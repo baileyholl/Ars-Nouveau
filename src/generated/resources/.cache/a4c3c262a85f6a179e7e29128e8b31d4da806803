@@ -1,4 +1,4 @@
-// 1.19.2	2023-06-19T22:23:36.3430488	Ars Nouveau Item Models
+// 1.19.2	2023-09-21T10:49:46.3718124	Ars Nouveau Item Models
 ecf86e39be560a9c1f232af399fcccf2c34a0a0b assets/ars_nouveau/models/item/alchemists_crown.json
 3b63734fc12c7c1711a2a607ed7af51e77bd7e1b assets/ars_nouveau/models/item/bastion_pod.json
 a4784e992d0d58f5808f3894b96d08fa5bc26395 assets/ars_nouveau/models/item/blank_thread.json
@@ -91,6 +91,7 @@ fff50de0eac0110b05c29c9033c75a7ed3fc9204 assets/ars_nouveau/models/item/glyph_pu
 81656d1886c6a54ab2ce81c2618827a461c41088 assets/ars_nouveau/models/item/glyph_self.json
 1ddd9bf087a21173c91411baa0ee761204ac196b assets/ars_nouveau/models/item/glyph_sense_magic.json
 d6d2a54c2b4b54395e05ce673d9a1af96456fbb7 assets/ars_nouveau/models/item/glyph_sensitive.json
+8e6b3a6a9ff1f714df527efe63ed34d3a71d7aa1 assets/ars_nouveau/models/item/glyph_shuffle.json
 fa2fdeaed0980909d4b23496dc09d1bd5d3f5d66 assets/ars_nouveau/models/item/glyph_slowfall.json
 591ae435fad245dc1b1794d43d1433e5a08277ff assets/ars_nouveau/models/item/glyph_smelt.json
 9dc3d8eab368e86d6cac1fc9c50a80324096d3cf assets/ars_nouveau/models/item/glyph_snare.json
