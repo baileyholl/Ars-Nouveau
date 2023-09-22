@@ -18,6 +18,8 @@
   "mixins": [
     "CrossbowMixin",
     "PotionRecipeMixin",
+    "PufferfishAccessor",
+    "RedstoneLevelMixin",
     "camera.ANServerPlayerMixin",
     "camera.ChunkMapMixin",
     "camera.PlayerListMixin",
@@ -27,10 +29,9 @@
     "jar.DispenserMixin",
     "jar.MobAccessorMixin",
     "perks.PerkLivingEntity",
-    "structure.StructureTemplateMixin",
-    "PufferfishAccessor",
     "structure.StructureProcessorAccessor",
-    "structure.StructureTemplateAccessor"
+    "structure.StructureTemplateAccessor",
+    "structure.StructureTemplateMixin"
   ],
   "minVersion": "0.8"
 }
