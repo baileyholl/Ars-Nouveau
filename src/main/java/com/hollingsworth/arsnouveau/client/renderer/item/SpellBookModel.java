@@ -42,6 +42,6 @@ public class SpellBookModel extends TransformAnimatedModel<SpellBook> {
 
     @Override
     public ResourceLocation getAnimationResource(SpellBook animatable) {
-        return new ResourceLocation(ArsNouveau.MODID, "animations/empty.json");
+        return new ResourceLocation(ArsNouveau.MODID, "animations/spellbook.animations.json");
     }
 }

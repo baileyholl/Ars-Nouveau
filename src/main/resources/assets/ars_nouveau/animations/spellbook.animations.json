@@ -1,0 +1,48 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "flip_page_right": {
+      "animation_length": 0.52,
+      "bones": {
+        "right_page": {
+          "rotation": {
+            "0.0": {
+              "vector": [
+                0,
+                0,
+                0
+              ]
+            },
+            "0.52": {
+              "vector": [
+                0,
+                140,
+                0
+              ]
+            }
+          }
+        }
+      }
+    },
+    "flip_page_left": {
+      "animation_length": 0.52,
+      "bones": {
+        "left_page": {
+          "rotation": {
+            "0.0": [
+              0,
+              0,
+              0
+            ],
+            "0.52": [
+              0,
+              -137.5,
+              0
+            ]
+          }
+        }
+      }
+    }
+  },
+  "geckolib_format_version": 2
+}

@@ -34,16 +34,22 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
+import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
+import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.network.GeckoLibNetwork;
+import software.bernie.geckolib3.network.ISyncable;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -51,19 +57,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SpellBook extends ModItem implements IAnimatable, ICasterTool, IDyeable, IRadialProvider {
+public class SpellBook extends ModItem implements IAnimatable, ISyncable, ICasterTool, IDyeable, IRadialProvider {
 
     public SpellTier tier;
+
+    @Override
+    public String getSyncKey() {
+        return ISyncable.super.getSyncKey() + '_' + tier.value;
+    }
+
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return !oldStack.sameItem(newStack);
+    }
+
     AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     public SpellBook(SpellTier tier) {
-        super(new Item.Properties().stacksTo(1).tab(ArsNouveau.itemGroup));
-        this.tier = tier;
+        this(new Item.Properties().stacksTo(1).tab(ArsNouveau.itemGroup), tier);
     }
 
     public SpellBook(Properties properties, SpellTier tier) {
         super(properties);
         this.tier = tier;
+        GeckoLibNetwork.registerSyncable(this);
     }
 
     @Override
@@ -74,7 +91,7 @@ public class SpellBook extends ModItem implements IAnimatable, ICasterTool, IDye
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-        if(this != ItemsRegistry.CREATIVE_SPELLBOOK.get()) {
+        if (this != ItemsRegistry.CREATIVE_SPELLBOOK.get()) {
             CapabilityRegistry.getMana(playerIn).ifPresent(iMana -> {
                 if (iMana.getBookTier() < this.tier.value) {
                     iMana.setBookTier(this.tier.value);
@@ -97,13 +114,6 @@ public class SpellBook extends ModItem implements IAnimatable, ICasterTool, IDye
         return 72000;
     }
 
-    /**
-     * returns the action that specifies what animation to play when the items is being used
-     */
-    public UseAnim getUseAnimation(ItemStack stack) {
-        return UseAnim.BOW;
-    }
-
     @Override
     public boolean doesSneakBypassUse(ItemStack stack, LevelReader world, BlockPos pos, Player player) {
         return true;
@@ -124,6 +134,18 @@ public class SpellBook extends ModItem implements IAnimatable, ICasterTool, IDye
 
     @Override
     public void registerControllers(AnimationData data) {
+        data.addAnimationController(new AnimationController<>(this, "controller", 0, (a) -> PlayState.CONTINUE));
+    }
+
+    @Override
+    public void onAnimationSync(int id, int state) {
+        if (state == 0 || state == 1) {
+            final AnimationController<?> controller = GeckoLibUtil.getControllerForID(this.factory, id, "controller");
+            if (controller.getAnimationState() == AnimationState.Stopped) {
+                controller.markNeedsReload();
+                controller.setAnimation(new AnimationBuilder().addAnimation(state == 1 ? "flip_page_right" : "flip_page_left", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+            }
+        }
     }
 
     @Override
@@ -164,7 +186,7 @@ public class SpellBook extends ModItem implements IAnimatable, ICasterTool, IDye
     @Override
     public void onOpenBookMenuKeyPressed(ItemStack stack, Player player) {
         InteractionHand hand = StackUtil.getBookHand(player);
-        if(hand == null){
+        if (hand == null) {
             return;
         }
         Minecraft.getInstance().setScreen(new GuiSpellBook(hand));

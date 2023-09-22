@@ -34,7 +34,7 @@ public class PacketSetBookMode {
                 ServerPlayer sender = ctx.get().getSender();
                 if (sender == null) return;
 
-                ItemStack stack = StackUtil.getHeldSpellbook(ctx.get().getSender());
+                ItemStack stack = StackUtil.getHeldSpellbook(sender);
                 if (stack.getItem() instanceof SpellBook) {
                     stack.setTag(tag);
                 }
