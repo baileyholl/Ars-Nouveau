@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -16,6 +18,10 @@ public class EntityHomingProjectileSpell extends EntityProjectileSpell {
 
     public EntityHomingProjectileSpell(EntityType<? extends EntityProjectileSpell> entityType, Level world) {
         super(entityType, world);
+    }
+
+    public EntityHomingProjectileSpell(Level world, SpellResolver resolver) {
+        super(ModEntities.SPELL_PROJ_HOM.get(), world, resolver);
     }
 
     List<Predicate<LivingEntity>> ignore;
