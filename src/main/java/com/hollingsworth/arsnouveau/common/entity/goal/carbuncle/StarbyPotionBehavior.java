@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -33,9 +34,9 @@ public class StarbyPotionBehavior extends StarbyListBehavior {
     }
 
     @Override
-    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        super.onFinishedConnectionFirst(storedPos, storedEntity, playerEntity);
-        if(storedPos != null && level.getBlockEntity(storedPos) instanceof PotionJarTile){
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable Direction face, @Nullable LivingEntity storedEntity, Player playerEntity) {
+        super.onFinishedConnectionFirst(storedPos, face, storedEntity, playerEntity);
+        if (storedPos != null && level.getBlockEntity(storedPos) instanceof PotionJarTile) {
             addToPos(storedPos);
             syncTag();
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.potion_to"));
@@ -43,18 +44,18 @@ public class StarbyPotionBehavior extends StarbyListBehavior {
     }
 
     @Override
-    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        super.onFinishedConnectionLast(storedPos, storedEntity, playerEntity);
-        if(storedPos != null && level.getBlockEntity(storedPos) instanceof PotionJarTile){
+    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable Direction face, @Nullable LivingEntity storedEntity, Player playerEntity) {
+        super.onFinishedConnectionLast(storedPos, face, storedEntity, playerEntity);
+        if (storedPos != null && level.getBlockEntity(storedPos) instanceof PotionJarTile) {
             addFromPos(storedPos);
             syncTag();
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.potion_from"));
         }
     }
 
-    public @Nullable BlockPos getJarForTake(){
-        for(BlockPos pos : FROM_LIST){
-            if(isPositionValidTake(pos)){
+    public @Nullable BlockPos getJarForTake() {
+        for (BlockPos pos : FROM_LIST) {
+            if (isPositionValidTake(pos)) {
                 return pos;
             }
         }
@@ -64,16 +65,16 @@ public class StarbyPotionBehavior extends StarbyListBehavior {
     public boolean isPositionValidTake(BlockPos p) {
         if (p == null)
             return false;
-        if(level.getBlockEntity(p) instanceof PotionJarTile jar){
+        if (level.getBlockEntity(p) instanceof PotionJarTile jar) {
             // Check if we can store the potion we take from this jar
             return jar.getAmount() >= 100 && getJarForStorage(jar.getData()) != null;
         }
         return false;
     }
 
-    public @Nullable BlockPos getJarForStorage(PotionData data){
-        for(BlockPos pos : TO_LIST){
-            if(level.getBlockEntity(pos) instanceof PotionJarTile && isPositionValidStore(pos, data)){
+    public @Nullable BlockPos getJarForStorage(PotionData data) {
+        for (BlockPos pos : TO_LIST) {
+            if (level.getBlockEntity(pos) instanceof PotionJarTile && isPositionValidStore(pos, data)) {
                 return pos;
             }
         }
@@ -86,20 +87,20 @@ public class StarbyPotionBehavior extends StarbyListBehavior {
         return level.getBlockEntity(p) instanceof PotionJarTile jar && jar.canAccept(data, 100);
     }
 
-    public PotionData getHeldPotion(){
+    public PotionData getHeldPotion() {
         return heldPotion == null ? new PotionData() : heldPotion;
     }
 
-    public void setHeldPotion(PotionData data){
+    public void setHeldPotion(PotionData data) {
         heldPotion = data;
         syncTag();
     }
 
-    public void setAmount(int amount){
+    public void setAmount(int amount) {
         this.amount = amount;
     }
 
-    public int getAmount(){
+    public int getAmount() {
         return this.amount;
     }
 
@@ -112,7 +113,7 @@ public class StarbyPotionBehavior extends StarbyListBehavior {
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
-        if(heldPotion != null){
+        if (heldPotion != null) {
             tag.put("potionData", heldPotion.toTag());
         }
         tag.putInt("amount", amount);
@@ -121,7 +122,7 @@ public class StarbyPotionBehavior extends StarbyListBehavior {
 
     @Override
     public ItemStack getStackForRender() {
-        if(heldPotion != null && heldPotion.getPotion() != Potions.EMPTY){
+        if (heldPotion != null && heldPotion.getPotion() != Potions.EMPTY) {
             return heldPotion.asPotionStack();
         }
         return super.getStackForRender();

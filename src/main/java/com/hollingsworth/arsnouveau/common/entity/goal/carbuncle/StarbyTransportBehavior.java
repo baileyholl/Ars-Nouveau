@@ -219,7 +219,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
 
     @Override
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        super.onFinishedConnectionFirst(storedPos, storedEntity, playerEntity);
+        super.onFinishedConnectionFirst(storedPos, side, storedEntity, playerEntity);
         if (storedPos == null)
             return;
         BlockEntity blockEntity = level.getBlockEntity(storedPos);
