@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
+import com.hollingsworth.arsnouveau.common.items.MobJarItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -12,6 +13,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PlayerRideable;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.ContainerEntity;
 import net.minecraft.world.item.ItemStack;
@@ -62,31 +64,37 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
         if (tile == null) {
             return InteractionResult.PASS;
         }
-        if(!pLevel.isClientSide){
+        if (!pLevel.isClientSide) {
             ItemStack held = pPlayer.getItemInHand(pHand);
-            if(held.is(ItemTagProvider.JAR_ITEM_BLACKLIST)){
+            if (held.is(ItemTagProvider.JAR_ITEM_BLACKLIST)) {
                 return InteractionResult.PASS;
             }
         }
-        if(tile.getEntity() == null && !pLevel.isClientSide){
+        if (tile.getEntity() == null && !pLevel.isClientSide) {
             ItemStack stack = pPlayer.getItemInHand(pHand);
-            if(stack.getItem() instanceof SpawnEggItem spawnEggItem){
+            if (stack.getItem() instanceof SpawnEggItem spawnEggItem) {
                 EntityType<?> type = spawnEggItem.getType(null);
                 Entity entity = type.create(pLevel);
-                if(entity != null) {
+                if (entity != null) {
                     tile.setEntityData(entity);
                     stack.shrink(1);
                     return InteractionResult.CONSUME;
                 }
+            } else if (!stack.isEmpty() && !(stack.getItem() instanceof MobJarItem)) {
+                ItemEntity entity = new ItemEntity(EntityType.ITEM, pLevel);
+                entity.setItem(stack.copy());
+                tile.setEntityData(entity);
+                stack.setCount(0);
+                return InteractionResult.CONSUME;
             }
         }
-        if(tile.getEntity() != null
-                && !(tile.getEntity() instanceof PlayerRideable)
-                && !JarBehaviorRegistry.containsEntity(tile.getEntity())
-                && !(tile.getEntity() instanceof ContainerEntity)){
+        if (tile.getEntity() != null
+            && !(tile.getEntity() instanceof PlayerRideable)
+            && !JarBehaviorRegistry.containsEntity(tile.getEntity())
+            && !(tile.getEntity() instanceof ContainerEntity)) {
             Entity tileEntity = tile.getEntity();
             pPlayer.interactOn(tileEntity, pHand);
-            if(!tileEntity.isAlive() || tileEntity.isRemoved()){
+            if (!tileEntity.isAlive() || tileEntity.isRemoved()) {
                 tile.removeEntity();
             }
         }
@@ -102,7 +110,7 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
     }
 
-   @NotNull
+    @NotNull
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
@@ -120,11 +128,11 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
 
     @Override
     public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
-        if(pLevel.isClientSide)
+        if (pLevel.isClientSide)
             return;
-        if(pLevel.getBlockEntity(pPos) instanceof MobJarTile tile){
+        if (pLevel.getBlockEntity(pPos) instanceof MobJarTile tile) {
             int light = tile.calculateLight();
-            if(pState.getValue(LIGHT_LEVEL) != light){
+            if (pState.getValue(LIGHT_LEVEL) != light) {
                 pLevel.setBlock(pPos, pState.setValue(LIGHT_LEVEL, light), 2);
             }
         }
@@ -173,6 +181,7 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
+
     public static final VoxelShape shape = Stream.of(
             Block.box(3, 14, 3, 13, 16, 13),
             Block.box(1, 0, 1, 15, 13, 15),
@@ -191,7 +200,7 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
     }
 
     public int getSignal(BlockState pBlockState, BlockGetter pBlockAccess, BlockPos pPos, Direction pSide) {
-        if(pBlockAccess.getBlockEntity(pPos) instanceof MobJarTile jarTile){
+        if (pBlockAccess.getBlockEntity(pPos) instanceof MobJarTile jarTile) {
             AtomicInteger power = new AtomicInteger();
             jarTile.dispatchBehavior((behavior) -> {
                 power.set(Math.max(power.get(), behavior.getSignalPower(jarTile)));

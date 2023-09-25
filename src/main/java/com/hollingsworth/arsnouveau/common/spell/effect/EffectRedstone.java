@@ -19,6 +19,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -31,11 +32,11 @@ public class EffectRedstone extends AbstractEffect {
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
 
-
         int signalModifier = Mth.clamp((int) spellStats.getAmpMultiplier() + 10, 1, 15);
 
         BlockState state = BlockRegistry.REDSTONE_AIR.defaultBlockState().setValue(RedstoneAir.POWER, signalModifier);
         BlockPos pos = rayTraceResult.getBlockPos();
+
         int timeBonus = (int) spellStats.getDurationMultiplier();
         int delay = Math.max(GENERIC_INT.get() + timeBonus * BONUS_TIME.get(), 2);
 

@@ -16,6 +16,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
@@ -26,10 +27,11 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import static net.minecraft.world.item.crafting.RecipeType.SMOKING;
 
 public class EffectSmelt extends AbstractEffect {
     public static EffectSmelt INSTANCE = new EffectSmelt();
@@ -39,37 +41,35 @@ public class EffectSmelt extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         double aoeBuff = spellStats.getAoeMultiplier();
         int pierceBuff = spellStats.getBuffCount(AugmentPierce.INSTANCE);
         int maxItemSmelt = (int) Math.round(4 * (1 + aoeBuff + pierceBuff));
+
         List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AABB(rayTraceResult.getEntity().blockPosition()).inflate(aoeBuff + 1.0));
-        smeltItems(world, itemEntities, maxItemSmelt);
+        smeltItems(world, itemEntities, maxItemSmelt, spellStats);
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         double aoeBuff = spellStats.getAoeMultiplier();
         int pierceBuff = spellStats.getBuffCount(AugmentPierce.INSTANCE);
         int maxItemSmelt = (int) Math.round(4 * (1 + aoeBuff + pierceBuff));
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
         List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AABB(rayTraceResult.getBlockPos()).inflate(aoeBuff + 1.0));
-        smeltItems(world, itemEntities, maxItemSmelt);
+        smeltItems(world, itemEntities, maxItemSmelt, spellStats);
 
         for (BlockPos pos : posList) {
-            if (!canBlockBeHarvested(spellStats, world, pos))
-                continue;
             smeltBlock(world, pos, shooter, rayTraceResult, spellStats, spellContext, resolver);
         }
     }
 
 
     public void smeltBlock(Level world, BlockPos pos, LivingEntity shooter, BlockHitResult hitResult, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (!canBlockBeHarvested(spellStats, world, pos)) return;
         BlockState state = world.getBlockState(pos);
-        if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos))
-            return;
-        Optional<SmeltingRecipe> optional = world.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(new ItemStack(state.getBlock().asItem(), 1)),
-                world);
+        if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos)) return;
+        Optional<SmeltingRecipe> optional = world.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(new ItemStack(state.getBlock().asItem(), 1)), world);
         if (optional.isPresent()) {
             ItemStack itemstack = optional.get().getResultItem();
             if (!itemstack.isEmpty()) {
@@ -80,25 +80,29 @@ public class EffectSmelt extends AbstractEffect {
                     world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), itemstack.copy()));
                     BlockUtil.safelyUpdateState(world, pos);
                 }
-                ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
-                        new Vec3(pos.getX(), pos.getY(), pos.getZ()), hitResult.getDirection(), pos, false), world, shooter, spellContext, resolver
-                );
+                ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(new Vec3(pos.getX(), pos.getY(), pos.getZ()), hitResult.getDirection(), pos, false), world, shooter, spellContext, resolver);
             }
         }
     }
 
 
-    public void smeltItems(Level world, List<ItemEntity> itemEntities, int maxItemSmelt) {
+    public void smeltItems(Level world, List<ItemEntity> itemEntities, int maxItemSmelt, SpellStats spellStats) {
         int numSmelted = 0;
         for (ItemEntity itemEntity : itemEntities) {
-            if (numSmelted > maxItemSmelt)
-                break;
-            Optional<SmeltingRecipe> optional = world.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(itemEntity.getItem()),
-                    world);
+            if (numSmelted > maxItemSmelt) break;
+            Optional<? extends AbstractCookingRecipe> optional;
+
+            if (spellStats.hasBuff(AugmentDampen.INSTANCE)) {
+                optional = world.getRecipeManager().getRecipeFor(SMOKING, new SimpleContainer(itemEntity.getItem()), world);
+            } else if (spellStats.hasBuff(AugmentAmplify.INSTANCE)) {
+                optional = world.getRecipeManager().getRecipeFor(RecipeType.BLASTING, new SimpleContainer(itemEntity.getItem()), world);
+            } else {
+                optional = world.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(itemEntity.getItem()), world);
+            }
+
             if (optional.isPresent()) {
                 ItemStack result = optional.get().getResultItem().copy();
-                if (result.isEmpty())
-                    continue;
+                if (result.isEmpty()) continue;
                 while (numSmelted < maxItemSmelt && !itemEntity.getItem().isEmpty()) {
                     itemEntity.getItem().shrink(1);
                     world.addFreshEntity(new ItemEntity(world, itemEntity.getX(), itemEntity.getY(), itemEntity.getZ(), result.copy()));
@@ -108,13 +112,10 @@ public class EffectSmelt extends AbstractEffect {
         }
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(
-                AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE,
-                AugmentAOE.INSTANCE, AugmentPierce.INSTANCE
-        );
+        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE);
     }
 
     @Override
@@ -132,7 +133,7 @@ public class EffectSmelt extends AbstractEffect {
         return 100;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_FIRE);

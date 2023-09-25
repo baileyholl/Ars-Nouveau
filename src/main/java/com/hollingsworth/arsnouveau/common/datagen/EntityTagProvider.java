@@ -44,7 +44,6 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
                         ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get());
         this.tag(EntityTags.JAR_BLACKLIST).addTag(EntityTags.FAMILIAR);
         this.tag(EntityTags.JAR_WHITELIST).addOptional(new ResourceLocation("create:contraption"))
-                .add(EntityType.ITEM)
                 .add(EntityType.END_CRYSTAL)
                 .add(EntityType.BOAT)
                 .add(EntityType.CHEST_BOAT)
