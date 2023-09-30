@@ -751,8 +751,6 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.annotated_codex", "Annotated Codex");
         add("ars_nouveau.page.annotated_codex", "The Annoted Codex allows players to share their knowledge of glyphs with other players. To record your known glyphs, simply use the codex. Recording glyphs requires EXP for each glyph known, and the EXP will be consumed upon using the item. Using the item again will update the list of known glyphs. Other players may use the book to learn the glyphs, consuming the codex in the process.");
         add("ars_nouveau.ritual.no_start", "Start the current ritual or break the block to remove it.");
-        add("ars_nouveau.lights_on", "You have turned dynamic lights on. This can cause lag for users with weaker CPUs, low RAM allocation, and unexpected results with 'performance' mods like Optifine. Run this command or change the ars_nouveau-client config to disable this.");
-        add("ars_nouveau.lights_off", "You have turned dynamic lights off.");
         add("ars_nouveau.page.relay_collector", "Operates similar to the Source Relay, but will automatically take from jars it is not linked to within 5 blocks. See the instructions on the Source Relay for use.");
         add("block.ars_nouveau.relay_collector", "Source Relay: Collector");
         add("ars_nouveau.page2.relay", "A redstone signal will disable the relay.");
@@ -768,8 +766,6 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.sounds.test", "Test");
         add("ars_nouveau.gui.settings", "Settings and Rewards");
         add("ars_nouveau.settings.title", "Settings");
-        add("ars_nouveau.dynamic_lights.button_on", "Dynamic lights are turned on.  This can cause lag for users with weaker CPUs, low RAM allocation, and unexpected results with 'performance' mods like Optifine.");
-        add("ars_nouveau.dynamic_lights.button_off", "Dynamic lights are turned off.");
         add("block.ars_nouveau.orange_sbed", "Orange Magebloom Bed");
         add("block.ars_nouveau.blue_sbed", "Blue Magebloom Bed");
         add("block.ars_nouveau.green_sbed", "Green Magebloom Bed");
@@ -1131,7 +1127,6 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.adv.desc.catch_lightning", "Catch a lightning bolt in a containment jar.");
         add("ars_nouveau.adv.title.time_in_a_bottle", "Time in a Bottle");
         add("ars_nouveau.adv.desc.time_in_a_bottle", "Put a clock in a containment jar");
-        add("ars_nouveau.light_message", "Ars Nouveau adds built in dynamic lights. Enable with `/ars-light on`. This won't appear again!");
         add("ars_nouveau.warp_scroll.already_recorded", "This scroll is already bound to a location.");
         add("ars_nouveau.page4.illusion_blocks", "Skyweave will display the skybox of the dimension it is placed in. To toggle the skybox and show the facade, cast Dispel on it. The facade may be set to another block like Mirrorweave.");
         add("block.ars_nouveau.sky_block", "Skyweave");
