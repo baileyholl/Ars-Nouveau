@@ -9,11 +9,7 @@
     "camera.ClientChunkCacheMixin",
     "camera.LevelRendererMixin",
     "camera.MinecraftMixin",
-    "elytra.ClientElytraMixin",
-    "light.ClientMixin",
-    "light.EntityRendererMixin",
-    "light.LevelRendererMixin",
-    "light.LightEntityMixin"
+    "elytra.ClientElytraMixin"
   ],
   "mixins": [
     "CrossbowMixin",

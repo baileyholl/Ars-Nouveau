@@ -330,7 +330,6 @@ public class EventHandler {
         ResetCommand.register(event.getDispatcher());
         DataDumpCommand.register(event.getDispatcher());
         PathCommand.register(event.getDispatcher());
-        ToggleLightCommand.register(event.getDispatcher());
         AddTomeCommand.register(event.getDispatcher());
         SummonAnimHeadCommand.register(event.getDispatcher());
     }

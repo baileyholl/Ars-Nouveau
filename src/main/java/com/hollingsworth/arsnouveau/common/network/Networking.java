@@ -151,16 +151,6 @@ public class Networking {
                 PacketSetScribeRecipe::toBytes,
                 PacketSetScribeRecipe::new,
                 PacketSetScribeRecipe::handle);
-        INSTANCE.registerMessage(nextID(),
-                PacketToggleLight.class,
-                PacketToggleLight::toBytes,
-                PacketToggleLight::new,
-                PacketToggleLight::handle);
-        INSTANCE.registerMessage(nextID(),
-                PacketAddFadingLight.class,
-                PacketAddFadingLight::encode,
-                PacketAddFadingLight::decode,
-                PacketAddFadingLight.Handler::handle);
 
         INSTANCE.registerMessage(nextID(),
                 PacketSetSound.class,
@@ -182,11 +172,6 @@ public class Networking {
                 PacketSetCameraView::encode,
                 PacketSetCameraView::decode,
                 PacketSetCameraView::onMessage);
-        INSTANCE.registerMessage(nextID(),
-                PacketSyncLitEntities.class,
-                PacketSyncLitEntities::toBytes,
-                PacketSyncLitEntities::new,
-                PacketSyncLitEntities::handle);
         INSTANCE.registerMessage(nextID(),
                 PacketSyncTag.class,
                 PacketSyncTag::encode,
