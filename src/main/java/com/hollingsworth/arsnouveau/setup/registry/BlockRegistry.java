@@ -355,15 +355,15 @@ public class BlockRegistry {
 
     public static void onBlockItemsRegistry(IForgeRegistry<Item> registry) {
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
-            registry.register(s, getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
+            ITEMS.register(s, () -> getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
         }
 
         for (String s : LibBlockNames.DECORATIVE_STAIRS) {
-            registry.register(s, getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
+            ITEMS.register(s, () -> getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
         }
 
         for (String s : LibBlockNames.DECORATIVE_SLABS) {
-            registry.register(s, getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
+            ITEMS.register(s, () -> getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
         }
     }
 

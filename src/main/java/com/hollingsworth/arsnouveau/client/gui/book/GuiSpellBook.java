@@ -543,11 +543,12 @@ public class GuiSpellBook extends BaseBook {
         //manabar
         int manaLength = 96;
         if (maxManaCache > 0) {
-            manaLength *= (float) (maxManaCache - currentCostCache) / maxManaCache;
+            //keep the mana bar lenght between -1 and 96 to avoid over/underflow
+            manaLength = (int) Mth.clamp(manaLength * ((float) (maxManaCache - currentCostCache) / maxManaCache), -1, 96);
         } else manaLength = 0;
 
         int offsetLeft = 89;
-        int yOffset = 210;//
+        int yOffset = 210;
 
         //scale the manabar to fit the gui
         PoseStack poseStack = graphics.pose();
@@ -566,7 +567,7 @@ public class GuiSpellBook extends BaseBook {
             RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_grayscale.png"));
             RenderUtils.colorBlit(graphics.pose(), offsetLeft + 8, yOffset - 10, 0, manaOffset, 100, 8, 256, 256, manaLength < 0 ? Color.RED : Color.rainbowColor(ClientInfo.ticksInGame));
         }
-        if (ArsNouveauAPI.ENABLE_DEBUG_NUMBERS) {
+        if (ArsNouveauAPI.ENABLE_DEBUG_NUMBERS && minecraft != null) {
             String text = currentCostCache + "  /  " + maxManaCache;
             int maxWidth = minecraft.font.width(maxManaCache + "  /  " + maxManaCache);
             int offset = offsetLeft - maxWidth / 2 + (maxWidth - minecraft.font.width(text));
