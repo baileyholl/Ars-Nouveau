@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
+import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
 import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
@@ -14,6 +15,7 @@ import com.hollingsworth.arsnouveau.api.scrying.SingleBlockScryer;
 import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.familiars.*;
 import com.hollingsworth.arsnouveau.common.mob_jar.*;
 import com.hollingsworth.arsnouveau.common.perk.*;
@@ -21,8 +23,14 @@ import com.hollingsworth.arsnouveau.common.ritual.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import java.util.Arrays;
@@ -275,6 +283,14 @@ public class APIRegistry {
         JarBehaviorRegistry.register(EntityType.PUFFERFISH, new PufferfishBehavior());
         JarBehaviorRegistry.register(EntityType.ALLAY, new AllayBehavior());
         JarBehaviorRegistry.register(ModEntities.ENTITY_DUMMY.get(), new DecoyBehavior());
+        JarBehaviorRegistry.register(EntityType.ITEM, new JarBehavior<>() {
+            @Override
+            public void use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit, MobJarTile tile) {
+                if (player.isShiftKeyDown()) {
+                    tile.onDispel(player);
+                }
+            }
+        });
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {
