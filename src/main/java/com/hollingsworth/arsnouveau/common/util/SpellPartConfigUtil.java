@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.util;
 
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.setup.config.ConfigUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 
@@ -11,6 +12,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static com.hollingsworth.arsnouveau.setup.config.ConfigUtil.writeConfig;
 
 /**
  * Utility class for code around handling spell part configuration.
@@ -129,7 +132,7 @@ public class SpellPartConfigUtil {
     public static AugmentCosts buildAugmentCosts(ForgeConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
         ForgeConfigSpec.ConfigValue<List<? extends String>> configValue = builder
                 .comment("How much an augment should cost when used on this effect or form. This overrides the default cost in the augment config.", "Example entry: \"" + GlyphLib.AugmentAmplifyID + "=50\"")
-                .defineList("augment_cost_overrides", writeConfig(defaults), SpellPartConfigUtil::validateAugmentLimits);
+                .defineList("augment_cost_overrides", ConfigUtil.writeResConfig(defaults), SpellPartConfigUtil::validateAugmentLimits);
 
         return new AugmentCosts(configValue);
     }

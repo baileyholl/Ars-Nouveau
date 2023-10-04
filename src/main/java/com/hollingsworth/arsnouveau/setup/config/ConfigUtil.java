@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.setup.config;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.List;
@@ -32,6 +33,13 @@ public class ConfigUtil {
     public static List<String> writeConfig(Map<String, Integer> map) {
         return map.entrySet().stream()
                 .map(e -> e.getKey() + "=" + e.getValue().toString())
+                .collect(Collectors.toList());
+    }
+
+    /** Produces a list of tag=limit strings suitable for saving to the configuration. */
+    public static List<String> writeResConfig(Map<ResourceLocation, Integer> map) {
+        return map.entrySet().stream()
+                .map(e -> e.getKey().toString() + "=" + e.getValue().toString())
                 .collect(Collectors.toList());
     }
 
