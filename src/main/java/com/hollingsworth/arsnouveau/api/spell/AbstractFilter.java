@@ -32,12 +32,12 @@ public abstract class AbstractFilter extends AbstractEffect implements IFilter {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (!shouldResolveOnEntity(rayTraceResult)) spellContext.setCanceled(true);
+        if (!shouldResolveOnEntity(rayTraceResult, world)) spellContext.setCanceled(true);
     }
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (!shouldResolveOnBlock(rayTraceResult)) spellContext.setCanceled(true);
+        if (!shouldResolveOnBlock(rayTraceResult, world)) spellContext.setCanceled(true);
     }
 
 }
