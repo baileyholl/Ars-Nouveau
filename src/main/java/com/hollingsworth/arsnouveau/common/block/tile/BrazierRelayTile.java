@@ -15,12 +15,17 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.hollingsworth.arsnouveau.common.block.RitualBrazierBlock.LIT;
 
 public class BrazierRelayTile extends RitualBrazierTile{
 
     int ticksToLightOff = 0;
     public BlockPos brazierPos;
+
+    private static List<BlockPos> relayingTraversed = new ArrayList<>();
 
     public BrazierRelayTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
@@ -111,12 +116,15 @@ public class BrazierRelayTile extends RitualBrazierTile{
 
     @Override
     public InventoryManager getInventoryManager() {
-        if (this.brazierPos != null && level != null && level.isLoaded(this.brazierPos) && level.getBlockEntity(this.brazierPos) instanceof RitualBrazierTile brazierTile) {
+        if (this.brazierPos != null && level != null && relayingTraversed.size() < 256 && !relayingTraversed.contains(brazierPos) && level.isLoaded(this.brazierPos) && level.getBlockEntity(this.brazierPos) instanceof RitualBrazierTile brazierTile) {
+            relayingTraversed.add(brazierPos);
             InventoryManager brazierInv = brazierTile.getInventoryManager();
-            if (brazierInv.getInventory().size() > 0) {
+            if (!brazierInv.getInventory().isEmpty()) {
+                relayingTraversed.clear();
                 return brazierInv;
             }
         }
+        relayingTraversed.clear();
         return super.getInventoryManager();
     }
 }

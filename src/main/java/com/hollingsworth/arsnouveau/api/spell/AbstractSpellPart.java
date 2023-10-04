@@ -43,9 +43,9 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     public Set<AbstractAugment> compatibleAugments = ConcurrentHashMap.newKeySet();
 
     /**
-     * A list of glyphs that cannot be used with this glyph.
+     * A wrapper for the list of glyphs that cannot be used with this glyph. Parsed from configs.
      */
-    public Set<ResourceLocation> invalidCombinations = ConcurrentHashMap.newKeySet();
+    public SpellPartConfigUtil.ComboLimits invalidCombinations = new SpellPartConfigUtil.ComboLimits(null);
 
     public AbstractSpellPart(String registryName, String name) {
         this(new ResourceLocation(ArsNouveau.MODID, registryName), name);
@@ -189,6 +189,20 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     protected void buildAugmentCostOverrideConfig(ForgeConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
         this.augmentCosts = SpellPartConfigUtil.buildAugmentCosts(builder, defaults);
     }
+    /**
+     * Registers the glyph_limits configuration entry for combo limits.
+     */
+    protected void buildInvalidCombosConfig(ForgeConfigSpec.Builder builder, Set<ResourceLocation> defaults) {
+        this.invalidCombinations = SpellPartConfigUtil.buildInvalidCombosConfig(builder, defaults);
+    }
+
+    /**
+     * Override this method to provide defaults for the augmentation limits configuration.
+     */
+    protected Map<ResourceLocation, Integer> getDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        addDefaultAugmentLimits(defaults);
+        return defaults;
+    }
 
     /**
      * Adds default augment limits to the given map, used to generate the config.
@@ -196,6 +210,14 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {}
 
     protected void addAugmentCostOverrides(Map<ResourceLocation, Integer> defaults) {}
+
+    protected Set<ResourceLocation> getDefaultInvalidCombos(Set<ResourceLocation> defaults) {
+        addDefaultInvalidCombos(defaults);
+        return defaults;
+    }
+
+    protected void addDefaultInvalidCombos(Set<ResourceLocation> defaults) {
+    }
 
     // Default value for the starter spell config
     public boolean defaultedStarterGlyph() {

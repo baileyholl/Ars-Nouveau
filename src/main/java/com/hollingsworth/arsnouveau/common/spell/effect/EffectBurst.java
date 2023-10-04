@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -21,12 +22,11 @@ import java.util.function.Predicate;
 
 public class EffectBurst extends AbstractEffect {
 
+    //TODO use GlyphLib#EffectBurstId
     public static final EffectBurst INSTANCE = new EffectBurst("burst", "Burst");
 
     public EffectBurst(String tag, String description) {
         super(tag, description);
-        invalidCombinations.add(EffectLinger.INSTANCE.getRegistryName());
-        invalidCombinations.add(EffectWall.INSTANCE.getRegistryName());
     }
 
     @Override
@@ -86,4 +86,9 @@ public class EffectBurst extends AbstractEffect {
         return augmentSetOf(AugmentAOE.INSTANCE, AugmentSensitive.INSTANCE, AugmentDampen.INSTANCE);
     }
 
+    @Override
+    protected void addDefaultInvalidCombos(Set<ResourceLocation> defaults) {
+        defaults.add(EffectLinger.INSTANCE.getRegistryName());
+        defaults.add(EffectWall.INSTANCE.getRegistryName());
+    }
 }

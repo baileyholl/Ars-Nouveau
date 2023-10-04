@@ -29,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -138,6 +139,8 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         Map<ResourceLocation, Integer> defaultAugmentCosts = new HashMap<>();
         addAugmentCostOverrides(defaultAugmentCosts);
         buildAugmentCostOverrideConfig(builder, defaultAugmentCosts);
+        super.buildAugmentLimitsConfig(builder, getDefaultAugmentLimits(new HashMap<>()));
+        super.buildInvalidCombosConfig(builder, getDefaultInvalidCombos(new HashSet<>()));
     }
 
     public void addDamageConfig(ForgeConfigSpec.Builder builder, double defaultValue) {
