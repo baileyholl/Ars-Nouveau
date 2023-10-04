@@ -8,11 +8,15 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -59,11 +63,13 @@ public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILigh
     public void load(CompoundTag pTag) {
         super.load(pTag);
         if(pTag.contains("mimic_state")) {
-            mimicState = NbtUtils.readBlockState(this.level.holderLookup(Registries.BLOCK), pTag.getCompound("mimic_state"));
+            HolderGetter<Block> holdergetter = this.level != null ? this.level.holderLookup(Registries.BLOCK) : BuiltInRegistries.BLOCK.asLookup();
+            mimicState = NbtUtils.readBlockState(holdergetter, pTag.getCompound("mimic_state"));
         }else{
             mimicState = getDefaultBlockState();
         }
     }
+
 
     public BlockState getDefaultBlockState(){
         return BlockRegistry.MIRROR_WEAVE.defaultBlockState();
