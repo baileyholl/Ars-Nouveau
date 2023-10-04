@@ -32,6 +32,10 @@ public class GlyphLib {
     public static final String AugmentAccelerateID = prependGlyph("accelerate");
     public static final String AugmentDecelerateID = prependGlyph("decelerate");
     public static final String AugmentExtendTimeID = prependGlyph("extend_time");
+    public static final String AugmentDurationDown = prependGlyph("duration_down");
+    public static final String AugmentSensitiveID = prependGlyph("sensitive");
+
+    public static final String AugmentShuffleID = prependGlyph("shuffle");
     public static final String AugmentPierceID = prependGlyph("pierce");
     public static final String AugmentAOEID = prependGlyph("aoe");
     public static final String AugmentAmplifyID = prependGlyph("amplify");
@@ -47,13 +51,9 @@ public class GlyphLib {
     public static final String EffectPlaceBlockID = prependGlyph("place_block");
     public static final String EffectDelayID = prependGlyph("delay");
     public static final String EffectRedstoneID = prependGlyph("redstone_signal");
-
     public static final String EffectIntangibleID = prependGlyph("intangible");
     public static final String EffectFellID = prependGlyph("fell");
-
     public static final String EffectInvisibilityID = prependGlyph("invisibility");
-    public static final String AugmentDurationDown = prependGlyph("duration_down");
-
     public static final String EffectWitherID = prependGlyph("wither");
     public static final String EffectExchangeID = prependGlyph("exchange");
     public static final String EffectCraftID = prependGlyph("craft");
@@ -78,7 +78,7 @@ public class GlyphLib {
     public static final String EffectEarthshakeID = prependGlyph("earthshake");
     public static final String EffectBounceID = prependGlyph("bounce");
     public static final String EffectEvaporate = prependGlyph("evaporate");
-    public static final String AugmentSensitiveID = prependGlyph("sensitive");
+
     public static final String EffectLingerID = prependGlyph("linger");
     public static final String EffectSenseMagicID = prependGlyph("sense_magic");
     public static final String EffectInfuseID = prependGlyph("infuse");
