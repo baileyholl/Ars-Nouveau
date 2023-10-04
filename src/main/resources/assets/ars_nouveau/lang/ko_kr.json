@@ -426,7 +426,7 @@
   "ars_nouveau.page.dominion_wand": "마력 전달체와 자동화 개체를 구성하기 위한 도구입니다. 전송 경로를 설정하려면 스태프를 들고 마력을 가져올 축적기나 장치에 오른쪽클릭을 한 후 마력을 보내려는 곳에 다시 우클릭해주세요. 예시: 농작물 마력 축적기 -> 마력 전달체 -> 마력단지. 연결을 해제하려면 이 지팡이를 전달체에 웅크린 상태로 우클릭하면 됩니다.",
   "ars_nouveau.page.dowsing_rod": "수맥봉을 사용하면 짧은 시간동안 자라나는 자수정 블록이나 75블록 내에 있는 마법 생명체를 탐색할 수 있습니다. 수맥봉은 내구도도 있습니다.",
   "ars_nouveau.page.enchanters_eye": "점술사의 수정을 통해 원격으로 각인된 주문을 시전할 수 있는 시전 도구입니다. 점술사의 수정을 사용하여 눈에 보이게 할 개체를 정하거나, 손에 들고있는 주문 양피지를 결속시킬 수 있습니다. 마법 포탑과 비슷하게 주문을 시전하지만, 플레이어가 시전한 것으로 간주됩니다. 원격 순간이동이나 아이템 이동등에 유용합니다.",
-  "ars_nouveau.page.enchanters_mirror": "Applies a self spell to the user. Spells cast with this mirror are discounted and gain additional bonus duration to all glyphs. Apply a spell at the Scribe's table that DOES NOT contain a form such as Heal -> Heal.",
+  "ars_nouveau.page.enchanters_mirror": "자신에게 주문을 적용합니다. 거울로 시전하는 주문은 마나 소모량이 감소되고 모든 문양에 추가 지속시간이 적용됩니다. 서기장의 테이블에서 치유 -> 치유와 같은 형태가 포함되지 않은 주문을 적용합니다.",
   "ars_nouveau.page.enchanters_shield": "방패로 피해를 막은 사용자는 짧은 시간동안 마력 재생을 얻습니다. 또한 이 방패는 착용자의 마력을 사용하여 서서히 수리됩니다.",
   "ars_nouveau.page.enchanters_sword": "개체에게 피해를 주기 전에 접촉 주문이 발동됩니다. 또한 모든 주문은 주문의 마지막 효과에 대해 하나의 추가 증폭 기능을 얻습니다. 필기 작업대에서 점화 -> 시간 확장처럼 형태를 포함하지 않는 주문을 적용하세요.",
   "ars_nouveau.page.flask_cannons": "플라스크 대포",
