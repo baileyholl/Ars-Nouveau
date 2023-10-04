@@ -98,7 +98,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
             if (pref.ordinal() > foundPref.ordinal()) {
                 foundPref = pref;
                 returnPos = b;
-                if(foundPref == ItemScroll.SortPref.HIGHEST){
+                if (foundPref == ItemScroll.SortPref.HIGHEST) {
                     return returnPos;
                 }
             }
@@ -116,10 +116,9 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         return starbuncle.getCosmeticItem().getItem() == ItemsRegistry.STARBUNCLE_SHADES.get();
     }
 
-    //TODO consider making it side-sensitive
-    public @Nullable IItemHandler getItemCapFromTile(BlockEntity blockEntity) {
-        if (blockEntity != null && blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()) {
-            var lazy = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
+    public @Nullable IItemHandler getItemCapFromTile(BlockEntity blockEntity, @Nullable Direction face) {
+        if (blockEntity != null && blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, face).isPresent()) {
+            var lazy = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, face).resolve();
             if (lazy.isPresent())
                 return lazy.get();
         }
@@ -139,7 +138,8 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
 
     public boolean isPositionValidTake(BlockPos p) {
         if (p == null) return false;
-        IItemHandler iItemHandler = getItemCapFromTile(level.getBlockEntity(p));
+        Direction face = FROM_DIRECTION_MAP.get(p.hashCode());
+        IItemHandler iItemHandler = getItemCapFromTile(level.getBlockEntity(p), face);
         if (iItemHandler == null) return false;
         for (int j = 0; j < iItemHandler.getSlots(); j++) {
             ItemStack stack = iItemHandler.getStackInSlot(j);
@@ -159,7 +159,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         }
         BlockPos validStorePos = getValidStorePos(stack);
         if (validStorePos == null) return -1;
-        IItemHandler handler = getItemCapFromTile(level.getBlockEntity(validStorePos));
+        IItemHandler handler = getItemCapFromTile(level.getBlockEntity(validStorePos), FROM_DIRECTION_MAP.get(validStorePos.hashCode()));
         if (handler == null)
             return -1;
 
@@ -184,7 +184,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         if (tile == null || stack == null || stack.isEmpty())
             return ItemScroll.SortPref.INVALID;
 
-        IItemHandler handler = getItemCapFromTile(tile);
+        IItemHandler handler = getItemCapFromTile(tile, TO_DIRECTION_MAP.get(tile.getBlockPos().hashCode()));
         if (handler == null)
             return ItemScroll.SortPref.INVALID;
         for (ItemFrame i : level.getEntitiesOfClass(ItemFrame.class, new AABB(tile.getBlockPos()).inflate(1))) {
@@ -219,13 +219,13 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
 
     @Override
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        super.onFinishedConnectionFirst(storedPos, storedEntity, playerEntity);
+        super.onFinishedConnectionFirst(storedPos, side, storedEntity, playerEntity);
         if (storedPos == null)
             return;
         BlockEntity blockEntity = level.getBlockEntity(storedPos);
         if (blockEntity != null && blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, side).isPresent()) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.store"));
-            addToPos(storedPos);
+            addToPos(storedPos, side);
         }
     }
 
@@ -238,7 +238,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         BlockEntity blockEntity = level.getBlockEntity(storedPos);
         if (blockEntity != null && blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, side).isPresent()) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.take"));
-            addFromPos(storedPos);
+            addFromPos(storedPos, side);
         }
     }
 

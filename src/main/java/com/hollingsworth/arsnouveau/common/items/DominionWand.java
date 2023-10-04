@@ -15,6 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -74,10 +75,11 @@ public class DominionWand extends ModItem {
         Level world = playerEntity.getCommandSenderWorld();
 
         if (data.getStoredPos() != null && world.getBlockEntity(data.getStoredPos()) instanceof IWandable wandable) {
-            wandable.onFinishedConnectionFirst(data.getStoredPos(), target, playerEntity);
+            wandable.onFinishedConnectionFirst(data.getStoredPos(), data.getFace(), target, playerEntity);
         }
+
         if (target instanceof IWandable wandable) {
-            wandable.onFinishedConnectionLast(data.getStoredPos(), target, playerEntity);
+            wandable.onFinishedConnectionLast(data.getStoredPos(), data.getFace(), target, playerEntity);
             clear(stack, playerEntity);
         }
 
@@ -96,8 +98,18 @@ public class DominionWand extends ModItem {
         DominionData data = new DominionData(stack);
         data.setStoredPos(null);
         data.setStoredEntityID(-1);
+        data.setFacing(null);
     }
 
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+        ItemStack stack = pPlayer.getItemInHand(pUsedHand);
+        DominionData data = new DominionData(stack);
+        if (pPlayer.isShiftKeyDown() && !data.hasStoredData()) {
+            data.changeMode();
+        }
+        return super.use(pLevel, pPlayer, pUsedHand);
+    }
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
@@ -117,10 +129,10 @@ public class DominionWand extends ModItem {
 
         if (!data.hasStoredData()) {
             data.setStoredPos(pos.immutable());
-            data.setFacing(context.getClickedFace());
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.dominion_wand.position_set"));
             return InteractionResult.SUCCESS;
         }
+        if (data.facing == null && data.strict) data.setFacing(context.getClickedFace());
 
         if (data.getStoredPos() != null && world.getBlockEntity(data.getStoredPos()) instanceof IWandable wandable) {
             wandable.onFinishedConnectionFirst(pos, data.getFace(), (LivingEntity) world.getEntity(data.getStoredEntityID()), playerEntity);
@@ -136,6 +148,12 @@ public class DominionWand extends ModItem {
         return super.useOn(context);
     }
 
+    @Override
+    public String getDescriptionId(ItemStack pStack) {
+        DominionData data = new DominionData(pStack);
+        if (data.strict) return super.getDescriptionId(pStack) + ".strict";
+        return super.getDescriptionId(pStack);
+    }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag p_77624_4_) {
@@ -151,6 +169,8 @@ public class DominionWand extends ModItem {
         } else {
             tooltip.add(Component.translatable("ars_nouveau.dominion_wand.position_stored", getPosString(data.getStoredPos())));
         }
+
+        if (data.strict) tooltip.add(Component.literal("Side-Sensitive"));
     }
 
     public static String getPosString(BlockPos pos) {
@@ -160,11 +180,14 @@ public class DominionWand extends ModItem {
     public static class DominionData extends ItemstackData {
         private BlockPos storedPos;
 
-        public Direction getFace() {
+        public @Nullable Direction getFace() {
             return facing;
         }
 
-        private Direction facing = Direction.NORTH;
+        private @Nullable Direction facing = null;
+
+        boolean strict = false;
+
         private int storedEntityID;
 
         public DominionData(ItemStack stack) {
@@ -175,7 +198,8 @@ public class DominionWand extends ModItem {
             }
             storedPos = NBTUtil.getNullablePos(tag, "stored");
             storedEntityID = tag.getInt("entityID");
-            facing = Direction.from3DDataValue(tag.getInt("facing"));
+            facing = tag.contains("facing") ? Direction.from3DDataValue(tag.getInt("facing")) : null;
+            strict = tag.getBoolean("mode");
         }
 
         public boolean hasStoredData() {
@@ -209,6 +233,11 @@ public class DominionWand extends ModItem {
             writeItem();
         }
 
+        public void changeMode() {
+            strict = !strict;
+            writeItem();
+        }
+
         @Override
         public String getTagString() {
             return "an_dominion_wand";
@@ -219,11 +248,10 @@ public class DominionWand extends ModItem {
             if (storedPos != null) {
                 NBTUtil.storeBlockPos(tag, "stored", storedPos);
             }
-            tag.putInt("facing", facing == null ? -1 : facing.get3DDataValue());
+            if (facing != null) tag.putInt("facing", facing.ordinal());
             tag.putInt("entityID", storedEntityID);
+            tag.putBoolean("mode", strict);
         }
     }
 
-    public record WrappedBlockPos(BlockPos pos, @Nullable Direction facing) {
-    }
 }

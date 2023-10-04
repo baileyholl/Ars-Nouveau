@@ -1,6 +1,11 @@
 {
   "type": "ars_nouveau:caster_tome",
-  "color": 16742347,
+  "color": {
+    "type": "ars_nouveau:constant",
+    "blue": 203,
+    "green": 119,
+    "red": 255
+  },
   "flavour_text": "The bite from this storm is worse than its bark.",
   "name": "Aurellia's Bite Storm",
   "sound": {

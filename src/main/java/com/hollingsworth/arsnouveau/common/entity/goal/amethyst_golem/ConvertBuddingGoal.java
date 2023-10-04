@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.AmethystGolem;
 import net.minecraft.core.BlockPos;
@@ -47,7 +48,7 @@ public class ConvertBuddingGoal extends Goal {
     public void convert() {
         if (targetCluster != null && golem.level.getBlockState(targetCluster).getBlock() == Blocks.AMETHYST_BLOCK) {
             golem.level.setBlock(targetCluster, Blocks.BUDDING_AMETHYST.defaultBlockState(), 3);
-            ParticleUtil.spawnTouchPacket(golem.level, targetCluster, ParticleUtil.defaultParticleColorWrapper());
+            ParticleUtil.spawnTouchPacket(golem.level, targetCluster, ParticleColor.defaultParticleColor());
         }
         golem.convertCooldown = 20 * 60 * 5;
         golem.setImbueing(false);
