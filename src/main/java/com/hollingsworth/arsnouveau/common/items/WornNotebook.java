@@ -30,7 +30,7 @@ public class WornNotebook extends ModItem {
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (ArsNouveau.patchouliLoaded && playerIn instanceof ServerPlayer player) {
             PatchouliHandler.openBookGUI(player);
-        }else if(!ArsNouveau.patchouliLoaded){
+        }else if(!ArsNouveau.patchouliLoaded && worldIn.isClientSide){
             try {
                 Util.getPlatform().openUri(new URI("https://www.arsnouveau.wiki/"));
             } catch (URISyntaxException e) {
