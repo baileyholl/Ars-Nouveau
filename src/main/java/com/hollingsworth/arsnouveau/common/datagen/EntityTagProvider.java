@@ -48,6 +48,7 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
                 ModEntities.ENTITY_FAMILIAR_WIXIE.get(), ModEntities.ENTITY_FAMILIAR_DRYGMY.get(),
                 ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get());
         this.tag(EntityTags.JAR_BLACKLIST).addTag(EntityTags.FAMILIAR);
+
         this.tag(EntityTags.JAR_WHITELIST)
                 .add(EntityType.ITEM)
                 .add(EntityType.END_CRYSTAL)

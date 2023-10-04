@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.lib.PotionEffectTags;
+import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -28,5 +29,7 @@ public class PotionEffectTagProvider extends IntrinsicHolderTagsProvider<MobEffe
                 MobEffects.SLOW_FALLING, MobEffects.NIGHT_VISION, MobEffects.CONDUIT_POWER, MobEffects.ABSORPTION, MobEffects.DAMAGE_BOOST,
                 MobEffects.FIRE_RESISTANCE, MobEffects.DIG_SPEED, MobEffects.MOVEMENT_SPEED, MobEffects.REGENERATION, MobEffects.DAMAGE_RESISTANCE
         );
+        //placeholder to not leave the tag empty
+        this.tag(PotionEffectTags.DISPEL_DENY).add(ModPotions.SUMMONING_SICKNESS_EFFECT.get());
     }
 }

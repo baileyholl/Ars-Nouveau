@@ -12,7 +12,8 @@
   "7135da42-d327-47bb-bb04-5ba4e212fb32", "c4c21dde-7f38-461c-8da8-32346996209c", "b0d69c83-18cb-4fa4-ac6f-5609674398a2",
   "14212b1b-ba12-4164-947c-c208a6b07ac9", "dfb079d8-a5ce-4d70-907f-b852a44f8de8", "5ebee73e-faec-4810-ae7a-4baf73f026e4",
   "b9694497-80b7-4412-b00e-2c9bc2705fd1", "02320102-6fc4-408b-8873-afe54b2dcae6", "ac076a44-c1e3-4752-a3ac-2a366deaefb1",
-  "8f86b83a-e35f-4fca-8b0f-a8181cc1741d", "c657941e-8ac5-46ac-bf65-8983f776ff33", "47b128a4-9043-4ec6-ba69-0edffdddfd8a"],
+  "8f86b83a-e35f-4fca-8b0f-a8181cc1741d", "c657941e-8ac5-46ac-bf65-8983f776ff33", "47b128a4-9043-4ec6-ba69-0edffdddfd8a",
+    "0753a4e3-f71d-4b86-b338-3983f36d2b8a", "df2c8cdf-fbaf-4a22-9fdf-16770ee19c63"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -209,6 +210,16 @@
       "adopter": "Jaysungmr",
       "color": "pink",
       "bio": "Found in an abandoned mage tower. Seems to enjoy source berries and live jazz"
+    },{
+      "name": "Cookie",
+      "adopter": "Sarrdonous",
+      "color": "light_gray",
+      "bio": "Cookie has a knack for finding the juiciest and most delicious Sourceberries, and sometimes sneaks into Sourceberry farms to satisfy his sweet tooth. Don’t be surprised if you see him with a berry-stained mouth and a guilty grin."
+    },{
+      "name": "Skytail",
+      "adopter": "HolidayWither",
+      "color": "light_blue",
+      "bio": "Skytail thrives on companionship, supports magic users with a positive and upbeat attitude, and spreads happiness wherever it goes."
     }
   ]
 }
