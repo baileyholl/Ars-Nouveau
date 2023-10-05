@@ -20,6 +20,10 @@ public class ServerConfig {
     public static ForgeConfigSpec.IntValue CODEX_COST_PER_GLYPH;
     public static ForgeConfigSpec.BooleanValue ENABLE_WARP_PORTALS;
 
+    public static ForgeConfigSpec.BooleanValue INFINITE_SPELLS;
+    public static ForgeConfigSpec.IntValue NOT_SO_INFINITE_SPELLS;
+
+
     static {
         ForgeConfigSpec.Builder SERVER_BUILDER = new ForgeConfigSpec.Builder();
         SERVER_BUILDER.comment("Mana").push("mana");
@@ -45,6 +49,11 @@ public class ServerConfig {
 
         SERVER_BUILDER.pop().push("warp_portals");
         ENABLE_WARP_PORTALS = SERVER_BUILDER.comment("Enable warp portals?").define("enableWarpPortals", true);
+
+        SERVER_BUILDER.comment("Beta Features").push("beta");
+        INFINITE_SPELLS = SERVER_BUILDER.comment("Allow crafting infinite spells. This is a beta feature and may cause crashes.").define("infiniteSpells", false);
+        NOT_SO_INFINITE_SPELLS = SERVER_BUILDER.comment("Limits the crafting infinite spells beta, set a cap to the number of additional glyphs. This is a beta feature and may cause crashes.").defineInRange("infiniteSpellLimit", 30, 10, 1000);
+        SERVER_BUILDER.pop();
 
         SERVER_CONFIG = SERVER_BUILDER.build();
     }
