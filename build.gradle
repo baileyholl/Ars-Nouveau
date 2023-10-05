@@ -29,7 +29,7 @@ apply plugin: 'maven-publish'
 
 
 
-version = '3.17.10'
+version = '3.19.0'
 
 
 configurations {
@@ -135,11 +135,6 @@ repositories {
         url = "https://maven.theillusivec4.top/"
     }
     maven {
-        // location of the maven that hosts JEI files
-        name = "Progwml6 maven"
-        url = "https://dvs1.progwml6.com/files/maven/"
-    }
-    maven {
         // location of a maven mirror for JEI files, as a fallback
         name = "ModMaven"
         url = "https://modmaven.k-4u.nl"
@@ -199,6 +194,7 @@ dependencies {
     compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:1.19-3.0.0.3:api")
     implementation fg.deobf("curse.maven:jade-324717:4318618")
     runtimeOnly fg.deobf("curse.maven:config-457570:4011355")
+    runtimeOnly fg.deobf("curse.maven:the-twilight-forest-227639:4075841")
 //    implementation fg.deobf("com.simibubi.create:create-1.19.2:0.5.0.f-15:slim"){ transitive = false }
 //    implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-1.19.2:0.6.7-9")
 //    implementation fg.deobf("com.tterrag.registrate:Registrate:MC1.19-1.1.5")

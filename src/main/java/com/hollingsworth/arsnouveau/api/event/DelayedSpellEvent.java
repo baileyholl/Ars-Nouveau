@@ -6,8 +6,10 @@ import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
@@ -42,11 +44,13 @@ public class DelayedSpellEvent implements ITimedEvent {
     }
 
     public void resolveSpell() {
-        if (world == null || result instanceof EntityHitResult ehr && ehr.getEntity().isRemoved())
+        if (world == null)
             return;
-        //Optional TODO: Resolve the spell in the last position of the entity if it was removed during the delay, instead of cancelling. This would allow to keep the old behaviour without dupes.
+        HitResult newResult = result;
+        if (result instanceof EntityHitResult ehr && ehr.getEntity().isRemoved())
+            newResult = new BlockHitResult(ehr.getLocation(), Direction.UP, ehr.getEntity().getOnPos(), true);
         SpellResolver resolver = new SpellResolver(context);
-        resolver.onResolveEffect(world, result);
+        resolver.onResolveEffect(world, newResult);
     }
 
     @Override

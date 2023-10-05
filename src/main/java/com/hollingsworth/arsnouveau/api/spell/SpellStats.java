@@ -34,6 +34,8 @@ public class SpellStats {
 
     private double aoeMultiplier;
 
+    private boolean randomizing;
+
     private List<AbstractAugment> augments;
 
     private List<ItemStack> modifierItems;
@@ -94,6 +96,9 @@ public class SpellStats {
         this.damageModifier = damageModifier;
     }
 
+    public boolean isRandomized() {
+        return randomizing;
+    }
 
     public double getDurationMultiplier() {
         return durationMultiplier;
@@ -243,6 +248,11 @@ public class SpellStats {
 
         public Builder addItem(ItemStack itemStack) {
             spellStats.modifierItems.add(itemStack);
+            return this;
+        }
+
+        public Builder randomize() {
+            spellStats.randomizing = true;
             return this;
         }
     }

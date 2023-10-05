@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentShuffle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -38,10 +39,12 @@ public class EffectPlaceBlock extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
         FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
         for (BlockPos pos1 : posList) {
+            if (!world.isInWorldBounds(pos1))
+                continue;
             pos1 = rayTraceResult.isInside() ? pos1 : pos1.relative(rayTraceResult.getDirection());
             boolean notReplaceable = !world.getBlockState(pos1).getMaterial().isReplaceable();
             if (notReplaceable || MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer)))
@@ -50,10 +53,10 @@ public class EffectPlaceBlock extends AbstractEffect {
         }
     }
 
-    public void place(BlockHitResult resolveResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver, FakePlayer fakePlayer){
+    public void place(BlockHitResult resolveResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver, FakePlayer fakePlayer) {
         InventoryManager manager = spellContext.getCaster().getInvManager();
-        ExtractedStack extractItem = manager.extractItem(i -> !i.isEmpty() && i.getItem() instanceof BlockItem, 1);
-        if(extractItem.isEmpty())
+        ExtractedStack extractItem = spellStats.isRandomized() ? manager.extractRandomItem(i -> !i.isEmpty() && i.getItem() instanceof BlockItem, 1) : manager.extractItem(i -> !i.isEmpty() && i.getItem() instanceof BlockItem, 1);
+        if (extractItem.isEmpty())
             return;
         InteractionResult resultType = attemptPlace(world, extractItem.stack, (BlockItem) extractItem.stack.getItem(), resolveResult, fakePlayer);
         if (InteractionResult.FAIL != resultType) {
@@ -73,10 +76,10 @@ public class EffectPlaceBlock extends AbstractEffect {
         return 10;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentAOE.INSTANCE, AugmentPierce.INSTANCE);
+        return augmentSetOf(AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentShuffle.INSTANCE);
     }
 
     @Override
@@ -84,7 +87,7 @@ public class EffectPlaceBlock extends AbstractEffect {
         return "Places blocks from the casters inventory. If a player is casting this, this spell will place blocks from the hot bar first.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);

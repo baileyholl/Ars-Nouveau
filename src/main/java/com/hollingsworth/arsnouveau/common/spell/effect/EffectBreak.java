@@ -10,6 +10,8 @@ import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -39,7 +41,7 @@ public class EffectBreak extends AbstractEffect {
     public ItemStack getStack(LivingEntity shooter, BlockHitResult blockHitResult) {
         ItemStack stack = shooter.getMainHandItem().copy();
         boolean usePick = shooter.level.getBlockState(blockHitResult.getBlockPos()).is(BlockTagProvider.BREAK_WITH_PICKAXE);
-        if(usePick){
+        if (usePick) {
             return new ItemStack(Items.DIAMOND_PICKAXE);
         }
         return stack.isEmpty() ? new ItemStack(Items.DIAMOND_PICKAXE) : stack;
@@ -50,6 +52,10 @@ public class EffectBreak extends AbstractEffect {
         BlockPos pos = rayTraceResult.getBlockPos();
         BlockState state;
 
+        MobEffectInstance miningFatigue = shooter.getEffect(MobEffects.DIG_SLOWDOWN);
+        if (miningFatigue != null)
+            spellStats.setAmpMultiplier(spellStats.getAmpMultiplier() - miningFatigue.getAmplifier());
+
         double aoeBuff = spellStats.getAoeMultiplier();
         int pierceBuff = spellStats.getBuffCount(AugmentPierce.INSTANCE);
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, aoeBuff, pierceBuff);
@@ -57,23 +63,25 @@ public class EffectBreak extends AbstractEffect {
 
         int numFortune = spellStats.getBuffCount(AugmentFortune.INSTANCE);
         int numSilkTouch = spellStats.getBuffCount(AugmentExtract.INSTANCE);
-        if(numFortune > 0 && stack.getEnchantmentLevel(Enchantments.BLOCK_FORTUNE) < numFortune) {
+        if (numFortune > 0 && stack.getEnchantmentLevel(Enchantments.BLOCK_FORTUNE) < numFortune) {
             stack.enchant(Enchantments.BLOCK_FORTUNE, numFortune);
         }
-        if(numSilkTouch > 0 && stack.getEnchantmentLevel(Enchantments.SILK_TOUCH) < numSilkTouch) {
+        if (numSilkTouch > 0 && stack.getEnchantmentLevel(Enchantments.SILK_TOUCH) < numSilkTouch) {
             stack.enchant(Enchantments.SILK_TOUCH, numSilkTouch);
         }
         for (BlockPos pos1 : posList) {
+            if (world.random.nextFloat() < spellStats.getBuffCount(AugmentShuffle.INSTANCE) * 0.25F) {
+                continue;
+            }
             state = world.getBlockState(pos1);
 
             if (!canBlockBeHarvested(spellStats, world, pos1) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1) || state.is(BlockTagProvider.BREAK_BLACKLIST)) {
                 continue;
             }
 
-            if(!BlockUtil.breakExtraBlock((ServerLevel) world, pos1, stack, shooter.getUUID(), true)){
+            if (!BlockUtil.breakExtraBlock((ServerLevel) world, pos1, stack, shooter.getUUID(), true)) {
                 continue;
             }
-
 
             ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
                     new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false
@@ -86,16 +94,14 @@ public class EffectBreak extends AbstractEffect {
         return true;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
                 AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE,
-                AugmentPierce.INSTANCE,
-                AugmentAOE.INSTANCE,
-                AugmentExtract.INSTANCE,
-                AugmentFortune.INSTANCE,
-                AugmentSensitive.INSTANCE
+                AugmentPierce.INSTANCE, AugmentAOE.INSTANCE,
+                AugmentExtract.INSTANCE, AugmentFortune.INSTANCE,
+                AugmentSensitive.INSTANCE, AugmentShuffle.INSTANCE
         );
     }
 
@@ -111,7 +117,7 @@ public class EffectBreak extends AbstractEffect {
         return defaults;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_EARTH);

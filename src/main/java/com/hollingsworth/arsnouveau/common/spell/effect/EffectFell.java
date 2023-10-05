@@ -21,7 +21,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.Set;
 
 public class EffectFell extends AbstractEffect {
@@ -33,7 +32,7 @@ public class EffectFell extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult ray, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveBlock(BlockHitResult ray, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos blockPos = ray.getBlockPos();
         BlockState state = world.getBlockState(blockPos);
         if (isTree(state)) {

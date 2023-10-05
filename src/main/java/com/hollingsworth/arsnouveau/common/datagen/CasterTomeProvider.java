@@ -159,13 +159,12 @@ public class CasterTomeProvider implements DataProvider {
                 .add(AugmentExtendTime.INSTANCE, 4)
                 .add(AugmentAmplify.INSTANCE), "Light up the sky", new ParticleColor(25, 255, 255)));
 
-        tomes.add(buildTome("othy", "Othy's Death By 100 Pricks", new Spell()
-                .add(MethodProjectile.INSTANCE)
-                .add(AugmentPierce.INSTANCE, 2)
-                .add(EffectLinger.INSTANCE)
-                .add(AugmentSensitive.INSTANCE)
-                .add(EffectSummonVex.INSTANCE)
-                .add(AugmentExtendTime.INSTANCE), "Swarm your enemies with bladed spirits.", new ParticleColor(255, 255, 255)));
+        tomes.add(buildTome("othy", "Othy's Misdirection", new Spell()
+                .add(MethodSelf.INSTANCE)
+                .add(AugmentExtendTime.INSTANCE)
+                .add(EffectSummonDecoy.INSTANCE)
+                .add(EffectBlink.INSTANCE)
+                .add(AugmentAmplify.INSTANCE, 2), "Swarm your enemies with bladed spirits.", new ParticleColor(255, 255, 255)));
 
         tomes.add(buildTome("aurellia", "Aurellia's Bite Storm", new Spell()
                         .add(MethodProjectile.INSTANCE)
@@ -209,6 +208,23 @@ public class CasterTomeProvider implements DataProvider {
                         .add(EffectRune.INSTANCE)
                         .add(EffectLaunch.INSTANCE, 4),
                 "Smothers an area with runes that launch entities upward. Do NOT get covered in the Repulsion Runes.", new ParticleColor(61, 207, 248)));
+
+        tomes.add(buildTome("ivy", "Ivy", new Spell(MethodTouch.INSTANCE)
+                .add(EffectAnimate.INSTANCE)
+                .add(AugmentExtendTime.INSTANCE, 7)
+                .add(EffectName.INSTANCE), "Now you never have to be lonely again! You will always have a friend with you! Feel free to change their name to whatever you want! :D",
+                new ParticleColor(255, 105, 180)));
+
+        tomes.add(buildTome("darkfira","Darkfira's Flash Freeze", new Spell(MethodProjectile.INSTANCE)
+                .add(EffectBurst.INSTANCE)
+                .add(AugmentSensitive.INSTANCE)
+                .add(AugmentAOE.INSTANCE, 3)
+                .add(EffectConjureWater.INSTANCE)
+                .add(EffectFreeze.INSTANCE)
+                .add(EffectLightning.INSTANCE)
+                        .add(AugmentAmplify.INSTANCE)
+                        .withSound(new ConfiguredSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND, 1.69f, 1.9f)), "Encases your enemies or friends in a tomb of ice. Guaranteed to leave them shocked and confused.",
+                new ParticleColor(25, 255, 255)));
         Path output = this.generator.getOutputFolder();
         for (CasterTomeData g : tomes) {
             Path path = getRecipePath(output, g.getId().getPath());

@@ -40,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -214,6 +215,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     public void buildConfig(ForgeConfigSpec.Builder builder) {
         super.buildConfig(builder);
         super.buildAugmentLimitsConfig(builder, getDefaultAugmentLimits(new HashMap<>()));
+        super.buildInvalidCombosConfig(builder, getDefaultInvalidCombos(new HashSet<>()));
     }
 
     public void addDamageConfig(ForgeConfigSpec.Builder builder, double defaultValue) {

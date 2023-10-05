@@ -1,4 +1,4 @@
-// 1.19.2	2023-06-28T21:56:30.3947283	Recipes
+// 1.19.2	2023-09-16T13:09:33.1735198	Recipes
 2f8defc056cb514d0403c026bd216faabe8c59b5 data/ars_nouveau/advancements/recipes/ars_nouveau/agronomic_sourcelink.json
 5b27f030ed9411ac9c3b4a160363aee9e4fd7454 data/ars_nouveau/advancements/recipes/ars_nouveau/alchemical_sourcelink.json
 24b2148fcda9c3b3704f9625a7d00338b764f512 data/ars_nouveau/advancements/recipes/ars_nouveau/allow_scroll.json
@@ -243,6 +243,7 @@ ca151f6f2806973425087cf2700a9b10437f38fa data/ars_nouveau/advancements/recipes/a
 372577fe29dc85f65f8f3c07949e01fea36a75e4 data/ars_nouveau/advancements/recipes/ars_nouveau/warp_scroll.json
 c633828430e522cab7330cda94d2a5df65c30260 data/ars_nouveau/advancements/recipes/ars_nouveau/wilden_summon_alt.json
 811155f682d47314e442a45b8eb1da8615553837 data/ars_nouveau/advancements/recipes/ars_nouveau/wipe_spell_parchment.json
+0762541a3f1376183300c2e0a6b73819a68b16d9 data/ars_nouveau/advancements/recipes/ars_nouveau/wipe_starby_shard.json
 07dd2430ba8fe73ad9f6874ea90e5d10e276d40f data/ars_nouveau/advancements/recipes/ars_nouveau/wixie_hat.json
 3f4ea451fb0381ed459041097c58e05023379e87 data/ars_nouveau/advancements/recipes/ars_nouveau/worn_notebook.json
 f92389d2c2e77d37cbd5e2bc087728305ec6439b data/ars_nouveau/advancements/recipes/ars_nouveau/yellow_sbed.json
@@ -536,6 +537,7 @@ e4633697d5bab72c35e242070a5147505d3e9d97 data/ars_nouveau/recipes/water_essence_
 ee11bfd9c718a3fd4b5017aef733fcceaf5570d3 data/ars_nouveau/recipes/wilden_summon_alt.json
 4e645f8e5e49ef1272d427c29affdf0f11f06a63 data/ars_nouveau/recipes/wing_to_leather.json
 7c84001348441006120ee35f361d1284b7ba4af0 data/ars_nouveau/recipes/wipe_spell_parchment.json
+a86ceeae23fcd60f2696867adac94751658f3295 data/ars_nouveau/recipes/wipe_starby_shard.json
 993d4a41a393646865c5f7a3596d41641b3799a2 data/ars_nouveau/recipes/wixie_hat.json
 64f3316c35d833d798a6ad8c7f2df36e45a42575 data/ars_nouveau/recipes/worn_notebook.json
 015c3419032ecb7a57873d0906df38fd13bba25d data/ars_nouveau/recipes/yellow_sbed.json
