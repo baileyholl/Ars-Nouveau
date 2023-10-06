@@ -398,6 +398,7 @@
   "ars_nouveau.mirror.invalid": "無効な呪文です。鏡はエフェクトとオーグメントのみ受け付けます。",
   "ars_nouveau.mod_news": "Modニュース！",
   "ars_nouveau.mod_news_desc": "最新のリリースとニュース",
+  "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
   "ars_nouveau.norecipe": "レシピが見つかりません。",
   "ars_nouveau.not_enough_exp": "このグリフ作成に必要な経験値が足りません。",
   "ars_nouveau.nothing": "無し",
