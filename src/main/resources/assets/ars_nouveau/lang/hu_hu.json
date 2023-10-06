@@ -398,6 +398,7 @@
   "ars_nouveau.mirror.invalid": "Érvénytelen varázslat. A tükrök csak effektusokat és kiegészítéseket fogadnak el.",
   "ars_nouveau.mod_news": "Mod News",
   "ars_nouveau.mod_news_desc": "A legfrissebb kiadványok és hírek",
+  "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
   "ars_nouveau.norecipe": "Nem található recept.",
   "ars_nouveau.not_enough_exp": "Nincs elég EXP ehhez a jelhez.",
   "ars_nouveau.nothing": "Semmi",
