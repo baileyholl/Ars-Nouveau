@@ -398,6 +398,7 @@
   "ars_nouveau.mirror.invalid": "无效法术。巫师之镜的法术只能含效果类和增强类构件。",
   "ars_nouveau.mod_news": "模组新闻",
   "ars_nouveau.mod_news_desc": "模组的最新版和新闻",
+  "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
   "ars_nouveau.norecipe": "找不到配方。",
   "ars_nouveau.not_enough_exp": "合成魔符所需经验不足。",
   "ars_nouveau.nothing": "无",
