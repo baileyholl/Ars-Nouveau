@@ -398,6 +398,7 @@
   "ars_nouveau.mirror.invalid": "Neplatné kouzlo. Zrcadla přijímají pouze efekty a rozšíření.",
   "ars_nouveau.mod_news": "Mod News",
   "ars_nouveau.mod_news_desc": "Nejnovější verze a novinky",
+  "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
   "ars_nouveau.norecipe": "Nebyl nalezen žádný recept.",
   "ars_nouveau.not_enough_exp": "Pro tento glyph není dostatek EXP.",
   "ars_nouveau.nothing": "Nic",
