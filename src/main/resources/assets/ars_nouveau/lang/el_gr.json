@@ -398,6 +398,7 @@
   "ars_nouveau.mirror.invalid": "Μη έγκυρο ξόρκι. Οι καθρέφτες δέχονται μόνο εφέ και επαυξήσεις.",
   "ars_nouveau.mod_news": "Mod News",
   "ars_nouveau.mod_news_desc": "Οι τελευταίες εκδόσεις και νέα",
+  "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
   "ars_nouveau.norecipe": "Δεν βρέθηκε συνταγή.",
   "ars_nouveau.not_enough_exp": "Δεν αρκεί η ΛΗΞΗ για αυτό το γλυφό.",
   "ars_nouveau.nothing": "Τίποτα",
