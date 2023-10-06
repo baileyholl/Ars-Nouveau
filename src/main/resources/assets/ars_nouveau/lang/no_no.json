@@ -398,6 +398,7 @@
   "ars_nouveau.mirror.invalid": "Ugyldig stavemåte. Speil aksepterer kun effekter og forsterkninger.",
   "ars_nouveau.mod_news": "Mod Nyheter",
   "ars_nouveau.mod_news_desc": "De siste utgivelsene og nyhetene",
+  "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
   "ars_nouveau.norecipe": "Ingen oppskrift funnet.",
   "ars_nouveau.not_enough_exp": "Ikke nok EXP for denne glyfen.",
   "ars_nouveau.nothing": "Ingenting",
