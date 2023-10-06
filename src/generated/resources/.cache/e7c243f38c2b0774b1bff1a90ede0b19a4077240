@@ -1,4 +1,4 @@
-// 1.20.1	2023-07-09T20:26:02.0288592	Patchouli
+// 1.20.1	2023-10-05T21:03:59.9302498	Patchouli
 d5f03c259d2af4f5e8e286639783f4fc833b1076 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/aqua_affinity.json
 2ec536fea831588201432d61d70af61385882054 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/alteration_table.json
 a82f4fc73946d228b1e3f5e03d0ecef46f33cdfb assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/applying_perks.json
@@ -114,6 +114,7 @@ b76616cf71ff62944c11560b2915d6600683f696 assets/ars_nouveau/patchouli_books/worn
 e1c2bb82ba84d8b9dc8e609b4ec02d021f51832a assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_1/glyph_place_block.json
 81a3a3d4b742b79fa1638874d512fe4a71a6cbdc assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_1/glyph_projectile.json
 09289602d184ba9ad58dbf2880ada24654ba3c3a assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_1/glyph_pull.json
+5b2fe24785ee4c1d802b5b77cece2cf470b7c92a assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_1/glyph_randomize.json
 a710a88019b4e40c290ecf1a7968bba9aecffdf5 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_1/glyph_redstone_signal.json
 d964e1974330118f11ca742653d8b922c7460e47 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_1/glyph_rotate.json
 32f252f5e4cd406d7cd85d9618e0bff77caa5ca3 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_1/glyph_rune.json

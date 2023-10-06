@@ -1,4 +1,4 @@
-// 1.20.1	2023-07-09T20:17:45.7295007	Ars Nouveau Item Models
+// 1.20.1	2023-10-05T21:03:59.9237253	Ars Nouveau Item Models
 11ee554b11a3a830e89b742762e5b754c2ecb5ee assets/ars_nouveau/models/item/agronomic_sourcelink.json
 339a05323ebef7efc5c70db708a2e7a24708e9bc assets/ars_nouveau/models/item/alchemical_sourcelink.json
 a0214090201827dd5f954d0b33e64e4df6e53764 assets/ars_nouveau/models/item/alchemists_crown.json
@@ -88,6 +88,7 @@ fbfe10752f07a26aebd57e6484d5f00a053c4636 assets/ars_nouveau/models/item/glyph_na
 9ba86517b6eff6389269b76ef79b0c30cdaa7d83 assets/ars_nouveau/models/item/glyph_place_block.json
 7b5f192bbbfab3508efba29f9c2c99f7cb34792f assets/ars_nouveau/models/item/glyph_projectile.json
 4aae4d9c31df4e7c77ab9281b31bd227a249c7fa assets/ars_nouveau/models/item/glyph_pull.json
+5dea560185bf354975f8f94bd56a7e3623080c68 assets/ars_nouveau/models/item/glyph_randomize.json
 597b7e7e70a00c4c0aa0fd311e72e5ad3dc95215 assets/ars_nouveau/models/item/glyph_redstone_signal.json
 bfc3c86585cb7dc814d110686717138e093e1de8 assets/ars_nouveau/models/item/glyph_rotate.json
 f2b0ad974f69bd9e85dcba810b82dca58572241b assets/ars_nouveau/models/item/glyph_rune.json

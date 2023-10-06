@@ -28,11 +28,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 version = '4.5.0'
-//configurations {
-//    library
-//    shade // <- Create a 'shade' configuration
-//    implementation.extendsFrom(shade) // <- Add the shade configuration to implementation
-//}
+
 
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')

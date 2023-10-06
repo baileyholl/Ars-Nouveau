@@ -48,4 +48,3 @@ jobs:
             ${{ env.MINECRAFT_VERSION }}
           changelog: ""
           version-resolver: exact
-

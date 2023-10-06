@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -45,7 +46,7 @@ public class EffectExchange extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
         Vec3 origLoc = shooter.position;
         if (!ForgeEventFactory.onEnderTeleport(shooter, entity.getX(), entity.getY(), entity.getZ()).isCanceled())
@@ -56,7 +57,7 @@ public class EffectExchange extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult result, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveBlock(BlockHitResult result, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, result.getBlockPos(), result, spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE));
         BlockState origState = world.getBlockState(result.getBlockPos());
         ANFakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
@@ -65,25 +66,25 @@ public class EffectExchange extends AbstractEffect {
         for (BlockPos pos1 : posList) {
             BlockState state = world.getBlockState(pos1);
 
-            if (!canBlockBeHarvested(spellStats, world, pos1) || origState.getBlock() != state.getBlock() ||
-                    !world.getBlockState(pos1).isAir() && world.getBlockState(pos1).getBlock() instanceof IntangibleAirBlock
+            if (!canBlockBeHarvested(spellStats, world, pos1) || origState.getBlock() != state.getBlock()
+                    || !world.getBlockState(pos1).isAir() && world.getBlockState(pos1).getBlock() instanceof IntangibleAirBlock
                     || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1)) {
                 continue;
             }
             Block finalFirstBlock = firstBlock;
-            ExtractedStack extractedStack = manager.extractItem(i ->{
-                if(i.getItem() instanceof BlockItem blockItem){
-                    if(finalFirstBlock == null){
+            ExtractedStack extractedStack = manager.extractRandomItem(i -> {
+                if (i.getItem() instanceof BlockItem blockItem) {
+                    if (finalFirstBlock == null) {
                         return true;
                     }
-                    return blockItem.getBlock() == finalFirstBlock;
+                    return spellStats.isRandomized() || blockItem.getBlock() == finalFirstBlock;
                 }
                 return false;
             }, 1);
-            if(extractedStack.isEmpty()){
+            if (extractedStack.isEmpty()) {
                 continue;
             }
-            if(firstBlock == null && extractedStack.stack.getItem() instanceof BlockItem blockItem){
+            if (firstBlock == null && extractedStack.stack.getItem() instanceof BlockItem blockItem) {
                 firstBlock = blockItem.getBlock();
             }
             attemptPlace(extractedStack.getStack(), world, pos1, result, shooter, fakePlayer, spellContext, resolver);
@@ -98,13 +99,13 @@ public class EffectExchange extends AbstractEffect {
         fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
         BlockPlaceContext context = BlockPlaceContext.at(new BlockPlaceContext(new UseOnContext(fakePlayer, InteractionHand.MAIN_HAND, result)), pos1.relative(result.getDirection().getOpposite()), result.getDirection());
         BlockState placeState = item.getBlock().getStateForPlacement(context);
-        if(placeState != null && placeState.getBlock() == world.getBlockState(pos1).getBlock())
+        if (placeState != null && placeState.getBlock() == world.getBlockState(pos1).getBlock())
             return;
 
-        if(!BlockUtil.breakExtraBlock((ServerLevel) world, pos1, tool, shooter.getUUID(), true)){
+        if (!BlockUtil.breakExtraBlock((ServerLevel) world, pos1, tool, shooter.getUUID(), true)) {
             return;
         }
-        if(placeState == null)
+        if (placeState == null)
             return;
         world.setBlock(pos1, placeState, 3);
         item.getBlock().setPlacedBy(world, pos1, placeState, shooter, stack);
@@ -119,20 +120,20 @@ public class EffectExchange extends AbstractEffect {
         return SpellTier.TWO;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
                 AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE,
                 AugmentPierce.INSTANCE,
-                AugmentAOE.INSTANCE
+                AugmentAOE.INSTANCE, AugmentRandomize.INSTANCE
         );
     }
 
     @Override
     public String getBookDescription() {
         return "When used on blocks, exchanges the blocks in the players hotbar for the blocks hit as if they were mined with silk touch. Can be augmented with AOE, and Amplify is required for swapping blocks of higher hardness. "
-                + "When used on entities, the locations of the caster and the entity hit are swapped.";
+               + "When used on entities, the locations of the caster and the entity hit are swapped.";
     }
 
     @Override
@@ -140,7 +141,7 @@ public class EffectExchange extends AbstractEffect {
         return 50;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);
