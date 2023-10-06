@@ -398,6 +398,7 @@
   "ars_nouveau.mirror.invalid": "Sort invalide. Les Miroirs n'acceptent que les Effets et les Améliorations.",
   "ars_nouveau.mod_news": "Nouveautés du mod",
   "ars_nouveau.mod_news_desc": "Les dernières nouveautés et actualités",
+  "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
   "ars_nouveau.norecipe": "Aucune recette trouvée.",
   "ars_nouveau.not_enough_exp": "Pas assez d'EXP pour ce glyphe.",
   "ars_nouveau.nothing": "Rien",
