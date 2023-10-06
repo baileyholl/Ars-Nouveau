@@ -398,6 +398,7 @@
   "ars_nouveau.mirror.invalid": "Ugyldig stavemåde. Mirrors accepterer kun effekter og augments.",
   "ars_nouveau.mod_news": "Mod nyheder",
   "ars_nouveau.mod_news_desc": "De seneste udgivelser og nyheder",
+  "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
   "ars_nouveau.norecipe": "Ingen opskrift fundet.",
   "ars_nouveau.not_enough_exp": "Ikke nok EXP til denne glyf.",
   "ars_nouveau.nothing": "Ikke noget",
