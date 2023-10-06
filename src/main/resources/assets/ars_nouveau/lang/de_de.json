@@ -398,6 +398,7 @@
   "ars_nouveau.mirror.invalid": "Ungültiger Zauber. Spiegel akzeptieren nur Effekte und Erweiterungen.",
   "ars_nouveau.mod_news": "Mod-Neuigkeiten",
   "ars_nouveau.mod_news_desc": "Die neuesten Veröffentlichungen und Neuigkeiten",
+  "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
   "ars_nouveau.norecipe": "Kein Rezept gefunden.",
   "ars_nouveau.not_enough_exp": "Nicht genügend EXP für diese Glyphe.",
   "ars_nouveau.nothing": "Nichts",
