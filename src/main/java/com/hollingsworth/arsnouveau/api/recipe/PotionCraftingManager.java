@@ -59,13 +59,13 @@ public class PotionCraftingManager extends CraftingManager {
         BlockPos worldPosition = tile.getBlockPos();
         BlockPos jarPos = WixieCauldronTile.findPotionStorage(tile.getLevel(), tile.getBlockPos(), potionOut);
         if (jarPos == null) {
-            if (!tile.needsPotionStorage) {
-                tile.needsPotionStorage = true;
+            if (!tile.needsPotionStorage()) {
+                tile.setNeedsPotionStorage(true);
                 level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
             }
             return;
         }else if (level.getBlockEntity(jarPos) instanceof PotionJarTile jar) {
-            tile.needsPotionStorage = false;
+            tile.setNeedsPotionStorage(false);
             jar.add(new PotionData(potionOut),300);
             ParticleColor color2 = ParticleColor.fromInt(jar.getColor());
             EntityFlyingItem flying = new EntityFlyingItem(level, new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ()+ 0.5),
