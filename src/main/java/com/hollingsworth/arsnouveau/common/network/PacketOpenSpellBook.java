@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
+import com.hollingsworth.arsnouveau.client.gui.book.InfinityGuiSpellBook;
+import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraftforge.network.NetworkEvent;
@@ -25,7 +27,12 @@ public class PacketOpenSpellBook {
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> GuiSpellBook.open(isMainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND));
+        ctx.get().enqueueWork(() -> {
+            InteractionHand hand = isMainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+            if (ServerConfig.INFINITE_SPELLS.get())
+                InfinityGuiSpellBook.open(hand);
+            else GuiSpellBook.open(hand);
+        });
         ctx.get().setPacketHandled(true);
     }
 

@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.item.IRadialProvider;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
+import com.hollingsworth.arsnouveau.client.gui.book.InfinityGuiSpellBook;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenuSlot;
@@ -12,11 +13,12 @@ import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.client.registry.ModKeyBindings;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellBookRenderer;
 import com.hollingsworth.arsnouveau.common.capability.ANPlayerDataCap;
-import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetBookMode;
+import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
@@ -73,7 +75,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-        if(this != ItemsRegistry.CREATIVE_SPELLBOOK.get()) {
+        if (this != ItemsRegistry.CREATIVE_SPELLBOOK.get()) {
             CapabilityRegistry.getMana(playerIn).ifPresent(iMana -> {
                 if (iMana.getBookTier() < this.tier.value) {
                     iMana.setBookTier(this.tier.value);
@@ -163,10 +165,10 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     @Override
     public void onOpenBookMenuKeyPressed(ItemStack stack, Player player) {
         InteractionHand hand = StackUtil.getBookHand(player);
-        if(hand == null){
+        if (hand == null) {
             return;
         }
-        Minecraft.getInstance().setScreen(new GuiSpellBook(hand));
+        Minecraft.getInstance().setScreen(ServerConfig.INFINITE_SPELLS.get() ? new InfinityGuiSpellBook(hand) : new GuiSpellBook(hand));
     }
 
     @OnlyIn(Dist.CLIENT)
