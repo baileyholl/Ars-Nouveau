@@ -398,6 +398,7 @@
   "ars_nouveau.mirror.invalid": "無效拼寫。鏡子只接受效果和增強。",
   "ars_nouveau.mod_news": "國防部新聞",
   "ars_nouveau.mod_news_desc": "最新發布和新聞",
+  "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
   "ars_nouveau.norecipe": "沒有找到食譜。",
   "ars_nouveau.not_enough_exp": "這個字形沒有足夠的 EXP。",
   "ars_nouveau.nothing": "沒有什麼",
