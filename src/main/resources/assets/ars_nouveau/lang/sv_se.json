@@ -398,6 +398,7 @@
   "ars_nouveau.mirror.invalid": "Ogiltig besvärjelse. Speglar accepterar endast effekter och förstärkningar.",
   "ars_nouveau.mod_news": "Mod Nyheter",
   "ars_nouveau.mod_news_desc": "De senaste släppen och nyheterna",
+  "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
   "ars_nouveau.norecipe": "Inget recept hittat.",
   "ars_nouveau.not_enough_exp": "Inte tillräckligt med EXP för denna glyf.",
   "ars_nouveau.nothing": "Ingenting",
