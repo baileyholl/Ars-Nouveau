@@ -398,6 +398,7 @@
   "ars_nouveau.mirror.invalid": "Encanteri no vàlid. Els miralls només accepten efectes i augments.",
   "ars_nouveau.mod_news": "Mod News",
   "ars_nouveau.mod_news_desc": "Els últims llançaments i notícies",
+  "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
   "ars_nouveau.norecipe": "No s'ha trobat cap recepta.",
   "ars_nouveau.not_enough_exp": "No hi ha prou EXP per a aquest glif.",
   "ars_nouveau.nothing": "Res",
