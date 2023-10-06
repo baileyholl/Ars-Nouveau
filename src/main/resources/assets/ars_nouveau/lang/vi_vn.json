@@ -398,6 +398,7 @@
   "ars_nouveau.mirror.invalid": "Câu thần chú không hợp lệ. Gương chỉ chấp nhận Hiệu ứng và Tăng cường.",
   "ars_nouveau.mod_news": "tin tức mod",
   "ars_nouveau.mod_news_desc": "Các bản phát hành và tin tức mới nhất",
+  "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
   "ars_nouveau.norecipe": "Không tìm thấy công thức nào.",
   "ars_nouveau.not_enough_exp": "Không đủ EXP cho biểu tượng này.",
   "ars_nouveau.nothing": "Không có gì",
