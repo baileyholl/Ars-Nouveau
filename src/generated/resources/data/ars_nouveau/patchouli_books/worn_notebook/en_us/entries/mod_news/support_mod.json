@@ -10,6 +10,11 @@
       "url": "https://www.patreon.com/arsnouveau"
     },
     {
+      "type": "patchouli:entity",
+      "entity": "ars_nouveau:lily",
+      "text": "ars_nouveau.lily"
+    },
+    {
       "type": "patchouli:link",
       "link_text": "ars_nouveau.store_text",
       "text": "ars_nouveau.store",

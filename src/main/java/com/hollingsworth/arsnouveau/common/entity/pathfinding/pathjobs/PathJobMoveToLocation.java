@@ -87,6 +87,6 @@ public class PathJobMoveToLocation extends AbstractPathJob {
     @Override
     protected double getNodeResultScore(final ModNode n) {
         //  For Result Score lower is better
-        return destination.distSqr(n.pos);
+        return destination.distManhattan(n.pos);
     }
 }

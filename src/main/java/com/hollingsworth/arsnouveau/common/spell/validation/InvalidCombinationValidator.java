@@ -23,7 +23,7 @@ public class InvalidCombinationValidator extends ScanningSpellValidator<Map<Reso
         } else {
             partCounts.put(spellPart.getRegistryName(), 1);
         }
-        for(ResourceLocation invalidPart : spellPart.invalidCombinations){
+        for (ResourceLocation invalidPart : spellPart.invalidCombinations.parseComboLimits()) {
             AbstractSpellPart offendingPart = ArsNouveauAPI.getInstance().getSpellPart(invalidPart);
             if(offendingPart == null)
                 continue;

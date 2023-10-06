@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.common.collect.ImmutableList;
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.AlterationTable;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.block.ThreePartBlock;
@@ -31,6 +32,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
@@ -146,6 +148,10 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.POTION_DIFFUSER);
             for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
                 registerDropSelf(BlockRegistry.getBlock(s));
+                Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s + "_stairs"));
+                registerDropSelf(block);
+                Block slab = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s + "_slab"));
+                registerDropSelf(slab);
             }
             registerBedCondition(BlockRegistry.ALTERATION_TABLE, AlterationTable.PART, ThreePartBlock.HEAD);
             registerDropSelf(BlockRegistry.VOID_PRISM);
@@ -155,6 +161,7 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.MIRROR_WEAVE);
             registerDropSelf(BlockRegistry.ITEM_DETECTOR);
             registerDropSelf(BlockRegistry.SKY_WEAVE);
+            registerDropSelf(BlockRegistry.ROTATING_TURRET);
         }
 
         protected void registerSlabItemTable(Block p_124291_) {

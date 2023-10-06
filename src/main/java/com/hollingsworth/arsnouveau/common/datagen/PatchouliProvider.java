@@ -222,7 +222,7 @@ public class PatchouliProvider implements DataProvider {
 
         var turrets = addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.BASIC_SPELL_TURRET)
                 .withLocalizedText()
-                .withPage(new CraftingPage(BlockRegistry.BASIC_SPELL_TURRET))
+                .withPage(new CraftingPage(BlockRegistry.BASIC_SPELL_TURRET).withRecipe2(BlockRegistry.ROTATING_TURRET))
                 .withLocalizedText()
                 .withPage(new ApparatusPage(BlockRegistry.ENCHANTED_SPELL_TURRET))
                 .withLocalizedText()
@@ -291,10 +291,10 @@ public class PatchouliProvider implements DataProvider {
         addPage(new PatchouliBuilder(RESOURCES, "wilden")
                 .withIcon(ItemsRegistry.WILDEN_SPIKE)
                 .withLocalizedText()
-                .withPage(new EntityPage(getRegistryName(ModEntities.WILDEN_HUNTER.get()).toString()).withText(getLangPath("wilden", 3)))
-                .withPage(new EntityPage(getRegistryName(ModEntities.WILDEN_STALKER.get()).toString()).withText(getLangPath("wilden", 4)))
-                .withPage(new EntityPage(getRegistryName(ModEntities.WILDEN_GUARDIAN.get()).toString()).withText(getLangPath("wilden", 5)))
-                .withPage(new EntityPage(getRegistryName(ModEntities.WILDEN_BOSS.get()).toString()).withText(getLangPath("wilden", 6)))
+                .withPage(new EntityPage(getRegistryName(ModEntities.WILDEN_HUNTER.get()).toString()).withScale(0.55f).withText(getLangPath("wilden", 3)))
+                .withPage(new EntityPage(getRegistryName(ModEntities.WILDEN_STALKER.get()).toString()).withScale(0.55f).withText(getLangPath("wilden", 4)))
+                .withPage(new EntityPage(getRegistryName(ModEntities.WILDEN_GUARDIAN.get()).toString()).withScale(0.55f).withText(getLangPath("wilden", 5)))
+                .withPage(new EntityPage(getRegistryName(ModEntities.WILDEN_BOSS.get()).toString()).withScale(0.55f).withText(getLangPath("wilden", 6)))
                 .withPage(new TextPage(getLangPath("wilden", 7))), getPath(RESOURCES, "wilden"));
 
         var denyScroll = addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.DENY_ITEM_SCROLL)
@@ -474,6 +474,7 @@ public class PatchouliProvider implements DataProvider {
         addPage(new PatchouliBuilder(MOD_NEWS, "support_mod")
                         .withIcon(ItemsRegistry.STARBUNCLE_CHARM)
                         .withPage(new LinkPage("https://www.patreon.com/arsnouveau", "ars_nouveau.patreon_text", "ars_nouveau.patreon"))
+                        .withPage(new EntityPage(ModEntities.LILY.get()).withText("ars_nouveau.lily"))
                         .withPage(new LinkPage("https://www.redbubble.com/people/Gootastic/explore?page=1&sortOrder=recent", "ars_nouveau.store_text", "ars_nouveau.store")),
                 getPath(MOD_NEWS, "support_mod"));
 
@@ -555,6 +556,7 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new EntityPage(EntityType.PUFFERFISH).withText("mob_jar.pufferfish"))
                 .withPage(new EntityPage(EntityType.FROG).withText("mob_jar.frog"))
                 .withPage(new EntityPage(EntityType.PANDA).withText("mob_jar.panda"))
+                .withPage(new EntityPage(ModEntities.ENTITY_DUMMY.get()).withText("mob_jar.dummy"))
                 .withPage(new CraftingPage(BlockRegistry.MOB_JAR))
                 .withPage(new RelationsPage().withEntry(RITUALS, RitualLib.CONTAINMENT).withEntry(AUTOMATION, "drygmy_charm")), getPath(MACHINES, "mob_jar"));
 

@@ -10,7 +10,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -26,7 +25,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.Vec2;
 
 import javax.annotation.Nullable;
@@ -170,15 +168,6 @@ public class WarpScroll extends ModItem {
             writeItem();
         }
 
-        public @Nullable ServerLevel getDimension(ServerLevel serverLevel){
-            DimensionType type = BuiltinRegistries.DIMENSION_TYPE.get(new ResourceLocation(this.dimension));
-            if(type != null) {
-                ResourceKey<Level> resourcekey = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dimension));
-                return serverLevel.getServer().getLevel(resourcekey);
-            }
-            return null;
-        }
-
         @Override
         public void writeToNBT(CompoundTag tag) {
             if (pos != null) {
@@ -225,6 +214,13 @@ public class WarpScroll extends ModItem {
 
         public void setRotation(Vec2 rotation) {
             this.rotation = rotation;
+            writeItem();
+        }
+
+        public void copyFrom(WarpScrollData warpScrollData) {
+            this.pos = warpScrollData.pos;
+            this.dimension = warpScrollData.dimension;
+            this.rotation = warpScrollData.rotation;
             writeItem();
         }
     }

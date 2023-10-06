@@ -24,12 +24,12 @@ public class WhirlisprigModel<T extends LivingEntity & IAnimatable> extends Anim
 
     @Override
     public ResourceLocation getModelResource(T whirlisprig) {
-        return new ResourceLocation(ArsNouveau.MODID, "geo/sylph.geo.json");
+        return new ResourceLocation(ArsNouveau.MODID, "geo/whirlisprig.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(T whirlisprig) {
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph.png");
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/whirlisprig.png");
     }
 
     @Override

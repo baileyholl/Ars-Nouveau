@@ -100,7 +100,7 @@ public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
         if (currentItemStack.getItem() instanceof SpellCrossbow spellCrossbow) {
             int timeHeld = (int) (72000 - Minecraft.getInstance().player.getUseItemRemainingTicks() + partialTicks);
 
-            if (SpellCrossbow.isCharged(currentItemStack)) {
+            if (SpellCrossbow.isCharged(currentItemStack) || Minecraft.getInstance().player.getUseItemRemainingTicks() <= 0 && Minecraft.getInstance().player.isUsingItem()) {
                 right.setRotationY((float) (right.getRotationY() - Math.toRadians(35)));
                 left.setRotationY((float) (left.getRotationY() + Math.toRadians(35)));
                 outerAngle = ((ClientInfo.ticksInGame + partialTicks) / 3.0f) % 360;

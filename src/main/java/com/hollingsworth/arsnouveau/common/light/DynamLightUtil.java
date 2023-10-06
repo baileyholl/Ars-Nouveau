@@ -21,7 +21,7 @@ public class DynamLightUtil {
 
 
     private static int getLuminance(Entity entity){
-        if(entity.isOnFire()) {
+        if(entity.isOnFire() || entity.isCurrentlyGlowing()) {
             return 15;
         }
         if(Config.ENTITY_LIGHT_MAP.containsKey(keyFor(entity)))
@@ -30,7 +30,7 @@ public class DynamLightUtil {
     }
 
     public static boolean couldGiveLight(Entity entity){
-        return LightManager.getLightRegistry().containsKey(entity.getType()) || Config.ENTITY_LIGHT_MAP.containsKey(keyFor(entity)) || (entity instanceof Player player && getPlayerLight(player) > 0) || entity.isOnFire();
+        return LightManager.getLightRegistry().containsKey(entity.getType()) || Config.ENTITY_LIGHT_MAP.containsKey(keyFor(entity)) || (entity instanceof Player player && getPlayerLight(player) > 0) || entity.isOnFire() || entity.isCurrentlyGlowing();
     }
 
     public static int getPlayerLight(Player player){
@@ -44,7 +44,7 @@ public class DynamLightUtil {
         if(entity instanceof Player player){
             light = getPlayerLight(player);
         }
-        if(entity.isOnFire()){
+        if(entity.isOnFire() || entity.isCurrentlyGlowing()){
             return 15;
         }
         if(light < 15 && LightManager.containsEntity(entity.getType())) {

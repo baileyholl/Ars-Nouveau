@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.MageBlockTile;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.mojang.authlib.GameProfile;
 import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.CrashReportCategory;
@@ -93,7 +94,11 @@ public class EnchantedFallingBlock extends ColoredProjectile implements IAnimata
     }
 
     public static boolean canFall(Level level, BlockPos pos, LivingEntity owner, SpellStats spellStats) {
-        if (level.isEmptyBlock(pos)  || !level.getFluidState(pos).isEmpty() || (level.getBlockEntity(pos) != null && !(level.getBlockEntity(pos) instanceof MageBlockTile || level.getBlockEntity(pos) instanceof SkullBlockEntity))) {
+        if (level.isEmptyBlock(pos)
+                || !level.getFluidState(pos).isEmpty()
+                || level.getBlockState(pos).is(BlockTagProvider.RELOCATION_NOT_SUPPORTED)
+                || (level.getBlockEntity(pos) != null && !(level.getBlockEntity(pos) instanceof MageBlockTile
+                || level.getBlockEntity(pos) instanceof SkullBlockEntity))) {
             return false;
         }
         return BlockUtil.canBlockBeHarvested(spellStats, level, pos) && BlockUtil.destroyRespectsClaim(owner, level, pos);
@@ -221,6 +226,9 @@ public class EnchantedFallingBlock extends ColoredProjectile implements IAnimata
 
                         try {
                             blockentity.load(this.blockData);
+                            if(blockentity instanceof SkullBlockEntity sk && this.blockData != null && this.blockData.contains("SkullOwner")){
+                                sk.setOwner(new GameProfile(null, this.blockData.getString("SkullOwner")));
+                            }
                         } catch (Exception exception) {
 
                         }
@@ -237,14 +245,22 @@ public class EnchantedFallingBlock extends ColoredProjectile implements IAnimata
             } else if (this.dropItem && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
                 this.discard();
                 this.callOnBrokenAfterFall(block, blockpos);
-                this.spawnAtLocation(block);
+                ItemStack itemstack = new ItemStack(block);
+                if(this.blockData != null && !itemstack.hasTag() && this.getBlockState().is(Blocks.PLAYER_HEAD)){
+                    itemstack.setTag(this.blockData);
+                }
+                this.spawnAtLocation(itemstack);
                 return null;
             }
         } else {
             this.discard();
             if (this.dropItem && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
                 this.callOnBrokenAfterFall(block, blockpos);
-                this.spawnAtLocation(block);
+                ItemStack itemstack = new ItemStack(block);
+                if(this.blockData != null && !itemstack.hasTag() && this.getBlockState().is(Blocks.PLAYER_HEAD)){
+                    itemstack.setTag(this.blockData);
+                }
+                this.spawnAtLocation(itemstack);
             }
         }
         return null;

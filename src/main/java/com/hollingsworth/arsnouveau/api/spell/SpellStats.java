@@ -20,6 +20,10 @@ import java.util.List;
  * A wrapper for spell modifiers as they exist for a single effect before resolving.
  */
 public class SpellStats {
+
+    //true if at least one sensitive augment is present, keep using getBuffCount() for more than one
+    private boolean sensitive = false;
+
     private double amplification;
 
     private float acceleration;
@@ -29,6 +33,8 @@ public class SpellStats {
     private double durationMultiplier;
 
     private double aoeMultiplier;
+
+    private boolean randomizing;
 
     private List<AbstractAugment> augments;
 
@@ -90,6 +96,9 @@ public class SpellStats {
         this.damageModifier = damageModifier;
     }
 
+    public boolean isRandomized() {
+        return randomizing;
+    }
 
     public double getDurationMultiplier() {
         return durationMultiplier;
@@ -115,6 +124,10 @@ public class SpellStats {
         this.modifierItems = modifierItems;
     }
 
+    public boolean isSensitive() {
+        return sensitive;
+    }
+
     public static class Builder {
         private SpellStats spellStats;
 
@@ -124,7 +137,7 @@ public class SpellStats {
 
         public SpellStats build(AbstractSpellPart spellPart, @Nullable HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellContext spellContext) {
             for (AbstractAugment abstractAugment : spellStats.augments) {
-                abstractAugment.applyModifiers(this, spellPart);
+                abstractAugment.applyModifiers(this, spellPart, rayTraceResult, world, shooter, spellContext);
             }
 
             for (ItemStack stack : spellStats.modifierItems) {
@@ -141,6 +154,11 @@ public class SpellStats {
 
         public SpellStats build() {
             return spellStats;
+        }
+
+        public Builder setSensitive() {
+            spellStats.sensitive = true;
+            return this;
         }
 
         public Builder setDamageModifier(double damageModifier) {
@@ -230,6 +248,11 @@ public class SpellStats {
 
         public Builder addItem(ItemStack itemStack) {
             spellStats.modifierItems.add(itemStack);
+            return this;
+        }
+
+        public Builder randomize() {
+            spellStats.randomizing = true;
             return this;
         }
     }

@@ -5,8 +5,10 @@ import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerCaster extends LivingCaster{
     public Player player;
@@ -14,13 +16,18 @@ public class PlayerCaster extends LivingCaster{
     public PlayerCaster(Player livingEntity) {
         super(livingEntity);
         player = livingEntity;
-        this.filterableItemHandlers = new ArrayList<>();
-        this.filterableItemHandlers.add(new FilterableItemHandler(new PlayerMainInvWrapper(player.inventory), new ArrayList<>()));
     }
 
     @Override
     public InventoryManager getInvManager() {
         return new InventoryManager(getInventory()).extractSlotMax(9).insertSlotMax(-1);
+    }
+
+    @Override
+    public @NotNull List<FilterableItemHandler> getInventory() {
+        List<FilterableItemHandler> base = new ArrayList<>();
+        base.add(new FilterableItemHandler(new PlayerMainInvWrapper(player.inventory), new ArrayList<>()));
+        return base;
     }
 
     @Override

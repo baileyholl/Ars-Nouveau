@@ -96,6 +96,11 @@ public class FindItem extends Goal {
         if (dest == null) {
             starbuncle.setBackOff(30 + starbuncle.level.random.nextInt(30));
             starbuncle.addGoalDebug(this, new DebugEvent("NotReachable", "No pathable items nearby"));
+            return false;
+        }
+        if(behavior.isBedPowered()){
+            starbuncle.addGoalDebug(this, new DebugEvent("BedPowered", "Bed powered, cannot pickup items"));
+            return false;
         }
         return dest != null && !nearbyItems().isEmpty();
     }

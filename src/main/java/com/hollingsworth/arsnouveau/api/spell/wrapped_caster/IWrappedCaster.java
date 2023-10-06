@@ -4,10 +4,13 @@ import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public interface IWrappedCaster{
 
@@ -28,4 +31,12 @@ public interface IWrappedCaster{
     default Direction getFacingDirection(){
         return Direction.NORTH;
     }
+
+    /**
+     * Returns the first block entity that matches the predicate.
+     */
+    default @Nullable BlockEntity getNearbyBlockEntity(Predicate<BlockEntity> predicate){
+        return null;
+    }
+
 }

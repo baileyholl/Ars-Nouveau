@@ -22,9 +22,12 @@ import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import com.hollingsworth.arsnouveau.common.items.EnchantersSword;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketJoinedServer;
 import com.hollingsworth.arsnouveau.common.perk.JumpHeightPerk;
 import com.hollingsworth.arsnouveau.common.perk.LootingPerk;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
+import com.hollingsworth.arsnouveau.common.ritual.DenySpawnRitual;
 import com.hollingsworth.arsnouveau.common.ritual.RitualFlight;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -32,6 +35,7 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.VillagerRegistry;
+import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -167,6 +171,15 @@ public class EventHandler {
         }
     }
 
+    @SubscribeEvent
+    public static void livingSpawnEvent(LivingSpawnEvent.CheckSpawn checkSpawn) {
+        if(checkSpawn.getLevel() instanceof Level level && !level.isClientSide){
+            if(RitualEventQueue.getRitual(level, DenySpawnRitual.class, ritu -> ritu.denySpawn(checkSpawn)) != null){
+                checkSpawn.setResult(Event.Result.DENY);
+            }
+        }
+    }
+
 
     @SubscribeEvent
     public static void jumpEvent(LivingEvent.LivingJumpEvent e) {
@@ -181,6 +194,12 @@ public class EventHandler {
     public static void playerLogin(PlayerEvent.PlayerLoggedInEvent e) {
         if (e.getEntity().getCommandSenderWorld().isClientSide)
             return;
+        if(e.getEntity() instanceof ServerPlayer serverPlayer) {
+            boolean isContributor = Rewards.CONTRIBUTORS.contains(serverPlayer.getUUID());
+            if(isContributor) {
+                Networking.sendToPlayerClient(new PacketJoinedServer(true), (ServerPlayer) e.getEntity());
+            }
+        }
         CompoundTag tag = e.getEntity().getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
         String book_tag = "an_book_";
         String light_tag = "an_light_";
@@ -203,6 +222,9 @@ public class EventHandler {
     public static void clientTickEnd(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             ClientInfo.ticksInGame++;
+            if (ClientInfo.redTicks()) {
+                ClientInfo.redOverlayTicks--;
+            }
         }
     }
 
@@ -310,6 +332,7 @@ public class EventHandler {
         PathCommand.register(event.getDispatcher());
         ToggleLightCommand.register(event.getDispatcher());
         AddTomeCommand.register(event.getDispatcher());
+        SummonAnimHeadCommand.register(event.getDispatcher());
     }
 
     @SubscribeEvent

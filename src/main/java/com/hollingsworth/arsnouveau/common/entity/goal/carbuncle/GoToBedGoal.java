@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
-import com.hollingsworth.arsnouveau.common.block.SummonBed;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import net.minecraft.core.BlockPos;
@@ -78,26 +78,31 @@ public class GoToBedGoal extends Goal {
 
     @Override
     public boolean canUse() {
+        if(starbuncle.level.random.nextInt(2) == 0){
+            return false;
+        }
         bedPos = starbuncle.data.bedPos;
         if (starbuncle.getBedBackoff() > 0
                 || starbuncle.goalState != Starbuncle.StarbuncleGoalState.NONE
                 || bedPos == null
                 || !behavior.canGoToBed()) {
+            starbuncle.addGoalDebug(this, new DebugEvent("CannotSleep","Bed not valid" + " backoff: " + starbuncle.getBedBackoff()));
             return false;
         }
         boolean canRun = isBedValid() && !isOnBed();
         if(!canRun){
             starbuncle.setBedBackoff(20 * 3);
+            starbuncle.addGoalDebug(this, new DebugEvent("InvalidBed", "Bed position invalid"));
         }
         return canRun;
     }
 
     public boolean isBedValid(){
-        return starbuncle.level.isLoaded(bedPos) && starbuncle.level.getBlockState(new BlockPos(bedPos)).getBlock() instanceof SummonBed;
+        return starbuncle.level.isLoaded(bedPos) && starbuncle.level.getBlockState(new BlockPos(bedPos)).is(BlockTagProvider.SUMMON_SLEEPABLE);
     }
 
     public boolean isOnBed(){
-        return starbuncle.level.getBlockState(new BlockPos(starbuncle.position)).getBlock() instanceof SummonBed;
+        return starbuncle.level.getBlockState(new BlockPos(starbuncle.position)).is(BlockTagProvider.SUMMON_SLEEPABLE);
     }
 
     @Override

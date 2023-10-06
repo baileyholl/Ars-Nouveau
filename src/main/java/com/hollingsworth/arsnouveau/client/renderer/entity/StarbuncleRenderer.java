@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.CosmeticRenderUtil;
 import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
+import com.hollingsworth.arsnouveau.client.ShaderRegistry;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -21,15 +22,9 @@ import software.bernie.geckolib3.util.RenderUtils;
 import javax.annotation.Nullable;
 
 public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
-    private static final ResourceLocation ORANGE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_orange.png");
-    private static final ResourceLocation PURPLE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_purple.png");
-    private static final ResourceLocation GREEN = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_green.png");
-    private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_wild_orange.png");
 
     public StarbuncleRenderer(EntityRendererProvider.Context manager) {
         super(manager, new StarbuncleModel());
-//        this.addLayer(new CarbuncleHeldItemLayer(this));
-//        this.addLayer(new ModelLayerRenderer(this, new CarbuncleShadesModel(this.getGeoModelProvider())));
     }
 
     Starbuncle starbuncle;
@@ -78,11 +73,17 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
 
     @Override
     public ResourceLocation getTextureLocation(Starbuncle entity) {
-        return entity.isTamed() ? entity.getTexture(entity) : WILD_TEXTURE;
+        return entity.getTexture(entity);
     }
 
     @Override
     public RenderType getRenderType(Starbuncle animatable, float partialTicks, PoseStack stack, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
+        // Jared's special shader, because adopter details aren't synced.
+        if(animatable.getName().getString().equals("Splonk")) {
+            return ShaderRegistry.blamed(textureLocation, true);
+        }else if(animatable.getName().getString().equals("Bailey")){
+            return ShaderRegistry.rainbowEntity(textureLocation, new ResourceLocation(ArsNouveau.MODID, "textures/entity/starbuncle_mask.png"),true);
+        }
         return RenderType.entityCutoutNoCull(textureLocation);
     }
 }

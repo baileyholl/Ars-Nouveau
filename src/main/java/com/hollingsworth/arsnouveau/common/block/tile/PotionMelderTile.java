@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -70,7 +71,7 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
             return;
         }
         if (!level.isClientSide && !hasSource && level.getGameTime() % 20 == 0) {
-            if (SourceUtil.takeSourceWithParticles(worldPosition, level, 5, 100) != null) {
+            if (SourceUtil.takeSourceWithParticles(worldPosition, level, 5, Config.MELDER_SOURCE_COST.get()) != null) {
                 hasSource = true;
                 updateBlock();
             }
@@ -86,7 +87,7 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
         PotionJarTile tile1 = (PotionJarTile) level.getBlockEntity(fromJars.get(0));
         PotionJarTile tile2 = (PotionJarTile) level.getBlockEntity(fromJars.get(1));
         PotionData data = tile1.getData().mergeEffects(tile2.getData());
-        if (!combJar.canAccept(data, 100)) {
+        if (!combJar.canAccept(data, Config.MELDER_OUTPUT.get())) {
             isMixing = false;
             timeMixing = 0;
             return;
@@ -136,9 +137,9 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
     }
 
     public void mergePotions(PotionJarTile combJar, PotionJarTile take1, PotionJarTile take2, PotionData data){
-        combJar.add(data, 100);
-        take1.remove(300);
-        take2.remove(300);
+        combJar.add(data, Config.MELDER_OUTPUT.get());
+        take1.remove(Config.MELDER_INPUT_COST.get());
+        take2.remove(Config.MELDER_INPUT_COST.get());
         hasSource = false;
         ParticleColor color2 = ParticleColor.fromInt(combJar.getColor());
         EntityFlyingItem item2 = new EntityFlyingItem(level, new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ()+ 0.5),
@@ -155,7 +156,7 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
             return false;
         for(BlockPos p : fromJars){
             BlockEntity te = level.getBlockEntity(p);
-            if(!level.isLoaded(p) || !(te instanceof PotionJarTile jar) || jar.getAmount() < 300){
+            if(!level.isLoaded(p) || !(te instanceof PotionJarTile jar) || jar.getAmount() < Config.MELDER_INPUT_COST.get()){
                 return false;
             }
         }
@@ -287,11 +288,12 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
         if(fromJars.size() >= 2 && toPos != null && level.getBlockEntity(toPos) instanceof PotionJarTile combJar){
             PotionJarTile tile1 = (PotionJarTile) level.getBlockEntity(fromJars.get(0));
             PotionJarTile tile2 = (PotionJarTile) level.getBlockEntity(fromJars.get(1));
-            if(tile1.getAmount() < 300 || tile2.getAmount() < 300) {
+            int inputCost = Config.MELDER_INPUT_COST.get();
+            if(tile1 == null || tile1.getAmount() < inputCost || tile2 == null || tile2.getAmount() < inputCost) {
                 return;
             }
             PotionData data = getCombinedResult(tile1, tile2);
-            if(!combJar.canAccept(data, 100)){
+            if(!combJar.canAccept(data, Config.MELDER_OUTPUT.get())){
                 tooltip.add(Component.translatable("ars_nouveau.melder.destination_invalid").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
             }
         }

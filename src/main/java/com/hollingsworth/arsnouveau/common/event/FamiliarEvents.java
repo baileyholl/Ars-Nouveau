@@ -60,7 +60,7 @@ public class FamiliarEvents {
             if (!entity.isAlive())
                 return;
             if (entity.getOwner() != null && entity.getOwner().equals(event.getEntity())) {
-                event.setMax((int) (event.getMax() - event.getMax() * entity.getManaReserveModifier()));
+                event.setReserve((float) (event.getReserve() + entity.getManaReserveModifier()));
                 return;
             }
         }

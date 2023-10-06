@@ -4,7 +4,7 @@
   "flavour_text": "Cures status effects and heals the user.",
   "name": "Rune of Renewing",
   "sound": {
-    "family": "default",
+    "family": "ars_nouveau:fire_family",
     "pitch": 1.0,
     "volume": 1.0
   },

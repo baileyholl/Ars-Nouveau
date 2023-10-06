@@ -11,11 +11,14 @@ import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.core.BlockPos;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.monster.Drowned;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.level.LevelAccessor;
@@ -92,7 +95,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<WildenHunter>> WILDEN_HUNTER = registerEntity(
             LibEntityNames.WILDEN_HUNTER,
             EntityType.Builder.<WildenHunter>of(WildenHunter::new, MobCategory.MONSTER)
-                    .sized(0.6F, 1.95F)
+                    .sized(1.2f, 1.2F)
                     .setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
     public static final RegistryObject<EntityType<EntitySpellArrow>> ENTITY_SPELL_ARROW = registerEntity(
@@ -106,7 +109,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<WildenStalker>> WILDEN_STALKER = registerEntity(
             LibEntityNames.WILDEN_STALKER,
             EntityType.Builder.<WildenStalker>of(WildenStalker::new, MobCategory.MONSTER)
-                    .sized(0.6F, 1.95F)
+                    .sized(0.95F, 1F)
                     .setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
     public static final RegistryObject<EntityType<SummonHorse>> SUMMON_HORSE = registerEntity(
@@ -117,13 +120,13 @@ public class ModEntities {
     public static final RegistryObject<EntityType<WildenGuardian>> WILDEN_GUARDIAN = registerEntity(
             LibEntityNames.WILDEN_GUARDIAN,
             EntityType.Builder.<WildenGuardian>of(WildenGuardian::new, MobCategory.MONSTER)
-                    .sized(0.6F, 1.95F)
+                    .sized(1.15F, 1.15F)
                     .setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
-    public static final RegistryObject<EntityType<EntityChimera>> WILDEN_BOSS = registerEntity(
+    public static final RegistryObject<EntityType<WildenChimera>> WILDEN_BOSS = registerEntity(
             LibEntityNames.WILDEN_CHIMERA,
-            EntityType.Builder.<EntityChimera>of(EntityChimera::new, MobCategory.MONSTER)
-                    .sized(1.5f, 2.5f)
+            EntityType.Builder.<WildenChimera>of(WildenChimera::new, MobCategory.MONSTER)
+                    .sized(2.5f, 2.25f)
                     .setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
     public static final RegistryObject<EntityType<LightningEntity>> LIGHTNING_ENTITY = registerEntity(LibEntityNames.AN_LIGHTNING, EntityType.Builder.<LightningEntity>of(LightningEntity::new, MobCategory.MISC)
@@ -244,6 +247,11 @@ public class ModEntities {
                     .sized(1.0f, 1.5f)
                     .noSave()
                     .setTrackingRange(10));
+    public static final RegistryObject<EntityType<Lily>> LILY = registerEntity(
+            LibEntityNames.LILY,
+            EntityType.Builder.<Lily>of(Lily::new, MobCategory.MISC)
+                    .sized(0.5F, 0.75F)
+                    .setTrackingRange(10));
 
     public static void registerPlacements() {
         SpawnPlacements.register(STARBUNCLE_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
@@ -251,9 +259,10 @@ public class ModEntities {
         SpawnPlacements.register(WHIRLISPRIG_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
         SpawnPlacements.register(ENTITY_DRYGMY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
 
-        SpawnPlacements.register(WILDEN_GUARDIAN.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::canMonsterSpawnInLight);
-        SpawnPlacements.register(WILDEN_HUNTER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::canMonsterSpawnInLight);
-        SpawnPlacements.register(WILDEN_STALKER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::canMonsterSpawnInLight);
+        SpawnPlacements.register(WILDEN_GUARDIAN.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::wildenSpawnRules);
+        SpawnPlacements.register(WILDEN_HUNTER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::wildenSpawnRules);
+        SpawnPlacements.register(WILDEN_STALKER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::wildenSpawnRules);
+
         SpawnPlacements.register(ENTITY_BLAZING_WEALD.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
         SpawnPlacements.register(ENTITY_CASCADING_WEALD.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
         SpawnPlacements.register(ENTITY_FLOURISHING_WEALD.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
@@ -265,6 +274,16 @@ public class ModEntities {
     public static boolean canMonsterSpawnInLight(EntityType<? extends Monster> type, ServerLevelAccessor worldIn, MobSpawnType reason, BlockPos pos, RandomSource randomIn) {
         return Monster.checkMonsterSpawnRules(type, worldIn, reason, pos, randomIn)
                 && !Config.DIMENSION_BLACKLIST.get().contains(worldIn.getLevel().dimension().location().toString());
+    }
+
+    public static boolean wildenSpawnRules(EntityType<? extends Monster> type, ServerLevelAccessor worldIn, MobSpawnType reason, BlockPos pos, RandomSource randomIn){
+        return worldIn.getDifficulty() != Difficulty.PEACEFUL && Monster.checkMonsterSpawnRules(type, worldIn, reason, pos, randomIn)
+                && !Config.DIMENSION_BLACKLIST.get().contains(worldIn.getLevel().dimension().location().toString());
+    }
+
+    public static boolean guardianSpawnRules(EntityType<Drowned> pDrowned, ServerLevelAccessor pServerLevel, MobSpawnType pMobSpawnType, BlockPos pPos, RandomSource pRandom) {
+            boolean flag = pServerLevel.getDifficulty() != Difficulty.PEACEFUL && (pMobSpawnType != MobSpawnType.SPAWNER || pServerLevel.getFluidState(pPos).is(FluidTags.WATER));
+            return flag;
     }
 
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -286,7 +305,7 @@ public class ModEntities {
             event.put(ENTITY_DUMMY.get(), Mob.createMobAttributes()
                     .add(Attributes.MAX_HEALTH, 20.0D)
                     .add(Attributes.MOVEMENT_SPEED, 0.25D).build());
-            event.put(WILDEN_BOSS.get(), EntityChimera.getModdedAttributes().build());
+            event.put(WILDEN_BOSS.get(), WildenChimera.getModdedAttributes().build());
             event.put(ENTITY_FAMILIAR_STARBUNCLE.get(), FamiliarEntity.attributes().build());
             event.put(ENTITY_FAMILIAR_BOOKWYRM.get(), FamiliarEntity.attributes().build());
 //            event.put(ENTITY_FAMILIAR_JABBERWOG.get(), FamiliarEntity.attributes().build());
@@ -303,7 +322,7 @@ public class ModEntities {
             event.put(GIFT_STARBY.get(), GiftStarbuncle.attributes().build());
             event.put(ANIMATED_BLOCK.get(), AnimBlockSummon.createAttributes().build());
             event.put(ANIMATED_HEAD.get(), AnimBlockSummon.createAttributes().build());
-
+            event.put(LILY.get(), Lily.createAttributes().build());
         }
     }
 

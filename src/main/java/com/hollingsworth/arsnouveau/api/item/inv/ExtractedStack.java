@@ -28,14 +28,9 @@ public class ExtractedStack extends SlotReference{
         return new ExtractedStack(ItemStack.EMPTY, null, -1);
     }
 
-    public ItemStack replaceAndReturn(ItemStack stack){
+    public void replaceAndReturnOrDrop(ItemStack stack, Level level, BlockPos pos){
         this.stack = stack;
         this.stack = this.returnStack();
-        return this.stack;
-    }
-
-    public void replaceAndReturnOrDrop(ItemStack stack, Level level, BlockPos pos){
-        this.replaceAndReturn(stack);
         if(!this.stack.isEmpty()){
             level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, this.stack.copy()));
             this.stack.setCount(0);

@@ -27,7 +27,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 	private int lines;
 	protected Inventory pinv;
 	public Runnable onPacket;
-	public SortSettings terminalData;
+	public SortSettings terminalData = null;
 	public String search;
 	public boolean noSort;
 	public List<String> tabNames = new ArrayList<>();
@@ -50,7 +50,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 	}
 
 	protected void addStorageSlots() {
-		addStorageSlots(5, 8, 18);
+		addStorageSlots(8, 18);
 	}
 
 	protected void addPlayerSlots(Inventory playerInventory, int x, int y) {
@@ -66,9 +66,9 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 		}
 	}
 
-	public final void addStorageSlots(int lines, int x, int y) {
+	public void addStorageSlots(int x, int y) {
 		storageSlotList.clear();
-		this.lines = lines;
+		lines = this.terminalData == null || !terminalData.expanded ? 3 : 7;
 		for (int i = 0;i < lines;++i) {
 			for (int j = 0;j < 9;++j) {
 				this.addSlotToContainer(new SlotStorage(this.te, i * 9 + j, x + j * 18, y + i * 18));
@@ -217,8 +217,13 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 		}
 		if(message.contains("search"))
 			search = message.getString("search");
-		if(message.contains("sortSettings"))
+		if(message.contains("sortSettings")) {
+			boolean isExpanded = terminalData != null && terminalData.expanded;
 			terminalData = SortSettings.fromTag(message.getCompound("sortSettings"));
+			if(isExpanded != terminalData.expanded) {
+				addStorageSlots();
+			}
+		}
 		if(message.contains("tabs")){
 			ListTag tabs = message.getList("tabs", 10);
 			tabNames = new ArrayList<>();

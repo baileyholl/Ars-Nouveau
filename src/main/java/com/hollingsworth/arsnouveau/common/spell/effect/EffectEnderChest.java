@@ -13,7 +13,6 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.util.FakePlayer;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.Set;
 
 public class EffectEnderChest extends AbstractEffect {
@@ -27,7 +26,7 @@ public class EffectEnderChest extends AbstractEffect {
 
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (shooter instanceof Player && !(shooter instanceof FakePlayer)) {
             PlayerEnderChestContainer chestInventory = ((Player) shooter).getEnderChestInventory();
             ((Player) shooter).openMenu(new SimpleMenuProvider((p_226928_1_, p_226928_2_, p_226928_3_) -> ChestMenu.threeRows(p_226928_1_, p_226928_2_, chestInventory), CONTAINER_NAME));

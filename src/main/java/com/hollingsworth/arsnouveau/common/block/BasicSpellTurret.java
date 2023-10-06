@@ -37,6 +37,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -101,7 +102,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
                     resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);
                 } else {
                     Vec3 hitVec = new Vec3(touchPos.getX() + facingDir.getStepX() * 0.5, touchPos.getY() + facingDir.getStepY() * 0.5, touchPos.getZ() + facingDir.getStepZ() * 0.5);
-                    resolver.onCastOnBlock(new BlockHitResult(hitVec, facingDir, new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), true));
+                    resolver.onCastOnBlock(new BlockHitResult(hitVec, facingDir.getOpposite(), new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), true));
                 }
             }
         });
@@ -196,6 +197,10 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
         ItemStack stack = player.getItemInHand(handIn);
         Spell spell = CasterUtil.getCaster(stack).getSpell();
         if (!spell.isEmpty()) {
+            if(spell.getCastMethod() == null){
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.turret_needs_form"));
+                return InteractionResult.SUCCESS;
+            }
             if (!(TURRET_BEHAVIOR_MAP.containsKey(spell.getCastMethod()))) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.turret_type"));
                 return InteractionResult.SUCCESS;
@@ -237,4 +242,9 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
     //kept is as simple as possible for compat. with other turrets, needed for waterlogged. Does not keep track of turret direction
     static final VoxelShape shape = Block.box(4.6, 4.6, 4.6, 11.6, 11.6, 11.6);
 
+
+    @Override
+    public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+        return false;
+    }
 }

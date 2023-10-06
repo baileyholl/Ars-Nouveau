@@ -4,7 +4,7 @@
   "flavour_text": "Heroes are so straightforward, so easily befuddled...",
   "name": "KirinDave's Sinister Switch",
   "sound": {
-    "family": "default",
+    "family": "ars_nouveau:fire_family",
     "pitch": 1.0,
     "volume": 1.0
   },

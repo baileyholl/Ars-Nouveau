@@ -2,17 +2,16 @@ package com.hollingsworth.arsnouveau.common.mixin.elytra;
 
 
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(LocalPlayer.class)
 public class ClientElytraMixin {
 
-    @Redirect(
+    @ModifyExpressionValue(
             method = "aiStep",
             at = @At(
                     value = "INVOKE",
@@ -20,7 +19,7 @@ public class ClientElytraMixin {
                     remap = false
             )
     )
-    public boolean elytraOverride(ItemStack stack, LivingEntity entity) {
-        return EffectGlide.canGlide(entity) || stack.canElytraFly(entity);
+    public boolean elytraOverride(boolean original) {
+        return original || EffectGlide.canGlide(((LivingEntity) ((Object)this)));
     }
 }

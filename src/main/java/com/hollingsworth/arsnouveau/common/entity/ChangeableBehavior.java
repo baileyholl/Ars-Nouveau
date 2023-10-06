@@ -66,4 +66,8 @@ public abstract class ChangeableBehavior implements IWandable {
     public boolean clearOrRemove() {
         return true;
     }
+
+    public void syncTag(){
+
+    }
 }

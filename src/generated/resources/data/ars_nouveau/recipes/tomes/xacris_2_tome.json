@@ -4,7 +4,7 @@
   "flavour_text": "Light up the sky",
   "name": "Xacris's Firework Display",
   "sound": {
-    "family": "default",
+    "family": "ars_nouveau:fire_family",
     "pitch": 1.0,
     "volume": 1.0
   },

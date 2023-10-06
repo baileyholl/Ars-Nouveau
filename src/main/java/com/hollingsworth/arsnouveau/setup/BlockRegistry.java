@@ -11,8 +11,6 @@ import com.hollingsworth.arsnouveau.common.items.ModBlockItem;
 import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
-import com.hollingsworth.arsnouveau.common.block.CraftingLecternBlock;
-import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
 import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import com.hollingsworth.arsnouveau.common.world.WorldEvent;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTree;
@@ -490,6 +488,13 @@ public class BlockRegistry {
                 registry.register(s, new ModBlock());
             }
         }
+        for(String s : LibBlockNames.DECORATIVE_SLABS){
+            registry.register(s, new SlabBlock(BlockBehaviour.Properties.of(Material.STONE).strength(1.5F, 6.0F).sound(SoundType.STONE)));
+        }
+        for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
+            registry.register(s + "_stairs", new StairBlock(() -> ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s)).defaultBlockState(), BlockBehaviour.Properties.of(Material.STONE).strength(1.5F, 6.0F).sound(SoundType.STONE)));
+        }
+
         registry.register(LibBlockNames.ALTERATION_TABLE, new AlterationTable());
         registry.register(LibBlockNames.MOB_JAR, new MobJar());
         registry.register(LibBlockNames.VOID_PRISM, new VoidPrism());
@@ -749,6 +754,14 @@ public class BlockRegistry {
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
             registry.register(s, getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
         }
+
+        for (String s : LibBlockNames.DECORATIVE_STAIRS) {
+            registry.register(s, getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
+        }
+
+        for (String s : LibBlockNames.DECORATIVE_SLABS) {
+            registry.register(s, getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
+        }
         registry.register(LibBlockNames.ALTERATION_TABLE, new RendererBlockItem(BlockRegistry.ALTERATION_TABLE, defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
@@ -834,7 +847,7 @@ public class BlockRegistry {
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
                 return BasicTurretRenderer::getISTER;
             }
-        });
+        }.withTooltip(Component.translatable("ars_nouveau.turret.tooltip")));
 
         ITEMS.register(LibBlockNames.ARCANE_PEDESTAL, () -> getDefaultBlockItem(ARCANE_PEDESTAL.get()));
 

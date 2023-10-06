@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -21,15 +22,14 @@ import java.util.function.Predicate;
 
 public class EffectBurst extends AbstractEffect {
 
+    //TODO use GlyphLib#EffectBurstId
     public static final EffectBurst INSTANCE = new EffectBurst("burst", "Burst");
 
     public EffectBurst(String tag, String description) {
         super(tag, description);
-        invalidCombinations.add(EffectLinger.INSTANCE.getRegistryName());
-        invalidCombinations.add(EffectWall.INSTANCE.getRegistryName());
     }
 
-    @Override //TODO
+    @Override
     public String getBookDescription() {
         return "Resolves the spell in a spherical area around the target. Augment with Sensitive to target blocks instead of entities and Dampen to make an empty sphere. Augment with AOE to increase the radius. ";
     }
@@ -50,7 +50,7 @@ public class EffectBurst extends AbstractEffect {
         SpellContext newContext = resolver.spellContext.clone().withSpell(spellContext.getRemainingSpell());
         int radius = (int) (1 + spellStats.getAoeMultiplier());
         Predicate<Double> Sphere = spellStats.hasBuff(AugmentDampen.INSTANCE) ? (distance) -> distance <= radius + 0.5 && distance >= radius - 0.5 : (distance) -> (distance <= radius + 0.5);
-        if (spellStats.hasBuff(AugmentSensitive.INSTANCE)) {
+        if (spellStats.isSensitive()) {
             //TODO check if BlockPos.betweenClosed is better
             for (BlockPos pos : BlockPos.withinManhattan(center, radius, radius, radius)) {
                 if (Sphere.test(BlockUtil.distanceFromCenter(pos, center))) {
@@ -60,7 +60,7 @@ public class EffectBurst extends AbstractEffect {
             }
         } else {
             for (LivingEntity entity : world.getEntitiesOfClass(LivingEntity.class, new AABB(center).inflate(radius, radius, radius))) {
-                if (Sphere.test(entity.distanceToSqr(Vec3.atCenterOf(center)))) {
+                if (Sphere.test(BlockUtil.distanceFromCenter(entity.blockPosition(), center))) {
                     resolver.getNewResolver(newContext.clone()).onResolveEffect(world, new EntityHitResult(entity));
                 }
             }
@@ -88,4 +88,9 @@ public class EffectBurst extends AbstractEffect {
         return augmentSetOf(AugmentAOE.INSTANCE, AugmentSensitive.INSTANCE, AugmentDampen.INSTANCE);
     }
 
+    @Override
+    protected void addDefaultInvalidCombos(Set<ResourceLocation> defaults) {
+        defaults.add(EffectLinger.INSTANCE.getRegistryName());
+        defaults.add(EffectWall.INSTANCE.getRegistryName());
+    }
 }

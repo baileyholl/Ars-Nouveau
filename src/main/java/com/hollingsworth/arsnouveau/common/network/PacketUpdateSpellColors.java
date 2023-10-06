@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -27,7 +28,7 @@ public class PacketUpdateSpellColors {
     //Decoder
     public PacketUpdateSpellColors(FriendlyByteBuf buf) {
         castSlot = buf.readInt();
-        color = ParticleColor.deserialize(buf.readNbt());
+        color = ParticleColorRegistry.from(buf.readNbt());
         mainHand = buf.readBoolean();
     }
 

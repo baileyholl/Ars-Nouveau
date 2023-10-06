@@ -38,6 +38,9 @@ public class Config {
     public static ForgeConfigSpec.IntValue DRYGMY_UNIQUE_BONUS;
     public static ForgeConfigSpec.IntValue DRYGMY_QUANTITY_CAP;
 
+    public static ForgeConfigSpec.IntValue MELDER_OUTPUT;
+    public static ForgeConfigSpec.IntValue MELDER_INPUT_COST;
+    public static ForgeConfigSpec.IntValue MELDER_SOURCE_COST;
     public static ForgeConfigSpec.BooleanValue HUNTER_ATTACK_ANIMALS;
     public static ForgeConfigSpec.BooleanValue STALKER_ATTACK_ANIMALS;
     public static ForgeConfigSpec.BooleanValue GUARDIAN_ATTACK_ANIMALS;
@@ -47,6 +50,7 @@ public class Config {
     public static ForgeConfigSpec.IntValue ARCHWOOD_FOREST_WEIGHT;
 
     public static ForgeConfigSpec.BooleanValue DYNAMIC_LIGHTS_ENABLED;
+    public static ForgeConfigSpec.BooleanValue SHOW_SUPPORTER_MESSAGE;
     public static ForgeConfigSpec.IntValue TOUCH_LIGHT_LUMINANCE;
     public static ForgeConfigSpec.IntValue TOUCH_LIGHT_DURATION;
 
@@ -54,6 +58,7 @@ public class Config {
     public static ForgeConfigSpec.BooleanValue ALTERNATE_PORTAL_RENDER;
 
     public static ForgeConfigSpec.BooleanValue DISABLE_SKY_SHADER;
+    public static ForgeConfigSpec.BooleanValue SHOW_RECIPE_BOOK;
     public static ForgeConfigSpec.IntValue MAX_LOG_EVENTS;
     public static ForgeConfigSpec.IntValue TOOLTIP_X_OFFSET;
     public static ForgeConfigSpec.IntValue TOOLTIP_Y_OFFSET;
@@ -85,6 +90,7 @@ public class Config {
         ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
 
         CLIENT_BUILDER.comment("Lighting").push("lights");
+        SHOW_SUPPORTER_MESSAGE = CLIENT_BUILDER.comment("Show the supporter message. This is set to false after the first time.").define("showSupporterMessage", true);
         DYNAMIC_LIGHTS_ENABLED = CLIENT_BUILDER.comment("If dynamic lights are enabled").define("lightsEnabled", false);
         TOUCH_LIGHT_LUMINANCE = CLIENT_BUILDER.comment("How bright the touch light is").defineInRange("touchLightLuminance", 8, 0, 15);
         TOUCH_LIGHT_DURATION = CLIENT_BUILDER.comment("How long the touch light lasts in ticks").defineInRange("touchLightDuration", 8, 0, 40);
@@ -92,11 +98,14 @@ public class Config {
                 .defineList("entity_lights", ConfigUtil.writeConfig(getDefaultEntityLight()), ConfigUtil::validateMap);
         ITEM_LIGHT_CONFIG = CLIENT_BUILDER.comment("Light level an item should emit when held when dynamic lights are on", "Example entry: minecraft:stick=15")
                 .defineList("item_lights", ConfigUtil.writeConfig(getDefaultItemLight()), ConfigUtil::validateMap);
+        CLIENT_BUILDER.pop();
         CLIENT_BUILDER.comment("Overlay").push("overlays");
         TOOLTIP_X_OFFSET = CLIENT_BUILDER.comment("X offset for the tooltip").defineInRange("xTooltip", 20, Integer.MIN_VALUE, Integer.MAX_VALUE);
         TOOLTIP_Y_OFFSET = CLIENT_BUILDER.comment("Y offset for the tooltip").defineInRange("yTooltip", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
         MANABAR_X_OFFSET = CLIENT_BUILDER.comment("X offset for the Mana Bar").defineInRange("xManaBar", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
         MANABAR_Y_OFFSET = CLIENT_BUILDER.comment("Y offset for the Mana Bar").defineInRange("yManaBar", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        SHOW_RECIPE_BOOK = CLIENT_BUILDER.comment("If the Storage Lectern should show the recipe book icon").define("showRecipeBook", true);
+        CLIENT_BUILDER.pop();
         CLIENT_BUILDER.comment("Misc").push("misc");
         ALTERNATE_PORTAL_RENDER = CLIENT_BUILDER.comment("Use simplified renderer for Warp Portals").define("no_end_portal_render", false);
         DISABLE_SKY_SHADER = CLIENT_BUILDER.comment("Disables the skyweave renderer. Disable if your sky is broken with shaders.").define("disable_skyweave", false);
@@ -126,6 +135,12 @@ public class Config {
         SERVER_BUILDER.comment("Items").push("item");
         SPAWN_TOMES = SERVER_BUILDER.comment("Spawn Caster Tomes in Dungeon Loot?").define("spawnTomes", true);
         SERVER_BUILDER.pop();
+        SERVER_BUILDER.comment("Blocks").push("block");
+        MELDER_INPUT_COST = SERVER_BUILDER.comment("How much potion a melder takes from each input jar. 100 = 1 potion").defineInRange("melderInputCost", 200, 100, Integer.MAX_VALUE);
+        MELDER_OUTPUT = SERVER_BUILDER.comment("How much potion a melder outputs per cycle. 100 = 1 potion").defineInRange("melderOutput", 100, 100, Integer.MAX_VALUE);
+        MELDER_SOURCE_COST = SERVER_BUILDER.comment("How much source a melder takes per cycle").defineInRange("melderSourceCost", 300, 0, Integer.MAX_VALUE);
+        SERVER_BUILDER.pop();
+
         SERVER_BUILDER.comment("Debug").push("debug");
         MAX_LOG_EVENTS = SERVER_BUILDER.comment("Max number of log events to keep on entities. Lowering this number may make it difficult to debug why your entities are stuck.").defineInRange("maxLogEvents", 100, 0, Integer.MAX_VALUE);
         SERVER_BUILDER.pop();

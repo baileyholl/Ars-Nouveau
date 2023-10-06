@@ -34,6 +34,9 @@ public class EffectLeap extends AbstractEffect {
         Entity entity = rayTraceResult.getEntity();
         double bonus;
         Vec3 vector;
+        if (NERF.get() && entity == shooter && !shooter.isOnGround()) {
+            return;
+        }
         if (entity instanceof LivingEntity) {
             vector = entity.getLookAngle();
             bonus = Math.max(0, GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
@@ -62,14 +65,17 @@ public class EffectLeap extends AbstractEffect {
         }
     }
 
+    ForgeConfigSpec.BooleanValue NERF;
+
     @Override
     public void buildConfig(ForgeConfigSpec.Builder builder) {
         super.buildConfig(builder);
+        NERF = builder.comment("If true, will not launch the caster if they are not on the ground.").define("force_ground", false);
         addGenericDouble(builder, 1.5, "Base knockup amount", "knock_up");
         addAmpConfig(builder, 1.0);
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE);
@@ -85,7 +91,7 @@ public class EffectLeap extends AbstractEffect {
         return 25;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_AIR);

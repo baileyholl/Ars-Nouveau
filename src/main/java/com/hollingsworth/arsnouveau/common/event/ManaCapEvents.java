@@ -8,7 +8,6 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateMana;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -35,10 +34,11 @@ public class ManaCapEvents {
             mana.addMana(regenPerSecond);
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
         }
-        int max = ManaUtil.getMaxMana(e.player);
+        ManaUtil.Mana maxmana = ManaUtil.calcMaxMana(e.player);
+        int max = maxmana.getRealMax();
         if (mana.getMaxMana() != max || shouldIgnoreMax) {
             mana.setMaxMana(max);
-            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier(), maxmana.Reserve()));
         }
     }
 
@@ -73,10 +73,11 @@ public class ManaCapEvents {
     public static void syncPlayerEvent(Player playerEntity) {
         if (playerEntity instanceof ServerPlayer) {
             CapabilityRegistry.getMana(playerEntity).ifPresent(mana -> {
-                mana.setMaxMana(ManaUtil.getMaxMana(playerEntity));
+                var manaCalc = ManaUtil.calcMaxMana(playerEntity);
+                mana.setMaxMana(manaCalc.getRealMax());
                 mana.setGlyphBonus(mana.getGlyphBonus());
                 mana.setBookTier(mana.getBookTier());
-                Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) playerEntity), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
+                Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) playerEntity), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier(), manaCalc.Reserve()));
             });
         }
     }

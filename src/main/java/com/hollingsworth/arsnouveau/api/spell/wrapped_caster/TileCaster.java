@@ -10,26 +10,20 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class TileCaster implements IWrappedCaster{
     protected SpellContext.CasterType casterType;
-    protected List<FilterableItemHandler> handlers;
     protected BlockEntity tile;
 
     public TileCaster(BlockEntity tile, SpellContext.CasterType casterType){
         this.tile = tile;
         this.casterType = casterType;
-        handlers = new ArrayList<>();
-        initFilterables(tile);
-    }
-
-    public void initFilterables(BlockEntity tile){
-        handlers = new ArrayList<>(InvUtil.adjacentInventories(tile.getLevel(), tile.getBlockPos()));
     }
 
     @Override
     public @NotNull List<FilterableItemHandler> getInventory() {
-        return handlers;
+        return new ArrayList<>(InvUtil.adjacentInventories(tile.getLevel(), tile.getBlockPos()));
     }
 
     @Override
@@ -47,5 +41,16 @@ public class TileCaster implements IWrappedCaster{
             return tile.getBlockState().getValue(BlockStateProperties.FACING);
         }
         return Direction.NORTH;
+    }
+
+    @Override
+    public BlockEntity getNearbyBlockEntity(Predicate<BlockEntity> predicate) {
+        for(Direction dir : Direction.values()){
+            BlockEntity tile = this.tile.getLevel().getBlockEntity(this.tile.getBlockPos().relative(dir));
+            if(tile != null && predicate.test(tile)){
+                return tile;
+            }
+        }
+        return null;
     }
 }

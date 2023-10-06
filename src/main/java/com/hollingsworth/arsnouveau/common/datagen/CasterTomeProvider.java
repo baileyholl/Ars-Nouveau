@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
 import com.hollingsworth.arsnouveau.common.tomes.CasterTomeData;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.SoundRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
@@ -31,7 +32,7 @@ public class CasterTomeProvider implements DataProvider {
     @Override
     public void run(CachedOutput cache) throws IOException {
 
-        tomes.add(buildTome("glow","Glow Trap", new Spell()
+        tomes.add(buildTome("glow", "Glow Trap", new Spell()
                         .add(MethodTouch.INSTANCE)
                         .add(EffectRune.INSTANCE)
                         .add(EffectSnare.INSTANCE)
@@ -39,7 +40,7 @@ public class CasterTomeProvider implements DataProvider {
                         .add(EffectLight.INSTANCE)
                 , "Snares the target and grants other targets Glowing."));
 
-        tomes.add(buildTome("bailey","Bailey's Bovine Rocket", new Spell()
+        tomes.add(buildTome("bailey", "Bailey's Bovine Rocket", new Spell()
                         .add(MethodProjectile.INSTANCE)
                         .add(EffectLaunch.INSTANCE)
                         .add(AugmentAmplify.INSTANCE, 2)
@@ -48,7 +49,7 @@ public class CasterTomeProvider implements DataProvider {
                         .add(AugmentAmplify.INSTANCE)
                 , "To the MOOn")); //TODO FlavourText here?
 
-        tomes.add(buildTome("arachne","Arachne's Weaving", new Spell()
+        tomes.add(buildTome("arachne", "Arachne's Weaving", new Spell()
                         .add(MethodProjectile.INSTANCE)
                         .add(AugmentSplit.INSTANCE, 2)
                         .add(EffectSnare.INSTANCE)
@@ -56,14 +57,14 @@ public class CasterTomeProvider implements DataProvider {
                         .add(AugmentExtendTime.INSTANCE)
                 , "Creates three snaring projectiles."));
 
-        tomes.add(buildTome("warp_impact","Warp Impact", new Spell()
+        tomes.add(buildTome("warp_impact", "Warp Impact", new Spell()
                         .add(MethodProjectile.INSTANCE)
                         .add(EffectBlink.INSTANCE)
                         .add(EffectExplosion.INSTANCE)
                         .add(AugmentAOE.INSTANCE)
                 , "Teleportation, with style!"));
 
-        tomes.add(buildTome("farfalla","Farfalla's Frosty Flames", new Spell()
+        tomes.add(buildTome("farfalla", "Farfalla's Frosty Flames", new Spell()
                         .add(MethodProjectile.INSTANCE)
                         .add(EffectIgnite.INSTANCE)
                         .add(EffectDelay.INSTANCE)
@@ -71,7 +72,7 @@ public class CasterTomeProvider implements DataProvider {
                         .add(EffectFreeze.INSTANCE)
                 , "Creates a fire that quickly freezes to ice."));
 
-        tomes.add(buildTome("gootastic","Gootastic's Telekinetic Fishing Rod", new Spell()
+        tomes.add(buildTome("gootastic", "Gootastic's Telekinetic Fishing Rod", new Spell()
                 .add(MethodProjectile.INSTANCE)
                 .add(EffectLaunch.INSTANCE)
                 .add(AugmentAmplify.INSTANCE, 2)
@@ -80,14 +81,14 @@ public class CasterTomeProvider implements DataProvider {
                 .add(AugmentAmplify.INSTANCE, 2), "The squid's Lovecraftian roots appear to make it immune."
         ));
 
-        tomes.add(buildTome("toxin","Potent Toxin", new Spell()
+        tomes.add(buildTome("toxin", "Potent Toxin", new Spell()
                         .add(MethodProjectile.INSTANCE)
                         .add(EffectHex.INSTANCE)
                         .add(EffectHarm.INSTANCE)
                         .add(AugmentExtendTime.INSTANCE),
                 "Poisons that target and causes them to take additional damage from all sources."
         ));
-        tomes.add(buildTome("shadow","The Shadow's Temporary Tunnel", new Spell()
+        tomes.add(buildTome("shadow", "The Shadow's Temporary Tunnel", new Spell()
                         .add(MethodTouch.INSTANCE)
                         .add(EffectIntangible.INSTANCE)
                         .add(AugmentAOE.INSTANCE, 2)
@@ -96,7 +97,7 @@ public class CasterTomeProvider implements DataProvider {
                 "Creates a temporary tunnel of blocks."
         ));
 
-        tomes.add(buildTome("vault","Vault", new Spell()
+        tomes.add(buildTome("vault", "Vault", new Spell()
                         .add(MethodSelf.INSTANCE)
                         .add(EffectLaunch.INSTANCE)
                         .add(EffectDelay.INSTANCE)
@@ -105,7 +106,7 @@ public class CasterTomeProvider implements DataProvider {
                 "Sometimes you just need to get over that wall."
         ));
 
-        tomes.add(buildTome("fireball","Fireball!", new Spell()
+        tomes.add(buildTome("fireball", "Fireball!", new Spell()
                         .add(MethodProjectile.INSTANCE)
                         .add(EffectIgnite.INSTANCE)
                         .add(EffectExplosion.INSTANCE)
@@ -113,7 +114,7 @@ public class CasterTomeProvider implements DataProvider {
                         .add(AugmentAOE.INSTANCE, 2),
                 "A classic."
         ));
-        tomes.add(buildTome("renew_rune","Rune of Renewing", new Spell()
+        tomes.add(buildTome("renew_rune", "Rune of Renewing", new Spell()
                         .add(MethodTouch.INSTANCE)
                         .add(EffectRune.INSTANCE)
                         .add(EffectDispel.INSTANCE)
@@ -122,7 +123,7 @@ public class CasterTomeProvider implements DataProvider {
                 "Cures status effects and heals the user."
         ));
 
-        tomes.add(buildTome("yeet","Knocked out of Orbit", new Spell()
+        tomes.add(buildTome("yeet", "Knocked out of Orbit", new Spell()
                 .add(MethodOrbit.INSTANCE)
                 .add(EffectLaunch.INSTANCE)
                 .add(AugmentAmplify.INSTANCE, 2)
@@ -131,25 +132,25 @@ public class CasterTomeProvider implements DataProvider {
                 .add(AugmentAmplify.INSTANCE, 2), "Summons orbiting projectiles that will launch nearby enemies.")
         );
 
-        tomes.add(buildTome("takeoff","Takeoff!", new Spell().add(MethodSelf.INSTANCE)
+        tomes.add(buildTome("takeoff", "Takeoff!", new Spell().add(MethodSelf.INSTANCE)
                 .add(EffectLaunch.INSTANCE, 2)
                 .add(EffectGlide.INSTANCE)
                 .add(AugmentDurationDown.INSTANCE), "Launches the caster into the air and grants temporary elytra flight!"));
 
-        tomes.add(buildTome("kirin","KirinDave's Sinister Switch", new Spell()
+        tomes.add(buildTome("kirin", "KirinDave's Sinister Switch", new Spell()
                 .add(MethodSelf.INSTANCE)
                 .add(EffectSummonDecoy.INSTANCE)
                 .add(EffectBlink.INSTANCE)
                 .add(AugmentAmplify.INSTANCE), "Heroes are so straightforward, so easily befuddled...", new ParticleColor(25, 255, 255)));
 
-        tomes.add(buildTome("xacris","Xacris' Tiny Hut", new Spell()
+        tomes.add(buildTome("xacris", "Xacris' Tiny Hut", new Spell()
                         .add(MethodUnderfoot.INSTANCE)
                         .add(EffectPhantomBlock.INSTANCE)
                         .add(AugmentAOE.INSTANCE, 3)
                         .add(AugmentPierce.INSTANCE, 3)
                 , "Builds a small hut around the user."));
 
-        tomes.add(buildTome("xacris_2","Xacris's Firework Display", new Spell()
+        tomes.add(buildTome("xacris_2", "Xacris's Firework Display", new Spell()
                 .add(MethodProjectile.INSTANCE)
                 .add(EffectWall.INSTANCE)
                 .add(AugmentSensitive.INSTANCE)
@@ -158,14 +159,72 @@ public class CasterTomeProvider implements DataProvider {
                 .add(AugmentExtendTime.INSTANCE, 4)
                 .add(AugmentAmplify.INSTANCE), "Light up the sky", new ParticleColor(25, 255, 255)));
 
-        tomes.add(buildTome("othy","Othy's Death By 100 Pricks", new Spell()
-                .add(MethodProjectile.INSTANCE)
-                .add(AugmentPierce.INSTANCE, 2)
-                .add(EffectLinger.INSTANCE)
-                .add(AugmentSensitive.INSTANCE)
-                .add(EffectSummonVex.INSTANCE)
-                .add(AugmentExtendTime.INSTANCE), "Swarm your enemies with bladed spirits.", new ParticleColor(255, 255, 255)));
+        tomes.add(buildTome("othy", "Othy's Misdirection", new Spell()
+                .add(MethodSelf.INSTANCE)
+                .add(AugmentExtendTime.INSTANCE)
+                .add(EffectSummonDecoy.INSTANCE)
+                .add(EffectBlink.INSTANCE)
+                .add(AugmentAmplify.INSTANCE, 2), "Swarm your enemies with bladed spirits.", new ParticleColor(255, 255, 255)));
 
+        tomes.add(buildTome("aurellia", "Aurellia's Bite Storm", new Spell()
+                        .add(MethodProjectile.INSTANCE)
+                        .add(EffectLinger.INSTANCE)
+                        .add(AugmentSensitive.INSTANCE)
+                        .add(EffectFangs.INSTANCE)
+                        .add(EffectLightning.INSTANCE)
+                        .add(AugmentAmplify.INSTANCE, 2)
+                        .add(AugmentExtendTime.INSTANCE, 3)
+                        .withSound(new ConfiguredSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND)),
+                "The bite from this storm is worse than its bark.",
+                new ParticleColor(255, 119, 203)));
+
+        tomes.add(buildTome("alex", "Alex's Magnificent Mansion", new Spell(MethodSelf.INSTANCE)
+                        .add(EffectBurst.INSTANCE)
+                        .add(AugmentSensitive.INSTANCE)
+                        .add(AugmentDampen.INSTANCE)
+                        .add(AugmentAOE.INSTANCE, 5)
+                        .add(EffectPhantomBlock.INSTANCE)
+                        .add(AugmentAmplify.INSTANCE)
+                        .add(AugmentPierce.INSTANCE)
+                        .withSound(new ConfiguredSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND)),
+                "For those who can't settle with just a tiny hut.",
+                new ParticleColor(255, 255, 255))
+        );
+
+        tomes.add(buildTome("poseidon", "Poseidon's Refuge", new Spell(MethodProjectile.INSTANCE)
+                .add(AugmentSensitive.INSTANCE)
+                .add(EffectLight.INSTANCE)
+                        .add(EffectBurst.INSTANCE)
+                        .add(AugmentAOE.INSTANCE, 2)
+                        .add(AugmentSensitive.INSTANCE)
+                        .add(EffectFreeze.INSTANCE)
+                        .add(EffectBreak.INSTANCE)
+                        .add(EffectFreeze.INSTANCE)
+                        .withSound(new ConfiguredSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND))
+                , "Fire at a body of water to create a Ice bubble in the depths.", new ParticleColor(0,0,255)));
+        tomes.add(buildTome("chems", "Chem's Scientific Repulsion Runes", new Spell(MethodProjectile.INSTANCE)
+                .add(EffectLinger.INSTANCE)
+                        .add(AugmentSensitive.INSTANCE)
+                        .add(EffectRune.INSTANCE)
+                        .add(EffectLaunch.INSTANCE, 4),
+                "Smothers an area with runes that launch entities upward. Do NOT get covered in the Repulsion Runes.", new ParticleColor(61, 207, 248)));
+
+        tomes.add(buildTome("ivy", "Ivy", new Spell(MethodTouch.INSTANCE)
+                .add(EffectAnimate.INSTANCE)
+                .add(AugmentExtendTime.INSTANCE, 7)
+                .add(EffectName.INSTANCE), "Now you never have to be lonely again! You will always have a friend with you! Feel free to change their name to whatever you want! :D",
+                new ParticleColor(255, 105, 180)));
+
+        tomes.add(buildTome("darkfira","Darkfira's Flash Freeze", new Spell(MethodProjectile.INSTANCE)
+                .add(EffectBurst.INSTANCE)
+                .add(AugmentSensitive.INSTANCE)
+                .add(AugmentAOE.INSTANCE, 3)
+                .add(EffectConjureWater.INSTANCE)
+                .add(EffectFreeze.INSTANCE)
+                .add(EffectLightning.INSTANCE)
+                        .add(AugmentAmplify.INSTANCE)
+                        .withSound(new ConfiguredSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND, 1.69f, 1.9f)), "Encases your enemies or friends in a tomb of ice. Guaranteed to leave them shocked and confused.",
+                new ParticleColor(25, 255, 255)));
         Path output = this.generator.getOutputFolder();
         for (CasterTomeData g : tomes) {
             Path path = getRecipePath(output, g.getId().getPath());
@@ -183,7 +242,7 @@ public class CasterTomeProvider implements DataProvider {
                 spell.serializeRecipe(),
                 ItemsRegistry.CASTER_TOME.registryObject.getId(),
                 flavorText,
-                ParticleColor.defaultParticleColor().getColor(), ConfiguredSpellSound.DEFAULT);
+                spell.color.getColor(), spell.sound);
     }
 
     public CasterTomeData buildTome(String id, String name, Spell spell, String flavorText, ParticleColor color) {

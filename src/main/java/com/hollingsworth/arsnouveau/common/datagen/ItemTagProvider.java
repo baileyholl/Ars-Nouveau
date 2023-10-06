@@ -43,7 +43,7 @@ public class ItemTagProvider extends ItemTagsProvider {
 
         this.tag(BERRY_TAG).add(BlockRegistry.SOURCEBERRY_BUSH.asItem());
 
-        this.tag(ItemTags.MUSIC_DISCS).add(ItemsRegistry.FIREL_DISC.get());
+        this.tag(ItemTags.MUSIC_DISCS).add(ItemsRegistry.FIREL_DISC.get(), ItemsRegistry.WILD_HUNT.get(), ItemsRegistry.SOUND_OF_GLASS.get());
         this.tag(MAGIC_FOOD)
                 .add(ItemsRegistry.SOURCE_BERRY_PIE.get(),
                         ItemsRegistry.SOURCE_BERRY_ROLL.get());

@@ -16,7 +16,6 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.nbt.CompoundTag;
@@ -58,11 +57,12 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	 */
 	private boolean refreshItemList;
 	protected boolean wasClicking;
-	protected EditBox searchField;
+	protected NoShadowTextField searchField;
 	protected int slotIDUnderMouse = -1;
 	protected int controllMode;
 	protected int rowCount;
 	protected int searchType;
+	protected boolean expanded;
 	private String searchLast = "";
 	protected boolean loadedSearch = false;
 	private StoredItemStack.IStoredItemStackComparator comparator = new StoredItemStack.ComparatorAmount(false);
@@ -90,6 +90,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			buttonSortingType.state = s.sortType;
 			buttonDirection.state = s.reverseSort ? 1 : 0;
 			buttonSearchType.state = searchType;
+			expanded = s.expanded;
 		}
 		if(menu.tabNames != null && !menu.tabNames.isEmpty()){
 			for(StorageTabButton tabButton : tabButtons){
@@ -109,6 +110,11 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			loadedSearch = true;
 			searchField.setValue(menu.search);
 			searchField.setFocus(true);
+			if (searchField.getValue().isEmpty()) {
+				searchField.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.search").getString());
+			}else{
+				searchField.setSuggestion("");
+			}
 		}
 	}
 
@@ -129,7 +135,8 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 				controllMode,
 				comparator.isReversed(),
 				comparator.type(),
-				searchType
+				searchType,
+				expanded
 		);
 	}
 
@@ -139,11 +146,10 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		inventoryLabelY = imageHeight - 92;
 		super.init();
 
-		this.searchField = new NoShadowTextField(getFont(), this.leftPos + 114, this.topPos + 6, 60, this.getFont().lineHeight, Component.translatable("narrator.ars_nouveau.search"));
+		this.searchField = new NoShadowTextField(getFont(), this.leftPos + 115, this.topPos + 6, 60, this.getFont().lineHeight, Component.translatable("narrator.ars_nouveau.search"));
 		this.searchField.setMaxLength(100);
 		this.searchField.setBordered(false);
 		this.searchField.setVisible(true);
-		this.searchField.setTextColor(16777215);
 		this.searchField.setValue(searchLast);
 		searchLast = "";
 		addRenderableWidget(searchField);
@@ -190,7 +196,14 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 	protected void updateSearch() {
 		String searchString = searchField.getValue().trim();
+		if(searchField.getValue().isEmpty()){
+			searchField.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.search").getString());
+		}else{
+			searchField.setSuggestion("");
+		}
+
 		if (refreshItemList || !searchLast.equals(searchString)) {
+
 			getMenu().itemListClientSorted.clear();
 			boolean searchMod = false;
 			String search = searchString;
@@ -413,6 +426,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+		this.searchField.mouseClicked(mouseX, mouseY, mouseButton);
 		if (slotIDUnderMouse > -1) {
 			if (isPullOne(mouseButton)) {
 				if (getMenu().getSlotByID(slotIDUnderMouse).stack != null && getMenu().getSlotByID(slotIDUnderMouse).stack.getQuantity() > 0) {
@@ -443,15 +457,8 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			}
 		} else if (GLFW.glfwGetKey(mc.getWindow().getWindow(), GLFW.GLFW_KEY_SPACE) != GLFW.GLFW_RELEASE) {
 			storageSlotClick(null, SPACE_CLICK, false);
-		} else {
-			if (mouseButton == 1 && isHovering(searchField.x - leftPos, searchField.y - topPos, 89, this.getFont().lineHeight, mouseX, mouseY))
-				searchField.setValue("");
-			else if(this.searchField.mouseClicked(mouseX, mouseY, mouseButton))
-				return true;
-			else
-				return super.mouseClicked(mouseX, mouseY, mouseButton);
 		}
-		return true;
+		return super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	protected void storageSlotClick(StoredItemStack slotStack, StorageTerminalMenu.SlotAction act, boolean pullOne) {

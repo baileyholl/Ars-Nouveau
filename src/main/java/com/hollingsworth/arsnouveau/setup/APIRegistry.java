@@ -6,13 +6,14 @@ import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
 import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
-import com.hollingsworth.arsnouveau.api.ritual.*;
+import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.scrying.CompoundScryer;
 import com.hollingsworth.arsnouveau.api.scrying.IScryer;
 import com.hollingsworth.arsnouveau.api.scrying.SingleBlockScryer;
 import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.familiars.*;
 import com.hollingsworth.arsnouveau.common.mob_jar.*;
 import com.hollingsworth.arsnouveau.common.perk.*;
@@ -109,6 +110,8 @@ public class APIRegistry {
         registerSpell(EffectWall.INSTANCE);
         registerSpell(EffectAnimate.INSTANCE);
         registerSpell(EffectBurst.INSTANCE);
+        registerSpell(AugmentRandomize.INSTANCE);
+
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());
         registerRitual(new RitualCloudshaper());
@@ -131,6 +134,7 @@ public class APIRegistry {
         registerRitual(new ForestationRitual());
         registerRitual(new FloweringRitual());
         registerRitual(new ConjureDesertRitual());
+        registerRitual(new DenySpawnRitual());
 
         registerFamiliar(new StarbuncleFamiliarHolder());
         registerFamiliar(new DrygmyFamiliarHolder());
@@ -273,6 +277,7 @@ public class APIRegistry {
         JarBehaviorRegistry.register(EntityType.ENDER_DRAGON, new DragonBehavior());
         JarBehaviorRegistry.register(EntityType.PUFFERFISH, new PufferfishBehavior());
         JarBehaviorRegistry.register(EntityType.ALLAY, new AllayBehavior());
+        JarBehaviorRegistry.register(ModEntities.ENTITY_DUMMY.get(), new DecoyBehavior());
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {

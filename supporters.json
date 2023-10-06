@@ -1,0 +1,225 @@
+{
+  "uuids": ["facee59d-9953-4466-b8cb-eebe7297651d", "9df6acb3-6618-474a-a2b0-e2e74748ae05", "066cfcbc-3db0-4a97-aa02-650f3f3a71ea",
+    "9d7278bc-8d30-4241-aa7e-08ac8398cf2e", "fefb153f-4ffc-4f5c-acd2-3291e73bdd4d", "7cc40d87-69a4-45e6-9fda-29fed94de4b3",
+    "a31d8405-b45d-40de-9c89-6b8489cce509", "b1e428b5-bdad-44e5-b2eb-7f02dc08b57c", "2fd766b7-17d0-400e-bec5-8e760185e1e3",
+  "380df991-f603-344c-a090-369bad2a924a", "9ded9e0a-bc2b-45da-a4e5-ecffdebffcf7", "de4e108a-ed87-4e57-8033-8a7f7940ea27",
+  "1c60df38-1f15-4427-a51f-8ed1a568956b", "0e918660-22bf-4bed-8426-ece3b4bbd01d", "3a438b67-2fe1-46df-8fc0-e144ca78d820",
+  "a5ddb356-8048-4a4c-a5ab-121f8b613bac","2ae39938-5c8d-4f07-af0c-4243be46c8ff", "a337102a-eeb3-4967-9deb-a5263b5b6231",
+  "838dd85f-95b9-4a9d-a785-7694e8c7c8b1", "99a814a0-bff4-4526-bee6-4af5c74a6824", "966ebb69-a63d-4bb2-ac90-ed39d8c64b80",
+  "bbb87dbe-690f-4205-bdc5-72ffb8ebc29d", "490b090b-ee3f-4a2b-a135-5b4b98f87f0a", "1a9776a0-be9b-4155-a99b-9931d0f7325f",
+    "27aee4ea-a286-433b-879b-7c4c2ab3fd4b", "cf1f2cfc-1a85-40a6-aaf4-a17355ac6579", "bfc0f715-54f5-45bb-b4cd-16dfb3dd1f10",
+    "98105ad8-080a-4d70-a5da-0cc27a833309", "3bf32666-f9ba-4060-af02-53bdb0df38fc", "d183e5a2-a087-462a-963e-c3d7295f9ec5",
+  "7135da42-d327-47bb-bb04-5ba4e212fb32", "c4c21dde-7f38-461c-8da8-32346996209c", "b0d69c83-18cb-4fa4-ac6f-5609674398a2",
+  "14212b1b-ba12-4164-947c-c208a6b07ac9", "dfb079d8-a5ce-4d70-907f-b852a44f8de8", "5ebee73e-faec-4810-ae7a-4baf73f026e4",
+  "b9694497-80b7-4412-b00e-2c9bc2705fd1", "02320102-6fc4-408b-8873-afe54b2dcae6", "ac076a44-c1e3-4752-a3ac-2a366deaefb1",
+  "8f86b83a-e35f-4fca-8b0f-a8181cc1741d", "c657941e-8ac5-46ac-bf65-8983f776ff33", "47b128a4-9043-4ec6-ba69-0edffdddfd8a",
+    "0753a4e3-f71d-4b86-b338-3983f36d2b8a", "df2c8cdf-fbaf-4a22-9fdf-16770ee19c63"],
+  "starbuncleAdoptions": [
+    {
+      "name": "Stekkie",
+      "adopter": "ShyNieke",
+      "color": "orange",
+      "bio": "Saw a mythical rhino named Stekkie and thought it was so cool that they started going through a metamorphosis to transform into one. Stekkie is now content with life and strives to definitely not cause mischief"
+    },
+    {
+      "name": "Ashen",
+      "adopter": "Darkhax",
+      "color": "gray",
+      "bio": "Despite being seen as an omen of pestilence and strife his cute little face reassures you that everything will be alright."
+    },
+    {
+      "name": "Xephyr",
+      "adopter": "Xacris",
+      "color": "cyan",
+      "bio": "This quiet Starbuncle once lived in an Ancient City that was covered in plant life. He had all the source berries he could ever want, and skipped amongst the sculk."
+    },
+    {
+      "name": "Ophiuchus",
+      "adopter": "Amo",
+      "color": "cyan",
+      "bio": "When Ophiuchus slithers through the shadows, the stars weep blood and souls tremble with eternal despair."
+    },
+    {
+      "name": "Stonks",
+      "adopter": "Mrbysco",
+      "color": "red",
+      "bio": "Sees a starbuncle in the forest You: gives it a gold nugget Starbuncle: takes the nugget and teleports away You: Wait, that’s illegal. Starbuncle: comes back with more nuggets You: Stonks."
+    },
+    {
+      "name": "Maximilian",
+      "adopter": "Kaeghen",
+      "color": "black",
+      "bio": "Maximilian was sound asleep in the boughs of an Archwood tree but was unintentionally awakened by Kaeghen, who had dodged a horde of zombies with a Leap to the tree's top. Offered a nugget of gold as apology for interrupting his sleep the drowsy Starbuncle and Kaeghen became fast friends."
+    },
+    {
+      "name": "Dr. Cat",
+      "adopter": "Raycoms",
+      "color": "pink",
+      "bio": "In the realm of intellectual curiosity, Dr. Cat, a brilliant Starbunkle, embarked on an extraordinary journey under the tutelage of their owner, Raycoms. Late nights spent poring over textbooks and engaging in spirited discussions with Raycoms fueled Dr. Cat's hunger for knowledge. Through unwavering determination and countless hours of study, Dr. Cat, became a trailblazing symbol of Starbunkle intellect and the limitless possibilities of knowledge."
+    },
+    {
+      "name": "Trix",
+      "adopter": "Aurellia",
+      "color": "pink",
+      "bio": "Trix came to visit while we were redstoning. We gave her a nugget and she gave us her love. The cutie has been fetching trinkets for us since!"
+    },
+    {
+      "name": "Lucky",
+      "adopter": "Zieg777",
+      "color": "gray",
+      "bio": "This curious Starbuncle has a habit of showing up in the most unlikely places. Zieg found this little starby hiding, with slightly singed fur, inside a rune based smelter; dutifully holding on to a freshly smelted gold ingot. "
+    },
+    {
+      "name": "Nyx",
+      "adopter": "Sadie",
+      "color": "black",
+      "bio": "Infused by the void of the End, Nyx was born of an ill-fated experiment by Sadie to develop a spell to enable safe void travel.  It went wrong, and this Starbuncle's fur turned black.  Be careful, they've been caught peering over the shoulder of every wizard they meet to catch a peek at their notes!"
+    },
+    {
+      "name": "Chestnut",
+      "adopter": "Gootastic",
+      "color": "brown",
+      "bio": "Most confuse Chestnut for a squirrel rather than a magical hopper. She prefers it that way."
+    },{
+      "name": "Solstice",
+      "color": "lime",
+      "adopter": "Darkfira",
+      "bio": "Solstice likes to wander off and explore the unknown, usually leaving the task at hand unfinished. She will usually be found in someone's home relieving them of their gold and other valuables."
+    },
+    {
+      "name": "Aofie",
+      "color": "lime",
+      "adopter": "Sarenor",
+      "bio": "Sarenor was in desperate need of help automating his  Imbuement Stills when Aoife pranced through his automation basement on the search for adventure and food. After tossing a gold nugget at her, Aoife became Sarenors first and best Still Master. Today she enjoys a good dram, friends, and nice chair."
+    },
+    {
+      "name": "Ser Orstell",
+      "adopter": "Alex",
+      "color": "light_gray",
+      "bio": "Ser Orstell was once a knight of the Order of the Sacred Nug, keepers of the greatest gold nugget ever found. Orstell is now retired and wander in our world, from shrine to shrine to spread the myth of the Sacret Nug, and to seek a more quiet life in company of a wizard."
+    },
+    {
+      "name": "Carter",
+      "color": "red",
+      "adopter": "Nathan",
+      "bio": "Carter is a weird mix between loving and hating strangers, he is happy to jump at your legs and walk with you but is a ninja at dogdging hands, he enjoys Cuddles with his human."
+    },{
+      "name": "Peregrimm",
+      "color": "light_gray",
+      "adopter": "Dragon Verdantyr",
+      "bio": "A proud furry squire of Dragon's keeping up his moral with snuggles and cheering him on with squeaks and growls.  Also a brave protector from the little creepies and come for his companion in the night."
+    },
+    {
+      "name": "Litl",
+      "color": "cyan",
+      "adopter": "Relax",
+      "bio": "He's just a little, vibey guy!"
+    },{
+      "name": "Luna",
+      "color": "purple",
+      "adopter": "The Boo",
+      "bio": "Just let me sleep."
+    },{
+      "name": "Archimedes",
+      "color": "red",
+      "adopter": "Abandoned_Cat87",
+      "bio": "Failed at becoming a mage because he wasn't able to hold the spell book so he went on a quest to find a smaller one."
+    },{
+      "name": "Fisher",
+      "color": "black",
+      "adopter": "PaprikaSu",
+      "bio": "A friendly, swishy lil' guy who likes to zip around at 100 kilometers an hour."
+    },{
+      "name": "Atmos",
+      "color": "cyan",
+      "adopter": "Firel",
+      "bio": "Spends their time gazing at the open sky, and loves taking rides with Elytra-fliers."
+    },{
+      "name": "Dusty",
+      "color": "brown",
+      "adopter": "Coda Vanistok",
+      "bio": "This peculular hoarder was found huddled up between a few thrown pillows and a fireplace settled in Coda's study, relishing in the ambient heat before being discovered trying to store away every bit of gold found around the room over a period of a few days undiscovered. A feisty little critter that ducks away from offered affection, they're most appropriately described as an adorable troublemaker."
+    },{
+      "name": "Shade",
+      "color": "black",
+      "adopter": "VampyKillerClown",
+      "bio": "Once a necromancer's Familiar now a wondering soul looking for its next master, waiting for the return of his first."
+    },{
+      "name": "Squirrel",
+      "color": "brown",
+      "adopter": "The Emperor",
+      "bio": ""
+    },
+    {
+      "name": "Splonk",
+      "adopter": "Jaredlll08",
+      "color": "cyan",
+      "bio": "Splonk may seem a bit wobbly at times, but they seem to be perfectly fine otherwise!"
+    },{
+      "name": "Bailey",
+      "adopter": "Ars Nouveau Team",
+      "color": "red",
+      "bio": "Ars Nouveau is a passion project brought to life by hundreds of contributions from the community. We hope you enjoy this Rainbow-buncle as much as we enjoy making this mod! Thanks for playing!"
+    },{
+      "name": "Wolfram",
+      "adopter": "Chemoeum",
+      "color": "blue",
+      "bio": "Wolfram used to work for a chemist with 117 other starbuncles. While Wolfram was the only one able to distinguish materials from every element of the Periodic Table, all of his sisters and brothers struggled with basically any element except for gold."
+    },{
+      "name": "Nemo",
+      "adopter": "Tunatuesday",
+      "bio": "Please help me find my family uwu",
+      "color": "pink"
+    },{
+      "name": "Nuna",
+      "color": "brown",
+      "adopter": "Mochipurin",
+      "bio": "Stop staring, gimmie treats now"
+    },{
+      "name": "Aki",
+      "color": "white",
+      "adopter": "Weiss",
+      "bio": "Found on the shore near a chest, Aki seems to have been forgotten by a prior mage, She hates loud noises, and Skeletons. A note on her neck reads \"please give her a better life on the land then I could on the sea\""
+    },{
+      "name": "Snowflake",
+      "color": "light_blue",
+      "adopter": "DerringerCubed",
+      "bio": "On the far-flung plane of Alfheim, in the eternally frozen retreat of the fae of the Winter Court, amid a patch of preternaturally-tall, luminous crocus, DerringerCubed met this warm, soft fluffball curled up for a moment's rest. She is deterred by neither the long nights and relentless snows of deep winter nor the lingering traces of unnatural magic that always seem to surround her new friend."
+    },{
+      "name": "Rhaast",
+      "color": "black",
+      "adopter": "NUK3 redemption",
+      "bio": "A misguided spirit who is searching for her wizard companion"
+    },{
+      "name": "WaveClaw",
+      "color": "purple",
+      "adopter": "waveclaw",
+      "bio": "Found enjoying shiny metal that reminds one of cheese and sunrises."
+    },{
+      "name": "Ivory",
+      "adopter": "Lifeline",
+      "color": "red",
+      "bio": "A very small little friend eager to be loved. She is very curious but seems to be very smart, eager to try and help however she can. She tends to be anxious around new people, but will melt with joy if you give her pets. She has a small mushroom and a goat sticker always on her back."
+    },{
+      "name": "Elis",
+      "color": "orange",
+      "adopter": "Thunder",
+      "bio": "It is staring at you with confusion."
+    },{
+      "name": "Berry",
+      "adopter": "Jaysungmr",
+      "color": "pink",
+      "bio": "Found in an abandoned mage tower. Seems to enjoy source berries and live jazz"
+    },{
+      "name": "Cookie",
+      "adopter": "Sarrdonous",
+      "color": "light_gray",
+      "bio": "Cookie has a knack for finding the juiciest and most delicious Sourceberries, and sometimes sneaks into Sourceberry farms to satisfy his sweet tooth. Don’t be surprised if you see him with a berry-stained mouth and a guilty grin."
+    },{
+      "name": "Skytail",
+      "adopter": "HolidayWither",
+      "color": "light_blue",
+      "bio": "Skytail thrives on companionship, supports magic users with a positive and upbeat attitude, and spreads happiness wherever it goes."
+    }
+  ]
+}

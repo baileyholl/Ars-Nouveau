@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.WildenGuardian;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
@@ -13,12 +12,10 @@ import javax.annotation.Nullable;
 
 public class WildenGuardianModel extends AnimatedGeoModel<WildenGuardian> {
 
-    public static final ResourceLocation WARDER_NEUTRAL = new ResourceLocation(ArsNouveau.MODID, "geo/wilden_warder_neutral.geo.json");
-    public static final ResourceLocation WARDER_ARMORED = new ResourceLocation(ArsNouveau.MODID, "geo/wilden_warder_defense.geo.json");
-    public static final ResourceLocation TEXT = new ResourceLocation(ArsNouveau.MODID, "textures/entity/warder.png");
-    public static final ResourceLocation ANIM = new ResourceLocation(ArsNouveau.MODID, "animations/wilden_warder_animation_neutral.geo.json");
+    public static final ResourceLocation WARDER_NEUTRAL = new ResourceLocation(ArsNouveau.MODID, "geo/wilden_guardian.geo.json");
+    public static final ResourceLocation TEXT = new ResourceLocation(ArsNouveau.MODID, "textures/entity/wilden_guardian.png");
+    public static final ResourceLocation ANIM = new ResourceLocation(ArsNouveau.MODID, "animations/wilden_defender_animations.json");
 
-    //wilden_warder_defense
 
     @Override
     public void setCustomAnimations(WildenGuardian entity, int uniqueID, @Nullable AnimationEvent customPredicate) {
@@ -28,16 +25,22 @@ public class WildenGuardianModel extends AnimatedGeoModel<WildenGuardian> {
         head.setRotationX(extraData.headPitch * 0.017453292F);
         head.setRotationY(extraData.netHeadYaw * 0.017453292F);
 
-        IBone frontLeftLeg = this.getAnimationProcessor().getBone("left_leg");
-        IBone frontRightLeg = this.getAnimationProcessor().getBone("right_leg");
+        this.getBone("body_spines_retracted").setHidden(entity.isArmored());
+        this.getBone("left_arm_spines_retracted").setHidden(entity.isArmored());
+        this.getBone("right_arm_spines_retracted").setHidden(entity.isArmored());
+        this.getBone("right_leg_spines_retracted").setHidden(entity.isArmored());
+        this.getBone("left_leg_spines_retracted").setHidden(entity.isArmored());
 
-        frontLeftLeg.setRotationX(Mth.cos(entity.animationPosition * 0.6662F) * 1.4F * entity.animationSpeed);
-        frontRightLeg.setRotationX(Mth.cos(entity.animationPosition * 0.6662F + (float) Math.PI) * 1.4F * entity.animationSpeed);
+        this.getBone("body_spines_extended").setHidden(!entity.isArmored());
+        this.getBone("left_arm_spines_extended").setHidden(!entity.isArmored());
+        this.getBone("right_arm_spines_extended").setHidden(!entity.isArmored());
+        this.getBone("right_leg_spines_extended").setHidden(!entity.isArmored());
+        this.getBone("left_leg_spines_extended").setHidden(!entity.isArmored());
     }
 
     @Override
     public ResourceLocation getModelResource(WildenGuardian wildenStalker) {
-        return wildenStalker.isArmored() ? WARDER_ARMORED : WARDER_NEUTRAL;
+        return WARDER_NEUTRAL;
     }
 
     @Override

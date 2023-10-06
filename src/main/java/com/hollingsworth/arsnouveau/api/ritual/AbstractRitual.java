@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public abstract class AbstractRitual {
 
@@ -84,6 +85,16 @@ public abstract class AbstractRitual {
                 return true;
         }
         return false;
+    }
+
+    public int itemConsumedCount(Predicate<ItemStack> stackPredicate){
+        int total = 0;
+        for(ItemStack stack : getConsumedItems()){
+            if(stackPredicate.test(stack)){
+                total += stack.getCount();
+            }
+        }
+        return total;
     }
 
     /**
@@ -163,6 +174,11 @@ public abstract class AbstractRitual {
 
     public boolean needsSourceNow() {
         return getContext().needsSourceToRun;
+    }
+
+    public boolean takeSourceNow(){
+        setNeedsSource(true);
+        return tile.takeSource();
     }
 
     public void write(CompoundTag tag) {

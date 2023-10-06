@@ -15,12 +15,17 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.hollingsworth.arsnouveau.common.block.RitualBrazierBlock.LIT;
 
 public class BrazierRelayTile extends RitualBrazierTile{
 
     int ticksToLightOff = 0;
     public BlockPos brazierPos;
+
+    private static List<BlockPos> relayingTraversed = new ArrayList<>();
 
     public BrazierRelayTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
@@ -33,7 +38,7 @@ public class BrazierRelayTile extends RitualBrazierTile{
     @Override
     public void tick() {
         if (isDecorative && level.isClientSide) {
-            makeParticle(color.nextColor(level.random), color.nextColor(level.random), 5);
+            makeParticle(color.transition((int) level.getGameTime() * 10), color.transition((int) level.getGameTime() * 10), 5);
         }
 
         if(!level.isClientSide){
@@ -57,13 +62,13 @@ public class BrazierRelayTile extends RitualBrazierTile{
         double xzOffset = 0.25;
         for (int i = 0; i < intensity; i++) {
             world.addParticle(
-                    GlowParticleData.createData(centerColor),
+                    GlowParticleData.createData(centerColor.transition((int) level.getGameTime() * 20)),
                     pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2), pos.getY() + 0.2 + ParticleUtil.inRange(-0.05, 0.2), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2),
                     0, ParticleUtil.inRange(0.0, 0.05f), 0);
         }
         for (int i = 0; i < intensity; i++) {
             world.addParticle(
-                    GlowParticleData.createData(outerColor),
+                    GlowParticleData.createData(outerColor.transition((int) level.getGameTime() * 20)),
                     pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset), pos.getY() + 0.2 + ParticleUtil.inRange(0, 0.7), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset),
                     0, ParticleUtil.inRange(0.0, 0.05f), 0);
         }
@@ -111,12 +116,15 @@ public class BrazierRelayTile extends RitualBrazierTile{
 
     @Override
     public InventoryManager getInventoryManager() {
-        if (this.brazierPos != null && level != null && level.isLoaded(this.brazierPos) && level.getBlockEntity(this.brazierPos) instanceof RitualBrazierTile brazierTile) {
+        if (this.brazierPos != null && level != null && relayingTraversed.size() < 256 && !relayingTraversed.contains(brazierPos) && level.isLoaded(this.brazierPos) && level.getBlockEntity(this.brazierPos) instanceof RitualBrazierTile brazierTile) {
+            relayingTraversed.add(brazierPos);
             InventoryManager brazierInv = brazierTile.getInventoryManager();
-            if (brazierInv.getInventory().size() > 0) {
+            if (!brazierInv.getInventory().isEmpty()) {
+                relayingTraversed.clear();
                 return brazierInv;
             }
         }
+        relayingTraversed.clear();
         return super.getInventoryManager();
     }
 }

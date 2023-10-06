@@ -143,7 +143,7 @@ public final class Pathfinding {
     }
 
     @OnlyIn(Dist.CLIENT)
-    private static void debugDrawNode(final ModNode n, final float r, final float g, final float b, final PoseStack matrixStack) {
+    public static void debugDrawNode(final ModNode n, final float r, final float g, final float b, final PoseStack matrixStack) {
         matrixStack.pushPose();
         matrixStack.translate((double) n.pos.getX() + 0.375, (double) n.pos.getY() + 0.375, (double) n.pos.getZ() + 0.375);
 
@@ -216,7 +216,7 @@ public final class Pathfinding {
     }
 
     @OnlyIn(Dist.CLIENT)
-    private static void renderDebugText(final ModNode n, final PoseStack matrixStack) {
+    public static void renderDebugText(final ModNode n, final PoseStack matrixStack) {
         final String s1 = String.format("F: %.3f [%d]", n.getCost(), n.getCounterAdded());
         final String s2 = String.format("G: %.3f [%d]", n.getScore(), n.getCounterVisited());
         final Font fontrenderer = Minecraft.getInstance().font;

@@ -16,6 +16,10 @@ public class ClientInfo {
 
     public static CompoundTag persistentData = new CompoundTag();
     public static int ticksInGame = 0;
+    public static int redOverlayTicks = 0;
+    public static float redOverlayMana = 0;
+    public static float reservedOverlayMana = 0.15F;
+
     public static float partialTicks = 0.0f;
     public static List<BlockPos> scryingPositions = new ArrayList<>();
 
@@ -24,7 +28,10 @@ public class ClientInfo {
 
     public static TextureTarget skyRenderTarget;
     public static ShaderInstance skyShader;
+    public static ShaderInstance blameShader;
+    public static ShaderInstance rainbowShader;
 
+    public static boolean isSupporter = false;
 
     public static Component[] storageTooltip = new Component[0];
     public static void setTooltip(Component... string) {
@@ -34,5 +41,9 @@ public class ClientInfo {
     public static void highlightPosition(List<ColorPos> colorPos, int ticks){
         highlightPositions = colorPos;
         highlightTicks = ticks;
+    }
+
+    public static boolean redTicks() {
+        return redOverlayTicks > 0;
     }
 }

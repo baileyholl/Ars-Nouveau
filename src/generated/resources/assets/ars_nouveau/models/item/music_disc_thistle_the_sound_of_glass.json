@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "ars_nouveau:items/music_disc_thistle_the_sound_of_glass"
+  }
+}

@@ -69,21 +69,8 @@ public class ScryCaster extends ModItem implements ICasterTool, IAnimatable {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-        if(pLevel.isClientSide)
-            return new InteractionResultHolder<>(InteractionResult.SUCCESS, pPlayer.getItemInHand(pUsedHand));
-
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
-        ScryCaster.Data data = new Data(stack);
         ISpellCaster caster = getSpellCaster(stack);
-        if(data.scryPos == null){
-            PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.scry_caster.no_pos"));
-            return super.use(pLevel, pPlayer, pUsedHand);
-        }
-
-        if(!caster.getSpell().isValid()){
-            PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.invalid_spell"));
-            super.use(pLevel, pPlayer, pUsedHand);
-        }
         return caster.castSpell(pLevel, (LivingEntity) pPlayer, pUsedHand, Component.translatable("ars_nouveau.invalid_spell"));
     }
 

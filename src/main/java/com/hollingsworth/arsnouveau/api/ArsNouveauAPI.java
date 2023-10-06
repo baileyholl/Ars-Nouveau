@@ -52,6 +52,9 @@ import java.util.stream.Collectors;
 public class ArsNouveauAPI {
     public static final ResourceLocation EMPTY_KEY = new ResourceLocation(ArsNouveau.MODID, "empty");
 
+    //This is intended as a dev debug tool, used in mana bars. Do not make into a config option with a PR. A Starkiller will be dispatched if you do.
+    public static boolean ENABLE_DEBUG_NUMBERS = false;
+
     /**
      * Map of all spells to be registered in the spell system
      * <p>
