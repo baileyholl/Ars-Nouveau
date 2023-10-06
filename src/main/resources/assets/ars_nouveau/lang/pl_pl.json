@@ -398,6 +398,7 @@
   "ars_nouveau.mirror.invalid": "Niepoprawne zaklęcie. Lustra akceptują tylko efekty i ulepszenia.",
   "ars_nouveau.mod_news": "Nowości modowe",
   "ars_nouveau.mod_news_desc": "Najnowsze wydania i aktualności",
+  "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
   "ars_nouveau.norecipe": "Nie znaleziono przepisu.",
   "ars_nouveau.not_enough_exp": "Za mało EXP dla tego glifu.",
   "ars_nouveau.nothing": "Nic",
