@@ -398,6 +398,7 @@
   "ars_nouveau.mirror.invalid": "Hechizo inválido. Los espejos sólo aceptan efectos y aumentos",
   "ars_nouveau.mod_news": "Noticias del mod",
   "ars_nouveau.mod_news_desc": "Los últimos lanzamientos y noticias",
+  "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
   "ars_nouveau.norecipe": "No se ha encontrado ninguna receta",
   "ars_nouveau.not_enough_exp": "No hay suficiente EXP para este glifo",
   "ars_nouveau.nothing": "Nada",
