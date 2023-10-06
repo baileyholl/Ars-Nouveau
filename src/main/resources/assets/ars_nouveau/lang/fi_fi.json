@@ -398,6 +398,7 @@
   "ars_nouveau.mirror.invalid": "Virheellinen oikeinkirjoitus. Peilit hyväksyvät vain tehosteet ja lisäykset.",
   "ars_nouveau.mod_news": "Mod-uutiset",
   "ars_nouveau.mod_news_desc": "Uusimmat tiedotteet ja uutiset",
+  "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
   "ars_nouveau.norecipe": "Reseptiä ei löytynyt.",
   "ars_nouveau.not_enough_exp": "Ei tarpeeksi EXP tälle kuviolle.",
   "ars_nouveau.nothing": "Ei mitään",
