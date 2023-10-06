@@ -398,6 +398,7 @@
   "ars_nouveau.mirror.invalid": "잘못된 주문입니다. 거울은 효과와 강화 문양만 적용가능합니다.",
   "ars_nouveau.mod_news": "모드 뉴스",
   "ars_nouveau.mod_news_desc": "최신 릴리즈 내역과 뉴스",
+  "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
   "ars_nouveau.norecipe": "검색된 조합법이 없습니다.",
   "ars_nouveau.not_enough_exp": "문양을 위한 경험치가 부족합니다.",
   "ars_nouveau.nothing": "없음",
