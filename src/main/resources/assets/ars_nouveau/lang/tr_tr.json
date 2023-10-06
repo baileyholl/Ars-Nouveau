@@ -398,6 +398,7 @@
   "ars_nouveau.mirror.invalid": "Geçersiz büyü Aynalar yalnızca Efektleri ve Artırmaları kabul eder.",
   "ars_nouveau.mod_news": "Mod Haberleri",
   "ars_nouveau.mod_news_desc": "En son sürümler ve haberler",
+  "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
   "ars_nouveau.norecipe": "Tarif bulunamadı.",
   "ars_nouveau.not_enough_exp": "Bu glif için yeterli EXP yok.",
   "ars_nouveau.nothing": "Hiç bir şey",
