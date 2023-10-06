@@ -398,6 +398,7 @@
   "ars_nouveau.mirror.invalid": "Incantesimo non valido. Gli specchi accettano solo effetti e potenziamenti.",
   "ars_nouveau.mod_news": "Notizie mod",
   "ars_nouveau.mod_news_desc": "Le ultime uscite e novità",
+  "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
   "ars_nouveau.norecipe": "Nessuna ricetta trovata",
   "ars_nouveau.not_enough_exp": "EXP insufficiente per questo glifo.",
   "ars_nouveau.nothing": "Niente",
