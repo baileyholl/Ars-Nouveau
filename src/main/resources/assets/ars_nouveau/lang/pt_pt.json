@@ -398,6 +398,7 @@
   "ars_nouveau.mirror.invalid": "Feitiço inválido. Espelhos aceitam apenas Efeitos e Ampliações.",
   "ars_nouveau.mod_news": "Mod Notícias",
   "ars_nouveau.mod_news_desc": "Os últimos lançamentos e novidades",
+  "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
   "ars_nouveau.norecipe": "Nenhuma receita encontrada.",
   "ars_nouveau.not_enough_exp": "Não há EXP suficiente para este glifo.",
   "ars_nouveau.nothing": "Nada",
