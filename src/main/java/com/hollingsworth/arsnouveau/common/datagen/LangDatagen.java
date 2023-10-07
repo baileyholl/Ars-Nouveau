@@ -1229,6 +1229,8 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.spell_sensor", "Spell Sensor");
         add("ars_nouveau.page1.spell_sensor", "Outputs a redstone signal when a spell is cast nearby. Output strength is determined by the length of the spell cast. Using a Dominion Wand will cause it to trigger when a spell resolves nearby, instead of being cast. Using a Spell Parchment will set the sensor to only output when that exact spell is detected.");
         add("ars_nouveau.no_stack_crafting", "No valid craft nearby.");
+        add("item.ars_nouveau.jump_ring", "Ring of Jumping");
+        add("ars_nouveau.page1.jump_ring", "Allows the user to continue jumping in the air. Each jump will expend mana.");
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             String key = "block.ars_nouveau." + s;
             String val = data.get(key);

@@ -641,6 +641,7 @@ public class PatchouliProvider implements DataProvider {
         dominionWand.builder.withPage(new RelationsPage().withEntry(storageLectern).withEntry(displayCase).withEntry(starby));
 
         addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.SPELL_SENSOR).withLocalizedText().withPage(new ApparatusPage(BlockRegistry.SPELL_SENSOR)), getPath(AUTOMATION, "spell_sensor"));
+        addPage(new PatchouliBuilder(EQUIPMENT, ItemsRegistry.JUMP_RING).withLocalizedText().withPage(new ApparatusPage(ItemsRegistry.JUMP_RING)), getPath(EQUIPMENT, "jump_ring"));
     }
 
     public String getLangPath(String name, int count) {

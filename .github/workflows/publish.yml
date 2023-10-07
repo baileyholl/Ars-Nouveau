@@ -38,8 +38,9 @@ jobs:
           modrinth-id: TKB6INcv
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          files-primary: build/libs/!(*-@(dev|sources)).jar
-          files-secondary: build/libs/*-@(dev|sources).jar
+          files: |
+            build/libs/!(*-@(dev|sources|javadoc)).jar
+            build/libs/*-@(dev|sources|javadoc).jar
           version-type: release
           loaders: forge
           name: Ars Nouveau ${{ env.MINECRAFT_VERSION }}-${{ inputs.version }}
@@ -47,4 +48,3 @@ jobs:
           game-versions: |
             ${{ env.MINECRAFT_VERSION }}
           changelog: ""
-          version-resolver: exact

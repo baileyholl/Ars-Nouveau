@@ -1,4 +1,4 @@
-// 1.19.2	2023-10-06T22:05:27.4406504	Patchouli
+// 1.19.2	2023-10-06T22:07:24.6961719	Patchouli
 d5f03c259d2af4f5e8e286639783f4fc833b1076 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/aqua_affinity.json
 2ec536fea831588201432d61d70af61385882054 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/alteration_table.json
 a82f4fc73946d228b1e3f5e03d0ecef46f33cdfb data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/applying_perks.json
@@ -55,6 +55,7 @@ de0893ea7345811d79f946808a1c91cc58ec2798 data/ars_nouveau/patchouli_books/worn_n
 d1e6009f319c0bc546af9a39f184102cb9a15c99 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/equipment/enchanters_sword.json
 3fab58c25a4f9679d73a4c406de4bb9b6922b15e data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/equipment/flask_launcher.json
 af03840f0988505b31a14e18fbe2045198f0aa39 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/equipment/jar_of_light.json
+465677fa8bf0b032fe80693036603174ac5a9f42 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/equipment/jump_ring.json
 7e1795fd2a7e4b0d55ab428d554484931caad96e data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/equipment/potion_flask.json
 802dddbf926b3996a1e647e45f45d02f7d812bfb data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/equipment/reactive_enchantment.json
 b71740ed0f131157a6bf36d3df15d6dbc61cb993 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/equipment/ring_of_greater_discount.json
