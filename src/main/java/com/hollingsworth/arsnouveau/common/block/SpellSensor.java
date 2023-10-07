@@ -27,7 +27,7 @@ public class SpellSensor extends TickableModBlock{
     public static final EnumProperty<SculkSensorPhase> PHASE = BlockStateProperties.SCULK_SENSOR_PHASE;
 
     public SpellSensor(){
-        this(defaultProperties());
+        this(defaultProperties().noOcclusion());
     }
 
     public SpellSensor(Properties p_49795_) {

@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:block/cube_all",
+  "render_type": "cutout",
   "textures": {
-    "all": "ars_nouveau:blocks/spell_sensor"
+    "all": "ars_nouveau:blocks/spell_sensor_animation"
   }
 }
