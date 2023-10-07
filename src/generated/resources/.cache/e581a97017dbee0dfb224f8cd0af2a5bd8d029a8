@@ -1,4 +1,4 @@
-// 1.19.2	2023-06-13T19:55:51.7921588	Apparatus
+// 1.19.2	2023-10-06T16:30:21.0908934	Apparatus
 47c673376b4ffc5874674165c030f4e7213c87cb data/ars_nouveau/recipes/alchemists_crown.json
 9de96693a6f1f8acf98ddedc408117537e390b95 data/ars_nouveau/recipes/amulet_of_mana_boost.json
 9336968ca3afbcbcdcb1dfd5c8bbe859975835a0 data/ars_nouveau/recipes/amulet_of_mana_regen.json
@@ -54,6 +54,7 @@ c96faa00a6648573eddb08e6bb9d2b82020aab2f data/ars_nouveau/recipes/fortune_2.json
 21969be82dfc26b0e48911f4f21d38d24142e619 data/ars_nouveau/recipes/fortune_3.json
 ec952c57d59d54a02da3301d4502ec926800438c data/ars_nouveau/recipes/infinity_1.json
 388cc834eac87f5774b99899c5df9290cc50f65f data/ars_nouveau/recipes/jar_of_light.json
+9dd267bdd8265184cec4ee610139318921c19651 data/ars_nouveau/recipes/jump_ring.json
 588a5debf821d2cd7617de2aee640fc68c608f41 data/ars_nouveau/recipes/knockback_1.json
 056b6f330bac0f9d19155fbea4521b3e6fd07549 data/ars_nouveau/recipes/knockback_2.json
 3d953def1a654a23cae4a133a9e82688c74c02db data/ars_nouveau/recipes/lingering_flask_cannon.json

@@ -639,6 +639,8 @@ public class PatchouliProvider implements DataProvider {
         displayCase.builder.withPage(new RelationsPage().withEntry(bookwyrm).withEntry(storageLectern).withEntry(dominionWand)
                 .withEntries(scrollRelations));
         dominionWand.builder.withPage(new RelationsPage().withEntry(storageLectern).withEntry(displayCase).withEntry(starby));
+
+        addPage(new PatchouliBuilder(EQUIPMENT, ItemsRegistry.JUMP_RING).withLocalizedText().withPage(new ApparatusPage(ItemsRegistry.JUMP_RING)), getPath(EQUIPMENT, "jump_ring"));
     }
 
     public String getLangPath(String name, int count) {

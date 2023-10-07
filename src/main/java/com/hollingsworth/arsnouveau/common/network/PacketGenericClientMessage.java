@@ -32,7 +32,6 @@ public class PacketGenericClientMessage {
             ServerPlayer player = ctx.get().getSender();
             if (player != null) {
                 if(action == Action.JUMP_RING){
-                    System.out.println("boop");
                     JumpingRing.doJump(player);
                 }
             }

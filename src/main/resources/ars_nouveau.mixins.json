@@ -31,7 +31,7 @@
     "PufferfishAccessor",
     "LivingAccessor",
     "structure.StructureProcessorAccessor",
-    "structure.StructureTemplateAccessor" 
+    "structure.StructureTemplateAccessor"
   ],
   "minVersion": "0.8"
 }

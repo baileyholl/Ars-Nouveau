@@ -287,7 +287,7 @@ public class ItemsRegistry {
     public static RegistryWrapper<Item> STABLE_WARP_SCROLL = register(LibItemNames.STABLE_WARP_SCROLL, () -> new StableWarpScroll(defaultItemProperties().stacksTo(1)));
     public static RegistryWrapper<ScryCaster> SCRY_CASTER = register(LibItemNames.SCRY_CASTER, () -> new ScryCaster(defaultItemProperties().stacksTo(1)));
 
-    public static RegistryWrapper<JumpingRing> JUMP_RING = register("jump_ring", () -> new JumpingRing());
+    public static RegistryWrapper<JumpingRing> JUMP_RING = register(LibItemNames.JUMP_RING, () -> new JumpingRing());
 
     public static RegistryWrapper register(String name, Supplier<? extends Item> item) {
         return new RegistryWrapper<>(ITEMS.register(name, item));

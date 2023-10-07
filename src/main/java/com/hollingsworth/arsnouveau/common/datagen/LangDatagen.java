@@ -1224,6 +1224,8 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.music_disc_firel_the_wild_hunt", "Music Disc");
         add("item.ars_nouveau.music_disc_firel_the_wild_hunt.desc", "Firel - The Wild Hunt");
         add("ars_nouveau.no_stack_crafting", "No valid craft nearby.");
+        add("item.ars_nouveau.jump_ring", "Ring of Jumping");
+        add("ars_nouveau.page1.jump_ring", "Allows the user to continue jumping in the air. Each jump will expend mana.");
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             String key = "block.ars_nouveau." + s;
             String val = data.get(key);
