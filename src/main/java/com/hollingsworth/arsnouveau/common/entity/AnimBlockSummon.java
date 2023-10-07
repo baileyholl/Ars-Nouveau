@@ -142,6 +142,8 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
     }
 
     public void returnToFallingBlock(BlockState blockState) {
+        if(blockState == null)
+            return;
         EnchantedFallingBlock fallingBlock = new EnchantedFallingBlock(level, blockPosition(), blockState);
         fallingBlock.setOwner(this.getOwner());
         fallingBlock.setDeltaMovement(this.getDeltaMovement());
