@@ -26,16 +26,8 @@ public class ClientEventHandler {
      */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void renderWorldLastEvent(final RenderLevelStageEvent event) {
-//        WorldEventContext.INSTANCE.renderWorldLastEvent(event);
-//        if(event.getStage() == RenderLevelStageEvent.Stage.AFTER_CUTOUT_MIPPED_BLOCKS_BLOCKS){
-//            PathfindingDebugRenderer.render(WorldEventContext.INSTANCE);
-//            WorldEventContext.bufferSource.endBatch();
-//        }
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
             ClientInfo.partialTicks = event.getPartialTick();
-//            if (DEBUG_DRAW) {
-//                Pathfinding.debugDraw(event.getPartialTick(), event.getPoseStack());
-//            }
             LightManager.updateAll(event.getLevelRenderer());
         }
     }
@@ -50,10 +42,5 @@ public class ClientEventHandler {
                 Config.INFORM_LIGHTS.save();
             }
         }
-//        if (e.getEntity().getCommandSenderWorld().isClientSide){
-//            if(Config.INFORM_LIGHTS.get()){
-//                PortUtil.sendMessage(e.getEntity(), Component.translatable("ars_nouveau.light_message").withStyle(ChatFormatting.GOLD));
-//            }
-//        }
     }
 }
