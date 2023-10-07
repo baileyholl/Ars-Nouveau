@@ -12,7 +12,7 @@ import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.SpellSensor;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
-import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -52,7 +52,8 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
     }
 
     public static void onSpellCast(SpellCastEvent event){
-        SENSOR_MAP.applyForRange(event.getWorld(), new BlockPos(event.context.getCaster().getPosition()), 8, (pos) ->{
+        Vec3 vec3 = event.context.getCaster().getPosition();
+        SENSOR_MAP.applyForRange(event.getWorld(), BlockPos.containing(vec3.x, vec3.y, vec3.z), 8, (pos) ->{
             if(event.getWorld().getBlockEntity(pos) instanceof SpellSensorTile tile && !tile.isOnResolve){
                 tile.onSignal(event.context.getCaster().getPosition(), event.spell);
             }

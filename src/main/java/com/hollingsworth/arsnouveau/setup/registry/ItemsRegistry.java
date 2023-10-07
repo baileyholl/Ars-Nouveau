@@ -219,6 +219,7 @@ public class ItemsRegistry {
     public static final RegistryWrapper<SpellCrossbow> SPELL_CROSSBOW = register(LibItemNames.SPELL_CROSSBOW, () -> new SpellCrossbow(defaultItemProperties().stacksTo(1)));
     public static final RegistryWrapper<StableWarpScroll> STABLE_WARP_SCROLL = register(LibItemNames.STABLE_WARP_SCROLL, () -> new StableWarpScroll(defaultItemProperties().stacksTo(1)));
     public static final RegistryWrapper<ScryCaster> SCRY_CASTER = register(LibItemNames.SCRY_CASTER, () -> new ScryCaster(defaultItemProperties().stacksTo(1)));
+    public static final RegistryWrapper<JumpingRing> JUMP_RING = register(LibItemNames.JUMP_RING, JumpingRing::new);
 
     public static <T extends Item> RegistryWrapper<T> register(String name, Supplier<T> item) {
         return new RegistryWrapper<>(ITEMS.register(name, item));

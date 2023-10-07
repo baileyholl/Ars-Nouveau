@@ -1,4 +1,4 @@
-// 1.20.1	2023-07-09T20:26:02.0258562	Loot Tables
+// 1.20.1	2023-10-07T14:06:16.4709887	Loot Tables
 4f70eae621815da8d08d3ea0b9fd479b48bad2d3 data/ars_nouveau/loot_tables/blocks/agronomic_sourcelink.json
 8a6d60f2b39de0408c7e4537b53e866a04236d22 data/ars_nouveau/loot_tables/blocks/alchemical_sourcelink.json
 8bdff8a0a49a9f3f21a822eb1d1d01a950d6ad1a data/ars_nouveau/loot_tables/blocks/alteration_table.json
@@ -146,6 +146,7 @@ e92ecb490985aae22297d2f5cd5bcb5e625671b7 data/ars_nouveau/loot_tables/blocks/sou
 5708d7c438d48789ab5d0f00a115bdebe340215b data/ars_nouveau/loot_tables/blocks/source_gem_block.json
 de69afa2d3bda63f5fa5551faa06b3856f9e2b45 data/ars_nouveau/loot_tables/blocks/source_jar.json
 7cfca21047bb21713aaeec12060826e87c6cd4de data/ars_nouveau/loot_tables/blocks/spell_prism.json
+401055b950ac66d34a96e29f1666fd3c59244c0f data/ars_nouveau/loot_tables/blocks/spell_sensor.json
 2e038e8112b147e2a4d00e4a1d707541c89c421c data/ars_nouveau/loot_tables/blocks/spell_turret.json
 9ee66bf29aa157ad4254250a2471b6b0a8789355 data/ars_nouveau/loot_tables/blocks/storage_lectern.json
 9aaab2a4ead128014c2d59c87df70099a1df6a91 data/ars_nouveau/loot_tables/blocks/stripped_blue_archwood_log.json

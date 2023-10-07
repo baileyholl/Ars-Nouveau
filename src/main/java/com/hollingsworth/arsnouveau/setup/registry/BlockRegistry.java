@@ -317,13 +317,14 @@ public class BlockRegistry {
     public static final RegistryWrapper<SkyWeave> SKY_WEAVE = registerBlockAndItem(LibBlockNames.SKY_WEAVE, () ->  new SkyWeave(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
     public static final RegistryWrapper<TemporaryBlock> TEMPORARY_BLOCK = registerBlock(LibBlockNames.TEMPORARY_BLOCK, () -> new TemporaryBlock(BlockBehaviour.Properties.of().strength(1.5F, 6.0F).sound(SoundType.STONE)));
     public static final RegistryWrapper<ItemDetector> ITEM_DETECTOR = registerBlockAndItem(LibBlockNames.ITEM_DETECTOR, ItemDetector::new);
-
+    public static RegistryWrapper<SpellSensor> SPELL_SENSOR = registerBlockAndItem(LibBlockNames.SPELL_SENSOR, SpellSensor::new);
     public static final RegistryWrapper<BlockEntityType<RitualBrazierTile>> RITUAL_TILE = registerTile(LibBlockNames.RITUAL_BRAZIER, RitualBrazierTile::new, RITUAL_BLOCK);
     public static final RegistryWrapper<BlockEntityType<BrazierRelayTile>> BRAZIER_RELAY_TILE = registerTile(LibBlockNames.BRAZIER_RELAY, BrazierRelayTile::new, BRAZIER_RELAY);
     public static final RegistryWrapper<BlockEntityType<SkyBlockTile>> SKYWEAVE_TILE = registerTile(LibBlockNames.SKY_WEAVE, SkyBlockTile::new, SKY_WEAVE);
     public static final RegistryWrapper<BlockEntityType<TemporaryTile>> TEMPORARY_TILE = registerTile(LibBlockNames.TEMPORARY_BLOCK, TemporaryTile::new, TEMPORARY_BLOCK);
     public static final RegistryWrapper<BlockEntityType<CraftingLecternTile>> CRAFTING_LECTERN_TILE = registerTile(LibBlockNames.STORAGE_LECTERN, CraftingLecternTile::new, CRAFTING_LECTERN);
     public static final RegistryWrapper<BlockEntityType<ItemDetectorTile>> ITEM_DETECTOR_TILE = registerTile(LibBlockNames.ITEM_DETECTOR, ItemDetectorTile::new, ITEM_DETECTOR);
+    public static final RegistryWrapper<BlockEntityType<SpellSensorTile>> SPELL_SENSOR_TILE = registerTile(LibBlockNames.SPELL_SENSOR, SpellSensorTile::new, SPELL_SENSOR);
 
     public static void onBlocksRegistry(final IForgeRegistry<Block> registry) {
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {

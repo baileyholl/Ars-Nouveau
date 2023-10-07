@@ -10,7 +10,7 @@ import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.registry.ModKeyBindings;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.*;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
@@ -144,7 +144,7 @@ public class KeyHandler {
             checkKeysPressed(event.getKey());
         if(event.getKey() ==  Minecraft.getInstance().options.keyJump.getKey().getValue()){
             if(Minecraft.getInstance().player != null
-                    && !Minecraft.getInstance().player.isOnGround()
+                    && !Minecraft.getInstance().player.onGround()
                     && CuriosUtil.hasItem(Minecraft.getInstance().player, ItemsRegistry.JUMP_RING.get())){
                 Networking.INSTANCE.sendToServer(new PacketGenericClientMessage(PacketGenericClientMessage.Action.JUMP_RING));
             }
