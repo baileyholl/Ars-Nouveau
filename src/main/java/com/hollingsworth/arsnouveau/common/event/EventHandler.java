@@ -19,6 +19,7 @@ import com.hollingsworth.arsnouveau.common.block.LavaLily;
 import com.hollingsworth.arsnouveau.common.command.*;
 import com.hollingsworth.arsnouveau.common.compat.CaelusHandler;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
+import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import com.hollingsworth.arsnouveau.common.items.EnchantersSword;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
@@ -67,6 +68,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.level.SaplingGrowTreeEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -74,9 +76,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
@@ -406,6 +406,27 @@ public class EventHandler {
         }
     }
 
+    @SubscribeEvent
+    public static void treeGrow(SaplingGrowTreeEvent event) {
+        if (!(event.getLevel() instanceof ServerLevel level))
+            return;
+        Set<UUID> sprigs = Whirlisprig.WHIRLI_MAP.getEntities(level);
+        List<UUID> sprigsToRemove = new ArrayList<>();
+
+        for(UUID uuid : sprigs){
+            Entity entity = level.getEntity(uuid);
+            if(entity == null || !(entity instanceof Whirlisprig whirlisprig)){
+                sprigsToRemove.add(uuid);
+                continue;
+            }
+            if(BlockUtil.distanceFrom(entity.blockPosition(), event.getPos()) <= 10) {
+                whirlisprig.droppingShards = true;
+            }
+        }
+        for(UUID uuid : sprigsToRemove){
+            Whirlisprig.WHIRLI_MAP.removeEntity(level, uuid);
+        }
+    }
 
     private EventHandler() {
     }
