@@ -29,6 +29,7 @@
     "perks.PerkLivingEntity",
     "structure.StructureTemplateMixin",
     "PufferfishAccessor",
+    "LivingAccessor",
     "structure.StructureProcessorAccessor",
     "structure.StructureTemplateAccessor"
   ],
