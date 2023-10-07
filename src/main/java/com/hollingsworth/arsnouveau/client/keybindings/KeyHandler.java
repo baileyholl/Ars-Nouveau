@@ -30,10 +30,10 @@ public class KeyHandler {
     };
     public static void checkKeysPressed(int key) {
         checkCurioHotkey(key);
-        if(key == ModKeyBindings.FAMILIAR_TOGGLE.getKey().getValue()){
+        if(key == ModKeyBindings.FAMILIAR_TOGGLE.getKey().getValue() && !ModKeyBindings.FAMILIAR_TOGGLE.isUnbound()){
             Networking.sendToServer(new PacketToggleFamiliar());
         }
-        if (key == ModKeyBindings.OPEN_RADIAL_HUD.getKey().getValue()) {
+        if (key == ModKeyBindings.OPEN_RADIAL_HUD.getKey().getValue() && !ModKeyBindings.OPEN_RADIAL_HUD.isUnbound()) {
             if (MINECRAFT.screen instanceof GuiRadialMenu) {
                 MINECRAFT.player.closeContainer();
                 return;
