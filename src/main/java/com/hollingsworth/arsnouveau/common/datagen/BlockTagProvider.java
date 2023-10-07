@@ -37,6 +37,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     public static TagKey<Block> BREAK_WITH_PICKAXE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "break_with_pickaxe"));
     public static TagKey<Block> AUTOPULL_DISABLED = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "storage/autopull_disabled"));
     public static TagKey<Block> RELOCATION_NOT_SUPPORTED = BlockTags.create(new ResourceLocation("forge", "relocation_not_supported"));
+    public static TagKey<Block> OCCLUDES_SPELL_SENSOR = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "occludes_spell_sensor"));
 
     public BlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
         super(output, Registries.BLOCK, future, block -> block.builtInRegistryHolder().key(), ArsNouveau.MODID, helper);
@@ -44,6 +45,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
 
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
+        this.tag(OCCLUDES_SPELL_SENSOR).add(BlockRegistry.MAGEBLOOM_BLOCK.get());
         this.tag(RELOCATION_NOT_SUPPORTED);
         this.tag(BUDDING_BLOCKS).add(Blocks.BUDDING_AMETHYST);
         this.tag(CLUSTER_BLOCKS).add(Blocks.AMETHYST_CLUSTER);

@@ -1,4 +1,4 @@
-// 1.20.1	2023-10-05T21:03:59.9237253	Ars Nouveau Item Models
+// 1.20.1	2023-10-07T14:06:16.4759917	Ars Nouveau Item Models
 11ee554b11a3a830e89b742762e5b754c2ecb5ee assets/ars_nouveau/models/item/agronomic_sourcelink.json
 339a05323ebef7efc5c70db708a2e7a24708e9bc assets/ars_nouveau/models/item/alchemical_sourcelink.json
 a0214090201827dd5f954d0b33e64e4df6e53764 assets/ars_nouveau/models/item/alchemists_crown.json
@@ -113,6 +113,7 @@ e211bc125e4638f3492319e443e345cbb07dbc41 assets/ars_nouveau/models/item/glyph_to
 1ea37799aba1357a8fc65398b71a5d1738e9e6af assets/ars_nouveau/models/item/greater_experience_gem.json
 8a3874b48013ee67b3d362bb9b7974924c5898d0 assets/ars_nouveau/models/item/green_sbed.json
 486511474b99fb4803c0781259ef5620ac0b5adf assets/ars_nouveau/models/item/item_detector.json
+abbab026c7b967ee35b53345b2fe7bacee12c3b7 assets/ars_nouveau/models/item/jump_ring.json
 6b4020f44475f6afeb58072fb014c8e53664a2c5 assets/ars_nouveau/models/item/magebloom_block.json
 dfb72f1f778ccff4efb558a02fc745c8d7f7fae3 assets/ars_nouveau/models/item/mendosteen_pod.json
 a869ede0c768f982722b00764902abac8e30fde9 assets/ars_nouveau/models/item/mirrorweave.json

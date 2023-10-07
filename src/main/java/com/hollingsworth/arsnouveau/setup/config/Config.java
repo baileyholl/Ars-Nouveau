@@ -37,6 +37,7 @@ public class Config {
     public static ForgeConfigSpec.IntValue DRYGMY_BASE_ITEM;
     public static ForgeConfigSpec.IntValue DRYGMY_UNIQUE_BONUS;
     public static ForgeConfigSpec.IntValue DRYGMY_QUANTITY_CAP;
+    public static ForgeConfigSpec.IntValue JUMP_RING_COST;
 
     public static ForgeConfigSpec.IntValue MELDER_OUTPUT;
     public static ForgeConfigSpec.IntValue MELDER_INPUT_COST;
@@ -65,6 +66,7 @@ public class Config {
     public static ForgeConfigSpec.IntValue MANABAR_X_OFFSET;
     public static ForgeConfigSpec.IntValue MANABAR_Y_OFFSET;
     public static ForgeConfigSpec.IntValue BOOKWYRM_LIMIT;
+
     private static ForgeConfigSpec.ConfigValue<List<? extends String>> ENTITY_LIGHT_CONFIG;
     private static ForgeConfigSpec.ConfigValue<List<? extends String>> ITEM_LIGHT_CONFIG;
 
@@ -134,6 +136,7 @@ public class Config {
 
         SERVER_BUILDER.comment("Items").push("item");
         SPAWN_TOMES = SERVER_BUILDER.comment("Spawn Caster Tomes in Dungeon Loot?").define("spawnTomes", true);
+        JUMP_RING_COST = SERVER_BUILDER.comment("How much mana the Ring of Jumping consumes per jump").defineInRange("jumpRingCost", 30, 0, 10000);
         SERVER_BUILDER.pop();
         SERVER_BUILDER.comment("Blocks").push("block");
         MELDER_INPUT_COST = SERVER_BUILDER.comment("How much potion a melder takes from each input jar. 100 = 1 potion").defineInRange("melderInputCost", 200, 100, Integer.MAX_VALUE);

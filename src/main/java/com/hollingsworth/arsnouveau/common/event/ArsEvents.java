@@ -6,6 +6,8 @@ import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.PlayerCaster;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
+
+import com.hollingsworth.arsnouveau.common.block.tile.SpellSensorTile;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectInvisibility;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
@@ -13,12 +15,10 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -29,11 +29,11 @@ import java.util.UUID;
 public class ArsEvents {
 
     @SubscribeEvent
-    public static void costCalc(SpellCostCalcEvent e){
-        if(e.context.getCasterTool().isEmpty()){
+    public static void costCalc(SpellCostCalcEvent e) {
+        if (e.context.getCasterTool().isEmpty()) {
             return;
         }
-        if(e.context.getCaster() instanceof PlayerCaster livingCaster && e.context.getCasterTool().is(ItemsRegistry.CASTER_TOME.get())){
+        if (e.context.getCaster() instanceof PlayerCaster livingCaster && e.context.getCasterTool().is(ItemsRegistry.CASTER_TOME.get())) {
             int maxMana = ManaUtil.getMaxMana(livingCaster.player);
             if (e.currentCost > maxMana) {
                 e.currentCost = maxMana;
@@ -44,6 +44,12 @@ public class ArsEvents {
     }
 
     @SubscribeEvent
+    public static void castEvent(SpellCastEvent castEvent) {
+        SpellSensorTile.onSpellCast(castEvent);
+    }
+
+
+    @SubscribeEvent
     public static void regenCalc(ManaRegenCalcEvent e) {
         if (e.getEntity() != null && e.getEntity().hasEffect(ModPotions.HEX_EFFECT.get())) {
             e.setRegen(e.getRegen() / 2.0);
@@ -52,6 +58,7 @@ public class ArsEvents {
 
     @SubscribeEvent
     public static void spellResolve(SpellResolveEvent.Post e) {
+        SpellSensorTile.onSpellResolve(e);
         if(e.spell.recipe.contains(EffectInvisibility.INSTANCE) && e.rayTraceResult instanceof BlockHitResult blockHitResult){
             if(e.world.getBlockEntity(blockHitResult.getBlockPos()) instanceof GhostWeaveTile ghostWeaveTile){
                 ghostWeaveTile.setVisibility(true);

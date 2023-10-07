@@ -1244,7 +1244,14 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.music_disc_thistle_the_sound_of_glass.desc", "Thistle - The Sound of Glass");
         add("item.ars_nouveau.music_disc_firel_the_wild_hunt", "Music Disc");
         add("item.ars_nouveau.music_disc_firel_the_wild_hunt.desc", "Firel - The Wild Hunt");
+        add("ars_nouveau.sensor.set_spell", "Sensor will now trigger on this spell only.");
+        add("ars_nouveau.sensor.on_resolve", "Mode: On Resolve");
+        add("ars_nouveau.sensor.on_cast", "Mode: On Cast");
+        add("block.ars_nouveau.spell_sensor", "Spell Sensor");
+        add("ars_nouveau.page1.spell_sensor", "Outputs a redstone signal when a spell is cast nearby. Output strength is determined by the length of the spell cast. Using a Dominion Wand will cause it to trigger when a spell resolves nearby, instead of being cast. Using a Spell Parchment will set the sensor to only output when that exact spell is detected.");
         add("ars_nouveau.no_stack_crafting", "No valid craft nearby.");
+        add("item.ars_nouveau.jump_ring", "Ring of Jumping");
+        add("ars_nouveau.page1.jump_ring", "Allows the user to continue jumping in the air. Each jump will expend mana.");
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             String key = "block.ars_nouveau." + s;
             String val = data.get(key);

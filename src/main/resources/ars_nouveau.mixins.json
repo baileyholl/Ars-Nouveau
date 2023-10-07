@@ -29,6 +29,7 @@
     "jar.DispenserMixin",
     "jar.MobAccessorMixin",
     "perks.PerkLivingEntity",
+    "LivingAccessor",
     "structure.StructureProcessorAccessor",
     "structure.StructureTemplateAccessor",
     "structure.StructureTemplateMixin"
