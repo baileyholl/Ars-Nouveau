@@ -1,4 +1,4 @@
-// 1.19.2	2023-10-06T16:30:21.0958941	Ars Nouveau Item Models
+// 1.19.2	2023-10-07T14:14:17.5126548	Ars Nouveau Item Models
 ecf86e39be560a9c1f232af399fcccf2c34a0a0b assets/ars_nouveau/models/item/alchemists_crown.json
 3b63734fc12c7c1711a2a607ed7af51e77bd7e1b assets/ars_nouveau/models/item/bastion_pod.json
 a4784e992d0d58f5808f3894b96d08fa5bc26395 assets/ars_nouveau/models/item/blank_thread.json
@@ -196,6 +196,7 @@ fad002103bb7ccaea2998a2fe617fcf5fd54d416 assets/ars_nouveau/models/item/sourcest
 b476712880e974a70c1fadea694f0d61adb9c291 assets/ars_nouveau/models/item/sourcestone_small_bricks_stairs.json
 a7b3f41fce153ebc7540a0dfbe855fc724f521b1 assets/ars_nouveau/models/item/sourcestone_stairs.json
 f433c503db1699241353f198a0d427f708716930 assets/ars_nouveau/models/item/source_gem_block.json
+9d2205eb9012b0585bff4adaf4c02419b2f01d9a assets/ars_nouveau/models/item/spell_sensor.json
 1a921e2809c2a9588e7e8f5fbe4556f5f6729487 assets/ars_nouveau/models/item/stripped_blue_archwood_log.json
 1205608f4c722986291eb4255ad2e405715515cf assets/ars_nouveau/models/item/stripped_blue_archwood_wood.json
 8cf33c617e9b25c0fe978d8e517ff8f7d03f266f assets/ars_nouveau/models/item/stripped_green_archwood_log.json
