@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,4 +40,8 @@ public interface IWrappedCaster{
         return null;
     }
 
+
+    default Vec3 getPosition(){
+        return Vec3.ZERO;
+    }
 }

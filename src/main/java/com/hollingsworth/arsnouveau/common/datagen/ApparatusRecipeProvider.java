@@ -1074,6 +1074,7 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withSourceCost(1000)
                 .withId(new ResourceLocation(ArsNouveau.MODID, "warp_scroll_copy"))
                 .build());
+        addRecipe(builder().withResult(BlockRegistry.SPELL_SENSOR).withReagent(Blocks.SCULK_SENSOR).build());
         addRecipe(builder().withReagent(ItemsRegistry.RING_OF_POTENTIAL).withResult(ItemsRegistry.JUMP_RING)
                 .withPedestalItem(3, ItemsRegistry.WILDEN_WING)
                 .withPedestalItem(ItemsRegistry.AIR_ESSENCE).build());

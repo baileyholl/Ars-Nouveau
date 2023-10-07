@@ -35,6 +35,7 @@ public class BlockTagProvider extends BlockTagsProvider {
     public static TagKey<Block> BREAK_WITH_PICKAXE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "break_with_pickaxe"));
     public static TagKey<Block> AUTOPULL_DISABLED = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "storage/autopull_disabled"));
     public static TagKey<Block> RELOCATION_NOT_SUPPORTED = BlockTags.create(new ResourceLocation("forge", "relocation_not_supported"));
+    public static TagKey<Block> OCCLUDES_SPELL_SENSOR = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "occludes_spell_sensor"));
     private final DataGenerator generator;
 
     public BlockTagProvider(DataGenerator generatorIn, ExistingFileHelper helper) {
@@ -44,6 +45,7 @@ public class BlockTagProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags() {
+        this.tag(OCCLUDES_SPELL_SENSOR).add(BlockRegistry.MAGEBLOOM_BLOCK);
         this.tag(RELOCATION_NOT_SUPPORTED);
         this.tag(BUDDING_BLOCKS).add(Blocks.BUDDING_AMETHYST);
         this.tag(CLUSTER_BLOCKS).add(Blocks.AMETHYST_CLUSTER);
