@@ -70,7 +70,7 @@ public class EffectBreak extends AbstractEffect {
             stack.enchant(Enchantments.SILK_TOUCH, numSilkTouch);
         }
         for (BlockPos pos1 : posList) {
-            if (world.random.nextFloat() < spellStats.getBuffCount(AugmentShuffle.INSTANCE) * 0.25F) {
+            if (world.random.nextFloat() < spellStats.getBuffCount(AugmentRandomize.INSTANCE) * 0.25F) {
                 continue;
             }
             state = world.getBlockState(pos1);
@@ -101,7 +101,7 @@ public class EffectBreak extends AbstractEffect {
                 AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE,
                 AugmentPierce.INSTANCE, AugmentAOE.INSTANCE,
                 AugmentExtract.INSTANCE, AugmentFortune.INSTANCE,
-                AugmentSensitive.INSTANCE, AugmentShuffle.INSTANCE
+                AugmentSensitive.INSTANCE, AugmentRandomize.INSTANCE
         );
     }
 

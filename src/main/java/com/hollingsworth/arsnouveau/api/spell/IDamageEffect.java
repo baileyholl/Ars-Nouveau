@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.event.SpellDamageEvent;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentShuffle;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
@@ -46,7 +46,7 @@ public interface IDamageEffect {
         float totalDamage = (float) (baseDamage + stats.getDamageModifier());
         //randomize damage buff or debuff
         if (stats.isRandomized())
-            totalDamage += stats.getBuffCount(AugmentShuffle.INSTANCE) * server.random.nextIntBetweenInclusive(-1, 1);
+            totalDamage += stats.getBuffCount(AugmentRandomize.INSTANCE) * server.random.nextIntBetweenInclusive(-1, 1);
         SpellDamageEvent.Pre preDamage = new SpellDamageEvent.Pre(source, shooter, entity, totalDamage, spellContext);
         MinecraftForge.EVENT_BUS.post(preDamage);
 

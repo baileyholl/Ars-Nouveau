@@ -123,7 +123,7 @@ public class EffectExchange extends AbstractEffect {
         return augmentSetOf(
                 AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE,
                 AugmentPierce.INSTANCE,
-                AugmentAOE.INSTANCE, AugmentShuffle.INSTANCE
+                AugmentAOE.INSTANCE, AugmentRandomize.INSTANCE
         );
     }
 

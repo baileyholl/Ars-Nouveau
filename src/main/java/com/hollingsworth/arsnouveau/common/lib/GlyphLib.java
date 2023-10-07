@@ -35,7 +35,7 @@ public class GlyphLib {
     public static final String AugmentDurationDown = prependGlyph("duration_down");
     public static final String AugmentSensitiveID = prependGlyph("sensitive");
 
-    public static final String AugmentShuffleID = prependGlyph("shuffle");
+    public static final String AugmentRandomizeID = prependGlyph("randomize");
     public static final String AugmentPierceID = prependGlyph("pierce");
     public static final String AugmentAOEID = prependGlyph("aoe");
     public static final String AugmentAmplifyID = prependGlyph("amplify");

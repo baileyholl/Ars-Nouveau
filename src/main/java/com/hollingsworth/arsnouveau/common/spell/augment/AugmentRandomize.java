@@ -6,12 +6,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 
-public class AugmentShuffle extends AbstractAugment {
+public class AugmentRandomize extends AbstractAugment {
 
-    public static final AugmentShuffle INSTANCE = new AugmentShuffle();
+    public static final AugmentRandomize INSTANCE = new AugmentRandomize();
 
-    public AugmentShuffle() {
-        super(GlyphLib.AugmentShuffleID, "Shuffle");
+    public AugmentRandomize() {
+        super(GlyphLib.AugmentRandomizeID, "Randomize");
     }
 
     @Override
@@ -20,7 +20,7 @@ public class AugmentShuffle extends AbstractAugment {
     }
 
     public SpellTier defaultTier() {
-        return SpellTier.TWO;
+        return SpellTier.ONE;
     }
 
     @Override
