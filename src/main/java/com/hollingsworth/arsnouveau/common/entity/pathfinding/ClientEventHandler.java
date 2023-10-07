@@ -2,8 +2,14 @@ package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.light.LightManager;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.Config;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -32,5 +38,22 @@ public class ClientEventHandler {
 //            }
             LightManager.updateAll(event.getLevelRenderer());
         }
+    }
+
+    @SubscribeEvent
+    public static void clientPlayerLogin(ClientPlayerNetworkEvent.LoggingIn e) {
+        if(e.getPlayer() != null){
+            if(Config.INFORM_LIGHTS.get()){
+                Player entity = e.getPlayer();
+                PortUtil.sendMessage(entity, Component.translatable("ars_nouveau.light_message").withStyle(ChatFormatting.GOLD));
+                Config.INFORM_LIGHTS.set(false);
+                Config.INFORM_LIGHTS.save();
+            }
+        }
+//        if (e.getEntity().getCommandSenderWorld().isClientSide){
+//            if(Config.INFORM_LIGHTS.get()){
+//                PortUtil.sendMessage(e.getEntity(), Component.translatable("ars_nouveau.light_message").withStyle(ChatFormatting.GOLD));
+//            }
+//        }
     }
 }
