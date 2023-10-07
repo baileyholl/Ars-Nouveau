@@ -1,4 +1,4 @@
-// 1.19.2	2023-06-13T19:55:51.7921588	Apparatus
+// 1.19.2	2023-10-05T11:12:12.966751	Apparatus
 47c673376b4ffc5874674165c030f4e7213c87cb data/ars_nouveau/recipes/alchemists_crown.json
 9de96693a6f1f8acf98ddedc408117537e390b95 data/ars_nouveau/recipes/amulet_of_mana_boost.json
 9336968ca3afbcbcdcb1dfd5c8bbe859975835a0 data/ars_nouveau/recipes/amulet_of_mana_regen.json
@@ -129,6 +129,7 @@ a8019e141fbb846cfa281124357a8e2d8b4a5e52 data/ars_nouveau/recipes/smite_3.json
 b54053da88c7b6b44c077001a3b426c7681c1d65 data/ars_nouveau/recipes/smite_5.json
 20e34e9f8d44a12a23216c0533b5b1b683bba807 data/ars_nouveau/recipes/spell_bow.json
 bfce956c01aba633bbd43d0393c8e936dfbfbd83 data/ars_nouveau/recipes/spell_crossbow.json
+91df45176d5e117853887c4b0edb8ace32e1abe7 data/ars_nouveau/recipes/spell_sensor.json
 a5cd53eea13b4dae5249694a701608a630d19817 data/ars_nouveau/recipes/spell_turret.json
 d838045b9e960e29b0ee40bc8ca504efe2c37510 data/ars_nouveau/recipes/spell_write.json
 dae29c9eb350d1ebeaf82b219ff039bfdd5aecfa data/ars_nouveau/recipes/splash_flask_cannon.json

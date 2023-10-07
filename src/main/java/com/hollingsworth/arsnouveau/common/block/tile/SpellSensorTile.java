@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.LevelPosMap;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.block.SpellSensor;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.ClipBlockStateContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.SculkSensorPhase;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -101,7 +103,8 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
         }
         outputDuration = 40;
         this.outputStrength = str;
-        updateBlock();
+        level.setBlockAndUpdate(worldPosition, getBlockState().setValue(SpellSensor.PHASE, SculkSensorPhase.ACTIVE));
+        setChanged();
         level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
     }
 
@@ -132,7 +135,8 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
                 outputStrength = 0;
                 onCooldown = true;
                 // 1 tick cooldown
-                updateBlock();
+                level.setBlockAndUpdate(worldPosition, getBlockState().setValue(SpellSensor.PHASE, SculkSensorPhase.INACTIVE));
+                setChanged();
                 level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
                 level.scheduleTick(worldPosition, getBlockState().getBlock(), 1);
             }
