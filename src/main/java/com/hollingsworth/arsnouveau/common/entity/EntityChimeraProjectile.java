@@ -129,7 +129,7 @@ public class EntityChimeraProjectile extends AbstractArrow implements IAnimatabl
         if (entity instanceof LivingEntity entity1) {
             // Omit our summoned sources that might aggro or accidentally hurt us
             if (entity1 instanceof WildenStalker || entity1 instanceof WildenGuardian || entity instanceof WildenHunter
-                    || (entity instanceof ISummon summon && summon.getOwnerID() != null && summon.getOwnerID().equals(this.getUUID()))
+                    || (entity instanceof ISummon summon && summon.getOwnerUUID() != null && summon.getOwnerUUID().equals(this.getUUID()))
                     || (entity1 instanceof SummonWolf && ((SummonWolf) entity1).isWildenSummon))
                 return false;
         }

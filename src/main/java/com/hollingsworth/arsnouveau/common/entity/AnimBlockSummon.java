@@ -113,11 +113,11 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
 
     @Override
     public boolean canAttack(LivingEntity pTarget) {
-        if (getOwnerID() != null) {
-            if (pTarget.getUUID().equals(getOwnerID()))
+        if (getOwnerUUID() != null) {
+            if (pTarget.getUUID().equals(getOwnerUUID()))
                 return false;
             if (pTarget instanceof ISummon summon) {
-                return super.canAttack(pTarget) && !getOwnerID().equals(summon.getOwnerID());
+                return super.canAttack(pTarget) && !getOwnerUUID().equals(summon.getOwnerUUID());
             }
         }
         return super.canAttack(pTarget);
@@ -219,7 +219,7 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
 
     @Nullable
     @Override
-    public UUID getOwnerID() {
+    public UUID getOwnerUUID() {
         return this.getEntityData().get(OWNER_UUID).isEmpty() ? this.getUUID() : this.getEntityData().get(OWNER_UUID).get();
     }
 
