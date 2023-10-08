@@ -255,19 +255,19 @@ public class InventoryManager {
      * Returns a reference to a random matching stack, if any. Does not modify the inventory. Chance is a percentage to choose the stack.
      */
     public SlotReference findItemR(FilterableItemHandler itemHandler, Predicate<ItemStack> stackPredicate, InteractType type) {
-        List<ItemStack> validStacks = new ArrayList<>();
+        List<Integer> validSlots = new ArrayList<>();
         //filter the valid slots
         for (int slot = 0; slot < maxSlotForType(itemHandler, type); slot++) {
             ItemStack stackInSlot = itemHandler.getHandler().getStackInSlot(slot);
             if (!stackInSlot.isEmpty() && stackPredicate.test(stackInSlot) && itemHandler.canInteractFor(stackInSlot, type).valid()) {
-                validStacks.add(stackInSlot);
+                validSlots.add(slot);
             }
         }
+        if(validSlots.isEmpty()){
+            return SlotReference.empty();
+        }
         //apply uniform chance if there are any valid slots
-        if (!validStacks.isEmpty())
-            return new SlotReference(itemHandler.getHandler(), random.nextInt(validStacks.size()));
-
-        return SlotReference.empty();
+        return new SlotReference(itemHandler.getHandler(), validSlots.get(random.nextInt(validSlots.size())));
     }
 
     /**
