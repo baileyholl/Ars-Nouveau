@@ -237,7 +237,7 @@ public class EventHandler {
         if (event.player.level.getGameTime() % RitualGravity.renewInterval == 0 && event.player instanceof ServerPlayer serverPlayer) {
             MobEffectInstance gravity = event.player.getEffect(ModPotions.GRAVITY_EFFECT.get());
             if (gravity == null || gravity.getDuration() <= RitualGravity.renewThreshold) {
-                RitualEventQueue.getRitual(event.player.level, RitualGravity.class, ritual -> ritual.attemptRefresh(serverPlayer));
+                RitualEventQueue.getRitual(event.player.level, RitualGravity.class, ritual -> !serverPlayer.isCreative() && ritual.attemptRefresh(serverPlayer));
             }
         }
     }
