@@ -180,7 +180,7 @@ public class InventoryManager {
         List<ExtractedStack> extractedStacks = new ArrayList<>();
         IItemHandler itemHandler = filterableItemHandler.getHandler();
         for (int i = 0; i < itemHandler.getSlots(); i++) {
-            ItemStack stack = itemHandler.getStackInSlot(i);
+            ItemStack stack = itemHandler.extractItem(i, remaining, true);
             if (!ItemStack.isSame(stack, desiredStack) || !ItemStack.tagMatches(stack, desiredStack)) {
                 continue;
             }
@@ -192,6 +192,7 @@ public class InventoryManager {
             } else {
                 merged.grow(toExtract);
             }
+            // actually extracts the stack
             extractedStacks.add(ExtractedStack.from(filterableItemHandler.getHandler(), i, toExtract));
             if (remaining <= 0)
                 break;
@@ -306,7 +307,8 @@ public class InventoryManager {
             ItemScroll.SortPref pref = ItemScroll.SortPref.LOW;
             // Get the highest pref item in the handler
             for (int i = 0; i < maxSlotForType(wrapper, type); i++) {
-                ItemStack stack = wrapper.getHandler().getStackInSlot(i);
+                // Simulate extract to respect modded inventory filters
+                ItemStack stack = wrapper.getHandler().extractItem(i, 1, true);
                 if (stack.isEmpty() || !predicate.test(stack))
                     continue;
                 InteractResult result = wrapper.canInteractFor(stack, type);
