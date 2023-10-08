@@ -37,6 +37,7 @@ public class Config {
     public static ForgeConfigSpec.IntValue DRYGMY_BASE_ITEM;
     public static ForgeConfigSpec.IntValue DRYGMY_UNIQUE_BONUS;
     public static ForgeConfigSpec.IntValue DRYGMY_QUANTITY_CAP;
+    public static ForgeConfigSpec.IntValue JUMP_RING_COST;
 
     public static ForgeConfigSpec.IntValue MELDER_OUTPUT;
     public static ForgeConfigSpec.IntValue MELDER_INPUT_COST;
@@ -65,6 +66,7 @@ public class Config {
     public static ForgeConfigSpec.IntValue MANABAR_X_OFFSET;
     public static ForgeConfigSpec.IntValue MANABAR_Y_OFFSET;
     public static ForgeConfigSpec.IntValue BOOKWYRM_LIMIT;
+
     private static ForgeConfigSpec.ConfigValue<List<? extends String>> ENTITY_LIGHT_CONFIG;
     private static ForgeConfigSpec.ConfigValue<List<? extends String>> ITEM_LIGHT_CONFIG;
 
@@ -105,6 +107,7 @@ public class Config {
         MANABAR_X_OFFSET = CLIENT_BUILDER.comment("X offset for the Mana Bar").defineInRange("xManaBar", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
         MANABAR_Y_OFFSET = CLIENT_BUILDER.comment("Y offset for the Mana Bar").defineInRange("yManaBar", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
         SHOW_RECIPE_BOOK = CLIENT_BUILDER.comment("If the Storage Lectern should show the recipe book icon").define("showRecipeBook", true);
+        INFORM_LIGHTS = CLIENT_BUILDER.comment("Inform the player of Dynamic lights once.").define("informLights", true);
         CLIENT_BUILDER.pop();
         CLIENT_BUILDER.comment("Misc").push("misc");
         ALTERNATE_PORTAL_RENDER = CLIENT_BUILDER.comment("Use simplified renderer for Warp Portals").define("no_end_portal_render", false);
@@ -112,7 +115,6 @@ public class Config {
         SERVER_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
         DIMENSION_BLACKLIST = SERVER_BUILDER.comment("Dimensions where hostile mobs will not spawn. Ex: [\"minecraft:overworld\", \"undergarden:undergarden\"]. . Run /forge dimensions for a list.").defineList("dimensionBlacklist", new ArrayList<>(), (o) -> true);
         SPAWN_BOOK = SERVER_BUILDER.comment("Spawn a book in the players inventory on login").define("spawnBook", true);
-        INFORM_LIGHTS = SERVER_BUILDER.comment("Inform the player of Dynamic lights once.").define("informLights", true);
         SYLPH_MANA_COST = SERVER_BUILDER.comment("How much mana whirlisprigs consume per generation").defineInRange("sylphManaCost", 250, 0, 10000);
         WHIRLISPRIG_MAX_PROGRESS = SERVER_BUILDER.comment("How much progress whirlisprigs must accumulate before creating resources")
                 .defineInRange("whirlisprigProgress", 250, 0, 10000);
@@ -134,6 +136,7 @@ public class Config {
 
         SERVER_BUILDER.comment("Items").push("item");
         SPAWN_TOMES = SERVER_BUILDER.comment("Spawn Caster Tomes in Dungeon Loot?").define("spawnTomes", true);
+        JUMP_RING_COST = SERVER_BUILDER.comment("How much mana the Ring of Jumping consumes per jump").defineInRange("jumpRingCost", 30, 0, 10000);
         SERVER_BUILDER.pop();
         SERVER_BUILDER.comment("Blocks").push("block");
         MELDER_INPUT_COST = SERVER_BUILDER.comment("How much potion a melder takes from each input jar. 100 = 1 potion").defineInRange("melderInputCost", 200, 100, Integer.MAX_VALUE);

@@ -3,11 +3,14 @@ package com.hollingsworth.arsnouveau.common.potions;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.event.BounceTimedEvent;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -49,6 +52,25 @@ public class BounceEffect extends MobEffect {
                 }
                 event.setCanceled(true);
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onFlyWallDamage(LivingHurtEvent event) {
+        LivingEntity entity = event.getEntity();
+        if (entity == null || !entity.hasEffect(ModPotions.BOUNCE_EFFECT.get())) {
+            return;
+        }
+        boolean isPlayer = entity instanceof Player;
+        if (!isPlayer) {
+            return;
+        }
+        if(event.getSource() == DamageSource.FLY_INTO_WALL){
+            event.setAmount(0);
+            Vec3 lookAngle = entity.getLookAngle();
+
+            entity.setDeltaMovement(lookAngle.scale(-2));
+            entity.hurtMarked = true;
         }
     }
 

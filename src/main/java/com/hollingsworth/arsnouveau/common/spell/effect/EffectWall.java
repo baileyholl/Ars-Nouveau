@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.common.entity.EntityWallSpell;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
@@ -22,7 +23,6 @@ public class EffectWall extends AbstractEffect {
 
     private EffectWall() {
         super(GlyphLib.EffectWallId, "Wall");
-        invalidCombinations.add(EffectLinger.INSTANCE.getRegistryName());
     }
 
     @Override
@@ -71,6 +71,11 @@ public class EffectWall extends AbstractEffect {
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentSensitive.INSTANCE, AugmentAOE.INSTANCE, AugmentAccelerate.INSTANCE, AugmentDecelerate.INSTANCE, AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentDampen.INSTANCE);
+    }
+
+    @Override
+    protected void addDefaultInvalidCombos(Set<ResourceLocation> defaults) {
+        defaults.add(EffectLinger.INSTANCE.getRegistryName());
     }
 
     @Override

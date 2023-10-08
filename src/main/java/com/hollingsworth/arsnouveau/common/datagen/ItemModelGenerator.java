@@ -103,6 +103,8 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
         getBuilder(LibBlockNames.ITEM_DETECTOR).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.ITEM_DETECTOR));
         itemUnchecked(ItemsRegistry.WILD_HUNT);
         itemUnchecked(ItemsRegistry.SOUND_OF_GLASS);
+        itemUnchecked(ItemsRegistry.JUMP_RING);
+        getBuilder(LibBlockNames.SPELL_SENSOR).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.SPELL_SENSOR));
     }
 
     public void blockAsItem(String s){

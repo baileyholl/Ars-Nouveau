@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.block.IPrismaticBlock;
+import com.hollingsworth.arsnouveau.api.event.SpellProjectileHitEvent;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
@@ -29,6 +30,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 
@@ -183,21 +185,19 @@ public class EntityProjectileSpell extends ColoredProjectile {
     }
 
     public void playParticles() {
-        for (int i = 0; i < 1; i++) {
-            double deltaX = getX() - xOld;
-            double deltaY = getY() - yOld;
-            double deltaZ = getZ() - zOld;
-            double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 6);
-            for (double j = 0; j < dist; j++) {
-                double coeff = j / dist;
-                level.addParticle(GlowParticleData.createData(getParticleColor()),
-                        (float) (xo + deltaX * coeff),
-                        (float) (yo + deltaY * coeff) + 0.1, (float)
-                                (zo + deltaZ * coeff),
-                        0.0125f * (random.nextFloat() - 0.5f),
-                        0.0125f * (random.nextFloat() - 0.5f),
-                        0.0125f * (random.nextFloat() - 0.5f));
-            }
+        double deltaX = getX() - xOld;
+        double deltaY = getY() - yOld;
+        double deltaZ = getZ() - zOld;
+        double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 6);
+        for (double j = 0; j < dist; j++) {
+            double coeff = j / dist;
+            level.addParticle(GlowParticleData.createData(getParticleColor()),
+                    (float) (xo + deltaX * coeff),
+                    (float) (yo + deltaY * coeff) + 0.1, (float)
+                            (zo + deltaZ * coeff),
+                    0.0125f * (random.nextFloat() - 0.5f),
+                    0.0125f * (random.nextFloat() - 0.5f),
+                    0.0125f * (random.nextFloat() - 0.5f));
         }
     }
 
@@ -259,41 +259,51 @@ public class EntityProjectileSpell extends ColoredProjectile {
     @Override
     protected void onHit(HitResult result) {
         result = transformHitResult(result);
-        if (!level.isClientSide && result instanceof EntityHitResult entityHitResult) {
-            if (entityHitResult.getEntity().equals(this.getOwner())) return;
-            if (this.spellResolver != null) {
-                this.spellResolver.onResolveEffect(level, result);
-                Networking.sendToNearby(level, new BlockPos(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                        new BlockPos(result.getLocation()), getParticleColorWrapper()));
+
+        if(!level.isClientSide) {
+
+            SpellProjectileHitEvent event = new SpellProjectileHitEvent(this,result);
+            MinecraftForge.EVENT_BUS.post(event);
+            if(event.isCanceled()){
+                return;
+            }
+
+            if (result instanceof EntityHitResult entityHitResult) {
+                if (entityHitResult.getEntity().equals(this.getOwner())) return;
+                if (this.spellResolver != null) {
+                    this.spellResolver.onResolveEffect(level, result);
+                    Networking.sendToNearby(level, new BlockPos(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
+                            new BlockPos(result.getLocation()), getParticleColorWrapper()));
+                    attemptRemoval();
+                }
+            }
+
+            if (result instanceof BlockHitResult blockraytraceresult && !this.isRemoved() && !hitList.contains(blockraytraceresult.getBlockPos())) {
+
+                BlockState state = level.getBlockState(blockraytraceresult.getBlockPos());
+
+                if (state.getBlock() instanceof IPrismaticBlock prismaticBlock) {
+                    prismaticBlock.onHit((ServerLevel) level, blockraytraceresult.getBlockPos(), this);
+                    return;
+                }
+
+                if (state.getMaterial() == Material.PORTAL) {
+                    state.getBlock().entityInside(state, level, blockraytraceresult.getBlockPos(), this);
+                    return;
+                }
+
+                if (state.getBlock() instanceof TargetBlock) {
+                    this.onHitBlock(blockraytraceresult);
+                }
+
+                if (this.spellResolver != null) {
+                    this.hitList.add(blockraytraceresult.getBlockPos());
+                    this.spellResolver.onResolveEffect(this.level, blockraytraceresult);
+                }
+                Networking.sendToNearby(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
+                        new BlockPos(result.getLocation()).below(), getParticleColorWrapper()));
                 attemptRemoval();
             }
-        }
-
-        if (!level.isClientSide && result instanceof BlockHitResult blockraytraceresult && !this.isRemoved() && !hitList.contains(blockraytraceresult.getBlockPos())) {
-
-            BlockState state = level.getBlockState(blockraytraceresult.getBlockPos());
-
-            if (state.getBlock() instanceof IPrismaticBlock prismaticBlock) {
-                prismaticBlock.onHit((ServerLevel) level, blockraytraceresult.getBlockPos(), this);
-                return;
-            }
-
-            if (state.getMaterial() == Material.PORTAL) {
-                state.getBlock().entityInside(state, level, blockraytraceresult.getBlockPos(), this);
-                return;
-            }
-
-            if (state.getBlock() instanceof TargetBlock) {
-                this.onHitBlock(blockraytraceresult);
-            }
-
-            if (this.spellResolver != null) {
-                this.hitList.add(blockraytraceresult.getBlockPos());
-                this.spellResolver.onResolveEffect(this.level, blockraytraceresult);
-            }
-            Networking.sendToNearby(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                    new BlockPos(result.getLocation()).below(), getParticleColorWrapper()));
-            attemptRemoval();
         }
     }
 

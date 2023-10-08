@@ -426,7 +426,7 @@
   "ars_nouveau.page.dominion_wand": "用於配置源中繼和自動化實體的工具。要設置傳輸路徑，請在您想要從中獲取源的對像上使用魔杖，然後在您想要將源發送到的塊上使用它。例如：Source Jar 到 Source Relay、Source Relay 到 Source Relay 或 Source Relay 到 Source Jar。要清除連接，請偷偷摸摸並在繼電器上使用這根魔杖。",
   "ars_nouveau.page.dowsing_rod": "探礦棒為用戶提供短時間的探知萌芽紫水晶和魔法發現，這將使魔法生物在你 75 格內發光。探測棒的使用次數有限。",
   "ars_nouveau.page.enchanters_eye": "一種施法工具，可以通過占卜水晶遠程施展銘刻法術。使用占卜水晶上的眼睛來綁定位置，或者副手拿著綁定的占卜羊皮紙。法術將通過類似於法術砲塔的眼睛施放，但您被視為所有效果的施法者。用於遠程傳送或物品移動。",
-  "ars_nouveau.page.enchanters_mirror": "對使用者應用自我咒語。使用這面鏡子施放的法術會被打折並獲得額外的所有雕文獎勵持續時間。在抄寫員的桌子上應用一個不包含諸如力量 -> 治療等形式的咒語。",
+  "ars_nouveau.page.enchanters_mirror": "Applies a self spell to the user. Spells cast with this mirror are discounted and gain additional bonus duration to all glyphs. Apply a spell at the Scribe's table that DOES NOT contain a form such as Heal -> Heal.",
   "ars_nouveau.page.enchanters_shield": "格擋傷害後，使用者將獲得短時間的法力回復和法術傷害。此外，此護盾會隨著時間的推移使用佩戴者的法力進行修復。",
   "ars_nouveau.page.enchanters_sword": "在損壞實體之前應用觸摸法術。此外，所有法術都會在法術的最後一個效果上獲得一個額外的增效增強。在抄寫員桌上應用一個不包含表格的法術，例如點燃 -> 延長時間。",
   "ars_nouveau.page.flask_cannons": "燒瓶大砲",

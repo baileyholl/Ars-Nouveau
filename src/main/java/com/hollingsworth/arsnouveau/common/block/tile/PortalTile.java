@@ -55,8 +55,8 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
         if ((level instanceof ServerLevel serverLevel)
                 && warpPos != null
                 && dimID != null
-                && PortalTile.teleportEntityTo(e, getServerLevel(dimID), this.warpPos, rotationVec) != null) {
-            ServerLevel serverWorld = getServerLevel(dimID);
+                && PortalTile.teleportEntityTo(e, getServerLevel(dimID, serverLevel), this.warpPos, rotationVec) != null) {
+            ServerLevel serverWorld = getServerLevel(dimID, serverLevel);
             if(serverWorld == null){
                 return;
             }
@@ -109,7 +109,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
                 for (Entity e : entities) {
                     if (e instanceof EntityFollowProjectile)
                         continue;
-                    if(dimID != null && PortalTile.teleportEntityTo(e, getServerLevel(dimID), this.warpPos, rotationVec) != null){
+                    if(dimID != null && PortalTile.teleportEntityTo(e, getServerLevel(dimID, serverLevel), this.warpPos, rotationVec) != null){
                         level.playSound(null, warpPos, SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1.0f, 1.0f);
                         serverLevel.sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
                                 4, (this.level.random.nextDouble() - 0.5D) * 2.0D, -this.level.random.nextDouble(), (this.level.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
@@ -120,7 +120,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
         }
     }
 
-    public @Nullable ServerLevel getServerLevel(String dimID){
+    public static @Nullable ServerLevel getServerLevel(String dimID, ServerLevel level){
         if(dimID != null && level != null){
             ResourceKey<Level> resourcekey = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dimID));
             return level.getServer().getLevel(resourcekey);

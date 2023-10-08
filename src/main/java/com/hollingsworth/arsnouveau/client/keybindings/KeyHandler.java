@@ -8,10 +8,8 @@ import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketHotkeyPressed;
-import com.hollingsworth.arsnouveau.common.network.PacketQuickCast;
-import com.hollingsworth.arsnouveau.common.network.PacketToggleFamiliar;
+import com.hollingsworth.arsnouveau.common.network.*;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
@@ -32,10 +30,10 @@ public class KeyHandler {
     };
     public static void checkKeysPressed(int key) {
         checkCurioHotkey(key);
-        if(key == ModKeyBindings.FAMILIAR_TOGGLE.getKey().getValue()){
+        if(key == ModKeyBindings.FAMILIAR_TOGGLE.getKey().getValue() && !ModKeyBindings.FAMILIAR_TOGGLE.isUnbound()){
             Networking.sendToServer(new PacketToggleFamiliar());
         }
-        if (key == ModKeyBindings.OPEN_RADIAL_HUD.getKey().getValue()) {
+        if (key == ModKeyBindings.OPEN_RADIAL_HUD.getKey().getValue() && !ModKeyBindings.OPEN_RADIAL_HUD.isUnbound()) {
             if (MINECRAFT.screen instanceof GuiRadialMenu) {
                 MINECRAFT.player.closeContainer();
                 return;
@@ -138,10 +136,18 @@ public class KeyHandler {
 
     @SubscribeEvent
     public static void keyEvent(final InputEvent.Key event) {
+
         if (MINECRAFT.player == null || event.getAction() != 1)
             return;
         if(MINECRAFT.screen == null || MINECRAFT.screen instanceof GuiRadialMenu)
             checkKeysPressed(event.getKey());
+        if(event.getKey() ==  Minecraft.getInstance().options.keyJump.getKey().getValue()){
+            if(Minecraft.getInstance().player != null
+                    && !Minecraft.getInstance().player.isOnGround()
+                    && CuriosUtil.hasItem(Minecraft.getInstance().player, ItemsRegistry.JUMP_RING.get())){
+                Networking.INSTANCE.sendToServer(new PacketGenericClientMessage(PacketGenericClientMessage.Action.JUMP_RING));
+            }
+        }
     }
 
     public static void sendHotkeyPacket(PacketHotkeyPressed.Key key) {

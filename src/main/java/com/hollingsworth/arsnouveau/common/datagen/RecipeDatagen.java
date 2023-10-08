@@ -721,6 +721,7 @@ public class RecipeDatagen extends RecipeProvider {
             shapelessBuilder(getRitualItem(RitualLib.SANCTUARY)).requires(BlockRegistry.CASCADING_LOG).requires(ItemsRegistry.WATER_ESSENCE).requires(Items.SEA_LANTERN).save(consumer);
             shapelessBuilder(BlockRegistry.ROTATING_TURRET).requires(BlockRegistry.BASIC_SPELL_TURRET).save(consumer);
             shapelessBuilder(BlockRegistry.BASIC_SPELL_TURRET).requires(BlockRegistry.ROTATING_TURRET).save(consumer, new ResourceLocation(ArsNouveau.MODID, "rotating_turret_to_basic_spell_turret"));
+            shapelessBuilder(ItemsRegistry.STARBUNCLE_SHARD).requires(ItemsRegistry.STARBUNCLE_SHARD).save(consumer, new ResourceLocation(ArsNouveau.MODID, "wipe_starby_shard"));
 
         }
     }

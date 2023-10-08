@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.FakePlayer;
 import org.jetbrains.annotations.NotNull;
@@ -41,5 +42,10 @@ public class LivingCaster implements IWrappedCaster {
     @Override
     public Direction getFacingDirection() {
         return livingEntity.getDirection();
+    }
+
+    @Override
+    public Vec3 getPosition() {
+        return livingEntity.position();
     }
 }

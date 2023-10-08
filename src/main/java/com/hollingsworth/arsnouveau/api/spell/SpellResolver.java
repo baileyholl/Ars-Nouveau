@@ -198,11 +198,24 @@ public class SpellResolver {
     }
 
     public void expendMana() {
-        int totalCost = getResolveCost();
+        int totalCost = getResolveCostAndResetDiscounts();
         CapabilityRegistry.getMana(spellContext.getUnwrappedCaster()).ifPresent(mana -> mana.removeMana(totalCost));
     }
 
+    /**
+     * Simulates the cost required to cast a spell
+     * When expending mana, please call getResolveCostAndResetDiscounts instead
+     */
     public int getResolveCost() {
+        int cost = spellContext.getSpell().getDiscountedCost() - getPlayerDiscounts(spellContext.getUnwrappedCaster(), spell);
+        return Math.max(cost, 0);
+    }
+
+    /**
+     * Gets the cost to cast a spell, and resets any discounts on the spell
+     * should only be called when expending mana
+     */
+    public int getResolveCostAndResetDiscounts() {
         int cost = spellContext.getSpell().getFinalCostAndReset() - getPlayerDiscounts(spellContext.getUnwrappedCaster(), spell);
         return Math.max(cost, 0);
     }

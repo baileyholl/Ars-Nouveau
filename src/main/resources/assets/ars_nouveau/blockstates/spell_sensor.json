@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "sculk_sensor_phase=active": {
+      "model": "ars_nouveau:block/spell_sensor_active"
+    },
+    "sculk_sensor_phase=cooldown": {
+      "model": "ars_nouveau:block/spell_sensor"
+    },
+    "sculk_sensor_phase=inactive": {
+      "model": "ars_nouveau:block/spell_sensor"
+    }
+  }
+}
