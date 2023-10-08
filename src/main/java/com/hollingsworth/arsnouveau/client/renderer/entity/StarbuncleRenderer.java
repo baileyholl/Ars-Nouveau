@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
@@ -47,10 +48,8 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
                 itemstack = animatable.dynamicBehavior.getStackForRender();
             }
             if(!itemstack.isEmpty()) {
-                Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.GROUND, packedLight, OverlayTexture.NO_OVERLAY, stack,
-                        cosmeticBuffer, animatable.level, (int) animatable.getOnPos().asLong());
+                Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.GROUND, packedLight, OverlayTexture.NO_OVERLAY, stack, bufferSource, animatable.level, (int) animatable.getOnPos().asLong());
             }
-            cosmeticBuffer.endBatch();
             stack.popPose();
         }
         if (animatable.getCosmeticItem().getItem() instanceof ICosmeticItem cosmetic && cosmetic.getBone().equals(bone.getName())) {
