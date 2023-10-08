@@ -1,4 +1,4 @@
-// 1.19.2	2023-10-06T22:07:24.6961719	Patchouli
+// 1.19.2	2023-10-08T11:38:50.8318894	Patchouli
 d5f03c259d2af4f5e8e286639783f4fc833b1076 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/aqua_affinity.json
 2ec536fea831588201432d61d70af61385882054 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/alteration_table.json
 a82f4fc73946d228b1e3f5e03d0ecef46f33cdfb data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/applying_perks.json
@@ -228,6 +228,7 @@ a730ce45e432076fae64c368f89dd9697803304a data/ars_nouveau/patchouli_books/worn_n
 3d62d84ed6a28beb35761cfda0711500b26d09d8 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/rituals/ritual_flight.json
 20c59d0321aae8169be644b0231d88f7f939cc65 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/rituals/ritual_flowering.json
 cc434d380d70d0002dd8bc48f8783d118349ce51 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/rituals/ritual_forestation.json
+a3fa03d6359b468ff05357f222945c5c77a3645d data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/rituals/ritual_gravity.json
 b7b236fb3ef28fea2260bcbf5abe2c202ee8a271 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/rituals/ritual_harvest.json
 be5c7be210f8e88dba08fd658065c693c154bff5 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/rituals/ritual_moonfall.json
 b4b44e353840375ed13ffa9657902f68fdd339c0 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/rituals/ritual_overgrowth.json

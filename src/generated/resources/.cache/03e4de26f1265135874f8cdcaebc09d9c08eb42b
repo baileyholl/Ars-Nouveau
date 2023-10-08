@@ -1,4 +1,4 @@
-// 1.19.2	2023-06-19T22:23:36.3388331	Tags for minecraft:item
+// 1.19.2	2023-08-15T22:55:03.382237882	Tags for minecraft:item
 bde6ca31173d1f22d5f6fe355dc90c9faa35b239 data/ars_nouveau/tags/items/golem/shard.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/items/interact_jar_blacklist.json
 a0800fbffa0e00aecb2e86a1e991d42904427191 data/ars_nouveau/tags/items/magic_food.json
@@ -14,10 +14,10 @@ da4665fd166ddba7d16ba80eaef3090a829d8151 data/forge/tags/items/armors/helmets.js
 2f9b7e099208b0e404e0f81c89f2a368e5d909da data/forge/tags/items/chests.json
 2f9b7e099208b0e404e0f81c89f2a368e5d909da data/forge/tags/items/chests/wooden.json
 d975e125845630962d46be3215fd2bf3c557e5dc data/forge/tags/items/crops.json
-87c0ae6c7a718897569f2f2b4d81fdcf8e9b269b data/forge/tags/items/fences.json
-87c0ae6c7a718897569f2f2b4d81fdcf8e9b269b data/forge/tags/items/fences/wooden.json
 0a05d2d0fafe11fe202f401f1dbed0401ced9eca data/forge/tags/items/fence_gates.json
 0a05d2d0fafe11fe202f401f1dbed0401ced9eca data/forge/tags/items/fence_gates/wooden.json
+87c0ae6c7a718897569f2f2b4d81fdcf8e9b269b data/forge/tags/items/fences.json
+87c0ae6c7a718897569f2f2b4d81fdcf8e9b269b data/forge/tags/items/fences/wooden.json
 30bb276fcad7836c5553b1d740ae81c9e687c8f7 data/forge/tags/items/fruits/berry.json
 0fab28203f8c9e1daa9c635ecb6c026ba0be0ba1 data/forge/tags/items/gems.json
 0fab28203f8c9e1daa9c635ecb6c026ba0be0ba1 data/forge/tags/items/gems/source.json
