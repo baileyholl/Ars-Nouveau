@@ -164,6 +164,10 @@ public class ScryCaster extends ModItem implements ICasterTool, IAnimatable {
                 return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
             }
 
+            if(!resolver.canCast(player)){
+                return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
+            }
+
             BlockSourceImpl blockSource = new BlockSourceImpl((ServerLevel) worldIn, scryPos);
             Position position;
             Direction direction = castingAtState.getValue(ScryerCrystal.FACING);
