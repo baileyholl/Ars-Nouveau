@@ -29,8 +29,16 @@ public abstract class SourceBlock extends ModBlock implements EntityBlock {
                 if (player.getItemInHand(handIn).getItem() == ItemsRegistry.BUCKET_OF_SOURCE.get()) {
                     if (tile.getMaxSource() - tile.getSource() >= 1000) {
                         tile.addSource(1000);
-                        if (!player.isCreative())
-                            player.setItemInHand(handIn, new ItemStack(Items.BUCKET));
+                        if (!player.isCreative()) {
+                            if(player.getItemInHand(handIn).getCount() == 1){
+                                player.setItemInHand(handIn, new ItemStack(Items.BUCKET));
+                            }else{
+                                player.getItemInHand(handIn).shrink(1);
+                                if(!player.addItem(new ItemStack(Items.BUCKET))){
+                                    player.drop(new ItemStack(Items.BUCKET), false, false);
+                                }
+                            }
+                        }
                         return InteractionResult.SUCCESS;
                     }
                     return super.use(state, worldIn, pos, player, handIn, hit);
