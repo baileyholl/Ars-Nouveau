@@ -6,12 +6,10 @@ import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.FrameType;
-import net.minecraft.advancements.critereon.ConsumeItemTrigger;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -76,6 +74,8 @@ public class ANAdvancements implements ForgeAdvancementProvider.AdvancementGener
         var warpScroll = saveBasicItem(ItemsRegistry.WARP_SCROLL, magebloom);
         builder("create_portal").display(BlockRegistry.CREATIVE_SOURCE_JAR, FrameType.CHALLENGE, false).addCriterion(new PlayerTrigger.TriggerInstance(ANCriteriaTriggers.CREATE_PORTAL.getId(),ContextAwarePredicate.ANY)).parent(warpScroll).save(con);
         var alteration = saveBasicItem(BlockRegistry.ALTERATION_TABLE, magebloom);
+
+        builder("ritual_gravity").display(RitualRegistry.getRitualItemMap().get(new ResourceLocation(ArsNouveau.MODID, RitualLib.GRAVITY)), FrameType.GOAL).addCriterion("gravity_effect", EffectsChangedTrigger.TriggerInstance.hasEffects(MobEffectsPredicate.effects().and(ModPotions.GRAVITY_EFFECT.get()))).parent(rituals).save(con);
     }
 
     public ANAdvancementBuilder buildBasicItem(ItemLike item, Advancement parent){

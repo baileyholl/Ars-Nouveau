@@ -344,6 +344,14 @@ public class RecipeDatagen extends RecipeProvider {
                     .requires(Items.LAPIS_BLOCK)
                     .save(consumer);
 
+            shapelessBuilder(getRitualItem(RitualLib.GRAVITY))
+                    .requires(BlockRegistry.FLOURISHING_LOG)
+                    .requires(ItemsRegistry.AIR_ESSENCE)
+                    .requires(ItemsRegistry.EARTH_ESSENCE)
+                    .requires(Items.FEATHER)
+                    .requires(Items.ANVIL)
+                    .save(consumer);
+
 
             STONECUTTER_COUNTER = 1;
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlockRegistry.ALCHEMICAL_BLOCK).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))

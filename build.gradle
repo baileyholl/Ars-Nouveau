@@ -29,7 +29,6 @@ apply plugin: 'maven-publish'
 
 version = '4.6.0'
 
-
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
@@ -210,6 +209,7 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:config-556861:4324174") // functional storage
     runtimeOnly fg.deobf("curse.maven:config-287342:4391554") // titanium
     runtimeOnly fg.deobf("curse.maven:commandstructures-565119:3823785")*/
+
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
     annotationProcessor("com.github.LlamaLad7:MixinExtras:${mixin_extras_version}")
 

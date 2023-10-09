@@ -1,4 +1,4 @@
-// 1.20.1	2023-07-04T22:32:46.6271813	Advancements
+// 1.20.1	2023-10-08T20:36:02.3394116	Advancements
 7295239c199c7886bf0317067fbaf3090076239e data/ars_nouveau/advancements/alteration_table.json
 6781bad48309645bfb0fab3d02adfa7c33b5852c data/ars_nouveau/advancements/amethyst_golem_charm.json
 8b36814d9bda6dcf457239295627d68bda637474 data/ars_nouveau/advancements/apprentice_spell_book.json
@@ -21,6 +21,7 @@ a41878e8192bb3154e1d55165608c10c5a640e03 data/ars_nouveau/advancements/potion_ja
 7ae0149b4e7e1c24cb9b8879080592d85dec20c5 data/ars_nouveau/advancements/potion_melder.json
 ca760aefd6cecc0d54e0d0c3f2a411552b79d967 data/ars_nouveau/advancements/prismatic.json
 0c41c790e0c758f2570a802ba7e1b66cbfb8b65d data/ars_nouveau/advancements/ritual_brazier.json
+d4af90d483986bdf9289897b1dd7687ef4daa975 data/ars_nouveau/advancements/ritual_gravity.json
 05c322d82a943da793534201a48a821a55b8d502 data/ars_nouveau/advancements/root.json
 6c481c463e143e164abf7497497c17cfd9908af5 data/ars_nouveau/advancements/scryers_oculus.json
 427e01c440adb1640e70830caf805ac82540d936 data/ars_nouveau/advancements/shapers_focus.json

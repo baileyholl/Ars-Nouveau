@@ -1,4 +1,4 @@
-// 1.20.1	2023-10-07T14:18:52.3599709	Ars Nouveau Item Models
+// 1.20.1	2023-10-08T20:36:02.3108508	Ars Nouveau Item Models
 11ee554b11a3a830e89b742762e5b754c2ecb5ee assets/ars_nouveau/models/item/agronomic_sourcelink.json
 339a05323ebef7efc5c70db708a2e7a24708e9bc assets/ars_nouveau/models/item/alchemical_sourcelink.json
 a0214090201827dd5f954d0b33e64e4df6e53764 assets/ars_nouveau/models/item/alchemists_crown.json
@@ -140,6 +140,7 @@ c1626a0f087fedafc08c42505f1f85f29a867b45 assets/ars_nouveau/models/item/ritual_f
 9c553deac48ba0f9240c59eb59e8add39b2a3242 assets/ars_nouveau/models/item/ritual_flight.json
 5e9a95ac3da33e9f1de54af8629b4c0bf805144c assets/ars_nouveau/models/item/ritual_flowering.json
 9cb0d169f0fbb9ae38762378d30edfa617addda6 assets/ars_nouveau/models/item/ritual_forestation.json
+b280f28794ef322e19eea074fae60bed4edee0db assets/ars_nouveau/models/item/ritual_gravity.json
 a98250f321e85ee0aaf3c8c6da5d85d1d133d92c assets/ars_nouveau/models/item/ritual_harvest.json
 3df96cf4eb6eeec0d30ff666207cc8c46084dcea assets/ars_nouveau/models/item/ritual_moonfall.json
 1725a459a4898426fdf524ec8615e736d5c29698 assets/ars_nouveau/models/item/ritual_overgrowth.json

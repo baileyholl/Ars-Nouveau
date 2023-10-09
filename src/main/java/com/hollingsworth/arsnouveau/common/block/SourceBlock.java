@@ -7,5 +7,4 @@ public abstract class SourceBlock extends ModBlock implements EntityBlock {
     public SourceBlock(Properties properties, String registry) {
         super(properties);
     }
-
 }

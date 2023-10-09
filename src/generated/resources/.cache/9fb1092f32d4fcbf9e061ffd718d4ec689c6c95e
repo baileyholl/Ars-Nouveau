@@ -1,4 +1,4 @@
-// 1.20.1	2023-09-17T11:58:47.388671	Recipes
+// 1.20.1	2023-10-08T20:36:02.3289017	Recipes
 53e7c7063857317940cff0f32c3e0bb2144ce88a data/ars_nouveau/advancements/recipes/building_blocks/archwood_button.json
 3b562128c61e177df4b6cadd7e13b0a7f2aae1df data/ars_nouveau/advancements/recipes/building_blocks/archwood_door.json
 e310e3ed620252904dbd7ad1ce31741843c2474e data/ars_nouveau/advancements/recipes/building_blocks/archwood_fence.json
@@ -195,6 +195,7 @@ e0cd3715303024f98bb70fe42369681f4a30856f data/ars_nouveau/advancements/recipes/m
 1b8b5803cf92ea8a80e738e3d7183ea980c0bf62 data/ars_nouveau/advancements/recipes/misc/ritual_flight.json
 228aa62a0fd21bb498282fcc1c5b722fd2fef6dd data/ars_nouveau/advancements/recipes/misc/ritual_flowering.json
 720a316846a1b4fca1291540c71b4fee6e436c22 data/ars_nouveau/advancements/recipes/misc/ritual_forestation.json
+843f0566acbe6800570c405e4c305530144037a9 data/ars_nouveau/advancements/recipes/misc/ritual_gravity.json
 aae1d8344e5a57e3ce38f474a4815c915ee50f17 data/ars_nouveau/advancements/recipes/misc/ritual_harvest.json
 07e92a9351eec80779b0b2e040ce6a6c6b4bbff7 data/ars_nouveau/advancements/recipes/misc/ritual_moonfall.json
 bd6744a7bf42e4fb19c1db9fe641fcd800b909ba data/ars_nouveau/advancements/recipes/misc/ritual_overgrowth.json
@@ -393,6 +394,7 @@ a23f354932fdd08441e1b5b1bb724ac6d19d4f58 data/ars_nouveau/recipes/ritual_fertili
 6ecd2f3eb49fb546d8a99c0c8ec6d2e25f0a4426 data/ars_nouveau/recipes/ritual_flight.json
 1ca17abdc62b59476048de9567379b78378d2010 data/ars_nouveau/recipes/ritual_flowering.json
 877a0d77b02b3ebb108aa4ca9a22b20b980ee92d data/ars_nouveau/recipes/ritual_forestation.json
+22178b377cf918f0dc34fec089255d5a0f3578c5 data/ars_nouveau/recipes/ritual_gravity.json
 12788526ae408bed10dc9f31583b414def9e211d data/ars_nouveau/recipes/ritual_harvest.json
 0f8b17e3a63618a33264f2d3749521d4d1093d33 data/ars_nouveau/recipes/ritual_moonfall.json
 c6a48710eda8437d30f04e5266493a3ad531914f data/ars_nouveau/recipes/ritual_overgrowth.json
