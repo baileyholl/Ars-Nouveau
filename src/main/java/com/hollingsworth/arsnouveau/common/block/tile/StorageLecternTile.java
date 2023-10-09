@@ -440,7 +440,10 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 				ItemStack extractedStack = handler.extractItem(i, stack.getMaxStackSize(), false);
 				ItemStack remaining = mainLectern.pushStack(extractedStack, null);
 				if(!remaining.isEmpty()){
-					handler.insertItem(i, remaining, false);
+					ItemStack remainder = handler.insertItem(i, remaining, false);
+					if(!remainder.isEmpty()){
+						Containers.dropItemStack(level, worldPosition.getX() + .5f, worldPosition.getY() + .5f, worldPosition.getZ() + .5f, remainder);
+					}
 				}
 				return;
 			}
