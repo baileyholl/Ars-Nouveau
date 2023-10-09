@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.PlayerCaster;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
-
 import com.hollingsworth.arsnouveau.common.block.tile.SpellSensorTile;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectInvisibility;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
@@ -19,7 +18,6 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -71,12 +69,6 @@ public class ArsEvents {
         if(e.rayTraceResult instanceof BlockHitResult blockHitResult && e.world.getBlockEntity(blockHitResult.getBlockPos()) instanceof GhostWeaveTile ghostWeaveTile){
             ghostWeaveTile.setVisibility(false);
         }
-    }
-
-    @SubscribeEvent
-    public static void adjustAttributeCaps(PlayerEvent.PlayerLoggedInEvent event) {
-        event.getEntity().getAttributes().getInstance(PerkAttributes.MAX_MANA.get()).setBaseValue(ServerConfig.INIT_MAX_MANA.get());
-        event.getEntity().getAttributes().getInstance(PerkAttributes.MANA_REGEN_BONUS.get()).setBaseValue(ServerConfig.INIT_MANA_REGEN.get());
     }
 
     @SubscribeEvent

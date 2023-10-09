@@ -6,10 +6,8 @@ import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.mana.IManaDiscountEquipment;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
-import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -63,6 +61,7 @@ public class ManaUtil {
 
         int tier = mana.getBookTier();
         int numGlyphs = mana.getGlyphBonus();
+        rawMax += ServerConfig.INIT_MAX_MANA.get();
         rawMax += numGlyphs * ServerConfig.GLYPH_MAX_BONUS.get();
         rawMax += tier * ServerConfig.TIER_MAX_BONUS.get();
 
@@ -94,7 +93,7 @@ public class ManaUtil {
         double numGlyphs = mana.getGlyphBonus();
         regen += numGlyphs * ServerConfig.GLYPH_REGEN_BONUS.get();
         regen += tier * ServerConfig.TIER_REGEN_BONUS.get();
-
+        regen += ServerConfig.INIT_MANA_REGEN.get();
         ManaRegenCalcEvent event = new ManaRegenCalcEvent(e, regen);
         MinecraftForge.EVENT_BUS.post(event);
         regen = event.getRegen();
