@@ -12,6 +12,7 @@ import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetScribeRecipe;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.CreativeTabRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.ChatFormatting;
@@ -211,8 +212,6 @@ public class GlyphUnlockMenu extends BaseBook {
         layoutAllGlyphs(page);
     }
 
-    public static Comparator<AbstractSpellPart> COMPARE_TIER_THEN_NAME = COMPARE_GLYPH_BY_TYPE.thenComparingInt(o -> o.getConfigTier().value).thenComparing(AbstractSpellPart::getLocaleName);
-
 
     public void layoutAllGlyphs(int page) {
         clearButtons(glyphButtons);
@@ -227,7 +226,7 @@ public class GlyphUnlockMenu extends BaseBook {
         int adjustedRowsPlaced = 0;
         int yStart = bookTop + 20;
         List<AbstractSpellPart> sorted = new ArrayList<>(displayedGlyphs);
-        sorted.sort(COMPARE_TIER_THEN_NAME);
+        sorted.sort(CreativeTabRegistry.COMPARE_TIER_THEN_NAME);
         sorted = sorted.subList(maxPerPage * page, Math.min(sorted.size(), maxPerPage * (page + 1)));
         int adjustedXPlaced = 0;
         tier1Row = 0;

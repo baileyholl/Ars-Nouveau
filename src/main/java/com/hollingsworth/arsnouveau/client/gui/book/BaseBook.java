@@ -30,11 +30,6 @@ public class BaseBook extends ModdedScreen {
         super(Component.literal(""));
     }
 
-    public static Comparator<AbstractSpellPart> COMPARE_GLYPH_BY_TYPE = Comparator.comparingInt(AbstractSpellPart::getTypeIndex);
-
-    public static Comparator<AbstractSpellPart> COMPARE_TYPE_THEN_NAME = COMPARE_GLYPH_BY_TYPE.thenComparing(AbstractSpellPart::getLocaleName);
-
-
     @Override
     public void init() {
         super.init();

@@ -23,6 +23,7 @@ import com.hollingsworth.arsnouveau.common.network.PacketUpdateCaster;
 import com.hollingsworth.arsnouveau.common.spell.validation.CombinedSpellValidator;
 import com.hollingsworth.arsnouveau.common.spell.validation.GlyphMaxTierValidator;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.CreativeTabRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -219,7 +220,7 @@ public class GuiSpellBook extends BaseBook {
         sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractCastMethod).toList());
         sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractAugment).toList());
         sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractEffect).toList());
-        sorted.sort(COMPARE_TYPE_THEN_NAME);
+        sorted.sort(CreativeTabRegistry.COMPARE_TYPE_THEN_NAME);
         sorted = sorted.subList(glyphsPerPage * page, Math.min(sorted.size(), glyphsPerPage * (page + 1)));
         int adjustedXPlaced = 0;
         int totalRowsPlaced = 0;

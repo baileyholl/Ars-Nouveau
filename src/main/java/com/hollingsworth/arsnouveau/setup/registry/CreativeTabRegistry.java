@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
-import com.hollingsworth.arsnouveau.client.gui.book.BaseBook;
+import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
@@ -19,9 +19,17 @@ import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.Comparator;
+
 import static com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry.ITEMS;
 
 public class CreativeTabRegistry {
+    public static Comparator<AbstractSpellPart> COMPARE_GLYPH_BY_TYPE = Comparator.comparingInt(AbstractSpellPart::getTypeIndex);
+
+    public static Comparator<AbstractSpellPart> COMPARE_TYPE_THEN_NAME = COMPARE_GLYPH_BY_TYPE.thenComparing(AbstractSpellPart::getLocaleName);
+    public static Comparator<AbstractSpellPart> COMPARE_TIER_THEN_NAME = COMPARE_GLYPH_BY_TYPE.thenComparingInt(o -> o.getConfigTier().value).thenComparing(AbstractSpellPart::getLocaleName);
+
+
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ArsNouveau.MODID);
     public static final RegistryObject<CreativeModeTab> BLOCKS = TABS.register("general", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.ars_nouveau"))
@@ -51,10 +59,12 @@ public class CreativeTabRegistry {
             .displayItems((params, output) -> {
 
                 for (var glyph : GlyphRegistry.getSpellpartMap().values().stream()
-                        .sorted(BaseBook.COMPARE_TYPE_THEN_NAME).toList()) {
+                        .sorted(COMPARE_TYPE_THEN_NAME).toList()) {
                     output.accept(glyph.getGlyph().getDefaultInstance());
                 }
 
             }).withTabsBefore(BLOCKS.getKey())
             .build());
+
+
 }
