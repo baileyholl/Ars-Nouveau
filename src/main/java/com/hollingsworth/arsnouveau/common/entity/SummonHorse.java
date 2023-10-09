@@ -128,9 +128,9 @@ public class SummonHorse extends Horse implements ISummon {
     }
 
 
-    @Nullable
+    @org.jetbrains.annotations.Nullable
     @Override
-    public UUID getOwnerID() {
+    public UUID getOwnerUUID() {
         return this.getEntityData().get(OWNER_UUID).isEmpty() ? this.getUUID() : this.getEntityData().get(OWNER_UUID).get();
     }
 

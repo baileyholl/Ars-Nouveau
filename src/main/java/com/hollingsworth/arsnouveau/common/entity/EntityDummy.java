@@ -83,7 +83,7 @@ public class EntityDummy extends PathfinderMob implements ISummon {
     public void tick() {
         super.tick();
         if (!level.isClientSide) {
-            if (level.getGameTime() % 10 == 0 && level.getPlayerByUUID(getOwnerID()) == null) {
+            if (level.getGameTime() % 10 == 0 && level.getPlayerByUUID(getOwnerUUID()) == null) {
                 ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
                 this.remove(RemovalReason.DISCARDED);
                 onSummonDeath(level, null, false);
@@ -110,7 +110,7 @@ public class EntityDummy extends PathfinderMob implements ISummon {
         if (!level.isClientSide)
             return ItemStack.EMPTY;
 
-        ItemStack heldStack = level.getPlayerByUUID(getOwnerID()) != null ? level.getPlayerByUUID(getOwnerID()).getItemBySlot(p_184582_1_) : ItemStack.EMPTY;
+        ItemStack heldStack = level.getPlayerByUUID(getOwnerUUID()) != null ? level.getPlayerByUUID(getOwnerUUID()).getItemBySlot(p_184582_1_) : ItemStack.EMPTY;
         if(heldStack.getItem() == BlockRegistry.MOB_JAR.asItem()){
             return new ItemStack(BlockRegistry.MOB_JAR.asItem());
         }
@@ -124,20 +124,20 @@ public class EntityDummy extends PathfinderMob implements ISummon {
 
     public ResourceLocation getSkinTextureLocation() {
         PlayerInfo networkplayerinfo = this.getPlayerInfo();
-        return networkplayerinfo == null ? DefaultPlayerSkin.getDefaultSkin(getOwnerID()) : networkplayerinfo.getSkinLocation();
+        return networkplayerinfo == null ? DefaultPlayerSkin.getDefaultSkin(getOwnerUUID()) : networkplayerinfo.getSkinLocation();
     }
 
     @Nullable
     @OnlyIn(Dist.CLIENT)
     protected PlayerInfo getPlayerInfo() {
         if (this.playerInfo == null) {
-            this.playerInfo = Minecraft.getInstance().getConnection().getPlayerInfo(getOwnerID());
+            this.playerInfo = Minecraft.getInstance().getConnection().getPlayerInfo(getOwnerUUID());
         }
         return this.playerInfo;
     }
 
     public Component getName() {
-        return this.level.getPlayerByUUID(getOwnerID()) == null ? Component.literal("") : this.level.getPlayerByUUID(getOwnerID()).getName();
+        return this.level.getPlayerByUUID(getOwnerUUID()) == null ? Component.literal("") : this.level.getPlayerByUUID(getOwnerUUID()).getName();
     }
 
     public Component getDisplayName() {
@@ -164,7 +164,7 @@ public class EntityDummy extends PathfinderMob implements ISummon {
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.ticksLeft = tag.getInt("left");
-        if (getOwnerID() != null)
+        if (getOwnerUUID() != null)
             setOwnerID(tag.getUUID("owner"));
     }
 
@@ -180,7 +180,7 @@ public class EntityDummy extends PathfinderMob implements ISummon {
 
     @Nullable
     @Override
-    public UUID getOwnerID() {
+    public UUID getOwnerUUID() {
         return this.getEntityData().get(OWNER_UUID).isEmpty() ? this.getUUID() : this.getEntityData().get(OWNER_UUID).get();
     }
 

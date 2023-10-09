@@ -118,7 +118,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this, SummonSkeleton.class){
             @Override
             protected boolean canAttack(@Nullable LivingEntity pPotentialTarget, TargetingConditions pTargetPredicate) {
-                return pPotentialTarget != null && super.canAttack(pPotentialTarget, pTargetPredicate) && !pPotentialTarget.getUUID().equals(getOwnerID()) ;
+                return pPotentialTarget != null && super.canAttack(pPotentialTarget, pTargetPredicate) && !pPotentialTarget.getUUID().equals(getOwnerUUID()) ;
             }
         });
         this.targetSelector.addGoal(1, new CopyOwnerTargetGoal<>(this));
@@ -156,7 +156,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
         if (pSource.is(DamageTypes.MOB_ATTACK) && pSource.getEntity() instanceof ISummon summon){
-            if (summon.getOwnerID() != null && summon.getOwnerID().equals(this.getOwnerID())) return false;
+            if (summon.getOwnerUUID() != null && summon.getOwnerUUID().equals(this.getOwnerUUID())) return false;
         }
         return super.hurt(pSource, pAmount);
     }
@@ -182,7 +182,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
         LivingEntity summoner = this.getSummoner();
 
         if (summoner != null) {
-            if (pEntity instanceof ISummon summon && summon.getOwnerID() != null && summon.getOwnerID().equals(this.getOwnerID())) return true;
+            if (pEntity instanceof ISummon summon && summon.getOwnerUUID() != null && summon.getOwnerUUID().equals(this.getOwnerUUID())) return true;
             return pEntity == summoner || summoner.isAlliedTo(pEntity);
         }
         return super.isAlliedTo(pEntity);
@@ -252,7 +252,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
 
     public LivingEntity getOwnerFromID() {
         try {
-            UUID uuid = this.getOwnerID();
+            UUID uuid = this.getOwnerUUID();
 
             return uuid == null ? null : this.level.getPlayerByUUID(uuid);
         } catch (IllegalArgumentException var2) {
@@ -276,10 +276,10 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
         if (this.limitedLifespan) {
             compound.putInt("LifeTicks", this.limitedLifeTicks);
         }
-        if (this.getOwnerID() == null) {
+        if (this.getOwnerUUID() == null) {
             compound.putUUID("OwnerUUID", Util.NIL_UUID);
         } else {
-            compound.putUUID("OwnerUUID", this.getOwnerID());
+            compound.putUUID("OwnerUUID", this.getOwnerUUID());
         }
 
     }
@@ -307,7 +307,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
 
     @Nullable
     @Override
-    public UUID getOwnerID() {
+    public UUID getOwnerUUID() {
         return this.entityData.get(OWNER_UNIQUE_ID).orElse(null);
     }
 

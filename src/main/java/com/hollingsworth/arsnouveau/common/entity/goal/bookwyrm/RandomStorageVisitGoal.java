@@ -56,12 +56,12 @@ public class RandomStorageVisitGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return target != null && ticksRunning < 10 * 20 && !isDone;
+        return target != null && ticksRunning < 10 * 20 && !isDone && !bookwyrm.playerTooFar;
     }
 
     @Override
     public boolean canUse() {
-        return bookwyrm.backoffTicks <= 0 && bookwyrm.getRandom().nextInt(4) == 0;
+        return !bookwyrm.playerTooFar && bookwyrm.backoffTicks <= 0 && bookwyrm.getRandom().nextInt(4) == 0;
     }
 }
 

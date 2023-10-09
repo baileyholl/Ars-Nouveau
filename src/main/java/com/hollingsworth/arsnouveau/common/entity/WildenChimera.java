@@ -454,7 +454,7 @@ public class WildenChimera extends Monster implements GeoEntity {
 
             // Omit our summoned sources that might aggro or accidentally hurt us
             if (entity1 instanceof WildenStalker || entity1 instanceof WildenGuardian || entity instanceof WildenHunter
-                    || (entity instanceof ISummon && ((ISummon) entity).getOwnerID() != null && ((ISummon) entity).getOwnerID().equals(this.getUUID()))
+                    || (entity instanceof ISummon && ((ISummon) entity).getOwnerUUID() != null && ((ISummon) entity).getOwnerUUID().equals(this.getUUID()))
                     || (entity1 instanceof SummonWolf && ((SummonWolf) entity1).isWildenSummon))
                 return false;
         }

@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
-import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.api.util.LevelEntityMap;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -54,10 +54,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.event.level.SaplingGrowTreeEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -76,6 +73,7 @@ import java.util.List;
 public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, ITooltipProvider, IDispellable, IVariantColorProvider<Whirlisprig> {
     AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
 
+    public static LevelEntityMap WHIRLI_MAP = new LevelEntityMap();
 
     public int timeSinceBonemeal = 0;
     public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(Whirlisprig.class, EntityDataSerializers.BOOLEAN);
@@ -221,16 +219,12 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
 
     public Whirlisprig(EntityType<? extends AbstractFlyingCreature> type, Level worldIn) {
         super(type, worldIn);
-        if(!level.isClientSide)
-            MinecraftForge.EVENT_BUS.register(this);
         this.moveControl = new FlyingMoveControl(this, 10, true);
         addGoalsAfterConstructor();
     }
 
     public Whirlisprig(Level world, boolean isTamed, BlockPos pos) {
         super(ModEntities.WHIRLISPRIG_TYPE.get(), world);
-        if(!level.isClientSide)
-            MinecraftForge.EVENT_BUS.register(this);
         this.moveControl = new FlyingMoveControl(this, 10, true);
         this.entityData.set(TAMED, isTamed);
         this.flowerPos = pos;
@@ -238,10 +232,19 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     }
 
     @Override
+    public void setRemoved(RemovalReason pRemovalReason) {
+        super.setRemoved(pRemovalReason);
+        Whirlisprig.WHIRLI_MAP.removeEntity(level, this.getUUID());
+    }
+
+    @Override
     public void tick() {
         super.tick();
         SummonUtil.healOverTime(this);
         if (!this.level.isClientSide) {
+            if(!this.isRemoved()) {
+                Whirlisprig.WHIRLI_MAP.addEntity(level, this.getUUID());
+            }
             if (level.getGameTime() % 20 == 0 && this.blockPosition().getY() < this.level.getMinBuildHeight()) {
                 this.remove(RemovalReason.DISCARDED);
                 return;
@@ -341,13 +344,6 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
             return null;
         }
         return (WhirlisprigTile) level.getBlockEntity(flowerPos);
-    }
-
-    @SubscribeEvent
-    public void treeGrow(SaplingGrowTreeEvent event) {
-        if (!this.entityData.get(TAMED) && BlockUtil.distanceFrom(this.blockPosition(), event.getPos()) <= 10) {
-            this.droppingShards = true;
-        }
     }
 
     @Override

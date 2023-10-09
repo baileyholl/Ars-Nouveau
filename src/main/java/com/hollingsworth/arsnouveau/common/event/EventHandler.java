@@ -20,6 +20,7 @@ import com.hollingsworth.arsnouveau.common.block.LavaLily;
 import com.hollingsworth.arsnouveau.common.command.*;
 import com.hollingsworth.arsnouveau.common.compat.CaelusHandler;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
+import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import com.hollingsworth.arsnouveau.common.items.EnchantersSword;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
@@ -38,9 +39,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.VillagerRegistry;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -70,6 +69,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.level.SaplingGrowTreeEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -77,9 +77,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
@@ -200,20 +198,14 @@ public class EventHandler {
         }
         CompoundTag tag = e.getEntity().getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
         String book_tag = "an_book_";
-        String light_tag = "an_light_";
         if (!tag.getBoolean(book_tag) && Config.SPAWN_BOOK.get()) {
             Player entity = e.getEntity();
             ItemHandlerHelper.giveItemToPlayer(entity, new ItemStack(ItemsRegistry.WORN_NOTEBOOK));
             tag.putBoolean(book_tag, true);
             e.getEntity().getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
         }
-        if(!tag.getBoolean(light_tag) && Config.INFORM_LIGHTS.get()){
-            Player entity = e.getEntity();
-            PortUtil.sendMessage(entity, Component.translatable("ars_nouveau.light_message").withStyle(ChatFormatting.GOLD));
-            tag.putBoolean(light_tag, true);
-            e.getEntity().getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
-        }
     }
+
 
 
     @SubscribeEvent
@@ -413,6 +405,27 @@ public class EventHandler {
         }
     }
 
+    @SubscribeEvent
+    public static void treeGrow(SaplingGrowTreeEvent event) {
+        if (!(event.getLevel() instanceof ServerLevel level))
+            return;
+        Set<UUID> sprigs = Whirlisprig.WHIRLI_MAP.getEntities(level);
+        List<UUID> sprigsToRemove = new ArrayList<>();
+
+        for(UUID uuid : sprigs){
+            Entity entity = level.getEntity(uuid);
+            if(entity == null || !(entity instanceof Whirlisprig whirlisprig)){
+                sprigsToRemove.add(uuid);
+                continue;
+            }
+            if(BlockUtil.distanceFrom(entity.blockPosition(), event.getPos()) <= 10) {
+                whirlisprig.droppingShards = true;
+            }
+        }
+        for(UUID uuid : sprigsToRemove){
+            Whirlisprig.WHIRLI_MAP.removeEntity(level, uuid);
+        }
+    }
 
     private EventHandler() {
     }

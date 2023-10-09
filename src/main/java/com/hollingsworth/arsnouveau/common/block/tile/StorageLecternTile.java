@@ -26,6 +26,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
@@ -324,31 +325,36 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         return list;
     }
 
-    @Override
-    public void tick() {
-        if (level.isClientSide)
-            return;
-        if (backoffTicks > 0) {
-            backoffTicks--;
-        }
-        if (backoffTicks <= 0 && level.getGameTime() % 20 == 0) {
-            insertNearbyItems();
-        }
-        if (checkPlayerRangeTicks > 0) {
-            checkPlayerRangeTicks--;
-        }
-        if (checkPlayerRangeTicks <= 0) {
-            // Turn off bookwyrm tasks if no player is nearby
-            checkPlayerRangeTicks = 60 + level.random.nextInt(5);
-            ServerLevel serverLevel = (ServerLevel) level;
-            Player player = serverLevel.getNearestPlayer(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), 60, false);
-            canCreateTasks = player != null;
-        }
-        if (updateItems) {
-            updateItems();
-            updateItems = false;
-        }
-    }
+	@Override
+	public void tick() {
+		if(level.isClientSide)
+			return;
+		if(backoffTicks > 0){
+			backoffTicks--;
+		}
+		if(backoffTicks <= 0 && level.getGameTime() % 20 == 0){
+			insertNearbyItems();
+		}
+		if(checkPlayerRangeTicks > 0){
+			checkPlayerRangeTicks--;
+		}
+		if(checkPlayerRangeTicks <= 0){
+			// Turn off bookwyrm tasks if no player is nearby
+			checkPlayerRangeTicks = 60 + level.random.nextInt(5);
+			canCreateTasks = false;
+			ServerLevel serverLevel = (ServerLevel) level;
+			for(ServerPlayer serverPlayer : serverLevel.players()){
+				if(BlockUtil.distanceFrom(serverPlayer.position(), this.getBlockPos()) < 40){
+					canCreateTasks = true;
+					break;
+				}
+			}
+		}
+		if(updateItems) {
+			updateItems();
+			updateItems = false;
+		}
+	}
 
     public void updateItems() {
         itemsByTab.clear();

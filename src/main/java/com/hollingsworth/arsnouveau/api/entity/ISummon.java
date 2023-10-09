@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -15,7 +16,7 @@ import java.util.UUID;
 /**
  * For entities summoned by spells.
  */
-public interface ISummon {
+public interface ISummon extends OwnableEntity {
     // How many ticks the summon has left
     int getTicksLeft();
 
@@ -25,13 +26,6 @@ public interface ISummon {
         return this instanceof LivingEntity ? (LivingEntity) this : null;
     }
 
-    @Nullable
-    UUID getOwnerID();
-
-    default @Nullable Entity getOwner(ServerLevel world) {
-        return getOwnerID() != null ? world.getEntity(getOwnerID()) : null;
-    }
-
     void setOwnerID(UUID uuid);
 
     default void onSummonDeath(Level world, @Nullable DamageSource source, boolean didExpire) {
@@ -39,8 +33,8 @@ public interface ISummon {
     }
 
     default void writeOwner(CompoundTag tag) {
-        if (getOwnerID() != null)
-            tag.putUUID("owner", getOwnerID());
+        if (getOwnerUUID() != null)
+            tag.putUUID("owner", getOwnerUUID());
     }
 
     default @Nullable Entity readOwner(ServerLevel world, CompoundTag tag) {

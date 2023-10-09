@@ -222,7 +222,7 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
 
     public LivingEntity getOwnerFromID() {
         try {
-            UUID uuid = this.getOwnerID();
+            UUID uuid = this.getOwnerUUID();
 
             return uuid == null ? null : this.level.getPlayerByUUID(uuid);
         } catch (IllegalArgumentException var2) {
@@ -266,10 +266,10 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
         if (this.limitedLifespan) {
             compound.putInt("LifeTicks", this.limitedLifeTicks);
         }
-        if (this.getOwnerID() == null) {
+        if (this.getOwnerUUID() == null) {
             compound.putUUID("OwnerUUID", Util.NIL_UUID);
         } else {
-            compound.putUUID("OwnerUUID", this.getOwnerID());
+            compound.putUUID("OwnerUUID", this.getOwnerUUID());
         }
 
     }
@@ -291,9 +291,8 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
         this.limitedLifeTicks = ticks;
     }
 
-    @Nullable
     @Override
-    public UUID getOwnerID() {
+    public UUID getOwnerUUID() {
         return this.entityData.get(OWNER_UNIQUE_ID).orElse(null);
     }
 

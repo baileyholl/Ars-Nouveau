@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.familiar.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
@@ -23,6 +24,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -62,6 +64,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
 
     public BlockPos lecternPos;
     public int backoffTicks;
+    public boolean playerTooFar;
 
     public EntityBookwyrm(EntityType<? extends FlyingMob> p_i48568_1_, Level p_i48568_2_) {
         super(p_i48568_1_, p_i48568_2_);
@@ -114,6 +117,16 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
                 }
             }
         }
+        if(!level.isClientSide && level.getGameTime() % 100 == 0){
+            playerTooFar = true;
+            ServerLevel serverLevel = (ServerLevel) level;
+            for(ServerPlayer serverPlayer : serverLevel.players()){
+                if(BlockUtil.distanceFrom(serverPlayer.position(), this.position()) < 40){
+                    playerTooFar = false;
+                    break;
+                }
+            }
+        }
     }
 
     @Override
@@ -153,7 +166,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
         this.goalSelector.addGoal(2, new TransferGoal(this));
         this.goalSelector.addGoal(4, new RandomStorageVisitGoal(this, () ->{
             StorageLecternTile tile = getTile();
-            if(tile == null){
+            if(tile == null || playerTooFar){
                 return null;
             }
             List<BlockPos> targets = new ArrayList<>(tile.connectedInventories);
