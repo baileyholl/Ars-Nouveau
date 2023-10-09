@@ -7,7 +7,6 @@ public class LibItemNames {
 
     public static final String MAGE_FIBER = "magebloom_fiber";
 
-    public static final String BUCKET_OF_SOURCE = "bucket_of_source";
 
     public static final String WORN_NOTEBOOK = "worn_notebook";
 
@@ -16,9 +15,6 @@ public class LibItemNames {
     public static final String ARCHMAGE_SPELL_BOOK = "archmage_spell_book";
 
     public static final String MAGE_BLOOM = "magebloom";
-    public static final String BLAZE_FIBER = "blaze_fiber";
-
-    public static final String END_FIBER = "end_fiber";
     public static final String BELT_OF_LEVITATION = "belt_of_levitation";
     public static final String RING_OF_POTENTIAL = "ring_of_potential";
     public static final String MUNDANE_BELT = "mundane_belt";
@@ -47,7 +43,6 @@ public class LibItemNames {
     public static final String ALLOW_ITEM_SCROLL = "allow_scroll";
     public static final String DENY_ITEM_SCROLL = "deny_scroll";
     public static final String BLANK_PARCHMENT = "blank_parchment";
-    public static final String SOURCE_BERRY = "source_berry";
 
     public static final String WAND = "wand";
     public static final String VOID_JAR = "void_jar";
