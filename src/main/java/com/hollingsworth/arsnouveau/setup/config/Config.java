@@ -66,6 +66,7 @@ public class Config {
     public static ForgeConfigSpec.IntValue MANABAR_X_OFFSET;
     public static ForgeConfigSpec.IntValue MANABAR_Y_OFFSET;
     public static ForgeConfigSpec.IntValue BOOKWYRM_LIMIT;
+    public static ForgeConfigSpec.BooleanValue GUI_TRANSPARENCY;
 
     private static ForgeConfigSpec.ConfigValue<List<? extends String>> ENTITY_LIGHT_CONFIG;
     private static ForgeConfigSpec.ConfigValue<List<? extends String>> ITEM_LIGHT_CONFIG;
@@ -112,6 +113,7 @@ public class Config {
         CLIENT_BUILDER.comment("Misc").push("misc");
         ALTERNATE_PORTAL_RENDER = CLIENT_BUILDER.comment("Use simplified renderer for Warp Portals").define("no_end_portal_render", false);
         DISABLE_SKY_SHADER = CLIENT_BUILDER.comment("Disables the skyweave renderer. Disable if your sky is broken with shaders.").define("disable_skyweave", false);
+        GUI_TRANSPARENCY = CLIENT_BUILDER.comment("Enables transparent/opaque rendering of elements in the book GUI. Disable if it leads to crash with Sodium derivatives").define("gui_transparency", true);
         SERVER_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
         DIMENSION_BLACKLIST = SERVER_BUILDER.comment("Dimensions where hostile mobs will not spawn. Ex: [\"minecraft:overworld\", \"undergarden:undergarden\"]. . Run /forge dimensions for a list.").defineList("dimensionBlacklist", new ArrayList<>(), (o) -> true);
         SPAWN_BOOK = SERVER_BUILDER.comment("Spawn a book in the players inventory on login").define("spawnBook", true);

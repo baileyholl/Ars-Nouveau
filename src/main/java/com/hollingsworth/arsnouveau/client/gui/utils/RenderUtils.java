@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui.utils;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.client.gui.Color;
+import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -65,7 +66,7 @@ public class RenderUtils {
                 ItemDisplayContext.GUI,
                 false,
                 poseStack,
-                transparent ? transparentBuffer(buffer) : buffer, // TODO: remove sodium check when sodium is fixed https://github.com/CaffeineMC/sodium-fabric/pull/1842/files
+                transparent && Config.GUI_TRANSPARENCY.get() ? transparentBuffer(buffer) : buffer, // TODO: remove sodium check when sodium is fixed https://github.com/CaffeineMC/sodium-fabric/pull/1842/files
                 LightTexture.FULL_BRIGHT,
                 OverlayTexture.NO_OVERLAY,
                 model
