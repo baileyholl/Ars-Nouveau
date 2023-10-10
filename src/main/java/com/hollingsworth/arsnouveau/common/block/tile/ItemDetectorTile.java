@@ -58,7 +58,7 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
         }
         int found = 0;
         for(int i = 0; i < handler.getSlots(); i++){
-            ItemStack stack = handler.getStackInSlot(i);
+            ItemStack stack = handler.extractItem(i, 64, true);
             found += getCountForStack(stack);
             if(found > neededCount){
                 setReachedCount(true);
@@ -75,7 +75,7 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
                 return stack.getCount();
             }
         }
-        if (!ItemStack.isSameItem(stack, filterStack) || !ItemStack.matches(stack, filterStack)) {
+        if (!ItemStack.isSameItemSameTags(stack, filterStack)) {
             return 0;
         }
         return (filterStack.isEmpty() && stack.isEmpty()) ? 1 : stack.getCount();
