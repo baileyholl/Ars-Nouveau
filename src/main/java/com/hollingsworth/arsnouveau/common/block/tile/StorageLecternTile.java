@@ -417,36 +417,39 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         return bookwyrmEntities;
     }
 
-    public void insertNearbyItems() {
-        // Get adjacent inventories
-        StorageLecternTile mainLectern = getMainLectern();
-        if (mainLectern == null)
-            return;
-        for (Direction dir : Direction.values()) {
-            BlockPos pos = this.worldPosition.relative(dir);
-            if (level.getBlockState(pos).is(BlockTagProvider.AUTOPULL_DISABLED)) {
-                continue;
-            }
-            BlockEntity tile = this.level.getBlockEntity(pos);
-            if (tile == null || mainLectern.connectedInventories.contains(pos))
-                continue;
-            IItemHandler handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
-            if (handler == null)
-                continue;
-            for (int i = 0; i < handler.getSlots(); i++) {
-                ItemStack stack = handler.getStackInSlot(i);
-                if (stack.isEmpty())
-                    continue;
-                ItemStack extractedStack = handler.extractItem(i, stack.getMaxStackSize(), false);
-                ItemStack remaining = mainLectern.pushStack(extractedStack, null);
-                if (!remaining.isEmpty()) {
-                    handler.insertItem(i, remaining, false);
-                }
-                return;
-            }
-        }
-        backoffTicks = 100 + level.random.nextInt(20);
-    }
+	public void insertNearbyItems(){
+		// Get adjacent inventories
+		StorageLecternTile mainLectern = getMainLectern();
+		if(mainLectern == null)
+			return;
+		for(Direction dir : Direction.values()){
+			BlockPos pos = this.worldPosition.relative(dir);
+			if(level.getBlockState(pos).is(BlockTagProvider.AUTOPULL_DISABLED)){
+				continue;
+			}
+			BlockEntity tile = this.level.getBlockEntity(pos);
+			if(tile == null || mainLectern.connectedInventories.contains(pos))
+				continue;
+			IItemHandler handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+			if(handler == null)
+				continue;
+			for(int i = 0; i < handler.getSlots(); i++){
+				ItemStack stack = handler.getStackInSlot(i);
+				if(stack.isEmpty())
+					continue;
+				ItemStack extractedStack = handler.extractItem(i, stack.getMaxStackSize(), false);
+				ItemStack remaining = mainLectern.pushStack(extractedStack, null);
+				if(!remaining.isEmpty()){
+					ItemStack remainder = handler.insertItem(i, remaining, false);
+					if(!remainder.isEmpty()){
+						Containers.dropItemStack(level, worldPosition.getX() + .5f, worldPosition.getY() + .5f, worldPosition.getZ() + .5f, remainder);
+					}
+				}
+				return;
+			}
+		}
+		backoffTicks = 100 + level.random.nextInt(20);
+	}
 
     public void removeBookwyrm(EntityBookwyrm bookwyrm) {
         bookwyrmUUIDs.remove(bookwyrm.getUUID());
