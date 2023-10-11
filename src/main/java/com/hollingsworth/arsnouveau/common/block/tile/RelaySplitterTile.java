@@ -86,7 +86,7 @@ public class RelaySplitterTile extends RelayTile {
 
             LazyOptional<ISourceTile> cap = be.getCapability(CapabilityRegistry.SOURCE_TILE, target.getValue());
 
-            cap.resolve().ifPresentOrElse(sourceTile -> {
+            cap.ifPresent(sourceTile -> {
                 ISourceTile fromTile = sendSource ? this : sourceTile;
                 ISourceTile toTile = sendSource ? sourceTile : this;
 
@@ -95,7 +95,8 @@ public class RelaySplitterTile extends RelayTile {
                     BlockPos toPos = sendSource ? target.getKey() : worldPosition;
                     createParticles(fromPos, toPos);
                 }
-                }, () -> stale.add(target.getKey()));
+                });
+            cap.addListener(sourceTile -> stale.add(target.getKey()));
         }
 
         for (BlockPos pos : stale) {

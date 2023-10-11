@@ -184,19 +184,16 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
             } else {
                 LazyOptional<ISourceTile> cap = fromBE.getCapability(CapabilityRegistry.SOURCE_TILE, fromDir);
 
-                cap.resolve().ifPresentOrElse(
-                        (otherTile) -> {
-                            if (transferSource(otherTile, this) > 0) {
-                                updateBlock();
-                                ParticleUtil.spawnFollowProjectile(level, fromPos, worldPosition);
-                            }
-                        },
-                        () -> {
-                            //capability is no longer present
-                            fromPos = null;
-                            updateBlock();
-                        }
-                );
+                cap.ifPresent(otherTile -> {
+                    if (transferSource(otherTile, this) > 0) {
+                        updateBlock();
+                        ParticleUtil.spawnFollowProjectile(level, fromPos, worldPosition);
+                    }
+                });
+                cap.addListener(otherTile -> {
+                    fromPos = null;
+                    updateBlock();
+                });
             }
         }
 
@@ -209,26 +206,24 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
             } else {
                 LazyOptional<ISourceTile> cap = toBE.getCapability(CapabilityRegistry.SOURCE_TILE, toDir);
 
-                cap.resolve().ifPresentOrElse(
-                        (otherTile) -> {
-                            if (transferSource(this, otherTile) > 0) {
-                                updateBlock();
-                                ParticleUtil.spawnFollowProjectile(level, worldPosition, toPos);
-                            }
-                        },
-                        () -> {
-                            //capability is no longer present
-                            toPos = null;
-                            updateBlock();
-                        }
-                );
+                cap.ifPresent(otherTile -> {
+                    if (transferSource(this, otherTile) > 0) {
+                        updateBlock();
+                        ParticleUtil.spawnFollowProjectile(level, worldPosition, toPos);
+                    }
+                });
+                cap.addListener(otherTile -> {
+                    //capability is no longer present
+                    toPos = null;
+                    updateBlock();
+                });
             }
         }
     }
 
-    String TO = "to_";
+    String TO = "to";
     String FROM = "from";
-    String DIR_SUFFIX = "dir_";
+    String DIR_SUFFIX = "_dir";
 
     @Override
     public void load(CompoundTag tag) {
