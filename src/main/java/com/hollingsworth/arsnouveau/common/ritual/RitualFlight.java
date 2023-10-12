@@ -59,7 +59,7 @@ public class RitualFlight extends RangeEffectRitual {
 
     public boolean onJumpEvent(LivingEvent.LivingJumpEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer && !serverPlayer.hasEffect(getEffect())) {
-            return applyEffect(serverPlayer);
+            return attemptRefresh(serverPlayer);
         }
         return false;
     }
