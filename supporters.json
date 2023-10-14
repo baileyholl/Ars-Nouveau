@@ -13,7 +13,7 @@
   "14212b1b-ba12-4164-947c-c208a6b07ac9", "dfb079d8-a5ce-4d70-907f-b852a44f8de8", "5ebee73e-faec-4810-ae7a-4baf73f026e4",
   "b9694497-80b7-4412-b00e-2c9bc2705fd1", "02320102-6fc4-408b-8873-afe54b2dcae6", "ac076a44-c1e3-4752-a3ac-2a366deaefb1",
   "8f86b83a-e35f-4fca-8b0f-a8181cc1741d", "c657941e-8ac5-46ac-bf65-8983f776ff33", "47b128a4-9043-4ec6-ba69-0edffdddfd8a",
-    "0753a4e3-f71d-4b86-b338-3983f36d2b8a", "df2c8cdf-fbaf-4a22-9fdf-16770ee19c63"],
+    "0753a4e3-f71d-4b86-b338-3983f36d2b8a", "df2c8cdf-fbaf-4a22-9fdf-16770ee19c63", "b71554c5-ea50-441a-bed0-384416402575"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -220,6 +220,11 @@
       "adopter": "HolidayWither",
       "color": "light_blue",
       "bio": "Skytail thrives on companionship, supports magic users with a positive and upbeat attitude, and spreads happiness wherever it goes."
+    },{
+      "name": "Sarrion",
+      "adopter": "Mr_Etan",
+      "color": "orange",
+      "bio": "A once powerful mage accidentally turned himself into a starbuncle! He hasn't really bothered to turn himself back. Perhaps he enjoys the simple life?"
     }
   ]
 }
