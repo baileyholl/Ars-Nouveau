@@ -40,4 +40,12 @@ public interface ISummon extends OwnableEntity {
     default @Nullable Entity readOwner(ServerLevel world, CompoundTag tag) {
         return tag.contains("owner") ? world.getEntity(tag.getUUID("owner")) : null;
     }
+
+    /*
+     * This is a workaround for summon entities that inherit from an entity that override LivingEntity.getOwner() to return a subclass that doesn't include players. Ex. Vex
+     * By default it will redirect to the classic getOwner() method, so it's safer to use as getter for general purpose
+     * */
+    default LivingEntity getOwnerAlt() {
+        return getOwner();
+    }
 }

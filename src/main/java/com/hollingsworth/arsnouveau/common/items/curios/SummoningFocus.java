@@ -81,7 +81,7 @@ public class SummoningFocus extends ArsNouveauCurio implements ISpellModifierIte
         if (!event.getWorld().isClientSide && event.getEntity() instanceof Player && SummoningFocus.containsThis(event.getWorld(), event.getEntity())) {
             if (event.spell.getCastMethod() != null && sympatheticMethods.contains(event.spell.getCastMethod())) {
                 for (LivingEntity i : event.getWorld().getEntitiesOfClass(LivingEntity.class, new AABB(event.getEntity().blockPosition()).inflate(30), ISummon.class::isInstance)) {
-                    if (event.getEntity().equals(((ISummon) i).getOwner())) {
+                    if (event.getEntity().equals(((ISummon) i).getOwnerAlt())) {
                         EntitySpellResolver spellResolver = new EntitySpellResolver(event.context.clone().withWrappedCaster(new LivingCaster(i)));
                         spellResolver.onCast(ItemStack.EMPTY, i.level);
                     }
@@ -92,9 +92,9 @@ public class SummoningFocus extends ArsNouveauCurio implements ISpellModifierIte
 
     @SubscribeEvent
     public static void summonDeathEvent(SummonEvent.Death event) {
-        if (!event.world.isClientSide && SummoningFocus.containsThis(event.world, event.summon.getOwner())) {
+        if (!event.world.isClientSide && SummoningFocus.containsThis(event.world, event.summon.getOwnerAlt())) {
             DamageSource source = event.source;
-            if (source != null && source.getEntity() != null && source.getEntity() != event.summon.getOwner()) {
+            if (source != null && source.getEntity() != null && source.getEntity() != event.summon.getOwnerAlt()) {
                 source.getEntity().hurt(source.getEntity().level.damageSources().thorns(source.getEntity()), 5.0f);
             }
         }
