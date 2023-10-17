@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
-import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
@@ -50,14 +49,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -65,7 +61,7 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipProvider, IDispellable, IVariantColorProvider<EntityDrygmy> {
+public class EntityDrygmy extends MagicalBuddyMob implements ITooltipProvider, IVariantColorProvider<EntityDrygmy> {
 
     public static final EntityDataAccessor<Boolean> CHANNELING = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.BOOLEAN);
@@ -77,7 +73,6 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     public int channelCooldown;
     private boolean setBehaviors;
     public BlockPos homePos;
-    public int tamingTime;
     public static String[] COLORS = {"brown", "cyan", "orange"};
 
     @Override
@@ -100,11 +95,6 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
         if (homePos == null || !(level.getBlockEntity(homePos) instanceof DrygmyTile))
             return null;
         return (DrygmyTile) level.getBlockEntity(homePos);
-    }
-
-    @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
-        return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
     }
 
     @Override
@@ -310,13 +300,6 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
 
     private PlayState idlePredicate(AnimationState<?> event) {
         return PlayState.CONTINUE;
-    }
-
-    AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return factory;
     }
 
     @Override

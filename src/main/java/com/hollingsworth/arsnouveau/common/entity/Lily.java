@@ -12,15 +12,20 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.animal.ShoulderRidingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -39,7 +44,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.UUID;
 
-public class Lily extends TamableAnimal implements GeoEntity, IDispellable {
+public class Lily extends ShoulderRidingEntity implements GeoEntity, IDispellable {
     // Owner UUID to Lily UUID
     public static BiMap<UUID, UUID> ownerLilyMap = HashBiMap.create();
 
@@ -47,11 +52,11 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable {
     private static final EntityDataAccessor<Boolean> WAG = SynchedEntityData.defineId(Lily.class, EntityDataSerializers.BOOLEAN);
     public int wagTicks;
 
-    public Lily(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
+    public Lily(EntityType<? extends ShoulderRidingEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
-    public Lily(Level level){
+    public Lily(Level level) {
         this(ModEntities.LILY.get(), level);
     }
 
@@ -73,6 +78,10 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable {
             return InteractionResult.CONSUME;
         }
         if (this.isOwnedBy(pPlayer)) {
+            if (pPlayer.isShiftKeyDown() && pPlayer instanceof ServerPlayer sp) {
+                this.setEntityOnShoulder(sp);
+                return InteractionResult.SUCCESS;
+            }
             this.setOrderedToSit(!this.isOrderedToSit());
             this.jumping = false;
             this.navigation.stop();
@@ -86,13 +95,13 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable {
     public void tick() {
         super.tick();
         SummonUtil.healOverTime(this);
-        if(!level.isClientSide){
-            if(level.getGameTime() % 20 == 0 && !ownerLilyMap.containsValue(this.getUUID())){
+        if (!level.isClientSide) {
+            if (level.getGameTime() % 20 == 0 && !ownerLilyMap.containsValue(this.getUUID())) {
                 this.remove(RemovalReason.DISCARDED);
             }
-            if( wagTicks > 0 && isWagging()){
+            if (wagTicks > 0 && isWagging()) {
                 wagTicks--;
-                if(wagTicks <= 0){
+                if (wagTicks <= 0) {
                     setWagging(false);
                 }
             }
@@ -155,7 +164,7 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable {
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        if(!(pSource.getEntity() instanceof Player)){
+        if (!(pSource.getEntity() instanceof Player)) {
             return false;
         }
         return super.hurt(pSource, pAmount);
@@ -195,21 +204,21 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         data.add(new AnimationController(this, "walk", 1, (event) -> {
-            if(event.isMoving()){
+            if (event.isMoving()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
         data.add(new AnimationController(this, "idle", 1, (event) -> {
-            if(!event.isMoving() && !this.isWagging()){
+            if (!event.isMoving() && !this.isWagging()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
         data.add(new AnimationController(this, "idle_wag", 1, (event) -> {
-            if(!event.isMoving() && this.isWagging()){
+            if (!event.isMoving() && this.isWagging()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("idle_wagging"));
                 return PlayState.CONTINUE;
             }
@@ -217,7 +226,7 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable {
         }));
 
         data.add(new AnimationController(this, "rest", 1, (event) -> {
-            if(!event.isMoving() && this.isOrderedToSit() && !this.isWagging()){
+            if (!event.isMoving() && this.isOrderedToSit() && !this.isWagging()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("resting"));
                 return PlayState.CONTINUE;
             }
@@ -225,7 +234,7 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable {
         }));
 
         data.add(new AnimationController(this, "rest_wag", 1, (event) -> {
-            if(!event.isMoving() && this.isOrderedToSit() && this.isWagging()){
+            if (!event.isMoving() && this.isOrderedToSit() && this.isWagging()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("resting_wagging"));
                 return PlayState.CONTINUE;
             }
@@ -233,7 +242,9 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable {
         }));
 
     }
+
     AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
+
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
@@ -241,7 +252,7 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable {
 
     @Override
     public boolean onDispel(@NotNull LivingEntity caster) {
-        if(caster.getUUID().equals(this.getOwnerUUID())) {
+        if (caster.getUUID().equals(this.getOwnerUUID())) {
             this.remove(RemovalReason.DISCARDED);
             return true;
         }
@@ -251,7 +262,7 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable {
     @Override
     public void load(CompoundTag pCompound) {
         super.load(pCompound);
-        if(!ownerLilyMap.containsKey(this.getOwnerUUID())) {
+        if (!ownerLilyMap.containsKey(this.getOwnerUUID())) {
             Lily.ownerLilyMap.put(this.getOwnerUUID(), this.getUUID());
         }
     }

@@ -5,6 +5,8 @@
   "refmap": "ars_nouveau.refmap.json",
   "plugin": "com.hollingsworth.arsnouveau.common.mixin.MixinPlugin",
   "client": [
+    "AddLayerPlayerMixin",
+    "ChatComponentAccessor",
     "GameRendererMixin",
     "camera.ClientChunkCacheMixin",
     "camera.LevelRendererMixin",
@@ -13,8 +15,7 @@
     "light.ClientMixin",
     "light.EntityRendererMixin",
     "light.LevelRendererMixin",
-    "light.LightEntityMixin",
-    "ChatComponentAccessor",
+    "light.LightEntityMixin"
   ],
   "mixins": [
     "CrossbowMixin",

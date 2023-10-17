@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.ChangeableBehavior;
 import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
-import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.familiar.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.registry.BehaviorRegistry;
@@ -71,20 +70,17 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
-public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, ITagSyncable, IVariantColorProvider<Starbuncle> {
+public class Starbuncle extends MagicalBuddyMob implements IDecoratable, ITooltipProvider, IWandable, IDebuggerProvider, ITagSyncable, IVariantColorProvider<Starbuncle> {
 
 
     public enum StarbuncleGoalState {
@@ -109,7 +105,6 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
 
     private int bedBackoff;
 
-    public int tamingTime;
     private int lastAABBCalc;
     private AABB cachedAAB;
 
@@ -119,7 +114,6 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     public StarbuncleData data = new StarbuncleData(new CompoundTag());
     public ChangeableBehavior dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
     public boolean canSleep;
-    AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
 
     public Starbuncle(EntityType<? extends Starbuncle> entityCarbuncleEntityType, Level world) {
         super(entityCarbuncleEntityType, world);
@@ -197,16 +191,6 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             }
             return PlayState.STOP;
         }));
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return manager;
-    }
-
-    @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
-        return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
     }
 
     public boolean isTamed() {
@@ -429,7 +413,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         if (hand != InteractionHand.MAIN_HAND || player.getCommandSenderWorld().isClientSide || !isTamed())
-            return InteractionResult.SUCCESS;
+            return super.mobInteract(player, hand);
 
         ItemStack stack = player.getItemInHand(hand);
 
@@ -447,8 +431,9 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             setPathBlockDesc(Component.translatable(data.pathBlock.getDescriptionId()).getString());
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.starbuncle.path"));
         }
-
-        return dynamicBehavior.mobInteract(player, hand);
+        InteractionResult ir = dynamicBehavior.mobInteract(player, hand);
+        //if nothing that consume the action happens on dynamicBehavior, pass to super
+        return ir == InteractionResult.PASS ? super.mobInteract(player, hand) : ir;
     }
 
     @Override
@@ -574,6 +559,11 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     public void setCustomName(@Nullable Component pName) {
         super.setCustomName(pName);
         this.data.name = pName;
+    }
+
+    @Override
+    public double getMyRidingOffset() {
+        return super.getMyRidingOffset() + 0.3;
     }
 
     public int getBedBackoff() {

@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.light;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -49,6 +49,26 @@ public class LightManager {
             return p != ArsNouveau.proxy.getPlayer() && LightManager.jarHoldingEntityList.contains(p.getId()) ? 15 : 0;
         }));
 
+        /*
+        register(EntityType.PLAYER, (p -> {
+            var left = p.getShoulderEntityLeft();
+            var right = p.getShoulderEntityRight();
+            var rightEntity = EntityType.byString(right.getString("id")).orElse(null);
+            var leftEntity = EntityType.byString(left.getString("id")).orElse(null);
+            int temp = 0;
+            if (rightEntity != null && LIGHT_REGISTRY.get(rightEntity) != null) {
+                var dummy = rightEntity.create(p.level);
+                if (dummy != null) temp = getValue(dummy);
+            }
+            if (leftEntity != null && LIGHT_REGISTRY.get(leftEntity) != null) {
+                var dummy = leftEntity.create(p.level);
+                if (dummy != null) temp = getValue(dummy);
+            }
+            return temp;
+        }));
+
+         */
+
         register(EntityType.FALLING_BLOCK, (p) -> {
             return p.getBlockState().getLightEmission(p.level, p.blockPosition());
         });
@@ -93,7 +113,7 @@ public class LightManager {
         register(ModEntities.ANIMATED_BLOCK.get(), (p) -> p.getBlockState().getLightEmission(p.level, p.blockPosition()));
     }
 
-    public static < T extends Entity> void register(EntityType<T> type, Function<T, Integer> luminanceFunction) {
+    public static <T extends Entity> void register(EntityType<T> type, Function<T, Integer> luminanceFunction) {
         if (!LIGHT_REGISTRY.containsKey(type)) {
             LIGHT_REGISTRY.put(type, new ArrayList<>());
         }
@@ -101,28 +121,26 @@ public class LightManager {
     }
 
 
-    public static <T extends Entity> Map<EntityType<?>, List<Function<?, Integer>>> getLightRegistry(){
+    public static <T extends Entity> Map<EntityType<?>, List<Function<?, Integer>>> getLightRegistry() {
         return LIGHT_REGISTRY;
     }
 
-    public static <T extends Entity> int getValue(T entity)
-    {
+    public static <T extends Entity> int getValue(T entity) {
         int val = 0;
-        if(!LIGHT_REGISTRY.containsKey(entity.getType()))
+        if (!LIGHT_REGISTRY.containsKey(entity.getType()))
             return val;
         EntityType<?> type = entity.getType();
-        for(Function<?, Integer> function : LIGHT_REGISTRY.get(type))
-        {
-            var fun = (Function<T,Integer>)function;
+        for (Function<?, Integer> function : LIGHT_REGISTRY.get(type)) {
+            var fun = (Function<T, Integer>) function;
             Integer value = fun.apply(entity);
-            if(value > val){
+            if (value > val) {
                 val = value;
             }
         }
         return val;
     }
 
-    public static boolean containsEntity(EntityType<? extends Entity> type){
+    public static boolean containsEntity(EntityType<? extends Entity> type) {
         return LIGHT_REGISTRY.containsKey(type) || Config.ENTITY_LIGHT_MAP.containsKey(ForgeRegistries.ENTITY_TYPES.getKey(type));
     }
 
