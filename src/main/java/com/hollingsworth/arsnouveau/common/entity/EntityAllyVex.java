@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -41,12 +42,12 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
     private int limitedLifeTicks;
 
     public EntityAllyVex(EntityType<? extends Vex> p_i50190_1_, Level p_i50190_2_) {
-        super(ModEntities.ALLY_VEX.get(), p_i50190_2_);
+        super(p_i50190_1_, p_i50190_2_);
     }
 
 
     public EntityAllyVex(Level p_i50190_2_, LivingEntity owner) {
-        super(EntityType.VEX, p_i50190_2_);
+        super(ModEntities.ALLY_VEX.get(), p_i50190_2_);
         this.owner = owner;
         this.limitedLifespan = false;
         setOwnerID(owner.getUUID());
@@ -60,7 +61,7 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
 
     @Nullable
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
-        this.populateDefaultEquipmentSlots(difficultyIn);
+        this.populateDefaultEquipmentSlots(worldIn.getRandom(), difficultyIn);
         this.populateDefaultEquipmentEnchantments(getRandom(), difficultyIn);
         return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
@@ -68,7 +69,8 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
     /**
      * Gives armor or weapon for entity based on given DifficultyInstance
      */
-    protected void populateDefaultEquipmentSlots(DifficultyInstance difficulty) {
+    @Override
+    protected void populateDefaultEquipmentSlots(RandomSource source, DifficultyInstance difficulty) {
         this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_SWORD));
         this.setDropChance(EquipmentSlot.MAINHAND, 0.0F);
     }
@@ -84,8 +86,8 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
         this.goalSelector.addGoal(2, new FollowSummonerFlyingGoal(this, this.owner, 1.0, 6.0f, 3.0f));
         this.targetSelector.addGoal(1, new CopyOwnerTargetGoal<>(this));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 10, false, true,
-                (entity) -> (entity instanceof Mob && ((Mob) entity).getTarget() != null &&
-                        ((Mob) entity).getTarget().equals(this.owner)) || (entity instanceof LivingEntity && entity.getKillCredit() != null && entity.getKillCredit().equals(this.owner))
+                (entity) -> (entity instanceof Mob mob && mob.getTarget() != null &&
+                             mob.getTarget().equals(this.owner)) || (entity != null && entity.getKillCredit() != null && entity.getKillCredit().equals(this.owner))
         ));
     }
 
@@ -120,7 +122,8 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
         return this.getOwnerFromID();
     }
 
-    public LivingEntity getActualOwner() {
+    @Override
+    public LivingEntity getOwnerAlt() {
         return owner;
     }
 
@@ -231,8 +234,8 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
     }
 
     public Team getTeam() {
-        if (this.getOwner() != null) {
-            LivingEntity livingentity = this.getOwner();
+        if (this.getOwnerAlt() != null) {
+            LivingEntity livingentity = this.getOwnerAlt();
             if (livingentity != null) {
                 return livingentity.getTeam();
             }
@@ -243,8 +246,8 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
 
     @Override
     public boolean isAlliedTo(Entity pEntity) {
-        if (this.getSummoner() != null) {
-            LivingEntity livingentity = this.getSummoner();
+        if (this.getOwnerAlt() != null) {
+            LivingEntity livingentity = this.getOwnerAlt();
             return pEntity == livingentity || livingentity.isAlliedTo(pEntity);
         }
         return super.isAlliedTo(pEntity);
