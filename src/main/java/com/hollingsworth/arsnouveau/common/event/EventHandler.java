@@ -426,7 +426,7 @@ public class EventHandler {
                 sprigsToRemove.add(uuid);
                 continue;
             }
-            if(BlockUtil.distanceFrom(entity.blockPosition(), event.getPos()) <= 10) {
+            if(BlockUtil.distanceFrom(entity.blockPosition(), event.getPos()) <= 10 && !whirlisprig.isTamed()) {
                 whirlisprig.droppingShards = true;
             }
         }
