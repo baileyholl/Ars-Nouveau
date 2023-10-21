@@ -136,6 +136,7 @@ public class APIRegistry {
         registerRitual(new FloweringRitual());
         registerRitual(new ConjureDesertRitual());
         registerRitual(new DenySpawnRitual());
+        registerRitual(new RitualIntangible());
 
         registerFamiliar(new StarbuncleFamiliarHolder());
         registerFamiliar(new DrygmyFamiliarHolder());

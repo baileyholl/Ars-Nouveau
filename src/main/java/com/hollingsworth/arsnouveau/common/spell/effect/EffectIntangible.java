@@ -14,7 +14,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
@@ -36,18 +35,24 @@ public class EffectIntangible extends AbstractEffect {
 
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, spellStats);
         for (BlockPos pos1 : posList) {
-            if (world.getBlockEntity(pos1) != null || world.getBlockState(pos1).getMaterial() == Material.AIR
-                    || world.getBlockState(pos1).getBlock() == Blocks.BEDROCK || !canBlockBeHarvested(spellStats, world, pos) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1))
+            if (!canBlockBeHarvested(spellStats, world, pos) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1))
                 continue;
+            makeIntangible(world, pos1, duration * 20);
+        }
+    }
 
-            BlockState state = world.getBlockState(pos1);
-            int id = Block.getId(state);
-            world.setBlockAndUpdate(pos1, BlockRegistry.INTANGIBLE_AIR.defaultBlockState());
-            IntangibleAirTile tile = ((IntangibleAirTile) world.getBlockEntity(pos1));
-            if(tile != null) {
-                tile.stateID = id;
-                tile.maxLength = duration * 20;
-            }
+    public static void makeIntangible(Level world, BlockPos pos1, int duration){
+        if (world.getBlockEntity(pos1) != null || world.getBlockState(pos1).isAir()
+                || world.getBlockState(pos1).getBlock() == Blocks.BEDROCK)
+            return;
+
+        BlockState state = world.getBlockState(pos1);
+        int id = Block.getId(state);
+        world.setBlockAndUpdate(pos1, BlockRegistry.INTANGIBLE_AIR.defaultBlockState());
+        IntangibleAirTile tile = ((IntangibleAirTile) world.getBlockEntity(pos1));
+        if(tile != null) {
+            tile.stateID = id;
+            tile.maxLength = duration;
         }
     }
 

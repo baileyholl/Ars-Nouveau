@@ -158,6 +158,7 @@ public class LibBlockNames {
     public static final String TEMPORARY_BLOCK = "temporary_block";
     public static final String STORAGE_LECTERN = "storage_lectern";
     public static final String ITEM_DETECTOR = "item_detector";
+    public static final String INTANGIBLE_CONTROLLER = "intangible_controller";
 
     public static final String SPELL_SENSOR = "spell_sensor";
 
