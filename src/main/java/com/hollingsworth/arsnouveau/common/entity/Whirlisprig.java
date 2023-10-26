@@ -98,7 +98,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
-        animatableManager.add(new AnimationController<>(this, "idleController", 20, this::idlePredicate));
+        animatableManager.add(new AnimationController<>(this, "idleController", 1, this::idlePredicate));
     }
 
     @Override
@@ -242,7 +242,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
         super.tick();
         SummonUtil.healOverTime(this);
         if (!this.level.isClientSide) {
-            if(!this.isRemoved()) {
+            if(!this.isRemoved() && !this.isTamed()) {
                 Whirlisprig.WHIRLI_MAP.addEntity(level, this.getUUID());
             }
             if (level.getGameTime() % 20 == 0 && this.blockPosition().getY() < this.level.getMinBuildHeight()) {

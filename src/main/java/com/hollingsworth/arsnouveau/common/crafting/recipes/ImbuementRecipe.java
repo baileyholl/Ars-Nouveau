@@ -85,7 +85,7 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
 
     @Override
     public boolean matches(ImbuementTile pContainer, Level pLevel) {
-        return EnchantingApparatusRecipe.doItemsMatch(pContainer.getPedestalItems(), pedestalItems) && this.input.test(pContainer.getItem(0));
+        return this.input.test(pContainer.getItem(0)) && EnchantingApparatusRecipe.doItemsMatch(pContainer.getPedestalItems(), pedestalItems);
     }
 
     @Override
