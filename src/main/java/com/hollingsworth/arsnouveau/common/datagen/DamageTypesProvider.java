@@ -5,11 +5,12 @@ import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.DamageTypeTagsProvider;
 import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -25,11 +26,11 @@ public class DamageTypesProvider  extends DatapackBuiltinEntriesProvider {
 
 
     public static void bootstrap(BootstapContext<DamageType> ctx) {
+        ctx.register(DamageTypesRegistry.GENERIC_SPELL_DAMAGE, new DamageType("player", 0.1F));
         ctx.register(DamageTypesRegistry.COLD_SNAP, new DamageType("freeze", 0.1F));
         ctx.register(DamageTypesRegistry.FLARE, new DamageType("fire", 0.1F));
-        ctx.register(DamageTypesRegistry.CRUSH, new DamageType("fire", 0.1F));
-        ctx.register(DamageTypesRegistry.WINDSHEAR, new DamageType("fire", 0.1F));
-
+        ctx.register(DamageTypesRegistry.CRUSH, new DamageType("player", 0.1F));
+        ctx.register(DamageTypesRegistry.WINDSHEAR, new DamageType("player", 0.1F));
     }
 
     public DamageTypesProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
@@ -47,6 +48,7 @@ public class DamageTypesProvider  extends DatapackBuiltinEntriesProvider {
 
     public static class DamageTypesTagsProvider extends DamageTypeTagsProvider {
 
+        TagKey<DamageType> FORGE_MAGIC = TagKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("forge", "is_magic"));
         public DamageTypesTagsProvider(PackOutput pPackOutput, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
             super(pPackOutput, provider, ArsNouveau.MODID, existingFileHelper);
         }
@@ -58,6 +60,20 @@ public class DamageTypesProvider  extends DatapackBuiltinEntriesProvider {
             tag(DamageTypeTags.IS_FREEZING).addOptional(DamageTypesRegistry.COLD_SNAP.location());
             tag(DamageTypeTags.BYPASSES_ARMOR).addOptional(DamageTypesRegistry.CRUSH.location()).addOptional(DamageTypesRegistry.WINDSHEAR.location());
             tag(DamageTypeTags.IS_FALL).addOptional(DamageTypesRegistry.WINDSHEAR.location());
+
+            tag(FORGE_MAGIC)
+                    .addOptional(DamageTypesRegistry.GENERIC_SPELL_DAMAGE.location())
+                    .addOptional(DamageTypesRegistry.COLD_SNAP.location())
+                    .addOptional(DamageTypesRegistry.FLARE.location())
+                    .addOptional(DamageTypesRegistry.CRUSH.location())
+                    .addOptional(DamageTypesRegistry.WINDSHEAR.location());
+            tag(DamageTypeTags.ALWAYS_HURTS_ENDER_DRAGONS)
+                    .addOptional(DamageTypesRegistry.GENERIC_SPELL_DAMAGE.location())
+                    .addOptional(DamageTypesRegistry.COLD_SNAP.location())
+                    .addOptional(DamageTypesRegistry.FLARE.location())
+                    .addOptional(DamageTypesRegistry.CRUSH.location())
+                    .addOptional(DamageTypesRegistry.WINDSHEAR.location());
+
         }
     }
 

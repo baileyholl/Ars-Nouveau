@@ -1,0 +1,24 @@
+{
+  "values": [
+    {
+      "id": "ars_nouveau:spell",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:frost",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:flare",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:crush",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:windshear",
+      "required": false
+    }
+  ]
+}
