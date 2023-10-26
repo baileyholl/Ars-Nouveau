@@ -3,9 +3,11 @@ package com.hollingsworth.arsnouveau.api.spell;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.event.SpellDamageEvent;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
+import com.hollingsworth.arsnouveau.api.util.DamageUtil;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
+import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
@@ -48,7 +50,7 @@ public interface IDamageEffect {
 
         //randomize damage buff or debuff
         if (stats.isRandomized())
-            totalDamage += stats.getBuffCount(AugmentRandomize.INSTANCE) * server.random.nextIntBetweenInclusive(-1, 1);
+            totalDamage += randomRolls(stats, server);
 
         SpellDamageEvent.Pre preDamage = new SpellDamageEvent.Pre(source, shooter, entity, totalDamage, spellContext);
         MinecraftForge.EVENT_BUS.post(preDamage);
@@ -81,13 +83,17 @@ public interface IDamageEffect {
         return true;
     }
 
+    default int randomRolls(SpellStats stats, ServerLevel server) {
+        return stats.getBuffCount(AugmentRandomize.INSTANCE) * server.random.nextIntBetweenInclusive(-1, 1);
+    }
+
     /**
      * @param world   world
      * @param shooter source
      * @return Player-Based Damage Source, will use Ars FakePlayer if the source is not a Player
      */
     default DamageSource buildDamageSource(Level world, LivingEntity shooter) {
-        return world.damageSources().playerAttack(!(shooter instanceof Player player) ? ANFakePlayer.getPlayer((ServerLevel) world) : player);
+        return DamageUtil.source(world, DamageTypesRegistry.GENERIC_SPELL_DAMAGE, !(shooter instanceof Player player) ? ANFakePlayer.getPlayer((ServerLevel) world) : player);
     }
 
 }

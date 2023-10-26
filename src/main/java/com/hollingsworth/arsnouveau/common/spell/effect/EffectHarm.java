@@ -24,14 +24,14 @@ public class EffectHarm extends AbstractEffect implements IDamageEffect, IPotion
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level level,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level level, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (!(rayTraceResult.getEntity() instanceof ItemEntity)) {
             double damage = DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
             int time = (int) spellStats.getDurationMultiplier();
             if (time > 0 && rayTraceResult.getEntity() instanceof LivingEntity entity) {
-                ((IPotionEffect)this).applyConfigPotion(entity, MobEffects.POISON, spellStats);
+                this.applyConfigPotion(entity, MobEffects.POISON, spellStats);
             } else {
-                attemptDamage(level, shooter, spellStats, spellContext, resolver, rayTraceResult.getEntity(), level.damageSources().playerAttack(getPlayer(shooter, (ServerLevel) level)), (float) damage);
+                attemptDamage(level, shooter, spellStats, spellContext, resolver, rayTraceResult.getEntity(), buildDamageSource(level, getPlayer(shooter, (ServerLevel) level)), (float) damage);
             }
         }
     }
@@ -56,13 +56,13 @@ public class EffectHarm extends AbstractEffect implements IDamageEffect, IPotion
         return 15;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
                 AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE,
                 AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE,
-                AugmentFortune.INSTANCE
+                AugmentFortune.INSTANCE, AugmentRandomize.INSTANCE
         );
     }
 
@@ -76,7 +76,7 @@ public class EffectHarm extends AbstractEffect implements IDamageEffect, IPotion
         return "A spell you start with. Damages a target. May be increased by Amplify, or applies the Poison debuff when using Extend Time. Note, multiple Harms without a delay will not apply due to invincibility on hit.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_EARTH);
