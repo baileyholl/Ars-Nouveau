@@ -15,7 +15,8 @@
   "8f86b83a-e35f-4fca-8b0f-a8181cc1741d", "c657941e-8ac5-46ac-bf65-8983f776ff33", "47b128a4-9043-4ec6-ba69-0edffdddfd8a",
     "0753a4e3-f71d-4b86-b338-3983f36d2b8a", "df2c8cdf-fbaf-4a22-9fdf-16770ee19c63", "b71554c5-ea50-441a-bed0-384416402575",
   "5a0d2794-50a3-400f-b014-b1234d198eca", "1a45aa67-e39d-48f5-a5aa-4467b9a0c0c0", "755d49f3-c7e7-4ae2-95c0-25b50954d416",
-  "d600e728-1c5e-4ee8-8df7-2899465c9129", "d155b322-ff09-4c0f-9438-21ba7c572490", "bb21a5a9-4a9a-49f9-84f9-1ff375bca6bf"],
+  "d600e728-1c5e-4ee8-8df7-2899465c9129", "d155b322-ff09-4c0f-9438-21ba7c572490", "bb21a5a9-4a9a-49f9-84f9-1ff375bca6bf",
+  "1f470f2a-a05b-4b6b-9d84-4b62f8686e5b"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -252,6 +253,11 @@
       "color": "white",
       "adopter": "heiko776",
       "bio": "Playful and curious little fella who loves to explore the world and make new friends."
+    },{
+      "name": "Glitero",
+      "color": "lime",
+      "adopter": "the_bob756",
+      "bio": "A funny little guy who loves glitter"
     }
   ]
 }
