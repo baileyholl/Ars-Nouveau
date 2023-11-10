@@ -164,6 +164,9 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
                 ItemsRegistry.APPRENTICE_SPELLBOOK.asItem(),
                 ItemsRegistry.CREATIVE_SPELLBOOK.asItem());
 
+        this.tag(ItemTags.SWORDS).add(ItemsRegistry.ENCHANTERS_SWORD.get());
+        this.tag(Tags.Items.TOOLS_SHIELDS).add(ItemsRegistry.ENCHANTERS_SHIELD.get());
+
         this.tag(Tags.Items.ARMORS).add(ItemsRegistry.SORCERER_ROBES.asItem(),
                 ItemsRegistry.ARCANIST_ROBES.asItem(),
                 ItemsRegistry.BATTLEMAGE_ROBES.asItem(),
