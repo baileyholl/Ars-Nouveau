@@ -624,6 +624,7 @@
   "ars_nouveau.pathing": "경로",
   "ars_nouveau.patreon": "Ars Nouveau patreon에 가입해 특별한 디스코드 역할을 맡고, 커스텀 고서를 제작하고, 상품을 받는 등 다양한 혜택을 받아보세요!",
   "ars_nouveau.patreon_text": "Patreon",
+  "ars_nouveau.perk.feather": "Feather Falling",
   "ars_nouveau.perk.flat_max_mana": "최대 마나",
   "ars_nouveau.perk.invalid_for_slot": "이 퍽은 %s 레벨 이상의 슬롯이 필요합니다.",
   "ars_nouveau.perk.jump_height": "점프 높이",
