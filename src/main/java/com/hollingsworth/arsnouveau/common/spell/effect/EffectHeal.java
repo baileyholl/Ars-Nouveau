@@ -6,6 +6,8 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
@@ -32,7 +34,7 @@ public class EffectHeal extends AbstractEffect implements IDamageEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (rayTraceResult.getEntity() instanceof LivingEntity entity) {
+        if (rayTraceResult.getEntity() instanceof LivingEntity entity && world instanceof ServerLevel serverLevel) {
             if (entity.isRemoved() || entity.getHealth() <= 0)
                 return;
 
@@ -43,6 +45,9 @@ public class EffectHeal extends AbstractEffect implements IDamageEffect {
                 if(entity instanceof Player player){
                     player.causeFoodExhaustion(2.5f);
                 }
+                //apply random here to not apply twice in attemptDamage
+                if (spellStats.isRandomized())
+                    healVal += randomRolls(spellStats, serverLevel);
                 entity.heal(healVal);
             }
 
@@ -76,7 +81,7 @@ public class EffectHeal extends AbstractEffect implements IDamageEffect {
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
                 AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE,
-                AugmentFortune.INSTANCE
+                AugmentFortune.INSTANCE, AugmentRandomize.INSTANCE
         );
     }
 

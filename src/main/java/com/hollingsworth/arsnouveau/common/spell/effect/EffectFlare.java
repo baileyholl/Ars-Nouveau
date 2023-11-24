@@ -37,7 +37,6 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
         float damage = (float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
         double range = 3 + spellStats.getAoeMultiplier();
         int fireSec = (int) (5.0 + EXTEND_TIME.get() * spellStats.getDurationMultiplier());
-        // TODO: Fix flare fire damage type
         DamageSource source = buildDamageSource(world, shooter);
         if (livingEntity.isOnFire() && attemptDamage(world, shooter, spellStats, spellContext, resolver, livingEntity, source, damage)) {
             ((ServerLevel) world).sendParticles(ParticleTypes.FLAME, vec.x, vec.y + 0.5, vec.z, 50,
@@ -87,7 +86,7 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
                 AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE,
                 AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE,
                 AugmentAOE.INSTANCE,
-                AugmentFortune.INSTANCE
+                AugmentFortune.INSTANCE, AugmentRandomize.INSTANCE
         );
     }
 

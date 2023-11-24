@@ -10,10 +10,6 @@ import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.block.IntangibleAirBlock;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -67,20 +63,25 @@ public class EffectExchange extends AbstractEffect {
             BlockState state = world.getBlockState(pos1);
 
             if (!canBlockBeHarvested(spellStats, world, pos1) || origState.getBlock() != state.getBlock()
-                    || !world.getBlockState(pos1).isAir() && world.getBlockState(pos1).getBlock() instanceof IntangibleAirBlock
-                    || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1)) {
+                || !world.getBlockState(pos1).isAir() && world.getBlockState(pos1).getBlock() instanceof IntangibleAirBlock
+                || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1)) {
                 continue;
             }
             Block finalFirstBlock = firstBlock;
-            ExtractedStack extractedStack = manager.extractRandomItem(i -> {
+            ExtractedStack extractedStack;
+
+            if (spellStats.isRandomized())
+                extractedStack = manager.extractRandomItem(i -> i.getItem() instanceof BlockItem, 1);
+            else extractedStack = manager.extractItem(i -> {
                 if (i.getItem() instanceof BlockItem blockItem) {
                     if (finalFirstBlock == null) {
                         return true;
                     }
-                    return spellStats.isRandomized() || blockItem.getBlock() == finalFirstBlock;
+                    return blockItem.getBlock() == finalFirstBlock;
                 }
                 return false;
             }, 1);
+
             if (extractedStack.isEmpty()) {
                 continue;
             }

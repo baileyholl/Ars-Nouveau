@@ -9,6 +9,7 @@ import net.minecraft.world.damagesource.DamageType;
 
 public class DamageTypesRegistry {
 
+    public static final ResourceKey<DamageType> GENERIC_SPELL_DAMAGE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ArsNouveau.MODID, "spell"));
     public static final ResourceKey<DamageType> WINDSHEAR = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ArsNouveau.MODID, "windshear"));
     public static final ResourceKey<DamageType> COLD_SNAP = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ArsNouveau.MODID, "frost"));
     public static final ResourceKey<DamageType> FLARE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ArsNouveau.MODID, "flare"));
