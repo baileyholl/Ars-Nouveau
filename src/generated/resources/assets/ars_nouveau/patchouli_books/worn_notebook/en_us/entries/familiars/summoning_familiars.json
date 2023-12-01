@@ -19,7 +19,7 @@
       "type": "patchouli:relations",
       "entries": [
         "ars_nouveau:machines/ritual_brazier",
-        "ars_nouveau:rituals/binding"
+        "ars_nouveau:rituals/ritual_binding"
       ]
     }
   ],
