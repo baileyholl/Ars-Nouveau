@@ -39,9 +39,17 @@ public class RedstoneRelay extends TickableModBlock implements EntityBlock {
     }
 
     @Override
+    public int getDirectSignal(BlockState pState, BlockGetter pLevel, BlockPos pPos, Direction pDirection) {
+        return getSignal(pState, pLevel, pPos, pDirection);
+    }
+
+    @Override
     public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos, boolean pIsMoving) {
         super.neighborChanged(pState, pLevel, pPos, pBlock, pFromPos, pIsMoving);
-        // check N E S W
+        updatePower(pLevel, pPos, pState);
+    }
+
+    public void updatePower(Level pLevel, BlockPos pPos, BlockState pState){
         int power = 0;
         Direction direction = pState.getValue(FACING);
         power = pLevel.getSignal(pPos.relative(pState.getValue(FACING)), direction);
@@ -72,7 +80,11 @@ public class RedstoneRelay extends TickableModBlock implements EntityBlock {
         super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
     }
 
-
+    @Override
+    public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
+        super.onPlace(pState, pLevel, pPos, pOldState, pIsMoving);
+        updatePower(pLevel, pPos, pState);
+    }
 
     @Nullable
     @Override

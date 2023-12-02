@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
-import com.hollingsworth.arsnouveau.common.block.RedstoneRelay;
 import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -42,15 +41,17 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
 
     @Override
     public void tick() {
-        if(updateListeners){
+
+        if(!level.isClientSide && updateListeners){
             // force update a tick later to account for connection checks
-            this.setNewPower(this.currentPower);
+            calculateNewPower();
             updateListeners = false;
         }
     }
 
     public void onParentPowerChange(BlockPos pos, int newParentPower){
         if(!this.poweredFrom.contains(pos)){
+            level.updateNeighborsAt(worldPosition, BlockRegistry.REDSTONE_RELAY.get());
             return;
         }
         if(pos.equals(currentParent)){
@@ -61,9 +62,14 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
             powerFromParentRelays = newParentPower;
             calculateNewPower();
         }
+
+        level.updateNeighborsAt(worldPosition, BlockRegistry.REDSTONE_RELAY.get());
     }
 
     public void calculateNewPower(){
+        if(level.isClientSide){
+            return;
+        }
         int oldPower = currentPower;
         int newPower = localPower;
 
@@ -87,10 +93,22 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
 
     protected void setNewPower(int power){
         this.currentPower = power;
-        level.setBlock(worldPosition, level.getBlockState(worldPosition).setValue(RedstoneRelay.POWER, power), 3);
+        this.level.setBlock(worldPosition, level.getBlockState(worldPosition).setValue(BlockRegistry.REDSTONE_RELAY.get().POWER, power), 3);
         updateBlock();
         level.updateNeighborsAt(worldPosition, BlockRegistry.REDSTONE_RELAY.get());
         updateListeners();
+    }
+
+    @Override
+    public boolean updateBlock() {
+        return super.updateBlock();
+//        if(level != null) {
+//            BlockState state = level.getBlockState(worldPosition);
+//            level.sendBlockUpdated(worldPosition, state, state, 3);
+//            setChanged();
+//            return true;
+//        }
+//        return false;
     }
 
     public void updateListeners(){
@@ -129,7 +147,7 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
             } else {
                 this.poweredFrom.add(storedPos);
             }
-            calculateNewPower();
+//            calculateNewPower();
             updateListeners = true;
             updateBlock();
         }
@@ -154,7 +172,7 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
                 this.powering.add(storedPos);
                 ParticleUtil.beam(storedPos, worldPosition, level);
             }
-            calculateNewPower();
+//            calculateNewPower();
             updateListeners = true;
             updateBlock();
         } else {
@@ -219,10 +237,11 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
     }
 
     public void setLocalPower(int newLocalPower) {
+        if(level.isClientSide){
+            return;
+        }
         if(newLocalPower != localPower) {
             this.localPower = newLocalPower;
-            setChanged();
-            updateBlock();
             calculateNewPower();
         }
     }
