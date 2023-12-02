@@ -16,11 +16,15 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltipProvider, ITickable {
+public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltipProvider, ITickable, IAnimatable {
     public List<BlockPos> poweredFrom = new ArrayList<>();
     public List<BlockPos> powering = new ArrayList<>();
 
@@ -259,5 +263,15 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
         } else {
             tooltip.add(Component.translatable("ars_nouveau.powered_from", poweredFrom.size()));
         }
+    }
+
+    @Override
+    public void registerControllers(AnimationData data) {
+
+    }
+    AnimationFactory animationFactory = GeckoLibUtil.createFactory(this);
+    @Override
+    public AnimationFactory getFactory() {
+        return animationFactory;
     }
 }

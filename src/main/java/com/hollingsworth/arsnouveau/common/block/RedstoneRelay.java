@@ -61,6 +61,11 @@ public class RedstoneRelay extends TickableModBlock implements EntityBlock {
     }
 
     @Override
+    public RenderShape getRenderShape(BlockState p_149645_1_) {
+        return RenderShape.ENTITYBLOCK_ANIMATED;
+    }
+
+    @Override
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
         if (pState.is(pNewState.getBlock())) {
             return;
