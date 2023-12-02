@@ -26,9 +26,9 @@ public class ModParticles {
 
     @SubscribeEvent
     public static void registerFactories(RegisterParticleProvidersEvent evt) {
-//        Minecraft.getInstance().particleEngine.register(GLOW_TYPE.get(), GlowParticleData::new);
-//        Minecraft.getInstance().particleEngine.register(LINE_TYPE.get(), ParticleLineData::new);
-//        Minecraft.getInstance().particleEngine.register(SPARKLE_TYPE.get(), ParticleSparkleData::new);
+        Minecraft.getInstance().particleEngine.register(GLOW_TYPE.get(), GlowParticleProvider::new);
+        Minecraft.getInstance().particleEngine.register(LINE_TYPE.get(), LineParticleProvider::new);
+        Minecraft.getInstance().particleEngine.register(SPARKLE_TYPE.get(), SparkleParticleProvider::new);
         Minecraft.getInstance().particleEngine.register(HELIX_TYPE.get(), HelixParticleData::new);
     }
 }
