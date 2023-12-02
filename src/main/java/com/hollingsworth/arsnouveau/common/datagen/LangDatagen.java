@@ -1234,6 +1234,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.no_stack_crafting", "No valid craft nearby.");
         add("item.ars_nouveau.jump_ring", "Ring of Jumping");
         add("ars_nouveau.page1.jump_ring", "Allows the user to continue jumping in the air. Each jump will expend mana.");
+        add("ars_nouveau.connections.remove", "Connection removed.");
+        add("ars_nouveau.powered_from", "Receiving signal from %d relays");
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             String key = "block.ars_nouveau." + s;
             String val = data.get(key);
