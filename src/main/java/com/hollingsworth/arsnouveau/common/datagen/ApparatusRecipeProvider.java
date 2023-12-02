@@ -258,7 +258,7 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withPedestalItem(4, Ingredient.of(Items.FERMENTED_SPIDER_EYE))
                 .withPedestalItem(1, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
-                .buildEnchantmentRecipe(Enchantments.BANE_OF_ARTHROPODS, 3, 500));
+                .buildEnchantmentRecipe(Enchantments.BANE_OF_ARTHROPODS, 3, 5000));
 
         addRecipe(builder()
                 .withPedestalItem(4, Ingredient.of(Items.FERMENTED_SPIDER_EYE))
@@ -632,7 +632,7 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ))
                 .withPedestalItem(1, Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
-                .buildEnchantmentRecipe(Enchantments.SHARPNESS, 3, 500));
+                .buildEnchantmentRecipe(Enchantments.SHARPNESS, 3, 5000));
 
         addRecipe(builder()
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ))
@@ -668,7 +668,7 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withPedestalItem(4, Ingredient.of(Items.BONE_BLOCK))
                 .withPedestalItem(1, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
-                .buildEnchantmentRecipe(Enchantments.SMITE, 3, 500));
+                .buildEnchantmentRecipe(Enchantments.SMITE, 3, 5000));
 
         addRecipe(builder()
                 .withPedestalItem(4, Ingredient.of(Items.BONE_BLOCK))
