@@ -11,7 +11,7 @@
       "type": "patchouli:relations",
       "entries": [
         "ars_nouveau:equipment/spell_books",
-        "ars_nouveau:equipment/armor"
+        "ars_nouveau:armor/armor"
       ]
     }
   ],
