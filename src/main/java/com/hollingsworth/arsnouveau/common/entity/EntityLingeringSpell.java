@@ -80,6 +80,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
         if (!level.isClientSide && age % (20 - 2 * getAccelerates()) == 0) {
             if (isSensitive()) {
                 for (BlockPos p : BlockPos.betweenClosed(blockPosition().east(flatAoe).north(flatAoe), blockPosition().west(flatAoe).south(flatAoe))) {
+                    p = p.immutable();
                     spellResolver.onResolveEffect(level, new
                             BlockHitResult(new Vec3(p.getX(), p.getY(), p.getZ()), Direction.UP, p, false));
                 }
