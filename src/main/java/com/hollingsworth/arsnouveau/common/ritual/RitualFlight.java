@@ -1,19 +1,31 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.ritual.RangeRitual;
-import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.api.ritual.RangeEffectRitual;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateFlight;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
-public class RitualFlight extends RangeRitual {
+public class RitualFlight extends RangeEffectRitual {
+    @Override
+    public MobEffect getEffect() {
+        return ModPotions.FLIGHT_EFFECT.get();
+    }
+
+    @Override
+    public int getDuration() {
+        return 60 * 20;
+    }
+
+    @Override
+    public int getRange() {
+        return 60;
+    }
 
     @Override
     public int getSourceCost() {
@@ -35,30 +47,21 @@ public class RitualFlight extends RangeRitual {
         return "Flight";
     }
 
-    // Return true to stop checking all events
-    public boolean refreshFlightEvent(ServerPlayer player) {
-        if (!player.level.isClientSide
-                && !needsSourceNow()
-                && BlockUtil.distanceFrom(getPos(), player.blockPosition()) <= 60
-                && player.abilities.flying) {
-            player.addEffect(new MobEffectInstance(ModPotions.FLIGHT_EFFECT.get(), 60 * 20));
+    @Override
+    public boolean applyEffect(ServerPlayer player) {
+        boolean wasFlying = player.abilities.flying;
+        boolean applied = super.applyEffect(player);
+        if (applied) {
             player.abilities.mayfly = true;
-            player.abilities.flying = true;
-            Networking.sendToPlayerClient(new PacketUpdateFlight(true, true), player);
-            setNeedsSource(true);
-            return true;
+            player.abilities.flying = wasFlying;
+            Networking.sendToPlayerClient(new PacketUpdateFlight(true, wasFlying), player);
         }
-        return false;
+        return applied;
     }
 
     public boolean onJumpEvent(LivingEvent.LivingJumpEvent event) {
-        if (!needsSourceNow()
-                && event.getEntity() instanceof Player entity
-                && entity.getEffect(ModPotions.FLIGHT_EFFECT.get()) == null
-                && BlockUtil.distanceFrom(getPos(), entity.blockPosition()) <= 60) {
-            setNeedsSource(true);
-            entity.addEffect(new MobEffectInstance(ModPotions.FLIGHT_EFFECT.get(), 90 * 20));
-            return true;
+        if (event.getEntity() instanceof ServerPlayer serverPlayer && !serverPlayer.hasEffect(getEffect())) {
+            return attemptRefresh(serverPlayer);
         }
         return false;
     }

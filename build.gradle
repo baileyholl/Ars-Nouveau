@@ -29,7 +29,7 @@ apply plugin: 'maven-publish'
 
 
 
-version = '3.18.0'
+version = '3.21.5'
 
 
 configurations {
@@ -206,6 +206,8 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:config-556861:4324174") // functional storage
     runtimeOnly fg.deobf("curse.maven:config-287342:4391554") // titanium
     runtimeOnly fg.deobf("curse.maven:commandstructures-565119:3823785")
+    runtimeOnly fg.deobf("curse.maven:sophisticated-storage-619320:4736648")
+    runtimeOnly fg.deobf("curse.maven:sophisticated-core-618298:4736641")
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 }
 

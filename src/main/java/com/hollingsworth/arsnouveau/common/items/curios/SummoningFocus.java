@@ -11,7 +11,6 @@ import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodOrbit;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -68,7 +67,7 @@ public class SummoningFocus extends ArsNouveauCurio implements ISpellModifierIte
 
     @SubscribeEvent
     public static void summonedEvent(SummonEvent event) {
-        if (!event.world.isClientSide && SummoningFocus.containsThis(event.world, event.summon.getOwner((ServerLevel) event.world))) {
+        if (!event.world.isClientSide && SummoningFocus.containsThis(event.world, event.summon.getOwner())) {
             event.summon.setTicksLeft(event.summon.getTicksLeft() * 2);
             if (event.summon.getLivingEntity() != null) {
                 event.summon.getLivingEntity().addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 500, 2));
@@ -82,7 +81,7 @@ public class SummoningFocus extends ArsNouveauCurio implements ISpellModifierIte
         if (!event.getWorld().isClientSide && event.getEntity() instanceof Player && SummoningFocus.containsThis(event.getWorld(), event.getEntity())) {
             if (event.spell.getCastMethod() != null && sympatheticMethods.contains(event.spell.getCastMethod())) {
                 for (LivingEntity i : event.getWorld().getEntitiesOfClass(LivingEntity.class, new AABB(event.getEntity().blockPosition()).inflate(30), ISummon.class::isInstance)) {
-                    if (event.getEntity().equals(((ISummon) i).getOwner((ServerLevel) event.getWorld()))) {
+                    if (event.getEntity().equals(((ISummon) i).getOwner())) {
                         EntitySpellResolver spellResolver = new EntitySpellResolver(event.context.clone().withWrappedCaster(new LivingCaster(i)));
                         spellResolver.onCast(ItemStack.EMPTY, i.level);
                     }
@@ -93,9 +92,9 @@ public class SummoningFocus extends ArsNouveauCurio implements ISpellModifierIte
 
     @SubscribeEvent
     public static void summonDeathEvent(SummonEvent.Death event) {
-        if (!event.world.isClientSide && SummoningFocus.containsThis(event.world, event.summon.getOwner((ServerLevel) event.world))) {
+        if (!event.world.isClientSide && SummoningFocus.containsThis(event.world, event.summon.getOwner())) {
             DamageSource source = event.source;
-            if (source != null && source.getEntity() != null && source.getEntity() != event.summon.getOwner((ServerLevel) event.world)) {
+            if (source != null && source.getEntity() != null && source.getEntity() != event.summon.getOwner()) {
                 source.getEntity().hurt(DamageSource.thorns(source.getEntity()).bypassArmor(), 5.0f);
             }
         }

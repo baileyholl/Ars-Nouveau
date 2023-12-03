@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
 import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
-import com.hollingsworth.arsnouveau.api.ritual.*;
+import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.scrying.CompoundScryer;
 import com.hollingsworth.arsnouveau.api.scrying.IScryer;
 import com.hollingsworth.arsnouveau.api.scrying.SingleBlockScryer;
@@ -110,6 +110,8 @@ public class APIRegistry {
         registerSpell(EffectWall.INSTANCE);
         registerSpell(EffectAnimate.INSTANCE);
         registerSpell(EffectBurst.INSTANCE);
+        registerSpell(AugmentRandomize.INSTANCE);
+
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());
         registerRitual(new RitualCloudshaper());
@@ -122,6 +124,7 @@ public class APIRegistry {
         registerRitual(new RitualWarp());
         registerRitual(new RitualScrying());
         registerRitual(new RitualFlight());
+        registerRitual(new RitualGravity());
         registerRitual(new RitualWildenSummoning());
         registerRitual(new RitualAnimalSummoning());
         registerRitual(new RitualBinding());

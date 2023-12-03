@@ -106,7 +106,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     }
 
     public ItemScroll.SortPref isValidStorePos(@Nullable BlockPos b, ItemStack stack) {
-        if (stack == null || stack.isEmpty() || b == null)
+        if (stack == null || stack.isEmpty() || b == null || !level.isLoaded(b))
             return ItemScroll.SortPref.INVALID;
         return canDepositItem(level.getBlockEntity(b), stack);
     }
@@ -137,7 +137,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     }
 
     public boolean isPositionValidTake(BlockPos p) {
-        if (p == null) return false;
+        if (p == null || !level.isLoaded(p)) return false;
         IItemHandler iItemHandler = getItemCapFromTile(level.getBlockEntity(p));
         if (iItemHandler == null) return false;
         for (int j = 0; j < iItemHandler.getSlots(); j++) {

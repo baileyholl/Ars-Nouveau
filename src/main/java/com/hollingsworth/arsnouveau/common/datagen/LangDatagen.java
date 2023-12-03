@@ -993,6 +993,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.perk.saturation", "Bonus Saturation");
         add("ars_nouveau.perk.wixie", "Potion Duration");
         add("ars_nouveau.perk.jump_height", "Jump Power");
+        add("ars_nouveau.perk.feather", "Feather Falling");
         add("ars_nouveau.page.threads", "Each type of armor has its own unique set of Thread Slots. Upgrading the armor to a new tier will unlock and add additional slots to the armor. The Sorcerors set provides the least amount of defence while providing the most powerful slots, while the Battlemage's set provides defence but much weaker slots. For recipes on upgrading your armor to the next tier, see the section in the Armor and Perks category.");
         add("ars_nouveau.threads", "Thread Slots");
         add("ars_nouveau.thread_layout", "Thread Tiers");
@@ -1091,6 +1092,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.adv.desc.mob_jar", "Acquire a Containment Jar");
         add("ars_nouveau.adv.title.shrunk_starbuncle", "Honey I Shrunk the Starbuncle");
         add("ars_nouveau.adv.desc.shrunk_starbuncle", "Put a Starbuncle in a Containment Jar");
+        add("ars_nouveau.adv.title.ritual_gravity", "You're Grounded");
+        add("ars_nouveau.adv.desc.ritual_gravity", "Be affected by a Ritual of Gravity");
         add("block.ars_nouveau.void_prism", "Void Prism");
         add("ars_nouveau.page.void_prism", "Destroys any spell projectiles that pass through it.");
         add("item.ars_nouveau.music_disc_aria_biblio", "Music Disc");
@@ -1223,6 +1226,14 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.music_disc_thistle_the_sound_of_glass.desc", "Thistle - The Sound of Glass");
         add("item.ars_nouveau.music_disc_firel_the_wild_hunt", "Music Disc");
         add("item.ars_nouveau.music_disc_firel_the_wild_hunt.desc", "Firel - The Wild Hunt");
+        add("ars_nouveau.sensor.set_spell", "Sensor will now trigger on this spell only.");
+        add("ars_nouveau.sensor.on_resolve", "Mode: On Resolve");
+        add("ars_nouveau.sensor.on_cast", "Mode: On Cast");
+        add("block.ars_nouveau.spell_sensor", "Spell Sensor");
+        add("ars_nouveau.page1.spell_sensor", "Outputs a redstone signal when a spell is cast nearby. Output strength is determined by the length of the spell cast. Using a Dominion Wand will cause it to trigger when a spell resolves nearby, instead of being cast. Using a Spell Parchment will set the sensor to only output when that exact spell is detected.");
+        add("ars_nouveau.no_stack_crafting", "No valid craft nearby.");
+        add("item.ars_nouveau.jump_ring", "Ring of Jumping");
+        add("ars_nouveau.page1.jump_ring", "Allows the user to continue jumping in the air. Each jump will expend mana.");
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             String key = "block.ars_nouveau." + s;
             String val = data.get(key);

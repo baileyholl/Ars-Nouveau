@@ -26,6 +26,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
@@ -340,9 +341,14 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 		if(checkPlayerRangeTicks <= 0){
 			// Turn off bookwyrm tasks if no player is nearby
 			checkPlayerRangeTicks = 60 + level.random.nextInt(5);
+			canCreateTasks = false;
 			ServerLevel serverLevel = (ServerLevel) level;
-			Player player = serverLevel.getNearestPlayer(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), 60, false);
-			canCreateTasks = player != null;
+			for(ServerPlayer serverPlayer : serverLevel.players()){
+				if(BlockUtil.distanceFrom(serverPlayer.position(), this.getBlockPos()) < 40){
+					canCreateTasks = true;
+					break;
+				}
+			}
 		}
 		if(updateItems) {
 			updateItems();
@@ -434,7 +440,10 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 				ItemStack extractedStack = handler.extractItem(i, stack.getMaxStackSize(), false);
 				ItemStack remaining = mainLectern.pushStack(extractedStack, null);
 				if(!remaining.isEmpty()){
-					handler.insertItem(i, remaining, false);
+					ItemStack remainder = handler.insertItem(i, remaining, false);
+					if(!remainder.isEmpty()){
+						Containers.dropItemStack(level, worldPosition.getX() + .5f, worldPosition.getY() + .5f, worldPosition.getZ() + .5f, remainder);
+					}
 				}
 				return;
 			}

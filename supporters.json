@@ -12,7 +12,12 @@
   "7135da42-d327-47bb-bb04-5ba4e212fb32", "c4c21dde-7f38-461c-8da8-32346996209c", "b0d69c83-18cb-4fa4-ac6f-5609674398a2",
   "14212b1b-ba12-4164-947c-c208a6b07ac9", "dfb079d8-a5ce-4d70-907f-b852a44f8de8", "5ebee73e-faec-4810-ae7a-4baf73f026e4",
   "b9694497-80b7-4412-b00e-2c9bc2705fd1", "02320102-6fc4-408b-8873-afe54b2dcae6", "ac076a44-c1e3-4752-a3ac-2a366deaefb1",
-  "8f86b83a-e35f-4fca-8b0f-a8181cc1741d", "c657941e-8ac5-46ac-bf65-8983f776ff33", "47b128a4-9043-4ec6-ba69-0edffdddfd8a"],
+  "8f86b83a-e35f-4fca-8b0f-a8181cc1741d", "c657941e-8ac5-46ac-bf65-8983f776ff33", "47b128a4-9043-4ec6-ba69-0edffdddfd8a",
+    "0753a4e3-f71d-4b86-b338-3983f36d2b8a", "df2c8cdf-fbaf-4a22-9fdf-16770ee19c63", "b71554c5-ea50-441a-bed0-384416402575",
+  "5a0d2794-50a3-400f-b014-b1234d198eca", "1a45aa67-e39d-48f5-a5aa-4467b9a0c0c0", "755d49f3-c7e7-4ae2-95c0-25b50954d416",
+  "d600e728-1c5e-4ee8-8df7-2899465c9129", "d155b322-ff09-4c0f-9438-21ba7c572490", "bb21a5a9-4a9a-49f9-84f9-1ff375bca6bf",
+  "1f470f2a-a05b-4b6b-9d84-4b62f8686e5b", "d600e728-1c5e-4ee8-8df7-2899465c9129", "43ec37c2-8b0d-4bda-9f6a-5f78c3b572d0",
+  "5a4971f3-6fb0-446e-8512-cca380ec7e85"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -209,6 +214,66 @@
       "adopter": "Jaysungmr",
       "color": "pink",
       "bio": "Found in an abandoned mage tower. Seems to enjoy source berries and live jazz"
+    },{
+      "name": "Cookie",
+      "adopter": "Sarrdonous",
+      "color": "light_gray",
+      "bio": "Cookie has a knack for finding the juiciest and most delicious Sourceberries, and sometimes sneaks into Sourceberry farms to satisfy his sweet tooth. Don’t be surprised if you see him with a berry-stained mouth and a guilty grin."
+    },{
+      "name": "Skytail",
+      "adopter": "HolidayWither",
+      "color": "light_blue",
+      "bio": "Skytail thrives on companionship, supports magic users with a positive and upbeat attitude, and spreads happiness wherever it goes."
+    },{
+      "name": "Sarrion",
+      "adopter": "Mr_Etan",
+      "color": "orange",
+      "bio": "A once powerful mage accidentally turned himself into a starbuncle! He hasn't really bothered to turn himself back. Perhaps he enjoys the simple life?"
+    },{
+      "name": "Trixie",
+      "color": "magenta",
+      "adopter": "Gulmok",
+      "bio": "It's staring at you with confusion."
+    },{
+      "name": "Jayden",
+      "color": "red",
+      "adopter": "EpicGamezTV",
+      "bio": "Because Race Car!"
+    },{
+      "name": "Jade",
+      "color": "green",
+      "adopter": "Arclight",
+      "bio": "Enjoys snoozing in the grass or hanging out on the front porch"
+    },{
+      "name": "Sleeping Rose",
+      "color": "pink",
+      "adopter": "RoxieOnyx",
+      "bio": "A sleepy lil guy! Smells like roses and has quite an... odd air about them. Stare into their eyes and the void might stare back… Still cute though and loves snuggles"
+    },{
+      "name": "Shimmer",
+      "color": "white",
+      "adopter": "heiko776",
+      "bio": "Playful and curious little fella who loves to explore the world and make new friends."
+    },{
+      "name": "Glitero",
+      "color": "lime",
+      "adopter": "the_bob756",
+      "bio": "A funny little guy who loves glitter"
+    },{
+      "name": "Avie",
+      "color": "cyan",
+      "adopter": "SaaltySenpai",
+      "bio": "This starbuncle has large tusks that protrude from the mouth. She smiles happily as she eats your shoes and spellbook. She loves fetch and picking sourceberries but she might eat a few."
+    },{
+      "name": "Durin",
+      "color": "light_gray",
+      "adopter": "Nates698",
+      "bio": "Found hiding from a snowstorm in a mountain cave. Durin is a wanderer attracted to all things shiny beneath the mountains."
+    },{
+      "name": "Elson the Timid",
+      "color": "lime",
+      "adopter": "CJ_squared",
+      "bio": "Despite his name, Elson is so brave and definitely not trembling in his tiny squirrel boots (sidenote, he is very proud of his custom made boots). He loves being in safe dark spaces (not because he's scared, it's just comfy)."
     }
   ]
 }

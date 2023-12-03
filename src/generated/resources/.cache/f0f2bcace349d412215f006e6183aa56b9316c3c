@@ -1,4 +1,4 @@
-// 1.19.2	2023-05-27T16:06:02.6686005	Glyph Recipes
+// 1.19.2	2023-10-08T14:02:41.0600363	Glyph Recipes
 4a93ce36d7592e183a340b759dd8354f02aaa6c3 data/ars_nouveau/recipes/burst.json
 9350ccacd4478fc29cbb997b18a01b45d14c0bde data/ars_nouveau/recipes/glyph_accelerate.json
 3c24bcec44204ae8e60321ee54866cf60dc7dd87 data/ars_nouveau/recipes/glyph_amplify.json
@@ -55,6 +55,7 @@ b019efb0d7512054020def6d84e97b6045a70cd8 data/ars_nouveau/recipes/glyph_pierce.j
 b266aa14f7762070d7055b095a5c0a681a036236 data/ars_nouveau/recipes/glyph_place_block.json
 13aa90b59435a9a64fb7e9b0b282f11f8da3a563 data/ars_nouveau/recipes/glyph_projectile.json
 9e8afeddd398ba2b4703d8faf876f68262b6dee9 data/ars_nouveau/recipes/glyph_pull.json
+8eab97a52dcb5d6accf3cd97e245ef8c98c60385 data/ars_nouveau/recipes/glyph_randomize.json
 5ef4c9558830e69cea92a8c4afbb74f1b752d149 data/ars_nouveau/recipes/glyph_redstone_signal.json
 d2c28344f777218e572949154c82a1e49efe8f2c data/ars_nouveau/recipes/glyph_rotate.json
 9da5750a9304472e1a30a5cdf95adf385c53bacf data/ars_nouveau/recipes/glyph_rune.json

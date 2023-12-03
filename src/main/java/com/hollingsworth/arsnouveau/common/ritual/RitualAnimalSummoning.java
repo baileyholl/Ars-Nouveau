@@ -120,7 +120,7 @@ public class RitualAnimalSummoning extends AbstractRitual {
 
     @Override
     public boolean canConsumeItem(ItemStack stack) {
-        return true;
+        return getWorld().getRecipeManager().getAllRecipesFor(RecipeRegistry.SUMMON_RITUAL_TYPE.get()).stream().anyMatch(r -> r.catalyst.test(stack));
     }
 
     @Override

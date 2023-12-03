@@ -1,4 +1,4 @@
-// 1.19.2	2023-06-19T22:23:36.3430488	Ars Nouveau Item Models
+// 1.19.2	2023-10-08T11:38:50.8414064	Ars Nouveau Item Models
 ecf86e39be560a9c1f232af399fcccf2c34a0a0b assets/ars_nouveau/models/item/alchemists_crown.json
 3b63734fc12c7c1711a2a607ed7af51e77bd7e1b assets/ars_nouveau/models/item/bastion_pod.json
 a4784e992d0d58f5808f3894b96d08fa5bc26395 assets/ars_nouveau/models/item/blank_thread.json
@@ -85,6 +85,7 @@ c32680a597997d504c772f53bc4964a8beeda71b assets/ars_nouveau/models/item/glyph_li
 99c578c5077e5a3764eaf1ccd27978d33530191a assets/ars_nouveau/models/item/glyph_place_block.json
 b5ab64c07dd37560b4ff496c68fc2e3a20e6f9f6 assets/ars_nouveau/models/item/glyph_projectile.json
 fff50de0eac0110b05c29c9033c75a7ed3fc9204 assets/ars_nouveau/models/item/glyph_pull.json
+ecae58dcf960acc67356e438a0321ab3c9754f79 assets/ars_nouveau/models/item/glyph_randomize.json
 565b65702e65f73fd5166f88df0de430299cccfb assets/ars_nouveau/models/item/glyph_redstone_signal.json
 2c287b50c88a06062dd8089b2abde65aea219e43 assets/ars_nouveau/models/item/glyph_rotate.json
 49299c44e2fa4176325ec3fc154c250acc4d328e assets/ars_nouveau/models/item/glyph_rune.json
@@ -109,6 +110,7 @@ c13b5fce1911737c61f1a2400caf025584c6b0dc assets/ars_nouveau/models/item/glyph_wa
 046743da6b41a321130305b5c44ee3f4516ed5d7 assets/ars_nouveau/models/item/greater_experience_gem.json
 8a3874b48013ee67b3d362bb9b7974924c5898d0 assets/ars_nouveau/models/item/green_sbed.json
 486511474b99fb4803c0781259ef5620ac0b5adf assets/ars_nouveau/models/item/item_detector.json
+e34a2525e24c1423c8cda6388b99bb39befe3f48 assets/ars_nouveau/models/item/jump_ring.json
 6b4020f44475f6afeb58072fb014c8e53664a2c5 assets/ars_nouveau/models/item/magebloom_block.json
 4296f1fca7ce7fd990519d39def05883d1e95b82 assets/ars_nouveau/models/item/mendosteen_pod.json
 a869ede0c768f982722b00764902abac8e30fde9 assets/ars_nouveau/models/item/mirrorweave.json
@@ -133,6 +135,7 @@ a6b790884c1c050302a0fd123afd5cf81cb24033 assets/ars_nouveau/models/item/ritual_f
 e92bef7fedddea01122386d4d38518869c2e98f5 assets/ars_nouveau/models/item/ritual_flight.json
 21c7b9c6acfd6c6d9fa375d7c3ebbacc361f9274 assets/ars_nouveau/models/item/ritual_flowering.json
 10adb545d4d219fbe6b1fc15031f96b54cf7cff1 assets/ars_nouveau/models/item/ritual_forestation.json
+e9efdfb9d6c99b16d5932f7c6c80ba33d72cf4ff assets/ars_nouveau/models/item/ritual_gravity.json
 763ea6dec00299fe970e1f3348aad7f63b717cdf assets/ars_nouveau/models/item/ritual_harvest.json
 ee73b481d05c274f670b581c61080a09aaa2115d assets/ars_nouveau/models/item/ritual_moonfall.json
 96bbe1059079c83d7002f0faf330d326927edc60 assets/ars_nouveau/models/item/ritual_overgrowth.json
@@ -194,6 +197,7 @@ fad002103bb7ccaea2998a2fe617fcf5fd54d416 assets/ars_nouveau/models/item/sourcest
 b476712880e974a70c1fadea694f0d61adb9c291 assets/ars_nouveau/models/item/sourcestone_small_bricks_stairs.json
 a7b3f41fce153ebc7540a0dfbe855fc724f521b1 assets/ars_nouveau/models/item/sourcestone_stairs.json
 f433c503db1699241353f198a0d427f708716930 assets/ars_nouveau/models/item/source_gem_block.json
+9d2205eb9012b0585bff4adaf4c02419b2f01d9a assets/ars_nouveau/models/item/spell_sensor.json
 1a921e2809c2a9588e7e8f5fbe4556f5f6729487 assets/ars_nouveau/models/item/stripped_blue_archwood_log.json
 1205608f4c722986291eb4255ad2e405715515cf assets/ars_nouveau/models/item/stripped_blue_archwood_wood.json
 8cf33c617e9b25c0fe978d8e517ff8f7d03f266f assets/ars_nouveau/models/item/stripped_green_archwood_log.json

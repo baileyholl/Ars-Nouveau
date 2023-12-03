@@ -1,4 +1,4 @@
-// 1.19.2	2023-06-30T18:25:32.5587722	AN tags
+// 1.19.2	2023-11-24T13:36:31.8620917	AN tags
 939cde8f97e4e8d7ea8445415522f703b2b927d4 data/ars_nouveau/tags/blocks/an_decorative.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/blocks/break_blacklist.json
 d4330c0670a8ff0476a64cff8c8e30d9e6d5d760 data/ars_nouveau/tags/blocks/break_with_pickaxe.json
@@ -12,10 +12,11 @@ df87c9e82c58b24ac8e979c73fc3be68bf25b4b0 data/ars_nouveau/tags/blocks/harvest/fo
 bf1a44f8a79b447f1e7b6541e8c3d93e4ef6f71f data/ars_nouveau/tags/blocks/magic_plants.json
 ce9ccf92ade8cd330c990516ee0f8a30c35adea9 data/ars_nouveau/tags/blocks/magic_saplings.json
 6429b3e3e4f89e7bb44af0c2ab98368717674afc data/ars_nouveau/tags/blocks/no_break_drop.json
+7d0c18d2019049acf42d10f3ae809011f4e968c1 data/ars_nouveau/tags/blocks/occludes_spell_sensor.json
 b0d3df2afba9d4095985b91440f57652d9217d04 data/ars_nouveau/tags/blocks/storage/autopull_disabled.json
 f5e3f6895ab28e98f84db162bb5a7ec0d8484aae data/ars_nouveau/tags/blocks/summon_bed.json
 449d2dab531ac4032acb37910e9a380d07431391 data/ars_nouveau/tags/blocks/summon_sleepable.json
-10b0c7c887bddd7683beae4ff9328a9118b5c53f data/ars_nouveau/tags/blocks/whirlisprig/greatly_likes.json
+a8499e798f3d96d8569c7b06e1c9b83d05da3caf data/ars_nouveau/tags/blocks/whirlisprig/greatly_likes.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/blocks/whirlisprig/kinda_likes.json
 2f9b7e099208b0e404e0f81c89f2a368e5d909da data/forge/tags/blocks/chests.json
 2f9b7e099208b0e404e0f81c89f2a368e5d909da data/forge/tags/blocks/chests/wooden.json
