@@ -43,6 +43,7 @@ public class SpellResolver {
     private final ISpellValidator spellValidator;
 
     public @Nullable HitResult hitResult = null;
+    public @Nullable SpellResolver previousResolver = null;
 
     public SpellResolver(SpellContext spellContext) {
         this.spell = spellContext.getSpell();
@@ -206,7 +207,6 @@ public class SpellResolver {
 
     /**
      * Simulates the cost required to cast a spell
-     * When expending mana, please call getResolveCostAndResetDiscounts instead
      */
     public int getResolveCost() {
         int cost = spellContext.getSpell().getCost() - getPlayerDiscounts(spellContext.getUnwrappedCaster(), spell, spellContext.getCasterTool());

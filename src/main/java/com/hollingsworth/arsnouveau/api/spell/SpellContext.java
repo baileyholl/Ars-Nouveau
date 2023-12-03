@@ -30,14 +30,13 @@ public class SpellContext implements Cloneable {
     public @Nullable BlockEntity castingTile;
 
     private ParticleColor colors = ParticleColor.defaultParticleColor();
-
     private CasterType type;
     private Level level;
 
     public CompoundTag tag = new CompoundTag();
     private IWrappedCaster wrappedCaster;
+    private SpellContext previousContext;
 
-    // TODO: Convert usages to use casterTool
     public SpellContext(Level level,@NotNull Spell spell, @Nullable LivingEntity caster, IWrappedCaster wrappedCaster) {
         this.level = level;
         this.spell = spell;
@@ -63,6 +62,11 @@ public class SpellContext implements Cloneable {
         return this;
     }
 
+    public SpellContext withParent(SpellContext parent){
+        this.previousContext = parent;
+        return this;
+    }
+
     public @Nullable AbstractSpellPart nextPart() {
         this.currentIndex++;
         AbstractSpellPart part = null;
@@ -80,6 +84,21 @@ public class SpellContext implements Cloneable {
             e.printStackTrace();
         }
         return part;
+    }
+
+    public SpellContext popContext(){
+        Spell remainder = getRemainingSpell();
+        for(AbstractSpellPart spellPart : remainder.recipe){
+            if(spellPart instanceof IContextManipulator manipulator){
+                SpellContext newContext = manipulator.manipulate(this);
+                if(newContext != null){
+                    newContext.previousContext = this;
+                    return newContext;
+                }
+            }
+        }
+        setCanceled(true);
+        return this;
     }
 
     public boolean hasNextPart() {
@@ -153,9 +172,15 @@ public class SpellContext implements Cloneable {
     }
 
     public @NotNull Spell getRemainingSpell() {
+        Spell remainder = getSpell().clone();
         if (getCurrentIndex() >= getSpell().recipe.size())
-            return getSpell().clone().setRecipe(new ArrayList<>());
+            return remainder.setRecipe(new ArrayList<>());
+
         return getSpell().clone().setRecipe(new ArrayList<>(getSpell().recipe.subList(getCurrentIndex(), getSpell().recipe.size())));
+    }
+
+    public @Nullable SpellContext getPreviousContext(){
+        return previousContext;
     }
 
     @Override
@@ -171,6 +196,7 @@ public class SpellContext implements Cloneable {
             clone.type = this.type;
             clone.level = this.level;
             clone.wrappedCaster = this.wrappedCaster;
+            clone.previousContext = this.previousContext == null ? null : this.previousContext.clone();
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
