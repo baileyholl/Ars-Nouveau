@@ -837,7 +837,12 @@ public class BlockRegistry {
     public static RegistryObject<BlockEntityType<RedstoneRelayTile>> REDSTONE_RELAY_TILE = BLOCK_ENTITIES.register(LibBlockNames.REDSTONE_RELAY, () -> BlockEntityType.Builder.of(RedstoneRelayTile::new, REDSTONE_RELAY.get()).build(null));;
 
     public static RegistryObject<ModBlockItem> SPELL_SENSOR_ITEM = ITEMS.register(LibBlockNames.SPELL_SENSOR, () -> getDefaultBlockItem(BlockRegistry.SPELL_SENSOR.get()));
-    public static RegistryObject<ModBlockItem> REDSTONE_RELAY_ITEM = ITEMS.register(LibBlockNames.REDSTONE_RELAY, () -> getDefaultBlockItem(BlockRegistry.REDSTONE_RELAY.get()));
+    public static RegistryObject<ModBlockItem> REDSTONE_RELAY_ITEM = ITEMS.register(LibBlockNames.REDSTONE_RELAY, () -> new RendererBlockItem(BlockRegistry.REDSTONE_RELAY.get(), defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return RedstoneRelayRenderer::getISTER;
+        }
+    });
 
     static {
         ROTATING_TURRET = registerBlock(LibBlockNames.ROTATING_SPELL_TURRET, RotatingSpellTurret::new);
