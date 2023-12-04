@@ -256,7 +256,6 @@ public class BlockTagProvider extends BlockTagsProvider {
 
         this.tag(IGNORE_TILE).add(
                 BlockRegistry.INTANGIBLE_AIR,
-                BlockRegistry.REDSTONE_AIR,
                 BlockRegistry.MAGE_BLOCK,
                 BlockRegistry.SCONCE_BLOCK,
                 BlockRegistry.LIGHT_BLOCK,
