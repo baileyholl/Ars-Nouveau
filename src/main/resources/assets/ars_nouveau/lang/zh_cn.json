@@ -252,7 +252,7 @@
   "ars_nouveau.glyph_desc.glyph_projectile": "你的初始法术构件。召唤一个弹射物，弹射物命中目标或方块时会造成法术效果。被敏感构件增强后，弹射物能破坏草之类不影响实体移动的方块。",
   "ars_nouveau.glyph_desc.glyph_pull": "将目标实体拉近施法者。如果目标是方块，该方块会变成掉落中的方块，并向被击中方块的一侧移动。敏感构件会阻止这个法术拉动方块。",
   "ars_nouveau.glyph_desc.glyph_randomize": "Randomize the behavior of some glyphs. If used with spells like Place Block and Exchange, it will randomize the block that is placed between the blocks in your hotbar.",
-  "ars_nouveau.glyph_desc.glyph_redstone_signal": "在方块上创造一道红石信号脉冲，就像按钮一样。信号初始强度为10，可通过强化提高，也可通过抑制降低。脉冲时长可通过延长时效延长。",
+  "ars_nouveau.glyph_desc.glyph_redstone_signal": "Places a temporary block of redstone with configurable power and duration. Augment with Sensitive to set the target block as a power source for itself and surrounding blocks. Dampen and Amplify will adjust the power from the base value of 10.",
   "ars_nouveau.glyph_desc.glyph_rotate": "顺时针旋转一个方块或实体。如果添加了敏感强化，则会改变方块的角度(如果可以) 或强制实体改变他们的朝向。抑制将会使转向变为逆时针。",
   "ars_nouveau.glyph_desc.glyph_rune": "在地上放置一个符文，会对触碰符文的目标施放法术。与符文粉笔放置的符文不同，这些符文是一次性的，而且不能充能。使用拾取物品时，物品会放在相邻容器中。",
   "ars_nouveau.glyph_desc.glyph_self": "你的初始法术构件。对施法者产生效果。",
