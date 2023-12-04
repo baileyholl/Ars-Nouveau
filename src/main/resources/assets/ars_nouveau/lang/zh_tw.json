@@ -252,7 +252,7 @@
   "ars_nouveau.glyph_desc.glyph_projectile": "你開始的咒語。召喚一個射彈，當該射彈擊中目標或物塊時應用法術效果。敏感將允許射彈破壞植物或其他不阻擋運動的材料。",
   "ars_nouveau.glyph_desc.glyph_pull": "Pulls the target closer to the caster. When used on blocks, they become falling blocks with motion towards the side of the block that was hit. Sensitive will stop this spell from pulling blocks.",
   "ars_nouveau.glyph_desc.glyph_randomize": "Randomize the behavior of some glyphs. If used with spells like Place Block and Exchange, it will randomize the block that is placed between the blocks in your hotbar.",
-  "ars_nouveau.glyph_desc.glyph_redstone_signal": "在方塊上創建一個短暫的紅石信號，如按鈕。信號強度從 10 開始，可以通過“放大”增加，或通過“衰減”減少。可以使用 Extend Time 延長持續時間或使用 Duration Down 縮短持續時間。",
+  "ars_nouveau.glyph_desc.glyph_redstone_signal": "Places a temporary block of redstone with configurable power and duration. Augment with Sensitive to set the target block as a power source for itself and surrounding blocks. Dampen and Amplify will adjust the power from the base value of 10.",
   "ars_nouveau.glyph_desc.glyph_rotate": "順時針旋轉塊或實體。如果增加了 sensitive 它將改變方塊的軸（如果可能的話）或迫使實體轉動它們的外觀。阻尼器將逆時針旋轉。",
   "ars_nouveau.glyph_desc.glyph_rune": "在地上放置一個符文，對接觸到符文的目標施法。與 Runic Chalk 放置的符文不同，這些符文是臨時的，無法重新充電。使用 Item Pickup 時，物品會存放到相鄰的庫存中。敏感會導致符文使用所有者的物品欄來拾取和使用。擁有 Magic Find 的玩家將能夠讀取刻在符文上的法術。",
   "ars_nouveau.glyph_desc.glyph_self": "你開始的咒語。對施法者施加法術。",
