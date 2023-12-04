@@ -1,14 +1,14 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.api.event.EventQueue;
-import com.hollingsworth.arsnouveau.api.event.RedstoneSpellEvent;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.RedstoneAir;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import com.hollingsworth.arsnouveau.common.world.saved_data.RedstoneSavedData;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -19,7 +19,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
-
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -43,8 +42,10 @@ public class EffectRedstone extends AbstractEffect {
         if (spellStats.isSensitive()) {
             if (!world.isInWorldBounds(pos))
                 return;
-            signalMap.get(world.dimension().location().toString()).put(pos, signalModifier);
-            EventQueue.getServerInstance().addEvent(new RedstoneSpellEvent(delay, rayTraceResult, world));
+            pos = pos.immutable();
+            RedstoneSavedData.from((ServerLevel) world).SIGNAL_MAP.put(pos, new RedstoneSavedData.Entry(pos, signalModifier, delay));
+            world.updateNeighborsAt(pos, state.getBlock());
+            System.out.println(RedstoneSavedData.from((ServerLevel) world).SIGNAL_MAP.size());
         } else {
 
             pos = pos.relative(rayTraceResult.getDirection());
