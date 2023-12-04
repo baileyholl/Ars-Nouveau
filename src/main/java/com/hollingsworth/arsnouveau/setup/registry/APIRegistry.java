@@ -179,6 +179,10 @@ public class APIRegistry {
     //register things only in dev, safe from production
     private static void registerWip() {
         registerSpell(EffectPopContext.INSTANCE);
+        //temporary, for showcase purposes
+        //TODO delete these before moving to prod
+        registerSpell(EffectElse.INSTANCE);
+        registerSpell(ANExampleFilter.INSTANCE);
     }
 
     public static void postInit() {

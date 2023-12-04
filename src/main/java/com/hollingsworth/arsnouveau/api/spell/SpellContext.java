@@ -86,11 +86,11 @@ public class SpellContext implements Cloneable {
         return part;
     }
 
-    public SpellContext popContext(){
+    public SpellContext popContext(boolean filterPassed){
         Spell remainder = getRemainingSpell();
         for(AbstractSpellPart spellPart : remainder.recipe){
             if(spellPart instanceof IContextManipulator manipulator){
-                SpellContext newContext = manipulator.manipulate(this);
+                SpellContext newContext = manipulator.manipulate(this,filterPassed);
                 if(newContext != null){
                     newContext.previousContext = this;
                     return newContext;
