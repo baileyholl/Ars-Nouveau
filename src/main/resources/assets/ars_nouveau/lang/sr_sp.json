@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "Положај постављен.",
   "ars_nouveau.dominion_wand.position_stored": "Stored: %s",
   "ars_nouveau.dominion_wand.stored_entity": "Похрањени ентитет",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "Динамичка светла су искључена.",
   "ars_nouveau.dynamic_lights.button_on": "Динамичка светла су укључена. Ово може да изазове заостајање за кориснике са слабијим процесорима, ниску алокацију РАМ-а и неочекиване резултате са модовима 'перформанси' као што је Оптифине.",
   "ars_nouveau.earth_essence.tooltip": "Може се користити на прљавштини да се претвори у траву.",
