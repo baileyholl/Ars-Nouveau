@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "Zestaw pozycji.",
   "ars_nouveau.dominion_wand.position_stored": "Zapisano: %s",
   "ars_nouveau.dominion_wand.stored_entity": "Zapisana jednostka",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "Światła dynamiczne są wyłączone.",
   "ars_nouveau.dynamic_lights.button_on": "Światła dynamiczne są włączone. Może to powodować opóźnienia dla użytkowników ze słabszymi procesorami, małą alokacją pamięci RAM i nieoczekiwanymi wynikami w przypadku modów „wydajnościowych”, takich jak Optifine.",
   "ars_nouveau.earth_essence.tooltip": "Można użyć na ziemi, aby zamienić ją w trawę.",
