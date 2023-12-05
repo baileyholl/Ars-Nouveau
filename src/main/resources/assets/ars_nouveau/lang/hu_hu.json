@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "Pozíció beállítva.",
   "ars_nouveau.dominion_wand.position_stored": "Tárolva: %s",
   "ars_nouveau.dominion_wand.stored_entity": "Tárolt entitás",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "A dinamikus világítás ki van kapcsolva.",
   "ars_nouveau.dynamic_lights.button_on": "A dinamikus fények bekapcsolnak. Ez késést okozhat a gyengébb CPU-val, alacsony RAM-kiosztással és váratlan eredményekkel a „teljesítményű” modokkal, mint például az Optifine.",
   "ars_nouveau.earth_essence.tooltip": "Használható Dirt-en, hogy fűvé változtassa.",
