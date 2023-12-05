@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "Stilling satt.",
   "ars_nouveau.dominion_wand.position_stored": "Lagret: %s",
   "ars_nouveau.dominion_wand.stored_entity": "Lagret enhet",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "Dynamisk lys slås av.",
   "ars_nouveau.dynamic_lights.button_on": "Dynamiske lys slås på. Dette kan forårsake etterslep for brukere med svakere CPUer, lav RAM-allokering og uventede resultater med \"ytelse\" mods som Optifine.",
   "ars_nouveau.earth_essence.tooltip": "Kan brukes på Dirt for å gjøre det om til gress.",
