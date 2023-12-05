@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "位置設置。",
   "ars_nouveau.dominion_wand.position_stored": "存儲： %s",
   "ars_nouveau.dominion_wand.stored_entity": "存儲實體",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "動態燈已關閉。",
   "ars_nouveau.dynamic_lights.button_on": "動態燈已打開。這可能會導致 CPU 較弱、RAM 分配較低以及使用 Optifine 等“性能”模組出現意外結果的用戶出現延遲。",
   "ars_nouveau.earth_essence.tooltip": "可用於泥土以將其變成草地。",
