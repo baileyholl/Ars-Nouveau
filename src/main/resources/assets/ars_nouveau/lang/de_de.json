@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "Position eingestellt.",
   "ars_nouveau.dominion_wand.position_stored": "Gespeichert: %s",
   "ars_nouveau.dominion_wand.stored_entity": "Gespeicherte Entität",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "Dynamische Lichter werden ausgeschaltet.",
   "ars_nouveau.dynamic_lights.button_on": "Dynamische Lichter werden eingeschaltet. Dies kann bei Benutzern mit schwächeren CPUs, geringer RAM-Zuweisung und unerwarteten Ergebnissen bei „Leistungs“-Mods wie Optifine zu Verzögerungen führen.",
   "ars_nouveau.earth_essence.tooltip": "Kann auf Erde verwendet werden, um sie in Gras zu verwandeln.",
