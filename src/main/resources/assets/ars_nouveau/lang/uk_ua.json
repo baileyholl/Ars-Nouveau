@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "Місце задано.",
   "ars_nouveau.dominion_wand.position_stored": "Місце: %s.",
   "ars_nouveau.dominion_wand.stored_entity": "Задана сутність.",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "Динамічне освітлення вимкнено.",
   "ars_nouveau.dynamic_lights.button_on": "Вмикається динамічне освітлення. Це може спричинити затримку для користувачів із слабшим ЦП, малим розподілом оперативної пам’яті та неочікуваними результатами з «продуктивними» модами, такими як Optifine.",
   "ars_nouveau.earth_essence.tooltip": "Використання на Ґрунті створить Блок трави.",
