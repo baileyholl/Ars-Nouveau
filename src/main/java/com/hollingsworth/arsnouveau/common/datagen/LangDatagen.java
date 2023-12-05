@@ -333,6 +333,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.warp_scroll.recorded", "You record your location to your Warp Scroll.");
         add("ars_nouveau.warp_scroll.no_location", "Use while sneaking to set a location.");
         add("ars_nouveau.wand.spell_invalid", "Invalid Spell.");
+        add("ars_nouveau.drygmy.blacklist", "Drygmy Blacklisted");
         add("ars_nouveau.starbuncle.store", "Starbuncle will store items here.");
         add("ars_nouveau.starbuncle.take", "Starbuncle take from this inventory.");
         add("ars_nouveau.starbuncle.whitelist", "Whitelisted: ");
