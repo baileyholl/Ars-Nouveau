@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "座標がセットされました。",
   "ars_nouveau.dominion_wand.position_stored": "座標: %s",
   "ars_nouveau.dominion_wand.stored_entity": "エンティティを保存しました。",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "動的光源はオフになっています。",
   "ars_nouveau.dynamic_lights.button_on": "動的光源はオンになっています。CPUが弱い場合やRAM割り当て量が低い時、ラグが発生する可能性があります。Optifineなどのパフォーマンス向上MODと一緒に使うと不安定になる可能性があります。",
   "ars_nouveau.earth_essence.tooltip": "土ブロックを草ブロックに変えられる。",
