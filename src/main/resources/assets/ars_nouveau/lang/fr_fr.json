@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "Position définie.",
   "ars_nouveau.dominion_wand.position_stored": "Enregistré : %s",
   "ars_nouveau.dominion_wand.stored_entity": "Entité enregistrée",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "Les lumières dynamiques sont désactivées.",
   "ars_nouveau.dynamic_lights.button_on": "Les lumières dynamiques sont activées. Cela peut entraîner des ralentissements pour les utilisateurs avec des processeurs plus faibles, une faible allocation de RAM et des résultats inattendus avec des mods « performance » comme Optifine.",
   "ars_nouveau.earth_essence.tooltip": "Peut être utilisée sur de la Terre pour la transformer en Herbe.",
