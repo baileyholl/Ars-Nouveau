@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "已设定位置。",
   "ars_nouveau.dominion_wand.position_stored": "已存储位置：%s",
   "ars_nouveau.dominion_wand.stored_entity": "实体已被存储",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "动态光源已关闭。",
   "ars_nouveau.dynamic_lights.button_on": "动态光源已开启。对于CPU性能较弱或者内存分配较少的用户来说，这可能会引起卡顿。对于安装了像Optifine这样的“优化”模组的用户来说，还可能会引发未知问题。",
   "ars_nouveau.earth_essence.tooltip": "对泥土使用能使其变成草方块。",
