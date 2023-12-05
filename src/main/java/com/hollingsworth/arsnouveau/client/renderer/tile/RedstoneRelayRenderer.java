@@ -26,7 +26,10 @@ public class RedstoneRelayRenderer extends ArsGeoBlockRenderer<RedstoneRelayTile
         super.renderRecursively(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
         ArrayList<String> strings = new ArrayList<>(List.of(new String[]{
                 "framework_input",
-                "framework"
+                "bone",
+                "bone2",
+                "bone3",
+                "bone4"
         }));
         if (strings.contains(bone.getName())) {
             //NOTE: if the bone have a parent, the recursion will get here with the neutral color, making the color getter useless

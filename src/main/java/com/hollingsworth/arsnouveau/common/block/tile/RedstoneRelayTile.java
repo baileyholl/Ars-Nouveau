@@ -17,6 +17,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
@@ -265,13 +269,25 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
         }
     }
 
-    @Override
-    public void registerControllers(AnimationData data) {
-
-    }
     AnimationFactory animationFactory = GeckoLibUtil.createFactory(this);
     @Override
     public AnimationFactory getFactory() {
         return animationFactory;
+    }
+
+    @Override
+    public void registerControllers(AnimationData data) {
+        data.addAnimationController(new AnimationController<>(this, "rotate_controller", 0, this::idlePredicate));
+        data.addAnimationController(new AnimationController<>(this, "float_controller", 0, this::floatPredicate));
+    }
+
+    private <P extends IAnimatable> PlayState idlePredicate(AnimationEvent<P> event) {
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("floating"));
+        return PlayState.CONTINUE;
+    }
+
+    private <P extends IAnimatable> PlayState floatPredicate(AnimationEvent<P> event) {
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("rotating"));
+        return PlayState.CONTINUE;
     }
 }
