@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "Positionssæt.",
   "ars_nouveau.dominion_wand.position_stored": "Gemt: %s",
   "ars_nouveau.dominion_wand.stored_entity": "Lagret enhed",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "Dynamisk lys er slukket.",
   "ars_nouveau.dynamic_lights.button_on": "Dynamisk lys tændes. Dette kan forårsage forsinkelse for brugere med svagere CPU'er, lav RAM-allokering og uventede resultater med 'ydeevne'-mods som Optifine.",
   "ars_nouveau.earth_essence.tooltip": "Kan bruges på Dirt til at forvandle den til græs.",
