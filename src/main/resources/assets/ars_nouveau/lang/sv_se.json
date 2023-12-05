@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "Position inställd.",
   "ars_nouveau.dominion_wand.position_stored": "Lagrad: %s",
   "ars_nouveau.dominion_wand.stored_entity": "Lagrad entitet",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "Dynamisk ljus är avstängda.",
   "ars_nouveau.dynamic_lights.button_on": "Dynamisk Ljus är påslagen. Detta kan orsaka lag för spelare med svagare processorer, lågt RAM-allokering och oväntade resultat med 'prestanda' tillägg som Optifine.",
   "ars_nouveau.earth_essence.tooltip": "Kan användas på Jord för att förvandla det till Gräs.",
