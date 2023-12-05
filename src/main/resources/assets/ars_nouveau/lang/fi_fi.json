@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "Asema asetettu.",
   "ars_nouveau.dominion_wand.position_stored": "Tallennettu: %s",
   "ars_nouveau.dominion_wand.stored_entity": "Tallennettu kokonaisuus",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "Dynaamiset valot sammutetaan.",
   "ars_nouveau.dynamic_lights.button_on": "Dynaamiset valot ovat päällä. Tämä voi aiheuttaa viivettä käyttäjille, joilla on heikommat prosessorit, alhainen RAM-varaus ja odottamattomia tuloksia \"suorituskykyisten\" modien, kuten Optifinen, kanssa.",
   "ars_nouveau.earth_essence.tooltip": "Voidaan käyttää Dirtillä muuttaakseen sen ruohoksi.",
