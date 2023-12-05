@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "Σετ θέσεων.",
   "ars_nouveau.dominion_wand.position_stored": "Αποθηκευμένο: %s",
   "ars_nouveau.dominion_wand.stored_entity": "Αποθηκευμένη οντότητα",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "Τα δυναμικά φώτα είναι σβηστά.",
   "ars_nouveau.dynamic_lights.button_on": "Τα δυναμικά φώτα είναι αναμμένα. Αυτό μπορεί να προκαλέσει καθυστέρηση για χρήστες με ασθενέστερες CPU, χαμηλή κατανομή μνήμης RAM και απροσδόκητα αποτελέσματα με mod \"απόδοσης\" όπως το Optifine.",
   "ars_nouveau.earth_essence.tooltip": "Μπορεί να χρησιμοποιηθεί σε Dirt για να το μετατρέψει σε Grass.",
