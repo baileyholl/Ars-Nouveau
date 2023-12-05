@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "Позиция установлена.",
   "ars_nouveau.dominion_wand.position_stored": "Хранится: %s",
   "ars_nouveau.dominion_wand.stored_entity": "Хранимый объект",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "Динамическое освещение выключено.",
   "ars_nouveau.dynamic_lights.button_on": "Динамическое освещение включено.  Это может привести к лагам для пользователей со слабыми процессорами, малой ОП, и неожиданным результатам с модами на производительность, такими как Optifine.",
   "ars_nouveau.earth_essence.tooltip": "Можно использовать на грязи, чтобы превратить ее в траву.",
