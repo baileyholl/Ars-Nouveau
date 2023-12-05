@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "Pozisyon ayarlandı.",
   "ars_nouveau.dominion_wand.position_stored": "Kayıtlı: %s",
   "ars_nouveau.dominion_wand.stored_entity": "Saklanan varlık",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "Dinamik ışıklar kapatılır.",
   "ars_nouveau.dynamic_lights.button_on": "Dinamik ışıklar açılır. Bu, daha zayıf CPU'lara, düşük RAM tahsisine ve Optifine gibi 'performans' modlarıyla beklenmeyen sonuçlara sahip kullanıcılar için gecikmeye neden olabilir.",
   "ars_nouveau.earth_essence.tooltip": "Dirt'i Çime dönüştürmek için kullanılabilir.",
