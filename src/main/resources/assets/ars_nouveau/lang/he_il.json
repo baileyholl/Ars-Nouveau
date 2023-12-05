@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "סט מיקום.",
   "ars_nouveau.dominion_wand.position_stored": "מאוחסן: %s",
   "ars_nouveau.dominion_wand.stored_entity": "ישות מאוחסנת",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "אורות דינמיים כבויים.",
   "ars_nouveau.dynamic_lights.button_on": "אורות דינמיים נדלקים. זה יכול לגרום לפיגור עבור משתמשים עם מעבדים חלשים יותר, הקצאת זיכרון RAM נמוכה ותוצאות בלתי צפויות עם אופנים 'ביצועים' כמו Optifine.",
   "ars_nouveau.earth_essence.tooltip": "ניתן להשתמש על Dirt כדי להפוך אותו לדשא.",
