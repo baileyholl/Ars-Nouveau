@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "Posición configurada.",
   "ars_nouveau.dominion_wand.position_stored": "Almacenado: %s",
   "ars_nouveau.dominion_wand.stored_entity": "Entidad almacenada",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "Las luces dinámicas están apagadas.",
   "ars_nouveau.dynamic_lights.button_on": "Las luces dinámicas están encendidas. Esto puede causar retrasos para los usuarios con CPU más débiles, poca asignación de RAM y resultados inesperados con modificaciones de \"rendimiento\" como Optifine.",
   "ars_nouveau.earth_essence.tooltip": "Se puede usar en tierra para convertirla en hierba.",
