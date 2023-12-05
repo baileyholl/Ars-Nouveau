@@ -116,8 +116,6 @@ public class BlockRegistry {
     public static EnchantedSpellTurret ENCHANTED_SPELL_TURRET;
     @ObjectHolder(value = prepend + LibBlockNames.ENCHANTED_SPELL_TURRET, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<EnchantedTurretTile> ENCHANTED_SPELL_TURRET_TYPE;
-    @ObjectHolder(value = prepend + LibBlockNames.REDSTONE_AIR, registryName = BlockRegistryKey)
-    public static RedstoneAir REDSTONE_AIR;
     @ObjectHolder(value = prepend + LibBlockNames.INTANGIBLE_AIR, registryName = BlockRegistryKey)
     public static IntangibleAirBlock INTANGIBLE_AIR;
     @ObjectHolder(value = prepend + LibBlockNames.INTANGIBLE_AIR, registryName = BlockEntityRegistryKey)
@@ -407,7 +405,6 @@ public class BlockRegistry {
         //Misc
         registry.register(LibBlockNames.SCRYERS_OCULUS, new ScryersOculus());
         registry.register(LibBlockNames.SCRYERS_CRYSTAL, new ScryerCrystal());
-        registry.register(LibBlockNames.REDSTONE_AIR, new RedstoneAir());
         registry.register(LibBlockNames.INTANGIBLE_AIR, new IntangibleAirBlock());
 
         //Trees & co
