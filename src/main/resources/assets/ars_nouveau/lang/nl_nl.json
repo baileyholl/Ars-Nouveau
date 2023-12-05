@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "Positie ingesteld.",
   "ars_nouveau.dominion_wand.position_stored": "Opgeslagen: %s",
   "ars_nouveau.dominion_wand.stored_entity": "Stored entity",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "Dynamische lichten zijn uitgezet.",
   "ars_nouveau.dynamic_lights.button_on": "Dynamische lichten zijn aangezet. Dit kan voor lag zorgen bij gebruikers met zwakkere CPUs en lage toegewezen RAM. Ook kan het zorgen voor onverwachte resultaten met 'prestatie' mods als OptiFine.",
   "ars_nouveau.earth_essence.tooltip": "Kan gebruikt worden om van aarde gras te maken.",
