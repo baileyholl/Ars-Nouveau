@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "Conjunt de posicions.",
   "ars_nouveau.dominion_wand.position_stored": "Emmagatzemat: %s",
   "ars_nouveau.dominion_wand.stored_entity": "Entitat emmagatzemada",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "Els llums dinàmics estan apagats.",
   "ars_nouveau.dynamic_lights.button_on": "S'encenen els llums dinàmics. Això pot provocar un retard per als usuaris amb CPU més febles, una assignació de memòria RAM baixa i resultats inesperats amb modificacions de \"rendiment\" com Optifine.",
   "ars_nouveau.earth_essence.tooltip": "Es pot utilitzar a la brutícia per convertir-lo en herba.",
