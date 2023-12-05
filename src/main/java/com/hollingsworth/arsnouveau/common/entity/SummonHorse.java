@@ -12,7 +12,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.player.Player;
@@ -22,8 +24,6 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
-
-import net.minecraft.world.entity.Entity.RemovalReason;
 
 public class SummonHorse extends Horse implements ISummon {
     public int ticksLeft;
@@ -60,6 +60,18 @@ public class SummonHorse extends Horse implements ISummon {
                 onSummonDeath(level, null, true);
             }
         }
+    }
+
+    @org.jetbrains.annotations.Nullable
+    @Override
+    public LivingEntity getOwner() {
+        return ISummon.super.getOwner() instanceof LivingEntity living ? living : null;
+    }
+
+    @org.jetbrains.annotations.Nullable
+    @Override
+    public Entity getOwner(ServerLevel world) {
+        return ISummon.super.getOwner(world);
     }
 
     @Override

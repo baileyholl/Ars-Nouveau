@@ -54,6 +54,7 @@ public class EffectBurst extends AbstractEffect {
             //TODO check if BlockPos.betweenClosed is better
             for (BlockPos pos : BlockPos.withinManhattan(center, radius, radius, radius)) {
                 if (Sphere.test(BlockUtil.distanceFromCenter(pos, center))) {
+                    pos = pos.immutable();
                     //TODO it needs a direction, UP as a dummy for now
                     resolver.getNewResolver(newContext.clone()).onResolveEffect(world, new BlockHitResult(new Vec3(pos.getX(), pos.getY(), pos.getZ()), Direction.UP, pos, false));
                 }

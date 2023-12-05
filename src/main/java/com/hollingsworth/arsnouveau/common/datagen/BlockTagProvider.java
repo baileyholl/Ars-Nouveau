@@ -166,7 +166,11 @@ public class BlockTagProvider extends BlockTagsProvider {
                 Blocks.BROWN_MUSHROOM_BLOCK,
                 Blocks.RED_MUSHROOM_BLOCK,
                 Blocks.SHROOMLIGHT,
-                Blocks.WARPED_WART_BLOCK, Blocks.NETHER_WART_BLOCK);
+                Blocks.WARPED_WART_BLOCK, Blocks.NETHER_WART_BLOCK,
+                Blocks.CACTUS,
+                Blocks.SUGAR_CANE,
+                Blocks.CHORUS_FLOWER,
+                Blocks.CHORUS_PLANT);
         this.tag(WHIRLISPRIG_KINDA_LIKES);
 
         this.tag(MAGIC_SAPLINGS).add(
@@ -252,7 +256,6 @@ public class BlockTagProvider extends BlockTagsProvider {
 
         this.tag(IGNORE_TILE).add(
                 BlockRegistry.INTANGIBLE_AIR,
-                BlockRegistry.REDSTONE_AIR,
                 BlockRegistry.MAGE_BLOCK,
                 BlockRegistry.SCONCE_BLOCK,
                 BlockRegistry.LIGHT_BLOCK,
