@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "Vị trí đặt.",
   "ars_nouveau.dominion_wand.position_stored": "Đã lưu trữ: %s",
   "ars_nouveau.dominion_wand.stored_entity": "Thực thể được lưu trữ",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "Đèn động bị tắt.",
   "ars_nouveau.dynamic_lights.button_on": "Đèn động được bật. Điều này có thể gây ra độ trễ cho người dùng có CPU yếu hơn, phân bổ RAM thấp và kết quả không mong muốn với các mod 'hiệu suất' như Optifine.",
   "ars_nouveau.earth_essence.tooltip": "Có thể sử dụng trên Dirt để biến nó thành Grass.",
