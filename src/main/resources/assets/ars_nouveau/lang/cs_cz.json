@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "Poloha nastavena.",
   "ars_nouveau.dominion_wand.position_stored": "Uloženo: %s",
   "ars_nouveau.dominion_wand.stored_entity": "Uložená entita",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "Dynamická světla jsou vypnutá.",
   "ars_nouveau.dynamic_lights.button_on": "Dynamická světla jsou zapnuta. To může způsobit zpoždění u uživatelů se slabšími CPU, nízkou alokací RAM a neočekávanými výsledky s „výkonovými“ mody, jako je Optifine.",
   "ars_nouveau.earth_essence.tooltip": "Může být použit na špínu a proměnit ji v trávu.",
