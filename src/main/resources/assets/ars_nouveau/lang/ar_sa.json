@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "مجموعة الموقف.",
   "ars_nouveau.dominion_wand.position_stored": "مُخزَّن: %s",
   "ars_nouveau.dominion_wand.stored_entity": "كيان مخزّن",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "تم إطفاء الأضواء الديناميكية.",
   "ars_nouveau.dynamic_lights.button_on": "الأضواء الديناميكية مضاءة. يمكن أن يتسبب هذا في تأخر المستخدمين الذين لديهم وحدات معالجة مركزية أضعف ، وتخصيص منخفض لذاكرة الوصول العشوائي ، ونتائج غير متوقعة مع تعديلات \"الأداء\" مثل Optifine.",
   "ars_nouveau.earth_essence.tooltip": "يمكن استخدامه على الأوساخ لتحويله إلى عشب.",
