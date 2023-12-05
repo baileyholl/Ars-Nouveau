@@ -155,6 +155,7 @@
   "ars_nouveau.dominion_wand.position_set": "Posizione impostata.",
   "ars_nouveau.dominion_wand.position_stored": "Archiviato: %s",
   "ars_nouveau.dominion_wand.stored_entity": "Entità archiviata",
+  "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
   "ars_nouveau.dynamic_lights.button_off": "Le luci dinamiche sono spente.",
   "ars_nouveau.dynamic_lights.button_on": "Le luci dinamiche sono accese. Ciò può causare ritardi per gli utenti con CPU più deboli, bassa allocazione della RAM e risultati imprevisti con mod di \"prestazioni\" come Optifine.",
   "ars_nouveau.earth_essence.tooltip": "Può essere usato su Dirt per trasformarlo in Grass.",
