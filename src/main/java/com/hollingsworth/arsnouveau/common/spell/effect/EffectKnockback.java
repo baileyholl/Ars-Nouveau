@@ -30,9 +30,9 @@ public class EffectKnockback extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-
         float strength = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
-        knockback(rayTraceResult.getEntity(), shooter, strength);
+        Vec3 fromPosition = spellStats.hasBuff(AugmentExtract.INSTANCE) ? shooter.position : previousPosition(resolver);
+        knockback(rayTraceResult.getEntity(), fromPosition, strength);
         rayTraceResult.getEntity().hurtMarked = true;
 
     }
@@ -42,19 +42,35 @@ public class EffectKnockback extends AbstractEffect {
         if (spellStats.isSensitive()) return;
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
         float strength = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
+        Vec3 fromPosition = spellStats.hasBuff(AugmentExtract.INSTANCE) ? shooter.position : previousPosition(resolver);
 
         for (BlockPos p : posList) {
             EnchantedFallingBlock fallingBlock = EnchantedFallingBlock.fall(world, p, shooter, spellContext, resolver, spellStats);
             if (fallingBlock != null) {
-                knockback(fallingBlock, shooter, strength);
+                knockback(fallingBlock, fromPosition, strength);
                 ShapersFocus.tryPropagateEntitySpell(fallingBlock, world, shooter, spellContext, resolver);
             }
         }
     }
 
+    public Vec3 previousPosition(SpellResolver resolver){
+        if(resolver.previousResolver != null){
+            return resolver.previousResolver.hitResult.getLocation();
+        }
+        return resolver.spellContext.getUnwrappedCaster().position();
+    }
+
+
+    @Deprecated
     public void knockback(Entity target, LivingEntity shooter, float strength) {
         knockback(target, strength, Mth.sin(shooter.yRot * ((float) Math.PI / 180F)), -Mth.cos(shooter.yRot * ((float) Math.PI / 180F)));
     }
+
+    public void knockback(Entity target, Vec3 fromPos, float strength) {
+        Vec3 diff = fromPos.subtract(target.position).normalize();
+        knockback(target, strength, diff.x, diff.z);
+    }
+
 
     public void knockback(Entity entity, double strength, double xRatio, double zRatio) {
         if (entity instanceof LivingEntity living)
@@ -82,12 +98,12 @@ public class EffectKnockback extends AbstractEffect {
    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentSensitive.INSTANCE);
+        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentSensitive.INSTANCE, AugmentExtract.INSTANCE);
     }
 
     @Override
     public String getBookDescription() {
-        return "Knocks a target or block away a short distance from the caster. Sensitive will stop this spell from launching blocks.";
+        return "Knocks a target or block away a short distance from the spell. Sensitive will stop this spell from launching blocks. Extract will make always knockback from the caster instead. ";
     }
 
    @NotNull
