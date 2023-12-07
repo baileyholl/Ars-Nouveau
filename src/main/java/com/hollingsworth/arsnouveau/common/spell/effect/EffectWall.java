@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityWallSpell;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
@@ -24,7 +25,7 @@ public class EffectWall extends AbstractEffect {
 
     private EffectWall() {
         super(GlyphLib.EffectWallId, "Wall");
-        ContextSpellValidator.RegisterContextCreator(this);
+        ArsNouveauAPI.RegisterContextCreator(this);
     }
 
     @Override

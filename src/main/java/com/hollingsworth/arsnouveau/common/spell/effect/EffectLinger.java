@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityLingeringSpell;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
@@ -20,7 +21,7 @@ public class EffectLinger extends AbstractEffect {
 
     private EffectLinger() {
         super(GlyphLib.EffectLingerID, "Linger");
-        ContextSpellValidator.RegisterContextCreator(this);
+        ArsNouveauAPI.RegisterContextCreator(this);
     }
 
     @Override

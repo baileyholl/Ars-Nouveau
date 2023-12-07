@@ -1,9 +1,11 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.common.spell.validation.ContextSpellValidator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -89,12 +91,21 @@ public class SpellContext implements Cloneable {
 
     public SpellContext popContext(boolean filterPassed){
         Spell remainder = getRemainingSpell();
+        int depth = 0;
         for(AbstractSpellPart spellPart : remainder.recipe){
+            //check some escape contexts might be popping other contexts, not ours
+            if(ArsNouveauAPI.IsContextCreator(spellPart)){
+                depth +=1;
+            }
             if(spellPart instanceof IContextManipulator manipulator){
-                SpellContext newContext = manipulator.manipulate(this,filterPassed);
-                if(newContext != null){
-                    newContext.previousContext = this;
-                    return newContext;
+                depth -=1;
+                //actually pop the current context
+                if(depth <= 0) {
+                    SpellContext newContext = manipulator.manipulate(this, filterPassed);
+                    if (newContext != null) {
+                        newContext.previousContext = this;
+                        return newContext;
+                    }
                 }
             }
         }

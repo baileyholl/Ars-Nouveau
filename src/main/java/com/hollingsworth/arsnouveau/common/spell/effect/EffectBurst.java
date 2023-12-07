@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
@@ -28,7 +29,7 @@ public class EffectBurst extends AbstractEffect {
 
     public EffectBurst(String tag, String description) {
         super(tag, description);
-        ContextSpellValidator.RegisterContextCreator(this);
+        ArsNouveauAPI.RegisterContextCreator(this);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.spell.validation.ContextSpellValidator;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,7 +18,7 @@ public class EffectElse extends AbstractEffect implements IContextManipulator {
     public static EffectElse INSTANCE = new EffectElse();
     public EffectElse() {
         super("else", "Else");
-        ContextSpellValidator.RegisterContextCreator(this);
+        ArsNouveauAPI.RegisterContextCreator(this);
     }
 
     @Override

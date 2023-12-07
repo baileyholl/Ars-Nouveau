@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.PotionIngredient;
 import com.hollingsworth.arsnouveau.api.scrying.IScryer;
+import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
+import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellValidator;
 import com.hollingsworth.arsnouveau.common.mixin.PotionRecipeMixin;
 import com.hollingsworth.arsnouveau.common.spell.validation.StandardSpellValidator;
@@ -55,6 +57,16 @@ public class ArsNouveauAPI {
 
     public Set<RecipeType<? extends IEnchantingRecipe>> getEnchantingRecipeTypes() {
         return enchantingRecipeTypes;
+    }
+
+    private static ConcurrentHashMap.KeySetView<AbstractEffect, Boolean> contextCreators = ConcurrentHashMap.newKeySet();
+
+    public static void RegisterContextCreator(AbstractEffect context){
+        contextCreators.add(context);
+    }
+
+    public static boolean IsContextCreator(AbstractSpellPart part){
+        return part instanceof AbstractEffect effect ? contextCreators.contains(effect) : false;
     }
 
 

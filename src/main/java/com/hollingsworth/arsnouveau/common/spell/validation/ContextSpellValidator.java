@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.validation;
 
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import net.minecraft.resources.ResourceLocation;
@@ -10,11 +11,6 @@ import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ContextSpellValidator extends ScanningSpellValidator<Stack<AbstractEffect>> {
-    private static ConcurrentHashMap.KeySetView<AbstractEffect, Boolean> set = ConcurrentHashMap.newKeySet();
-
-    public static void RegisterContextCreator(AbstractEffect context){
-        set.add(context);
-    }
     @Override
     protected Stack<AbstractEffect> initContext() {
         return new Stack<AbstractEffect>();
@@ -61,7 +57,7 @@ public class ContextSpellValidator extends ScanningSpellValidator<Stack<Abstract
             }
 
             //push after validating so a glyph can be an invalid nesting with itself
-            if (set.contains(effect)){
+            if (ArsNouveauAPI.IsContextCreator(effect)){
                 context.push(effect);//push context onto the stack
             }
         }
