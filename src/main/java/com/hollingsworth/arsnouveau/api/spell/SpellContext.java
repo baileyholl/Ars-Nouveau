@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -98,7 +99,11 @@ public class SpellContext implements Cloneable {
             }
         }
         setCanceled(true);
-        return this;
+        Spell newSpell = filterPassed ? this.getRemainingSpell() : this.getSpell().clone().setRecipe(new ArrayList<>());
+        SpellContext newContext = this.clone().withSpell(newSpell);
+        newContext.previousContext = this;
+        this.setCanceled(true);
+        return newContext;
     }
 
     public boolean hasNextPart() {
@@ -196,6 +201,12 @@ public class SpellContext implements Cloneable {
             clone.type = this.type;
             clone.level = this.level;
             clone.wrappedCaster = this.wrappedCaster;
+            /*
+            LoggerContext.getContext().getLogger(SpellContext.class).info("previous context:"+previousContext);
+            if(previousContext != null){
+                LoggerContext.getContext().getLogger(SpellContext.class).info("previous context spell:"+previousContext.getSpell().serialize().toString());
+            }
+             */
             clone.previousContext = this.previousContext == null ? null : this.previousContext.clone();
             return clone;
         } catch (CloneNotSupportedException e) {

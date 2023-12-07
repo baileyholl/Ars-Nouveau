@@ -47,6 +47,11 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
      */
     public SpellPartConfigUtil.ComboLimits invalidCombinations = new SpellPartConfigUtil.ComboLimits(null);
 
+    /**
+     * A wrapper for the list of glyphs that cannot be used with this glyph. Parsed from configs.
+     */
+    public SpellPartConfigUtil.ComboLimits invalidNestings = new SpellPartConfigUtil.ComboLimits(null);
+
     public AbstractSpellPart(String registryName, String name) {
         this(new ResourceLocation(ArsNouveau.MODID, registryName), name);
     }
@@ -196,6 +201,10 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         this.invalidCombinations = SpellPartConfigUtil.buildInvalidCombosConfig(builder, defaults);
     }
 
+    protected void buildInvalidNestingsConfig(ForgeConfigSpec.Builder builder, Set<ResourceLocation> defaults) {
+        this.invalidCombinations = SpellPartConfigUtil.buildInvalidCombosConfig(builder, defaults);
+    }
+
     /**
      * Override this method to provide defaults for the augmentation limits configuration.
      */
@@ -215,8 +224,13 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         addDefaultInvalidCombos(defaults);
         return defaults;
     }
-
+    protected Set<ResourceLocation> getDefaultInvalidNestings(Set<ResourceLocation> defaults) {
+        addDefaultInvalidNestings(defaults);
+        return defaults;
+    }
     protected void addDefaultInvalidCombos(Set<ResourceLocation> defaults) {
+    }
+    protected void addDefaultInvalidNestings(Set<ResourceLocation> defaults) {
     }
 
     // Default value for the starter spell config

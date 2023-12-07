@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
+import com.hollingsworth.arsnouveau.common.spell.validation.ContextSpellValidator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -27,6 +28,7 @@ public class EffectBurst extends AbstractEffect {
 
     public EffectBurst(String tag, String description) {
         super(tag, description);
+        ContextSpellValidator.RegisterContextCreator(this);
     }
 
     @Override
@@ -54,7 +56,7 @@ public class EffectBurst extends AbstractEffect {
             for (BlockPos pos : BlockPos.withinManhattan(center, radius, radius, radius)) {
                 if (Sphere.test(BlockUtil.distanceFromCenter(pos, center))) {
                     pos = pos.immutable();
-                    SpellResolver resolver1 = resolver.getNewResolver(newContext.clone().withParent(spellContext));
+                    SpellResolver resolver1 = resolver.getNewResolver(newContext);
                     resolver1.previousResolver = resolver;
                     //TODO it needs a direction, UP as a dummy for now
                     resolver1.onResolveEffect(world, new BlockHitResult(new Vec3(pos.getX(), pos.getY(), pos.getZ()), Direction.UP, pos, false));
@@ -63,7 +65,7 @@ public class EffectBurst extends AbstractEffect {
         } else {
             for (LivingEntity entity : world.getEntitiesOfClass(LivingEntity.class, new AABB(center).inflate(radius, radius, radius))) {
                 if (Sphere.test(BlockUtil.distanceFromCenter(entity.blockPosition(), center))) {
-                    SpellResolver resolver1 = resolver.getNewResolver(newContext.clone().withParent(spellContext));
+                    SpellResolver resolver1 = resolver.getNewResolver(newContext);
                     resolver1.previousResolver = resolver;
                     resolver1.onResolveEffect(world, new EntityHitResult(entity));
                 }
@@ -74,7 +76,7 @@ public class EffectBurst extends AbstractEffect {
     @Override
     public void buildConfig(ForgeConfigSpec.Builder builder) {
         super.buildConfig(builder);
-        PER_SPELL_LIMIT = builder.comment("The maximum number of times this glyph may appear in a single spell").defineInRange("per_spell_limit", 1, 1, 1);
+        //PER_SPELL_LIMIT = builder.comment("The maximum number of times this glyph may appear in a single spell").defineInRange("per_spell_limit", 1, 1, 1);
     }
 
     @Override
@@ -93,7 +95,7 @@ public class EffectBurst extends AbstractEffect {
     }
 
     @Override
-    protected void addDefaultInvalidCombos(Set<ResourceLocation> defaults) {
+    protected void addDefaultInvalidNestings(Set<ResourceLocation> defaults) {
         defaults.add(EffectLinger.INSTANCE.getRegistryName());
         defaults.add(EffectWall.INSTANCE.getRegistryName());
     }

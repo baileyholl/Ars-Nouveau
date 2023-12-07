@@ -17,6 +17,7 @@ public class ServerConfig {
     public static ForgeConfigSpec.DoubleValue GLYPH_REGEN_BONUS;
     public static ForgeConfigSpec.BooleanValue ENFORCE_AUGMENT_CAP_ON_CAST;
     public static ForgeConfigSpec.BooleanValue ENFORCE_GLYPH_LIMIT_ON_CAST;
+    public static ForgeConfigSpec.BooleanValue ENFORCE_NESTING_LIMITS_ON_CAST;
     public static ForgeConfigSpec.IntValue CODEX_COST_PER_GLYPH;
     public static ForgeConfigSpec.BooleanValue ENABLE_WARP_PORTALS;
 
@@ -43,6 +44,8 @@ public class ServerConfig {
         ENFORCE_AUGMENT_CAP_ON_CAST = SERVER_BUILDER.comment("Enforce augment cap on casting? Turn this off if you are a pack maker and want to create more powerful items than players.")
                 .define("enforceCapOnCast", true);
         ENFORCE_GLYPH_LIMIT_ON_CAST = SERVER_BUILDER.comment("Enforce glyph per spell limit on casting? Turn this off if you are a pack maker and want to create more powerful items than players.")
+                .define("enforceGlyphLimitOnCast", true);
+        ENFORCE_NESTING_LIMITS_ON_CAST = SERVER_BUILDER.comment("Enforce nesting limits on cast? Turn this off if you are a pack maker and want to create more powerful items than players.")
                 .define("enforceGlyphLimitOnCast", true);
         SERVER_BUILDER.pop().push("item");
         CODEX_COST_PER_GLYPH = SERVER_BUILDER.comment("Cost per glyph in a codex").defineInRange("codexCost", 10, 0, Integer.MAX_VALUE);

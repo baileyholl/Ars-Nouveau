@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityWallSpell;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import com.hollingsworth.arsnouveau.common.spell.validation.ContextSpellValidator;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,18 +24,19 @@ public class EffectWall extends AbstractEffect {
 
     private EffectWall() {
         super(GlyphLib.EffectWallId, "Wall");
+        ContextSpellValidator.RegisterContextCreator(this);
     }
 
     @Override
     public void onResolve(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Vec3 hit = safelyGetHitPos(rayTraceResult);
         EntityWallSpell entityWallSpell = new EntityWallSpell(world, shooter);
-        spellContext.setCanceled(true);
+        //spellContext.setCanceled(true);
         if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
 
-        Spell newSpell = spellContext.getRemainingSpell();
-        SpellContext newContext = spellContext.clone().withSpell(newSpell);
+        //Spell newSpell = spellContext.getRemainingSpell();
+        SpellContext newContext = resolver.spellContext.popContext(true);
 
         entityWallSpell.setAoe((float) spellStats.getAoeMultiplier());
         entityWallSpell.setSensitive(spellStats.isSensitive());
@@ -74,14 +76,14 @@ public class EffectWall extends AbstractEffect {
     }
 
     @Override
-    protected void addDefaultInvalidCombos(Set<ResourceLocation> defaults) {
+    protected void addDefaultInvalidNestings(Set<ResourceLocation> defaults) {
         defaults.add(EffectLinger.INSTANCE.getRegistryName());
     }
 
     @Override
     public void buildConfig(ForgeConfigSpec.Builder builder) {
         super.buildConfig(builder);
-        PER_SPELL_LIMIT = builder.comment("The maximum number of times this glyph may appear in a single spell").defineInRange("per_spell_limit", 1, 1, 1);
+        //PER_SPELL_LIMIT = builder.comment("The maximum number of times this glyph may appear in a single spell").defineInRange("per_spell_limit", 1, 1, 1);
     }
 
     @NotNull

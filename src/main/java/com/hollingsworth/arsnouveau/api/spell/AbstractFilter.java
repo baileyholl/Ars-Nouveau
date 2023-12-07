@@ -8,6 +8,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -45,7 +46,7 @@ public abstract class AbstractFilter extends AbstractEffect implements IFilter {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         boolean succeeded = shouldResolveOnBlock(rayTraceResult, world);
         SpellContext newContext = spellContext.popContext(succeeded);
-        SpellResolver resolver1 = resolver.getNewResolver(newContext.clone().withParent(spellContext));
+        SpellResolver resolver1 = resolver.getNewResolver(newContext);
         resolver1.previousResolver = resolver;
         resolver1.onResolveEffect(world, rayTraceResult);
     }
