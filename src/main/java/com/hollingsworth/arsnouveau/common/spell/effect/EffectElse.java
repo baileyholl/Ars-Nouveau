@@ -21,11 +21,11 @@ public class EffectElse extends AbstractEffect implements IContextManipulator {
     }
 
     @Override
-    public EscapeResult CanEscape(AbstractEffect effect){
-        if(effect instanceof AbstractFilter) {
-            return EscapeResult.ESCAPE;
+    public boolean CanEscape(AbstractEffect effect){
+        if(effect instanceof IFilter) {
+            return true;
         }
-        return EscapeResult.ERROR;
+        return false;
     }
 
     @Override

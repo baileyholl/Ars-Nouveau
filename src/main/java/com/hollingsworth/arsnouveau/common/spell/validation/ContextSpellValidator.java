@@ -29,13 +29,11 @@ public class ContextSpellValidator extends ScanningSpellValidator<Stack<Abstract
                     validationErrors.add(new EmptyManipulationSpellValidationError(position, effect));
                 }
                 else {
-                    IContextManipulator.EscapeResult result = manip.CanEscape(context.peek());
-                    if (result == IContextManipulator.EscapeResult.ESCAPE) {
+                    if (manip.CanEscape(context.peek())) {
                         context.pop();
-                    } else if (result == IContextManipulator.EscapeResult.ERROR) {
+                    } else{
                         validationErrors.add(new InvalidManipulationSpellValidationError(position, effect, context.peek()));
                     }
-                    //otherwise we ignore the context
                 }
             }
 

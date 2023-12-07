@@ -1,9 +1,8 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 public interface IContextManipulator {
-    enum EscapeResult{ESCAPE, IGNORE, ERROR}
-    default EscapeResult CanEscape(AbstractEffect effect){
-        return EscapeResult.ESCAPE;
+    default boolean CanEscape(AbstractEffect effect){
+        return true;
     }
     SpellContext manipulate(SpellContext context, boolean filterSucceeded);
 }
