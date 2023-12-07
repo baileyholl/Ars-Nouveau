@@ -98,5 +98,6 @@ public class EffectBurst extends AbstractEffect {
     protected void addDefaultInvalidNestings(Set<ResourceLocation> defaults) {
         defaults.add(EffectLinger.INSTANCE.getRegistryName());
         defaults.add(EffectWall.INSTANCE.getRegistryName());
+        defaults.add(EffectBurst.INSTANCE.getRegistryName());
     }
 }

@@ -377,6 +377,9 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.spell.validation.exists.augment_compatibility", "%s cannot be augmented by %s");
         add("ars_nouveau.spell.validation.exists.glyph_tier", "%s is too powerful for your current spell book.");
         add("ars_nouveau.spell.validation.exists.invalid_combination_policy", "%s cannot be used with %s");
+        add("ars_nouveau.spell.validation.exists.invalid_nesting_policy", "%s cannot be nested with %s");
+        add("ars_nouveau.spell.validation.exists.empty_manipulation", "%s has no context to pop");
+        add("ars_nouveau.spell.validation.exists.invalid_manipulation", "%s cannot pop %s");
         add("ars_nouveau.spell.validation.adding._comment", "__ These messages appear when attempting to add a glyph that would make a spell invalid. __");
         add("ars_nouveau.spell.validation.adding.non_empty_spell", "The spell may not be empty.");
         add("ars_nouveau.spell.validation.adding.max_one_cast_method", "The spell already has a form glyph.");
@@ -386,6 +389,9 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.spell.validation.adding.glyph_occurrences_policy", "%s has appeared its maximum number of times.");
         add("ars_nouveau.spell.validation.adding.augment_compatibility", "%s cannot be augmented by %s");
         add("ars_nouveau.spell.validation.adding.invalid_combination_policy", "%s cannot be used with %s");
+        add("ars_nouveau.spell.validation.adding.invalid_nesting_policy", "%s cannot be nested with %s");
+        add("ars_nouveau.spell.validation.adding.empty_manipulation", "%s has no context to pop");
+        add("ars_nouveau.spell.validation.adding.invalid_manipulation", "%s cannot pop %s");
         add("ars_nouveau.spell.validation.adding.glyph_tier", "%s is too powerful for your current spell book.");
         add("ars_nouveau.spell.no_mana", "Not enough Mana.");
         add("block.ars_nouveau.potion_jar", "Potion Jar");

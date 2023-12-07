@@ -78,6 +78,7 @@ public class EffectWall extends AbstractEffect {
     @Override
     protected void addDefaultInvalidNestings(Set<ResourceLocation> defaults) {
         defaults.add(EffectLinger.INSTANCE.getRegistryName());
+        defaults.add(EffectWall.INSTANCE.getRegistryName());
     }
 
     @Override

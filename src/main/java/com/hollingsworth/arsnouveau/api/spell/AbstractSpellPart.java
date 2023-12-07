@@ -202,7 +202,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     }
 
     protected void buildInvalidNestingsConfig(ForgeConfigSpec.Builder builder, Set<ResourceLocation> defaults) {
-        this.invalidCombinations = SpellPartConfigUtil.buildInvalidCombosConfig(builder, defaults);
+        this.invalidNestings = SpellPartConfigUtil.buildInvalidNestingsConfig(builder, defaults);
     }
 
     /**

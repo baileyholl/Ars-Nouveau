@@ -116,6 +116,15 @@ public class SpellPartConfigUtil {
         return new ComboLimits(configValue);
     }
 
+    public static ComboLimits buildInvalidNestingsConfig(ForgeConfigSpec.Builder builder, Set<ResourceLocation> defaults) {
+        ForgeConfigSpec.ConfigValue<List<? extends String>> configValue = builder
+                .comment("Prevents the given glyph from being nested in the other glyph's context, and vice versa.", "Glyphs such as Linger should include themselves to avoid lag issues.")
+                .comment("Example entry: \"" + GlyphLib.EffectBurstID + "\"")
+                .defineList("invalid_nestings", writeComboConfig(defaults), (o) -> o instanceof String s && ResourceLocation.isValidResourceLocation(s));
+
+        return new ComboLimits(configValue);
+    }
+
     /**
      * Produces a list of resourcelocation strings suitable for saving to the configuration.
      */

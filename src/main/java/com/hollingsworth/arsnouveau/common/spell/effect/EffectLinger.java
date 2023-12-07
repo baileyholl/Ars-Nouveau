@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.common.entity.EntityLingeringSpell;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.validation.ContextSpellValidator;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
@@ -75,5 +76,10 @@ public class EffectLinger extends AbstractEffect {
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);
+    }
+
+    @Override
+    protected void addDefaultInvalidNestings(Set<ResourceLocation> defaults) {
+        defaults.add(EffectLinger.INSTANCE.getRegistryName());
     }
 }
