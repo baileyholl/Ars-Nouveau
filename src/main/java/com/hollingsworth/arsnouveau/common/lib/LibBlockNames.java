@@ -162,6 +162,7 @@ public class LibBlockNames {
     public static final String ITEM_DETECTOR = "item_detector";
 
     public static final String SPELL_SENSOR = "spell_sensor";
+    public static final String REDSTONE_RELAY = "redstone_relay";
 
 
     public static final String[] DECORATIVE_SOURCESTONE = new String[]{

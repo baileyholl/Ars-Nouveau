@@ -129,7 +129,6 @@ public class BlockRegistry {
         }
     });
     public static RegistryWrapper<BlockEntityType<EnchantedTurretTile>> ENCHANTED_SPELL_TURRET_TYPE = registerTile(LibBlockNames.ENCHANTED_SPELL_TURRET, EnchantedTurretTile::new, ENCHANTED_SPELL_TURRET);
-    public static RegistryWrapper<RedstoneAir> REDSTONE_AIR = registerBlock(LibBlockNames.REDSTONE_AIR, RedstoneAir::new);
     public static RegistryWrapper<IntangibleAirBlock> INTANGIBLE_AIR = registerBlock(LibBlockNames.INTANGIBLE_AIR, IntangibleAirBlock::new);
     public static RegistryWrapper<BlockEntityType<IntangibleAirTile>> INTANGIBLE_AIR_TYPE = registerTile(LibBlockNames.INTANGIBLE_AIR, IntangibleAirTile::new, INTANGIBLE_AIR);
     public static RegistryWrapper<VolcanicSourcelinkBlock> VOLCANIC_BLOCK = registerBlockAndItem(LibBlockNames.VOLCANIC_SOURCELINK, VolcanicSourcelinkBlock::new);
@@ -318,6 +317,8 @@ public class BlockRegistry {
     public static final RegistryWrapper<TemporaryBlock> TEMPORARY_BLOCK = registerBlock(LibBlockNames.TEMPORARY_BLOCK, () -> new TemporaryBlock(BlockBehaviour.Properties.of().strength(1.5F, 6.0F).sound(SoundType.STONE)));
     public static final RegistryWrapper<ItemDetector> ITEM_DETECTOR = registerBlockAndItem(LibBlockNames.ITEM_DETECTOR, ItemDetector::new);
     public static RegistryWrapper<SpellSensor> SPELL_SENSOR = registerBlockAndItem(LibBlockNames.SPELL_SENSOR, SpellSensor::new);
+    public static RegistryWrapper<RedstoneRelay> REDSTONE_RELAY = registerBlockAndItem(LibBlockNames.REDSTONE_RELAY, RedstoneRelay::new);
+
     public static final RegistryWrapper<BlockEntityType<RitualBrazierTile>> RITUAL_TILE = registerTile(LibBlockNames.RITUAL_BRAZIER, RitualBrazierTile::new, RITUAL_BLOCK);
     public static final RegistryWrapper<BlockEntityType<BrazierRelayTile>> BRAZIER_RELAY_TILE = registerTile(LibBlockNames.BRAZIER_RELAY, BrazierRelayTile::new, BRAZIER_RELAY);
     public static final RegistryWrapper<BlockEntityType<SkyBlockTile>> SKYWEAVE_TILE = registerTile(LibBlockNames.SKY_WEAVE, SkyBlockTile::new, SKY_WEAVE);
@@ -325,6 +326,8 @@ public class BlockRegistry {
     public static final RegistryWrapper<BlockEntityType<CraftingLecternTile>> CRAFTING_LECTERN_TILE = registerTile(LibBlockNames.STORAGE_LECTERN, CraftingLecternTile::new, CRAFTING_LECTERN);
     public static final RegistryWrapper<BlockEntityType<ItemDetectorTile>> ITEM_DETECTOR_TILE = registerTile(LibBlockNames.ITEM_DETECTOR, ItemDetectorTile::new, ITEM_DETECTOR);
     public static final RegistryWrapper<BlockEntityType<SpellSensorTile>> SPELL_SENSOR_TILE = registerTile(LibBlockNames.SPELL_SENSOR, SpellSensorTile::new, SPELL_SENSOR);
+    public static final RegistryWrapper<BlockEntityType<RedstoneRelayTile>> REDSTONE_RELAY_TILE = registerTile(LibBlockNames.REDSTONE_RELAY, RedstoneRelayTile::new, REDSTONE_RELAY);
+
 
     public static void onBlocksRegistry(final IForgeRegistry<Block> registry) {
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
