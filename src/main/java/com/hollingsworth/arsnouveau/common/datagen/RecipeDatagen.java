@@ -722,7 +722,14 @@ public class RecipeDatagen extends RecipeProvider {
             shapelessBuilder(BlockRegistry.ROTATING_TURRET).requires(BlockRegistry.BASIC_SPELL_TURRET).save(consumer);
             shapelessBuilder(BlockRegistry.BASIC_SPELL_TURRET).requires(BlockRegistry.ROTATING_TURRET).save(consumer, new ResourceLocation(ArsNouveau.MODID, "rotating_turret_to_basic_spell_turret"));
             shapelessBuilder(ItemsRegistry.STARBUNCLE_SHARD).requires(ItemsRegistry.STARBUNCLE_SHARD).save(consumer, new ResourceLocation(ArsNouveau.MODID, "wipe_starby_shard"));
-
+            ShapedRecipeBuilder.shaped(BlockRegistry.REDSTONE_RELAY).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
+                    .pattern("gxg")
+                    .pattern("gMg")
+                    .pattern("gxg")
+                    .define('g', Tags.Items.INGOTS_GOLD)
+                    .define('M', SOURCE_GEM_BLOCK)
+                    .define('x', Tags.Items.DUSTS_REDSTONE)
+                    .save(consumer);
         }
     }
 

@@ -1,4 +1,4 @@
-// 1.19.2	2023-10-08T11:38:50.8527483	LootTables
+// 1.19.2	2023-12-06T15:54:16.6352661	LootTables
 d2e03e3c4f0549450774454a6592cf602f65d58e data/ars_nouveau/loot_tables/blocks/agronomic_sourcelink.json
 3c10d96f7ca01306c8b28d77f99cc15aa555f0b7 data/ars_nouveau/loot_tables/blocks/alchemical_sourcelink.json
 5989e056e242a821281ec28bc1fb6225f84ecbe1 data/ars_nouveau/loot_tables/blocks/alteration_table.json
@@ -66,6 +66,7 @@ e5c7b7a7f457ae33b65fb1bb9532ab61f4ba481b data/ars_nouveau/loot_tables/blocks/pur
 7e35a4e393cef06e98c765adcdc238175e8ec24f data/ars_nouveau/loot_tables/blocks/purple_archwood_sapling.json
 75f638585094276b3d5db7e4f3998f252f0e78f1 data/ars_nouveau/loot_tables/blocks/purple_archwood_wood.json
 a4f2dc9da7652a70176866125ecd0e07b341d9d2 data/ars_nouveau/loot_tables/blocks/purple_sbed.json
+0435691eeeff941949ab6a63049742bd683e77c7 data/ars_nouveau/loot_tables/blocks/redstone_relay.json
 914517252bd72356c8b6f19bfbcc4a39617b77c6 data/ars_nouveau/loot_tables/blocks/red_archwood_leaves.json
 75621e5ff34058055f594d106b6e07e8b1a9754f data/ars_nouveau/loot_tables/blocks/red_archwood_log.json
 1b49807282b3af24bd9325f1aefc033f84df251f data/ars_nouveau/loot_tables/blocks/red_archwood_sapling.json
