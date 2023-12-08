@@ -1,4 +1,4 @@
-// 1.19.2	2023-10-08T11:38:50.8434138	Recipes
+// 1.19.2	2023-12-05T17:29:01.760146	Recipes
 2f8defc056cb514d0403c026bd216faabe8c59b5 data/ars_nouveau/advancements/recipes/ars_nouveau/agronomic_sourcelink.json
 5b27f030ed9411ac9c3b4a160363aee9e4fd7454 data/ars_nouveau/advancements/recipes/ars_nouveau/alchemical_sourcelink.json
 24b2148fcda9c3b3704f9625a7d00338b764f512 data/ars_nouveau/advancements/recipes/ars_nouveau/allow_scroll.json
@@ -86,6 +86,7 @@ f1b46c17da2cf5ec51a9af42f72ae951da4ef48f data/ars_nouveau/advancements/recipes/a
 a1450919fc90500eaae50edf62407e39701734f8 data/ars_nouveau/advancements/recipes/ars_nouveau/potion_jar_empty.json
 d0a79e95647bf80ac724abc298b4d5318b568154 data/ars_nouveau/advancements/recipes/ars_nouveau/purple_archwood_wood.json
 6770c9bc4fef39551293db2b349a57c0e6b39abe data/ars_nouveau/advancements/recipes/ars_nouveau/purple_sbed.json
+d7f4f79077ec6ebf0422f21dc710d44d8dd3a393 data/ars_nouveau/advancements/recipes/ars_nouveau/redstone_relay.json
 30dc882fa6bc1904e3b72106fd37706cb908a4c2 data/ars_nouveau/advancements/recipes/ars_nouveau/red_archwood_wood.json
 012462f35c9cab2f8a9dcbba68ae18a05ddc6f1c data/ars_nouveau/advancements/recipes/ars_nouveau/red_sbed.json
 e7d7ca983f4c71f3c9ae4d74f7aa47e11d5a4489 data/ars_nouveau/advancements/recipes/ars_nouveau/relay.json
@@ -375,6 +376,7 @@ f47d197b91ca53888d96cbc4dd68477e9d61891c data/ars_nouveau/recipes/potion_jar.jso
 ce9ef9c8857bbad25ba94aee3590ad2c91905429 data/ars_nouveau/recipes/potion_jar_empty.json
 cd006e5d6e5fa401905d9b19e4af9616e5642859 data/ars_nouveau/recipes/purple_archwood_wood.json
 a4e0550928c57aa0943f3de4fc5150d55d49608f data/ars_nouveau/recipes/purple_sbed.json
+f6718e22ddc52094f28d6af821af3cf356f3eafd data/ars_nouveau/recipes/redstone_relay.json
 badba223d8002324908a62d3070eed01f8a1eb07 data/ars_nouveau/recipes/red_archwood_wood.json
 167c00572d8e719ab29d63b5ab2f62de087b49db data/ars_nouveau/recipes/red_sbed.json
 6440bd871d37cbb26e0afc535a0291ab9f0ce9f9 data/ars_nouveau/recipes/relay.json

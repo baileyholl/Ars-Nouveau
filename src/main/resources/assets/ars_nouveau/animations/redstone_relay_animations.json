@@ -11,11 +11,8 @@
 							"vector": [0, 0, 0]
 						},
 						"10.4": {
-							"vector": [0, -360, 0]
+							"vector": [0, 360, 0]
 						}
-					},
-					"position": {
-						"vector": [0, "math.sin(query.anim_time*60)*0.50", 0]
 					}
 				}
 			}
