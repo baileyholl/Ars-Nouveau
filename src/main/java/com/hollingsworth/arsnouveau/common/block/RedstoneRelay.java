@@ -44,6 +44,11 @@ public class RedstoneRelay extends TickableModBlock implements EntityBlock {
     }
 
     @Override
+    public boolean isSignalSource(BlockState pState) {
+        return true;
+    }
+
+    @Override
     public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos, boolean pIsMoving) {
         super.neighborChanged(pState, pLevel, pPos, pBlock, pFromPos, pIsMoving);
         updatePower(pLevel, pPos, pState);
