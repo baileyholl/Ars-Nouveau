@@ -96,7 +96,7 @@ public class GuiSpellBook extends BaseBook {
         maxManaCache = ManaUtil.getMaxMana(Minecraft.getInstance().player);
         parts.addAll(api.getDefaultStartingSpells());
         if (heldStack.getItem() == ItemsRegistry.CREATIVE_SPELLBOOK.get())
-            parts = new ArrayList<>(ArsNouveauAPI.getInstance().getSpellpartMap().values());
+            parts = new ArrayList<>(ArsNouveauAPI.getInstance().getSpellpartMap().values().stream().filter(AbstractSpellPart::shouldShowInSpellBook).toList());
         int tier = 1;
         if(heldStack.getItem() instanceof SpellBook book){
             tier = book.getTier().value;
