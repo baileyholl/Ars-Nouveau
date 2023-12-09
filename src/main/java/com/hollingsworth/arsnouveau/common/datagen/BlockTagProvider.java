@@ -258,7 +258,6 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
 
         this.tag(IGNORE_TILE).add(
                 BlockRegistry.INTANGIBLE_AIR.get(),
-                BlockRegistry.REDSTONE_AIR.get(),
                 BlockRegistry.MAGE_BLOCK.get(),
                 BlockRegistry.GOLD_SCONCE_BLOCK.get(),
                 BlockRegistry.LIGHT_BLOCK.get(),

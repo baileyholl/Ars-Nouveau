@@ -342,6 +342,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.warp_scroll.recorded", "You record your location to your Warp Scroll.");
         add("ars_nouveau.warp_scroll.no_location", "Use while sneaking to set a location.");
         add("ars_nouveau.wand.spell_invalid", "Invalid Spell.");
+        add("ars_nouveau.drygmy.blacklist", "Drygmy Blacklisted");
         add("ars_nouveau.starbuncle.store", "Starbuncle will store items here.");
         add("ars_nouveau.starbuncle.take", "Starbuncle take from this inventory.");
         add("ars_nouveau.starbuncle.whitelist", "Whitelisted: ");
@@ -1254,6 +1255,10 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.no_stack_crafting", "No valid craft nearby.");
         add("item.ars_nouveau.jump_ring", "Ring of Jumping");
         add("ars_nouveau.page1.jump_ring", "Allows the user to continue jumping in the air. Each jump will expend mana.");
+        add("ars_nouveau.connections.remove", "Connection removed.");
+        add("ars_nouveau.powered_from", "Receiving signal from %d relays");
+        add("block.ars_nouveau.redstone_relay", "Redstone Relay");
+        add("ars_nouveau.page1.redstone_relay", "Can be connected to other Redstone Relays to wirelessly send a redstone signal. Takes input from one side and outputs in all other directions. Can be connected within 30 blocks of another relay, and multiple relays can be connected.");
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             String key = "block.ars_nouveau." + s;
             String val = data.get(key);
