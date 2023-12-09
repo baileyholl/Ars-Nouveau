@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
 import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.common.items.summon_charms.BookwyrmCharm;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -23,7 +22,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -48,13 +46,8 @@ public class CraftingLecternBlock extends TickableModBlock {
 		return PushReaction.BLOCK;
 	}
 
-	@NotNull
-	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext p_196258_1_) {
-		Direction direction = p_196258_1_.getHorizontalDirection().getOpposite();
-		BlockPos blockpos = p_196258_1_.getClickedPos();
-		BlockPos blockpos1 = blockpos.relative(direction);
-		return p_196258_1_.getLevel().getBlockState(blockpos1).canBeReplaced(p_196258_1_) ? this.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, direction) : this.defaultBlockState();
+	public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+		return this.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, pContext.getHorizontalDirection().getOpposite());
 	}
 
 	@Override
