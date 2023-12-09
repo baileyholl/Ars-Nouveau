@@ -1,10 +1,12 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
+import com.hollingsworth.arsnouveau.common.spell.validation.ContextSpellValidator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -27,6 +29,7 @@ public class EffectBurst extends AbstractEffect {
 
     public EffectBurst(String tag, String description) {
         super(tag, description);
+        ArsNouveauAPI.RegisterContextCreator(this);
     }
 
     @Override
@@ -47,7 +50,7 @@ public class EffectBurst extends AbstractEffect {
     public void makeSphere(BlockPos center, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
 //        spellContext.setCanceled(true);
         if (spellContext.getRemainingSpell().isEmpty()) return;
-        SpellContext newContext = resolver.spellContext.popContext();
+        SpellContext newContext = resolver.spellContext.popContext(true);
         int radius = (int) (1 + spellStats.getAoeMultiplier());
         Predicate<Double> Sphere = spellStats.hasBuff(AugmentDampen.INSTANCE) ? (distance) -> distance <= radius + 0.5 && distance >= radius - 0.5 : (distance) -> (distance <= radius + 0.5);
         if (spellStats.isSensitive()) {

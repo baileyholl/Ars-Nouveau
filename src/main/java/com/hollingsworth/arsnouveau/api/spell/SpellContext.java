@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.common.spell.validation.ContextSpellValidator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -87,7 +89,7 @@ public class SpellContext implements Cloneable {
         return part;
     }
 
-    public SpellContext popContext(){
+    public SpellContext popContext(boolean filterPassed){
         Spell remainder = getRemainingSpell();
         int depth = 0;
         for(AbstractSpellPart spellPart : remainder.recipe){
@@ -99,7 +101,7 @@ public class SpellContext implements Cloneable {
                 depth -=1;
                 //actually pop the current context
                 if(depth <= 0) {
-                    SpellContext newContext = manipulator.manipulate(this);
+                    SpellContext newContext = manipulator.manipulate(this, filterPassed);
                     if (newContext != null) {
                         newContext.previousContext = this;
                         return newContext;
@@ -108,18 +110,15 @@ public class SpellContext implements Cloneable {
             }
         }
         setCanceled(true);
-        return this;
+        Spell newSpell = filterPassed ? this.getRemainingSpell() : this.getSpell().clone().setRecipe(new ArrayList<>());
+        SpellContext newContext = this.clone().withSpell(newSpell);
+        newContext.previousContext = this;
+        this.setCanceled(true);
+        return newContext;
     }
 
     public boolean hasNextPart() {
         return spell.isValid() && !isCanceled() && currentIndex < spell.recipe.size();
-    }
-
-    public @Nullable AbstractSpellPart canceledAt(){
-        if(isCanceled && currentIndex > 0){
-            return spell.recipe.get(currentIndex - 1);
-        }
-        return null;
     }
 
     public SpellContext resetCastCounter() {
@@ -180,28 +179,8 @@ public class SpellContext implements Cloneable {
         return isCanceled;
     }
 
-    /**
-     * Sets isCanceled calls {@link AbstractSpellPart#onContextCanceled(SpellContext)} for all remaining spell parts if canceled is true.
-     * @param canceled The new canceled state.
-     * @return The new canceled state after the spell parts have been notified if canceled was true.
-     */
-    public boolean setCanceled(boolean canceled) {
+    public void setCanceled(boolean canceled) {
         isCanceled = canceled;
-        if(isCanceled) {
-            Spell remainder = getRemainingSpell();
-            for (AbstractSpellPart spellPart : remainder.recipe) {
-                spellPart.onContextCanceled(this);
-            }
-        }
-        return isCanceled;
-    }
-
-    /**
-     * Sets isCanceled to true without the side effects of {@link SpellContext#setCanceled(boolean)}.
-     * This is used for abrupt termination of a spell. setCanceled should be used whenever possible.
-     */
-    public void stop(){
-        this.isCanceled = true;
     }
 
     public @NotNull Spell getSpell() {

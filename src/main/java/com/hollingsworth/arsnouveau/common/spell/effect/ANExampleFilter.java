@@ -1,7 +1,10 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractFilter;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.spell.validation.ContextSpellValidator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobType;
@@ -15,6 +18,7 @@ public class ANExampleFilter extends AbstractFilter {
 
     public ANExampleFilter(String registryName, String name) {
         super(new ResourceLocation(ArsNouveau.MODID, registryName), name);
+        ArsNouveauAPI.RegisterContextCreator(this);
     }
 
     @Override
