@@ -1,7 +1,8 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 public interface IContextManipulator {
-
-
-    SpellContext manipulate(SpellContext context);
+    default boolean CanEscape(AbstractEffect effect){
+        return true;
+    }
+    SpellContext manipulate(SpellContext context, boolean filterSucceeded);
 }

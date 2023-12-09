@@ -1,9 +1,11 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.common.spell.validation.ContextSpellValidator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -11,6 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -86,19 +89,32 @@ public class SpellContext implements Cloneable {
         return part;
     }
 
-    public SpellContext popContext(){
+    public SpellContext popContext(boolean filterPassed){
         Spell remainder = getRemainingSpell();
+        int depth = 0;
         for(AbstractSpellPart spellPart : remainder.recipe){
+            //check some escape contexts might be popping other contexts, not ours
+            if(ArsNouveauAPI.IsContextCreator(spellPart)){
+                depth +=1;
+            }
             if(spellPart instanceof IContextManipulator manipulator){
-                SpellContext newContext = manipulator.manipulate(this);
-                if(newContext != null){
-                    newContext.previousContext = this;
-                    return newContext;
+                depth -=1;
+                //actually pop the current context
+                if(depth <= 0) {
+                    SpellContext newContext = manipulator.manipulate(this, filterPassed);
+                    if (newContext != null) {
+                        newContext.previousContext = this;
+                        return newContext;
+                    }
                 }
             }
         }
         setCanceled(true);
-        return this;
+        Spell newSpell = filterPassed ? this.getRemainingSpell() : this.getSpell().clone().setRecipe(new ArrayList<>());
+        SpellContext newContext = this.clone().withSpell(newSpell);
+        newContext.previousContext = this;
+        this.setCanceled(true);
+        return newContext;
     }
 
     public boolean hasNextPart() {
@@ -196,6 +212,12 @@ public class SpellContext implements Cloneable {
             clone.type = this.type;
             clone.level = this.level;
             clone.wrappedCaster = this.wrappedCaster;
+            /*
+            LoggerContext.getContext().getLogger(SpellContext.class).info("previous context:"+previousContext);
+            if(previousContext != null){
+                LoggerContext.getContext().getLogger(SpellContext.class).info("previous context spell:"+previousContext.getSpell().serialize().toString());
+            }
+             */
             clone.previousContext = this.previousContext == null ? null : this.previousContext.clone();
             return clone;
         } catch (CloneNotSupportedException e) {

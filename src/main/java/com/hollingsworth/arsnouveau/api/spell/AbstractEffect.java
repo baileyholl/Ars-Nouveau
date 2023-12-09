@@ -141,6 +141,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         buildAugmentCostOverrideConfig(builder, defaultAugmentCosts);
         super.buildAugmentLimitsConfig(builder, getDefaultAugmentLimits(new HashMap<>()));
         super.buildInvalidCombosConfig(builder, getDefaultInvalidCombos(new HashSet<>()));
+        super.buildInvalidNestingsConfig(builder, getDefaultInvalidNestings(new HashSet<>()));
     }
 
     public void addDamageConfig(ForgeConfigSpec.Builder builder, double defaultValue) {
