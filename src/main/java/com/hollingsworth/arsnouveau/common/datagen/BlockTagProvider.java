@@ -84,7 +84,8 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.POTION_DIFFUSER,
                 BlockRegistry.MOB_JAR,
                 BlockRegistry.VOID_PRISM,
-                BlockRegistry.BRAZIER_RELAY.get()
+                BlockRegistry.BRAZIER_RELAY.get(),
+                BlockRegistry.REDSTONE_RELAY.get()
         );
 
         this.tag(BlockTags.MINEABLE_WITH_AXE).add(

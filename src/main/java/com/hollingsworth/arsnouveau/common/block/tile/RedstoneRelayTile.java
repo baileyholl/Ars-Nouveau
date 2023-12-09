@@ -101,10 +101,13 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
 
     protected void setNewPower(int power){
         this.currentPower = power;
+        if(!level.getBlockState(worldPosition).hasProperty(BlockRegistry.REDSTONE_RELAY.get().POWER))
+            return;
         this.level.setBlock(worldPosition, level.getBlockState(worldPosition).setValue(BlockRegistry.REDSTONE_RELAY.get().POWER, power), 3);
         updateBlock();
         level.updateNeighborsAt(worldPosition, BlockRegistry.REDSTONE_RELAY.get());
         updateListeners();
+
     }
 
     @Override
