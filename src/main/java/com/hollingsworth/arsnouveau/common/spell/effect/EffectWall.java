@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityWallSpell;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
-import com.hollingsworth.arsnouveau.common.spell.validation.ContextSpellValidator;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,7 +24,6 @@ public class EffectWall extends AbstractEffect {
 
     private EffectWall() {
         super(GlyphLib.EffectWallId, "Wall");
-        ArsNouveauAPI.RegisterContextCreator(this);
     }
 
     @Override
@@ -37,7 +35,7 @@ public class EffectWall extends AbstractEffect {
             return;
 
         //Spell newSpell = spellContext.getRemainingSpell();
-        SpellContext newContext = resolver.spellContext.popContext(true);
+        SpellContext newContext = resolver.spellContext.popContext();
 
         entityWallSpell.setAoe((float) spellStats.getAoeMultiplier());
         entityWallSpell.setSensitive(spellStats.isSensitive());

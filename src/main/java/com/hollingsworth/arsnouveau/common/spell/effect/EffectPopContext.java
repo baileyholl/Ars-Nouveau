@@ -32,24 +32,11 @@ public class EffectPopContext extends AbstractEffect implements IContextManipula
     }
 
     @Override
-    public SpellContext manipulate(SpellContext context, boolean passedFilter) {
+    public SpellContext manipulate(SpellContext context) {
         Spell remainder = context.getRemainingSpell();
         int index = remainder.recipe.indexOf(EffectPopContext.INSTANCE);
-
-        SpellContext newContext;
-
-        if(passedFilter){
-            //regular inner context
-            newContext = context.clone().withSpell(remainder.clone().setRecipe(new ArrayList<>(remainder.recipe.subList(0, index))));
-        }
-        else{
-            //didn't pass filter so send empty context
-            newContext = context.clone().withSpell(new Spell());
-            newContext.setCanceled(true);
-        }
-
-        //since index comes from the remaining spell, it is an offset on the total index
-        context.setCurrentIndex(context.getCurrentIndex() + index + 1);
+        SpellContext newContext = context.clone().withSpell(remainder.clone().setRecipe(new ArrayList<>(remainder.recipe.subList(0, index))));
+        context.setCurrentIndex(index + 1);
         return newContext;
     }
 }

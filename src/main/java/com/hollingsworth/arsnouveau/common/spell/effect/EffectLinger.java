@@ -1,11 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityLingeringSpell;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
-import com.hollingsworth.arsnouveau.common.spell.validation.ContextSpellValidator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -21,7 +19,6 @@ public class EffectLinger extends AbstractEffect {
 
     private EffectLinger() {
         super(GlyphLib.EffectLingerID, "Linger");
-        ArsNouveauAPI.RegisterContextCreator(this);
     }
 
     @Override
@@ -33,7 +30,7 @@ public class EffectLinger extends AbstractEffect {
         if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
         //Spell newSpell = spellContext.getRemainingSpell();
-        SpellContext newContext = resolver.spellContext.popContext(true);
+        SpellContext newContext = resolver.spellContext.popContext();
         entityLingeringSpell.setAoe((float) spellStats.getAoeMultiplier());
         entityLingeringSpell.setSensitive(spellStats.isSensitive());
         entityLingeringSpell.setAccelerates((int) spellStats.getAccMultiplier());
