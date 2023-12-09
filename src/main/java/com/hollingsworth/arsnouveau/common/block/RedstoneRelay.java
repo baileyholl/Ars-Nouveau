@@ -14,7 +14,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class RedstoneRelay extends TickableModBlock implements EntityBlock {
@@ -102,13 +101,8 @@ public class RedstoneRelay extends TickableModBlock implements EntityBlock {
         return new RedstoneRelayTile(pPos, pState);
     }
 
-    @NotNull
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext p_196258_1_) {
-        Direction direction = p_196258_1_.getHorizontalDirection().getOpposite();
-        BlockPos blockpos = p_196258_1_.getClickedPos();
-        BlockPos blockpos1 = blockpos.relative(direction);
-        return p_196258_1_.getLevel().getBlockState(blockpos1).canBeReplaced(p_196258_1_) ? this.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, direction) : this.defaultBlockState();
+    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+        return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getOpposite());
     }
 
     @Override
