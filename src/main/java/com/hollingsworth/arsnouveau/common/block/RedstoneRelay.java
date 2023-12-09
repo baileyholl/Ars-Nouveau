@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class RedstoneRelay extends TickableModBlock implements EntityBlock {
-    public static final DirectionProperty FACING = DirectionalBlock.FACING;
+    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
 
     public RedstoneRelay(){
@@ -104,8 +104,11 @@ public class RedstoneRelay extends TickableModBlock implements EntityBlock {
 
     @NotNull
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
+    public BlockState getStateForPlacement(BlockPlaceContext p_196258_1_) {
+        Direction direction = p_196258_1_.getHorizontalDirection().getOpposite();
+        BlockPos blockpos = p_196258_1_.getClickedPos();
+        BlockPos blockpos1 = blockpos.relative(direction);
+        return p_196258_1_.getLevel().getBlockState(blockpos1).canBeReplaced(p_196258_1_) ? this.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, direction) : this.defaultBlockState();
     }
 
     @Override
@@ -114,11 +117,11 @@ public class RedstoneRelay extends TickableModBlock implements EntityBlock {
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
+        return state.setValue(HorizontalDirectionalBlock.FACING, rot.rotate(state.getValue(HorizontalDirectionalBlock.FACING)));
     }
 
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(HorizontalDirectionalBlock.FACING)));
     }
 
     @Override

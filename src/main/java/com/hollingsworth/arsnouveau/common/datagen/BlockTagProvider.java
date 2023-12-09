@@ -86,7 +86,8 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.POTION_DIFFUSER.get(),
                 BlockRegistry.MOB_JAR.get(),
                 BlockRegistry.VOID_PRISM.get(),
-                BlockRegistry.BRAZIER_RELAY.get()
+                BlockRegistry.BRAZIER_RELAY.get(),
+                BlockRegistry.REDSTONE_RELAY.get()
         );
 
         this.tag(BlockTags.MINEABLE_WITH_AXE).add(
