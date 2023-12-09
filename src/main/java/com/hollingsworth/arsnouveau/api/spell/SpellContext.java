@@ -98,7 +98,10 @@ public class SpellContext implements Cloneable {
             }
         }
         setCanceled(true);
-        return this;
+        //todo: feel free to discard the changes in this file if it conflicts with the other PR
+        //I only changed this to prevent a stack overflow from it being it's own parent
+        //but PLEASE PLEASE PLEASE use the other better PR which supports filters and stuff
+        return this.clone().withSpell(this.getRemainingSpell());
     }
 
     public boolean hasNextPart() {
