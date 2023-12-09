@@ -111,13 +111,6 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
     @Override
     public boolean updateBlock() {
         return super.updateBlock();
-//        if(level != null) {
-//            BlockState state = level.getBlockState(worldPosition);
-//            level.sendBlockUpdated(worldPosition, state, state, 3);
-//            setChanged();
-//            return true;
-//        }
-//        return false;
     }
 
     public void updateListeners(){
@@ -156,7 +149,6 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
             } else {
                 this.poweredFrom.add(storedPos);
             }
-//            calculateNewPower();
             updateListeners = true;
             updateBlock();
         }
@@ -181,7 +173,6 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
                 this.powering.add(storedPos);
                 ParticleUtil.beam(storedPos, worldPosition, level);
             }
-//            calculateNewPower();
             updateListeners = true;
             updateBlock();
         } else {
