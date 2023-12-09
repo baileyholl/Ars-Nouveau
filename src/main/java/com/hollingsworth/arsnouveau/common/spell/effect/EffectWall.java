@@ -29,12 +29,10 @@ public class EffectWall extends AbstractEffect {
     public void onResolve(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Vec3 hit = safelyGetHitPos(rayTraceResult);
         EntityWallSpell entityWallSpell = new EntityWallSpell(world, shooter);
-        spellContext.setCanceled(true);
         if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
 
-        Spell newSpell = spellContext.getRemainingSpell();
-        SpellContext newContext = spellContext.clone().withSpell(newSpell);
+        SpellContext newContext = resolver.spellContext.popContext();
 
         entityWallSpell.setAoe((float) spellStats.getAoeMultiplier());
         entityWallSpell.setSensitive(spellStats.isSensitive());
@@ -45,7 +43,7 @@ public class EffectWall extends AbstractEffect {
 
         Direction facingDirection = spellContext.getCaster().getFacingDirection();
         entityWallSpell.setDirection(facingDirection == UP || facingDirection == DOWN ? facingDirection : facingDirection.getClockWise());
-        entityWallSpell.spellResolver = new SpellResolver(newContext);
+        entityWallSpell.spellResolver = resolver.getNewResolver(newContext);
         entityWallSpell.setPos(hit.x, hit.y, hit.z);
         entityWallSpell.setColor(spellContext.getColors());
         world.addFreshEntity(entityWallSpell);

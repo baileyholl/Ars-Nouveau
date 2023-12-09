@@ -86,13 +86,17 @@ public class SpellContext implements Cloneable {
         return part;
     }
 
-    public SpellContext popContext(){
+    /**
+     * Checks the remainder of the spell for a context manipulator and returns a new context if one is found. The current running context is not canceled by default.
+     * If no manipulator is found, the current context is canceled and returned.
+     */
+    public @NotNull SpellContext popContext(){
         Spell remainder = getRemainingSpell();
         for(AbstractSpellPart spellPart : remainder.recipe){
             if(spellPart instanceof IContextManipulator manipulator){
                 SpellContext newContext = manipulator.manipulate(this);
                 if(newContext != null){
-                    newContext.previousContext = this;
+                    newContext.withParent(this);
                     return newContext;
                 }
             }

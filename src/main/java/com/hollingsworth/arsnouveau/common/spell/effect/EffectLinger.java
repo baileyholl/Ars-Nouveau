@@ -25,17 +25,16 @@ public class EffectLinger extends AbstractEffect {
         super.onResolve(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
         Vec3 hit = safelyGetHitPos(rayTraceResult);
         EntityLingeringSpell entityLingeringSpell = new EntityLingeringSpell(world, shooter);
-        spellContext.setCanceled(true);
         if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
-        Spell newSpell = spellContext.getRemainingSpell();
-        SpellContext newContext = spellContext.clone().withSpell(newSpell);
+
+        SpellContext newContext = resolver.spellContext.popContext();
         entityLingeringSpell.setAoe((float) spellStats.getAoeMultiplier());
         entityLingeringSpell.setSensitive(spellStats.isSensitive());
         entityLingeringSpell.setAccelerates((int) spellStats.getAccMultiplier());
         entityLingeringSpell.extendedTime = spellStats.getDurationMultiplier();
         entityLingeringSpell.setShouldFall(!spellStats.hasBuff(AugmentDampen.INSTANCE));
-        entityLingeringSpell.spellResolver = new SpellResolver(newContext);
+        entityLingeringSpell.spellResolver = resolver.getNewResolver(newContext);
         entityLingeringSpell.setPos(hit.x, hit.y, hit.z);
         entityLingeringSpell.setColor(spellContext.getColors());
         world.addFreshEntity(entityLingeringSpell);
