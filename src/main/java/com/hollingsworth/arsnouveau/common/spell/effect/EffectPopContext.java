@@ -35,8 +35,13 @@ public class EffectPopContext extends AbstractEffect implements IContextManipula
     public SpellContext manipulate(SpellContext context) {
         Spell remainder = context.getRemainingSpell();
         int index = remainder.recipe.indexOf(EffectPopContext.INSTANCE);
-        SpellContext newContext = context.clone().withSpell(remainder.clone().setRecipe(new ArrayList<>(remainder.recipe.subList(0, index))));
+        SpellContext newContext = context.clone().withSpell(remainder.setRecipe(new ArrayList<>(remainder.recipe.subList(0, index))));
         context.setCurrentIndex(index + 1);
         return newContext;
+    }
+
+    @Override
+    public boolean shouldPushContext(SpellContext context) {
+        return true;
     }
 }

@@ -32,7 +32,7 @@ public class EffectWall extends AbstractEffect {
         if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
 
-        SpellContext newContext = resolver.spellContext.popContext();
+        SpellContext newContext = resolver.spellContext.makeChildContext();
 
         entityWallSpell.setAoe((float) spellStats.getAoeMultiplier());
         entityWallSpell.setSensitive(spellStats.isSensitive());

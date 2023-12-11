@@ -27,7 +27,7 @@ public class EffectRune extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = rayTraceResult.getBlockPos();
         pos = rayTraceResult.isInside() ? pos : pos.relative((rayTraceResult).getDirection());
-        SpellContext newContext = resolver.spellContext.popContext();
+        SpellContext newContext = resolver.spellContext.makeChildContext();
         if (world.getBlockState(pos).canBeReplaced()) {
             if(!world.isInWorldBounds(pos))
                 return;
