@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.client.gui.book.InfiniteUi;
 import com.hollingsworth.arsnouveau.common.entity.debug.IDebuggerProvider;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -12,6 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.commons.io.output.FileWriterWithEncoding;
 
 import java.io.File;
@@ -29,6 +32,11 @@ public class Debug extends ModItem {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
+        if(!FMLEnvironment.production){
+            if(pPlayer.level.isClientSide){
+                Minecraft.getInstance().setScreen(new InfiniteUi());
+            }
+        }
         if(!pPlayer.level.isClientSide && pInteractionTarget instanceof IDebuggerProvider iDebuggerProvider){
             try {
                 // Write the file
