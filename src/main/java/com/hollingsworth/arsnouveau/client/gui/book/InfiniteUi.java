@@ -1,15 +1,21 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.google.common.collect.Maps;
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.spell.effect.EffectHarm;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.advancements.AdvancementTab;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 import javax.annotation.Nullable;
 import java.util.Map;
+import java.util.Objects;
 
 public class InfiniteUi extends BaseBook{
 
@@ -35,6 +41,13 @@ public class InfiniteUi extends BaseBook{
     private AdvancementTab selectedTab;
     private boolean isScrolling;
     private static int tabPage, maxPages;
+    private double scrollX;
+    private double scrollY;
+    private int minX = Integer.MAX_VALUE;
+    private int minY = Integer.MAX_VALUE;
+    private int maxX = Integer.MIN_VALUE;
+    private int maxY = Integer.MIN_VALUE;
+    public GlyphNode root;
 
     public InfiniteUi() {
         super();
@@ -43,6 +56,7 @@ public class InfiniteUi extends BaseBook{
     public void init() {
         this.tabs.clear();
         this.selectedTab = null;
+        this.root = new GlyphNode(null, 0, 0, MethodProjectile.INSTANCE.glyphItem.getDefaultInstance());
 //        if (this.selectedTab == null && !this.tabs.isEmpty()) {
 //            this.advancements.setSelectedTab(this.tabs.values().iterator().next().getAdvancement(), true);
 //        } else {
@@ -57,6 +71,10 @@ public class InfiniteUi extends BaseBook{
 //                    .pos(guiLeft + WINDOW_WIDTH - 20, guiTop - 50).size(20, 20).build());
 //            maxPages = this.tabs.size() / AdvancementTabType.MAX_TABS;
 //        }
+        this.addNode(this.root);
+        GlyphNode node = new GlyphNode(this.root, 20, 0, EffectHarm.INSTANCE.glyphItem.getDefaultInstance());
+        root.addChild(node);
+        this.addNode(node);
     }
 
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
@@ -84,8 +102,8 @@ public class InfiniteUi extends BaseBook{
             int width = this.font.width(page);
             pGuiGraphics.drawString(this.font, page.getVisualOrderText(), i + (252 / 2) - (width / 2), j - 44, -1);
         }
-        this.renderInside(pGuiGraphics, pMouseX, pMouseY, i, j);
-        this.renderWindow(pGuiGraphics, i, j);
+        this.renderInside(pGuiGraphics, pMouseX, pMouseY, i + 9, j + 18);
+//        this.renderWindow(pGuiGraphics, i, j);
         this.renderTooltips(pGuiGraphics, pMouseX, pMouseY, i, j);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
     }
@@ -97,24 +115,55 @@ public class InfiniteUi extends BaseBook{
         } else {
             if (!this.isScrolling) {
                 this.isScrolling = true;
-            } else if (this.selectedTab != null) {
-                this.selectedTab.scroll(pDragX, pDragY);
+            } else {
+                if (this.maxX - this.minX > 234) {
+                    this.scrollX = Mth.clamp(this.scrollX + pDragX, (double)(-(this.maxX - 234)), 0.0D);
+                }
+
+                if (this.maxY - this.minY > 113) {
+                    this.scrollY = Mth.clamp(this.scrollY + pDragY, (double)(-(this.maxY - 113)), 0.0D);
+                }
             }
 
             return true;
         }
     }
 
-    private void renderInside(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, int pOffsetX, int pOffsetY) {
-        AdvancementTab advancementtab = this.selectedTab;
-        if (advancementtab == null) {
-            pGuiGraphics.fill(pOffsetX + 9, pOffsetY + 18, pOffsetX + 9 + 234, pOffsetY + 18 + 113, -16777216);
-            int i = pOffsetX + 9 + 117;
-            pGuiGraphics.drawCenteredString(this.font, NO_ADVANCEMENTS_LABEL, i, pOffsetY + 18 + 56 - 9 / 2, -1);
-            pGuiGraphics.drawCenteredString(this.font, VERY_SAD_LABEL, i, pOffsetY + 18 + 113 - 9, -1);
-        } else {
-            advancementtab.drawContents(pGuiGraphics, pOffsetX + 9, pOffsetY + 18);
-        }
+    private void renderInside(GuiGraphics pGuiGraphics, int mouseX, int mouseY, int pX, int pY) {
+//        AdvancementTab advancementtab = this.selectedTab;
+//        if (advancementtab == null) {
+//            pGuiGraphics.fill(pOffsetX + 9, pOffsetY + 18, pOffsetX + 9 + 234, pOffsetY + 18 + 113, -16777216);
+//            int i = pOffsetX + 9 + 117;
+//            pGuiGraphics.drawCenteredString(this.font, NO_ADVANCEMENTS_LABEL, i, pOffsetY + 18 + 56 - 9 / 2, -1);
+//            pGuiGraphics.drawCenteredString(this.font, VERY_SAD_LABEL, i, pOffsetY + 18 + 113 - 9, -1);
+//        } else {
+//            if (!this.centered) {
+//                this.scrollX = (double)(117 - (this.maxX + this.minX) / 2);
+//                this.scrollY = (double)(56 - (this.maxY + this.minY) / 2);
+//                this.centered = true;
+//            }
+
+            pGuiGraphics.enableScissor(pX, pY, pX + 234, pY + 113);
+            pGuiGraphics.pose().pushPose();
+            pGuiGraphics.pose().translate((float)pX, (float)pY, 0.0F);
+            ResourceLocation resourcelocation = Objects.requireNonNullElse(new ResourceLocation(ArsNouveau.MODID, "textures/gui/advancements/backgrounds/sourcestone.png"), TextureManager.INTENTIONAL_MISSING_TEXTURE);
+            int i = Mth.floor(this.scrollX);
+            int j = Mth.floor(this.scrollY);
+            int k = i % 16;
+            int l = j % 16;
+
+            for(int i1 = -1; i1 <= 15; ++i1) {
+                for(int j1 = -1; j1 <= 8; ++j1) {
+                    pGuiGraphics.blit(resourcelocation, k + 16 * i1, l + 16 * j1, 0.0F, 0.0F, 16, 16, 16, 16);
+                }
+            }
+
+            this.root.drawConnectivity(pGuiGraphics, i, j, true);
+            this.root.drawConnectivity(pGuiGraphics, i, j, false);
+            this.root.draw(pGuiGraphics, i, j);
+            pGuiGraphics.pose().popPose();
+            pGuiGraphics.disableScissor();
+//        }
     }
 
     public void renderWindow(GuiGraphics pGuiGraphics, int pOffsetX, int pOffsetY) {
@@ -154,4 +203,22 @@ public class InfiniteUi extends BaseBook{
         }
 
     }
+
+    private void addNode(GlyphNode pWidget) {
+//        this.widgets.put(pAdvancement, pWidget);
+        int i = pWidget.getX();
+        int j = i + 28;
+        int k = pWidget.getY();
+        int l = k + 27;
+        this.minX = Math.min(this.minX, i);
+        this.maxX = Math.max(this.maxX, j);
+        this.minY = Math.min(this.minY, k);
+        this.maxY = Math.max(this.maxY, l);
+
+//        for(AdvancementWidget advancementwidget : this.widgets.values()) {
+//            advancementwidget.attachToParent();
+//        }
+
+    }
+
 }

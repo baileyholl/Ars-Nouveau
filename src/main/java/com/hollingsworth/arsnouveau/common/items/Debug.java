@@ -32,11 +32,6 @@ public class Debug extends ModItem {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
-        if(!FMLEnvironment.production){
-            if(pPlayer.level.isClientSide){
-                Minecraft.getInstance().setScreen(new InfiniteUi());
-            }
-        }
         if(!pPlayer.level.isClientSide && pInteractionTarget instanceof IDebuggerProvider iDebuggerProvider){
             try {
                 // Write the file
@@ -56,6 +51,11 @@ public class Debug extends ModItem {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
+        if(!FMLEnvironment.production){
+            if(context.getPlayer().level.isClientSide){
+                Minecraft.getInstance().setScreen(new InfiniteUi());
+            }
+        }
         return super.useOn(context);
     }
 
