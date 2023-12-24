@@ -28,7 +28,7 @@ public class RitualScrying extends AbstractRitual {
     @Override
     protected void tick() {
 
-        ParticleUtil.spawnFallingSkyEffect(tile.ritual, tile, rand, getCenterColor().toWrapper());
+        ParticleUtil.spawnFallingSkyEffect(this, tile, rand, getCenterColor().toWrapper());
         if (getWorld().getGameTime() % 20 == 0 && !getWorld().isClientSide)
             incrementProgress();
 
