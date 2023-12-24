@@ -59,7 +59,7 @@ public class ModSetup {
         VillagerRegistry.POIs.register(modEventBus);
         VillagerRegistry.VILLAGERS.register(modEventBus);
         CreativeTabRegistry.TABS.register(modEventBus);
-
+        DataSerializers.DS.register(modEventBus);
     }
 
     public static void registerEvents(RegisterEvent event) {

@@ -94,7 +94,6 @@ public class ArsNouveau {
         Networking.registerMessages();
         event.enqueueWork(ModPotions::addRecipes);
         event.enqueueWork(ModEntities::registerPlacements);
-        event.enqueueWork(DataSerializers::init);
         if (terrablenderLoaded && Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
             event.enqueueWork(Terrablender::registerBiomes);
         }
