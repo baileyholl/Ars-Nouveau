@@ -1,6 +1,6 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "keepNbtOfReagent": false,
+  "keepNbtOfReagent": true,
   "output": {
     "item": "ars_nouveau:spell_crossbow"
   },

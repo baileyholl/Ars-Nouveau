@@ -58,8 +58,16 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
         }
         int found = 0;
         for(int i = 0; i < handler.getSlots(); i++){
-            ItemStack stack = handler.extractItem(i, 64, true);
-            found += getCountForStack(stack);
+            ItemStack ghostStack = handler.getStackInSlot(i);
+            ItemStack extractedStack = handler.extractItem(i, ghostStack.getCount(), true);
+            // This falls back to the getStack count if we attempted to extract beyond the max count.
+            // This is a workaround for inventories that support > max stack count, as you can only extract the max stack count at a time.
+            // and getStackInSlot will return counts for items that wouldn't necessarily be extractable.
+            if(ghostStack.getCount() > extractedStack.getCount() && extractedStack.getMaxStackSize() == extractedStack.getCount()){
+                found += getCountForStack(ghostStack);
+            }else{
+                found += getCountForStack(extractedStack);
+            }
             if(found > neededCount){
                 setReachedCount(true);
                 return;

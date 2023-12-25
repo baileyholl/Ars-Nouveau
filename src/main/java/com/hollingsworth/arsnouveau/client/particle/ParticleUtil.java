@@ -179,6 +179,9 @@ public class ParticleUtil {
     }
 
     public static void spawnFallingSkyEffect(AbstractRitual ritual, BlockEntity tileEntity, RandomSource rand, ParticleColor.IntWrapper color) {
+        if(ritual == null){
+            return;
+        }
         int scalar = 20;
         if (ritual.getContext().progress >= 5)
             scalar = 10;
