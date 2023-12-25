@@ -8,7 +8,6 @@ import com.hollingsworth.arsnouveau.client.events.ClientHandler;
 import com.hollingsworth.arsnouveau.client.events.TextureEvent;
 import com.hollingsworth.arsnouveau.client.gui.book.BaseBook;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
-import com.hollingsworth.arsnouveau.common.entity.DataSerializers;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
@@ -26,7 +25,6 @@ import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
@@ -123,9 +121,6 @@ public class ArsNouveau {
         Networking.registerMessages();
         event.enqueueWork(ModPotions::addRecipes);
         event.enqueueWork(ModEntities::registerPlacements);
-        event.enqueueWork(() -> {
-            EntityDataSerializers.registerSerializer(DataSerializers.VEC3);
-        });
         if (terrablenderLoaded && Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
             event.enqueueWork(Terrablender::registerBiomes);
         }

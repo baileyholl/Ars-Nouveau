@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.setup;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.client.particle.ModParticles;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
+import com.hollingsworth.arsnouveau.common.entity.DataSerializers;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.menu.MenuRegistry;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
@@ -73,6 +74,7 @@ public class ModSetup {
         MenuRegistry.MENU_REG.register(modEventBus);
         VillagerRegistry.POIs.register(modEventBus);
         VillagerRegistry.VILLAGERS.register(modEventBus);
+        DataSerializers.DS.register(modEventBus);
 
     }
 
