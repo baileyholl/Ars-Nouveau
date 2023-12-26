@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.api.item.ISpellModifierItem;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodOrbit;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -40,7 +39,6 @@ public class SummoningFocus extends ArsNouveauCurio implements ISpellModifierIte
 
     static {
         sympatheticMethods.add(MethodSelf.INSTANCE);
-        sympatheticMethods.add(MethodOrbit.INSTANCE);
     }
 
     @Override
