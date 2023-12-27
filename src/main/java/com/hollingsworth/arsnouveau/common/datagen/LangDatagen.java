@@ -132,7 +132,6 @@ public class LangDatagen extends LanguageProvider {
         add("enchantment.ars_nouveau.mana_boost", "Mana Boost");
         add("enchantment.ars_nouveau.reactive", "Reactive");
         add("enchantment.ars_nouveau.mana_regen", "Mana Regen");
-        add("item.ars_nouveau.bucket_of_source", "Source Bucket");
         add("item.ars_nouveau.magic_clay", "Magic Clay");
         add("item.ars_nouveau.marvelous_clay", "Marvelous Clay");
         add("item.ars_nouveau.mythical_clay", "Mythical Clay");
@@ -602,7 +601,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.casting_cost", "Casting Cost");
         add("ars_nouveau.tier", "Tier %s");
         add("ars_nouveau.page.agronomic_sourcelink", "The Agronomic Sourcelink generates source from crop and tree growth within 15 blocks. Bonus source is generated for magical plants such as Mageblooms, Source Berry Bushes, and Archwood Saplings. Source will be output from the Sourcelink to nearby jars within 5 blocks. Note: Bonemealing crops will not grant Source.");
-        add("ars_nouveau.page.source_jar", "Source Jars store source gathered from nearby Sourcelinks. Source is used in glyphs and rituals by powering devices like the Imbuement Chamber and Enchanting Apparatus. Source may be moved using a bucket, or the jar can be picked up and moved. To use Source in a jar, simply place the jar near your desired device. Source Jars will provide a signal to Redstone Comparators based on their fill level.");
+        add("ars_nouveau.page.source_jar", "Source Jars store source gathered from nearby Sourcelinks. Source is used in glyphs and rituals by powering devices like the Imbuement Chamber and Enchanting Apparatus. Source may be moved using a Source Relay or by breaking and moving it. To use Source in a jar, simply place the jar near your desired device. Source Jars will provide a signal to Redstone Comparators based on their fill level.");
         add("ars_nouveau.page1.volcanic_sourcelink", "The Volcanic Sourcelink generates Source by consuming burnable items. Archwood logs will generate bonus Source, with Blazing Archwood generating the most. As the Volcanic Sourcelink produces Source, it also produces $(item)heat$(), used for spawning Lava Lilies and converting stone into lava. The Volcanic Sourcelink automatically outputs to nearby jars, starting with the one closest to it.");
         add("ars_nouveau.page2.volcanic_sourcelink", "Nearby Blazing Archwood items will be burned up in exchange for a chunk of Source and a moderate amount of $(item)heat$(). The Volcanic Sourcelink will also take items from surrounding pedestals.");
         add("ars_nouveau.page3.volcanic_sourcelink", "The Volcanic Sourcelink will occasionally convert Stone into Magma Blocks, and Magma Blocks into Lava, given that these blocks exist beneath it in its 3x3 area. This conversion is dependent on the amount of $(item)heat$() it has produced over time. The Volcanic Sourcelink will also spawn a Lava Lily adjacent to it given that there is nothing covering the lava. Lava Lilys may be harvested and used for decoration.");

@@ -1,4 +1,4 @@
-// 1.20.1	2023-10-08T20:36:02.3028445	Ars Nouveau Caster Tomes Datagen
+// 1.20.1	2023-12-26T12:20:07.5217678	Ars Nouveau Caster Tomes Datagen
 7b2d5bfec3c8c3e016df01d114f69f395acf450a data/ars_nouveau/recipes/tomes/arachne_tome.json
 42abffd34f905357b1e7aa2f91214a261d1c1e4d data/ars_nouveau/recipes/tomes/aurellia_tome.json
 d8da4283859f5a0c1b49bfde99fa028fad70dffc data/ars_nouveau/recipes/tomes/bailey_tome.json
@@ -20,4 +20,4 @@ d77ebf81bb18332359b137d22714b7b88d72f0f9 data/ars_nouveau/recipes/tomes/poseidon
 cc2e31b60c7a332564f39896e553855701bf5935 data/ars_nouveau/recipes/tomes/warp_impact_tome.json
 ed1ce9465021152c439c604aa021b4722b40dedf data/ars_nouveau/recipes/tomes/xacris_2_tome.json
 75c1e8c02ab28f58f340cafe236fe4d713ac2fd4 data/ars_nouveau/recipes/tomes/xacris_tome.json
-0c966ac4456e318d326b1f7b03c2dd76a242c98b data/ars_nouveau/recipes/tomes/yeet_tome.json
+e31cdd795dd8391f347c9885061bbbb395407da9 data/ars_nouveau/recipes/tomes/yeet_tome.json

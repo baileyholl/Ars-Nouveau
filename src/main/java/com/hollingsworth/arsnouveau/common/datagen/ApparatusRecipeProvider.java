@@ -1030,6 +1030,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .build());
 
         addRecipe(builder().withResult(ItemsRegistry.SPELL_CROSSBOW)
+                .keepNbtOfReagent(true)
                 .withReagent(Items.CROSSBOW)
                 .withPedestalItem(Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
                 .withPedestalItem(ItemsRegistry.MANIPULATION_ESSENCE)

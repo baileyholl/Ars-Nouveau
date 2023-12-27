@@ -17,7 +17,7 @@
   "5a0d2794-50a3-400f-b014-b1234d198eca", "1a45aa67-e39d-48f5-a5aa-4467b9a0c0c0", "755d49f3-c7e7-4ae2-95c0-25b50954d416",
   "d600e728-1c5e-4ee8-8df7-2899465c9129", "d155b322-ff09-4c0f-9438-21ba7c572490", "bb21a5a9-4a9a-49f9-84f9-1ff375bca6bf",
   "1f470f2a-a05b-4b6b-9d84-4b62f8686e5b", "d600e728-1c5e-4ee8-8df7-2899465c9129", "43ec37c2-8b0d-4bda-9f6a-5f78c3b572d0",
-  "5a4971f3-6fb0-446e-8512-cca380ec7e85"],
+  "5a4971f3-6fb0-446e-8512-cca380ec7e85", "6859954f-e3b0-45a8-84d7-5f9e9782651f", "f24ec99c-5d9b-4815-8938-5401f5d62877"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -274,6 +274,16 @@
       "color": "lime",
       "adopter": "CJ_squared",
       "bio": "Despite his name, Elson is so brave and definitely not trembling in his tiny squirrel boots (sidenote, he is very proud of his custom made boots). He loves being in safe dark spaces (not because he's scared, it's just comfy)."
+    },{
+      "name": "Stardust",
+      "color": "light_blue",
+      "adopter": "shiranno",
+      "bio": "Found a certain place in the End. He loves flying like an elytra and enjoys doing it. He can seem to give glide effect by himself."
+    },{
+      "name": "Mega Volta",
+      "color": "cyan",
+      "adopter": "B9B",
+      "bio": "The sworn enemy of mega mindy wandering around looking for revenge. Sterre hagedoorn is her ally."
     }
   ]
 }
