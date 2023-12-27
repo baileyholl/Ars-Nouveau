@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
+import com.hollingsworth.arsnouveau.setup.registry.DataSerializers;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -22,16 +23,17 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class EntityOrbitProjectile extends EntityProjectileSpell {
-    public Entity wardedEntity;
     public int ticksLeft;
-    public static final EntityDataAccessor<Integer> OWNER_UUID = SynchedEntityData.defineId(EntityOrbitProjectile.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Vec3> LAST_POS = SynchedEntityData.defineId(EntityOrbitProjectile.class, DataSerializers.VEC.get());
     public static final EntityDataAccessor<Integer> OFFSET = SynchedEntityData.defineId(EntityOrbitProjectile.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> ACCELERATES = SynchedEntityData.defineId(EntityOrbitProjectile.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> AOE = SynchedEntityData.defineId(EntityOrbitProjectile.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Integer> TOTAL = SynchedEntityData.defineId(EntityOrbitProjectile.class, EntityDataSerializers.INT);
     public int extendTimes;
+    public boolean tracksGround; // If it should orbit the ground and hit the caster
 
     public EntityOrbitProjectile(Level worldIn, double x, double y, double z) {
         super(ModEntities.ORBIT_SPELL.get(), worldIn, x, y, z);
@@ -43,6 +45,19 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
 
     public EntityOrbitProjectile(Level world, SpellResolver resolver) {
         super(ModEntities.ORBIT_SPELL.get(), world, resolver);
+    }
+
+    public EntityOrbitProjectile(Level world, SpellResolver resolver, Entity tracking) {
+        super(ModEntities.ORBIT_SPELL.get(), world, resolver);
+        setOwner(tracking);
+        this.entityData.set(LAST_POS, tracking.position());
+    }
+
+    public EntityOrbitProjectile(Level world, SpellResolver resolver, Vec3 hitPos) {
+        super(ModEntities.ORBIT_SPELL.get(), world, resolver);
+        setOwner(null);
+        tracksGround = true;
+        this.entityData.set(LAST_POS, hitPos);
     }
 
     public EntityOrbitProjectile(EntityType<EntityOrbitProjectile> entityWardProjectileEntityType, Level world) {
@@ -93,14 +108,10 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
 
     @Override
     public void tick() {
-        Entity owner = level.getEntity(getOwnerID());
-        if (!level.isClientSide && owner == null) {
-            this.remove(RemovalReason.DISCARDED);
-            return;
-        } else if (owner == null) {
-            return;
-        }
         super.tick();
+        if(getOwner() == null){
+            this.tracksGround = true;
+        }
     }
 
     @Override
@@ -116,11 +127,27 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
     public Vec3 getAngledPosition(int nextTick) {
         double rotateSpeed = getRotateSpeed();
         double radiusMultiplier = getRadiusMultiplier();
-        Entity owner = level.getEntity(getOwnerID());
-        return new Vec3(
+        Entity owner = getOwner();
+        if(owner == null || owner.isRemoved() || tracksGround){
+            Vec3 lastVec = entityData.get(LAST_POS);
+            return new Vec3(
+                    lastVec.x() - radiusMultiplier * Math.sin(nextTick / rotateSpeed + getOffset()),
+                    lastVec.y() + (tracksGround ? 0.5 : 0), // Offset if the owner died
+                    lastVec.z() - radiusMultiplier * Math.cos(nextTick / rotateSpeed + getOffset()));
+        }
+        Vec3 lastVec = new Vec3(
                 owner.getX() - radiusMultiplier * Math.sin(nextTick / rotateSpeed + getOffset()),
                 owner.getY() + 1 - (owner.isShiftKeyDown() ? 0.25 : 0),
                 owner.getZ() - radiusMultiplier * Math.cos(nextTick / rotateSpeed + getOffset()));
+        entityData.set(LAST_POS, owner.position);
+
+        return lastVec;
+    }
+
+    @Nullable
+    @Override
+    public Entity getOwner() {
+        return this.level.getEntity(this.entityData.get(OWNER_ID));
     }
 
     @Override
@@ -138,8 +165,10 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
         if (level.isClientSide || result.getType() == HitResult.Type.MISS)
             return;
 
-        if (result.getType() == HitResult.Type.ENTITY) {
-            if (((EntityHitResult) result).getEntity().equals(this.getOwner())) return;
+        if (result instanceof EntityHitResult entityHitResult) {
+            if (entityHitResult.getEntity().equals(this.getOwner()) && !tracksGround){
+                return;
+            }
             if (this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(level, result);
                 Networking.sendToNearby(level, BlockPos.containing(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
@@ -159,11 +188,11 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(OWNER_UUID, 0);
         this.entityData.define(OFFSET, 0);
         this.entityData.define(ACCELERATES, 0);
         this.entityData.define(AOE, 0f);
         this.entityData.define(TOTAL, 0);
+        this.entityData.define(LAST_POS, Vec3.ZERO);
     }
 
     @Override
@@ -174,7 +203,10 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
         tag.putFloat("aoe", getAoe());
         tag.putInt("accelerate", getAccelerates());
         tag.putInt("total", getTotal());
-        tag.putInt("ownerID", getOwnerID());
+        tag.putDouble("lastX", entityData.get(LAST_POS).x);
+        tag.putDouble("lastY", entityData.get(LAST_POS).y);
+        tag.putDouble("lastZ", entityData.get(LAST_POS).z);
+        tag.putBoolean("canHitOwner", tracksGround);
     }
 
     @Override
@@ -184,8 +216,9 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
         setOffset(tag.getInt("offset"));
         setAoe(tag.getFloat("aoe"));
         setAccelerates(tag.getInt("accelerate"));
-        setOwnerID(tag.getInt("ownerID"));
         setTotal(tag.getInt("total"));
+        entityData.set(LAST_POS, new Vec3(tag.getDouble("lastX"), tag.getDouble("lastY"), tag.getDouble("lastZ")));
+        tracksGround = tag.getBoolean("canHitOwner");
     }
 
     @Override
@@ -200,13 +233,5 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
 
     public EntityOrbitProjectile(PlayMessages.SpawnEntity packet, Level world) {
         super(ModEntities.ORBIT_SPELL.get(), world);
-    }
-
-    public int getOwnerID() {
-        return this.getEntityData().get(OWNER_UUID);
-    }
-
-    public void setOwnerID(int uuid) {
-        this.getEntityData().set(OWNER_UUID, uuid);
     }
 }

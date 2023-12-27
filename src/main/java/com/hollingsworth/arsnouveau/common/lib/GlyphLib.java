@@ -71,7 +71,7 @@ public class GlyphLib {
     public static final String EffectHexID = prependGlyph("hex");
     public static final String MethodUnderfootID = prependGlyph("underfoot");
     public static final String EffectGlideID = prependGlyph("glide");
-    public static final String MethodOrbitID = prependGlyph("orbit");
+    public static final String EffectOrbitID = prependGlyph("orbit");
     public static final String EffectFireworkID = prependGlyph("firework");
     public static final String EffectTossID = prependGlyph("toss");
     public static final String EffectWindshearID = prependGlyph("wind_shear");

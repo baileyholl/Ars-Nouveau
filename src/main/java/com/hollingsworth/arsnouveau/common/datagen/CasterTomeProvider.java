@@ -122,7 +122,8 @@ public class CasterTomeProvider extends SimpleDataProvider {
         ));
 
         tomes.add(buildTome("yeet", "Knocked out of Orbit", new Spell()
-                .add(MethodOrbit.INSTANCE)
+                .add(MethodSelf.INSTANCE)
+                .add(EffectOrbit.INSTANCE)
                 .add(EffectLaunch.INSTANCE)
                 .add(AugmentAmplify.INSTANCE, 2)
                 .add(EffectDelay.INSTANCE)
