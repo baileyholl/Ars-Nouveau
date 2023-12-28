@@ -41,6 +41,13 @@ public class EffectPopContext extends AbstractEffect implements IContextManipula
     }
 
     @Override
+    public void onContextCanceled(SpellContext context) {
+        super.onContextCanceled(context);
+        context.setCanceled(false);
+        context.setCurrentIndex(context.getSpell().recipe.indexOf(EffectPopContext.INSTANCE) + 1);
+    }
+
+    @Override
     public boolean shouldPushContext(SpellContext context) {
         return true;
     }

@@ -62,6 +62,15 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     }
 
     /**
+     * A callback when the spell is canceled before this part had a chance to resolve.
+     * Can be changed and uncanceled by modifying this context directly.
+     * If isCanceled is not false, no more effects will resolve.
+     * Use the currentIndex to determine where a spell was canceled.
+     */
+    public void onContextCanceled(SpellContext context) {
+    }
+
+    /**
      * The default cost generated for the config.
      * This should not be used directly for calculations, but as a helper for a recommended value.
      */

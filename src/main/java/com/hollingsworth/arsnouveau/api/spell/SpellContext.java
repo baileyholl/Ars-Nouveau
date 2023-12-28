@@ -172,8 +172,28 @@ public class SpellContext implements Cloneable {
         return isCanceled;
     }
 
-    public void setCanceled(boolean canceled) {
+    /**
+     * Sets isCanceled calls {@link AbstractSpellPart#onContextCanceled(SpellContext)} for all remaining spell parts if canceled is true.
+     * @param canceled The new canceled state.
+     * @return The new canceled state after the spell parts have been notified if canceled was true.
+     */
+    public boolean setCanceled(boolean canceled) {
         isCanceled = canceled;
+        if(isCanceled) {
+            Spell remainder = getRemainingSpell();
+            for (AbstractSpellPart spellPart : remainder.recipe) {
+                spellPart.onContextCanceled(this);
+            }
+        }
+        return isCanceled;
+    }
+
+    /**
+     * Sets isCanceled to true without the side effects of {@link SpellContext#setCanceled(boolean)}.
+     * This is used for abrupt termination of a spell. setCanceled should be used whenever possible.
+     */
+    public void stop(){
+        this.isCanceled = true;
     }
 
     public @NotNull Spell getSpell() {
