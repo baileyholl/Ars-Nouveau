@@ -1,0 +1,13 @@
+{
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "exp": 27,
+  "inputItems": [
+    {
+      "item": {
+        "item": "minecraft:target"
+      }
+    }
+  ],
+  "output": "ars_nouveau:reset"
+}

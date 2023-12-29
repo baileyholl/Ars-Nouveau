@@ -22,14 +22,12 @@ public class EffectOrbit extends AbstractEffect {
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats stats, SpellContext spellContext, SpellResolver resolver) {
-        super.onResolveBlock(rayTraceResult, world, shooter, stats, spellContext, resolver);
+        if (spellContext.getRemainingSpell().isEmpty()) return;
         int total = 3 + stats.getBuffCount(AugmentSplit.INSTANCE);
+        SpellContext newContext = resolver.spellContext.makeChildContext();
+        Spell spell = newContext.getSpell();
+        spell.recipe.add(0, MethodProjectile.INSTANCE);
         spellContext.setCanceled(true);
-        if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
-            return;
-        Spell newSpell = spellContext.getRemainingSpell();
-        newSpell.recipe.add(0, MethodProjectile.INSTANCE);
-        SpellContext newContext = spellContext.clone().withSpell(newSpell);
         for (int i = 0; i < total; i++) {
             EntityOrbitProjectile wardProjectile = new EntityOrbitProjectile(world, resolver.getNewResolver(newContext), rayTraceResult.getLocation());
             wardProjectile.setOffset(i);
@@ -44,14 +42,12 @@ public class EffectOrbit extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats stats, SpellContext spellContext, SpellResolver resolver) {
-        super.onResolveEntity(rayTraceResult, world, shooter, stats, spellContext, resolver);
+        if (spellContext.getRemainingSpell().isEmpty()) return;
         int total = 3 + stats.getBuffCount(AugmentSplit.INSTANCE);
-        spellContext.setCanceled(true);
-        if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
-            return;
         Spell newSpell = spellContext.getRemainingSpell();
         newSpell.recipe.add(0, MethodProjectile.INSTANCE);
-        SpellContext newContext = spellContext.clone().withSpell(newSpell);
+        SpellContext newContext = resolver.spellContext.makeChildContext().withSpell(newSpell);
+        spellContext.setCanceled(true);
         for (int i = 0; i < total; i++) {
             EntityOrbitProjectile wardProjectile = new EntityOrbitProjectile(world, resolver.getNewResolver(newContext), rayTraceResult.getEntity());
             wardProjectile.setOffset(i);

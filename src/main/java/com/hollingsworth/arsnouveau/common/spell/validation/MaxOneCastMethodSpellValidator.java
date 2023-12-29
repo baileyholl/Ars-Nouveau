@@ -25,10 +25,6 @@ public class MaxOneCastMethodSpellValidator extends ScanningSpellValidator<MaxOn
         }
     }
 
-    @Override
-    protected void finish(OneCastContext context, List<SpellValidationError> validationErrors) {
-    }
-
     /**
      * Context for this validator is a simple counter on AbstractCastMethod parts
      */

@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.validation;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.IContextManipulator;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
+import com.hollingsworth.arsnouveau.common.spell.effect.EffectReset;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
@@ -19,7 +21,11 @@ public class GlyphOccurrencesPolicyValidator extends ScanningSpellValidator<Map<
 
     @Override
     protected void digestSpellPart(Map<ResourceLocation, Integer> partCounts, int position, AbstractSpellPart spellPart, List<SpellValidationError> validationErrors) {
-        // Count the glyph
+        if(spellPart instanceof IContextManipulator manipulator){
+            for(AbstractSpellPart resettable : manipulator.bypassOccurrenceLimitsFor()){
+                partCounts.remove(resettable.getRegistryName());
+            }
+        }
         if (partCounts.containsKey(spellPart.getRegistryName())) {
             partCounts.put(spellPart.getRegistryName(), partCounts.get(spellPart.getRegistryName()) + 1);
         } else {
@@ -29,12 +35,12 @@ public class GlyphOccurrencesPolicyValidator extends ScanningSpellValidator<Map<
         // Check if over the limit
         int limit = spellPart.PER_SPELL_LIMIT == null ? Integer.MAX_VALUE : spellPart.PER_SPELL_LIMIT.get();
         if (partCounts.getOrDefault(spellPart.getRegistryName(), 0) > limit) {
-            validationErrors.add(new GlyphOccurrencesPolicySpellValidationError(position, spellPart, limit));
+            if(EffectReset.RESET_LIMITS.contains(spellPart)){
+                validationErrors.add(new ResetableLimitSpellValidationError(position, spellPart, limit));
+            }else {
+                validationErrors.add(new GlyphOccurrencesPolicySpellValidationError(position, spellPart, limit));
+            }
         }
-    }
-
-    @Override
-    protected void finish(Map<ResourceLocation, Integer> context, List<SpellValidationError> validationErrors) {
     }
 
     private static class GlyphOccurrencesPolicySpellValidationError extends BaseSpellValidationError {
@@ -43,6 +49,18 @@ public class GlyphOccurrencesPolicyValidator extends ScanningSpellValidator<Map<
                     position,
                     part,
                     "glyph_occurrences_policy",
+                    part
+            );
+        }
+    }
+
+
+    private static class ResetableLimitSpellValidationError extends BaseSpellValidationError {
+        public ResetableLimitSpellValidationError(int position, AbstractSpellPart part, int limit) {
+            super(
+                    position,
+                    part,
+                    "glyph_occurrences_reset_policy",
                     part
             );
         }

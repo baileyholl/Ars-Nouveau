@@ -43,13 +43,12 @@ public class SpellArrow extends ArrowItem {
         if (mana == null)
             return new Arrow(world, shooter);
         EntitySpellArrow spellArrow = new EntitySpellArrow(world, shooter);
-        if (!(shooter instanceof Player entity) || !((shooter).getMainHandItem().getItem() instanceof ICasterTool))
+        if (!(shooter instanceof Player entity) || !((shooter).getMainHandItem().getItem() instanceof ICasterTool caster))
             return super.createArrow(world, stack, shooter);
-        ICasterTool caster = (ICasterTool) entity.getMainHandItem().getItem();
         ISpellCaster spellCaster = caster.getSpellCaster(entity.getMainHandItem());
         Spell spell = spellCaster.getSpell();
         modifySpell(spell);
-        spellArrow.spellResolver = new SpellResolver(new SpellContext(world, spell, entity, new PlayerCaster(entity))).withSilent(true);
+        spellArrow.spellResolver = new SpellResolver(new SpellContext(world, spell, entity, new PlayerCaster(entity), shooter.getMainHandItem())).withSilent(true);
         spellArrow.pierceLeft = spell.getBuffsAtIndex(0, shooter, AugmentPierce.INSTANCE);
         return spellArrow;
     }

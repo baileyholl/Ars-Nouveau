@@ -35,7 +35,7 @@ import java.util.List;
 
 import static com.hollingsworth.arsnouveau.api.util.ManaUtil.getPlayerDiscounts;
 
-public class SpellResolver {
+public class SpellResolver implements Cloneable {
     public AbstractCastMethod castType;
     public Spell spell;
     public SpellContext spellContext;
@@ -43,6 +43,7 @@ public class SpellResolver {
     private final ISpellValidator spellValidator;
 
     public @Nullable HitResult hitResult = null;
+    public @Nullable SpellResolver previousResolver = null;
 
     public SpellResolver(SpellContext spellContext) {
         this.spell = spellContext.getSpell();
@@ -206,7 +207,6 @@ public class SpellResolver {
 
     /**
      * Simulates the cost required to cast a spell
-     * When expending mana, please call getResolveCostAndResetDiscounts instead
      */
     public int getResolveCost() {
         int cost = spellContext.getSpell().getCost() - getPlayerDiscounts(spellContext.getUnwrappedCaster(), spell, spellContext.getCasterTool());
@@ -220,7 +220,9 @@ public class SpellResolver {
      * Addons can override this to return their custom spell resolver if you change the way logic resolves.
      */
     public SpellResolver getNewResolver(SpellContext context) {
-        return new SpellResolver(context);
+        SpellResolver newResolver = new SpellResolver(context);
+        newResolver.previousResolver = this;
+        return newResolver;
     }
 
     /**
@@ -229,5 +231,21 @@ public class SpellResolver {
      */
     public boolean hasFocus(ItemStack stack) {
         return CuriosUtil.hasItem(spellContext.getUnwrappedCaster(), stack);
+    }
+
+    @Override
+    public SpellResolver clone() {
+        try {
+            SpellResolver clone = (SpellResolver) super.clone();
+            clone.spellContext = spellContext.clone();
+            clone.previousResolver = this.previousResolver != null ? this.previousResolver.clone() : null;
+            clone.castType = this.castType;
+            clone.spell = this.spell.clone();
+            clone.silent = this.silent;
+            clone.hitResult = this.hitResult;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

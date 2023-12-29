@@ -78,9 +78,9 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         if (summonLivingEntity != null) {
             world.addFreshEntity(summon.getLivingEntity());
             if (resolver != null && resolver.hasFocus(ItemsRegistry.SUMMONING_FOCUS.get().getDefaultInstance())) {
-                EntitySpellResolver spellResolver = new EntitySpellResolver(spellContext.clone().withSpell(spellContext.getRemainingSpell()).withWrappedCaster(new LivingCaster(summonLivingEntity)));
+                SpellContext newContext = resolver.spellContext.makeChildContext();
+                EntitySpellResolver spellResolver = new EntitySpellResolver(newContext.withWrappedCaster(new LivingCaster(summonLivingEntity)));
                 spellResolver.onResolveEffect(world, new EntityHitResult(summonLivingEntity));
-                spellContext.setCanceled(true);
             }
         }
 
