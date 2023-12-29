@@ -62,16 +62,22 @@ public class SummonHorse extends Horse implements ISummon {
         }
     }
 
-    @org.jetbrains.annotations.Nullable
+    @Nullable
     @Override
     public LivingEntity getOwner() {
         return ISummon.super.getOwner() instanceof LivingEntity living ? living : null;
     }
 
-    @org.jetbrains.annotations.Nullable
+    @Nullable
     @Override
     public Entity getOwner(ServerLevel world) {
         return ISummon.super.getOwner(world);
+    }
+
+    @Nullable
+    @Override
+    public UUID getOwnerUUID() {
+        return super.getOwnerUUID();
     }
 
     @Override
