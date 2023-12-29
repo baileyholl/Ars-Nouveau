@@ -1,5 +1,8 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public interface IContextManipulator {
 
     /**
@@ -14,4 +17,18 @@ public interface IContextManipulator {
      * Allows you to manipulate the existing context or return a new context if shouldPushContext returns true
      */
     SpellContext manipulate(SpellContext context);
+
+    /**
+     * Resets the combination limit validator for this set of glpyhs if THIS glyph appears before them.
+     */
+    default Set<AbstractSpellPart> bypassCombinationLimitsFor(){
+        return new HashSet<>();
+    }
+
+    /**
+     * Resets the occurrence limit validator for this set of glpyhs if THIS glyph appears before them.
+     */
+    default Set<AbstractSpellPart> bypassOccurrenceLimitsFor(){
+        return new HashSet<>();
+    }
 }

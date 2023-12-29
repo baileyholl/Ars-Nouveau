@@ -54,6 +54,16 @@ public class EffectReset extends AbstractEffect implements IContextManipulator{
     }
 
     @Override
+    public Set<AbstractSpellPart> bypassCombinationLimitsFor() {
+        return RESET_LIMITS;
+    }
+
+    @Override
+    public Set<AbstractSpellPart> bypassOccurrenceLimitsFor() {
+        return RESET_LIMITS;
+    }
+
+    @Override
     public boolean shouldPushContext(SpellContext context) {
         return true;
     }

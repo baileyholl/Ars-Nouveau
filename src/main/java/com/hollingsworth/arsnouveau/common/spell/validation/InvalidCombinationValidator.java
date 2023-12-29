@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.spell.validation;
 
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.IContextManipulator;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectReset;
 import net.minecraft.resources.ResourceLocation;
@@ -18,8 +19,8 @@ public class InvalidCombinationValidator extends ScanningSpellValidator<Map<Reso
 
     @Override
     protected void digestSpellPart(Map<ResourceLocation, Integer> partCounts, int position, AbstractSpellPart spellPart, List<SpellValidationError> validationErrors) {
-        if(spellPart == EffectReset.INSTANCE){
-            for(AbstractSpellPart resettable : EffectReset.RESET_LIMITS){
+        if(spellPart instanceof IContextManipulator manipulator){
+            for(AbstractSpellPart resettable : manipulator.bypassCombinationLimitsFor()){
                 partCounts.remove(resettable.getRegistryName());
             }
         }
