@@ -119,6 +119,7 @@ public class APIRegistry {
         registerSpell(EffectBurst.INSTANCE);
         registerSpell(AugmentRandomize.INSTANCE);
         registerSpell(EffectOrbit.INSTANCE);
+        registerSpell(EffectReset.INSTANCE);
 
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());
@@ -178,7 +179,7 @@ public class APIRegistry {
 
     //register things only in dev, safe from production
     private static void registerWip() {
-        registerSpell(EffectReset.INSTANCE);
+
     }
 
     public static void postInit() {
