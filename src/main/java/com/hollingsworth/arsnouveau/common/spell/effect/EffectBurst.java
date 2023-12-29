@@ -22,11 +22,11 @@ import java.util.function.Predicate;
 
 public class EffectBurst extends AbstractEffect {
 
-    //TODO use GlyphLib#EffectBurstId
-    public static final EffectBurst INSTANCE = new EffectBurst("burst", "Burst");
-
-    public EffectBurst(String tag, String description) {
-        super(tag, description);
+    public static final EffectBurst INSTANCE = new EffectBurst();
+    //TODO: fix burst not using proper ID
+    public EffectBurst() {
+        super("burst", "Burst");
+        EffectReset.RESET_LIMITS.add(this);
     }
 
     @Override

@@ -18,6 +18,7 @@ public class EffectLinger extends AbstractEffect {
 
     private EffectLinger() {
         super(GlyphLib.EffectLingerID, "Linger");
+        EffectReset.RESET_LIMITS.add(this);
     }
 
     @Override

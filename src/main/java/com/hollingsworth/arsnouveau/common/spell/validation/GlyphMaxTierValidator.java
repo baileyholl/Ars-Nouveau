@@ -33,10 +33,6 @@ public class GlyphMaxTierValidator extends ScanningSpellValidator<Unit> {
         }
     }
 
-    @Override
-    protected void finish(Unit context, List<SpellValidationError> validationErrors) {
-    }
-
     private static class GlyphTierValidationError extends BaseSpellValidationError {
         public GlyphTierValidationError(int position, AbstractSpellPart spellPart, String localizationCode) {
             super(position, spellPart, localizationCode, spellPart);

@@ -40,7 +40,9 @@ public abstract class ScanningSpellValidator<T> implements ISpellValidator {
      * @param validationErrors a list the finisher may add new errors to. Like <code>context</code>, this list is
      *                         private to the specific job, allowing steps to remove or change existing errors if desired.
      */
-    protected abstract void finish(T context, List<SpellValidationError> validationErrors);
+    protected void finish(T context, List<SpellValidationError> validationErrors){
+
+    }
 
     @Override
     public List<SpellValidationError> validate(List<AbstractSpellPart> spellRecipe) {

@@ -23,6 +23,7 @@ public class EffectWall extends AbstractEffect {
 
     private EffectWall() {
         super(GlyphLib.EffectWallId, "Wall");
+        EffectReset.RESET_LIMITS.add(this);
     }
 
     @Override

@@ -9,9 +9,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class EffectReset extends AbstractEffect implements IContextManipulator{
     public static EffectReset INSTANCE = new EffectReset();
+
+    public static Set<AbstractSpellPart> RESET_LIMITS = ConcurrentHashMap.newKeySet();
 
     public EffectReset() {
         super("reset", "Reset");
@@ -57,6 +60,6 @@ public class EffectReset extends AbstractEffect implements IContextManipulator{
 
     @Override
     public String getBookDescription() {
-        return "Resets the spell chain to the original target if it was changed by a previous effect. For example, Burst -> Place Block -> Reset -> Break will cause Burst to place blocks, but only Break will apply to the original location. As a result, using Reset will allow you to place another Burst in a single spell.";
+        return "Resets the spell chain to the original target if it was changed by a previous effect. For example, Burst -> Place Block -> Reset -> Break will cause Burst to place blocks, but only Break will apply to the original location. As a result, using Reset will allow you to bypass combination and duplicate limits on glyphs.";
     }
 }
