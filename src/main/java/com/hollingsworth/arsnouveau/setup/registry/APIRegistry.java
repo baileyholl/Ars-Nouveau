@@ -178,7 +178,7 @@ public class APIRegistry {
 
     //register things only in dev, safe from production
     private static void registerWip() {
-        registerSpell(EffectPopContext.INSTANCE);
+        registerSpell(EffectReset.INSTANCE);
     }
 
     public static void postInit() {

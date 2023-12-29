@@ -19,6 +19,8 @@ import java.util.ArrayList;
 public class SpellContext implements Cloneable {
 
     private boolean isCanceled;
+    @Nullable
+    private CancelReason cancelReason;
 
     private Spell spell;
     private ItemStack casterTool = ItemStack.EMPTY;
@@ -172,13 +174,18 @@ public class SpellContext implements Cloneable {
         return isCanceled;
     }
 
+    public boolean setCanceled(boolean canceled){
+        return setCanceled(canceled, CancelReason.NEW_CONTEXT);
+    }
+
     /**
      * Sets isCanceled calls {@link AbstractSpellPart#onContextCanceled(SpellContext)} for all remaining spell parts if canceled is true.
      * @param canceled The new canceled state.
      * @return The new canceled state after the spell parts have been notified if canceled was true.
      */
-    public boolean setCanceled(boolean canceled) {
+    public boolean setCanceled(boolean canceled, @Nullable CancelReason cancelReason) {
         isCanceled = canceled;
+        this.cancelReason = cancelReason;
         if(isCanceled) {
             Spell remainder = getRemainingSpell();
             for (AbstractSpellPart spellPart : remainder.recipe) {
@@ -194,6 +201,7 @@ public class SpellContext implements Cloneable {
      */
     public void stop(){
         this.isCanceled = true;
+        cancelReason = CancelReason.TERMINATED;
     }
 
     public @NotNull Spell getSpell() {
@@ -249,6 +257,11 @@ public class SpellContext implements Cloneable {
 
     public void setCasterTool(ItemStack stack) {
         this.casterTool = stack.copy();
+    }
+
+    @Nullable
+    public CancelReason getCancelReason() {
+        return cancelReason;
     }
 
     /**

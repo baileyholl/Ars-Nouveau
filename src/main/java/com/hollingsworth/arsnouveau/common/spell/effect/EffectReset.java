@@ -10,10 +10,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class EffectPopContext extends AbstractEffect implements IContextManipulator{
-    public static EffectPopContext INSTANCE = new EffectPopContext();
-    public EffectPopContext() {
-        super("escape_context", "Escape Context");
+public class EffectReset extends AbstractEffect implements IContextManipulator{
+    public static EffectReset INSTANCE = new EffectReset();
+
+    public EffectReset() {
+        super("reset", "Reset");
     }
 
     @Override
@@ -34,7 +35,7 @@ public class EffectPopContext extends AbstractEffect implements IContextManipula
     @Override
     public SpellContext manipulate(SpellContext context) {
         Spell remainder = context.getRemainingSpell();
-        int index = remainder.recipe.indexOf(EffectPopContext.INSTANCE);
+        int index = remainder.recipe.indexOf(EffectReset.INSTANCE);
         SpellContext newContext = context.clone().withSpell(remainder.setRecipe(new ArrayList<>(remainder.recipe.subList(0, index))));
         context.setCurrentIndex(index + 1);
         return newContext;
@@ -43,12 +44,19 @@ public class EffectPopContext extends AbstractEffect implements IContextManipula
     @Override
     public void onContextCanceled(SpellContext context) {
         super.onContextCanceled(context);
-        context.setCanceled(false);
-        context.setCurrentIndex(context.getSpell().recipe.indexOf(EffectPopContext.INSTANCE) + 1);
+        if(context.getCancelReason() == CancelReason.NEW_CONTEXT) {
+            context.setCanceled(false);
+            context.setCurrentIndex(context.getSpell().recipe.indexOf(EffectReset.INSTANCE) + 1);
+        }
     }
 
     @Override
     public boolean shouldPushContext(SpellContext context) {
         return true;
+    }
+
+    @Override
+    public String getBookDescription() {
+        return "Resets the spell chain to the original target if it was changed by a previous effect. For example, Burst -> Place Block -> Reset -> Break will cause Burst to place blocks, but only Break will apply to the original location. As a result, using Reset will allow you to place another Burst in a single spell.";
     }
 }
