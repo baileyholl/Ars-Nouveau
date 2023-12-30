@@ -1,25 +1,30 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
-import com.hollingsworth.arsnouveau.api.source.IMultiSourceTargetProvider;
+import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
-public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetProvider {
-
-    ArrayList<BlockPos> toList = new ArrayList<>();
-    ArrayList<BlockPos> fromList = new ArrayList<>();
+public class RelaySplitterTile extends RelayTile {
+    private final Map<BlockPos, Direction> toMap = new HashMap<>();
+    private final Map<BlockPos, Direction> fromMap = new HashMap<>();
 
     public RelaySplitterTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.RELAY_SPLITTER_TILE, pos, state);
@@ -30,21 +35,23 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
     }
 
     @Override
-    public boolean setTakeFrom(BlockPos pos) {
-        return closeEnough(pos) && fromList.add(pos) && updateBlock();
+    public boolean setTakeFrom(BlockPos pos, Direction dir) {
+        fromMap.put(pos, dir);
+        return closeEnough(pos) && updateBlock();
     }
 
     @Override
-    public boolean setSendTo(BlockPos pos) {
-        return closeEnough(pos) && toList.add(pos) && updateBlock();
+    public boolean setSendTo(BlockPos pos, Direction dir) {
+        toMap.put(pos, dir);
+        return closeEnough(pos) && updateBlock();
     }
 
     @Override
     public List<ColorPos> getWandHighlight(List<ColorPos> list) {
-        for(BlockPos toPos : toList){
+        for(BlockPos toPos : toMap.keySet()){
             list.add(ColorPos.centered(toPos, ParticleColor.TO_HIGHLIGHT));
         }
-        for(BlockPos fromPos : fromList){
+        for(BlockPos fromPos : fromMap.keySet()){
             list.add(ColorPos.centered(fromPos, ParticleColor.FROM_HIGHLIGHT));
         }
         return list;
@@ -52,69 +59,60 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
 
     @Override
     public void clearPos() {
-        this.toList.clear();
-        this.fromList.clear();
+        this.toMap.clear();
+        this.fromMap.clear();
         updateBlock();
     }
 
-    public void processFromList() {
-        if (fromList.isEmpty())
-            return;
-        ArrayList<BlockPos> stale = new ArrayList<>();
-        int ratePer = getTransferRate() / fromList.size();
-        for (BlockPos fromPos : fromList) {
-            if (!level.isLoaded(fromPos))
-                continue;
-
-            if (!(level.getBlockEntity(fromPos) instanceof AbstractSourceMachine fromTile)) {
-                stale.add(fromPos);
-                continue;
-            }
-            if (transferSource(fromTile, this, ratePer) > 0) {
-                createParticles(fromPos, worldPosition);
-            }
-        }
-        for (BlockPos s : stale) {
-            fromList.remove(s);
-            updateBlock();
-        }
-
-    }
-
-    public void createParticles(BlockPos from, BlockPos to) {
+    protected void createParticles(BlockPos from, BlockPos to) {
         ParticleUtil.spawnFollowProjectile(level, from, to);
     }
 
-    public void processToList() {
-        if (toList.isEmpty())
-            return;
-        ArrayList<BlockPos> stale = new ArrayList<>();
-        int ratePer = getSource() / toList.size();
-        for (BlockPos toPos : toList) {
-            if (!level.isLoaded(toPos))
-                continue;
-            if (!(level.getBlockEntity(toPos) instanceof AbstractSourceMachine toTile)) {
-                stale.add(toPos);
+    void processTargetMap(Map<BlockPos,Direction> targets, boolean sendSource) {
+        if (targets.isEmpty()) return;
+
+        List<BlockPos> stale = new ArrayList<>();
+        int ratePer = getTransferRate() / targets.size();
+
+        for (var target : targets.entrySet()) {
+            if (!Objects.requireNonNull(level).isLoaded(target.getKey())) continue;
+
+            BlockEntity be = level.getBlockEntity(target.getKey());
+
+            if (be == null) {
+                stale.add(target.getKey());
                 continue;
             }
-            int transfer = transferSource(this, toTile, ratePer);
-            if (transfer > 0) {
-                createParticles(worldPosition, toPos);
-            }
+
+            LazyOptional<ISourceTile> cap = be.getCapability(CapabilityRegistry.SOURCE_TILE, target.getValue());
+
+            cap.ifPresent(sourceTile -> {
+                ISourceTile fromTile = sendSource ? this : sourceTile;
+                ISourceTile toTile = sendSource ? sourceTile : this;
+
+                if (transferSource(fromTile, toTile, ratePer) > 0) {
+                    BlockPos fromPos = sendSource ? worldPosition : target.getKey();
+                    BlockPos toPos = sendSource ? target.getKey() : worldPosition;
+                    createParticles(fromPos, toPos);
+                }
+                });
+            cap.addListener(sourceTile -> stale.add(target.getKey()));
         }
-        for (BlockPos s : stale) {
-            toList.remove(s);
+
+        for (BlockPos pos : stale) {
+            targets.remove(pos);
             updateBlock();
         }
     }
 
+
     @Override
     public void tick() {
-        if (level.getGameTime() % 20 != 0 || toList.isEmpty() || level.isClientSide || disabled)
+        if (level.getGameTime() % 20 != 0 || toMap.isEmpty() || level.isClientSide || disabled)
             return;
 
-        processFromList();
-        processToList();
+        processTargetMap(fromMap, false);
+        processTargetMap(toMap, true);
         updateBlock();
     }
 
@@ -131,22 +129,32 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        fromList = new ArrayList<>();
-        toList = new ArrayList<>();
+        fromMap.clear();
+        toMap.clear();
         int counter = 0;
 
         while (NBTUtil.hasBlockPos(tag, "from_" + counter)) {
             BlockPos pos = NBTUtil.getBlockPos(tag, "from_" + counter);
-            if (!this.fromList.contains(pos))
-                this.fromList.add(pos);
+            Direction dir = null;
+            if(tag.contains("from_dir_"+counter)){
+                dir = Direction.byName(tag.getString("from_dir_"+counter));
+            }
+            dir = dir == null ? Direction.UP : dir;
+
+            this.fromMap.put(pos, dir);
             counter++;
         }
 
         counter = 0;
         while (NBTUtil.hasBlockPos(tag, "to_" + counter)) {
             BlockPos pos = NBTUtil.getBlockPos(tag, "to_" + counter);
-            if (!this.toList.contains(pos))
-                this.toList.add(NBTUtil.getBlockPos(tag, "to_" + counter));
+            Direction dir = null;
+            if(tag.contains("to_dir_"+counter)){
+                dir = Direction.byName(tag.getString("to_dir_"+counter));
+            }
+            dir = dir == null ? Direction.UP : dir;
+
+            this.toMap.put(pos, dir);
             counter++;
         }
 
@@ -156,38 +164,30 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         int counter = 0;
-        for (BlockPos p : this.fromList) {
-            NBTUtil.storeBlockPos(tag, "from_" + counter, p);
+        for (var from : this.fromMap.entrySet()) {
+            NBTUtil.storeBlockPos(tag, "from_" + counter, from.getKey());
+            tag.putString("from_dir_"+counter, from.getValue().getName());
             counter++;
         }
         counter = 0;
-        for (BlockPos p : this.toList) {
-            NBTUtil.storeBlockPos(tag, "to_" + counter, p);
+        for (var to : this.toMap.entrySet()) {
+            NBTUtil.storeBlockPos(tag, "to_" + counter, to.getKey());
+            tag.putString("to_dir_"+counter, to.getValue().getName());
             counter++;
         }
     }
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if (toList == null || toList.isEmpty()) {
+        if (toMap.isEmpty()) {
             tooltip.add(Component.translatable("ars_nouveau.relay.no_to"));
         } else {
-            tooltip.add(Component.translatable("ars_nouveau.relay.one_to", toList.size()));
+            tooltip.add(Component.translatable("ars_nouveau.relay.one_to", toMap.size()));
         }
-        if (fromList == null || fromList.isEmpty()) {
+        if (fromMap.isEmpty()) {
             tooltip.add(Component.translatable("ars_nouveau.relay.no_from"));
         } else {
-            tooltip.add(Component.translatable("ars_nouveau.relay.one_from", fromList.size()));
+            tooltip.add(Component.translatable("ars_nouveau.relay.one_from", fromMap.size()));
         }
-    }
-
-    @Override
-    public List<BlockPos> getFromList() {
-        return fromList;
-    }
-
-    @Override
-    public List<BlockPos> getToList() {
-        return toList;
     }
 }

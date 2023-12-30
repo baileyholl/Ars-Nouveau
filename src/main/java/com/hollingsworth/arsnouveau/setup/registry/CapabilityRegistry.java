@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
+import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 import com.hollingsworth.arsnouveau.common.capability.ANPlayerCapAttacher;
 import com.hollingsworth.arsnouveau.common.capability.ANPlayerDataCap;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
@@ -29,6 +30,9 @@ public class CapabilityRegistry {
     public static final Capability<IManaCap> MANA_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
     });
     public static final Capability<IPlayerCap> PLAYER_DATA_CAP = CapabilityManager.get(new CapabilityToken<>() {
+    });
+
+    public static final Capability<ISourceTile> SOURCE_TILE = CapabilityManager.get(new CapabilityToken<>() {
     });
 
 
@@ -83,6 +87,7 @@ public class CapabilityRegistry {
         public static void registerCapabilities(final RegisterCapabilitiesEvent event) {
             event.register(IManaCap.class);
             event.register(IPlayerCap.class);
+            event.register(ISourceTile.class);
         }
 
         /**
