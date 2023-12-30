@@ -59,6 +59,7 @@ public class Config {
     public static ForgeConfigSpec.BooleanValue ALTERNATE_PORTAL_RENDER;
 
     public static ForgeConfigSpec.BooleanValue DISABLE_SKY_SHADER;
+    public static ForgeConfigSpec.BooleanValue DISABLE_TRANSLUCENT_PARTICLES;
     public static ForgeConfigSpec.BooleanValue SHOW_RECIPE_BOOK;
     public static ForgeConfigSpec.IntValue MAX_LOG_EVENTS;
     public static ForgeConfigSpec.IntValue TOOLTIP_X_OFFSET;
@@ -114,6 +115,7 @@ public class Config {
         ALTERNATE_PORTAL_RENDER = CLIENT_BUILDER.comment("Use simplified renderer for Warp Portals").define("no_end_portal_render", false);
         DISABLE_SKY_SHADER = CLIENT_BUILDER.comment("Disables the skyweave renderer. Disable if your sky is broken with shaders.").define("disable_skyweave", false);
         GUI_TRANSPARENCY = CLIENT_BUILDER.comment("Enables transparent/opaque rendering of elements in the book GUI. Disable if it leads to crash with Sodium derivatives").define("gui_transparency", true);
+        DISABLE_TRANSLUCENT_PARTICLES = CLIENT_BUILDER.comment("Disables translucent particles. Disable if your particles are invisible with shaders.").define("opaque_particles", false);
         SERVER_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
         DIMENSION_BLACKLIST = SERVER_BUILDER.comment("Dimensions where hostile mobs will not spawn. Ex: [\"minecraft:overworld\", \"undergarden:undergarden\"]. . Run /forge dimensions for a list.").defineList("dimensionBlacklist", new ArrayList<>(), (o) -> true);
         SPAWN_BOOK = SERVER_BUILDER.comment("Spawn a book in the players inventory on login").define("spawnBook", true);
