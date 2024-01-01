@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.DamageUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.IceShardEntity;
+import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
@@ -13,17 +14,20 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,57 +40,88 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (!(rayTraceResult.getEntity() instanceof LivingEntity livingEntity && world instanceof ServerLevel level))
             return;
         Vec3 vec = safelyGetHitPos(rayTraceResult);
         float damage = (float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
-        double range = 3 + spellStats.getAoeMultiplier();
         int snareSec = (int) (POTION_TIME.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier());
 
         if (!canDamage(livingEntity))
             return;
         this.damage(vec, level, shooter, livingEntity, spellStats, spellContext, resolver, snareSec, damage);
-        spawnIce(shooter, level, BlockPos.containing(vec.x, vec.y + (rayTraceResult.getEntity().onGround() ? 1 : 0), vec.z), spellStats);
+        spawnIce(shooter, level, BlockPos.containing(vec.x, vec.y + (rayTraceResult.getEntity().onGround() ? 1 : 0), vec.z), spellStats, spellContext, resolver);
     }
 
-    public void spawnIce(LivingEntity shooter, ServerLevel level, BlockPos targetPos, SpellStats spellStats) {
+    @Override
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        super.onResolveBlock(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
+        if(!world.getBlockState(rayTraceResult.getBlockPos()).is(BlockTags.ICE))
+            return;
+        world.setBlock(rayTraceResult.getBlockPos(), Blocks.AIR.defaultBlockState(), 3);
+        spawnIce(shooter, world, rayTraceResult.getBlockPos(), spellStats, spellContext, resolver);
+    }
+
+    public void spawnIce(LivingEntity shooter, Level level, BlockPos targetPos, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
         Vec3 middleVec = new Vec3(0.2, 0.3, 0.2);
-        Vec3 scaleVec = new Vec3(0.1, 0.2, 0.1);
-        int size = 0;
+        Vec3 cornerScaleVec = new Vec3(0.1, 0.2, 0.1);
+        Set<BlockPos> corners = new HashSet<>();
+        Set<BlockPos> sides = new HashSet<>();
+
         for(int i = 1; i < 2 + spellStats.getAoeMultiplier(); i++) {
             // Middle sides
-            spawnBetween(shooter, level, targetPos, targetPos.offset(-i, -i, 0), targetPos.offset(-i, i, 0), middleVec, spellStats);
-            spawnBetween(shooter, level, targetPos, targetPos.offset(i, -i, 0), targetPos.offset(i, i, 0), middleVec, spellStats);
-            spawnBetween(shooter, level, targetPos, targetPos.offset(0, -i, -i), targetPos.offset(0, i, -i), middleVec, spellStats);
-            spawnBetween(shooter, level, targetPos, targetPos.offset(0, -i, i), targetPos.offset(0, i, i), middleVec, spellStats);
-            // corners   shooter,
-            spawnBetween(shooter, level, targetPos, targetPos.offset(-i, -i, -i), targetPos.offset(-i, i, -i), scaleVec, spellStats);
-            spawnBetween(shooter, level, targetPos, targetPos.offset(i, -i, -i), targetPos.offset(i, i, -i), scaleVec, spellStats);
-            spawnBetween(shooter, level, targetPos, targetPos.offset(-i, -i, i), targetPos.offset(-i, i, i), scaleVec, spellStats);
-            spawnBetween(shooter, level, targetPos, targetPos.offset(i, -i, i), targetPos.offset(i, i, i), scaleVec, spellStats);
+            sides.addAll(replaceableBetween(level, targetPos.offset(-i, -i, 0), targetPos.offset(-i, i, 0)));
+            sides.addAll(replaceableBetween(level, targetPos.offset(i, -i, 0), targetPos.offset(i, i, 0)));
+            sides.addAll(replaceableBetween(level, targetPos.offset(0, -i, -i), targetPos.offset(0, i, -i)));
+            sides.addAll(replaceableBetween(level, targetPos.offset(0, -i, i), targetPos.offset(0, i, i)));
+            // corners
+            corners.addAll(replaceableBetween(level, targetPos.offset(-i, -i, -i), targetPos.offset(-i, i, -i)));
+            corners.addAll(replaceableBetween(level, targetPos.offset(i, -i, -i), targetPos.offset(i, i, -i)));
+            corners.addAll(replaceableBetween(level, targetPos.offset(-i, -i, i), targetPos.offset(-i, i, i)));
+            corners.addAll(replaceableBetween(level, targetPos.offset(i, -i, i), targetPos.offset(i, i, i)));
 
         }
         // top and bottom
-        spawnBetween(shooter, level, targetPos, targetPos.offset(0, -1, 0), targetPos.offset(0, 1, 0), scaleVec, spellStats);
+        corners.addAll(replaceableBetween(level, targetPos.offset(0, -1, 0), targetPos.offset(0, 1, 0)));
+
+        for (BlockPos pos : corners) {
+            if (!level.getBlockState(pos).canBeReplaced()) {
+                continue;
+            }
+            spawnIce(level, pos, targetPos, cornerScaleVec, spellStats, spellContext, resolver, shooter);
+        }
+
+        for (BlockPos pos : sides) {
+            if (!level.getBlockState(pos).canBeReplaced()) {
+                continue;
+            }
+            spawnIce(level, pos, targetPos, middleVec, spellStats, spellContext, resolver, shooter);
+        }
     }
 
-    public void spawnBetween(LivingEntity shooter, ServerLevel level, BlockPos targetPos, BlockPos pos1, BlockPos pos2, Vec3 scaleVec, SpellStats spellStats) {
+    public void spawnIce(Level level, BlockPos pos, BlockPos targetPos, Vec3 scaleVec, SpellStats spellStats, SpellContext context, SpellResolver resolver, LivingEntity shooter){
+        level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+        IceShardEntity fallingBlock = new IceShardEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, Blocks.ICE.defaultBlockState());
+        // Send the falling block the opposite direction of the target
+        fallingBlock.setDeltaMovement(pos.getX() - targetPos.getX(), pos.getY() - targetPos.getY(), pos.getZ() - targetPos.getZ());
+        fallingBlock.setDeltaMovement(fallingBlock.getDeltaMovement().multiply(scaleVec));
+        fallingBlock.cancelDrop = true;
+        fallingBlock.hurtEntities = true;
+        fallingBlock.baseDamage = ((float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier())) * 0.5f;
+        fallingBlock.shooter = shooter;
+        level.addFreshEntity(fallingBlock);
+        ShapersFocus.tryPropagateEntitySpell(fallingBlock, level, shooter, context, resolver);
+    }
+
+    public Set<BlockPos> replaceableBetween(Level level, BlockPos pos1, BlockPos pos2) {
+        HashSet<BlockPos> set = new HashSet<>();
         for (BlockPos pos : BlockPos.betweenClosed(pos1, pos2)) {
             if (!level.getBlockState(pos).canBeReplaced()) {
                 continue;
             }
-            level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-            IceShardEntity fallingBlock = new IceShardEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, Blocks.ICE.defaultBlockState());
-            // Send the falling block the opposite direction of the target
-            fallingBlock.setDeltaMovement(pos.getX() - targetPos.getX(), pos.getY() - targetPos.getY(), pos.getZ() - targetPos.getZ());
-            fallingBlock.setDeltaMovement(fallingBlock.getDeltaMovement().multiply(scaleVec));
-            fallingBlock.cancelDrop = true;
-            fallingBlock.hurtEntities = true;
-            fallingBlock.baseDamage = ((float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier())) / 0.5f;
-            fallingBlock.shooter = shooter;
-            level.addFreshEntity(fallingBlock);
+            set.add(pos.immutable());
         }
+        return set;
     }
 
     public boolean canDamage(LivingEntity livingEntity) {
@@ -139,7 +174,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
 
     @Override
     public String getBookDescription() {
-        return "Snares and causes a burst of damage to an entity that is afflicted by slowness, freezing, or is wet. Nearby enemies that are not afflicted by Slow will be slowed. Nearby Enemies afflicted by Slow or wetness will also be hit by Cold Snap. Can be augmented using Amplify, Extend Time, and AOE.";
+        return "Causes wet, slowed, or freezing entities to take a burst of damage and erupt into falling ice. Falling ice will slow and damage nearby entities. Can also be used to erupt a block of ice instead. Falling blocks of ice can be manipulated with the Focus of Block Shaping.";
     }
 
     @Override
