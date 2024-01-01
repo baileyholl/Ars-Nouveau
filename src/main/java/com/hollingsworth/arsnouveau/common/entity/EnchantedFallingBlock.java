@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.mojang.authlib.GameProfile;
-import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.core.BlockPos;
@@ -47,7 +46,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.slf4j.Logger;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -58,12 +56,11 @@ import java.util.function.Predicate;
 
 public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntity {
 
-    private static final Logger LOGGER = LogUtils.getLogger();
     public BlockState blockState = Blocks.SAND.defaultBlockState();
     public int time;
     public boolean dropItem = true;
     public boolean cancelDrop;
-    private boolean hurtEntities;
+    public boolean hurtEntities;
     private int fallDamageMax = 40;
     private float fallDamagePerDistance;
     public int knockback = 2;
@@ -79,8 +76,13 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         super(p_31950_, p_31951_);
     }
 
-    public EnchantedFallingBlock(Level world, double v, double y, double v1, BlockState blockState) {
-        this(ModEntities.ENCHANTED_FALLING_BLOCK.get(), world);
+    public EnchantedFallingBlock(EntityType<? extends ColoredProjectile> p_31950_, Level p_31951_, double p_31952_, double p_31953_, double p_31954_) {
+        this(p_31950_, p_31951_);
+        this.setPos(p_31952_, p_31953_, p_31954_);
+    }
+
+    public EnchantedFallingBlock(EntityType<? extends ColoredProjectile> p_31950_, Level world, double v, double y, double v1, BlockState blockState) {
+        this(p_31950_, world);
         this.blockState = blockState;
         this.blocksBuilding = true;
         this.setPos(v, y, v1);
@@ -89,6 +91,10 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         this.yo = y;
         this.zo = v1;
         this.setStartPos(this.blockPosition());
+    }
+
+    public EnchantedFallingBlock(Level world, double v, double y, double v1, BlockState blockState) {
+        this(ModEntities.ENCHANTED_FALLING_BLOCK.get(), world, v, y, v1, blockState);
     }
 
     public EnchantedFallingBlock(Level world, BlockPos pos, BlockState blockState) {
@@ -336,7 +342,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         }
     }
 
-    private void doPostHurtEffects(LivingEntity livingentity) {
+    public void doPostHurtEffects(LivingEntity livingentity) {
     }
 
     public void fillCrashReportCategory(CrashReportCategory pCategory) {
