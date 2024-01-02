@@ -11,7 +11,6 @@ import com.hollingsworth.arsnouveau.common.spell.effect.EffectInvisibility;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ArmorItem;
@@ -50,9 +49,12 @@ public class ArsEvents {
 
     @SubscribeEvent
     public static void regenCalc(ManaRegenCalcEvent e) {
+
+        /* Replaced by negative multiplier on AttributeModifier
         if (e.getEntity() != null && e.getEntity().hasEffect(ModPotions.HEX_EFFECT.get())) {
             e.setRegen(e.getRegen() / 2.0);
         }
+         */
     }
 
     @SubscribeEvent
