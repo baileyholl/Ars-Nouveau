@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
@@ -57,8 +58,8 @@ public class ArsEvents {
     @SubscribeEvent
     public static void spellResolve(SpellResolveEvent.Post e) {
         SpellSensorTile.onSpellResolve(e);
-        if(e.spell.recipe.contains(EffectInvisibility.INSTANCE) && e.rayTraceResult instanceof BlockHitResult blockHitResult){
-            if(e.world.getBlockEntity(blockHitResult.getBlockPos()) instanceof GhostWeaveTile ghostWeaveTile){
+        if (e.spell.recipe.contains(EffectInvisibility.INSTANCE) && e.rayTraceResult instanceof BlockHitResult blockHitResult) {
+            if (e.world.getBlockEntity(blockHitResult.getBlockPos()) instanceof GhostWeaveTile ghostWeaveTile) {
                 ghostWeaveTile.setVisibility(true);
             }
         }
@@ -66,27 +67,49 @@ public class ArsEvents {
 
     @SubscribeEvent
     public static void dispelEvent(DispelEvent e) {
-        if(e.rayTraceResult instanceof BlockHitResult blockHitResult && e.world.getBlockEntity(blockHitResult.getBlockPos()) instanceof GhostWeaveTile ghostWeaveTile){
+        if (e.rayTraceResult instanceof BlockHitResult blockHitResult && e.world.getBlockEntity(blockHitResult.getBlockPos()) instanceof GhostWeaveTile ghostWeaveTile) {
             ghostWeaveTile.setVisibility(false);
         }
     }
 
     @SubscribeEvent
     public static void modifyItemAttributes(ItemAttributeModifierEvent event) {
-        if (event.getItemStack().isEnchanted()){
-            if ((event.getItemStack().getItem() instanceof ArmorItem armor) && !(event.getSlotType() == armor.getEquipmentSlot()))
+        ItemStack itemStack = event.getItemStack();
+        if (itemStack.isEnchanted()) {
+            if ((itemStack.getItem() instanceof ArmorItem armor) && !(event.getSlotType() == armor.getEquipmentSlot()))
                 return;
-            if ((event.getItemStack().getItem() instanceof ShieldItem) && !(event.getSlotType() == EquipmentSlot.OFFHAND))
+            if ((itemStack.getItem() instanceof ShieldItem) && !(event.getSlotType() == EquipmentSlot.OFFHAND))
                 return;
 
-            if (event.getItemStack().getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.get()) > 0){
-                event.addModifier(PerkAttributes.MAX_MANA.get(), new AttributeModifier(UUID.fromString("f2239f81-4253-42a1-b596-234f42675484"),"max_mana_enchant", ServerConfig.MANA_BOOST_BONUS.get() * event.getItemStack().getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.get()), AttributeModifier.Operation.ADDITION));
+            if (itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.get()) > 0) {
+                UUID uuid = getManaBoostBySlot(event.getSlotType());
+                event.addModifier(PerkAttributes.MAX_MANA.get(), new AttributeModifier(uuid, "max_mana_enchant", ServerConfig.MANA_BOOST_BONUS.get() * itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.get()), AttributeModifier.Operation.ADDITION));
             }
-            if (event.getItemStack().getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.get()) > 0){
-                event.addModifier(PerkAttributes.MANA_REGEN_BONUS.get(), new AttributeModifier(UUID.fromString("1024a8dd-a341-43c1-a6e4-0765032dc14c"),"mana_regen_enchant", ServerConfig.MANA_REGEN_ENCHANT_BONUS.get() * event.getItemStack().getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.get()), AttributeModifier.Operation.ADDITION));
+            if (itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.get()) > 0) {
+                UUID uuid = getManaRegenBySlot(event.getSlotType());
+                event.addModifier(PerkAttributes.MANA_REGEN_BONUS.get(), new AttributeModifier(uuid, "mana_regen_enchant", ServerConfig.MANA_REGEN_ENCHANT_BONUS.get() * itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.get()), AttributeModifier.Operation.ADDITION));
             }
         }
 
     }
 
+    private static UUID getManaBoostBySlot(EquipmentSlot type) {
+        return switch (type) {
+            case CHEST -> UUID.fromString("fe9f03b8-b958-450c-a498-81b7ba72118b");
+            case LEGS -> UUID.fromString("052583f6-12ec-427a-aae2-82d79128bbab");
+            case FEET -> UUID.fromString("7ea8f56f-f865-4ac1-bc20-ffd5c8300464");
+            case HEAD -> UUID.fromString("79a1b1cd-3aaa-4913-8991-5c8540632f6b");
+            default -> UUID.fromString("f2239f81-4253-42a1-b596-234f42675484");
+        };
+    }
+
+    private static UUID getManaRegenBySlot(EquipmentSlot type) {
+        return switch (type) {
+            case CHEST -> UUID.fromString("e6cf3ff7-d6bb-42e3-ac77-e925b845b661");
+            case LEGS -> UUID.fromString("df2c1469-cbcc-4ce1-9e81-6cd43ae7eec8");
+            case FEET -> UUID.fromString("c1c7d29b-3dee-4f9a-a7c7-9d65c84863a9");
+            case HEAD -> UUID.fromString("91be52ff-f198-4708-91c6-f6c1331ea4b1");
+            default -> UUID.fromString("1024a8dd-a341-43c1-a6e4-0765032dc14c");
+        };
+    }
 }
