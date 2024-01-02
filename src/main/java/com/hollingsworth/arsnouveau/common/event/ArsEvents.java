@@ -86,18 +86,18 @@ public class ArsEvents {
                 return;
 
             if (itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.get()) > 0) {
-                UUID uuid = getManaBoostBySlot(event.getSlotType());
+                UUID uuid = getEnchantBoostBySlot(event.getSlotType());
                 event.addModifier(PerkAttributes.MAX_MANA.get(), new AttributeModifier(uuid, "max_mana_enchant", ServerConfig.MANA_BOOST_BONUS.get() * itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.get()), AttributeModifier.Operation.ADDITION));
             }
             if (itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.get()) > 0) {
-                UUID uuid = getManaRegenBySlot(event.getSlotType());
+                UUID uuid = getEnchantBoostBySlot(event.getSlotType());
                 event.addModifier(PerkAttributes.MANA_REGEN_BONUS.get(), new AttributeModifier(uuid, "mana_regen_enchant", ServerConfig.MANA_REGEN_ENCHANT_BONUS.get() * itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.get()), AttributeModifier.Operation.ADDITION));
             }
         }
 
     }
 
-    private static UUID getManaBoostBySlot(EquipmentSlot type) {
+    public static UUID getEnchantBoostBySlot(EquipmentSlot type) {
         return switch (type) {
             case CHEST -> UUID.fromString("fe9f03b8-b958-450c-a498-81b7ba72118b");
             case LEGS -> UUID.fromString("052583f6-12ec-427a-aae2-82d79128bbab");
@@ -107,13 +107,4 @@ public class ArsEvents {
         };
     }
 
-    private static UUID getManaRegenBySlot(EquipmentSlot type) {
-        return switch (type) {
-            case CHEST -> UUID.fromString("e6cf3ff7-d6bb-42e3-ac77-e925b845b661");
-            case LEGS -> UUID.fromString("df2c1469-cbcc-4ce1-9e81-6cd43ae7eec8");
-            case FEET -> UUID.fromString("c1c7d29b-3dee-4f9a-a7c7-9d65c84863a9");
-            case HEAD -> UUID.fromString("91be52ff-f198-4708-91c6-f6c1331ea4b1");
-            default -> UUID.fromString("1024a8dd-a341-43c1-a6e4-0765032dc14c");
-        };
-    }
 }
