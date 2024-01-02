@@ -209,6 +209,7 @@ public class LangDatagen extends LanguageProvider {
         add("item.minecraft.tipped_arrow.effect.mana_regen_potion", "Arrow of Mana Regeneration");
         add("item.minecraft.tipped_arrow.effect.mana_regen_potion_long", "Arrow of Mana Regeneration");
         add("effect.ars_nouveau.mana_regen", "Mana Regeneration");
+        add("effect.ars_nouveau.mana_regen.desc", "Improves mana regeneration");
         add("ars_nouveau.on", "Active: Yes");
         add("ars_nouveau.off", "Active: No");
         add("item.ars_nouveau.void_jar", "Jar of Voiding");

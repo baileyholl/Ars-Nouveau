@@ -76,9 +76,13 @@ public class ArsEvents {
     public static void modifyItemAttributes(ItemAttributeModifierEvent event) {
         ItemStack itemStack = event.getItemStack();
         if (itemStack.isEnchanted()) {
-            if ((itemStack.getItem() instanceof ArmorItem armor) && !(event.getSlotType() == armor.getEquipmentSlot()))
+            if (itemStack.getItem() instanceof ArmorItem armor) {
+                if (!(event.getSlotType() == armor.getEquipmentSlot())) {
+                    return;
+                }
+            } else if (event.getSlotType() != EquipmentSlot.MAINHAND && event.getSlotType() != EquipmentSlot.OFFHAND) {
                 return;
-            if ((itemStack.getItem() instanceof ShieldItem) && !(event.getSlotType() == EquipmentSlot.OFFHAND))
+            } else if (itemStack.getItem() instanceof ShieldItem && !(event.getSlotType() == EquipmentSlot.OFFHAND))
                 return;
 
             if (itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.get()) > 0) {

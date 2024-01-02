@@ -1102,6 +1102,7 @@
   "effect.ars_nouveau.hex": "Hex",
   "effect.ars_nouveau.magic_find": "Magic Find",
   "effect.ars_nouveau.mana_regen": "Mana Regeneration",
+  "effect.ars_nouveau.mana_regen.desc": "Improves mana regeneration",
   "effect.ars_nouveau.recovery": "Recovery",
   "effect.ars_nouveau.scrying": "Scrying",
   "effect.ars_nouveau.shield": "Magic Shield",
