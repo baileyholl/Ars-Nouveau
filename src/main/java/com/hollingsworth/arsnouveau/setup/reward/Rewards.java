@@ -27,7 +27,7 @@ public class Rewards {
             JsonArray supporters = object.getAsJsonArray("uuids");
             for (JsonElement element : supporters) {
                 String uuid = element.getAsString();
-                CONTRIBUTORS.add(UUID.fromString(uuid));
+                CONTRIBUTORS.add(UUID.fromString(uuid.trim()));
             }
             JsonArray adoptions = object.getAsJsonArray("starbuncleAdoptions");
             for (JsonElement element : adoptions) {
