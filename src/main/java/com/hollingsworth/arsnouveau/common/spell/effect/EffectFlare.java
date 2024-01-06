@@ -2,18 +2,14 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.DamageUtil;
-import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.entity.Cinder;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -38,21 +34,22 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
         double range = 3 + spellStats.getAoeMultiplier();
         int fireSec = (int) (5.0 + EXTEND_TIME.get() * spellStats.getDurationMultiplier());
         DamageSource source = buildDamageSource(world, shooter);
-        if (livingEntity.isOnFire() && attemptDamage(world, shooter, spellStats, spellContext, resolver, livingEntity, source, damage)) {
-            ((ServerLevel) world).sendParticles(ParticleTypes.FLAME, vec.x, vec.y + 0.5, vec.z, 50,
-                    ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), 0.3);
-            for (Entity e : world.getEntities(shooter, new AABB(
-                    livingEntity.position().add(range, range, range), livingEntity.position().subtract(range, range, range)))) {
-                if (e.equals(livingEntity) || !(e instanceof LivingEntity))
-                    continue;
-                attemptDamage(world, shooter, spellStats, spellContext, resolver, e, source, damage);
-                e.setSecondsOnFire(fireSec);
-                vec = e.position();
-                ((ServerLevel) world).sendParticles(ParticleTypes.FLAME, vec.x, vec.y + 0.5, vec.z, 50,
-                        ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), 0.3);
-
-            }
-        }
+        world.addFreshEntity(new Cinder(world, vec.x, vec.y, vec.z));
+//        if (livingEntity.isOnFire() && attemptDamage(world, shooter, spellStats, spellContext, resolver, livingEntity, source, damage)) {
+//            ((ServerLevel) world).sendParticles(ParticleTypes.FLAME, vec.x, vec.y + 0.5, vec.z, 50,
+//                    ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), 0.3);
+//            for (Entity e : world.getEntities(shooter, new AABB(
+//                    livingEntity.position().add(range, range, range), livingEntity.position().subtract(range, range, range)))) {
+//                if (e.equals(livingEntity) || !(e instanceof LivingEntity))
+//                    continue;
+//                attemptDamage(world, shooter, spellStats, spellContext, resolver, e, source, damage);
+//                e.setSecondsOnFire(fireSec);
+//                vec = e.position();
+//                ((ServerLevel) world).sendParticles(ParticleTypes.FLAME, vec.x, vec.y + 0.5, vec.z, 50,
+//                        ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), 0.3);
+//
+//            }
+//        }
     }
 
 

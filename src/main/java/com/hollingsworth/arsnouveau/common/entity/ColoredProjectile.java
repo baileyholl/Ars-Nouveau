@@ -29,10 +29,6 @@ public abstract class ColoredProjectile extends Projectile {
         rainbowStartTick = level.random.nextInt(1536);
     }
 
-    public static void init(){
-
-    }
-
     public ColoredProjectile(EntityType<? extends ColoredProjectile> type, Level worldIn, double x, double y, double z) {
         this(type, worldIn);
         setPos(x, y, z);

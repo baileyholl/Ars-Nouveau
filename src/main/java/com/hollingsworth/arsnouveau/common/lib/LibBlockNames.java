@@ -163,7 +163,7 @@ public class LibBlockNames {
 
     public static final String SPELL_SENSOR = "spell_sensor";
     public static final String REDSTONE_RELAY = "redstone_relay";
-
+    public static final String MAGIC_FIRE = "magic_fire";
 
     public static final String[] DECORATIVE_SOURCESTONE = new String[]{
             SOURCESTONE, SOURCESTONE_MOSAIC, SOURCESTONE_BASKET, SOURCESTONE_ALTERNATING, SOURCESTONE_LARGE_BRICKS, SOURCESTONE_SMALL_BRICKS,

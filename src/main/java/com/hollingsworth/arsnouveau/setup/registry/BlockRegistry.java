@@ -183,9 +183,11 @@ public class BlockRegistry {
     public static RegistryWrapper<SconceBlock> SOURCESTONE_SCONCE_BLOCK = registerBlockAndItem(LibBlockNames.SOURCESTONE_SCONCE, SconceBlock::new);
     public static RegistryWrapper<SconceBlock> POLISHED_SCONCE_BLOCK = registerBlockAndItem(LibBlockNames.POLISHED_SCONCE, SconceBlock::new);
     public static RegistryWrapper<SconceBlock> ARCHWOOD_SCONCE_BLOCK = registerBlockAndItem(LibBlockNames.ARCHWOOD_SCONCE, SconceBlock::new);
+    public static RegistryWrapper<MagicFire> MAGIC_FIRE = registerBlockAndItem(LibBlockNames.MAGIC_FIRE, () -> new MagicFire(BlockBehaviour.Properties.of().mapColor(MapColor.FIRE).replaceable().noCollission().instabreak().lightLevel((p_152607_) -> {
+        return 15;
+    }).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY), 1.0f));
+
     public static RegistryWrapper<BlockEntityType<SconceTile>> SCONCE_TILE = new RegistryWrapper<>(BLOCK_ENTITIES.register(LibBlockNames.SCONCE, () -> BlockEntityType.Builder.of(SconceTile::new, GOLD_SCONCE_BLOCK.get(), SOURCESTONE_SCONCE_BLOCK.get(), POLISHED_SCONCE_BLOCK.get(), ARCHWOOD_SCONCE_BLOCK.get()).build(null)));
-
-
     public static RegistryWrapper<DrygmyStone> DRYGMY_BLOCK = registerBlockAndItem(LibBlockNames.DRYGMY_STONE, DrygmyStone::new);
     public static RegistryWrapper<BlockEntityType<DrygmyTile>> DRYGMY_TILE = registerTile(LibBlockNames.DRYGMY_STONE, DrygmyTile::new, DRYGMY_BLOCK);
     public static RegistryWrapper<AlchemicalSourcelinkBlock> ALCHEMICAL_BLOCK = registerBlockAndItem(LibBlockNames.ALCHEMICAL_SOURCELINK, AlchemicalSourcelinkBlock::new);
