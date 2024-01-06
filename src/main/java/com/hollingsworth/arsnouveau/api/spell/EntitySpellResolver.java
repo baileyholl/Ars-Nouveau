@@ -19,7 +19,7 @@ public class EntitySpellResolver extends SpellResolver {
     }
 
     @Override
-    boolean enoughMana(LivingEntity entity) {
+    protected boolean enoughMana(LivingEntity entity) {
         return true;
     }
 }
