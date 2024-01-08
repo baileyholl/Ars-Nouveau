@@ -41,6 +41,7 @@ public class ModPotions {
     });
     public static final RegistryObject<MobEffect> SUMMONING_SICKNESS_EFFECT = EFFECTS.register(SUMMONING_SICKNESS, () -> new PublicEffect(MobEffectCategory.HARMFUL, 2039587, new ArrayList<>()));
     public static final RegistryObject<MobEffect> HEX_EFFECT = EFFECTS.register(HEX, () -> new PublicEffect(MobEffectCategory.HARMFUL, 8080895));
+    public static final RegistryObject<MobEffect> FLARE_EFFECT = EFFECTS.register(FLARE, () -> new FlareEffect(MobEffectCategory.HARMFUL, 8080895));
     public static final RegistryObject<MobEffect> SCRYING_EFFECT = EFFECTS.register(SCRYING, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, 2039587));
     public static final RegistryObject<MobEffect> GLIDE_EFFECT = EFFECTS.register(GLIDE, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, 8080895));
     public static final RegistryObject<MobEffect> SNARE_EFFECT = EFFECTS.register(SNARE, SnareEffect::new);

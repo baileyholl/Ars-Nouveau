@@ -11,6 +11,7 @@ public class LibPotions {
     public static final String GLIDE = "glide";
     public static final String SCRYING = "scrying";
     public static final String FLIGHT = "flight";
+    public static final String FLARE = "flare";
 
     public static final String MANA_REGEN = "mana_regen";
     public static final String SPELL_DAMAGE = "spell_damage";

@@ -130,11 +130,9 @@ public class ModEntities {
     public static final RegistryObject<EntityType<Cinder>> CINDER = registerEntity(
             LibEntityNames.CINDER,
             EntityType.Builder.<Cinder>of(Cinder::new, MobCategory.MISC)
-                    .clientTrackingRange(20)
-                    .updateInterval(20)
+                    .sized(0.5f, 0.5f)
                     .setShouldReceiveVelocityUpdates(true)
-                    .noSave()
-                    .setCustomClientFactory(Cinder::new));
+                    .setTrackingRange(256));
     public static final RegistryObject<EntityType<SummonWolf>> SUMMON_WOLF = registerEntity(
             LibEntityNames.SUMMONED_WOLF,
             EntityType.Builder.of(SummonWolf::new, MobCategory.CREATURE).sized(0.6F, 0.85F).clientTrackingRange(10));
