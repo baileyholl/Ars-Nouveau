@@ -236,6 +236,10 @@ public class ModEntities {
             "enchanted_falling_block", EntityType.Builder.<EnchantedFallingBlock>of(EnchantedFallingBlock::new, MobCategory.MISC).sized(0.98F, 0.98F)
                     .setShouldReceiveVelocityUpdates(true)
                     .setTrackingRange(256));
+    public static final RegistryObject<EntityType<IceShardEntity>> ICE_SHARD = registerEntity(
+            "ice_shard", EntityType.Builder.<IceShardEntity>of(IceShardEntity::new, MobCategory.MISC).sized(0.98F, 0.98F)
+                    .setShouldReceiveVelocityUpdates(true)
+                    .setTrackingRange(256));
     public static final RegistryObject<EntityType<EnchantedMageblock>> ENCHANTED_MAGE_BLOCK = registerEntity(
             "enchanted_mage_block", EntityType.Builder.<EnchantedMageblock>of(EnchantedMageblock::new, MobCategory.MISC).sized(0.98F, 0.98F)
                     .setShouldReceiveVelocityUpdates(true)

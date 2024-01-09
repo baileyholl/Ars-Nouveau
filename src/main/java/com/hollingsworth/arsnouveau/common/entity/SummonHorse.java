@@ -12,6 +12,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
@@ -65,6 +66,11 @@ public class SummonHorse extends Horse implements ISummon {
     @Override
     public LivingEntity getOwner() {
         return ISummon.super.getOwner();
+    }
+
+    @Override
+    public Level level() {
+        return super.level();
     }
 
     @Override

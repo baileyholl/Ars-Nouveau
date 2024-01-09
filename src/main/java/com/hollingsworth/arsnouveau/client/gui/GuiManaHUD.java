@@ -7,8 +7,8 @@ import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
-import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.config.Config;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -66,7 +66,8 @@ public class GuiManaHUD {
             int offset = 67 - maxWidth / 2 + (maxWidth - minecraft.font.width(text));
 
             guiGraphics.drawString(minecraft.font, text, offset, yOffset - 10, 0xFFFFFF);
-            guiGraphics.drawString(minecraft.font, String.valueOf((int)(ClientInfo.reservedOverlayMana * maxMana)), offset + 69, yOffset - 20, 0xFFFFFF);
+            // reserved mana text
+            // guiGraphics.drawString(minecraft.font, String.valueOf((int)(ClientInfo.reservedOverlayMana * maxMana)), offset + 69, yOffset - 20, 0xFFFFFF);
         }
 
         guiGraphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_border.png"), offsetLeft, yOffset - 17, 0, 18, 108, 20, 256, 256);

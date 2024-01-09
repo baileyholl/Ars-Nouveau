@@ -74,7 +74,7 @@ public class SpellResolver implements Cloneable {
         }
     }
 
-    boolean enoughMana(LivingEntity entity) {
+    protected boolean enoughMana(LivingEntity entity) {
         int totalCost = getResolveCost();
         IManaCap manaCap = CapabilityRegistry.getMana(entity).orElse(null);
         if (manaCap == null)

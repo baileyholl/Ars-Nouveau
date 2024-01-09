@@ -345,8 +345,10 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
 
                 if (canBounce()) {
                     bounce(blockraytraceresult);
-                    pierceLeft--; //to replace with bounce field eventually
-                    if (numSensitive > 1) return;
+                    if (numSensitive > 1) {
+                        pierceLeft--; //to replace with bounce field eventually, reduce here since we're not calling attemptRemoval
+                        return;
+                    }
                 }
 
                 if (this.spellResolver != null) {

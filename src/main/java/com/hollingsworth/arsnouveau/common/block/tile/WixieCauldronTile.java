@@ -5,9 +5,9 @@ import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.api.recipe.*;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
+import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.common.block.WixieCauldron;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
@@ -31,6 +31,7 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
@@ -53,8 +54,13 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     private int craftCooldown; // We set a 1 tick cooldown to allow redstone updates to apply?
 
     public int craftingIndex;
+
+    public WixieCauldronTile(BlockEntityType<? extends WixieCauldronTile> wixieCauldronType, BlockPos pos, BlockState state) {
+        super(wixieCauldronType, pos, state);
+    }
+
     public WixieCauldronTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.WIXIE_CAULDRON_TYPE, pos, state);
+        this(BlockRegistry.WIXIE_CAULDRON_TYPE.get(), pos, state);
     }
 
     @Override
