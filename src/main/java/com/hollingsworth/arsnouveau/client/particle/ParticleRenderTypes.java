@@ -61,7 +61,7 @@ public class ParticleRenderTypes {
             }
             RenderSystem.enableCull();
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
-            RenderSystem.enableDepthTest();
+            RenderSystem.disableDepthTest();
             buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
         }
 
