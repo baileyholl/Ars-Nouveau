@@ -18,7 +18,8 @@
   "d600e728-1c5e-4ee8-8df7-2899465c9129", "d155b322-ff09-4c0f-9438-21ba7c572490", "bb21a5a9-4a9a-49f9-84f9-1ff375bca6bf",
   "1f470f2a-a05b-4b6b-9d84-4b62f8686e5b", "d600e728-1c5e-4ee8-8df7-2899465c9129", "43ec37c2-8b0d-4bda-9f6a-5f78c3b572d0",
   "5a4971f3-6fb0-446e-8512-cca380ec7e85", "6859954f-e3b0-45a8-84d7-5f9e9782651f", "f24ec99c-5d9b-4815-8938-5401f5d62877",
-  "2980a99e-8582-4f63-9b82-f7117bc8be2c", "674b6c55-c4f3-4ef6-9a57-b4a7455f1296"],
+  "2980a99e-8582-4f63-9b82-f7117bc8be2c", "674b6c55-c4f3-4ef6-9a57-b4a7455f1296","0f4c174e-26f1-43c3-81d0-88507dba6e52",
+  "5b1c9f9b-edd0-4632-9ba3-79b6dcc9bfa8"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -295,6 +296,16 @@
       "color": "purple",
       "adopter": "GreyTalyn",
       "bio": "Winner of the Squiggle Olympics, lover of fine cheese. Thinks they're a werewolf."
+    },{
+      "name": "Sunsun",
+      "color": "orange",
+      "adopter": "RessFaure",
+      "bio": "Love to hang out when it's sunny and run after light. He's a bit warm like a little flame."
+    },{
+      "name": "Engenix, the curious",
+      "color": "cyan",
+      "adopter": "Suelvys",
+      "bio": "A little Starbuncle who lived in the forests near the house of an intelligent and friendly engineer, where he learned to create various things and lives making gadgets around, gears occasionally fall out of his magic tail (it's not clear how he keeps so many things in it, it must be magic), he loves copper nuggets and driving trains and machines, always curious and willing to help anyone who calls him."
     }
   ]
 }
