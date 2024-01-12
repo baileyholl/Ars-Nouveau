@@ -20,7 +20,7 @@ public class EntityDebugger implements IDebugger{
     public void addEntityEvent(DebugEvent event, boolean storeDuplicate) {
         // Do not store duplicate events back to back with the same ID
         if(storeDuplicate || events.isEmpty() || !events.peek().id.equals(event.id)){
-            events.add(new EntityEvent(entity, event.id, event.message));
+            events.push(new EntityEvent(entity, event.id, event.message));
         }
     }
 
