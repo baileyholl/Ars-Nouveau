@@ -42,6 +42,7 @@ public class Config {
     public static ForgeConfigSpec.IntValue MELDER_OUTPUT;
     public static ForgeConfigSpec.IntValue MELDER_INPUT_COST;
     public static ForgeConfigSpec.IntValue MELDER_SOURCE_COST;
+    public static ForgeConfigSpec.IntValue ENCHANTED_FLASK_CAP;
     public static ForgeConfigSpec.BooleanValue HUNTER_ATTACK_ANIMALS;
     public static ForgeConfigSpec.BooleanValue STALKER_ATTACK_ANIMALS;
     public static ForgeConfigSpec.BooleanValue GUARDIAN_ATTACK_ANIMALS;
@@ -142,6 +143,7 @@ public class Config {
         MELDER_INPUT_COST = SERVER_BUILDER.comment("How much potion a melder takes from each input jar. 100 = 1 potion").defineInRange("melderInputCost", 200, 100, Integer.MAX_VALUE);
         MELDER_OUTPUT = SERVER_BUILDER.comment("How much potion a melder outputs per cycle. 100 = 1 potion").defineInRange("melderOutput", 100, 100, Integer.MAX_VALUE);
         MELDER_SOURCE_COST = SERVER_BUILDER.comment("How much source a melder takes per cycle").defineInRange("melderSourceCost", 300, 0, Integer.MAX_VALUE);
+        ENCHANTED_FLASK_CAP = SERVER_BUILDER.comment("The max potion level the enchanted flask can grant. This isnt needed unless you have an infinite potion leveling exploit.").defineInRange("enchantedFlaskCap", 255, 2, Integer.MAX_VALUE);
         SERVER_BUILDER.pop();
 
         SERVER_BUILDER.comment("Debug").push("debug");

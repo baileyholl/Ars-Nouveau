@@ -176,7 +176,8 @@ public class ItemsRegistry {
     public static RegistryWrapper<PotionFlask> POTION_FLASK_AMPLIFY = register(LibItemNames.POTION_FLASK_AMPLIFY, () -> new PotionFlask() {
         @Override
         public MobEffectInstance getEffectInstance(MobEffectInstance effectInstance) {
-            return new MobEffectInstance(effectInstance.getEffect(), effectInstance.getDuration() / 2, effectInstance.getAmplifier() + 1);
+
+            return new MobEffectInstance(effectInstance.getEffect(), effectInstance.getDuration() / 2, Math.min(Config.ENCHANTED_FLASK_CAP.get(), effectInstance.getAmplifier() + 1));
         }
     }.withTooltip(Component.translatable("tooltip.potion_flask_amplify")));
 
