@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -18,7 +19,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -43,8 +43,8 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
         float damage = (float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
         int snareSec = 0;//(int) (POTION_TIME.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier());
 
-//        if (!canDamage(livingEntity))
-//            return;
+        if (!canDamage(livingEntity))
+            return;
         this.damage(vec, level, shooter, livingEntity, spellStats, spellContext, resolver, snareSec, damage);
         spawnCinders(shooter, level,rayTraceResult.getLocation().add(0, (rayTraceResult.getEntity().onGround() ? 1 : 0),0), spellStats, spellContext, resolver);
     }
@@ -52,10 +52,22 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         super.onResolveBlock(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
-        if(!world.getBlockState(rayTraceResult.getBlockPos()).is(BlockTags.ICE))
+
+        if(world.getBlockState(rayTraceResult.getBlockPos()).is(BlockTags.FIRE)){
+            spawnCinders(shooter, world, rayTraceResult.getLocation(), spellStats, spellContext, resolver);
             return;
-        world.setBlock(rayTraceResult.getBlockPos(), Blocks.AIR.defaultBlockState(), 3);
-        spawnCinders(shooter, world, rayTraceResult.getLocation(), spellStats, spellContext, resolver);
+        }
+
+        for(Direction d : Direction.values()){
+            if(world.getBlockState(rayTraceResult.getBlockPos().relative(d)).is(BlockTags.FIRE)){
+                spawnCinders(shooter, world, rayTraceResult.getLocation(), spellStats, spellContext, resolver);
+                return;
+            }
+        }
+    }
+
+    public boolean canDamage(LivingEntity livingEntity) {
+        return livingEntity.isOnFire() || livingEntity.hasEffect(ModPotions.BLAST_EFFECT.get()) || livingEntity.level.getBlockState(livingEntity.blockPosition()).is(BlockTags.FIRE);
     }
 
     public void spawnCinders(LivingEntity shooter, Level level, Vec3 hit, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){

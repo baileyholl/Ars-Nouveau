@@ -5,15 +5,13 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.AbstractCandleBlock;
-import net.minecraft.world.level.block.BaseFireBlock;
-import net.minecraft.world.level.block.CampfireBlock;
-import net.minecraft.world.level.block.CandleBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -37,8 +35,11 @@ public class EffectIgnite extends AbstractEffect {
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (spellStats.isSensitive())
+        if (spellStats.isSensitive()) {
+            BlockPos target = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
+            world.setBlock(target, BlockRegistry.MAGIC_FIRE.get().getStateForPlacement(world, target), 3);
             return;
+        }
         BlockState hitState = world.getBlockState(rayTraceResult.getBlockPos());
         if (hitState.getBlock() instanceof CandleBlock && CandleBlock.canLight(hitState) || hitState.getBlock() instanceof CampfireBlock && CampfireBlock.canLight(hitState)) {
             AbstractCandleBlock.setLit(world, hitState, rayTraceResult.getBlockPos(), true);
@@ -83,7 +84,7 @@ public class EffectIgnite extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Sets blocks and mobs on fire for a short time. Sensitive will stop this spell from igniting blocks.";
+        return "Sets blocks and mobs on fire for a short time. Sensitive will summon Mage Fire, a shorter lived fire that will not spread or destroy blocks.";
     }
 
    @NotNull

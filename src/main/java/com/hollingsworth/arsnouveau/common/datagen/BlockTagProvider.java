@@ -45,6 +45,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
 
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
+        this.tag(BlockTags.FIRE).add(BlockRegistry.MAGIC_FIRE.get());
         this.tag(OCCLUDES_SPELL_SENSOR).add(BlockRegistry.MAGEBLOOM_BLOCK.get());
         this.tag(RELOCATION_NOT_SUPPORTED);
         this.tag(BUDDING_BLOCKS).add(Blocks.BUDDING_AMETHYST);
