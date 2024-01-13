@@ -29,7 +29,9 @@ public class EffectLinger extends AbstractEffect {
         if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
 
-        SpellContext newContext = resolver.spellContext.makeChildContext();
+        SpellContext newContext = spellContext.makeChildContext();
+        spellContext.setCanceled(true);
+
         entityLingeringSpell.setAoe((float) spellStats.getAoeMultiplier());
         entityLingeringSpell.setSensitive(spellStats.isSensitive());
         entityLingeringSpell.setAccelerates((int) spellStats.getAccMultiplier());

@@ -46,7 +46,9 @@ public class EffectBurst extends AbstractEffect {
 
     public void makeSphere(BlockPos center, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
         if (spellContext.getRemainingSpell().isEmpty()) return;
-        SpellContext newContext = resolver.spellContext.makeChildContext();
+        SpellContext newContext = spellContext.makeChildContext();
+        spellContext.setCanceled(true);
+
         int radius = (int) (1 + spellStats.getAoeMultiplier());
         Predicate<Double> Sphere = spellStats.hasBuff(AugmentDampen.INSTANCE) ? (distance) -> distance <= radius + 0.5 && distance >= radius - 0.5 : (distance) -> (distance <= radius + 0.5);
         if (spellStats.isSensitive()) {
