@@ -30,18 +30,26 @@ public class ModPotions {
     public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTIONS, MODID);
 
     public static final RegistryObject<MobEffect> SHOCKED_EFFECT = EFFECTS.register(SHOCKED, ShockedEffect::new);
+
+    //TODO Consider switching to vanilla builder method for adding attribute modifiers
     public static final RegistryObject<MobEffect> MANA_REGEN_EFFECT = EFFECTS.register(MANA_REGEN, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, 8080895) {
         @Override
         public void addAttributeModifiers(LivingEntity pLivingEntity, AttributeMap pAttributeMap, int pAmplifier) {
-            super.addAttributeModifiers(pLivingEntity, pAttributeMap, pAmplifier);
             AttributeModifier attributemodifier = new AttributeModifier(UUID.fromString("bb72a21d-3e49-4e8e-b81c-3bfa9cf746b0"), this::getDescriptionId, ServerConfig.MANA_REGEN_POTION.get() * (1 + pAmplifier), AttributeModifier.Operation.ADDITION);
             this.getAttributeModifiers().put(PerkAttributes.MANA_REGEN_BONUS.get(), attributemodifier);
+            super.addAttributeModifiers(pLivingEntity, pAttributeMap, pAmplifier);
         }
 
     });
     public static final RegistryObject<MobEffect> SUMMONING_SICKNESS_EFFECT = EFFECTS.register(SUMMONING_SICKNESS, () -> new PublicEffect(MobEffectCategory.HARMFUL, 2039587, new ArrayList<>()));
-    public static final RegistryObject<MobEffect> HEX_EFFECT = EFFECTS.register(HEX, () -> new PublicEffect(MobEffectCategory.HARMFUL, 8080895));
-    public static final RegistryObject<MobEffect> FLARE_EFFECT = EFFECTS.register(FLARE, () -> new FlareEffect(MobEffectCategory.HARMFUL, 8080895));
+
+    public static final RegistryObject<MobEffect> HEX_EFFECT = EFFECTS.register(HEX, () -> new PublicEffect(MobEffectCategory.HARMFUL, 8080895) {
+        @Override
+        public void addAttributeModifiers(LivingEntity pLivingEntity, AttributeMap pAttributeMap, int pAmplifier) {
+            getAttributeModifiers().put(PerkAttributes.MANA_REGEN_BONUS.get(), new AttributeModifier(UUID.fromString("5636ef7d-0136-4205-aabc-fd7cf0d29d05"), this::getDescriptionId, -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            super.addAttributeModifiers(pLivingEntity, pAttributeMap, pAmplifier);
+        }
+    });
     public static final RegistryObject<MobEffect> SCRYING_EFFECT = EFFECTS.register(SCRYING, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, 2039587));
     public static final RegistryObject<MobEffect> GLIDE_EFFECT = EFFECTS.register(GLIDE, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, 8080895));
     public static final RegistryObject<MobEffect> SNARE_EFFECT = EFFECTS.register(SNARE, SnareEffect::new);
@@ -50,8 +58,8 @@ public class ModPotions {
     public static final RegistryObject<MobEffect> SPELL_DAMAGE_EFFECT = EFFECTS.register(SPELL_DAMAGE, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, new ParticleColor(30, 200, 200).getColor()) {
         @Override
         public void addAttributeModifiers(LivingEntity pLivingEntity, AttributeMap pAttributeMap, int pAmplifier) {
-            super.addAttributeModifiers(pLivingEntity, pAttributeMap, pAmplifier);
             getAttributeModifiers().put(PerkAttributes.SPELL_DAMAGE_BONUS.get(), new AttributeModifier(UUID.fromString("7a8b8f12-077b-430c-8da7-fd21c95dceb3"), this::getDescriptionId, 1.5F * (1 + pAmplifier), AttributeModifier.Operation.ADDITION));
+            super.addAttributeModifiers(pLivingEntity, pAttributeMap, pAmplifier);
         }
     });
     public static final RegistryObject<MobEffect> BOUNCE_EFFECT = EFFECTS.register(BOUNCE, BounceEffect::new);
