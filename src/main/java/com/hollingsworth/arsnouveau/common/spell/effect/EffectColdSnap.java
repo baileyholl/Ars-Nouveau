@@ -106,6 +106,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
         fallingBlock.setDeltaMovement(pos.getX() - targetPos.getX(), pos.getY() - targetPos.getY(), pos.getZ() - targetPos.getZ());
         fallingBlock.setDeltaMovement(fallingBlock.getDeltaMovement().multiply(scaleVec));
         fallingBlock.cancelDrop = true;
+        fallingBlock.dropItem = false;
         fallingBlock.hurtEntities = true;
         fallingBlock.baseDamage = ((float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier())) * 0.5f;
         fallingBlock.shooter = shooter;

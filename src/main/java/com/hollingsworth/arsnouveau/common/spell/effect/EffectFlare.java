@@ -45,7 +45,7 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
 
 //        if (!canDamage(livingEntity))
 //            return;
-//        this.damage(vec, level, shooter, livingEntity, spellStats, spellContext, resolver, snareSec, damage);
+        this.damage(vec, level, shooter, livingEntity, spellStats, spellContext, resolver, snareSec, damage);
         spawnCinders(shooter, level,rayTraceResult.getLocation().add(0, (rayTraceResult.getEntity().onGround() ? 1 : 0),0), spellStats, spellContext, resolver);
     }
 
@@ -74,7 +74,7 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
             // Send the falling block the opposite direction of the target
             fallingBlock.setDeltaMovement(vec3.x() - hit.x(), ParticleUtil.inRange(0.1, 0.5), vec3.z() - hit.z());
             fallingBlock.setDeltaMovement(fallingBlock.getDeltaMovement().multiply(scaleVec));
-            fallingBlock.cancelDrop = true;
+            fallingBlock.dropItem = false;
             fallingBlock.hurtEntities = true;
             fallingBlock.baseDamage = ((float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier())) * 0.5f;
             fallingBlock.shooter = shooter;

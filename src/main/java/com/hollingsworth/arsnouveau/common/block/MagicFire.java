@@ -25,8 +25,8 @@ import java.util.stream.Collectors;
 
 public class MagicFire extends BaseFireBlock {
 
-    public static final int MAX_AGE = 15;
-    public static final IntegerProperty AGE = BlockStateProperties.AGE_15;
+    public static final int MAX_AGE = 7;
+    public static final IntegerProperty AGE = BlockStateProperties.AGE_7;
     public static final BooleanProperty NORTH = PipeBlock.NORTH;
     public static final BooleanProperty EAST = PipeBlock.EAST;
     public static final BooleanProperty SOUTH = PipeBlock.SOUTH;
@@ -44,7 +44,7 @@ public class MagicFire extends BaseFireBlock {
 
     public MagicFire(Properties pProperties, float pFireDamage) {
         super(pProperties, pFireDamage);
-        this.registerDefaultState(this.stateDefinition.any().setValue(AGE, Integer.valueOf(0)).setValue(NORTH, Boolean.valueOf(false)).setValue(EAST, Boolean.valueOf(false)).setValue(SOUTH, Boolean.valueOf(false)).setValue(WEST, Boolean.valueOf(false)).setValue(UP, Boolean.valueOf(false)));
+        this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0).setValue(NORTH, Boolean.FALSE).setValue(EAST, Boolean.FALSE).setValue(SOUTH, Boolean.FALSE).setValue(WEST, Boolean.FALSE).setValue(UP, Boolean.FALSE));
         this.shapesCache = ImmutableMap.copyOf(this.stateDefinition.getPossibleStates().stream().filter((p_53497_) -> {
             return p_53497_.getValue(AGE) == 0;
         }).collect(Collectors.toMap(Function.identity(), MagicFire::calculateShape)));
@@ -128,13 +128,11 @@ public class MagicFire extends BaseFireBlock {
             BlockState blockstate = pLevel.getBlockState(pPos.below());
             boolean fireSourceBelow = blockstate.isFireSource(pLevel, pPos, Direction.UP);
             int age = pState.getValue(AGE);
-            if (!pState.canSurvive(pLevel, pPos)) {
-            }
             if (!fireSourceBelow && pLevel.isRaining() && this.isNearRain(pLevel, pPos) && pRandom.nextFloat() < 0.2F + (float) age * 0.03F) {
                 pLevel.removeBlock(pPos, false);
                 pLevel.removeBlock(pPos, false);
             } else {
-                int j = Math.min(15, age + pRandom.nextInt(3) / 2);
+                int j = Math.min(MAX_AGE, age + pRandom.nextInt(3) / 2);
                 if (age != j) {
                     pState = pState.setValue(AGE, Integer.valueOf(j));
                     pLevel.setBlock(pPos, pState, 4);
@@ -150,7 +148,7 @@ public class MagicFire extends BaseFireBlock {
                         return;
                     }
 
-                    if (age == 15 && pRandom.nextInt(4) == 0 && !this.canCatchFire(pLevel, pPos.below(), Direction.UP)) {
+                    if (age == MAX_AGE && pRandom.nextInt(4) == 0 && !this.canCatchFire(pLevel, pPos.below(), Direction.UP)) {
                         pLevel.removeBlock(pPos, false);
                         return;
                     }
