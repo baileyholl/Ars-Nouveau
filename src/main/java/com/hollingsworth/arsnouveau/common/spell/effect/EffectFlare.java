@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.Cinder;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.potions.BlastEffect;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
@@ -47,6 +48,12 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
             return;
         this.damage(vec, level, shooter, livingEntity, spellStats, spellContext, resolver, snareSec, damage);
         spawnCinders(shooter, level,rayTraceResult.getLocation().add(0, (rayTraceResult.getEntity().onGround() ? 1 : 0),0), spellStats, spellContext, resolver);
+
+        if(rayTraceResult.getEntity() instanceof LivingEntity living && living.hasEffect(ModPotions.BLAST_EFFECT.get())){
+            int amplifier = living.getEffect(ModPotions.BLAST_EFFECT.get()).getAmplifier();
+            living.removeEffect(ModPotions.BLAST_EFFECT.get());
+            BlastEffect.explode(living, amplifier + 1);
+        }
     }
 
     @Override
@@ -143,7 +150,7 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
 
     @Override
     public String getBookDescription() {
-        return "When used on entities that are on fire, Flare causes a burst of damage and will spread fire and deal damage to other nearby entities. Does significantly more damage than Harm. Can be augmented with Extend Time, Amplify, and AOE.";
+        return "When used on an entity or block that is on fire or afflicted with Blasting, Cinders will explode around the target, dealing damage and creating Mage Fire nearby. Mage Fire cannot spread to blocks and is short lived. Entities with Blasting will immediately explode for extra strength.";
     }
 
     @Override
