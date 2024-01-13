@@ -20,22 +20,16 @@ public class DelayedSpellEvent implements ITimedEvent {
     private final SpellContext context;
     private final HitResult result;
     private final Level world;
-    private final @Nullable LivingEntity shooter;
 
     @Deprecated(forRemoval = true)
     public DelayedSpellEvent(int delay, Spell spell, HitResult result, Level world, @Nullable LivingEntity shooter, SpellContext context) {
-        this.duration = delay;
-        this.result = result;
-        this.world = world;
-        this.shooter = shooter;
-        this.context = context;
+        this(delay, result, world, context);
     }
 
-    public DelayedSpellEvent(int delay, HitResult result, Level world, @Nullable LivingEntity shooter, SpellContext context) {
+    public DelayedSpellEvent(int delay, HitResult result, Level world, SpellContext context) {
         this.duration = delay;
         this.result = result;
         this.world = world;
-        this.shooter = shooter;
         this.context = context;
     }
 
