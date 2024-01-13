@@ -174,8 +174,8 @@ public class SpellContext implements Cloneable {
         return isCanceled;
     }
 
-    public boolean setCanceled(boolean canceled){
-        return setCanceled(canceled, CancelReason.NEW_CONTEXT);
+    public void setCanceled(boolean canceled){
+        setCanceled(canceled, CancelReason.NEW_CONTEXT);
     }
 
     /**
