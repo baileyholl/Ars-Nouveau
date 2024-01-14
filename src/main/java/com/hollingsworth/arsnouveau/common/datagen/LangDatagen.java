@@ -1262,6 +1262,8 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.redstone_relay", "Redstone Relay");
         add("ars_nouveau.page1.redstone_relay", "Can be connected to other Redstone Relays to wirelessly send a redstone signal. Takes input from one side and outputs in all other directions. Can be connected within 30 blocks of another relay, and multiple relays can be connected.");
         add("block.ars_nouveau.magic_fire", "Mage Fire");
+        add("effect.ars_nouveau.immolate", "Immolate");
+        add("effect.ars_nouveau.immolate.desc", "Enhances fire spells.");
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             String key = "block.ars_nouveau." + s;
             String val = data.get(key);

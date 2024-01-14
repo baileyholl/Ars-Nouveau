@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class KnockbackResistPerk extends Perk {
 
-    public static final KnockbackResistPerk INSTANCE = new KnockbackResistPerk(new ResourceLocation(ArsNouveau.MODID, "thread_knockback_resist"));
+    public static final KnockbackResistPerk INSTANCE = new KnockbackResistPerk(new ResourceLocation(ArsNouveau.MODID, "thread_amethyst_golem"));
     public static final UUID PERK_UUID = UUID.fromString("b1d84c5d-4c84-4626-b275-94698b08aae1");
 
     public KnockbackResistPerk(ResourceLocation key) {
@@ -28,7 +28,7 @@ public class KnockbackResistPerk extends Perk {
 
     @Override
     public String getLangName() {
-        return "Sturdy";
+        return "The Amethyst Golem";
     }
 
     @Override

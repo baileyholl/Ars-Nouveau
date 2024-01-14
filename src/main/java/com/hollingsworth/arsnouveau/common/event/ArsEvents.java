@@ -11,6 +11,8 @@ import com.hollingsworth.arsnouveau.common.spell.effect.EffectInvisibility;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ArmorItem;
@@ -64,6 +66,13 @@ public class ArsEvents {
             if (e.world.getBlockEntity(blockHitResult.getBlockPos()) instanceof GhostWeaveTile ghostWeaveTile) {
                 ghostWeaveTile.setVisibility(true);
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void preSpellDamage(SpellDamageEvent.Pre e) {
+        if (e.damageSource.is(DamageTypeTags.IS_FIRE) && e.caster.hasEffect(ModPotions.IMMOLATE_EFFECT.get())) {
+            e.damage += 2 * (e.caster.getEffect(ModPotions.IMMOLATE_EFFECT.get()).getAmplifier() + 1);
         }
     }
 

@@ -28,7 +28,7 @@ public class PotionDurationPerk extends Perk {
 
     @Override
     public String getLangName() {
-        return "Wixie";
+        return "The Wixie";
     }
 
     @Override

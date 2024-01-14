@@ -1068,6 +1068,21 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
         addRecipe(builder().withReagent(ItemsRegistry.RING_OF_POTENTIAL).withResult(ItemsRegistry.JUMP_RING)
                 .withPedestalItem(3, ItemsRegistry.WILDEN_WING)
                 .withPedestalItem(ItemsRegistry.AIR_ESSENCE).build());
+
+        addRecipe(builder().withResult(getPerkItem(ImmolatePerk.INSTANCE.getRegistryName()))
+                .withReagent(ItemsRegistry.BLANK_THREAD)
+                .withPedestalItem(3, ItemsRegistry.FIRE_ESSENCE)
+                .build());
+
+        addRecipe(builder().withResult(getPerkItem(StepHeightPerk.INSTANCE.getRegistryName()))
+                .withReagent(ItemsRegistry.BLANK_THREAD)
+                .withPedestalItem(3, ItemsRegistry.AIR_ESSENCE.get())
+                .build());
+        addRecipe(builder().withResult(getPerkItem(KnockbackResistPerk.INSTANCE.getRegistryName()))
+                .withReagent(ItemsRegistry.BLANK_THREAD)
+                .withPedestalItem(3, Ingredient.of(Tags.Items.OBSIDIAN))
+                .build());
+
     }
 
     public void makeArmor(ItemLike outputItem, ItemLike armorItem) {

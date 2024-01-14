@@ -2,7 +2,9 @@ package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.event.EffectResolveEvent;
+import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellDamageEvent;
+import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.api.perk.IEffectResolvePerk;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
@@ -57,11 +59,41 @@ public class PerkEvents {
     }
 
     @SubscribeEvent
+    public static void onSpellCast(SpellCastEvent spellCastEvent){
+        PerkUtil.getPerksFromLiving(spellCastEvent.getEntity()).forEach(perkInstance -> {
+            IPerk perk = perkInstance.getPerk();
+            if (perk instanceof IEffectResolvePerk) {
+                ((IEffectResolvePerk) perk).onSpellCast(spellCastEvent, perkInstance);
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void preSpellResolve(final SpellResolveEvent.Pre event){
+        PerkUtil.getPerksFromLiving(event.shooter).forEach(perkInstance -> {
+            IPerk perk = perkInstance.getPerk();
+            if (perk instanceof IEffectResolvePerk) {
+                ((IEffectResolvePerk) perk).onSpellPreResolve(event, perkInstance);
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void postSpellResolve(final SpellResolveEvent.Post event){
+        PerkUtil.getPerksFromLiving(event.shooter).forEach(perkInstance -> {
+            IPerk perk = perkInstance.getPerk();
+            if (perk instanceof IEffectResolvePerk) {
+                ((IEffectResolvePerk) perk).onSpellPostResolve(event, perkInstance);
+            }
+        });
+    }
+
+    @SubscribeEvent
     public static void preEffectResolve(final EffectResolveEvent.Pre event){
         PerkUtil.getPerksFromLiving(event.shooter).forEach(perkInstance -> {
             IPerk perk = perkInstance.getPerk();
             if (perk instanceof IEffectResolvePerk) {
-                ((IEffectResolvePerk) perk).onPreResolve(event, perkInstance);
+                ((IEffectResolvePerk) perk).onEffectPreResolve(event, perkInstance);
             }
         });
     }
@@ -71,7 +103,7 @@ public class PerkEvents {
         PerkUtil.getPerksFromLiving(event.shooter).forEach(perkInstance -> {
             IPerk perk = perkInstance.getPerk();
             if (perk instanceof IEffectResolvePerk) {
-                ((IEffectResolvePerk) perk).onPostResolve(event, perkInstance);
+                ((IEffectResolvePerk) perk).onEffectPostResolve(event, perkInstance);
             }
         });
     }

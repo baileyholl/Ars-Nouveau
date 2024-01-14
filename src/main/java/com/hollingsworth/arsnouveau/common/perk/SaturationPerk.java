@@ -35,7 +35,7 @@ public class SaturationPerk extends Perk {
 
     @Override
     public String getLangName() {
-        return "Whirlisprig";
+        return "The Whirlisprig";
     }
 
     @Override

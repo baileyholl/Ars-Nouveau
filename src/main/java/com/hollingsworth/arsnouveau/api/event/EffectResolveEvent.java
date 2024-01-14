@@ -29,7 +29,8 @@ public class EffectResolveEvent extends Event {
     }
 
     /**
-     * Fired before a glyph is resolved. Can be cancelled to stop resolving.
+     * Fired before a glyph is resolved and after SpellStats are calculated.
+     * Use this to modify the spell or stats before resolving. Can be cancelled to stop resolving.
      */
     public static class Pre extends EffectResolveEvent {
         public Pre(Level world, @NotNull LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, AbstractEffect resolveEffect, SpellStats spellStats, SpellResolver spellResolver) {
