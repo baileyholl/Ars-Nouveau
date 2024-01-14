@@ -32,7 +32,7 @@ public class LibEntityNames {
     public static final String BOOKWYRM = "bookwyrm";
     public static final String JABBERWOG = "jabberwog";
     public static final String WILDEN_HUNTER = "wilden_hunter";
-
+    public static final String CINDER = "cinder";
     public static final String WILDEN_STALKER = "wilden_stalker";
 
     public static final String WILDEN_GUARDIAN = "wilden_guardian";

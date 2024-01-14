@@ -28,15 +28,14 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketJoinedServer;
 import com.hollingsworth.arsnouveau.common.perk.JumpHeightPerk;
 import com.hollingsworth.arsnouveau.common.perk.LootingPerk;
-import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import com.hollingsworth.arsnouveau.common.ritual.DenySpawnRitual;
 import com.hollingsworth.arsnouveau.common.ritual.RitualFlight;
 import com.hollingsworth.arsnouveau.common.ritual.RitualGravity;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
-import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.config.Config;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import com.hollingsworth.arsnouveau.setup.registry.VillagerRegistry;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -261,12 +260,16 @@ public class EventHandler {
             e.setAmount(Math.max(0, damage));
         }
         LivingEntity entity = e.getEntity();
-        if (entity != null && entity.hasEffect(ModPotions.HEX_EFFECT.get()) &&
-                (entity.hasEffect(MobEffects.POISON) || entity.hasEffect(MobEffects.WITHER) || entity.isOnFire() || entity.hasEffect(ModPotions.SHOCKED_EFFECT.get()))) {
-            e.setAmount(e.getAmount() + 0.5f + 0.33f * entity.getEffect(ModPotions.HEX_EFFECT.get()).getAmplifier());
-        }
         if (entity == null)
             return;
+        if (entity.hasEffect(ModPotions.HEX_EFFECT.get())
+                && (entity.hasEffect(MobEffects.POISON)
+                || entity.hasEffect(MobEffects.WITHER)
+                || entity.isOnFire()
+                || entity.hasEffect(ModPotions.SHOCKED_EFFECT.get())
+                || entity.getTicksFrozen() >= entity.getTicksRequiredToFreeze())) {
+            e.setAmount(e.getAmount() + 0.5f + 0.33f * entity.getEffect(ModPotions.HEX_EFFECT.get()).getAmplifier());
+        }
         double warding = PerkUtil.valueOrZero(entity, PerkAttributes.WARDING.get());
         double feather = PerkUtil.valueOrZero(entity, PerkAttributes.FEATHER.get());
         if (e.getSource().is(DamageTypes.MAGIC)) {

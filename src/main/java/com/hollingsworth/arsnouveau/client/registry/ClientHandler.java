@@ -118,12 +118,12 @@ public class ClientHandler {
                 RenderFlyingItem::new);
 
         event.registerEntityRenderer(ModEntities.ENTITY_RITUAL.get(),
-                renderManager -> new RenderRitualProjectile(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
+                renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.ENTITY_SPELL_ARROW.get(), TippableArrowRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE.get(), (t) -> new TextureVariantRenderer<>(t, new WixieModel<>()));
         event.registerEntityRenderer(ModEntities.ENTITY_DUMMY.get(), DummyRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_DRYGMY.get(), (t) -> new TextureVariantRenderer<>(t, new DrygmyModel<>()));
-        event.registerEntityRenderer(ModEntities.ORBIT_SPELL.get(), renderManager -> new RenderRitualProjectile(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
+        event.registerEntityRenderer(ModEntities.ORBIT_SPELL.get(), renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.WILDEN_BOSS.get(), WildenChimeraRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_CHIMERA_SPIKE.get(), ChimeraProjectileRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get(), (t) -> new GenericFamiliarRenderer<>(t, new FamiliarStarbyModel<>()));
@@ -149,7 +149,7 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.GIFT_STARBY.get(), GiftStarbyRenderer::new);
         event.registerEntityRenderer(ModEntities.ANIMATED_BLOCK.get(), AnimBlockRenderer::new);
         event.registerEntityRenderer(ModEntities.ANIMATED_HEAD.get(), AnimSkullRenderer::new);
-
+        event.registerEntityRenderer(ModEntities.CINDER.get(), CinderRenderer::new);
         event.registerEntityRenderer(ModEntities.WALL_SPELL.get(),
                 renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.LILY.get(), LilyRenderer::new);

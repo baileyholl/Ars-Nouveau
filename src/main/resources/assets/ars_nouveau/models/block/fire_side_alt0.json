@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_fire_side_alt",
+  "render_type": "cutout",
+  "textures": {
+    "fire": "ars_nouveau:block/fire_0"
+  }
+}

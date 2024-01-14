@@ -1,4 +1,4 @@
-// 1.20.1	2023-12-09T15:30:59.8476153	AN tags
+// 1.20.1	2024-01-13T10:28:19.7812772	AN tags
 939cde8f97e4e8d7ea8445415522f703b2b927d4 data/ars_nouveau/tags/blocks/an_decorative.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/blocks/break_blacklist.json
 d4330c0670a8ff0476a64cff8c8e30d9e6d5d760 data/ars_nouveau/tags/blocks/break_with_pickaxe.json
@@ -31,6 +31,7 @@ a8499e798f3d96d8569c7b06e1c9b83d05da3caf data/ars_nouveau/tags/blocks/whirlispri
 a01909919207615cda1bb44f33db287efa02333b data/minecraft/tags/blocks/doors.json
 87c0ae6c7a718897569f2f2b4d81fdcf8e9b269b data/minecraft/tags/blocks/fences.json
 0a05d2d0fafe11fe202f401f1dbed0401ced9eca data/minecraft/tags/blocks/fence_gates.json
+538ec6e043a39f9e362acfa8b44db2f266ace007 data/minecraft/tags/blocks/fire.json
 248bbddd99634aced7fd4adc84b0290de05f4a0a data/minecraft/tags/blocks/leaves.json
 248bbddd99634aced7fd4adc84b0290de05f4a0a data/minecraft/tags/blocks/leaves/archwood_leaves.json
 da17a4d3113a940d3ad74c9d53bb9e561d800a66 data/minecraft/tags/blocks/logs.json

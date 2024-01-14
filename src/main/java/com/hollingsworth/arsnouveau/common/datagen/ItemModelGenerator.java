@@ -120,6 +120,7 @@ public class ItemModelGenerator extends ItemModelProvider {
         itemUnchecked(ItemsRegistry.SOUND_OF_GLASS);
         itemUnchecked(ItemsRegistry.JUMP_RING);
         getBuilder(LibBlockNames.SPELL_SENSOR).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.SPELL_SENSOR));
+
     }
 
     public void blockAsItem(String s){

@@ -42,6 +42,7 @@ public class ModPotions {
 
     });
     public static final RegistryObject<MobEffect> SUMMONING_SICKNESS_EFFECT = EFFECTS.register(SUMMONING_SICKNESS, () -> new PublicEffect(MobEffectCategory.HARMFUL, 2039587, new ArrayList<>()));
+
     public static final RegistryObject<MobEffect> HEX_EFFECT = EFFECTS.register(HEX, () -> new PublicEffect(MobEffectCategory.HARMFUL, 8080895) {
         @Override
         public void addAttributeModifiers(LivingEntity pLivingEntity, AttributeMap pAttributeMap, int pAmplifier) {
