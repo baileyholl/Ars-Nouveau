@@ -8,7 +8,6 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -66,7 +65,7 @@ public class EffectGlide extends AbstractEffect implements IPotionEffect {
     }
 
     public static boolean canGlide(LivingEntity entity) {
-        return entity.hasEffect(ModPotions.GLIDE_EFFECT.get()) || (entity instanceof Player player && PerkUtil.countForPerk(GlidingPerk.INSTANCE, player) > 0.0);
+        return entity.hasEffect(ModPotions.GLIDE_EFFECT.get()) || PerkUtil.countForPerk(GlidingPerk.INSTANCE, entity) > 0.0;
     }
 
     @Override

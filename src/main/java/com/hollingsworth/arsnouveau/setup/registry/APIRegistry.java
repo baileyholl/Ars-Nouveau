@@ -159,6 +159,7 @@ public class APIRegistry {
 
         registerPerk(EmptyPerk.INSTANCE);
         registerPerk(StarbunclePerk.INSTANCE);
+        registerPerk(StepHeightPerk.INSTANCE);
         registerPerk(DepthsPerk.INSTANCE);
         registerPerk(FeatherPerk.INSTANCE);
         registerPerk(GlidingPerk.INSTANCE);

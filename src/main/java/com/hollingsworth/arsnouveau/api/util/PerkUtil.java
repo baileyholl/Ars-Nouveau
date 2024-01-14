@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.api.util;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerkProvider;
@@ -40,7 +39,6 @@ public class PerkUtil {
             return perkItems;
         }
         for(IPerk perk : holder.getPerks()){
-            ArsNouveauAPI api = ArsNouveauAPI.getInstance();
             PerkItem item = PerkRegistry.getPerkItemMap().get(perk.getRegistryName());
             if(item != null){
                 perkItems.add(item);
@@ -58,33 +56,43 @@ public class PerkUtil {
         return perkInstances;
     }
 
+    @Deprecated
     public static List<PerkInstance> getPerksFromPlayer(Player player){
+        return getPerksFromLiving(player);
+    }
+
+    public static List<PerkInstance> getPerksFromLiving(LivingEntity player){
         List<PerkInstance> perkInstances = new ArrayList<>();
-        for(ItemStack stack : player.inventory.armor){
+        for(ItemStack stack : player.getArmorSlots()){
             perkInstances.addAll(getPerksFromItem(stack));
         }
         return perkInstances;
     }
 
-    public static int countForPerk(IPerk perk, Player player){
+    public static int countForPerk(IPerk perk, LivingEntity player){
         int maxCount = 0;
-        for(ItemStack stack : player.inventory.armor){
+        for(ItemStack stack : player.getArmorSlots()){
             IPerkHolder<ItemStack> holder = getPerkHolder(stack);
             if(holder == null)
                 continue;
             for(PerkInstance instance : holder.getPerkInstances()){
                 if(instance.getPerk() == perk){
-                   maxCount = Math.max(maxCount, instance.getSlot().value);
+                    maxCount = Math.max(maxCount, instance.getSlot().value);
                 }
             }
         }
         return maxCount;
     }
 
-    public static @Nullable IPerkHolder<ItemStack> getHolderForPerk(IPerk perk, Player player){
+    @Deprecated(forRemoval = true)
+    public static int countForPerk(IPerk perk, Player player){
+        return countForPerk(perk, (LivingEntity) player);
+    }
+
+    public static @Nullable IPerkHolder<ItemStack> getHolderForPerk(IPerk perk, LivingEntity entity){
         IPerkHolder<ItemStack> highestHolder = null;
         int maxCount = 0;
-        for(ItemStack stack : player.inventory.armor){
+        for(ItemStack stack : entity.getArmorSlots()){
             IPerkHolder<ItemStack> holder = getPerkHolder(stack);
             if(holder == null)
                 continue;
@@ -96,5 +104,10 @@ public class PerkUtil {
             }
         }
         return highestHolder;
+    }
+
+    @Deprecated(forRemoval = true)
+    public static @Nullable IPerkHolder<ItemStack> getHolderForPerk(IPerk perk, Player player){
+        return getHolderForPerk(perk, (LivingEntity) player);
     }
 }

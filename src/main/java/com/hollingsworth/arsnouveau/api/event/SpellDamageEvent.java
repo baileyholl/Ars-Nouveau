@@ -5,16 +5,17 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.eventbus.api.Event;
+import org.jetbrains.annotations.NotNull;
 
 public class SpellDamageEvent extends Event {
 
     public DamageSource damageSource;
     public SpellContext context;
-    public LivingEntity caster;
+    public @NotNull LivingEntity caster;
     public Entity target;
     public float damage;
 
-    private SpellDamageEvent(DamageSource source, LivingEntity shooter, Entity entity, float totalDamage, SpellContext context) {
+    private SpellDamageEvent(DamageSource source, @NotNull LivingEntity shooter, Entity entity, float totalDamage, SpellContext context) {
         this.damageSource = source;
         this.caster = shooter;
         this.target = entity;
