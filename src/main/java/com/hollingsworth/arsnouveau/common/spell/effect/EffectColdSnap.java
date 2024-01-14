@@ -51,6 +51,9 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
             return;
         this.damage(vec, level, shooter, livingEntity, spellStats, spellContext, resolver, snareSec, damage);
         spawnIce(shooter, level, BlockPos.containing(vec.x, vec.y + (rayTraceResult.getEntity().onGround() ? 1 : 0), vec.z), spellStats, spellContext, resolver);
+        if(livingEntity.hasEffect(ModPotions.FREEZING_EFFECT.get())){
+            livingEntity.setTicksFrozen(livingEntity.getTicksRequiredToFreeze() + 3);
+        }
     }
 
     @Override
@@ -175,7 +178,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
 
     @Override
     public String getBookDescription() {
-        return "Causes wet, slowed, or freezing entities to take a burst of damage and erupt into falling ice. Falling ice will slow and damage nearby entities. Can also be used to erupt a block of ice instead. Falling blocks of ice can be manipulated with the Focus of Block Shaping.";
+        return "Causes wet, slowed, or freezing entities to take a burst of damage and erupt into falling ice. Falling ice will slow and damage nearby entities. Can also be used to erupt a block of ice instead. Falling blocks of ice can be manipulated with the Focus of Block Shaping. Entities afflicted with Freezing will be set to the maximum freeze level immediately.";
     }
 
     @Override

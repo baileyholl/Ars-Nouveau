@@ -50,7 +50,7 @@ public class EffectHex extends AbstractEffect implements IPotionEffect {
 
     @Override
     public String getBookDescription() {
-        return "Applies the Hex effect. Hex increases any damage taken by a small amount while the user is afflicted by poison, wither, or fire. Additionally, Hex cuts the rate of Mana Regeneration and healing in half.";
+        return "Applies the Hex effect. Hex increases any damage taken by a small amount while the user is afflicted by poison, wither, fire, or when frozen. Additionally, Hex cuts the rate of Mana Regeneration and healing in half.";
     }
 
     @Override

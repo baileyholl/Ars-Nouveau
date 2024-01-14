@@ -132,6 +132,7 @@ public class ModEntities {
             EntityType.Builder.<Cinder>of(Cinder::new, MobCategory.MISC)
                     .sized(0.5f, 0.5f)
                     .setShouldReceiveVelocityUpdates(true)
+                    .fireImmune()
                     .setTrackingRange(256));
     public static final RegistryObject<EntityType<SummonWolf>> SUMMON_WOLF = registerEntity(
             LibEntityNames.SUMMONED_WOLF,

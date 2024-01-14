@@ -27,6 +27,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 public class EffectFlare extends AbstractEffect implements IDamageEffect {
@@ -79,14 +80,14 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
 
     public void spawnCinders(LivingEntity shooter, Level level, Vec3 hit, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
         double radiusMultiplier = 1;
-        double rotateSpeed = 1d;
-        int max = 11;
+        int max = (int) Math.ceil(3 + spellStats.getAoeMultiplier());
+        Random random = new Random();
         for(int i = 0; i < max; i++) {
             float offset = i * 15;
             Vec3 vec3 = new Vec3(
-                    hit.x() - radiusMultiplier * Math.sin(i / rotateSpeed + offset),
+                    hit.x() - radiusMultiplier * Math.sin(random.nextInt(360)),
                     hit.y(), // Offset if the owner died
-                    hit.z() - radiusMultiplier * Math.cos(i / rotateSpeed + offset));
+                    hit.z() - radiusMultiplier * Math.cos(random.nextInt(360)));
             Vec3 scaleVec =  new Vec3(ParticleUtil.inRange(0.1, 0.5), 1, ParticleUtil.inRange(0.1, 0.5));
 
             Cinder fallingBlock = new Cinder(level, vec3.x(), vec3.y(), vec3.z(), BlockRegistry.MAGIC_FIRE.defaultBlockState());
