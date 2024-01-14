@@ -726,6 +726,8 @@ public class RecipeDatagen extends RecipeProvider {
                     .define('M', SOURCE_GEM_BLOCK)
                     .define('x', Tags.Items.DUSTS_REDSTONE)
                     .save(consumer);
+            shapelessBuilder(BlockRegistry.SOURCEBERRY_SACK).requires(BlockRegistry.SOURCEBERRY_BUSH, 9).save(consumer);
+            shapelessBuilder(BlockRegistry.SOURCEBERRY_BUSH, 9).requires(BlockRegistry.SOURCEBERRY_SACK).save(consumer, new ResourceLocation(ArsNouveau.MODID, "sourceberry_sack_to_bush"));
         }
     }
 

@@ -1264,6 +1264,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.magic_fire", "Mage Fire");
         add("effect.ars_nouveau.immolate", "Immolate");
         add("effect.ars_nouveau.immolate.desc", "Enhances fire spells.");
+        add("block.ars_nouveau.sourceberry_sack", "Sourceberry Sack");
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             String key = "block.ars_nouveau." + s;
             String val = data.get(key);
