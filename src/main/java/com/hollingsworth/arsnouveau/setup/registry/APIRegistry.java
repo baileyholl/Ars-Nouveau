@@ -159,6 +159,8 @@ public class APIRegistry {
 
         registerPerk(EmptyPerk.INSTANCE);
         registerPerk(StarbunclePerk.INSTANCE);
+        registerPerk(StepHeightPerk.INSTANCE);
+        registerPerk(ImmolatePerk.INSTANCE);
         registerPerk(DepthsPerk.INSTANCE);
         registerPerk(FeatherPerk.INSTANCE);
         registerPerk(GlidingPerk.INSTANCE);
@@ -174,6 +176,7 @@ public class APIRegistry {
         registerPerk(IgnitePerk.INSTANCE);
         registerPerk(TotemPerk.INSTANCE);
         registerPerk(VampiricPerk.INSTANCE);
+        registerPerk(KnockbackResistPerk.INSTANCE);
 
     }
 

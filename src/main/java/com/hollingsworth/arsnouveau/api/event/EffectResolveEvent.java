@@ -5,12 +5,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.eventbus.api.Event;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 public class EffectResolveEvent extends Event {
     public Level world;
-    public @Nullable LivingEntity shooter;
+    public @NotNull LivingEntity shooter;
     public HitResult rayTraceResult;
     public Spell spell;
     public SpellContext context;
@@ -18,7 +17,7 @@ public class EffectResolveEvent extends Event {
     public SpellStats spellStats;
     public SpellResolver resolver;
 
-    private EffectResolveEvent(Level world, LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, AbstractEffect resolveEffect, SpellStats spellStats, SpellResolver spellResolver) {
+    private EffectResolveEvent(Level world, @NotNull LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, AbstractEffect resolveEffect, SpellStats spellStats, SpellResolver spellResolver) {
         this.world = world;
         this.shooter = shooter;
         this.rayTraceResult = result;
@@ -30,10 +29,11 @@ public class EffectResolveEvent extends Event {
     }
 
     /**
-     * Fired before a glyph is resolved. Can be cancelled to stop resolving.
+     * Fired before a glyph is resolved and after SpellStats are calculated.
+     * Use this to modify the spell or stats before resolving. Can be cancelled to stop resolving.
      */
     public static class Pre extends EffectResolveEvent {
-        public Pre(Level world, LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, AbstractEffect resolveEffect, SpellStats spellStats, SpellResolver spellResolver) {
+        public Pre(Level world, @NotNull LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, AbstractEffect resolveEffect, SpellStats spellStats, SpellResolver spellResolver) {
             super(world, shooter, result, spell, spellContext, resolveEffect, spellStats, spellResolver);
         }
 
@@ -48,7 +48,7 @@ public class EffectResolveEvent extends Event {
      */
     public static class Post extends EffectResolveEvent {
 
-        public Post(Level world, LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, AbstractEffect resolveEffect, SpellStats spellStats, SpellResolver spellResolver) {
+        public Post(Level world, @NotNull LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, AbstractEffect resolveEffect, SpellStats spellStats, SpellResolver spellResolver) {
             super(world, shooter, result, spell, spellContext, resolveEffect, spellStats, spellResolver);
         }
 

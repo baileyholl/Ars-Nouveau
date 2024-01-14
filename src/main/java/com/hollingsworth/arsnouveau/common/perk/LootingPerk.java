@@ -17,7 +17,7 @@ public class LootingPerk extends Perk {
 
     @Override
     public String getLangName() {
-        return "Drygmy";
+        return "The Drygmy";
     }
 
     @Override

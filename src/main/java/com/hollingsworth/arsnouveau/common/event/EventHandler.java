@@ -283,9 +283,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void fallEvent(LivingFallEvent fallEvent) {
-        if(!(fallEvent.getEntity() instanceof Player player))
-            return;
-        double jumpBonus = PerkUtil.countForPerk(JumpHeightPerk.INSTANCE, player);
+        double jumpBonus = PerkUtil.countForPerk(JumpHeightPerk.INSTANCE, fallEvent.getEntity());
         fallEvent.setDistance((float) (fallEvent.getDistance() - (jumpBonus / 0.1)));
         if(CuriosUtil.hasItem(fallEvent.getEntity(), ItemsRegistry.BELT_OF_LEVITATION.asItem())){
             fallEvent.setDistance(Math.max(0, fallEvent.getDistance() - 6));
@@ -393,7 +391,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void onLootingEvent(LootingLevelEvent event) {
-        if (event.getDamageSource() != null && event.getDamageSource().getEntity() instanceof Player living) {
+        if (event.getDamageSource() != null && event.getDamageSource().getEntity() instanceof LivingEntity living) {
             event.setLootingLevel(event.getLootingLevel() + Math.round(PerkUtil.countForPerk(LootingPerk.INSTANCE, living)));
         }
     }

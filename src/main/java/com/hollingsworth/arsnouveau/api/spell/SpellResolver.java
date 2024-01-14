@@ -6,15 +6,12 @@ import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellCostCalcEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
-import com.hollingsworth.arsnouveau.api.perk.IEffectResolvePerk;
-import com.hollingsworth.arsnouveau.api.perk.PerkInstance;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
-import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
-import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.NotEnoughManaPacket;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -30,7 +27,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.hollingsworth.arsnouveau.api.util.ManaUtil.getPlayerDiscounts;
@@ -161,7 +157,6 @@ public class SpellResolver implements Cloneable {
         MinecraftForge.EVENT_BUS.post(spellResolveEvent);
         if (spellResolveEvent.isCanceled())
             return;
-        List<PerkInstance> perkInstances = shooter instanceof Player player ? PerkUtil.getPerksFromPlayer(player) : new ArrayList<>();
         while (spellContext.hasNextPart()) {
             AbstractSpellPart part = spellContext.nextPart();
             if (part == null)
@@ -180,20 +175,7 @@ public class SpellResolver implements Cloneable {
             EffectResolveEvent.Pre preEvent = new EffectResolveEvent.Pre(world, shooter, this.hitResult, spell, spellContext, effect, stats, this);
             if (MinecraftForge.EVENT_BUS.post(preEvent))
                 continue;
-
-            for (PerkInstance perkInstance : perkInstances) {
-                if (perkInstance.getPerk() instanceof IEffectResolvePerk effectPerk) {
-                    effectPerk.onPreResolve(this.hitResult, world, shooter, stats, spellContext, this, effect, perkInstance);
-                }
-            }
             effect.onResolve(this.hitResult, world, shooter, stats, spellContext, this);
-            for (PerkInstance perkInstance : perkInstances) {
-                if (perkInstance.getPerk() instanceof IEffectResolvePerk effectPerk) {
-                    effectPerk.onPostResolve(this.hitResult, world, shooter, stats, spellContext, this, effect, perkInstance);
-
-                }
-            }
-
             MinecraftForge.EVENT_BUS.post(new EffectResolveEvent.Post(world, shooter, this.hitResult, spell, spellContext, effect, stats, this));
         }
 

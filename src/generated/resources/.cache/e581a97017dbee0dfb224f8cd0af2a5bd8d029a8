@@ -1,4 +1,4 @@
-// 1.20.1	2023-12-26T12:20:07.525311	Apparatus
+// 1.20.1	2024-01-14T13:20:19.1422162	Apparatus
 47c673376b4ffc5874674165c030f4e7213c87cb data/ars_nouveau/recipes/alchemists_crown.json
 9de96693a6f1f8acf98ddedc408117537e390b95 data/ars_nouveau/recipes/amulet_of_mana_boost.json
 9336968ca3afbcbcdcb1dfd5c8bbe859975835a0 data/ars_nouveau/recipes/amulet_of_mana_regen.json
@@ -144,12 +144,15 @@ f147aa1c0269cca5634737f4c1ddabccb682aa08 data/ars_nouveau/recipes/sweeping_2.jso
 62d3417fcded40c5b27e2108eef528f31cedce57 data/ars_nouveau/recipes/thorns_1.json
 61cc10aea1c8e514592b71160f54553dc65e3e81 data/ars_nouveau/recipes/thorns_2.json
 6b71c2071ea4d1ea2799e8e62fb0bf152bdd5120 data/ars_nouveau/recipes/thorns_3.json
+357e204119f122f377dbe4834c852ed90c8b9fa7 data/ars_nouveau/recipes/thread_amethyst_golem.json
 61d6fbbc58c2c31e5dd624dbf57c7db72ca91021 data/ars_nouveau/recipes/thread_chilling.json
 98f9bda8f773441ce9d56e9033321227ebf18908 data/ars_nouveau/recipes/thread_depths.json
 177c721fa4e3438d1fca2c43106916ba5e9bf637 data/ars_nouveau/recipes/thread_drygmy.json
 94dce20351b9d3032985f15346a3433e86158d35 data/ars_nouveau/recipes/thread_feather.json
 2b12a718fa45a9c28d12699e81e1a36a8280eee0 data/ars_nouveau/recipes/thread_gliding.json
 19aaca263d1b9c8fdeb9d24498acba1cf86bf4e3 data/ars_nouveau/recipes/thread_heights.json
+0529fff0aa61f87beb0cc790209e8a3e50cf6cb1 data/ars_nouveau/recipes/thread_high_step.json
+def934419266f753070ed01e0231596062b25811 data/ars_nouveau/recipes/thread_immolation.json
 b2452b46446df1616212bf48cbeaed9033890a69 data/ars_nouveau/recipes/thread_kindling.json
 ccb614ebf64ef93ae01b603148f24ca2296891f4 data/ars_nouveau/recipes/thread_life_drain.json
 6caacc7461039b09cb526473381588a99378ba1d data/ars_nouveau/recipes/thread_magic_capacity.json
