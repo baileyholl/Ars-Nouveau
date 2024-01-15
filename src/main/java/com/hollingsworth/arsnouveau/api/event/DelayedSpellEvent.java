@@ -17,18 +17,19 @@ import javax.annotation.Nullable;
 
 public class DelayedSpellEvent implements ITimedEvent {
     private int duration;
-    private final Spell spell;
     private final SpellContext context;
     private final HitResult result;
     private final Level world;
-    private final @Nullable LivingEntity shooter;
 
+    @Deprecated(forRemoval = true)
     public DelayedSpellEvent(int delay, Spell spell, HitResult result, Level world, @Nullable LivingEntity shooter, SpellContext context) {
+        this(delay, result, world, context);
+    }
+
+    public DelayedSpellEvent(int delay, HitResult result, Level world, SpellContext context) {
         this.duration = delay;
-        this.spell = spell;
         this.result = result;
         this.world = world;
-        this.shooter = shooter;
         this.context = context;
     }
 

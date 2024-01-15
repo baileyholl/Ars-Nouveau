@@ -21,6 +21,7 @@
     "CrossbowMixin",
     "PotionRecipeMixin",
     "PufferfishAccessor",
+    "redstone.RedstoneLevelMixin",
     "camera.ANServerPlayerMixin",
     "camera.ChunkMapMixin",
     "camera.PlayerListMixin",

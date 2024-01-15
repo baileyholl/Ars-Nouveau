@@ -8,8 +8,6 @@ import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.Random;
-
 @OnlyIn(Dist.CLIENT)
 public class ParticleGlow extends TextureSheetParticle {
     public float colorR = 0;
@@ -63,7 +61,7 @@ public class ParticleGlow extends TextureSheetParticle {
     public void tick() {
         super.tick();
 
-        if (new Random().nextInt(6) == 0) {
+        if (level.random.nextInt(6) == 0) {
             this.age++;
         }
         float lifeCoeff = (float) this.age / (float) this.lifetime;

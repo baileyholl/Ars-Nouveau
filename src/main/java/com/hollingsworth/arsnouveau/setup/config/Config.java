@@ -42,6 +42,7 @@ public class Config {
     public static ForgeConfigSpec.IntValue MELDER_OUTPUT;
     public static ForgeConfigSpec.IntValue MELDER_INPUT_COST;
     public static ForgeConfigSpec.IntValue MELDER_SOURCE_COST;
+    public static ForgeConfigSpec.IntValue ENCHANTED_FLASK_CAP;
     public static ForgeConfigSpec.BooleanValue HUNTER_ATTACK_ANIMALS;
     public static ForgeConfigSpec.BooleanValue STALKER_ATTACK_ANIMALS;
     public static ForgeConfigSpec.BooleanValue GUARDIAN_ATTACK_ANIMALS;
@@ -59,6 +60,7 @@ public class Config {
     public static ForgeConfigSpec.BooleanValue ALTERNATE_PORTAL_RENDER;
 
     public static ForgeConfigSpec.BooleanValue DISABLE_SKY_SHADER;
+    public static ForgeConfigSpec.BooleanValue DISABLE_TRANSLUCENT_PARTICLES;
     public static ForgeConfigSpec.BooleanValue SHOW_RECIPE_BOOK;
     public static ForgeConfigSpec.IntValue MAX_LOG_EVENTS;
     public static ForgeConfigSpec.IntValue TOOLTIP_X_OFFSET;
@@ -114,6 +116,7 @@ public class Config {
         ALTERNATE_PORTAL_RENDER = CLIENT_BUILDER.comment("Use simplified renderer for Warp Portals").define("no_end_portal_render", false);
         DISABLE_SKY_SHADER = CLIENT_BUILDER.comment("Disables the skyweave renderer. Disable if your sky is broken with shaders.").define("disable_skyweave", false);
         GUI_TRANSPARENCY = CLIENT_BUILDER.comment("Enables transparent/opaque rendering of elements in the book GUI. Disable if it leads to crash with Sodium derivatives").define("gui_transparency", true);
+        DISABLE_TRANSLUCENT_PARTICLES = CLIENT_BUILDER.comment("Disables translucent particles. Disable if your particles are invisible with shaders.").define("opaque_particles", false);
         SERVER_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
         DIMENSION_BLACKLIST = SERVER_BUILDER.comment("Dimensions where hostile mobs will not spawn. Ex: [\"minecraft:overworld\", \"undergarden:undergarden\"]. . Run /forge dimensions for a list.").defineList("dimensionBlacklist", new ArrayList<>(), (o) -> true);
         SPAWN_BOOK = SERVER_BUILDER.comment("Spawn a book in the players inventory on login").define("spawnBook", true);
@@ -144,6 +147,7 @@ public class Config {
         MELDER_INPUT_COST = SERVER_BUILDER.comment("How much potion a melder takes from each input jar. 100 = 1 potion").defineInRange("melderInputCost", 200, 100, Integer.MAX_VALUE);
         MELDER_OUTPUT = SERVER_BUILDER.comment("How much potion a melder outputs per cycle. 100 = 1 potion").defineInRange("melderOutput", 100, 100, Integer.MAX_VALUE);
         MELDER_SOURCE_COST = SERVER_BUILDER.comment("How much source a melder takes per cycle").defineInRange("melderSourceCost", 300, 0, Integer.MAX_VALUE);
+        ENCHANTED_FLASK_CAP = SERVER_BUILDER.comment("The max potion level the enchanted flask can grant. This isnt needed unless you have an infinite potion leveling exploit.").defineInRange("enchantedFlaskCap", 255, 2, Integer.MAX_VALUE);
         SERVER_BUILDER.pop();
 
         SERVER_BUILDER.comment("Debug").push("debug");

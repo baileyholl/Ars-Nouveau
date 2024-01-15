@@ -7,18 +7,17 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.eventbus.api.Event;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 public class SpellResolveEvent extends Event {
     public Level world;
-    public @Nullable LivingEntity shooter;
+    public @NotNull LivingEntity shooter;
     public HitResult rayTraceResult;
     public Spell spell;
     public SpellContext context;
     public SpellResolver resolver;
 
-    private SpellResolveEvent(Level world, LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, SpellResolver resolver) {
+    private SpellResolveEvent(Level world, @NotNull LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, SpellResolver resolver) {
         this.world = world;
         this.shooter = shooter;
         this.rayTraceResult = result;
@@ -31,7 +30,7 @@ public class SpellResolveEvent extends Event {
      * Fired before a spell is resolved. Can be cancelled to stop resolving.
      */
     public static class Pre extends SpellResolveEvent {
-        public Pre(Level world, LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, SpellResolver resolver) {
+        public Pre(Level world, @NotNull LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, SpellResolver resolver) {
             super(world, shooter, result, spell, spellContext, resolver);
         }
 
@@ -46,7 +45,7 @@ public class SpellResolveEvent extends Event {
      */
     public static class Post extends SpellResolveEvent {
 
-        public Post(Level world, LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, SpellResolver resolver) {
+        public Post(Level world, @NotNull LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, SpellResolver resolver) {
             super(world, shooter, result, spell, spellContext, resolver);
         }
 

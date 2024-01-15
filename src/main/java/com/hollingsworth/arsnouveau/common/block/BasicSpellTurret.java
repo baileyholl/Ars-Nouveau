@@ -22,7 +22,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -140,16 +139,6 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
             worldIn.setBlock(pos, state.setValue(TRIGGERED, Boolean.FALSE), 4);
         }
     }
-
-    public boolean hasAnalogOutputSignal(BlockState state) {
-        return false;
-    }
-
-
-    public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
-        return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(worldIn.getBlockEntity(pos));
-    }
-
 
     /**
      * Get the position where the dispenser at the given Coordinates should dispense to.

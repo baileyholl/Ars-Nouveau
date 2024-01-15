@@ -13,14 +13,14 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.datagen.patchouli.*;
-import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.perk.EmptyPerk;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -145,7 +145,7 @@ public class PatchouliProvider extends SimpleDataProvider{
                 .withSortNum(9)
                 .withIcon(ItemsRegistry.ARCHMAGE_SPELLBOOK)
                 .withLocalizedText()
-                .withPage(new RelationsPage().withEntry(EQUIPMENT, "spell_books").withEntry(EQUIPMENT, "armor")), getPath(GETTING_STARTED, "upgrades"));
+                .withPage(new RelationsPage().withEntry(EQUIPMENT, "spell_books").withEntry(ARMOR, "armor")), getPath(GETTING_STARTED, "upgrades"));
 
         addPage(new PatchouliBuilder(GETTING_STARTED, "starting_automation")
                 .withSortNum(10)
@@ -437,7 +437,7 @@ public class PatchouliProvider extends SimpleDataProvider{
                 .withLocalizedText()
                 .withLocalizedText()
                 .withPage(new CraftingPage(RitualRegistry.getRitualItemMap().get(new ResourceLocation(ArsNouveau.MODID, RitualLib.BINDING))))
-                .withPage(new RelationsPage().withEntry(MACHINES, "ritual_brazier").withEntry(RITUALS, "binding")), getPath(FAMILIARS, "summoning_familiars"));
+                .withPage(new RelationsPage().withEntry(MACHINES, "ritual_brazier").withEntry(RITUALS, "ritual_binding")), getPath(FAMILIARS, "summoning_familiars"));
 
         addPage(new PatchouliBuilder(MOD_NEWS, "mod_news")
                         .withIcon(ItemsRegistry.SPELL_PARCHMENT)
@@ -643,6 +643,7 @@ public class PatchouliProvider extends SimpleDataProvider{
 
         addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.SPELL_SENSOR).withLocalizedText().withPage(new ApparatusPage(BlockRegistry.SPELL_SENSOR)), getPath(AUTOMATION, "spell_sensor"));
         addPage(new PatchouliBuilder(EQUIPMENT, ItemsRegistry.JUMP_RING).withLocalizedText().withPage(new ApparatusPage(ItemsRegistry.JUMP_RING)), getPath(EQUIPMENT, "jump_ring"));
+        addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.REDSTONE_RELAY).withLocalizedText().withPage(new CraftingPage(BlockRegistry.REDSTONE_RELAY)), getPath(AUTOMATION, "redstone_relay"));
     }
 
     public String getLangPath(String name, int count) {

@@ -14,7 +14,12 @@
   "b9694497-80b7-4412-b00e-2c9bc2705fd1", "02320102-6fc4-408b-8873-afe54b2dcae6", "ac076a44-c1e3-4752-a3ac-2a366deaefb1",
   "8f86b83a-e35f-4fca-8b0f-a8181cc1741d", "c657941e-8ac5-46ac-bf65-8983f776ff33", "47b128a4-9043-4ec6-ba69-0edffdddfd8a",
     "0753a4e3-f71d-4b86-b338-3983f36d2b8a", "df2c8cdf-fbaf-4a22-9fdf-16770ee19c63", "b71554c5-ea50-441a-bed0-384416402575",
-  "5a0d2794-50a3-400f-b014-b1234d198eca", "1a45aa67-e39d-48f5-a5aa-4467b9a0c0c0", "755d49f3-c7e7-4ae2-95c0-25b50954d416"],
+  "5a0d2794-50a3-400f-b014-b1234d198eca", "1a45aa67-e39d-48f5-a5aa-4467b9a0c0c0", "755d49f3-c7e7-4ae2-95c0-25b50954d416",
+  "d600e728-1c5e-4ee8-8df7-2899465c9129", "d155b322-ff09-4c0f-9438-21ba7c572490", "bb21a5a9-4a9a-49f9-84f9-1ff375bca6bf",
+  "1f470f2a-a05b-4b6b-9d84-4b62f8686e5b", "d600e728-1c5e-4ee8-8df7-2899465c9129", "43ec37c2-8b0d-4bda-9f6a-5f78c3b572d0",
+  "5a4971f3-6fb0-446e-8512-cca380ec7e85", "6859954f-e3b0-45a8-84d7-5f9e9782651f", "f24ec99c-5d9b-4815-8938-5401f5d62877",
+  "2980a99e-8582-4f63-9b82-f7117bc8be2c", "674b6c55-c4f3-4ef6-9a57-b4a7455f1296","0f4c174e-26f1-43c3-81d0-88507dba6e52",
+  "5b1c9f9b-edd0-4632-9ba3-79b6dcc9bfa8"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -241,6 +246,66 @@
       "color": "green",
       "adopter": "Arclight",
       "bio": "Enjoys snoozing in the grass or hanging out on the front porch"
+    },{
+      "name": "Sleeping Rose",
+      "color": "pink",
+      "adopter": "RoxieOnyx",
+      "bio": "A sleepy lil guy! Smells like roses and has quite an... odd air about them. Stare into their eyes and the void might stare back… Still cute though and loves snuggles"
+    },{
+      "name": "Shimmer",
+      "color": "white",
+      "adopter": "heiko776",
+      "bio": "Playful and curious little fella who loves to explore the world and make new friends."
+    },{
+      "name": "Glitero",
+      "color": "lime",
+      "adopter": "the_bob756",
+      "bio": "A funny little guy who loves glitter"
+    },{
+      "name": "Avie",
+      "color": "cyan",
+      "adopter": "SaaltySenpai",
+      "bio": "This starbuncle has large tusks that protrude from the mouth. She smiles happily as she eats your shoes and spellbook. She loves fetch and picking sourceberries but she might eat a few."
+    },{
+      "name": "Durin",
+      "color": "light_gray",
+      "adopter": "Nates698",
+      "bio": "Found hiding from a snowstorm in a mountain cave. Durin is a wanderer attracted to all things shiny beneath the mountains."
+    },{
+      "name": "Elson the Timid",
+      "color": "lime",
+      "adopter": "CJ_squared",
+      "bio": "Despite his name, Elson is so brave and definitely not trembling in his tiny squirrel boots (sidenote, he is very proud of his custom made boots). He loves being in safe dark spaces (not because he's scared, it's just comfy)."
+    },{
+      "name": "Stardust",
+      "color": "light_blue",
+      "adopter": "shiranno",
+      "bio": "Found a certain place in the End. He loves flying like an elytra and enjoys doing it. He can seem to give glide effect by himself."
+    },{
+      "name": "Mega Volta",
+      "color": "cyan",
+      "adopter": "B9B",
+      "bio": "The sworn enemy of mega mindy wandering around looking for revenge. Sterre hagedoorn is her ally."
+    },{
+      "name": "Gold Loving Starbuncle",
+      "color": "purple",
+      "adopter": "Clement446",
+      "bio": "A greedy thief who wanted to learn all spells at a low cost got turned into a starbuncle! It seems that even in his starbuncle state, he still loves gold and riches as much as when he was a human."
+    },{
+      "name": "Squiggle",
+      "color": "purple",
+      "adopter": "GreyTalyn",
+      "bio": "Winner of the Squiggle Olympics, lover of fine cheese. Thinks they're a werewolf."
+    },{
+      "name": "Sunsun",
+      "color": "orange",
+      "adopter": "RessFaure",
+      "bio": "Love to hang out when it's sunny and run after light. He's a bit warm like a little flame."
+    },{
+      "name": "Engenix, the curious",
+      "color": "cyan",
+      "adopter": "Suelvys",
+      "bio": "A little Starbuncle who lived in the forests near the house of an intelligent and friendly engineer, where he learned to create various things and lives making gadgets around, gears occasionally fall out of his magic tail (it's not clear how he keeps so many things in it, it must be magic), he loves copper nuggets and driving trains and machines, always curious and willing to help anyone who calls him."
     }
   ]
 }

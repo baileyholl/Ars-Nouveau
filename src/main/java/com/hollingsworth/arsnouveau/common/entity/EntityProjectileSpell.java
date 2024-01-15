@@ -19,6 +19,9 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
@@ -55,6 +58,8 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
     public boolean isNoGravity = true;
     public boolean canTraversePortals = true;
     public int prismRedirect;
+    public static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(EntityProjectileSpell.class, EntityDataSerializers.INT);
+
     @Deprecated
     public int expireTime = 60 * 20;
 
@@ -124,6 +129,12 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
         Vec3 nextPosition = getNextHitPosition();
         return this.level.clip(new ClipContext(thisPosition, nextPosition, numSensitive > 0 ? ClipContext.Block.OUTLINE : ClipContext.Block.COLLIDER,
                 ClipContext.Fluid.NONE, this));
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(OWNER_ID, -1);
     }
 
     /**
@@ -334,8 +345,10 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
 
                 if (canBounce()) {
                     bounce(blockraytraceresult);
-                    pierceLeft--; //to replace with bounce field eventually
-                    if (numSensitive > 1) return;
+                    if (numSensitive > 1) {
+                        pierceLeft--; //to replace with bounce field eventually, reduce here since we're not calling attemptRemoval
+                        return;
+                    }
                 }
 
                 if (this.spellResolver != null) {
@@ -382,12 +395,23 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
     }
 
     @Override
+    public void setOwner(@org.jetbrains.annotations.Nullable Entity pOwner) {
+        super.setOwner(pOwner);
+        if(pOwner != null) {
+            this.entityData.set(OWNER_ID, pOwner.getId());
+        }else{
+            this.entityData.set(OWNER_ID, -1);
+        }
+    }
+
+    @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if (tag.contains("pierce")) {
             this.pierceLeft = tag.getInt("pierce");
         }
         isNoGravity = tag.getBoolean("gravity");
+        this.entityData.set(OWNER_ID, tag.getInt("ownerId"));
     }
 
     @Override
@@ -395,5 +419,6 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
         super.addAdditionalSaveData(tag);
         tag.putInt("pierce", this.pierceLeft);
         tag.putBoolean("gravity", isNoGravity);
+        tag.putInt("ownerId", this.entityData.get(OWNER_ID));
     }
 }

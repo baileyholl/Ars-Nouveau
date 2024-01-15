@@ -100,7 +100,6 @@ public class APIRegistry {
         registerSpell(EffectHex.INSTANCE);
         registerSpell(MethodUnderfoot.INSTANCE);
         registerSpell(EffectGlide.INSTANCE);
-        registerSpell(MethodOrbit.INSTANCE);
         registerSpell(EffectRune.INSTANCE);
         registerSpell(EffectFreeze.INSTANCE);
         registerSpell(EffectName.INSTANCE);
@@ -119,6 +118,8 @@ public class APIRegistry {
         registerSpell(EffectAnimate.INSTANCE);
         registerSpell(EffectBurst.INSTANCE);
         registerSpell(AugmentRandomize.INSTANCE);
+        registerSpell(EffectOrbit.INSTANCE);
+        registerSpell(EffectReset.INSTANCE);
 
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());
@@ -158,6 +159,8 @@ public class APIRegistry {
 
         registerPerk(EmptyPerk.INSTANCE);
         registerPerk(StarbunclePerk.INSTANCE);
+        registerPerk(StepHeightPerk.INSTANCE);
+        registerPerk(ImmolatePerk.INSTANCE);
         registerPerk(DepthsPerk.INSTANCE);
         registerPerk(FeatherPerk.INSTANCE);
         registerPerk(GlidingPerk.INSTANCE);
@@ -173,6 +176,7 @@ public class APIRegistry {
         registerPerk(IgnitePerk.INSTANCE);
         registerPerk(TotemPerk.INSTANCE);
         registerPerk(VampiricPerk.INSTANCE);
+        registerPerk(KnockbackResistPerk.INSTANCE);
 
     }
 

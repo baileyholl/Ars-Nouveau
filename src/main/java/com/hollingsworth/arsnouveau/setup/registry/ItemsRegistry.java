@@ -22,6 +22,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
 import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
+import com.hollingsworth.arsnouveau.setup.config.Config;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -138,7 +139,7 @@ public class ItemsRegistry {
         PotionFlask flask = new PotionFlask() {
             @Override
             public @NotNull MobEffectInstance getEffectInstance(MobEffectInstance effectInstance) {
-                return new MobEffectInstance(effectInstance.getEffect(), effectInstance.getDuration() / 2, effectInstance.getAmplifier() + 1);
+                return new MobEffectInstance(effectInstance.getEffect(), effectInstance.getDuration() / 2, Math.min(Config.ENCHANTED_FLASK_CAP.get(), effectInstance.getAmplifier() + 1));
             }
         };
         flask.withTooltip(Component.translatable("tooltip.potion_flask_amplify"));

@@ -29,16 +29,16 @@ public class EffectDelay extends AbstractEffect {
     }
 
     public void sendPacket(Level world, HitResult rayTraceResult, @Nullable LivingEntity shooter, SpellContext spellContext, SpellStats spellStats, BlockHitResult blockResult, Entity hitEntity) {
-        spellContext.setCanceled(true);
         if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
         Spell newSpell = spellContext.getRemainingSpell();
         SpellContext newContext = spellContext.clone().withSpell(newSpell);
+        spellContext.setCanceled(true);
         int duration = GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getBuffCount(AugmentExtendTime.INSTANCE) * 20;
         int decreasedTime = EXTEND_TIME.get() * 10 * spellStats.getBuffCount(AugmentDurationDown.INSTANCE);
         duration -= decreasedTime;
         EventQueue.getServerInstance().addEvent(
-                new DelayedSpellEvent(duration, newSpell, rayTraceResult, world, shooter, newContext));
+                new DelayedSpellEvent(duration, rayTraceResult, world, newContext));
         Networking.sendToNearby(world, BlockPos.containing(safelyGetHitPos(rayTraceResult)),
                 new PacketClientDelayEffect(duration, shooter, newSpell, newContext, blockResult, hitEntity));
     }

@@ -295,7 +295,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
 
     public EntitySpellArrow buildSpellArrow(Level worldIn, LivingEntity playerentity, ISpellCaster caster) {
         EntitySpellArrow spellArrow = new EntitySpellArrow(worldIn, playerentity);
-        spellArrow.spellResolver = new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerentity, LivingCaster.from(playerentity))).withSilent(true);
+        spellArrow.spellResolver = new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerentity, LivingCaster.from(playerentity), playerentity.getMainHandItem())).withSilent(true);
         spellArrow.setColors(caster.getColor());
         return spellArrow;
     }

@@ -45,6 +45,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
 
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
+        this.tag(BlockTags.FIRE).add(BlockRegistry.MAGIC_FIRE.get());
         this.tag(OCCLUDES_SPELL_SENSOR).add(BlockRegistry.MAGEBLOOM_BLOCK.get());
         this.tag(RELOCATION_NOT_SUPPORTED);
         this.tag(BUDDING_BLOCKS).add(Blocks.BUDDING_AMETHYST);
@@ -86,7 +87,8 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.POTION_DIFFUSER.get(),
                 BlockRegistry.MOB_JAR.get(),
                 BlockRegistry.VOID_PRISM.get(),
-                BlockRegistry.BRAZIER_RELAY.get()
+                BlockRegistry.BRAZIER_RELAY.get(),
+                BlockRegistry.REDSTONE_RELAY.get()
         );
 
         this.tag(BlockTags.MINEABLE_WITH_AXE).add(
@@ -168,7 +170,11 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 Blocks.BROWN_MUSHROOM_BLOCK,
                 Blocks.RED_MUSHROOM_BLOCK,
                 Blocks.SHROOMLIGHT,
-                Blocks.WARPED_WART_BLOCK, Blocks.NETHER_WART_BLOCK);
+                Blocks.WARPED_WART_BLOCK, Blocks.NETHER_WART_BLOCK,
+                Blocks.CACTUS,
+                Blocks.SUGAR_CANE,
+                Blocks.CHORUS_FLOWER,
+                Blocks.CHORUS_PLANT);
         this.tag(WHIRLISPRIG_KINDA_LIKES);
 
         this.tag(MAGIC_SAPLINGS).add(
@@ -254,7 +260,6 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
 
         this.tag(IGNORE_TILE).add(
                 BlockRegistry.INTANGIBLE_AIR.get(),
-                BlockRegistry.REDSTONE_AIR.get(),
                 BlockRegistry.MAGE_BLOCK.get(),
                 BlockRegistry.GOLD_SCONCE_BLOCK.get(),
                 BlockRegistry.LIGHT_BLOCK.get(),

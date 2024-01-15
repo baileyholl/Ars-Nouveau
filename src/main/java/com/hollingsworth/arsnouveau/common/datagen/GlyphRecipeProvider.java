@@ -45,7 +45,7 @@ public class GlyphRecipeProvider extends SimpleDataProvider {
         add(get(AugmentSensitive.INSTANCE).withItem(Items.SCAFFOLDING).withItem(Items.POPPY).withItem(Items.WATER_BUCKET));
         add(get(AugmentSplit.INSTANCE).withItem(BlockRegistry.RELAY_SPLITTER).withItem(ItemsRegistry.WILDEN_SPIKE).withItem(Items.STONECUTTER));
 
-        add(get(MethodOrbit.INSTANCE).withItem(Items.COMPASS).withItem(Items.ENDER_EYE).withIngredient(Ingredient.of(Tags.Items.RODS_BLAZE)));
+        add(get(EffectOrbit.INSTANCE).withItem(Items.COMPASS).withItem(Items.ENDER_EYE).withIngredient(Ingredient.of(Tags.Items.RODS_BLAZE)));
         add(get(MethodProjectile.INSTANCE).withItem(Items.FLETCHING_TABLE).withItem(Items.ARROW));
         add(get(MethodSelf.INSTANCE).withIngredient(Ingredient.of(ItemTags.WOODEN_PRESSURE_PLATES)).withItem(Items.IRON_CHESTPLATE));
         add(get(MethodTouch.INSTANCE).withIngredient(Ingredient.of(ItemTags.BUTTONS)));
@@ -119,6 +119,8 @@ public class GlyphRecipeProvider extends SimpleDataProvider {
         add(get(EffectAnimate.INSTANCE).withItem(ItemsRegistry.CONJURATION_ESSENCE).withIngredient(Tags.Items.OBSIDIAN, 3));
         add(get(EffectBurst.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.TNT, 5).withItem(Items.FIREWORK_STAR));
         add(get(AugmentRandomize.INSTANCE).withItem(Items.PINK_CARPET, 2));
+        add(get(EffectReset.INSTANCE).withItem(Items.TARGET, 1));
+
         for (GlyphRecipe recipe : recipes) {
             Path path = getScribeGlyphPath(output, recipe.output.getItem());
             saveStable(pOutput, recipe.asRecipe(), path);

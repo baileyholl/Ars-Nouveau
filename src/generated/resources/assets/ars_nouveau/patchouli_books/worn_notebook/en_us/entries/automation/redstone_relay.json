@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:automation",
+  "icon": "ars_nouveau:redstone_relay",
+  "name": "block.ars_nouveau.redstone_relay",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.redstone_relay"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:redstone_relay"
+    }
+  ]
+}

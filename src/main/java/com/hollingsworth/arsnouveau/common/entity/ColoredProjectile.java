@@ -23,6 +23,7 @@ public abstract class ColoredProjectile extends Projectile {
     public static final EntityDataAccessor<Integer> BLUE = SynchedEntityData.defineId(ColoredProjectile.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<CompoundTag> PARTICLE_TAG = SynchedEntityData.defineId(ColoredProjectile.class, EntityDataSerializers.COMPOUND_TAG);
     public int rainbowStartTick = 0;
+
     public ColoredProjectile(EntityType<? extends ColoredProjectile> type, Level worldIn) {
         super(type, worldIn);
         rainbowStartTick = level.random.nextInt(1536);

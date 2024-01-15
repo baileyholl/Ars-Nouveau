@@ -1,21 +1,29 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
-import com.hollingsworth.arsnouveau.api.spell.Spell;
+import com.hollingsworth.arsnouveau.api.mana.IManaCap;
+import com.hollingsworth.arsnouveau.api.mana.IManaDiscountEquipment;
+import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.NotEnoughManaPacket;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class CasterTome extends ModItem implements ICasterTool {
+public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEquipment {
 
     public CasterTome(Properties properties) {
         super(properties);
@@ -39,6 +47,11 @@ public class CasterTome extends ModItem implements ICasterTool {
     }
 
     @Override
+    public @NotNull ISpellCaster getSpellCaster(ItemStack stack) {
+        return new TomeSpellCaster(stack);
+    }
+
+    @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
         if (worldIn == null)
             return;
@@ -50,4 +63,40 @@ public class CasterTome extends ModItem implements ICasterTool {
         tooltip2.add(Component.translatable("tooltip.ars_nouveau.caster_tome"));
         super.appendHoverText(stack, worldIn, tooltip2, flagIn);
     }
+
+    @Override
+    public int getManaDiscount(ItemStack i, Spell spell) {
+        return spell.getCost() / 2;
+    }
+
+    /**
+     * A Spell resolver that ignores mana player limits.
+     */
+    public static class TomeSpellCaster extends SpellCaster {
+        public TomeSpellCaster(ItemStack stack) {
+            super(stack);
+        }
+
+        @Override
+        public SpellResolver getSpellResolver(SpellContext context, Level worldIn, LivingEntity playerIn, InteractionHand handIn) {
+            return new SpellResolver(context) {
+                @Override
+                protected boolean enoughMana(LivingEntity entity) {
+                    int totalCost = getResolveCost();
+                    IManaCap manaCap = CapabilityRegistry.getMana(entity).orElse(null);
+                    if (manaCap == null)
+                        return false;
+                    boolean canCast = totalCost <= manaCap.getCurrentMana() || manaCap.getCurrentMana() == manaCap.getMaxMana() || (entity instanceof Player player && player.isCreative());
+                    if (!canCast && !entity.getCommandSenderWorld().isClientSide && !silent) {
+                        PortUtil.sendMessageNoSpam(entity, Component.translatable("ars_nouveau.spell.no_mana"));
+                        if (entity instanceof ServerPlayer serverPlayer)
+                            Networking.sendToPlayerClient(new NotEnoughManaPacket(totalCost), serverPlayer);
+                    }
+                    return canCast;
+                }
+
+            };
+        }
+    }
+
 }

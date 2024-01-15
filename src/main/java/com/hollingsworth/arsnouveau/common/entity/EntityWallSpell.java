@@ -97,6 +97,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
             if(age % (20 - 2 * getAccelerates()) != 0 && age != 1)
                 return;
             for(BlockPos p : BlockPos.betweenClosed(start, end)){
+                p = p.immutable();
                 spellResolver.onResolveEffect(level, new
                         BlockHitResult(new Vec3(p.getX(), p.getY(), p.getZ()), Direction.UP, p, false));
             }

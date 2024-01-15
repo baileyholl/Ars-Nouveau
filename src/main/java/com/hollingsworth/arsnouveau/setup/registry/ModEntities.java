@@ -127,6 +127,13 @@ public class ModEntities {
             LibEntityNames.SPELL_ARROW,
             EntityType.Builder.<EntitySpellArrow>of(EntitySpellArrow::new, MobCategory.MISC)
                     .clientTrackingRange(20).updateInterval(20).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntitySpellArrow::new));
+    public static final RegistryObject<EntityType<Cinder>> CINDER = registerEntity(
+            LibEntityNames.CINDER,
+            EntityType.Builder.<Cinder>of(Cinder::new, MobCategory.MISC)
+                    .sized(0.5f, 0.5f)
+                    .setShouldReceiveVelocityUpdates(true)
+                    .fireImmune()
+                    .setTrackingRange(256));
     public static final RegistryObject<EntityType<SummonWolf>> SUMMON_WOLF = registerEntity(
             LibEntityNames.SUMMONED_WOLF,
             EntityType.Builder.of(SummonWolf::new, MobCategory.CREATURE).sized(0.6F, 0.85F).clientTrackingRange(10));
@@ -234,6 +241,10 @@ public class ModEntities {
 
     public static final RegistryObject<EntityType<EnchantedFallingBlock>> ENCHANTED_FALLING_BLOCK = registerEntity(
             "enchanted_falling_block", EntityType.Builder.<EnchantedFallingBlock>of(EnchantedFallingBlock::new, MobCategory.MISC).sized(0.98F, 0.98F)
+                    .setShouldReceiveVelocityUpdates(true)
+                    .setTrackingRange(256));
+    public static final RegistryObject<EntityType<IceShardEntity>> ICE_SHARD = registerEntity(
+            "ice_shard", EntityType.Builder.<IceShardEntity>of(IceShardEntity::new, MobCategory.MISC).sized(0.98F, 0.98F)
                     .setShouldReceiveVelocityUpdates(true)
                     .setTrackingRange(256));
     public static final RegistryObject<EntityType<EnchantedMageblock>> ENCHANTED_MAGE_BLOCK = registerEntity(

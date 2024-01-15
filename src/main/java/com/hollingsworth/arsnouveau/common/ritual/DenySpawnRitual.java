@@ -45,7 +45,7 @@ public class DenySpawnRitual extends RangeRitual {
         if(getWorld().isClientSide){
             return;
         }
-        if(deniedSpawn && getWorld().getGameTime() % 300 == 0){
+        if(deniedSpawn && getWorld().getGameTime() % 1200 == 0){
             deniedSpawn = false;
             takeSourceNow();
         }

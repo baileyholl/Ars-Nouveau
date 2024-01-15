@@ -6,15 +6,12 @@ import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellCostCalcEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
-import com.hollingsworth.arsnouveau.api.perk.IEffectResolvePerk;
-import com.hollingsworth.arsnouveau.api.perk.PerkInstance;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
-import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
-import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.NotEnoughManaPacket;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -30,12 +27,11 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.hollingsworth.arsnouveau.api.util.ManaUtil.getPlayerDiscounts;
 
-public class SpellResolver {
+public class SpellResolver implements Cloneable {
     public AbstractCastMethod castType;
     public Spell spell;
     public SpellContext spellContext;
@@ -43,6 +39,7 @@ public class SpellResolver {
     private final ISpellValidator spellValidator;
 
     public @Nullable HitResult hitResult = null;
+    public @Nullable SpellResolver previousResolver = null;
 
     public SpellResolver(SpellContext spellContext) {
         this.spell = spellContext.getSpell();
@@ -73,7 +70,7 @@ public class SpellResolver {
         }
     }
 
-    boolean enoughMana(LivingEntity entity) {
+    protected boolean enoughMana(LivingEntity entity) {
         int totalCost = getResolveCost();
         IManaCap manaCap = CapabilityRegistry.getMana(entity).orElse(null);
         if (manaCap == null)
@@ -160,7 +157,6 @@ public class SpellResolver {
         MinecraftForge.EVENT_BUS.post(spellResolveEvent);
         if (spellResolveEvent.isCanceled())
             return;
-        List<PerkInstance> perkInstances = shooter instanceof Player player ? PerkUtil.getPerksFromPlayer(player) : new ArrayList<>();
         while (spellContext.hasNextPart()) {
             AbstractSpellPart part = spellContext.nextPart();
             if (part == null)
@@ -179,20 +175,7 @@ public class SpellResolver {
             EffectResolveEvent.Pre preEvent = new EffectResolveEvent.Pre(world, shooter, this.hitResult, spell, spellContext, effect, stats, this);
             if (MinecraftForge.EVENT_BUS.post(preEvent))
                 continue;
-
-            for (PerkInstance perkInstance : perkInstances) {
-                if (perkInstance.getPerk() instanceof IEffectResolvePerk effectPerk) {
-                    effectPerk.onPreResolve(this.hitResult, world, shooter, stats, spellContext, this, effect, perkInstance);
-                }
-            }
             effect.onResolve(this.hitResult, world, shooter, stats, spellContext, this);
-            for (PerkInstance perkInstance : perkInstances) {
-                if (perkInstance.getPerk() instanceof IEffectResolvePerk effectPerk) {
-                    effectPerk.onPostResolve(this.hitResult, world, shooter, stats, spellContext, this, effect, perkInstance);
-
-                }
-            }
-
             MinecraftForge.EVENT_BUS.post(new EffectResolveEvent.Post(world, shooter, this.hitResult, spell, spellContext, effect, stats, this));
         }
 
@@ -206,7 +189,6 @@ public class SpellResolver {
 
     /**
      * Simulates the cost required to cast a spell
-     * When expending mana, please call getResolveCostAndResetDiscounts instead
      */
     public int getResolveCost() {
         int cost = spellContext.getSpell().getCost() - getPlayerDiscounts(spellContext.getUnwrappedCaster(), spell, spellContext.getCasterTool());
@@ -220,7 +202,9 @@ public class SpellResolver {
      * Addons can override this to return their custom spell resolver if you change the way logic resolves.
      */
     public SpellResolver getNewResolver(SpellContext context) {
-        return new SpellResolver(context);
+        SpellResolver newResolver = new SpellResolver(context);
+        newResolver.previousResolver = this;
+        return newResolver;
     }
 
     /**
@@ -229,5 +213,21 @@ public class SpellResolver {
      */
     public boolean hasFocus(ItemStack stack) {
         return CuriosUtil.hasItem(spellContext.getUnwrappedCaster(), stack);
+    }
+
+    @Override
+    public SpellResolver clone() {
+        try {
+            SpellResolver clone = (SpellResolver) super.clone();
+            clone.spellContext = spellContext.clone();
+            clone.previousResolver = this.previousResolver != null ? this.previousResolver.clone() : null;
+            clone.castType = this.castType;
+            clone.spell = this.spell.clone();
+            clone.silent = this.silent;
+            clone.hitResult = this.hitResult;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

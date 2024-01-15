@@ -1,0 +1,167 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 32,
+				"texture_height": 32,
+				"visible_bounds_width": 2,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "redstone_relay",
+					"pivot": [0, 2, 0]
+				},
+				{
+					"name": "gem",
+					"parent": "redstone_relay",
+					"pivot": [0, 2, 0],
+					"cubes": [
+						{"origin": [-3, 6, -3], "size": [6, 8, 6], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "framework",
+					"parent": "redstone_relay",
+					"pivot": [0, 2, 0]
+				},
+				{
+					"name": "frame1",
+					"parent": "framework",
+					"pivot": [0, 10, 0]
+				},
+				{
+					"name": "bone",
+					"parent": "frame1",
+					"pivot": [0, 2, 0],
+					"cubes": [
+						{"origin": [1, 7, -5], "size": [2, 6, 1], "uv": [0, 14]},
+						{"origin": [-2, 5, -5], "size": [3, 4, 1], "uv": [22, 14]},
+						{"origin": [-2, 11, -5], "size": [3, 4, 1], "uv": [18, 0]}
+					]
+				},
+				{
+					"name": "redstone_framework",
+					"parent": "frame1",
+					"pivot": [0, 10, 5],
+					"cubes": [
+						{"origin": [-1, 12, -5], "size": [4, 1, 1], "uv": [22, 19]},
+						{"origin": [2, 8, -5], "size": [1, 4, 1], "uv": [0, 0]},
+						{"origin": [-1, 7, -5], "size": [4, 1, 1], "uv": [11, 14]},
+						{"origin": [-1, 13, -5], "size": [1, 1, 1], "uv": [14, 19]},
+						{"origin": [-1, 6, -5], "size": [1, 1, 1], "uv": [11, 18]}
+					]
+				},
+				{
+					"name": "frame2",
+					"parent": "framework",
+					"pivot": [0, 10, 0],
+					"rotation": [0, -90, 0]
+				},
+				{
+					"name": "bone2",
+					"parent": "frame2",
+					"pivot": [0, 2, 0],
+					"cubes": [
+						{"origin": [1, 7, -5], "size": [2, 6, 1], "uv": [0, 14]},
+						{"origin": [-2, 5, -5], "size": [3, 4, 1], "uv": [22, 14]},
+						{"origin": [-2, 11, -5], "size": [3, 4, 1], "uv": [18, 0]}
+					]
+				},
+				{
+					"name": "redstone_framework2",
+					"parent": "frame2",
+					"pivot": [0, 10, 5],
+					"cubes": [
+						{"origin": [-1, 12, -5], "size": [4, 1, 1], "uv": [22, 19]},
+						{"origin": [2, 8, -5], "size": [1, 4, 1], "uv": [0, 0]},
+						{"origin": [-1, 7, -5], "size": [4, 1, 1], "uv": [11, 14]},
+						{"origin": [-1, 13, -5], "size": [1, 1, 1], "uv": [14, 19]},
+						{"origin": [-1, 6, -5], "size": [1, 1, 1], "uv": [11, 18]}
+					]
+				},
+				{
+					"name": "frame3",
+					"parent": "framework",
+					"pivot": [0, 10, 0],
+					"rotation": [0, 180, 0]
+				},
+				{
+					"name": "bone3",
+					"parent": "frame3",
+					"pivot": [0, 2, 0],
+					"cubes": [
+						{"origin": [1, 7, -5], "size": [2, 6, 1], "uv": [0, 14]},
+						{"origin": [-2, 5, -5], "size": [3, 4, 1], "uv": [22, 14]},
+						{"origin": [-2, 11, -5], "size": [3, 4, 1], "uv": [18, 0]}
+					]
+				},
+				{
+					"name": "redstone_framework3",
+					"parent": "frame3",
+					"pivot": [0, 10, 5],
+					"cubes": [
+						{"origin": [-1, 12, -5], "size": [4, 1, 1], "uv": [22, 19]},
+						{"origin": [2, 8, -5], "size": [1, 4, 1], "uv": [0, 0]},
+						{"origin": [-1, 7, -5], "size": [4, 1, 1], "uv": [11, 14]},
+						{"origin": [-1, 13, -5], "size": [1, 1, 1], "uv": [14, 19]},
+						{"origin": [-1, 6, -5], "size": [1, 1, 1], "uv": [11, 18]}
+					]
+				},
+				{
+					"name": "frame4",
+					"parent": "framework",
+					"pivot": [0, 10, 0],
+					"rotation": [0, 90, 0]
+				},
+				{
+					"name": "bone4",
+					"parent": "frame4",
+					"pivot": [0, 2, 0],
+					"cubes": [
+						{"origin": [1, 7, -5], "size": [2, 6, 1], "uv": [0, 14]},
+						{"origin": [-2, 5, -5], "size": [3, 4, 1], "uv": [22, 14]},
+						{"origin": [-2, 11, -5], "size": [3, 4, 1], "uv": [18, 0]}
+					]
+				},
+				{
+					"name": "redstone_framework4",
+					"parent": "frame4",
+					"pivot": [0, 10, 5],
+					"cubes": [
+						{"origin": [-1, 12, -5], "size": [4, 1, 1], "uv": [22, 19]},
+						{"origin": [2, 8, -5], "size": [1, 4, 1], "uv": [0, 0]},
+						{"origin": [-1, 7, -5], "size": [4, 1, 1], "uv": [11, 14]},
+						{"origin": [-1, 13, -5], "size": [1, 1, 1], "uv": [14, 19]},
+						{"origin": [-1, 6, -5], "size": [1, 1, 1], "uv": [11, 18]}
+					]
+				},
+				{
+					"name": "input",
+					"pivot": [0, 0, 0]
+				},
+				{
+					"name": "framework_input",
+					"parent": "input",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-1, 0, -2], "size": [2, 4, 3], "uv": [0, 22]},
+						{"origin": [-1, 0, -8], "size": [2, 2, 6], "uv": [12, 16]}
+					]
+				},
+				{
+					"name": "redstone_input",
+					"parent": "input",
+					"pivot": [-4, 0, 0],
+					"cubes": [
+						{"origin": [-1, 2, -1], "size": [2, 1, 1], "uv": [11, 16]},
+						{"origin": [-1, 1, -7], "size": [2, 1, 7], "uv": [0, 14]}
+					]
+				}
+			]
+		}
+	]
+}

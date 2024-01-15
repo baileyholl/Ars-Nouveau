@@ -718,7 +718,16 @@ public class RecipeDatagen extends RecipeProvider {
             shapelessBuilder(BlockRegistry.ROTATING_TURRET).requires(BlockRegistry.BASIC_SPELL_TURRET).save(consumer);
             shapelessBuilder(BlockRegistry.BASIC_SPELL_TURRET).requires(BlockRegistry.ROTATING_TURRET).save(consumer, new ResourceLocation(ArsNouveau.MODID, "rotating_turret_to_basic_spell_turret"));
             shapelessBuilder(ItemsRegistry.STARBUNCLE_SHARD).requires(ItemsRegistry.STARBUNCLE_SHARD).save(consumer, new ResourceLocation(ArsNouveau.MODID, "wipe_starby_shard"));
-
+            shapedBuilder(BlockRegistry.REDSTONE_RELAY)
+                    .pattern("gxg")
+                    .pattern("gMg")
+                    .pattern("gxg")
+                    .define('g', Tags.Items.INGOTS_GOLD)
+                    .define('M', SOURCE_GEM_BLOCK)
+                    .define('x', Tags.Items.DUSTS_REDSTONE)
+                    .save(consumer);
+            shapelessBuilder(BlockRegistry.SOURCEBERRY_SACK).requires(BlockRegistry.SOURCEBERRY_BUSH, 9).save(consumer);
+            shapelessBuilder(BlockRegistry.SOURCEBERRY_BUSH, 9).requires(BlockRegistry.SOURCEBERRY_SACK).save(consumer, new ResourceLocation(ArsNouveau.MODID, "sourceberry_sack_to_bush"));
         }
     }
 

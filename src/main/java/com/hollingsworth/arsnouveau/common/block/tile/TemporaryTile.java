@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -26,7 +27,11 @@ public class TemporaryTile extends MirrorWeaveTile implements ITickable {
         if(!level.isClientSide){
             tickDuration--;
             if(tickDuration <= 0){
-                level.destroyBlock(worldPosition, false);
+                level.setBlock(worldPosition, Blocks.AIR.defaultBlockState(), 2);
+                level.updateNeighborsAt(worldPosition, level.getBlockState(worldPosition).getBlock());
+                for (Direction d : Direction.values()) {
+                    level.updateNeighborsAt(worldPosition.relative(d), this.getBlockState().getBlock());
+                }
             }
         }
     }

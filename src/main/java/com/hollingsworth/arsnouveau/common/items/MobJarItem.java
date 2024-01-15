@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.client.renderer.item.MobJarItemRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
+import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
@@ -64,6 +65,10 @@ public class MobJarItem extends BlockItem implements GeoItem {
             MutableComponent name = entity.getType().getDescription().copy();
             name.withStyle(ChatFormatting.GRAY);
             pTooltip.add(name);
+        }
+        if (entity.getType().is(EntityTags.DRYGMY_BLACKLIST)) {
+            Component blacklisted = Component.translatable("ars_nouveau.drygmy.blacklist").withStyle(ChatFormatting.DARK_RED);
+            pTooltip.add(blacklisted);
         }
     }
 

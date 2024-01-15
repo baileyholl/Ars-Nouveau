@@ -179,6 +179,9 @@ public class ParticleUtil {
     }
 
     public static void spawnFallingSkyEffect(AbstractRitual ritual, BlockEntity tileEntity, RandomSource rand, ParticleColor.IntWrapper color) {
+        if(ritual == null){
+            return;
+        }
         int scalar = 20;
         if (ritual.getContext().progress >= 5)
             scalar = 10;
@@ -191,23 +194,6 @@ public class ParticleUtil {
         }
     }
 
-    public static void spawnParticleSphere(Level world, BlockPos pos) {
-        if (!world.isClientSide)
-            return;
-        spawnParticleSphere(world, pos, ParticleColor.makeRandomColor(255, 255, 255, world.random));
-    }
-
-    public static void spawnParticleSphere(Level world, BlockPos pos, ParticleColor color) {
-        if (!world.isClientSide)
-            return;
-        for (int i = 0; i < 5; i++) {
-            Vec3 particlePos = new Vec3(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0, 0.5);
-            particlePos = particlePos.add(ParticleUtil.pointInSphere());
-            world.addParticle(ParticleLineData.createData(color),
-                    particlePos.x(), particlePos.y(), particlePos.z(),
-                    pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
-        }
-    }
 
     public static void spawnLight(Level world, ParticleColor color, Vec3 vec, int intensity) {
         for (int i = 0; i < intensity; i++) {
