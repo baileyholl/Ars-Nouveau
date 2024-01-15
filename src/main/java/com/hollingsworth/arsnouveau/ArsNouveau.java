@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau;
 
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
@@ -44,6 +45,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
+import java.util.List;
 
 
 @Mod(ArsNouveau.MODID)
@@ -127,6 +129,9 @@ public class ArsNouveau {
                 DispenserBlock.registerBehavior(tablet, new DispenserRitualBehavior());
             }
 
+            ArsNouveauAPI.shoulderRiders.addAll(List.of("ars_nouveau:starbuncle",
+                    "ars_nouveau:drygmy"
+            ));
         });
     }
 

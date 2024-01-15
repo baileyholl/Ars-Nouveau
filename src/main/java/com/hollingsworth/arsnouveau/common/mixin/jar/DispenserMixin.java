@@ -36,7 +36,7 @@ public abstract class DispenserMixin {
             locals = LocalCapture.CAPTURE_FAILHARD,
             cancellable = true
     )
-    public void onDispenseFromInject(ServerLevel level, BlockPos pos, CallbackInfo ci, BlockSourceImpl source, DispenserBlockEntity dispenser, int slot, ItemStack stack) {
+    public void arsNouveau$onDispenseFromInject(ServerLevel level, BlockPos pos, CallbackInfo ci, BlockSourceImpl source, DispenserBlockEntity dispenser, int slot, ItemStack stack) {
         BlockState inFront = level.getBlockState(pos.relative(source.getBlockState().getValue(DispenserBlock.FACING)));
         if (inFront.is(BlockRegistry.MOB_JAR.get()) && stack.getItem() instanceof ShearsItem) {
             BlockPos relativePos = pos.relative(source.getBlockState().getValue(DispenserBlock.FACING));

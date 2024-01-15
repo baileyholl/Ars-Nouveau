@@ -17,7 +17,7 @@ public class MixinLivingEntity {
                     remap = false
             )
     )
-    public boolean elytraOverride(boolean original) {
+    public boolean arsNouveau$elytraOverride(boolean original) {
         return original || EffectGlide.canGlide(((LivingEntity) ((Object)this)));
     }
 
@@ -29,7 +29,7 @@ public class MixinLivingEntity {
                     remap = false
             )
     )
-    public boolean eytraValidOverride(boolean original) {
+    public boolean arsNouveau$eytraValidOverride(boolean original) {
         return  original || EffectGlide.canGlide(((LivingEntity) ((Object)this)));
     }
 }

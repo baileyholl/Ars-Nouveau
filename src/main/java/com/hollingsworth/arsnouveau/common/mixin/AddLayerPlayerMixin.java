@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class AddLayerPlayerMixin {
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    public void constructor(EntityRendererProvider.Context pContext, boolean pUseSlimModel, CallbackInfo ci) {
+    public void arsNouveau$constructor(EntityRendererProvider.Context pContext, boolean pUseSlimModel, CallbackInfo ci) {
         ((PlayerRenderer)(Object)this).addLayer(new GeoShoulderLayer<>(((PlayerRenderer)(Object)this), pContext));
     }
 

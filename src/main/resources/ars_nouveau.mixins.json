@@ -19,9 +19,10 @@
   ],
   "mixins": [
     "CrossbowMixin",
+    "LivingAccessor",
+    "PlayerMixin",
     "PotionRecipeMixin",
     "PufferfishAccessor",
-    "redstone.RedstoneLevelMixin",
     "camera.ANServerPlayerMixin",
     "camera.ChunkMapMixin",
     "camera.PlayerListMixin",
@@ -31,7 +32,7 @@
     "jar.DispenserMixin",
     "jar.MobAccessorMixin",
     "perks.PerkLivingEntity",
-    "LivingAccessor",
+    "redstone.RedstoneLevelMixin",
     "structure.StructureProcessorAccessor",
     "structure.StructureTemplateAccessor",
     "structure.StructureTemplateMixin"

@@ -14,10 +14,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(CrossbowItem.class)
 public class CrossbowMixin {
-    @Inject(method="Lnet/minecraft/world/item/CrossbowItem;performShooting(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/ItemStack;FF)V",
+    @Inject(method= "performShooting(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/ItemStack;FF)V",
     at= @At("HEAD"),
             cancellable = true)
-    private static void performShooting(Level pLevel, LivingEntity pShooter, InteractionHand pUsedHand, ItemStack pCrossbowStack, float pVelocity, float pInaccuracy, CallbackInfo ci) {
+    private static void arsNouveau$performShooting(Level pLevel, LivingEntity pShooter, InteractionHand pUsedHand, ItemStack pCrossbowStack, float pVelocity, float pInaccuracy, CallbackInfo ci) {
         if(!(pShooter instanceof Player) && pCrossbowStack.getItem() instanceof SpellCrossbow spellCrossbow){
             spellCrossbow.shootStoredProjectiles(pLevel, pShooter, pUsedHand, pCrossbowStack, pVelocity, pInaccuracy);
             ci.cancel();

@@ -82,7 +82,6 @@ import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegi
 
 public class Starbuncle extends MagicalBuddyMob implements IDecoratable, ITooltipProvider, IWandable, IDebuggerProvider, ITagSyncable, IVariantColorProvider<Starbuncle> {
 
-
     public enum StarbuncleGoalState {
         FORAGING,
         HUNTING_ITEM,
