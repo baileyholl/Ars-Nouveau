@@ -9,7 +9,9 @@ import com.hollingsworth.arsnouveau.common.items.RunicChalk;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.common.util.VoxelShapeUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -19,16 +21,20 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -41,7 +47,8 @@ public class RuneBlock extends TickableModBlock {
     public static VoxelShape shape = Block.box(0.0D, 0.0D, 0.0D, 16D, 0.5D, 16D);
 
     public RuneBlock() {
-        super(defaultProperties().noCollission().noOcclusion().strength(0f, 0f));
+        this(defaultProperties().noCollission().noOcclusion().strength(0f, 0f));
+        registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH).setValue(FLOOR, true));
     }
 
     public RuneBlock(BlockBehaviour.Properties properties) {
@@ -51,6 +58,13 @@ public class RuneBlock extends TickableModBlock {
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(worldIn, pos, state, placer, stack);
+    }
+
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return this.defaultBlockState().setValue(BlockStateProperties.FACING, context.getClickedFace());
     }
 
     @Override
@@ -82,6 +96,14 @@ public class RuneBlock extends TickableModBlock {
         return super.use(state, worldIn, pos, player, handIn, hit);
     }
 
+
+    public BlockState rotate(BlockState state, Rotation rot) {
+        return state.setValue(BlockStateProperties.FACING, rot.rotate(state.getValue(BlockStateProperties.FACING)));
+    }
+
+    public BlockState mirror(BlockState state, Mirror mirrorIn) {
+        return state.rotate(mirrorIn.getRotation(state.getValue(BlockStateProperties.FACING)));
+    }
     @Override
     public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource rand) {
         super.tick(state, worldIn, pos, rand);
@@ -120,6 +142,19 @@ public class RuneBlock extends TickableModBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        Direction facing = state.getValue(BlockStateProperties.FACING);
+        switch(facing){
+            case EAST:
+                return VoxelShapeUtils.rotate(shape, Direction.WEST);
+            case NORTH:
+                return VoxelShapeUtils.rotateX(shape, 270);
+            case DOWN:
+                return VoxelShapeUtils.rotate(shape, Direction.UP);
+            case WEST:
+                return VoxelShapeUtils.rotate(shape, Direction.EAST);
+            case SOUTH:
+                return VoxelShapeUtils.rotateX(shape, 90);
+        }
         return shape;
     }
 
@@ -134,8 +169,9 @@ public class RuneBlock extends TickableModBlock {
     }
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-
+    public static final BooleanProperty FLOOR = BooleanProperty.create("floor");
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(POWERED);
+        builder.add(POWERED).add(FACING).add(FLOOR);
     }
 }
