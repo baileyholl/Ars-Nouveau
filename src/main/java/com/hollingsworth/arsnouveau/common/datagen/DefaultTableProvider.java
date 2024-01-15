@@ -219,6 +219,7 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.POLISHED_SCONCE_BLOCK.get());
             registerDropSelf(BlockRegistry.ARCHWOOD_SCONCE_BLOCK.get());
             registerDropSelf(BlockRegistry.REDSTONE_RELAY.get());
+            registerDropSelf(BlockRegistry.SOURCEBERRY_SACK.get());
         }
 
         @Override
