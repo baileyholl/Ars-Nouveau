@@ -225,6 +225,13 @@ public class CasterTomeProvider implements DataProvider {
                         .add(AugmentAmplify.INSTANCE)
                         .withSound(new ConfiguredSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND, 1.69f, 1.9f)), "Encases your enemies or friends in a tomb of ice. Guaranteed to leave them shocked and confused.",
                 new ParticleColor(25, 255, 255)));
+
+        tomes.add(buildTome("spinoftw", "You were hurt, but you're fine", new Spell(MethodSelf.INSTANCE)
+                .add(EffectConjureWater.INSTANCE)
+                .add(EffectHeal.INSTANCE)
+                .add(AugmentAmplify.INSTANCE, 2)
+                .add(EffectPhantomBlock.INSTANCE)
+                .add(AugmentAOE.INSTANCE, 3), " A utility spell to aid you in your adventures", new ParticleColor(225, 90 ,1)));
         Path output = this.generator.getOutputFolder();
         for (CasterTomeData g : tomes) {
             Path path = getRecipePath(output, g.getId().getPath());
