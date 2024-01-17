@@ -18,6 +18,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -40,6 +41,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 @SuppressWarnings("deprecation")
 public class RuneBlock extends TickableModBlock {
@@ -117,7 +119,10 @@ public class RuneBlock extends TickableModBlock {
     @Override
     public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
         super.entityInside(state, worldIn, pos, entityIn);
-        if (worldIn.getBlockEntity(pos) instanceof RuneTile rune) {
+        List<Entity> entities = worldIn.getEntitiesOfClass(Entity.class, getShape(state, worldIn, pos, CollisionContext.empty()).bounds().move(pos), EntitySelector.NO_SPECTATORS.and((p_289691_) -> {
+            return !p_289691_.isIgnoringBlockTriggers();
+        }));
+        if (!entities.isEmpty() && worldIn.getBlockEntity(pos) instanceof RuneTile rune) {
             if (rune.spell != null) {
                 for (AbstractSpellPart part : rune.spell.recipe) {
                     if ( part instanceof IFilter filter) {
@@ -127,7 +132,7 @@ public class RuneBlock extends TickableModBlock {
                     } else break;
                 }
             }
-            rune.touchedEntity = entityIn;
+            rune.touchedEntity = entities.get(0);
             worldIn.scheduleTick(pos, this, 1);
         }
     }
