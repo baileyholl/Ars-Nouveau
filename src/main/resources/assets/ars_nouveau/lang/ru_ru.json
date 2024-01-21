@@ -402,7 +402,7 @@
   "ars_nouveau.mirror.invalid": "Неверное заклинание. Зеркала принимают только Эффекты и Дополнения.",
   "ars_nouveau.mod_news": "Новости мода",
   "ars_nouveau.mod_news_desc": "Последние релизы и новости",
-  "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
+  "ars_nouveau.no_stack_crafting": "Поблизости нет допустимого крафта.",
   "ars_nouveau.norecipe": "Рецепты не найдены.",
   "ars_nouveau.not_enough_exp": "Недостаточно опыта для этого глифа.",
   "ars_nouveau.nothing": "Ничего",
