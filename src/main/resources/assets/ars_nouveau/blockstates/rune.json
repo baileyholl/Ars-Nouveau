@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "ars_nouveau:block/empty" }
+    "": { "model": "ars_nouveau:block/rune" }
   }
 }
