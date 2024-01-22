@@ -24,6 +24,11 @@ public class EntityHomingProjectileSpell extends EntityProjectileSpell {
         super(ModEntities.SPELL_PROJ_HOM.get(), world, resolver);
     }
 
+    @Override
+    public EntityType<?> getType() {
+        return ModEntities.SPELL_PROJ_HOM.get();
+    }
+
     List<Predicate<LivingEntity>> ignore;
     LivingEntity target;
 

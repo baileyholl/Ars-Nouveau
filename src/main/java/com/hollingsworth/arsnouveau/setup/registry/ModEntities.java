@@ -49,7 +49,7 @@ public class ModEntities {
                     .sized(0.5f, 0.5f).noSave()
                     .setTrackingRange(20).fireImmune()
                     .setShouldReceiveVelocityUpdates(true)
-                    .setUpdateInterval(120).setCustomClientFactory(EntityProjectileSpell::new));
+                    .setUpdateInterval(120));
     public static final RegistryObject<EntityType<EntityProjectileSpell>> SPELL_PROJ_ARC = registerEntity(
             LibEntityNames.SPELL_PROJ_ARC,
             EntityType.Builder.<EntityProjectileSpell>of((entityType, world) -> new EntityProjectileSpell(entityType, world) {
@@ -65,15 +65,13 @@ public class ModEntities {
                     }, MobCategory.MISC)
                     .sized(0.5f, 0.5f).noSave()
                     .setTrackingRange(20).fireImmune()
-                    .setShouldReceiveVelocityUpdates(true)
-                    .setUpdateInterval(120).setCustomClientFactory(EntityProjectileSpell::new));
+                    .setShouldReceiveVelocityUpdates(true));
     public static final RegistryObject<EntityType<EntityProjectileSpell>> SPELL_PROJ_HOM = registerEntity(
             LibEntityNames.SPELL_PROJ_HOM,
             EntityType.Builder.<EntityProjectileSpell>of(EntityHomingProjectileSpell::new, MobCategory.MISC)
                     .sized(0.5f, 0.5f).noSave()
                     .setTrackingRange(20).fireImmune()
-                    .setShouldReceiveVelocityUpdates(true)
-                    .setUpdateInterval(120).setCustomClientFactory(EntityProjectileSpell::new));
+                    .setShouldReceiveVelocityUpdates(true));
     public static final RegistryObject<EntityType<EntityAllyVex>> ALLY_VEX = registerEntity(
             LibEntityNames.ALLY_VEX,
             EntityType.Builder.<EntityAllyVex>of(EntityAllyVex::new, MobCategory.MISC)

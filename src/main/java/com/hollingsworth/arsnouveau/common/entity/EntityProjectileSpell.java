@@ -40,7 +40,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.network.PlayMessages;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
@@ -365,10 +364,6 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
     @Override
     protected boolean canHitEntity(Entity entity) {
         return super.canHitEntity(entity) || entity.getType().is(EntityTags.SPELL_CAN_HIT);
-    }
-
-    public EntityProjectileSpell(PlayMessages.SpawnEntity packet, Level world) {
-        super(ModEntities.SPELL_PROJ.get(), world);
     }
 
     @Override

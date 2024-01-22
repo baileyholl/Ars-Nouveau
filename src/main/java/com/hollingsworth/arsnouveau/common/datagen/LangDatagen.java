@@ -988,6 +988,8 @@ public class LangDatagen extends LanguageProvider {
         add("entity.ars_nouveau.scryer_camera", "Scryer Camera");
         add("entity.ars_nouveau.spell_arrow", "Spell Arrow");
         add("entity.ars_nouveau.spell_proj", "Spell Projectile");
+        add("entity.ars_nouveau.arcing_spell_proj", "Arc Spell Projectile");
+        add("entity.ars_nouveau.homing_spell_proj", "Homing Spell Projectile");
         add("ars_nouveau.armor", "Armor and Perks");
         add("ars_nouveau.page.armor_upgrading", "Armor Upgrading");
         add("ars_nouveau.armor_tiers", "Armor Tiers");
