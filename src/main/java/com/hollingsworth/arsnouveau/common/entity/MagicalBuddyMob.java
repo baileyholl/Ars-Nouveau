@@ -57,7 +57,7 @@ public abstract class MagicalBuddyMob extends PathfinderMob implements GeoEntity
 
     @Override
     protected InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
-        if (pPlayer instanceof ServerPlayer sp && sp.getItemInHand(pHand).isEmpty() && sp.isShiftKeyDown()) {
+        if (pPlayer instanceof ServerPlayer sp && sp.getItemInHand(InteractionHand.MAIN_HAND).isEmpty() && sp.isShiftKeyDown()) {
             this.setEntityOnShoulder(sp);
             return InteractionResult.SUCCESS;
         }
