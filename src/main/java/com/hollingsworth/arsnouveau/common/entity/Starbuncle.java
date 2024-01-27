@@ -27,6 +27,7 @@ import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.UntamedFindItem
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.MinecoloniesAdvancedPathNavigate;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.MovementHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingStuckHandler;
+import com.hollingsworth.arsnouveau.common.items.summon_charms.StarbuncleCharm;
 import com.hollingsworth.arsnouveau.common.network.ITagSyncable;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSyncTag;
@@ -58,6 +59,7 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -81,6 +83,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
@@ -274,6 +277,12 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             if (this.bedBackoff > 0) {
                 this.bedBackoff--;
             }
+            if(this.hasPassenger((e) -> true)){
+                System.out.println("has passenger");
+                for(WrappedGoal goal : this.goalSelector.getRunningGoals().collect(Collectors.toList())){
+                    System.out.println(goal.getGoal());
+                }
+            }
         }
         if (!level.isClientSide && dynamicBehavior != null && level.getGameTime() % 100 == 0) {
             dynamicBehavior.syncTag();
@@ -427,11 +436,30 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     }
 
     @Override
+    protected void updateControlFlags() {
+        boolean flag = true;
+        boolean flag1 = !(this.getVehicle() instanceof Boat);
+        this.goalSelector.setControlFlag(Goal.Flag.MOVE, flag);
+        this.goalSelector.setControlFlag(Goal.Flag.JUMP, flag && flag1);
+        this.goalSelector.setControlFlag(Goal.Flag.LOOK, flag);
+    }
+
+    @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         if (hand != InteractionHand.MAIN_HAND || player.getCommandSenderWorld().isClientSide || !isTamed())
             return InteractionResult.SUCCESS;
 
         ItemStack stack = player.getItemInHand(hand);
+        if(player.getMainHandItem().getItem() instanceof StarbuncleCharm starbuncleCharm){
+
+            Starbuncle carbuncle = new Starbuncle(level, true);
+            Starbuncle.StarbuncleData data = new Starbuncle.StarbuncleData(player.getMainHandItem().getOrCreateTag());
+            carbuncle.data = data;
+            level.addFreshEntity(carbuncle);
+            carbuncle.restoreFromTag();
+            carbuncle.startRiding(this);
+            return InteractionResult.SUCCESS;
+        }
 
         if (player.getMainHandItem().is(Tags.Items.DYES)) {
             DyeColor color = DyeColor.getColor(stack);

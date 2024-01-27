@@ -29,6 +29,7 @@ public class StarbyPotionBehavior extends StarbyListBehavior {
         super(entity, tag);
         heldPotion = PotionData.fromTag(tag.getCompound("potionData"));
         amount = tag.getInt("amount");
+        goals.add(new WrappedGoal(4, new GoToBedGoal(starbuncle, this)));
         goals.add(new WrappedGoal(3, new PotionTakeGoal(entity, this)));
         goals.add(new WrappedGoal(3, new PotionStoreGoal(entity, this)));
     }

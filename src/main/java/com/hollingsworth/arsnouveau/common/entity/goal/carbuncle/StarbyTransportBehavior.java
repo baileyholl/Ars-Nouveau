@@ -4,6 +4,10 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import com.hollingsworth.arsnouveau.common.entity.statemachine.IStateEvent;
+import com.hollingsworth.arsnouveau.common.entity.statemachine.SimpleStateMachine;
+import com.hollingsworth.arsnouveau.common.entity.statemachine.starbuncle.DecideStarbyActionState;
+import com.hollingsworth.arsnouveau.common.entity.statemachine.starbuncle.StarbyState;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
@@ -17,7 +21,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -41,6 +44,8 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
 
     public ItemStack itemScroll;
 
+    public SimpleStateMachine<StarbyState, IStateEvent> stateMachine;
+
     public StarbyTransportBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
         if (!entity.isTamed())
@@ -48,10 +53,19 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
 
         if (tag.contains("itemScroll"))
             this.itemScroll = ItemStack.of(tag.getCompound("itemScroll"));
-        goals.add(new WrappedGoal(1, new FindItem(starbuncle, this)));
-        goals.add(new WrappedGoal(2, new ForageManaBerries(starbuncle, this)));
-        goals.add(new WrappedGoal(3, new StoreItemGoal<>(starbuncle, this)));
-        goals.add(new WrappedGoal(3, new TakeItemGoal<>(starbuncle, this)));
+//        goals.add(new WrappedGoal(1, new FindItem(starbuncle, this)));
+//        goals.add(new WrappedGoal(2, new ForageManaBerries(starbuncle, this)));
+//        goals.add(new WrappedGoal(3, new StoreItemGoal<>(starbuncle, this)));
+//        goals.add(new WrappedGoal(3, new TakeItemGoal<>(starbuncle, this)));
+        stateMachine = new SimpleStateMachine<>(new DecideStarbyActionState(starbuncle, this));
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if(!level.isClientSide) {
+            stateMachine.tick();
+        }
     }
 
     @Override

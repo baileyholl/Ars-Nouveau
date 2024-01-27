@@ -28,6 +28,10 @@ public abstract class ChangeableBehavior implements IWandable {
         this.entity = entity;
     }
 
+    public void tick(){
+
+    }
+
     public void getTooltip(List<Component> tooltip){}
 
     public CompoundTag toTag(CompoundTag tag) {
