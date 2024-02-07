@@ -36,7 +36,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWaterloggedBlock {
 
     public ArcanePedestal() {
-        super(ModBlock.defaultProperties().noOcclusion());
+        super(ModBlock.defaultProperties().noOcclusion().forceSolidOn());
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
     }
 
