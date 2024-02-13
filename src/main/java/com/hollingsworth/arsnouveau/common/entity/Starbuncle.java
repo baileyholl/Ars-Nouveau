@@ -262,6 +262,9 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             System.out.println(this);
             return;
         }
+        if(this.dynamicBehavior != null){
+            this.dynamicBehavior.tick();
+        }
         if (level.isClientSide && level.getGameTime() % 5 == 0) {
             this.canSleep = this.getBlockStateOn().is(BlockTagProvider.SUMMON_SLEEPABLE);
         }
@@ -692,6 +695,10 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     }
 
     public void addGoalDebug(Goal goal, DebugEvent debugEvent) {
+        addGoalDebug((Object) goal, debugEvent);
+    }
+
+    public void addGoalDebug(Object goal, DebugEvent debugEvent) {
         debugEvent.id = goal.getClass().getSimpleName() + "_" + debugEvent.id;
         debugEvent.message += " ===== current state: " + this.goalState.name();
         addDebugEvent(debugEvent);

@@ -1,10 +1,66 @@
 package com.hollingsworth.arsnouveau.common.entity.statemachine.starbuncle;
 
+import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyTransportBehavior;
+import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.items.IItemHandler;
 
-public class TakeItemState extends StarbyState{
-    public TakeItemState(Starbuncle starbuncle, StarbyTransportBehavior behavior) {
-        super(starbuncle, behavior);
+public class TakeItemState extends TravelToPosState{
+    public TakeItemState(Starbuncle starbuncle, StarbyTransportBehavior behavior, BlockPos target) {
+        super(starbuncle, behavior, target, new DecideStarbyActionState(starbuncle, behavior));
+    }
+
+    @Override
+    public StarbyState onDestinationReached() {
+        Level world = starbuncle.level;
+        BlockEntity tileEntity = world.getBlockEntity(targetPos);
+        if (tileEntity == null) {
+            starbuncle.addGoalDebug(this, new DebugEvent("TakePosBroken", "Take Tile Broken" ));
+            return nextState;
+        }
+        IItemHandler iItemHandler = behavior.getItemCapFromTile(tileEntity, behavior.FROM_DIRECTION_MAP.get(targetPos.hashCode()));
+        if (iItemHandler == null) {
+            starbuncle.addGoalDebug(this, new DebugEvent("NoItemHandler", "No item handler at " + targetPos.toString()));
+            return nextState;
+        }
+        for (int j = 0; j < iItemHandler.getSlots() && starbuncle.getHeldStack().isEmpty(); j++) {
+            ItemStack stack = iItemHandler.getStackInSlot(j);
+            if (!stack.isEmpty()) {
+                int count = behavior.getMaxTake(iItemHandler.getStackInSlot(j));
+                if (count <= 0)
+                    continue;
+                starbuncle.setHeldStack(iItemHandler.extractItem(j, Math.min(count, stack.getMaxStackSize()), false));
+                starbuncle.addGoalDebug(this, new DebugEvent("SetHeld", "Taking " + count + "x " + starbuncle.getHeldStack().getHoverName().getString() + " from " + targetPos.toString()));
+                starbuncle.level.playSound(null, starbuncle.getX(), starbuncle.getY(), starbuncle.getZ(),
+                        SoundEvents.ITEM_PICKUP, starbuncle.getSoundSource(), 1.0F, 1.0F);
+
+                if (world instanceof ServerLevel serverLevel) {
+                    try {
+                        OpenChestEvent event = new OpenChestEvent(serverLevel, targetPos, 20);
+                        event.open();
+                        EventQueue.getServerInstance().addEvent(event);
+                    } catch (Exception ignored) {
+                        // Potential bug with OpenJDK causing irreproducible noClassDef errors
+                    }
+                }
+            }
+        }
+        if(starbuncle.getHeldStack().isEmpty()) {
+            starbuncle.addGoalDebug(this, new DebugEvent("TakeFromChest", "No items to take? Cancelling goal."));
+        }
+        return nextState;
+    }
+
+    @Override
+    public boolean isDestinationStillValid(BlockPos pos) {
+        return behavior.isPositionValidTake(pos);
     }
 }

@@ -48,6 +48,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
 
     public StarbyTransportBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
+        stateMachine = new SimpleStateMachine<>(new DecideStarbyActionState(starbuncle, this));
         if (!entity.isTamed())
             return;
 
@@ -57,7 +58,6 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
 //        goals.add(new WrappedGoal(2, new ForageManaBerries(starbuncle, this)));
 //        goals.add(new WrappedGoal(3, new StoreItemGoal<>(starbuncle, this)));
 //        goals.add(new WrappedGoal(3, new TakeItemGoal<>(starbuncle, this)));
-        stateMachine = new SimpleStateMachine<>(new DecideStarbyActionState(starbuncle, this));
     }
 
     @Override

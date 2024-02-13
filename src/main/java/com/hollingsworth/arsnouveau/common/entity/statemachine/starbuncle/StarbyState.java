@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 public class StarbyState implements IState<StarbyState> {
     public Starbuncle starbuncle;
     public StarbyTransportBehavior behavior;
-
+    public int ticksRunning;
     public StarbyState(Starbuncle starbuncle, StarbyTransportBehavior behavior) {
         this.starbuncle = starbuncle;
         this.behavior = behavior;
@@ -28,6 +28,7 @@ public class StarbyState implements IState<StarbyState> {
     @Nullable
     @Override
     public StarbyState tick() {
+        ticksRunning++;
         return null;
     }
 
