@@ -19,7 +19,8 @@
   "1f470f2a-a05b-4b6b-9d84-4b62f8686e5b", "d600e728-1c5e-4ee8-8df7-2899465c9129", "43ec37c2-8b0d-4bda-9f6a-5f78c3b572d0",
   "5a4971f3-6fb0-446e-8512-cca380ec7e85", "6859954f-e3b0-45a8-84d7-5f9e9782651f", "f24ec99c-5d9b-4815-8938-5401f5d62877",
   "2980a99e-8582-4f63-9b82-f7117bc8be2c", "674b6c55-c4f3-4ef6-9a57-b4a7455f1296","0f4c174e-26f1-43c3-81d0-88507dba6e52",
-  "5b1c9f9b-edd0-4632-9ba3-79b6dcc9bfa8", "eb0da540-8487-4ca0-8a5f-ed4acaa0268d", "8bacc3d4-a301-429b-859d-042d47f61e4d"],
+  "5b1c9f9b-edd0-4632-9ba3-79b6dcc9bfa8", "eb0da540-8487-4ca0-8a5f-ed4acaa0268d", "8bacc3d4-a301-429b-859d-042d47f61e4d",
+  "3d8f61f1-7333-4c4f-b9e8-d76a3b453420"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -316,6 +317,11 @@
       "adopter": "Amajami",
       "color": "lime",
       "bio": "She seems to really want to help you"
+    },{
+      "name": "Kira, The Sleepy",
+      "color": "magenta",
+      "adopter": "QueenOfWorms",
+      "bio": "A lonely little starbuncle, that loves to quietly slumber under trees and in caves."
     }
   ]
 }
