@@ -20,7 +20,7 @@
   "5a4971f3-6fb0-446e-8512-cca380ec7e85", "6859954f-e3b0-45a8-84d7-5f9e9782651f", "f24ec99c-5d9b-4815-8938-5401f5d62877",
   "2980a99e-8582-4f63-9b82-f7117bc8be2c", "674b6c55-c4f3-4ef6-9a57-b4a7455f1296","0f4c174e-26f1-43c3-81d0-88507dba6e52",
   "5b1c9f9b-edd0-4632-9ba3-79b6dcc9bfa8", "eb0da540-8487-4ca0-8a5f-ed4acaa0268d", "8bacc3d4-a301-429b-859d-042d47f61e4d",
-  "3d8f61f1-7333-4c4f-b9e8-d76a3b453420"],
+  "3d8f61f1-7333-4c4f-b9e8-d76a3b453420", "888d2798-4fdf-4e70-89ed-1bb2ff47c6c1"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -322,6 +322,11 @@
       "color": "magenta",
       "adopter": "QueenOfWorms",
       "bio": "A lonely little starbuncle, that loves to quietly slumber under trees and in caves."
+    },{
+      "name": "Kaori, The Almighty",
+      "adopter": "TheSeaMoon",
+      "color": "white",
+      "bio": "Kaori was once one of the most powerful summoner in the world, until a mishap made a witch angry at them, Kaori will have her revenge once she undo the transformation, AND THE WITCH WILL BOW BEF- Oh! Shiny Nugget!"
     }
   ]
 }
