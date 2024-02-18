@@ -47,13 +47,13 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
             thisCaster.setFlavorText(heldCaster.getFlavorText());
             thisCaster.setSpellName(heldCaster.getSpellName());
             thisCaster.setSound(heldCaster.getCurrentSound());
-        }else if(heldStack.getItem() == ItemsRegistry.MANIPULATION_ESSENCE.asItem()){
+        } else if (heldStack.getItem() == ItemsRegistry.MANIPULATION_ESSENCE.asItem()) {
             // Thanks mojang
             String[] words = new String[]{"the", "elder", "scrolls", "klaatu", "berata", "niktu", "xyzzy", "bless", "curse", "light", "darkness", "fire", "air", "earth", "water", "hot", "dry", "cold", "wet", "ignite", "snuff", "embiggen", "twist", "shorten", "stretch", "fiddle", "destroy", "imbue", "galvanize", "enchant", "free", "limited", "range", "of", "towards", "inside", "sphere", "cube", "self", "other", "ball", "mental", "physical", "grow", "shrink", "demon", "elemental", "spirit", "animal", "creature", "beast", "humanoid", "undead", "fresh", "stale", "phnglui", "mglwnafh", "cthulhu", "rlyeh", "wgahnagl", "fhtagn", "baguette"};
             // Pick between 3 and 5 words
             int numWords = world.random.nextInt(3) + 3;
             StringBuilder sb = new StringBuilder();
-            for(int i = 0; i < numWords; i++){
+            for (int i = 0; i < numWords; i++) {
                 sb.append(words[world.random.nextInt(words.length)]).append(" ");
             }
             thisCaster.setSpellHidden(true);
@@ -118,12 +118,12 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
             tooltip2.add(Component.translatable("ars_nouveau.tooltip.can_inscribe"));
             return;
         }
-        if (!caster.getSpellName().isEmpty()){
-         tooltip2.add(Component.literal(caster.getSpellName()));
+        if (!caster.getSpellName().isEmpty()) {
+            tooltip2.add(Component.literal(caster.getSpellName()));
         }
-        if(caster.isSpellHidden()) {
+        if (caster.isSpellHidden()) {
             tooltip2.add(Component.literal(caster.getHiddenRecipe()).withStyle(Style.EMPTY.withFont(new ResourceLocation("minecraft", "alt")).withColor(ChatFormatting.GOLD)));
-        }else {
+        } else {
             Spell spell = caster.getSpell();
             tooltip2.add(Component.literal(spell.getDisplayString()));
         }

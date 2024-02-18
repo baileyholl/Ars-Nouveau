@@ -69,6 +69,7 @@ public class Config {
     public static ForgeConfigSpec.IntValue MANABAR_Y_OFFSET;
     public static ForgeConfigSpec.IntValue BOOKWYRM_LIMIT;
     public static ForgeConfigSpec.BooleanValue GUI_TRANSPARENCY;
+    public static ForgeConfigSpec.BooleanValue GLYPH_TOOLTIPS;
 
     private static ForgeConfigSpec.ConfigValue<List<? extends String>> ENTITY_LIGHT_CONFIG;
     private static ForgeConfigSpec.ConfigValue<List<? extends String>> ITEM_LIGHT_CONFIG;
@@ -115,6 +116,7 @@ public class Config {
         CLIENT_BUILDER.comment("Misc").push("misc");
         ALTERNATE_PORTAL_RENDER = CLIENT_BUILDER.comment("Use simplified renderer for Warp Portals").define("no_end_portal_render", false);
         DISABLE_SKY_SHADER = CLIENT_BUILDER.comment("Disables the skyweave renderer. Disable if your sky is broken with shaders.").define("disable_skyweave", false);
+        GLYPH_TOOLTIPS = CLIENT_BUILDER.comment("Show spell tooltips with glyphs instead of plain text").define("glyphTooltips", true);
         GUI_TRANSPARENCY = CLIENT_BUILDER.comment("Enables transparent/opaque rendering of elements in the book GUI. Disable if it leads to crash with Sodium derivatives").define("gui_transparency", true);
         DISABLE_TRANSLUCENT_PARTICLES = CLIENT_BUILDER.comment("Disables translucent particles. Disable if your particles are invisible with shaders.").define("opaque_particles", false);
         SERVER_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
