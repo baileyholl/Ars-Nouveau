@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
+import com.hollingsworth.arsnouveau.api.perk.StackPerkHolder;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.common.block.AlterationTable;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
@@ -74,7 +74,7 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
 
     public void setArmorStack(ItemStack stack, Player player){
         IPerkHolder<ItemStack> holder = PerkUtil.getPerkHolder(stack);
-        if(holder instanceof ArmorPerkHolder armorPerkHolder){
+        if (holder instanceof StackPerkHolder armorPerkHolder) {
             this.perkList = new ArrayList<>(PerkUtil.getPerksAsItems(stack).stream().map(Item::getDefaultInstance).toList());
             armorPerkHolder.setPerks(new ArrayList<>());
             this.armorStack = stack.copy();
@@ -97,7 +97,7 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
 
     public void removeArmorStack(Player player){
         IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(armorStack);
-        if(perkHolder instanceof ArmorPerkHolder armorPerkHolder){
+        if (perkHolder instanceof StackPerkHolder armorPerkHolder) {
             armorPerkHolder.setPerks(perkList.stream().map(i ->{
                 if(i.getItem() instanceof PerkItem perkItem){
                     return perkItem.perk;
@@ -115,7 +115,7 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
 
     public void addPerkStack(ItemStack stack, Player player){
         IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(armorStack);
-        if(!(perkHolder instanceof ArmorPerkHolder armorPerkHolder)){
+        if (!(perkHolder instanceof StackPerkHolder armorPerkHolder)) {
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.set_armor"));
             return;
         }
@@ -126,7 +126,7 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
         PerkSlot foundSlot = getAvailableSlot(perkHolder);
         if(stack.getItem() instanceof PerkItem perkItem) {
             IPerk perk = perkItem.perk;
-            if(foundSlot != null && perk.validForSlot(foundSlot, stack, player)) {
+            if (foundSlot != null && perk.validForSlot(foundSlot, armorStack, player)) {
                 this.perkList.add(stack.split(1));
                 if (newPerkTimer <= 0) {
                     newPerkTimer = 40;
