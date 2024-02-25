@@ -53,7 +53,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
     public AlterationTableRenderer(BlockEntityRendererProvider.Context p_i226006_1_) {
         super(new GenericModel<>("alteration_table").withEmptyAnim());
         innerModel = new ArmorStandArmorModel(p_i226006_1_.bakeLayer(ModelLayers.ARMOR_STAND_INNER_ARMOR));
-        outerModel =  new ArmorStandArmorModel(p_i226006_1_.bakeLayer(ModelLayers.ARMOR_STAND_OUTER_ARMOR));
+        outerModel = new ArmorStandArmorModel(p_i226006_1_.bakeLayer(ModelLayers.ARMOR_STAND_OUTER_ARMOR));
     }
 
     public void renderArmorStack(AlterationTile tile, PoseStack matrixStack, float ticks, MultiBufferSource iRenderTypeBuffer, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float partialTicks) {
@@ -61,7 +61,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());
         if (!(state.getBlock() instanceof AlterationTable))
             return;
-        if(tile.armorStack.getItem() instanceof ArmorItem armorItem) {
+        if (tile.armorStack.getItem() instanceof ArmorItem armorItem) {
             // to rotate around a point: scale, point translate, rotate, object translate
             matrixStack.scale(0.5f, 0.5f, 0.5f);
             matrixStack.translate(-2.1, 3.3, 0);
@@ -69,7 +69,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
             if (tile.newPerkTimer >= 0) {
                 // need zero it out or else it fights the translation we're doing below
                 yOffset = 0;
-                float percentage = Mth.abs( tile.newPerkTimer - 20) / 20f;
+                float percentage = Mth.abs(tile.newPerkTimer - 20) / 20f;
                 double smooooooooth = Mth.smoothstep(percentage);
                 double perkYOffset = 0.625 - (smooooooooth * 0.625);
                 matrixStack.mulPose(Axis.YP.rotationDegrees((float) (Mth.smoothstep(tile.newPerkTimer / 40f) * 360)));
@@ -79,23 +79,23 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
             matrixStack.translate(0, yOffset + rotForSlot(armorItem.getEquipmentSlot()), 0);
 
             this.renderArmorPiece(tile, tile.armorStack, matrixStack, iRenderTypeBuffer, packedLightIn, getArmorModel(armorItem.getEquipmentSlot()));
-        }else {
+        } else {
             Minecraft.getInstance().getItemRenderer().renderStatic(tile.armorStack, ItemDisplayContext.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, tile.getLevel(), (int) tile.getBlockPos().asLong());
         }
         matrixStack.popPose();
     }
 
-    public void renderPerks(AlterationTile tile, PoseStack matrixStack, float ticks, MultiBufferSource iRenderTypeBuffer, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float partialTicks){
-        if(tile.perkList.isEmpty()){
+    public void renderPerks(AlterationTile tile, PoseStack matrixStack, float ticks, MultiBufferSource iRenderTypeBuffer, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float partialTicks) {
+        if (tile.perkList.isEmpty()) {
             return;
         }
-        for(int i = 0; i < Math.min(3, tile.perkList.size()); i++){
+        for (int i = 0; i < Math.min(3, tile.perkList.size()); i++) {
             ItemStack perkStack = tile.perkList.get(i);
-            if(perkStack.isEmpty()){
+            if (perkStack.isEmpty()) {
                 continue;
             }
             matrixStack.pushPose();
-            matrixStack.translate(-0.25, 0.74 - (0.175 * i),-0.3 - (0.175 * i));
+            matrixStack.translate(-0.25, 0.74 - (0.175 * i), -0.3 - (0.175 * i));
             GeoBone bone = model.getBone("display").get();
             if (bone.getRotZ() != 0.0F) {
                 matrixStack.mulPose(Axis.ZP.rotation(-bone.getRotZ()));
@@ -105,7 +105,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
                 matrixStack.mulPose(Axis.YP.rotation(-bone.getRotY()));
             }
 
-            if (bone.getRotX()  != 0.0F) {
+            if (bone.getRotX() != 0.0F) {
                 matrixStack.mulPose(Axis.XP.rotation(-bone.getRotX()));
             }
             GeoBone locBone = model.getBone("top_" + (i + 1)).get();
@@ -130,7 +130,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
     }
 
     private void renderArmorPiece(AlterationTile tile, ItemStack itemstack, PoseStack pPoseStack, MultiBufferSource pBuffer, int packedLightIn, ArmorStandArmorModel armorModel) {
-        if(!(itemstack.getItem() instanceof ArmorItem armoritem))
+        if (!(itemstack.getItem() instanceof ArmorItem armoritem))
             return;
 
         EquipmentSlot pSlot = armoritem.getEquipmentSlot();
@@ -159,7 +159,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
     }
 
     public ResourceLocation getArmorResource(ItemStack stack, EquipmentSlot slot, @Nullable String type) {
-        ArmorItem item = (ArmorItem)stack.getItem();
+        ArmorItem item = (ArmorItem) stack.getItem();
         String texture = item.getMaterial().getName();
         String domain = "minecraft";
         int idx = texture.indexOf(':');
@@ -229,9 +229,9 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
             return;
         Direction direction = animatable.getLevel().getBlockState(animatable.getBlockPos()).getValue(AlterationTable.FACING);
         Vector3d perkTranslate = new Vector3d(0, 0, 0);
-        Quaternionf perkQuat =  Axis.YP.rotationDegrees(-90);
+        Quaternionf perkQuat = Axis.YP.rotationDegrees(-90);
         Vector3d armorTranslate = new Vector3d(0, 0, 0);
-        Quaternionf armorQuat =  Axis.YP.rotationDegrees(-90);
+        Quaternionf armorQuat = Axis.YP.rotationDegrees(-90);
         if (direction == Direction.NORTH) {
             perkQuat = Axis.YP.rotationDegrees(-90);
             perkTranslate = new Vector3d(1.55, 0.00, -.5);
@@ -241,16 +241,16 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
 
         if (direction == Direction.SOUTH) {
             perkQuat = Axis.YP.rotationDegrees(90);
-            perkTranslate = new Vector3d(.5, 0 ,.5);
+            perkTranslate = new Vector3d(.5, 0, .5);
             armorQuat = Axis.YP.rotationDegrees(-90);
-            armorTranslate = new Vector3d(1.6, 0.2 ,-0.5 );
+            armorTranslate = new Vector3d(1.6, 0.2, -0.5);
         }
 
         if (direction == Direction.WEST) {
             perkQuat = Axis.YP.rotationDegrees(0);
             perkTranslate = new Vector3d(1.5, 0, 0.5);
             armorQuat = Axis.YP.rotationDegrees(180);
-            armorTranslate = new Vector3d(0.6,0.2, -0.5);
+            armorTranslate = new Vector3d(0.6, 0.2, -0.5);
         }
 
         if (direction == Direction.EAST) {
@@ -263,6 +263,12 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         stack.pushPose();
         stack.mulPose(armorQuat);
         stack.translate(armorTranslate.x, armorTranslate.y, armorTranslate.z);
+
+        if (!(animatable.armorStack.getItem() instanceof ArmorItem)) {
+            stack.scale(0.75f, 0.75f, 0.75f);
+            stack.translate(-1.5, 1.95, 0);
+        }
+
         this.renderArmorStack(animatable, stack, (float) ticks, bufferSource, buffer, packedLight, packedOverlay, partialTick);
         stack.popPose();
 
@@ -274,19 +280,19 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         stack.popPose();
     }
 
-    public void renderSlate(BakedGeoModel model, AlterationTile tile){
+    public void renderSlate(BakedGeoModel model, AlterationTile tile) {
         String[] rowNames = new String[]{"top", "mid", "bot"};
-        if(tile.armorStack.isEmpty()){
-            for(String s : rowNames){
+        if (tile.armorStack.isEmpty()) {
+            for (String s : rowNames) {
                 setSlateRow(model, s, 0);
             }
             return;
         }
         if (!(PerkUtil.getPerkHolder(tile.armorStack) instanceof StackPerkHolder armorPerkHolder)) {
-          return;
+            return;
         }
         List<PerkSlot> perks = armorPerkHolder.getSlotsForTier();
-        for(int i = 0; i < Math.min(perks.size(), rowNames.length); i++){
+        for (int i = 0; i < Math.min(perks.size(), rowNames.length); i++) {
             PerkSlot perkSlot = perks.get(i);
             setSlateRow(model, rowNames[i], perkSlot.value);
         }
@@ -294,11 +300,11 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         remainingRows.subList(perks.size(), remainingRows.size()).forEach(s -> setSlateRow(model, s, 0));
     }
 
-    public void setSlateRow(BakedGeoModel model, String loc, int tier){
-        for(int i = 0; i < 4; i++){
-            if(tier != i){
+    public void setSlateRow(BakedGeoModel model, String loc, int tier) {
+        for (int i = 0; i < 4; i++) {
+            if (tier != i) {
                 model.getBone(loc + "_" + i).ifPresent(bone -> bone.setHidden(true));
-            }else{
+            } else {
                 model.getBone(loc + "_" + i).ifPresent(bone -> bone.setHidden(false));
             }
         }
@@ -311,7 +317,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
 
     @Override
     public RenderType getRenderType(AlterationTile animatable, ResourceLocation texture, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, float partialTick) {
-        return  RenderType.entityTranslucent(texture);
+        return RenderType.entityTranslucent(texture);
     }
 
     @Override
