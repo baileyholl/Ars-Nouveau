@@ -284,7 +284,7 @@
   "ars_nouveau.glyph_desc.glyph_wind_shear": "Deals damage to targets in the air, with an increasing amount based on how high the target is off the ground, up to 10 blocks. Targets on the ground take no damage.",
   "ars_nouveau.glyph_desc.glyph_wither": "Applies the Wither debuff.",
   "ars_nouveau.glyph_desc.reset": "Resets the spell chain to the original target if it was changed by a previous effect. For example, Burst -> Place Block -> Reset -> Break will cause Burst to place blocks, but only Break will apply to the original location. As a result, using Reset will allow you to bypass combination and duplicate limits on glyphs.",
-  "ars_nouveau.glyph_desc.wololo": "",
+  "ars_nouveau.glyph_desc.wololo": "Changes the color of an entity or compatible block to the color of the spell.",
   "ars_nouveau.glyph_name.burst": "Burst",
   "ars_nouveau.glyph_name.glyph_accelerate": "Accelerate",
   "ars_nouveau.glyph_name.glyph_amplify": "Amplify",

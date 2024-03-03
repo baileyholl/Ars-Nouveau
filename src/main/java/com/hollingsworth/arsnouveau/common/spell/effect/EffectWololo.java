@@ -119,5 +119,8 @@ public class EffectWololo extends AbstractEffect {
         vanillaColors.put(ParticleColor.BLACK, Items.BLACK_DYE);
     }
 
-
+    @Override
+    public String getBookDescription() {
+        return "Changes the color of an entity or compatible block to the color of the spell.";
+    }
 }
