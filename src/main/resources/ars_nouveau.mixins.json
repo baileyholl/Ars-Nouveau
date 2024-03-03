@@ -5,6 +5,7 @@
   "refmap": "ars_nouveau.refmap.json",
   "plugin": "com.hollingsworth.arsnouveau.common.mixin.MixinPlugin",
   "client": [
+    "ChatComponentAccessor",
     "GameRendererMixin",
     "camera.ClientChunkCacheMixin",
     "camera.LevelRendererMixin",
@@ -13,14 +14,15 @@
     "light.ClientMixin",
     "light.EntityRendererMixin",
     "light.LevelRendererMixin",
-    "light.LightEntityMixin",
-    "ChatComponentAccessor",
+    "light.LightEntityMixin"
   ],
   "mixins": [
     "CrossbowMixin",
+    "LivingAccessor",
+    "MobAccessor",
+    "PlayerMixin",
     "PotionRecipeMixin",
     "PufferfishAccessor",
-    "redstone.RedstoneLevelMixin",
     "camera.ANServerPlayerMixin",
     "camera.ChunkMapMixin",
     "camera.PlayerListMixin",
@@ -30,7 +32,7 @@
     "jar.DispenserMixin",
     "jar.MobAccessorMixin",
     "perks.PerkLivingEntity",
-    "LivingAccessor",
+    "redstone.RedstoneLevelMixin",
     "structure.StructureProcessorAccessor",
     "structure.StructureTemplateAccessor",
     "structure.StructureTemplateMixin"
