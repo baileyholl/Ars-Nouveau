@@ -6,7 +6,10 @@ import com.hollingsworth.arsnouveau.api.util.IWololoable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.mixin.MobAccessor;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -50,18 +53,21 @@ public class EffectWololo extends AbstractEffect {
             ((MobAccessor) living).callMobInteract(player, InteractionHand.MAIN_HAND);
             player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
         }
+        world.playSound(null, living.getX(), living.getY(), living.getZ(), SoundEvents.EVOKER_PREPARE_WOLOLO, SoundSource.PLAYERS, 1.0F, 1.0F);
 
     }
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (world.getBlockEntity(rayTraceResult.getBlockPos()) instanceof IWololoable sheep) {
+        BlockPos blockPos = rayTraceResult.getBlockPos();
+        if (world.getBlockEntity(blockPos) instanceof IWololoable sheep) {
             ParticleColor color = spellStats.isRandomized() ? ParticleColor.makeRandomColor(255, 255, 255, shooter.getRandom()) : spellContext.getSpell().color;
             sheep.setColor(color);
-        } else if (world.getBlockEntity(rayTraceResult.getBlockPos()) instanceof SignBlockEntity sign) {
+        } else if (world.getBlockEntity(blockPos) instanceof SignBlockEntity sign) {
             DyeItem dye = spellStats.isRandomized() ? getRandomDye(shooter.getRandom()) : getDyeItemFromSpell(spellContext);
             dye.tryApplyToSign(world, sign, true, ANFakePlayer.getPlayer((ServerLevel) world));
         }
+        world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundEvents.EVOKER_PREPARE_WOLOLO, SoundSource.PLAYERS, 1.0F, 1.0F);
     }
 
     private DyeItem getRandomDye(RandomSource random) {
