@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class PerkLivingEntity {
 
     @Inject(method = "decreaseAirSupply", at = @At("HEAD"), cancellable = true)
-    protected void decreaseAirSupply(int pCurrentAir, CallbackInfoReturnable<Integer> cir) {
+    protected void arsNouveau$decreaseAirSupply(int pCurrentAir, CallbackInfoReturnable<Integer> cir) {
         LivingEntity thisEntity = (LivingEntity) (Object) this;
         int numDepths = PerkUtil.countForPerk(DepthsPerk.INSTANCE, thisEntity);
         if(numDepths >= 3 || thisEntity.getRandom().nextDouble() <= numDepths * .33) {
@@ -22,7 +22,7 @@ public class PerkLivingEntity {
     }
 
     @Inject(method = "getJumpBoostPower", at = @At("RETURN"), cancellable = true)
-    protected void getJumpPower(CallbackInfoReturnable<Float> cir) {
+    protected void arsNouveau$getJumpPower(CallbackInfoReturnable<Float> cir) {
         LivingEntity thisEntity = (LivingEntity) (Object) this;
         cir.setReturnValue(cir.getReturnValueF() + PerkUtil.countForPerk(JumpHeightPerk.INSTANCE, thisEntity) * 0.1f);
     }

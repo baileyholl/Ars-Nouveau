@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(value = ServerPlayer.class, priority = 1000)
 public class ANServerPlayerMixin {
     @WrapWithCondition(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;absMoveTo(DDDFF)V"))
-    private boolean shouldMove(ServerPlayer player, double x, double y, double z, float yaw, float pitch) {
+    private boolean arsNouveau$shouldMove(ServerPlayer player, double x, double y, double z, float yaw, float pitch) {
         return !CameraUtil.isPlayerMountedOnCamera(player);
     }
 }

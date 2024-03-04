@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class RedstoneLevelMixin {
 
     @Inject(method = "getSignal", at = @At("RETURN"), cancellable = true)
-    public void getArsSignal(BlockGetter pLevel, BlockPos pPos, Direction pDirection, CallbackInfoReturnable<Integer> cir) {
+    public void arsNouveau$getArsSignal(BlockGetter pLevel, BlockPos pPos, Direction pDirection, CallbackInfoReturnable<Integer> cir) {
         if(pLevel instanceof ServerLevel serverLevel) {
             RedstoneUtil.getArsSignal(serverLevel, pPos, pDirection, cir);
         }

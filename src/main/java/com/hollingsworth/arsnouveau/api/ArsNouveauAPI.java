@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Main class of the Ars Nouveau API.
@@ -39,6 +40,9 @@ public class ArsNouveauAPI {
     private ConcurrentHashMap<ResourceLocation, IScryer> scryerMap = new ConcurrentHashMap<>();
 
     private Set<RecipeType<? extends IEnchantingRecipe>> enchantingRecipeTypes = ConcurrentHashMap.newKeySet();
+
+    public static List<String> shoulderRiders = new CopyOnWriteArrayList<>();
+
 
     /**
      * Validator to use when crafting a spell in the spell book.

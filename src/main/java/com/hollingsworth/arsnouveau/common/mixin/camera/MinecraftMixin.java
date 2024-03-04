@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(value = Minecraft.class, priority = 1100)
 public class MinecraftMixin {
     @WrapWithCondition(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Options;setCameraType(Lnet/minecraft/client/CameraType;)V"))
-    private boolean handleKeybinds(Options options, CameraType newType) {
+    private boolean arsNouveau$handleKeybinds(Options options, CameraType newType) {
        return !ClientCameraUtil.isPlayerMountedOnCamera();
     }
 }

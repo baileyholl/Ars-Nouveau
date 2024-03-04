@@ -17,7 +17,7 @@ public class ElytraPlayerMixin {
                     remap = false
             )
     )
-    public boolean elytraOverride(boolean original) {
+    public boolean arsNouveau$elytraOverride(boolean original) {
         return original || EffectGlide.canGlide(((LivingEntity) ((Object)this)));
     }
 }
