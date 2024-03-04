@@ -359,9 +359,9 @@ public class EventHandler {
             level2.add((trader, rand) -> emerToItem(BlockRegistry.FALSE_WEAVE, 1, 8, 2));
             level2.add((trader, rand) -> emerToItem(ItemsRegistry.WARP_SCROLL, 1, 8, 2));
 
-            level2.add((trader, rand) -> itemToEmer(ItemsRegistry.WILDEN_HORN, 4, 8, 12));
-            level2.add((trader, rand) -> itemToEmer(ItemsRegistry.WILDEN_SPIKE, 4, 8, 12));
-            level2.add((trader, rand) -> itemToEmer(ItemsRegistry.WILDEN_WING, 4, 8, 12));
+            for (ItemStack wilden : Ingredient.of(ItemTagProvider.WILDEN_DROP_TAG).getItems()) {
+                level2.add((trader, rand) -> itemToEmer(wilden.getItem(), 4, 8, 12));
+            }
 
             List<RitualTablet> tablets = new ArrayList<>(ArsNouveauAPI.getInstance().getRitualItemMap().values());
             for(RitualTablet tablet : tablets){
