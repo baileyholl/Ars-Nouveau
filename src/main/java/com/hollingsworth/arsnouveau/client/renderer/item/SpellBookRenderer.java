@@ -74,7 +74,7 @@ public class SpellBookRenderer extends FixedGeoItemRenderer<SpellBook> {
         float green = renderColor.getGreenFloat();
         float blue = renderColor.getBlueFloat();
         float alpha = renderColor.getAlphaFloat();
-        int packedOverlay = this.getPackedOverlay(animatable, 0.0F);
+        int packedOverlay = this.getPackedOverlay(animatable, 0.0F, partialTick);
         BakedGeoModel model = closedModel.getBakedModel(closedModel.getModelResource(animatable));
         if (renderType == null) {
             renderType = this.getRenderType(animatable, this.getTextureLocation(animatable), bufferSource, partialTick);

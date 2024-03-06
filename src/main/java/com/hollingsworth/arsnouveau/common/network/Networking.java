@@ -220,6 +220,9 @@ public class Networking {
         INSTANCE.registerMessage(nextID(), PacketUnsummonLily.class, PacketUnsummonLily::toBytes, PacketUnsummonLily::new, PacketUnsummonLily::handle);
         INSTANCE.registerMessage(nextID(), SyncPathMessage.class, SyncPathMessage::toBytes, SyncPathMessage::new, SyncPathMessage.Handler::handle);
         INSTANCE.registerMessage(nextID(), SyncPathReachedMessage.class, SyncPathReachedMessage::toBytes, SyncPathReachedMessage::new, SyncPathReachedMessage.Handler::handle);
+        INSTANCE.registerMessage(nextID(), PacketUpdateSpellColorAll.class, PacketUpdateSpellColorAll::toBytes, PacketUpdateSpellColorAll::new, PacketUpdateSpellColorAll::handle);
+        INSTANCE.registerMessage(nextID(), PacketUpdateSpellSoundAll.class, PacketUpdateSpellSoundAll::toBytes, PacketUpdateSpellSoundAll::new, PacketUpdateSpellSoundAll::handle);
+
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend) {

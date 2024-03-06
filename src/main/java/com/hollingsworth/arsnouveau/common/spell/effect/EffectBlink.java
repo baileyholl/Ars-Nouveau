@@ -65,9 +65,8 @@ public class EffectBlink extends AbstractEffect {
         if (isRealPlayer(shooter)) {
             WarpScroll.WarpScrollData scrollData = WarpScroll.WarpScrollData.get(shooter.getOffhandItem());
             if (scrollData.isValid()) {
-                WarpScroll.WarpScrollData data = WarpScroll.WarpScrollData.get(shooter.getOffhandItem());
-                if (data.isValid() && data.canTeleportWithDim(world)) {
-                    warpEntity(rayTraceResult.getEntity(), data);
+                if (scrollData.isValid() && scrollData.canTeleportWithDim(world)) {
+                    warpEntity(rayTraceResult.getEntity(), scrollData);
                 }
             } else {
                 shooter.teleportTo(vec.x(), vec.y(), vec.z());

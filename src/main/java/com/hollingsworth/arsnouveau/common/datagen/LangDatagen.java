@@ -335,6 +335,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.color_gui.brown", "Brown");
         add("ars_nouveau.color_gui.black", "Black");
         add("ars_nouveau.color_gui.save", "Save");
+        add("ars_nouveau.color_gui.save_all", "Save All");
         add("ars_nouveau.dominion_wand.stored_entity", "Stored entity");
         add("ars_nouveau.dominion_wand.position_set", "Position set.");
         add("ars_nouveau.dominion_wand.no_entity", "No entity set");

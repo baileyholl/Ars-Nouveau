@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.RainbowParticleColor;
 import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellColorAll;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellColors;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -52,7 +53,8 @@ public class GuiColorScreen extends BaseBook {
         addRenderableWidget(redW);
         addRenderableWidget(greenW);
         addRenderableWidget(blueW);
-        addRenderableWidget(new GuiImageButton(bookLeft + 55, bookBottom - 36, 0, 0, 37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveClick));
+        addRenderableWidget(new GuiImageButton(bookLeft + 25, bookBottom - 36, 0, 0, 37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveClick));
+        addRenderableWidget(new GuiImageButton(bookLeft + 75, bookBottom - 36, 0, 0, 37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveAllClick));
 
         layoutPageOne();
 
@@ -135,6 +137,10 @@ public class GuiColorScreen extends BaseBook {
         Networking.INSTANCE.sendToServer(new PacketUpdateSpellColors(slot, new ParticleColor(redW.getValue(), greenW.getValue(), blueW.getValue()), this.stackHand == InteractionHand.MAIN_HAND));
     }
 
+    public void onSaveAllClick(Button button) {
+        Networking.INSTANCE.sendToServer(new PacketUpdateSpellColorAll(slot, new ParticleColor(redW.getValue(), greenW.getValue(), blueW.getValue()), this.stackHand == InteractionHand.MAIN_HAND));
+    }
+
     @Override
     public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
@@ -164,7 +170,9 @@ public class GuiColorScreen extends BaseBook {
             graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.gray").getString(), 228, 94, color, false);
 
         }
-        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.save").getString(), 67, 160, color, false);
+        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.save").getString(), 37, 160, color, false);
+        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.save_all").getString(), 87, 160, color, false);
+
     }
 
     public int getNumPages() {

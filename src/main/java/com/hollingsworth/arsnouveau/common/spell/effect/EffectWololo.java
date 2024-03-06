@@ -1,11 +1,18 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.item.inv.InteractType;
+import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
+import com.hollingsworth.arsnouveau.api.item.inv.SlotReference;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.api.util.IWololoable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
+import com.hollingsworth.arsnouveau.common.entity.debug.FixedStack;
 import com.hollingsworth.arsnouveau.common.mixin.MobAccessor;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -15,11 +22,13 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -30,10 +39,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class EffectWololo extends AbstractEffect {
     public static EffectWololo INSTANCE = new EffectWololo();
@@ -42,60 +48,102 @@ public class EffectWololo extends AbstractEffect {
         super("wololo", "Wololo");
     }
 
+    public static int MAX_RECIPE_CACHE = 16;
+    public static FixedStack<CraftingRecipe> recipeCache = new FixedStack<>(MAX_RECIPE_CACHE);
+
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
 
-        if (!(rayTraceResult.getEntity() instanceof Mob living)) return;
-        DyeItem dye = spellStats.isRandomized() ? getRandomDye(shooter.getRandom()) : getDyeItemFromSpell(spellContext);
+        if (!(rayTraceResult.getEntity() instanceof LivingEntity living)) return;
 
         Player player = ANFakePlayer.getPlayer((ServerLevel) world);
-        ItemStack stack = dye.getDefaultInstance();
+
+        ItemStack dyeStack = getDye(shooter, spellStats, spellContext, player);
+        if (dyeStack.isEmpty()) return;
+        DyeItem dye = (DyeItem) dyeStack.getItem();
+
         if (living instanceof Sheep sheep)
             sheep.setColor(dye.getDyeColor());
-        else {
-            player.setItemInHand(InteractionHand.MAIN_HAND, stack);
-            ((MobAccessor) living).callMobInteract(player, InteractionHand.MAIN_HAND);
+        else if (spellStats.isSensitive() || living instanceof ArmorStand) {
+            for (ItemStack armorStack : living.getArmorSlots()) {
+                if (!armorStack.isEmpty())
+                    if (armorStack.getItem() instanceof DyeableLeatherItem) {
+                        var temp = DyeableLeatherItem.dyeArmor(armorStack, List.of(dye));
+                        //replace the tag with the new tag instead of replacing the stack
+                        armorStack.setTag(temp.getTag());
+                    } else if (armorStack.getItem() instanceof IDyeable iDyeable) {
+                        iDyeable.onDye(armorStack, dye.getDyeColor());
+                    }
+            }
+        } else if (living instanceof Mob mob) {
+            player.setItemInHand(InteractionHand.MAIN_HAND, dyeStack);
+            ((MobAccessor) mob).callMobInteract(player, InteractionHand.MAIN_HAND);
             player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
         }
         world.playSound(null, living.getX(), living.getY(), living.getZ(), SoundEvents.EVOKER_PREPARE_WOLOLO, SoundSource.PLAYERS, spellContext.getSpell().sound.volume, spellContext.getSpell().sound.pitch);
+    }
+
+    @NotNull
+    private ItemStack getDye(@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, Player player) {
+
+        if (spellContext.getCaster() instanceof TileCaster) {
+            InventoryManager manager = spellContext.getCaster().getInvManager();
+            SlotReference reference = manager.findItem(i -> (i.getItem() instanceof DyeItem), InteractType.EXTRACT);
+            if (!reference.isEmpty()) {
+                return reference.getHandler().getStackInSlot(reference.getSlot());
+            }
+        } else if (isRealPlayer(shooter)) {
+            ItemStack stack = player.getOffhandItem();
+            if (stack.getItem() instanceof DyeItem) {
+                return stack;
+            }
+        }
+
+        DyeItem dye = spellStats.isRandomized() ? getRandomDye(shooter.getRandom()) : getDyeItemFromSpell(spellContext);
+
+        return dye.getDefaultInstance();
     }
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos blockPos = rayTraceResult.getBlockPos();
         BlockEntity blockEntity = world.getBlockEntity(blockPos);
-        if (blockEntity instanceof IWololoable sheep) {
+        if (blockEntity instanceof IWololoable tileToDye) {
             ParticleColor color = spellStats.isRandomized() ? ParticleColor.makeRandomColor(255, 255, 255, shooter.getRandom()) : spellContext.getSpell().color;
-            sheep.setColor(color);
-        } else if (blockEntity instanceof SignBlockEntity sign) {
-            DyeItem dye = spellStats.isRandomized() ? getRandomDye(shooter.getRandom()) : getDyeItemFromSpell(spellContext);
-            dye.tryApplyToSign(world, sign, true, ANFakePlayer.getPlayer((ServerLevel) world));
+            tileToDye.setColor(color);
         } else {
-            DyeItem dye = spellStats.isRandomized() ? getRandomDye(shooter.getRandom()) : getDyeItemFromSpell(spellContext);
-            // Try block + dye
-            Block hitBlock = world.getBlockState(blockPos).getBlock();
-            if (hitBlock == Blocks.AIR) return;
-            ItemStack result = getResultingBlock(dye, hitBlock, (ServerLevel) world);
-            BlockItem blockItem;
-            if (result.isEmpty() || !(result.getItem() instanceof BlockItem)) {
-                // Try blocks surrounding the dye
-                result = getResultingBlock8(dye, hitBlock, (ServerLevel) world);
-                if (result.isEmpty() || !(result.getItem() instanceof BlockItem)) return;
+            ItemStack dyeStack = getDye(shooter, spellStats, spellContext, ANFakePlayer.getPlayer((ServerLevel) world));
+            if (dyeStack.isEmpty()) return;
+            DyeItem dye = (DyeItem) dyeStack.getItem();
+
+            if (blockEntity instanceof SignBlockEntity sign) {
+                dye.tryApplyToSign(world, sign, true, ANFakePlayer.getPlayer((ServerLevel) world));
+            } else {
+                // Try block + dye
+                Block hitBlock = world.getBlockState(blockPos).getBlock();
+                if (hitBlock == Blocks.AIR) return;
+                ItemStack result = getDyedResult((ServerLevel) world, makeContainer(dye, hitBlock));
+                BlockItem blockItem;
+                if (result.isEmpty() || !(result.getItem() instanceof BlockItem)) {
+                    // Try blocks surrounding the dye
+                    result = getDyedResult((ServerLevel) world, makeContainer8(dye, hitBlock));
+                    if (result.isEmpty() || !(result.getItem() instanceof BlockItem)) return;
+                }
+                blockItem = (BlockItem) result.getItem();
+                world.setBlockAndUpdate(blockPos, blockItem.getBlock().defaultBlockState());
             }
-            blockItem = (BlockItem) result.getItem();
-            world.setBlockAndUpdate(blockPos, blockItem.getBlock().defaultBlockState());
         }
 
         world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundEvents.EVOKER_PREPARE_WOLOLO, SoundSource.PLAYERS, .5F, 1.0F);
     }
 
-    private ItemStack getResultingBlock(DyeItem dye, Block block, ServerLevel world) {
-        CraftingContainer craftingcontainer = makeContainer(dye, block);
-        return world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingcontainer, world).map((craftingRecipe) -> craftingRecipe.assemble(craftingcontainer, world.registryAccess())).orElse(ItemStack.EMPTY);
-    }
-
-    private ItemStack getResultingBlock8(DyeItem dye, Block block, ServerLevel world) {
-        CraftingContainer craftingcontainer = makeContainer8(dye, block);
+    @NotNull
+    private ItemStack getDyedResult(ServerLevel world, CraftingContainer craftingcontainer) {
+        Optional<CraftingRecipe> recipe = recipeCache.stream().filter(craftingRecipe -> craftingRecipe.matches(craftingcontainer, world)).findFirst();
+        if (recipe.isPresent()) {
+            recipeCache.add(recipe.get());
+            return recipe.get().assemble(craftingcontainer, world.registryAccess());
+        }
         return world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingcontainer, world).map((craftingRecipe) -> craftingRecipe.assemble(craftingcontainer, world.registryAccess())).orElse(ItemStack.EMPTY);
     }
 
@@ -157,7 +205,7 @@ public class EffectWololo extends AbstractEffect {
 
     @Override
     protected int getDefaultManaCost() {
-        return 0;
+        return 30;
     }
 
     /**
@@ -169,7 +217,7 @@ public class EffectWololo extends AbstractEffect {
      */
     @Override
     protected @NotNull Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentRandomize.INSTANCE);
+        return augmentSetOf(AugmentRandomize.INSTANCE, AugmentSensitive.INSTANCE);
     }
 
     public static Map<ParticleColor, Item> vanillaColors = new HashMap<>();
