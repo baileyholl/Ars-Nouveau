@@ -16,11 +16,15 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.TransientCraftingContainer;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -53,21 +57,91 @@ public class EffectWololo extends AbstractEffect {
             ((MobAccessor) living).callMobInteract(player, InteractionHand.MAIN_HAND);
             player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
         }
-        world.playSound(null, living.getX(), living.getY(), living.getZ(), SoundEvents.EVOKER_PREPARE_WOLOLO, SoundSource.PLAYERS, 1.0F, 1.0F);
-
+        world.playSound(null, living.getX(), living.getY(), living.getZ(), SoundEvents.EVOKER_PREPARE_WOLOLO, SoundSource.PLAYERS, spellContext.getSpell().sound.volume, spellContext.getSpell().sound.pitch);
     }
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos blockPos = rayTraceResult.getBlockPos();
-        if (world.getBlockEntity(blockPos) instanceof IWololoable sheep) {
+        BlockEntity blockEntity = world.getBlockEntity(blockPos);
+        if (blockEntity instanceof IWololoable sheep) {
             ParticleColor color = spellStats.isRandomized() ? ParticleColor.makeRandomColor(255, 255, 255, shooter.getRandom()) : spellContext.getSpell().color;
             sheep.setColor(color);
-        } else if (world.getBlockEntity(blockPos) instanceof SignBlockEntity sign) {
+        } else if (blockEntity instanceof SignBlockEntity sign) {
             DyeItem dye = spellStats.isRandomized() ? getRandomDye(shooter.getRandom()) : getDyeItemFromSpell(spellContext);
             dye.tryApplyToSign(world, sign, true, ANFakePlayer.getPlayer((ServerLevel) world));
+        } else {
+            DyeItem dye = spellStats.isRandomized() ? getRandomDye(shooter.getRandom()) : getDyeItemFromSpell(spellContext);
+            // Try block + dye
+            Block hitBlock = world.getBlockState(blockPos).getBlock();
+            if (hitBlock == Blocks.AIR) return;
+            ItemStack result = getResultingBlock(dye, hitBlock, (ServerLevel) world);
+            BlockItem blockItem;
+            if (result.isEmpty() || !(result.getItem() instanceof BlockItem)) {
+                // Try blocks surrounding the dye
+                result = getResultingBlock8(dye, hitBlock, (ServerLevel) world);
+                if (result.isEmpty() || !(result.getItem() instanceof BlockItem)) return;
+            }
+            blockItem = (BlockItem) result.getItem();
+            world.setBlockAndUpdate(blockPos, blockItem.getBlock().defaultBlockState());
         }
-        world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundEvents.EVOKER_PREPARE_WOLOLO, SoundSource.PLAYERS, 1.0F, 1.0F);
+
+        world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundEvents.EVOKER_PREPARE_WOLOLO, SoundSource.PLAYERS, .5F, 1.0F);
+    }
+
+    private ItemStack getResultingBlock(DyeItem dye, Block block, ServerLevel world) {
+        CraftingContainer craftingcontainer = makeContainer(dye, block);
+        return world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingcontainer, world).map((craftingRecipe) -> craftingRecipe.assemble(craftingcontainer, world.registryAccess())).orElse(ItemStack.EMPTY);
+    }
+
+    private ItemStack getResultingBlock8(DyeItem dye, Block block, ServerLevel world) {
+        CraftingContainer craftingcontainer = makeContainer8(dye, block);
+        return world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingcontainer, world).map((craftingRecipe) -> craftingRecipe.assemble(craftingcontainer, world.registryAccess())).orElse(ItemStack.EMPTY);
+    }
+
+    private static CraftingContainer makeContainer(DyeItem targetColor, Block blockToDye) {
+        CraftingContainer craftingcontainer = new TransientCraftingContainer(new AbstractContainerMenu(null, -1) {
+            /**
+             * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the
+             * player inventory and the other inventory(s).
+             */
+            public ItemStack quickMoveStack(Player p_218264_, int p_218265_) {
+                return ItemStack.EMPTY;
+            }
+
+            /**
+             * Determines whether supplied player can use this container
+             */
+            public boolean stillValid(Player p_29888_) {
+                return false;
+            }
+        }, 2, 1);
+        craftingcontainer.setItem(0, new ItemStack(targetColor));
+        craftingcontainer.setItem(1, new ItemStack(blockToDye));
+        return craftingcontainer;
+    }
+
+    private static CraftingContainer makeContainer8(DyeItem targetColor, Block blockToDye) {
+        CraftingContainer craftingcontainer = new TransientCraftingContainer(new AbstractContainerMenu(null, -1) {
+            /**
+             * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the
+             * player inventory and the other inventory(s).
+             */
+            public ItemStack quickMoveStack(Player p_218264_, int p_218265_) {
+                return ItemStack.EMPTY;
+            }
+
+            /**
+             * Determines whether supplied player can use this container
+             */
+            public boolean stillValid(Player p_29888_) {
+                return false;
+            }
+        }, 3, 3);
+        for (int i = 0; i < 9; i++) {
+            craftingcontainer.setItem(i, i == 4 ? new ItemStack(targetColor) : new ItemStack(blockToDye));
+        }
+        return craftingcontainer;
     }
 
     private DyeItem getRandomDye(RandomSource random) {
