@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.setup.config.Config;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
@@ -34,7 +35,7 @@ public class SpellParchment extends ModItem implements ICasterTool {
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
         ISpellCaster caster = getSpellCaster(stack);
 
-        if (!Config.GLYPH_TOOLTIPS.get() || caster.isSpellHidden() || caster.getSpell().isEmpty())
+        if (!Config.GLYPH_TOOLTIPS.get() || Screen.hasShiftDown() || caster.isSpellHidden() || caster.getSpell().isEmpty())
             getInformation(stack, worldIn, tooltip2, flagIn);
 
         super.appendHoverText(stack, worldIn, tooltip2, flagIn);
@@ -43,7 +44,7 @@ public class SpellParchment extends ModItem implements ICasterTool {
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
         ISpellCaster caster = getSpellCaster(pStack);
-        if (Config.GLYPH_TOOLTIPS.get() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
+        if (Config.GLYPH_TOOLTIPS.get() && !Screen.hasShiftDown() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
             return Optional.of(new SpellTooltip(caster));
         return Optional.empty();
     }

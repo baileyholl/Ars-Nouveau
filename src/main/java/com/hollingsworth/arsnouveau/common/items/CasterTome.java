@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -64,7 +65,7 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
             return;
         ISpellCaster caster = getSpellCaster(stack);
 
-        if (Config.GLYPH_TOOLTIPS.get()) {
+        if (Config.GLYPH_TOOLTIPS.get() || Screen.hasShiftDown()) {
             if (caster.isSpellHidden()) {
                 tooltip2.add(Component.literal(caster.getHiddenRecipe()).withStyle(Style.EMPTY.withFont(new ResourceLocation("minecraft", "alt")).withColor(ChatFormatting.GOLD)));
             }
@@ -85,7 +86,7 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
         ISpellCaster caster = getSpellCaster(pStack);
-        if (Config.GLYPH_TOOLTIPS.get() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
+        if (!Screen.hasShiftDown() && Config.GLYPH_TOOLTIPS.get() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
             return Optional.of(new SpellTooltip(caster));
         return Optional.empty();
     }
