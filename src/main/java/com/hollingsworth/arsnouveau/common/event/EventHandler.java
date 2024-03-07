@@ -427,6 +427,15 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void onPotionRemove(MobEffectEvent.Remove event) {
+        syncPotionRemoval(event);
+    }
+
+    @SubscribeEvent
+    public static void onPotionExpire(MobEffectEvent.Expired event) {
+        syncPotionRemoval(event);
+    }
+
+    private static void syncPotionRemoval(MobEffectEvent event) {
         if (event.getEntity() instanceof LivingEntity && event.getEffectInstance() != null && !event.getEntity().level.isClientSide) {
             LivingEntity target = event.getEntity();
             MobEffect effect = event.getEffectInstance().getEffect();
