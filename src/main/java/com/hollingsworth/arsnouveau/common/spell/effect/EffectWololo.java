@@ -133,8 +133,6 @@ public class EffectWololo extends AbstractEffect {
                 world.setBlockAndUpdate(blockPos, blockItem.getBlock().defaultBlockState());
             }
         }
-
-        world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundEvents.EVOKER_PREPARE_WOLOLO, SoundSource.PLAYERS, .5F, 1.0F);
     }
 
     @NotNull
