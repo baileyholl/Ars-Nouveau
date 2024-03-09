@@ -244,8 +244,6 @@ public class CasterTomeProvider extends SimpleDataProvider {
                 .add(AugmentPierce.INSTANCE)
                 .add(AugmentAmplify.INSTANCE), "You. Shall. Not. Pass."));
 
-        Path output = this.generator.getOutputFolder();
-
         for (CasterTomeData g : tomes) {
             Path path = getRecipePath(output, g.getId().getPath());
             saveStable(pOutput, g.toJson(), path);
