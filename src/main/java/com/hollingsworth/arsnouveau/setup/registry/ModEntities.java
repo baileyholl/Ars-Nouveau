@@ -48,8 +48,7 @@ public class ModEntities {
             EntityType.Builder.<EntityProjectileSpell>of(EntityProjectileSpell::new, MobCategory.MISC)
                     .sized(0.5f, 0.5f).noSave()
                     .setTrackingRange(20).fireImmune()
-                    .setShouldReceiveVelocityUpdates(true)
-                    .setUpdateInterval(120));
+                    .setShouldReceiveVelocityUpdates(true));
     public static final RegistryObject<EntityType<EntityProjectileSpell>> SPELL_PROJ_ARC = registerEntity(
             LibEntityNames.SPELL_PROJ_ARC,
             EntityType.Builder.<EntityProjectileSpell>of((entityType, world) -> new EntityProjectileSpell(entityType, world) {
@@ -124,7 +123,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<EntitySpellArrow>> ENTITY_SPELL_ARROW = registerEntity(
             LibEntityNames.SPELL_ARROW,
             EntityType.Builder.<EntitySpellArrow>of(EntitySpellArrow::new, MobCategory.MISC)
-                    .clientTrackingRange(20).updateInterval(20).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntitySpellArrow::new));
+                    .clientTrackingRange(20).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntitySpellArrow::new));
     public static final RegistryObject<EntityType<Cinder>> CINDER = registerEntity(
             LibEntityNames.CINDER,
             EntityType.Builder.<Cinder>of(Cinder::new, MobCategory.MISC)
@@ -176,7 +175,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<EntityOrbitProjectile>> ORBIT_SPELL = registerEntity(
             LibEntityNames.ORBIT_PROJECTILE,
             EntityType.Builder.<EntityOrbitProjectile>of(EntityOrbitProjectile::new, MobCategory.MISC).sized(0.5f, 0.5f).fireImmune()
-                    .clientTrackingRange(20).updateInterval(20).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityOrbitProjectile::new));
+                    .clientTrackingRange(20).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityOrbitProjectile::new));
     public static final RegistryObject<EntityType<EntityChimeraProjectile>> ENTITY_CHIMERA_SPIKE = registerEntity(
             LibEntityNames.CHIMERA_SPIKE,
             EntityType.Builder.<EntityChimeraProjectile>of(EntityChimeraProjectile::new, MobCategory.MISC)
@@ -203,7 +202,15 @@ public class ModEntities {
                     .setTrackingRange(20)
                     .setShouldReceiveVelocityUpdates(true)
                     .noSave()
-                    .setUpdateInterval(120).setCustomClientFactory(EntityLingeringSpell::new));
+                    .setCustomClientFactory(EntityLingeringSpell::new));
+    public static final RegistryObject<EntityType<EntityWallSpell>> WALL_SPELL = registerEntity(
+            LibEntityNames.WALL,
+            EntityType.Builder.<EntityWallSpell>of(EntityWallSpell::new, MobCategory.MISC)
+                    .sized(0.5f, 0.5f)
+                    .setTrackingRange(20)
+                    .setShouldReceiveVelocityUpdates(true)
+                    .noSave()
+                    .setCustomClientFactory(EntityWallSpell::new));
     public static final RegistryObject<EntityType<WealdWalker>> ENTITY_CASCADING_WEALD = registerEntity(LibEntityNames.CASCADING_WEALD_WALKER, EntityType.Builder.<WealdWalker>of((type, world) -> {
                 WealdWalker walker = new WealdWalker(type, world);
                 walker.spell = new Spell(MethodProjectile.INSTANCE, EffectFreeze.INSTANCE, EffectColdSnap.INSTANCE);
@@ -258,14 +265,6 @@ public class ModEntities {
             .sized(0.6F, 0.63F).setTrackingRange(10)
             .setShouldReceiveVelocityUpdates(true));
 
-    public static final RegistryObject<EntityType<EntityWallSpell>> WALL_SPELL = registerEntity(
-            LibEntityNames.WALL,
-            EntityType.Builder.<EntityWallSpell>of(EntityWallSpell::new, MobCategory.MISC)
-                    .sized(0.5f, 0.5f)
-                    .setTrackingRange(20)
-                    .noSave()
-                    .setShouldReceiveVelocityUpdates(true)
-                    .setUpdateInterval(120).setCustomClientFactory(EntityWallSpell::new));
 
     public static final RegistryObject<EntityType<AnimBlockSummon>> ANIMATED_BLOCK = registerEntity(
             "animated_block",
@@ -306,17 +305,17 @@ public class ModEntities {
 
     public static boolean canMonsterSpawnInLight(EntityType<? extends Monster> type, ServerLevelAccessor worldIn, MobSpawnType reason, BlockPos pos, RandomSource randomIn) {
         return Monster.checkMonsterSpawnRules(type, worldIn, reason, pos, randomIn)
-                && !Config.DIMENSION_BLACKLIST.get().contains(worldIn.getLevel().dimension().location().toString());
+               && !Config.DIMENSION_BLACKLIST.get().contains(worldIn.getLevel().dimension().location().toString());
     }
 
-    public static boolean wildenSpawnRules(EntityType<? extends Monster> type, ServerLevelAccessor worldIn, MobSpawnType reason, BlockPos pos, RandomSource randomIn){
+    public static boolean wildenSpawnRules(EntityType<? extends Monster> type, ServerLevelAccessor worldIn, MobSpawnType reason, BlockPos pos, RandomSource randomIn) {
         return worldIn.getDifficulty() != Difficulty.PEACEFUL && Monster.checkMonsterSpawnRules(type, worldIn, reason, pos, randomIn)
-                && !Config.DIMENSION_BLACKLIST.get().contains(worldIn.getLevel().dimension().location().toString());
+               && !Config.DIMENSION_BLACKLIST.get().contains(worldIn.getLevel().dimension().location().toString());
     }
 
     public static boolean guardianSpawnRules(EntityType<Drowned> pDrowned, ServerLevelAccessor pServerLevel, MobSpawnType pMobSpawnType, BlockPos pPos, RandomSource pRandom) {
-            boolean flag = pServerLevel.getDifficulty() != Difficulty.PEACEFUL && (pMobSpawnType != MobSpawnType.SPAWNER || pServerLevel.getFluidState(pPos).is(FluidTags.WATER));
-            return flag;
+        boolean flag = pServerLevel.getDifficulty() != Difficulty.PEACEFUL && (pMobSpawnType != MobSpawnType.SPAWNER || pServerLevel.getFluidState(pPos).is(FluidTags.WATER));
+        return flag;
     }
 
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)

@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.PatchouliTooltipEvent;
+import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
 import com.hollingsworth.arsnouveau.common.block.tile.SkyBlockTile;
@@ -13,10 +14,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderHighlightEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
@@ -29,18 +30,28 @@ import java.util.Collections;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
 public class ClientEvents {
+
+    @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+    static class ClientModEvents {
+        @SubscribeEvent
+        public static void registerTooltipFactory(RegisterClientTooltipComponentFactoriesEvent event) {
+            event.register(SpellTooltip.class, SpellTooltip.SpellTooltipRenderer::new);
+        }
+    }
+
+
     @SubscribeEvent
-    public static void TooltipEvent(RenderTooltipEvent.Pre e){
+    public static void TooltipEvent(RenderTooltipEvent.Pre e) {
         try {
             // Uses patchouli internals, don't crash if they change something :)
             PatchouliTooltipEvent.onTooltip(e.getGraphics().pose(), e.getItemStack(), e.getX(), e.getY());
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
     @SubscribeEvent
-    public static void highlightBlockEvent(RenderHighlightEvent.Block e){
+    public static void highlightBlockEvent(RenderHighlightEvent.Block e) {
         Level level = Minecraft.getInstance().level;
         if (level != null) {
             BlockEntity be = level.getBlockEntity(e.getTarget().getBlockPos());
@@ -64,7 +75,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onTooltip(final ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
-        int level = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get(), stack);
+        int level = stack.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get());
         if (level > 0 && new ReactiveCaster(stack).getSpell().isValid()) {
             Spell spell = new ReactiveCaster(stack).getSpell();
             event.getToolTip().add(Component.literal(spell.getDisplayString()));
