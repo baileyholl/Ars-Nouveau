@@ -11,7 +11,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.*;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.MenuType;
@@ -54,7 +53,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 		}
 	};
 	private CraftingRecipe currentRecipe;
-	private final CraftingContainer craftMatrix = new TransientCraftingContainer(craftingContainer, 3, 3);
+	private final TransientCustomContainer craftMatrix = new TransientCustomContainer(craftingContainer, 3, 3);
 	private ResultContainer craftResult = new ResultContainer();
 	private HashSet<CraftingTerminalMenu> craftingListeners = new HashSet<>();
 
@@ -136,57 +135,61 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 	}
 
 	public void craft(Player thePlayer, @Nullable String tab) {
-		if(currentRecipe != null) {
-			NonNullList<ItemStack> remainder = currentRecipe.getRemainingItems(craftMatrix);
-			boolean playerInvUpdate = false;
-			for (int i = 0; i < remainder.size(); ++i) {
-				ItemStack slot = craftMatrix.getItem(i);
-				ItemStack oldItem = slot.copy();
-				ItemStack rem = remainder.get(i);
-				if (!slot.isEmpty()) {
-					craftMatrix.removeItem(i, 1);
-					slot = craftMatrix.getItem(i);
-				}
-				if(slot.isEmpty() && !oldItem.isEmpty()) {
-					StoredItemStack is = pullStack(new StoredItemStack(oldItem), 1, tab);
-					if(is == null) {
-						for(int j = 0;j<thePlayer.getInventory().getContainerSize();j++) {
-							ItemStack st = thePlayer.getInventory().getItem(j);
-							if(ItemStack.isSameItem(oldItem, st) && ItemStack.matches(oldItem, st)) {
-								st = thePlayer.getInventory().removeItem(j, 1);
-								if(!st.isEmpty()) {
-									is = new StoredItemStack(st, 1);
-									playerInvUpdate = true;
-									break;
-								}
+		if(currentRecipe == null) {
+			return;
+		}
+		NonNullList<ItemStack> remainder = currentRecipe.getRemainingItems(craftMatrix);
+		boolean playerInvUpdate = false;
+		for (int i = 0; i < remainder.size(); ++i) {
+			ItemStack currentStack = craftMatrix.getItem(i);
+			ItemStack oldItem = currentStack.copy();
+			ItemStack rem = remainder.get(i);
+			if (!currentStack.isEmpty()) {
+				craftMatrix.removeItemNoUpdate(i, 1);
+				currentStack = craftMatrix.getItem(i);
+			}
+			if(currentStack.isEmpty() && !oldItem.isEmpty()) {
+				StoredItemStack is = pullStack(new StoredItemStack(oldItem), 1, tab);
+				if(is == null) {
+					for(int j = 0;j<thePlayer.getInventory().getContainerSize();j++) {
+						ItemStack st = thePlayer.getInventory().getItem(j);
+						if(ItemStack.isSameItem(oldItem, st) && ItemStack.matches(oldItem, st)) {
+							st = thePlayer.getInventory().removeItem(j, 1);
+							if(!st.isEmpty()) {
+								is = new StoredItemStack(st, 1);
+								playerInvUpdate = true;
+								break;
 							}
 						}
 					}
-					if(is != null) {
-						craftMatrix.setItem(i, is.getActualStack());
-						slot = craftMatrix.getItem(i);
-					}
 				}
-				if (rem.isEmpty()) {
-					continue;
+				if(is != null) {
+					craftMatrix.setItemNoUpdate(i, is.getActualStack());
+					currentStack = craftMatrix.getItem(i);
 				}
-				if (slot.isEmpty()) {
-					craftMatrix.setItem(i, rem);
-					continue;
-				}
-				if (ItemStack.isSameItem(slot, rem) && ItemStack.matches(slot, rem)) {
-					rem.grow(slot.getCount());
-					craftMatrix.setItem(i, rem);
-					continue;
-				}
-				rem = pushStack(rem, tab);
-				if(rem.isEmpty())continue;
-				if (thePlayer.getInventory().add(rem)) continue;
-				thePlayer.drop(rem, false);
 			}
-			if(playerInvUpdate)thePlayer.containerMenu.broadcastChanges();
-			onCraftingMatrixChanged();
+			if (rem.isEmpty()) {
+				continue;
+			}
+			if (currentStack.isEmpty()) {
+				craftMatrix.setItemNoUpdate(i, rem);
+				continue;
+			}
+			if (ItemStack.isSameItem(currentStack, rem) && ItemStack.matches(currentStack, rem)) {
+				rem.grow(currentStack.getCount());
+				craftMatrix.setItemNoUpdate(i, rem);
+				continue;
+			}
+			rem = pushStack(rem, tab);
+			if(rem.isEmpty() || thePlayer.getInventory().add(rem)){
+				continue;
+			}
+			thePlayer.drop(rem, false);
 		}
+		if(playerInvUpdate) {
+			thePlayer.containerMenu.broadcastChanges();
+		}
+		onCraftingMatrixChanged();
 	}
 
 	public void unregisterCrafting(CraftingTerminalMenu containerCraftingTerminal) {
@@ -280,7 +283,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 			return PlayState.CONTINUE;
 		})));
 	}
-	software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache AnimatableInstanceCache = GeckoLibUtil.createInstanceCache(this);
+	AnimatableInstanceCache AnimatableInstanceCache = GeckoLibUtil.createInstanceCache(this);
 	@Override
 	public AnimatableInstanceCache getAnimatableInstanceCache() {
 		return AnimatableInstanceCache;

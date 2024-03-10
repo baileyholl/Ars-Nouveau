@@ -59,7 +59,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
     public static HashMap<AbstractCastMethod, ITurretBehavior> TURRET_BEHAVIOR_MAP = new HashMap<>();
 
     public BasicSpellTurret(Properties properties) {
-        super(properties);
+        super(properties.forceSolidOn());
         this.registerDefaultState(this.stateDefinition.any().setValue(BlockStateProperties.WATERLOGGED, false).setValue(FACING, Direction.NORTH).setValue(TRIGGERED, Boolean.FALSE));
     }
 

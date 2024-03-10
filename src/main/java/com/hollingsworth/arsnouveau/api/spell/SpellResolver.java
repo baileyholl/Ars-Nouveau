@@ -18,6 +18,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -161,7 +162,7 @@ public class SpellResolver implements Cloneable {
             AbstractSpellPart part = spellContext.nextPart();
             if (part == null)
                 break;
-            if (part instanceof AbstractAugment)
+            if (part instanceof AbstractAugment || !part.isEnabled())
                 continue;
             SpellStats.Builder builder = new SpellStats.Builder();
             List<AbstractAugment> augments = spell.getAugments(spellContext.getCurrentIndex() - 1, shooter);
@@ -192,7 +193,7 @@ public class SpellResolver implements Cloneable {
      */
     public int getResolveCost() {
         int cost = spellContext.getSpell().getCost() - getPlayerDiscounts(spellContext.getUnwrappedCaster(), spell, spellContext.getCasterTool());
-        SpellCostCalcEvent event = new SpellCostCalcEvent(spellContext,  cost);
+        SpellCostCalcEvent event = new SpellCostCalcEvent(spellContext, cost);
         MinecraftForge.EVENT_BUS.post(event);
         cost = Math.max(0, event.currentCost);
         return cost;
@@ -213,6 +214,10 @@ public class SpellResolver implements Cloneable {
      */
     public boolean hasFocus(ItemStack stack) {
         return CuriosUtil.hasItem(spellContext.getUnwrappedCaster(), stack);
+    }
+
+    public boolean hasFocus(Item stack) {
+        return CuriosUtil.hasItem(spellContext.getUnwrappedCaster(), stack.getDefaultInstance());
     }
 
     @Override

@@ -169,7 +169,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     }
 
     public boolean isEnabled() {
-        return ENABLED == null || ENABLED.get();
+        return ENABLED != null && ENABLED.get();
     }
 
     /**
