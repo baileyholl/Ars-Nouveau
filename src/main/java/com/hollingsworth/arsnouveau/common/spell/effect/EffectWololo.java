@@ -117,7 +117,8 @@ public class EffectWololo extends AbstractEffect {
             DyeItem dye = (DyeItem) dyeStack.getItem();
 
             if (blockEntity instanceof SignBlockEntity sign) {
-                dye.tryApplyToSign(world, sign, true, ANFakePlayer.getPlayer((ServerLevel) world));
+                var player = getPlayer(shooter, (ServerLevel) world);
+                dye.tryApplyToSign(world, sign, sign.isFacingFrontText(player), player);
             } else {
                 // Try block + dye
                 Block hitBlock = world.getBlockState(blockPos).getBlock();

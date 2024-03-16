@@ -17,8 +17,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -46,16 +49,17 @@ public class EffectLight extends AbstractEffect implements IPotionEffect {
 
         if (!(rayTraceResult.getEntity() instanceof LivingEntity living))
             return;
-        if (shooter == null || !shooter.equals(living)) {
-            ((IPotionEffect)this).applyConfigPotion(living, MobEffects.GLOWING, spellStats);
+        if (!shooter.equals(living)) {
+            this.applyConfigPotion(living, MobEffects.GLOWING, spellStats);
         }
-        ((IPotionEffect)this).applyConfigPotion(living, MobEffects.NIGHT_VISION, spellStats);
+        this.applyConfigPotion(living, MobEffects.NIGHT_VISION, spellStats);
     }
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
-        if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos))
+        Player player = getPlayer(shooter, (ServerLevel) world);
+        if (!BlockUtil.destroyRespectsClaim(player, world, pos))
             return;
 
         if (world.getBlockEntity(rayTraceResult.getBlockPos()) instanceof ILightable lightable) {
@@ -64,11 +68,16 @@ public class EffectLight extends AbstractEffect implements IPotionEffect {
         } else if (world.getBlockState(rayTraceResult.getBlockPos()).getBlock() instanceof ILightable lightable) {
             lightable.onLight(rayTraceResult, world, shooter, spellStats, spellContext);
             return;
+        } else if (world.getBlockEntity(pos) instanceof SignBlockEntity sign) {
+            sign.updateText((a) -> sign.getTextFacingPlayer(player).setHasGlowingText(true),
+                    sign.isFacingFrontText(player)
+            );
+            world.gameEvent(GameEvent.BLOCK_CHANGE, sign.getBlockPos(), GameEvent.Context.of(player, sign.getBlockState()));
         }
 
         if (world.getBlockState(pos).canBeReplaced()
-                && world.isUnobstructed(BlockRegistry.LIGHT_BLOCK.get().defaultBlockState(), pos, CollisionContext.of(ANFakePlayer.getPlayer((ServerLevel) world)))
-                && world.isInWorldBounds(pos)) {
+            && world.isUnobstructed(BlockRegistry.LIGHT_BLOCK.get().defaultBlockState(), pos, CollisionContext.of(ANFakePlayer.getPlayer((ServerLevel) world)))
+            && world.isInWorldBounds(pos)) {
             BlockState lightBlockState = (spellStats.getDurationMultiplier() != 0 ? BlockRegistry.T_LIGHT_BLOCK.get() : BlockRegistry.LIGHT_BLOCK.get()).defaultBlockState().setValue(WATERLOGGED, world.getFluidState(pos).getType() == Fluids.WATER);
             world.setBlockAndUpdate(pos, lightBlockState.setValue(SconceBlock.LIGHT_LEVEL, Math.max(0, Math.min(15, 14 + (int) spellStats.getAmpMultiplier()))));
             if (world.getBlockEntity(pos) instanceof LightTile tile) {
@@ -98,7 +107,7 @@ public class EffectLight extends AbstractEffect implements IPotionEffect {
         return 25;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDurationDown.INSTANCE, AugmentDampen.INSTANCE, AugmentExtendTime.INSTANCE);
@@ -109,7 +118,7 @@ public class EffectLight extends AbstractEffect implements IPotionEffect {
         return "If cast on a block, a permanent light source is created. May be amplified up to Glowstone brightness, or Dampened for a lower light level. When cast on yourself, you will receive night vision. When cast on other entities, they will receive Night Vision and Glowing.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.CONJURATION);
