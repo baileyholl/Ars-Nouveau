@@ -12,7 +12,7 @@ import org.lwjgl.glfw.GLFW;
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModKeyBindings {
 
-    private static final String CATEGORY = "key.category.ars_nouveau.general";
+    public static final String CATEGORY = "key.category.ars_nouveau.general";
 
     public static final KeyMapping OPEN_BOOK = new KeyMapping("key.ars_nouveau.open_book", GLFW.GLFW_KEY_C, CATEGORY);
     public static final KeyMapping OPEN_RADIAL_HUD = new KeyMapping("key.ars_nouveau.selection_hud", GLFW.GLFW_KEY_V, CATEGORY);
