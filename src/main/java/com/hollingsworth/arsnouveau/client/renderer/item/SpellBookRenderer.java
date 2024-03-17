@@ -54,8 +54,8 @@ public class SpellBookRenderer extends FixedGeoItemRenderer<SpellBook> {
         } else {
             Lighting.setupForFlatItems();
         }
-        int fullbright = 15728880;
-        this.defaultRenderGui(poseStack, this.animatable, defaultBufferSource, renderType, buffer, 0.0F, Minecraft.getInstance().getFrameTime(), fullbright);
+
+        this.defaultRenderGui(poseStack, this.animatable, defaultBufferSource, renderType, buffer, 0.0F, Minecraft.getInstance().getFrameTime(), packedLight, packedOverlay);
         defaultBufferSource.endBatch();
         RenderSystem.enableDepthTest();
         Lighting.setupFor3DItems();
@@ -67,14 +67,13 @@ public class SpellBookRenderer extends FixedGeoItemRenderer<SpellBook> {
         super.defaultRender(poseStack, animatable, bufferSource, renderType, buffer, yaw, partialTick, packedLight);
     }
 
-    public void defaultRenderGui(PoseStack poseStack, SpellBook animatable, MultiBufferSource bufferSource, @Nullable RenderType renderType, @Nullable VertexConsumer buffer, float yaw, float partialTick, int packedLight) {
+    public void defaultRenderGui(PoseStack poseStack, SpellBook animatable, MultiBufferSource bufferSource, @Nullable RenderType renderType, @Nullable VertexConsumer buffer, float yaw, float partialTick, int packedLight, int packedOverlay) {
         poseStack.pushPose();
         Color renderColor = this.getRenderColor(animatable, partialTick, packedLight);
         float red = renderColor.getRedFloat();
         float green = renderColor.getGreenFloat();
         float blue = renderColor.getBlueFloat();
         float alpha = renderColor.getAlphaFloat();
-        int packedOverlay = this.getPackedOverlay(animatable, 0.0F, partialTick);
         BakedGeoModel model = closedModel.getBakedModel(closedModel.getModelResource(animatable));
         if (renderType == null) {
             renderType = this.getRenderType(animatable, this.getTextureLocation(animatable), bufferSource, partialTick);
