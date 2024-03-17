@@ -1,4 +1,4 @@
-// 1.20.1	2024-01-14T16:45:25.3537752	Ars Nouveau Item Models
+// 1.20.1	2024-03-17T12:41:58.4723472	Ars Nouveau Item Models
 11ee554b11a3a830e89b742762e5b754c2ecb5ee assets/ars_nouveau/models/item/agronomic_sourcelink.json
 339a05323ebef7efc5c70db708a2e7a24708e9bc assets/ars_nouveau/models/item/alchemical_sourcelink.json
 a0214090201827dd5f954d0b33e64e4df6e53764 assets/ars_nouveau/models/item/alchemists_crown.json
@@ -237,4 +237,5 @@ b79310281aae70a7aa6af5e3270c5034106dc2a1 assets/ars_nouveau/models/item/thread_w
 51225dd289572d53a0ed0f767380081712411813 assets/ars_nouveau/models/item/vitalic_sourcelink.json
 7137ce0392d01860ba8bd7d15c962d4a44d2b390 assets/ars_nouveau/models/item/void_prism.json
 49086385023fb8590e80567ae57e7104543ceb0c assets/ars_nouveau/models/item/volcanic_sourcelink.json
+15996959ddfb148e5e775a865eddb46d16177866 assets/ars_nouveau/models/item/wololo.json
 1a84ca1f514d9cf90ecf8384a579b0ea43cb71f8 assets/ars_nouveau/models/item/yellow_sbed.json
