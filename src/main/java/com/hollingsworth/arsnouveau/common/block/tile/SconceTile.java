@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.spell.ILightable;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
+import com.hollingsworth.arsnouveau.api.util.IWololoable;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -24,9 +25,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
-public class SconceTile extends ModdedTile implements ILightable, ITickable, IDispellable {
+public class SconceTile extends ModdedTile implements ILightable, ITickable, IDispellable, IWololoable {
 
-    public ParticleColor color = ParticleColor.defaultParticleColor();
+    protected ParticleColor color = ParticleColor.defaultParticleColor();
     public boolean lit;
 
     public SconceTile(BlockPos pos, BlockState state) {
@@ -112,5 +113,16 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable, IDi
         level.setBlock(getBlockPos(), level.getBlockState(getBlockPos()).setValue(SconceBlock.LIGHT_LEVEL, 0), 3);
         updateBlock();
         return true;
+    }
+
+    @Override
+    public void setColor(ParticleColor color) {
+        this.color = color;
+        updateBlock();
+    }
+
+    @Override
+    public ParticleColor getColor() {
+        return color;
     }
 }

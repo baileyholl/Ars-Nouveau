@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.SoundButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetSound;
+import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellSoundAll;
 import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -55,6 +56,7 @@ public class SoundScreen extends BaseBook {
         addRenderableWidget(volumeSlider);
         addRenderableWidget(pitchSlider);
         addRenderableWidget(new GuiImageButton(bookLeft + 25, bookBottom - 36, 0, 0, 37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveClick));
+        addRenderableWidget(new GuiImageButton(bookLeft + 165, bookBottom - 36, 0, 0, 37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveAllClick));
         GuiImageButton testButton = new GuiImageButton(bookLeft + 90, bookBottom - 36, 0, 0, 37, 12, 37, 12, "textures/gui/sound_test_icon.png", this::onTestClick);
         testButton.soundDisabled = true;
         addRenderableWidget(testButton);
@@ -119,6 +121,10 @@ public class SoundScreen extends BaseBook {
         Networking.INSTANCE.sendToServer(new PacketSetSound(casterSlot, selectedSound == null ? ConfiguredSpellSound.EMPTY : new ConfiguredSpellSound(selectedSound, (float) volumeSlider.getValue() / 100f, (float) pitchSlider.getValue() / 100f), stackHand == InteractionHand.MAIN_HAND));
     }
 
+    public void onSaveAllClick(Button button) {
+        Networking.INSTANCE.sendToServer(new PacketUpdateSpellSoundAll(casterSlot, selectedSound == null ? ConfiguredSpellSound.EMPTY : new ConfiguredSpellSound(selectedSound, (float) volumeSlider.getValue() / 100f, (float) pitchSlider.getValue() / 100f), stackHand == InteractionHand.MAIN_HAND));
+    }
+
     @Override
     public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
@@ -126,6 +132,7 @@ public class SoundScreen extends BaseBook {
         int color = -8355712;
         graphics.drawString(font, Component.translatable("ars_nouveau.sounds.title").getString(), 51, 24, color, false);
         graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.save").getString(), 37, 160, color, false);
+        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.save_all").getString(), 177, 160, color, false);
         graphics.drawString(font, Component.translatable("ars_nouveau.sounds.test").getString(), 102, 160, color, false);
     }
 }

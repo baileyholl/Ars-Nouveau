@@ -351,14 +351,6 @@ public class InfinityGuiSpellBook extends BaseBook {
         }
     }
 
-    public void clearButtons(List<GlyphButton> glyphButtons) {
-        for (GlyphButton b : glyphButtons) {
-            renderables.remove(b);
-            children().remove(b);
-        }
-        glyphButtons.clear();
-    }
-
     public void onPageIncrease(Button button) {
         if (page + 1 >= getNumPages())
             return;

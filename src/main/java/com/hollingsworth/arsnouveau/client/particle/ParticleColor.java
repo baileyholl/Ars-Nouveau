@@ -14,6 +14,7 @@ import java.util.Random;
 public class ParticleColor implements IParticleColor, Cloneable {
     public static final ResourceLocation ID = new ResourceLocation(ArsNouveau.MODID, "constant");
 
+    public static final ParticleColor DEFAULT = new ParticleColor(255, 25, 180);
     public static final ParticleColor WHITE = new ParticleColor(255, 255, 255);
     public static final ParticleColor RED = new ParticleColor(255, 50, 50);
     public static final ParticleColor GREEN = new ParticleColor(50, 255, 50);
@@ -22,6 +23,17 @@ public class ParticleColor implements IParticleColor, Cloneable {
     public static final ParticleColor PURPLE = new ParticleColor(255, 50, 255);
     public static final ParticleColor CYAN = new ParticleColor(50, 255, 255);
     public static final ParticleColor ORANGE = new ParticleColor(255, 128, 0);
+
+    public static final ParticleColor MAGENTA = new ParticleColor(255, 0, 255);
+    public static final ParticleColor LIGHT_BLUE = new ParticleColor(173, 216, 230);
+    public static final ParticleColor LIME = new ParticleColor(0, 255, 0);
+    public static final ParticleColor PINK = new ParticleColor(255, 192, 203);
+    public static final ParticleColor GRAY = new ParticleColor(128, 128, 128);
+    public static final ParticleColor LIGHT_GRAY = new ParticleColor(211, 211, 211);
+    public static final ParticleColor BROWN = new ParticleColor(125, 42, 42);
+
+    public static final ParticleColor BLACK = new ParticleColor(0, 0, 0);
+
     public static final ParticleColor TO_HIGHLIGHT = RED;
     public static final ParticleColor FROM_HIGHLIGHT = CYAN;
     public static final Random random = new Random();
@@ -125,6 +137,10 @@ public class ParticleColor implements IParticleColor, Cloneable {
             return defaultParticleColor();
         String[] arr = string.split(",");
         return new ParticleColor(Integer.parseInt(arr[0].trim()), Integer.parseInt(arr[1].trim()), Integer.parseInt(arr[2].trim()));
+    }
+
+    public double euclideanDistance(ParticleColor color) {
+        return Math.sqrt(Math.pow(this.r - color.getRed(), 2) + Math.pow(this.g - color.getGreen(), 2) + Math.pow(this.b - color.getBlue(), 2));
     }
 
     @Override
