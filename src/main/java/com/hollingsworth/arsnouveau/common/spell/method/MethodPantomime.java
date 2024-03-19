@@ -33,6 +33,7 @@ public class MethodPantomime extends AbstractCastMethod {
         BlockPos toPos = BlockPos.containing(to);
         return new BlockHitResult(eyes, Direction.getNearest(to.x, to.y, to.z).getOpposite(), toPos, true);
     }
+
     public CastResolveType getTarget(Level world, LivingEntity shooter, SpellResolver resolver) {
         BlockHitResult res = findPosition(shooter);
 
