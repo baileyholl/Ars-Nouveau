@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 // 1.20.1	2024-03-17T12:41:58.4808622	Languages: en_us
 5a1796360e3700adbac3707bab62698f1eb2b79f assets/ars_nouveau/lang/en_us.json
+=======
+// 1.20.1	2024-03-18T18:21:17.990733545	Languages: en_us
+9ed85447a1b22c927fdc44ca3c9bb767702152c6 assets/ars_nouveau/lang/en_us.json
+>>>>>>> 8b01fa905 (feat: add pantomime)

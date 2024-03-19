@@ -6,9 +6,12 @@ import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.PatchouliTooltipEvent;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
+import com.hollingsworth.arsnouveau.client.renderer.world.PantomimeRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
 import com.hollingsworth.arsnouveau.common.block.tile.SkyBlockTile;
+import com.hollingsworth.arsnouveau.common.light.LightManager;
 import com.hollingsworth.arsnouveau.common.spell.casters.ReactiveCaster;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodPantomime;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -17,12 +20,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.client.event.RenderHighlightEvent;
-import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -39,6 +40,12 @@ public class ClientEvents {
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void renderWorldLastEvent(final RenderLevelStageEvent event) {
+        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
+            PantomimeRenderer.renderOutline(event.getPoseStack());
+        }
+    }
 
     @SubscribeEvent
     public static void TooltipEvent(RenderTooltipEvent.Pre e) {

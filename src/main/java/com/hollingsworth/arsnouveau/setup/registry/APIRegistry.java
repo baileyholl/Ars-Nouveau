@@ -36,6 +36,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
@@ -47,6 +48,7 @@ public class APIRegistry {
         registerSpell(MethodProjectile.INSTANCE);
         registerSpell(MethodTouch.INSTANCE);
         registerSpell(MethodSelf.INSTANCE);
+        registerSpell(MethodPantomime.INSTANCE);
         registerSpell(EffectBreak.INSTANCE);
         registerSpell(EffectHarm.INSTANCE);
         registerSpell(EffectIgnite.INSTANCE);

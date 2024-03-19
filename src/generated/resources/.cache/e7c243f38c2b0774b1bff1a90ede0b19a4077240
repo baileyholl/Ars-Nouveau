@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // 1.20.1	2024-03-17T12:41:58.4753429	Patchouli
+=======
+// 1.20.1	2024-03-18T18:21:17.987999876	Patchouli
+>>>>>>> 8b01fa905 (feat: add pantomime)
 d5f03c259d2af4f5e8e286639783f4fc833b1076 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/aqua_affinity.json
 2ec536fea831588201432d61d70af61385882054 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/alteration_table.json
 a82f4fc73946d228b1e3f5e03d0ecef46f33cdfb assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/applying_perks.json
@@ -115,6 +119,7 @@ b76616cf71ff62944c11560b2915d6600683f696 assets/ars_nouveau/patchouli_books/worn
 589e170f6a45abd57d82f0a31d3153bbd92c778e assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_1/glyph_launch.json
 64aaae029f866e7e288d3f69239e9ff9f5043d68 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_1/glyph_leap.json
 0251ef29596c07db5958dcaf3131407c1e97eef7 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_1/glyph_light.json
+de57d3e446040e4dd9d50dc754930c50a66041a1 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_1/glyph_pantomime.json
 1990bd69025686c60aecee87d2c95a2c477b72fe assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_1/glyph_phantom_block.json
 9fe654f846500785f20e623c2ce2ed95696849df assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_1/glyph_pickup.json
 e1c2bb82ba84d8b9dc8e609b4ec02d021f51832a assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_1/glyph_place_block.json
@@ -192,9 +197,9 @@ eb9ec934fad69de9859f3ea369e0b425e5f49a8e assets/ars_nouveau/patchouli_books/worn
 2cd9fc82feaf6ce609abcf49183c5211b4d9e832 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/repository.json
 6706644869dc084dfb5b0e2140702bae084e7c65 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/ritual_brazier.json
 68a05b40e14eb4556f0353f8a69477230b616461 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/scribes_block.json
+9ea03a0bf9efe62392c5f2739a3689fdc39c31de assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/scryer_scroll.json
 8ab5a8da4ca767b38afd42f1992ab17de84014e6 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/scryers_crystal.json
 343b90150349cbdba99d647b63912f48967fecda assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/scryers_oculus.json
-9ea03a0bf9efe62392c5f2739a3689fdc39c31de assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/scryer_scroll.json
 7be64662ebd5e76cdc477b564d6554127f1f41a0 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/storage_lectern.json
 e797ff6d4a79504b65178376196d5442fed62f42 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/warp_portal.json
 9b4e79632022441481188de75ca691f0bdba400f assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/mana_boost.json
