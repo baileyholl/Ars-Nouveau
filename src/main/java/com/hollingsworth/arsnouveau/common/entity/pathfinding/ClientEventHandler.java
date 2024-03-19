@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.light.LightManager;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodPantomime;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import net.minecraft.ChatFormatting;
