@@ -54,6 +54,7 @@ public abstract class AbstractRitual {
         return true;
     }
 
+    @Deprecated(since = "4.10.1", forRemoval = true)
     public boolean canStart() {
         return canStart(null);
     }

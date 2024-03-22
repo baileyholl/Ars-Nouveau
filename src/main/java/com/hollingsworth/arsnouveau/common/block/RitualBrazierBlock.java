@@ -83,7 +83,7 @@ public class RitualBrazierBlock extends TickableModBlock {
         super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
         if (!world.isClientSide() && world.getBlockEntity(pos) instanceof RitualBrazierTile tile) {
             tile.isOff = world.hasNeighborSignal(pos);
-            if (world.hasNeighborSignal(pos) && tile.ritual != null && tile.ritual.canStart()) {
+            if (world.hasNeighborSignal(pos) && tile.ritual != null && tile.ritual.canStart(null)) {
                 tile.startRitual(null);
             }
             BlockUtil.safelyUpdateState(world, pos);

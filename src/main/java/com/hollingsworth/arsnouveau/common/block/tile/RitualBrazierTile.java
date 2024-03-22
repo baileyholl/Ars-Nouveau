@@ -22,6 +22,7 @@ import com.hollingsworth.arsnouveau.common.block.RitualBrazierBlock;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -195,7 +196,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
 
     @Deprecated(since = "4.10.1", forRemoval = true)
     public boolean canRitualStart() {
-        return ritual.canStart();
+        return ritual.canStart(null);
     }
 
     @Deprecated(since = "4.10.1", forRemoval = true)
@@ -276,7 +277,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
                 return;
             }
             if (!ritual.isRunning()) {
-                if (!ritual.canStart()) {
+                if (!ritual.canStart(Minecraft.getInstance().player)) {
                     tooltips.add(Component.translatable("ars_nouveau.tooltip.conditions_unmet").withStyle(ChatFormatting.GOLD));
                 } else
                     tooltips.add(Component.translatable("ars_nouveau.tooltip.waiting").withStyle(ChatFormatting.GOLD));
