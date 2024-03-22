@@ -7,9 +7,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
+import org.jetbrains.annotations.Nullable;
 
 public class DenySpawnRitual extends RangeRitual {
     public int radius = 32;
@@ -27,8 +29,8 @@ public class DenySpawnRitual extends RangeRitual {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onStart(@Nullable Player player) {
+        super.onStart(player);
         if(getWorld().isClientSide){
             return;
         }

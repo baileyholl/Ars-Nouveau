@@ -11,10 +11,12 @@ import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import static com.hollingsworth.arsnouveau.api.util.BlockUtil.destroyBlockSafely;
 
@@ -25,8 +27,8 @@ public class RitualDig extends AbstractRitual {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onStart(@Nullable Player player) {
+        super.onStart(player);
         if (tile == null)
             return;
         EntityRitualProjectile ritualProjectile = new EntityRitualProjectile(getWorld(), getPos().above());

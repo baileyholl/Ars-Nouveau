@@ -5,8 +5,10 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import oshi.util.tuples.Pair;
 
 import java.util.*;
@@ -31,8 +33,8 @@ public abstract class FeaturePlacementRitual extends AbstractRitual {
     public abstract void addFeatures(List<IPlaceableFeature> features);
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onStart(@Nullable Player player) {
+        super.onStart(player);
         for(ItemStack i : getConsumedItems()){
             if(i.is(ItemTagProvider.SOURCE_GEM_TAG)) {
                 checkRadius += i.getCount();

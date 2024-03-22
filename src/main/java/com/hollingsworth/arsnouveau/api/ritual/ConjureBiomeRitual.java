@@ -6,10 +6,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class ConjureBiomeRitual extends AbstractRitual {
     public int radius = 7;
@@ -24,8 +26,8 @@ public abstract class ConjureBiomeRitual extends AbstractRitual {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onStart(@Nullable Player player) {
+        super.onStart(player);
         if(getWorld().isClientSide){
             return;
         }
