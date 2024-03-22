@@ -1,10 +1,10 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.BookSlider;
 import com.hollingsworth.arsnouveau.client.gui.ModdedScreen;
+import com.hollingsworth.arsnouveau.client.gui.buttons.ANButton;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
@@ -12,7 +12,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class BaseBook extends ModdedScreen {
@@ -50,6 +49,14 @@ public class BaseBook extends ModdedScreen {
         }
         drawScreenAfterScale(graphics, mouseX, mouseY, partialTicks);
         matrixStack.popPose();
+    }
+
+    public <T extends ANButton> void clearButtons(List<T> buttons) {
+        for (ANButton b : buttons) {
+            renderables.remove(b);
+            children().remove(b);
+        }
+        buttons.clear();
     }
 
     public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {

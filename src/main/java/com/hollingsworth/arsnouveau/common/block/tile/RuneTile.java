@@ -8,13 +8,15 @@ import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.RuneCaster;
+import com.hollingsworth.arsnouveau.api.util.IWololoable;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RuneBlock;
-import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -33,7 +35,7 @@ import java.util.List;
 import java.util.UUID;
 
 
-public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, ITooltipProvider {
+public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, ITooltipProvider, IWololoable {
     public Spell spell = new Spell();
     public boolean isTemporary;
     public boolean disabled;
@@ -154,5 +156,16 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
         if (ArsNouveau.proxy.getPlayer().hasEffect(ModPotions.MAGIC_FIND_EFFECT.get())) {
             tooltip.add(Component.literal(spell.getDisplayString()));
         }
+    }
+
+    @Override
+    public void setColor(ParticleColor color) {
+        spell.withColor(color);
+        updateBlock();
+    }
+
+    @Override
+    public ParticleColor getColor() {
+        return spell.color;
     }
 }

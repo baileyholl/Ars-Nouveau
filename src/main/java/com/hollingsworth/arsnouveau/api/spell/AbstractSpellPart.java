@@ -129,7 +129,8 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         return setOf();
     }
 
-    protected <T> Set<T> setOf(T... list) {
+    @SafeVarargs
+    protected final <T> Set<T> setOf(T... list) {
         return Set.of(list);
     }
 

@@ -35,7 +35,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import org.joml.Matrix4f;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -296,14 +295,6 @@ public class GlyphUnlockMenu extends BaseBook {
 
             }
         }
-    }
-
-    public void clearButtons(List<UnlockGlyphButton> glyphButtons) {
-        for (UnlockGlyphButton b : glyphButtons) {
-            renderables.remove(b);
-            children().remove(b);
-        }
-        glyphButtons.clear();
     }
 
     public void onPageIncrease(Button button) {

@@ -4,7 +4,10 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
-import com.hollingsworth.arsnouveau.common.spell.method.*;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodUnderfoot;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.data.CachedOutput;
@@ -120,7 +123,7 @@ public class GlyphRecipeProvider extends SimpleDataProvider {
         add(get(EffectBurst.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.TNT, 5).withItem(Items.FIREWORK_STAR));
         add(get(AugmentRandomize.INSTANCE).withItem(Items.PINK_CARPET, 2));
         add(get(EffectReset.INSTANCE).withItem(Items.TARGET, 1));
-
+        add(get(EffectWololo.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withIngredient(Ingredient.of(Tags.Items.DYES), 3));
         for (GlyphRecipe recipe : recipes) {
             Path path = getScribeGlyphPath(output, recipe.output.getItem());
             saveStable(pOutput, recipe.asRecipe(), path);

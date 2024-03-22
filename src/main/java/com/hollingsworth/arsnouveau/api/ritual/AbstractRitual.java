@@ -232,4 +232,8 @@ public abstract class AbstractRitual {
     public boolean canBeTraded(){
         return true;
     }
+
+    public void onDestroy() {}
+
+    public void onStatusChanged(boolean status) {}
 }
