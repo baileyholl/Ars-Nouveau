@@ -193,15 +193,21 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
         return ritual != null && ritual.getContext().isDone;
     }
 
+    @Deprecated(since = "4.10.1", forRemoval = true)
     public boolean canRitualStart() {
         return ritual.canStart();
     }
 
+    @Deprecated(since = "4.10.1", forRemoval = true)
     public void startRitual() {
-        if (ritual == null || !ritual.canStart() || ritual.isRunning())
+        startRitual(null);
+    }
+
+    public void startRitual(@Nullable Player player) {
+        if (ritual == null || !ritual.canStart(player) || ritual.isRunning())
             return;
         getLevel().playSound(null, getBlockPos(), SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.NEUTRAL, 1.0f, 1.0f);
-        ritual.onStart();
+        ritual.onStart(player);
     }
 
     @Override
