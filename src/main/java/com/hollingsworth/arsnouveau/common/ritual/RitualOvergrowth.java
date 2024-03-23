@@ -14,6 +14,9 @@ import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
 import java.util.List;
@@ -46,6 +49,13 @@ public class RitualOvergrowth extends AbstractRitual {
                 int range = 5;
                 boolean didWorkOnce = false;
                 for (BlockPos b : BlockPos.betweenClosed(pos.offset(range, -1, range), pos.offset(-range, 1, -range))) {
+                    BlockState state = world.getBlockState(b);
+
+                    if (state.getBlock() instanceof FarmBlock || world.getBlockState(b.above()).getBlock() instanceof BonemealableBlock) {
+                        b = b.above();
+                        state = world.getBlockState(b);
+                    }
+
                     if (rand.nextInt(25) == 0)
                         if (BoneMealItem.applyBonemeal(new ItemStack(Items.BONE_MEAL), world, b, ANFakePlayer.getPlayer((ServerLevel) world))) {
                             didWorkOnce = true;
