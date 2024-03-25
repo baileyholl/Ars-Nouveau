@@ -90,7 +90,7 @@ public class EffectInfuse extends AbstractEffect {
         }
 
         if(potionData == null){
-            BlockEntity jarEntity = spellContext.getCaster().getNearbyBlockEntity(i -> i instanceof PotionJarTile jar && jar.getAmount() > 100);
+            BlockEntity jarEntity = spellContext.getCaster().getNearbyBlockEntity(i -> i instanceof PotionJarTile jar && jar.getAmount() >= 100);
             if(jarEntity instanceof PotionJarTile jar){
                 potionData = jar.getData().clone();
                 jar.remove(100);
