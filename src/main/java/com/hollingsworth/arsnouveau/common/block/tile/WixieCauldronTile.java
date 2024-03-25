@@ -19,6 +19,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -35,8 +37,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.*;
 // TODO: 1.20 Make all inventories bind only, remove auto inventory detection
 // Also remove setStack and use pedestals only.
@@ -92,8 +94,8 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     }
 
     @Override
-    public void onFinishedConnectionLast(@org.jetbrains.annotations.Nullable BlockPos storedPos, @org.jetbrains.annotations.Nullable LivingEntity storedEntity, Player playerEntity) {
-        if(storedPos == null)
+    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+        if(storedPos == null || level == null)
             return;
         BlockEntity blockEntity = level.getBlockEntity(storedPos);
         if(blockEntity == null){
@@ -136,6 +138,8 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
      * Picks the next recipe to craft collecting items from the pedestals and the cauldron
      */
     public void rotateCraft(){
+        if (level == null)
+            return;
         BlockPos leftBound = worldPosition.below().south().east();
         BlockPos rightBound = worldPosition.above().north().west();
         List<ItemStack> itemStacks = new ArrayList<>();
@@ -178,12 +182,12 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
                 return;
             }
             craftManager = new PotionCraftingManager(potionNeeded, needed, potionOutput);
-            level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
             //BrewingRecipe
         } else {
             craftManager = new CraftingManager(instructions.recipe().outputStack.copy(), instructions.itemsNeeded());
-            level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
         }
+        onCraftStart();
+        level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
         stackBeingCrafted = nextStack.copy();
         updateBlock();
     }
@@ -231,7 +235,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     }
 
     public void updateInventories() {
-        if(!boundedInvs.isEmpty()){
+        if(!boundedInvs.isEmpty() || level == null){
             return;
         }
         cachedInventories = new ArrayList<>();
@@ -270,6 +274,8 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
 
     public void convertedEffect() {
         super.convertedEffect();
+        if (level == null)
+            return;
         if (tickCounter >= 120 && !level.isClientSide) {
             converted = true;
             level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(WixieCauldron.FILLED, false).setValue(SummoningTile.CONVERTED, true));
@@ -310,6 +316,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
 
             for (int i = 0; i < handler.getSlots(); i++) {
                 ItemStack stack = handler.getStackInSlot(i);
+                //noinspection ConstantValue
                 if (stack == null) {
                     System.out.println("======");
                     System.out.println("A MOD IS RETURNING A NULL STACK. THIS IS NOT ALLOWED YOU NERD. TELL THIS MOD AUTHOR TO FIX IT");
@@ -466,4 +473,20 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         this.needsPotionStorage = needsPotionStorage;
         updateBlock();
     }
+
+
+    /**
+     * Called when the crafting is complete
+     */
+    public void onCraftingComplete() {
+        level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(WixieCauldron.FILLED, false));
+        level.playSound(null, worldPosition, SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.BLOCKS, 0.15f, 0.6f);
+    }
+
+    /**
+     * Called when the crafting is about to start, if ingredients are available
+     */
+    public void onCraftStart() {
+    }
+
 }
