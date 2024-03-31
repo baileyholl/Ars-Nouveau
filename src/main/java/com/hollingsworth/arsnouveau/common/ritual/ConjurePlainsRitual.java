@@ -8,10 +8,12 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 public class ConjurePlainsRitual extends ConjureBiomeRitual {
     boolean isSnowy;
@@ -21,8 +23,8 @@ public class ConjurePlainsRitual extends ConjureBiomeRitual {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onStart(@Nullable Player player) {
+        super.onStart(player);
         isSnowy = getConsumedItems().stream().anyMatch(i -> i.is(BlockRegistry.FROSTAYA_POD.asItem()));
         if(isSnowy){
             biome = Biomes.SNOWY_PLAINS;

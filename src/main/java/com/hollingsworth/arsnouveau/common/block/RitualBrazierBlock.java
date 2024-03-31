@@ -70,7 +70,7 @@ public class RitualBrazierBlock extends TickableModBlock {
             return super.use(state, worldIn, pos, player, handIn, hit);
         ItemStack heldStack = player.getMainHandItem();
         if (heldStack.isEmpty() && tile.ritual != null && !tile.isRitualDone()) {
-            tile.startRitual();
+            tile.startRitual(player);
         }
         if(!heldStack.isEmpty()){
             tile.tryBurnStack(heldStack);
@@ -87,8 +87,8 @@ public class RitualBrazierBlock extends TickableModBlock {
             if (wasOff != world.hasNeighborSignal(pos) && tile.ritual != null) {
                 tile.ritual.onStatusChanged(tile.isOff);
             }
-            if (world.hasNeighborSignal(pos) && tile.ritual != null && tile.canRitualStart()) {
-                tile.startRitual();
+            if (world.hasNeighborSignal(pos) && tile.ritual != null && tile.ritual.canStart(null)) {
+                tile.startRitual(null);
             }
             BlockUtil.safelyUpdateState(world, pos);
         }

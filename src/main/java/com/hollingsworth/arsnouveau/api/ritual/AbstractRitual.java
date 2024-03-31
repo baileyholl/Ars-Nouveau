@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
@@ -49,8 +50,13 @@ public abstract class AbstractRitual {
         return tile != null ? tile.getLevel() : null;
     }
 
-    public boolean canStart() {
+    public boolean canStart(@Nullable Player player) {
         return true;
+    }
+
+    @Deprecated(since = "4.10.1", forRemoval = true)
+    public boolean canStart() {
+        return canStart(null);
     }
 
     public List<ItemStack> getConsumedItems() {
@@ -112,8 +118,13 @@ public abstract class AbstractRitual {
         return getContext().progress;
     }
 
-    public void onStart() {
+    public void onStart(@Nullable Player player) {
         getContext().isStarted = true;
+    }
+
+    @Deprecated(since = "4.10.1", forRemoval = true)
+    public void onStart() {
+        onStart(null);
     }
 
     public boolean isRunning() {
