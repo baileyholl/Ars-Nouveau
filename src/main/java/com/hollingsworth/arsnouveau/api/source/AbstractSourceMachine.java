@@ -14,7 +14,7 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
 
     private int source = 0;
     private int maxSource = 0;
-    private ParticleColor color = ParticleColor.PINK;
+    private ParticleColor color = ParticleColor.defaultParticleColor();
     public static String SOURCE_TAG = "source";
     public static String MAX_SOURCE_TAG = "max_source";
     public static String COLOR_TAG = "color";
