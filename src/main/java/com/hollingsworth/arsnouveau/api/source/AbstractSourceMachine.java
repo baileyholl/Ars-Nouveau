@@ -1,5 +1,8 @@
 package com.hollingsworth.arsnouveau.api.source;
 
+import com.hollingsworth.arsnouveau.api.util.IWololoable;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.ModdedTile;
 import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import net.minecraft.core.BlockPos;
@@ -7,12 +10,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class AbstractSourceMachine extends ModdedTile implements ISourceTile {
+public abstract class AbstractSourceMachine extends ModdedTile implements ISourceTile, IWololoable {
 
     private int source = 0;
     private int maxSource = 0;
+    private ParticleColor color = ParticleColor.PINK;
     public static String SOURCE_TAG = "source";
     public static String MAX_SOURCE_TAG = "max_source";
+    public static String COLOR_TAG = "color";
 
     public AbstractSourceMachine(BlockEntityType<?> manaTile, BlockPos pos, BlockState state) {
         super(manaTile, pos, state);
@@ -26,6 +31,7 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
     public void load(CompoundTag tag) {
         source = tag.getInt(SOURCE_TAG);
         maxSource = tag.getInt(MAX_SOURCE_TAG);
+        color = ParticleColor.fromInt(tag.getInt(COLOR_TAG));
         super.load(tag);
     }
 
@@ -34,6 +40,7 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
         super.saveAdditional(tag);
         tag.putInt(SOURCE_TAG, getSource());
         tag.putInt(MAX_SOURCE_TAG, getMaxSource());
+        tag.putInt(COLOR_TAG, getColor().getColor());
     }
 
     @Override
@@ -118,6 +125,16 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
 
     public int getTransferRate(ISourceTile from, ISourceTile to, int fromTransferRate) {
         return Math.min(Math.min(fromTransferRate, from.getSource()), to.getMaxSource() - to.getSource());
+    }
+
+    @Override
+    public ParticleColor getColor() {
+        return color;
+    }
+
+    @Override
+    public void setColor(ParticleColor color) {
+        this.color = color;
     }
 }
 

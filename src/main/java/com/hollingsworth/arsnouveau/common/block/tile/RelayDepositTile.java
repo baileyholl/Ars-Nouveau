@@ -35,7 +35,7 @@ public class RelayDepositTile extends RelayTile {
 
                 if (!(provider.getSource() instanceof RelayTile)) {
                     transferSource(this, provider.getSource());
-                    ParticleUtil.spawnFollowProjectile(level, this.worldPosition, provider.getCurrentPos());
+                    ParticleUtil.spawnFollowProjectile(level, this.worldPosition, provider.getCurrentPos(), this.getColor());
                 }
             }
         }

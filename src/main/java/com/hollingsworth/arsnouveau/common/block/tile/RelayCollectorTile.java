@@ -36,7 +36,7 @@ public class RelayCollectorTile extends RelayTile {
 
                 int transferred = transferSource(provider.getSource(), this);
                 if (transferred > 0) {
-                    ParticleUtil.spawnFollowProjectile(level, provider.getCurrentPos(), this.worldPosition);
+                    ParticleUtil.spawnFollowProjectile(level, provider.getCurrentPos(), this.worldPosition, this.getColor());
                 }
             }
 
