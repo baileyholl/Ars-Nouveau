@@ -62,6 +62,7 @@ public class EffectRedstone extends AbstractEffect {
                 BlockState state1 = BlockRegistry.TEMPORARY_BLOCK.get().defaultBlockState().setValue(TemporaryBlock.POWER, signalModifier);
                 world.setBlockAndUpdate(pos1, state1);
                 if(world.getBlockEntity(pos1) instanceof TemporaryTile tile){
+                    tile.gameTime = world.getGameTime();
                     tile.tickDuration = delay;
                     tile.mimicState = Blocks.REDSTONE_BLOCK.defaultBlockState();
                     tile.updateBlock();
