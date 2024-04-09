@@ -70,7 +70,7 @@ public class RitualBrazierBlock extends TickableModBlock {
             return super.use(state, worldIn, pos, player, handIn, hit);
         ItemStack heldStack = player.getMainHandItem();
         if (heldStack.isEmpty() && tile.ritual != null && !tile.isRitualDone()) {
-            tile.startRitual();
+            tile.startRitual(player);
         }
         if(!heldStack.isEmpty()){
             tile.tryBurnStack(heldStack);
@@ -82,9 +82,13 @@ public class RitualBrazierBlock extends TickableModBlock {
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
         if (!world.isClientSide() && world.getBlockEntity(pos) instanceof RitualBrazierTile tile) {
+            boolean wasOff = tile.isOff;
             tile.isOff = world.hasNeighborSignal(pos);
-            if (world.hasNeighborSignal(pos) && tile.ritual != null && tile.canRitualStart()) {
-                tile.startRitual();
+            if (wasOff != world.hasNeighborSignal(pos) && tile.ritual != null) {
+                tile.ritual.onStatusChanged(tile.isOff);
+            }
+            if (world.hasNeighborSignal(pos) && tile.ritual != null && tile.ritual.canStart(null)) {
+                tile.startRitual(null);
             }
             BlockUtil.safelyUpdateState(world, pos);
         }
@@ -94,10 +98,12 @@ public class RitualBrazierBlock extends TickableModBlock {
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         super.playerWillDestroy(worldIn, pos, state, player);
         if (worldIn.getBlockEntity(pos) instanceof RitualBrazierTile tile) {
-            if (tile.ritual != null && !tile.ritual.isRunning() && !tile.ritual.isDone()) {
-                worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(RitualRegistry.getRitualItemMap().get(tile.ritual.getRegistryName()))));
+            if (tile.ritual != null) {
+                tile.ritual.onDestroy();
+                if (!tile.ritual.isRunning() && !tile.ritual.isDone()) {
+                    worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(RitualRegistry.getRitualItemMap().get(tile.ritual.getRegistryName()))));
+                }
             }
-
         }
     }
 

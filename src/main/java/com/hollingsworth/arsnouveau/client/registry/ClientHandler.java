@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
+import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.potion.PotionData;
@@ -17,12 +18,12 @@ import com.hollingsworth.arsnouveau.client.renderer.tile.*;
 import com.hollingsworth.arsnouveau.common.block.tile.MageBlockTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionMelderTile;
-import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.common.items.PotionFlask;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.util.CameraUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.Font;
@@ -98,6 +99,11 @@ public class ClientHandler {
 
         event.registerEntityRenderer(ModEntities.SPELL_PROJ.get(),
                 renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
+        event.registerEntityRenderer(ModEntities.SPELL_PROJ_ARC.get(),
+                renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
+        event.registerEntityRenderer(ModEntities.SPELL_PROJ_HOM.get(),
+                renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
+
         event.registerEntityRenderer(ModEntities.ENTITY_FOLLOW_PROJ.get(),
                 renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.SUMMON_SKELETON.get(), RenderSummonSkeleton::new);
@@ -295,12 +301,19 @@ public class ClientHandler {
                         colorFromArmor(stack),
                 ItemsRegistry.BATTLEMAGE_LEGGINGS);
 
+        event.register((stack, color) -> {
+            if (color == 1 && stack.getItem() instanceof ICasterTool i) {
+                return i.getSpellCaster(stack).getColor().getColor();
+            }
+            return -1;
 
-        event.getItemColors().register((stack, color) -> {
+        }, ItemsRegistry.SPELL_PARCHMENT);
+
+        event.register((stack, color) -> {
             if (color > 0 || !stack.hasTag()) {
                 return -1;
             }
-            CompoundTag blockTag = stack.getTag().getCompound("BlockEntityTag");
+            CompoundTag blockTag = stack.getOrCreateTag().getCompound("BlockEntityTag");
             if (blockTag.contains("potionData")) {
                 PotionData data = PotionData.fromTag(blockTag.getCompound("potionData"));
                 return PotionUtils.getColor(data.fullEffects());

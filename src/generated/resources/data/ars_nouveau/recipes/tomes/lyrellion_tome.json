@@ -1,0 +1,26 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": {
+    "type": "ars_nouveau:constant",
+    "blue": 180,
+    "green": 25,
+    "red": 255
+  },
+  "flavour_text": "You. Shall. Not. Pass.",
+  "name": "Lyrellion’s Wall of Force",
+  "sound": {
+    "family": "ars_nouveau:fire_family",
+    "pitch": 1.0,
+    "volume": 1.0
+  },
+  "spell": [
+    "ars_nouveau:glyph_projectile",
+    "ars_nouveau:glyph_accelerate",
+    "ars_nouveau:glyph_wall",
+    "ars_nouveau:glyph_sensitive",
+    "ars_nouveau:glyph_phantom_block",
+    "ars_nouveau:glyph_pierce",
+    "ars_nouveau:glyph_amplify"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

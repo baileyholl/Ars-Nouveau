@@ -2,24 +2,26 @@
   "uuids": ["facee59d-9953-4466-b8cb-eebe7297651d", "9df6acb3-6618-474a-a2b0-e2e74748ae05", "066cfcbc-3db0-4a97-aa02-650f3f3a71ea",
     "9d7278bc-8d30-4241-aa7e-08ac8398cf2e", "fefb153f-4ffc-4f5c-acd2-3291e73bdd4d", "7cc40d87-69a4-45e6-9fda-29fed94de4b3",
     "a31d8405-b45d-40de-9c89-6b8489cce509", "b1e428b5-bdad-44e5-b2eb-7f02dc08b57c", "2fd766b7-17d0-400e-bec5-8e760185e1e3",
-  "380df991-f603-344c-a090-369bad2a924a", "9ded9e0a-bc2b-45da-a4e5-ecffdebffcf7", "de4e108a-ed87-4e57-8033-8a7f7940ea27",
-  "1c60df38-1f15-4427-a51f-8ed1a568956b", "0e918660-22bf-4bed-8426-ece3b4bbd01d", "3a438b67-2fe1-46df-8fc0-e144ca78d820",
-  "a5ddb356-8048-4a4c-a5ab-121f8b613bac","2ae39938-5c8d-4f07-af0c-4243be46c8ff", "a337102a-eeb3-4967-9deb-a5263b5b6231",
-  "838dd85f-95b9-4a9d-a785-7694e8c7c8b1", "99a814a0-bff4-4526-bee6-4af5c74a6824", "966ebb69-a63d-4bb2-ac90-ed39d8c64b80",
-  "bbb87dbe-690f-4205-bdc5-72ffb8ebc29d", "490b090b-ee3f-4a2b-a135-5b4b98f87f0a", "1a9776a0-be9b-4155-a99b-9931d0f7325f",
+    "380df991-f603-344c-a090-369bad2a924a", "9ded9e0a-bc2b-45da-a4e5-ecffdebffcf7", "de4e108a-ed87-4e57-8033-8a7f7940ea27",
+    "1c60df38-1f15-4427-a51f-8ed1a568956b", "0e918660-22bf-4bed-8426-ece3b4bbd01d", "3a438b67-2fe1-46df-8fc0-e144ca78d820",
+    "a5ddb356-8048-4a4c-a5ab-121f8b613bac","2ae39938-5c8d-4f07-af0c-4243be46c8ff", "a337102a-eeb3-4967-9deb-a5263b5b6231",
+    "838dd85f-95b9-4a9d-a785-7694e8c7c8b1", "99a814a0-bff4-4526-bee6-4af5c74a6824", "966ebb69-a63d-4bb2-ac90-ed39d8c64b80",
+    "bbb87dbe-690f-4205-bdc5-72ffb8ebc29d", "490b090b-ee3f-4a2b-a135-5b4b98f87f0a", "1a9776a0-be9b-4155-a99b-9931d0f7325f",
     "27aee4ea-a286-433b-879b-7c4c2ab3fd4b", "cf1f2cfc-1a85-40a6-aaf4-a17355ac6579", "bfc0f715-54f5-45bb-b4cd-16dfb3dd1f10",
     "98105ad8-080a-4d70-a5da-0cc27a833309", "3bf32666-f9ba-4060-af02-53bdb0df38fc", "d183e5a2-a087-462a-963e-c3d7295f9ec5",
-  "7135da42-d327-47bb-bb04-5ba4e212fb32", "c4c21dde-7f38-461c-8da8-32346996209c", "b0d69c83-18cb-4fa4-ac6f-5609674398a2",
-  "14212b1b-ba12-4164-947c-c208a6b07ac9", "dfb079d8-a5ce-4d70-907f-b852a44f8de8", "5ebee73e-faec-4810-ae7a-4baf73f026e4",
-  "b9694497-80b7-4412-b00e-2c9bc2705fd1", "02320102-6fc4-408b-8873-afe54b2dcae6", "ac076a44-c1e3-4752-a3ac-2a366deaefb1",
-  "8f86b83a-e35f-4fca-8b0f-a8181cc1741d", "c657941e-8ac5-46ac-bf65-8983f776ff33", "47b128a4-9043-4ec6-ba69-0edffdddfd8a",
+    "7135da42-d327-47bb-bb04-5ba4e212fb32", "c4c21dde-7f38-461c-8da8-32346996209c", "b0d69c83-18cb-4fa4-ac6f-5609674398a2",
+    "14212b1b-ba12-4164-947c-c208a6b07ac9", "dfb079d8-a5ce-4d70-907f-b852a44f8de8", "5ebee73e-faec-4810-ae7a-4baf73f026e4",
+    "b9694497-80b7-4412-b00e-2c9bc2705fd1", "02320102-6fc4-408b-8873-afe54b2dcae6", "ac076a44-c1e3-4752-a3ac-2a366deaefb1",
+    "8f86b83a-e35f-4fca-8b0f-a8181cc1741d", "c657941e-8ac5-46ac-bf65-8983f776ff33", "47b128a4-9043-4ec6-ba69-0edffdddfd8a",
     "0753a4e3-f71d-4b86-b338-3983f36d2b8a", "df2c8cdf-fbaf-4a22-9fdf-16770ee19c63", "b71554c5-ea50-441a-bed0-384416402575",
-  "5a0d2794-50a3-400f-b014-b1234d198eca", "1a45aa67-e39d-48f5-a5aa-4467b9a0c0c0", "755d49f3-c7e7-4ae2-95c0-25b50954d416",
-  "d600e728-1c5e-4ee8-8df7-2899465c9129", "d155b322-ff09-4c0f-9438-21ba7c572490", "bb21a5a9-4a9a-49f9-84f9-1ff375bca6bf",
-  "1f470f2a-a05b-4b6b-9d84-4b62f8686e5b", "d600e728-1c5e-4ee8-8df7-2899465c9129", "43ec37c2-8b0d-4bda-9f6a-5f78c3b572d0",
-  "5a4971f3-6fb0-446e-8512-cca380ec7e85", "6859954f-e3b0-45a8-84d7-5f9e9782651f", "f24ec99c-5d9b-4815-8938-5401f5d62877",
-  "2980a99e-8582-4f63-9b82-f7117bc8be2c", "674b6c55-c4f3-4ef6-9a57-b4a7455f1296","0f4c174e-26f1-43c3-81d0-88507dba6e52",
-  "5b1c9f9b-edd0-4632-9ba3-79b6dcc9bfa8"],
+    "5a0d2794-50a3-400f-b014-b1234d198eca", "1a45aa67-e39d-48f5-a5aa-4467b9a0c0c0", "755d49f3-c7e7-4ae2-95c0-25b50954d416",
+    "d600e728-1c5e-4ee8-8df7-2899465c9129", "d155b322-ff09-4c0f-9438-21ba7c572490", "bb21a5a9-4a9a-49f9-84f9-1ff375bca6bf",
+    "1f470f2a-a05b-4b6b-9d84-4b62f8686e5b", "d600e728-1c5e-4ee8-8df7-2899465c9129", "43ec37c2-8b0d-4bda-9f6a-5f78c3b572d0",
+    "5a4971f3-6fb0-446e-8512-cca380ec7e85", "6859954f-e3b0-45a8-84d7-5f9e9782651f", "f24ec99c-5d9b-4815-8938-5401f5d62877",
+    "2980a99e-8582-4f63-9b82-f7117bc8be2c", "674b6c55-c4f3-4ef6-9a57-b4a7455f1296","0f4c174e-26f1-43c3-81d0-88507dba6e52",
+    "5b1c9f9b-edd0-4632-9ba3-79b6dcc9bfa8", "eb0da540-8487-4ca0-8a5f-ed4acaa0268d", "8bacc3d4-a301-429b-859d-042d47f61e4d",
+    "3d8f61f1-7333-4c4f-b9e8-d76a3b453420", "888d2798-4fdf-4e70-89ed-1bb2ff47c6c1", "8b93ffcd-e3e8-41c7-aee9-458b03bd0b34",
+    "1d1b87f0-5243-4b39-926f-f7490d28954a"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -306,6 +308,36 @@
       "color": "cyan",
       "adopter": "Suelvys",
       "bio": "A little Starbuncle who lived in the forests near the house of an intelligent and friendly engineer, where he learned to create various things and lives making gadgets around, gears occasionally fall out of his magic tail (it's not clear how he keeps so many things in it, it must be magic), he loves copper nuggets and driving trains and machines, always curious and willing to help anyone who calls him."
+    },{
+      "name": "Spino",
+      "color": "orange",
+      "adopter": "SpinoFTW",
+      "bio": "An orange starbuncle that likes to sprint around people. Likes source berries and pies. Thinks it is the fastest starbuncle in the world."
+    },{
+      "name": "Vic",
+      "adopter": "Amajami",
+      "color": "lime",
+      "bio": "She seems to really want to help you"
+    },{
+      "name": "Kira, The Sleepy",
+      "color": "magenta",
+      "adopter": "QueenOfWorms",
+      "bio": "A lonely little starbuncle, that loves to quietly slumber under trees and in caves."
+    },{
+      "name": "Kaori, The Almighty",
+      "adopter": "TheSeaMoon",
+      "color": "white",
+      "bio": "Kaori was once one of the most powerful summoner in the world, until a mishap made a witch angry at them, Kaori will have her revenge once she undo the transformation, AND THE WITCH WILL BOW BEF- Oh! Shiny Nugget!"
+    },{
+      "name": "Bengie",
+      "adopter": "Dean",
+      "color": "green",
+      "bio": "This Starbuncle loves plants and can often be spotted in trees or bushes."
+    },{
+      "name": "Magenty",
+      "adopter": "Lyrellion",
+      "color": "magenta",
+      "bio": "This brightly colored starbuncle seems to have an endless supply of energy…almost like a 6 year old child..."
     }
   ]
 }

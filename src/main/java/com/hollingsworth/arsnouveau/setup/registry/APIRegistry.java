@@ -22,7 +22,10 @@ import com.hollingsworth.arsnouveau.common.perk.*;
 import com.hollingsworth.arsnouveau.common.ritual.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
-import com.hollingsworth.arsnouveau.common.spell.method.*;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodUnderfoot;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -120,6 +123,7 @@ public class APIRegistry {
         registerSpell(AugmentRandomize.INSTANCE);
         registerSpell(EffectOrbit.INSTANCE);
         registerSpell(EffectReset.INSTANCE);
+        registerSpell(EffectWololo.INSTANCE);
 
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());
@@ -182,7 +186,6 @@ public class APIRegistry {
 
     //register things only in dev, safe from production
     private static void registerWip() {
-
     }
 
     public static void postInit() {

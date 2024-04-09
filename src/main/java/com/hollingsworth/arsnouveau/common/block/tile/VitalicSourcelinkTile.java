@@ -47,7 +47,7 @@ public class VitalicSourcelinkTile extends SourcelinkTile {
                         }
                         entity.setAge(Math.min(0, entity.getAge() + 500));
                         this.addSource(10);
-                        ParticleUtil.spawnFollowProjectile(level, entity.blockPosition(), this.worldPosition);
+                        ParticleUtil.spawnFollowProjectile(level, entity.blockPosition(), this.worldPosition, this.getColor());
                     }
                 }
 

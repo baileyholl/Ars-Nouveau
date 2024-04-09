@@ -131,7 +131,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         fallingblockentity.context = context;
         fallingblockentity.baseDamage = (float) (9.0f + spellStats.getDamageModifier());
         fallingblockentity.dropItem = !blockState.is(BlockTagProvider.GRAVITY_BLACKLIST);
-        if (resolver.hasFocus(ItemsRegistry.SHAPERS_FOCUS.get().getDefaultInstance())) {
+        if (resolver.hasFocus(ItemsRegistry.SHAPERS_FOCUS.get())) {
             fallingblockentity.hurtEntities = true;
         }
 

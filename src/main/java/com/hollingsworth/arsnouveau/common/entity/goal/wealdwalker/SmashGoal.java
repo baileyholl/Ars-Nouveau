@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.common.entity.WealdWalker;
 import com.hollingsworth.arsnouveau.common.entity.goal.AnimatedAttackGoal;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Creeper;
 
 import java.util.function.Supplier;
 
@@ -14,6 +15,11 @@ public class SmashGoal extends AnimatedAttackGoal {
     public SmashGoal(WealdWalker entity, boolean followUnseen, Supplier<Boolean> canAttack, int animationID, int animationLength, int attackRange) {
         super(entity, followUnseen, canAttack, animationID, animationLength, attackRange, 1.2f);
         this.walker = entity;
+    }
+
+    @Override
+    public boolean canUse() {
+        return super.canUse() && !(mob.getTarget() instanceof Creeper);
     }
 
     @Override

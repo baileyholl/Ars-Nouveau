@@ -129,7 +129,8 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         return setOf();
     }
 
-    protected <T> Set<T> setOf(T... list) {
+    @SafeVarargs
+    protected final <T> Set<T> setOf(T... list) {
         return Set.of(list);
     }
 
@@ -168,7 +169,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     }
 
     public boolean isEnabled() {
-        return ENABLED == null || ENABLED.get();
+        return ENABLED != null && ENABLED.get();
     }
 
     /**

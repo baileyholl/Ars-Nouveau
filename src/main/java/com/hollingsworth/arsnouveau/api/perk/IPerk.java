@@ -30,6 +30,12 @@ public interface IPerk {
         return PerkSlot.ONE;
     }
 
+    /**
+     * @param slot   The slot the perk is being applied to
+     * @param stack  The stack the perk is being applied to
+     * @param player The player applying the perk
+     * @return Whether the perk is valid for the given slot, defaults to check slot level
+     */
     default boolean validForSlot(PerkSlot slot, ItemStack stack, Player player){
         if(this.minimumSlot().value > slot.value){
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.invalid_for_slot", this.minimumSlot().value));

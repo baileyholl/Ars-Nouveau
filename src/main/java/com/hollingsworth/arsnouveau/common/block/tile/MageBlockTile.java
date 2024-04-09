@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
+import com.hollingsworth.arsnouveau.api.util.IWololoable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -13,7 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 
-public class MageBlockTile extends ModdedTile implements ITickable, IDispellable {
+public class MageBlockTile extends ModdedTile implements ITickable, IDispellable, IWololoable {
 
     int age;
     public boolean isPermanent;
@@ -65,5 +66,16 @@ public class MageBlockTile extends ModdedTile implements ITickable, IDispellable
         level.destroyBlock(this.getBlockPos(), false);
         level.removeBlockEntity(this.getBlockPos());
         return true;
+    }
+
+    @Override
+    public void setColor(ParticleColor color) {
+        this.color = color;
+        updateBlock();
+    }
+
+    @Override
+    public ParticleColor getColor() {
+        return color;
     }
 }

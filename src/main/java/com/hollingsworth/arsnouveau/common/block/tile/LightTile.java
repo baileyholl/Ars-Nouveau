@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
+import com.hollingsworth.arsnouveau.api.util.IWololoable;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -13,7 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class LightTile extends ModdedTile implements ITickable {
+public class LightTile extends ModdedTile implements ITickable, IWololoable {
 
     public ParticleColor color = ParticleColor.defaultParticleColor();
     public static RandomSource random = RandomSource.createNewThreadLocalInstance();
@@ -28,7 +29,7 @@ public class LightTile extends ModdedTile implements ITickable {
 
     @Override
     public void tick(Level level, BlockState state, BlockPos pos) {
-        if (level.isClientSide){
+        if (level.isClientSide) {
             //don't spawn particles with 1/1/1 color, they would be invisible anyway
             if (this.color.getColor() == 65793) return;
             level.addParticle(
@@ -48,5 +49,16 @@ public class LightTile extends ModdedTile implements ITickable {
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         tag.put("color", color.serialize());
+    }
+
+    @Override
+    public void setColor(ParticleColor color) {
+        this.color = color;
+        updateBlock();
+    }
+
+    @Override
+    public ParticleColor getColor() {
+        return color;
     }
 }

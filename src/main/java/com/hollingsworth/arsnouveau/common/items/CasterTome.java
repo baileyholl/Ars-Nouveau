@@ -4,17 +4,24 @@ import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.mana.IManaDiscountEquipment;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.NotEnoughManaPacket;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -22,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 
 public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEquipment {
 
@@ -56,17 +64,31 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
         if (worldIn == null)
             return;
         ISpellCaster caster = getSpellCaster(stack);
-        Spell spell = caster.getSpell();
 
-        getInformation(stack, worldIn, tooltip2, flagIn);
+        if (Config.GLYPH_TOOLTIPS.get() || Screen.hasShiftDown()) {
+            if (caster.isSpellHidden()) {
+                tooltip2.add(Component.literal(caster.getHiddenRecipe()).withStyle(Style.EMPTY.withFont(new ResourceLocation("minecraft", "alt")).withColor(ChatFormatting.GOLD)));
+            }
+            if (!caster.getFlavorText().isEmpty())
+                tooltip2.add(Component.literal(caster.getFlavorText()).withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE)));
+        } else getInformation(stack, worldIn, tooltip2, flagIn);
 
         tooltip2.add(Component.translatable("tooltip.ars_nouveau.caster_tome"));
+
         super.appendHoverText(stack, worldIn, tooltip2, flagIn);
     }
 
     @Override
     public int getManaDiscount(ItemStack i, Spell spell) {
         return spell.getCost() / 2;
+    }
+
+    @Override
+    public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
+        ISpellCaster caster = getSpellCaster(pStack);
+        if (!Screen.hasShiftDown() && Config.GLYPH_TOOLTIPS.get() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
+            return Optional.of(new SpellTooltip(caster));
+        return Optional.empty();
     }
 
     /**
