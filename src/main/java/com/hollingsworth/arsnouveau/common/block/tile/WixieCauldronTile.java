@@ -95,7 +95,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
 
     @Override
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        if(storedPos == null || level == null)
+        if(storedPos == null)
             return;
         BlockEntity blockEntity = level.getBlockEntity(storedPos);
         if(blockEntity == null){
@@ -138,8 +138,6 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
      * Picks the next recipe to craft collecting items from the pedestals and the cauldron
      */
     public void rotateCraft(){
-        if (level == null)
-            return;
         BlockPos leftBound = worldPosition.below().south().east();
         BlockPos rightBound = worldPosition.above().north().west();
         List<ItemStack> itemStacks = new ArrayList<>();
@@ -235,7 +233,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     }
 
     public void updateInventories() {
-        if(!boundedInvs.isEmpty() || level == null){
+        if(!boundedInvs.isEmpty()){
             return;
         }
         cachedInventories = new ArrayList<>();
@@ -274,8 +272,6 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
 
     public void convertedEffect() {
         super.convertedEffect();
-        if (level == null)
-            return;
         if (tickCounter >= 120 && !level.isClientSide) {
             converted = true;
             level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(WixieCauldron.FILLED, false).setValue(SummoningTile.CONVERTED, true));

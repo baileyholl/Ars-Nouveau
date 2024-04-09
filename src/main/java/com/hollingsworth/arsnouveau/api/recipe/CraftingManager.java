@@ -72,7 +72,6 @@ public class CraftingManager {
     public void completeCraft(WixieCauldronTile tile){
         Level level = tile.getLevel();
         BlockPos worldPosition = tile.getBlockPos();
-        assert level != null;
 
         if(!outputStack.isEmpty()){
             level.addFreshEntity(new ItemEntity(level, worldPosition.getX(), worldPosition.getY() + 1.0, worldPosition.getZ(), outputStack.copy()));
