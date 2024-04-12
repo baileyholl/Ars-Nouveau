@@ -143,7 +143,7 @@
   "ars_nouveau.connections.remove": "Connection removed.",
   "ars_nouveau.connections.send": "Relay set to send to %s",
   "ars_nouveau.connections.take": "Relay set to take from %s",
-  "ars_nouveau.consumed_codex": "You consume to codex to learn %s glyphs.",
+  "ars_nouveau.consumed_codex": "You consume the codex to learn %s glyphs.",
   "ars_nouveau.contains_glyphs": "Contains %s glyphs.",
   "ars_nouveau.crafting": "Crafting: %s",
   "ars_nouveau.crafting_progress": "Crafting Progress: %s",
