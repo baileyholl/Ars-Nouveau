@@ -107,7 +107,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         ItemScroll.SortPref foundPref = ItemScroll.SortPref.INVALID;
 
         for (BlockPos b : TO_LIST) {
-            ItemScroll.SortPref pref = isValidStorePos(b, stack);
+            ItemScroll.SortPref pref = sortPrefForStack(b, stack);
             // Pick our highest priority
             if (pref.ordinal() > foundPref.ordinal()) {
                 foundPref = pref;
@@ -120,7 +120,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         return returnPos;
     }
 
-    public ItemScroll.SortPref isValidStorePos(@Nullable BlockPos b, ItemStack stack) {
+    public ItemScroll.SortPref sortPrefForStack(@Nullable BlockPos b, ItemStack stack) {
         if (stack == null || stack.isEmpty() || b == null || !level.isLoaded(b))
             return ItemScroll.SortPref.INVALID;
         return canDepositItem(level.getBlockEntity(b), stack);

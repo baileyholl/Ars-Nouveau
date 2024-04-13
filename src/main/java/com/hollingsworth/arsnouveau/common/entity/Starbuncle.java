@@ -365,7 +365,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     }
 
     @Override
-    protected void pickUpItem(ItemEntity itemEntity) {
+    public void pickUpItem(ItemEntity itemEntity) {
         if (!this.getHeldStack().isEmpty())
             return;
         if (!this.isTamed() && itemEntity.getItem().is(Tags.Items.NUGGETS_GOLD)) {

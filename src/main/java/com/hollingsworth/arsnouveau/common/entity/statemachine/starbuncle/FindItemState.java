@@ -19,26 +19,26 @@ public class FindItemState extends StarbyState{
     List<ItemEntity> destList = new ArrayList<>();
     ItemEntity dest;
     int stuckTicks;
-    public FindItemState(Starbuncle starbuncle, StarbyTransportBehavior behavior) {
+    public FindItemState(Starbuncle starbuncle, StarbyTransportBehavior behavior, List<ItemEntity> destList) {
         super(starbuncle, behavior);
+        this.destList = destList;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
-        List<ItemEntity> list = nearbyItems(starbuncle, behavior);
-        if(list.isEmpty()){
-            return;
-        }
-        for (ItemEntity entity : list) {
-            if (behavior.getValidStorePos(entity.getItem()) == null)
-                continue;
-            destList.add(entity);
-        }
         if (destList.isEmpty()) {
             return;
         }
+        List<ItemEntity> validDestinations = new ArrayList<>();
+        for (ItemEntity entity : destList) {
+            if (behavior.getValidStorePos(entity.getItem()) == null) {
+                continue;
+            }
+            validDestinations.add(entity);
+        }
+        this.destList = validDestinations;
+
         Collections.shuffle(destList);
         for (ItemEntity e : destList) {
             Path path = starbuncle.minecraftPathNav.createPath(BlockPos.containing(e.position()), 1, 9);

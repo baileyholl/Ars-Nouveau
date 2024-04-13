@@ -59,6 +59,6 @@ public class DepositItemState extends TravelToPosState {
 
     @Override
     public boolean isDestinationStillValid(BlockPos pos) {
-        return behavior.isValidStorePos(pos, starbuncle.getHeldStack()) != ItemScroll.SortPref.INVALID;
+        return behavior.sortPrefForStack(pos, starbuncle.getHeldStack()) != ItemScroll.SortPref.INVALID;
     }
 }
