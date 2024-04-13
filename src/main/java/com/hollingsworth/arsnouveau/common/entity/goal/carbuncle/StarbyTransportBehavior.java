@@ -46,6 +46,9 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
 
     public SimpleStateMachine<StarbyState, IStateEvent> stateMachine;
 
+    public int berryBackoff;
+    public int findItemBackoff;
+    public int takeItemBackoff;
     public StarbyTransportBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
         stateMachine = new SimpleStateMachine<>(new DecideStarbyActionState(starbuncle, this));
@@ -54,16 +57,21 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
 
         if (tag.contains("itemScroll"))
             this.itemScroll = ItemStack.of(tag.getCompound("itemScroll"));
-//        goals.add(new WrappedGoal(1, new FindItem(starbuncle, this)));
-//        goals.add(new WrappedGoal(2, new ForageManaBerries(starbuncle, this)));
-//        goals.add(new WrappedGoal(3, new StoreItemGoal<>(starbuncle, this)));
-//        goals.add(new WrappedGoal(3, new TakeItemGoal<>(starbuncle, this)));
     }
 
     @Override
     public void tick() {
         super.tick();
         if(!level.isClientSide) {
+            if(berryBackoff > 0){
+                berryBackoff--;
+            }
+            if(findItemBackoff > 0){
+                findItemBackoff--;
+            }
+            if(takeItemBackoff > 0){
+                takeItemBackoff--;
+            }
             stateMachine.tick();
         }
     }
