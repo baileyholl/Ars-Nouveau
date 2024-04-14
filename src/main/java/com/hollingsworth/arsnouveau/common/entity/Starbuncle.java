@@ -83,7 +83,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
@@ -286,12 +285,6 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
                 this.backOff--;
             if (this.bedBackoff > 0) {
                 this.bedBackoff--;
-            }
-            if(this.hasPassenger((e) -> true)){
-                System.out.println("has passenger");
-                for(WrappedGoal goal : this.goalSelector.getRunningGoals().collect(Collectors.toList())){
-                    System.out.println(goal.getGoal());
-                }
             }
         }
         if (!level.isClientSide && dynamicBehavior != null && level.getGameTime() % 100 == 0) {

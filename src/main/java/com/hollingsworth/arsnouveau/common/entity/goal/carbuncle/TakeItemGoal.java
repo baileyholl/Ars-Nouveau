@@ -22,9 +22,6 @@ public class TakeItemGoal<T extends StarbyTransportBehavior> extends GoToPosGoal
     @Override
     public boolean canUse() {
         boolean superCan = super.canUse();
-        if(starbuncle.hasPassenger((e) -> true)){
-            System.out.println(" im the riding one");
-        }
         if(!superCan || behavior.FROM_LIST.isEmpty())
             return false;
         if(getDestination() == null){
