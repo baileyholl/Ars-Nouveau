@@ -338,6 +338,7 @@ public class EventHandler {
         ToggleLightCommand.register(event.getDispatcher());
         AddTomeCommand.register(event.getDispatcher());
         SummonAnimHeadCommand.register(event.getDispatcher());
+        LearnGlyphCommand.register(event.getDispatcher());
     }
 
     @SubscribeEvent
