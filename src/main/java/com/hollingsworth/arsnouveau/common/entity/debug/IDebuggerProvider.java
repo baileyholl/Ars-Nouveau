@@ -5,6 +5,10 @@ public interface IDebuggerProvider {
     IDebugger getDebugger();
 
      default void addDebugEvent(DebugEvent event){
-        getDebugger().addEntityEvent(event);
+         this.addDebugEvent(event, false);
+    }
+
+    default void addDebugEvent(DebugEvent event, boolean storeDuplicate){
+        getDebugger().addEntityEvent(event, storeDuplicate);
     }
 }

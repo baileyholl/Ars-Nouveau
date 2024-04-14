@@ -16,7 +16,7 @@ public class DecideStarbyActionState extends StarbyState{
 
     @Override
     public @Nullable StarbyState tick() {
-        if(!starbuncle.isTamed()){
+        if(!starbuncle.isTamed() || starbuncle.isPassenger() || starbuncle.isNoAi()){
             return null;
         }
 

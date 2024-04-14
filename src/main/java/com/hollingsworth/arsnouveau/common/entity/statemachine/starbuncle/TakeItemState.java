@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -31,6 +32,37 @@ public class TakeItemState extends TravelToPosState{
             starbuncle.addGoalDebug(this, new DebugEvent("NoItemHandler", "No item handler at " + targetPos.toString()));
             return nextState;
         }
+
+        giveStarbyStack(starbuncle, iItemHandler);
+        if(starbuncle.getHeldStack().isEmpty()) {
+            starbuncle.addGoalDebug(this, new DebugEvent("TakeFromChest", "No items to take? Cancelling goal."));
+            return nextState;
+        }
+
+        starbuncle.addGoalDebug(this, new DebugEvent("SetHeld", "Taking " + starbuncle.getHeldStack().getHoverName().getString() + " from " + targetPos.toString()));
+        starbuncle.level.playSound(null, starbuncle.getX(), starbuncle.getY(), starbuncle.getZ(),
+                SoundEvents.ITEM_PICKUP, starbuncle.getSoundSource(), 1.0F, 1.0F);
+
+        OpenChestEvent event = new OpenChestEvent((ServerLevel) level, targetPos, 20);
+        event.open();
+        EventQueue.getServerInstance().addEvent(event);
+
+        for(Entity entity : starbuncle.getIndirectPassengers()){
+            if(!(entity instanceof Starbuncle passenger) || !passenger.getHeldStack().isEmpty()){
+                break;
+            }
+            giveStarbyStack(passenger, iItemHandler);
+            if(passenger.getHeldStack().isEmpty()){
+                break;
+            }
+            starbuncle.addGoalDebug(this, new DebugEvent("SetHeldPassenger", "Taking " + passenger.getHeldStack().getHoverName().getString() + " from " + targetPos.toString()));
+        }
+
+
+        return nextState;
+    }
+
+    public void giveStarbyStack(Starbuncle starbuncle, IItemHandler iItemHandler){
         for (int j = 0; j < iItemHandler.getSlots() && starbuncle.getHeldStack().isEmpty(); j++) {
             ItemStack stack = iItemHandler.getStackInSlot(j);
             if (!stack.isEmpty()) {
@@ -38,25 +70,8 @@ public class TakeItemState extends TravelToPosState{
                 if (count <= 0)
                     continue;
                 starbuncle.setHeldStack(iItemHandler.extractItem(j, Math.min(count, stack.getMaxStackSize()), false));
-                starbuncle.addGoalDebug(this, new DebugEvent("SetHeld", "Taking " + count + "x " + starbuncle.getHeldStack().getHoverName().getString() + " from " + targetPos.toString()));
-                starbuncle.level.playSound(null, starbuncle.getX(), starbuncle.getY(), starbuncle.getZ(),
-                        SoundEvents.ITEM_PICKUP, starbuncle.getSoundSource(), 1.0F, 1.0F);
-
-                if (world instanceof ServerLevel serverLevel) {
-                    try {
-                        OpenChestEvent event = new OpenChestEvent(serverLevel, targetPos, 20);
-                        event.open();
-                        EventQueue.getServerInstance().addEvent(event);
-                    } catch (Exception ignored) {
-                        // Potential bug with OpenJDK causing irreproducible noClassDef errors
-                    }
-                }
             }
         }
-        if(starbuncle.getHeldStack().isEmpty()) {
-            starbuncle.addGoalDebug(this, new DebugEvent("TakeFromChest", "No items to take? Cancelling goal."));
-        }
-        return nextState;
     }
 
     @Override

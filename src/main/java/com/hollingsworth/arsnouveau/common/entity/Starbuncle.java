@@ -202,6 +202,13 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         }));
     }
 
+    public void getNextItemFromPassengers(){
+        if(getFirstPassenger() instanceof Starbuncle starbuncle && !starbuncle.getHeldStack().isEmpty()){
+            this.setHeldStack(starbuncle.getHeldStack().copyAndClear());
+            starbuncle.getNextItemFromPassengers();
+        }
+    }
+
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return manager;
@@ -699,10 +706,15 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     }
 
     public void addGoalDebug(Object goal, DebugEvent debugEvent) {
+        addGoalDebug(goal, debugEvent, false);
+    }
+
+    public void addGoalDebug(Object goal, DebugEvent debugEvent, boolean storeDuplicate) {
         debugEvent.id = goal.getClass().getSimpleName() + "_" + debugEvent.id;
         debugEvent.message += " ===== current state: " + this.goalState.name();
-        addDebugEvent(debugEvent);
+        addDebugEvent(debugEvent, storeDuplicate);
     }
+
 
     @Override
     public void onTagSync(CompoundTag tag) {

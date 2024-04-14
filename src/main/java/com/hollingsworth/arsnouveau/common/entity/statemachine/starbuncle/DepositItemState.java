@@ -36,25 +36,35 @@ public class DepositItemState extends TravelToPosState {
             return nextState;
         }
 
-        ItemStack oldStack = new ItemStack(starbuncle.getHeldStack().getItem(), starbuncle.getHeldStack().getCount());
-        ItemStack left = ItemHandlerHelper.insertItemStacked(iItemHandler, starbuncle.getHeldStack(), false);
-        if (left.equals(oldStack)) {
+        boolean didDeposit = depositStack(iItemHandler);
+        if (!didDeposit) {
             starbuncle.setBackOff(5 + starbuncle.level.random.nextInt(20));
             starbuncle.addGoalDebug(this, new DebugEvent("no_room", targetPos.toString()));
             return nextState;
         }
 
-        try {
-            OpenChestEvent event = new OpenChestEvent((ServerLevel) starbuncle.level, targetPos, 20);
-            event.open();
-            EventQueue.getServerInstance().addEvent(event);
-        } catch (Exception ignored) {
-            // Potential bug with OpenJDK causing irreproducible noClassDef errors
-        }
+        OpenChestEvent event = new OpenChestEvent((ServerLevel) starbuncle.level, targetPos, 20);
+        event.open();
+        EventQueue.getServerInstance().addEvent(event);
 
-        starbuncle.setHeldStack(left);
+        ItemStack left = starbuncle.getHeldStack();
         starbuncle.addGoalDebug(this, new DebugEvent("stored_item", "successful at " + targetPos.toString() + "set stack to " + left.getCount() + "x " + left.getHoverName().getString()));
+        boolean fetchPassengerStack = left.isEmpty();
+        while(fetchPassengerStack){
+            fetchPassengerStack = false;
+            starbuncle.getNextItemFromPassengers();
+            if(!starbuncle.getHeldStack().isEmpty()){
+                fetchPassengerStack = depositStack(iItemHandler) && starbuncle.getHeldStack().isEmpty();
+            }
+        }
         return nextState;
+    }
+
+    public boolean depositStack(IItemHandler iItemHandler){
+        ItemStack oldStack = new ItemStack(starbuncle.getHeldStack().getItem(), starbuncle.getHeldStack().getCount());
+        ItemStack left = ItemHandlerHelper.insertItemStacked(iItemHandler, starbuncle.getHeldStack(), false);
+        starbuncle.setHeldStack(left);
+        return !left.equals(oldStack);
     }
 
     @Override
