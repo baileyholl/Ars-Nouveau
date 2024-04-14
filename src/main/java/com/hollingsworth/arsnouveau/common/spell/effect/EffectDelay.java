@@ -37,6 +37,13 @@ public class EffectDelay extends AbstractEffect {
         int duration = GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getBuffCount(AugmentExtendTime.INSTANCE) * 20;
         int decreasedTime = EXTEND_TIME.get() * 10 * spellStats.getBuffCount(AugmentDurationDown.INSTANCE);
         duration -= decreasedTime;
+<<<<<<< Updated upstream
+=======
+        if (spellStats.hasBuff(AugmentRandomize.INSTANCE)) {
+            double randomize = spellStats.getBuffCount(AugmentRandomize.INSTANCE) * RANDOMIZE_CHANCE.get();
+            duration = world.random.nextIntBetweenInclusive((int) (duration * (1 - randomize)), (int) (duration * (1 + randomize)));
+        }
+>>>>>>> Stashed changes
         EventQueue.getServerInstance().addEvent(
                 new DelayedSpellEvent(duration, rayTraceResult, world, newContext));
         Networking.sendToNearby(world, BlockPos.containing(safelyGetHitPos(rayTraceResult)),
@@ -58,7 +65,7 @@ public class EffectDelay extends AbstractEffect {
     public void buildConfig(ForgeConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addExtendTimeConfig(builder, 1);
-        addGenericInt(builder, 20, "Base duration in ticks.", "base_duration");
+        addRandomizeConfig(builder, 0.25f);
     }
 
     @Override
