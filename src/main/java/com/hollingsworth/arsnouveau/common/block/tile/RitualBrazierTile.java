@@ -39,6 +39,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -269,6 +271,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
     }
 
     @Override
+    @OnlyIn(Dist.CLIENT)
     public void getTooltip(List<Component> tooltips) {
         if (ritual != null) {
             tooltips.add(Component.literal(ritual.getName()));
