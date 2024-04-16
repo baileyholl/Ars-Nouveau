@@ -181,7 +181,7 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-common:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
 
-    implementation fg.deobf("curse.maven:curios-309927:4583413")
+    implementation fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
 
     implementation fg.deobf("curse.maven:terrablender-563928:4590487")
 
@@ -191,7 +191,7 @@ dependencies {
     implementation fg.deobf("curse.maven:aphoattr-898963:4688147")
 //    runtimeOnly fg.deobf("curse.maven:byg-247560:4027228") // BYG
 //    runtimeOnly fg.deobf("curse.maven:bop-220318:4034263") // BOP
-//    compileOnly fg.deobf("curse.maven:ars_elemental-561470:4345275") // ars elemental
+    implementation fg.deobf("curse.maven:ars_elemental-561470:5255908") // ars elemental
 //    runtimeOnly fg.deobf("curse.maven:tmg-560595:4001247") // toomanyglyphs
 
 //    implementation fg.deobf("curse.maven:cyanide-541676:3832812") // Cyanide

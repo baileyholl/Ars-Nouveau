@@ -41,7 +41,7 @@ public class SpellContext implements Cloneable {
 
     public SpellContext(Level level,@NotNull Spell spell, @Nullable LivingEntity caster, IWrappedCaster wrappedCaster) {
         this.level = level;
-        this.spell = spell;
+        this.spell = spell.clone();
         this.caster = caster;
         this.colors = spell.color.clone();
         this.wrappedCaster = wrappedCaster;
