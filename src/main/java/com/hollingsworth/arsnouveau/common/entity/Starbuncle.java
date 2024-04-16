@@ -121,6 +121,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     public StarbuncleData data = new StarbuncleData(new CompoundTag());
     public ChangeableBehavior dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
     public boolean canSleep;
+    public boolean sleeping;
     AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
 
     public Starbuncle(EntityType<? extends Starbuncle> entityCarbuncleEntityType, Level world) {
@@ -186,14 +187,18 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             return PlayState.STOP;
         }));
         animatableManager.add(new AnimationController<>(this, "sleepController", 1, (event) -> {
-            if (!event.isMoving() && canSleep) {
+            boolean shouldSleep = canSleep || (this.getVehicle() instanceof Starbuncle vehicle && vehicle.sleeping);
+            if (!event.isMoving() && shouldSleep) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("resting"));
+                sleeping = true;
                 return PlayState.CONTINUE;
             }
+            this.sleeping = false;
             return PlayState.STOP;
         }));
         animatableManager.add(new AnimationController<>(this, "idleController", 1, (event) -> {
-            if (!event.isMoving() && !canSleep) {
+            boolean shouldSleep = canSleep || (this.getVehicle() instanceof Starbuncle vehicle && vehicle.sleeping);
+            if (!event.isMoving() && !shouldSleep) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
                 return PlayState.CONTINUE;
             }
@@ -334,11 +339,19 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
 
     @Override
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @org.jetbrains.annotations.Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity) {
+        if(this.isPassenger() && this.getRootVehicle() instanceof Starbuncle baseStarby){
+            baseStarby.dynamicBehavior.onFinishedConnectionFirst(storedPos, side, storedEntity, playerEntity);
+            return;
+        }
         dynamicBehavior.onFinishedConnectionFirst(storedPos, side, storedEntity, playerEntity);
     }
 
     @Override
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @org.jetbrains.annotations.Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity) {
+        if(this.isPassenger() && this.getRootVehicle() instanceof Starbuncle baseStarby){
+            baseStarby.dynamicBehavior.onFinishedConnectionLast(storedPos, side, storedEntity, playerEntity);
+            return;
+        }
         dynamicBehavior.onFinishedConnectionLast(storedPos, side, storedEntity, playerEntity);
     }
 
@@ -619,6 +632,10 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     public void getTooltip(List<Component> tooltip) {
         if (!isTamed())
             return;
+        if(this.isPassenger() && this.getRootVehicle() instanceof Starbuncle baseStarby){
+            baseStarby.getTooltip(tooltip);
+            return;
+        }
 
         if (dynamicBehavior != null)
             dynamicBehavior.getTooltip(tooltip);

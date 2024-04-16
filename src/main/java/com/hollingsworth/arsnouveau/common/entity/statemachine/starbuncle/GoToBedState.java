@@ -37,8 +37,6 @@ public class GoToBedState extends StarbyState{
                 return nextState;
             }
         }
-
-        ticksRunning++;
         setPath(bedPos.getX(), bedPos.getY() + 1.0, bedPos.getZ(), 1.3);
         starbuncle.addGoalDebug(this, new DebugEvent("PathToBed", "Pathing to " + bedPos.getX() + " " + bedPos.getY() + " " + bedPos.getZ()));
         return null;
