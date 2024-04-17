@@ -47,10 +47,11 @@ public class LearnGlyphCommand {
 
             if (glyph == null) {
                 if (playerCap == null) continue;
-                playerCap.setKnownGlyphs(GlyphRegistry.getSpellpartMap().values());
+                playerCap.setKnownGlyphs(GlyphRegistry.getSpellpartMap().values().stream().filter(g -> !g.defaultedStarterGlyph()).toList());
                 player.sendSystemMessage(Component.literal("Unlocked all glyphs"));
             } else {
                 AbstractSpellPart spellPart = GlyphRegistry.getSpellPart(glyph);
+                if (spellPart.defaultedStarterGlyph()) continue;
                 boolean learned = playerCap.unlockGlyph(spellPart);
                 if (learned) {
                     player.sendSystemMessage(Component.literal("Unlocked " + spellPart.getName()));
