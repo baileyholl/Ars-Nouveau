@@ -87,6 +87,7 @@ public class BuildPortalEvent implements ITimedEvent {
                 if(level.getBlockEntity(pos) instanceof TemporaryTile tile){
                     tile.mimicState = BlockRegistry.getBlock(LibBlockNames.SOURCESTONE).defaultBlockState();
                     tile.tickDuration = 20 * 60;
+                    tile.gameTime = level.getGameTime();
                     tile.updateBlock();
                 }
                 level.playSound(null, pos, BlockRegistry.getBlock(LibBlockNames.SOURCESTONE).getSoundType(level.getBlockState(pos)).getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);

@@ -65,7 +65,7 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
             List<ISpecialSourceProvider> providers = SourceUtil.canGiveSource(worldPosition, level, 5);
             if(!providers.isEmpty()){
                 transferSource(this, providers.get(0).getSource());
-                ParticleUtil.spawnFollowProjectile(level, this.worldPosition, providers.get(0).getCurrentPos());
+                ParticleUtil.spawnFollowProjectile(level, this.worldPosition, providers.get(0).getCurrentPos(), this.getColor());
             }
         }
     }
@@ -82,7 +82,7 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
 
     public void getManaEvent(BlockPos sourcePos, int total) {
         this.addSource(total);
-        ParticleUtil.spawnFollowProjectile(level, sourcePos, this.worldPosition);
+        ParticleUtil.spawnFollowProjectile(level, sourcePos, this.worldPosition, this.getColor());
     }
 
     public boolean eventInRange(BlockPos sourcePos, @Nullable Event event) {

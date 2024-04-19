@@ -128,6 +128,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     public ForgeConfigSpec.IntValue EXTEND_TIME;
     public ForgeConfigSpec.IntValue GENERIC_INT;
     public ForgeConfigSpec.DoubleValue GENERIC_DOUBLE;
+    public ForgeConfigSpec.DoubleValue RANDOMIZE_CHANCE;
 
     @Override
     public void buildConfig(ForgeConfigSpec.Builder builder) {
@@ -157,6 +158,10 @@ public abstract class AbstractEffect extends AbstractSpellPart {
 
     public void addExtendTimeConfig(ForgeConfigSpec.Builder builder, int defaultTime) {
         EXTEND_TIME = builder.comment("Extend time duration, in seconds").defineInRange("extend_time", defaultTime, 0, Integer.MAX_VALUE);
+    }
+
+    public void addRandomizeConfig(ForgeConfigSpec.Builder builder, float defaultChance) {
+        RANDOMIZE_CHANCE = builder.comment("Randomize chance, in percentage (0-1 = 0% - 100%)").defineInRange("extend_time", defaultChance, 0.0f, Integer.MAX_VALUE);
     }
 
     public void addGenericInt(ForgeConfigSpec.Builder builder, int val, String comment, String path) {

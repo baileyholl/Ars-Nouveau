@@ -158,11 +158,16 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
                 BlockRegistry.ORANGE_SBED.asItem(),
                 BlockRegistry.PURPLE_SBED.asItem());
 
-        this.tag(ItemTags.LECTERN_BOOKS).add(ItemsRegistry.WORN_NOTEBOOK.asItem(),
+        Item[] books = new Item[]{ItemsRegistry.WORN_NOTEBOOK.asItem(),
+                ItemsRegistry.CASTER_TOME.asItem(),
                 ItemsRegistry.NOVICE_SPELLBOOK.asItem(),
                 ItemsRegistry.ARCHMAGE_SPELLBOOK.asItem(),
                 ItemsRegistry.APPRENTICE_SPELLBOOK.asItem(),
-                ItemsRegistry.CREATIVE_SPELLBOOK.asItem());
+                ItemsRegistry.CREATIVE_SPELLBOOK.asItem()};
+
+        this.tag(ItemTags.LECTERN_BOOKS).add(books);
+
+        this.tag(ItemTags.BOOKSHELF_BOOKS).add(books);
 
         this.tag(ItemTags.SWORDS).add(ItemsRegistry.ENCHANTERS_SWORD.get());
         this.tag(Tags.Items.TOOLS_SHIELDS).add(ItemsRegistry.ENCHANTERS_SHIELD.get());

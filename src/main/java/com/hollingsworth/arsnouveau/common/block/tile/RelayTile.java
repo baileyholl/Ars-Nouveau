@@ -170,7 +170,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
                 // Transfer mana fromPos to this
                 if (transferSource(fromTile, this) > 0) {
                     updateBlock();
-                    ParticleUtil.spawnFollowProjectile(level, fromPos, worldPosition);
+                    ParticleUtil.spawnFollowProjectile(level, fromPos, worldPosition, this.getColor());
                 }
             }
         }
@@ -183,7 +183,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
             }
             AbstractSourceMachine toTile = (AbstractSourceMachine) this.level.getBlockEntity(toPos);
             if (transferSource(this, toTile) > 0) {
-                ParticleUtil.spawnFollowProjectile(level, worldPosition, toPos);
+                ParticleUtil.spawnFollowProjectile(level, worldPosition, toPos, this.getColor());
             }
         }
     }

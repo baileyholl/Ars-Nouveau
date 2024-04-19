@@ -82,7 +82,7 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
     }
 
     public void createParticles(BlockPos from, BlockPos to) {
-        ParticleUtil.spawnFollowProjectile(level, from, to);
+        ParticleUtil.spawnFollowProjectile(level, from, to, this.getColor());
     }
 
     public void processToList() {

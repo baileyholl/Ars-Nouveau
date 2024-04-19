@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketClientDelayEffect;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -37,6 +38,10 @@ public class EffectDelay extends AbstractEffect {
         int duration = GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getBuffCount(AugmentExtendTime.INSTANCE) * 20;
         int decreasedTime = EXTEND_TIME.get() * 10 * spellStats.getBuffCount(AugmentDurationDown.INSTANCE);
         duration -= decreasedTime;
+        if (spellStats.isRandomized()) {
+            double randomize = spellStats.getBuffCount(AugmentRandomize.INSTANCE) * RANDOMIZE_CHANCE.get();
+            duration = world.random.nextIntBetweenInclusive((int) (duration * (1 - randomize)), (int) (duration * (1 + randomize)));
+        }
         EventQueue.getServerInstance().addEvent(
                 new DelayedSpellEvent(duration, rayTraceResult, world, newContext));
         Networking.sendToNearby(world, BlockPos.containing(safelyGetHitPos(rayTraceResult)),
@@ -58,7 +63,7 @@ public class EffectDelay extends AbstractEffect {
     public void buildConfig(ForgeConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addExtendTimeConfig(builder, 1);
-        addGenericInt(builder, 20, "Base duration in ticks.", "base_duration");
+        addRandomizeConfig(builder, 0.25f);
     }
 
     @Override
