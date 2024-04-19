@@ -45,11 +45,11 @@ public class EffectLeap extends AbstractEffect {
         } else {
             vector = shooter.getLookAngle();
             if (spellContext.getCaster() instanceof TileCaster tc) {
-                BlockEntity var6 = tc.getTile();
-                if (var6 instanceof RotatingTurretTile rotatingTurretTile) {
+                BlockEntity tile = tc.getTile();
+                if (tile instanceof RotatingTurretTile rotatingTurretTile) {
                     vector = rotatingTurretTile.getShootAngle();
-                } else if (tc.getTile() instanceof BasicSpellTurretTile || tc.getTile() instanceof RuneTile) {
-                    vector = new Vec3(tc.getTile().getBlockState().getValue(FACING).step());
+                } else if (tile instanceof BasicSpellTurretTile || tile instanceof RuneTile) {
+                    vector = new Vec3(tile.getBlockState().getValue(FACING).step());
                 }
             }
             bonus = GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
