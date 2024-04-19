@@ -233,6 +233,13 @@ public abstract class AbstractRitual {
         return true;
     }
 
+    /**
+     * If this ritual can appear in dungeon loot
+     */
+    public boolean canBeLooted() {
+        return true;
+    }
+
     public void onDestroy() {}
 
     public void onStatusChanged(boolean status) {}

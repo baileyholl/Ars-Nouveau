@@ -60,7 +60,7 @@ public class DungeonLootTables {
         UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.PIERCE_ARROW.get(), 16 + r.nextInt(16)));
 
         UNCOMMON_LOOT.add(() -> {
-            List<RitualTablet> tablets = new ArrayList<>(RitualRegistry.getRitualItemMap().values());
+            List<RitualTablet> tablets = RitualRegistry.getRitualItemMap().values().stream().filter(tablet -> tablet.ritual.canBeLooted()).toList();
             return new ItemStack(tablets.get(r.nextInt(tablets.size())));
         });
 
