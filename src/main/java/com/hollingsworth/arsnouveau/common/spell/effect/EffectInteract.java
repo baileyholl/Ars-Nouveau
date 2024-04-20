@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.item.inv.ExtractedStack;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -133,6 +134,7 @@ public class EffectInteract extends AbstractEffect {
     }
 
     public void useOnBlock(Player player, SpellStats spellStats, BlockPos pos, BlockState state, Level world, BlockHitResult rayTraceResult) {
+
         if (spellStats.isSensitive()) {
             ItemStack item = player.getItemInHand(getHand(player));
             if (item.getItem() instanceof BucketItem bucket) {
@@ -152,6 +154,9 @@ public class EffectInteract extends AbstractEffect {
         BlockState blockState = world.getBlockState(blockPos);
         if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, blockPos))
             return;
+        if(blockState.is(BlockTagProvider.INTERACT_BLACKLIST)){
+            return;
+        }
         Player player = getPlayer(shooter, (ServerLevel) world);
         if(isRealPlayer(shooter)){
             useOnBlock(player, spellStats, blockPos, blockState, world, rayTraceResult);

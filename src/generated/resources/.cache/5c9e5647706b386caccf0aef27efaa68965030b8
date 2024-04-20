@@ -1,4 +1,4 @@
-// 1.20.1	2023-11-10T12:20:12.9337708	Tags for minecraft:item mod id ars_nouveau
+// 1.20.1	2024-04-20T12:02:33.7567836	Tags for minecraft:item mod id ars_nouveau
 bde6ca31173d1f22d5f6fe355dc90c9faa35b239 data/ars_nouveau/tags/items/golem/shard.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/items/interact_jar_blacklist.json
 a0800fbffa0e00aecb2e86a1e991d42904427191 data/ars_nouveau/tags/items/magic_food.json
@@ -28,11 +28,12 @@ f898aac12b01b598949701b1f6e45aa0cd1d9a25 data/forge/tags/items/planks/archwood.j
 6febc815f11d70abf442be0be941a9132ddd072d data/forge/tags/items/storage_blocks/source.json
 877c63c507be1e55a9f5eeed6e73dfabea015dab data/forge/tags/items/tools/shields.json
 0fab28203f8c9e1daa9c635ecb6c026ba0be0ba1 data/minecraft/tags/items/beacon_payment_items.json
+30ef7d5d3bbd42c50ac6566dce458cb5f7ee404b data/minecraft/tags/items/bookshelf_books.json
 43a847dca5f71ae27537abc65fabcd8d3fdb1c72 data/minecraft/tags/items/buttons.json
 a01909919207615cda1bb44f33db287efa02333b data/minecraft/tags/items/doors.json
 87c0ae6c7a718897569f2f2b4d81fdcf8e9b269b data/minecraft/tags/items/fences.json
 248bbddd99634aced7fd4adc84b0290de05f4a0a data/minecraft/tags/items/leaves.json
-e1df9ea3c09067bedd8f32a7c60052639e4191d0 data/minecraft/tags/items/lectern_books.json
+30ef7d5d3bbd42c50ac6566dce458cb5f7ee404b data/minecraft/tags/items/lectern_books.json
 f8f647d2f880955435d323e3c61b7d789d06d59c data/minecraft/tags/items/logs.json
 f8f647d2f880955435d323e3c61b7d789d06d59c data/minecraft/tags/items/logs_that_burn.json
 a350e3112294fc7f7f26561673046c76017f3198 data/minecraft/tags/items/music_discs.json
