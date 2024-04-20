@@ -61,6 +61,7 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
         if (fromList.isEmpty())
             return;
         ArrayList<BlockPos> stale = new ArrayList<>();
+
         int ratePer = getTransferRate() / fromList.size();
         for (BlockPos fromPos : fromList) {
             if (!level.isLoaded(fromPos))
@@ -70,7 +71,8 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
                 stale.add(fromPos);
                 continue;
             }
-            if (transferSource(fromTile, this, ratePer) > 0) {
+            int fromRate = Math.min(ratePer, getTransferRate(fromTile, this));
+            if (transferSource(fromTile, this, fromRate) > 0) {
                 createParticles(fromPos, worldPosition);
             }
         }
@@ -97,6 +99,7 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
                 stale.add(toPos);
                 continue;
             }
+
             int transfer = transferSource(this, toTile, ratePer);
             if (transfer > 0) {
                 createParticles(worldPosition, toPos);
