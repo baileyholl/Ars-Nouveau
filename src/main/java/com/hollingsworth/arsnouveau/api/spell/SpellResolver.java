@@ -8,10 +8,12 @@ import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.items.curios.TimeFocus;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.NotEnoughManaPacket;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -158,6 +160,7 @@ public class SpellResolver implements Cloneable {
         MinecraftForge.EVENT_BUS.post(spellResolveEvent);
         if (spellResolveEvent.isCanceled())
             return;
+        int numResolved = 0;
         while (spellContext.hasNextPart()) {
             AbstractSpellPart part = spellContext.nextPart();
             if (part == null)
@@ -173,11 +176,16 @@ public class SpellResolver implements Cloneable {
             if (!(part instanceof AbstractEffect effect))
                 continue;
 
+            if(numResolved > 0 && hasFocus(ItemsRegistry.TIME_FOCUS.get())){
+                TimeFocus.delayNextPart(world, this);
+                return;
+            }
             EffectResolveEvent.Pre preEvent = new EffectResolveEvent.Pre(world, shooter, this.hitResult, spell, spellContext, effect, stats, this);
             if (MinecraftForge.EVENT_BUS.post(preEvent))
                 continue;
             effect.onResolve(this.hitResult, world, shooter, stats, spellContext, this);
             MinecraftForge.EVENT_BUS.post(new EffectResolveEvent.Post(world, shooter, this.hitResult, spell, spellContext, effect, stats, this));
+            numResolved++;
         }
 
         MinecraftForge.EVENT_BUS.post(new SpellResolveEvent.Post(world, shooter, this.hitResult, spell, spellContext, this));
