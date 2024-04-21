@@ -124,6 +124,7 @@ public class APIRegistry {
         registerSpell(EffectOrbit.INSTANCE);
         registerSpell(EffectReset.INSTANCE);
         registerSpell(EffectWololo.INSTANCE);
+        registerSpell(EffectRewind.INSTANCE);
 
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());
