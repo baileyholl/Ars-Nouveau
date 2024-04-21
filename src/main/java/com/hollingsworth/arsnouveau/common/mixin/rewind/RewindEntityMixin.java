@@ -42,13 +42,10 @@ public abstract class RewindEntityMixin implements IRewindable {
 
     @Inject(method = "baseTick", at = @At("TAIL"))
     public void onTick(CallbackInfo ci) {
-        if(this.level().isClientSide)
-            return;
-        if (isRewinding()) {
-            return;
+        if(EffectRewind.shouldRecordData((Entity) (Object) this, this)) {
+            EffectRewind.Data data = new EffectRewind.Data(getDeltaMovement(), this.position());
+            motions.push(data);
         }
-        EffectRewind.Data data = new EffectRewind.Data(getDeltaMovement(), this.position());
-        motions.push(data);
     }
 
 
