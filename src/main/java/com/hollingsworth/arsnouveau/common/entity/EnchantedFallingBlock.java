@@ -6,6 +6,10 @@ import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.MageBlockTile;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
+import com.hollingsworth.arsnouveau.common.event.timed.IRewindable;
+import com.hollingsworth.arsnouveau.common.spell.rewind.BlockToEntityRewind;
+import com.hollingsworth.arsnouveau.common.spell.rewind.RewindAttachment;
+import com.hollingsworth.arsnouveau.common.spell.rewind.RewindEntityData;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.mojang.authlib.GameProfile;
@@ -134,7 +138,13 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         if (resolver.hasFocus(ItemsRegistry.SHAPERS_FOCUS.get())) {
             fallingblockentity.hurtEntities = true;
         }
-
+        if(context.attachments.get(RewindAttachment.ID) instanceof RewindAttachment rewindAttachment){
+            rewindAttachment.addRewindEvent(level.getGameTime(), new BlockToEntityRewind(pos, blockState));
+            if(fallingblockentity instanceof IRewindable rewindable){
+                RewindEntityData data = new RewindEntityData(fallingblockentity.level().getGameTime(), fallingblockentity.getDeltaMovement(), fallingblockentity.position(), 0);
+                rewindable.getMotions().push(data);
+            }
+        }
         level.setBlock(pos, blockState.getFluidState().createLegacyBlock(), 3);
         return fallingblockentity;
     }
@@ -509,4 +519,5 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return GeckoLibUtil.createInstanceCache(this);
     }
+
 }

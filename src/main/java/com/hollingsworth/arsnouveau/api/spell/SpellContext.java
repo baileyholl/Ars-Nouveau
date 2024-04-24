@@ -4,8 +4,10 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.common.spell.rewind.RewindAttachment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -15,6 +17,8 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SpellContext implements Cloneable {
 
@@ -38,6 +42,7 @@ public class SpellContext implements Cloneable {
     public CompoundTag tag = new CompoundTag();
     private IWrappedCaster wrappedCaster;
     private SpellContext previousContext;
+    public Map<ResourceLocation, IContextAttachment> attachments = new HashMap<>();
 
     public SpellContext(Level level,@NotNull Spell spell, @Nullable LivingEntity caster, IWrappedCaster wrappedCaster) {
         this.level = level;
@@ -45,6 +50,7 @@ public class SpellContext implements Cloneable {
         this.caster = caster;
         this.colors = spell.color.clone();
         this.wrappedCaster = wrappedCaster;
+        withAttachment(new RewindAttachment());
     }
 
     public SpellContext(Level level,@NotNull Spell spell, @Nullable LivingEntity caster, IWrappedCaster wrappedCaster, ItemStack casterTool) {
@@ -66,6 +72,11 @@ public class SpellContext implements Cloneable {
 
     public SpellContext withParent(SpellContext parent){
         this.previousContext = parent;
+        return this;
+    }
+
+    public SpellContext withAttachment(IContextAttachment attachment){
+        this.attachments.put(attachment.id(), attachment);
         return this;
     }
 
@@ -240,6 +251,7 @@ public class SpellContext implements Cloneable {
             clone.level = this.level;
             clone.wrappedCaster = this.wrappedCaster;
             clone.previousContext = this.previousContext == null ? null : this.previousContext.clone();
+            clone.attachments = attachments.isEmpty() ? new HashMap<>() :new HashMap<>(attachments);
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();

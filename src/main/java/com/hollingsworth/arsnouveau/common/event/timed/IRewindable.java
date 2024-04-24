@@ -1,12 +1,12 @@
 package com.hollingsworth.arsnouveau.common.event.timed;
 
-import com.hollingsworth.arsnouveau.common.spell.effect.EffectRewind;
+import com.hollingsworth.arsnouveau.common.spell.rewind.RewindEntityData;
 
 import java.util.Stack;
 
 public interface IRewindable {
 
-    Stack<EffectRewind.Data> getMotions();
+    Stack<RewindEntityData> getMotions();
 
     boolean isRewinding();
 

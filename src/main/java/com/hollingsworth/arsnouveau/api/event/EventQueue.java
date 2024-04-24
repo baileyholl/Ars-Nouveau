@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +15,10 @@ import java.util.List;
 @SuppressWarnings("ForLoopReplaceableByForEach")
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class EventQueue {
-    List<ITimedEvent> events;
+    @NotNull List<ITimedEvent> events = new ArrayList<>();;
 
     public void tick(TickEvent tickEvent) {
-        if (events == null || events.isEmpty()) {
+        if (events.isEmpty()) {
             return;
         }
 
@@ -35,8 +36,6 @@ public class EventQueue {
     }
 
     public void addEvent(ITimedEvent event) {
-        if (events == null)
-            events = new ArrayList<>();
         events.add(event);
     }
 
@@ -55,7 +54,10 @@ public class EventQueue {
 
     // Tear down on world unload
     public void clear() {
-        this.events = null;
+        for(ITimedEvent event : events){
+            event.onServerStopping();
+        }
+        this.events = new ArrayList<>();
     }
 
     // Split these because our integrated servers are CURSED and both tick.

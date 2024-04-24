@@ -3,7 +3,9 @@ package com.hollingsworth.arsnouveau.common.mixin.rewind;
 import com.hollingsworth.arsnouveau.common.entity.debug.FixedStack;
 import com.hollingsworth.arsnouveau.common.event.timed.IRewindable;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectRewind;
+import com.hollingsworth.arsnouveau.common.spell.rewind.RewindEntityData;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,17 +35,20 @@ public abstract class RewindEntityMixin implements IRewindable {
     @Shadow public abstract Vec3 position();
 
     @Unique
-    public Stack<EffectRewind.Data> motions = new FixedStack<>(100);
+    public Stack<RewindEntityData> motions = new FixedStack<>(100);
 
     @Unique
     public boolean an_isRewinding = false;
 
-
-
     @Inject(method = "baseTick", at = @At("TAIL"))
     public void onTick(CallbackInfo ci) {
-        if(EffectRewind.shouldRecordData((Entity) (Object) this, this)) {
-            EffectRewind.Data data = new EffectRewind.Data(getDeltaMovement(), this.position());
+        Entity entity = (Entity) (Object) this;
+        if(EffectRewind.shouldRecordData(entity, this)) {
+            float health = 0;
+            if(entity instanceof LivingEntity living){
+                health = living.getHealth();
+            }
+            RewindEntityData data = new RewindEntityData(level().getGameTime(), getDeltaMovement(), this.position(), health);
             motions.push(data);
         }
     }
@@ -64,7 +69,7 @@ public abstract class RewindEntityMixin implements IRewindable {
     }
 
     @Override
-    public Stack<EffectRewind.Data> getMotions() {
+    public Stack<RewindEntityData> getMotions() {
         return motions;
     }
 

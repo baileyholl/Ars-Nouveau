@@ -12,7 +12,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -34,7 +33,7 @@ public class EffectRewind extends AbstractEffect {
         super.onResolveEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
         if(rayTraceResult.getEntity() instanceof IRewindable rewindable){
             if(!rewindable.isRewinding()){
-                EventQueue.getServerInstance().addEvent(new RewindEvent(rayTraceResult.getEntity(), 100));
+                EventQueue.getServerInstance().addEvent(new RewindEvent(rayTraceResult.getEntity(), 100, spellContext));
                 if(rewindable instanceof Player player){
                     Networking.sendToNearby(world, player, new PacketClientRewindEffect(100, player));
                 }
@@ -63,7 +62,4 @@ public class EffectRewind extends AbstractEffect {
         return new HashSet<>();
     }
 
-    public static record Data(Vec3 deltaMovement, Vec3 position){
-
-    }
 }
