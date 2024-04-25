@@ -229,14 +229,8 @@ public abstract class AbstractRitual {
     /**
      * If this ritual can appear in villager trades
      */
+    @Deprecated(since = "4.11.0", forRemoval = true)
     public boolean canBeTraded(){
-        return true;
-    }
-
-    /**
-     * If this ritual can appear in dungeon loot
-     */
-    public boolean canBeLooted() {
         return true;
     }
 

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.loot;
 
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -9,6 +10,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +62,7 @@ public class DungeonLootTables {
         UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.PIERCE_ARROW.get(), 16 + r.nextInt(16)));
 
         UNCOMMON_LOOT.add(() -> {
-            List<RitualTablet> tablets = RitualRegistry.getRitualItemMap().values().stream().filter(tablet -> tablet.ritual.canBeLooted()).toList();
+            List<RitualTablet> tablets = RitualRegistry.getRitualItemMap().values().stream().filter(tablet -> new ItemStack(tablet).is(ItemTagProvider.RITUAL_LOOT_BLACKLIST)).toList();
             return new ItemStack(tablets.get(r.nextInt(tablets.size())));
         });
 
