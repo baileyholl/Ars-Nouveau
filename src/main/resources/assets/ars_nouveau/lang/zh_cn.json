@@ -1,10 +1,10 @@
 {
   "alert.core": "奥术核心必须放置在这个方块下。",
   "ars_nouveau.active_generation": "主动地生成魔源",
-  "ars_nouveau.adopter": "Adopted by %s",
+  "ars_nouveau.adopter": "由 %s 通过",
   "ars_nouveau.adv.desc.alteration_table": "获得改衣台",
   "ars_nouveau.adv.desc.amethyst_golem_charm": "获得紫晶傀儡护符",
-  "ars_nouveau.adv.desc.apprentice_spell_book": "获得初学者法术书",
+  "ars_nouveau.adv.desc.apprentice_spell_book": "获得一本法师的法术书",
   "ars_nouveau.adv.desc.archmage_spell_book": "获得大法师法术书",
   "ars_nouveau.adv.desc.basic_spell_turret": "获得基础法术炮塔",
   "ars_nouveau.adv.desc.blank_thread": "获得空白纤维",
