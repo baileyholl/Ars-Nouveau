@@ -5,6 +5,11 @@
   "pedestalItems": [
     {
       "item": {
+        "item": "minecraft:arrow"
+      }
+    },
+    {
+      "item": {
         "item": "ars_nouveau:air_essence"
       }
     },
