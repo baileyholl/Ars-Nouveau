@@ -589,7 +589,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
         addRecipe(builder()
                 .withPedestalItem(1, ItemsRegistry.AIR_ESSENCE)
                 .withPedestalItem(2, ItemsRegistry.ABJURATION_ESSENCE)
-                .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
+                .withPedestalItem(3, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.QUICK_CHARGE, 3, 6000));
 
 
