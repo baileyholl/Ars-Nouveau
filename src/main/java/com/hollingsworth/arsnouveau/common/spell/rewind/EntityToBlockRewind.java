@@ -25,18 +25,19 @@ public class EntityToBlockRewind implements IRewindCallback{
 
     @Override
     public void onRewind(RewindEvent event) {
-        EnchantedFallingBlock fallingBlock = EnchantedFallingBlock.fall(previousEntity.level, pos, previousEntity.getOwner(), previousEntity.context, previousEntity.resolver, previousEntity.spellStats);
-        event.entity = fallingBlock;
-        if(event.entity instanceof IRewindable rewindable){
+        if(state != previousEntity.level.getBlockState(pos)) {
+            return;
+        }
+        event.entity = EnchantedFallingBlock.fall(previousEntity.level, pos, previousEntity.getOwner(), previousEntity.context, previousEntity.resolver, previousEntity.spellStats);
+        if(event.entity instanceof IRewindable rewindable) {
             rewindable.setRewinding(true);
-            if(data != null) {
+            if (data != null) {
                 rewindable.getMotions().addAll(data);
             }
-            if(!rewindable.getMotions().isEmpty()){
+            if (!rewindable.getMotions().isEmpty()) {
                 RewindEntityData data = rewindable.getMotions().pop();
                 data.onRewind(event);
             }
         }
-
     }
 }
