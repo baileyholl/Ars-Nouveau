@@ -7,6 +7,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 
 import java.nio.file.Path;
@@ -53,6 +54,7 @@ public class CrushRecipeProvider extends SimpleDataProvider {
         recipes.add(new CrushRecipe("sugar_cane", Ingredient.of(Items.SUGAR_CANE)).withItems(new ItemStack(Items.SUGAR, 2)));
         recipes.add(new CrushRecipe("sandstone_to_sand", Ingredient.of(Items.SANDSTONE)).withItems(Items.SAND.getDefaultInstance()));
         recipes.add(new CrushRecipe("quartz_block_to_quartz", Ingredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ)).withItems((new ItemStack(Items.QUARTZ, 4))));
+        recipes.add(new CrushRecipe("glowstone_block_to_dust", Ingredient.of(Blocks.GLOWSTONE)).withItems((new ItemStack(Items.GLOWSTONE_DUST, 4))));
 
 
         for (CrushRecipe g : recipes) {
