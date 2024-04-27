@@ -63,6 +63,7 @@ public class EffectDelay extends AbstractEffect {
     public void buildConfig(ForgeConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addExtendTimeConfig(builder, 1);
+        addGenericInt(builder, 20, "The base duration of the delay effect in ticks.", "base_duration");
         addRandomizeConfig(builder, 0.25f);
     }
 

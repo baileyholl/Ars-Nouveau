@@ -189,7 +189,10 @@ public class SpellContext implements Cloneable {
         if(isCanceled) {
             Spell remainder = getRemainingSpell();
             for (AbstractSpellPart spellPart : remainder.recipe) {
-                spellPart.onContextCanceled(this);
+                boolean keepChecking = spellPart.contextCanceled(this);
+                if (!keepChecking) {
+                    break;
+                }
             }
         }
         return isCanceled;
