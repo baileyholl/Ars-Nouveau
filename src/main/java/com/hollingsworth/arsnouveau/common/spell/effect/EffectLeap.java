@@ -9,7 +9,10 @@ import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
 import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -54,10 +57,7 @@ public class EffectLeap extends AbstractEffect {
             }
             bonus = GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
         }
-        if (spellStats.hasBuff(AugmentAccelerate.INSTANCE))
-            entity.setDeltaMovement(entity.getDeltaMovement().add(vector.x * bonus, vector.y * bonus, vector.z * bonus));
-        else entity.setDeltaMovement(vector.x * bonus, vector.y * bonus, vector.z * bonus);
-
+        entity.setDeltaMovement(vector.x * bonus, vector.y * bonus, vector.z * bonus);
         entity.fallDistance = 0.0f;
         entity.hurtMarked = true;
     }
@@ -91,12 +91,12 @@ public class EffectLeap extends AbstractEffect {
     @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentAccelerate.INSTANCE);
+        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE);
     }
 
     @Override
     public String getBookDescription() {
-        return "Launches the target in the direction they are looking. Amplification will increase the distance moved. With Accelerate the momentum will be kept instead of overriden.";
+        return "Launches the target in the direction they are looking. Amplification will increase the distance moved.";
     }
 
     @Override
