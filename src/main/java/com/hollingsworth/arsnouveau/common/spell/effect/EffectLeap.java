@@ -46,20 +46,26 @@ public class EffectLeap extends AbstractEffect {
             vector = entity.getLookAngle();
             bonus = Math.max(0, GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
         } else {
-            vector = shooter.getLookAngle();
-            if (spellContext.getCaster() instanceof TileCaster tc) {
-                BlockEntity tile = tc.getTile();
-                if (tile instanceof RotatingTurretTile rotatingTurretTile) {
-                    vector = rotatingTurretTile.getShootAngle();
-                } else if (tile instanceof BasicSpellTurretTile || tile instanceof RuneTile) {
-                    vector = new Vec3(tile.getBlockState().getValue(FACING).step());
-                }
-            }
+            vector = getLookVector(shooter, spellContext);
             bonus = GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
         }
         entity.setDeltaMovement(vector.x * bonus, vector.y * bonus, vector.z * bonus);
         entity.fallDistance = 0.0f;
         entity.hurtMarked = true;
+    }
+
+    public static Vec3 getLookVector(@NotNull LivingEntity shooter, SpellContext spellContext) {
+        Vec3 vector;
+        vector = shooter.getLookAngle();
+        if (spellContext.getCaster() instanceof TileCaster tc) {
+            BlockEntity tile = tc.getTile();
+            if (tile instanceof RotatingTurretTile rotatingTurretTile) {
+                vector = rotatingTurretTile.getShootAngle();
+            } else if (tile instanceof BasicSpellTurretTile || tile instanceof RuneTile) {
+                vector = new Vec3(tile.getBlockState().getValue(FACING).step());
+            }
+        }
+        return vector;
     }
 
     @Override
@@ -68,7 +74,7 @@ public class EffectLeap extends AbstractEffect {
         for (BlockPos pos1 : posList) {
             EnchantedFallingBlock entity = EnchantedFallingBlock.fall(world, pos1, shooter, spellContext, resolver, spellStats);
             if (entity != null) {
-                Vec3 vector = shooter.getLookAngle();
+                Vec3 vector = getLookVector(shooter, spellContext);
                 double bonus = GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
                 entity.setDeltaMovement(vector.x * bonus, vector.y * bonus, vector.z * bonus);
                 entity.hurtMarked = true;
