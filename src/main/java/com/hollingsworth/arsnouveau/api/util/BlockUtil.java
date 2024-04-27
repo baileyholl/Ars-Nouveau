@@ -95,7 +95,12 @@ public class BlockUtil {
 
     }
 
+    @Deprecated(forRemoval = true)
     public static boolean destroyRespectsClaim(LivingEntity caster, Level world, BlockPos pos) {
+        return destroyRespectsClaim((Entity) caster, world, pos);
+    }
+
+    public static boolean destroyRespectsClaim(Entity caster, Level world, BlockPos pos) {
         Player playerEntity = caster instanceof Player ? (Player) caster : ANFakePlayer.getPlayer((ServerLevel) world);
         return !MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), playerEntity));
     }

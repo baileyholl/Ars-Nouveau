@@ -8,8 +8,8 @@ import com.hollingsworth.arsnouveau.common.block.tile.MageBlockTile;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.event.timed.IRewindable;
 import com.hollingsworth.arsnouveau.common.spell.rewind.BlockToEntityRewind;
+import com.hollingsworth.arsnouveau.common.spell.rewind.EntityToBlockRewind;
 import com.hollingsworth.arsnouveau.common.spell.rewind.RewindAttachment;
-import com.hollingsworth.arsnouveau.common.spell.rewind.RewindEntityData;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.mojang.authlib.GameProfile;
@@ -72,7 +72,8 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
     public CompoundTag blockData;
     public SpellContext context;
     public float baseDamage;
-
+    public SpellResolver resolver;
+    public SpellStats spellStats;
     protected static final EntityDataAccessor<BlockPos> DATA_START_POS = SynchedEntityData.defineId(EnchantedFallingBlock.class, EntityDataSerializers.BLOCK_POS);
     private IntOpenHashSet piercingIgnoreEntityIds = new IntOpenHashSet(5);
 
@@ -105,7 +106,12 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         this(world, pos.getX(), pos.getY(), pos.getZ(), blockState);
     }
 
+    @Deprecated(forRemoval = true)
     public static boolean canFall(Level level, BlockPos pos, LivingEntity owner, SpellStats spellStats) {
+        return canFall(level, pos, (Entity) owner, spellStats);
+    }
+
+    public static boolean canFall(Level level, BlockPos pos, Entity owner, SpellStats spellStats) {
         if (level.isEmptyBlock(pos)
                 || !level.getFluidState(pos).isEmpty()
                 || level.getBlockState(pos).is(BlockTagProvider.RELOCATION_NOT_SUPPORTED)
@@ -116,7 +122,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         return BlockUtil.canBlockBeHarvested(spellStats, level, pos) && BlockUtil.destroyRespectsClaim(owner, level, pos);
     }
 
-    public static @Nullable EnchantedFallingBlock fall(Level level, BlockPos pos, LivingEntity owner, SpellContext context, SpellResolver resolver, SpellStats spellStats) {
+    public static @Nullable EnchantedFallingBlock fall(Level level, BlockPos pos, Entity owner, SpellContext context, SpellResolver resolver, SpellStats spellStats) {
         if (!canFall(level, pos, owner, spellStats)) return null;
         BlockState blockState = level.getBlockState(pos);
         EnchantedFallingBlock fallingblockentity;
@@ -135,18 +141,22 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         fallingblockentity.context = context;
         fallingblockentity.baseDamage = (float) (9.0f + spellStats.getDamageModifier());
         fallingblockentity.dropItem = !blockState.is(BlockTagProvider.GRAVITY_BLACKLIST);
+        fallingblockentity.resolver = resolver;
+        fallingblockentity.spellStats = spellStats;
         if (resolver.hasFocus(ItemsRegistry.SHAPERS_FOCUS.get())) {
             fallingblockentity.hurtEntities = true;
         }
-        if(context.attachments.get(RewindAttachment.ID) instanceof RewindAttachment rewindAttachment){
+        if(context != null){
+            RewindAttachment rewindAttachment = RewindAttachment.get(context);
             rewindAttachment.addRewindEvent(level.getGameTime(), new BlockToEntityRewind(pos, blockState));
-            if(fallingblockentity instanceof IRewindable rewindable){
-                RewindEntityData data = new RewindEntityData(fallingblockentity.level().getGameTime(), fallingblockentity.getDeltaMovement(), fallingblockentity.position(), 0);
-                rewindable.getMotions().push(data);
-            }
         }
         level.setBlock(pos, blockState.getFluidState().createLegacyBlock(), 3);
         return fallingblockentity;
+    }
+
+    @Deprecated(forRemoval = true)
+    public static @Nullable EnchantedFallingBlock fall(Level level, BlockPos pos, LivingEntity owner, SpellContext context, SpellResolver resolver, SpellStats spellStats) {
+        return fall(level, pos, (Entity) owner, context, resolver, spellStats);
     }
 
     @Override
@@ -203,7 +213,9 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
                     this.discard();
                 }
             } else { // on ground
-                this.groundBlock(false);
+                if(this instanceof IRewindable rewindable && !rewindable.isRewinding()) {
+                    this.groundBlock(false);
+                }
             }
         }
         this.setDeltaMovement(this.getDeltaMovement().scale(0.98D));
@@ -236,6 +248,8 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
                 this.discard();
                 if (block instanceof Fallable fallable) {
                     fallable.onLand(this.level, blockpos, this.blockState, blockstate, new FallingBlockEntity(level, this.getX(), this.getY(), this.getZ(), this.blockState));
+                }else{
+                    RewindAttachment.get(context).addRewindEvent(level.getGameTime(), new EntityToBlockRewind(this, blockpos, this.blockState));
                 }
 
                 if (this.blockData != null && this.blockState.hasBlockEntity()) {

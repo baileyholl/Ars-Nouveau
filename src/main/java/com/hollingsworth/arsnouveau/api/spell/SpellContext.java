@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.common.spell.rewind.RewindAttachment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -50,7 +49,6 @@ public class SpellContext implements Cloneable {
         this.caster = caster;
         this.colors = spell.color.clone();
         this.wrappedCaster = wrappedCaster;
-        withAttachment(new RewindAttachment());
     }
 
     public SpellContext(Level level,@NotNull Spell spell, @Nullable LivingEntity caster, IWrappedCaster wrappedCaster, ItemStack casterTool) {
@@ -75,9 +73,12 @@ public class SpellContext implements Cloneable {
         return this;
     }
 
-    public SpellContext withAttachment(IContextAttachment attachment){
-        this.attachments.put(attachment.id(), attachment);
-        return this;
+    public <T extends IContextAttachment> T getOrCreateAttachment(ResourceLocation id, T attachment){
+        return (T) attachments.computeIfAbsent(id, k -> attachment);
+    }
+
+    public @Nullable <T extends IContextAttachment> T getAttachment(ResourceLocation id){
+        return (T) attachments.get(id);
     }
 
     public @Nullable AbstractSpellPart nextPart() {

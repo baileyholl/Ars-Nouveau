@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.common.spell.rewind.IRewindCallback;
 import com.hollingsworth.arsnouveau.common.spell.rewind.RewindAttachment;
 import com.hollingsworth.arsnouveau.common.spell.rewind.RewindEntityData;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
@@ -14,65 +13,72 @@ import java.util.List;
 
 public class RewindEvent implements ITimedEvent {
 
-    public Entity entity;
+    public @Nullable Entity entity;
     public boolean doneRewinding;
     public int rewindTicks;
     public int ticksToRewind;
     public boolean respectsGravity;
     public @Nullable SpellContext context;
     public boolean serverSide;
+    public long startGameTime;
 
-    public RewindEvent(Entity entity, int ticksToRewind) {
-        this.entity = entity;
+    public RewindEvent(long gameTime, int ticksToRewind, @Nullable SpellContext spellContext){
+        this.startGameTime = gameTime;
         this.ticksToRewind = ticksToRewind;
-        respectsGravity = !entity.isNoGravity();
+        this.context = spellContext;
     }
 
-    public RewindEvent(Entity entity, int ticksToRewind, SpellContext context){
-        this(entity, ticksToRewind);
+    public RewindEvent(@Nullable Entity entity, long gameTime, int ticksToRewind) {
+        this(gameTime, ticksToRewind, null);
+        this.entity = entity;
+        respectsGravity = entity != null && !entity.isNoGravity();
+    }
+
+    public RewindEvent(@Nullable Entity entity, long gameTime, int ticksToRewind, @Nullable SpellContext context){
+        this(entity, gameTime, ticksToRewind);
         this.context = context;
     }
 
     @Override
     public void tick(boolean serverSide) {
         this.serverSide = serverSide;
-        if(!(entity instanceof IRewindable rewindable) || (entity instanceof LivingEntity living && living.isDeadOrDying()) || entity.isRemoved()){
-            doneRewinding = true;
-            return;
+        long eventGameTime = startGameTime - this.rewindTicks;
+        if(entity instanceof IRewindable rewindable){
+            rewindable.setRewinding(true);
+            if(!rewindable.getMotions().empty()){
+                RewindEntityData data = rewindable.getMotions().pop();
+                data.onRewind(this);
+            }
         }
-        if(rewindable.getMotions().empty()){
-            stop(rewindable);
-            return;
-        }
-        RewindEntityData data = rewindable.getMotions().pop();
-        rewindable.setRewinding(true);
-        if(context != null && this.context.attachments.get(RewindAttachment.ID) instanceof RewindAttachment rewindAttachment){
-            List<IRewindCallback> contextData = rewindAttachment.rewindEvents.get(data.gameTime);
+        if(context != null){
+            RewindAttachment rewindAttachment = RewindAttachment.get(context);
+            List<IRewindCallback> contextData = rewindAttachment.rewindEvents.get(eventGameTime);
             if(contextData != null){
                 for(IRewindCallback callback : contextData){
                     callback.onRewind(this);
                 }
             }
         }
-        data.onRewind(this);
         rewindTicks++;
         if(rewindTicks >= ticksToRewind){
-            stop(rewindable);
+            stop();
         }
     }
 
-    public void stop(IRewindable rewindable){
+    public void stop(){
         doneRewinding = true;
-        rewindable.setRewinding(false);
-        entity.setDeltaMovement(Vec3.ZERO);
-        if(respectsGravity) {
-            entity.setNoGravity(false);
+        if(entity instanceof IRewindable rewindable){
+            rewindable.setRewinding(false);
+            entity.setDeltaMovement(Vec3.ZERO);
+            if(respectsGravity) {
+                entity.setNoGravity(false);
+            }
         }
     }
 
     @Override
     public void onServerStopping() {
-        if(respectsGravity){
+        if(respectsGravity && entity != null){
             entity.setNoGravity(false);
         }
     }

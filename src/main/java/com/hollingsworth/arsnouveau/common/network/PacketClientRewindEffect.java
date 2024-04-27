@@ -35,7 +35,7 @@ public class PacketClientRewindEffect {
             Level world = ArsNouveau.proxy.getClientWorld();
             Entity hitEntity = world.getEntity(hitEntityID);
             if(hitEntity != null) {
-                EventQueue.getClientQueue().addEvent(new RewindEvent(hitEntity, duration));
+                EventQueue.getClientQueue().addEvent(new RewindEvent(hitEntity, hitEntity.level.getGameTime(), duration));
             }
         });
         ctx.get().setPacketHandled(true);
