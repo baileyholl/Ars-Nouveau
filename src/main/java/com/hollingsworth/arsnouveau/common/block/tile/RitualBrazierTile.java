@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
@@ -271,7 +272,6 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public void getTooltip(List<Component> tooltips) {
         if (ritual != null) {
             tooltips.add(Component.literal(ritual.getName()));
@@ -280,7 +280,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
                 return;
             }
             if (!ritual.isRunning()) {
-                if (!ritual.canStart(Minecraft.getInstance().player)) {
+                if (!ritual.canStart(ArsNouveau.proxy.getPlayer())) {
                     tooltips.add(Component.translatable("ars_nouveau.tooltip.conditions_unmet").withStyle(ChatFormatting.GOLD));
                 } else
                     tooltips.add(Component.translatable("ars_nouveau.tooltip.waiting").withStyle(ChatFormatting.GOLD));

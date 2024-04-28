@@ -61,13 +61,19 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         compatibleAugments.addAll(getCompatibleAugments());
     }
 
+    public void onContextCanceled(SpellContext context) {
+    }
+
     /**
      * A callback when the spell is canceled before this part had a chance to resolve.
      * Can be changed and uncanceled by modifying this context directly.
      * If isCanceled is not false, no more effects will resolve.
      * Use the currentIndex to determine where a spell was canceled.
+     * @return true if the canceled callbacks should continue to the next glyph, false if it should stop.
      */
-    public void onContextCanceled(SpellContext context) {
+    public boolean contextCanceled(SpellContext context){
+        this.onContextCanceled(context);
+        return true;
     }
 
     /**
