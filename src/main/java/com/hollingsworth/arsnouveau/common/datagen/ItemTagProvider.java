@@ -29,6 +29,8 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
     public static TagKey<Item> BERRY_TAG = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "fruits/berry"));
     public static final TagKey<Item> SUMMON_SHARDS_TAG = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_shards"));
     public static TagKey<Item> JAR_ITEM_BLACKLIST = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "interact_jar_blacklist"));
+    public static TagKey<Item> RITUAL_LOOT_BLACKLIST = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "ritual_loot_blacklist"));
+    public static TagKey<Item> RITUAL_TRADE_BLACKLIST = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "ritual_trade_blacklist"));
 
     public ItemTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
         super(output, Registries.ITEM, future, item -> item.builtInRegistryHolder().key(), ArsNouveau.MODID, helper);
@@ -204,5 +206,7 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
         this.tag(Tags.Items.CHESTS).add(BlockRegistry.ARCHWOOD_CHEST.asItem());
         this.tag(Tags.Items.CHESTS_WOODEN).add(BlockRegistry.ARCHWOOD_CHEST.asItem());
         this.tag(JAR_ITEM_BLACKLIST);
+        this.tag(RITUAL_LOOT_BLACKLIST);
+        this.tag(RITUAL_TRADE_BLACKLIST);
     }
 }

@@ -372,6 +372,7 @@ public class EventHandler {
 
             List<RitualTablet> tablets = new ArrayList<>(RitualRegistry.getRitualItemMap().values());
             for (RitualTablet tablet : tablets) {
+                if (new ItemStack(tablet).is(ItemTagProvider.RITUAL_TRADE_BLACKLIST)) continue;
                 if (tablet.ritual.canBeTraded()) {
                     level3.add((trader, rand) -> emerToItem(tablet, 4, 1, 12));
                 }
