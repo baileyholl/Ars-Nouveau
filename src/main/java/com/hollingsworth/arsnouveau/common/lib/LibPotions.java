@@ -22,6 +22,7 @@ public class LibPotions {
     public static final String BLAST = "blasting";
     public static final String FREEZING = "freezing";
     public static final String DEFENCE = "shielding";
+    public static final String SOGGY = "soggy";
 
     public static String potion(String base) {
         return base + "_potion";

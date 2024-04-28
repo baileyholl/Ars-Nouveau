@@ -24,6 +24,11 @@ public abstract class ParticleMobEffect extends PublicEffect {
         return true;
     }
 
+    @Override
+    public boolean isDurationEffectTick(int pDuration, int pAmplifier) {
+        return pDuration > 0;
+    }
+
     public abstract ParticleOptions getParticle();
 
     public int getChance() {
