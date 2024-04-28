@@ -15,8 +15,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Set;
 
 public class EffectRewind extends AbstractEffect {
@@ -33,10 +35,12 @@ public class EffectRewind extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         super.onResolveEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
-        if(rayTraceResult.getEntity() instanceof IRewindable rewindable && !rewindable.isRewinding()){
-            EventQueue.getServerInstance().addEvent(new RewindEvent(rayTraceResult.getEntity(), world.getGameTime(), 100, spellContext));
+        int ticksToRewind = getRewindTicks(spellStats);
+        Entity entity = rayTraceResult.getEntity();
+        if(entity instanceof IRewindable rewindable && !rewindable.isRewinding()){
+            EventQueue.getServerInstance().addEvent(new RewindEvent(entity, world.getGameTime(), ticksToRewind, spellContext));
             if(rewindable instanceof Player player){
-                Networking.sendToNearby(world, player, new PacketClientRewindEffect(100, player));
+                Networking.sendToNearby(world, player, new PacketClientRewindEffect(ticksToRewind, player));
             }
         }
     }
@@ -44,7 +48,19 @@ public class EffectRewind extends AbstractEffect {
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         super.onResolveBlock(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
-        EventQueue.getServerInstance().addEvent(new RewindEvent(null, world.getGameTime(), 100, spellContext));
+        int ticksToRewind = getRewindTicks(spellStats);
+        EventQueue.getServerInstance().addEvent(new RewindEvent(null, world.getGameTime(), ticksToRewind, spellContext));
+    }
+
+    public int getRewindTicks(SpellStats spellStats){
+        double multiplier = spellStats.getDurationMultiplier();
+        int ticksToRewind = BASE_REWIND_TIME.get();
+        if(multiplier < 0){
+            ticksToRewind = (int) (ticksToRewind + EXTEND_TIME.get() * multiplier);
+        }else if(multiplier > 0){
+            ticksToRewind = (int) (ticksToRewind - DURATION_DOWN_TIME.get() * multiplier);
+        }
+        return ticksToRewind;
     }
 
     public static boolean shouldAllowMovement(IRewindable rewindable){
@@ -59,6 +75,28 @@ public class EffectRewind extends AbstractEffect {
             return false;
         }
         return !rewindable.isRewinding();
+    }
+
+    public ForgeConfigSpec.IntValue BASE_REWIND_TIME;
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addGenericInt(builder, 60, "Max ticks entities should track for motion and health, etc. Note: Entities ANYWHERE are tracking this, setting this to a high value is not recommended for low-spec machines.", "entityRewindTracking");
+        BASE_REWIND_TIME = builder.comment("How many ticks should be rewound before augments").defineInRange("baseRewindTime", 40, 1, 60);
+        addExtendTimeTicksConfig(builder, 20);
+        addDurationDownConfig(builder, 10);
+    }
+
+    @Override
+    protected void buildAugmentLimitsConfig(ForgeConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
+        super.buildAugmentLimitsConfig(builder, defaults);
+        defaults.put(AugmentExtendTime.INSTANCE.getRegistryName(), 1);
+        defaults.put(AugmentDurationDown.INSTANCE.getRegistryName(), 5);
+    }
+
+    public int getEntityMaxTrackingTicks(){
+        return GENERIC_INT.get();
     }
 
     @Override

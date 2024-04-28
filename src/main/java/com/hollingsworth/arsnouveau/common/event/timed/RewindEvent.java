@@ -52,12 +52,15 @@ public class RewindEvent implements ITimedEvent {
         }
         if(context != null){
             RewindAttachment rewindAttachment = RewindAttachment.get(context);
-            List<IRewindCallback> contextData = rewindAttachment.rewindEvents.get(eventGameTime);
+            List<IRewindCallback> contextData = rewindAttachment.getForTime(eventGameTime);
+            // Lock and prevent adding rewind events for the current tick. Otherwise you get CME or infinte loops
+            rewindAttachment.setLockedTime(eventGameTime);
             if(contextData != null){
                 for(IRewindCallback callback : contextData){
                     callback.onRewind(this);
                 }
             }
+            rewindAttachment.setLockedTime(-1);
         }
         rewindTicks++;
         if(rewindTicks >= ticksToRewind){

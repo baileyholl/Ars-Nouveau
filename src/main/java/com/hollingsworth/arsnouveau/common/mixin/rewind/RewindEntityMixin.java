@@ -34,8 +34,9 @@ public abstract class RewindEntityMixin implements IRewindable {
 
     @Shadow public abstract Vec3 position();
 
+    @Shadow public Level level;
     @Unique
-    public Stack<RewindEntityData> motions = new FixedStack<>(100);
+    public Stack<RewindEntityData> ars_Nouveau$motions = new FixedStack<>(EffectRewind.INSTANCE.getEntityMaxTrackingTicks());
 
     @Unique
     public boolean an_isRewinding = false;
@@ -43,14 +44,15 @@ public abstract class RewindEntityMixin implements IRewindable {
     @Inject(method = "baseTick", at = @At("TAIL"))
     public void onTick(CallbackInfo ci) {
         Entity entity = (Entity) (Object) this;
-        if(EffectRewind.shouldRecordData(entity, this)) {
-            float health = 0;
-            if(entity instanceof LivingEntity living){
-                health = living.getHealth();
-            }
-            RewindEntityData data = new RewindEntityData(level().getGameTime(), getDeltaMovement(), this.position(), health);
-            motions.push(data);
+        if(!EffectRewind.shouldRecordData(entity, this) || level == null) {
+            return;
         }
+        float health = 0;
+        if(entity instanceof LivingEntity living){
+            health = living.getHealth();
+        }
+        RewindEntityData data = new RewindEntityData(level.getGameTime(), getDeltaMovement(), this.position(), health);
+        ars_Nouveau$motions.push(data);
     }
 
 
@@ -70,7 +72,7 @@ public abstract class RewindEntityMixin implements IRewindable {
 
     @Override
     public Stack<RewindEntityData> getMotions() {
-        return motions;
+        return ars_Nouveau$motions;
     }
 
     @Override
