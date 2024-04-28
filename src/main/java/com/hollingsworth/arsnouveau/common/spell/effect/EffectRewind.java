@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.event.timed.IRewindable;
 import com.hollingsworth.arsnouveau.common.event.timed.RewindEvent;
+import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketClientRewindEffect;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
@@ -71,7 +72,7 @@ public class EffectRewind extends AbstractEffect {
         if(entity.level.isClientSide && !(entity instanceof Player)){
             return false;
         }
-        if(!EffectRewind.INSTANCE.isEnabled()){
+        if(!EffectRewind.INSTANCE.isEnabled() || entity.getType().is(EntityTags.REWIND_BLACKLIST)){
             return false;
         }
         return !rewindable.isRewinding();
