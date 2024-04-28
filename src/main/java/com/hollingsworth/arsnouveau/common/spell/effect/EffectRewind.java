@@ -6,6 +6,8 @@ import com.hollingsworth.arsnouveau.common.event.timed.IRewindable;
 import com.hollingsworth.arsnouveau.common.event.timed.RewindEvent;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketClientRewindEffect;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,14 +17,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class EffectRewind extends AbstractEffect {
     public static EffectRewind INSTANCE = new EffectRewind();
 
     public EffectRewind() {
-        super("rewind", "Rewinds an entity back in time to its previous locations and health. Can revert blocks that were moved with spells back into solid blocks.");
+        super("rewind", "Rewind");
     }
 
     public EffectRewind(ResourceLocation tag, String description) {
@@ -38,7 +39,6 @@ public class EffectRewind extends AbstractEffect {
                 Networking.sendToNearby(world, player, new PacketClientRewindEffect(100, player));
             }
         }
-
     }
 
     @Override
@@ -63,12 +63,23 @@ public class EffectRewind extends AbstractEffect {
 
     @Override
     protected int getDefaultManaCost() {
-        return 0;
+        return 100;
+    }
+
+
+    @Override
+    public String getBookDescription() {
+        return "Rewinds an entity back in time to its previous locations and health. Can revert blocks that were moved with spells back into solid blocks.";
+    }
+
+    @Override
+    public SpellTier defaultTier() {
+        return SpellTier.THREE;
     }
 
     @Override
     protected @NotNull Set<AbstractAugment> getCompatibleAugments() {
-        return new HashSet<>();
+        return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
     }
 
 }
