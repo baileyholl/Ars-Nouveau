@@ -31,6 +31,6 @@ public class PotionEffectTagProvider extends IntrinsicHolderTagsProvider<MobEffe
         );
         //placeholder to not leave the tag empty
         this.tag(PotionEffectTags.DISPEL_DENY).add(ModPotions.SUMMONING_SICKNESS_EFFECT.get());
-        this.tag(PotionEffectTags.TO_SYNC);
+        this.tag(PotionEffectTags.TO_SYNC).add(ModPotions.SOGGY_EFFECT.get());
     }
 }
