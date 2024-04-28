@@ -17,20 +17,20 @@ import javax.annotation.Nullable;
 
 public class DelayedSpellEvent implements ITimedEvent {
     private int duration;
-    private final SpellContext context;
+    private final SpellResolver resolver;
     private final HitResult result;
     private final Level world;
 
     @Deprecated(forRemoval = true)
     public DelayedSpellEvent(int delay, Spell spell, HitResult result, Level world, @Nullable LivingEntity shooter, SpellContext context) {
-        this(delay, result, world, context);
+        this(delay, result, world, new SpellResolver(context));
     }
 
-    public DelayedSpellEvent(int delay, HitResult result, Level world, SpellContext context) {
+    public DelayedSpellEvent(int delay, HitResult result, Level world, SpellResolver resolver) {
         this.duration = delay;
         this.result = result;
         this.world = world;
-        this.context = context;
+        this.resolver = resolver;
     }
 
     @Override
@@ -39,8 +39,8 @@ public class DelayedSpellEvent implements ITimedEvent {
         if (duration <= 0 && serverSide) {
             resolveSpell();
         } else if (!serverSide && result != null) {
-            BlockPos hitVec = result instanceof EntityHitResult ? ((EntityHitResult) result).getEntity().blockPosition() : BlockPos.containing(result.getLocation());
-            ParticleUtil.spawnTouch((ClientLevel) world, hitVec, context.getColors());
+            BlockPos hitVec = result instanceof EntityHitResult entityHitResult ? entityHitResult.getEntity().blockPosition() : BlockPos.containing(result.getLocation());
+            ParticleUtil.spawnTouch((ClientLevel) world, hitVec, resolver.spellContext.getColors());
         }
     }
 
@@ -50,7 +50,6 @@ public class DelayedSpellEvent implements ITimedEvent {
         HitResult newResult = result;
         if (result instanceof EntityHitResult ehr && ehr.getEntity().isRemoved())
             newResult = new BlockHitResult(ehr.getLocation(), Direction.UP, ehr.getEntity().getOnPos(), true);
-        SpellResolver resolver = new SpellResolver(context);
         resolver.onResolveEffect(world, newResult);
     }
 
