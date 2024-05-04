@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.MageBlockTile;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.event.timed.IRewindable;
+import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.spell.rewind.BlockToEntityRewind;
 import com.hollingsworth.arsnouveau.common.spell.rewind.EntityToBlockRewind;
 import com.hollingsworth.arsnouveau.common.spell.rewind.RewindAttachment;
@@ -250,6 +251,11 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
                     fallable.onLand(this.level, blockpos, this.blockState, blockstate, new FallingBlockEntity(level, this.getX(), this.getY(), this.getZ(), this.blockState));
                 }else if(context != null){
                     RewindAttachment.get(context).addRewindEvent(level.getGameTime(), new EntityToBlockRewind(this, blockpos, this.blockState));
+                    if(!context.isCanceled()) {
+                        ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
+                                new Vec3(blockpos.getX(), blockpos.getY(), blockpos.getZ()), Direction.DOWN, blockpos, false
+                        ), level, getOwner(), context, resolver);
+                    }
                 }
 
                 if (this.blockData != null && this.blockState.hasBlockEntity()) {

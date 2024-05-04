@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.api.event.DelayedSpellEvent;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.event.timed.IRewindable;
@@ -38,11 +39,17 @@ public class EffectRewind extends AbstractEffect {
         super.onResolveEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
         int ticksToRewind = getRewindTicks(spellStats);
         Entity entity = rayTraceResult.getEntity();
-        if(entity instanceof IRewindable rewindable && !rewindable.isRewinding()){
+        if(!entity.getType().is(EntityTags.REWIND_BLACKLIST) && entity instanceof IRewindable rewindable && !rewindable.isRewinding()){
+            Spell newSpell = spellContext.getRemainingSpell();
+            SpellContext newContext = spellContext.clone().withSpell(newSpell);
+            spellContext.setCanceled(true);
             EventQueue.getServerInstance().addEvent(new RewindEvent(entity, world.getGameTime(), ticksToRewind, spellContext));
             if(rewindable instanceof Player player){
                 Networking.sendToNearby(world, player, new PacketClientRewindEffect(ticksToRewind, player));
             }
+
+            EventQueue.getServerInstance().addEvent(
+                    new DelayedSpellEvent(ticksToRewind, rayTraceResult, world, resolver));
         }
     }
 
@@ -50,7 +57,13 @@ public class EffectRewind extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         super.onResolveBlock(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
         int ticksToRewind = getRewindTicks(spellStats);
+        Spell newSpell = spellContext.getRemainingSpell();
+        SpellContext newContext = spellContext.clone().withSpell(newSpell);
+        spellContext.setCanceled(true);
         EventQueue.getServerInstance().addEvent(new RewindEvent(null, world.getGameTime(), ticksToRewind, spellContext));
+
+        EventQueue.getServerInstance().addEvent(
+                new DelayedSpellEvent(ticksToRewind, rayTraceResult, world, resolver));
     }
 
     public int getRewindTicks(SpellStats spellStats){
@@ -108,7 +121,7 @@ public class EffectRewind extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Rewinds an entity back in time to its previous locations and health. Can revert blocks that were moved with spells back into solid blocks.";
+        return "Rewinds an entity back in time to its previous locations and health. Can revert blocks that were moved with spells back into solid blocks. Glyphs that come after Rewind will be cast at the end of the rewind, as if they were Delayed.";
     }
 
     @Override
@@ -121,4 +134,8 @@ public class EffectRewind extends AbstractEffect {
         return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
     }
 
+    @Override
+    protected @NotNull Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.MANIPULATION);
+    }
 }
