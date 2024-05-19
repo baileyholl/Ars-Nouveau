@@ -93,17 +93,18 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         super.pickUpItem(itemEntity);
         if (getValidStorePos(itemEntity.getItem()) == null || isPickupDisabled())
             return;
-        starbuncle.setHeldStack(itemEntity.getItem());
+        Starbuncle starbuncleWithRoom = starbuncle.getStarbuncleWithSpace();
+        starbuncleWithRoom.setHeldStack(itemEntity.getItem());
         itemEntity.remove(Entity.RemovalReason.DISCARDED);
         this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ITEM_PICKUP, starbuncle.getSoundSource(), 1.0F, 1.0F);
         for (ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, starbuncle.getBoundingBox().inflate(3))) {
             if (itemEntity.getItem().getCount() >= itemEntity.getItem().getMaxStackSize())
                 break;
-            int maxTake = starbuncle.getHeldStack().getMaxStackSize() - starbuncle.getHeldStack().getCount();
-            if (ItemStack.isSameItemSameTags(i.getItem(), starbuncle.getHeldStack())) {
+            int maxTake = starbuncleWithRoom.getHeldStack().getMaxStackSize() - starbuncleWithRoom.getHeldStack().getCount();
+            if (ItemStack.isSameItemSameTags(i.getItem(), starbuncleWithRoom.getHeldStack())) {
                 int toTake = Math.min(i.getItem().getCount(), maxTake);
                 i.getItem().shrink(toTake);
-                starbuncle.getHeldStack().grow(toTake);
+                starbuncleWithRoom.getHeldStack().grow(toTake);
             }
         }
     }

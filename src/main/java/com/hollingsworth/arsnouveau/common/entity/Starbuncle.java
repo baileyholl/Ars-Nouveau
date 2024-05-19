@@ -89,6 +89,7 @@ import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegi
 public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, ITagSyncable, IVariantColorProvider<Starbuncle> {
 
 
+    @Deprecated
     public enum StarbuncleGoalState {
         FORAGING,
         HUNTING_ITEM,
@@ -298,7 +299,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         if (this.dead)
             return;
 
-        if (this.getHeldStack().isEmpty() && !level.isClientSide) {
+        if (!level.isClientSide && this.getStarbuncleWithSpace() != null) {
             for (ItemEntity itementity : this.level.getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(1))) {
                 if (itementity.isAlive() && !itementity.getItem().isEmpty() && !itementity.hasPickUpDelay()) {
                     this.pickUpItem(itementity);
@@ -379,7 +380,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
 
     @Override
     public void pickUpItem(ItemEntity itemEntity) {
-        if (!this.getHeldStack().isEmpty())
+        if (!this.getHeldStack().isEmpty() && this.getStarbuncleWithSpace() == null)
             return;
         if (!this.isTamed() && itemEntity.getItem().is(Tags.Items.NUGGETS_GOLD)) {
             setHeldStack(itemEntity.getItem().split(1));
@@ -521,6 +522,23 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
 
     public ItemStack getHeldStack() {
         return this.getMainHandItem();
+    }
+
+    /**
+     * @return self if held item is empty, or the first starbuncle passenger
+     */
+    public Starbuncle getStarbuncleWithSpace(){
+        if(this.getHeldStack().isEmpty()){
+            return this;
+        }
+        for(Entity e : this.getIndirectPassengers()){
+            if(!(e instanceof Starbuncle starbuncle))
+                continue;
+            if(starbuncle.getHeldStack().isEmpty()){
+                return starbuncle;
+            }
+        }
+        return null;
     }
 
     public ItemStack getCosmeticItem() {

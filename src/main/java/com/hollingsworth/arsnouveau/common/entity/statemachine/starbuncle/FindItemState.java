@@ -19,9 +19,12 @@ public class FindItemState extends StarbyState{
     List<ItemEntity> destList = new ArrayList<>();
     ItemEntity dest;
     int stuckTicks;
+    Starbuncle starbyWithSpace;
+
     public FindItemState(Starbuncle starbuncle, StarbyTransportBehavior behavior, List<ItemEntity> destList) {
         super(starbuncle, behavior);
         this.destList = destList;
+        starbyWithSpace = this.starbuncle.getStarbuncleWithSpace();
     }
 
     @Override
@@ -52,7 +55,9 @@ public class FindItemState extends StarbyState{
 
 
     public static List<ItemEntity> nearbyItems(Starbuncle starbuncle, StarbyTransportBehavior behavior) {
-        return starbuncle.level.getEntitiesOfClass(ItemEntity.class, starbuncle.getAABB(), itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && behavior.getValidStorePos(itemEntity.getItem()) != null);
+        return starbuncle.level.getEntitiesOfClass(ItemEntity.class, starbuncle.getAABB(), itemEntity -> !itemEntity.hasPickUpDelay()
+                && itemEntity.isAlive()
+                && behavior.getValidStorePos(itemEntity.getItem()) != null);
     }
 
     @Override
@@ -65,11 +70,23 @@ public class FindItemState extends StarbyState{
 
         if (behavior.isPickupDisabled())
             return new DecideStarbyActionState(starbuncle, behavior);
+        ItemStack itemstack = starbyWithSpace.getHeldStack();
+        if (!itemstack.isEmpty()) {
+            starbuncle.addGoalDebug(this, new DebugEvent("ItemPickup", "Received item, ending."));
+            starbuncle.getNavigation().stop();
+            Starbuncle nextAvailableStarby = starbuncle.getStarbuncleWithSpace();
+            List<ItemEntity> nearbyItems = FindItemState.nearbyItems(starbuncle, behavior);
+            if(nextAvailableStarby != null && !nearbyItems.isEmpty()){
+                System.out.println(this + " set next starby to " + nextAvailableStarby);
+                return new FindItemState(starbuncle, behavior, nearbyItems);
+            }
+            return new DecideStarbyActionState(starbuncle, behavior);
+        }
         if(ticksRunning > 20 * 15){
             starbuncle.addGoalDebug(this, new DebugEvent("TooLong", "Stopped finding item, time finding expired"));
             return new DecideStarbyActionState(starbuncle, behavior);
         }
-        if(itemStuck || !starbuncle.getHeldStack().isEmpty()){
+        if(itemStuck || this.starbyWithSpace == null){
             return new DecideStarbyActionState(starbuncle, behavior);
         }
         if (dest == null || dest.getItem().isEmpty() || dest.isRemoved()) {
@@ -87,11 +104,7 @@ public class FindItemState extends StarbyState{
             }
             return super.tick();
         }
-        ItemStack itemstack = starbuncle.getHeldStack();
-        if (!itemstack.isEmpty()) {
-            starbuncle.addGoalDebug(this, new DebugEvent("ItemPickup", "Received item, ending."));
-            return new DecideStarbyActionState(starbuncle, behavior);
-        }
+
         starbuncle.getNavigation().moveTo(dest, 1.4d);
         starbuncle.addGoalDebug(this, new DebugEvent("PathTo", "Pathing to " + dest));
         return super.tick();
