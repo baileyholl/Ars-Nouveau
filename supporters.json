@@ -23,7 +23,8 @@
   "3d8f61f1-7333-4c4f-b9e8-d76a3b453420", "888d2798-4fdf-4e70-89ed-1bb2ff47c6c1", "8b93ffcd-e3e8-41c7-aee9-458b03bd0b34",
   "1d1b87f0-5243-4b39-926f-f7490d28954a", "45e4cde5-5c3f-4997-8564-3ae5be9407e1", "d8a9a09f-d6da-495b-8bb8-7d56f9c5b949",
   "277d0321-7fe7-4ab0-b1bc-4b00ac627231", "8bbf2330-78d1-4ea7-945f-89b7a99298c2", "b4feb5db-e845-4bc1-b72e-b4de8b646288",
-  "0c6a5082-d327-41ec-8722-42d942f30f5a", "728ac916-4aac-439d-af1c-d68e6a51139b", "9c5e5766-0a1c-4563-a8c4-8184994a15a6"],
+  "0c6a5082-d327-41ec-8722-42d942f30f5a", "728ac916-4aac-439d-af1c-d68e6a51139b", "9c5e5766-0a1c-4563-a8c4-8184994a15a6",
+  "92d6215b-0730-44ce-a8b2-1baf4c2cd0d5"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -370,6 +371,11 @@
       "color": "purple",
       "adopter": "Floofi",
       "bio": "After having been bullied by her brothers and sisters for so long, she seeks a quiet life of peace. She only asks that you treat her well as she helps you with your adventure."
+    },{
+      "name": "Sprigly",
+      "adopter": "Parsley",
+      "bio": "Always loved to help in the mouse garden",
+      "color": "lime"
     }
   ]
 }
