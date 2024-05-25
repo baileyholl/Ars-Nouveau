@@ -42,6 +42,11 @@
       "title": "ars_nouveau.starbuncle_bed"
     },
     {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page8.starbuncle_charm",
+      "title": "ars_nouveau.starbuncle_stacking"
+    },
+    {
       "type": "patchouli:relations",
       "entries": [
         "ars_nouveau:automation/deny_scroll",
