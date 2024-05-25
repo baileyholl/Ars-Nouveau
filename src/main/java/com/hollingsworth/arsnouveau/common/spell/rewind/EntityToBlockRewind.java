@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.spell.rewind;
 
-import com.hollingsworth.arsnouveau.api.spell.CancelReason;
 import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
 import com.hollingsworth.arsnouveau.common.event.timed.IRewindable;
 import com.hollingsworth.arsnouveau.common.event.timed.RewindEvent;
@@ -33,15 +32,6 @@ public class EntityToBlockRewind implements IRewindCallback{
         // Resurrect the context here because of rewind shenanigans
         if(event.entity instanceof EnchantedFallingBlock enchantedFallingBlock){
             enchantedFallingBlock.context = event.context;
-        }
-        if(previousEntity.context.getCancelReason() == CancelReason.NEW_CONTEXT){
-//            previousEntity.context.setCanceled(false, null);
-//            if(previousEntity.context.isDelayed()){
-//                DelayedSpellEvent delayedSpellEvent = previousEntity.context.getDelayedSpellEvent();
-//                DelayedSpellEvent newDelayedSpellEvent = new DelayedSpellEvent(delayedSpellEvent.duration, delayedSpellEvent.result, delayedSpellEvent.world, previousEntity.resolver);
-//                EventQueue.getServerInstance().addEvent(newDelayedSpellEvent);
-//                previousEntity.context.delay(newDelayedSpellEvent);
-//            }
         }
         if(event.entity instanceof IRewindable rewindable) {
             rewindable.setRewinding(true);

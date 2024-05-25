@@ -34,7 +34,6 @@
     "perks.PerkLivingEntity",
     "redstone.RedstoneLevelMixin",
     "rewind.RewindEntityMixin",
-    "rewind.RewindMixin",
     "structure.StructureProcessorAccessor",
     "structure.StructureTemplateAccessor",
     "structure.StructureTemplateMixin"
