@@ -4,6 +4,10 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import com.hollingsworth.arsnouveau.common.entity.statemachine.IStateEvent;
+import com.hollingsworth.arsnouveau.common.entity.statemachine.SimpleStateMachine;
+import com.hollingsworth.arsnouveau.common.entity.statemachine.starbuncle.DecideStarbyActionState;
+import com.hollingsworth.arsnouveau.common.entity.statemachine.starbuncle.StarbyState;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
@@ -17,7 +21,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -41,17 +44,36 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
 
     public ItemStack itemScroll;
 
+    public SimpleStateMachine<StarbyState, IStateEvent> stateMachine;
+
+    public int berryBackoff;
+    public int findItemBackoff;
+    public int takeItemBackoff;
     public StarbyTransportBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
+        stateMachine = new SimpleStateMachine<>(new DecideStarbyActionState(starbuncle, this));
         if (!entity.isTamed())
             return;
 
         if (tag.contains("itemScroll"))
             this.itemScroll = ItemStack.of(tag.getCompound("itemScroll"));
-        goals.add(new WrappedGoal(1, new FindItem(starbuncle, this)));
-        goals.add(new WrappedGoal(2, new ForageManaBerries(starbuncle, this)));
-        goals.add(new WrappedGoal(3, new StoreItemGoal<>(starbuncle, this)));
-        goals.add(new WrappedGoal(3, new TakeItemGoal<>(starbuncle, this)));
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if(!level.isClientSide) {
+            if(berryBackoff > 0){
+                berryBackoff--;
+            }
+            if(findItemBackoff > 0){
+                findItemBackoff--;
+            }
+            if(takeItemBackoff > 0){
+                takeItemBackoff--;
+            }
+            stateMachine.tick();
+        }
     }
 
     @Override
@@ -71,17 +93,18 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         super.pickUpItem(itemEntity);
         if (getValidStorePos(itemEntity.getItem()) == null || isPickupDisabled())
             return;
-        starbuncle.setHeldStack(itemEntity.getItem());
+        Starbuncle starbuncleWithRoom = starbuncle.getStarbuncleWithSpace();
+        starbuncleWithRoom.setHeldStack(itemEntity.getItem());
         itemEntity.remove(Entity.RemovalReason.DISCARDED);
         this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ITEM_PICKUP, starbuncle.getSoundSource(), 1.0F, 1.0F);
         for (ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, starbuncle.getBoundingBox().inflate(3))) {
             if (itemEntity.getItem().getCount() >= itemEntity.getItem().getMaxStackSize())
                 break;
-            int maxTake = starbuncle.getHeldStack().getMaxStackSize() - starbuncle.getHeldStack().getCount();
-            if (ItemStack.isSameItemSameTags(i.getItem(), starbuncle.getHeldStack())) {
+            int maxTake = starbuncleWithRoom.getHeldStack().getMaxStackSize() - starbuncleWithRoom.getHeldStack().getCount();
+            if (ItemStack.isSameItemSameTags(i.getItem(), starbuncleWithRoom.getHeldStack())) {
                 int toTake = Math.min(i.getItem().getCount(), maxTake);
                 i.getItem().shrink(toTake);
-                starbuncle.getHeldStack().grow(toTake);
+                starbuncleWithRoom.getHeldStack().grow(toTake);
             }
         }
     }
@@ -93,7 +116,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         ItemScroll.SortPref foundPref = ItemScroll.SortPref.INVALID;
 
         for (BlockPos b : TO_LIST) {
-            ItemScroll.SortPref pref = isValidStorePos(b, stack);
+            ItemScroll.SortPref pref = sortPrefForStack(b, stack);
             // Pick our highest priority
             if (pref.ordinal() > foundPref.ordinal()) {
                 foundPref = pref;
@@ -106,7 +129,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         return returnPos;
     }
 
-    public ItemScroll.SortPref isValidStorePos(@Nullable BlockPos b, ItemStack stack) {
+    public ItemScroll.SortPref sortPrefForStack(@Nullable BlockPos b, ItemStack stack) {
         if (stack == null || stack.isEmpty() || b == null || !level.isLoaded(b))
             return ItemScroll.SortPref.INVALID;
         return canDepositItem(level.getBlockEntity(b), stack);

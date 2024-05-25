@@ -94,13 +94,14 @@ public class SourceBerryBush extends BushBlock implements BonemealableBlock {
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         int i = state.getValue(AGE);
         boolean flag = i == 3;
-        if (!flag && player.getItemInHand(handIn).getItem() == Items.BONE_MEAL) {
+        if (!flag && player.getItemInHand(handIn).is(Items.BONE_MEAL)) {
             return InteractionResult.PASS;
         } else if (i > 1) {
             int j = 1 + worldIn.random.nextInt(2);
             popResource(worldIn, pos, new ItemStack(BlockRegistry.SOURCEBERRY_BUSH, j + (flag ? 1 : 0)));
             worldIn.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.BLOCKS, 1.0F, 0.8F + worldIn.random.nextFloat() * 0.4F);
-            worldIn.setBlock(pos, state.setValue(AGE, 1), 2);
+            BlockState blockstate = state.setValue(AGE, 1);
+            worldIn.setBlock(pos, blockstate, 3);
             return InteractionResult.sidedSuccess(worldIn.isClientSide);
         } else {
             return super.use(state, worldIn, pos, player, handIn, hit);
