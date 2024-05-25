@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.items;
 import com.hollingsworth.arsnouveau.common.entity.debug.IDebuggerProvider;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -53,7 +54,10 @@ public class Debug extends ModItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player playerIn, InteractionHand handIn) {
-
+        if(!world.isClientSide){
+            var cave = new AdvancedCaveGenerator(world, ((ServerLevel) world).getSeed(), 0.5);
+            cave.generateCaveNetwork(playerIn.getBlockX(), playerIn.getBlockZ(), playerIn.getBlockY(), 500, 3);
+        }
         return InteractionResultHolder.success(playerIn.getItemInHand(handIn));
     }
 }
