@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items.curios;
 
+import com.hollingsworth.arsnouveau.api.event.DelayedSpellEvent;
+import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.item.ArsNouveauCurio;
 import com.hollingsworth.arsnouveau.api.item.ISpellModifierItem;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
@@ -32,13 +34,28 @@ public class ShapersFocus extends ArsNouveauCurio implements ISpellModifierItem 
     }
 
 
-    public static void tryPropagateEntitySpell(EnchantedFallingBlock fallingblockentity, Level level, Entity shooter, SpellContext spellContext, SpellResolver resolver) {
+    public static @Nullable SpellContext tryPropagateEntitySpell(EnchantedFallingBlock fallingblockentity, Level level, Entity shooter, SpellContext spellContext, SpellResolver resolver) {
         if (!resolver.hasFocus(ItemsRegistry.SHAPERS_FOCUS.get()))
-            return;
+            return null;
+        boolean wasCanceled = spellContext.isCanceled();
+        if(wasCanceled) {
+            return null;
+        }
         SpellContext context = spellContext.makeChildContext();
         spellContext.setCanceled(true);
+        fallingblockentity.context = context;
+        EntityHitResult hitResult = new EntityHitResult(fallingblockentity, fallingblockentity.position);
         SpellResolver newResolver = resolver.getNewResolver(context);
-        newResolver.onResolveEffect(level, new EntityHitResult(fallingblockentity, fallingblockentity.position));
+        if(spellContext.isDelayed()){
+            var currenDelay = spellContext.getDelayedSpellEvent();
+            newResolver.hitResult = hitResult;
+            DelayedSpellEvent delayedSpellEvent = new DelayedSpellEvent(currenDelay.duration, hitResult, level, newResolver);
+            EventQueue.getServerInstance().addEvent(delayedSpellEvent);
+            context.delay(delayedSpellEvent);
+        }else {
+            newResolver.onResolveEffect(level, new EntityHitResult(fallingblockentity, fallingblockentity.position));
+        }
+        return context;
     }
 
     @Deprecated(forRemoval = true)
@@ -46,13 +63,30 @@ public class ShapersFocus extends ArsNouveauCurio implements ISpellModifierItem 
         tryPropagateBlockSpell(blockHitResult, level, (Entity) shooter, spellContext, resolver);
     }
 
-    public static void tryPropagateBlockSpell(BlockHitResult blockHitResult, Level level, Entity shooter, SpellContext spellContext, SpellResolver resolver) {
+    /**
+     * @return the new context
+     */
+    public static @Nullable SpellContext tryPropagateBlockSpell(BlockHitResult blockHitResult, Level level, Entity shooter, SpellContext spellContext, SpellResolver resolver) {
         if (!resolver.hasFocus(ItemsRegistry.SHAPERS_FOCUS.get()))
-            return;
+            return null;
+        boolean wasCanceled = spellContext.isCanceled();
+        if(wasCanceled){
+            return null;
+        }
         SpellContext context = spellContext.makeChildContext();
         spellContext.setCanceled(true);
         SpellResolver newResolver = resolver.getNewResolver(context);
-        newResolver.onResolveEffect(level, blockHitResult);
+        if(spellContext.isDelayed()){
+            var currenDelay = spellContext.getDelayedSpellEvent();
+            newResolver.hitResult = blockHitResult;
+            DelayedSpellEvent delayedSpellEvent = new DelayedSpellEvent(currenDelay.duration, blockHitResult, level, newResolver);
+            EventQueue.getServerInstance().addEvent(delayedSpellEvent);
+            context.delay(delayedSpellEvent);
+        }else {
+            newResolver.onResolveEffect(level, blockHitResult);
+        }
+
+        return context;
     }
 
     @Override

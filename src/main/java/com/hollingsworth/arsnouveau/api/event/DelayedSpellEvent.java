@@ -14,10 +14,10 @@ import net.minecraft.world.phys.HitResult;
 import javax.annotation.Nullable;
 
 public class DelayedSpellEvent implements ITimedEvent {
-    private int duration;
-    private final SpellResolver resolver;
-    private final HitResult result;
-    private final Level world;
+    public int duration;
+    public final SpellResolver resolver;
+    public final HitResult result;
+    public final Level world;
 
     @Deprecated(forRemoval = true)
     public DelayedSpellEvent(int delay, Spell spell, HitResult result, Level world, @Nullable LivingEntity shooter, SpellContext resolver) {
@@ -48,7 +48,6 @@ public class DelayedSpellEvent implements ITimedEvent {
         if (result instanceof EntityHitResult ehr && ehr.getEntity().isRemoved()) {
             return;
         }
-        this.resolver.spellContext.setCanceled(false, null);
         resolver.resume(world);
     }
 

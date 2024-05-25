@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.event.DelayedSpellEvent;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -41,6 +42,8 @@ public class SpellContext implements Cloneable {
     public CompoundTag tag = new CompoundTag();
     private IWrappedCaster wrappedCaster;
     private SpellContext previousContext;
+    private DelayedSpellEvent delayedSpellEvent;
+
     public Map<ResourceLocation, IContextAttachment> attachments = new HashMap<>();
 
     public SpellContext(Level level,@NotNull Spell spell, @Nullable LivingEntity caster, IWrappedCaster wrappedCaster) {
@@ -125,7 +128,7 @@ public class SpellContext implements Cloneable {
     }
 
     public boolean hasNextPart() {
-        return spell.isValid() && !isCanceled() && currentIndex < spell.recipe.size();
+        return spell.isValid() && !isCanceled() && !this.isDelayed() && currentIndex < spell.recipe.size();
     }
 
     public SpellContext resetCastCounter() {
@@ -217,6 +220,18 @@ public class SpellContext implements Cloneable {
     public void stop(){
         this.isCanceled = true;
         cancelReason = CancelReason.TERMINATED;
+    }
+
+    public void delay(DelayedSpellEvent spellEvent){
+        this.delayedSpellEvent = spellEvent;
+    }
+
+    public DelayedSpellEvent getDelayedSpellEvent(){
+        return delayedSpellEvent;
+    }
+
+    public boolean isDelayed(){
+        return delayedSpellEvent != null && delayedSpellEvent.duration > 0;
     }
 
     public @NotNull Spell getSpell() {

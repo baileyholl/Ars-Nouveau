@@ -40,16 +40,14 @@ public class EffectRewind extends AbstractEffect {
         int ticksToRewind = getRewindTicks(spellStats);
         Entity entity = rayTraceResult.getEntity();
         if(!entity.getType().is(EntityTags.REWIND_BLACKLIST) && entity instanceof IRewindable rewindable && !rewindable.isRewinding()){
-            Spell newSpell = spellContext.getRemainingSpell();
-            SpellContext newContext = spellContext.clone().withSpell(newSpell);
-            spellContext.setCanceled(true);
+            var delayEvent = new DelayedSpellEvent(ticksToRewind, rayTraceResult, world, resolver);
+            spellContext.delay(delayEvent);
             EventQueue.getServerInstance().addEvent(new RewindEvent(entity, world.getGameTime(), ticksToRewind, spellContext));
             if(rewindable instanceof Player player){
                 Networking.sendToNearby(world, player, new PacketClientRewindEffect(ticksToRewind, player));
             }
 
-            EventQueue.getServerInstance().addEvent(
-                    new DelayedSpellEvent(ticksToRewind, rayTraceResult, world, resolver));
+            EventQueue.getServerInstance().addEvent(delayEvent);
         }
     }
 
@@ -57,13 +55,11 @@ public class EffectRewind extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         super.onResolveBlock(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
         int ticksToRewind = getRewindTicks(spellStats);
-        Spell newSpell = spellContext.getRemainingSpell();
-        SpellContext newContext = spellContext.clone().withSpell(newSpell);
-        spellContext.setCanceled(true);
+        var delayEvent = new DelayedSpellEvent(ticksToRewind, rayTraceResult, world, resolver);
+        spellContext.delay(delayEvent);
         EventQueue.getServerInstance().addEvent(new RewindEvent(null, world.getGameTime(), ticksToRewind, spellContext));
 
-        EventQueue.getServerInstance().addEvent(
-                new DelayedSpellEvent(ticksToRewind, rayTraceResult, world, resolver));
+        EventQueue.getServerInstance().addEvent(delayEvent);
     }
 
     public int getRewindTicks(SpellStats spellStats){

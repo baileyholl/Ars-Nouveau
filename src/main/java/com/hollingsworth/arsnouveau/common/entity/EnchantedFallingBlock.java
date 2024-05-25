@@ -251,11 +251,9 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
                     fallable.onLand(this.level, blockpos, this.blockState, blockstate, new FallingBlockEntity(level, this.getX(), this.getY(), this.getZ(), this.blockState));
                 }else if(context != null){
                     RewindAttachment.get(context).addRewindEvent(level.getGameTime(), new EntityToBlockRewind(this, blockpos, this.blockState));
-                    if(!context.isCanceled()) {
-                        ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
-                                new Vec3(blockpos.getX(), blockpos.getY(), blockpos.getZ()), Direction.DOWN, blockpos, false
-                        ), level, getOwner(), context, resolver);
-                    }
+                    ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
+                            new Vec3(blockpos.getX(), blockpos.getY(), blockpos.getZ()), Direction.DOWN, blockpos, false
+                    ), level, getOwner(), context, resolver);
                 }
 
                 if (this.blockData != null && this.blockState.hasBlockEntity()) {
