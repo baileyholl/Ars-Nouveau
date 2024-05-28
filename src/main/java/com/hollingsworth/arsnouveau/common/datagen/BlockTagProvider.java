@@ -39,6 +39,11 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     public static TagKey<Block> RELOCATION_NOT_SUPPORTED = BlockTags.create(new ResourceLocation("forge", "relocation_not_supported"));
     public static TagKey<Block> OCCLUDES_SPELL_SENSOR = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "occludes_spell_sensor"));
     public static TagKey<Block> INTERACT_BLACKLIST = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "interact_blacklist"));
+    public static TagKey<Block> CASCADING_LOGS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "cascading_logs"));
+    public static TagKey<Block> FLOURISHING_LOGS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "flourishing_logs"));
+    public static TagKey<Block> VEXING_LOGS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "vexing_logs"));
+    public static TagKey<Block> BLAZING_LOGS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "blazing_logs"));
+
     public BlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
         super(output, Registries.BLOCK, future, block -> block.builtInRegistryHolder().key(), ArsNouveau.MODID, helper);
     }
@@ -284,6 +289,11 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(BREAK_WITH_PICKAXE).add(Blocks.AMETHYST_CLUSTER);
         this.tag(BlockTags.PORTALS).add(BlockRegistry.PORTAL_BLOCK.get());
         this.tag(AUTOPULL_DISABLED).add(BlockRegistry.SCRIBES_BLOCK.get(), BlockRegistry.ALTERATION_TABLE.get());
+
+        this.tag(BLAZING_LOGS).add(BlockRegistry.BLAZING_LOG.get(), BlockRegistry.BLAZING_WOOD.get(), BlockRegistry.STRIPPED_AWLOG_RED.get(), BlockRegistry.STRIPPED_AWWOOD_RED.get());
+        this.tag(CASCADING_LOGS).add(BlockRegistry.CASCADING_LOG.get(), BlockRegistry.CASCADING_WOOD.get(), BlockRegistry.STRIPPED_AWLOG_BLUE.get(), BlockRegistry.STRIPPED_AWWOOD_BLUE.get());
+        this.tag(FLOURISHING_LOGS).add(BlockRegistry.FLOURISHING_LOG.get(), BlockRegistry.FLOURISHING_WOOD.get(), BlockRegistry.STRIPPED_AWLOG_GREEN.get(), BlockRegistry.STRIPPED_AWWOOD_GREEN.get());
+        this.tag(VEXING_LOGS).add(BlockRegistry.VEXING_LOG.get(), BlockRegistry.VEXING_WOOD.get(), BlockRegistry.STRIPPED_AWLOG_PURPLE.get(), BlockRegistry.STRIPPED_AWWOOD_PURPLE.get());
     }
 
     public String getName() {
