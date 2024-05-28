@@ -43,6 +43,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     public static TagKey<Block> FLOURISHING_LOGS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "flourishing_logs"));
     public static TagKey<Block> VEXING_LOGS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "vexing_logs"));
     public static TagKey<Block> BLAZING_LOGS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "blazing_logs"));
+    public static TagKey<Block> DOWSING_ROD = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "dowsing_rod"));
 
     public BlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
         super(output, Registries.BLOCK, future, block -> block.builtInRegistryHolder().key(), ArsNouveau.MODID, helper);
@@ -294,6 +295,8 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(CASCADING_LOGS).add(BlockRegistry.CASCADING_LOG.get(), BlockRegistry.CASCADING_WOOD.get(), BlockRegistry.STRIPPED_AWLOG_BLUE.get(), BlockRegistry.STRIPPED_AWWOOD_BLUE.get());
         this.tag(FLOURISHING_LOGS).add(BlockRegistry.FLOURISHING_LOG.get(), BlockRegistry.FLOURISHING_WOOD.get(), BlockRegistry.STRIPPED_AWLOG_GREEN.get(), BlockRegistry.STRIPPED_AWWOOD_GREEN.get());
         this.tag(VEXING_LOGS).add(BlockRegistry.VEXING_LOG.get(), BlockRegistry.VEXING_WOOD.get(), BlockRegistry.STRIPPED_AWLOG_PURPLE.get(), BlockRegistry.STRIPPED_AWWOOD_PURPLE.get());
+
+        this.tag(DOWSING_ROD).addTag(BUDDING_BLOCKS);
     }
 
     public String getName() {

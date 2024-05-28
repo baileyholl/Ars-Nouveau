@@ -30,6 +30,8 @@ import static com.hollingsworth.arsnouveau.common.block.SconceBlock.LIGHT_LEVEL;
 
 public class ArchfruitPod extends CocoaBlock implements ILightable {
     public TagKey<Block> surviveTag;
+
+    @Deprecated(since = "4.12.0", forRemoval = true)
     public Supplier<Block> surviveBlock;
     protected static final VoxelShape[] EAST_AABB = new VoxelShape[]{Block.box(11.0D, 7.0D, 6.0D, 15.0D, 11.0D, 10.0D),
             Block.box(9.0D, 5.0D, 5.0D, 15.0D, 11.0D, 11.0D),
@@ -46,7 +48,7 @@ public class ArchfruitPod extends CocoaBlock implements ILightable {
             Block.box(1.0D, 3.0D, 4.0D, 9.0D, 11.0D, 12.0D)};
 
 
-    @Deprecated(since = "4.12.0")
+    @Deprecated(since = "4.12.0", forRemoval = true)
     public ArchfruitPod(Supplier<Block> surviveBlock) {
        this(BlockBehaviour.Properties.of().randomTicks().strength(0.2F, 3.0F).sound(SoundType.WOOD).noOcclusion().lightLevel((b) -> b.getValue(LIGHT_LEVEL)).pushReaction(PushReaction.DESTROY).mapColor(MapColor.PLANT));
        this.surviveBlock = surviveBlock;
