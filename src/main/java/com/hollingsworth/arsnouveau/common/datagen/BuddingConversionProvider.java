@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.recipe.BuddingConversionRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.SummonRitualRecipe;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
@@ -9,36 +10,35 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Blocks;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SummonRitualProvider extends SimpleDataProvider{
+public class BuddingConversionProvider extends SimpleDataProvider{
 
-    public List<SummonRitualRecipe> recipes = new ArrayList<>();
+    public List<BuddingConversionRecipe> recipes = new ArrayList<>();
 
-    public SummonRitualProvider(DataGenerator generatorIn) {
+    public BuddingConversionProvider(DataGenerator generatorIn) {
         super(generatorIn);
     }
 
     @Override
     public void collectJsons(CachedOutput pOutput) {
         addEntries();
-        for (SummonRitualRecipe recipe : recipes) {
+        for (BuddingConversionRecipe recipe : recipes) {
             Path path = getRecipePath(output, recipe.getId().getPath());
             saveStable(pOutput, recipe.asRecipe(), path);
         }
     }
 
     protected void addEntries() {
-         ArrayList<SummonRitualRecipe.WeightedMobType> bats = new ArrayList<>();
-         bats.add(new SummonRitualRecipe.WeightedMobType(EntityType.getKey(EntityType.BAT)));
-         recipes.add(new SummonRitualRecipe(new ResourceLocation(ArsNouveau.MODID, "bats"), Ingredient.of(Items.AMETHYST_SHARD), SummonRitualRecipe.MobSource.MOB_LIST, 5, bats));
+        recipes.add(new BuddingConversionRecipe(new ResourceLocation(ArsNouveau.MODID, "budding_amethyst"), Blocks.AMETHYST_BLOCK, Blocks.BUDDING_AMETHYST));
     }
 
     protected static Path getRecipePath(Path path, String id) {
-        return path.resolve("data/ars_nouveau/recipes/summon_ritual/" + id + ".json");
+        return path.resolve("data/ars_nouveau/recipes/budding_conversion/" + id + ".json");
     }
 
     /**
@@ -46,6 +46,6 @@ public class SummonRitualProvider extends SimpleDataProvider{
      */
     @Override
     public String getName() {
-        return "Summon Ritual Datagen";
+        return "Budding Conversion Datagen";
     }
 }
