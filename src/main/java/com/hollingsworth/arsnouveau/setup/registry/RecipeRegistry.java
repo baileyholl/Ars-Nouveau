@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.setup.registry;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.*;
 import com.hollingsworth.arsnouveau.api.event.ChimeraSummonEvent;
 import com.hollingsworth.arsnouveau.api.recipe.BuddingConversionRecipe;
+import com.hollingsworth.arsnouveau.api.recipe.DispelEntityRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.SummonRitualRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.*;
 import com.hollingsworth.arsnouveau.common.tomes.CasterTomeData;
@@ -35,6 +36,7 @@ public class RecipeRegistry {
     public static final String TOME_DATAPACK = "caster_tome";
     public static final String SUMMON_RITUAL_DATAPACK = "summon_ritual";
     public static final String BUDDING_CONVERSION_RECIPE_ID = "budding_conversion";
+    public static final String DISPEL_ENTITY_RECIPE_ID = "dispel_entity";
 
     public static final RegistryObject<RecipeType<EnchantingApparatusRecipe>> APPARATUS_TYPE = RECIPE_TYPES.register(ENCHANTING_APPARATUS_RECIPE_ID, () -> new ModRecipeType<>());
     public static final RegistryObject<RecipeSerializer<EnchantingApparatusRecipe>> APPARATUS_SERIALIZER = RECIPE_SERIALIZERS.register(ENCHANTING_APPARATUS_RECIPE_ID, () -> new EnchantingApparatusRecipe.Serializer());
@@ -80,7 +82,8 @@ public class RecipeRegistry {
     public static final RegistryObject<RecipeSerializer<SummonRitualRecipe>> SUMMON_RITUAL_SERIALIZER = RECIPE_SERIALIZERS.register(SUMMON_RITUAL_DATAPACK, () -> new SummonRitualRecipe.Serializer());
     public static final RegistryObject<RecipeType<BuddingConversionRecipe>> BUDDING_CONVERSION_TYPE = RECIPE_TYPES.register(BUDDING_CONVERSION_RECIPE_ID, () -> new ModRecipeType<>());
     public static final RegistryObject<RecipeSerializer<BuddingConversionRecipe>> BUDDING_CONVERSION_SERIALIZER = RECIPE_SERIALIZERS.register(BUDDING_CONVERSION_RECIPE_ID, () -> new BuddingConversionRecipe.Serializer());
-
+    public static final RegistryObject<RecipeType<DispelEntityRecipe>> DISPEL_ENTITY_TYPE = RECIPE_TYPES.register(DISPEL_ENTITY_RECIPE_ID, () -> new ModRecipeType<>());
+    public static final RegistryObject<RecipeSerializer<DispelEntityRecipe>> DISPEL_ENTITY_SERIALIZER = RECIPE_SERIALIZERS.register(DISPEL_ENTITY_RECIPE_ID, () -> new DispelEntityRecipe.Serializer());
 
     private static class ModRecipeType<T extends Recipe<?>> implements RecipeType<T> {
         @Override

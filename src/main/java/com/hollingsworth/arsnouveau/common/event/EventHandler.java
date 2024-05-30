@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
+import com.hollingsworth.arsnouveau.api.recipe.DispelEntityRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.MultiRecipeWrapper;
 import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
@@ -37,10 +38,7 @@ import com.hollingsworth.arsnouveau.common.ritual.RitualGravity;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectWololo;
 import com.hollingsworth.arsnouveau.setup.config.Config;
-import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
-import com.hollingsworth.arsnouveau.setup.registry.VillagerRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.*;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.nbt.CompoundTag;
@@ -318,16 +316,31 @@ public class EventHandler {
         }
     }
 
+    private static void replaceEntityWithItem(ServerLevel level, Entity entity, ItemStack item) {
+        entity.remove(Entity.RemovalReason.KILLED);
+        ParticleUtil.spawnPoof(level, entity.blockPosition());
+        level.addFreshEntity(new ItemEntity(level, entity.getX(), entity.getY(), entity.getZ(), item));
+    }
+
     @SubscribeEvent
     public static void dispelEvent(DispelEvent event) {
-        if (event.rayTraceResult instanceof EntityHitResult hit && hit.getEntity() instanceof Witch entity) {
-            if (entity.getHealth() <= entity.getMaxHealth() / 2) {
-                entity.remove(Entity.RemovalReason.KILLED);
-                ParticleUtil.spawnPoof((ServerLevel) event.world, entity.blockPosition());
-                event.world.addFreshEntity(new ItemEntity(event.world, entity.getX(), entity.getY(), entity.getZ(), new ItemStack(ItemsRegistry.WIXIE_SHARD)));
+        if (event.rayTraceResult instanceof EntityHitResult hit && event.world instanceof ServerLevel level) {
+            Entity entity = hit.getEntity();
+            if (!entity.isAlive()) return;
+            // TODO: Replace with EntitySubPredicate when it becomes a registry in 1.21
+            if (entity instanceof Witch witch) {
+                if (witch.getHealth() <= witch.getMaxHealth() / 2) {
+                    replaceEntityWithItem(level, witch, new ItemStack(ItemsRegistry.WIXIE_SHARD));
+                    return;
+                }
+            }
+            for (DispelEntityRecipe recipe : level.getRecipeManager().getAllRecipesFor(RecipeRegistry.DISPEL_ENTITY_TYPE.get())) {
+                if (recipe.matches(entity)) {
+                    replaceEntityWithItem(level, entity, recipe.result().copy());
+                    return;
+                }
             }
         }
-
     }
 
     @SubscribeEvent
@@ -353,10 +366,11 @@ public class EventHandler {
 
             level1.add((trader, rand) -> itemToEmer(BlockRegistry.SOURCEBERRY_BUSH, 16, 16, 2));
             level1.add((trader, rand) -> itemToEmer(ItemsRegistry.MAGE_FIBER, 16, 16, 2));
-            level1.add((trader, rand) -> itemToEmer(BlockRegistry.BOMBEGRANTE_POD, 6, 16, 2));
-            level1.add((trader, rand) -> itemToEmer(BlockRegistry.MENDOSTEEN_POD, 6, 16, 2));
-            level1.add((trader, rand) -> itemToEmer(BlockRegistry.FROSTAYA_POD, 6, 16, 2));
-            level1.add((trader, rand) -> itemToEmer(BlockRegistry.BASTION_POD, 6, 16, 2));
+
+            for (ItemStack fruit : Ingredient.of(ItemTagProvider.SHADY_WIZARD_FRUITS).getItems()) {
+                level1.add((trader, rand) -> itemToEmer(fruit.getItem(), 6, 16, 2));
+            }
+
             level1.add((trader, rand) -> itemToEmer(Items.AMETHYST_SHARD, 32, 16, 2));
 
             level1.add((trader, rand) -> emerToItem(ItemsRegistry.SOURCE_BERRY_ROLL, 4, 16, 2));

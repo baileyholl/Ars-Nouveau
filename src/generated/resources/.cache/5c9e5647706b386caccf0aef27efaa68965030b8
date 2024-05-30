@@ -1,10 +1,11 @@
-// 1.20.1	2024-05-30T17:40:59.457572744	Tags for minecraft:item mod id ars_nouveau
+// 1.20.1	2024-05-30T20:24:51.579642115	Tags for minecraft:item mod id ars_nouveau
 bde6ca31173d1f22d5f6fe355dc90c9faa35b239 data/ars_nouveau/tags/items/golem/shard.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/items/interact_jar_blacklist.json
 a0800fbffa0e00aecb2e86a1e991d42904427191 data/ars_nouveau/tags/items/magic_food.json
 1781e2e03328482696e713943d129953a77de05c data/ars_nouveau/tags/items/magic_shards.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/items/ritual_loot_blacklist.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/items/ritual_trade_blacklist.json
+2bea9b95ffd91ffd3ad204aab2644fae06731943 data/ars_nouveau/tags/items/shady_wizard_fruits.json
 f5e3f6895ab28e98f84db162bb5a7ec0d8484aae data/ars_nouveau/tags/items/summon_bed.json
 69048d53b29588f52e6e47c61ac0b01697fdad03 data/ars_nouveau/tags/items/whirlisprig/denied_drop.json
 efd77219e54deb73b590435b014edcbb9c0f5ee1 data/ars_nouveau/tags/items/wilden_drop.json

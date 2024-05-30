@@ -42,6 +42,7 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new CasterTomeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new SummonRitualProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new BuddingConversionProvider(event.getGenerator()));
+        event.getGenerator().addProvider(event.includeServer(), new DispelEntityProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new StructureTagProvider(output, provider, fileHelper));
         event.getGenerator().addProvider(event.includeClient(), new AtlasProvider(output, fileHelper));
         event.getGenerator().addProvider(event.includeServer(), new DamageTypesProvider(output, provider));
