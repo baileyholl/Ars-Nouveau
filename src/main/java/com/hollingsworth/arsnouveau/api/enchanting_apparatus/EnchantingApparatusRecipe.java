@@ -120,7 +120,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
     @Override
     public String toString() {
         return "EnchantingApparatusRecipe{" +
-                "catalyst=" + reagent +
+                "augment=" + reagent +
                 ", result=" + result +
                 ", pedestalItems=" + pedestalItems +
                 '}';

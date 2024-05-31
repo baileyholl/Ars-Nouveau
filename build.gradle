@@ -21,6 +21,12 @@ base {
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 java.withSourcesJar()
 
+minecraft {
+    accessTransformers {
+        file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
+    }
+}
+
 subsystems {
     parchment {
         minecraftVersion = project.minecraft_version

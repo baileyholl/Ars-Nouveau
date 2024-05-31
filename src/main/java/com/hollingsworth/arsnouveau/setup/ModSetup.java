@@ -4,11 +4,8 @@ import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
 import com.hollingsworth.arsnouveau.setup.registry.*;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
 import net.minecraftforge.registries.*;
 import net.neoforged.bus.api.IEventBus;
@@ -22,8 +19,6 @@ import net.neoforged.neoforge.registries.RegistryObject;
 import top.theillusivec4.curios.Curios;
 import top.theillusivec4.curios.api.SlotTypeMessage;
 import top.theillusivec4.curios.api.SlotTypePreset;
-
-import java.util.Objects;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
