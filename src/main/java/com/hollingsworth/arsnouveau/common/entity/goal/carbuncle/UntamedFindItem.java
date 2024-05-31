@@ -6,8 +6,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.pathfinder.Path;
-import net.minecraftforge.common.Tags;
-
+import net.neoforged.neoforge.common.Tags;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;

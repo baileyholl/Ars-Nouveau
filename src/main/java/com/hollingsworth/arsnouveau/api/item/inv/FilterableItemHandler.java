@@ -1,10 +1,10 @@
 package com.hollingsworth.arsnouveau.api.item.inv;
 
+import InteractResult;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
-
+import net.neoforged.neoforge.items.IItemHandler;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;

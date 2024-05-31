@@ -22,8 +22,8 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.common.ForgeHooks;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.common.CommonHooks;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -58,7 +58,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
                     .and(i -> !(i.getItem() instanceof SpellArrow) || (i.getItem() instanceof SpellArrow && canPlayerCastSpell(shootable, playerEntity)));
             ItemStack itemstack = ProjectileWeaponItem.getHeldProjectile(playerEntity, predicate);
             if (!itemstack.isEmpty()) {
-                return ForgeHooks.getProjectile(playerEntity, shootable, itemstack);
+                return CommonHooks.getProjectile(playerEntity, shootable, itemstack);
             } else {
                 predicate = projectileWeaponItem.getAllSupportedProjectiles().and(i ->
                         !(i.getItem() instanceof SpellArrow) ||
@@ -68,11 +68,11 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
                 for (int i = 0; i < playerEntity.getInventory().getContainerSize(); ++i) {
                     ItemStack itemstack1 = playerEntity.inventory.getItem(i);
                     if (predicate.test(itemstack1)) {
-                        return ForgeHooks.getProjectile(playerEntity, shootable, itemstack1);
+                        return CommonHooks.getProjectile(playerEntity, shootable, itemstack1);
                     }
                 }
 
-                return ForgeHooks.getProjectile(playerEntity, shootable, playerEntity.abilities.instabuild ? new ItemStack(Items.ARROW) : ItemStack.EMPTY);
+                return CommonHooks.getProjectile(playerEntity, shootable, playerEntity.abilities.instabuild ? new ItemStack(Items.ARROW) : ItemStack.EMPTY);
             }
         }
     }
@@ -82,7 +82,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
         ISpellCaster caster = getSpellCaster(playerIn.getItemInHand(handIn));
         boolean hasAmmo = !findAmmo(playerIn, itemstack).isEmpty();
 
-        InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, worldIn, playerIn, handIn, hasAmmo);
+        InteractionResultHolder<ItemStack> ret = net.neoforged.neoforge.event.EventHooks.onArrowNock(itemstack, worldIn, playerIn, handIn, hasAmmo);
         if (ret != null) return ret;
 
         if (hasAmmo || (caster.getSpell().isValid() && new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerIn, new PlayerCaster(playerIn), itemstack)).withSilent(true).canCast(playerIn))) {
@@ -116,7 +116,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
         ItemStack arrowStack = findAmmo(playerentity, bowStack);
 
         int useTime = this.getUseDuration(bowStack) - timeLeft;
-        useTime = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(bowStack, worldIn, playerentity, useTime, !arrowStack.isEmpty() || isInfinity);
+        useTime = net.neoforged.neoforge.event.EventHooks.onArrowLoose(bowStack, worldIn, playerentity, useTime, !arrowStack.isEmpty() || isInfinity);
         if (useTime < 0) return;
         boolean canFire = false;
         if (!arrowStack.isEmpty() || isInfinity) {

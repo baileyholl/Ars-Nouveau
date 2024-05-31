@@ -19,7 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -53,7 +53,7 @@ public interface IDamageEffect {
             totalDamage += randomRolls(stats, server);
 
         SpellDamageEvent.Pre preDamage = new SpellDamageEvent.Pre(source, shooter, entity, totalDamage, spellContext);
-        MinecraftForge.EVENT_BUS.post(preDamage);
+        NeoForge.EVENT_BUS.post(preDamage);
 
         source = preDamage.damageSource;
         totalDamage = preDamage.damage;
@@ -67,7 +67,7 @@ public interface IDamageEffect {
         shooter.setLastHurtMob(entity);
 
         SpellDamageEvent.Post postDamage = new SpellDamageEvent.Post(source, shooter, entity, totalDamage, spellContext);
-        MinecraftForge.EVENT_BUS.post(postDamage);
+        NeoForge.EVENT_BUS.post(postDamage);
 
         if (entity instanceof
                     LivingEntity mob && mob.getHealth() <= 0 && !mob.isRemoved() && stats.hasBuff(AugmentFortune.INSTANCE)) {

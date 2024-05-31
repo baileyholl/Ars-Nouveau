@@ -21,15 +21,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.UsernameCache;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.util.FakePlayerFactory;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.UsernameCache;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +87,7 @@ public class BlockUtil {
         if (!(world instanceof ServerLevel))
             return false;
         Player playerEntity = caster instanceof Player ? (Player) caster : ANFakePlayer.getPlayer((ServerLevel) world);
-        if (MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), playerEntity)))
+        if (NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), playerEntity)))
             return false;
         world.getBlockState(pos).getBlock().playerWillDestroy(world, pos, world.getBlockState(pos), playerEntity);
         return world.destroyBlock(pos, dropBlock);
@@ -97,7 +96,7 @@ public class BlockUtil {
 
     public static boolean destroyRespectsClaim(LivingEntity caster, Level world, BlockPos pos) {
         Player playerEntity = caster instanceof Player ? (Player) caster : ANFakePlayer.getPlayer((ServerLevel) world);
-        return !MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), playerEntity));
+        return !NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), playerEntity));
     }
 
     public static void safelyUpdateState(Level world, BlockPos pos, BlockState state) {
@@ -118,7 +117,7 @@ public class BlockUtil {
             return false;
 
         Player playerEntity = caster instanceof Player ? (Player) caster : ANFakePlayer.getPlayer((ServerLevel) world);
-        if (MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), playerEntity)))
+        if (NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), playerEntity)))
             return false;
 
         return destroyBlockWithoutSound(world, pos, dropBlock);
@@ -150,7 +149,7 @@ public class BlockUtil {
             BlockEntity tileEntity = world.getBlockEntity(pos.relative(d));
             if (tileEntity == null)
                 continue;
-            tileEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(iInventories::add);
+            tileEntity.getCapability(Capabilities.ITEM_HANDLER).ifPresent(iInventories::add);
         }
 
         return iInventories;
@@ -331,7 +330,7 @@ public class BlockUtil {
         }
 
         GameType type = player.getAbilities().instabuild ? GameType.CREATIVE : GameType.SURVIVAL;
-        int exp = net.minecraftforge.common.ForgeHooks.onBlockBreakEvent(world, type, player, pos);
+        int exp = net.neoforged.neoforge.common.CommonHooks.onBlockBreakEvent(world, type, player, pos);
         if (exp == -1) {
             return false;
         } else {
@@ -353,7 +352,7 @@ public class BlockUtil {
                     boolean canHarvest = blockstate.canHarvestBlock(world, pos, player) || bypassToolCheck;
                     mainhand.mineBlock(world, blockstate, pos, player);
                     if (mainhand.isEmpty() && !copyMain.isEmpty()){
-                        net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(player, copyMain, InteractionHand.MAIN_HAND);
+                        net.neoforged.neoforge.event.EventHooks.onPlayerDestroyItem(player, copyMain, InteractionHand.MAIN_HAND);
                     }
                     boolean removed = removeBlock(world, player, pos, canHarvest);
 

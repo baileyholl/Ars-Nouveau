@@ -22,9 +22,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -84,7 +84,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
             }
         }
 
-        MinecraftForge.EVENT_BUS.post(new SummonEvent(rayTraceResult, world, shooter, augments, spellContext, summon));
+        NeoForge.EVENT_BUS.post(new SummonEvent(rayTraceResult, world, shooter, augments, spellContext, summon));
     }
 
     public Player getPlayer(LivingEntity entity, ServerLevel world) {
@@ -122,16 +122,16 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         }
     }
 
-    public ForgeConfigSpec.DoubleValue DAMAGE;
-    public ForgeConfigSpec.DoubleValue AMP_VALUE;
-    public ForgeConfigSpec.IntValue POTION_TIME;
-    public ForgeConfigSpec.IntValue EXTEND_TIME;
-    public ForgeConfigSpec.IntValue GENERIC_INT;
-    public ForgeConfigSpec.DoubleValue GENERIC_DOUBLE;
-    public ForgeConfigSpec.DoubleValue RANDOMIZE_CHANCE;
+    public ModConfigSpec.DoubleValue DAMAGE;
+    public ModConfigSpec.DoubleValue AMP_VALUE;
+    public ModConfigSpec.IntValue POTION_TIME;
+    public ModConfigSpec.IntValue EXTEND_TIME;
+    public ModConfigSpec.IntValue GENERIC_INT;
+    public ModConfigSpec.DoubleValue GENERIC_DOUBLE;
+    public ModConfigSpec.DoubleValue RANDOMIZE_CHANCE;
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         Map<ResourceLocation, Integer> defaultAugmentLimits = new HashMap<>();
         addDefaultAugmentLimits(defaultAugmentLimits);
@@ -144,35 +144,35 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         super.buildInvalidCombosConfig(builder, getDefaultInvalidCombos(new HashSet<>()));
     }
 
-    public void addDamageConfig(ForgeConfigSpec.Builder builder, double defaultValue) {
+    public void addDamageConfig(ModConfigSpec.Builder builder, double defaultValue) {
         DAMAGE = builder.defineInRange("damage", defaultValue, 0, Integer.MAX_VALUE);
     }
 
-    public void addAmpConfig(ForgeConfigSpec.Builder builder, double defaultValue) {
+    public void addAmpConfig(ModConfigSpec.Builder builder, double defaultValue) {
         AMP_VALUE = builder.defineInRange("amplify", defaultValue, 0, Integer.MAX_VALUE);
     }
 
-    public void addPotionConfig(ForgeConfigSpec.Builder builder, int defaultTime) {
+    public void addPotionConfig(ModConfigSpec.Builder builder, int defaultTime) {
         POTION_TIME = builder.comment("Potion duration, in seconds").defineInRange("potion_time", defaultTime, 0, Integer.MAX_VALUE);
     }
 
-    public void addExtendTimeConfig(ForgeConfigSpec.Builder builder, int defaultTime) {
+    public void addExtendTimeConfig(ModConfigSpec.Builder builder, int defaultTime) {
         EXTEND_TIME = builder.comment("Extend time duration, in seconds").defineInRange("extend_time", defaultTime, 0, Integer.MAX_VALUE);
     }
 
-    public void addRandomizeConfig(ForgeConfigSpec.Builder builder, float defaultChance) {
+    public void addRandomizeConfig(ModConfigSpec.Builder builder, float defaultChance) {
         RANDOMIZE_CHANCE = builder.comment("Randomize chance, in percentage (0-1 = 0% - 100%)").defineInRange("extend_time", defaultChance, 0.0f, Integer.MAX_VALUE);
     }
 
-    public void addGenericInt(ForgeConfigSpec.Builder builder, int val, String comment, String path) {
+    public void addGenericInt(ModConfigSpec.Builder builder, int val, String comment, String path) {
         GENERIC_INT = builder.comment(comment).defineInRange(path, val, 0, Integer.MAX_VALUE);
     }
 
-    public void addGenericDouble(ForgeConfigSpec.Builder builder, double val, String comment, String path) {
+    public void addGenericDouble(ModConfigSpec.Builder builder, double val, String comment, String path) {
         GENERIC_DOUBLE = builder.comment(comment).defineInRange(path, val, 0.0, Double.MAX_VALUE);
     }
 
-    public void addDefaultPotionConfig(ForgeConfigSpec.Builder builder) {
+    public void addDefaultPotionConfig(ModConfigSpec.Builder builder) {
         addPotionConfig(builder, 30);
         addExtendTimeConfig(builder, 8);
     }

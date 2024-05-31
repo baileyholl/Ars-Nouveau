@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
-
+import record;
 import java.util.ArrayList;
 import java.util.List;
 

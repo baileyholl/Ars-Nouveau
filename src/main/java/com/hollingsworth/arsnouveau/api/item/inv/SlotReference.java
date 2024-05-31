@@ -1,8 +1,7 @@
 package com.hollingsworth.arsnouveau.api.item.inv;
 
-import net.minecraftforge.items.IItemHandler;
-
 import javax.annotation.Nullable;
+import net.neoforged.neoforge.items.IItemHandler;
 
 /**
  * References a slot in an inventory.

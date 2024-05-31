@@ -1,9 +1,8 @@
 package com.hollingsworth.arsnouveau.api.item.inv;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.wrapper.EmptyHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.wrapper.EmptyHandler;
 import org.jetbrains.annotations.NotNull;
 
 public class CombinedHandlerInv implements IItemHandler {

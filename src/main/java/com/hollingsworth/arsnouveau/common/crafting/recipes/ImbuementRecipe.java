@@ -7,10 +7,15 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.common.block.tile.ImbuementTile;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
+import net.minecraft.core.DefaultedRegistry;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -20,9 +25,9 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
-
+import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.neoforged.neoforge.registries.RegistryObject;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +94,7 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
     }
 
     @Override
-    public ItemStack assemble(ImbuementTile p_44001_, RegistryAccess p_267165_) {
+    public ItemStack assemble(ImbuementTile pCraftingContainer, HolderLookup.Provider pRegistries) {
         return ItemStack.EMPTY;
     }
 
@@ -99,13 +104,8 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess p_267052_) {
+    public ItemStack getResultItem(HolderLookup.Provider pRegistries) {
         return ItemStack.EMPTY;
-    }
-
-    @Override
-    public ResourceLocation getId() {
-        return id;
     }
 
     @Override
@@ -115,7 +115,7 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
 
     @Override
     public RecipeType<?> getType() {
-        return ForgeRegistries.RECIPE_TYPES.getValue(new ResourceLocation(ArsNouveau.MODID, RecipeRegistry.IMBUEMENT_RECIPE_ID));
+        return BuiltInRegistries.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, RecipeRegistry.IMBUEMENT_RECIPE_ID));
     }
 
     public JsonElement asRecipe() {

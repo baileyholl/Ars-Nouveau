@@ -14,8 +14,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.common.Tags;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -74,7 +74,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements GeoAnimata
     public int getSourceValue(ItemStack i) {
         int source = 0;
         int progress = 0;
-        int burnTime = ForgeHooks.getBurnTime(i, null);
+        int burnTime = CommonHooks.getBurnTime(i, null);
         if (burnTime > 0) {
             source = burnTime / 12;
             progress = 1;

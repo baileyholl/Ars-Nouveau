@@ -25,8 +25,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.common.MinecraftForge;
-
+import net.neoforged.neoforge.common.NeoForge;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -155,7 +154,7 @@ public class SpellResolver implements Cloneable {
         spellContext.resetCastCounter();
         LivingEntity shooter = spellContext.getUnwrappedCaster();
         SpellResolveEvent.Pre spellResolveEvent = new SpellResolveEvent.Pre(world, shooter, this.hitResult, spell, spellContext, this);
-        MinecraftForge.EVENT_BUS.post(spellResolveEvent);
+        NeoForge.EVENT_BUS.post(spellResolveEvent);
         if (spellResolveEvent.isCanceled())
             return;
         while (spellContext.hasNextPart()) {
@@ -174,13 +173,13 @@ public class SpellResolver implements Cloneable {
                 continue;
 
             EffectResolveEvent.Pre preEvent = new EffectResolveEvent.Pre(world, shooter, this.hitResult, spell, spellContext, effect, stats, this);
-            if (MinecraftForge.EVENT_BUS.post(preEvent))
+            if (NeoForge.EVENT_BUS.post(preEvent))
                 continue;
             effect.onResolve(this.hitResult, world, shooter, stats, spellContext, this);
-            MinecraftForge.EVENT_BUS.post(new EffectResolveEvent.Post(world, shooter, this.hitResult, spell, spellContext, effect, stats, this));
+            NeoForge.EVENT_BUS.post(new EffectResolveEvent.Post(world, shooter, this.hitResult, spell, spellContext, effect, stats, this));
         }
 
-        MinecraftForge.EVENT_BUS.post(new SpellResolveEvent.Post(world, shooter, this.hitResult, spell, spellContext, this));
+        NeoForge.EVENT_BUS.post(new SpellResolveEvent.Post(world, shooter, this.hitResult, spell, spellContext, this));
     }
 
     public void expendMana() {
@@ -194,7 +193,7 @@ public class SpellResolver implements Cloneable {
     public int getResolveCost() {
         int cost = spellContext.getSpell().getCost() - getPlayerDiscounts(spellContext.getUnwrappedCaster(), spell, spellContext.getCasterTool());
         SpellCostCalcEvent event = new SpellCostCalcEvent(spellContext, cost);
-        MinecraftForge.EVENT_BUS.post(event);
+        NeoForge.EVENT_BUS.post(event);
         cost = Math.max(0, event.currentCost);
         return cost;
     }

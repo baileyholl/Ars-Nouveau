@@ -22,8 +22,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.world.ForgeChunkManager;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.common.world.ForcedChunkManager;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 /**
  * Camera work is taken from SecurityCraft:
@@ -149,7 +149,7 @@ public class ScryerCamera extends Entity {
 
             for (int x = chunkPos.getX() - view; x <= chunkPos.getX() + view; x++) {
                 for (int z = chunkPos.getZ() - view; z <= chunkPos.getZ() + view; z++) {
-                    ForgeChunkManager.forceChunk((ServerLevel) this.level, ArsNouveau.MODID, this, x, z, false, false);
+                    ForcedChunkManager.forceChunk((ServerLevel) this.level, ArsNouveau.MODID, this, x, z, false, false);
                 }
             }
         }

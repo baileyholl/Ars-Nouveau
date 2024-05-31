@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.RegistryObject;
 
 public class ApparatusTextPage extends ApparatusPage{
 

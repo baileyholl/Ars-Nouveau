@@ -23,15 +23,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
-import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.network.PlayMessages;
-
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.event.entity.EntityStruckByLightningEvent;
+import net.neoforged.neoforge.network.NetworkHooks;
+import net.neoforged.neoforge.network.PlayMessages;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,11 +99,11 @@ public class LightningEntity extends LightningBolt {
             } else if (!this.effectOnly) {
                 List<Entity> list = this.level.getEntities(this, new AABB(this.getX() - 3.0D, this.getY() - 3.0D, this.getZ() - 3.0D, this.getX() + 3.0D, this.getY() + 6.0D + 3.0D, this.getZ() + 3.0D), Entity::isAlive);
                 for (Entity entity : list) {
-                    if (!net.minecraftforge.event.ForgeEventFactory.onEntityStruckByLightning(entity, this)) {
+                    if (!net.neoforged.neoforge.event.EventHooks.onEntityStruckByLightning(entity, this)) {
                         float origDamage = this.getDamage();
                         this.setDamage(this.getDamage(entity));
                         EntityStruckByLightningEvent event = new EntityStruckByLightningEvent(entity, this);
-                        MinecraftForge.EVENT_BUS.post(event);
+                        NeoForge.EVENT_BUS.post(event);
                         if (event.isCanceled())
                             continue;
                         entity.thunderHit((ServerLevel) this.level, this);
@@ -151,16 +150,16 @@ public class LightningEntity extends LightningBolt {
         float baseDamage = getDamage() + ampScalar * amps + (entity.isInWaterOrRain() ? wetBonus : 0.0f);
         int multiplier = 1;
         for (ItemStack i : entity.getArmorSlots()) {
-            IEnergyStorage energyStorage = i.getCapability(ForgeCapabilities.ENERGY).orElse(null);
+            IEnergyStorage energyStorage = i.getCapability(Capabilities.ENERGY).orElse(null);
             if (energyStorage != null) {
                 multiplier++;
             }
         }
         if (entity instanceof LivingEntity) {
-            IEnergyStorage energyStorage = ((LivingEntity) entity).getMainHandItem().getCapability(ForgeCapabilities.ENERGY).orElse(null);
+            IEnergyStorage energyStorage = ((LivingEntity) entity).getMainHandItem().getCapability(Capabilities.ENERGY).orElse(null);
             if (energyStorage != null)
                 multiplier++;
-            energyStorage = ((LivingEntity) entity).getOffhandItem().getCapability(ForgeCapabilities.ENERGY).orElse(null);
+            energyStorage = ((LivingEntity) entity).getOffhandItem().getCapability(Capabilities.ENERGY).orElse(null);
             if (energyStorage != null)
                 multiplier++;
         }

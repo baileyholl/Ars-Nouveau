@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 import org.jetbrains.annotations.NotNull;
 
 public class EffectResolveEvent extends Event {

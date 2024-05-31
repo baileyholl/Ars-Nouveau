@@ -98,7 +98,7 @@ public class ANExplosion extends Explosion {
         int j2 = Mth.floor(this.z - (double) f2 - 1.0D);
         int j1 = Mth.floor(this.z + (double) f2 + 1.0D);
         List<Entity> list = this.level.getEntities(this.source, new AABB(k1, i2, j2, l1, i1, j1));
-        net.minecraftforge.event.ForgeEventFactory.onExplosionDetonate(this.level, this, list, f2);
+        net.neoforged.neoforge.event.EventHooks.onExplosionDetonate(this.level, this, list, f2);
         Vec3 vector3d = new Vec3(this.x, this.y, this.z);
 
         for (Entity entity : list) {

@@ -7,10 +7,10 @@ import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.alchemy.PotionContents;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,19 +35,19 @@ public class DungeonLootTables {
         BASIC_LOOT.add(() -> new ItemStack(BlockRegistry.SOURCEBERRY_BUSH, 1 + r.nextInt(3)));
         BASIC_LOOT.add(() -> {
             ItemStack stack = new ItemStack(Items.POTION);
-            PotionUtils.setPotion(stack, ModPotions.LONG_MANA_REGEN_POTION.get());
+            stack.set(DataComponents.POTION_CONTENTS, new PotionContents(ModPotions.LONG_MANA_REGEN_POTION));
             return stack;
         });
 
         BASIC_LOOT.add(() -> {
             ItemStack stack = new ItemStack(Items.POTION);
-            PotionUtils.setPotion(stack, ModPotions.STRONG_MANA_REGEN_POTION.get());
+            stack.set(DataComponents.POTION_CONTENTS, new PotionContents(ModPotions.STRONG_MANA_REGEN_POTION));
             return stack;
         });
 
         BASIC_LOOT.add(() -> {
             ItemStack stack = new ItemStack(Items.POTION);
-            PotionUtils.setPotion(stack, ModPotions.MANA_REGEN_POTION.get());
+            stack.set(DataComponents.POTION_CONTENTS, new PotionContents(ModPotions.MANA_REGEN_POTION));
             return stack;
         });
 
@@ -69,7 +69,6 @@ public class DungeonLootTables {
         RARE_LOOT.add(() -> new ItemStack(ItemsRegistry.FIREL_DISC.get()));
         RARE_LOOT.add(() -> new ItemStack(ItemsRegistry.SOUND_OF_GLASS.get()));
         RARE_LOOT.add(() -> new ItemStack(ItemsRegistry.WILD_HUNT.get()));
-
     }
 
     public static ItemStack getRandomItem(List<Supplier<ItemStack>> pool) {

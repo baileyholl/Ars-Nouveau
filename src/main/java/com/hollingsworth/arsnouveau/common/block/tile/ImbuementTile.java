@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
@@ -23,14 +22,15 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.common.capabilities.Capability;
+import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -40,7 +40,7 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
-
+import var;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     public ItemStack stack = ItemStack.EMPTY;
     public ItemEntity entity;
     public boolean draining;
-    ImbuementRecipe recipe;
+    RecipeHolder<T> recipe;
     int backoff;
     public float frames;
     boolean hasRecipe;
@@ -111,7 +111,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
         // Restore the recipe on world restart
         if (recipe == null) {
-            var foundRecipe = getRecipeNow();
+            RecipeHolder<T> foundRecipe = getRecipeNow();
             if(foundRecipe != null){
                 this.recipe = foundRecipe;
                 this.craftTicks = 100;
@@ -206,7 +206,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         if (stack.isEmpty() || !this.stack.isEmpty())
             return false;
         this.stack = stack.copy();
-        ImbuementRecipe recipe = getRecipeNow();
+        RecipeHolder<T> recipe = getRecipeNow();
         this.stack = ItemStack.EMPTY;
         return recipe != null;
     }
@@ -257,7 +257,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
    @NotNull
     @Override
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, final @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
+        if (cap == Capabilities.ITEM_HANDLER) {
             return itemHandler.cast();
         }
         return super.getCapability(cap, side);
@@ -306,14 +306,14 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         return pedestalList(getBlockPos(), 1, getLevel());
     }
 
-    public @Nullable ImbuementRecipe getRecipeNow(){
+    public @Nullable RecipeHolder<T> getRecipeNow(){
         return level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream()
                 .filter(f -> f.matches(this, level)).findFirst().orElse(null);
     }
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        var recipe = getRecipeNow();
+        RecipeHolder<T> recipe = getRecipeNow();
         if(recipe != null && !recipe.output.isEmpty() && stack != null && !stack.isEmpty()) {
             tooltip.add(Component.translatable("ars_nouveau.crafting", recipe.output.getHoverName()));
             if(recipe.source > 0) {

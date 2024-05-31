@@ -350,7 +350,7 @@ public class GlyphUnlockMenu extends BaseBook {
             MutableComponent component = Component.translatable("ars_nouveau.levels_required", ScribesTile.getLevelsFromExp(hoveredRecipe.exp)).withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN));
             tooltip.add(component);
         }
-        List<ClientTooltipComponent> components = new ArrayList<>(net.minecraftforge.client.ForgeHooksClient.gatherTooltipComponents(ItemStack.EMPTY, tooltip, mouseX, width, height, this.font));
+        List<ClientTooltipComponent> components = new ArrayList<>(net.neoforged.neoforge.client.ClientHooks.gatherTooltipComponents(ItemStack.EMPTY, tooltip, mouseX, width, height, this.font));
         if (hoveredRecipe != null)
             components.add(new GlyphRecipeTooltip(hoveredRecipe.inputs));
         renderTooltipInternal(stack, components, mouseX, mouseY);
@@ -361,7 +361,7 @@ public class GlyphUnlockMenu extends BaseBook {
 
         if (!pClientTooltipComponents.isEmpty()) {
             PoseStack pPoseStack = graphics.pose();
-            net.minecraftforge.client.event.RenderTooltipEvent.Pre preEvent = net.minecraftforge.client.ForgeHooksClient.onRenderTooltipPre(ItemStack.EMPTY, graphics, pMouseX, pMouseY, width, height, pClientTooltipComponents, this.font, DefaultTooltipPositioner.INSTANCE);
+            net.neoforged.neoforge.client.event.RenderTooltipEvent.Pre preEvent = net.neoforged.neoforge.client.ClientHooks.onRenderTooltipPre(ItemStack.EMPTY, graphics, pMouseX, pMouseY, width, height, pClientTooltipComponents, this.font, DefaultTooltipPositioner.INSTANCE);
             if (preEvent.isCanceled()) return;
             int i = 0;
             int j = pClientTooltipComponents.size() == 1 ? -2 : 0;
@@ -390,7 +390,7 @@ public class GlyphUnlockMenu extends BaseBook {
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
             bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
             Matrix4f matrix4f = pPoseStack.last().pose();
-            net.minecraftforge.client.event.RenderTooltipEvent.Color colorEvent = net.minecraftforge.client.ForgeHooksClient.onRenderTooltipColor(ItemStack.EMPTY, graphics, j2, k2, preEvent.getFont(), pClientTooltipComponents);
+            net.neoforged.neoforge.client.event.RenderTooltipEvent.Color colorEvent = net.neoforged.neoforge.client.ClientHooks.onRenderTooltipColor(ItemStack.EMPTY, graphics, j2, k2, preEvent.getFont(), pClientTooltipComponents);
             graphics.fillGradient( j2 - 3, k2 - 4, j2 + i + 3, k2 - 3, 400, colorEvent.getBackgroundStart(), colorEvent.getBackgroundStart());
             graphics.fillGradient(j2 - 3, k2 + j + 3, j2 + i + 3, k2 + j + 4, 400, colorEvent.getBackgroundEnd(), colorEvent.getBackgroundEnd());
             graphics.fillGradient(j2 - 3, k2 - 3, j2 + i + 3, k2 + j + 3, 400, colorEvent.getBackgroundStart(), colorEvent.getBackgroundEnd());

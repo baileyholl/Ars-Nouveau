@@ -3,8 +3,7 @@ package com.hollingsworth.arsnouveau.common.util;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.setup.config.ConfigUtil;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.ForgeConfigSpec;
-
+import net.neoforged.neoforge.common.ModConfigSpec;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -34,12 +33,12 @@ public class SpellPartConfigUtil {
      * limitations.
      */
     public static class AugmentLimits {
-        private ForgeConfigSpec.ConfigValue<List<? extends String>> configValue;
+        private ModConfigSpec.ConfigValue<List<? extends String>> configValue;
 
         /**
          * Create a new AugmentLimits from the given ConfigValue
          */
-        private AugmentLimits(ForgeConfigSpec.ConfigValue<List<? extends String>> configValue) {
+        private AugmentLimits(ModConfigSpec.ConfigValue<List<? extends String>> configValue) {
             this.configValue = configValue;
         }
 
@@ -68,12 +67,12 @@ public class SpellPartConfigUtil {
     }
 
     public static class ComboLimits {
-        private final ForgeConfigSpec.ConfigValue<List<? extends String>> configValue;
+        private final ModConfigSpec.ConfigValue<List<? extends String>> configValue;
 
         /**
          * Create a new AugmentLimits from the given ConfigValue
          */
-        public ComboLimits(ForgeConfigSpec.ConfigValue<List<? extends String>> configValue) {
+        public ComboLimits(ModConfigSpec.ConfigValue<List<? extends String>> configValue) {
             this.configValue = configValue;
         }
 
@@ -97,19 +96,19 @@ public class SpellPartConfigUtil {
 
 
     /**
-     * Builds a "augment_limits" configuration item using the provided {@link ForgeConfigSpec.Builder} and returns an
+     * Builds a "augment_limits" configuration item using the provided {@link ModConfigSpec.Builder} and returns an
      * {@link AugmentLimits} instance to encapsulate it.
      */
-    public static AugmentLimits buildAugmentLimitsConfig(ForgeConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
-        ForgeConfigSpec.ConfigValue<List<? extends String>> configValue = builder
+    public static AugmentLimits buildAugmentLimitsConfig(ModConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
+        ModConfigSpec.ConfigValue<List<? extends String>> configValue = builder
                 .comment("Limits the number of times a given augment may be applied to a given effect", "Example entry: \"" + GlyphLib.AugmentAmplifyID + "=5\"")
                 .defineList("augment_limits", writeAugmentConfig(defaults), SpellPartConfigUtil::validateAugmentLimits);
 
         return new AugmentLimits(configValue);
     }
 
-    public static ComboLimits buildInvalidCombosConfig(ForgeConfigSpec.Builder builder, Set<ResourceLocation> defaults) {
-        ForgeConfigSpec.ConfigValue<List<? extends String>> configValue = builder
+    public static ComboLimits buildInvalidCombosConfig(ModConfigSpec.Builder builder, Set<ResourceLocation> defaults) {
+        ModConfigSpec.ConfigValue<List<? extends String>> configValue = builder
                 .comment("Prevents the given glyph from being used in the same spell as the given glyph", "Example entry: \"" + GlyphLib.EffectBurstID + "\"")
                 .defineList("invalid_combos", writeComboConfig(defaults), (o) -> o instanceof String s && ResourceLocation.isValidResourceLocation(s));
 
@@ -126,11 +125,11 @@ public class SpellPartConfigUtil {
     }
 
     /**
-     * Builds a "augment_limits" configuration item using the provided {@link ForgeConfigSpec.Builder} and returns an
+     * Builds a "augment_limits" configuration item using the provided {@link ModConfigSpec.Builder} and returns an
      * {@link AugmentLimits} instance to encapsulate it.
      */
-    public static AugmentCosts buildAugmentCosts(ForgeConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
-        ForgeConfigSpec.ConfigValue<List<? extends String>> configValue = builder
+    public static AugmentCosts buildAugmentCosts(ModConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
+        ModConfigSpec.ConfigValue<List<? extends String>> configValue = builder
                 .comment("How much an augment should cost when used on this effect or form. This overrides the default cost in the augment config.", "Example entry: \"" + GlyphLib.AugmentAmplifyID + "=50\"")
                 .defineList("augment_cost_overrides", ConfigUtil.writeResConfig(defaults), SpellPartConfigUtil::validateAugmentLimits);
 
@@ -164,12 +163,12 @@ public class SpellPartConfigUtil {
      */
     public static class AugmentCosts {
         private Map<ResourceLocation, Integer> costs = null;
-        private ForgeConfigSpec.ConfigValue<List<? extends String>> configValue;
+        private ModConfigSpec.ConfigValue<List<? extends String>> configValue;
 
         /**
          * Create a new AugmentLimits from the given ConfigValue
          */
-        private AugmentCosts(ForgeConfigSpec.ConfigValue<List<? extends String>> configValue) {
+        private AugmentCosts(ModConfigSpec.ConfigValue<List<? extends String>> configValue) {
             this.configValue = configValue;
         }
 

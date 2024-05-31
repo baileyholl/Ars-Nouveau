@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
+import com.hollingsworth.arsnouveau.common.util.registry.BlockEntityTypeRegistryWrapper;
+import com.hollingsworth.arsnouveau.common.util.registry.RegistryWrapper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -17,7 +19,7 @@ public class ModdedTile extends BlockEntity {
         super(tileEntityTypeIn, pos, state);
     }
 
-    public ModdedTile(RegistryWrapper<? extends BlockEntityType<?>> tileEntityTypeIn, BlockPos pos, BlockState state) {
+    public ModdedTile(BlockEntityTypeRegistryWrapper<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         this(tileEntityTypeIn.get(), pos, state);
     }
 
@@ -28,14 +30,14 @@ public class ModdedTile extends BlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(pTag, pRegistries);
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(pkt.getTag() == null ? new CompoundTag() : pkt.getTag());
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
+        super.onDataPacket(net, pkt, lookupProvider);
+        handleUpdateTag(pkt.getTag() == null ? new CompoundTag() : pkt.getTag(), lookupProvider);
     }
 
     public boolean updateBlock() {
@@ -49,9 +51,9 @@ public class ModdedTile extends BlockEntity {
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
+    public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries) {
         CompoundTag tag = new CompoundTag();
-        this.saveAdditional(tag);
+        this.saveAdditional(tag, pRegistries);
         return tag;
     }
 

@@ -13,8 +13,7 @@ import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.Tags;
-
+import net.neoforged.neoforge.common.Tags;
 import java.util.List;
 
 public class RitualPillagerRaid extends AbstractRitual {

@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRendere
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 import java.util.function.Supplier;

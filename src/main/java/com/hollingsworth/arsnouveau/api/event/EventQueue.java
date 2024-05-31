@@ -1,18 +1,17 @@
 package com.hollingsworth.arsnouveau.api.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.TickEvent;
 
 /**
  * For queuing deferred or over-time tasks. Tick refers to the Server or Client Tick event.
  */
 @SuppressWarnings("ForLoopReplaceableByForEach")
-@Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
+@EventBusSubscriber(modid = ArsNouveau.MODID)
 public class EventQueue {
     List<ITimedEvent> events;
 

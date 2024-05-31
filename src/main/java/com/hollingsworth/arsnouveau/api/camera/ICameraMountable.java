@@ -11,8 +11,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.world.ForgeChunkManager;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.common.world.ForcedChunkManager;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public interface ICameraMountable {
 
@@ -34,7 +34,7 @@ public interface ICameraMountable {
 
             for (int x = chunkPos.getX() - viewDistance; x <= chunkPos.getX() + viewDistance; x++) {
                 for (int z = chunkPos.getZ() - viewDistance; z <= chunkPos.getZ() + viewDistance; z++) {
-                    ForgeChunkManager.forceChunk(serverLevel, ArsNouveau.MODID, dummyEntity, x, z, true, false);
+                    ForcedChunkManager.forceChunk(serverLevel, ArsNouveau.MODID, dummyEntity, x, z, true, false);
                 }
             }
 

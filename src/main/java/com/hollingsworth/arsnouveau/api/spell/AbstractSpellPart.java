@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.util.SpellPartConfigUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -149,15 +149,15 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         return Component.translatable(getRegistryName().getNamespace() + ".glyph_desc." + getRegistryName().getPath());
     }
 
-    public @Nullable ForgeConfigSpec CONFIG;
-    public @Nullable ForgeConfigSpec.IntValue COST;
-    public @Nullable ForgeConfigSpec.BooleanValue ENABLED;
-    public @Nullable ForgeConfigSpec.BooleanValue STARTER_SPELL;
-    public @Nullable ForgeConfigSpec.IntValue PER_SPELL_LIMIT;
-    public @Nullable ForgeConfigSpec.IntValue GLYPH_TIER;
+    public @Nullable ModConfigSpec CONFIG;
+    public @Nullable ModConfigSpec.IntValue COST;
+    public @Nullable ModConfigSpec.BooleanValue ENABLED;
+    public @Nullable ModConfigSpec.BooleanValue STARTER_SPELL;
+    public @Nullable ModConfigSpec.IntValue PER_SPELL_LIMIT;
+    public @Nullable ModConfigSpec.IntValue GLYPH_TIER;
 
 
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         builder.comment("General settings").push("general");
         ENABLED = builder.comment("Is Enabled?").define("enabled", true);
         COST = builder.comment("Cost").defineInRange("cost", getDefaultManaCost(), Integer.MIN_VALUE, Integer.MAX_VALUE);
@@ -198,17 +198,17 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     /**
      * Registers the glyph_limits configuration entry for augmentation limits.
      */
-    protected void buildAugmentLimitsConfig(ForgeConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
+    protected void buildAugmentLimitsConfig(ModConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
         this.augmentLimits = SpellPartConfigUtil.buildAugmentLimitsConfig(builder, defaults);
     }
 
-    protected void buildAugmentCostOverrideConfig(ForgeConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
+    protected void buildAugmentCostOverrideConfig(ModConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
         this.augmentCosts = SpellPartConfigUtil.buildAugmentCosts(builder, defaults);
     }
     /**
      * Registers the glyph_limits configuration entry for combo limits.
      */
-    protected void buildInvalidCombosConfig(ForgeConfigSpec.Builder builder, Set<ResourceLocation> defaults) {
+    protected void buildInvalidCombosConfig(ModConfigSpec.Builder builder, Set<ResourceLocation> defaults) {
         this.invalidCombinations = SpellPartConfigUtil.buildInvalidCombosConfig(builder, defaults);
     }
 

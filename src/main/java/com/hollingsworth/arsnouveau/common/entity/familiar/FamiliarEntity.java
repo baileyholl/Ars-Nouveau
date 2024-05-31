@@ -35,13 +35,12 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.network.NetworkHooks;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -189,7 +188,7 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
     //use this for tag reload
     public void setCosmeticItem(ItemStack stack, boolean shouldDrop) {
         if (!this.entityData.get(COSMETIC).isEmpty() && shouldDrop)
-            this.level.addFreshEntity(new ItemEntity(this.level, this.getX(), this.getY(), this.getZ(), this.entityData.get(COSMETIC)));
+            this.level().addFreshEntity(new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), this.entityData.get(COSMETIC)));
         this.entityData.set(COSMETIC, stack);
         this.persistentData.cosmetic = stack;
         syncTag();
@@ -206,7 +205,7 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
 
     public static AttributeSupplier.Builder attributes() {
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 100d)
-                .add(Attributes.MOVEMENT_SPEED, 0.2d).add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue())
+                .add(Attributes.MOVEMENT_SPEED, 0.2d).add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.value().getDefaultValue())
                 .add(Attributes.FOLLOW_RANGE, 16D);
     }
 
@@ -222,9 +221,9 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
 
     @Override
     public boolean onDispel(@Nullable LivingEntity caster) {
-        if (!level.isClientSide && getOwner() != null && getOwner().equals(caster)) {
+        if (!level().isClientSide && getOwner() != null && getOwner().equals(caster)) {
             this.remove(RemovalReason.DISCARDED);
-            ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
+            ParticleUtil.spawnPoof((ServerLevel) level(), blockPosition());
             return true;
         }
         return false;

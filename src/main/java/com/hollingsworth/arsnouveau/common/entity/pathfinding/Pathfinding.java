@@ -3,10 +3,9 @@ package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs.AbstractPathJob;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
 import java.util.concurrent.*;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 /**
  * Static class the handles all the Pathfinding.

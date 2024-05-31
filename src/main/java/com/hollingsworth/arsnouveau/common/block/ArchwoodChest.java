@@ -16,8 +16,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import java.util.function.Consumer;
 
 public class ArchwoodChest extends ChestBlock {
@@ -32,7 +31,7 @@ public class ArchwoodChest extends ChestBlock {
 
     public static class Item extends BlockItem {
 
-        public Item(Block block, Properties props) {
+        public Item(Block block, net.minecraft.world.item.Item.Properties props) {
             super(block, props);
         }
 

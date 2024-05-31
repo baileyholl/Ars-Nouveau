@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.recipe;
 
+import WeightedMobType;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -21,7 +22,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
+import record;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

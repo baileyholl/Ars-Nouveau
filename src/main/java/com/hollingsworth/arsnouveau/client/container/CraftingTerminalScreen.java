@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.container;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.client.container.CraftingTerminalMenu.TerminalRecipeItemHelper;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import net.minecraft.client.gui.GuiGraphics;

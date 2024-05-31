@@ -22,11 +22,11 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.client.ClientHooks;
+import net.neoforged.neoforge.client.event.RenderTooltipEvent;
+import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
+import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
+import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
@@ -39,7 +39,7 @@ public class GuiEntityInfoHUD {
     public static int hoverTicks = 0;
     public static Object lastHovered = null;
 
-    public static void renderOverlay(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width,
+    public static void renderOverlay(ExtendedGui gui, GuiGraphics graphics, float partialTicks, int width,
                                      int height) {
         PoseStack poseStack = graphics.pose();
         Minecraft mc = Minecraft.getInstance();
@@ -130,10 +130,10 @@ public class GuiEntityInfoHUD {
         if (textLines.isEmpty())
             return;
         PoseStack pStack = graphics.pose();
-        List<ClientTooltipComponent> list = ForgeHooksClient.gatherTooltipComponents(stack, textLines, stack.getTooltipImage(), mouseX, screenWidth, screenHeight, font);
+        List<ClientTooltipComponent> list = ClientHooks.gatherTooltipComponents(stack, textLines, stack.getTooltipImage(), mouseX, screenWidth, screenHeight, font);
         RenderTooltipEvent.Pre event =
                 new RenderTooltipEvent.Pre(stack, graphics, mouseX, mouseY, screenWidth, screenHeight, font, list, DefaultTooltipPositioner.INSTANCE);
-        if (MinecraftForge.EVENT_BUS.post(event))
+        if (NeoForge.EVENT_BUS.post(event))
             return;
 
         mouseX = event.getX();
@@ -216,7 +216,7 @@ public class GuiEntityInfoHUD {
         final int zLevel = 400;
         RenderTooltipEvent.Color colorEvent = new RenderTooltipEvent.Color(stack, graphics, tooltipX, tooltipY,
                 font, backgroundColor, borderColorStart, borderColorEnd, list);
-        MinecraftForge.EVENT_BUS.post(colorEvent);
+        NeoForge.EVENT_BUS.post(colorEvent);
         backgroundColor = colorEvent.getBackgroundStart();
         borderColorStart = colorEvent.getBorderStart();
         borderColorEnd = colorEvent.getBorderEnd();

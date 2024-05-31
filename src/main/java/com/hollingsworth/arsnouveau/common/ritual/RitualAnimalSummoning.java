@@ -18,9 +18,10 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.MobSpawnSettings;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -30,15 +31,15 @@ public class RitualAnimalSummoning extends AbstractRitual {
     private final MobCategory category = MobCategory.CREATURE;
     private WeightedRandomList<? extends WeightedEntry> mobs;
 
-    private Optional<SummonRitualRecipe> recipe;
+    private Optional<RecipeHolder<T>> recipe;
 
-    private Optional<SummonRitualRecipe> getRecipe() {
+    private Optional<RecipeHolder<T>> getRecipe() {
         return getWorld().getRecipeManager().getAllRecipesFor(RecipeRegistry.SUMMON_RITUAL_TYPE.get()).stream().filter(r -> r.matches(getConsumedItems())).findFirst();
     }
 
     private WeightedRandomList<? extends WeightedEntry> getMobs(Level world) {
         if (recipe.isPresent()) {
-            SummonRitualRecipe summonRitualRecipe = recipe.get();
+            RecipeHolder<T> summonRitualRecipe = recipe.get();
             if (summonRitualRecipe.mobSource == SummonRitualRecipe.MobSource.MOB_LIST) {
                 return WeightedRandomList.create(summonRitualRecipe.mobs);
             }

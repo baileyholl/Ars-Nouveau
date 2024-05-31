@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.api.item.inv;
 
+import InteractResult;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
-
+import net.neoforged.neoforge.items.IItemHandler;
 import java.util.List;
 import java.util.function.Function;
 

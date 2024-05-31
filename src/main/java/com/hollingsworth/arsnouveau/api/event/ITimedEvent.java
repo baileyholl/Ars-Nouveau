@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.api.event;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.event.TickEvent;
+import net.neoforged.neoforge.event.TickEvent;
 
 /**
  * A basic timed event for the EventQueue.

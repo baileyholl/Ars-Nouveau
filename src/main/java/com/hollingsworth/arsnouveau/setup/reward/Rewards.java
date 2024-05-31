@@ -5,8 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.minecraft.world.item.DyeColor;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-
+import net.neoforged.fml.loading.FMLEnvironment;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

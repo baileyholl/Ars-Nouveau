@@ -18,7 +18,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.network.PlayMessages;
+import net.neoforged.neoforge.network.PlayMessages;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;

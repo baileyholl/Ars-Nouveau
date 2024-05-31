@@ -25,9 +25,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -80,7 +80,7 @@ public class EffectBlink extends AbstractEffect {
         if (entity == null) return;
 
         if (entity instanceof LivingEntity living){
-            Event event = ForgeEventFactory.onEnderTeleport(living, warpScrollData.getPos().getX(),  warpScrollData.getPos().getY(),  warpScrollData.getPos().getZ());
+            Event event = EventHooks.onEnderTeleport(living, warpScrollData.getPos().getX(),  warpScrollData.getPos().getY(),  warpScrollData.getPos().getZ());
             if (event.isCanceled()) return;
         }
         ServerLevel dimension = PortalTile.getServerLevel(warpScrollData.getDimension(), (ServerLevel) entity.level);
@@ -94,7 +94,7 @@ public class EffectBlink extends AbstractEffect {
         if (entity == null) return;
         Level world = entity.level;
         if (entity instanceof LivingEntity living){
-            Event event = ForgeEventFactory.onEnderTeleport(living, warpPos.getX(), warpPos.getY(), warpPos.getZ());
+            Event event = EventHooks.onEnderTeleport(living, warpPos.getX(), warpPos.getY(), warpPos.getZ());
             if (event.isCanceled()) return;
         }
         ((ServerLevel) entity.level).sendParticles(ParticleTypes.PORTAL, entity.getX(), entity.getY() + 1, entity.getZ(),
@@ -149,7 +149,7 @@ public class EffectBlink extends AbstractEffect {
     }
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addGenericInt(builder, 8, "Base teleport distance", "distance");
         addAmpConfig(builder, 3.0);

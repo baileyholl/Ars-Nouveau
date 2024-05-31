@@ -8,8 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.common.Tags;
-
+import net.neoforged.neoforge.common.Tags;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +23,12 @@ public class CrushRecipeProvider extends SimpleDataProvider {
 
     @Override
     public void collectJsons(CachedOutput pOutput) {
-        recipes.add(new CrushRecipe("stone", Ingredient.of(Tags.Items.STONE))
+        recipes.add(new CrushRecipe("stone", Ingredient.of(Tags.Items.STONES))
                 .withItems(Items.GRAVEL.getDefaultInstance(), 1.0f));
-        recipes.add(new CrushRecipe("gravel", Ingredient.of(Tags.Items.GRAVEL))
+        recipes.add(new CrushRecipe("gravel", Ingredient.of(Tags.Items.GRAVELS))
                 .withItems(Items.SAND.getDefaultInstance(), 1.0f)
                 .withItems(Items.FLINT.getDefaultInstance(), 0.02f));
-        recipes.add(new CrushRecipe("cobblestone", Ingredient.of(Tags.Items.COBBLESTONE)).withItems(Items.GRAVEL.getDefaultInstance(), 1.0f));
+        recipes.add(new CrushRecipe("cobblestone", Ingredient.of(Tags.Items.COBBLESTONES)).withItems(Items.GRAVEL.getDefaultInstance(), 1.0f));
         recipes.add(new CrushRecipe("white_dye", Ingredient.of(Items.LILY_OF_THE_VALLEY)).withItems(new ItemStack(Items.WHITE_DYE, 2)));
         recipes.add(new CrushRecipe("orange_dye", Ingredient.of(Items.ORANGE_TULIP)).withItems(new ItemStack(Items.ORANGE_DYE, 2)));
         recipes.add(new CrushRecipe("magenta_dye", Ingredient.of(Items.ALLIUM)).withItems(new ItemStack(Items.MAGENTA_DYE, 2)));
@@ -53,7 +52,7 @@ public class CrushRecipeProvider extends SimpleDataProvider {
         recipes.add(new CrushRecipe("terracotta", Ingredient.of(Items.TERRACOTTA)).withItems(Items.RED_SAND.getDefaultInstance()));
         recipes.add(new CrushRecipe("sugar_cane", Ingredient.of(Items.SUGAR_CANE)).withItems(new ItemStack(Items.SUGAR, 2)));
         recipes.add(new CrushRecipe("sandstone_to_sand", Ingredient.of(Items.SANDSTONE)).withItems(Items.SAND.getDefaultInstance()));
-        recipes.add(new CrushRecipe("quartz_block_to_quartz", Ingredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ)).withItems((new ItemStack(Items.QUARTZ, 4))));
+         recipes.add(new CrushRecipe("quartz_block_to_quartz", Ingredient.of(ItemTagProvider.STORAGE_BLOCKS_QUARTZ)).withItems((new ItemStack(Items.QUARTZ, 4))));
         recipes.add(new CrushRecipe("glowstone_block_to_dust", Ingredient.of(Blocks.GLOWSTONE)).withItems((new ItemStack(Items.GLOWSTONE_DUST, 4))));
 
 

@@ -9,8 +9,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.ForgeMod;
-
+import net.neoforged.neoforge.common.NeoForgeMod;
 import java.util.UUID;
 
 public class DepthsPerk extends Perk {
@@ -26,7 +25,7 @@ public class DepthsPerk extends Perk {
     public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int slotValue) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> modifiers = new ImmutableMultimap.Builder<>();
         if(slotValue >= 3){
-            modifiers.put(ForgeMod.SWIM_SPEED.get(), new AttributeModifier(PERK_UUID, "DepthsPerk", 2.0, AttributeModifier.Operation.ADDITION));
+            modifiers.put(NeoForgeMod.SWIM_SPEED.get(), new AttributeModifier(PERK_UUID, "DepthsPerk", 2.0, AttributeModifier.Operation.ADDITION));
         }
 
         return modifiers.build();

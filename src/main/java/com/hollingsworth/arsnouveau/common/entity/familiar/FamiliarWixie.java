@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
+import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
@@ -29,9 +30,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.brewing.BrewingRecipe;
-import net.minecraftforge.event.entity.living.MobEffectEvent;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.brewing.BrewingRecipe;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
+import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
@@ -50,7 +52,7 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if (level.isClientSide || hand != InteractionHand.MAIN_HAND)
+        if (level().isClientSide || hand != InteractionHand.MAIN_HAND)
             return InteractionResult.SUCCESS;
 
         ItemStack stack = player.getItemInHand(hand);
@@ -62,18 +64,18 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
             setColor(color);
             return InteractionResult.SUCCESS;
         }else{
-            for (BrewingRecipe r : ArsNouveauAPI.getInstance().getAllPotionRecipes()) {
-                ItemStack water = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
-                ItemStack awkard = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.AWKWARD);
+            for (BrewingRecipe r : ArsNouveauAPI.getInstance().getAllPotionRecipes(level())) {
+                ItemStack water = PotionUtil.getPotion(Potions.WATER);
+                ItemStack awkward = PotionUtil.getPotion(Potions.AWKWARD);
 
-                if(r.isIngredient(stack) && (r.getInput().test(awkard) || r.getInput().test(water))){
+                if(r.isIngredient(stack) && (r.getInput().test(awkward) || r.getInput().test(water))){
                     PotionData data = new PotionData(r.getOutput().copy());
 
                     if(!data.isEmpty()){
                         data.applyEffects(player, player, player);
                         PortUtil.sendMessage(player, Component.translatable("ars_nouveau.wixie_familiar.applied",data.asPotionStack().getHoverName().getString()));
-                        Networking.sendToNearby(level, this, new PacketAnimEntity(this.getId(), EntityWixie.Animations.CAST.ordinal()));
-                        ParticleUtil.spawnPoof((ServerLevel) level, player.blockPosition().above());
+                        Networking.sendToNearby(level(), this, new PacketAnimEntity(this.getId(), EntityWixie.Animations.CAST.ordinal()));
+                        ParticleUtil.spawnPoof((ServerLevel) level(), player.blockPosition().above());
                         stack.shrink(1);
                         return InteractionResult.SUCCESS;
                     }
@@ -92,7 +94,8 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
         boolean isBeneficialOwner = target.equals(getOwner()) && event.getEffectInstance().getEffect().isBeneficial();
         boolean isApplierOwner = applier != null && applier.equals(this.getOwner());
         if(isBeneficialOwner || isApplierOwner){
-            event.getEffectInstance().duration += event.getEffectInstance().duration * .2;
+            event.getEffectInstance().getCures();
+            event.getEffectInstance().mapDuration(duration -> duration + duration * 2);
         }
     }
 
@@ -135,6 +138,11 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
         if (color.isEmpty())
             color = "blue";
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/wixie_" + color + ".png");
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+
     }
 
     public static class DebuffTargetGoal extends Goal {

@@ -9,9 +9,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.network.NetworkEvent;
-
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class PacketSummonFamiliar {
@@ -47,7 +46,7 @@ public class PacketSummonFamiliar {
                 familiarEntity.getThisEntity().setPos(owner.getX(), owner.getY(), owner.getZ());
 
                 FamiliarSummonEvent summonEvent = new FamiliarSummonEvent(familiarEntity.getThisEntity(), owner);
-                MinecraftForge.EVENT_BUS.post(summonEvent);
+                NeoForge.EVENT_BUS.post(summonEvent);
 
                 if (!summonEvent.isCanceled()) {
                     owner.level.addFreshEntity(familiarEntity.getThisEntity());

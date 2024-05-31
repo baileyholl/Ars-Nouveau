@@ -9,7 +9,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraftforge.event.entity.living.LivingEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
 
 public class RitualFlight extends RangeEffectRitual {
     @Override

@@ -16,7 +16,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -51,18 +51,18 @@ public class EffectDispel extends AbstractEffect {
                 //TODO dispel loot table?
                 return;
             }
-            if (MinecraftForge.EVENT_BUS.post(new DispelEvent.Pre(rayTraceResult, world, shooter, spellStats, spellContext)))
+            if (NeoForge.EVENT_BUS.post(new DispelEvent.Pre(rayTraceResult, world, shooter, spellStats, spellContext)))
                 return;
             if (entity instanceof IDispellable iDispellable) {
                 iDispellable.onDispel(shooter);
             }
-            MinecraftForge.EVENT_BUS.post(new DispelEvent.Post(rayTraceResult, world, shooter, spellStats, spellContext));
+            NeoForge.EVENT_BUS.post(new DispelEvent.Post(rayTraceResult, world, shooter, spellStats, spellContext));
         }
     }
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (MinecraftForge.EVENT_BUS.post(new DispelEvent.Pre(rayTraceResult, world, shooter, spellStats, spellContext)))
+        if (NeoForge.EVENT_BUS.post(new DispelEvent.Pre(rayTraceResult, world, shooter, spellStats, spellContext)))
             return;
         if (world.getBlockState(rayTraceResult.getBlockPos()) instanceof IDispellable dispellable) {
             dispellable.onDispel(shooter);
@@ -70,7 +70,7 @@ public class EffectDispel extends AbstractEffect {
         if (world.getBlockEntity(rayTraceResult.getBlockPos()) instanceof IDispellable dispellable) {
             dispellable.onDispel(shooter);
         }
-        MinecraftForge.EVENT_BUS.post(new DispelEvent.Post(rayTraceResult, world, shooter, spellStats, spellContext));
+        NeoForge.EVENT_BUS.post(new DispelEvent.Post(rayTraceResult, world, shooter, spellStats, spellContext));
     }
 
     @Override
