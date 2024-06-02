@@ -44,7 +44,7 @@ public class EffectConjureWater extends AbstractEffect implements IPotionEffect 
             entity.clearFire();
         }
         if (entity instanceof LivingEntity livingEntity && spellStats.getDurationMultiplier() > 0) {
-            applyConfigPotion(livingEntity, ModPotions.SOGGY_EFFECT.get(), spellStats);
+            applyConfigPotion(livingEntity, ModPotions.SOAKED_EFFECT.get(), spellStats);
         }
         if (spellStats.isSensitive() && !world.dimensionType().ultraWarm()) {
             placeWater(world, shooter, spellContext, resolver, entity.blockPosition(), Direction.UP);
