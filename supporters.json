@@ -24,7 +24,8 @@
   "1d1b87f0-5243-4b39-926f-f7490d28954a", "45e4cde5-5c3f-4997-8564-3ae5be9407e1", "d8a9a09f-d6da-495b-8bb8-7d56f9c5b949",
   "277d0321-7fe7-4ab0-b1bc-4b00ac627231", "8bbf2330-78d1-4ea7-945f-89b7a99298c2", "b4feb5db-e845-4bc1-b72e-b4de8b646288",
   "0c6a5082-d327-41ec-8722-42d942f30f5a", "728ac916-4aac-439d-af1c-d68e6a51139b", "9c5e5766-0a1c-4563-a8c4-8184994a15a6",
-  "92d6215b-0730-44ce-a8b2-1baf4c2cd0d5", "bfde5990-f846-4dae-90d1-0372ce45f522", "c6ad89fd-6625-4290-83b2-2665e9e39225"],
+  "92d6215b-0730-44ce-a8b2-1baf4c2cd0d5", "bfde5990-f846-4dae-90d1-0372ce45f522", "c6ad89fd-6625-4290-83b2-2665e9e39225",
+  "7dc1de80-c04c-4c0f-8f00-6326d770626b"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -98,7 +99,7 @@
       "bio": "Solstice likes to wander off and explore the unknown, usually leaving the task at hand unfinished. She will usually be found in someone's home relieving them of their gold and other valuables."
     },
     {
-      "name": "Aofie",
+      "name": "Aoife",
       "color": "lime",
       "adopter": "Sarenor",
       "bio": "Sarenor was in desperate need of help automating his  Imbuement Stills when Aoife pranced through his automation basement on the search for adventure and food. After tossing a gold nugget at her, Aoife became Sarenors first and best Still Master. Today she enjoys a good dram, friends, and nice chair."
@@ -386,6 +387,17 @@
       "adopter": "Hubnester",
       "color": "cyan",
       "bio": "A cute lil guy who does cute lil things."
+    },{
+      "name": "OmegaYun",
+      "color": "pink",
+      "adopter": "Milinen",
+      "bio": "Is angry at a big dummy named Adashi."
+    },{
+      "name": "Honeybun",
+      "adopter": "LunarisDraconis",
+      "bio": "sweet, soft, shy, and loving loves cuddles and snacks",
+      "color": "pink"
     }
   ]
 }
+
