@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau;
 
+import com.hollingsworth.arsnouveau.api.registry.BuddingConversionRegistry;
 import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
@@ -97,7 +98,10 @@ public class ArsNouveau {
         if (terrablenderLoaded && Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
             event.enqueueWork(Terrablender::registerBiomes);
         }
-        MinecraftForge.EVENT_BUS.addListener((ServerStartedEvent e) -> CasterTomeRegistry.reloadTomeData(e.getServer().getRecipeManager(), e.getServer().getLevel(Level.OVERWORLD)));
+        MinecraftForge.EVENT_BUS.addListener((ServerStartedEvent e) -> {
+            CasterTomeRegistry.reloadTomeData(e.getServer().getRecipeManager(), e.getServer().getLevel(Level.OVERWORLD));
+            BuddingConversionRegistry.reloadBuddingConversionRecipes(e.getServer().getRecipeManager());
+        });
     }
 
     public void postModLoadEvent(final FMLLoadCompleteEvent event) {

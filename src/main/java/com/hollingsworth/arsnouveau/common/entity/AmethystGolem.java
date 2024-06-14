@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.recipe.BuddingConversionRecipe;
+import com.hollingsworth.arsnouveau.api.registry.BuddingConversionRegistry;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
@@ -63,7 +64,7 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
     public static final EntityDataAccessor<Boolean> IMBUEING = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> STOMPING = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<BlockPos> IMBUE_POS = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.BLOCK_POS);
-    public final List<BuddingConversionRecipe> recipes;
+    public final List<BuddingConversionRecipe> recipes = BuddingConversionRegistry.getRecipes();
 
     public int growCooldown;
     public int convertCooldown;
@@ -87,7 +88,6 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
 
     public AmethystGolem(EntityType<? extends PathfinderMob> p_21683_, Level p_21684_) {
         super(p_21683_, p_21684_);
-        this.recipes = this.level.getRecipeManager().getAllRecipesFor(RecipeRegistry.BUDDING_CONVERSION_TYPE.get());
     }
 
     @Override

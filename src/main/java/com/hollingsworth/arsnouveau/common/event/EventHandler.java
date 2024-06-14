@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.recipe.DispelEntityRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.MultiRecipeWrapper;
+import com.hollingsworth.arsnouveau.api.registry.BuddingConversionRegistry;
 import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.api.ritual.RitualEventQueue;
@@ -106,7 +107,8 @@ public class EventHandler {
                     @Override
                     public void tickEvent(TickEvent event) {
                         if (event instanceof TickEvent.ServerTickEvent serverTickEvent) {
-                            CasterTomeRegistry.reloadTomeData(serverTickEvent.getServer().getRecipeManager(), ((TickEvent.ServerTickEvent) event).getServer().getLevel(Level.OVERWORLD));
+                            CasterTomeRegistry.reloadTomeData(serverTickEvent.getServer().getRecipeManager(), serverTickEvent.getServer().getLevel(Level.OVERWORLD));
+                            BuddingConversionRegistry.reloadBuddingConversionRecipes(serverTickEvent.getServer().getRecipeManager());
                         }
                         expired = true;
                     }
