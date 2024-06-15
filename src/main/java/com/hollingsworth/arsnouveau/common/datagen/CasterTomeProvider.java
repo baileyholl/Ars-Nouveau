@@ -248,6 +248,8 @@ public class CasterTomeProvider extends SimpleDataProvider {
                 .add(EffectLight.INSTANCE)
                 .add(AugmentExtendTime.INSTANCE, 3), "When you want to go deeper but just don't have the torches", new ParticleColor(0, 255, 0)));
 
+        tomes.add(buildTome("uni","Uni's Windshield", new Spell(MethodSelf.INSTANCE, EffectOrbit.INSTANCE, EffectKnockback.INSTANCE).add(AugmentAmplify.INSTANCE, 8), "Stay away!"));
+
         for (CasterTomeData g : tomes) {
             Path path = getRecipePath(output, g.getId().getPath());
             saveStable(pOutput, g.toJson(), path);
