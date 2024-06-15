@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau;
 import com.hollingsworth.arsnouveau.api.registry.BuddingConversionRegistry;
 import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ScryRitualRegistry;
 import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
 import com.hollingsworth.arsnouveau.client.container.CraftingTerminalScreen;
 import com.hollingsworth.arsnouveau.client.registry.ClientHandler;
@@ -101,6 +102,7 @@ public class ArsNouveau {
         MinecraftForge.EVENT_BUS.addListener((ServerStartedEvent e) -> {
             CasterTomeRegistry.reloadTomeData(e.getServer().getRecipeManager(), e.getServer().getLevel(Level.OVERWORLD));
             BuddingConversionRegistry.reloadBuddingConversionRecipes(e.getServer().getRecipeManager());
+            ScryRitualRegistry.reloadScryRitualRecipes(e.getServer().getRecipeManager());
         });
     }
 
