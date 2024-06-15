@@ -25,6 +25,7 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
         this.tag(Tags.EntityTypes.BOSSES).add(ModEntities.WILDEN_BOSS.get());
+        this.tag(EntityTags.REWIND_BLACKLIST).addTags(Tags.EntityTypes.BOSSES);
         this.tag(EntityTags.DISINTEGRATION_BLACKLIST);
         this.tag(EntityTags.DISINTEGRATION_WHITELIST);
         this.tag(EntityTags.DRYGMY_BLACKLIST).add(EntityType.IRON_GOLEM);

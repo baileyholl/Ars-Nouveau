@@ -1,11 +1,13 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.event.DelayedSpellEvent;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -15,6 +17,8 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SpellContext implements Cloneable {
 
@@ -38,6 +42,9 @@ public class SpellContext implements Cloneable {
     public CompoundTag tag = new CompoundTag();
     private IWrappedCaster wrappedCaster;
     private SpellContext previousContext;
+    private DelayedSpellEvent delayedSpellEvent;
+
+    public Map<ResourceLocation, IContextAttachment> attachments = new HashMap<>();
 
     public SpellContext(Level level,@NotNull Spell spell, @Nullable LivingEntity caster, IWrappedCaster wrappedCaster) {
         this.level = level;
@@ -67,6 +74,14 @@ public class SpellContext implements Cloneable {
     public SpellContext withParent(SpellContext parent){
         this.previousContext = parent;
         return this;
+    }
+
+    public <T extends IContextAttachment> T getOrCreateAttachment(ResourceLocation id, T attachment){
+        return (T) attachments.computeIfAbsent(id, k -> attachment);
+    }
+
+    public @Nullable <T extends IContextAttachment> T getAttachment(ResourceLocation id){
+        return (T) attachments.get(id);
     }
 
     public @Nullable AbstractSpellPart nextPart() {
@@ -113,7 +128,7 @@ public class SpellContext implements Cloneable {
     }
 
     public boolean hasNextPart() {
-        return spell.isValid() && !isCanceled() && currentIndex < spell.recipe.size();
+        return spell.isValid() && !isCanceled() && !this.isDelayed() && currentIndex < spell.recipe.size();
     }
 
     public SpellContext resetCastCounter() {
@@ -207,6 +222,18 @@ public class SpellContext implements Cloneable {
         cancelReason = CancelReason.TERMINATED;
     }
 
+    public void delay(DelayedSpellEvent spellEvent){
+        this.delayedSpellEvent = spellEvent;
+    }
+
+    public DelayedSpellEvent getDelayedSpellEvent(){
+        return delayedSpellEvent;
+    }
+
+    public boolean isDelayed(){
+        return delayedSpellEvent != null && delayedSpellEvent.duration > 0;
+    }
+
     public @NotNull Spell getSpell() {
         return spell == null ? new Spell() : spell;
     }
@@ -240,6 +267,7 @@ public class SpellContext implements Cloneable {
             clone.level = this.level;
             clone.wrappedCaster = this.wrappedCaster;
             clone.previousContext = this.previousContext == null ? null : this.previousContext.clone();
+            clone.attachments = attachments.isEmpty() ? new HashMap<>() :new HashMap<>(attachments);
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();

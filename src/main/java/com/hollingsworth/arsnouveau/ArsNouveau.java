@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau;
 
+import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
@@ -150,5 +151,7 @@ public class ArsNouveau {
     @SubscribeEvent
     public static void onServerStopped(final ServerStoppingEvent event) {
         Pathfinding.shutdown();
+        EventQueue.getServerInstance().clear();
+        EventQueue.getClientQueue().clear();
     }
 }
