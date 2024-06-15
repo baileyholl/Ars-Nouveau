@@ -11,21 +11,19 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.StringRepresentable;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
@@ -33,26 +31,47 @@ import net.minecraftforge.common.loot.IGlobalLootModifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.Optional;
+import java.util.List;
 
-public record DispelEntityRecipe(ResourceLocation id, EntityType<?> entity, ItemStack result, LootItemCondition[] conditions) implements Recipe<Container> {
+public record DispelEntityRecipe(ResourceLocation id, EntityType<?> entity, ResourceLocation lootTable, LootItemCondition[] conditions) implements Recipe<Container> {
     @Override
     public boolean matches(Container container, Level level) {
         return false;
     }
 
-    public boolean matches(Entity entity) {
-        if (!entity.getType().equals(this.entity)) return false;
+    public boolean matches(LivingEntity killer, Entity victim) {
+        if (!victim.getType().equals(this.entity)) return false;
 
         if (conditions.length == 0) return true;
 
-        LootParams params = new LootParams.Builder((ServerLevel) entity.level)
-                .withParameter(LootContextParams.ORIGIN, entity.position())
-                .withParameter(LootContextParams.THIS_ENTITY, entity)
-                .create(LootContextParamSets.SELECTOR);
-        LootContext context = new LootContext.Builder(params).create(null);
+        LootParams params = getLootParams(killer, victim);
+        LootContext context = new LootContext.Builder(params)
+                .create(null);
 
         return Arrays.stream(conditions).allMatch(condition -> condition.test(context));
+    }
+
+    private LootParams getLootParams(LivingEntity killer, Entity victim) {
+        LootParams.Builder params = new LootParams.Builder((ServerLevel) victim.level)
+                .withParameter(LootContextParams.ORIGIN, victim.position())
+                .withParameter(LootContextParams.THIS_ENTITY, victim)
+                .withParameter(LootContextParams.DAMAGE_SOURCE, killer.damageSources().mobAttack(killer))
+                .withOptionalParameter(LootContextParams.KILLER_ENTITY, killer)
+                .withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, killer);
+        if (killer instanceof ServerPlayer serverPlayer) {
+            params = params.withOptionalParameter(LootContextParams.LAST_DAMAGE_PLAYER, serverPlayer);
+        }
+        return params.create(LootContextParamSets.ENTITY);
+    }
+
+    public List<ItemStack> result(LivingEntity killer, Entity victim) {
+        if (!victim.getType().equals(this.entity)) return List.of();
+
+        LootParams params = getLootParams(killer, victim);
+
+        LootTable lootTable = killer.level().getServer().getLootData().getLootTable(lootTable());
+
+        return lootTable.getRandomItems(params);
     }
 
     @Override
@@ -102,7 +121,7 @@ public record DispelEntityRecipe(ResourceLocation id, EntityType<?> entity, Item
         public static final Codec<DispelEntityRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 ResourceLocation.CODEC.fieldOf("id").forGetter(DispelEntityRecipe::id),
                 BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity").forGetter(DispelEntityRecipe::entity),
-                ItemStack.CODEC.fieldOf("result").forGetter(DispelEntityRecipe::result),
+                ResourceLocation.CODEC.fieldOf("loot_table").forGetter(DispelEntityRecipe::lootTable),
                 IGlobalLootModifier.LOOT_CONDITIONS_CODEC.optionalFieldOf("loot_conditions", new LootItemCondition[]{}).forGetter(DispelEntityRecipe::conditions)
         ).apply(instance, DispelEntityRecipe::new));
 

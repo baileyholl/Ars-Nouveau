@@ -320,10 +320,12 @@ public class EventHandler {
         }
     }
 
-    private static void replaceEntityWithItem(ServerLevel level, Entity entity, ItemStack item) {
+    private static void replaceEntityWithItems(ServerLevel level, Entity entity, ItemStack ...items) {
         entity.remove(Entity.RemovalReason.KILLED);
         ParticleUtil.spawnPoof(level, entity.blockPosition());
-        level.addFreshEntity(new ItemEntity(level, entity.getX(), entity.getY(), entity.getZ(), item));
+        for (ItemStack item : items) {
+            level.addFreshEntity(new ItemEntity(level, entity.getX(), entity.getY(), entity.getZ(), item));
+        }
     }
 
     @SubscribeEvent
@@ -334,13 +336,13 @@ public class EventHandler {
             // TODO: Replace with EntitySubPredicate when it becomes a registry in 1.21
             if (entity instanceof Witch witch) {
                 if (witch.getHealth() <= witch.getMaxHealth() / 2) {
-                    replaceEntityWithItem(level, witch, new ItemStack(ItemsRegistry.WIXIE_SHARD));
+                    replaceEntityWithItems(level, witch, new ItemStack(ItemsRegistry.WIXIE_SHARD));
                     return;
                 }
             }
             for (DispelEntityRecipe recipe : level.getRecipeManager().getAllRecipesFor(RecipeRegistry.DISPEL_ENTITY_TYPE.get())) {
-                if (recipe.matches(entity)) {
-                    replaceEntityWithItem(level, entity, recipe.result().copy());
+                if (recipe.matches(event.shooter, entity)) {
+                    replaceEntityWithItems(level, entity, recipe.result(event.shooter, entity).toArray(ItemStack[]::new));
                     return;
                 }
             }

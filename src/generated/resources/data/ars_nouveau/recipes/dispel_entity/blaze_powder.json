@@ -13,8 +13,5 @@
       }
     }
   ],
-  "result": {
-    "Count": 1,
-    "id": "minecraft:blaze_powder"
-  }
+  "loot_table": "minecraft:entities/blaze"
 }
