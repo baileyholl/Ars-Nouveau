@@ -38,23 +38,23 @@ public class SpellBookRenderer extends FixedGeoItemRenderer<SpellBook> {
 
     @Override
     protected void renderInGui(ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-        MultiBufferSource.BufferSource var10000;
-        if (bufferSource instanceof MultiBufferSource.BufferSource bufferSource2) {
-            var10000 = bufferSource2;
-        } else {
-            var10000 = Minecraft.getInstance().renderBuffers().bufferSource();
-        }
-
-        MultiBufferSource.BufferSource defaultBufferSource = var10000;
-        RenderType renderType = this.getRenderType(this.animatable, this.getTextureLocation(this.animatable), defaultBufferSource, Minecraft.getInstance().getFrameTime());
-        VertexConsumer buffer = ItemRenderer.getFoilBufferDirect(bufferSource, renderType, true, this.currentItemStack != null && this.currentItemStack.hasFoil());
-        poseStack.pushPose();
         if (this.useEntityGuiLighting) {
             Lighting.setupForEntityInInventory();
         } else {
             Lighting.setupForFlatItems();
         }
 
+        MultiBufferSource.BufferSource var10000;
+        if (bufferSource instanceof MultiBufferSource.BufferSource bufferSource2) {
+            var10000 = bufferSource2;
+        } else {
+            var10000 = Minecraft.getInstance().renderBuffers().bufferSource();
+        }
+        MultiBufferSource.BufferSource defaultBufferSource = var10000;
+        RenderType renderType = this.getRenderType(this.animatable, this.getTextureLocation(this.animatable), defaultBufferSource, Minecraft.getInstance().getFrameTime());
+        VertexConsumer buffer = ItemRenderer.getFoilBufferDirect(bufferSource, renderType, true, this.currentItemStack != null && this.currentItemStack.hasFoil());
+
+        poseStack.pushPose();
         this.defaultRenderGui(poseStack, this.animatable, defaultBufferSource, renderType, buffer, 0.0F, Minecraft.getInstance().getFrameTime(), packedLight, packedOverlay);
         defaultBufferSource.endBatch();
         RenderSystem.enableDepthTest();
