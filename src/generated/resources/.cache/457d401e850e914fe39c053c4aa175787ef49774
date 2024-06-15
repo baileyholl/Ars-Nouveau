@@ -1,4 +1,6 @@
-// 1.20.1	2024-06-15T18:50:20.748817682	Scry Ritual Datagen
+// 1.20.1	2024-06-15T19:25:53.535665436	Scry Ritual Datagen
+e72254d66d10ea16125165e2a42f90bcdedf1da7 data/ars_nouveau/recipes/scry_ritual/amethyst_blocks.json
+8a268cddaa06f14a9678d681bb1ef601c3d28761 data/ars_nouveau/recipes/scry_ritual/amethyst_gems.json
 45dfbbb83a3c4b0ca88af91b0e33601472173ada data/ars_nouveau/recipes/scry_ritual/coal_ores.json
 9f3cfc89b39d566cbee1de2693fee071fb590e89 data/ars_nouveau/recipes/scry_ritual/copper_ores.json
 72033ec1323c34e45f9711c147618ffa750afc90 data/ars_nouveau/recipes/scry_ritual/diamond_ores.json
