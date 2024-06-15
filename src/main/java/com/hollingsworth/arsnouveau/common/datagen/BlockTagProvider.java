@@ -146,6 +146,8 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
             Block slab = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s + "_slab"));
             this.tag(DECORATIVE_AN).add(block, stair, slab);
             this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block, stair, slab);
+            this.tag(BlockTags.STAIRS).add(stair);
+            this.tag(BlockTags.SLABS).add(slab);
         }
 
         this.tag(DECORATIVE_AN).add(BlockRegistry.FALSE_WEAVE.get(), BlockRegistry.MIRROR_WEAVE.get(), BlockRegistry.GHOST_WEAVE.get(), BlockRegistry.MAGEBLOOM_BLOCK.get());
