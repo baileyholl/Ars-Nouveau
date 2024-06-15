@@ -59,7 +59,8 @@ public record DispelEntityRecipe(ResourceLocation id, EntityType<?> entity, Reso
                 .withOptionalParameter(LootContextParams.KILLER_ENTITY, killer)
                 .withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, killer);
         if (killer instanceof ServerPlayer serverPlayer) {
-            params = params.withOptionalParameter(LootContextParams.LAST_DAMAGE_PLAYER, serverPlayer);
+            params = params.withOptionalParameter(LootContextParams.LAST_DAMAGE_PLAYER, serverPlayer)
+                    .withLuck(serverPlayer.getLuck());
         }
         return params.create(LootContextParamSets.ENTITY);
     }
