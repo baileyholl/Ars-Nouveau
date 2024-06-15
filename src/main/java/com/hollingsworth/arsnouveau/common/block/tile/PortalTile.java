@@ -60,7 +60,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
             if(serverWorld == null){
                 return;
             }
-            Networking.sendToNearby(serverWorld, e, new PacketWarpPosition(e.getId(), e.getX() + 0.5, e.getY(), e.getZ() + 0.5, e.getXRot(), e.getYRot()));
+            Networking.sendToNearby(serverWorld, e, new PacketWarpPosition(e.getId(), e.getX() + 0.5, e.getY(), e.getZ() + 0.5, rotationVec.x, rotationVec.y));
             serverLevel.sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
                     4, (serverWorld.random.nextDouble() - 0.5D) * 2.0D, -serverWorld.random.nextDouble(), (serverWorld.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
         }
@@ -139,8 +139,11 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
                 return entity;
             }
             entity.teleportTo(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
-            entity.setXRot(rotationVec != null ? rotationVec.x : entity.getXRot());
-            entity.setYRot(rotationVec != null ? rotationVec.y : entity.getYRot());
+            var rotX = rotationVec != null ? rotationVec.x : entity.getXRot();
+            var rotY = rotationVec != null ? rotationVec.y : entity.getYRot();
+            entity.setXRot(rotX);
+            entity.setYRot(rotY);
+            Networking.sendToNearby(targetWorld, entity, new PacketWarpPosition(entity.getId(),target.getX() + 0.5, target.getY(), target.getZ() + 0.5, rotX, rotY));
             if (!entity.getPassengers().isEmpty()) {
                 //Force re-apply any passengers so that players don't get "stuck" outside what they may be riding
                 ((ServerChunkCache) entity.getCommandSenderWorld().getChunkSource()).broadcast(entity, new ClientboundSetPassengersPacket(entity));
