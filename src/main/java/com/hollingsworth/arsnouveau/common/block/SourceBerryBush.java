@@ -134,7 +134,7 @@ public class SourceBerryBush extends BushBlock implements BonemealableBlock {
     @Override
     public BlockPathTypes getBlockPathType(BlockState state, BlockGetter world, BlockPos pos, @Nullable Mob entity) {
         if(entity instanceof Starbuncle){
-            return null;
+            return BlockPathTypes.WALKABLE;
         }
         return BlockPathTypes.DAMAGE_OTHER;
     }
