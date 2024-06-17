@@ -166,6 +166,7 @@
   "ars_nouveau.dominion_wand.position_stored": "Stored: %s",
   "ars_nouveau.dominion_wand.stored_entity": "Stored entity",
   "ars_nouveau.drygmy.blacklist": "Drygmy Blacklisted",
+  "ars_nouveau.drygmy.only_use_jars": "Only Using Containment Jars",
   "ars_nouveau.dynamic_lights.button_off": "Dynamic lights are turned off.",
   "ars_nouveau.dynamic_lights.button_on": "Dynamic lights are turned on.  This can cause lag for users with weaker CPUs, low RAM allocation, and unexpected results with 'performance' mods like Optifine.",
   "ars_nouveau.earth_essence.tooltip": "Can be used on Dirt to turn it into Grass.",

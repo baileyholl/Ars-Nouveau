@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
@@ -39,13 +40,12 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class DrygmyTile extends SummoningTile implements ITooltipProvider {
-
-
+public class DrygmyTile extends SummoningTile implements ITooltipProvider, IWandable {
     public int progress;
     public int bonus;
     public boolean needsMana;
     private List<LivingEntity> nearbyEntities;
+    public boolean includeEntities = true;
 
     public DrygmyTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.DRYGMY_TILE, pos, state);
@@ -130,7 +130,10 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
 
     public void refreshEntitiesAndBonus() {
         Set<ResourceLocation> uniqueEntities;
-        this.nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, new AABB(getBlockPos().north(10).west(10).below(6), getBlockPos().south(10).east(10).above(6)));
+        this.nearbyEntities = new ArrayList<>();
+        if (this.includeEntities) {
+            this.nearbyEntities.addAll(level.getEntitiesOfClass(LivingEntity.class, new AABB(getBlockPos().north(10).west(10).below(6), getBlockPos().south(10).east(10).above(6))));
+        }
         for(BlockPos b : BlockPos.withinManhattan(getBlockPos(), 10, 10, 10)){
             if(level.getBlockEntity(b) instanceof MobJarTile mobJarTile && mobJarTile.getEntity() instanceof LivingEntity livingEntity){
                 nearbyEntities.add(livingEntity);
@@ -206,12 +209,18 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
         updateBlock();
     }
 
+    @Override
+    public void onWanded(Player playerEntity) {
+        includeEntities = !includeEntities;
+        updateBlock();
+    }
 
     @Override
     public void load(CompoundTag compound) {
         this.progress = compound.getInt("progress");
         this.bonus = compound.getInt("bonus");
         this.needsMana = compound.getBoolean("needsMana");
+        this.includeEntities = !compound.contains("includeEntities") || compound.getBoolean("includeEntities");
         super.load(compound);
     }
 
@@ -221,6 +230,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
         tag.putInt("progress", progress);
         tag.putInt("bonus", bonus);
         tag.putBoolean("needsMana", needsMana);
+        tag.putBoolean("includeEntities", includeEntities);
     }
 
     @Override
@@ -230,6 +240,9 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
         }
         if (this.needsMana) {
             tooltip.add(Component.translatable("ars_nouveau.wixie.need_mana"));
+        }
+        if (!this.includeEntities) {
+            tooltip.add(Component.translatable("ars_nouveau.drygmy.only_use_jars"));
         }
     }
 }
