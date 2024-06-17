@@ -25,7 +25,7 @@
   "277d0321-7fe7-4ab0-b1bc-4b00ac627231", "8bbf2330-78d1-4ea7-945f-89b7a99298c2", "b4feb5db-e845-4bc1-b72e-b4de8b646288",
   "0c6a5082-d327-41ec-8722-42d942f30f5a", "728ac916-4aac-439d-af1c-d68e6a51139b", "9c5e5766-0a1c-4563-a8c4-8184994a15a6",
   "92d6215b-0730-44ce-a8b2-1baf4c2cd0d5", "bfde5990-f846-4dae-90d1-0372ce45f522", "c6ad89fd-6625-4290-83b2-2665e9e39225",
-  "7dc1de80-c04c-4c0f-8f00-6326d770626b"],
+  "7dc1de80-c04c-4c0f-8f00-6326d770626b", "9ed15188-9b7e-432f-86fc-fe50aa347d2c"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -397,7 +397,12 @@
       "adopter": "LunarisDraconis",
       "bio": "sweet, soft, shy, and loving loves cuddles and snacks",
       "color": "pink"
-    }
+    },{
+      "name": "Copito",
+      "adopter": "Diego",
+      "bio": "Very stronger with the magic of the most ancient powers, prepared for battle and also intelligent",
+      "color": "white"
+    },
   ]
 }
 
