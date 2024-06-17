@@ -111,6 +111,9 @@ public class ANPlayerDataCap implements IPlayerCap {
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
+        glyphs = new HashSet<>();
+        familiars = new HashSet<>();
+
         CompoundTag glyphsTag = nbt.getCompound("glyphs");
         for (int i = 0; i < glyphsTag.getInt("size"); i++) {
             ResourceLocation id = new ResourceLocation(glyphsTag.getString("glyph" + i));

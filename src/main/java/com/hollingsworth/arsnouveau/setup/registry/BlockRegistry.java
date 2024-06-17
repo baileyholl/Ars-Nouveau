@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.client.renderer.tile.*;
 import com.hollingsworth.arsnouveau.common.block.LightBlock;
 import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.block.tile.*;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.items.MobJarItem;
 import com.hollingsworth.arsnouveau.common.items.ModBlockItem;
 import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
@@ -266,10 +267,10 @@ public class BlockRegistry {
     public static RegistryWrapper<BlockEntityType<ScryersOculusTile>> SCRYERS_OCULUS_TILE = registerTile(LibBlockNames.SCRYERS_OCULUS, ScryersOculusTile::new, SCRYERS_OCULUS);
     public static RegistryWrapper<ScryerCrystal> SCRYERS_CRYSTAL = registerBlockAndItem(LibBlockNames.SCRYERS_CRYSTAL, ScryerCrystal::new);
     public static RegistryWrapper<BlockEntityType<ScryerCrystalTile>> SCRYER_CRYSTAL_TILE = registerTile(LibBlockNames.SCRYERS_CRYSTAL, ScryerCrystalTile::new, SCRYERS_CRYSTAL);
-    public static RegistryWrapper<ArchfruitPod> MENDOSTEEN_POD = registerBlockAndItem(LibBlockNames.MENDOSTEEN_POD, () -> new ArchfruitPod(() -> FLOURISHING_LOG.get()), (reg) -> new ItemNameBlockItem(reg.get(), defaultItemProperties().food(ItemsRegistry.MENDOSTEEN_FOOD)));
-    public static RegistryWrapper<ArchfruitPod> BASTION_POD = registerBlockAndItem(LibBlockNames.BASTION_POD, () -> new ArchfruitPod(() -> VEXING_LOG.get()), (reg) -> new ItemNameBlockItem(reg.get(), defaultItemProperties().food(ItemsRegistry.BASTION_FOOD)));
-    public static RegistryWrapper<ArchfruitPod> FROSTAYA_POD = registerBlockAndItem(LibBlockNames.FROSTAYA_POD, () -> new ArchfruitPod(() -> CASCADING_LOG.get()), (reg) -> new ItemNameBlockItem(reg.get(), defaultItemProperties().food(ItemsRegistry.FROSTAYA_FOOD)));
-    public static RegistryWrapper<ArchfruitPod> BOMBEGRANTE_POD = registerBlockAndItem(LibBlockNames.BOMBEGRANATE_POD, () -> new ArchfruitPod(() -> BLAZING_LOG.get()), (reg) -> new ItemNameBlockItem(reg.get(), defaultItemProperties().food(ItemsRegistry.BLASTING_FOOD)));
+    public static RegistryWrapper<ArchfruitPod> MENDOSTEEN_POD = registerBlockAndItem(LibBlockNames.MENDOSTEEN_POD, () -> new ArchfruitPod(BlockTagProvider.FLOURISHING_LOGS), (reg) -> new ItemNameBlockItem(reg.get(), defaultItemProperties().food(ItemsRegistry.MENDOSTEEN_FOOD)));
+    public static RegistryWrapper<ArchfruitPod> BASTION_POD = registerBlockAndItem(LibBlockNames.BASTION_POD, () -> new ArchfruitPod(BlockTagProvider.VEXING_LOGS), (reg) -> new ItemNameBlockItem(reg.get(), defaultItemProperties().food(ItemsRegistry.BASTION_FOOD)));
+    public static RegistryWrapper<ArchfruitPod> FROSTAYA_POD = registerBlockAndItem(LibBlockNames.FROSTAYA_POD, () -> new ArchfruitPod(BlockTagProvider.CASCADING_LOGS), (reg) -> new ItemNameBlockItem(reg.get(), defaultItemProperties().food(ItemsRegistry.FROSTAYA_FOOD)));
+    public static RegistryWrapper<ArchfruitPod> BOMBEGRANTE_POD = registerBlockAndItem(LibBlockNames.BOMBEGRANATE_POD, () -> new ArchfruitPod(BlockTagProvider.BLAZING_LOGS), (reg) -> new ItemNameBlockItem(reg.get(), defaultItemProperties().food(ItemsRegistry.BLASTING_FOOD)));
     public static RegistryWrapper<PotionDiffuserBlock> POTION_DIFFUSER = registerBlockAndItem(LibBlockNames.POTION_DIFFUSER, PotionDiffuserBlock::new);
     public static RegistryWrapper<BlockEntityType<PotionDiffuserTile>> POTION_DIFFUSER_TILE = registerTile(LibBlockNames.POTION_DIFFUSER, PotionDiffuserTile::new, POTION_DIFFUSER);
     public static RegistryWrapper<AlterationTable> ALTERATION_TABLE = registerBlockAndItem(LibBlockNames.ALTERATION_TABLE, AlterationTable::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {

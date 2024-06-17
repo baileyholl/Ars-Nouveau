@@ -37,7 +37,9 @@ public class EffectIgnite extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (spellStats.isSensitive()) {
             BlockPos target = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
-            world.setBlock(target, BlockRegistry.MAGIC_FIRE.get().getStateForPlacement(world, target), 3);
+            if(world.getBlockState(target).canBeReplaced()) {
+                world.setBlock(target, BlockRegistry.MAGIC_FIRE.get().getStateForPlacement(world, target), 3);
+            }
             return;
         }
         BlockState hitState = world.getBlockState(rayTraceResult.getBlockPos());

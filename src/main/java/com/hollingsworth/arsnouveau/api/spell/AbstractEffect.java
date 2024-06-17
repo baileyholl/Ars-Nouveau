@@ -121,11 +121,12 @@ public abstract class AbstractEffect extends AbstractSpellPart {
             stack.enchant(Enchantments.BLOCK_FORTUNE, stats.getBuffCount(AugmentFortune.INSTANCE));
         }
     }
-
+    // TODO: Convert seconds to ticks for default configs
     public ForgeConfigSpec.DoubleValue DAMAGE;
     public ForgeConfigSpec.DoubleValue AMP_VALUE;
     public ForgeConfigSpec.IntValue POTION_TIME;
     public ForgeConfigSpec.IntValue EXTEND_TIME;
+    public ForgeConfigSpec.IntValue DURATION_DOWN_TIME;
     public ForgeConfigSpec.IntValue GENERIC_INT;
     public ForgeConfigSpec.DoubleValue GENERIC_DOUBLE;
     public ForgeConfigSpec.DoubleValue RANDOMIZE_CHANCE;
@@ -156,8 +157,17 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         POTION_TIME = builder.comment("Potion duration, in seconds").defineInRange("potion_time", defaultTime, 0, Integer.MAX_VALUE);
     }
 
+    @Deprecated(forRemoval = true)
     public void addExtendTimeConfig(ForgeConfigSpec.Builder builder, int defaultTime) {
         EXTEND_TIME = builder.comment("Extend time duration, in seconds").defineInRange("extend_time", defaultTime, 0, Integer.MAX_VALUE);
+    }
+
+    public void addExtendTimeTicksConfig(ForgeConfigSpec.Builder builder, int defaultTime) {
+        EXTEND_TIME = builder.comment("Extend time duration, in ticks").defineInRange("extend_time", defaultTime, 0, Integer.MAX_VALUE);
+    }
+
+    public void addDurationDownConfig(ForgeConfigSpec.Builder builder, int defaultTime) {
+        DURATION_DOWN_TIME = builder.comment("Duration down time, in ticks").defineInRange("duration_down_time", defaultTime, 0, Integer.MAX_VALUE);
     }
 
     public void addRandomizeConfig(ForgeConfigSpec.Builder builder, float defaultChance) {

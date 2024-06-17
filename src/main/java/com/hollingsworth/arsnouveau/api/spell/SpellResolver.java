@@ -146,13 +146,27 @@ public class SpellResolver implements Cloneable {
         return false;
     }
 
+
+    /**
+     * Sets the starting index to 0 and uncancels the spell, then resolves all effects.
+     */
     public void onResolveEffect(Level world, HitResult result) {
         this.hitResult = result;
         this.resolveAllEffects(world);
     }
 
+    /**
+     * Sets the starting index to 0 and uncancels the spell, then resolves all effects.
+     */
     protected void resolveAllEffects(Level world) {
         spellContext.resetCastCounter();
+        resume(world);
+    }
+
+    /**
+     * Attempts to resolve the remaining effects of the SpellContext without restarting.
+     */
+    public void resume(Level world){
         LivingEntity shooter = spellContext.getUnwrappedCaster();
         SpellResolveEvent.Pre spellResolveEvent = new SpellResolveEvent.Pre(world, shooter, this.hitResult, spell, spellContext, this);
         MinecraftForge.EVENT_BUS.post(spellResolveEvent);
