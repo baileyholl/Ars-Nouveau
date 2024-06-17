@@ -301,6 +301,7 @@ public class APIRegistry {
                 }
             }
         });
+        JarBehaviorRegistry.register(EntityType.WITHER, new WitherBehavior());
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {
