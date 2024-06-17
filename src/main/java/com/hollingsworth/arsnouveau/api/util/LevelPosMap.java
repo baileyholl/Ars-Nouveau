@@ -49,5 +49,4 @@ public class LevelPosMap {
             posMap.get(key).remove(pos);
         }
     }
-
 }
