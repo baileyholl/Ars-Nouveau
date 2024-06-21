@@ -29,12 +29,9 @@ public class EffectDelay extends AbstractEffect {
         super(GlyphLib.EffectDelayID, "Delay");
     }
 
-    public void sendPacket(Level world, HitResult rayTraceResult, @Nullable LivingEntity shooter, SpellContext spellContext, SpellStats spellStats, BlockHitResult blockResult, Entity hitEntity) {
+    public void sendPacket(Level world, HitResult rayTraceResult, @Nullable LivingEntity shooter, SpellContext spellContext, SpellStats spellStats, BlockHitResult blockResult, Entity hitEntity, SpellResolver spellResolver) {
         if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
-        Spell newSpell = spellContext.getRemainingSpell();
-        SpellContext newContext = spellContext.clone().withSpell(newSpell);
-        spellContext.setCanceled(true);
         int duration = GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getBuffCount(AugmentExtendTime.INSTANCE) * 20;
         int decreasedTime = EXTEND_TIME.get() * 10 * spellStats.getBuffCount(AugmentDurationDown.INSTANCE);
         duration -= decreasedTime;
@@ -42,21 +39,23 @@ public class EffectDelay extends AbstractEffect {
             double randomize = spellStats.getBuffCount(AugmentRandomize.INSTANCE) * RANDOMIZE_CHANCE.get();
             duration = world.random.nextIntBetweenInclusive((int) (duration * (1 - randomize)), (int) (duration * (1 + randomize)));
         }
-        EventQueue.getServerInstance().addEvent(
-                new DelayedSpellEvent(duration, rayTraceResult, world, newContext));
+        var delayEvent = new DelayedSpellEvent(duration, rayTraceResult, world, spellResolver);
+        spellContext.delay(delayEvent);
+
+        EventQueue.getServerInstance().addEvent(delayEvent);
         Networking.sendToNearby(world, BlockPos.containing(safelyGetHitPos(rayTraceResult)),
-                new PacketClientDelayEffect(duration, shooter, newSpell, newContext, blockResult, hitEntity));
+                new PacketClientDelayEffect(duration, shooter, spellContext.getSpell(), spellContext, blockResult, hitEntity));
     }
 
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        sendPacket(world, rayTraceResult, shooter, spellContext, spellStats, rayTraceResult, null);
+        sendPacket(world, rayTraceResult, shooter, spellContext, spellStats, rayTraceResult, null, resolver);
     }
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        sendPacket(world, rayTraceResult, shooter, spellContext, spellStats, null, rayTraceResult.getEntity());
+        sendPacket(world, rayTraceResult, shooter, spellContext, spellStats, null, rayTraceResult.getEntity(), resolver);
     }
 
     @Override
@@ -75,7 +74,7 @@ public class EffectDelay extends AbstractEffect {
    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
+        return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentRandomize.INSTANCE);
     }
 
     @Override

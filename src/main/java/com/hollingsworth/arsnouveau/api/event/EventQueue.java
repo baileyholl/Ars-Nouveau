@@ -1,11 +1,15 @@
 package com.hollingsworth.arsnouveau.api.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import org.jetbrains.annotations.NotNull;
+
+
 import java.util.ArrayList;
 import java.util.List;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.event.TickEvent;
 
 /**
  * For queuing deferred or over-time tasks. Tick refers to the Server or Client Tick event.
@@ -13,10 +17,10 @@ import net.neoforged.neoforge.event.TickEvent;
 @SuppressWarnings("ForLoopReplaceableByForEach")
 @EventBusSubscriber(modid = ArsNouveau.MODID)
 public class EventQueue {
-    List<ITimedEvent> events;
+    @NotNull List<ITimedEvent> events = new ArrayList<>();;
 
-    public void tick(TickEvent tickEvent) {
-        if (events == null || events.isEmpty()) {
+    public void tick(boolean serverSide) {
+        if (events.isEmpty()) {
             return;
         }
 
@@ -27,15 +31,13 @@ public class EventQueue {
             if (event.isExpired()) {
                 stale.add(event);
             } else {
-                event.tickEvent(tickEvent);
+                event.tick(serverSide);
             }
         }
         this.events.removeAll(stale);
     }
 
     public void addEvent(ITimedEvent event) {
-        if (events == null)
-            events = new ArrayList<>();
         events.add(event);
     }
 
@@ -54,7 +56,10 @@ public class EventQueue {
 
     // Tear down on world unload
     public void clear() {
-        this.events = null;
+        for(ITimedEvent event : events){
+            event.onServerStopping();
+        }
+        this.events = new ArrayList<>();
     }
 
     // Split these because our integrated servers are CURSED and both tick.
@@ -66,20 +71,13 @@ public class EventQueue {
     }
 
     @SubscribeEvent
-    public static void serverTick(TickEvent.ServerTickEvent e) {
-
-        if (e.phase != TickEvent.Phase.END)
-            return;
-
-        EventQueue.getServerInstance().tick(e);
+    public static void serverTick(ServerTickEvent.Post e) {
+        EventQueue.getServerInstance().tick(true);
     }
 
     @SubscribeEvent
-    public static void clientTickEvent(TickEvent.ClientTickEvent e) {
-
-        if (e.phase != TickEvent.Phase.END)
-            return;
-
-        EventQueue.getClientQueue().tick(e);
+    public static void clientTickEvent(ClientTickEvent.Post e) {
+        EventQueue.getClientQueue().tick(false);
     }
+
 }

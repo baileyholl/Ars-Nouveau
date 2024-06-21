@@ -64,11 +64,11 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public boolean canSummon(LivingEntity playerEntity) {
-        return isRealPlayer(playerEntity) && (playerEntity.getEffect(ModPotions.SUMMONING_SICKNESS_EFFECT.get()) == null || (playerEntity instanceof Player player && player.isCreative()));
+        return isRealPlayer(playerEntity) && (playerEntity.getEffect(ModPotions.SUMMONING_SICKNESS_EFFECT) == null || (playerEntity instanceof Player player && player.isCreative()));
     }
 
     public void applySummoningSickness(LivingEntity playerEntity, int time) {
-        playerEntity.addEffect(new MobEffectInstance(ModPotions.SUMMONING_SICKNESS_EFFECT.get(), time));
+        playerEntity.addEffect(new MobEffectInstance(ModPotions.SUMMONING_SICKNESS_EFFECT, time));
     }
 
     public void summonLivingEntity(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats augments, SpellContext spellContext, @Nullable SpellResolver resolver, ISummon summon) {
@@ -118,7 +118,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         }
 
         if (stats.hasBuff(AugmentFortune.INSTANCE)) {
-            stack.enchant(Enchantments.BLOCK_FORTUNE, stats.getBuffCount(AugmentFortune.INSTANCE));
+            stack.enchant(Enchantments.FORTUNE, stats.getBuffCount(AugmentFortune.INSTANCE));
         }
     }
 
@@ -126,6 +126,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     public ModConfigSpec.DoubleValue AMP_VALUE;
     public ModConfigSpec.IntValue POTION_TIME;
     public ModConfigSpec.IntValue EXTEND_TIME;
+    public ModConfigSpec.IntValue DURATION_DOWN_TIME;
     public ModConfigSpec.IntValue GENERIC_INT;
     public ModConfigSpec.DoubleValue GENERIC_DOUBLE;
     public ModConfigSpec.DoubleValue RANDOMIZE_CHANCE;
@@ -155,7 +156,6 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     public void addPotionConfig(ModConfigSpec.Builder builder, int defaultTime) {
         POTION_TIME = builder.comment("Potion duration, in seconds").defineInRange("potion_time", defaultTime, 0, Integer.MAX_VALUE);
     }
-
     public void addExtendTimeConfig(ModConfigSpec.Builder builder, int defaultTime) {
         EXTEND_TIME = builder.comment("Extend time duration, in seconds").defineInRange("extend_time", defaultTime, 0, Integer.MAX_VALUE);
     }
@@ -163,6 +163,11 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     public void addRandomizeConfig(ModConfigSpec.Builder builder, float defaultChance) {
         RANDOMIZE_CHANCE = builder.comment("Randomize chance, in percentage (0-1 = 0% - 100%)").defineInRange("extend_time", defaultChance, 0.0f, Integer.MAX_VALUE);
     }
+
+    public void addDurationDownConfig(ModConfigSpec.Builder builder, int defaultTime) {
+        DURATION_DOWN_TIME = builder.comment("Duration down time, in ticks").defineInRange("duration_down_time", defaultTime, 0, Integer.MAX_VALUE);
+    }
+
 
     public void addGenericInt(ModConfigSpec.Builder builder, int val, String comment, String path) {
         GENERIC_INT = builder.comment(comment).defineInRange(path, val, 0, Integer.MAX_VALUE);

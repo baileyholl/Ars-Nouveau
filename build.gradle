@@ -8,6 +8,7 @@ plugins {
 
 version = mod_version
 
+
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }

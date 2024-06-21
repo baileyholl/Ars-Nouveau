@@ -37,4 +37,8 @@ public interface ITimedEvent {
     default String getID() {
         return "";
     }
+
+    default void onServerStopping(){
+
+    }
 }

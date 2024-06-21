@@ -68,6 +68,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirtPathBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -132,6 +133,8 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
         reloadGoals();
         this.moveControl = new MovementHandler(this);
+        this.setPathfindingMalus(BlockPathTypes.DANGER_OTHER, 0.0F);
+        this.setPathfindingMalus(BlockPathTypes.DAMAGE_OTHER, 0.0F);
     }
 
     public Starbuncle(Level world, boolean tamed) {

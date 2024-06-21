@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.client.renderer.tile.*;
 import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.block.LightBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.*;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.items.MobJarItem;
 import com.hollingsworth.arsnouveau.common.items.ModBlockItem;
 import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
@@ -13,7 +14,6 @@ import com.hollingsworth.arsnouveau.common.util.registry.BlockEntityTypeRegistry
 import com.hollingsworth.arsnouveau.common.util.registry.BlockRegistryWrapper;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTree;
 import com.hollingsworth.arsnouveau.common.world.tree.SupplierBlockStateProvider;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -264,6 +264,7 @@ public class BlockRegistry {
             return ScryerOculusRenderer::getISTER;
         }
     }.withTooltip(Component.translatable("ars_nouveau.tooltip.scryers_oculus").withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE))));
+
     public static BlockEntityTypeRegistryWrapper<ScryersOculusTile> SCRYERS_OCULUS_TILE = registerTile(LibBlockNames.SCRYERS_OCULUS, ScryersOculusTile::new, SCRYERS_OCULUS);
     public static BlockRegistryWrapper<ScryerCrystal> SCRYERS_CRYSTAL = registerBlockAndItem(LibBlockNames.SCRYERS_CRYSTAL, ScryerCrystal::new);
     public static BlockEntityTypeRegistryWrapper<ScryerCrystalTile> SCRYER_CRYSTAL_TILE = registerTile(LibBlockNames.SCRYERS_CRYSTAL, ScryerCrystalTile::new, SCRYERS_CRYSTAL);

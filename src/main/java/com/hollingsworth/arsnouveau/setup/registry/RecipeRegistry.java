@@ -1,6 +1,10 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.*;
+import com.hollingsworth.arsnouveau.api.event.ChimeraSummonEvent;
+import com.hollingsworth.arsnouveau.api.recipe.BuddingConversionRecipe;
+import com.hollingsworth.arsnouveau.api.recipe.DispelEntityRecipe;
+import com.hollingsworth.arsnouveau.api.recipe.ScryRitualRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.SummonRitualRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.*;
 import com.hollingsworth.arsnouveau.common.tomes.CasterTomeData;
@@ -32,6 +36,9 @@ public class RecipeRegistry {
     public static final String ARMOR_RECIPE_ID = "armor_upgrade";
     public static final String TOME_DATAPACK = "caster_tome";
     public static final String SUMMON_RITUAL_DATAPACK = "summon_ritual";
+    public static final String BUDDING_CONVERSION_RECIPE_ID = "budding_conversion";
+    public static final String DISPEL_ENTITY_RECIPE_ID = "dispel_entity";
+    public static final String SCRY_RITUAL_RECIPE_ID = "scry_ritual";
 
     public static final DeferredHolder<RecipeType<?>, ModRecipeType<EnchantingApparatusRecipe>> APPARATUS_TYPE = RECIPE_TYPES.register(ENCHANTING_APPARATUS_RECIPE_ID, () -> new ModRecipeType<>());
     public static final DeferredHolder<RecipeSerializer<?>, EnchantingApparatusRecipe.Serializer> APPARATUS_SERIALIZER = RECIPE_SERIALIZERS.register(ENCHANTING_APPARATUS_RECIPE_ID, () -> new EnchantingApparatusRecipe.Serializer());
@@ -73,9 +80,16 @@ public class RecipeRegistry {
     public static final DeferredHolder<RecipeType<?>, ModRecipeType<CasterTomeData>> CASTER_TOME_TYPE = RECIPE_TYPES.register(TOME_DATAPACK, () -> new ModRecipeType<>());
     public static final DeferredHolder<RecipeSerializer<?>, CasterTomeData.Serializer> CASTER_TOME_SERIALIZER = RECIPE_SERIALIZERS.register(TOME_DATAPACK, () -> new CasterTomeData.Serializer());
 
+
     public static final DeferredHolder<RecipeType<?>, ModRecipeType<SummonRitualRecipe>> SUMMON_RITUAL_TYPE = RECIPE_TYPES.register(SUMMON_RITUAL_DATAPACK, () -> new ModRecipeType<>());
     public static final DeferredHolder<RecipeSerializer<?>, SummonRitualRecipe.Serializer> SUMMON_RITUAL_SERIALIZER = RECIPE_SERIALIZERS.register(SUMMON_RITUAL_DATAPACK, () -> new SummonRitualRecipe.Serializer());
 
+    public static final DeferredHolder<RecipeType<?>, ModRecipeType<BuddingConversionRecipe>> BUDDING_CONVERSION_TYPE = RECIPE_TYPES.register(BUDDING_CONVERSION_RECIPE_ID, () -> new ModRecipeType<>());
+    public static final DeferredHolder<RecipeSerializer<?>, BuddingConversionRecipe.Serializer> BUDDING_CONVERSION_SERIALIZER = RECIPE_SERIALIZERS.register(BUDDING_CONVERSION_RECIPE_ID, () -> new BuddingConversionRecipe.Serializer());
+    public static final DeferredHolder<RecipeType<?>, ModRecipeType<DispelEntityRecipe>> DISPEL_ENTITY_TYPE = RECIPE_TYPES.register(DISPEL_ENTITY_RECIPE_ID, () -> new ModRecipeType<>());
+    public static final DeferredHolder<RecipeSerializer<?>, DispelEntityRecipe.Serializer> DISPEL_ENTITY_SERIALIZER = RECIPE_SERIALIZERS.register(DISPEL_ENTITY_RECIPE_ID, () -> new DispelEntityRecipe.Serializer());
+    public static final DeferredHolder<RecipeType<?>, ModRecipeType<ScryRitualRecipe>> SCRY_RITUAL_TYPE = RECIPE_TYPES.register(SCRY_RITUAL_RECIPE_ID, () -> new ModRecipeType<>());
+    public static final DeferredHolder<RecipeSerializer<?>, ScryRitualRecipe.Serializer> SCRY_RITUAL_SERIALIZER = RECIPE_SERIALIZERS.register(SCRY_RITUAL_RECIPE_ID, () -> new ScryRitualRecipe.Serializer());
 
 
     public static class ModRecipeType<T extends Recipe<?>> implements RecipeType<T> {

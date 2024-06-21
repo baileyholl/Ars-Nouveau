@@ -19,7 +19,6 @@ public class CasterTomeRegistry {
     }
 
     public static List<CasterTomeData> reloadTomeData(RecipeManager recipeManager, Level level){
-        TOME_DATA = new ArrayList<>();
         var recipes = recipeManager.getAllRecipesFor(RecipeRegistry.CASTER_TOME_TYPE.get());
         DungeonLootTables.CASTER_TOMES = new ArrayList<>();
         TOME_DATA = new ArrayList<>();
