@@ -13,8 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.util.FakePlayer;
-
+import net.neoforged.neoforge.common.util.FakePlayer;
 import java.util.List;
 import java.util.Optional;
 

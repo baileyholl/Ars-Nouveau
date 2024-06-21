@@ -16,8 +16,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.EntityItemPickupEvent;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -42,7 +42,7 @@ public class EffectPickup extends AbstractEffect {
         InventoryManager manager = spellContext.getCaster().getInvManager().extractSlotMax(-1);
         for (ItemEntity i : entityList) {
             ItemStack stack = i.getItem();
-            if (stack.isEmpty() || MinecraftForge.EVENT_BUS.post(new EntityItemPickupEvent(getPlayer(shooter, (ServerLevel) world), i)))
+            if (stack.isEmpty() || NeoForge.EVENT_BUS.post(new EntityItemPickupEvent(getPlayer(shooter, (ServerLevel) world), i)))
                 continue;
             stack = manager.insertStack(stack);
             i.setItem(stack);
@@ -51,7 +51,7 @@ public class EffectPickup extends AbstractEffect {
                 posVec.add(expansion, expansion, expansion), posVec.subtract(expansion, expansion, expansion)));
         for (ExperienceOrb i : orbList) {
             if (shooter instanceof Player player && isNotFakePlayer(player) && spellContext.castingTile == null) {
-                if (MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerXpEvent.PickupXp(player, i)))
+                if (NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.entity.player.PlayerXpEvent.PickupXp(player, i)))
                     continue;
                 player.giveExperiencePoints(i.value);
                 i.remove(Entity.RemovalReason.DISCARDED);

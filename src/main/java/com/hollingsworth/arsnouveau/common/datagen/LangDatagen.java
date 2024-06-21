@@ -14,8 +14,7 @@ import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.common.data.LanguageProvider;
-
+import net.neoforged.neoforge.common.data.LanguageProvider;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Supplier;

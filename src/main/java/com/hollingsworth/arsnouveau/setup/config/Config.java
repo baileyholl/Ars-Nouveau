@@ -5,74 +5,74 @@ import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
-
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = ArsNouveau.MODID)
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, modid = ArsNouveau.MODID)
 public class Config {
     public static final String CATEGORY_GENERAL = "general";
 
     public static final String CATEGORY_SPELLS = "spells";
     public static final String DRYGMY_CATEGORY = "drygmy_production";
 
-    public static ForgeConfigSpec COMMON_CONFIG;
-    public static ForgeConfigSpec CLIENT_CONFIG;
+    public static ModConfigSpec COMMON_CONFIG;
+    public static ModConfigSpec CLIENT_CONFIG;
 
-    public static ForgeConfigSpec.BooleanValue SPAWN_BOOK;
-    public static ForgeConfigSpec.BooleanValue INFORM_LIGHTS;
+    public static ModConfigSpec.BooleanValue SPAWN_BOOK;
+    public static ModConfigSpec.BooleanValue INFORM_LIGHTS;
     public static Integer TREE_SPAWN_RATE = 100;
 
 
-    public static ForgeConfigSpec.IntValue DRYGMY_MANA_COST;
-    public static ForgeConfigSpec.IntValue SYLPH_MANA_COST;
-    public static ForgeConfigSpec.IntValue WHIRLISPRIG_MAX_PROGRESS;
-    public static ForgeConfigSpec.IntValue DRYGMY_MAX_PROGRESS;
-    public static ForgeConfigSpec.IntValue DRYGMY_BASE_ITEM;
-    public static ForgeConfigSpec.IntValue DRYGMY_UNIQUE_BONUS;
-    public static ForgeConfigSpec.IntValue DRYGMY_QUANTITY_CAP;
-    public static ForgeConfigSpec.IntValue JUMP_RING_COST;
+    public static ModConfigSpec.IntValue DRYGMY_MANA_COST;
+    public static ModConfigSpec.IntValue SYLPH_MANA_COST;
+    public static ModConfigSpec.IntValue WHIRLISPRIG_MAX_PROGRESS;
+    public static ModConfigSpec.IntValue DRYGMY_MAX_PROGRESS;
+    public static ModConfigSpec.IntValue DRYGMY_BASE_ITEM;
+    public static ModConfigSpec.IntValue DRYGMY_UNIQUE_BONUS;
+    public static ModConfigSpec.IntValue DRYGMY_QUANTITY_CAP;
+    public static ModConfigSpec.IntValue JUMP_RING_COST;
 
-    public static ForgeConfigSpec.IntValue MELDER_OUTPUT;
-    public static ForgeConfigSpec.IntValue MELDER_INPUT_COST;
-    public static ForgeConfigSpec.IntValue MELDER_SOURCE_COST;
-    public static ForgeConfigSpec.IntValue ENCHANTED_FLASK_CAP;
-    public static ForgeConfigSpec.BooleanValue HUNTER_ATTACK_ANIMALS;
-    public static ForgeConfigSpec.BooleanValue STALKER_ATTACK_ANIMALS;
-    public static ForgeConfigSpec.BooleanValue GUARDIAN_ATTACK_ANIMALS;
-    public static ForgeConfigSpec.BooleanValue CHIMERA_DIVE_DESTRUCTIVE;
-    public static ForgeConfigSpec.ConfigValue<List<? extends String>> DIMENSION_BLACKLIST;
+    public static ModConfigSpec.IntValue MELDER_OUTPUT;
+    public static ModConfigSpec.IntValue MELDER_INPUT_COST;
+    public static ModConfigSpec.IntValue MELDER_SOURCE_COST;
+    public static ModConfigSpec.IntValue ENCHANTED_FLASK_CAP;
+    public static ModConfigSpec.BooleanValue HUNTER_ATTACK_ANIMALS;
+    public static ModConfigSpec.BooleanValue STALKER_ATTACK_ANIMALS;
+    public static ModConfigSpec.BooleanValue GUARDIAN_ATTACK_ANIMALS;
+    public static ModConfigSpec.BooleanValue CHIMERA_DIVE_DESTRUCTIVE;
+    public static ModConfigSpec.ConfigValue<List<? extends String>> DIMENSION_BLACKLIST;
 
-    public static ForgeConfigSpec.IntValue ARCHWOOD_FOREST_WEIGHT;
+    public static ModConfigSpec.IntValue ARCHWOOD_FOREST_WEIGHT;
 
-    public static ForgeConfigSpec.BooleanValue DYNAMIC_LIGHTS_ENABLED;
-    public static ForgeConfigSpec.BooleanValue SHOW_SUPPORTER_MESSAGE;
-    public static ForgeConfigSpec.IntValue TOUCH_LIGHT_LUMINANCE;
-    public static ForgeConfigSpec.IntValue TOUCH_LIGHT_DURATION;
+    public static ModConfigSpec.BooleanValue DYNAMIC_LIGHTS_ENABLED;
+    public static ModConfigSpec.BooleanValue SHOW_SUPPORTER_MESSAGE;
+    public static ModConfigSpec.IntValue TOUCH_LIGHT_LUMINANCE;
+    public static ModConfigSpec.IntValue TOUCH_LIGHT_DURATION;
 
-    public static ForgeConfigSpec.BooleanValue SPAWN_TOMES;
-    public static ForgeConfigSpec.BooleanValue ALTERNATE_PORTAL_RENDER;
+    public static ModConfigSpec.BooleanValue SPAWN_TOMES;
+    public static ModConfigSpec.BooleanValue ALTERNATE_PORTAL_RENDER;
 
-    public static ForgeConfigSpec.BooleanValue DISABLE_SKY_SHADER;
-    public static ForgeConfigSpec.BooleanValue DISABLE_TRANSLUCENT_PARTICLES;
-    public static ForgeConfigSpec.BooleanValue SHOW_RECIPE_BOOK;
-    public static ForgeConfigSpec.IntValue MAX_LOG_EVENTS;
-    public static ForgeConfigSpec.IntValue TOOLTIP_X_OFFSET;
-    public static ForgeConfigSpec.IntValue TOOLTIP_Y_OFFSET;
-    public static ForgeConfigSpec.IntValue MANABAR_X_OFFSET;
-    public static ForgeConfigSpec.IntValue MANABAR_Y_OFFSET;
-    public static ForgeConfigSpec.IntValue BOOKWYRM_LIMIT;
-    public static ForgeConfigSpec.BooleanValue GUI_TRANSPARENCY;
-    public static ForgeConfigSpec.BooleanValue GLYPH_TOOLTIPS;
+    public static ModConfigSpec.BooleanValue DISABLE_SKY_SHADER;
+    public static ModConfigSpec.BooleanValue DISABLE_TRANSLUCENT_PARTICLES;
+    public static ModConfigSpec.BooleanValue SHOW_RECIPE_BOOK;
+    public static ModConfigSpec.IntValue MAX_LOG_EVENTS;
+    public static ModConfigSpec.IntValue TOOLTIP_X_OFFSET;
+    public static ModConfigSpec.IntValue TOOLTIP_Y_OFFSET;
+    public static ModConfigSpec.IntValue MANABAR_X_OFFSET;
+    public static ModConfigSpec.IntValue MANABAR_Y_OFFSET;
+    public static ModConfigSpec.IntValue BOOKWYRM_LIMIT;
+    public static ModConfigSpec.BooleanValue GUI_TRANSPARENCY;
+    public static ModConfigSpec.BooleanValue GLYPH_TOOLTIPS;
 
-    private static ForgeConfigSpec.ConfigValue<List<? extends String>> ENTITY_LIGHT_CONFIG;
-    private static ForgeConfigSpec.ConfigValue<List<? extends String>> ITEM_LIGHT_CONFIG;
+    private static ModConfigSpec.ConfigValue<List<? extends String>> ENTITY_LIGHT_CONFIG;
+    private static ModConfigSpec.ConfigValue<List<? extends String>> ITEM_LIGHT_CONFIG;
 
     public static Map<ResourceLocation, Integer> ENTITY_LIGHT_MAP = new HashMap<>();
     public static Map<ResourceLocation, Integer> ITEM_LIGHTMAP = new HashMap<>();
@@ -92,8 +92,8 @@ public class Config {
     }
 
     static {
-        ForgeConfigSpec.Builder SERVER_BUILDER = new ForgeConfigSpec.Builder();
-        ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
+        ModConfigSpec.Builder SERVER_BUILDER = new ModConfigSpec.Builder();
+        ModConfigSpec.Builder CLIENT_BUILDER = new ModConfigSpec.Builder();
 
         CLIENT_BUILDER.comment("Lighting").push("lights");
         SHOW_SUPPORTER_MESSAGE = CLIENT_BUILDER.comment("Show the supporter message. This is set to false after the first time.").define("showSupporterMessage", true);

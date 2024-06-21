@@ -10,13 +10,13 @@ import com.hollingsworth.arsnouveau.common.spell.validation.StandardSpellValidat
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.brewing.BrewingRecipe;
-import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.fml.loading.FMLPaths;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.fml.loading.FMLPaths;
+import net.neoforged.neoforge.common.brewing.BrewingRecipe;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class ArsNouveauAPI {
      */
     private ISpellValidator castingSpellValidator;
 
-    private List<IEnchantingRecipe> enchantingApparatusRecipes = new ArrayList<>();
+    private List<RecipeHolder<? extends IEnchantingRecipe>> enchantingApparatusRecipes = new ArrayList<>();
 
     private List<BrewingRecipe> brewingRecipes = new ArrayList<>();
 
@@ -58,10 +58,10 @@ public class ArsNouveauAPI {
     }
 
 
-    public List<IEnchantingRecipe> getEnchantingApparatusRecipes(Level world) {
-        List<IEnchantingRecipe> recipes = new ArrayList<>(enchantingApparatusRecipes);
+    public List<RecipeHolder<? extends IEnchantingRecipe>> getEnchantingApparatusRecipes(Level world) {
+        List<RecipeHolder<? extends IEnchantingRecipe>> recipes = new ArrayList<>(enchantingApparatusRecipes);
         RecipeManager manager = world.getRecipeManager();
-        List<IEnchantingRecipe> recipesByType = new ArrayList<>(); // todo lazy init enchanting types
+        List<RecipeHolder<? extends IEnchantingRecipe>> recipesByType = new ArrayList<>(); // todo lazy init enchanting types
         for (RecipeType<? extends IEnchantingRecipe> type : enchantingRecipeTypes) {
             recipesByType.addAll(manager.getAllRecipesFor(type));
         }
@@ -69,17 +69,17 @@ public class ArsNouveauAPI {
         return recipes;
     }
 
-    public List<BrewingRecipe> getAllPotionRecipes() {
+    public List<BrewingRecipe> getAllPotionRecipes(Level world) {
         if (brewingRecipes.isEmpty()) {
-            BrewingRecipeRegistry.getRecipes().forEach(ib -> {
+            world.potionBrewing().getRecipes().forEach(ib -> {
                 if (ib instanceof BrewingRecipe brewingRecipe)
                     brewingRecipes.add(brewingRecipe);
             });
             for(PotionBrewing.Mix<Potion> mix : PotionRecipeMixin.mixList()){
                 brewingRecipes.add(new BrewingRecipe(
-                        PotionIngredient.fromPotion(mix.from.get()),
-                        mix.ingredient,
-                        PotionIngredient.fromPotion(mix.to.get()).getStack()
+                        PotionIngredient.fromPotion(mix.from()),
+                        mix.ingredient(),
+                        PotionIngredient.fromPotion(mix.to()).getItems()[0]
                 ));
             }
         }

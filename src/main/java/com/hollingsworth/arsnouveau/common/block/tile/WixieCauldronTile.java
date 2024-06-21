@@ -35,8 +35,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -101,7 +101,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         if(blockEntity == null){
             return;
         }
-        IItemHandler itemHandler = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+        IItemHandler itemHandler = blockEntity.getCapability(Capabilities.ITEM_HANDLER).orElse(null);
         if(itemHandler == null){
             return;
         }
@@ -243,7 +243,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
             BlockEntity blockEntity = level.getBlockEntity(bPos);
             if(blockEntity == null || blockEntity instanceof ArcanePedestalTile)
                 continue;
-            if(!blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent())
+            if(!blockEntity.getCapability(Capabilities.ITEM_HANDLER).isPresent())
                 continue;
             cachedInventories.add(bPos.immutable());
         }
@@ -304,7 +304,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
                 stale.add(p);
                 continue;
             }
-            IItemHandler handler = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+            IItemHandler handler = blockEntity.getCapability(Capabilities.ITEM_HANDLER).orElse(null);
             if(handler == null) {
                 stale.add(p);
                 continue;

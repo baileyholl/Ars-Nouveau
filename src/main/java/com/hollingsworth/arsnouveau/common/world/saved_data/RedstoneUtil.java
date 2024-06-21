@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import var;
 
 public class RedstoneUtil {
 

@@ -10,7 +10,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeHooks;
+import net.neoforged.neoforge.common.CommonHooks;
 import top.theillusivec4.curios.api.SlotContext;
 
 public class JumpingRing extends ArsNouveauCurio {
@@ -36,7 +36,7 @@ public class JumpingRing extends ArsNouveauCurio {
             player.hasImpulse = true;
             player.hurtMarked = true;
             player.fallDistance = 0;
-            ForgeHooks.onLivingJump(player);
+            CommonHooks.onLivingJump(player);
         }
     }
 }

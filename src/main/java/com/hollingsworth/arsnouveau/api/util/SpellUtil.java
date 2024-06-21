@@ -17,17 +17,15 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.TierSortingRegistry;
-import net.minecraftforge.common.util.FakePlayer;
-
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import java.util.*;
 import java.util.function.Predicate;
 
 public class SpellUtil {
 
     public static boolean postEvent(SpellCastEvent e) {
-        return MinecraftForge.EVENT_BUS.post(e);
+        return NeoForge.EVENT_BUS.post(e);
     }
 
     public static List<BlockPos> calcAOEBlocks(LivingEntity caster, BlockPos origin, BlockHitResult mop, int aoeBonus) {

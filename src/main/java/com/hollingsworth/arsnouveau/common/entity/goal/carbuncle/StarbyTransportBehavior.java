@@ -27,11 +27,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
-
+import var;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -140,8 +140,8 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     }
 
     public @Nullable IItemHandler getItemCapFromTile(BlockEntity blockEntity, @Nullable Direction face) {
-        if (blockEntity != null && blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, face).isPresent()) {
-            var lazy = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, face).resolve();
+        if (blockEntity != null && blockEntity.getCapability(Capabilities.ITEM_HANDLER, face).isPresent()) {
+            var lazy = blockEntity.getCapability(Capabilities.ITEM_HANDLER, face).resolve();
             if (lazy.isPresent())
                 return lazy.get();
         }
@@ -248,7 +248,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         if (storedPos == null)
             return;
         BlockEntity blockEntity = level.getBlockEntity(storedPos);
-        if (blockEntity != null && blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, side).isPresent()) {
+        if (blockEntity != null && blockEntity.getCapability(Capabilities.ITEM_HANDLER, side).isPresent()) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.store"));
             addToPos(storedPos, side);
         }
@@ -261,7 +261,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
             return;
 
         BlockEntity blockEntity = level.getBlockEntity(storedPos);
-        if (blockEntity != null && blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, side).isPresent()) {
+        if (blockEntity != null && blockEntity.getCapability(Capabilities.ITEM_HANDLER, side).isPresent()) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.take"));
             addFromPos(storedPos, side);
         }

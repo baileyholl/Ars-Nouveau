@@ -5,21 +5,24 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.block.AlterationTable;
-import com.hollingsworth.arsnouveau.common.block.ArchfruitPod;
-import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
-import com.hollingsworth.arsnouveau.common.block.ThreePartBlock;
+import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
-import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
+import com.hollingsworth.arsnouveau.common.util.registry.BlockRegistryWrapper;
+import com.hollingsworth.arsnouveau.common.util.registry.RegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.WritableRegistry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.flag.FeatureFlags;
@@ -35,7 +38,6 @@ import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.ValidationContext;
-import net.minecraft.world.level.storage.loot.entries.DynamicLoot;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.*;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -43,18 +45,16 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePrope
 import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
-
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class DefaultTableProvider extends LootTableProvider {
-    public DefaultTableProvider(PackOutput pOutput) {
-        super(pOutput, new HashSet<>(), List.of(new LootTableProvider.SubProviderEntry(BlockLootTable::new, LootContextParamSets.BLOCK), new LootTableProvider.SubProviderEntry(EntityLootTable::new, LootContextParamSets.ENTITY)));
+    public DefaultTableProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pRegistries) {
+        super(pOutput, new HashSet<>(), List.of(new LootTableProvider.SubProviderEntry(BlockLootTable::new, LootContextParamSets.BLOCK), new LootTableProvider.SubProviderEntry(EntityLootTable::new, LootContextParamSets.ENTITY)), pRegistries);
     }
 
     private static final float[] DEFAULT_SAPLING_DROP_RATES = new float[]{0.05F, 0.0625F, 0.083333336F, 0.1F};
@@ -160,9 +160,9 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.POTION_DIFFUSER);
             for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
                 registerDropSelf(BlockRegistry.getBlock(s));
-                Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s + "_stairs"));
+                Block block = BuiltInRegistries.BLOCK.get(new ResourceLocation(ArsNouveau.MODID, s + "_stairs"));
                 registerDropSelf(block);
-                Block slab = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s + "_slab"));
+                Block slab = BuiltInRegistries.BLOCK.get(new ResourceLocation(ArsNouveau.MODID, s + "_slab"));
                 registerDropSelf(slab);
 
             }
@@ -183,14 +183,12 @@ public class DefaultTableProvider extends LootTableProvider {
                     .setRolls(ConstantValue.exactly(1))
                     .add(LootItem.lootTableItem(BlockRegistry.POTION_JAR)
                             .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
-                            .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
-                                    .copy("potionData", "BlockEntityTag.potionData", CopyNbtFunction.MergeStrategy.REPLACE)
-                                    .copy("currentFill", "BlockEntityTag.currentFill", CopyNbtFunction.MergeStrategy.REPLACE)
-                                    .copy("locked", "BlockEntityTag.locked", CopyNbtFunction.MergeStrategy.REPLACE)
-                                    .copy("potionNames", "potionNames", CopyNbtFunction.MergeStrategy.REPLACE)
-                                    .copy("currentFill", "fill", CopyNbtFunction.MergeStrategy.REPLACE))
-                            .apply(SetContainerContents.setContents(BlockRegistry.POTION_JAR_TYPE.get())
-                                    .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
+                            .apply(CopyCustomDataFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
+                                    .copy("potionData", "BlockEntityTag.potionData", CopyCustomDataFunction.MergeStrategy.REPLACE)
+                                    .copy("currentFill", "BlockEntityTag.currentFill", CopyCustomDataFunction.MergeStrategy.REPLACE)
+                                    .copy("locked", "BlockEntityTag.locked", CopyCustomDataFunction.MergeStrategy.REPLACE)
+                                    .copy("potionNames", "potionNames", CopyCustomDataFunction.MergeStrategy.REPLACE)
+                                    .copy("currentFill", "fill", CopyCustomDataFunction.MergeStrategy.REPLACE))
                     );
             add(BlockRegistry.POTION_JAR.get(), LootTable.lootTable().withPool(potionJarBuilder));
             add(BlockRegistry.BASTION_POD.get(), LootTable.lootTable().withPool(POD_BUILDER(BlockRegistry.BASTION_POD.asItem(), BlockRegistry.BASTION_POD.get())));
@@ -202,11 +200,9 @@ public class DefaultTableProvider extends LootTableProvider {
                     .setRolls(ConstantValue.exactly(1))
                     .add(LootItem.lootTableItem(BlockRegistry.MOB_JAR)
                             .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
-                            .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
-                                    .copy("entityTag", "BlockEntityTag.entityTag", CopyNbtFunction.MergeStrategy.REPLACE)
-                                    .copy("entityId", "entityId", CopyNbtFunction.MergeStrategy.REPLACE))
-                            .apply(SetContainerContents.setContents(BlockRegistry.MOB_JAR_TILE.get())
-                                    .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
+                            .apply(CopyCustomDataFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
+                                    .copy("entityTag", "BlockEntityTag.entityTag", CopyCustomDataFunction.MergeStrategy.REPLACE)
+                                    .copy("entityId", "entityId", CopyCustomDataFunction.MergeStrategy.REPLACE))
                     );
             add(BlockRegistry.MOB_JAR.get(), LootTable.lootTable().withPool(mobJarBuilder));
             //CustomName
@@ -235,12 +231,12 @@ public class DefaultTableProvider extends LootTableProvider {
         }
 
 
-        protected void add(RegistryWrapper<Block> pBlock, LootTable.Builder pBuilder) {
+        protected void add(RegistryWrapper<Block, Block> pBlock, LootTable.Builder pBuilder) {
             add(pBlock.get(), pBuilder);
         }
 
 
-        protected void add(RegistryWrapper<Block> pBlock, Function<Block, LootTable.Builder> pFactory) {
+        protected void add(RegistryWrapper<Block, Block> pBlock, Function<Block, LootTable.Builder> pFactory) {
             add(pBlock.get(), pFactory);
         }
 
@@ -257,11 +253,9 @@ public class DefaultTableProvider extends LootTableProvider {
                     .setRolls(ConstantValue.exactly(1))
                     .add(LootItem.lootTableItem(block)
                             .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
-                            .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
-                                    .copy("inv", "BlockEntityTag.inv", CopyNbtFunction.MergeStrategy.REPLACE) //addOperation
-                                    .copy("source", "BlockEntityTag.source", CopyNbtFunction.MergeStrategy.REPLACE))
-                            .apply(SetContainerContents.setContents(BlockRegistry.SOURCE_JAR_TILE.get())
-                                    .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
+                            .apply(CopyCustomDataFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
+                                    .copy("inv", "BlockEntityTag.inv", CopyCustomDataFunction.MergeStrategy.REPLACE) //addOperation
+                                    .copy("source", "BlockEntityTag.source", CopyCustomDataFunction.MergeStrategy.REPLACE))
                     );
             return LootTable.lootTable().withPool(builder);
         }
@@ -275,21 +269,23 @@ public class DefaultTableProvider extends LootTableProvider {
         }
 
         // Override and ignore the missing loot table error
+
+
         @Override
-        public void generate(BiConsumer<ResourceLocation, LootTable.Builder> p_249322_) {
+        public void generate(HolderLookup.Provider pRegistries, BiConsumer<ResourceKey<LootTable>, LootTable.Builder> pGenerator) {
             this.generate();
-            Set<ResourceLocation> set = new HashSet<>();
+            Set<ResourceKey<LootTable>> set = new HashSet<>();
 
             for (Block block : list) {
                 if (block.isEnabled(this.enabledFeatures)) {
-                    ResourceLocation resourcelocation = block.getLootTable();
+                    ResourceKey<LootTable> resourcelocation = block.getLootTable();
                     if (resourcelocation != BuiltInLootTables.EMPTY && set.add(resourcelocation)) {
                         LootTable.Builder loottable$builder = this.map.remove(resourcelocation);
                         if (loottable$builder == null) {
                             continue;
                         }
 
-                        p_249322_.accept(resourcelocation, loottable$builder);
+                        pGenerator.accept(resourcelocation, loottable$builder);
                     }
                 }
             }
@@ -311,19 +307,13 @@ public class DefaultTableProvider extends LootTableProvider {
             this.add(block, createDoorTable(block));
         }
 
-        public void registerDropSelf(RegistryWrapper block) {
-            list.add((Block) block.get());
-            dropSelf((Block) block.get());
+        private <T extends Block> void registerDropSelf(BlockRegistryWrapper<T> block) {
+            registerDropSelf(block.get());
         }
 
         public void registerDropSelf(Block block) {
             list.add(block);
             dropSelf(block);
-        }
-
-        public void registerDropSelf(RegistryObject<Block> block) {
-            list.add(block.get());
-            dropSelf(block.get());
         }
 
         public void registerDrop(Block input, ItemLike output) {
@@ -333,14 +323,14 @@ public class DefaultTableProvider extends LootTableProvider {
 
         @Override
         protected Iterable<Block> getKnownBlocks() {
-            return ForgeRegistries.BLOCKS.getValues().stream().filter(block -> ForgeRegistries.BLOCKS.getKey(block).getNamespace().equals(ArsNouveau.MODID)).collect(Collectors.toList());
+            return BuiltInRegistries.BLOCK.stream().filter(block -> BuiltInRegistries.BLOCK.getKey(block).getNamespace().equals(ArsNouveau.MODID)).collect(Collectors.toList());
         }
 
     }
 
 
     public static class EntityLootTable extends EntityLootSubProvider {
-        private final Map<EntityType<?>, Map<ResourceLocation, LootTable.Builder>> map = Maps.newHashMap();
+        private final Map<EntityType<?>, Map<ResourceKey<LootTable>, LootTable.Builder>> map = Maps.newHashMap();
 
         protected EntityLootTable() {
             super(FeatureFlags.REGISTRY.allFlags());
@@ -375,7 +365,7 @@ public class DefaultTableProvider extends LootTableProvider {
         }
 
         @Override
-        protected void add(EntityType<?> pEntityType, ResourceLocation pLootTableLocation, LootTable.Builder pBuilder) {
+        protected void add(EntityType<?> pEntityType, ResourceKey<LootTable> pLootTableLocation, LootTable.Builder pBuilder) {
             super.add(pEntityType, pLootTableLocation, pBuilder);
             this.map.computeIfAbsent(pEntityType, (p_249004_) -> {
                 return Maps.newHashMap();
@@ -383,27 +373,27 @@ public class DefaultTableProvider extends LootTableProvider {
         }
 
         @Override
-        public void generate(BiConsumer<ResourceLocation, LootTable.Builder> p_251751_) {
+        public void generate(HolderLookup.Provider pRegistries, BiConsumer<ResourceKey<LootTable>, LootTable.Builder> pGenerator) {
             this.generate();
-            Set<ResourceLocation> set = Sets.newHashSet();
+            Set<ResourceKey<LootTable>> set = Sets.newHashSet();
             this.getKnownEntityTypes().map(EntityType::builtInRegistryHolder).forEach((p_249003_) -> {
                 EntityType<?> entitytype = p_249003_.value();
                 if (canHaveLootTable(entitytype)) {
-                    Map<ResourceLocation, LootTable.Builder> map = this.map.remove(entitytype);
-                    ResourceLocation resourcelocation = entitytype.getDefaultLootTable();
+                    Map<ResourceKey<LootTable>, LootTable.Builder> map = this.map.remove(entitytype);
+                    ResourceKey<LootTable> resourcelocation = entitytype.getDefaultLootTable();
                     if (map != null) {
                         map.forEach((p_250376_, p_250972_) -> {
                             if (!set.add(p_250376_)) {
                                 throw new IllegalStateException(String.format(Locale.ROOT, "Duplicate loottable '%s' for '%s'", p_250376_, p_249003_.key().location()));
                             } else {
-                                p_251751_.accept(p_250376_, p_250972_);
+                                pGenerator.accept(p_250376_, p_250972_);
                             }
                         });
                     }
                 } else {
-                    Map<ResourceLocation, LootTable.Builder> map1 = this.map.remove(entitytype);
+                    Map<ResourceKey<LootTable>, LootTable.Builder> map1 = this.map.remove(entitytype);
                     if (map1 != null) {
-                        throw new IllegalStateException(String.format(Locale.ROOT, "Weird loottables '%s' for '%s', not a LivingEntity so should not have loot", map1.keySet().stream().map(ResourceLocation::toString).collect(Collectors.joining(",")), p_249003_.key().location()));
+                        throw new IllegalStateException(String.format(Locale.ROOT, "Weird loottables '%s' for '%s', not a LivingEntity so should not have loot", map1.keySet().stream().map(ResourceKey::toString).collect(Collectors.joining(",")), p_249003_.key().location()));
                     }
                 }
 
@@ -412,12 +402,12 @@ public class DefaultTableProvider extends LootTableProvider {
 
         @Override
         protected Stream<EntityType<?>> getKnownEntityTypes() {
-            return ForgeRegistries.ENTITY_TYPES.getValues().stream().filter(block -> ForgeRegistries.ENTITY_TYPES.getKey(block).getNamespace().equals(ArsNouveau.MODID)).toList().stream();
+            return BuiltInRegistries.ENTITY_TYPE.stream().filter(block -> BuiltInRegistries.ENTITY_TYPE.getKey(block).getNamespace().equals(ArsNouveau.MODID)).toList().stream();
         }
     }
 
     @Override
-    protected void validate(Map<ResourceLocation, LootTable> map, ValidationContext validationtracker) {
+    protected void validate(WritableRegistry<LootTable> writableregistry, ValidationContext validationcontext, ProblemReporter.Collector problemreporter$collector) {
 
     }
 }

@@ -3,8 +3,7 @@ package com.hollingsworth.arsnouveau.common.network;
 import com.hollingsworth.arsnouveau.client.renderer.world.PathfindingDebugRenderer;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ModNode;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
-
+import net.neoforged.neoforge.network.NetworkEvent;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;

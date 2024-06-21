@@ -19,8 +19,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
-
+import net.neoforged.neoforge.registries.ForgeRegistries;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,7 +99,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
         for (ItemStack i : inputs)
             recipeitemhelper.accountStack(i, 1);
 
-        return inputs.size() == recipeItems.size() && (net.minecraftforge.common.util.RecipeMatcher.findMatches(inputs, recipeItems) != null);
+        return inputs.size() == recipeItems.size() && (net.neoforged.neoforge.common.util.RecipeMatcher.findMatches(inputs, recipeItems) != null);
     }
 
     @Override
@@ -121,7 +120,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
     @Override
     public String toString() {
         return "EnchantingApparatusRecipe{" +
-                "catalyst=" + reagent +
+                "augment=" + reagent +
                 ", result=" + result +
                 ", pedestalItems=" + pedestalItems +
                 '}';

@@ -17,9 +17,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
-
+import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
 import java.util.*;
 
 public class FindNextItemGoal extends ExtendedRangeGoal {
@@ -55,7 +54,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
             BlockEntity blockEntity = world.getBlockEntity(b);
             if(blockEntity == null)
                 continue;
-            IItemHandler itemHandler = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+            IItemHandler itemHandler = blockEntity.getCapability(Capabilities.ITEM_HANDLER).orElse(null);
             if (itemHandler == null)
                 continue;
             for(int i = 0; i < itemHandler.getSlots(); i++){
@@ -114,7 +113,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
                 BlockEntity blockEntity = world.getBlockEntity(b);
                 if(blockEntity == null)
                     continue;
-                IItemHandler itemHandler = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+                IItemHandler itemHandler = blockEntity.getCapability(Capabilities.ITEM_HANDLER).orElse(null);
                 if (itemHandler == null)
                     continue;
                handlers.add(new StorageLecternTile.HandlerPos(b.immutable(), itemHandler));

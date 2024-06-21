@@ -11,7 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
-
+import var;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -94,7 +94,7 @@ public class ChimeraRamGoal extends Goal {
     }
 
     public void breakBlocks() {
-        if (!net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.boss.level, this.boss)) {
+        if (!net.neoforged.neoforge.event.EventHooks.getMobGriefingEvent(this.boss.level, this.boss)) {
             return;
         }
         Direction facing = boss.getDirection();

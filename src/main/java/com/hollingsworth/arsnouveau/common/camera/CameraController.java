@@ -14,12 +14,12 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.TickEvent;
 
-@Mod.EventBusSubscriber(modid = ArsNouveau.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = ArsNouveau.MODID, value = Dist.CLIENT)
 public class CameraController {
     public static CameraType previousCameraType;
     public static boolean resetOverlaysAfterDismount = false;

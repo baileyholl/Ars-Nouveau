@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.items.itemscrolls;
 
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 
 public class AllowItemScroll extends ItemScroll {
 

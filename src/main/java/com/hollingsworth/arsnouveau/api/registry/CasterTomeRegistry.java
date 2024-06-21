@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.common.tomes.CasterTomeData;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
-
+import var;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

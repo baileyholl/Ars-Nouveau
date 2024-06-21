@@ -6,17 +6,19 @@ import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.registries.*;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.InterModComms;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.IForgeRegistry;
+import net.neoforged.neoforge.registries.RegisterEvent;
+import net.neoforged.neoforge.registries.RegistryObject;
 import top.theillusivec4.curios.Curios;
 import top.theillusivec4.curios.api.SlotTypeMessage;
 import top.theillusivec4.curios.api.SlotTypePreset;
-
-import java.util.Objects;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
@@ -31,9 +33,9 @@ public class ModSetup {
         InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.NECKLACE.getMessageBuilder().build());
     }
 
-    public static final DeferredRegister<TrunkPlacerType<?>> TRUNK_PLACER_TYPE_DEFERRED_REGISTER = DeferredRegister.createOptional(Registries.TRUNK_PLACER_TYPE, MODID);
+    public static final DeferredRegister<TrunkPlacerType<?>> TRUNK_PLACER_TYPE_DEFERRED_REGISTER = DeferredRegister.create(Registries.TRUNK_PLACER_TYPE, MODID);
 
-    public static RegistryObject<TrunkPlacerType<MagicTrunkPlacer>> MAGIC_TRUNK_PLACER = TRUNK_PLACER_TYPE_DEFERRED_REGISTER.register("magic_trunk_placer", () -> new TrunkPlacerType<>(MagicTrunkPlacer.CODEC));
+    public static DeferredHolder<TrunkPlacerType<?>, TrunkPlacerType<MagicTrunkPlacer>> MAGIC_TRUNK_PLACER = TRUNK_PLACER_TYPE_DEFERRED_REGISTER.register("magic_trunk_placer", () -> new TrunkPlacerType<>(MagicTrunkPlacer.CODEC));
 
     public static void registers(IEventBus modEventBus) {
         ItemsRegistry.ITEMS.register(modEventBus);
@@ -63,14 +65,12 @@ public class ModSetup {
     }
 
     public static void registerEvents(RegisterEvent event) {
-        if (event.getRegistryKey().equals(ForgeRegistries.Keys.BLOCKS)) {
-            IForgeRegistry<Block> registry = Objects.requireNonNull(event.getForgeRegistry());
-            BlockRegistry.onBlocksRegistry(registry);
+        if (event.getRegistryKey().equals(Registries.BLOCK.registryKey())) {
+            BlockRegistry.onBlocksRegistry();
         }
-        if (event.getRegistryKey().equals(ForgeRegistries.Keys.ITEMS)) {
-            IForgeRegistry<Item> registry = Objects.requireNonNull(event.getForgeRegistry());
-            BlockRegistry.onBlockItemsRegistry(registry);
-            ItemsRegistry.onItemRegistry(registry);
+        if (event.getRegistryKey().equals(Registries.BLOCK.registryKey())) {
+            BlockRegistry.onBlockItemsRegistry();
+            ItemsRegistry.onItemRegistry();
         }
     }
 }

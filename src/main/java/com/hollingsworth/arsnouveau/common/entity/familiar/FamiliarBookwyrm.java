@@ -15,10 +15,10 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.event.entity.player.EntityItemPickupEvent;
+import net.neoforged.neoforge.items.wrapper.PlayerMainInvWrapper;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
@@ -65,7 +65,7 @@ public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCast
             if(entity instanceof ItemEntity i){
                 ItemStack stack = i.getItem();
                 if (stack.isEmpty()
-                        || MinecraftForge.EVENT_BUS.post(new EntityItemPickupEvent(player, i))
+                        || NeoForge.EVENT_BUS.post(new EntityItemPickupEvent(player, i))
                         || getOwnerID().equals(i.getOwner())
                         || i.hasPickUpDelay()
                         || i.getPersistentData().getBoolean("PreventRemoteMovement")
@@ -75,7 +75,7 @@ public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCast
                 i.setItem(stack);
             }
             if(entity instanceof ExperienceOrb orb){
-                if (orb.isRemoved() || MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerXpEvent.PickupXp(player, orb)))
+                if (orb.isRemoved() || NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.entity.player.PlayerXpEvent.PickupXp(player, orb)))
                     continue;
                 player.giveExperiencePoints(orb.value);
                 orb.remove(Entity.RemovalReason.DISCARDED);

@@ -16,8 +16,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
+import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 
 public class GuiManaHUD {
     public static final IGuiOverlay OVERLAY = GuiManaHUD::renderOverlay;
@@ -32,7 +32,7 @@ public class GuiManaHUD {
                 || (ManaUtil.getMaxMana(minecraft.player) > ManaUtil.getCurrentMana(minecraft.player));
     }
 
-    public static void renderOverlay(ForgeGui gui, GuiGraphics guiGraphics, float pt, int width,
+    public static void renderOverlay(ExtendedGui gui, GuiGraphics guiGraphics, float pt, int width,
                                      int height) {
         if (!shouldDisplayBar())
             return;

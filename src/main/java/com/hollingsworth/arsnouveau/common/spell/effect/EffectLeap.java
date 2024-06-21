@@ -16,7 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -65,10 +65,10 @@ public class EffectLeap extends AbstractEffect {
         }
     }
 
-    ForgeConfigSpec.BooleanValue NERF;
+    ModConfigSpec.BooleanValue NERF;
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         NERF = builder.comment("If true, will not launch the caster if they are not on the ground.").define("force_ground", false);
         addGenericDouble(builder, 1.5, "Base knockup amount", "knock_up");

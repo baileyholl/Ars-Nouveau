@@ -33,7 +33,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -252,7 +252,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
     }
     // was override of performShooting
     public void shootStoredProjectiles(Level pLevel, LivingEntity pShooter, InteractionHand pUsedHand, ItemStack pCrossbowStack, float pVelocity, float pInaccuracy) {
-        if (pShooter instanceof Player player && net.minecraftforge.event.ForgeEventFactory.onArrowLoose(pCrossbowStack, pShooter.level, player, 1, true) < 0) return;
+        if (pShooter instanceof Player player && net.neoforged.neoforge.event.EventHooks.onArrowLoose(pCrossbowStack, pShooter.level, player, 1, true) < 0) return;
         List<ItemStack> list = getChargedProjectiles(pCrossbowStack);
         float[] afloat = getShotPitches(pShooter.getRandom());
         boolean isSpell = pCrossbowStack.hasTag() && pCrossbowStack.getTag().getBoolean("isSpell");

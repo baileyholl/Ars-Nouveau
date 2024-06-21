@@ -21,9 +21,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.IForgeShearable;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.common.IShearable;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -40,13 +40,13 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
 
     @Override
     public boolean canDamage(LivingEntity shooter, SpellStats stats, SpellContext spellContext, SpellResolver resolver, @NotNull Entity entity) {
-        return IDamageEffect.super.canDamage(shooter, stats, spellContext, resolver, entity) && !(entity instanceof IForgeShearable);
+        return IDamageEffect.super.canDamage(shooter, stats, spellContext, resolver, entity) && !(entity instanceof IShearable);
     }
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
-        if (entity instanceof IForgeShearable shearable) {
+        if (entity instanceof IShearable shearable) {
             ItemStack shears = new ItemStack(Items.SHEARS);
             applyEnchantments(spellStats, shears);
             if (shearable.isShearable(shears, world, entity.blockPosition())) {
@@ -72,7 +72,7 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
 
     private boolean dupeCheck(Level world, BlockPos pos){
         BlockEntity be = world.getBlockEntity(pos);
-        return be != null && (world.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent() || be instanceof Container);
+        return be != null && (world.getCapability(Capabilities.ITEM_HANDLER).isPresent() || be instanceof Container);
     }
 
     public void doStrip(BlockPos p, BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
@@ -90,7 +90,7 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
     public void doShear(BlockPos p, BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
         ItemStack shears = new ItemStack(Items.SHEARS);
         applyEnchantments(spellStats, shears);
-        if (world.getBlockState(p).getBlock() instanceof IForgeShearable shearable && shearable.isShearable(shears, world, p)) {
+        if (world.getBlockState(p).getBlock() instanceof IShearable shearable && shearable.isShearable(shears, world, p)) {
             List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, p, spellStats.getBuffCount(AugmentFortune.INSTANCE));
             items.forEach(i -> world.addFreshEntity(new ItemEntity(world, p.getX(), p.getY(), p.getZ(), i)));
         }
@@ -104,7 +104,7 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addDamageConfig(builder, 1.0);
         addAmpConfig(builder, 1.0);

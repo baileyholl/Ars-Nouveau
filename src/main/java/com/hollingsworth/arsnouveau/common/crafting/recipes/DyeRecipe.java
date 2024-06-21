@@ -17,8 +17,8 @@ import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.crafting.CraftingHelper;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.crafting.CraftingHelper;
 
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 

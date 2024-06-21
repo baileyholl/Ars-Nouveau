@@ -10,9 +10,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.wrapper.PlayerMainInvWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -28,7 +28,7 @@ public class InvUtil {
             if (adjacentInvTile == null || adjacentInvTile.isRemoved())
                 continue;
 
-            IItemHandler handler = adjacentInvTile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+            IItemHandler handler = adjacentInvTile.getCapability(Capabilities.ITEM_HANDLER).orElse(null);
             if(handler == null)
                 continue;
             inventories.add(new FilterableItemHandler(handler, filtersOnTile(adjacentInvTile)));
@@ -37,7 +37,7 @@ public class InvUtil {
     }
 
     public static FilterableItemHandler getFilteredHandler(@NotNull BlockEntity tile){
-        return new FilterableItemHandler(tile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null), filtersOnTile(tile));
+        return new FilterableItemHandler(tile.getCapability(Capabilities.ITEM_HANDLER).orElse(null), filtersOnTile(tile));
     }
 
     public static List<Function<ItemStack, ItemScroll.SortPref>> filtersOnTile(@Nullable BlockEntity thisTile){
@@ -47,7 +47,7 @@ public class InvUtil {
         Level level = thisTile.getLevel();
         BlockPos pos = thisTile.getBlockPos();
         List<Function<ItemStack, ItemScroll.SortPref>> filters = new ArrayList<>();
-        IItemHandler inv = thisTile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+        IItemHandler inv = thisTile.getCapability(Capabilities.ITEM_HANDLER).orElse(null);
         if(inv == null)
             return filters;
 

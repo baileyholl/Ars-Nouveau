@@ -1,23 +1,25 @@
 package com.hollingsworth.arsnouveau.api.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import org.jetbrains.annotations.NotNull;
+
 
 import java.util.ArrayList;
 import java.util.List;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /**
  * For queuing deferred or over-time tasks. Tick refers to the Server or Client Tick event.
  */
 @SuppressWarnings("ForLoopReplaceableByForEach")
-@Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
+@EventBusSubscriber(modid = ArsNouveau.MODID)
 public class EventQueue {
     @NotNull List<ITimedEvent> events = new ArrayList<>();;
 
-    public void tick(TickEvent tickEvent) {
+    public void tick(boolean serverSide) {
         if (events.isEmpty()) {
             return;
         }
@@ -29,7 +31,7 @@ public class EventQueue {
             if (event.isExpired()) {
                 stale.add(event);
             } else {
-                event.tickEvent(tickEvent);
+                event.tick(serverSide);
             }
         }
         this.events.removeAll(stale);
@@ -69,20 +71,13 @@ public class EventQueue {
     }
 
     @SubscribeEvent
-    public static void serverTick(TickEvent.ServerTickEvent e) {
-
-        if (e.phase != TickEvent.Phase.END)
-            return;
-
-        EventQueue.getServerInstance().tick(e);
+    public static void serverTick(ServerTickEvent.Post e) {
+        EventQueue.getServerInstance().tick(true);
     }
 
     @SubscribeEvent
-    public static void clientTickEvent(TickEvent.ClientTickEvent e) {
-
-        if (e.phase != TickEvent.Phase.END)
-            return;
-
-        EventQueue.getClientQueue().tick(e);
+    public static void clientTickEvent(ClientTickEvent.Post e) {
+        EventQueue.getClientQueue().tick(false);
     }
+
 }

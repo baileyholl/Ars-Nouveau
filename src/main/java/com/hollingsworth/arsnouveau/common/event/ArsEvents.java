@@ -19,13 +19,13 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.event.ItemAttributeModifierEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
+@EventBusSubscriber(modid = ArsNouveau.MODID)
 public class ArsEvents {
 
     @SubscribeEvent
@@ -71,8 +71,8 @@ public class ArsEvents {
 
     @SubscribeEvent
     public static void preSpellDamage(SpellDamageEvent.Pre e) {
-        if (e.damageSource.is(DamageTypeTags.IS_FIRE) && e.caster.hasEffect(ModPotions.IMMOLATE_EFFECT.get())) {
-            e.damage += 2 * (e.caster.getEffect(ModPotions.IMMOLATE_EFFECT.get()).getAmplifier() + 1);
+        if (e.damageSource.is(DamageTypeTags.IS_FIRE) && e.caster.hasEffect(ModPotions.IMMOLATE_EFFECT)) {
+            e.damage += 2 * (e.caster.getEffect(ModPotions.IMMOLATE_EFFECT).getAmplifier() + 1);
         }
     }
 
@@ -98,11 +98,11 @@ public class ArsEvents {
 
             if (itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.get()) > 0) {
                 UUID uuid = getEnchantBoostBySlot(event.getSlotType());
-                event.addModifier(PerkAttributes.MAX_MANA.get(), new AttributeModifier(uuid, "max_mana_enchant", ServerConfig.MANA_BOOST_BONUS.get() * itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.get()), AttributeModifier.Operation.ADDITION));
+                event.addModifier(PerkAttributes.MAX_MANA, new AttributeModifier(uuid, "max_mana_enchant", ServerConfig.MANA_BOOST_BONUS.get() * itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.get()), AttributeModifier.Operation.ADD_VALUE));
             }
             if (itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.get()) > 0) {
                 UUID uuid = getEnchantBoostBySlot(event.getSlotType());
-                event.addModifier(PerkAttributes.MANA_REGEN_BONUS.get(), new AttributeModifier(uuid, "mana_regen_enchant", ServerConfig.MANA_REGEN_ENCHANT_BONUS.get() * itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.get()), AttributeModifier.Operation.ADDITION));
+                event.addModifier(PerkAttributes.MANA_REGEN_BONUS, new AttributeModifier(uuid, "mana_regen_enchant", ServerConfig.MANA_REGEN_ENCHANT_BONUS.get() * itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.get()), AttributeModifier.Operation.ADD_VALUE));
             }
         }
 

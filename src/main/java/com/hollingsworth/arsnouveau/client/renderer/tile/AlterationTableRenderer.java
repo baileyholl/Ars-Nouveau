@@ -32,7 +32,7 @@ import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.ForgeHooksClient;
+import net.neoforged.neoforge.client.ClientHooks;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
@@ -150,7 +150,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
     }
 
     protected net.minecraft.client.model.Model getArmorModelHook(ItemStack itemStack, EquipmentSlot slot, HumanoidModel model) {
-        return net.minecraftforge.client.ForgeHooksClient.getArmorModel(Minecraft.getInstance().player, itemStack, slot, model);
+        return net.neoforged.neoforge.client.ClientHooks.getArmorModel(Minecraft.getInstance().player, itemStack, slot, model);
     }
 
     private void renderModel(PoseStack pPoseStack, MultiBufferSource pBuffer, int packedLight, boolean p_117111_, net.minecraft.client.model.Model pModel, float p_117114_, float p_117115_, float p_117116_, ResourceLocation armorResource) {
@@ -169,7 +169,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         }
         String s1 = String.format(java.util.Locale.ROOT, "%s:textures/models/armor/%s_layer_%d%s.png", domain, texture, (usesInnerModel(slot) ? 2 : 1), type == null ? "" : String.format(java.util.Locale.ROOT, "_%s", type));
 
-        s1 = ForgeHooksClient.getArmorTexture(Minecraft.getInstance().player, stack, s1, slot, type);
+        s1 = ClientHooks.getArmorTexture(Minecraft.getInstance().player, stack, s1, slot, type);
         ResourceLocation resourcelocation = ARMOR_LOCATION_CACHE.get(s1);
 
         if (resourcelocation == null) {

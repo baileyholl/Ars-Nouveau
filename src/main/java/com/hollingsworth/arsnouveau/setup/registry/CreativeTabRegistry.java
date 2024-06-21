@@ -16,9 +16,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
-
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.Comparator;
 
 import static com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry.ITEMS;
@@ -31,11 +30,11 @@ public class CreativeTabRegistry {
 
 
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ArsNouveau.MODID);
-    public static final RegistryObject<CreativeModeTab> BLOCKS = TABS.register("general", () -> CreativeModeTab.builder()
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> BLOCKS = TABS.register("general", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.ars_nouveau"))
             .icon(() -> ItemsRegistry.CREATIVE_SPELLBOOK.get().getDefaultInstance())
             .displayItems((params, output) -> {
-                for (RegistryObject<Item> entry : ITEMS.getEntries()) {
+                for (DeferredHolder<Item, ? extends Item> entry : ITEMS.getEntries()) {
                     if (!(entry.get() instanceof Glyph)) {
                         output.accept(entry.get().getDefaultInstance());
                     }
@@ -53,7 +52,7 @@ public class CreativeTabRegistry {
             }).withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
             .build());
 
-    public static final RegistryObject<CreativeModeTab> GLYPHS = TABS.register("glyphs", () -> CreativeModeTab.builder()
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> GLYPHS = TABS.register("glyphs", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.ars_glyphs"))
             .icon(() -> MethodProjectile.INSTANCE.glyphItem.getDefaultInstance())
             .displayItems((params, output) -> {

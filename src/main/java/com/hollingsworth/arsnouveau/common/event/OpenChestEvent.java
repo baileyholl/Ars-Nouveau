@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
-import net.minecraftforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.util.FakePlayer;
 
 public class OpenChestEvent implements ITimedEvent {
     ServerLevel level;

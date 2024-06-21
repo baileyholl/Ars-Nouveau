@@ -1,9 +1,11 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
+import com.hollingsworth.arsnouveau.common.util.registry.BlockRegistryWrapper;
+import com.hollingsworth.arsnouveau.common.util.registry.RegistryWrapper;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import software.bernie.geckolib.animation.AnimatableManager;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -15,7 +17,7 @@ public abstract class RendererBlockItem extends AnimBlockItem {
         super(block, props);
     }
 
-    public RendererBlockItem(RegistryWrapper<? extends Block> block, Properties props) {
+    public RendererBlockItem(BlockRegistryWrapper<? extends Block> block, Properties props) {
         this(block.get(), props);
     }
 

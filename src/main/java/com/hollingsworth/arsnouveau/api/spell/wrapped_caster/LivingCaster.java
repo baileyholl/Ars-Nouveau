@@ -6,8 +6,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class LivingCaster implements IWrappedCaster {
     @Override
     public @NotNull List<FilterableItemHandler> getInventory() {
         List<FilterableItemHandler> filterableItemHandlers = new ArrayList<>();
-        livingEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(cap -> filterableItemHandlers.add(new FilterableItemHandler(cap)));
+        livingEntity.getCapability(Capabilities.ITEM_HANDLER).ifPresent(cap -> filterableItemHandlers.add(new FilterableItemHandler(cap)));
         return filterableItemHandlers;
     }
 

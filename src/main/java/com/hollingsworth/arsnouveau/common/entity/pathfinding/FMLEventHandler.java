@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
-import net.minecraftforge.event.server.ServerStoppingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 
 /**
  * Event handler used to catch various forge events.

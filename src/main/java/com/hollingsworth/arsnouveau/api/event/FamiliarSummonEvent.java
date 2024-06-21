@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.api.event;
 
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.event.entity.EntityEvent;
+import net.neoforged.neoforge.event.entity.EntityEvent;
 
 public class FamiliarSummonEvent extends EntityEvent {
     public Entity owner;

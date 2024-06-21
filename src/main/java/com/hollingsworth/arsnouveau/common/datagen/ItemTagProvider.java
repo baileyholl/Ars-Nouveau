@@ -12,10 +12,8 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.versions.forge.ForgeVersion;
-
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import java.util.concurrent.CompletableFuture;
 
 public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
@@ -26,12 +24,14 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
     public static TagKey<Item> MAGIC_FOOD = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_food"));
     public static TagKey<Item> WILDEN_DROP_TAG = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "wilden_drop"));
     public static TagKey<Item> SHARD_TAG = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/shard"));
-    public static TagKey<Item> BERRY_TAG = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "fruits/berry"));
+    public static TagKey<Item> BERRY_TAG = ItemTags.create(new ResourceLocation("c", "fruits/berry"));
     public static final TagKey<Item> SUMMON_SHARDS_TAG = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_shards"));
     public static TagKey<Item> JAR_ITEM_BLACKLIST = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "interact_jar_blacklist"));
     public static TagKey<Item> RITUAL_LOOT_BLACKLIST = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "ritual_loot_blacklist"));
     public static TagKey<Item> RITUAL_TRADE_BLACKLIST = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "ritual_trade_blacklist"));
+    public static TagKey<Item> STORAGE_BLOCKS_QUARTZ = ItemTags.create(new ResourceLocation("storage_blocks/quartz"));
     public static TagKey<Item> SHADY_WIZARD_FRUITS = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "shady_wizard_fruits"));
+
 
     public ItemTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
         super(output, Registries.ITEM, future, item -> item.builtInRegistryHolder().key(), ArsNouveau.MODID, helper);
@@ -120,7 +120,7 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
 
 
         );
-        this.tag(ItemTags.create(new ResourceLocation("forge", "planks/archwood")))
+        this.tag(ItemTags.create(new ResourceLocation("c", "planks/archwood")))
                 .add(BlockRegistry.ARCHWOOD_PLANK.asItem());
         this.tag(Tags.Items.SEEDS)
                 .add(BlockRegistry.MAGE_BLOOM_CROP.asItem());

@@ -41,12 +41,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.common.capabilities.Capability;
+import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
-
+import record;
 import java.util.*;
 
 
@@ -88,7 +88,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (!this.remove && cap == ForgeCapabilities.ITEM_HANDLER) {
+        if (!this.remove && cap == Capabilities.ITEM_HANDLER) {
             StorageLecternTile lecternTile = getMainLectern();
             if (lecternTile == null) {
                 this.lecternInvWrapper = LazyOptional.of(() -> new LecternInvWrapper(this));
@@ -98,7 +98,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             for (BlockPos pos : lecternTile.connectedInventories) {
                 BlockEntity invTile = lecternTile.level.getBlockEntity(pos);
                 if (invTile != null) {
-                    IItemHandler lih = invTile.getCapability(ForgeCapabilities.ITEM_HANDLER, null).orElse(null);
+                    IItemHandler lih = invTile.getCapability(Capabilities.ITEM_HANDLER, null).orElse(null);
                     if (lih == null) {
                         continue;
                     }
@@ -265,7 +265,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.no_tile"));
             return;
         }
-        IItemHandler handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER, side).orElse(null);
+        IItemHandler handler = tile.getCapability(Capabilities.ITEM_HANDLER, side).orElse(null);
         if (handler == null) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.no_tile"));
             return;
@@ -367,7 +367,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             if (invTile == null) {
                 continue;
             }
-            IItemHandler handler = invTile.getCapability(ForgeCapabilities.ITEM_HANDLER, null).orElse(null);
+            IItemHandler handler = invTile.getCapability(Capabilities.ITEM_HANDLER, null).orElse(null);
             if (handler == null) {
                 continue;
             }
@@ -430,7 +430,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 			BlockEntity tile = this.level.getBlockEntity(pos);
 			if(tile == null || mainLectern.connectedInventories.contains(pos))
 				continue;
-			IItemHandler handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+			IItemHandler handler = tile.getCapability(Capabilities.ITEM_HANDLER).orElse(null);
 			if(handler == null)
 				continue;
 			for(int i = 0; i < handler.getSlots(); i++){

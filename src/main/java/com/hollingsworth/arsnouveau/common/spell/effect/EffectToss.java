@@ -14,9 +14,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -59,7 +59,7 @@ public class EffectToss extends AbstractEffect {
             return;
         }
         BlockEntity tileEntity = world.getBlockEntity(rayTraceResult.getBlockPos());
-        IItemHandler targetInv = tileEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+        IItemHandler targetInv = tileEntity.getCapability(Capabilities.ITEM_HANDLER).orElse(null);
 
         if (targetInv == null) {
             return;

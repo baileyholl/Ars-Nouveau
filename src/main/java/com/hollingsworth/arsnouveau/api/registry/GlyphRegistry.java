@@ -5,10 +5,9 @@ import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.setup.config.ANModConfig;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.ModConfig;
-
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +34,8 @@ public class GlyphRegistry {
         glyphItemMap.put(part.getRegistryName(), part::getGlyph);
 
         //register the spell part's config in
-        ForgeConfigSpec spec;
-        ForgeConfigSpec.Builder spellBuilder = new ForgeConfigSpec.Builder();
+        ModConfigSpec spec;
+        ModConfigSpec.Builder spellBuilder = new ModConfigSpec.Builder();
         part.buildConfig(spellBuilder);
         spec = spellBuilder.build();
         part.CONFIG = spec;

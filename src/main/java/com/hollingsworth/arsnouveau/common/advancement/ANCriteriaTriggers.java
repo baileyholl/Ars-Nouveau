@@ -1,24 +1,31 @@
 package com.hollingsworth.arsnouveau.common.advancement;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.Optional;
+
+import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
 public class ANCriteriaTriggers {
-    public static final PlayerTrigger POOF_MOB = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "poof_mob")));
-    public static final PlayerTrigger FAMILIAR = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "familiar")));
-    public static final PlayerTrigger CHIMERA_EXPLOSION = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "chimera_explosion")));
-    public static final PlayerTrigger CREATE_PORTAL = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "portals")));
-    public static final PlayerTrigger PRISMATIC = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "prismatic")));
-    public static final PlayerTrigger SHRUNK_STARBY = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "shrunk_starby")));
-    public static final PlayerTrigger CAUGHT_LIGHTNING = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "catch_lightning")));
-    public static final PlayerTrigger TIME_IN_BOTTLE = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "time_in_bottle")));
+    public static final DeferredRegister<CriterionTrigger<?>> TRIGGERS = DeferredRegister.create(BuiltInRegistries.TRIGGER_TYPES, MODID);
+    public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> POOF_MOB = register("poof_mob");
+    public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> FAMILIAR = register("familiar");
+    public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> CHIMERA_EXPLOSION = register("chimera_explosion");
+    public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> CREATE_PORTAL = register("portals");
+    public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> PRISMATIC = register("prismatic");
+    public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> SHRUNK_STARBY = register("shrunk_starby");
+    public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> CAUGHT_LIGHTNING = register("catch_lightning");
+    public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> TIME_IN_BOTTLE = register("time_in_bottle");
 
     public static void rewardNearbyPlayers(PlayerTrigger criteria, ServerLevel level, BlockPos pos, int radius){
         AABB aabb = new AABB(pos).inflate(radius);
@@ -29,9 +36,17 @@ public class ANCriteriaTriggers {
         }
     }
 
-    public static <T extends CriterionTrigger<?>> T register(T trigger) {
-        return CriteriaTriggers.register(trigger);
+    public static <T extends CriterionTrigger<?>> DeferredHolder<CriterionTrigger<?>, PlayerTrigger> register(String pName) {
+        return register(pName, new PlayerTrigger());
+    }
+
+    public static <T extends CriterionTrigger<?>> DeferredHolder<CriterionTrigger<?>, T> register(String pName, T pTrigger) {
+        return TRIGGERS.register(pName, () -> pTrigger);
     }
 
     public static void init() {}
+
+    public static Criterion<?> createCriterion(DeferredHolder<CriterionTrigger<?>, PlayerTrigger> holder) {
+        return holder.get().createCriterion(new PlayerTrigger.TriggerInstance(Optional.empty()));
+    }
 }

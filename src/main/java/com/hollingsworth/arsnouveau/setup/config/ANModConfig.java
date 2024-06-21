@@ -1,14 +1,13 @@
 package com.hollingsworth.arsnouveau.setup.config;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.config.ConfigFileTypeHandler;
-import net.minecraftforge.fml.config.IConfigSpec;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.loading.FMLPaths;
-
 import java.nio.file.Path;
 import java.util.function.Function;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.config.ConfigFileTypeHandler;
+import net.neoforged.fml.config.IConfigSpec;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.loading.FMLPaths;
 
 public class ANModConfig extends ModConfig {
     private static final ANConfigFileTypeHandler AN_TOML = new ANConfigFileTypeHandler();
