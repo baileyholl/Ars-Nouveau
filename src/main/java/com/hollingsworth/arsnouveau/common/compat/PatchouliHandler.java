@@ -12,7 +12,7 @@ import vazkii.patchouli.client.book.gui.GuiBookEntry;
 public class PatchouliHandler {
 
     public static void openBookGUI(ServerPlayer player) {
-        PatchouliAPI.get().openBookGUI(player, new ResourceLocation(ArsNouveau.MODID, "worn_notebook"));
+        PatchouliAPI.get().openBookGUI(player, ArsNouveau.prefix( "worn_notebook"));
     }
 
     public static void openBookClient(){

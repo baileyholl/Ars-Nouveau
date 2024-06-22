@@ -18,14 +18,14 @@ import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
 public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<CraftingTerminalMenu> implements RecipeUpdateListener {
-	private static final ResourceLocation gui = new ResourceLocation(ArsNouveau.MODID, "textures/gui/crafting_terminal.png");
-	private static final ResourceLocation gui_expanded = new ResourceLocation(ArsNouveau.MODID, "textures/gui/crafting_terminal_expanded.png");
+	private static final ResourceLocation gui = ArsNouveau.prefix( "textures/gui/crafting_terminal.png");
+	private static final ResourceLocation gui_expanded = ArsNouveau.prefix( "textures/gui/crafting_terminal_expanded.png");
 	private final RecipeBookComponent recipeBookGui;
 	private boolean widthTooNarrow;
-	private static final ResourceLocation RECIPE_BUTTON_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/gui/recipe_book.png");
-	private static final ResourceLocation CLEAR_CRAFT_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/gui/craft_clear.png");
-	private static final ResourceLocation EXPAND_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/gui/expand_inventory.png");
-	private static final ResourceLocation COLLAPSE_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/gui/collapse_inventory.png");
+	private static final ResourceLocation RECIPE_BUTTON_TEXTURE = ArsNouveau.prefix( "textures/gui/recipe_book.png");
+	private static final ResourceLocation CLEAR_CRAFT_TEXTURE = ArsNouveau.prefix( "textures/gui/craft_clear.png");
+	private static final ResourceLocation EXPAND_TEXTURE = ArsNouveau.prefix( "textures/gui/expand_inventory.png");
+	private static final ResourceLocation COLLAPSE_TEXTURE = ArsNouveau.prefix( "textures/gui/collapse_inventory.png");
 	private EditBox recipeBookSearch;
 	private GhostRecipe ghostRecipe;
 

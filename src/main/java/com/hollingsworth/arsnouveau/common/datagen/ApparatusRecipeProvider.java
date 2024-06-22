@@ -1066,7 +1066,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .withPedestalItem(ItemsRegistry.WARP_SCROLL)
                 .keepNbtOfReagent(true)
                 .withSourceCost(1000)
-                .withId(new ResourceLocation(ArsNouveau.MODID, "warp_scroll_copy"))
+                .withId(ArsNouveau.prefix( "warp_scroll_copy"))
                 .build());
         addRecipe(builder().withResult(BlockRegistry.SPELL_SENSOR).withReagent(Blocks.SCULK_SENSOR).build());
         addRecipe(builder().withReagent(ItemsRegistry.RING_OF_POTENTIAL).withResult(ItemsRegistry.JUMP_RING)

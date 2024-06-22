@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.api.util;
 
-import Mana;
+
 import com.hollingsworth.arsnouveau.api.event.ManaRegenCalcEvent;
 import com.hollingsworth.arsnouveau.api.event.MaxManaCalcEvent;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
@@ -14,8 +14,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.NeoForge;
-import record;
-import var;
+
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 

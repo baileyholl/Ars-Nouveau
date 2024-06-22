@@ -19,7 +19,7 @@ public class BiomeRegistry {
     public static final ResourceKey<Biome> ARCHWOOD_FOREST = register("archwood_forest");
 
     public static ResourceKey<Biome> register(String name) {
-        return ResourceKey.create(Registries.BIOME, new ResourceLocation(ArsNouveau.MODID, name));
+        return ResourceKey.create(Registries.BIOME, ArsNouveau.prefix( name));
     }
 
     public static void bootstrap(BootstrapContext<Biome> context) {

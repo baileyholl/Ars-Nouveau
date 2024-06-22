@@ -19,9 +19,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 
 
 public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellCastListener {
@@ -97,6 +97,6 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
 
     @Override
     public ResourceLocation getTexture(FamiliarEntity entity) {
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/whirlisprig_" + (getColor().isEmpty() ? "summer" : getColor().toLowerCase()) + ".png");
+        return ArsNouveau.prefix( "textures/entity/whirlisprig_" + (getColor().isEmpty() ? "summer" : getColor().toLowerCase()) + ".png");
     }
 }

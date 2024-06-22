@@ -139,6 +139,6 @@ public class StarbyListBehavior extends StarbyBehavior {
 
     @Override
     protected ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, "starby_list");
+        return ArsNouveau.prefix( "starby_list");
     }
 }

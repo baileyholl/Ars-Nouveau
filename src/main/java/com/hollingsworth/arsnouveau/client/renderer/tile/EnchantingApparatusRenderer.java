@@ -11,8 +11,8 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import software.bernie.geckolib.util.RenderUtils;
+import software.bernie.geckolib.animatable.model.CoreGeoBone;
+import software.bernie.geckolib.util.RenderUtil;
 
 
 public class EnchantingApparatusRenderer extends ArsGeoBlockRenderer<EnchantingApparatusTile> {
@@ -33,7 +33,7 @@ public class EnchantingApparatusRenderer extends ArsGeoBlockRenderer<EnchantingA
                 tile.renderEntity = new ItemEntity(tile.getLevel(), x, y, z, tile.getStack());
             }
             stack.pushPose();
-            RenderUtils.translateMatrixToBone(stack, frame);
+            RenderUtil.translateMatrixToBone(stack, frame);
             stack.translate(0.5, +0.5, 0.5);
             stack.scale(0.75f, 0.75f, 0.75f);
             ItemStack itemstack = tile.renderEntity.getItem();

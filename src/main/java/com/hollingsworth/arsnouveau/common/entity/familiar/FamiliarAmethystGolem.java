@@ -12,9 +12,9 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,7 +53,7 @@ public class FamiliarAmethystGolem extends FamiliarEntity {
 
     public static final Map<String,ResourceLocation> Variants = new HashMap<>();
     static {
-        Variants.put("default", new ResourceLocation(ArsNouveau.MODID, "textures/entity/amethyst_golem.png"));
+        Variants.put("default", ArsNouveau.prefix( "textures/entity/amethyst_golem.png"));
     }
 
     @Override

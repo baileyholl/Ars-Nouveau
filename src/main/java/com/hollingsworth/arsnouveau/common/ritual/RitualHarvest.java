@@ -136,7 +136,7 @@ public class RitualHarvest extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, RitualLib.HARVEST);
+        return ArsNouveau.prefix( RitualLib.HARVEST);
     }
 
     @Override

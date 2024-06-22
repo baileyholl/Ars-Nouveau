@@ -17,7 +17,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforgespi.language.IModInfo;
-import var;
+
 import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
@@ -42,9 +42,9 @@ public class UnlockGlyphButton extends ANButton {
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         if (visible) {
             if (this.spellPart != null) {
-                RenderUtils.drawSpellPart(this.spellPart, graphics, x, y, width, !playerKnows, 0);
+                RenderUtil.drawSpellPart(this.spellPart, graphics, x, y, width, !playerKnows, 0);
                 if (selected)
-                    graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/glyph_selected.png"), x, y, 0, 0, 16, 16, 16, 16);
+                    graphics.blit(ArsNouveau.prefix( "textures/gui/glyph_selected.png"), x, y, 0, 0, 16, 16, 16, 16);
             }
         }
     }

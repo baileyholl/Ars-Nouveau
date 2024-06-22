@@ -4,9 +4,9 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.model.CoreGeoBone;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
@@ -14,9 +14,9 @@ import javax.annotation.Nullable;
 
 public class DrygmyModel<T extends LivingEntity & GeoAnimatable> extends GeoModel<T> {
 
-    private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/drygmy.png");
-    public static final ResourceLocation NORMAL_MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/drygmy.geo.json");
-    public static final ResourceLocation ANIMATIONS = new ResourceLocation(ArsNouveau.MODID, "animations/drygmy_animations.json");
+    private static final ResourceLocation WILD_TEXTURE = ArsNouveau.prefix( "textures/entity/drygmy.png");
+    public static final ResourceLocation NORMAL_MODEL = ArsNouveau.prefix( "geo/drygmy.geo.json");
+    public static final ResourceLocation ANIMATIONS = ArsNouveau.prefix( "animations/drygmy_animations.json");
 
     @Override
     public void setCustomAnimations(T entity, long uniqueID, @Nullable AnimationState<T> customPredicate) {

@@ -167,6 +167,6 @@ public class ArsNouveau {
     }
 
     public static ResourceLocation prefix(String str) {
-        return new ResourceLocation(MODID, str);
+        return ResourceLocation.fromNamespaceAndPath(MODID, str);
     }
 }

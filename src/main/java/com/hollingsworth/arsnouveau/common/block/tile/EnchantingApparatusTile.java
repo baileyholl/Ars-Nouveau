@@ -27,11 +27,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -140,7 +140,8 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
 
     public IEnchantingRecipe getRecipe(ItemStack stack, @Nullable Player playerEntity) {
         List<ItemStack> pedestalItems = getPedestalItems();
-        return ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes(level).stream().filter(r -> r.isMatch(pedestalItems, stack, this, playerEntity)).findFirst().orElse(null);
+        var holder = ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes(level).stream().filter(r -> r.value().isMatch(pedestalItems, stack, this, playerEntity)).findFirst().orElse(null);
+        return holder != null ? holder.value() : null;
     }
 
     public boolean attemptCraft(ItemStack catalyst, @Nullable Player playerEntity) {

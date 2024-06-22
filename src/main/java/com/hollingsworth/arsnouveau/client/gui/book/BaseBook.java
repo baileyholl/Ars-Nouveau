@@ -18,7 +18,7 @@ public class BaseBook extends ModdedScreen {
 
     public final int FULL_WIDTH = 290;
     public final int FULL_HEIGHT = 194;
-    public static ResourceLocation background = new ResourceLocation(ArsNouveau.MODID, "textures/gui/spell_book_template.png");
+    public static ResourceLocation background = ArsNouveau.prefix( "textures/gui/spell_book_template.png");
     public int bookLeft;
     public int bookTop;
     public int bookRight;

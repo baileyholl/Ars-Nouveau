@@ -227,6 +227,6 @@ public class Config {
     }
 
     public static String an(String s){
-        return new ResourceLocation(ArsNouveau.MODID, s).toString();
+        return ArsNouveau.prefix( s).toString();
     }
 }

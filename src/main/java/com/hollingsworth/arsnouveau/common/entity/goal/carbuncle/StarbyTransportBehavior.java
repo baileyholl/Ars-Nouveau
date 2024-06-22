@@ -31,7 +31,7 @@ import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
-import var;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -40,7 +40,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
             .expireAfterAccess(20, TimeUnit.SECONDS)
             .build();
 
-    public static final ResourceLocation TRANSPORT_ID = new ResourceLocation(ArsNouveau.MODID, "starby_transport");
+    public static final ResourceLocation TRANSPORT_ID = ArsNouveau.prefix( "starby_transport");
 
     public ItemStack itemScroll;
 

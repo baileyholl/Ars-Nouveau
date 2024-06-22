@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.124'
+    id 'net.neoforged.gradle.userdev' version '7.0.145'
 }
 
 version = mod_version
@@ -22,15 +22,13 @@ base {
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 java.withSourcesJar()
 
-minecraft {
-    accessTransformers {
-        file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
-    }
-}
+minecraft.accessTransformers.files(
+        file('src/main/resources/META-INF/accesstransformer.cfg')
+)
 
 subsystems {
     parchment {
-        minecraftVersion = project.minecraft_version
+        minecraftVersion = "1.20.6"
         mappingsVersion = project.parchment_version
     }
 }
@@ -85,19 +83,19 @@ tasks.named('jarJar') {}
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
 
-    jarJar(group: 'software.bernie.geckolib', name: "geckolib-neoforge-${minecraft_version}", version: "[4.5,)") {
-        jarJar.pin(it, "${geckolib_version}")
-    }
-    implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
-
-    implementation "vazkii.patchouli:Patchouli:1.20.4-${patchouli_version}"
-    implementation "top.theillusivec4.caelus:neoforge:${caelus_version}+${minecraft_version}"
-
-    compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}+${minecraft_version}:api"
-    localRuntime "top.theillusivec4.curios:curios-neoforge:${curios_version}+${minecraft_version}"
-
-    compileOnly "mezz.jei:jei-1.20.4-neoforge-api:${jei_version}"
-    localRuntime "mezz.jei:jei-1.20.4-neoforge:${jei_version}"
+//    jarJar(group: 'software.bernie.geckolib', name: "geckolib-neoforge-${minecraft_version}", version: "[4.5,)") {
+//        jarJar.pin(it, "${geckolib_version}")
+//    }
+    implementation "software.bernie.geckolib:geckolib-neoforge-1.21:${geckolib_version}"
+//
+//    implementation "vazkii.patchouli:Patchouli:1.20.4-${patchouli_version}"
+//    implementation "top.theillusivec4.caelus:neoforge:${caelus_version}+${minecraft_version}"
+//
+//    compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}+${minecraft_version}:api"
+//    localRuntime "top.theillusivec4.curios:curios-neoforge:${curios_version}+${minecraft_version}"
+//
+//    compileOnly "mezz.jei:jei-1.20.4-neoforge-api:${jei_version}"
+//    localRuntime "mezz.jei:jei-1.20.4-neoforge:${jei_version}"
 }
 
 tasks.withType(ProcessResources).configureEach {

@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class FeatherPerk extends Perk {
 
-    public static final FeatherPerk INSTANCE = new FeatherPerk(new ResourceLocation(ArsNouveau.MODID, "thread_feather"));
+    public static final FeatherPerk INSTANCE = new FeatherPerk(ArsNouveau.prefix( "thread_feather"));
     public static final UUID PERK_UUID = UUID.fromString("3923ee66-756d-4b1d-b216-bb9338b0315b");
 
     public FeatherPerk(ResourceLocation key) {

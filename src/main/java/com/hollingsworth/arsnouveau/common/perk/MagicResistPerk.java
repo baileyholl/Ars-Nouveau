@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class MagicResistPerk extends Perk {
 
-    public static final MagicResistPerk INSTANCE = new MagicResistPerk(new ResourceLocation(ArsNouveau.MODID, "thread_warding"));
+    public static final MagicResistPerk INSTANCE = new MagicResistPerk(ArsNouveau.prefix( "thread_warding"));
     public static final UUID PERK_UUID = UUID.fromString("fc967b66-a432-44e1-93ec-e8ed583b47b3");
 
     public MagicResistPerk(ResourceLocation key) {

@@ -46,11 +46,11 @@ public class CrushRecipe implements Recipe<Container> {
     }
 
     public CrushRecipe(String id, Ingredient input, List<CrushOutput> outputs) {
-        this(new ResourceLocation(ArsNouveau.MODID, "crush_" + id), input, outputs, false);
+        this(ArsNouveau.prefix( "crush_" + id), input, outputs, false);
     }
 
     public CrushRecipe(String id, Ingredient input, List<CrushOutput> outputs, boolean skipBlockPlace) {
-        this(new ResourceLocation(ArsNouveau.MODID, "crush_" + id), input, outputs, skipBlockPlace);
+        this(ArsNouveau.prefix( "crush_" + id), input, outputs, skipBlockPlace);
     }
 
     public CrushRecipe(String id, Ingredient input) {

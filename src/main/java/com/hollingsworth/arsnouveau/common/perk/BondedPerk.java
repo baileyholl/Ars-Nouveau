@@ -6,7 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class BondedPerk extends Perk {
 
-    public static BondedPerk INSTANCE = new BondedPerk(new ResourceLocation(ArsNouveau.MODID, "thread_bonded"));
+    public static BondedPerk INSTANCE = new BondedPerk(ArsNouveau.prefix( "thread_bonded"));
 
     public BondedPerk(ResourceLocation key) {
         super(key);

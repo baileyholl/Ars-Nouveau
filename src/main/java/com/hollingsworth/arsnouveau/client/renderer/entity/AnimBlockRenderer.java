@@ -20,20 +20,20 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.object.Color;
+import software.bernie.geckolib.animatable.model.CoreGeoBone;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.object.Color;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib.util.RenderUtils;
-import var;
+import software.bernie.geckolib.util.RenderUtil;
+
 
 
 public class AnimBlockRenderer<BOBBY extends AnimBlockSummon> extends GeoEntityRenderer<BOBBY> {
 
-    protected static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/anim_block.png");
-    public static final ResourceLocation BASE_MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/animated_block.geo.json");
-    public static final ResourceLocation ANIMATIONS = new ResourceLocation(ArsNouveau.MODID, "animations/animated_block_animations.json");
+    protected static final ResourceLocation TEXTURE = ArsNouveau.prefix( "textures/entity/anim_block.png");
+    public static final ResourceLocation BASE_MODEL = ArsNouveau.prefix( "geo/animated_block.geo.json");
+    public static final ResourceLocation ANIMATIONS = ArsNouveau.prefix( "animations/animated_block_animations.json");
 
     private final BlockRenderDispatcher dispatcher;
     protected MultiBufferSource bufferSource;
@@ -93,7 +93,7 @@ public class AnimBlockRenderer<BOBBY extends AnimBlockSummon> extends GeoEntityR
                     if (blockstate != level.getBlockState(animBlock.blockPosition()) && blockstate.getRenderShape() != RenderShape.INVISIBLE) {
                         poseStack.pushPose();
                         BlockPos blockpos = animBlock.blockPosition().above();
-                        RenderUtils.translateToPivotPoint(poseStack, bone);
+                        RenderUtil.translateToPivotPoint(poseStack, bone);
                         poseStack.translate(-0.5D, -0.5, -0.5D);
                         var model = this.dispatcher.getBlockModel(blockstate);
                         for (var renderType : model.getRenderTypes(blockstate, RandomSource.create(blockstate.getSeed(animBlock.blockPosition())), ModelData.EMPTY))

@@ -80,7 +80,7 @@ public class ScryersOculus extends TickableModBlock {
                 return;
             }
             Networking.INSTANCE.sendToServer(new PacketMountCamera(data.pos));
-        }, slots, (slotData, posestack, positionx, posy, size, transparent) -> RenderUtils.drawItemAsIcon(slotData.getDefaultInstance(), posestack, positionx, posy, size, transparent), 3)));
+        }, slots, (slotData, posestack, positionx, posy, size, transparent) -> RenderUtil.drawItemAsIcon(slotData.getDefaultInstance(), posestack, positionx, posy, size, transparent), 3)));
     }
 
     @Nullable

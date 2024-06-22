@@ -45,7 +45,7 @@ public class BlockStatesDatagen extends BlockStateProvider {
 
         registerNormalCube(BlockRegistry.VOID_PRISM.get(), LibBlockNames.VOID_PRISM);
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
-            registerNormalCube(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s)), s);
+            registerNormalCube(ForgeRegistries.BLOCKS.getValue(ArsNouveau.prefix( s)), s);
         }
         registerNormalCube(BlockRegistry.MAGEBLOOM_BLOCK.get(), LibBlockNames.MAGEBLOOM_BLOCK);
         registerNormalCube(BlockRegistry.FALSE_WEAVE.get(), LibBlockNames.FALSE_WEAVE);
@@ -53,12 +53,12 @@ public class BlockStatesDatagen extends BlockStateProvider {
         registerNormalCube(BlockRegistry.MIRROR_WEAVE.get(), LibBlockNames.MIRROR_WEAVE);
 
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
-            ResourceLocation tex = new ResourceLocation(ArsNouveau.MODID, "block/" + s);
-            Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s + "_stairs"));
+            ResourceLocation tex = ArsNouveau.prefix( "block/" + s);
+            Block block = ForgeRegistries.BLOCKS.getValue(ArsNouveau.prefix( s + "_stairs"));
             stairsBlock((StairBlock) block, tex);
 
-            Block slab = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s + "_slab"));
-            slabBlock((SlabBlock) slab, new ResourceLocation(ArsNouveau.MODID, s), tex);
+            Block slab = ForgeRegistries.BLOCKS.getValue(ArsNouveau.prefix( s + "_slab"));
+            slabBlock((SlabBlock) slab, ArsNouveau.prefix( s), tex);
         }
     }
 
@@ -79,7 +79,7 @@ public class BlockStatesDatagen extends BlockStateProvider {
 
     //will it work? idk
     public void signBlock(Block sign, String reg) {
-        ModelFile signModel = models().withExistingParent(reg, new ResourceLocation("block/air")).texture("particle", new ResourceLocation(ArsNouveau.MODID, "block/" + reg));
+        ModelFile signModel = models().withExistingParent(reg, new ResourceLocation("block/air")).texture("particle", ArsNouveau.prefix( "block/" + reg));
         getVariantBuilder(sign).forAllStates(s -> ConfiguredModel.builder().modelFile(signModel).build());
     }
 
@@ -101,7 +101,7 @@ public class BlockStatesDatagen extends BlockStateProvider {
     }
 
     public ResourceLocation getBlockLoc(String registryName) {
-        return new ResourceLocation(ArsNouveau.MODID, "block" + "/" + registryName);
+        return ArsNouveau.prefix( "block" + "/" + registryName);
     }
 
 }

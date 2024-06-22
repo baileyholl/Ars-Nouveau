@@ -9,7 +9,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.phys.Vec2;
-import record;
+
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Function;

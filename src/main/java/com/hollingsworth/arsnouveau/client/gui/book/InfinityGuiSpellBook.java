@@ -589,10 +589,10 @@ public class InfinityGuiSpellBook extends BaseBook {
         if (augmentTextRow >= 1) {
             graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.augment").getString(), augmentTextRow > 6 ? 154 : 20, 5 + 18 * (augmentTextRow + 1), -8355712, false);
         }
-        graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spell_name_paper.png"), 16, 179, 0, 0, 109, 15, 109, 15);
-        graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15, 72, 15);
-        graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/clear_paper.png"), 161, 179, 0, 0, 47, 15, 47, 15);
-        graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15);
+        graphics.blit(ArsNouveau.prefix( "textures/gui/spell_name_paper.png"), 16, 179, 0, 0, 109, 15, 109, 15);
+        graphics.blit(ArsNouveau.prefix( "textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15, 72, 15);
+        graphics.blit(ArsNouveau.prefix( "textures/gui/clear_paper.png"), 161, 179, 0, 0, 47, 15, 47, 15);
+        graphics.blit(ArsNouveau.prefix( "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15);
         if (validationErrors.isEmpty()) {
             graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.create"), 233, 183, -8355712, false);
         } else {
@@ -619,17 +619,17 @@ public class InfinityGuiSpellBook extends BaseBook {
         poseStack.pushPose();
         poseStack.scale(1.2F, 1.2F, 1.2F);
         poseStack.translate(-25, -30, 0);
-        graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_border.png"), offsetLeft, yOffset - 18, 0, 0, 108, 18, 256, 256);
+        graphics.blit(ArsNouveau.prefix( "textures/gui/manabar_gui_border.png"), offsetLeft, yOffset - 18, 0, 0, 108, 18, 256, 256);
         int manaOffset = (int) (((ClientInfo.ticksInGame + partialTicks) / 3 % (33))) * 6;
 
         // default length is 96
         // rainbow effect for perfect match is currently disabled by the >=
         if (manaLength >= 0) {
-            graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_mana.png"), offsetLeft + 9, yOffset - 9, 0, manaOffset, manaLength, 6, 256, 256);
+            graphics.blit(ArsNouveau.prefix( "textures/gui/manabar_gui_mana.png"), offsetLeft + 9, yOffset - 9, 0, manaOffset, manaLength, 6, 256, 256);
         } else {
             //color rainbow if mana cost = max mana, red if mana cost > max mana
-            RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_grayscale.png"));
-            RenderUtils.colorBlit(graphics.pose(), offsetLeft + 8, yOffset - 10, 0, manaOffset, 100, 8, 256, 256, manaLength < 0 ? Color.RED : Color.rainbowColor(ClientInfo.ticksInGame));
+            RenderSystem.setShaderTexture(0, ArsNouveau.prefix( "textures/gui/manabar_gui_grayscale.png"));
+            RenderUtil.colorBlit(graphics.pose(), offsetLeft + 8, yOffset - 10, 0, manaOffset, 100, 8, 256, 256, manaLength < 0 ? Color.RED : Color.rainbowColor(ClientInfo.ticksInGame));
         }
         if (ArsNouveauAPI.ENABLE_DEBUG_NUMBERS && minecraft != null) {
             String text = currentCostCache + "  /  " + maxManaCache;
@@ -639,7 +639,7 @@ public class InfinityGuiSpellBook extends BaseBook {
             graphics.drawString(minecraft.font, text, offset + 55, yOffset - 10, 0xFFFFFF, false);
         }
 
-        graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_border.png"), offsetLeft, yOffset - 17, 0, 18, 108, 20, 256, 256);
+        graphics.blit(ArsNouveau.prefix( "textures/gui/manabar_gui_border.png"), offsetLeft, yOffset - 17, 0, 18, 108, 20, 256, 256);
         poseStack.popPose();
     }
 

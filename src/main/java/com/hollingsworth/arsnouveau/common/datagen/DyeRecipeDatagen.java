@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.level.ItemLike;
-import record;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;

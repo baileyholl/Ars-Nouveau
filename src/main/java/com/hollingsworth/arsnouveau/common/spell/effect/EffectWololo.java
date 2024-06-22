@@ -38,7 +38,7 @@ import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
-import var;
+
 import java.util.*;
 
 public class EffectWololo extends AbstractEffect {

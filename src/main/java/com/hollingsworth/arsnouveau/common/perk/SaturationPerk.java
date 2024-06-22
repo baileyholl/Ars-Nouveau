@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class SaturationPerk extends Perk {
 
-    public static final SaturationPerk INSTANCE = new SaturationPerk(new ResourceLocation(ArsNouveau.MODID, "thread_whirlisprig"));
+    public static final SaturationPerk INSTANCE = new SaturationPerk(ArsNouveau.prefix( "thread_whirlisprig"));
     public static final UUID PERK_UUID = UUID.fromString("fe329876-34b0-4349-a60a-6215ca44bd4e");
 
     public SaturationPerk(ResourceLocation key) {

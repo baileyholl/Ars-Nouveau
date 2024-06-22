@@ -34,9 +34,9 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.brewing.BrewingRecipe;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -137,7 +137,7 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
         String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "blue";
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/wixie_" + color + ".png");
+        return ArsNouveau.prefix( "textures/entity/wixie_" + color + ".png");
     }
 
     @Override

@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class StructureTagProvider extends TagsProvider<Structure> {
 
-    public static TagKey<Structure> WILDEN_DEN = TagKey.create(Registries.STRUCTURE, new ResourceLocation(ArsNouveau.MODID, "wilden_den"));
+    public static TagKey<Structure> WILDEN_DEN = TagKey.create(Registries.STRUCTURE, ArsNouveau.prefix( "wilden_den"));
 
     public static final ResourceKey<Structure> HUNTER_DEN = register("hunter_wilden_den");
     public static final ResourceKey<Structure> STALKER_DEN = register("stalker_wilden_den");
@@ -32,6 +32,6 @@ public class StructureTagProvider extends TagsProvider<Structure> {
     }
 
     public static ResourceKey<Structure> register(String name) {
-        return ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(ArsNouveau.MODID, name));
+        return ResourceKey.create(Registries.STRUCTURE, ArsNouveau.prefix( name));
     }
 }

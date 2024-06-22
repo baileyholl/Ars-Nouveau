@@ -68,7 +68,7 @@ public class WorldgenProvider extends DatapackBuiltinEntriesProvider {
 
         @NotNull
         private static ResourceLocation prefix(String path) {
-            return new ResourceLocation(ArsNouveau.MODID, path);
+            return ArsNouveau.prefix( path);
         }
 
     }

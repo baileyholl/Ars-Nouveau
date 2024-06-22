@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
-import CancelReason;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.event.DelayedSpellEvent;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
@@ -61,7 +60,7 @@ public class SpellContext implements Cloneable {
     }
 
     public static SpellContext fromEntity(@NotNull Spell spell, @NotNull LivingEntity caster, ItemStack castingTool){
-        return new SpellContext(caster.level, spell, caster, LivingCaster.from(caster), castingTool);
+        return new SpellContext(caster.level(), spell, caster, LivingCaster.from(caster), castingTool);
     }
 
     public SpellContext withWrappedCaster(IWrappedCaster caster){

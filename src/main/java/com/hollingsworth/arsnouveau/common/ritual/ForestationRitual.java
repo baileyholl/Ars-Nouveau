@@ -45,7 +45,7 @@ public class ForestationRitual extends FeaturePlacementRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, RitualLib.FORESTATION);
+        return ArsNouveau.prefix( RitualLib.FORESTATION);
     }
 
     @Override

@@ -21,7 +21,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
-import record;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +61,7 @@ public class AlchemistsCrown extends ModItem implements IRadialProvider {
         }
         Minecraft.getInstance().setScreen(new GuiRadialMenu<>(new RadialMenu<>((int index) -> {
             Networking.INSTANCE.sendToServer(new PacketConsumePotion(slots.get(index).primarySlotIcon().slot));
-        }, slots, (slotData, posestack, positionx, posy, size, transparent) -> RenderUtils.drawItemAsIcon(slotData.stack, posestack, positionx, posy, size, transparent), 3)));
+        }, slots, (slotData, posestack, positionx, posy, size, transparent) -> RenderUtil.drawItemAsIcon(slotData.stack, posestack, positionx, posy, size, transparent), 3)));
     }
 
     public record SlotData(int slot, ItemStack stack){

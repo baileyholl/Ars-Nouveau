@@ -14,7 +14,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
-import var;
+
 
 public class EnchantedFallingBlockRenderer<T extends EnchantedFallingBlock> extends EntityRenderer<T> {
     private final BlockRenderDispatcher dispatcher;

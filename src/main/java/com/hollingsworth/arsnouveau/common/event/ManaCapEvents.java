@@ -14,7 +14,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
-import var;
+
 
 @EventBusSubscriber(modid = ArsNouveau.MODID)
 public class ManaCapEvents {

@@ -33,7 +33,7 @@ public class RitualGravity extends RangeEffectRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, RitualLib.GRAVITY);
+        return ArsNouveau.prefix( RitualLib.GRAVITY);
     }
 
     @Override

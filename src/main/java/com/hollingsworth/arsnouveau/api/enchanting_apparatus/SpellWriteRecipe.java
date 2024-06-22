@@ -40,7 +40,7 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe implements IText
 
     public SpellWriteRecipe(List<Ingredient> pedestalItems) {
         this.pedestalItems = pedestalItems;
-        this.id = new ResourceLocation(ArsNouveau.MODID, "spell_write");
+        this.id = ArsNouveau.prefix( "spell_write");
     }
 
     @Override

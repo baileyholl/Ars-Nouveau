@@ -97,14 +97,14 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.REDSTONE_RELAY_TILE.get(), RedstoneRelayRenderer::new);
 
         event.registerEntityRenderer(ModEntities.SPELL_PROJ.get(),
-                renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
+                renderManager -> new RenderSpell(renderManager, ArsNouveau.prefix( "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.SPELL_PROJ_ARC.get(),
-                renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
+                renderManager -> new RenderSpell(renderManager, ArsNouveau.prefix( "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.SPELL_PROJ_HOM.get(),
-                renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
+                renderManager -> new RenderSpell(renderManager, ArsNouveau.prefix( "textures/entity/spell_proj.png")));
 
         event.registerEntityRenderer(ModEntities.ENTITY_FOLLOW_PROJ.get(),
-                renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
+                renderManager -> new RenderBlank(renderManager, ArsNouveau.prefix( "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.SUMMON_SKELETON.get(), RenderSummonSkeleton::new);
 
         event.registerEntityRenderer(ModEntities.ENTITY_EVOKER_FANGS_ENTITY_TYPE.get(), EvokerFangsRenderer::new);
@@ -123,12 +123,12 @@ public class ClientHandler {
                 RenderFlyingItem::new);
 
         event.registerEntityRenderer(ModEntities.ENTITY_RITUAL.get(),
-                renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
+                renderManager -> new RenderBlank(renderManager, ArsNouveau.prefix( "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.ENTITY_SPELL_ARROW.get(), TippableArrowRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE.get(), (t) -> new TextureVariantRenderer<>(t, new WixieModel<>()));
         event.registerEntityRenderer(ModEntities.ENTITY_DUMMY.get(), DummyRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_DRYGMY.get(), (t) -> new TextureVariantRenderer<>(t, new DrygmyModel<>()));
-        event.registerEntityRenderer(ModEntities.ORBIT_SPELL.get(), renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
+        event.registerEntityRenderer(ModEntities.ORBIT_SPELL.get(), renderManager -> new RenderBlank(renderManager, ArsNouveau.prefix( "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.WILDEN_BOSS.get(), WildenChimeraRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_CHIMERA_SPIKE.get(), ChimeraProjectileRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get(), (t) -> new GenericFamiliarRenderer<>(t, new FamiliarStarbyModel<>()));
@@ -139,14 +139,14 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.FAMILIAR_AMETHYST_GOLEM.get(), (t) -> new GenericFamiliarRenderer<>(t, new AmethystGolemModel<>()));
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get(), FamiliarBookwyrmRenderer::new);
         event.registerEntityRenderer(ModEntities.LINGER_SPELL.get(),
-                renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
+                renderManager -> new RenderBlank(renderManager, ArsNouveau.prefix( "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.ENTITY_CASCADING_WEALD.get(), (v) -> new WealdWalkerRenderer<>(v, "cascading_weald"));
         event.registerEntityRenderer(ModEntities.ENTITY_BLAZING_WEALD.get(), (v) -> new WealdWalkerRenderer<>(v, "blazing_weald"));
         event.registerEntityRenderer(ModEntities.ENTITY_FLOURISHING_WEALD.get(), (v) -> new WealdWalkerRenderer<>(v, "flourishing_weald"));
         event.registerEntityRenderer(ModEntities.ENTITY_VEXING_WEALD.get(), (v) -> new WealdWalkerRenderer<>(v, "vexing_weald"));
 
         event.registerEntityRenderer(ModEntities.AMETHYST_GOLEM.get(), AmethystGolemRenderer::new);
-        event.registerEntityRenderer(ModEntities.SCRYER_CAMERA.get(), renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
+        event.registerEntityRenderer(ModEntities.SCRYER_CAMERA.get(), renderManager -> new RenderBlank(renderManager, ArsNouveau.prefix( "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.ENCHANTED_FALLING_BLOCK.get(), EnchantedFallingBlockRenderer::new);
         event.registerEntityRenderer(ModEntities.ICE_SHARD.get(), EnchantedFallingBlockRenderer::new);
         event.registerEntityRenderer(ModEntities.ENCHANTED_MAGE_BLOCK.get(), MageBlockRenderer::new);
@@ -156,11 +156,11 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ANIMATED_HEAD.get(), AnimSkullRenderer::new);
         event.registerEntityRenderer(ModEntities.CINDER.get(), CinderRenderer::new);
         event.registerEntityRenderer(ModEntities.WALL_SPELL.get(),
-                renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
+                renderManager -> new RenderBlank(renderManager, ArsNouveau.prefix( "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.LILY.get(), LilyRenderer::new);
     }
 
-    public static NamedGuiOverlay cameraOverlay = new NamedGuiOverlay(new ResourceLocation(ArsNouveau.MODID, "scry_camera"), (gui, pose, partialTick, width, height) -> {
+    public static NamedGuiOverlay cameraOverlay = new NamedGuiOverlay(ArsNouveau.prefix( "scry_camera"), (gui, pose, partialTick, width, height) -> {
         Minecraft mc = Minecraft.getInstance();
         Level level = mc.level;
         BlockPos pos = mc.cameraEntity.blockPosition();
@@ -193,10 +193,10 @@ public class ClientHandler {
     public static void init(final FMLClientSetupEvent evt) {
 
         evt.enqueueWork(() -> {
-            ItemProperties.register(ItemsRegistry.ENCHANTERS_SHIELD.get(), new ResourceLocation(ArsNouveau.MODID, "blocking"), (item, resourceLocation, livingEntity, arg4) -> {
+            ItemProperties.register(ItemsRegistry.ENCHANTERS_SHIELD.get(), ArsNouveau.prefix( "blocking"), (item, resourceLocation, livingEntity, arg4) -> {
                 return livingEntity != null && livingEntity.isUsingItem() && livingEntity.getUseItem() == item ? 1.0F : 0.0F;
             });
-            ItemProperties.register(ItemsRegistry.DOWSING_ROD.get(), new ResourceLocation(ArsNouveau.MODID, "uses"), new ClampedItemPropertyFunction() {
+            ItemProperties.register(ItemsRegistry.DOWSING_ROD.get(), ArsNouveau.prefix( "uses"), new ClampedItemPropertyFunction() {
                 @Override
                 public float unclampedCall(ItemStack pStack, @Nullable ClientLevel pLevel, @Nullable LivingEntity pEntity, int pSeed) {
                     return switch (pStack.getDamageValue()) {
@@ -207,11 +207,11 @@ public class ClientHandler {
                     };
                 }
             });
-            ItemProperties.register(BlockRegistry.POTION_JAR.asItem(), new ResourceLocation(ArsNouveau.MODID, "amount"), (stack, level, entity, seed) -> {
+            ItemProperties.register(BlockRegistry.POTION_JAR.asItem(), ArsNouveau.prefix( "amount"), (stack, level, entity, seed) -> {
                 CompoundTag tag = stack.getTag();
                 return tag != null ? (tag.getCompound("BlockEntityTag").getInt("currentFill") / 10000.0F) : 0.0F;
             });
-            ItemProperties.register(BlockRegistry.SOURCE_JAR.asItem(), new ResourceLocation(ArsNouveau.MODID, "source"), (stack, level, entity, seed) -> {
+            ItemProperties.register(BlockRegistry.SOURCE_JAR.asItem(), ArsNouveau.prefix( "source"), (stack, level, entity, seed) -> {
                 CompoundTag tag = stack.getTag();
                 return tag != null ? (tag.getCompound("BlockEntityTag").getInt("source") / 10000.0F) : 0.0F;
             });
@@ -248,7 +248,7 @@ public class ClientHandler {
 
         event.register((stack, color) -> color > 0 ? -1 :
                         new ParticleColor(200, 0, 200).getColor(),
-                ForgeRegistries.ITEMS.getValue(new ResourceLocation(ArsNouveau.MODID, LibBlockNames.POTION_MELDER_BLOCK)));
+                ForgeRegistries.ITEMS.getValue(ArsNouveau.prefix( LibBlockNames.POTION_MELDER_BLOCK)));
 
         event.register((stack, color) -> color > 0 ? -1 :
                         colorFromArmor(stack),

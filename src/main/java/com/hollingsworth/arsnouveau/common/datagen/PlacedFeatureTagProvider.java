@@ -15,8 +15,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.CompletableFuture;
 
 public class PlacedFeatureTagProvider extends TagsProvider<PlacedFeature> {
-    public static TagKey<PlacedFeature> ARCHWOOD_TREES = TagKey.create(Registries.PLACED_FEATURE, new ResourceLocation(ArsNouveau.MODID, "archwood_trees"));
-    public static TagKey<PlacedFeature> SOURCE_BERRIES = TagKey.create(Registries.PLACED_FEATURE, new ResourceLocation(ArsNouveau.MODID, "source_berries"));
+    public static TagKey<PlacedFeature> ARCHWOOD_TREES = TagKey.create(Registries.PLACED_FEATURE, ArsNouveau.prefix( "archwood_trees"));
+    public static TagKey<PlacedFeature> SOURCE_BERRIES = TagKey.create(Registries.PLACED_FEATURE, ArsNouveau.prefix( "source_berries"));
 
     public PlacedFeatureTagProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider, @Nullable ExistingFileHelper existingFileHelper) {
         super(pOutput, Registries.PLACED_FEATURE, pProvider, ArsNouveau.MODID, existingFileHelper);

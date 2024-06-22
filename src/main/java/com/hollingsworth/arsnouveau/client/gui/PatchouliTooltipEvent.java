@@ -19,7 +19,7 @@ public class PatchouliTooltipEvent {
 //                ItemStack stackAt = mc.player.getInventory().getItem(i);
 //                if (!stackAt.isEmpty()) {
 //                    Book book = ItemStackUtil.getBookFromStack(stackAt);
-//                    if (book != null && book.id.equals(new ResourceLocation(ArsNouveau.MODID, "worn_notebook"))) {
+//                    if (book != null && book.id.equals(ArsNouveau.prefix( "worn_notebook"))) {
 //                        return;
 //                    }
 //                    if(stackAt.getItem() instanceof SpellBook){

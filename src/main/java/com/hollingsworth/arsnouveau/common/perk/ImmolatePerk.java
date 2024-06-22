@@ -13,7 +13,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 
 public class ImmolatePerk extends Perk implements IEffectResolvePerk {
-    public static final ImmolatePerk INSTANCE = new ImmolatePerk(new ResourceLocation(ArsNouveau.MODID, "thread_immolation"));
+    public static final ImmolatePerk INSTANCE = new ImmolatePerk(ArsNouveau.prefix( "thread_immolation"));
 
     public ImmolatePerk(ResourceLocation key) {
         super(key);

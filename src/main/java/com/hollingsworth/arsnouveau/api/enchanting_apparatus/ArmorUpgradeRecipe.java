@@ -28,7 +28,7 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
     public int tier; // 0 indexed
 
     public ArmorUpgradeRecipe(List<Ingredient> pedestalItems, int cost, int tier) {
-        this(new ResourceLocation(ArsNouveau.MODID, "upgrade_" + tier), pedestalItems, cost, tier);
+        this(ArsNouveau.prefix( "upgrade_" + tier), pedestalItems, cost, tier);
     }
 
     public ArmorUpgradeRecipe(ResourceLocation id, List<Ingredient> pedestalItems, int cost, int tier) {

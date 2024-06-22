@@ -19,9 +19,9 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.entity.player.EntityItemPickupEvent;
 import net.neoforged.neoforge.items.wrapper.PlayerMainInvWrapper;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,6 +99,6 @@ public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCast
         String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "blue";
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_" + color + ".png");
+        return ArsNouveau.prefix( "textures/entity/book_wyrm_" + color + ".png");
     }
 }

@@ -75,11 +75,11 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.registries.ForgeRegistries;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -694,7 +694,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         String color = getColor(entity);
         if (color.isEmpty()) color = DyeColor.ORANGE.getName();
 
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/starbuncle_" + color.toLowerCase() + ".png");
+        return ArsNouveau.prefix( "textures/entity/starbuncle_" + color.toLowerCase() + ".png");
     }
 
     @org.jetbrains.annotations.Nullable

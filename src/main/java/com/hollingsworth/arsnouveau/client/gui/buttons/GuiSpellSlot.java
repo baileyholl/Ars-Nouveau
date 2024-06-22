@@ -27,7 +27,7 @@ public class GuiSpellSlot extends GuiImageButton {
     @Override
     public void render(GuiGraphics graphics, int parX, int parY, float partialTicks) {
         if (visible) {
-            image = this.isSelected ? new ResourceLocation(ArsNouveau.MODID, "textures/gui/spell_tab_selected.png") : new ResourceLocation(ArsNouveau.MODID, "textures/gui/spell_tab.png");
+            image = this.isSelected ? ArsNouveau.prefix( "textures/gui/spell_tab_selected.png") : ArsNouveau.prefix( "textures/gui/spell_tab.png");
             super.render(graphics, parX, parY, partialTicks);
             graphics.drawCenteredString(Minecraft.getInstance().font, String.valueOf(this.slotNum + 1), x + 8, y + 3, 16777215); // White
         }

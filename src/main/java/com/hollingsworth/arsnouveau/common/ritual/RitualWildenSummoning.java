@@ -81,6 +81,6 @@ public class RitualWildenSummoning extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, RitualLib.WILDEN_SUMMON);
+        return ArsNouveau.prefix( RitualLib.WILDEN_SUMMON);
     }
 }

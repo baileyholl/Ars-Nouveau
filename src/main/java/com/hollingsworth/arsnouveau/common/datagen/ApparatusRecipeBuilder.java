@@ -110,7 +110,7 @@ public class ApparatusRecipeBuilder {
 
     public EnchantingApparatusRecipe build() {
         if (recipe.id.getPath().equals("empty"))
-            recipe.id = new ResourceLocation(ArsNouveau.MODID, getRegistryName(recipe.result.getItem()).getPath());
+            recipe.id = ArsNouveau.prefix( getRegistryName(recipe.result.getItem()).getPath());
         if(recipe.result.isEmpty()){
             throw new IllegalStateException("Enchanting Apparatus Recipe has no result");
         }

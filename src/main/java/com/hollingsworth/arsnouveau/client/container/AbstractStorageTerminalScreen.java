@@ -27,7 +27,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.lwjgl.glfw.GLFW;
-import var;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -66,8 +65,8 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	private String searchLast = "";
 	protected boolean loadedSearch = false;
 	private StoredItemStack.IStoredItemStackComparator comparator = new StoredItemStack.ComparatorAmount(false);
-	protected static final ResourceLocation scrollBall = new ResourceLocation(ArsNouveau.MODID, "textures/gui/scroll_ball.png");
-	protected static final ResourceLocation tabImages = new ResourceLocation(ArsNouveau.MODID, "textures/gui/bookwyrm_storage_tabs.png");
+	protected static final ResourceLocation scrollBall = ArsNouveau.prefix( "textures/gui/scroll_ball.png");
+	protected static final ResourceLocation tabImages = ArsNouveau.prefix( "textures/gui/bookwyrm_storage_tabs.png");
 	protected StateButton buttonSortingType;
 	protected StateButton buttonDirection;
 	protected StateButton buttonSearchType;
@@ -154,20 +153,20 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		searchLast = "";
 		addRenderableWidget(searchField);
 
-		buttonSortingType = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 14, 22, 12, 44, 13, 0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/sort_type.png"), b -> {
+		buttonSortingType = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 14, 22, 12, 44, 13, 0, ArsNouveau.prefix( "textures/gui/sort_type.png"), b -> {
 			comparator = StoredItemStack.SortingTypes.VALUES[(comparator.type() + 1) % StoredItemStack.SortingTypes.VALUES.length].create(comparator.isReversed());
 			buttonSortingType.state = comparator.type();
 			sendUpdate();
 			refreshItemList = true;
 		}));
 
-		buttonDirection = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 29, 22, 12, 44, 13, 0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/sort_order.png"), b -> {
+		buttonDirection = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 29, 22, 12, 44, 13, 0, ArsNouveau.prefix( "textures/gui/sort_order.png"), b -> {
 			comparator.setReversed(!comparator.isReversed());
 			buttonDirection.state = comparator.isReversed() ? 1 : 0;
 			sendUpdate();
 			refreshItemList = true;
 		}));
-		buttonSearchType = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 44, 22, 12, 44, 13, 0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_sync.png"), b -> {
+		buttonSearchType = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 44, 22, 12, 44, 13, 0, ArsNouveau.prefix( "textures/gui/search_sync.png"), b -> {
 			searchType = searchType == 0 ? 1 : 0;
 			buttonSearchType.state = searchType;
 			sendUpdate();
@@ -517,7 +516,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	@Override
 	protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
 		graphics.blit(getGui(), this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
-		graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), this.leftPos + 102, this.topPos + 3, 0, 0, 72, 15, 72, 15);
+		graphics.blit(ArsNouveau.prefix( "textures/gui/search_paper.png"), this.leftPos + 102, this.topPos + 3, 0, 0, 72, 15, 72, 15);
 	}
 
 	protected void onUpdateSearch(String text) {}

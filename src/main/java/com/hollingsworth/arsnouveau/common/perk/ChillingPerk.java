@@ -15,7 +15,7 @@ import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 
 public class ChillingPerk extends Perk implements IEffectResolvePerk {
-    public static ChillingPerk INSTANCE = new ChillingPerk(new ResourceLocation(ArsNouveau.MODID, "thread_chilling"));
+    public static ChillingPerk INSTANCE = new ChillingPerk(ArsNouveau.prefix( "thread_chilling"));
 
     public ChillingPerk(ResourceLocation key) {
         super(key);

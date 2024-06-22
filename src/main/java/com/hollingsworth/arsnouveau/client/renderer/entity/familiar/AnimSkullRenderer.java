@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.util.RenderUtils;
+import software.bernie.geckolib.util.RenderUtil;
 
 
 public class AnimSkullRenderer extends AnimBlockRenderer<AnimHeadSummon> {
@@ -25,7 +25,7 @@ public class AnimSkullRenderer extends AnimBlockRenderer<AnimHeadSummon> {
             AnimHeadSummon animBlock = animatable;
             if (animBlock == null) return;
             poseStack.pushPose();
-            RenderUtils.translateToPivotPoint(poseStack, bone);
+            RenderUtil.translateToPivotPoint(poseStack, bone);
             poseStack.mulPose(Axis.YP.rotationDegrees(180));
             poseStack.translate(0,0.2,0);
             poseStack.scale(1.4F, 1.4F, 1.4F);

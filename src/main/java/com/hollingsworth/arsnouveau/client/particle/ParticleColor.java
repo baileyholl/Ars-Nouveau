@@ -12,7 +12,7 @@ import java.util.Random;
  * Modified class of ElementType: https://github.com/Sirttas/ElementalCraft/blob/b91ca42b3d139904d9754d882a595406bad1bd18/src/main/java/sirttas/elementalcraft/ElementType.java
  */
 public class ParticleColor implements IParticleColor, Cloneable {
-    public static final ResourceLocation ID = new ResourceLocation(ArsNouveau.MODID, "constant");
+    public static final ResourceLocation ID = ArsNouveau.prefix( "constant");
 
     public static final ParticleColor DEFAULT = new ParticleColor(255, 25, 180);
     public static final ParticleColor WHITE = new ParticleColor(255, 255, 255);

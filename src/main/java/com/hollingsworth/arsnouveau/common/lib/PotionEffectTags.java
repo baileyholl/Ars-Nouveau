@@ -16,10 +16,10 @@ import java.util.Optional;
 public class PotionEffectTags {
     private static final HashMap<TagKey<MobEffect>, ArrayList<MobEffect>> potionEffects = new HashMap<>();
 
-    public static final TagKey<MobEffect> UNSTABLE_GIFTS = TagKey.create(Registries.MOB_EFFECT, new ResourceLocation(ArsNouveau.MODID, "unstable_gifts"));
-    public static final TagKey<MobEffect> DISPEL_DENY = TagKey.create(Registries.MOB_EFFECT, new ResourceLocation(ArsNouveau.MODID, "deny_dispel"));
-    public static final TagKey<MobEffect> DISPEL_ALLOW = TagKey.create(Registries.MOB_EFFECT, new ResourceLocation(ArsNouveau.MODID, "allow_dispel"));
-    public static final TagKey<MobEffect> TO_SYNC = TagKey.create(Registries.MOB_EFFECT, new ResourceLocation(ArsNouveau.MODID, "to_sync"));
+    public static final TagKey<MobEffect> UNSTABLE_GIFTS = TagKey.create(Registries.MOB_EFFECT, ArsNouveau.prefix( "unstable_gifts"));
+    public static final TagKey<MobEffect> DISPEL_DENY = TagKey.create(Registries.MOB_EFFECT, ArsNouveau.prefix( "deny_dispel"));
+    public static final TagKey<MobEffect> DISPEL_ALLOW = TagKey.create(Registries.MOB_EFFECT, ArsNouveau.prefix( "allow_dispel"));
+    public static final TagKey<MobEffect> TO_SYNC = TagKey.create(Registries.MOB_EFFECT, ArsNouveau.prefix( "to_sync"));
     public static ArrayList<MobEffect> getEffects(Level level, TagKey<MobEffect> tag) {
         return potionEffects.computeIfAbsent(tag, (_key) -> {
             Optional<HolderSet.Named<MobEffect>> effects = level.registryAccess().registryOrThrow(Registries.MOB_EFFECT).getTag(tag);

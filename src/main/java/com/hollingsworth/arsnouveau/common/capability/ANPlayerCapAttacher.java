@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 public class ANPlayerCapAttacher {
     private static class ANPlayerCapProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
-        public static final ResourceLocation IDENTIFIER = new ResourceLocation(ArsNouveau.MODID, "player_data");
+        public static final ResourceLocation IDENTIFIER = ArsNouveau.prefix( "player_data");
 
         private final IPlayerCap backend = new ANPlayerDataCap();
         private final LazyOptional<IPlayerCap> optionalData = LazyOptional.of(() -> backend);

@@ -168,10 +168,10 @@ public class RecipeDatagen extends RecipeProvider {
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlockRegistry.SOURCE_GEM_BLOCK, 1)
                     .pattern("xx")
                     .pattern("xx").define('x', SOURCE_GEM).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK)).save(consumer);
-            shapelessBuilder(ItemsRegistry.SOURCE_GEM, 4).requires(BlockRegistry.SOURCE_GEM_BLOCK, 1).save(consumer, new ResourceLocation(ArsNouveau.MODID, "source_gem_block_2"));
-            shapelessBuilder(Items.LEATHER, 1).requires(ItemsRegistry.WILDEN_WING).save(consumer, new ResourceLocation(ArsNouveau.MODID, "wing_to_leather"));
-            shapelessBuilder(Items.BONE_MEAL, 3).requires(ItemsRegistry.WILDEN_HORN).save(consumer, new ResourceLocation(ArsNouveau.MODID, "horn_to_bonemeal"));
-            shapelessBuilder(Items.ORANGE_DYE, 5).requires(ItemsRegistry.WILDEN_SPIKE).save(consumer, new ResourceLocation(ArsNouveau.MODID, "spike_to_dye"));
+            shapelessBuilder(ItemsRegistry.SOURCE_GEM, 4).requires(BlockRegistry.SOURCE_GEM_BLOCK, 1).save(consumer, ArsNouveau.prefix( "source_gem_block_2"));
+            shapelessBuilder(Items.LEATHER, 1).requires(ItemsRegistry.WILDEN_WING).save(consumer, ArsNouveau.prefix( "wing_to_leather"));
+            shapelessBuilder(Items.BONE_MEAL, 3).requires(ItemsRegistry.WILDEN_HORN).save(consumer, ArsNouveau.prefix( "horn_to_bonemeal"));
+            shapelessBuilder(Items.ORANGE_DYE, 5).requires(ItemsRegistry.WILDEN_SPIKE).save(consumer, ArsNouveau.prefix( "spike_to_dye"));
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.ARROW, 32)
                     .unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern(" x ")
@@ -180,14 +180,14 @@ public class RecipeDatagen extends RecipeProvider {
                     .define('x', ItemsRegistry.WILDEN_SPIKE)
                     .define('y', Items.STICK)
                     .define('z', Items.FEATHER)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "spike_to_arrow"));
+                    .save(consumer, ArsNouveau.prefix( "spike_to_arrow"));
 
             shapelessBuilder(BlockRegistry.POTION_JAR)
                     .requires(BlockRegistry.SOURCE_JAR)
                     .requires(ItemsRegistry.ABJURATION_ESSENCE)
                     .save(consumer);
 
-            shapelessBuilder(BlockRegistry.POTION_JAR).requires(BlockRegistry.POTION_JAR).save(consumer, new ResourceLocation(ArsNouveau.MODID,"potion_jar_empty"));
+            shapelessBuilder(BlockRegistry.POTION_JAR).requires(BlockRegistry.POTION_JAR).save(consumer, ArsNouveau.prefix("potion_jar_empty"));
 
             shapelessBuilder(BlockRegistry.RITUAL_BLOCK)
                     .requires(BlockRegistry.ARCANE_PEDESTAL.get())
@@ -212,7 +212,7 @@ public class RecipeDatagen extends RecipeProvider {
                     .requires(BlockRegistry.SOURCESTONE_SCONCE_BLOCK)
                     .save(consumer);
 
-            shapelessBuilder(BlockRegistry.SOURCESTONE_SCONCE_BLOCK).requires(BlockRegistry.POLISHED_SCONCE_BLOCK).save(consumer, new ResourceLocation(ArsNouveau.MODID, "polished_source_sconce"));
+            shapelessBuilder(BlockRegistry.SOURCESTONE_SCONCE_BLOCK).requires(BlockRegistry.POLISHED_SCONCE_BLOCK).save(consumer, ArsNouveau.prefix( "polished_source_sconce"));
 
             shapelessBuilder(getRitualItem(RitualLib.MOONFALL))
                     .requires(BlockRegistry.CASCADING_LOG)
@@ -224,7 +224,7 @@ public class RecipeDatagen extends RecipeProvider {
             shapelessBuilder(getRitualItem(RitualLib.MOONFALL))
                     .requires(BlockRegistry.CASCADING_LOG)
                     .requires(ItemsRegistry.WILDEN_WING)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "moonfall_2"));
+                    .save(consumer, ArsNouveau.prefix( "moonfall_2"));
 
             shapelessBuilder(getRitualItem(RitualLib.SUNRISE))
                     .requires(BlockRegistry.BLAZING_LOG)
@@ -235,7 +235,7 @@ public class RecipeDatagen extends RecipeProvider {
             shapelessBuilder(getRitualItem(RitualLib.SUNRISE))
                     .requires(BlockRegistry.BLAZING_LOG)
                     .requires(Items.SUNFLOWER)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "sunrise_2"));
+                    .save(consumer, ArsNouveau.prefix( "sunrise_2"));
 
             shapelessBuilder(getRitualItem(RitualLib.DIG))
                     .requires(BlockRegistry.FLOURISHING_LOG)
@@ -259,7 +259,7 @@ public class RecipeDatagen extends RecipeProvider {
                     .requires(BlockRegistry.VEXING_LOG)
                     .requires(ItemsRegistry.WILDEN_HORN)
                     .requires(Items.EMERALD)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "challenge_2"));
+                    .save(consumer, ArsNouveau.prefix( "challenge_2"));
 
             shapelessBuilder(getRitualItem(RitualLib.OVERGROWTH))
                     .requires(BlockRegistry.FLOURISHING_LOG)
@@ -300,11 +300,11 @@ public class RecipeDatagen extends RecipeProvider {
 
             shapelessBuilder(ItemsRegistry.ALLOW_ITEM_SCROLL)
                     .requires(ItemsRegistry.ALLOW_ITEM_SCROLL)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "clear_allow"));
+                    .save(consumer, ArsNouveau.prefix( "clear_allow"));
 
             shapelessBuilder(ItemsRegistry.DENY_ITEM_SCROLL)
                     .requires(ItemsRegistry.DENY_ITEM_SCROLL)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "clear_deny"));
+                    .save(consumer, ArsNouveau.prefix( "clear_deny"));
 
             shapelessBuilder(getRitualItem(RitualLib.SCRYING))
                     .requires(BlockRegistry.VEXING_LOG)
@@ -337,7 +337,7 @@ public class RecipeDatagen extends RecipeProvider {
                     .requires(Items.IRON_SWORD, 1)
                     .requires(Items.BOW, 1)
                     .requires(Items.LAPIS_BLOCK)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "wilden_summon_alt"));
+                    .save(consumer, ArsNouveau.prefix( "wilden_summon_alt"));
 
             shapelessBuilder(getRitualItem(RitualLib.ANIMAL_SUMMON))
                     .requires(BlockRegistry.VEXING_LOG)
@@ -438,7 +438,7 @@ public class RecipeDatagen extends RecipeProvider {
                     .define('n', Ingredient.of(ItemTagProvider.STORAGE_BLOCKS_QUARTZ))
                     .save(consumer);
 
-            shapelessBuilder(Items.CHEST).requires(BlockRegistry.ARCHWOOD_CHEST).save(consumer, new ResourceLocation(ArsNouveau.MODID, "archwood_to_chest"));
+            shapelessBuilder(Items.CHEST).requires(BlockRegistry.ARCHWOOD_CHEST).save(consumer, ArsNouveau.prefix( "archwood_to_chest"));
 
             shapelessBuilder(getRitualItem(RitualLib.AWAKENING))
                     .requires(BlockRegistry.FLOURISHING_LOG)
@@ -449,11 +449,11 @@ public class RecipeDatagen extends RecipeProvider {
                     .requires(SOURCE_GEM, 4)
                     .save(consumer);
 
-            shapelessBuilder(Items.PINK_DYE, 2).requires(ItemsRegistry.MAGE_BLOOM, 2).save(consumer, new ResourceLocation(ArsNouveau.MODID, "magebloom_to_pink"));
-            shapelessBuilder(Items.PURPLE_DYE).requires(BlockRegistry.SOURCEBERRY_BUSH).save(consumer, new ResourceLocation(ArsNouveau.MODID, "sourceberry_to_purple"));
+            shapelessBuilder(Items.PINK_DYE, 2).requires(ItemsRegistry.MAGE_BLOOM, 2).save(consumer, ArsNouveau.prefix( "magebloom_to_pink"));
+            shapelessBuilder(Items.PURPLE_DYE).requires(BlockRegistry.SOURCEBERRY_BUSH).save(consumer, ArsNouveau.prefix( "sourceberry_to_purple"));
 
-            shapelessBuilder(Items.WATER_BUCKET).requires(ItemsRegistry.WATER_ESSENCE).requires(Items.BUCKET).save(consumer, new ResourceLocation(ArsNouveau.MODID, "water_essence_to_bucket"));
-            shapelessBuilder(Items.FIRE_CHARGE, 3).requires(ItemsRegistry.FIRE_ESSENCE).requires(Items.GUNPOWDER).requires(Items.COAL).save(consumer, new ResourceLocation(ArsNouveau.MODID, "fire_essence_to_charge"));
+            shapelessBuilder(Items.WATER_BUCKET).requires(ItemsRegistry.WATER_ESSENCE).requires(Items.BUCKET).save(consumer, ArsNouveau.prefix( "water_essence_to_bucket"));
+            shapelessBuilder(Items.FIRE_CHARGE, 3).requires(ItemsRegistry.FIRE_ESSENCE).requires(Items.GUNPOWDER).requires(Items.COAL).save(consumer, ArsNouveau.prefix( "fire_essence_to_charge"));
 
 
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ItemsRegistry.DOWSING_ROD).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
@@ -464,30 +464,30 @@ public class RecipeDatagen extends RecipeProvider {
                     .save(consumer);
 
             shapelessBuilder(ItemsRegistry.ANNOTATED_CODEX).requires(ItemsRegistry.BLANK_PARCHMENT).requires(Items.LEATHER).save(consumer);
-            shapelessBuilder(Items.POWDER_SNOW_BUCKET).requires(ItemsRegistry.AIR_ESSENCE).requires(Items.BUCKET).requires(Items.SNOW_BLOCK).save(consumer, new ResourceLocation(ArsNouveau.MODID, "air_essence_to_snow_bucket"));
+            shapelessBuilder(Items.POWDER_SNOW_BUCKET).requires(ItemsRegistry.AIR_ESSENCE).requires(Items.BUCKET).requires(Items.SNOW_BLOCK).save(consumer, ArsNouveau.prefix( "air_essence_to_snow_bucket"));
             shapedBuilder(Items.SOUL_SAND, 8)
                     .pattern("xxx")
                     .pattern("xyx")
                     .pattern("xxx")
                     .define('x', Tags.Items.SANDS)
                     .define('y', ItemsRegistry.CONJURATION_ESSENCE)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "conjuration_essence_to_soul_sand"));
+                    .save(consumer, ArsNouveau.prefix( "conjuration_essence_to_soul_sand"));
             shapedBuilder(Items.END_STONE, 8)
                     .pattern("xxx")
                     .pattern("xyx")
                     .pattern("xxx")
                     .define('x', Tags.Items.STONES)
                     .define('y', ItemsRegistry.CONJURATION_ESSENCE)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "conjuration_essence_to_end_stone"));
+                    .save(consumer, ArsNouveau.prefix( "conjuration_essence_to_end_stone"));
 
-            shapelessBuilder(Items.OBSIDIAN).requires(Items.LAVA_BUCKET).requires(ItemsRegistry.WATER_ESSENCE).save(consumer, new ResourceLocation(ArsNouveau.MODID, "water_essence_to_obsidian"));
+            shapelessBuilder(Items.OBSIDIAN).requires(Items.LAVA_BUCKET).requires(ItemsRegistry.WATER_ESSENCE).save(consumer, ArsNouveau.prefix( "water_essence_to_obsidian"));
             shapedBuilder(Items.MAGMA_BLOCK, 8)
                     .pattern("xxx")
                     .pattern("xyx")
                     .pattern("xxx")
                     .define('x', Tags.Items.STONES)
                     .define('y', ItemsRegistry.FIRE_ESSENCE)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "fire_essence_to_magma_block"));
+                    .save(consumer, ArsNouveau.prefix( "fire_essence_to_magma_block"));
 
             shapedBuilder(Items.GRANITE, 8)
                     .pattern("xxx")
@@ -495,21 +495,21 @@ public class RecipeDatagen extends RecipeProvider {
                     .pattern("xxx")
                     .define('x', Items.DIORITE)
                     .define('y', ItemsRegistry.MANIPULATION_ESSENCE)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_granite"));
+                    .save(consumer, ArsNouveau.prefix( "manipulation_essence_to_granite"));
             shapedBuilder(Items.ANDESITE, 8)
                     .pattern("xxx")
                     .pattern("xyx")
                     .pattern("xxx")
                     .define('x', Items.GRANITE)
                     .define('y', ItemsRegistry.MANIPULATION_ESSENCE)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_andesite"));
+                    .save(consumer, ArsNouveau.prefix( "manipulation_essence_to_andesite"));
             shapedBuilder(Items.DIORITE, 8)
                     .pattern("xxx")
                     .pattern("xyx")
                     .pattern("xxx")
                     .define('x', Items.ANDESITE)
                     .define('y', ItemsRegistry.MANIPULATION_ESSENCE)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_diorite"));
+                    .save(consumer, ArsNouveau.prefix( "manipulation_essence_to_diorite"));
 
             shapedBuilder(Items.MYCELIUM, 8)
                     .pattern("xxx")
@@ -517,7 +517,7 @@ public class RecipeDatagen extends RecipeProvider {
                     .pattern("xxx")
                     .define('x', Items.GRASS_BLOCK)
                     .define('y', ItemsRegistry.MANIPULATION_ESSENCE)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_mycelium"));
+                    .save(consumer, ArsNouveau.prefix( "manipulation_essence_to_mycelium"));
 
             shapedBuilder(Items.MOSS_BLOCK, 8)
                     .pattern("xxx")
@@ -525,7 +525,7 @@ public class RecipeDatagen extends RecipeProvider {
                     .pattern("xxx")
                     .define('x', Items.MYCELIUM)
                     .define('y', ItemsRegistry.MANIPULATION_ESSENCE)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_moss_block"));
+                    .save(consumer, ArsNouveau.prefix( "manipulation_essence_to_moss_block"));
 
             shapedBuilder(Items.GRASS_BLOCK, 8)
                     .pattern("xxx")
@@ -533,7 +533,7 @@ public class RecipeDatagen extends RecipeProvider {
                     .pattern("xxx")
                     .define('x', Items.MOSS_BLOCK)
                     .define('y', ItemsRegistry.MANIPULATION_ESSENCE)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_grass_block"));
+                    .save(consumer, ArsNouveau.prefix( "manipulation_essence_to_grass_block"));
 
             shapedBuilder(Items.TUFF, 8)
                     .pattern("xxx")
@@ -541,7 +541,7 @@ public class RecipeDatagen extends RecipeProvider {
                     .pattern("xxx")
                     .define('x', Items.DEEPSLATE)
                     .define('y', ItemsRegistry.MANIPULATION_ESSENCE)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_tuff"));
+                    .save(consumer, ArsNouveau.prefix( "manipulation_essence_to_tuff"));
 
             shapedBuilder(Items.CALCITE, 8)
                     .pattern("xxx")
@@ -549,7 +549,7 @@ public class RecipeDatagen extends RecipeProvider {
                     .pattern("xxx")
                     .define('x', Items.TUFF)
                     .define('y', ItemsRegistry.MANIPULATION_ESSENCE)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_calcite"));
+                    .save(consumer, ArsNouveau.prefix( "manipulation_essence_to_calcite"));
 
             shapedBuilder(Items.DEEPSLATE, 8)
                     .pattern("xxx")
@@ -557,23 +557,23 @@ public class RecipeDatagen extends RecipeProvider {
                     .pattern("xxx")
                     .define('x', Items.CALCITE)
                     .define('y', ItemsRegistry.MANIPULATION_ESSENCE)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_deepslate"));
+                    .save(consumer, ArsNouveau.prefix( "manipulation_essence_to_deepslate"));
 
             shapelessBuilder(BlockRegistry.CASCADING_SAPLING)
                     .requires(ItemsRegistry.MANIPULATION_ESSENCE)
-                    .requires(BlockRegistry.BLAZING_SAPLING).save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_cascading_sapling"));
+                    .requires(BlockRegistry.BLAZING_SAPLING).save(consumer, ArsNouveau.prefix( "manipulation_essence_to_cascading_sapling"));
 
             shapelessBuilder(BlockRegistry.FLOURISHING_SAPLING)
                     .requires(ItemsRegistry.MANIPULATION_ESSENCE)
-                    .requires(BlockRegistry.CASCADING_SAPLING).save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_flourishing_sapling"));
+                    .requires(BlockRegistry.CASCADING_SAPLING).save(consumer, ArsNouveau.prefix( "manipulation_essence_to_flourishing_sapling"));
 
             shapelessBuilder(BlockRegistry.VEXING_SAPLING)
                     .requires(ItemsRegistry.MANIPULATION_ESSENCE)
-                    .requires(BlockRegistry.FLOURISHING_SAPLING).save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_vexing_sapling"));
+                    .requires(BlockRegistry.FLOURISHING_SAPLING).save(consumer, ArsNouveau.prefix( "manipulation_essence_to_vexing_sapling"));
 
             shapelessBuilder(BlockRegistry.BLAZING_SAPLING)
                     .requires(ItemsRegistry.MANIPULATION_ESSENCE)
-                    .requires(BlockRegistry.VEXING_SAPLING).save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_blazin_sapling"));
+                    .requires(BlockRegistry.VEXING_SAPLING).save(consumer, ArsNouveau.prefix( "manipulation_essence_to_blazin_sapling"));
 
             shapedBuilder(BlockRegistry.ORANGE_SBED)
                     .pattern("xxx")
@@ -605,8 +605,8 @@ public class RecipeDatagen extends RecipeProvider {
                     .requires(Items.ENDER_EYE)
                     .requires(RecipeDatagen.SOURCE_GEM).save(consumer);
 
-            shapelessBuilder(ItemsRegistry.BLANK_PARCHMENT).requires(ItemsRegistry.SCRYER_SCROLL).save(consumer, new ResourceLocation(ArsNouveau.MODID, "scry_to_blank_parchment"));
-            shapelessBuilder(ItemsRegistry.BLANK_PARCHMENT).requires(ItemsRegistry.SPELL_PARCHMENT).save(consumer, new ResourceLocation(ArsNouveau.MODID, "wipe_spell_parchment"));
+            shapelessBuilder(ItemsRegistry.BLANK_PARCHMENT).requires(ItemsRegistry.SCRYER_SCROLL).save(consumer, ArsNouveau.prefix( "scry_to_blank_parchment"));
+            shapelessBuilder(ItemsRegistry.BLANK_PARCHMENT).requires(ItemsRegistry.SPELL_PARCHMENT).save(consumer, ArsNouveau.prefix( "wipe_spell_parchment"));
             shapedBuilder(ItemsRegistry.STARBUNCLE_SHADES)
                     .pattern("xyx")
                     .define('x', Items.TINTED_GLASS)
@@ -617,17 +617,17 @@ public class RecipeDatagen extends RecipeProvider {
                 if(s.equals(LibBlockNames.SOURCESTONE))
                     continue;
                 makeStonecutter(consumer, BlockRegistry.getBlock(LibBlockNames.SOURCESTONE), BlockRegistry.getBlock(s), LibBlockNames.SOURCESTONE);
-                shapelessBuilder(SOURCESTONE).requires(BlockRegistry.getBlock(s)).save(consumer, new ResourceLocation(ArsNouveau.MODID, s + "_to_sourcestone"));
+                shapelessBuilder(SOURCESTONE).requires(BlockRegistry.getBlock(s)).save(consumer, ArsNouveau.prefix( s + "_to_sourcestone"));
 
-                Block stair = BuiltInRegistries.BLOCK.get(new ResourceLocation(ArsNouveau.MODID, s + "_stairs"));
-                Block slab = BuiltInRegistries.BLOCK.get(new ResourceLocation(ArsNouveau.MODID, s + "_slab"));
+                Block stair = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( s + "_stairs"));
+                Block slab = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( s + "_slab"));
                 SingleItemRecipeBuilder.stonecutting(Ingredient.of(BlockRegistry.getBlock(s)), RecipeCategory.BUILDING_BLOCKS, stair)
                         .unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                        .save(consumer, new ResourceLocation(ArsNouveau.MODID, s + "_stonecutter_stair"));
+                        .save(consumer, ArsNouveau.prefix( s + "_stonecutter_stair"));
 
                 SingleItemRecipeBuilder.stonecutting(Ingredient.of(BlockRegistry.getBlock(s)),RecipeCategory.BUILDING_BLOCKS, slab, 2)
                         .unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                        .save(consumer, new ResourceLocation(ArsNouveau.MODID, s + "_stone_cutterslab"));
+                        .save(consumer, ArsNouveau.prefix( s + "_stone_cutterslab"));
 
                 shapedWoodenStairs(consumer, stair, BlockRegistry.getBlock(s), s + "_stairs");
                 shapedWoodenSlab(consumer, slab, BlockRegistry.getBlock(s), s + "_slab");
@@ -671,7 +671,7 @@ public class RecipeDatagen extends RecipeProvider {
                     .pattern("xx ")
                     .define('x', ItemsRegistry.MAGE_FIBER).save(consumer);
 
-            shapelessBuilder(ItemsRegistry.MAGE_FIBER, 4).requires(BlockRegistry.MAGEBLOOM_BLOCK).save(consumer, new ResourceLocation(ArsNouveau.MODID,"magebloom_block_to_magebloom"));
+            shapelessBuilder(ItemsRegistry.MAGE_FIBER, 4).requires(BlockRegistry.MAGEBLOOM_BLOCK).save(consumer, ArsNouveau.prefix("magebloom_block_to_magebloom"));
 
             shapedBuilder(BlockRegistry.FALSE_WEAVE, 8)
                     .pattern("xxx")
@@ -699,7 +699,7 @@ public class RecipeDatagen extends RecipeProvider {
                     .pattern(" x ").define('x', Tags.Items.NUGGETS_GOLD).define('y', SOURCE_GEM).save(consumer);
 
             shapelessBuilder(BlockRegistry.ARCANE_PLATFORM).requires(BlockRegistry.ARCANE_PEDESTAL).save(consumer);
-            shapelessBuilder(BlockRegistry.ARCANE_PEDESTAL).requires(BlockRegistry.ARCANE_PLATFORM).save(consumer, new ResourceLocation(ArsNouveau.MODID, "platform_to_pedestal"));
+            shapelessBuilder(BlockRegistry.ARCANE_PEDESTAL).requires(BlockRegistry.ARCANE_PLATFORM).save(consumer, ArsNouveau.prefix( "platform_to_pedestal"));
 
             shapedBuilder(BlockRegistry.SKY_WEAVE, 8)
                     .pattern("xxx")
@@ -717,8 +717,8 @@ public class RecipeDatagen extends RecipeProvider {
 
             shapelessBuilder(getRitualItem(RitualLib.SANCTUARY)).requires(BlockRegistry.CASCADING_LOG).requires(ItemsRegistry.WATER_ESSENCE).requires(Items.SEA_LANTERN).save(consumer);
             shapelessBuilder(BlockRegistry.ROTATING_TURRET).requires(BlockRegistry.BASIC_SPELL_TURRET).save(consumer);
-            shapelessBuilder(BlockRegistry.BASIC_SPELL_TURRET).requires(BlockRegistry.ROTATING_TURRET).save(consumer, new ResourceLocation(ArsNouveau.MODID, "rotating_turret_to_basic_spell_turret"));
-            shapelessBuilder(ItemsRegistry.STARBUNCLE_SHARD).requires(ItemsRegistry.STARBUNCLE_SHARD).save(consumer, new ResourceLocation(ArsNouveau.MODID, "wipe_starby_shard"));
+            shapelessBuilder(BlockRegistry.BASIC_SPELL_TURRET).requires(BlockRegistry.ROTATING_TURRET).save(consumer, ArsNouveau.prefix( "rotating_turret_to_basic_spell_turret"));
+            shapelessBuilder(ItemsRegistry.STARBUNCLE_SHARD).requires(ItemsRegistry.STARBUNCLE_SHARD).save(consumer, ArsNouveau.prefix( "wipe_starby_shard"));
             shapedBuilder(BlockRegistry.REDSTONE_RELAY)
                     .pattern("gxg")
                     .pattern("gMg")
@@ -728,12 +728,12 @@ public class RecipeDatagen extends RecipeProvider {
                     .define('x', Tags.Items.DUSTS_REDSTONE)
                     .save(consumer);
             shapelessBuilder(BlockRegistry.SOURCEBERRY_SACK).requires(BlockRegistry.SOURCEBERRY_BUSH, 9).save(consumer);
-            shapelessBuilder(BlockRegistry.SOURCEBERRY_BUSH, 9).requires(BlockRegistry.SOURCEBERRY_SACK).save(consumer, new ResourceLocation(ArsNouveau.MODID, "sourceberry_sack_to_bush"));
+            shapelessBuilder(BlockRegistry.SOURCEBERRY_BUSH, 9).requires(BlockRegistry.SOURCEBERRY_SACK).save(consumer, ArsNouveau.prefix( "sourceberry_sack_to_bush"));
         }
     }
 
     public static RitualTablet getRitualItem(String name) {
-        return RitualRegistry.getRitualItemMap().get(new ResourceLocation(ArsNouveau.MODID, name));
+        return RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix( name));
     }
 
     public ShapedRecipeBuilder shapedBuilder(ItemLike item) {
@@ -770,7 +770,7 @@ public class RecipeDatagen extends RecipeProvider {
                 .pattern("#  ")
                 .pattern("## ")
                 .pattern("###").unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                .save(recipeConsumer, new ResourceLocation(ArsNouveau.MODID, name));
+                .save(recipeConsumer, ArsNouveau.prefix( name));
 
     }
 
@@ -819,7 +819,7 @@ public class RecipeDatagen extends RecipeProvider {
     private static void shapedWoodenSlab(RecipeOutput recipeConsumer, ItemLike slab, ItemLike input, String name) {
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, slab, 6).define('#', input).pattern("###").group("wooden_slab")
                 .unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                .save(recipeConsumer, new ResourceLocation(ArsNouveau.MODID, name));
+                .save(recipeConsumer, ArsNouveau.prefix( name));
     }
 
     public ShapelessRecipeBuilder shapelessBuilder(ItemLike result) {
@@ -833,7 +833,7 @@ public class RecipeDatagen extends RecipeProvider {
     private static int STONECUTTER_COUNTER = 0;
 
     public static void makeStonecutter(RecipeOutput consumer, ItemLike input, ItemLike output, String reg) {
-        SingleItemRecipeBuilder.stonecutting(Ingredient.of(input), RecipeCategory.DECORATIONS, output).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK)).save(consumer, new ResourceLocation(ArsNouveau.MODID, reg + "_" + STONECUTTER_COUNTER));
+        SingleItemRecipeBuilder.stonecutting(Ingredient.of(input), RecipeCategory.DECORATIONS, output).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK)).save(consumer, ArsNouveau.prefix( reg + "_" + STONECUTTER_COUNTER));
         STONECUTTER_COUNTER++;
     }
 }

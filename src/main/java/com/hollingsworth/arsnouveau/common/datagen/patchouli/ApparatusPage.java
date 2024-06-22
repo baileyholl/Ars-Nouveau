@@ -23,6 +23,6 @@ public class ApparatusPage extends AbstractPage {
 
     @Override
     public ResourceLocation getType() {
-        return new ResourceLocation(ArsNouveau.MODID, "apparatus_recipe");
+        return ArsNouveau.prefix( "apparatus_recipe");
     }
 }

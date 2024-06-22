@@ -76,9 +76,9 @@ public class ShaderRegistry extends RenderType {
 
     @SubscribeEvent
     public static void shaderRegistry(RegisterShadersEvent event) throws IOException {
-        event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(ArsNouveau.MODID, "sky"), DefaultVertexFormat.POSITION), s -> ClientInfo.skyShader = s);
-        event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(ArsNouveau.MODID, "rainbow_entity"), DefaultVertexFormat.NEW_ENTITY), s -> ClientInfo.rainbowShader = s);
-        event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(ArsNouveau.MODID, "blamed_entity"), DefaultVertexFormat.NEW_ENTITY), s -> ClientInfo.blameShader = s);
+        event.registerShader(new ShaderInstance(event.getResourceProvider(), ArsNouveau.prefix( "sky"), DefaultVertexFormat.POSITION), s -> ClientInfo.skyShader = s);
+        event.registerShader(new ShaderInstance(event.getResourceProvider(), ArsNouveau.prefix( "rainbow_entity"), DefaultVertexFormat.NEW_ENTITY), s -> ClientInfo.rainbowShader = s);
+        event.registerShader(new ShaderInstance(event.getResourceProvider(), ArsNouveau.prefix( "blamed_entity"), DefaultVertexFormat.NEW_ENTITY), s -> ClientInfo.blameShader = s);
     }
 
     private static <T, U, V, R> TriFunction<T, U, V, R> memoize(final TriFunction<T, U, V, R> pMemoBiFunction) {

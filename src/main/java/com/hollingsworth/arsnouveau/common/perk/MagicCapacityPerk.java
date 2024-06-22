@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class MagicCapacityPerk extends Perk {
 
-    public static final MagicCapacityPerk INSTANCE = new MagicCapacityPerk(new ResourceLocation(ArsNouveau.MODID, "thread_magic_capacity"));
+    public static final MagicCapacityPerk INSTANCE = new MagicCapacityPerk(ArsNouveau.prefix( "thread_magic_capacity"));
     public static final UUID PERK_UUID = UUID.fromString("42ebba5f-7843-4da9-9ad4-e9ca37120602");
 
     public MagicCapacityPerk(ResourceLocation key) {

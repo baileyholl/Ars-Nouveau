@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class StarbyPotionBehavior extends StarbyListBehavior {
-    public static final ResourceLocation POTION_ID = new ResourceLocation(ArsNouveau.MODID, "starby_potion");
+    public static final ResourceLocation POTION_ID = ArsNouveau.prefix( "starby_potion");
 
     private @Nullable PotionData heldPotion = null;
     private int amount;

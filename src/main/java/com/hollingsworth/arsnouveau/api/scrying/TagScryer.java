@@ -48,6 +48,6 @@ public class TagScryer implements IScryer {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, "tag_scryer");
+        return ArsNouveau.prefix( "tag_scryer");
     }
 }

@@ -9,7 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 
 public class TotemPerk extends Perk {
-    public static TotemPerk INSTANCE = new TotemPerk(new ResourceLocation(ArsNouveau.MODID, "thread_undying"));
+    public static TotemPerk INSTANCE = new TotemPerk(ArsNouveau.prefix( "thread_undying"));
 
     public TotemPerk(ResourceLocation key) {
         super(key);

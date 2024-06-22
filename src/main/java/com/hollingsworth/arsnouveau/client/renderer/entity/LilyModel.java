@@ -4,8 +4,8 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.Lily;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.animatable.model.CoreGeoBone;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
@@ -24,16 +24,16 @@ public class LilyModel extends GeoModel<Lily> {
 
     @Override
     public ResourceLocation getModelResource(Lily whirlisprig) {
-        return new ResourceLocation(ArsNouveau.MODID, "geo/lily.geo.json");
+        return ArsNouveau.prefix( "geo/lily.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(Lily whirlisprig) {
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/lily.png");
+        return ArsNouveau.prefix( "textures/entity/lily.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(Lily whirlisprig) {
-        return new ResourceLocation(ArsNouveau.MODID, "animations/lily_animations.json");
+        return ArsNouveau.prefix( "animations/lily_animations.json");
     }
 }

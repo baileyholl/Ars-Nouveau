@@ -216,6 +216,6 @@ public class SpellCaster implements ISpellCaster {
 
     @Override
     public ResourceLocation getTagID() {
-        return new ResourceLocation(ArsNouveau.MODID, "caster");
+        return ArsNouveau.prefix( "caster");
     }
 }

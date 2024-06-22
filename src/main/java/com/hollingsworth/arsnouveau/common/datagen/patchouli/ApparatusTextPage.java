@@ -21,6 +21,6 @@ public class ApparatusTextPage extends ApparatusPage{
 
     @Override
     public ResourceLocation getType() {
-        return new ResourceLocation(ArsNouveau.MODID, "no_output_apparatus_recipe");
+        return ArsNouveau.prefix( "no_output_apparatus_recipe");
     }
 }

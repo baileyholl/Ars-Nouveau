@@ -160,9 +160,9 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.POTION_DIFFUSER);
             for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
                 registerDropSelf(BlockRegistry.getBlock(s));
-                Block block = BuiltInRegistries.BLOCK.get(new ResourceLocation(ArsNouveau.MODID, s + "_stairs"));
+                Block block = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( s + "_stairs"));
                 registerDropSelf(block);
-                Block slab = BuiltInRegistries.BLOCK.get(new ResourceLocation(ArsNouveau.MODID, s + "_slab"));
+                Block slab = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( s + "_slab"));
                 registerDropSelf(slab);
 
             }

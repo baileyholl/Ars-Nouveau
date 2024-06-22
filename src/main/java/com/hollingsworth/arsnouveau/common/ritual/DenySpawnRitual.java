@@ -65,7 +65,7 @@ public class DenySpawnRitual extends RangeRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, RitualLib.SANCTUARY);
+        return ArsNouveau.prefix( RitualLib.SANCTUARY);
     }
 
     @Override

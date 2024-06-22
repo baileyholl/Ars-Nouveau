@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class RainbowParticleColor extends ParticleColor{
 
-    public static final ResourceLocation ID = new ResourceLocation(ArsNouveau.MODID, "rainbow");
+    public static final ResourceLocation ID = ArsNouveau.prefix( "rainbow");
 
     public final int tickOffset;
     public int transitionSpeed;

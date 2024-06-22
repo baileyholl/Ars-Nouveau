@@ -17,6 +17,6 @@ public class TurretSpellCaster extends SpellCaster {
 
     @Override
     public ResourceLocation getTagID() {
-        return new ResourceLocation(ArsNouveau.MODID, "turret_caster");
+        return ArsNouveau.prefix( "turret_caster");
     }
 }

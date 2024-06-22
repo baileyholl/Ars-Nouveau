@@ -44,7 +44,7 @@ public class ArmorRenderer extends GeoArmorRenderer<AnimatedMagicArmor> {
     @Override
     public ResourceLocation getTextureLocation(AnimatedMagicArmor instance) {
         if(model instanceof GenericModel<AnimatedMagicArmor> genericModel){
-            return new ResourceLocation(ArsNouveau.MODID, "textures/" + genericModel.textPathRoot + "/" + genericModel.name + "_" + instance.getColor(getCurrentStack()) + ".png");
+            return ArsNouveau.prefix( "textures/" + genericModel.textPathRoot + "/" + genericModel.name + "_" + instance.getColor(getCurrentStack()) + ".png");
         }
 
         return super.getTextureLocation(instance);

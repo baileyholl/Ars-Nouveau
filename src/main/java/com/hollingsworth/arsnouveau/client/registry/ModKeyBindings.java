@@ -7,7 +7,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import org.lwjgl.glfw.GLFW;
-import record;
+
 
 
 @EventBusSubscriber(modid = ArsNouveau.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)

@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.core.object.Color;
+import software.bernie.geckolib.object.Color;
 import software.bernie.geckolib.model.GeoModel;
 
 public class SwordRenderer extends FixedGeoItemRenderer<EnchantersSword> {
@@ -17,17 +17,17 @@ public class SwordRenderer extends FixedGeoItemRenderer<EnchantersSword> {
         super(new GeoModel<EnchantersSword>() {
             @Override
             public ResourceLocation getModelResource(EnchantersSword wand) {
-                return new ResourceLocation(ArsNouveau.MODID, "geo/sword.geo.json");
+                return ArsNouveau.prefix( "geo/sword.geo.json");
             }
 
             @Override
             public ResourceLocation getTextureResource(EnchantersSword wand) {
-                return new ResourceLocation(ArsNouveau.MODID, "textures/item/enchanters_sword.png");
+                return ArsNouveau.prefix( "textures/item/enchanters_sword.png");
             }
 
             @Override
             public ResourceLocation getAnimationResource(EnchantersSword wand) {
-                return new ResourceLocation(ArsNouveau.MODID, "animations/sword.json");
+                return ArsNouveau.prefix( "animations/sword.json");
             }
         });
     }

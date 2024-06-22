@@ -103,7 +103,7 @@ public class GlyphUnlockMenu extends BaseBook {
             searchBar.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.search").getString());
         searchBar.setResponder((val) -> this.onSearchChanged(val));
         addRenderableWidget(searchBar);
-        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 13, 50, 12, new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_icon.png"), this::onSelectClick));
+        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 13, 50, 12, ArsNouveau.prefix( "textures/gui/create_icon.png"), this::onSelectClick));
         this.nextButton = addRenderableWidget(new PageButton(bookRight - 20, bookBottom - 10, true, this::onPageIncrease, true));
         this.previousButton = addRenderableWidget(new PageButton(bookLeft - 5, bookBottom - 10, false, this::onPageDec, true));
         updateNextPageButtons();
@@ -119,16 +119,16 @@ public class GlyphUnlockMenu extends BaseBook {
             itemButtons.add(cell);
         }
 
-        all = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 22, 0, 0, 23, 20, 23, 20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_all.png"),
-                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_all_selected.png"), (b) -> this.setFilter(Filter.ALL, (SelectableButton) b, Component.translatable("ars_nouveau.all_glyphs").getString())).withTooltip(Component.translatable("ars_nouveau.all_glyphs"));
+        all = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 22, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix( "textures/gui/filter_tab_all.png"),
+                ArsNouveau.prefix( "textures/gui/filter_tab_all_selected.png"), (b) -> this.setFilter(Filter.ALL, (SelectableButton) b, Component.translatable("ars_nouveau.all_glyphs").getString())).withTooltip(Component.translatable("ars_nouveau.all_glyphs"));
         all.isSelected = true;
-        tier1 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 46, 0, 0, 23, 20, 23, 20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier1.png"),
-                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier1_selected.png"), (b) -> this.setFilter(Filter.TIER1, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 1).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 1));
+        tier1 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 46, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix( "textures/gui/filter_tab_tier1.png"),
+                ArsNouveau.prefix( "textures/gui/filter_tab_tier1_selected.png"), (b) -> this.setFilter(Filter.TIER1, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 1).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 1));
 
-        tier2 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 70, 0, 0, 23, 20, 23, 20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier2.png"),
-                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier2_selected.png"), (b) -> this.setFilter(Filter.TIER2, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 2).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 2));
-        tier3 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 94, 0, 0, 23, 20, 23, 20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier3.png"),
-                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier3_selected.png"), (b) -> this.setFilter(Filter.TIER3, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 3).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 3));
+        tier2 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 70, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix( "textures/gui/filter_tab_tier2.png"),
+                ArsNouveau.prefix( "textures/gui/filter_tab_tier2_selected.png"), (b) -> this.setFilter(Filter.TIER2, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 2).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 2));
+        tier3 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 94, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix( "textures/gui/filter_tab_tier3.png"),
+                ArsNouveau.prefix( "textures/gui/filter_tab_tier3_selected.png"), (b) -> this.setFilter(Filter.TIER3, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 3).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 3));
         filterButtons.add(all);
         filterButtons.add(tier2);
         filterButtons.add(tier1);
@@ -337,9 +337,9 @@ public class GlyphUnlockMenu extends BaseBook {
 
         graphics.drawString(font, orderingTitle, tier1Row > 7 ? 154 : 20, 5 + 18 * (tier1Row + (tier1Row == 1 ? 0 : 1)), -8355712, false);
 
-        graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15);
+        graphics.blit(ArsNouveau.prefix( "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15);
 
-        graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15, 72, 15);
+        graphics.blit(ArsNouveau.prefix( "textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15, 72, 15);
         graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.select"), 233, 183, -8355712, false);
     }
 

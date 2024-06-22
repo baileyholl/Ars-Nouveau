@@ -8,9 +8,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PerkSlot {
     public static ConcurrentHashMap<ResourceLocation, PerkSlot> PERK_SLOTS = new ConcurrentHashMap<>();
 
-    public static final PerkSlot ONE = new PerkSlot(new ResourceLocation(ArsNouveau.MODID, "one"), 1);
-    public static final PerkSlot TWO = new PerkSlot(new ResourceLocation(ArsNouveau.MODID, "two"), 2);
-    public static final PerkSlot THREE = new PerkSlot(new ResourceLocation(ArsNouveau.MODID, "three"), 3);
+    public static final PerkSlot ONE = new PerkSlot(ArsNouveau.prefix( "one"), 1);
+    public static final PerkSlot TWO = new PerkSlot(ArsNouveau.prefix( "two"), 2);
+    public static final PerkSlot THREE = new PerkSlot(ArsNouveau.prefix( "three"), 3);
 
     public final ResourceLocation id;
     public final int value; // oneIndexed

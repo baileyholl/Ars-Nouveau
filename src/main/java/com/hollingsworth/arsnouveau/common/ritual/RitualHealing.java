@@ -53,7 +53,7 @@ public class RitualHealing extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, RitualLib.RESTORATION);
+        return ArsNouveau.prefix( RitualLib.RESTORATION);
     }
 
     @Override

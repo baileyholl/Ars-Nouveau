@@ -34,7 +34,7 @@ public class BuddingConversionProvider extends SimpleDataProvider{
     }
 
     protected void addEntries() {
-        recipes.add(new BuddingConversionRecipe(new ResourceLocation(ArsNouveau.MODID, "budding_amethyst"), Blocks.AMETHYST_BLOCK, Blocks.BUDDING_AMETHYST));
+        recipes.add(new BuddingConversionRecipe(ArsNouveau.prefix( "budding_amethyst"), Blocks.AMETHYST_BLOCK, Blocks.BUDDING_AMETHYST));
     }
 
     protected static Path getRecipePath(Path path, String id) {

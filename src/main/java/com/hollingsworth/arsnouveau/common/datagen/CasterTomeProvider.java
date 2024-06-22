@@ -261,7 +261,7 @@ public class CasterTomeProvider extends SimpleDataProvider {
     }
 
     public CasterTomeData buildTome(String id, String name, Spell spell, String flavorText) {
-        return new CasterTomeData(new ResourceLocation(ArsNouveau.MODID, id + "_tome"),
+        return new CasterTomeData(ArsNouveau.prefix( id + "_tome"),
                 name,
                 spell.serializeRecipe(),
                 ItemsRegistry.CASTER_TOME.registryObject.getId(),

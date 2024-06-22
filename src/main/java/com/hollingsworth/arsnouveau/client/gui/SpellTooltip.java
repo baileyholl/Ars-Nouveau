@@ -52,7 +52,7 @@ public record SpellTooltip(ISpellCaster spellcaster, boolean showName) implement
             List<AbstractSpellPart> recipe = spellCaster.getSpell().recipe;
             for (int i = 0, recipeSize = recipe.size(); i < recipeSize; i++) {
                 AbstractSpellPart part = recipe.get(i);
-                RenderUtils.drawSpellPart(part, pGuiGraphics, pX + i * 16, pY + (showName ? 10 : 0), 16, false);
+                RenderUtil.drawSpellPart(part, pGuiGraphics, pX + i * 16, pY + (showName ? 10 : 0), 16, false);
             }
         }
 

@@ -4,8 +4,8 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.animatable.model.CoreGeoBone;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
@@ -30,7 +30,7 @@ public class StarbuncleModel extends GeoModel<Starbuncle> {
 
     @Override
     public ResourceLocation getModelResource(Starbuncle carbuncle) {
-        return new ResourceLocation(ArsNouveau.MODID, "geo/starbuncle.geo.json");
+        return ArsNouveau.prefix( "geo/starbuncle.geo.json");
     }
 
     @Override
@@ -40,6 +40,6 @@ public class StarbuncleModel extends GeoModel<Starbuncle> {
 
     @Override
     public ResourceLocation getAnimationResource(Starbuncle carbuncle) {
-        return new ResourceLocation(ArsNouveau.MODID, "animations/starbuncle_animations.json");
+        return ArsNouveau.prefix( "animations/starbuncle_animations.json");
     }
 }

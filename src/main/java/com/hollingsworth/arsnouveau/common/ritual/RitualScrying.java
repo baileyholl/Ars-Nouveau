@@ -62,7 +62,7 @@ public class RitualScrying extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, RitualLib.SCRYING);
+        return ArsNouveau.prefix( RitualLib.SCRYING);
     }
 
     public static void grantScrying(ServerPlayer playerEntity, int ticks, IScryer scryer) {

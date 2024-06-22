@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class ToughnessPerk extends Perk {
 
-    public static final ToughnessPerk INSTANCE = new ToughnessPerk(new ResourceLocation(ArsNouveau.MODID, "thread_toughness"));
+    public static final ToughnessPerk INSTANCE = new ToughnessPerk(ArsNouveau.prefix( "thread_toughness"));
     public static final UUID PERK_UUID = UUID.fromString("a628398e-20e1-493c-b81f-d1e58d7d0d69");
 
     public ToughnessPerk(ResourceLocation key) {

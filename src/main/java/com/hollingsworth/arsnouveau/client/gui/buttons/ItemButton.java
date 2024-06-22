@@ -33,7 +33,7 @@ public class ItemButton extends GuiImageButton {
                     List<ClientTooltipComponent> components = new ArrayList<>(ClientHooks.gatherTooltipComponents(ItemStack.EMPTY, Screen.getTooltipFromItem(Minecraft.getInstance(), stack), parX, width, height, font));
                     parent.renderTooltipInternal(graphics, components, parX, parY);
                 }
-                RenderUtils.drawItemAsIcon(stack, graphics, x + 3, y + 2, 16, false);
+                RenderUtil.drawItemAsIcon(stack, graphics, x + 3, y + 2, 16, false);
             }
         }
         super.render(graphics, parX, parY, partialTicks);

@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.util.Mth;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
+import software.bernie.geckolib.animatable.model.CoreGeoBone;
 
 public class ScryerOculusRenderer extends ArsGeoBlockRenderer<ScryersOculusTile> {
 

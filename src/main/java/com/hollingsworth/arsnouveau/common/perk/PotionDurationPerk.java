@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class PotionDurationPerk extends Perk {
 
-    public static final PotionDurationPerk INSTANCE = new PotionDurationPerk(new ResourceLocation(ArsNouveau.MODID, "thread_wixie"));
+    public static final PotionDurationPerk INSTANCE = new PotionDurationPerk(ArsNouveau.prefix( "thread_wixie"));
     public static final UUID PERK_UUID = UUID.fromString("f4c0926e-82a7-44d6-bd6b-a0321a65de2f");
 
     public PotionDurationPerk(ResourceLocation key) {

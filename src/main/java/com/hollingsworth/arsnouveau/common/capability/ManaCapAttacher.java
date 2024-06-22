@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 public class ManaCapAttacher {
     private static class ManaCapProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
-        public static final ResourceLocation IDENTIFIER = new ResourceLocation(ArsNouveau.MODID, "mana");
+        public static final ResourceLocation IDENTIFIER = ArsNouveau.prefix( "mana");
 
         private final IManaCap backend = new ManaCap(null);
         private final LazyOptional<IManaCap> optionalData = LazyOptional.of(() -> backend);

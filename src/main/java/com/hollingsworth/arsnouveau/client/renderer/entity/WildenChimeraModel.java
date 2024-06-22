@@ -4,8 +4,8 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.WildenChimera;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.animatable.model.CoreGeoBone;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
@@ -13,9 +13,9 @@ import javax.annotation.Nullable;
 
 public class WildenChimeraModel extends GeoModel<WildenChimera> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/wilden_chimera.png");
-    public static final ResourceLocation NORMAL_MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/wilden_chimera.geo.json");
-    public static final ResourceLocation ANIMATIONS = new ResourceLocation(ArsNouveau.MODID, "animations/wilden_chimera_animations.json");
+    private static final ResourceLocation TEXTURE = ArsNouveau.prefix( "textures/entity/wilden_chimera.png");
+    public static final ResourceLocation NORMAL_MODEL = ArsNouveau.prefix( "geo/wilden_chimera.geo.json");
+    public static final ResourceLocation ANIMATIONS = ArsNouveau.prefix( "animations/wilden_chimera_animations.json");
 
 
 

@@ -62,7 +62,7 @@ public class ConjureDesertRitual extends ConjureBiomeRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, RitualLib.DESERT);
+        return ArsNouveau.prefix( RitualLib.DESERT);
     }
 
     @Override

@@ -22,7 +22,7 @@ public class GuiImageButton extends ANButton {
     }
 
     public GuiImageButton(int x, int y, int u, int v, int w, int h, int image_width, int image_height, String resource_image, Button.OnPress onPress) {
-        this(x, y, u, v, w, h, image_width, image_height, new ResourceLocation(ArsNouveau.MODID, resource_image), onPress);
+        this(x, y, u, v, w, h, image_width, image_height, ArsNouveau.prefix( resource_image), onPress);
     }
 
     public GuiImageButton(int x, int y, int u, int v, int w, int h, int image_width, int image_height, ResourceLocation image, Button.OnPress onPress) {

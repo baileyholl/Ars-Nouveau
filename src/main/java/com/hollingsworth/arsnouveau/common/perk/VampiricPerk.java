@@ -17,7 +17,7 @@ import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 
 public class VampiricPerk extends Perk implements IEffectResolvePerk {
-    public static VampiricPerk INSTANCE = new VampiricPerk(new ResourceLocation(ArsNouveau.MODID, "thread_life_drain"));
+    public static VampiricPerk INSTANCE = new VampiricPerk(ArsNouveau.prefix( "thread_life_drain"));
     public VampiricPerk(ResourceLocation key) {
         super(key);
     }

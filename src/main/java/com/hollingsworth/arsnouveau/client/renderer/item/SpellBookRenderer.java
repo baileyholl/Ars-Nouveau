@@ -14,7 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemDisplayContext;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.core.object.Color;
+import software.bernie.geckolib.object.Color;
 import software.bernie.geckolib.model.GeoModel;
 
 import javax.annotation.Nullable;
@@ -101,7 +101,7 @@ public class SpellBookRenderer extends FixedGeoItemRenderer<SpellBook> {
     public ResourceLocation getTextureLocation(SpellBook o) {
         String base = "textures/item/spellbook_";
         String color = !currentItemStack.hasTag() || !currentItemStack.getTag().contains("color") ? "purple" : DyeColor.byId(currentItemStack.getOrCreateTag().getInt("color")).getName();
-        return new ResourceLocation(ArsNouveau.MODID, base + color + ".png");
+        return ArsNouveau.prefix( base + color + ".png");
     }
 
     @Override

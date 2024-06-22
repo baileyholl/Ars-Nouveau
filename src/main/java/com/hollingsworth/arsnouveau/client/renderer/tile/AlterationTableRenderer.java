@@ -38,7 +38,7 @@ import org.joml.Vector3d;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
-import software.bernie.geckolib.util.RenderUtils;
+import software.bernie.geckolib.util.RenderUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -109,7 +109,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
                 matrixStack.mulPose(Axis.XP.rotation(-bone.getRotX()));
             }
             GeoBone locBone = model.getBone("top_" + (i + 1)).get();
-            RenderUtils.translateToPivotPoint(matrixStack, locBone);
+            RenderUtil.translateToPivotPoint(matrixStack, locBone);
             matrixStack.scale(0.18f, 0.18f, 0.18f);
             Minecraft.getInstance().getItemRenderer().renderStatic(perkStack, ItemDisplayContext.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, tile.getLevel(), (int) tile.getBlockPos().asLong());
             matrixStack.popPose();

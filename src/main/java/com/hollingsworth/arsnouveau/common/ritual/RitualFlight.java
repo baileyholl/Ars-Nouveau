@@ -34,7 +34,7 @@ public class RitualFlight extends RangeEffectRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, RitualLib.FLIGHT);
+        return ArsNouveau.prefix( RitualLib.FLIGHT);
     }
 
     @Override

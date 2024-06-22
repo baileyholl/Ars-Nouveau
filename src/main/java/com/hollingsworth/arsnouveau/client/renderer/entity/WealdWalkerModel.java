@@ -5,8 +5,8 @@ import com.hollingsworth.arsnouveau.common.entity.WealdWalker;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.animatable.model.CoreGeoBone;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
@@ -38,16 +38,16 @@ public class WealdWalkerModel<W extends WealdWalker> extends GeoModel<W> {
 
     @Override
     public ResourceLocation getModelResource(WealdWalker walker) {
-        return walker.isBaby() ? new ResourceLocation(ArsNouveau.MODID, "geo/" + type + "_waddler.geo.json") : new ResourceLocation(ArsNouveau.MODID, "geo/" + type + "_walker.geo.json");
+        return walker.isBaby() ? ArsNouveau.prefix( "geo/" + type + "_waddler.geo.json") : ArsNouveau.prefix( "geo/" + type + "_walker.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(WealdWalker walker) {
-        return walker.isBaby() ? new ResourceLocation(ArsNouveau.MODID, "textures/entity/" + type + "_waddler.png") : new ResourceLocation(ArsNouveau.MODID, "textures/entity/" + type + "_walker.png");
+        return walker.isBaby() ? ArsNouveau.prefix( "textures/entity/" + type + "_waddler.png") : ArsNouveau.prefix( "textures/entity/" + type + "_walker.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(WealdWalker walker) {
-        return walker.isBaby() ? new ResourceLocation(ArsNouveau.MODID, "animations/weald_waddler_animations.json") : new ResourceLocation(ArsNouveau.MODID, "animations/weald_walker_animations.json");
+        return walker.isBaby() ? ArsNouveau.prefix( "animations/weald_waddler_animations.json") : ArsNouveau.prefix( "animations/weald_walker_animations.json");
     }
 }

@@ -40,12 +40,12 @@ public class ScryRitualProvider extends SimpleDataProvider{
         for (String ore : defaultOres) {
             addForgeOreRecipe(ore);
         }
-        recipes.add(new ScryRitualRecipe(new ResourceLocation(ArsNouveau.MODID, "amethyst_gems"), forgeItemTag("gems/amethyst"), forgeBlockTag("storage_blocks/amethyst")));
-        recipes.add(new ScryRitualRecipe(new ResourceLocation(ArsNouveau.MODID, "amethyst_blocks"), forgeItemTag("storage_blocks/amethyst"), forgeBlockTag("storage_blocks/amethyst")));
+        recipes.add(new ScryRitualRecipe(ArsNouveau.prefix( "amethyst_gems"), forgeItemTag("gems/amethyst"), forgeBlockTag("storage_blocks/amethyst")));
+        recipes.add(new ScryRitualRecipe(ArsNouveau.prefix( "amethyst_blocks"), forgeItemTag("storage_blocks/amethyst"), forgeBlockTag("storage_blocks/amethyst")));
     }
 
     private void addForgeOreRecipe(String ore) {
-        recipes.add(new ScryRitualRecipe(new ResourceLocation(ArsNouveau.MODID, ore + "_ores"), forgeItemTag("ores/" + ore), forgeBlockTag("ores/" + ore)));
+        recipes.add(new ScryRitualRecipe(ArsNouveau.prefix( ore + "_ores"), forgeItemTag("ores/" + ore), forgeBlockTag("ores/" + ore)));
     }
 
     private TagKey<Block> forgeBlockTag(String path) {

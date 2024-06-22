@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.RedStoneWireBlock;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.core.object.Color;
+import software.bernie.geckolib.object.Color;
 
 import java.util.ArrayList;
 import java.util.List;

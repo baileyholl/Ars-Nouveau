@@ -48,7 +48,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     public SpellPartConfigUtil.ComboLimits invalidCombinations = new SpellPartConfigUtil.ComboLimits(null);
 
     public AbstractSpellPart(String registryName, String name) {
-        this(new ResourceLocation(ArsNouveau.MODID, registryName), name);
+        this(ArsNouveau.prefix( registryName), name);
     }
 
     public AbstractSpellPart(ResourceLocation registryName, String name) {

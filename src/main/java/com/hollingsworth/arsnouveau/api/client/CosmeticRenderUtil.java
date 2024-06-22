@@ -10,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.util.RenderUtils;
+import software.bernie.geckolib.util.RenderUtil;
 
 
 public class CosmeticRenderUtil {
@@ -21,9 +21,9 @@ public class CosmeticRenderUtil {
         //checks should have already been made, but pattern variables ftw
         matrix.pushPose();
 
-        RenderUtils.translateToPivotPoint(matrix, bone);
-        RenderUtils.rotateMatrixAroundBone(matrix, bone);
-        RenderUtils.translateMatrixToBone(matrix, bone);
+        RenderUtil.translateToPivotPoint(matrix, bone);
+        RenderUtil.rotateMatrixAroundBone(matrix, bone);
+        RenderUtil.translateMatrixToBone(matrix, bone);
         Vec3 translations = cosmetic.getTranslations(entity);
         Vec3 scaling = cosmetic.getScaling(entity);
         matrix.translate(translations.x, translations.y, translations.z);

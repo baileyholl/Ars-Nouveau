@@ -16,7 +16,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforgespi.language.IModInfo;
-import var;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class GlyphButton extends ANButton {
         if(!visible){
             return;
         }
-        RenderUtils.drawSpellPart(this.abstractSpellPart, graphics, x, y, 16, !validationErrors.isEmpty(), 0);
+        RenderUtil.drawSpellPart(this.abstractSpellPart, graphics, x, y, 16, !validationErrors.isEmpty(), 0);
     }
 
     @Override

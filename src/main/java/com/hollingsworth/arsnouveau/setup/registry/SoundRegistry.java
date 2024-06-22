@@ -41,7 +41,7 @@ public class SoundRegistry {
     public static SpellSound FIRE_SPELL_SOUND;
 
     static SoundEvent makeSound(String name) {
-        return SoundEvent.createVariableRangeEvent(new ResourceLocation(ArsNouveau.MODID, name));
+        return SoundEvent.createVariableRangeEvent(ArsNouveau.prefix( name));
     }
 
 }

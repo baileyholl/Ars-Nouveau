@@ -38,7 +38,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
 
     @Override
     public ResourceLocation getPluginUid() {
-        return new ResourceLocation(ArsNouveau.MODID, "main");
+        return ArsNouveau.prefix( "main");
     }
 
     @Override

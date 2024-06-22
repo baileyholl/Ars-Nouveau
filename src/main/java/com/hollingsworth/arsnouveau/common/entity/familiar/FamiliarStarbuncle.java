@@ -20,9 +20,9 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 
 import java.util.Arrays;
 
@@ -81,7 +81,7 @@ public class FamiliarStarbuncle extends FamiliarEntity {
         String color = getColor();
         if (color.isEmpty()) color = DyeColor.ORANGE.getName();
 
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/starbuncle_" + color.toLowerCase() + ".png");
+        return ArsNouveau.prefix( "textures/entity/starbuncle_" + color.toLowerCase() + ".png");
     }
 
     @Override

@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class DepthsPerk extends Perk {
 
-    public static DepthsPerk INSTANCE = new DepthsPerk(new ResourceLocation(ArsNouveau.MODID, "thread_depths"));
+    public static DepthsPerk INSTANCE = new DepthsPerk(ArsNouveau.prefix( "thread_depths"));
     public static final UUID PERK_UUID = UUID.fromString("ce320c42-9d63-4b83-9e69-ef144790d667");
 
     public DepthsPerk(ResourceLocation key) {

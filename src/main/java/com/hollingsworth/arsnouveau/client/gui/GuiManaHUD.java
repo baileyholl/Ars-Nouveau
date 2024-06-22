@@ -52,10 +52,10 @@ public class GuiManaHUD {
 
         int yOffset = minecraft.getWindow().getGuiScaledHeight() - 5 + Config.MANABAR_Y_OFFSET.get();
 
-        guiGraphics.blit( new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_border.png"), offsetLeft, yOffset - 18, 0, 0, 108, 18, 256, 256);
+        guiGraphics.blit( ArsNouveau.prefix( "textures/gui/manabar_gui_border.png"), offsetLeft, yOffset - 18, 0, 0, 108, 18, 256, 256);
         int manaOffset = (int) (((ClientInfo.ticksInGame + pt) / 3 % (33))) * 6;
 
-        guiGraphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_mana.png"), offsetLeft + 9, yOffset - 9, 0, manaOffset, manaLength, 6, 256, 256);
+        guiGraphics.blit(ArsNouveau.prefix( "textures/gui/manabar_gui_mana.png"), offsetLeft + 9, yOffset - 9, 0, manaOffset, manaLength, 6, 256, 256);
 
         renderReserveOverlay(ms, offsetLeft, yOffset, manaOffset, maxMana);
         renderRedOverlay(ms, offsetLeft, yOffset, manaOffset, maxMana);
@@ -70,7 +70,7 @@ public class GuiManaHUD {
             // guiGraphics.drawString(minecraft.font, String.valueOf((int)(ClientInfo.reservedOverlayMana * maxMana)), offset + 69, yOffset - 20, 0xFFFFFF);
         }
 
-        guiGraphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_border.png"), offsetLeft, yOffset - 17, 0, 18, 108, 20, 256, 256);
+        guiGraphics.blit(ArsNouveau.prefix( "textures/gui/manabar_gui_border.png"), offsetLeft, yOffset - 17, 0, 18, 108, 20, 256, 256);
     }
 
     public static void renderRedOverlay(PoseStack ms, int offsetLeft, int yOffset, int manaOffset, int maxMana) {
@@ -78,8 +78,8 @@ public class GuiManaHUD {
             return;
 
         int redManaLength = (int) (98F * Mth.clamp(0F,ClientInfo.redOverlayMana / maxMana , 1F));
-        RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_grayscale.png"));
-        RenderUtils.colorBlit(ms, offsetLeft + 8, yOffset - 10, 0, manaOffset, redManaLength, 8, 256, 256, Color.RED.scaleAlpha(ClientInfo.redOverlayTicks/35f));
+        RenderSystem.setShaderTexture(0, ArsNouveau.prefix( "textures/gui/manabar_gui_grayscale.png"));
+        RenderUtil.colorBlit(ms, offsetLeft + 8, yOffset - 10, 0, manaOffset, redManaLength, 8, 256, 256, Color.RED.scaleAlpha(ClientInfo.redOverlayTicks/35f));
 
     }
 
@@ -93,8 +93,8 @@ public class GuiManaHUD {
         int reserveManaLength = (int) (96F * ClientInfo.reservedOverlayMana);
         //invert offsets so it aligns with the right side of the bar
         int offset = 96 - reserveManaLength;
-        RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_mana.png"));
-        RenderUtils.colorBlit(ms, offsetLeft + 10 + offset, yOffset - 10, 0, stillBar ? 0 : manaOffset, reserveManaLength, 8, 256, 256, BLACK);
+        RenderSystem.setShaderTexture(0, ArsNouveau.prefix( "textures/gui/manabar_gui_mana.png"));
+        RenderUtil.colorBlit(ms, offsetLeft + 10 + offset, yOffset - 10, 0, stillBar ? 0 : manaOffset, reserveManaLength, 8, 256, 256, BLACK);
 
     }
 

@@ -20,7 +20,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib.util.RenderUtils;
+import software.bernie.geckolib.util.RenderUtil;
 
 public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
     public static MultiBufferSource.BufferSource cosmeticBuffer = MultiBufferSource.immediate(new BufferBuilder(256));
@@ -40,7 +40,7 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
         super.renderRecursively(stack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
         if (bone.getName().equals("item")) {
             stack.pushPose();
-            RenderUtils.translateToPivotPoint(stack, bone);
+            RenderUtil.translateToPivotPoint(stack, bone);
             stack.translate(0, -0.10, 0);
             stack.scale(0.75f, 0.75f, 0.75f);
             ItemStack itemstack = animatable.getHeldStack();
@@ -69,7 +69,7 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
         if(animatable.getName().getString().equals("Splonk")) {
             return ShaderRegistry.blamed(textureLocation, true);
         }else if(animatable.getName().getString().equals("Bailey")){
-            return ShaderRegistry.rainbowEntity(textureLocation, new ResourceLocation(ArsNouveau.MODID, "textures/entity/starbuncle_mask.png"),true);
+            return ShaderRegistry.rainbowEntity(textureLocation, ArsNouveau.prefix( "textures/entity/starbuncle_mask.png"),true);
         }
         return RenderType.entityCutoutNoCull(textureLocation);
     }
