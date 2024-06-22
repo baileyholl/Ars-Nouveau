@@ -63,7 +63,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .withReagent(Items.GLASS_BOTTLE)
                 .withPedestalItem(4, Items.GLOWSTONE)
                 .withPedestalItem(2, Items.REDSTONE_LAMP)
-                .withPedestalItem(2, Ingredient.of(Tags.Items.GLASS))
+                .withPedestalItem(2, Ingredient.of(Tags.Items.GLASS_BLOCKS))
                 .build());
 
         addRecipe(builder()

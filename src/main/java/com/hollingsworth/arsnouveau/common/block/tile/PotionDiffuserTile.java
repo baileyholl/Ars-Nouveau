@@ -12,6 +12,7 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -88,8 +89,8 @@ public class PotionDiffuserTile extends ModdedTile implements ITickable, IWandab
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
+    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(pTag, pRegistries);
 
         boundPos = NBTUtil.getNullablePos(pTag, "boundPos");
 
@@ -101,8 +102,8 @@ public class PotionDiffuserTile extends ModdedTile implements ITickable, IWandab
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         if(boundPos != null){
             NBTUtil.storeBlockPos(tag, "boundPos", boundPos);
         }

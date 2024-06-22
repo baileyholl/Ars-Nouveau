@@ -42,7 +42,7 @@ import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class EntityProjectileSpell extends ColoredProjectile implements IEntityAdditionalSpawnData {
+public class EntityProjectileSpell extends ColoredProjectile {
 
     public int age;
     public SpellResolver spellResolver;
@@ -330,7 +330,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
                 }
 
                 if (state.is(BlockTags.PORTALS)) {
-                    state.getBlock().entityInside(state, level, blockraytraceresult.getBlockPos(), this);
+                    state.entityInside(level, blockraytraceresult.getBlockPos(), this);
                     return;
                 }
 
@@ -360,11 +360,6 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
     @Override
     protected boolean canHitEntity(Entity entity) {
         return super.canHitEntity(entity) || entity.getType().is(EntityTags.SPELL_CAN_HIT);
-    }
-
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     public void writeSpawnData(FriendlyByteBuf buffer) {

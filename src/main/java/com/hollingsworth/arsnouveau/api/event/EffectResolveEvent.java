@@ -5,6 +5,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class EffectResolveEvent extends Event {
@@ -32,15 +33,11 @@ public class EffectResolveEvent extends Event {
      * Fired before a glyph is resolved and after SpellStats are calculated.
      * Use this to modify the spell or stats before resolving. Can be cancelled to stop resolving.
      */
-    public static class Pre extends EffectResolveEvent {
+    public static class Pre extends EffectResolveEvent implements ICancellableEvent {
         public Pre(Level world, @NotNull LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, AbstractEffect resolveEffect, SpellStats spellStats, SpellResolver spellResolver) {
             super(world, shooter, result, spell, spellContext, resolveEffect, spellStats, spellResolver);
         }
 
-        @Override
-        public boolean isCancelable() {
-            return true;
-        }
     }
 
     /**
@@ -52,9 +49,5 @@ public class EffectResolveEvent extends Event {
             super(world, shooter, result, spell, spellContext, resolveEffect, spellStats, spellResolver);
         }
 
-        @Override
-        public boolean isCancelable() {
-            return false;
-        }
     }
 }

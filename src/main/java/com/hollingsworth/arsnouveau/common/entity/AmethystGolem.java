@@ -329,12 +329,12 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(HOME, Optional.empty());
-        this.entityData.define(IMBUEING, false);
-        this.entityData.define(IMBUE_POS, BlockPos.ZERO);
-        this.entityData.define(STOMPING, false);
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(HOME, Optional.empty());
+        pBuilder.define(IMBUEING, false);
+        pBuilder.define(IMBUE_POS, BlockPos.ZERO);
+        pBuilder.define(STOMPING, false);
     }
 
     @Override
@@ -343,7 +343,7 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
     }
 
     @Override
-    public int getExperienceReward() {
+    protected int getBaseExperienceReward() {
         return 0;
     }
 

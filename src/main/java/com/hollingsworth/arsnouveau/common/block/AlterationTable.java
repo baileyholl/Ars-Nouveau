@@ -11,6 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -38,9 +39,9 @@ public class AlterationTable extends TableBlock{
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    protected ItemInteractionResult useItemOn(ItemStack pStack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (world.isClientSide || handIn != InteractionHand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof AlterationTile tile))
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         ItemStack stack = player.getMainHandItem();
         // Attempt to put armor and remove perks
         if(tile.isMasterTile()){
@@ -48,31 +49,31 @@ public class AlterationTable extends TableBlock{
             if (holder instanceof StackPerkHolder) {
                 if(tile.armorStack.isEmpty()){
                     tile.setArmorStack(stack, player);
-                    return InteractionResult.SUCCESS;
+                    return ItemInteractionResult.SUCCESS;
                 }
             }else if(stack.isEmpty() && !tile.armorStack.isEmpty()){
                 tile.removeArmorStack(player);
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
         }else if(state.getValue(PART) == ThreePartBlock.OTHER){
-            this.use(world.getBlockState(pos.below()), world, pos.below(), player, handIn, hit);
+            this.useItemOn(pStack, world.getBlockState(pos.below()), world, pos.below(), player, handIn, hit);
         }else{
             tile = tile.getLogicTile();
             if(tile == null)
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             if(stack.isEmpty()){
                 tile.removePerk(player);
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
             // Attempt to change perks
             if(!(stack.getItem() instanceof PerkItem)){
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.not_perk"));
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
             tile.addPerkStack(stack, player);
         }
 
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Nullable
@@ -82,11 +83,12 @@ public class AlterationTable extends TableBlock{
     }
 
     @Override
-    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
+    public BlockState playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         super.playerWillDestroy(worldIn, pos, state, player);
         if (worldIn.getBlockEntity(pos) instanceof AlterationTile tile) {
             tile.dropItems();
         }
+        return state;
     }
 
     public static VoxelShape SOUTH_OTHER = Shapes.or(Block.box(3.40D, 0D, 1.0D, 7.333333D, 1D, 17.0D),
@@ -197,7 +199,7 @@ public class AlterationTable extends TableBlock{
     }
 
     @Override
-    public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+    protected boolean isPathfindable(BlockState pState, PathComputationType pPathComputationType) {
         return false;
     }
 }

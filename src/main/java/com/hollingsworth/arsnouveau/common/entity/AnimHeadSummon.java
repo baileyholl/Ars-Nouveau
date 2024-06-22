@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.entity.IEntityAdditionalSpawnData;
 import net.neoforged.neoforge.network.NetworkHooks;
 
-public class AnimHeadSummon extends AnimBlockSummon implements IEntityAdditionalSpawnData {
+public class AnimHeadSummon extends AnimBlockSummon {
 
     public CompoundTag head_data = new CompoundTag();
 
@@ -48,12 +48,6 @@ public class AnimHeadSummon extends AnimBlockSummon implements IEntityAdditional
             fallingBlock.blockData = head_data;
         }
         level.addFreshEntity(fallingBlock);
-    }
-
-
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override

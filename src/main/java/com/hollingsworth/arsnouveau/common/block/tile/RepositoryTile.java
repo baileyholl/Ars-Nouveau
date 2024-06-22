@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -135,30 +136,31 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
         return 54;
     }
 
-
-    protected void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
+    @Override
+    protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(pTag, pRegistries);
         if (!this.trySaveLootTable(pTag)) {
-            ContainerHelper.saveAllItems(pTag, this.items);
+            ContainerHelper.saveAllItems(pTag, this.items, pRegistries);
         }
         pTag.putInt("fillLevel", fillLevel);
         pTag.putInt("configuration", configuration);
     }
 
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
+    @Override
+    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(pTag, pRegistries);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         if (!this.tryLoadLootTable(pTag)) {
-            ContainerHelper.loadAllItems(pTag, this.items);
+            ContainerHelper.loadAllItems(pTag, this.items, pRegistries);
         }
         fillLevel = pTag.getInt("fillLevel");
         configuration = pTag.getInt("configuration");
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(pkt.getTag() == null ? new CompoundTag() : pkt.getTag());
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
+        super.onDataPacket(net, pkt, lookupProvider);
+        handleUpdateTag(pkt.getTag() == null ? new CompoundTag() : pkt.getTag(), lookupProvider);
     }
 
     public boolean updateBlock() {
@@ -172,10 +174,10 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
+    public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries) {
         CompoundTag tag = new CompoundTag();
-        this.saveAdditional(tag);
-        return tag;
+        this.saveAdditional(tag, pRegistries);
+        return super.getUpdateTag(pRegistries);
     }
 
     @Override

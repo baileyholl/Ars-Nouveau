@@ -16,6 +16,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -40,15 +41,15 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable, IDi
 
 
     @Override
-    public void load(CompoundTag nbt) {
-        super.load(nbt);
-        this.color = ParticleColorRegistry.from(nbt.getCompound("color"));
-        lit = nbt.getBoolean("lit");
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(pTag, bpRegistries);
+        this.color = ParticleColorRegistry.from(pTag.getCompound("color"));
+        lit = pTag.getBoolean("lit");
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound) {
-        super.saveAdditional(compound);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         compound.put("color", color.serialize());
         compound.putBoolean("lit", lit);
     }

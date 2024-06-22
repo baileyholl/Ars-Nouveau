@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.client.container.CraftingTerminalMenu;
 import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -68,8 +69,8 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag compound) {
-		super.saveAdditional(compound);
+	protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+		super.saveAdditional(tag, pRegistries);
 
 		ListTag listnbt = new ListTag();
 
@@ -88,8 +89,8 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 
 	private boolean reading;
 	@Override
-	public void load(CompoundTag compound) {
-		super.load(compound);
+	protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+		super.loadAdditional(compound, pRegistries);
 		reading = true;
 		ListTag listnbt = compound.getList("CraftingTable", 10);
 

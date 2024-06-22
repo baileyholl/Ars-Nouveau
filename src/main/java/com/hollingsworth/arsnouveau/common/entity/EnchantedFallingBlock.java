@@ -129,11 +129,11 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         EnchantedFallingBlock fallingblockentity;
         if (level.getBlockEntity(pos) instanceof MageBlockTile tile) {
             fallingblockentity = new EnchantedMageblock(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, blockState.hasProperty(BlockStateProperties.WATERLOGGED) ? blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE) : blockState);
-            fallingblockentity.blockData = tile.saveWithoutMetadata();
+            fallingblockentity.blockData = tile.saveWithoutMetadata(level.registryAccess());
             fallingblockentity.setColor(tile.color);
         } else if (level.getBlockEntity(pos) instanceof SkullBlockEntity tile) {
             fallingblockentity = new EnchantedSkull(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, blockState.hasProperty(BlockStateProperties.WATERLOGGED) ? blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE) : blockState);
-            fallingblockentity.blockData = tile.saveWithoutMetadata();
+            fallingblockentity.blockData = tile.saveWithoutMetadata(level.registryAccess());
         } else {
             fallingblockentity = new EnchantedFallingBlock(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, blockState.hasProperty(BlockStateProperties.WATERLOGGED) ? blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE) : blockState);
         }
@@ -338,7 +338,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         boolean isEnderman = entity.getType() == EntityType.ENDERMAN;
         int k = entity.getRemainingFireTicks();
         if (this.isOnFire() && !isEnderman) {
-            entity.setSecondsOnFire(5);
+            entity.igniteForTicks(5);
         }
 
         if (entity.hurt(damagesource, (float) i)) {
@@ -384,10 +384,6 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
 
     public boolean onlyOpCanSetNbt() {
         return true;
-    }
-
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return new ClientboundAddEntityPacket(this, Block.getId(this.getBlockState()));
     }
 
     public void recreateFromPacket(ClientboundAddEntityPacket pPacket) {
@@ -455,12 +451,6 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         }
     }
 
-    @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-    }
-
-
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
@@ -515,9 +505,10 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         return Entity.MovementEmission.NONE;
     }
 
-    public void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DATA_START_POS, BlockPos.ZERO);
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(DATA_START_POS, BlockPos.ZERO);
     }
 
     /**

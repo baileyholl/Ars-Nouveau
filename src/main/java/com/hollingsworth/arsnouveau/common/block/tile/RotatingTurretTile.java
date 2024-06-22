@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -131,8 +132,8 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         tag.putFloat("rotationY", rotationY);
         tag.putFloat("rotationX", rotationX);
         tag.putFloat("neededRotationY", neededRotationY);
@@ -140,8 +141,8 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(tag, pRegistries);
         rotationX = tag.getFloat("rotationX");
         rotationY = tag.getFloat("rotationY");
         neededRotationX = tag.getFloat("neededRotationX");

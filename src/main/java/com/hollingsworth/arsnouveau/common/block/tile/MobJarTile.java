@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.block.MobJar;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
@@ -153,8 +154,8 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
 
         // Check both conditions because the entity may have never been loaded on the server side.
         if(entityTag != null || cachedEntity != null){
@@ -172,8 +173,8 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
+    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(pTag, pRegistries);
         if(pTag.contains("entityTag")){
             this.entityTag = pTag.getCompound("entityTag");
             this.cachedEntity = null;

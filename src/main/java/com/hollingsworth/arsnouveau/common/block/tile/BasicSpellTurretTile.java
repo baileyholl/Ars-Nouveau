@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.util.registry.RegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -32,11 +33,6 @@ public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider
         super(p_i48289_1_, pos, state);
     }
 
-
-    public BasicSpellTurretTile(RegistryWrapper<? extends BlockEntityType<?>> p_i48289_1_, BlockPos pos, BlockState state) {
-        super(p_i48289_1_.get(), pos, state);
-    }
-
     public BasicSpellTurretTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.BASIC_SPELL_TURRET_TILE, pos, state);
     }
@@ -46,15 +42,15 @@ public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        spellCaster.serializeOnTag(tag);
+    protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(pTag, pRegistries);
+        spellCaster.serializeOnTag(pTag);
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        this.spellCaster = new TurretSpellCaster(tag);
-        super.load(tag);
+    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(pTag, pRegistries);
+        this.spellCaster = new TurretSpellCaster(pTag);
     }
 
     @Override

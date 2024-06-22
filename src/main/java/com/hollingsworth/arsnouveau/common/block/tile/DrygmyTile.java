@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -48,7 +49,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
     private List<LivingEntity> nearbyEntities;
 
     public DrygmyTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.DRYGMY_TILE, pos, state);
+        super(BlockRegistry.DRYGMY_TILE.get(), pos, state);
     }
 
     @Override
@@ -208,16 +209,16 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
 
 
     @Override
-    public void load(CompoundTag compound) {
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(compound, pRegistries);
         this.progress = compound.getInt("progress");
         this.bonus = compound.getInt("bonus");
         this.needsMana = compound.getBoolean("needsMana");
-        super.load(compound);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         tag.putInt("progress", progress);
         tag.putInt("bonus", bonus);
         tag.putBoolean("needsMana", needsMana);

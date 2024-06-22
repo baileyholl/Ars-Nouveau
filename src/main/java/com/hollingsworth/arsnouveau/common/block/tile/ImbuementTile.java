@@ -16,6 +16,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
@@ -57,7 +58,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     int craftTicks;
 
     public ImbuementTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.IMBUEMENT_TILE, pos, state);
+        super(BlockRegistry.IMBUEMENT_TILE.get(), pos, state);
     }
 
     @Override
@@ -164,7 +165,8 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     }
 
     @Override
-    public void load(CompoundTag tag) {
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(tag, pRegistries);
         stack = ItemStack.of((CompoundTag) tag.get("itemStack"));
         draining = tag.getBoolean("draining");
         this.hasRecipe = tag.getBoolean("hasRecipe");
@@ -173,8 +175,8 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         if (stack != null) {
             CompoundTag reagentTag = new CompoundTag();
             stack.save(reagentTag);

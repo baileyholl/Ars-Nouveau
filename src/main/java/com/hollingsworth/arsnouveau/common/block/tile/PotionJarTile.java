@@ -6,15 +6,16 @@ import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.common.block.SourceJar;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -61,8 +62,8 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag) {
-        super.handleUpdateTag(tag);
+    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.handleUpdateTag(tag, lookupProvider);
         level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition),  level.getBlockState(worldPosition), 8);
     }
 
@@ -110,8 +111,8 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(pTag, pRegistries);
         if(tag.contains("potionData"))
             this.data = PotionData.fromTag(tag.getCompound("potionData"));
         this.isLocked = tag.getBoolean("locked");
@@ -119,15 +120,15 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         tag.put("potionData", this.data.toTag());
         tag.putBoolean("locked", this.isLocked);
         tag.putInt("currentFill", this.currentFill);
 
         // Include a sorted list of potion names so quests can check the jar's contents
         Set<Potion> potionSet = this.data.getIncludedPotions();
-        List<String> potionNames = new ArrayList<>(potionSet.stream().map(potion -> ForgeRegistries.POTIONS.getKey(potion).toString()).toList());
+        List<String> potionNames = new ArrayList<>(potionSet.stream().map(potion -> NeoForgeRegistries.POTIONS.getKey(potion).toString()).toList());
         potionNames.sort(String::compareTo);
         tag.putString("potionNames", String.join(",", potionNames));
 

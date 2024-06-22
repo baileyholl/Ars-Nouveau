@@ -17,7 +17,7 @@ import net.neoforged.neoforge.entity.IEntityAdditionalSpawnData;
 import net.neoforged.neoforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
-public class EnchantedSkull extends EnchantedFallingBlock implements IEntityAdditionalSpawnData {
+public class EnchantedSkull extends EnchantedFallingBlock {
     public EnchantedSkull(EntityType<? extends ColoredProjectile> p_31950_, Level p_31951_) {
         super(p_31950_, p_31951_);
     }
@@ -33,11 +33,6 @@ public class EnchantedSkull extends EnchantedFallingBlock implements IEntityAddi
     @Override
     public EntityType<?> getType() {
         return ModEntities.ENCHANTED_HEAD_BLOCK.get();
-    }
-
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Nullable

@@ -17,6 +17,7 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -73,7 +74,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
         if (craftingTicks > 0)
             craftingTicks--;
 
-        if (recipeID != null && recipeID.equals(new ResourceLocation(""))) {
+        if (recipeID != null && recipeID.equals(ResourceLocation.withDefaultNamespace(""))) {
             recipe = null; // Used on client to remove recipe since for some forsaken reason world is missing during load.
         }
 
@@ -114,7 +115,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
         if (!level.isClientSide && crafting && craftingTicks == 0 && recipe != null) {
             level.addFreshEntity(new ItemEntity(level, getX() + 0.5, getY() + 1.1, getZ() + 0.5, recipe.output.copy()));
             recipe = null;
-            recipeID = new ResourceLocation("");
+            recipeID = ResourceLocation.withDefaultNamespace("");
             crafting = false;
             consumedStacks = new ArrayList<>();
             updateBlock();
@@ -266,8 +267,8 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(compound, pRegistries);
         stack = ItemStack.of((CompoundTag) compound.get("itemStack"));
         if (compound.contains("recipe")) {
             recipeID = new ResourceLocation(compound.getString("recipe"));
@@ -281,7 +282,8 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound) {
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         if (stack != null) {
             CompoundTag reagentTag = new CompoundTag();
             stack.save(reagentTag);

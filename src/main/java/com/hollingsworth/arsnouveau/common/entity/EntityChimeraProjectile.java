@@ -26,14 +26,6 @@ import java.util.Collection;
 public class EntityChimeraProjectile extends AbstractArrow implements GeoEntity {
     int groundMax;
 
-    public EntityChimeraProjectile(double p_i48547_2_, double p_i48547_4_, double p_i48547_6_, Level p_i48547_8_) {
-        super(ModEntities.ENTITY_CHIMERA_SPIKE.get(), p_i48547_2_, p_i48547_4_, p_i48547_6_, p_i48547_8_);
-    }
-
-    public EntityChimeraProjectile(LivingEntity p_i48548_2_, Level p_i48548_3_) {
-        super(ModEntities.ENTITY_CHIMERA_SPIKE.get(), p_i48548_2_, p_i48548_3_);
-    }
-
     public EntityChimeraProjectile(Level world) {
         super(ModEntities.ENTITY_CHIMERA_SPIKE.get(), world);
     }
@@ -78,7 +70,7 @@ public class EntityChimeraProjectile extends AbstractArrow implements GeoEntity 
         boolean isEnderman = entity.getType() == EntityType.ENDERMAN;
         int k = entity.getRemainingFireTicks();
         if (this.isOnFire() && !isEnderman) {
-            entity.setSecondsOnFire(5);
+            entity.igniteForSeconds(5);
         }
 
         if (entity.hurt(damagesource, damage)) {

@@ -81,7 +81,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     public static String[] COLORS = {"brown", "cyan", "orange"};
 
     @Override
-    public int getExperienceReward() {
+    protected int getBaseExperienceReward() {
         return 0;
     }
 
@@ -208,14 +208,14 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(CHANNELING, false);
-        this.entityData.define(TAMED, false);
-        this.entityData.define(HOLDING_ESSENCE, false);
-        this.entityData.define(CHANNELING_ENTITY, -1);
-        this.entityData.define(BEING_TAMED, false);
-        this.entityData.define(COLOR, "brown");
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(CHANNELING, false);
+        pBuilder.define(TAMED, false);
+        pBuilder.define(HOLDING_ESSENCE, false);
+        pBuilder.define(CHANNELING_ENTITY, -1);
+        pBuilder.define(BEING_TAMED, false);
+        pBuilder.define(COLOR, "brown");
     }
 
     public boolean holdingEssence() {

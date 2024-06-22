@@ -13,13 +13,17 @@ import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import net.minecraft.core.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -116,7 +120,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
         if (manaCost > 0 && SourceUtil.takeSourceWithParticles(pos, world, 10, manaCost) == null)
             return;
         Networking.sendToNearby(world, pos, new PacketOneShotAnimation(pos));
-        Position iposition = getDispensePosition(new BlockSourceImpl(world, pos));
+        Position iposition = getDispensePosition(world.getBlockState(pos), pos);
         Direction direction = world.getBlockState(pos).getValue(FACING);
         FakePlayer fakePlayer = ANFakePlayer.getPlayer(world);
         fakePlayer.setPos(pos.getX(), pos.getY(), pos.getZ());
@@ -143,12 +147,12 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
     /**
      * Get the position where the dispenser at the given Coordinates should dispense to.
      */
-    public static Position getDispensePosition(BlockSource coords) {
-        Direction direction = coords.getBlockState().getValue(FACING);
-        double d0 = coords.x() + 0.5D * (double) direction.getStepX();
-        double d1 = coords.y() + 0.5D * (double) direction.getStepY();
-        double d2 = coords.z() + 0.5D * (double) direction.getStepZ();
-        return new PositionImpl(d0, d1, d2);
+    public static Position getDispensePosition(BlockState state, BlockPos pos) {
+        Direction direction = state.getValue(FACING);
+        double d0 = pos.getX() + 0.5D * (double) direction.getStepX();
+        double d1 = pos.getY() + 0.5D * (double) direction.getStepY();
+        double d2 = pos.getZ() + 0.5D * (double) direction.getStepZ();
+        return new Vec3(d0, d1, d2);
     }
 
     @Override
@@ -177,22 +181,22 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    protected ItemInteractionResult useItemOn(ItemStack pStack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult pHitResult) {
         if (handIn != InteractionHand.MAIN_HAND) {
-            return InteractionResult.PASS;
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         if (worldIn.isClientSide)
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(handIn);
         Spell spell = CasterUtil.getCaster(stack).getSpell();
         if (!spell.isEmpty()) {
             if(spell.getCastMethod() == null){
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.turret_needs_form"));
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
             if (!(TURRET_BEHAVIOR_MAP.containsKey(spell.getCastMethod()))) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.turret_type"));
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
             if (worldIn.getBlockEntity(pos) instanceof BasicSpellTurretTile tile) {
                 tile.spellCaster.copyFromCaster(CasterUtil.getCaster(stack));
@@ -202,7 +206,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
                 worldIn.sendBlockUpdated(pos, state, state, 2);
             }
         }
-        return super.use(state, worldIn, pos, player, handIn, hit);
+        return super.useItemOn(pStack, state, worldIn, pos, player, handIn, pHitResult);
     }
 
     @Override
@@ -231,9 +235,8 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
     //kept is as simple as possible for compat. with other turrets, needed for waterlogged. Does not keep track of turret direction
     static final VoxelShape shape = Block.box(4.6, 4.6, 4.6, 11.6, 11.6, 11.6);
 
-
     @Override
-    public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+    protected boolean isPathfindable(BlockState pState, PathComputationType pPathComputationType) {
         return false;
     }
 }

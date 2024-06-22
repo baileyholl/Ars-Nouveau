@@ -169,13 +169,14 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(OWNER_UUID, Optional.of(Util.NIL_UUID));
-        this.entityData.define(COLOR, ParticleColor.defaultParticleColor().getColor());
-        this.entityData.define(AGE, 0);
-        this.entityData.define(CAN_WALK, false);
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(OWNER_UUID, Optional.of(Util.NIL_UUID));
+        pBuilder.define(COLOR, ParticleColor.defaultParticleColor().getColor());
+        pBuilder.define(AGE, 0);
+        pBuilder.define(CAN_WALK, false);
     }
+
 
     @Override
     public void die(DamageSource cause) {
@@ -206,7 +207,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     @Override
-    public int getExperienceReward() {
+    protected int getBaseExperienceReward() {
         return 0;
     }
 
@@ -256,11 +257,6 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
-    }
-
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return new ClientboundAddEntityPacket(this, Block.getId(this.getBlockState()));
     }
 
     public BlockState getBlockState() {

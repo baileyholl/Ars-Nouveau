@@ -74,6 +74,10 @@ repositories {
         name = "Jared's maven"
         url = "https://maven.blamejared.com/"
     }
+    maven {
+        name = 'Forge'
+        url = "https://maven.minecraftforge.net"
+    }
 }
 
 jarJar.enable()
@@ -94,8 +98,9 @@ dependencies {
 //    compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}+${minecraft_version}:api"
 //    localRuntime "top.theillusivec4.curios:curios-neoforge:${curios_version}+${minecraft_version}"
 //
-//    compileOnly "mezz.jei:jei-1.20.4-neoforge-api:${jei_version}"
-//    localRuntime "mezz.jei:jei-1.20.4-neoforge:${jei_version}"
+    compileOnly "mezz.jei:jei-1.21-neoforge-api:${jei_version}"
+    localRuntime "mezz.jei:jei-1.21-neoforge:${jei_version}"
+    implementation 'com.github.glitchfiend:TerraBlender-neoforge:1.21-4.0.0.0'
 }
 
 tasks.withType(ProcessResources).configureEach {

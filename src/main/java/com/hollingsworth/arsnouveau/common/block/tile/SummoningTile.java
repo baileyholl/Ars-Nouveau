@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.common.block.ITickable;
-import com.hollingsworth.arsnouveau.common.util.registry.RegistryWrapper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,10 +17,6 @@ public class SummoningTile extends ModdedTile implements ITickable {
 
     public SummoningTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
-    }
-
-    public SummoningTile(RegistryWrapper<? extends BlockEntityType<?>> type, BlockPos pos, BlockState state) {
-        this(type.get(), pos, state);
     }
 
     @Override
@@ -38,14 +34,15 @@ public class SummoningTile extends ModdedTile implements ITickable {
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(compound, pRegistries);
         this.converted = compound.getBoolean("converted");
         this.isOff = compound.getBoolean("off");
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         tag.putBoolean("converted", converted);
         tag.putBoolean("off", isOff);
     }

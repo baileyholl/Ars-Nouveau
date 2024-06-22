@@ -206,8 +206,8 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         ListTag listTag = new ListTag();
         for(BlockPos pos : poweredFrom){
             CompoundTag posTag = new CompoundTag();

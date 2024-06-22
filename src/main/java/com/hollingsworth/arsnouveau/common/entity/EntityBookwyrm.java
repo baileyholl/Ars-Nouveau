@@ -312,15 +312,16 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     }
 
     public static AttributeSupplier.Builder attributes() {
-        return Mob.createMobAttributes().add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue())
+        return Mob.createMobAttributes().add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.value().getDefaultValue())
                 .add(Attributes.MAX_HEALTH, 6.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.3D);
     }
 
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(HELD_ITEM, ItemStack.EMPTY);
-        this.entityData.define(COLOR, "blue");
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(HELD_ITEM, ItemStack.EMPTY);
+        pBuilder.define(COLOR, "blue");
     }
 
     public static String[] COLORS = {"purple", "green", "blue", "black", "red", "white"};

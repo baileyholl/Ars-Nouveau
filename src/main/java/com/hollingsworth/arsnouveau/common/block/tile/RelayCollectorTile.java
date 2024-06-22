@@ -12,7 +12,7 @@ import java.util.List;
 public class RelayCollectorTile extends RelayTile {
 
     public RelayCollectorTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.RELAY_COLLECTOR_TILE, pos, state);
+        super(BlockRegistry.RELAY_COLLECTOR_TILE.get(), pos, state);
     }
 
     @Override

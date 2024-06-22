@@ -13,7 +13,7 @@ import software.bernie.geckolib.animation.PlayState;
 public class EnchantedTurretTile extends BasicSpellTurretTile {
 
     public EnchantedTurretTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.ENCHANTED_SPELL_TURRET_TYPE, pos, state);
+        super(BlockRegistry.ENCHANTED_SPELL_TURRET_TYPE.get(), pos, state);
     }
 
     @Override

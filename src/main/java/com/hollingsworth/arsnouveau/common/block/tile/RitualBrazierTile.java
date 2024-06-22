@@ -25,6 +25,7 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -215,11 +216,11 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(tag, pRegistries);
         String ritualIDString = tag.getString("ritualID");
         if (!ritualIDString.isEmpty()) {
-            ResourceLocation ritualID = new ResourceLocation(ritualIDString);
+            ResourceLocation ritualID = ResourceLocation.tryParse(ritualIDString);
             ritual = RitualRegistry.getRitual(ritualID);
             if (ritual != null) {
                 ritual.tile = this;
@@ -238,7 +239,8 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         if (ritual != null) {
             tag.putString("ritualID", ritual.getRegistryName().toString());
             ritual.write(tag);

@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -336,8 +337,8 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(compound, pRegistries);
         setStack = ItemStack.EMPTY;
         stackBeingCrafted = ItemStack.EMPTY;
         if (compound.contains("crafting")) {
@@ -365,8 +366,8 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound) {
-        super.saveAdditional(compound);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
 
         if (setStack != null) {
             CompoundTag itemTag = new CompoundTag();

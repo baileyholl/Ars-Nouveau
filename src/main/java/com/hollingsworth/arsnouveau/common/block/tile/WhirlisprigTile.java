@@ -13,6 +13,7 @@ import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -54,8 +55,9 @@ public class WhirlisprigTile extends SummoningTile implements GeoBlockEntity {
     public int progress;
     public Map<BlockState, Integer> genTable = new HashMap<>();
     public Map<BlockState, Integer> scoreMap = new HashMap<>();
+
     public WhirlisprigTile(BlockPos pPos, BlockState pState) {
-        super(BlockRegistry.WHIRLISPRIG_TILE, pPos, pState);
+        super(BlockRegistry.WHIRLISPRIG_TILE.get(), pPos, pState);
     }
 
     @Override
@@ -221,8 +223,8 @@ public class WhirlisprigTile extends SummoningTile implements GeoBlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         tag.putInt("moodScore", moodScore);
         tag.putInt("diversityScore", diversityScore);
         tag.putInt("progress", progress);
@@ -232,8 +234,8 @@ public class WhirlisprigTile extends SummoningTile implements GeoBlockEntity {
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(compound, pRegistries);
         moodScore = compound.getInt("moodScore");
         diversityScore = compound.getInt("diversityScore");
         progress = compound.getInt("progress");

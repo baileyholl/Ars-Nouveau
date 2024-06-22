@@ -15,7 +15,7 @@ import java.util.Set;
 public class AlchemicalSourcelinkTile extends SourcelinkTile {
 
     public AlchemicalSourcelinkTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.ALCHEMICAL_TILE, pos, state);
+        super(BlockRegistry.ALCHEMICAL_TILE.get(), pos, state);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class AlchemicalSourcelinkTile extends SourcelinkTile {
                     source += (e.getDuration() / 50);
                     source += e.getAmplifier() * 250;
                     source += 150;
-                    effectTypes.add(e.getEffect());
+                    effectTypes.add(e.getEffect().value());
                 }
                 if (effectTypes.size() > 1) {
                     source *= Math.pow(2.1, effectTypes.size());

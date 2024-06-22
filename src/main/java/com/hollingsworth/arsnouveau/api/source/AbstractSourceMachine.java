@@ -3,8 +3,8 @@ package com.hollingsworth.arsnouveau.api.source;
 import com.hollingsworth.arsnouveau.api.util.IWololoable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.ModdedTile;
-import com.hollingsworth.arsnouveau.common.util.registry.RegistryWrapper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,21 +22,17 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
         super(manaTile, pos, state);
     }
 
-    public AbstractSourceMachine(RegistryWrapper< ? extends BlockEntityType<?>> manaTile, BlockPos pos, BlockState state) {
-        this(manaTile.get(), pos, state);
-    }
-
     @Override
-    public void load(CompoundTag tag) {
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(tag, pRegistries);
         source = tag.getInt(SOURCE_TAG);
         maxSource = tag.getInt(MAX_SOURCE_TAG);
         color = ParticleColor.fromInt(tag.getInt(COLOR_TAG));
-        super.load(tag);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         tag.putInt(SOURCE_TAG, getSource());
         tag.putInt(MAX_SOURCE_TAG, getMaxSource());
         tag.putInt(COLOR_TAG, getColor().getColor());

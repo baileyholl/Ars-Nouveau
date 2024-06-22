@@ -11,12 +11,13 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -70,14 +71,13 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (worldIn.isClientSide)
-            return super.use(state, worldIn, pos, player, handIn, hit);
+            return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
 
         PotionJarTile tile = (PotionJarTile) worldIn.getBlockEntity(pos);
         if (tile == null)
-            return super.use(state, worldIn, pos, player, handIn, hit);
-        ItemStack stack = player.getItemInHand(handIn);
+            return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
         Potion potion = PotionUtils.getPotion(stack);
 
         if (stack.getItem() == Items.POTION && potion != Potions.EMPTY) {
@@ -88,7 +88,7 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
                     player.addItem(new ItemStack(Items.GLASS_BOTTLE));
                 }
             }
-            return super.use(state, worldIn, pos, player, handIn, hit);
+            return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
         }else if (stack.getItem() == Items.GLASS_BOTTLE && tile.getAmount() >= 100) {
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionUtils.setPotion(potionStack, tile.getData().getPotion());
@@ -106,7 +106,7 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
                 tile.remove(10);
             }
         }
-        return super.use(state, worldIn, pos, player, handIn, hit);
+        return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
     }
 
     @Override
@@ -126,8 +126,8 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext pContext, List<Component> tooltip, TooltipFlag pTooltipFlag) {
+        super.appendHoverText(stack, pContext, pTootipComponents, pTooltipFlag);
         if (stack.getTag() == null)
             return;
         int fill = stack.getTag().getCompound("BlockEntityTag").getInt("currentFill");
@@ -181,7 +181,7 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     @Override
-    public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+    public boolean isPathfindable(BlockState pState, PathComputationType pType) {
         return false;
     }
 }

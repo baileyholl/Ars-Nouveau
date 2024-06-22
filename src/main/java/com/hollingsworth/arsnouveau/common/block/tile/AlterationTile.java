@@ -12,6 +12,7 @@ import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -154,8 +155,8 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         CompoundTag armorTag = new CompoundTag();
         armorStack.save(armorTag);
         tag.put("armorStack", armorTag);
@@ -171,8 +172,8 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(compound, pRegistries);
         this.armorStack = ItemStack.of(compound.getCompound("armorStack"));
         int count = compound.getInt("numPerks");
         perkList = new ArrayList<>();

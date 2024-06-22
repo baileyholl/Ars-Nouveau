@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -40,21 +41,20 @@ public class ItemDetector extends TickableModBlock{
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        ItemStack stack = player.getItemInHand(handIn);
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (handIn == InteractionHand.MAIN_HAND) {
             if(worldIn.isClientSide){
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
             if ((stack.getItem() instanceof DominionWand) || !(worldIn.getBlockEntity(pos) instanceof ItemDetectorTile itemDetector))
-                return super.use(state, worldIn, pos, player, handIn, hit);
+                return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
             if (stack.isEmpty()) {
                 itemDetector.addCount(player.isShiftKeyDown() ? 8 : 1);
             }else if(!stack.isEmpty()){
                 itemDetector.setFilterStack(stack.copy());
             }
         }
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Override
@@ -77,7 +77,7 @@ public class ItemDetector extends TickableModBlock{
     }
 
     @Override
-    public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+    public boolean isPathfindable(BlockState pState, PathComputationType pType) {
         return false;
     }
 }

@@ -83,7 +83,7 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
         // TODO Replace with AN shears
         if (dupeCheck(world, p)) return;
         entity.setPos(p.getX(), p.getY(), p.getZ());
-        world.getBlockState(p).use(world, entity, InteractionHand.MAIN_HAND, rayTraceResult);
+        world.getBlockState(p).useItemOn(axe, world, entity, InteractionHand.MAIN_HAND, rayTraceResult);
         axe.useOn(new UseOnContext(entity, InteractionHand.MAIN_HAND, rayTraceResult));
     }
 
@@ -99,7 +99,7 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
         // TODO Replace with AN shears
         if (dupeCheck(world, p)) return;
         entity.setPos(p.getX(), p.getY(), p.getZ());
-        world.getBlockState(p).use(world, entity, InteractionHand.MAIN_HAND, rayTraceResult);
+        world.getBlockState(p).useItemOn(shears, world, entity, InteractionHand.MAIN_HAND, rayTraceResult);
         shears.useOn(new UseOnContext(entity, InteractionHand.MAIN_HAND, rayTraceResult));
     }
 

@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.util.registry.RegistryWrapper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -36,10 +37,6 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
 
     public SourcelinkTile(BlockEntityType<?> sourceLinkTile, BlockPos pos, BlockState state) {
         super(sourceLinkTile, pos, state);
-    }
-
-    public SourcelinkTile(RegistryWrapper<? extends BlockEntityType<?>> sourceLinkTile, BlockPos pos, BlockState state) {
-        super(sourceLinkTile.get(), pos, state);
     }
 
     @Override
@@ -109,15 +106,15 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(tag, pRegistries);
         progress = tag.getInt("progress");
         isDisabled = tag.getBoolean("disabled");
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         tag.putInt("progress", progress);
         tag.putBoolean("disabled", isDisabled);
     }

@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -22,7 +23,7 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
     ArrayList<BlockPos> fromList = new ArrayList<>();
 
     public RelaySplitterTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.RELAY_SPLITTER_TILE, pos, state);
+        super(BlockRegistry.RELAY_SPLITTER_TILE.get(), pos, state);
     }
 
     public RelaySplitterTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -132,8 +133,8 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(tag, pRegistries);
         fromList = new ArrayList<>();
         toList = new ArrayList<>();
         int counter = 0;
@@ -156,8 +157,8 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         int counter = 0;
         for (BlockPos p : this.fromList) {
             NBTUtil.storeBlockPos(tag, "from_" + counter, p);

@@ -9,7 +9,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -36,11 +38,6 @@ public class CraftingLecternBlock extends TickableModBlock {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, BlockGetter worldIn, List<Component> tooltip,
-			TooltipFlag flagIn) {
-	}
-
-	@Override
 	public PushReaction getPistonPushReaction(BlockState p_149656_1_) {
 		return PushReaction.BLOCK;
 	}
@@ -51,16 +48,16 @@ public class CraftingLecternBlock extends TickableModBlock {
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos,
-								 Player player, InteractionHand hand, BlockHitResult rtr) {
+	public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos,
+									 Player player, InteractionHand hand, BlockHitResult rtr) {
 		ItemStack heldStack = player.getItemInHand(hand);
 		if(world.isClientSide){
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 		}
 		if (heldStack.getItem() instanceof DominionWand
 				|| hand != InteractionHand.MAIN_HAND
 				|| heldStack.getItem() instanceof BookwyrmCharm) {
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		}
 
 		BlockEntity blockEntity_1 = world.getBlockEntity(pos);
@@ -69,7 +66,7 @@ public class CraftingLecternBlock extends TickableModBlock {
 				player.displayClientMessage(Component.translatable("ars_nouveau.invalid_lectern"), true);
 			}
 		}
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.SUCCESS;
 	}
 
 	@SuppressWarnings("deprecation")

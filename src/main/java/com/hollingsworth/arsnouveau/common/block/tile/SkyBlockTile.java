@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.event.timed.SkyweaveVisibilityEvent;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -65,15 +66,15 @@ public class SkyBlockTile extends MirrorWeaveTile implements ITickable, IDispell
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         tag.putBoolean("showFacade", showFacade);
         tag.putInt("previousLight", previousLight);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
+    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(pTag, pRegistries);
         showFacade = pTag.getBoolean("showFacade");
         previousLight = pTag.getInt("previousLight");
     }

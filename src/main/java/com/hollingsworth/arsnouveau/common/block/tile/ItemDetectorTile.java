@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -148,8 +149,8 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         if(connectedPos != null){
             tag.putLong("connectedPos", connectedPos.asLong());
         }
@@ -162,8 +163,8 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
+    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(pTag, pRegistries);
         if(pTag.contains("connectedPos")){
             connectedPos = BlockPos.of(pTag.getLong("connectedPos"));
         }

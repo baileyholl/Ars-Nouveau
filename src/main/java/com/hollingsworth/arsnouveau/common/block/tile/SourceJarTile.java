@@ -16,15 +16,11 @@ import java.util.List;
 public class SourceJarTile extends AbstractSourceMachine implements ITooltipProvider, ITickable {
 
     public SourceJarTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.SOURCE_JAR_TILE, pos, state);
+        super(BlockRegistry.SOURCE_JAR_TILE.get(), pos, state);
     }
 
     public SourceJarTile(BlockEntityType<? extends SourceJarTile> tileTileEntityType, BlockPos pos, BlockState state) {
         super(tileTileEntityType, pos, state);
-    }
-
-    public SourceJarTile(RegistryWrapper<? extends BlockEntityType<?>> type, BlockPos pos, BlockState state) {
-        super(type.get(), pos, state);
     }
 
     @Override

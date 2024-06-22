@@ -5,8 +5,9 @@ import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
-import net.neoforged.bus.api.Cancelable;
 import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
+
 import javax.annotation.Nullable;
 
 /**
@@ -28,8 +29,7 @@ public class DispelEvent extends Event {
         this.context = spellContext;
     }
 
-    @Cancelable
-    public static class Pre extends DispelEvent {
+    public static class Pre extends DispelEvent implements ICancellableEvent {
         public Pre(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats augments, SpellContext spellContext) {
             super(rayTraceResult, world, shooter, augments, spellContext);
         }

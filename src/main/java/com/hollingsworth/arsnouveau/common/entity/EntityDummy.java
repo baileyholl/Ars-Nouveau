@@ -62,9 +62,9 @@ public class EntityDummy extends PathfinderMob implements ISummon {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(OWNER_UUID, Optional.of(Util.NIL_UUID));
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(OWNER_UUID, Optional.of(Util.NIL_UUID));
     }
 
     @Override
@@ -123,7 +123,7 @@ public class EntityDummy extends PathfinderMob implements ISummon {
 
     public ResourceLocation getSkinTextureLocation() {
         PlayerInfo networkplayerinfo = this.getPlayerInfo();
-        return networkplayerinfo == null ? DefaultPlayerSkin.getDefaultSkin(getOwnerUUID()) : networkplayerinfo.getSkinLocation();
+        return networkplayerinfo == null ? DefaultPlayerSkin.getDefaultTexture() : networkplayerinfo.getSkin().texture();
     }
 
     @Nullable

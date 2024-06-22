@@ -25,7 +25,7 @@ public class MycelialSourcelinkTile extends SourcelinkTile {
     }
 
     public MycelialSourcelinkTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.MYCELIAL_TILE, pos, state);
+        super(BlockRegistry.MYCELIAL_TILE.get(), pos, state);
     }
 
 

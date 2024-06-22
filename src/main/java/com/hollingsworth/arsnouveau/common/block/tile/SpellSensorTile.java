@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -148,8 +149,8 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         tag.putInt("outputDuration", outputDuration);
         tag.putInt("outputStrength", outputStrength);
         tag.putBoolean("isOnResolve", isOnResolve);
@@ -157,8 +158,8 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(pTag, pRegistries);
         this.outputDuration = pTag.getInt("outputDuration");
         this.outputStrength = pTag.getInt("outputStrength");
         this.isOnResolve = pTag.getBoolean("isOnResolve");

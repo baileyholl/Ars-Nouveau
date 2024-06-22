@@ -12,10 +12,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,11 +43,11 @@ public class ImbuementBlock extends TickableModBlock {
 
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!(worldIn.getBlockEntity(pos) instanceof ImbuementTile tile))
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         if (worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND)
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
 
         if (tile.stack.isEmpty() && !player.getItemInHand(handIn).isEmpty()) {
 
@@ -83,16 +85,17 @@ public class ImbuementBlock extends TickableModBlock {
             tile.draining = false;
             tile.updateBlock();
         }
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Override
-    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
+    public BlockState playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         super.playerWillDestroy(worldIn, pos, state, player);
         if (!(worldIn.getBlockEntity(pos) instanceof ImbuementTile))
-            return;
+            return state;
         ItemStack stack = ((ImbuementTile) worldIn.getBlockEntity(pos)).stack;
         worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack.copy()));
         ((ImbuementTile) worldIn.getBlockEntity(pos)).stack = ItemStack.EMPTY;
+        return state;
     }
 }

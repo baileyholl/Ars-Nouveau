@@ -20,6 +20,7 @@ import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
@@ -507,7 +508,8 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound) {
+    public void saveAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(compound, pRegistries);
         compound.put("sortSettings", sortSettings.toTag());
         ListTag list = new ListTag();
         for (BlockPos pos : connectedInventories) {
@@ -529,7 +531,8 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     }
 
     @Override
-    public void load(CompoundTag compound) {
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(compound, pRegistries);
         if (compound.contains("sortSettings")) {
             sortSettings = SortSettings.fromTag(compound.getCompound("sortSettings"));
         }
@@ -550,7 +553,6 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             }
         }
         updateItems = true;
-        super.load(compound);
     }
 
     public String getLastSearch() {

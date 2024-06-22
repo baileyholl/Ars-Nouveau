@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.world.entity.LivingEntity;
@@ -40,8 +41,8 @@ public class MageBlockTile extends ModdedTile implements ITickable, IDispellable
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(compound, pRegistries);
         this.age = compound.getInt("age");
         this.color = ParticleColorRegistry.from(compound.getCompound("lightColor"));
         this.isPermanent = compound.getBoolean("permanent");

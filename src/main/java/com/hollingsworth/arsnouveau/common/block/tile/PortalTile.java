@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.items.WarpScroll;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketWarpPosition;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -73,8 +74,8 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
 
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(compound, pRegistries);
         this.dimID = compound.getString("dim");
         this.warpPos = NBTUtil.getBlockPos(compound, "warp");
         this.rotationVec = new Vec2(compound.getFloat("xRot"), compound.getFloat("yRot"));
@@ -83,7 +84,8 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound) {
+    public void saveAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         if (this.warpPos != null) {
             NBTUtil.storeBlockPos(compound, "warp", this.warpPos);
         }

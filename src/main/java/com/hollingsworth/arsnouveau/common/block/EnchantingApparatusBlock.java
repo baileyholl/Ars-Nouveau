@@ -12,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -45,17 +46,17 @@ public class EnchantingApparatusBlock extends TickableModBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 
         if (world.isClientSide || handIn != InteractionHand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof EnchantingApparatusTile tile))
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         if (tile.isCrafting)
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
 
 
         if (!(world.getBlockState(pos.below()).getBlock() instanceof ArcaneCore)) {
             PortUtil.sendMessage(player, Component.translatable("alert.core"));
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
         if (tile.getStack() == null || tile.getStack().isEmpty()) {
             IEnchantingRecipe recipe = tile.getRecipe(player.getMainHandItem(), player);
@@ -85,7 +86,7 @@ public class EnchantingApparatusBlock extends TickableModBlock {
         }
 
         world.sendBlockUpdated(pos, state, state, 2);
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Override
@@ -94,11 +95,12 @@ public class EnchantingApparatusBlock extends TickableModBlock {
     }
 
     @Override
-    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
+    public BlockState playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         super.playerWillDestroy(worldIn, pos, state, player);
         if (worldIn.getBlockEntity(pos) instanceof EnchantingApparatusTile tile && tile.getStack() != null) {
             worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.getStack()));
         }
+        return state;
     }
 
     @Override
@@ -107,7 +109,7 @@ public class EnchantingApparatusBlock extends TickableModBlock {
     }
 
     @Override
-    public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+    public boolean isPathfindable(BlockState pState, PathComputationType pType) {
         return false;
     }
 }
