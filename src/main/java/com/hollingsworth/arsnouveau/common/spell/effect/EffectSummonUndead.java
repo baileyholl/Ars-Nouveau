@@ -46,7 +46,7 @@ public class EffectSummonUndead extends AbstractEffect {
             if ((spellStats.hasBuff(AugmentPierce.INSTANCE))) {
                 weapon = Items.BOW.getDefaultInstance();
                 if (spellStats.getAmpMultiplier() > 0)
-                    weapon.enchant(Enchantments.POWER_ARROWS, Math.max(4, (int) spellStats.getAmpMultiplier()) - 1);
+                    weapon.enchant(Enchantments.POWER, Math.max(4, (int) spellStats.getAmpMultiplier()) - 1);
             } else {
                 if (spellStats.getAmpMultiplier() >= 3) {
                     weapon = Items.NETHERITE_AXE.getDefaultInstance();
@@ -63,7 +63,7 @@ public class EffectSummonUndead extends AbstractEffect {
             undeadentity.setLimitedLife(ticks);
             summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, undeadentity);
         }
-        shooter.addEffect(new MobEffectInstance(ModPotions.SUMMONING_SICKNESS_EFFECT.get(), ticks));
+        shooter.addEffect(new MobEffectInstance(ModPotions.SUMMONING_SICKNESS_EFFECT, ticks));
     }
 
     @Override

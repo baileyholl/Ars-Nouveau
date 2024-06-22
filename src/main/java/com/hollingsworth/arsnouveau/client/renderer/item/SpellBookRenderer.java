@@ -14,7 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemDisplayContext;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.object.Color;
+import software.bernie.geckolib.util.Color;
 import software.bernie.geckolib.model.GeoModel;
 
 import javax.annotation.Nullable;

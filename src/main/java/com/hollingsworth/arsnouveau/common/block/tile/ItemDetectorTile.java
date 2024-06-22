@@ -19,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.CombinedInvWrapper;
 import org.jetbrains.annotations.Nullable;
@@ -52,7 +52,7 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
         if(tile == null){
             return;
         }
-        IItemHandler handler = tile.getCapability(Capabilities.ITEM_HANDLER).orElse(null);
+        IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, connectedPos, null);
         if(handler == null){
             return;
         }
@@ -83,7 +83,7 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
                 return stack.getCount();
             }
         }
-        if (!ItemStack.isSameItemSameTags(stack, filterStack)) {
+        if (!ItemStack.isSameItemSameComponents(stack, filterStack)) {
             return 0;
         }
         return (filterStack.isEmpty() && stack.isEmpty()) ? 1 : stack.getCount();
@@ -118,7 +118,7 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
     @Override
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         if(storedPos != null){
-            if(level.getBlockEntity(storedPos) == null || !level.getBlockEntity(storedPos).getCapability(Capabilities.ITEM_HANDLER).isPresent()){
+            if(level.getBlockEntity(storedPos) == null || level.getCapability(Capabilities.ItemHandler.BLOCK, connectedPos, null) == null){
                 return;
             }
             if(BlockUtil.distanceFrom(storedPos, worldPosition) > 30){

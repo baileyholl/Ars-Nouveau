@@ -20,7 +20,7 @@ import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.animatable.model.CoreGeoBone;
-import software.bernie.geckolib.object.Color;
+import software.bernie.geckolib.util.Color;
 
 public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
     public SpellCrossbowRenderer() {

@@ -76,15 +76,15 @@ public class WorldgenRegistry {
     public static final ResourceKey<PlacedFeature> PLACED_LIGHTS = registerPlacedKey("placed_lights");
 
     public static ResourceKey<Feature<?>> registerFeatureKey(String name) {
-        return ResourceKey.create(Registries.FEATURE, new ResourceLocation(MODID, name));
+        return ResourceKey.create(Registries.FEATURE, ArsNouveau.prefix(name));
     }
 
     public static ResourceKey<ConfiguredFeature<?, ?>> registerConfKey(String name) {
-        return ResourceKey.create(Registries.CONFIGURED_FEATURE, new ResourceLocation(MODID, name));
+        return ResourceKey.create(Registries.CONFIGURED_FEATURE, ArsNouveau.prefix(name));
     }
 
     public static ResourceKey<PlacedFeature> registerPlacedKey(String name) {
-        return ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation(MODID, name));
+        return ResourceKey.create(Registries.PLACED_FEATURE, ArsNouveau.prefix(name));
     }
 
     public static void bootstrapConfiguredFeatures(BootstrapContext<ConfiguredFeature<?, ?>> context) {

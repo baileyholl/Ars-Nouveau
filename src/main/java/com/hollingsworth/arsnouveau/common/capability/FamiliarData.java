@@ -23,7 +23,7 @@ public class FamiliarData {
 
     public FamiliarData(CompoundTag tag) {
         this.entityTag = tag.contains(ENTITY_TAG) ? tag.getCompound(ENTITY_TAG) : new CompoundTag();
-        this.familiarHolder = FamiliarRegistry.getFamiliarHolderMap().getOrDefault(new ResourceLocation(tag.getString(FAMILIAR_ID)),
+        this.familiarHolder = FamiliarRegistry.getFamiliarHolderMap().getOrDefault(ResourceLocation.tryParse(tag.getString(FAMILIAR_ID)),
                 FamiliarRegistry.getFamiliarHolderMap().get(ArsNouveau.prefix( LibEntityNames.FAMILIAR_WIXIE)));
     }
 

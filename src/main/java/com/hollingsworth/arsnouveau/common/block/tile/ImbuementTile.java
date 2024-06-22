@@ -47,7 +47,6 @@ import java.util.List;
 
 
 public class ImbuementTile extends AbstractSourceMachine implements Container, ITickable, GeoBlockEntity, ITooltipProvider, IPedestalMachine {
-    private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     public ItemStack stack = ItemStack.EMPTY;
     public ItemEntity entity;
     public boolean draining;
@@ -252,21 +251,6 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     public void clearContent() {
         this.stack = ItemStack.EMPTY;
         updateBlock();
-    }
-
-   @NotNull
-    @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, final @Nullable Direction side) {
-        if (cap == Capabilities.ITEM_HANDLER) {
-            return itemHandler.cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        itemHandler.invalidate();
-        super.invalidateCaps();
     }
 
     @Override

@@ -38,8 +38,6 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.entity.IEntityAdditionalSpawnData;
-import net.neoforged.neoforge.network.NetworkHooks;
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
@@ -130,9 +128,8 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(OWNER_ID, -1);
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        pBuilder.define(OWNER_ID, -1);
     }
 
     /**

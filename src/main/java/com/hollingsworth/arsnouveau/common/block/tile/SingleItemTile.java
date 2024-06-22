@@ -11,14 +11,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.wrapper.InvWrapper;
-import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
 
 public class SingleItemTile extends ModdedTile implements Container{
-    private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     protected ItemStack stack = ItemStack.EMPTY;
     public ItemEntity renderEntity;
 
@@ -26,9 +20,6 @@ public class SingleItemTile extends ModdedTile implements Container{
         super(tileEntityTypeIn, pos, state);
     }
 
-    public SingleItemTile(RegistryWrapper<? extends BlockEntityType<?>> tileEntityTypeIn, BlockPos pos, BlockState state) {
-        this(tileEntityTypeIn.get(), pos, state);
-    }
 
     @Override
     public int getContainerSize() {
@@ -95,21 +86,6 @@ public class SingleItemTile extends ModdedTile implements Container{
     public void setStack(ItemStack otherStack){
         this.stack = otherStack;
         updateBlock();
-    }
-
-   @NotNull
-    @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, final @Nullable Direction side) {
-        if (cap == Capabilities.ITEM_HANDLER) {
-            return itemHandler.cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        itemHandler.invalidate();
-        super.invalidateCaps();
     }
 
     @Override

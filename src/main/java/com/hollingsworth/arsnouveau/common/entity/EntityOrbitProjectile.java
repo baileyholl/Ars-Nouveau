@@ -20,8 +20,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.NetworkHooks;
-import net.neoforged.neoforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -186,13 +184,13 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(OFFSET, 0);
-        this.entityData.define(ACCELERATES, 0);
-        this.entityData.define(AOE, 0f);
-        this.entityData.define(TOTAL, 0);
-        this.entityData.define(LAST_POS, Vec3.ZERO);
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(OFFSET, 0);
+        pBuilder.define(ACCELERATES, 0);
+        pBuilder.define(AOE, 0f);
+        pBuilder.define(TOTAL, 0);
+        pBuilder.define(LAST_POS, Vec3.ZERO);
     }
 
     @Override

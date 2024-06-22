@@ -16,8 +16,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 @EventBusSubscriber(modid = ArsNouveau.MODID, value = Dist.CLIENT)
 public class CameraController {
@@ -30,7 +30,7 @@ public class CameraController {
     private static boolean wasRightPressed;
 
     @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
+    public static void onClientTick(ClientTickEvent event) {
         Entity cameraEntity = Minecraft.getInstance().cameraEntity;
 
         if (cameraEntity instanceof ScryerCamera cam) {

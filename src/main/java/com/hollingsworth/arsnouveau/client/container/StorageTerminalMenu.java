@@ -299,7 +299,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 					}
 				} else {
 					if (!stack.isEmpty()) {
-						if (ItemStack.isSameItemSameTags(stack, clicked.getStack()) && stack.getCount() + 1 <= stack.getMaxStackSize()) {
+						if (ItemStack.isSameItemSameComponents(stack, clicked.getStack()) && stack.getCount() + 1 <= stack.getMaxStackSize()) {
 							StoredItemStack pulled = te.pullStack(clicked, 1, selectedTab);
 							if (pulled != null) {
 								stack.grow(1);

@@ -79,13 +79,12 @@ public abstract class ColoredProjectile extends Projectile {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(RED, 255);
-        this.entityData.define(GREEN, 25);
-        this.entityData.define(BLUE, 180);
-        this.entityData.define(PARTICLE_TAG, new ParticleColor(255, 25, 180).serialize());
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        pBuilder.define(RED, 255);
+        pBuilder.define(GREEN, 25);
+        pBuilder.define(BLUE, 180);
+        pBuilder.define(PARTICLE_TAG, new ParticleColor(255, 25, 180).serialize());
     }
-
 
     @Nullable
     protected EntityHitResult findHitEntity(Vec3 pStartVec, Vec3 pEndVec) {

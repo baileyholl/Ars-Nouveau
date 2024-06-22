@@ -44,7 +44,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
     public static final int craftingLength = 210;
 
     public EnchantingApparatusTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.ENCHANTING_APP_TILE, pos, state);
+        super(BlockRegistry.ENCHANTING_APP_TILE.get(), pos, state);
     }
 
     @Override

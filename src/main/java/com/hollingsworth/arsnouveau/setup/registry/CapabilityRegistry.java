@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSyncPlayerCap;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -14,9 +15,15 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.EntityCapability;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
+
+import java.util.List;
 
 public class CapabilityRegistry {
 
@@ -70,9 +77,6 @@ public class CapabilityRegistry {
         }
     }
 
-    /**
-     * Event handler for the {@link IManaCap} capability.
-     */
     @SuppressWarnings("unused")
     @EventBusSubscriber(modid = ArsNouveau.MODID)
     public static class EventHandler {
@@ -81,6 +85,10 @@ public class CapabilityRegistry {
         public static void registerCapabilities(final RegisterCapabilitiesEvent event) {
             event.registerEntity(MANA_CAPABILITY, EntityType.PLAYER, (player, ctx) -> new ManaCap());
             event.registerEntity(PLAYER_DATA_CAP, EntityType.PLAYER, (player, ctx) -> new ANPlayerDataCap());
+            var containers = List.of(BlockRegistry.ENCHANTING_APP_TILE, BlockRegistry.IMBUEMENT_TILE, BlockRegistry.SCRIBES_TABLE_TILE);
+            for(var container : containers){
+                event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, container.get(), (c, side) -> new InvWrapper(c));
+            }
         }
 
         /**

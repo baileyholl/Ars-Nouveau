@@ -22,7 +22,7 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.object.Color;
+import software.bernie.geckolib.util.Color;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.util.RenderUtil;
