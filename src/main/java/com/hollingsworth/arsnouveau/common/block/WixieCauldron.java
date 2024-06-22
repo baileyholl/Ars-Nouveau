@@ -8,7 +8,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -29,9 +31,10 @@ public class WixieCauldron extends SummonBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND || !(worldIn.getBlockEntity(pos) instanceof WixieCauldronTile) || player.getMainHandItem().getItem() == ItemsRegistry.DOMINION_ROD.get())
-            return InteractionResult.PASS;
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        if (worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND || !(worldIn.getBlockEntity(pos) instanceof WixieCauldronTile) || player.getMainHandItem().getItem() == ItemsRegistry.DOMINION_ROD.get()){
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        }
 
         if (player.getMainHandItem().getItem() != ItemsRegistry.WIXIE_CHARM.get()
                 && !player.getMainHandItem().isEmpty()
@@ -43,9 +46,9 @@ public class WixieCauldron extends SummonBlock {
                 cauldronTile.setSetStack(player.getMainHandItem().copy());
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.wixie.recipe_set"));
             }
-            return InteractionResult.CONSUME;
+            return ItemInteractionResult.CONSUME;
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override

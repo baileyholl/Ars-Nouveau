@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.animatable.model.CoreGeoBone;
+
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.util.Color;
 import software.bernie.geckolib.model.GeoModel;
@@ -58,7 +58,7 @@ public class AnimBlockRenderer<BOBBY extends AnimBlockSummon> extends GeoEntityR
             @Override
             public void setCustomAnimations(BOBBY animatable, long instanceId, AnimationState<BOBBY> customPredicate) {
                 super.setCustomAnimations(animatable, instanceId, customPredicate);
-                CoreGeoBone head = this.getAnimationProcessor().getBone("block");
+                GeoBone head = this.getAnimationProcessor().getBone("block");
                 head.setHidden(!(animatable.getBlockState().getBlock() instanceof MageBlock));
             }
         });

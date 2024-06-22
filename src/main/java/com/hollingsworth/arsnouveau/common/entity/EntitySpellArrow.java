@@ -27,8 +27,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.NetworkHooks;
-import net.neoforged.neoforge.network.PlayMessages;
 
 public class EntitySpellArrow extends Arrow {
     public SpellResolver spellResolver;
@@ -266,11 +264,11 @@ public class EntitySpellArrow extends Arrow {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(RED, 0);
-        this.entityData.define(GREEN, 0);
-        this.entityData.define(BLUE, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(RED, 0);
+        pBuilder.define(GREEN, 0);
+        pBuilder.define(BLUE, 0);
     }
 
     @Override
@@ -307,12 +305,4 @@ public class EntitySpellArrow extends Arrow {
         return ModEntities.ENTITY_SPELL_ARROW.get();
     }
 
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
-    public EntitySpellArrow(PlayMessages.SpawnEntity packet, Level world) {
-        super(ModEntities.ENTITY_SPELL_ARROW.get(), world);
-    }
 }

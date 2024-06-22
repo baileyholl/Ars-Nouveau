@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.TimerSpellTurretTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -30,18 +31,17 @@ public class TimerSpellTurret extends BasicSpellTurret {
 
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        ItemStack stack = player.getItemInHand(handIn);
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (handIn == InteractionHand.MAIN_HAND) {
             if ((stack.getItem() instanceof ICasterTool) || worldIn.isClientSide)
-                return super.use(state, worldIn, pos, player, handIn, hit);
+                return super.useItemOn(stack,state, worldIn, pos, player, handIn, hit);
             if (worldIn.getBlockEntity(pos) instanceof TimerSpellTurretTile timerSpellTurretTile) {
                 if (timerSpellTurretTile.isLocked)
-                    return InteractionResult.SUCCESS;
+                    return ItemInteractionResult.SUCCESS;
                 timerSpellTurretTile.addTime(20 * (player.isShiftKeyDown() ? 10 : 1));
             }
         }
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Override

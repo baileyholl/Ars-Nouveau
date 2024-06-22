@@ -19,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.animatable.model.CoreGeoBone;
+
 import software.bernie.geckolib.util.Color;
 
 public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
@@ -39,9 +39,9 @@ public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
 
     @Override
     public void renderFinal(PoseStack poseStack, SpellCrossbow animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTicks, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        CoreGeoBone right = model.getBone("bow_right").get();
-        CoreGeoBone gem = model.getBone("gem").get();
-        CoreGeoBone left = model.getBone("bow_left").get();
+        GeoBone right = model.getBone("bow_right").get();
+        GeoBone gem = model.getBone("gem").get();
+        GeoBone left = model.getBone("bow_left").get();
         double ticks = animatable.getTick(animatable);
         float outerAngle = (float) (((ticks + partialTicks) / 10.0f) % 360);
 

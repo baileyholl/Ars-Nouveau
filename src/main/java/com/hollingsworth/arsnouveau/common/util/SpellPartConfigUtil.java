@@ -60,7 +60,7 @@ public class SpellPartConfigUtil {
                     .map(AUGMENT_LIMITS_PATTERN::matcher)
                     .filter(Matcher::matches)
                     .collect(Collectors.toMap(
-                            m -> new ResourceLocation(m.group(1)),
+                            m -> ResourceLocation.tryParse(m.group(1)),
                             m -> Integer.valueOf(m.group(2))
                     ));
         }
@@ -189,7 +189,7 @@ public class SpellPartConfigUtil {
                     .map(AUGMENT_LIMITS_PATTERN::matcher)
                     .filter(Matcher::matches)
                     .collect(Collectors.toMap(
-                            m -> new ResourceLocation(m.group(1)),
+                            m -> ResourceLocation.tryParse(m.group(1)),
                             m -> Integer.valueOf(m.group(2))
                     ));
         }

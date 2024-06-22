@@ -11,7 +11,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.animatable.model.CoreGeoBone;
+
 import software.bernie.geckolib.util.RenderUtil;
 
 
@@ -24,7 +24,7 @@ public class EnchantingApparatusRenderer extends ArsGeoBlockRenderer<EnchantingA
     @Override
     public void renderFinal(PoseStack stack, EnchantingApparatusTile tile, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         super.renderFinal(stack, tile, model, bufferSource, buffer, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-        CoreGeoBone frame = model.getBone("frame_all").orElse(null);
+        GeoBone frame = model.getBone("frame_all").orElse(null);
         if (frame != null && tile.getStack() != null) {
             double x = tile.getBlockPos().getX();
             double y = tile.getBlockPos().getY();

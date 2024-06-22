@@ -23,7 +23,7 @@ public class RegistryHelper {
     }
 
     public static ResourceLocation getRegistryName(Enchantment e) {
-        return BuiltInRegistries.ENCHANTMENT.getKey(e);
+        return BuiltInRegistries.ENCHANTMENT_EFFECT_COMPONENT_TYPE.getKey(e);
     }
 
     public static ResourceLocation getRegistryName(ParticleType<?> type) {

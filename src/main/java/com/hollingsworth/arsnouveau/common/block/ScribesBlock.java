@@ -12,6 +12,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -37,27 +38,27 @@ public class ScribesBlock extends TableBlock {
 
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public ItemInteractionResult useItemOn(ItemStack heldStack,BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (world.isClientSide || handIn != InteractionHand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof ScribesTile tile)) {
-            return InteractionResult.PASS;
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         if (player.getItemInHand(handIn).getItem() instanceof SpellBook && !player.isShiftKeyDown()) {
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
                     new PacketOpenGlyphCraft(pos));
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
 
         if (state.getValue(ScribesBlock.PART) != ThreePartBlock.HEAD) {
             BlockEntity tileEntity = world.getBlockEntity(pos.relative(ScribesBlock.getConnectedDirection(state)));
             tile = tileEntity instanceof ScribesTile ? (ScribesTile) tileEntity : null;
             if (tile == null)
-                return InteractionResult.PASS;
+                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
         if (!player.isShiftKeyDown()) {
 
             if (tile.consumeStack(player.getItemInHand(handIn))) {
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
 
             if (!tile.getStack().isEmpty() && player.getItemInHand(handIn).isEmpty()) {
@@ -79,10 +80,10 @@ public class ScribesBlock extends TableBlock {
         if (player.isShiftKeyDown()) {
             ItemStack stack = tile.getStack();
             if(player.getItemInHand(handIn).getItem() instanceof DominionWand){
-                return InteractionResult.PASS;
+                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
             }
             if (stack == null || stack.isEmpty())
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
 
             if (stack.getItem() instanceof IScribeable scribeable) {
                 scribeable.onScribe(world, pos, player, handIn, stack);
@@ -91,7 +92,7 @@ public class ScribesBlock extends TableBlock {
             }
         }
 
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Override

@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.common.perk.RepairingPerk;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -44,12 +45,12 @@ import java.util.function.Consumer;
 public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDyeable, GeoItem, IVariantColorProvider<ItemStack> {
     public GeoModel<AnimatedMagicArmor> model;
 
-    public AnimatedMagicArmor(ArmorMaterial materialIn, ArmorItem.Type slot, Properties builder, GeoModel<AnimatedMagicArmor> model) {
+    public AnimatedMagicArmor(Holder<ArmorMaterial> materialIn, ArmorItem.Type slot, Properties builder, GeoModel<AnimatedMagicArmor> model) {
         super(materialIn, slot, builder);
         this.model = model;
     }
 
-    public AnimatedMagicArmor(ArmorMaterial materialIn, ArmorItem.Type slot, GeoModel<AnimatedMagicArmor> model) {
+    public AnimatedMagicArmor(Holder<ArmorMaterial> materialIn, ArmorItem.Type slot, GeoModel<AnimatedMagicArmor> model) {
         this(materialIn, slot, ItemsRegistry.defaultItemProperties().stacksTo(1), model);
     }
 

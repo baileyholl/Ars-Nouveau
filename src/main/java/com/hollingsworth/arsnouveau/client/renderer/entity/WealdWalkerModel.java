@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.common.entity.WealdWalker;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.animatable.model.CoreGeoBone;
+
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
@@ -24,13 +24,13 @@ public class WealdWalkerModel<W extends WealdWalker> extends GeoModel<W> {
     public void setCustomAnimations(W entity, long uniqueID, @Nullable AnimationState<W> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
 
-        CoreGeoBone head = this.getAnimationProcessor().getBone("head");
+        GeoBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraData().get(DataTickets.ENTITY_MODEL_DATA);
         head.setRotX(extraData.headPitch() * 0.010453292F);
         head.setRotY(extraData.netHeadYaw() * 0.015453292F);
         if (entity.getEntityData().get(WealdWalker.CASTING)) {
-            CoreGeoBone frontLeftLeg = this.getAnimationProcessor().getBone("leg_right");
-            CoreGeoBone frontRightLeg = this.getAnimationProcessor().getBone("leg_left");
+            GeoBone frontLeftLeg = this.getAnimationProcessor().getBone("leg_right");
+            GeoBone frontRightLeg = this.getAnimationProcessor().getBone("leg_left");
             frontLeftLeg.setRotX(Mth.cos(entity.walkAnimation.position() * 0.6662F) * 1.4F * entity.walkAnimation.speed());
             frontRightLeg.setRotX(Mth.cos(entity.walkAnimation.position() * 0.6662F + (float) Math.PI) * 1.4F * entity.walkAnimation.speed());
         }

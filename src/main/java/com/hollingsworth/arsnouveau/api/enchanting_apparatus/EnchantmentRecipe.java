@@ -20,6 +20,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -95,7 +96,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
     @Override
     public ItemStack assemble(EnchantingApparatusTile inv, RegistryAccess p_267165_) {
         ItemStack stack = inv.getStack().getItem() == Items.BOOK ? new ItemStack(Items.ENCHANTED_BOOK) : inv.getStack().copy();
-        Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
+        ItemEnchantments enchantments = EnchantmentHelper.getEnchantmentsForCrafting(stack);
         enchantments.put(enchantment, enchantLevel);
         EnchantmentHelper.setEnchantments(enchantments, stack);
         return stack;

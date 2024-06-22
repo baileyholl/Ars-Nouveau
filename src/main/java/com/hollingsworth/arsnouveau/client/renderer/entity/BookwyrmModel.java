@@ -5,7 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.animatable.GeoAnimatable;
-import software.bernie.geckolib.animatable.model.CoreGeoBone;
+
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
@@ -22,7 +22,7 @@ public class BookwyrmModel<T extends LivingEntity & GeoAnimatable> extends GeoMo
     public void setCustomAnimations(T entity, long uniqueID, @Nullable AnimationState<T> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
 
-        CoreGeoBone head = this.getAnimationProcessor().getBone("head");
+        GeoBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraData().get(DataTickets.ENTITY_MODEL_DATA);
         head.setRotX(extraData.headPitch() * 0.010453292F);
         head.setRotY(extraData.netHeadYaw() * 0.015453292F);

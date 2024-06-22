@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.WildenChimera;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.animatable.model.CoreGeoBone;
+
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
@@ -23,7 +23,7 @@ public class WildenChimeraModel extends GeoModel<WildenChimera> {
     public void setCustomAnimations(WildenChimera entity, long uniqueID, @Nullable AnimationState customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
 
-        CoreGeoBone head = this.getAnimationProcessor().getBone("head");
+        GeoBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraData().get(DataTickets.ENTITY_MODEL_DATA);
         if(!entity.isFlying()){
             head.setRotY(extraData.netHeadYaw() * 0.012453292F);

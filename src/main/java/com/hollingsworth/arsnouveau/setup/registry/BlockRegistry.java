@@ -2,10 +2,9 @@ package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.renderer.tile.*;
-import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.block.LightBlock;
+import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.block.tile.*;
-import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.items.MobJarItem;
 import com.hollingsworth.arsnouveau.common.items.ModBlockItem;
 import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
@@ -14,6 +13,7 @@ import com.hollingsworth.arsnouveau.common.util.registry.BlockEntityTypeRegistry
 import com.hollingsworth.arsnouveau.common.util.registry.BlockRegistryWrapper;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTree;
 import com.hollingsworth.arsnouveau.common.world.tree.SupplierBlockStateProvider;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;

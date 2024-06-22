@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -65,9 +66,9 @@ public class RitualBrazierBlock extends TickableModBlock {
     public static final Property<Boolean> LIT = BooleanProperty.create("lit");
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!(worldIn.getBlockEntity(pos) instanceof RitualBrazierTile tile) || handIn != InteractionHand.MAIN_HAND)
-            return super.use(state, worldIn, pos, player, handIn, hit);
+            return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
         ItemStack heldStack = player.getMainHandItem();
         if (heldStack.isEmpty() && tile.ritual != null && !tile.isRitualDone()) {
             tile.startRitual(player);
@@ -75,7 +76,7 @@ public class RitualBrazierBlock extends TickableModBlock {
         if(!heldStack.isEmpty()){
             tile.tryBurnStack(heldStack);
         }
-        return super.use(state, worldIn, pos, player, handIn, hit);
+        return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
     }
 
     @Override

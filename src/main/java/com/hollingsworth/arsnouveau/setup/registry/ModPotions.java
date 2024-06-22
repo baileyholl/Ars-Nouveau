@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.potions.*;
@@ -18,8 +19,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
 import java.util.ArrayList;
-import java.util.UUID;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 import static com.hollingsworth.arsnouveau.common.lib.LibPotions.*;
@@ -35,7 +36,7 @@ public class ModPotions {
     public static final DeferredHolder<MobEffect, PublicEffect> MANA_REGEN_EFFECT = EFFECTS.register(MANA_REGEN, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, 8080895) {
         @Override
         public void addAttributeModifiers(AttributeMap pAttributeMap, int pAmplifier) {
-            AttributeModifier attributemodifier = new AttributeModifier(UUID.fromString("bb72a21d-3e49-4e8e-b81c-3bfa9cf746b0"), this.getDescriptionId(), ServerConfig.MANA_REGEN_POTION.get() * (1 + pAmplifier), AttributeModifier.Operation.ADD_VALUE);
+            AttributeModifier attributemodifier = new AttributeModifier(ArsNouveau.prefix("mana_regen_bonus"), ServerConfig.MANA_REGEN_POTION.get() * (1 + pAmplifier), AttributeModifier.Operation.ADD_VALUE);
             pAttributeMap.getInstance(PerkAttributes.MANA_REGEN_BONUS).addTransientModifier(attributemodifier);
             super.addAttributeModifiers(pAttributeMap, pAmplifier);
         }
@@ -45,7 +46,7 @@ public class ModPotions {
     public static final DeferredHolder<MobEffect, PublicEffect> HEX_EFFECT = EFFECTS.register(HEX, () -> new PublicEffect(MobEffectCategory.HARMFUL, 8080895) {
         @Override
         public void addAttributeModifiers(AttributeMap pAttributeMap, int pAmplifier) {
-            pAttributeMap.getInstance(PerkAttributes.MANA_REGEN_BONUS).addTransientModifier(new AttributeModifier(UUID.fromString("5636ef7d-0136-4205-aabc-fd7cf0d29d05"), this.getDescriptionId(), -0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+            pAttributeMap.getInstance(PerkAttributes.MANA_REGEN_BONUS).addTransientModifier(new AttributeModifier(ArsNouveau.prefix("hex_regen_penalty"), -0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
             super.addAttributeModifiers(pAttributeMap, pAmplifier);
         }
     });
@@ -54,13 +55,7 @@ public class ModPotions {
     public static final DeferredHolder<MobEffect, SnareEffect> SNARE_EFFECT = EFFECTS.register(SNARE, SnareEffect::new);
     public static final DeferredHolder<MobEffect, FlightEffect> FLIGHT_EFFECT = EFFECTS.register(FLIGHT, FlightEffect::new);
     public static final DeferredHolder<MobEffect, GravityEffect> GRAVITY_EFFECT = EFFECTS.register(GRAVITY, GravityEffect::new);
-    public static final DeferredHolder<MobEffect, PublicEffect> SPELL_DAMAGE_EFFECT = EFFECTS.register(SPELL_DAMAGE, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, new ParticleColor(30, 200, 200).getColor()) {
-        @Override
-        public void addAttributeModifiers(AttributeMap pAttributeMap, int pAmplifier) {
-            pAttributeMap.getInstance(PerkAttributes.MANA_REGEN_BONUS).addTransientModifier(new AttributeModifier(UUID.fromString("7a8b8f12-077b-430c-8da7-fd21c95dceb3"), this.getDescriptionId(), 1.5F * (1 + pAmplifier), AttributeModifier.Operation.ADD_VALUE));
-            super.addAttributeModifiers(pAttributeMap, pAmplifier);
-        }
-    });
+    public static final DeferredHolder<MobEffect, PublicEffect> SPELL_DAMAGE_EFFECT = EFFECTS.register(SPELL_DAMAGE, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, new ParticleColor(30, 200, 200).getColor()));
     public static final DeferredHolder<MobEffect, ImmolateEffect> IMMOLATE_EFFECT = EFFECTS.register(IMMOLATE, ImmolateEffect::new);
     public static final DeferredHolder<MobEffect, BounceEffect> BOUNCE_EFFECT = EFFECTS.register(BOUNCE, BounceEffect::new);
     public static final DeferredHolder<MobEffect, MagicFindEffect> MAGIC_FIND_EFFECT = EFFECTS.register(MAGIC_FIND, MagicFindEffect::new);

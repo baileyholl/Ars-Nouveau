@@ -90,8 +90,8 @@ public class SingleItemTile extends ModdedTile implements Container{
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(tag, pRegistries);
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(compound, pRegistries);
         stack = ItemStack.of((CompoundTag) compound.get("itemStack"));
     }
 

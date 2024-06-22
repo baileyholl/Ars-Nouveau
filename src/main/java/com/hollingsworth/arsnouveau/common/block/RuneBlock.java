@@ -17,6 +17,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
@@ -70,8 +71,7 @@ public class RuneBlock extends TickableModBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        ItemStack stack = player.getItemInHand(handIn);
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 
         if (worldIn.getBlockEntity(pos) instanceof RuneTile runeTile) {
 
@@ -79,23 +79,23 @@ public class RuneBlock extends TickableModBlock {
                 if (runeTile.isTemporary) {
                     runeTile.isTemporary = false;
                     PortUtil.sendMessage(player, Component.translatable("ars_nouveau.rune.setperm"));
-                    return InteractionResult.SUCCESS;
+                    return ItemInteractionResult.SUCCESS;
                 }
             }
             if (!(stack.getItem() instanceof SpellParchment) || worldIn.isClientSide)
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             Spell spell = CasterUtil.getCaster(stack).getSpell();
             if (spell.isEmpty())
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
 
             if (!(spell.recipe.get(0) instanceof MethodTouch)) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.rune.touch"));
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
             runeTile.setSpell(spell);
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.spell_set"));
         }
-        return super.use(state, worldIn, pos, player, handIn, hit);
+        return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
     }
 
 

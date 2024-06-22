@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.util.Mth;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.animatable.model.CoreGeoBone;
+
 
 public class ScryerOculusRenderer extends ArsGeoBlockRenderer<ScryersOculusTile> {
 
@@ -22,7 +22,7 @@ public class ScryerOculusRenderer extends ArsGeoBlockRenderer<ScryersOculusTile>
 
     @Override
     public void actuallyRender(PoseStack poseStack, ScryersOculusTile pBlockEntity, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        CoreGeoBone eye = this.getGeoModel().getBone("eye").orElse(null);
+        GeoBone eye = this.getGeoModel().getBone("eye").orElse(null);
         if (eye == null)
             return;
 
