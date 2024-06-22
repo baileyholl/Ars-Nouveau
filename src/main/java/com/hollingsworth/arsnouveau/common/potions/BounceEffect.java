@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
@@ -25,7 +26,7 @@ public class BounceEffect extends MobEffect {
     @SubscribeEvent
     public static void onFall(LivingFallEvent event) {
         LivingEntity entity = event.getEntity();
-        if (entity == null || !entity.hasEffect(ModPotions.BOUNCE_EFFECT.get())) {
+        if (entity == null || !entity.hasEffect(ModPotions.BOUNCE_EFFECT)) {
             return;
         }
         boolean isPlayer = entity instanceof Player;
@@ -40,7 +41,7 @@ public class BounceEffect extends MobEffect {
                 event.setDamageMultiplier(0);
                 entity.fallDistance = 0.0F;
                 if (!isPlayer || isClient) {
-                    double f = 0.95d - .1 * entity.getEffect(ModPotions.BOUNCE_EFFECT.get()).getAmplifier();
+                    double f = 0.95d - .1 * entity.getEffect(ModPotions.BOUNCE_EFFECT).getAmplifier();
                     // only slow down half as much when bouncing
                     entity.setDeltaMovement(entity.getDeltaMovement().x / f, entity.getDeltaMovement().y * (-0.9), entity.getDeltaMovement().z / f);
                     entity.hurtMarked = true;
@@ -59,7 +60,7 @@ public class BounceEffect extends MobEffect {
     @SubscribeEvent
     public static void onFlyWallDamage(LivingHurtEvent event) {
         LivingEntity entity = event.getEntity();
-        if (entity == null || !entity.hasEffect(ModPotions.BOUNCE_EFFECT.get())) {
+        if (entity == null || !entity.hasEffect(ModPotions.BOUNCE_EFFECT)) {
             return;
         }
         boolean isPlayer = entity instanceof Player;

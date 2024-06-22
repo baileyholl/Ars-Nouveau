@@ -51,7 +51,7 @@ import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
 import net.neoforged.neoforge.client.gui.overlay.NamedGuiOverlay;
 import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+
 import org.jetbrains.annotations.Nullable;
 
 import static com.hollingsworth.arsnouveau.client.events.ClientEvents.localize;

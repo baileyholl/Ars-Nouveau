@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+
 import java.util.function.Function;
 
 public abstract class AbstractSupplierBlockStateProvider extends BlockStateProvider {

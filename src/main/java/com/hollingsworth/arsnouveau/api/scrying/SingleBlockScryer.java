@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+
 
 public class SingleBlockScryer implements IScryer {
     public static SingleBlockScryer INSTANCE = new SingleBlockScryer(null);
