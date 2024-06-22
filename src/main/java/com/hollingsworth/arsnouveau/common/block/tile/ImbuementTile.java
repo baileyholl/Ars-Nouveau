@@ -9,37 +9,29 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.util.LazyOptional;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.wrapper.InvWrapper;
-import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
-import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -47,11 +39,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ImbuementTile extends AbstractSourceMachine implements Container, ITickable, GeoBlockEntity, ITooltipProvider, IPedestalMachine {
+public class ImbuementTile extends AbstractSourceMachine implements Container, ITickable, GeoBlockEntity, ITooltipProvider, IPedestalMachine, RecipeInput {
     public ItemStack stack = ItemStack.EMPTY;
     public ItemEntity entity;
     public boolean draining;
-    RecipeHolder<T> recipe;
+    ImbuementRecipe recipe;
     int backoff;
     public float frames;
     boolean hasRecipe;
@@ -94,7 +86,8 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
                 }
             }
             if(!stack.isEmpty() && recipe == null){
-                this.recipe = getRecipeNow();
+                RecipeHolder<ImbuementRecipe> holder = getRecipeNow();
+                this.recipe = holder != null ? holder.value() : null;
             }
             return;
         }
@@ -111,9 +104,9 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
         // Restore the recipe on world restart
         if (recipe == null) {
-            RecipeHolder<T> foundRecipe = getRecipeNow();
+            RecipeHolder<ImbuementRecipe> foundRecipe = getRecipeNow();
             if(foundRecipe != null){
-                this.recipe = foundRecipe;
+                this.recipe = foundRecipe.value();
                 this.craftTicks = 100;
             }
         }
@@ -167,19 +160,17 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(tag, pRegistries);
-        stack = ItemStack.of((CompoundTag) tag.get("itemStack"));
+        stack = ItemStack.parseOptional(pRegistries, (CompoundTag) tag.get("itemStack"));
         draining = tag.getBoolean("draining");
         this.hasRecipe = tag.getBoolean("hasRecipe");
         this.craftTicks = tag.getInt("craftTicks");
-        super.load(tag);
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
         if (stack != null) {
-            CompoundTag reagentTag = new CompoundTag();
-            stack.save(reagentTag);
+            Tag reagentTag = stack.save(pRegistries);
             tag.put("itemStack", reagentTag);
         }
         tag.putBoolean("draining", draining);
@@ -207,7 +198,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         if (stack.isEmpty() || !this.stack.isEmpty())
             return false;
         this.stack = stack.copy();
-        RecipeHolder<T> recipe = getRecipeNow();
+        RecipeHolder<ImbuementRecipe> recipe = getRecipeNow();
         this.stack = ItemStack.EMPTY;
         return recipe != null;
     }
@@ -220,6 +211,11 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     @Override
     public ItemStack getItem(int index) {
         return stack;
+    }
+
+    @Override
+    public int size() {
+        return 1;
     }
 
     @Override
@@ -292,18 +288,18 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         return pedestalList(getBlockPos(), 1, getLevel());
     }
 
-    public @Nullable RecipeHolder<T> getRecipeNow(){
+    public @Nullable RecipeHolder<ImbuementRecipe> getRecipeNow(){
         return level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream()
-                .filter(f -> f.matches(this, level)).findFirst().orElse(null);
+                .filter(f -> f.value().matches(this, level)).findFirst().orElse(null);
     }
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        RecipeHolder<T> recipe = getRecipeNow();
-        if(recipe != null && !recipe.output.isEmpty() && stack != null && !stack.isEmpty()) {
-            tooltip.add(Component.translatable("ars_nouveau.crafting", recipe.output.getHoverName()));
-            if(recipe.source > 0) {
-                tooltip.add(Component.translatable("ars_nouveau.crafting_progress", Math.min(100, (getSource() * 100) / recipe.source)).withStyle(ChatFormatting.GOLD));
+        RecipeHolder<ImbuementRecipe> recipe = getRecipeNow();
+        if(recipe != null && !recipe.value().output.isEmpty() && stack != null && !stack.isEmpty()) {
+            tooltip.add(Component.translatable("ars_nouveau.crafting", recipe.value().output.getHoverName()));
+            if(recipe.value().source > 0) {
+                tooltip.add(Component.translatable("ars_nouveau.crafting_progress", Math.min(100, (getSource() * 100) / recipe.value().source)).withStyle(ChatFormatting.GOLD));
             }
         }
     }

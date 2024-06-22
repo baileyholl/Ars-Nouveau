@@ -79,7 +79,7 @@ public class WildenHunter extends Monster implements GeoEntity, IAnimationListen
     }
 
     @Override
-    public int getExperienceReward() {
+    public int getBaseExperienceReward() {
         return 5;
     }
 

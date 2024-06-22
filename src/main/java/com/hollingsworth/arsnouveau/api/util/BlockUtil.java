@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.UsernameCache;
 import net.neoforged.neoforge.common.util.FakePlayer;
@@ -151,10 +152,10 @@ public class BlockUtil {
         if (world == null || pos == null) return new ArrayList<>();
         ArrayList<IItemHandler> iInventories = new ArrayList<>();
         for (Direction d : Direction.values()) {
-            BlockEntity tileEntity = world.getBlockEntity(pos.relative(d));
-            if (tileEntity == null)
-                continue;
-            tileEntity.getCapability(Capabilities.ITEM_HANDLER).ifPresent(iInventories::add);
+            var cap = world.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
+            if(cap != null){
+                iInventories.add(cap);
+            }
         }
 
         return iInventories;

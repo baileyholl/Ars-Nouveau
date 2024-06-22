@@ -4,8 +4,9 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -95,11 +96,11 @@ public class SourceManager {
 
 
     @SubscribeEvent
-    public static void serverTick(TickEvent.LevelTickEvent e) {
+    public static void serverTick(LevelTickEvent.Post e) {
 
-        if (e.level.isClientSide || e.phase != TickEvent.Phase.END)
+        if (e.getLevel().isClientSide)
             return;
 
-        INSTANCE.tick(e.level);
+        INSTANCE.tick(e.getLevel());
     }
 }

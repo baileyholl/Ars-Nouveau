@@ -150,7 +150,7 @@ public class Spell implements Cloneable {
         CompoundTag recipeTag = tag.getCompound("recipe");
         int size = recipeTag.getInt("size");
         for (int i = 0; i < size; i++) {
-            ResourceLocation registryName = new ResourceLocation(recipeTag.getString("part" + i));
+            ResourceLocation registryName = ResourceLocation.tryParse(recipeTag.getString("part" + i));
             AbstractSpellPart part = GlyphRegistry.getSpellpartMap().get(registryName);
             if (part != null)
                 spell.recipe.add(part);

@@ -12,14 +12,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
+public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingRecipe> {
 	protected StorageLecternTile te;
 	protected int playerSlotsStart;
 	protected List<SlotStorage> storageSlotList = new ArrayList<>();
@@ -180,7 +183,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 	}
 
 	@Override
-	public boolean recipeMatches(Recipe<? super CraftingContainer> recipeIn) {
+	public boolean recipeMatches(RecipeHolder pRecipe) {
 		return false;
 	}
 

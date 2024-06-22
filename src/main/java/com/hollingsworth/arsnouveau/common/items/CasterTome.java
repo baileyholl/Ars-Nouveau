@@ -67,7 +67,7 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
 
         if (Config.GLYPH_TOOLTIPS.get() || Screen.hasShiftDown()) {
             if (caster.isSpellHidden()) {
-                tooltip2.add(Component.literal(caster.getHiddenRecipe()).withStyle(Style.EMPTY.withFont(new ResourceLocation("minecraft", "alt")).withColor(ChatFormatting.GOLD)));
+                tooltip2.add(Component.literal(caster.getHiddenRecipe()).withStyle(Style.EMPTY.withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "alt")).withColor(ChatFormatting.GOLD)));
             }
             if (!caster.getFlavorText().isEmpty())
                 tooltip2.add(Component.literal(caster.getFlavorText()).withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE)));

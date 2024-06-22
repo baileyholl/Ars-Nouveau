@@ -11,6 +11,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -72,18 +73,18 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     }
 
     public int getColor() {
-        return this.data.getPotion() == null ? 16253176 : PotionUtils.getColor(this.data.fullEffects());
+        return this.data.getPotion() == null ? 16253176 : PotionContents.getColor(this.data.fullEffects());
     }
 
     public boolean canAccept(PotionData otherData, int amount){
-        if(otherData == null || otherData.getPotion() == Potions.EMPTY)
+        if(otherData == null || otherData.getPotion() == PotionContents.EMPTY)
             return false;
         return (!this.isLocked && this.getAmount() <= 0) || (amount <= (this.getMaxFill() - this.getAmount()) && otherData.areSameEffects(this.data));
     }
 
     public void add(PotionData other, int amount){
         if(this.currentFill == 0){
-            if(!this.data.equals(other) || (this.data.getPotion() == Potions.EMPTY)) {
+            if(!this.data.equals(other) || (this.data.getPotion() == PotionContents.EMPTY)) {
                 this.data = other;
             }
             currentFill += amount;
@@ -112,7 +113,7 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(pTag, pRegistries);
+        super.loadAdditional(tag, pRegistries);
         if(tag.contains("potionData"))
             this.data = PotionData.fromTag(tag.getCompound("potionData"));
         this.isLocked = tag.getBoolean("locked");
@@ -127,7 +128,7 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
         tag.putInt("currentFill", this.currentFill);
 
         // Include a sorted list of potion names so quests can check the jar's contents
-        Set<Potion> potionSet = this.data.getIncludedPotions();
+        Set<PotionContents> potionSet = this.data.getIncludedPotions();
         List<String> potionNames = new ArrayList<>(potionSet.stream().map(potion -> NeoForgeRegistries.POTIONS.getKey(potion).toString()).toList());
         potionNames.sort(String::compareTo);
         tag.putString("potionNames", String.join(",", potionNames));

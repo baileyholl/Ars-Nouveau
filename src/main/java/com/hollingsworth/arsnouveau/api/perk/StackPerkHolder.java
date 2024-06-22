@@ -38,7 +38,7 @@ public abstract class StackPerkHolder extends ItemstackData implements IPerkHold
                 CompoundTag perkTag = perkTagList.getCompound(i);
                 String perkName = perkTag.getString("perk");
                 CompoundTag perkData = perkTag.getCompound("data");
-                IPerk iPerk = PerkRegistry.getPerkMap().getOrDefault(new ResourceLocation(perkName), StarbunclePerk.INSTANCE);
+                IPerk iPerk = PerkRegistry.getPerkMap().getOrDefault(ResourceLocation.tryParse(perkName), StarbunclePerk.INSTANCE);
                 perkList.add(iPerk);
                 this.perkTags.put(iPerk, perkData);
             }

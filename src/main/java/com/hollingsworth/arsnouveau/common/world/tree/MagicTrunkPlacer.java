@@ -36,7 +36,7 @@ public class MagicTrunkPlacer extends TrunkPlacer {
     public MagicTrunkPlacer(int baseHeight, int height_rand_a, int height_rand_b, boolean isWorldGen, String podName) {
         this(baseHeight, height_rand_a, height_rand_b);
         this.isWorldGen = isWorldGen;
-        this.podID = new ResourceLocation(podName);
+        this.podID = ResourceLocation.tryParse(podName);
     }
 
     @Override

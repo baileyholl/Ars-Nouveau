@@ -75,7 +75,7 @@ public class StableWarpScroll extends ModItem{
         tooltip2.add(Component.translatable("ars_nouveau.position", pos.getX(), pos.getY(), pos.getZ()));
         String dimId = data.getDimension();
         if(dimId != null) {
-            ResourceLocation resourceLocation = new ResourceLocation(dimId);
+            ResourceLocation resourceLocation = ResourceLocation.tryParse(dimId);
             tooltip2.add(Component.translatable(resourceLocation.getPath() + "." + resourceLocation.getNamespace() + ".name"));
         }
     }

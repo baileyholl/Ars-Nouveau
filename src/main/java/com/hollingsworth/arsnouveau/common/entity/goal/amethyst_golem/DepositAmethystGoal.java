@@ -9,8 +9,6 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import java.util.function.Supplier;
 
-import static net.neoforged.neoforge.common.capabilities.Capabilities.ITEM_HANDLER;
-
 public class DepositAmethystGoal extends Goal {
     public AmethystGolem golem;
     public Supplier<Boolean> canUse;

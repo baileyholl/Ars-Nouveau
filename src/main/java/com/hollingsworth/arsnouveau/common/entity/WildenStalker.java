@@ -109,7 +109,7 @@ public class WildenStalker extends Monster implements GeoEntity {
     }
 
     @Override
-    public int getExperienceReward() {
+    public int getBaseExperienceReward() {
         return 8;
     }
 

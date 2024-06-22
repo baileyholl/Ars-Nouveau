@@ -6,8 +6,10 @@ import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -27,7 +29,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraftforge.common.loot.IGlobalLootModifier;
+import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -37,6 +39,11 @@ public record DispelEntityRecipe(ResourceLocation id, EntityType<?> entity, Reso
     @Override
     public boolean matches(Container container, Level level) {
         return false;
+    }
+
+    @Override
+    public ItemStack assemble(Container p_345149_, HolderLookup.Provider p_346030_) {
+        return null;
     }
 
     public boolean matches(LivingEntity killer, Entity victim) {
@@ -56,8 +63,8 @@ public record DispelEntityRecipe(ResourceLocation id, EntityType<?> entity, Reso
                 .withParameter(LootContextParams.ORIGIN, victim.position())
                 .withParameter(LootContextParams.THIS_ENTITY, victim)
                 .withParameter(LootContextParams.DAMAGE_SOURCE, killer.damageSources().mobAttack(killer))
-                .withOptionalParameter(LootContextParams.KILLER_ENTITY, killer)
-                .withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, killer);
+                .withOptionalParameter(LootContextParams.ATTACKING_ENTITY, killer)
+                .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, killer);
         if (killer instanceof ServerPlayer serverPlayer) {
             params = params.withOptionalParameter(LootContextParams.LAST_DAMAGE_PLAYER, serverPlayer)
                     .withLuck(serverPlayer.getLuck());
@@ -70,7 +77,7 @@ public record DispelEntityRecipe(ResourceLocation id, EntityType<?> entity, Reso
 
         LootParams params = getLootParams(killer, victim);
 
-        LootTable lootTable = killer.level().getServer().getLootData().getLootTable(lootTable());
+        LootTable lootTable = killer.level().registryAccess().registryOrThrow(Registries.LOOT_TABLE).get(lootTable());
 
         return lootTable.getRandomItems(params);
     }
@@ -83,6 +90,11 @@ public record DispelEntityRecipe(ResourceLocation id, EntityType<?> entity, Reso
     @Override
     public boolean canCraftInDimensions(int i, int i1) {
         return false;
+    }
+
+    @Override
+    public ItemStack getResultItem(HolderLookup.Provider pRegistries) {
+        return null;
     }
 
     @Override

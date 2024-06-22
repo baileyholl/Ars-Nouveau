@@ -9,8 +9,8 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+
 import javax.annotation.Nullable;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -164,7 +164,7 @@ public class ANAdvancementBuilder implements net.neoforged.neoforge.common.exten
     }
 
     public AdvancementHolder save(Consumer<AdvancementHolder> pConsumer) {
-        return this.save(pConsumer, new ResourceLocation(modid, fileKey));
+        return this.save(pConsumer, ResourceLocation.fromNamespaceAndPath(modid, fileKey));
     }
 
     public String toString() {

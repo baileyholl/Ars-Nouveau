@@ -27,7 +27,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class ScryEvents {
             CompoundTag tag = ClientInfo.persistentData;
             if (!tag.contains("an_scryer"))
                 return;
-            IScryer scryer = ArsNouveauAPI.getInstance().getScryer(new ResourceLocation(tag.getCompound("an_scryer").getString("id"))).fromTag(tag.getCompound("an_scryer"));
+            IScryer scryer = ArsNouveauAPI.getInstance().getScryer(ResourceLocation.tryParse(tag.getCompound("an_scryer").getString("id"))).fromTag(tag.getCompound("an_scryer"));
             if (scryer == null)
                 return;
             Player playerEntity = event.player;

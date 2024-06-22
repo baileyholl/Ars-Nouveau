@@ -183,11 +183,11 @@ public class Config {
         ITEM_LIGHTMAP = new HashMap<>();
         // Copy values from ENTITY_LIGHT_CONFIG to ENTITY_LIGHT_MAP
         for(Map.Entry<String, Integer> entry : ConfigUtil.parseMapConfig(ENTITY_LIGHT_CONFIG).entrySet()){
-            ENTITY_LIGHT_MAP.put(new ResourceLocation(entry.getKey()), entry.getValue());
+            ENTITY_LIGHT_MAP.put(ResourceLocation.tryParse(entry.getKey()), entry.getValue());
         }
         // Copy values from ITEM_LIGHT_CONFIG to ITEM_LIGHT_MAP
         for(Map.Entry<String, Integer> entry : ConfigUtil.parseMapConfig(ITEM_LIGHT_CONFIG).entrySet()){
-            ITEM_LIGHTMAP.put(new ResourceLocation(entry.getKey()), entry.getValue());
+            ITEM_LIGHTMAP.put(ResourceLocation.tryParse(entry.getKey()), entry.getValue());
         }
     }
 

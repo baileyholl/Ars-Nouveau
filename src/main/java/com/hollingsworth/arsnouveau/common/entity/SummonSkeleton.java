@@ -212,7 +212,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     }
 
     @Override
-    public int getExperienceReward() {
+    public int getBaseExperienceReward() {
         return 0;
     }
 

@@ -271,7 +271,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
         super.loadAdditional(compound, pRegistries);
         stack = ItemStack.of((CompoundTag) compound.get("itemStack"));
         if (compound.contains("recipe")) {
-            recipeID = new ResourceLocation(compound.getString("recipe"));
+            recipeID = ResourceLocation.tryParse(compound.getString("recipe"));
         }
         CompoundTag itemsTag = new CompoundTag();
         itemsTag.putInt("numStacks", consumedStacks.size());

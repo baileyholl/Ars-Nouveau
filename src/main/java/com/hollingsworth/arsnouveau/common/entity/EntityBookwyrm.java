@@ -285,7 +285,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     }
 
     @Override
-    public int getExperienceReward() {
+    public int getBaseExperienceReward() {
         return 0;
     }
 

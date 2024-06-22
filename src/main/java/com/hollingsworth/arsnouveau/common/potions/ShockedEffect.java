@@ -6,7 +6,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
 public class ShockedEffect extends MobEffect {
@@ -35,10 +35,10 @@ public class ShockedEffect extends MobEffect {
             }
         }
 
-        IEnergyStorage energyStorage = entity.getMainHandItem().getCapability(Capabilities.ENERGY).orElse(null);
+        IEnergyStorage energyStorage = entity.getMainHandItem().getCapability(Capabilities.EnergyStorage.ITEM);
         if (energyStorage != null)
             multiplier++;
-        energyStorage = entity.getOffhandItem().getCapability(Capabilities.ENERGY).orElse(null);
+        energyStorage = entity.getOffhandItem().getCapability(Capabilities.EnergyStorage.ITEM);
         if (energyStorage != null)
             multiplier++;
         if (multiplier > 0) {

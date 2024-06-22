@@ -10,14 +10,14 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
+import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import org.jetbrains.annotations.Nullable;
 
 public class DenySpawnRitual extends RangeRitual {
     public int radius = 32;
     public boolean deniedSpawn;
 
-    public boolean denySpawn(MobSpawnEvent.FinalizeSpawn checkSpawn){
+    public boolean denySpawn(FinalizeSpawnEvent checkSpawn){
         boolean shouldDeny = checkSpawn.getSpawnType() == MobSpawnType.NATURAL
                 && checkSpawn.getEntity() instanceof Enemy
                 && checkSpawn.getEntity().distanceToSqr(getPos().getX(), getPos().getY(), getPos().getZ()) <= radius * radius;

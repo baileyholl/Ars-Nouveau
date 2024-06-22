@@ -64,7 +64,7 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
                 .add(EntityType.ARMOR_STAND)
                 .add(EntityType.LIGHTNING_BOLT)
                 .add(ModEntities.LIGHTNING_ENTITY.get())
-                .add(EntityType.TRIDENT).addOptional(new ResourceLocation("create:contraption"));
+                .add(EntityType.TRIDENT).addOptional(ResourceLocation.parse("create:contraption"));
         this.tag(EntityTags.LINGERING_BLACKLIST)
                 .add(ModEntities.LIGHTNING_ENTITY.get(), ModEntities.LINGER_SPELL.get(), ModEntities.WALL_SPELL.get());
         this.tag(EntityTags.BERRY_BLACKLIST)

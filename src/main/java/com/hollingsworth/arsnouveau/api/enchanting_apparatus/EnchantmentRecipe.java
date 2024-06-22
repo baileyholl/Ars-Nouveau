@@ -134,7 +134,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
 
         @Override
         public EnchantmentRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(GsonHelper.getAsString(json, "enchantment")));
+            Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.tryParse(GsonHelper.getAsString(json, "enchantment")));
             int level = GsonHelper.getAsInt(json, "level", 1);
             int manaCost = GsonHelper.getAsInt(json, "sourceCost", 0);
             JsonArray pedestalItems = GsonHelper.getAsJsonArray(json, "pedestalItems");
@@ -170,7 +170,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
                     break;
                 }
             }
-            return new EnchantmentRecipe(stacks, ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(enchantID)), level, manaCost);
+            return new EnchantmentRecipe(stacks, ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.tryParse(enchantID)), level, manaCost);
         }
 
         @Override

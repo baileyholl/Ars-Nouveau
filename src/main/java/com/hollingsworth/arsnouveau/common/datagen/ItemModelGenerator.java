@@ -163,16 +163,16 @@ public class ItemModelGenerator extends ItemModelProvider {
 
     private ResourceLocation itemTexture(final Item item) {
         final ResourceLocation name = registryName(item);
-        return new ResourceLocation(name.getNamespace(), "item" + "/" + name.getPath());
+        return ResourceLocation.fromNamespaceAndPath(name.getNamespace(), "item" + "/" + name.getPath());
     }
 
     private ResourceLocation itemTexture(final Block item) {
         final ResourceLocation name = registryName(item);
-        return new ResourceLocation(name.getNamespace(), "item" + "/" + name.getPath());
+        return ResourceLocation.fromNamespaceAndPath(name.getNamespace(), "item" + "/" + name.getPath());
     }
 
     private ResourceLocation spellTexture(final Item item) {
         final ResourceLocation name = registryName(item);
-        return new ResourceLocation(name.getNamespace(), "item" + "/" + name.getPath().replace("glyph_", ""));
+        return ResourceLocation.fromNamespaceAndPath(name.getNamespace(), "item" + "/" + name.getPath().replace("glyph_", ""));
     }
 }

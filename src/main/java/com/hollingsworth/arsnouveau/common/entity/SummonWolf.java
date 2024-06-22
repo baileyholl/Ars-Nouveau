@@ -84,7 +84,7 @@ public class SummonWolf extends Wolf implements ISummon {
     }
 
     @Override
-    public int getExperienceReward() {
+    public int getBaseExperienceReward() {
         return 0;
     }
 

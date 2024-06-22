@@ -74,7 +74,7 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
     }
 
     @Override
-    public int getExperienceReward() {
+    public int getBaseExperienceReward() {
         return 0;
     }
 

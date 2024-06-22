@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.util;
 
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.event.ManaRegenCalcEvent;
 import com.hollingsworth.arsnouveau.api.event.MaxManaCalcEvent;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
@@ -9,6 +10,7 @@ import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
@@ -23,13 +25,14 @@ public class ManaUtil {
     public static int getPlayerDiscounts(LivingEntity e, Spell spell, ItemStack casterStack) {
         if (e == null) return 0;
         AtomicInteger discounts = new AtomicInteger();
-        CuriosUtil.getAllWornItems(e).ifPresent(items -> {
+        var items = CuriosUtil.getAllWornItems(e);
+        if(items != null){
             for (int i = 0; i < items.getSlots(); i++) {
                 ItemStack item = items.getStackInSlot(i);
                 if (item.getItem() instanceof IManaDiscountEquipment discountItem)
                     discounts.addAndGet(discountItem.getManaDiscount(item, spell));
             }
-        });
+        }
         for (ItemStack armor : e.getArmorSlots()) {
             if (armor.getItem() instanceof IManaDiscountEquipment discountItem)
                 discounts.addAndGet(discountItem.getManaDiscount(armor, spell));
@@ -56,8 +59,8 @@ public class ManaUtil {
 
     // UUIDs for the configurable bonus on mana attributes, to include them in multiplier calculations.
     // Only updated if the value changes.
-    static final UUID MAX_MANA_MODIFIER = UUID.fromString("6662fdb1-bc67-49bc-9bba-8e306bbc1ae6");
-    static final UUID MANA_REGEN_MODIFIER = UUID.fromString("3bd42486-6a51-44c4-a88f-04021af5df03");
+    static final ResourceLocation MAX_MANA_MODIFIER = ArsNouveau.prefix("MAX_MANA_MOD");
+    static final ResourceLocation MANA_REGEN_MODIFIER = ArsNouveau.prefix("MANA_REGEN_MOD");
 
     // Calculate Max Mana & Mana Reserve to keep track of the mana reserved by familiars & co.
     public static Mana calcMaxMana(Player e) {
@@ -73,12 +76,12 @@ public class ManaUtil {
         rawMax += numGlyphs * ServerConfig.GLYPH_MAX_BONUS.get();
         rawMax += tier * ServerConfig.TIER_MAX_BONUS.get();
 
-        var manaAttribute = e.getAttribute(PerkAttributes.MAX_MANA.get());
+        var manaAttribute = e.getAttribute(PerkAttributes.MAX_MANA);
         if (manaAttribute != null) {
             var manaCache = manaAttribute.getModifier(MAX_MANA_MODIFIER);
-            if (manaCache == null || manaCache.getAmount() != rawMax) {
+            if (manaCache == null || manaCache.amount() != rawMax) {
                 if (manaCache != null) manaAttribute.removeModifier(manaCache);
-                manaAttribute.addTransientModifier(new AttributeModifier(MAX_MANA_MODIFIER, "Mana Cache", rawMax, AttributeModifier.Operation.ADDITION));
+                manaAttribute.addTransientModifier(new AttributeModifier(MAX_MANA_MODIFIER, rawMax, AttributeModifier.Operation.ADD_VALUE));
             }
             rawMax = manaAttribute.getValue();
         }
@@ -110,12 +113,12 @@ public class ManaUtil {
         regen += tier * ServerConfig.TIER_REGEN_BONUS.get();
         regen += ServerConfig.INIT_MANA_REGEN.get();
 
-        var manaAttribute = e.getAttribute(PerkAttributes.MANA_REGEN_BONUS.get());
+        var manaAttribute = e.getAttribute(PerkAttributes.MANA_REGEN_BONUS);
         if (manaAttribute != null) {
             var manaCache = manaAttribute.getModifier(MANA_REGEN_MODIFIER);
-            if (manaCache == null || manaCache.getAmount() != regen) {
+            if (manaCache == null || manaCache.amount() != regen) {
                 if (manaCache != null) manaAttribute.removeModifier(manaCache);
-                manaAttribute.addTransientModifier(new AttributeModifier(MANA_REGEN_MODIFIER, "Mana Regen Cache", regen, AttributeModifier.Operation.ADDITION));
+                manaAttribute.addTransientModifier(new AttributeModifier(MANA_REGEN_MODIFIER, regen, AttributeModifier.Operation.ADD_VALUE));
             }
             regen = manaAttribute.getValue();
         }

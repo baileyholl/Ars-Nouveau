@@ -12,6 +12,6 @@ public class LinkPage extends AbstractPage {
 
     @Override
     public ResourceLocation getType() {
-        return new ResourceLocation("patchouli:link");
+        return ResourceLocation.tryParse("patchouli:link");
     }
 }

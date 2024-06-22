@@ -13,6 +13,7 @@ import com.hollingsworth.arsnouveau.client.gui.GuiSpellHUD;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.renderer.entity.*;
 import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.*;
+import com.hollingsworth.arsnouveau.client.renderer.tile.GenericRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.*;
 import com.hollingsworth.arsnouveau.common.block.tile.MageBlockTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
@@ -33,25 +34,20 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
-import net.neoforged.neoforge.client.gui.overlay.NamedGuiOverlay;
-import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
-
 import org.jetbrains.annotations.Nullable;
 
 import static com.hollingsworth.arsnouveau.client.events.ClientEvents.localize;
@@ -167,7 +163,7 @@ public class ClientHandler {
         if (!CameraUtil.isPlayerMountedOnCamera(mc.player)) {
             return;
         }
-        if (!mc.options.renderDebug) {
+        if (!mc.options.reducedDebugInfo().get()) {
             BlockEntity var10 = level.getBlockEntity(pos);
             if (var10 instanceof ICameraMountable be) {
                 Font font = Minecraft.getInstance().font;
@@ -331,6 +327,6 @@ public class ClientHandler {
 
     public static int colorFromFlask(ItemStack stack) {
         PotionFlask.FlaskData data = new PotionFlask.FlaskData(stack);
-        return data.getPotion().getPotion() == Potions.EMPTY ? -1 : PotionUtils.getColor(data.getPotion().asPotionStack());
+        return data.getPotion().getPotion() == PotionContents.EMPTY ? -1 : data.getPotion().getPotion().getColor();
     }
 }

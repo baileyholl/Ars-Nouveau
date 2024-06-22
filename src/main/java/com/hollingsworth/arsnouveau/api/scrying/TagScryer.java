@@ -33,7 +33,7 @@ public class TagScryer implements IScryer {
     public IScryer fromTag(CompoundTag tag) {
         TagScryer scryer = new TagScryer();
         if (tag.contains("blockTag")) {
-            scryer.blockTag = ForgeRegistries.BLOCKS.tags().getTag(new TagKey<>(Registries.BLOCK, new ResourceLocation(tag.getString("blockTag")))).getKey();
+            scryer.blockTag = ForgeRegistries.BLOCKS.tags().getTag(new TagKey<>(Registries.BLOCK, ResourceLocation.tryParse(tag.getString("blockTag")))).getKey();
         }
         return scryer;
     }

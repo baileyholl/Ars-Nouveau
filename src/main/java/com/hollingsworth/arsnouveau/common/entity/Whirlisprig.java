@@ -107,7 +107,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     }
 
     @Override
-    public int getExperienceReward() {
+    public int getBaseExperienceReward() {
         return 0;
     }
 

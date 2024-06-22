@@ -59,7 +59,12 @@ public class EffectExplosion extends AbstractEffect implements IDamageEffect {
 
         for (Player serverplayerentity : world.players()) {
             if (serverplayerentity.distanceToSqr(x, y, z) < 4096.0D) {
-                ((ServerPlayer) serverplayerentity).connection.send(new ClientboundExplodePacket(x, y, z, radius, explosion.getToBlow(), explosion.getHitPlayers().get(serverplayerentity)));
+                ((ServerPlayer) serverplayerentity).connection.send(new ClientboundExplodePacket(x, y, z, radius, explosion.getToBlow(),
+                        explosion.getHitPlayers().get(serverplayerentity),
+                        explosion.blockInteraction,
+                        explosion.smallExplosionParticles,
+                        explosion.largeExplosionParticles,
+                        explosion.explosionSound));
             }
         }
 

@@ -64,31 +64,21 @@ import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.event.entity.living.*;
-import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.neoforged.neoforge.event.TickEvent;
-import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
-import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHealEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
-import net.neoforged.neoforge.event.entity.living.LootingLevelEvent;
-import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
-import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
-import net.neoforged.neoforge.event.entity.living.ShieldBlockEvent;
-import net.neoforged.neoforge.event.entity.player.EntityItemPickupEvent;
+import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.level.SaplingGrowTreeEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.event.village.VillagerTradesEvent;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
@@ -138,19 +128,10 @@ public class EventHandler {
         });
     }
 
-
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void itemPickupEvent(EntityItemPickupEvent event) {
-        Player player = event.getEntity();
-        ItemStack pickingUp = event.getItem().getItem();
-        boolean voided = VoidJar.tryVoiding(player, pickingUp);
-        if (voided) event.setResult(Event.Result.ALLOW);
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void itemPickupEvent(PlayerEvent.ItemPickupEvent event) {
-        Player player = event.getEntity();
-        ItemStack pickingUp = event.getStack();
+    public static void itemPickupEvent(ItemEntityPickupEvent event) {
+        Player player = event.getPlayer();
+        ItemStack pickingUp = event.getItemEntity().getItem();
         VoidJar.tryVoiding(player, pickingUp);
     }
 
@@ -158,8 +139,8 @@ public class EventHandler {
     public static void shieldEvent(ShieldBlockEvent e) {
         if (!e.getEntity().level.isClientSide && e.getEntity() instanceof Player player && player.isBlocking()) {
             if (player.getUseItem().getItem() == ItemsRegistry.ENCHANTERS_SHIELD.asItem()) {
-                player.addEffect(new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT.get(), 200, 1));
-                player.addEffect(new MobEffectInstance(ModPotions.SPELL_DAMAGE_EFFECT.get(), 200, 1));
+                player.addEffect(new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT, 200, 1));
+                player.addEffect(new MobEffectInstance(ModPotions.SPELL_DAMAGE_EFFECT, 200, 1));
             }
         }
     }
@@ -188,7 +169,7 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void livingSpawnEvent(MobSpawnEvent.FinalizeSpawn checkSpawn) {
+    public static void livingSpawnEvent(FinalizeSpawnEvent checkSpawn) {
         if (checkSpawn.getLevel() instanceof Level level && !level.isClientSide) {
             RitualEventQueue.getRitual(level, DenySpawnRitual.class, ritu -> ritu.denySpawn(checkSpawn));
         }
@@ -197,7 +178,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void jumpEvent(LivingEvent.LivingJumpEvent e) {
-        if (e.getEntity() != null && e.getEntity().hasEffect(ModPotions.SNARE_EFFECT.get())) {
+        if (e.getEntity() != null && e.getEntity().hasEffect(ModPotions.SNARE_EFFECT)) {
             e.getEntity().setDeltaMovement(0, 0, 0);
             return;
         }
@@ -226,33 +207,34 @@ public class EventHandler {
 
 
     @SubscribeEvent
-    public static void clientTickEnd(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            ClientInfo.ticksInGame++;
-            if (ClientInfo.redTicks()) {
-                ClientInfo.redOverlayTicks--;
-            }
+    public static void clientTickEnd(ClientTickEvent.Post event) {
+
+        ClientInfo.ticksInGame++;
+        if (ClientInfo.redTicks()) {
+            ClientInfo.redOverlayTicks--;
         }
+
     }
 
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void onGlideTick(TickEvent.PlayerTickEvent event) {
-        if (ArsNouveau.caelusLoaded && EffectGlide.canGlide(event.player)) {
-            CaelusHandler.setFlying(event.player);
+    public static void onGlideTick(PlayerTickEvent event) {
+        var player = event.getEntity();
+        if (ArsNouveau.caelusLoaded && EffectGlide.canGlide(player)) {
+            CaelusHandler.setFlying(player);
         }
 
-        if (event.player.hasEffect(ModPotions.FLIGHT_EFFECT.get())
-            && event.player.level.getGameTime() % 20 == 0
-            && event.player.getEffect(ModPotions.FLIGHT_EFFECT.get()).getDuration() <= 30 * 20
-            && event.player instanceof ServerPlayer serverPlayer) {
-            RitualEventQueue.getRitual(event.player.level, RitualFlight.class, flight -> flight.attemptRefresh(serverPlayer));
+        if (player.hasEffect(ModPotions.FLIGHT_EFFECT)
+            && player.level.getGameTime() % 20 == 0
+            && player.getEffect(ModPotions.FLIGHT_EFFECT).getDuration() <= 30 * 20
+            && player instanceof ServerPlayer serverPlayer) {
+            RitualEventQueue.getRitual(player.level, RitualFlight.class, flight -> flight.attemptRefresh(serverPlayer));
         }
 
-        if (event.player.level.getGameTime() % RitualGravity.renewInterval == 0 && event.player instanceof ServerPlayer serverPlayer) {
-            MobEffectInstance gravity = event.player.getEffect(ModPotions.GRAVITY_EFFECT.get());
+        if (player.level.getGameTime() % RitualGravity.renewInterval == 0 && player instanceof ServerPlayer serverPlayer) {
+            MobEffectInstance gravity = player.getEffect(ModPotions.GRAVITY_EFFECT);
             if (gravity == null || gravity.getDuration() <= RitualGravity.renewThreshold) {
-                RitualEventQueue.getRitual(event.player.level, RitualGravity.class, ritual -> !serverPlayer.isCreative() && ritual.attemptRefresh(serverPlayer));
+                RitualEventQueue.getRitual(player.level, RitualGravity.class, ritual -> !serverPlayer.isCreative() && ritual.attemptRefresh(serverPlayer));
             }
         }
     }
@@ -266,26 +248,26 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void entityHurt(LivingHurtEvent e) {
-        if (e.getEntity() != null && e.getEntity().hasEffect(ModPotions.DEFENCE_EFFECT.get()) && (e.getSource().is(DamageTypes.MAGIC) || e.getSource().is(DamageTypes.GENERIC) || e.getSource().is(DamageTypes.MOB_ATTACK))) {
+        if (e.getEntity() != null && e.getEntity().hasEffect(ModPotions.DEFENCE_EFFECT) && (e.getSource().is(DamageTypes.MAGIC) || e.getSource().is(DamageTypes.GENERIC) || e.getSource().is(DamageTypes.MOB_ATTACK))) {
             if (e.getAmount() > 0.5) {
-                e.setAmount((float) Math.max(0.5, e.getAmount() - 1.0f - e.getEntity().getEffect(ModPotions.DEFENCE_EFFECT.get()).getAmplifier()));
+                e.setAmount((float) Math.max(0.5, e.getAmount() - 1.0f - e.getEntity().getEffect(ModPotions.DEFENCE_EFFECT).getAmplifier()));
             }
         }
 
-        if (e.getEntity() != null && e.getSource().is(DamageTypes.LIGHTNING_BOLT) && e.getEntity().hasEffect(ModPotions.SHOCKED_EFFECT.get())) {
-            float damage = e.getAmount() + 3.0f + 3.0f * e.getEntity().getEffect(ModPotions.SHOCKED_EFFECT.get()).getAmplifier();
+        if (e.getEntity() != null && e.getSource().is(DamageTypes.LIGHTNING_BOLT) && e.getEntity().hasEffect(ModPotions.SHOCKED_EFFECT)) {
+            float damage = e.getAmount() + 3.0f + 3.0f * e.getEntity().getEffect(ModPotions.SHOCKED_EFFECT).getAmplifier();
             e.setAmount(Math.max(0, damage));
         }
         LivingEntity entity = e.getEntity();
         if (entity == null)
             return;
-        if (entity.hasEffect(ModPotions.HEX_EFFECT.get())
+        if (entity.hasEffect(ModPotions.HEX_EFFECT)
             && (entity.hasEffect(MobEffects.POISON)
                 || entity.hasEffect(MobEffects.WITHER)
                 || entity.isOnFire()
-                || entity.hasEffect(ModPotions.SHOCKED_EFFECT.get())
+                || entity.hasEffect(ModPotions.SHOCKED_EFFECT)
                 || entity.getTicksFrozen() >= entity.getTicksRequiredToFreeze())) {
-            e.setAmount(e.getAmount() + 0.5f + 0.33f * entity.getEffect(ModPotions.HEX_EFFECT.get()).getAmplifier());
+            e.setAmount(e.getAmount() + 0.5f + 0.33f * entity.getEffect(ModPotions.HEX_EFFECT).getAmplifier());
         }
         double warding = PerkUtil.valueOrZero(entity, PerkAttributes.WARDING.get());
         double feather = PerkUtil.valueOrZero(entity, PerkAttributes.FEATHER.get());
@@ -310,12 +292,12 @@ public class EventHandler {
     @SubscribeEvent
     public static void entityHeal(LivingHealEvent e) {
         LivingEntity entity = e.getEntity();
-        if (entity != null && entity.hasEffect(ModPotions.HEX_EFFECT.get())) {
+        if (entity != null && entity.hasEffect(ModPotions.HEX_EFFECT)) {
             e.setAmount(e.getAmount() / 2.0f);
         }
 
-        if (entity != null && entity.hasEffect(ModPotions.RECOVERY_EFFECT.get())) {
-            e.setAmount(e.getAmount() + 1 + entity.getEffect(ModPotions.RECOVERY_EFFECT.get()).getAmplifier());
+        if (entity != null && entity.hasEffect(ModPotions.RECOVERY_EFFECT)) {
+            e.setAmount(e.getAmount() + 1 + entity.getEffect(ModPotions.RECOVERY_EFFECT).getAmplifier());
         }
     }
 
@@ -412,7 +394,7 @@ public class EventHandler {
             }
 
             level5.add((trader, rand) -> emerToItem(ItemsRegistry.SOURCE_BERRY_PIE, 4, 8, 2));
-            level5.add((trader, rand) -> new MerchantOffer(new ItemStack(Items.EMERALD, 48), DungeonLootTables.getRandomItem(DungeonLootTables.RARE_LOOT), 1, 20, 0.2F));
+            level5.add((trader, rand) -> new MerchantOffer(new ItemCost(Items.EMERALD, 48)), DungeonLootTables.getRandomItem(DungeonLootTables.RARE_LOOT), 1, 20, 0.2F);
 
         }
     }
@@ -440,7 +422,7 @@ public class EventHandler {
         if (target.level.isClientSide)
             return;
         double bonus = 0.0;
-        MobEffect effect = event.getEffectInstance().getEffect();
+        MobEffect effect = event.getEffectInstance().getEffect().value();
         if (effect.isBeneficial()) {
             bonus = PerkUtil.valueOrZero(target, PerkAttributes.WIXIE.get());
         } else if (applier instanceof LivingEntity living) {
@@ -472,7 +454,7 @@ public class EventHandler {
     private static void syncPotionRemoval(MobEffectEvent event) {
         if (event.getEntity() instanceof LivingEntity && event.getEffectInstance() != null && !event.getEntity().level.isClientSide) {
             LivingEntity target = event.getEntity();
-            MobEffect effect = event.getEffectInstance().getEffect();
+            MobEffect effect = event.getEffectInstance().getEffect().value();
             ForgeRegistries.MOB_EFFECTS.getHolder(effect).ifPresent(holder -> {
                 if (holder.is(PotionEffectTags.TO_SYNC)) {
                     Networking.sendToNearby(target.level(), target, new PotionSyncPacket(target.getId(), effect, -1));

@@ -22,8 +22,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
+
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public class SummoningFocus extends ArsNouveauCurio implements ISpellModifierIte
 
     public static boolean containsThis(Level world, Entity entity) {
         if (!world.isClientSide && entity instanceof Player) {
-            IItemHandlerModifiable items = CuriosUtil.getAllWornItems((LivingEntity) entity).orElse(null);
+            IItemHandlerModifiable items = CuriosUtil.getAllWornItems((LivingEntity) entity);
             if (items != null) {
                 for (int i = 0; i < items.getSlots(); i++) {
                     Item item = items.getStackInSlot(i).getItem();

@@ -23,7 +23,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.neoforged.neoforge.common.IShearable;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -49,8 +49,9 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
         if (entity instanceof IShearable shearable) {
             ItemStack shears = new ItemStack(Items.SHEARS);
             applyEnchantments(spellStats, shears);
-            if (shearable.isShearable(shears, world, entity.blockPosition())) {
-                List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, entity.blockPosition(), spellStats.getBuffCount(AugmentFortune.INSTANCE));
+            if (shearable.isShearable(getPlayer(shooter, (ServerLevel) world), shears, world, entity.blockPosition())) {
+                // TODO: restore fortune bonus on augment
+                List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, entity.blockPosition());
                 items.forEach(i -> world.addFreshEntity(new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), i)));
             }
         } else {
@@ -72,7 +73,7 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
 
     private boolean dupeCheck(Level world, BlockPos pos){
         BlockEntity be = world.getBlockEntity(pos);
-        return be != null && (world.getCapability(Capabilities.ITEM_HANDLER).isPresent() || be instanceof Container);
+        return be != null && (world.getCapability(Capabilities.ItemHandler.BLOCK, pos, null) != null || be instanceof Container);
     }
 
     public void doStrip(BlockPos p, BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
@@ -90,8 +91,9 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
     public void doShear(BlockPos p, BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
         ItemStack shears = new ItemStack(Items.SHEARS);
         applyEnchantments(spellStats, shears);
-        if (world.getBlockState(p).getBlock() instanceof IShearable shearable && shearable.isShearable(shears, world, p)) {
-            List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, p, spellStats.getBuffCount(AugmentFortune.INSTANCE));
+        if (world.getBlockState(p).getBlock() instanceof IShearable shearable && shearable.isShearable(getPlayer(shooter, (ServerLevel) world), shears, world, p)) {
+            // TODO: restore fortune bonus on augment
+            List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, p);
             items.forEach(i -> world.addFreshEntity(new ItemEntity(world, p.getX(), p.getY(), p.getZ(), i)));
         }
         Player entity = ANFakePlayer.getPlayer((ServerLevel) world);

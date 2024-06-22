@@ -181,12 +181,13 @@ public class SpellStats {
         public Builder addItemsFromEntity(@Nullable LivingEntity entity) {
             if (entity == null)
                 return this;
-            CuriosUtil.getAllWornItems(entity).ifPresent(e -> {
-                for (int i = 0; i < e.getSlots(); i++) {
-                    ItemStack item = e.getStackInSlot(i);
+            var handler = CuriosUtil.getAllWornItems(entity);
+            if(handler != null){
+                for (int i = 0; i < handler.getSlots(); i++) {
+                    ItemStack item = handler.getStackInSlot(i);
                     spellStats.modifierItems.add(item);
                 }
-            });
+            }
             for (ItemStack i : entity.getAllSlots()) {
                 spellStats.modifierItems.add(i);
             }

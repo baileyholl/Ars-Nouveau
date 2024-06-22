@@ -253,7 +253,7 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
         if (tag.hasUUID("ownerID"))
             setOwnerID(tag.getUUID("ownerID"));
         terminatedFamiliar = tag.getBoolean("terminated");
-        this.holderID = new ResourceLocation(tag.getString("holderID"));
+        this.holderID = ResourceLocation.tryParse(tag.getString("holderID"));
         this.persistentData = deserializePersistentData(tag.getCompound("familiarData"));
         this.entityData.set(COLOR, tag.getString("color"));
         this.entityData.set(COSMETIC, ItemStack.of(tag.getCompound("cosmetic")));

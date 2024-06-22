@@ -89,7 +89,7 @@ public class SummonHorse extends Horse implements ISummon {
     }
 
     @Override
-    public int getExperienceReward() {
+    public int getBaseExperienceReward() {
         return 0;
     }
 

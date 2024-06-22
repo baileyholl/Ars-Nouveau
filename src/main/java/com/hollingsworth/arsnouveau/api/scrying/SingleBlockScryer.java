@@ -29,7 +29,7 @@ public class SingleBlockScryer implements IScryer {
     @Override
     public IScryer fromTag(CompoundTag tag) {
         SingleBlockScryer scryer = new SingleBlockScryer(null);
-        scryer.block = tag.contains("block") ? ForgeRegistries.BLOCKS.getValue(new ResourceLocation(tag.getString("block"))) : null;
+        scryer.block = tag.contains("block") ? ForgeRegistries.BLOCKS.getValue(ResourceLocation.tryParse(tag.getString("block"))) : null;
         return scryer;
     }
 

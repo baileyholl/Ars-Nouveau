@@ -10,7 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -19,21 +19,21 @@ import java.util.List;
 
 public class PotionCraftingManager extends CraftingManager {
     private boolean hasObtainedPotion;
-    private Potion potionNeeded;
-    public Potion potionOut;
+    private PotionContents potionNeeded;
+    public PotionContents potionOut;
 
     public PotionCraftingManager(){
         super();
     }
 
-    public PotionCraftingManager(Potion potionNeeded, List<ItemStack> itemsNeeded, Potion potionOut) {
+    public PotionCraftingManager(PotionContents potionNeeded, List<ItemStack> itemsNeeded, PotionContents potionOut) {
         super(ItemStack.EMPTY, itemsNeeded);
         this.potionNeeded = potionNeeded;
         this.potionOut = potionOut;
         neededItems = itemsNeeded;
         remainingItems = itemsNeeded;
         outputStack = ItemStack.EMPTY;
-        hasObtainedPotion = potionNeeded == Potions.EMPTY || potionNeeded == Potions.WATER;
+        hasObtainedPotion = potionNeeded == PotionContents.EMPTY || potionNeeded.is(Potions.WATER);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class PotionCraftingManager extends CraftingManager {
         return !(hasObtainedPotion);
     }
 
-    public Potion getPotionNeeded(){
+    public PotionContents getPotionNeeded(){
         return potionNeeded;
     }
 

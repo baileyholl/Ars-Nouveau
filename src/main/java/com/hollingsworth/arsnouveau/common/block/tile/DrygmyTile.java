@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -156,12 +157,12 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
                 continue;
             }
 
-            LootTable loottable = this.level.getServer().getLootData().getLootTable(entity.getLootTable());
+            LootTable loottable = this.level.registryAccess().registry(Registries.LOOT_TABLE).get().get(entity.getLootTable());
             LootParams.Builder lootcontext$builder = (new LootParams.Builder((ServerLevel) this.level))
                     .withParameter(LootContextParams.THIS_ENTITY, entity).withParameter(LootContextParams.ORIGIN, entity.position())
                     .withParameter(LootContextParams.DAMAGE_SOURCE, damageSource)
-                    .withOptionalParameter(LootContextParams.KILLER_ENTITY, fakePlayer)
-                    .withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, damageSource.getDirectEntity());
+                    .withOptionalParameter(LootContextParams.ATTACKING_ENTITY, fakePlayer)
+                    .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, damageSource.getDirectEntity());
             lootcontext$builder = lootcontext$builder.withParameter(LootContextParams.LAST_DAMAGE_PLAYER, fakePlayer)
                     .withLuck(fakePlayer.getLuck());
 
@@ -170,7 +171,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
             if (entity instanceof Mob mob) {
                 oldExp = mob.xpReward;
             }
-            exp += entity.getExperienceReward();
+            exp += entity.getExperienceReward((ServerLevel) level, fakePlayer);
 
             if (entity instanceof Mob mob) {
                 // EVERY TIME GET EXPERIENCE REWARD IS CALLED IN ZOMBIE ENTITY IT MULTIPLIES BY 2.5X.

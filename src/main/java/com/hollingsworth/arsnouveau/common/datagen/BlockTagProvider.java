@@ -35,7 +35,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     public static TagKey<Block> CLUSTER_BLOCKS = BlockTags.create(ArsNouveau.prefix( "golem/cluster"));
     public static TagKey<Block> BREAK_WITH_PICKAXE = BlockTags.create(ArsNouveau.prefix( "break_with_pickaxe"));
     public static TagKey<Block> AUTOPULL_DISABLED = BlockTags.create(ArsNouveau.prefix( "storage/autopull_disabled"));
-    public static TagKey<Block> RELOCATION_NOT_SUPPORTED = BlockTags.create(new ResourceLocation("c", "relocation_not_supported"));
+    public static TagKey<Block> RELOCATION_NOT_SUPPORTED = BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", "relocation_not_supported"));
     public static TagKey<Block> OCCLUDES_SPELL_SENSOR = BlockTags.create(ArsNouveau.prefix( "occludes_spell_sensor"));
     public static TagKey<Block> INTERACT_BLACKLIST = BlockTags.create(ArsNouveau.prefix( "interact_blacklist"));
     public static TagKey<Block> CASCADING_LOGS = BlockTags.create(ArsNouveau.prefix( "cascading_logs"));
@@ -43,7 +43,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     public static TagKey<Block> VEXING_LOGS = BlockTags.create(ArsNouveau.prefix( "vexing_logs"));
     public static TagKey<Block> BLAZING_LOGS = BlockTags.create(ArsNouveau.prefix( "blazing_logs"));
     public static TagKey<Block> DOWSING_ROD = BlockTags.create(ArsNouveau.prefix( "dowsing_rod"));
-    public static TagKey<Block> BUSHES = BlockTags.create(new ResourceLocation("forge", "bushes"));
+    public static TagKey<Block> BUSHES = BlockTags.create(ResourceLocation.fromNamespaceAndPath("neoforge", "bushes"));
 
     public BlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
         super(output, Registries.BLOCK, future, block -> block.builtInRegistryHolder().key(), ArsNouveau.MODID, helper);
@@ -245,7 +245,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(BlockTags.FENCE_GATES).add(BlockRegistry.ARCHWOOD_FENCE_GATE.get());
         this.tag(BlockTags.FENCES).add(BlockRegistry.ARCHWOOD_FENCE.get());
         this.tag(BlockTags.WOODEN_FENCES).add(BlockRegistry.ARCHWOOD_FENCE.get());
-        TagKey<Block> ARCHWOOD_LEAVES = BlockTags.create(new ResourceLocation("minecraft", "leaves/archwood_leaves"));
+        TagKey<Block> ARCHWOOD_LEAVES = BlockTags.create(ResourceLocation.fromNamespaceAndPath("minecraft", "leaves/archwood_leaves"));
         this.tag(ARCHWOOD_LEAVES)
                 .add(BlockRegistry.VEXING_LEAVES.get(),
                         BlockRegistry.CASCADING_LEAVE.get(),

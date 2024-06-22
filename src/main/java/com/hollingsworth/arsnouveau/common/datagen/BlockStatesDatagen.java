@@ -76,12 +76,12 @@ public class BlockStatesDatagen extends BlockStateProvider {
     }
 
 
-
-    //will it work? idk
-    public void signBlock(Block sign, String reg) {
-        ModelFile signModel = models().withExistingParent(reg, new ResourceLocation("block/air")).texture("particle", ArsNouveau.prefix( "block/" + reg));
-        getVariantBuilder(sign).forAllStates(s -> ConfiguredModel.builder().modelFile(signModel).build());
-    }
+//
+//    //will it work? idk
+//    public void signBlock(Block sign, String reg) {
+//        ModelFile signModel = models().withExistingParent(reg, ResourceLocation("block/air")).texture("particle", ArsNouveau.prefix( "block/" + reg));
+//        getVariantBuilder(sign).forAllStates(s -> ConfiguredModel.builder().modelFile(signModel).build());
+//    }
 
     public void registerNormalCube(Block block, String registry) {
         buildNormalCube(registry);

@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
+import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
 import com.hollingsworth.arsnouveau.common.capability.*;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSyncPlayerCap;
@@ -23,6 +24,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class CapabilityRegistry {
@@ -30,6 +32,7 @@ public class CapabilityRegistry {
     public static final EntityCapability<IManaCap, Void> MANA_CAPABILITY = EntityCapability.createVoid(ArsNouveau.prefix("mana"), IManaCap.class);
     public static final EntityCapability<IPlayerCap, Void> PLAYER_DATA_CAP = EntityCapability.createVoid(ArsNouveau.prefix("player_data"), IPlayerCap.class);
 
+    public static final BlockCapability<IItemHandler, Direction> LECTERN_CAP = BlockCapability.create(ArsNouveau.prefix("lectern_handler"), IItemHandler.class, Direction.class);
     /**
      * Get the {@link IManaCap} from the specified entity.
      *
@@ -89,6 +92,8 @@ public class CapabilityRegistry {
             for(var container : containers){
                 event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, container.get(), (c, side) -> new InvWrapper(c));
             }
+
+            event.registerBlockEntity(LECTERN_CAP, BlockRegistry.CRAFTING_LECTERN_TILE.get(), (c, side) -> c.getCapability(c, side));
         }
 
         /**

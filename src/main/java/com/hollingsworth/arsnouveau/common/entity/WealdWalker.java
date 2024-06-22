@@ -310,7 +310,7 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
     }
 
     @Override
-    public int getExperienceReward() {
+    public int getBaseExperienceReward() {
         return 0;
     }
 

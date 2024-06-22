@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.potion;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -11,41 +12,41 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class PotionData implements Cloneable{
-    private Potion potion = Potions.EMPTY;
+    private PotionContents potion;
     private List<MobEffectInstance> customEffects = new ArrayList<>();
-    private Set<Potion> includedPotions = new HashSet<>();
+    private Set<PotionContents> includedPotions = new HashSet<>();
 
-    public PotionData(Potion potion, List<MobEffectInstance> customEffects, Set<Potion> includedPotions) {
+    public PotionData(PotionContents potion, List<MobEffectInstance> customEffects, Set<PotionContents> includedPotions) {
         this.potion = potion;
         this.includedPotions = includedPotions;
         setCustomEffects(customEffects);
     }
 
     public PotionData(){
-        this(Potions.EMPTY, new ArrayList<>(), new HashSet<>());
+        this(PotionContents.EMPTY, new ArrayList<>(), new HashSet<>());
     }
 
     public PotionData(ItemStack stack){
 
         if(stack.getItem() instanceof IPotionProvider provider){
             PotionData data = provider.getPotionData(stack).clone();
-            this.potion = data.getPotion();
+            this.potion = data.potion;
             this.customEffects = data.getCustomEffects();
         }else{
-            this.potion = PotionUtils.getPotion(stack);
+            this.potion = stack.get(DataComponents.POTION_CONTENTS);
             customEffects = new ArrayList<>();
-            setCustomEffects(PotionUtils.getCustomEffects(stack));
+            setCustomEffects(potion.customEffects());
         }
     }
 
-    public PotionData(Potion potion){
+    public PotionData(PotionContents potion){
         this(potion, new ArrayList<>(), new HashSet<>(Collections.singletonList(potion)));
     }
 
@@ -71,7 +72,7 @@ public class PotionData implements Cloneable{
         instance.setPotion(PotionUtils.getPotion(tag));
         instance.getCustomEffects().addAll(PotionUtils.getCustomEffects(tag));
         ListTag potionTagList = tag.getList("includedPotions", 8);
-        Set<Potion> potions = instance.includedPotions;
+        Set<PotionContents> potions = instance.includedPotions;
         for(int i = 0; i < potionTagList.size(); i++){
             potions.add(Potion.byName(potionTagList.getString(i)));
         }
@@ -101,14 +102,14 @@ public class PotionData implements Cloneable{
 
     public List<MobEffectInstance> fullEffects(){
         List<MobEffectInstance> thisEffects = new ArrayList<>(getCustomEffects());
-        thisEffects.addAll(getPotion().getEffects());
+        thisEffects.addAll(getPotion().getAllEffects());
         return thisEffects;
     }
 
     public void applyEffects(Entity source, Entity inDirectSource, LivingEntity target){
         for (MobEffectInstance effectinstance : fullEffects()) {
-            if (effectinstance.getEffect().isInstantenous()) {
-                effectinstance.getEffect().applyInstantenousEffect(source, inDirectSource, target, effectinstance.getAmplifier(), 1.0D);
+            if (effectinstance.getEffect().value().isInstantenous()) {
+                effectinstance.getEffect().value().applyInstantenousEffect(source, inDirectSource, target, effectinstance.getAmplifier(), 1.0D);
             } else {
                 target.addEffect(new MobEffectInstance(effectinstance), source);
             }
@@ -125,7 +126,7 @@ public class PotionData implements Cloneable{
     }
 
     public boolean isEmpty(){
-        return getPotion() == Potions.EMPTY || getPotion() == Potions.WATER || getPotion() == Potions.MUNDANE || fullEffects().isEmpty();
+        return getPotion() == PotionContents.EMPTY || getPotion().is( Potions.WATER) || getPotion().is(Potions.MUNDANE) || fullEffects().isEmpty();
     }
 
     public boolean areSameEffects(PotionData other){
@@ -139,18 +140,19 @@ public class PotionData implements Cloneable{
         set.addAll(this.fullEffects());
         set.addAll(other.fullEffects());
 
-        Set<Potion> potions = new HashSet<>();
+        Set<PotionContents> potions = new HashSet<>();
         potions.addAll(this.getIncludedPotions());
         potions.addAll(other.getIncludedPotions());
         return new PotionData(getPotion(), new ArrayList<>(set), potions);
     }
 
+    // TODO: fix ticksPerSecond?
     public void appendHoverText(List<Component> tooltip) {
-        if(getPotion() == Potions.EMPTY)
+        if(getPotion() == PotionContents.EMPTY)
             return;
         ItemStack potionStack = asPotionStack();
         tooltip.add(potionStack.getHoverName());
-        PotionUtils.addPotionTooltip(potionStack, tooltip, 1.0F);
+        PotionContents.addPotionTooltip(getPotion().getAllEffects(), tooltip::add, 1.0F, 20.0f);
     }
 
     @Override
@@ -171,11 +173,11 @@ public class PotionData implements Cloneable{
         }
     }
 
-    public Potion getPotion() {
+    public PotionContents getPotion() {
         return potion;
     }
 
-    public void setPotion(Potion potion) {
+    public void setPotion(PotionContents potion) {
         this.potion = potion;
     }
 
@@ -184,16 +186,16 @@ public class PotionData implements Cloneable{
     }
 
     public void setCustomEffects(List<MobEffectInstance> customEffects) {
-        this.customEffects = customEffects.stream().filter(e -> !potion.getEffects().contains(e)).collect(Collectors.toList());
+        this.customEffects = customEffects.stream().filter(e -> !potion.getAllEffects().contains(e)).collect(Collectors.toList());
     }
 
-    public Set<Potion> getIncludedPotions() {
+    public Set<PotionContents> getIncludedPotions() {
         includedPotions.add(getPotion());
-        includedPotions.removeIf(potion -> potion == Potions.EMPTY);
+        includedPotions.removeIf(potion -> potion == PotionContents.EMPTY);
         return includedPotions;
     }
 
-    public void setIncludedPotions(Set<Potion> includedPotions) {
+    public void setIncludedPotions(Set<PotionContents> includedPotions) {
         this.includedPotions = includedPotions;
     }
 }

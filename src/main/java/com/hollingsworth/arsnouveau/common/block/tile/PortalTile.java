@@ -123,7 +123,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
 
     public static @Nullable ServerLevel getServerLevel(String dimID, ServerLevel level){
         if(dimID != null && level != null){
-            ResourceKey<Level> resourcekey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(dimID));
+            ResourceKey<Level> resourcekey = ResourceKey.create(Registries.DIMENSION, ResourceLocation.tryParse(dimID));
             return level.getServer().getLevel(resourcekey);
         }
         return null;

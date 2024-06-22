@@ -6,21 +6,22 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+
 import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class ModDatagen {
-
+    public static CompletableFuture<HolderLookup.Provider> registries;
     @SubscribeEvent
     public static void datagen(GatherDataEvent event) {
         APIRegistry.postInit();
         PackOutput output = event.getGenerator().getPackOutput();
         CompletableFuture<HolderLookup.Provider> provider = event.getLookupProvider();
         ExistingFileHelper fileHelper = event.getExistingFileHelper();
+        ModDatagen.registries = provider;
         event.getGenerator().addProvider(event.includeClient(), new ItemModelGenerator(output, fileHelper));
         event.getGenerator().addProvider(event.includeServer(), new BlockTagProvider(output, provider, fileHelper));
         event.getGenerator().addProvider(event.includeClient(), new LangDatagen(output, ArsNouveau.MODID, "en_us"));

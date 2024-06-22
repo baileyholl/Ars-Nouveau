@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GlyphRecipeTooltip implements ClientTooltipComponent {
-    public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/gui/container/bundle.png");
+    public static final ResourceLocation TEXTURE_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/container/bundle.png");
     private static final int MARGIN_Y = 4;
     private static final int BORDER_WIDTH = 1;
     private static final int TEX_SIZE = 128;

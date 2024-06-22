@@ -26,11 +26,9 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.event.entity.EntityStruckByLightningEvent;
-import net.neoforged.neoforge.network.NetworkHooks;
-import net.neoforged.neoforge.network.PlayMessages;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -150,16 +148,16 @@ public class LightningEntity extends LightningBolt {
         float baseDamage = getDamage() + ampScalar * amps + (entity.isInWaterOrRain() ? wetBonus : 0.0f);
         int multiplier = 1;
         for (ItemStack i : entity.getArmorSlots()) {
-            IEnergyStorage energyStorage = i.getCapability(Capabilities.ENERGY).orElse(null);
+            IEnergyStorage energyStorage = i.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage != null) {
                 multiplier++;
             }
         }
         if (entity instanceof LivingEntity) {
-            IEnergyStorage energyStorage = ((LivingEntity) entity).getMainHandItem().getCapability(Capabilities.ENERGY).orElse(null);
+            IEnergyStorage energyStorage = ((LivingEntity) entity).getMainHandItem().getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage != null)
                 multiplier++;
-            energyStorage = ((LivingEntity) entity).getOffhandItem().getCapability(Capabilities.ENERGY).orElse(null);
+            energyStorage = ((LivingEntity) entity).getOffhandItem().getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage != null)
                 multiplier++;
         }

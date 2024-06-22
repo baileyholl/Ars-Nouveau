@@ -666,7 +666,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     }
 
     @Override
-    public int getExperienceReward() {
+    public int getBaseExperienceReward() {
         return 0;
     }
 
@@ -767,7 +767,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             bio = null;
 
             if (tag.contains("path")) {
-                pathBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(tag.getString("path")));
+                pathBlock = ForgeRegistries.BLOCKS.getValue(ResourceLocation.tryParse(tag.getString("path")));
             }
             bedPos = NBTUtil.getBlockPos(tag, "bed_");
             if (bedPos.equals(BlockPos.ZERO))

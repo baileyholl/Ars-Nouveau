@@ -61,12 +61,12 @@ public class SpellSound {
         if (!tag.contains("id"))
             return null;
 
-        ResourceLocation id = new ResourceLocation(tag.getString("id"));
+        ResourceLocation id = ResourceLocation.tryParse(tag.getString("id"));
         return SpellSoundRegistry.getSpellSoundsRegistry().get(id);
     }
 
     public ResourceLocation getTexturePath() {
-        return new ResourceLocation(this.id.getNamespace(), "textures/sounds/" + this.id.getPath() + ".png");
+        return ResourceLocation.fromNamespaceAndPath(this.id.getNamespace(), "textures/sounds/" + this.id.getPath() + ".png");
     }
 
     @Override

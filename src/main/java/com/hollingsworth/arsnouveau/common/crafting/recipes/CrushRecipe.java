@@ -187,7 +187,7 @@ public class CrushRecipe implements Recipe<Container> {
                 float chance = GsonHelper.getAsFloat(obj, "chance");
                 String itemId = GsonHelper.getAsString(obj, "item");
                 int count = obj.has("count") ? GsonHelper.getAsInt(obj, "count") : 1;
-                ItemStack output = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId)), count);
+                ItemStack output = new ItemStack(ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(itemId)), count);
                 int maxRange = obj.has("maxRange") ? GsonHelper.getAsInt(obj, "maxRange") : 1;
                 parsedOutputs.add(new CrushOutput(output, chance, maxRange));
             }

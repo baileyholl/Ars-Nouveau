@@ -11,7 +11,6 @@ import java.util.function.Supplier;
 
 public class GenericRenderer<T extends BlockEntity & GeoAnimatable> extends GeoBlockRenderer<T> {
 
-    public static GenericModel model = new GenericModel("source_relay");
 
     public GenericRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn, String loc) {
         super(new GenericModel(loc));

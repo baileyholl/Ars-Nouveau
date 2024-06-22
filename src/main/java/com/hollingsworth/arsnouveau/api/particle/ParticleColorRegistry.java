@@ -26,6 +26,6 @@ public class ParticleColorRegistry {
         if(compoundTag == null){
             return new ParticleColor(0,0,0);
         }
-        return MAP.getOrDefault(new ResourceLocation(compoundTag.getString("type")), ParticleColor::new).apply(compoundTag);
+        return MAP.getOrDefault(ResourceLocation.tryParse(compoundTag.getString("type")), ParticleColor::new).apply(compoundTag);
     }
 }

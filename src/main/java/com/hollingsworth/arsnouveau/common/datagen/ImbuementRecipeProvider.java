@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.DataProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -14,6 +15,7 @@ import net.neoforged.neoforge.common.Tags;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class ImbuementRecipeProvider extends SimpleDataProvider{
 
@@ -21,6 +23,19 @@ public class ImbuementRecipeProvider extends SimpleDataProvider{
 
     public ImbuementRecipeProvider(DataGenerator generatorIn) {
         super(generatorIn);
+    }
+
+    @Override
+    public CompletableFuture<?> run(CachedOutput pOutput) {
+        collectJsons(pOutput);
+        List<CompletableFuture<?>> futures = new ArrayList<>();
+        return ModDatagen.registries.thenCompose((registry) -> {
+            for (ImbuementRecipe g : recipes) {
+                Path path = getRecipePath(output, g.id.getPath());
+                futures.add(DataProvider.saveStable(pOutput, registry, ImbuementRecipe.Serializer.CODEC.codec(), g, path));
+            }
+            return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+        });
     }
 
     @Override
@@ -72,12 +87,6 @@ public class ImbuementRecipeProvider extends SimpleDataProvider{
                 .withPedestalItem(ItemsRegistry.SOURCE_GEM.get())
                 .withPedestalItem(ItemsRegistry.AIR_ESSENCE.get())
                 .withPedestalItem(ItemsRegistry.WILDEN_HORN.get()));
-
-
-        for (ImbuementRecipe g : recipes) {
-            Path path = getRecipePath(output, g.getId().getPath());
-            saveStable(pOutput, g.asRecipe(), path);
-        }
     }
 
     private static Path getRecipePath(Path pathIn, String str) {

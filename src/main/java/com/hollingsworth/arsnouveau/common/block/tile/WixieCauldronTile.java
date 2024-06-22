@@ -29,14 +29,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -98,11 +98,8 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         if(storedPos == null)
             return;
-        BlockEntity blockEntity = level.getBlockEntity(storedPos);
-        if(blockEntity == null){
-            return;
-        }
-        IItemHandler itemHandler = blockEntity.getCapability(Capabilities.ITEM_HANDLER).orElse(null);
+
+        IItemHandler itemHandler = level.getCapability(Capabilities.ItemHandler.BLOCK, storedPos, null);
         if(itemHandler == null){
             return;
         }
@@ -173,9 +170,9 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
 
             Ingredient itemIngred = instructions.recipe().recipeIngredients.get(1);
             List<ItemStack> needed = new ArrayList<>(Arrays.asList(itemIngred.getItems()));
-            Potion potionNeeded = PotionUtils.getPotion(potionIngred.getStack());
-            Potion potionOutput = PotionUtils.getPotion(instructions.recipe().outputStack);
-            boolean foundInput = potionNeeded == Potions.WATER || findNeededPotion(potionNeeded, 300, level, worldPosition) != null;
+            PotionContents potionNeeded = PotionUtils.getPotion(potionIngred.getStack());
+            PotionContents potionOutput = PotionUtils.getPotion(instructions.recipe().outputStack);
+            boolean foundInput = potionNeeded.is(Potions.WATER) || findNeededPotion(potionNeeded, 300, level, worldPosition) != null;
             boolean foundRoomForOutput = findPotionStorage(level, worldPosition, potionOutput) != null;
             if(!foundRoomForOutput || !foundInput){
                 return;
@@ -203,7 +200,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         return craftManager instanceof PotionCraftingManager potionCraftingManager && potionCraftingManager.needsPotion();
     }
 
-    public Potion getNeededPotion() {
+    public PotionContents getNeededPotion() {
         return craftManager instanceof PotionCraftingManager potionCraftingManager ? potionCraftingManager.getPotionNeeded() : null;
     }
 
@@ -244,14 +241,14 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
             BlockEntity blockEntity = level.getBlockEntity(bPos);
             if(blockEntity == null || blockEntity instanceof ArcanePedestalTile)
                 continue;
-            if(!blockEntity.getCapability(Capabilities.ITEM_HANDLER).isPresent())
+            if(level.getCapability(Capabilities.ItemHandler.BLOCK, bPos, null) == null)
                 continue;
             cachedInventories.add(bPos.immutable());
         }
         setChanged();
     }
 
-    public static @Nullable BlockPos findPotionStorage(Level level, BlockPos worldPosition, Potion passedPot) {
+    public static @Nullable BlockPos findPotionStorage(Level level, BlockPos worldPosition, PotionContents passedPot) {
         for(BlockPos bPos : BlockPos.withinManhattan(worldPosition.below(2), 4, 3, 4)){
             if (level.getBlockEntity(bPos) instanceof PotionJarTile tile && tile.canAccept(new PotionData(passedPot), 300)) {
                 return bPos.immutable();
@@ -260,7 +257,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         return null;
     }
 
-    public static @Nullable BlockPos findNeededPotion(Potion passedPot, int amount, Level level, BlockPos worldPosition) {
+    public static @Nullable BlockPos findNeededPotion(PotionContents passedPot, int amount, Level level, BlockPos worldPosition) {
         for(BlockPos bPos : BlockPos.withinManhattan(worldPosition.below(2), 4, 3, 4)){
             if (level.getBlockEntity(bPos) instanceof PotionJarTile tile &&
                     tile.getAmount() >= amount &&
@@ -305,7 +302,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
                 stale.add(p);
                 continue;
             }
-            IItemHandler handler = blockEntity.getCapability(Capabilities.ITEM_HANDLER).orElse(null);
+            IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, p, null);
             if(handler == null) {
                 stale.add(p);
                 continue;
@@ -366,7 +363,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+    public void saveAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
 
         if (setStack != null) {

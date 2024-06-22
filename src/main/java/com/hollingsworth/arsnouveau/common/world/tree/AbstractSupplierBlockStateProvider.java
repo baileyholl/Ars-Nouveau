@@ -21,10 +21,6 @@ public abstract class AbstractSupplierBlockStateProvider extends BlockStateProvi
     protected final ResourceLocation key;
     protected BlockState state = null;
 
-    public AbstractSupplierBlockStateProvider(String namespace, String path) {
-        this(new ResourceLocation(namespace, path));
-    }
-
     public AbstractSupplierBlockStateProvider(ResourceLocation key) {
         this.key = key;
     }

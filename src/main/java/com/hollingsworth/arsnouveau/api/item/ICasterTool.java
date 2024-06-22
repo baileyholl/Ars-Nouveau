@@ -122,7 +122,7 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
             tooltip2.add(Component.literal(caster.getSpellName()));
         }
         if (caster.isSpellHidden()) {
-            tooltip2.add(Component.literal(caster.getHiddenRecipe()).withStyle(Style.EMPTY.withFont(new ResourceLocation("minecraft", "alt")).withColor(ChatFormatting.GOLD)));
+            tooltip2.add(Component.literal(caster.getHiddenRecipe()).withStyle(Style.EMPTY.withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "alt")).withColor(ChatFormatting.GOLD)));
         } else {
             Spell spell = caster.getSpell();
             tooltip2.add(Component.literal(spell.getDisplayString()));

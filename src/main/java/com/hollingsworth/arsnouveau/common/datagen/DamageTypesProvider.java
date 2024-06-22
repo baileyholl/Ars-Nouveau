@@ -48,7 +48,7 @@ public class DamageTypesProvider  extends DatapackBuiltinEntriesProvider {
 
     public static class DamageTypesTagsProvider extends DamageTypeTagsProvider {
 
-        TagKey<DamageType> FORGE_MAGIC = TagKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("c", "is_magic"));
+        TagKey<DamageType> FORGE_MAGIC = TagKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("c", "is_magic"));
         public DamageTypesTagsProvider(PackOutput pPackOutput, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
             super(pPackOutput, provider, ArsNouveau.MODID, existingFileHelper);
         }
