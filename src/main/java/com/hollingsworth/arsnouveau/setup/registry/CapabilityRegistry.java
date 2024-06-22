@@ -2,33 +2,26 @@ package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
-import com.hollingsworth.arsnouveau.common.capability.ANPlayerCapAttacher;
-import com.hollingsworth.arsnouveau.common.capability.ANPlayerDataCap;
-import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
-import com.hollingsworth.arsnouveau.common.capability.ManaCapAttacher;
+import com.hollingsworth.arsnouveau.common.capability.*;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSyncPlayerCap;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.capabilities.EntityCapability;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 public class CapabilityRegistry {
 
-    public static final Capability<IManaCap> MANA_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
-    });
-    public static final Capability<IPlayerCap> PLAYER_DATA_CAP = CapabilityManager.get(new CapabilityToken<>() {
-    });
-
-
-    public static final Direction DEFAULT_FACING = null;
-
+    public static final EntityCapability<IManaCap, Void> MANA_CAPABILITY = EntityCapability.createVoid(ArsNouveau.prefix("mana"), IManaCap.class);
+    public static final EntityCapability<IPlayerCap, Void> PLAYER_DATA_CAP = EntityCapability.createVoid(ArsNouveau.prefix("player_data"), IPlayerCap.class);
 
     /**
      * Get the {@link IManaCap} from the specified entity.
@@ -39,7 +32,7 @@ public class CapabilityRegistry {
     public static LazyOptional<IManaCap> getMana(final LivingEntity entity) {
         if (entity == null)
             return LazyOptional.empty();
-        return entity.getCapability(MANA_CAPABILITY);
+        return LazyOptional.of(entity.getCapability(MANA_CAPABILITY));
     }
 
     /**
@@ -51,7 +44,30 @@ public class CapabilityRegistry {
     public static LazyOptional<IPlayerCap> getPlayerDataCap(final LivingEntity entity) {
         if (entity == null)
             return LazyOptional.empty();
-        return entity.getCapability(PLAYER_DATA_CAP);
+        return LazyOptional.of(entity.getCapability(PLAYER_DATA_CAP));
+    }
+
+    /**
+     * todo: DELETE
+     * @deprecated
+     */
+    public static class LazyOptional<T> {
+        private T val;
+        private LazyOptional(T value) {
+            this.val = value;
+        }
+
+        public static <T> LazyOptional<T> of(T value) {
+            return new LazyOptional<>(value);
+        }
+
+        public T orElse(T value) {
+            return val == null ? value : val;
+        }
+
+        public static <T> LazyOptional<T> empty() {
+            return null;
+        }
     }
 
     /**
@@ -61,23 +77,10 @@ public class CapabilityRegistry {
     @EventBusSubscriber(modid = ArsNouveau.MODID)
     public static class EventHandler {
 
-        /**
-         * Attach the {@link IManaCap} capability to all living entities.
-         *
-         * @param event The event
-         */
-        @SubscribeEvent
-        public static void attachCapabilities(final AttachCapabilitiesEvent<Entity> event) {
-            if (event.getObject() instanceof Player) {
-                ManaCapAttacher.attach(event);
-                ANPlayerCapAttacher.attach(event);
-            }
-        }
-
         @SubscribeEvent
         public static void registerCapabilities(final RegisterCapabilitiesEvent event) {
-            event.register(IManaCap.class);
-            event.register(IPlayerCap.class);
+            event.registerEntity(MANA_CAPABILITY, EntityType.PLAYER, (player, ctx) -> new ManaCap());
+            event.registerEntity(PLAYER_DATA_CAP, EntityType.PLAYER, (player, ctx) -> new ANPlayerDataCap());
         }
 
         /**
@@ -88,21 +91,26 @@ public class CapabilityRegistry {
         @SubscribeEvent
         public static void playerClone(PlayerEvent.Clone event) {
             Player oldPlayer = event.getOriginal();
-            oldPlayer.revive();
-            getMana(oldPlayer).ifPresent(oldMaxMana -> getMana(event.getEntity()).ifPresent(newMaxMana -> {
-                newMaxMana.setMaxMana(oldMaxMana.getMaxMana());
-                newMaxMana.setMana(oldMaxMana.getCurrentMana());
-                newMaxMana.setBookTier(oldMaxMana.getBookTier());
-                newMaxMana.setGlyphBonus(oldMaxMana.getGlyphBonus());
-            }));
+//            oldPlayer.revive();
+            var oldMana = getMana(oldPlayer).orElse(null);
+            var newMana = getMana(event.getEntity()).orElse(null);
+            if (oldMana != null && newMana != null) {
+                newMana.setMaxMana(oldMana.getMaxMana());
+                newMana.setMana(oldMana.getCurrentMana());
+                newMana.setBookTier(oldMana.getBookTier());
+                newMana.setGlyphBonus(oldMana.getGlyphBonus());
+            }
 
-            getPlayerDataCap(oldPlayer).ifPresent(oldPlayerCap -> {
-                IPlayerCap playerDataCap = getPlayerDataCap(event.getEntity()).orElse(new ANPlayerDataCap());
-                CompoundTag tag = oldPlayerCap.serializeNBT();
-                playerDataCap.deserializeNBT(tag);
+            var oldPlayerCap = getPlayerDataCap(oldPlayer).orElse(null);
+            var newPlayerCap = getPlayerDataCap(event.getEntity()).orElse(new ANPlayerDataCap());
+            if (oldPlayerCap != null) {
+                CompoundTag tag = oldPlayerCap.serializeNBT(event.getOriginal().level.registryAccess());
+                newPlayerCap.deserializeNBT(event.getOriginal().level.registryAccess(), tag);
                 syncPlayerCap(event.getEntity());
-            });
-            event.getOriginal().invalidateCaps();
+            }
+
+
+//            event.getOriginal().invalidateCaps();
         }
 
 
@@ -137,7 +145,7 @@ public class CapabilityRegistry {
 
         public static void syncPlayerCap(Player player) {
             IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(player).orElse(new ANPlayerDataCap());
-            CompoundTag tag = cap.serializeNBT();
+            CompoundTag tag = cap.serializeNBT(player.level.registryAccess());
             if(player instanceof ServerPlayer serverPlayer){
                 Networking.sendToPlayerClient(new PacketSyncPlayerCap(tag), serverPlayer);
             }

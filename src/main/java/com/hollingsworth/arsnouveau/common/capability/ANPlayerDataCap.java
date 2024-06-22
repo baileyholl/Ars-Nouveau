@@ -3,8 +3,10 @@ package com.hollingsworth.arsnouveau.common.capability;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.UnknownNullability;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -85,7 +87,7 @@ public class ANPlayerDataCap implements IPlayerCap {
     }
 
     @Override
-    public CompoundTag serializeNBT() {
+    public @UnknownNullability CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();
 
         CompoundTag glyphsTag = new CompoundTag();
@@ -110,13 +112,13 @@ public class ANPlayerDataCap implements IPlayerCap {
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
         glyphs = new HashSet<>();
         familiars = new HashSet<>();
 
         CompoundTag glyphsTag = nbt.getCompound("glyphs");
         for (int i = 0; i < glyphsTag.getInt("size"); i++) {
-            ResourceLocation id = new ResourceLocation(glyphsTag.getString("glyph" + i));
+            ResourceLocation id = ResourceLocation.parse(glyphsTag.getString("glyph" + i));
             AbstractSpellPart part = GlyphRegistry.getSpellPart(id);
             if (part != null)
                 glyphs.add(part);
@@ -127,7 +129,7 @@ public class ANPlayerDataCap implements IPlayerCap {
             familiars.add(new FamiliarData(familiarsTag.getCompound("familiar" + i)));
         }
         if(nbt.contains("lastSummonedFamiliar")){
-            lastSummonedFamiliar = new ResourceLocation(nbt.getString("lastSummonedFamiliar"));
+            lastSummonedFamiliar = ResourceLocation.parse(nbt.getString("lastSummonedFamiliar"));
         }
     }
 }
