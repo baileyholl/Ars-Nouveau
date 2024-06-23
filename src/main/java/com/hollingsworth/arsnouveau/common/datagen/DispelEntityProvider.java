@@ -2,16 +2,12 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.recipe.DispelEntityRecipe;
-import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.DispelEntityRecipe;
 import net.minecraft.advancements.critereon.EntityFlagsPredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;

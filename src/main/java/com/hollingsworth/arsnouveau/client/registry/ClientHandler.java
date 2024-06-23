@@ -27,6 +27,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
@@ -38,7 +39,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.api.distmarker.Dist;
@@ -48,6 +48,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.jetbrains.annotations.Nullable;
 
 import static com.hollingsworth.arsnouveau.client.events.ClientEvents.localize;
@@ -156,7 +158,7 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.LILY.get(), LilyRenderer::new);
     }
 
-    public static NamedGuiOverlay cameraOverlay = new NamedGuiOverlay(ArsNouveau.prefix( "scry_camera"), (gui, pose, partialTick, width, height) -> {
+    public static LayeredDraw.Layer cameraOverlay = new LayeredDraw.Layer(ArsNouveau.prefix( "scry_camera"), (gui, pose, partialTick, width, height) -> {
         Minecraft mc = Minecraft.getInstance();
         Level level = mc.level;
         BlockPos pos = mc.cameraEntity.blockPosition();
@@ -177,11 +179,11 @@ public class ClientHandler {
     });
 
     @SubscribeEvent
-    public static void registerOverlays(final RegisterGuiOverlaysEvent event) {
-        event.registerAboveAll("scry_camera", cameraOverlay.overlay());
-        event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "tooltip", GuiEntityInfoHUD.OVERLAY);
-        event.registerAboveAll("mana_hud", GuiManaHUD.OVERLAY);
-        event.registerAboveAll("spell_hud", GuiSpellHUD.OVERLAY);
+    public static void registerOverlays(final RegisterGuiLayersEvent event) {
+        event.registerAboveAll(ArsNouveau.prefix("scry_camera"), cameraOverlay);
+        event.registerAbove(VanillaGuiLayers.HOTBAR, ArsNouveau.prefix("tooltip"), GuiEntityInfoHUD.OVERLAY);
+        event.registerAboveAll(ArsNouveau.prefix("mana_hud"), GuiManaHUD.OVERLAY);
+        event.registerAboveAll(ArsNouveau.prefix("spell_hud"), GuiSpellHUD.OVERLAY);
 
     }
 

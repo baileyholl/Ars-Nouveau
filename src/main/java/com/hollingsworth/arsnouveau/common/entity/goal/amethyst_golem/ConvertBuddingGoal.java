@@ -1,15 +1,14 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem;
 
-import com.hollingsworth.arsnouveau.api.recipe.BuddingConversionRecipe;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.BuddingConversionRecipe;
 import com.hollingsworth.arsnouveau.common.entity.AmethystGolem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 

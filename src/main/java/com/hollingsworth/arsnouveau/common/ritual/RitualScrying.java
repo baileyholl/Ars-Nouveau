@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.recipe.ScryRitualRecipe;
 import com.hollingsworth.arsnouveau.api.registry.ScryRitualRegistry;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.scrying.IScryer;
@@ -9,20 +8,18 @@ import com.hollingsworth.arsnouveau.api.scrying.SingleBlockScryer;
 import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.items.ManipulationEssence;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.ScryRitualRecipe;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketGetPersistentData;
-import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
-import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -32,7 +29,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class RitualScrying extends AbstractRitual {
-    private RegistryWrapper<ManipulationEssence> MANIPULATION_ESSENCE = ItemsRegistry.MANIPULATION_ESSENCE;
 
     @Override
     protected void tick() {
@@ -44,8 +40,8 @@ public class RitualScrying extends AbstractRitual {
         if (!getWorld().isClientSide && getProgress() >= 15) {
             List<ServerPlayer> players = getWorld().getEntitiesOfClass(ServerPlayer.class, new AABB(getPos()).inflate(5.0));
             if (!players.isEmpty()) {
-                ItemStack item = getConsumedItems().stream().filter(i -> i.getItem() != MANIPULATION_ESSENCE.get()).findFirst().orElse(ItemStack.EMPTY);
-                int modifier = didConsumeItem(MANIPULATION_ESSENCE.get()) ? 3 : 1;
+                ItemStack item = getConsumedItems().stream().filter(i -> i.getItem() != ItemsRegistry.MANIPULATION_ESSENCE.get()).findFirst().orElse(ItemStack.EMPTY);
+                int modifier = didConsumeItem(ItemsRegistry.MANIPULATION_ESSENCE.get()) ? 3 : 1;
                 for (ServerPlayer playerEntity : players) {
                     Optional<ScryRitualRecipe> hasRecipe = ScryRitualRegistry.getRecipes().stream().filter(recipe -> recipe.matches(item)).findFirst();
                     IScryer scryer = null;
@@ -66,7 +62,7 @@ public class RitualScrying extends AbstractRitual {
     }
 
     public static void grantScrying(ServerPlayer playerEntity, int ticks, IScryer scryer) {
-        playerEntity.addEffect(new MobEffectInstance(ModPotions.SCRYING_EFFECT.get(), ticks));
+        playerEntity.addEffect(new MobEffectInstance(ModPotions.SCRYING_EFFECT, ticks));
         CompoundTag tag = playerEntity.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
         tag.put("an_scryer", scryer.toTag(new CompoundTag()));
         playerEntity.getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
@@ -80,8 +76,8 @@ public class RitualScrying extends AbstractRitual {
 
     @Override
     public boolean canConsumeItem(ItemStack stack) {
-        boolean hasExtended = didConsumeItem(MANIPULATION_ESSENCE.get());
-        if (!hasExtended && stack.getItem() == MANIPULATION_ESSENCE.get()) return true;
+        boolean hasExtended = didConsumeItem(ItemsRegistry.MANIPULATION_ESSENCE.get());
+        if (!hasExtended && stack.getItem() == ItemsRegistry.MANIPULATION_ESSENCE.get()) return true;
 
         boolean hasConsumedAugment = getConsumedItems().size() - (hasExtended ? 1 : 0) > 0;
         if (!hasConsumedAugment) {

@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.recipe.SummonRitualRecipe;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.SummonRitualRecipe;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;

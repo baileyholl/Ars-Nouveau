@@ -16,9 +16,9 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -28,20 +28,17 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
-
-import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
-import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -49,7 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable, Container, ITooltipProvider, IAnimationListener, IWandable {
+public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable, Container, ITooltipProvider, IAnimationListener, IWandable, RecipeInput {
     private ItemStack stack = ItemStack.EMPTY;
     boolean synced;
     public List<ItemStack> consumedStacks = new ArrayList<>();
@@ -124,26 +121,23 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
 
     public void takeNearby() {
         for (BlockPos bPos : BlockPos.betweenClosed(worldPosition.north(6).east(6).below(2), worldPosition.south(6).west(6).above(2))) {
-            if (level.getBlockEntity(bPos) != null && level.getBlockEntity(bPos).getCapability(ITEM_HANDLER, null).isPresent()) {
-                IItemHandler handler = level.getBlockEntity(bPos).getCapability(ITEM_HANDLER, null).orElse(null);
-                if (handler != null) {
-                    for (int i = 0; i < handler.getSlots(); i++) {
-                        ItemStack stack = handler.getStackInSlot(i);
-                        if (canConsumeItemstack(stack)) {
-                            ItemStack stack1 = handler.extractItem(i, 1, false);
-                            stack1.copy().setCount(1);
-                            consumedStacks.add(stack1);
-                            EntityFlyingItem flyingItem = new EntityFlyingItem(level, bPos, getBlockPos());
-                            flyingItem.setStack(stack1);
-                            level.addFreshEntity(flyingItem);
-                            updateBlock();
-                            return;
-                        }
+            IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, bPos, null);
+            if (handler != null) {
+                for (int i = 0; i < handler.getSlots(); i++) {
+                    ItemStack stack = handler.getStackInSlot(i);
+                    if (canConsumeItemstack(stack)) {
+                        ItemStack stack1 = handler.extractItem(i, 1, false);
+                        stack1.copy().setCount(1);
+                        consumedStacks.add(stack1);
+                        EntityFlyingItem flyingItem = new EntityFlyingItem(level, bPos, getBlockPos());
+                        flyingItem.setStack(stack1);
+                        level.addFreshEntity(flyingItem);
+                        updateBlock();
+                        return;
                     }
                 }
             }
         }
-
     }
 
     public boolean consumeStack(ItemStack stack) {
@@ -269,7 +263,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
         super.loadAdditional(compound, pRegistries);
-        stack = ItemStack.of((CompoundTag) compound.get("itemStack"));
+        stack = ItemStack.parseOptional(pRegistries, (CompoundTag) compound.get("itemStack"));
         if (compound.contains("recipe")) {
             recipeID = ResourceLocation.tryParse(compound.getString("recipe"));
         }
@@ -282,11 +276,11 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    public void saveAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(compound, pRegistries);
         if (stack != null) {
-            CompoundTag reagentTag = new CompoundTag();
-            stack.save(reagentTag);
+            Tag reagentTag = stack.save(pRegistries);
+
             compound.put("itemStack", reagentTag);
         }
         if (recipe != null) {
@@ -319,11 +313,6 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
         data.add(controller);
     }
 
-    @Override
-    public AABB getRenderBoundingBox() {
-        return super.getRenderBoundingBox().inflate(2);
-    }
-
     AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
     AnimationController<ScribesTile> controller;
 
@@ -345,6 +334,11 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
     @Override
     public ItemStack getItem(int pIndex) {
         return stack;
+    }
+
+    @Override
+    public int size() {
+        return 0;
     }
 
     @Override

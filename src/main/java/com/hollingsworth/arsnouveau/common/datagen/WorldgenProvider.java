@@ -2,9 +2,9 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.setup.registry.BiomeRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.setup.registry.WorldgenRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.BiomeRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
@@ -22,7 +22,7 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.world.BiomeModifier;
 import net.neoforged.neoforge.common.world.BiomeModifiers;
-
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -32,20 +32,20 @@ public class WorldgenProvider extends DatapackBuiltinEntriesProvider {
     private static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
             .add(Registries.CONFIGURED_FEATURE, WorldgenRegistry::bootstrapConfiguredFeatures)
             .add(Registries.PLACED_FEATURE, WorldgenRegistry::bootstrapPlacedFeatures)
-            .add(ForgeRegistries.Keys.BIOME_MODIFIERS, BiomeModifierRegistry::bootstrap)
-            .add(ForgeRegistries.Keys.BIOMES, BiomeRegistry::bootstrap);
+            .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, BiomeModifierRegistry::bootstrap)
+            .add(NeoForgeRegistries.Keys.BIOMES, BiomeRegistry::bootstrap);
 
     public WorldgenProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries, BUILDER, Set.of(ArsNouveau.MODID));
     }
 
     public static class BiomeModifierRegistry {
-        public static final ResourceKey<BiomeModifier> STARBUNCLE_SPAWN = ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS, prefix("starbuncle_spawn"));
-        public static final ResourceKey<BiomeModifier> GIFT_STARBUNCLE_SPAWN = ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS, prefix("gift_starbuncle_spawn"));
-        public static final ResourceKey<BiomeModifier> DRYGMY_SPAWN = ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS, prefix("drygmy_spawn"));
-        public static final ResourceKey<BiomeModifier> WHIRLISPRIG_SPAWN = ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS, prefix("whirlisprig_spawn"));
-        public static final ResourceKey<BiomeModifier> ARCHWOOD_MIX_RARE = ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS, prefix("rare_archwood_mix"));
-        public static final ResourceKey<BiomeModifier> BERRY_COMMON = ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS, prefix("common_source_berry"));
+        public static final ResourceKey<BiomeModifier> STARBUNCLE_SPAWN = ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, prefix("starbuncle_spawn"));
+        public static final ResourceKey<BiomeModifier> GIFT_STARBUNCLE_SPAWN = ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, prefix("gift_starbuncle_spawn"));
+        public static final ResourceKey<BiomeModifier> DRYGMY_SPAWN = ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, prefix("drygmy_spawn"));
+        public static final ResourceKey<BiomeModifier> WHIRLISPRIG_SPAWN = ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, prefix("whirlisprig_spawn"));
+        public static final ResourceKey<BiomeModifier> ARCHWOOD_MIX_RARE = ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, prefix("rare_archwood_mix"));
+        public static final ResourceKey<BiomeModifier> BERRY_COMMON = ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, prefix("common_source_berry"));
 
         public static void bootstrap(BootstrapContext<BiomeModifier> context) {
             HolderSet<Biome> OVERWORLD_TAG = context.lookup(Registries.BIOME).getOrThrow(BiomeTags.IS_OVERWORLD);

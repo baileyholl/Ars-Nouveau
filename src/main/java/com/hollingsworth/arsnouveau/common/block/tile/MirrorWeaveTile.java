@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.common.block.MirrorWeave;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
-import com.hollingsworth.arsnouveau.common.util.registry.RegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderGetter;
@@ -37,10 +36,6 @@ public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILigh
 
     public MirrorWeaveTile(BlockPos pos, BlockState state) {
         this(BlockRegistry.MIRROR_WEAVE_TILE.get(), pos, state);
-    }
-
-    public MirrorWeaveTile(RegistryWrapper<? extends BlockEntityType> type, BlockPos pos, BlockState state) {
-        this(type.get(), pos, state);
     }
 
     @Override

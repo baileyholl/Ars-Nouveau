@@ -4,26 +4,25 @@ import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
-import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 
 
 public class GuiSpellHUD {
-    public static final IGuiOverlay OVERLAY = GuiSpellHUD::renderOverlay;
+    public static final LayeredDraw.Layer OVERLAY = GuiSpellHUD::renderOverlay;
 
     private static final Minecraft minecraft = Minecraft.getInstance();
 
-    public static void renderOverlay(ExtendedGui gui, GuiGraphics graphics, float pt, int width,
-                                     int height) {
+    public static void renderOverlay(GuiGraphics graphics, DeltaTracker deltaTracker) {
         ItemStack stack = StackUtil.getHeldSpellbook(minecraft.player);
         if (stack != ItemStack.EMPTY && stack.getItem() instanceof SpellBook && stack.getTag() != null) {
             int offsetLeft = 10;
             ISpellCaster caster = CasterUtil.getCaster(stack);
             String renderString = caster.getCurrentSlot() + 1 + " " + caster.getSpellName();
-            graphics.drawString(gui.getFont(), renderString, offsetLeft, minecraft.getWindow().getGuiScaledHeight() - 30, 0xFFFFFF);
+            graphics.drawString(Minecraft.getInstance().font, renderString, offsetLeft, minecraft.getWindow().getGuiScaledHeight() - 30, 0xFFFFFF);
         }
     }
 }

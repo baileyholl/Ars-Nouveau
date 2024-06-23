@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.statemachine;
 
 import com.hollingsworth.arsnouveau.common.util.Log;
-import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.neoforged.fml.loading.FMLEnvironment;
 
 import javax.annotation.Nonnull;
 

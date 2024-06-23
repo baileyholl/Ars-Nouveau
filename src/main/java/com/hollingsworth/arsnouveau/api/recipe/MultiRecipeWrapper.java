@@ -3,12 +3,10 @@ package com.hollingsworth.arsnouveau.api.recipe;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.*;
@@ -96,10 +94,8 @@ public class MultiRecipeWrapper implements IRecipeWrapper{
                 if (stack.getItem() == Items.POTION) {
                     PotionContents potionContents = stack.get(DataComponents.POTION_CONTENTS);
                     if (potionContents == null) continue;
-                    Optional<Holder<Potion>> potionOpt = potionContents.potion();
-                    if (potionOpt.isEmpty()) continue;
-                    Potion potion = potionOpt.get().value();
-                    if (potion == Potions.WATER || WixieCauldronTile.findNeededPotion(potion, 300, world, pos) != null) {
+
+                    if (potionContents.is(Potions.WATER) || WixieCauldronTile.findNeededPotion(potionContents, 300, world, pos) != null) {
                         foundStack = true;
                         break;
                     }

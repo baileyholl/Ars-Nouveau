@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.command;
 
 import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
-import com.hollingsworth.arsnouveau.common.tomes.CasterTomeData;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.CasterTomeData;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.minecraft.commands.CommandSourceStack;

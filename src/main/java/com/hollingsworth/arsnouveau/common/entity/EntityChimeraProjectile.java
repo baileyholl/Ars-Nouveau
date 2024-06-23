@@ -2,20 +2,17 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-import net.neoforged.neoforge.network.NetworkHooks;
-import net.neoforged.neoforge.network.PlayMessages;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -45,6 +42,16 @@ public class EntityChimeraProjectile extends AbstractArrow implements GeoEntity 
     @Override
     protected ItemStack getPickupItem() {
         return ItemStack.EMPTY;
+    }
+
+    @Override
+    protected ItemStack getDefaultPickupItem() {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    protected boolean tryPickup(Player pPlayer) {
+        return false;
     }
 
     @Override
@@ -104,7 +111,7 @@ public class EntityChimeraProjectile extends AbstractArrow implements GeoEntity 
             Collection<MobEffectInstance> effects = entity.getActiveEffects();
             MobEffectInstance[] array = effects.toArray(new MobEffectInstance[0]);
             for (MobEffectInstance e : array) {
-                if (e.getEffect().isBeneficial())
+                if (e.getEffect().value().isBeneficial())
                     entity.removeEffect(e.getEffect());
             }
             entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 2));
@@ -138,14 +145,5 @@ public class EntityChimeraProjectile extends AbstractArrow implements GeoEntity 
     @Override
     public EntityType<?> getType() {
         return ModEntities.ENTITY_CHIMERA_SPIKE.get();
-    }
-
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
-    public EntityChimeraProjectile(PlayMessages.SpawnEntity packet, Level world) {
-        super(ModEntities.ENTITY_CHIMERA_SPIKE.get(), world);
     }
 }

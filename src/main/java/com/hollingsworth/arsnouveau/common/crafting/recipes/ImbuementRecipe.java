@@ -1,8 +1,5 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.common.block.tile.ImbuementTile;
@@ -12,13 +9,10 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
@@ -31,8 +25,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
 
 public class ImbuementRecipe implements Recipe<ImbuementTile> {
@@ -122,11 +114,11 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
 
     @Override
     public RecipeType<?> getType() {
-        return BuiltInRegistries.RECIPE_TYPE.get(ArsNouveau.prefix( RecipeRegistry.IMBUEMENT_RECIPE_ID));
+        return BuiltInRegistries.RECIPE_TYPE.get(ArsNouveau.prefix(RecipeRegistry.IMBUEMENT_RECIPE_ID));
     }
 
     public static class Serializer implements RecipeSerializer<ImbuementRecipe> {
-        // Todo: restore count on output?
+
         public static final MapCodec<ImbuementRecipe> CODEC =  RecordCodecBuilder.mapCodec(instance -> instance.group(
                 Ingredient.CODEC.fieldOf("input").forGetter(ImbuementRecipe::getInput),
                 ItemStack.CODEC.fieldOf("output").forGetter(ImbuementRecipe::getOutput),
@@ -134,7 +126,11 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
                 Ingredient.CODEC.listOf().fieldOf("pedestalItems").forGetter(ImbuementRecipe::getPedestalItems)
         ).apply(instance, ImbuementRecipe::new));
 
-        public void toNetwork(RegistryFriendlyByteBuf buf, ImbuementRecipe recipe) {
+        public static final StreamCodec<RegistryFriendlyByteBuf, ImbuementRecipe> STREAM_CODEC = StreamCodec.of(
+                ImbuementRecipe.Serializer::toNetwork, ImbuementRecipe.Serializer::fromNetwork
+        );
+
+        public static void toNetwork(RegistryFriendlyByteBuf buf, ImbuementRecipe recipe) {
             buf.writeInt(recipe.pedestalItems.size());
             for (Ingredient i : recipe.pedestalItems) {
                 Ingredient.CONTENTS_STREAM_CODEC.encode(buf, i);
@@ -144,8 +140,7 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
             buf.writeInt(recipe.source);
         }
 
-        @Nullable
-        public ImbuementRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
+        public static ImbuementRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
             int length = buffer.readInt();
             List<Ingredient> stacks = new ArrayList<>();
 
@@ -167,7 +162,7 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
 
         @Override
         public StreamCodec<RegistryFriendlyByteBuf, ImbuementRecipe> streamCodec() {
-            return null;
+            return STREAM_CODEC;
         }
     }
 }

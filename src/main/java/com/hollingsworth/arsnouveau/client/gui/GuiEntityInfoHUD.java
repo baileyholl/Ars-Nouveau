@@ -6,9 +6,11 @@ import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -24,8 +26,6 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.client.ClientHooks;
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
-import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
-import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
@@ -34,13 +34,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GuiEntityInfoHUD {
-    public static final IGuiOverlay OVERLAY = GuiEntityInfoHUD::renderOverlay;
+    public static final LayeredDraw.Layer OVERLAY = GuiEntityInfoHUD::renderOverlay;
 
     public static int hoverTicks = 0;
     public static Object lastHovered = null;
 
-    public static void renderOverlay(ExtendedGui gui, GuiGraphics graphics, float partialTicks, int width,
-                                     int height) {
+    public static void renderOverlay(GuiGraphics graphics, DeltaTracker tracker) {
         PoseStack poseStack = graphics.pose();
         Minecraft mc = Minecraft.getInstance();
         if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)

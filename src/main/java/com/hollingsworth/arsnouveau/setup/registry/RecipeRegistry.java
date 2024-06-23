@@ -1,13 +1,7 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.*;
-import com.hollingsworth.arsnouveau.api.event.ChimeraSummonEvent;
-import com.hollingsworth.arsnouveau.api.recipe.BuddingConversionRecipe;
-import com.hollingsworth.arsnouveau.api.recipe.DispelEntityRecipe;
-import com.hollingsworth.arsnouveau.api.recipe.ScryRitualRecipe;
-import com.hollingsworth.arsnouveau.api.recipe.SummonRitualRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.*;
-import com.hollingsworth.arsnouveau.common.tomes.CasterTomeData;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -39,6 +33,8 @@ public class RecipeRegistry {
     public static final String BUDDING_CONVERSION_RECIPE_ID = "budding_conversion";
     public static final String DISPEL_ENTITY_RECIPE_ID = "dispel_entity";
     public static final String SCRY_RITUAL_RECIPE_ID = "scry_ritual";
+    public static final String BOOK_UPGRADE_RECIPE_ID = "book_upgrade";
+    public static final String POTION_FLASK_RECIPE_ID = "potion_flask";
 
     public static final DeferredHolder<RecipeType<?>, ModRecipeType<EnchantingApparatusRecipe>> APPARATUS_TYPE = RECIPE_TYPES.register(ENCHANTING_APPARATUS_RECIPE_ID, () -> new ModRecipeType<>());
     public static final DeferredHolder<RecipeSerializer<?>, EnchantingApparatusRecipe.Serializer> APPARATUS_SERIALIZER = RECIPE_SERIALIZERS.register(ENCHANTING_APPARATUS_RECIPE_ID, () -> new EnchantingApparatusRecipe.Serializer());
@@ -53,15 +49,15 @@ public class RecipeRegistry {
     public static final DeferredHolder<RecipeSerializer<?>, ImbuementRecipe.Serializer> IMBUEMENT_SERIALIZER = RECIPE_SERIALIZERS.register(IMBUEMENT_RECIPE_ID, () -> new ImbuementRecipe.Serializer());
 
 
-    public static final DeferredHolder<RecipeType<?>, ModRecipeType<BookUpgradeRecipe>> BOOK_UPGRADE_TYPE = RECIPE_TYPES.register("book_upgrade", () -> new ModRecipeType<>());
-    public static final DeferredHolder<RecipeSerializer<?>, BookUpgradeRecipe.Serializer> BOOK_UPGRADE_RECIPE = RECIPE_SERIALIZERS.register("book_upgrade", () -> new BookUpgradeRecipe.Serializer());
+    public static final DeferredHolder<RecipeType<?>, ModRecipeType<BookUpgradeRecipe>> BOOK_UPGRADE_TYPE = RECIPE_TYPES.register(BOOK_UPGRADE_RECIPE_ID, () -> new ModRecipeType<>());
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<BookUpgradeRecipe>> BOOK_UPGRADE_RECIPE = RECIPE_SERIALIZERS.register(BOOK_UPGRADE_RECIPE_ID, () -> ExtendableShapelessSerializer.create(BookUpgradeRecipe::new));
 
-    public static final DeferredHolder<RecipeType<?>, ModRecipeType<PotionFlaskRecipe>> POTION_FLASK_TYPE = RECIPE_TYPES.register("potion_flask", () -> new ModRecipeType<>());
-    public static final DeferredHolder<RecipeSerializer<?>, PotionFlaskRecipe.Serializer> POTION_FLASK_RECIPE = RECIPE_SERIALIZERS.register("potion_flask", () -> new PotionFlaskRecipe.Serializer());
+    public static final DeferredHolder<RecipeType<?>, ModRecipeType<PotionFlaskRecipe>> POTION_FLASK_TYPE = RECIPE_TYPES.register(POTION_FLASK_RECIPE_ID, () -> new ModRecipeType<>());
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<PotionFlaskRecipe>> POTION_FLASK_RECIPE = RECIPE_SERIALIZERS.register(POTION_FLASK_RECIPE_ID, () -> ExtendableShapelessSerializer.create(PotionFlaskRecipe::new));
 
 
     public static final DeferredHolder<RecipeType<?>, ModRecipeType<DyeRecipe>> DYE_TYPE = RECIPE_TYPES.register(DYE_RECIPE_ID, () -> new ModRecipeType<>());
-    public static final DeferredHolder<RecipeSerializer<?>, DyeRecipe.Serializer> DYE_RECIPE = RECIPE_SERIALIZERS.register(DYE_RECIPE_ID, () -> new DyeRecipe.Serializer());
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<DyeRecipe>> DYE_RECIPE = RECIPE_SERIALIZERS.register(DYE_RECIPE_ID, () -> ExtendableShapelessSerializer.create(DyeRecipe::new));
 
 
     public static final DeferredHolder<RecipeType<?>, ModRecipeType<ReactiveEnchantmentRecipe>> REACTIVE_TYPE = RECIPE_TYPES.register(REACTIVE_RECIPE_ID, () -> new ModRecipeType<>());

@@ -1,16 +1,16 @@
 package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketReactiveSpell;
 import com.hollingsworth.arsnouveau.common.spell.casters.ReactiveCaster;
+import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -30,7 +30,7 @@ public class ReactiveEvents {
     }
 
     public static void castSpell(LivingEntity playerIn, ItemStack s) {
-        if (s.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get()) * .25 >= Math.random() && new ReactiveCaster(s).getSpell().isValid()) {
+        if (s.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT) * .25 >= Math.random() && new ReactiveCaster(s).getSpell().isValid()) {
             ReactiveCaster reactiveCaster = new ReactiveCaster(s);
             reactiveCaster.castSpell(playerIn.getCommandSenderWorld(), playerIn, InteractionHand.MAIN_HAND, null);
         }
@@ -59,7 +59,7 @@ public class ReactiveEvents {
 
     @SubscribeEvent
     public static void leftClickAir(PlayerInteractEvent.LeftClickEmpty e) {
-        if (e.getItemStack().getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get()) > 0)
+        if (e.getItemStack().getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT) > 0)
             Networking.INSTANCE.sendToServer(new PacketReactiveSpell());
     }
 }

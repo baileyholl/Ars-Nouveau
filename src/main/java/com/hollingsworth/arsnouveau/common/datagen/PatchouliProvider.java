@@ -33,7 +33,6 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import org.apache.commons.io.FilenameUtils;
 
-
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -679,10 +678,6 @@ public class PatchouliProvider extends SimpleDataProvider{
     public PatchouliPage addBasicItem(ItemLike item, ResourceLocation category, IPatchouliPage recipePage) {
         PatchouliBuilder builder = buildBasicItem(item, category, recipePage);
         return addPage(new PatchouliPage(builder, getPath(category, getRegistryName(item.asItem()))));
-    }
-
-    public void addBasicItem(RegistryObject<? extends ItemLike> item, ResourceLocation category, IPatchouliPage recipePage) {
-        addBasicItem(item.get(), category, recipePage);
     }
 
     public Path getPath(ResourceLocation category, ResourceLocation fileName) {

@@ -7,11 +7,11 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.atlas.sources.SingleFile;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.common.data.SpriteSourceProvider;
+
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
@@ -29,13 +29,6 @@ public class AtlasProvider extends SpriteSourceProvider {
         super(output, helper, ArsNouveau.MODID);
     }
 
-    @Override
-    protected void addSources() {
-        MATERIALS.values().stream().flatMap(e -> e.values().stream()).map(Material::texture)
-                .forEach(resourceLocation -> this.atlas(CHESTS_ATLAS).addSource(new SingleFile(resourceLocation, Optional.empty())));
-    }
-
-
     private static EnumMap<ChestType, Material> chestMaterial(String type) {
         EnumMap<ChestType, Material> map = new EnumMap<>(ChestType.class);
 
@@ -44,5 +37,11 @@ public class AtlasProvider extends SpriteSourceProvider {
         map.put(ChestType.RIGHT, new Material(Sheets.CHEST_SHEET, ArsNouveau.prefix( "model/chest/" + type + "/right")));
 
         return map;
+    }
+
+    @Override
+    protected void gather() {
+        MATERIALS.values().stream().flatMap(e -> e.values().stream()).map(Material::texture)
+                .forEach(resourceLocation -> this.atlas(CHESTS_ATLAS).addSource(new SingleFile(resourceLocation, Optional.empty())));
     }
 }

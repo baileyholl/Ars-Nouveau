@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ritual.RangeEffectRitual;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 
@@ -12,8 +13,8 @@ public class RitualGravity extends RangeEffectRitual {
     public static int renewThreshold = 10 * 20;
 
     @Override
-    public MobEffect getEffect() {
-        return ModPotions.GRAVITY_EFFECT.get();
+    public Holder<MobEffect> getEffect() {
+        return ModPotions.GRAVITY_EFFECT;
     }
 
     @Override

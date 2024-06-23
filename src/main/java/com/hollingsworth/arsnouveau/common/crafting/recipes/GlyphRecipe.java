@@ -1,17 +1,17 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -21,22 +21,22 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
-
 public class GlyphRecipe implements Recipe<ScribesTile> {
 
-
-    public ItemStack output;
-    public List<Ingredient> inputs;
+    public final ItemStack output;
+    public final List<Ingredient> inputs;
     public ResourceLocation id;
-    public int exp;
+    public final int exp;
 
     public GlyphRecipe(ResourceLocation id, ItemStack output, List<Ingredient> inputs, int exp) {
+        this(output, inputs, exp);
         this.id = id;
+    }
+
+    public GlyphRecipe(ItemStack output, List<Ingredient> inputs, int exp) {
         this.output = output;
         this.inputs = inputs;
         this.exp = exp;
@@ -96,8 +96,21 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
     }
 
     @Override
-    public ItemStack assemble(ScribesTile p_44001_, RegistryAccess p_267165_) {
+    public ItemStack assemble(ScribesTile p_345149_, HolderLookup.Provider p_346030_) {
         return output.copy();
+    }
+
+
+    public ItemStack getOutput() {
+        return output;
+    }
+
+    public List<Ingredient> getInputs() {
+        return inputs;
+    }
+
+    public int getExp() {
+        return exp;
     }
 
     @Override
@@ -106,13 +119,8 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess p_267052_) {
+    public ItemStack getResultItem(HolderLookup.Provider pRegistries) {
         return output.copy();
-    }
-
-    @Override
-    public ResourceLocation getId() {
-        return id;
     }
 
     @Override
@@ -125,72 +133,46 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
         return RecipeRegistry.GLYPH_TYPE.get();
     }
 
-    public JsonElement asRecipe() {
-        JsonObject jsonobject = new JsonObject();
-        jsonobject.addProperty("type", "ars_nouveau:" + RecipeRegistry.GLYPH_RECIPE_ID);
-        jsonobject.addProperty("count", this.output.getCount());
-        JsonArray pedestalArr = new JsonArray();
-        for (Ingredient i : this.inputs) {
-            JsonObject object = new JsonObject();
-            object.add("item", i.toJson());
-            pedestalArr.add(object);
-        }
-        jsonobject.add("inputItems", pedestalArr);
-        jsonobject.addProperty("exp", exp);
-        jsonobject.addProperty("output", getRegistryName(output.getItem()).toString());
-        return jsonobject;
-    }
-
     public static class Serializer implements RecipeSerializer<GlyphRecipe> {
 
-        @Override
-        public GlyphRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            Item output = GsonHelper.getAsItem(json, "output");
-            int count = GsonHelper.getAsInt(json, "count");
-            ItemStack outputStack = new ItemStack(output, count);
-            int levels = GsonHelper.getAsInt(json, "exp");
-            JsonArray inputItems = GsonHelper.getAsJsonArray(json, "inputItems");
-            List<Ingredient> stacks = new ArrayList<>();
-
-            for (JsonElement e : inputItems) {
-                JsonObject obj = e.getAsJsonObject();
-                Ingredient input = null;
-                if (GsonHelper.isArrayNode(obj, "item")) {
-                    input = Ingredient.fromJson(GsonHelper.getAsJsonArray(obj, "item"));
-                } else {
-                    input = Ingredient.fromJson(GsonHelper.getAsJsonObject(obj, "item"));
-                }
-                stacks.add(input);
-            }
-            return new GlyphRecipe(recipeId, outputStack, stacks, levels);
-        }
-
-
-        @Override
-        public void toNetwork(FriendlyByteBuf buf, GlyphRecipe recipe) {
-            buf.writeInt(recipe.inputs.size());
+        public static void toNetwork(RegistryFriendlyByteBuf buffer, GlyphRecipe recipe) {
+            buffer.writeInt(recipe.inputs.size());
             for (Ingredient i : recipe.inputs) {
-                i.toNetwork(buf);
+                Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, i);
             }
-            buf.writeItem(recipe.output);
-            buf.writeInt(recipe.exp);
+            ItemStack.STREAM_CODEC.encode(buffer, recipe.output);
+            buffer.writeInt(recipe.exp);
         }
 
-        @Nullable
-        @Override
-        public GlyphRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+        public static GlyphRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
             int length = buffer.readInt();
             List<Ingredient> stacks = new ArrayList<>();
 
             for (int i = 0; i < length; i++) {
                 try {
-                    stacks.add(Ingredient.fromNetwork(buffer));
+                    Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
                 } catch (Exception e) {
                     e.printStackTrace();
                     break;
                 }
             }
-            return new GlyphRecipe(recipeId, buffer.readItem(), stacks, buffer.readInt());
+            return new GlyphRecipe(ItemStack.STREAM_CODEC.decode(buffer), stacks, buffer.readInt());
+        }
+
+        public static final MapCodec<GlyphRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                ItemStack.CODEC.fieldOf("output").forGetter(GlyphRecipe::getOutput),
+                Ingredient.CODEC.listOf().fieldOf("inputs").forGetter(GlyphRecipe::getIngredients),
+                Codec.INT.fieldOf("exp").forGetter(GlyphRecipe::getExp)
+        ).apply(instance, GlyphRecipe::new));
+
+        @Override
+        public MapCodec<GlyphRecipe> codec() {
+            return CODEC;
+        }
+
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, GlyphRecipe> streamCodec() {
+            return null;
         }
     }
 }

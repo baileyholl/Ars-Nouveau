@@ -20,8 +20,10 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 import net.neoforged.neoforge.client.event.RenderHighlightEvent;
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
 import java.util.Collections;
@@ -63,8 +65,8 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void overlayEvent(RenderGuiOverlayEvent.Pre event) {
-        if (Minecraft.getInstance().screen instanceof GuiRadialMenu && event.getOverlay() == VanillaGuiOverlay.CROSSHAIR.type()) {
+    public static void overlayEvent(RenderGuiLayerEvent.Pre event) {
+        if (Minecraft.getInstance().screen instanceof GuiRadialMenu && event.getName().equals(VanillaGuiLayers.CROSSHAIR)) {
             event.setCanceled(true);
         }
     }
@@ -73,7 +75,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onTooltip(final ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
-        int level = stack.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get());
+        int level = stack.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT);
         if (level > 0 && new ReactiveCaster(stack).getSpell().isValid()) {
             Spell spell = new ReactiveCaster(stack).getSpell();
             event.getToolTip().add(Component.literal(spell.getDisplayString()));

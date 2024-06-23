@@ -11,7 +11,7 @@ import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.NodeEvaluator;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -56,7 +56,7 @@ public class MovementHandler extends MoveControl {
             if (nodeprocessor.getBlockPathType(this.mob.level,
                     Mth.floor(this.mob.getX() + (double) rot1),
                     Mth.floor(this.mob.getY()),
-                    Mth.floor(this.mob.getZ() + (double) rot2)) != BlockPathTypes.WALKABLE) {
+                    Mth.floor(this.mob.getZ() + (double) rot2)) != PathType.WALKABLE) {
                 this.strafeForwards = 1.0F;
                 this.strafeRight = 0.0F;
                 speed = speedAtt;

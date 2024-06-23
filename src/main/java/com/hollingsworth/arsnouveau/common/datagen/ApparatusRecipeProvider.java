@@ -4,10 +4,10 @@ package com.hollingsworth.arsnouveau.common.datagen;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.*;
 import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.perk.*;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
@@ -21,6 +21,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -221,7 +222,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .withPedestalItem(ItemsRegistry.EARTH_ESSENCE)
                 .withPedestalItem(ItemsRegistry.FIRE_ESSENCE)
                 .withPedestalItem(ItemsRegistry.WATER_ESSENCE)
-                .buildEnchantmentRecipe(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get(), 2, 6000));
+                .buildEnchantmentRecipe(EnchantmentRegistry.REACTIVE_ENCHANTMENT.getKey(), 2, 6000));
 
         addRecipe(builder()
                 .withPedestalItem(4, Ingredient.of(Tags.Items.GEMS_EMERALD))
@@ -229,7 +230,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .withPedestalItem(ItemsRegistry.ABJURATION_ESSENCE)
                 .withPedestalItem(ItemsRegistry.CONJURATION_ESSENCE)
                 .withPedestalItem(ItemsRegistry.MANIPULATION_ESSENCE)
-                .buildEnchantmentRecipe(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get(), 3, 9000));
+                .buildEnchantmentRecipe(EnchantmentRegistry.REACTIVE_ENCHANTMENT.getKey(), 3, 9000));
 
         addRecipe(builder()
                 .withPedestalItem(2, Ingredient.of(Items.SPIDER_EYE))
@@ -274,7 +275,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
         addRecipe(builder()
                 .withPedestalItem(2, Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .withPedestalItem(2, Ingredient.of(Tags.Items.OBSIDIAN))
+                .withPedestalItem(2, Ingredient.of(Tags.Items.OBSIDIANS))
                 .buildEnchantmentRecipe(Enchantments.BLAST_PROTECTION, 3, 6000));
         addRecipe(builder()
                 .withPedestalItem(4, Ingredient.of(Tags.Items.GEMS_DIAMOND))
@@ -301,55 +302,55 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .withPedestalItem(1, Ingredient.of(Items.SUGAR))
                 .withPedestalItem(1, Ingredient.of(Items.IRON_PICKAXE))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .buildEnchantmentRecipe(Enchantments.BLOCK_EFFICIENCY, 1, 2000));
+                .buildEnchantmentRecipe(Enchantments.EFFICIENCY, 1, 2000));
         addRecipe(builder()
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_REDSTONE))
                 .withPedestalItem(1, Ingredient.of(Items.GOLDEN_PICKAXE))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .buildEnchantmentRecipe(Enchantments.BLOCK_EFFICIENCY, 2, 3500));
+                .buildEnchantmentRecipe(Enchantments.EFFICIENCY, 2, 3500));
         addRecipe(builder()
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_REDSTONE))
                 .withPedestalItem(1, Ingredient.of(Items.GOLDEN_PICKAXE))
                 .withPedestalItem(3, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .withPedestalItem(2, Ingredient.of(Tags.Items.OBSIDIAN))
-                .buildEnchantmentRecipe(Enchantments.BLOCK_EFFICIENCY, 3, 5000));
+                .withPedestalItem(2, Ingredient.of(Tags.Items.OBSIDIANS))
+                .buildEnchantmentRecipe(Enchantments.EFFICIENCY, 3, 5000));
         addRecipe(builder()
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_REDSTONE))
                 .withPedestalItem(1, Ingredient.of(Items.DIAMOND_PICKAXE))
                 .withPedestalItem(1, Ingredient.of(Items.IRON_SHOVEL))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .withPedestalItem(2, Ingredient.of(Tags.Items.OBSIDIAN))
-                .buildEnchantmentRecipe(Enchantments.BLOCK_EFFICIENCY, 4, 6500));
+                .withPedestalItem(2, Ingredient.of(Tags.Items.OBSIDIANS))
+                .buildEnchantmentRecipe(Enchantments.EFFICIENCY, 4, 6500));
         addRecipe(builder()
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_REDSTONE))
                 .withPedestalItem(1, Ingredient.of(Items.DIAMOND_PICKAXE))
                 .withPedestalItem(1, Ingredient.of(Items.DIAMOND_SHOVEL))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
-                .buildEnchantmentRecipe(Enchantments.BLOCK_EFFICIENCY, 5, 8000));
+                .buildEnchantmentRecipe(Enchantments.EFFICIENCY, 5, 8000));
 
 
         addRecipe(builder()
                 .withPedestalItem(1, ItemsRegistry.AIR_ESSENCE)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.SLIMEBALLS))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .buildEnchantmentRecipe(Enchantments.FALL_PROTECTION, 1, 2000));
+                .buildEnchantmentRecipe(Enchantments.FEATHER_FALLING, 1, 2000));
         addRecipe(builder()
                 .withPedestalItem(2, ItemsRegistry.AIR_ESSENCE)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.SLIMEBALLS))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .buildEnchantmentRecipe(Enchantments.FALL_PROTECTION, 2, 3500));
+                .buildEnchantmentRecipe(Enchantments.FEATHER_FALLING, 2, 3500));
         addRecipe(builder()
                 .withPedestalItem(3, ItemsRegistry.AIR_ESSENCE)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.SLIMEBALLS))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
-                .buildEnchantmentRecipe(Enchantments.FALL_PROTECTION, 3, 5000));
+                .buildEnchantmentRecipe(Enchantments.FEATHER_FALLING, 3, 5000));
         addRecipe(builder()
                 .withPedestalItem(4, ItemsRegistry.AIR_ESSENCE)
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
-                .buildEnchantmentRecipe(Enchantments.FALL_PROTECTION, 4, 6500));
+                .buildEnchantmentRecipe(Enchantments.FEATHER_FALLING, 4, 6500));
 
         addRecipe(builder()
                 .withPedestalItem(1, ItemsRegistry.FIRE_ESSENCE)
@@ -397,29 +398,29 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .withPedestalItem(1, ItemsRegistry.FIRE_ESSENCE)
                 .withPedestalItem(1, ItemsRegistry.AIR_ESSENCE)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.RODS_BLAZE))
-                .buildEnchantmentRecipe(Enchantments.FLAMING_ARROWS, 1, 5000));
+                .buildEnchantmentRecipe(Enchantments.FLAME, 1, 5000));
 
         addRecipe(builder()
                 .withPedestalItem(1, ItemsRegistry.EARTH_ESSENCE)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(6, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .buildEnchantmentRecipe(Enchantments.BLOCK_FORTUNE, 1, 6000));
+                .buildEnchantmentRecipe(Enchantments.FORTUNE, 1, 6000));
         addRecipe(builder()
                 .withPedestalItem(2, ItemsRegistry.EARTH_ESSENCE)
                 .withPedestalItem(4, Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .buildEnchantmentRecipe(Enchantments.BLOCK_FORTUNE, 2, 8000));
+                .buildEnchantmentRecipe(Enchantments.FORTUNE, 2, 8000));
         addRecipe(builder()
                 .withPedestalItem(3, ItemsRegistry.EARTH_ESSENCE)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_DIAMOND))
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .buildEnchantmentRecipe(Enchantments.BLOCK_FORTUNE, 3, 9000));
+                .buildEnchantmentRecipe(Enchantments.FORTUNE, 3, 9000));
 
         addRecipe(builder()
                 .withPedestalItem(7, ItemsRegistry.AIR_ESSENCE)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_DIAMOND))
-                .buildEnchantmentRecipe(Enchantments.INFINITY_ARROWS, 1, 9000));
+                .buildEnchantmentRecipe(Enchantments.INFINITY, 1, 9000));
 
         addRecipe(builder()
                 .withPedestalItem(1, ItemsRegistry.MANIPULATION_ESSENCE)
@@ -436,18 +437,18 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .withPedestalItem(1, ItemsRegistry.EARTH_ESSENCE)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.GEMS_EMERALD))
                 .withPedestalItem(6, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .buildEnchantmentRecipe(Enchantments.MOB_LOOTING, 1, 6000));
+                .buildEnchantmentRecipe(Enchantments.LOOTING, 1, 6000));
         addRecipe(builder()
                 .withPedestalItem(2, ItemsRegistry.EARTH_ESSENCE)
                 .withPedestalItem(4, Ingredient.of(Tags.Items.GEMS_EMERALD))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .buildEnchantmentRecipe(Enchantments.MOB_LOOTING, 2, 8000));
+                .buildEnchantmentRecipe(Enchantments.LOOTING, 2, 8000));
         addRecipe(builder()
                 .withPedestalItem(3, ItemsRegistry.EARTH_ESSENCE)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_EMERALD))
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .buildEnchantmentRecipe(Enchantments.MOB_LOOTING, 3, 9000));
+                .buildEnchantmentRecipe(Enchantments.LOOTING, 3, 9000));
 
         addRecipe(builder()
                 .withPedestalItem(3, ItemsRegistry.MANIPULATION_ESSENCE)
@@ -479,30 +480,30 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .withPedestalItem(1, Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(1, ItemsRegistry.AIR_ESSENCE)
                 .withPedestalItem(1, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .buildEnchantmentRecipe(Enchantments.POWER_ARROWS, 1, 2000));
+                .buildEnchantmentRecipe(Enchantments.POWER, 1, 2000));
         addRecipe(builder()
                 .withPedestalItem(2, Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(1, ItemsRegistry.AIR_ESSENCE)
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .buildEnchantmentRecipe(Enchantments.POWER_ARROWS, 2, 3500));
+                .buildEnchantmentRecipe(Enchantments.POWER, 2, 3500));
         addRecipe(builder()
                 .withPedestalItem(3, Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(1, ItemsRegistry.AIR_ESSENCE)
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
-                .buildEnchantmentRecipe(Enchantments.POWER_ARROWS, 3, 5000));
+                .buildEnchantmentRecipe(Enchantments.POWER, 3, 5000));
         addRecipe(builder()
                 .withPedestalItem(4, Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(1, ItemsRegistry.AIR_ESSENCE)
                 .withPedestalItem(1, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
-                .buildEnchantmentRecipe(Enchantments.POWER_ARROWS, 4, 6500));
+                .buildEnchantmentRecipe(Enchantments.POWER, 4, 6500));
         addRecipe(builder()
                 .withPedestalItem(5, Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(1, ItemsRegistry.AIR_ESSENCE)
                 .withPedestalItem(1, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
-                .buildEnchantmentRecipe(Enchantments.POWER_ARROWS, 5, 9000));
+                .buildEnchantmentRecipe(Enchantments.POWER, 5, 9000));
 
 
         addRecipe(builder()
@@ -543,42 +544,42 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .withPedestalItem(1, ItemsRegistry.ABJURATION_ESSENCE)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .buildEnchantmentRecipe(Enchantments.ALL_DAMAGE_PROTECTION, 1, 2000));
+                .buildEnchantmentRecipe(Enchantments.PROTECTION, 1, 2000));
         addRecipe(builder()
                 .withPedestalItem(2, ItemsRegistry.MANIPULATION_ESSENCE)
                 .withPedestalItem(1, ItemsRegistry.ABJURATION_ESSENCE)
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
-                .buildEnchantmentRecipe(Enchantments.ALL_DAMAGE_PROTECTION, 2, 3500));
+                .buildEnchantmentRecipe(Enchantments.PROTECTION, 2, 3500));
         addRecipe(builder()
                 .withPedestalItem(2, ItemsRegistry.MANIPULATION_ESSENCE)
                 .withPedestalItem(1, ItemsRegistry.ABJURATION_ESSENCE)
                 .withPedestalItem(3, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
-                .buildEnchantmentRecipe(Enchantments.ALL_DAMAGE_PROTECTION, 3, 5000));
+                .buildEnchantmentRecipe(Enchantments.PROTECTION, 3, 5000));
         addRecipe(builder()
                 .withPedestalItem(2, ItemsRegistry.MANIPULATION_ESSENCE)
                 .withPedestalItem(2, ItemsRegistry.ABJURATION_ESSENCE)
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
-                .buildEnchantmentRecipe(Enchantments.ALL_DAMAGE_PROTECTION, 4, 6500));
+                .buildEnchantmentRecipe(Enchantments.PROTECTION, 4, 6500));
 
         addRecipe(builder()
                 .withPedestalItem(3, ItemsRegistry.MANIPULATION_ESSENCE)
                 .withPedestalItem(3, ItemsRegistry.ABJURATION_ESSENCE)
                 .withPedestalItem(1, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_DIAMOND))
-                .buildEnchantmentRecipe(Enchantments.ALL_DAMAGE_PROTECTION, 5, 8000));
+                .buildEnchantmentRecipe(Enchantments.PROTECTION, 5, 8000));
 
 
         addRecipe(builder()
                 .withPedestalItem(2, ItemsRegistry.AIR_ESSENCE)
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .buildEnchantmentRecipe(Enchantments.PUNCH_ARROWS, 1, 2000));
+                .buildEnchantmentRecipe(Enchantments.PUNCH, 1, 2000));
         addRecipe(builder()
                 .withPedestalItem(3, ItemsRegistry.AIR_ESSENCE)
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .buildEnchantmentRecipe(Enchantments.PUNCH_ARROWS, 2, 4000));
+                .buildEnchantmentRecipe(Enchantments.PUNCH, 2, 4000));
 
         addRecipe(builder()
                 .withPedestalItem(1, ItemsRegistry.AIR_ESSENCE)
@@ -611,30 +612,30 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .buildEnchantmentRecipe(Enchantments.RESPIRATION, 3, 9000));
 
         addRecipe(builder()
-                .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ))
+                .withPedestalItem(2, Ingredient.of(Blocks.QUARTZ_BLOCK))
                 .withPedestalItem(1, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.SHARPNESS, 1, 2000));
         addRecipe(builder()
-                .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ))
+                .withPedestalItem(2, Ingredient.of(Blocks.QUARTZ_BLOCK))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.SHARPNESS, 2, 3500));
 
         addRecipe(builder()
-                .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ))
+                .withPedestalItem(2, Ingredient.of(Blocks.QUARTZ_BLOCK))
                 .withPedestalItem(1, Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.SHARPNESS, 3, 5000));
 
         addRecipe(builder()
-                .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ))
+                .withPedestalItem(2, Ingredient.of(Blocks.QUARTZ_BLOCK))
                 .withPedestalItem(2, Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.SHARPNESS, 4, 6500));
 
         addRecipe(builder()
-                .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ))
+                .withPedestalItem(2, Ingredient.of(Blocks.QUARTZ_BLOCK))
                 .withPedestalItem(2, Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.SHARPNESS, 5, 8000));
@@ -733,40 +734,40 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
         addRecipe(builder()
                 .withPedestalItem(1, BlockRegistry.SOURCEBERRY_BUSH)
                 .withPedestalItem(4, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.get(), 1, 2000));
+                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.getKey(), 1, 2000));
         addRecipe(builder()
                 .withPedestalItem(1, BlockRegistry.SOURCEBERRY_BUSH)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(4, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
-                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.get(), 2, 3500));
+                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.getKey(), 2, 3500));
 
         addRecipe(builder()
                 .withPedestalItem(1, BlockRegistry.SOURCEBERRY_BUSH)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(4, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
-                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.get(), 3, 5000));
+                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.getKey(), 3, 5000));
 
 
         addRecipe(builder()
                 .withPedestalItem(2, BlockRegistry.SOURCEBERRY_BUSH)
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
-                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.get(), 1, 2000));
+                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.getKey(), 1, 2000));
         addRecipe(builder()
                 .withPedestalItem(2, BlockRegistry.SOURCEBERRY_BUSH)
                 .withPedestalItem(2, ItemsRegistry.ABJURATION_ESSENCE)
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
-                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.get(), 2, 3500));
+                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.getKey(), 2, 3500));
 
         addRecipe(builder()
                 .withPedestalItem(2, BlockRegistry.SOURCEBERRY_BUSH)
                 .withPedestalItem(3, ItemsRegistry.ABJURATION_ESSENCE)
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
-                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.get(), 3, 5000));
+                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.getKey(), 3, 5000));
 
         addRecipe(builder()
                 .withResult(ItemsRegistry.ENCHANTERS_SWORD)
@@ -829,7 +830,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
         addRecipe(builder()
                 .withResult(ItemsRegistry.ENCHANTERS_MIRROR)
                 .withReagent(RecipeDatagen.SOURCE_GEM_BLOCK)
-                .withPedestalItem(2, Ingredient.of(Tags.Items.GLASS))
+                .withPedestalItem(2, Ingredient.of(Tags.Items.GLASS_BLOCKS))
                 .withPedestalItem(2, ItemsRegistry.MANIPULATION_ESSENCE)
                 .withPedestalItem(2, RecipeDatagen.ARCHWOOD_LOG)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.INGOTS_GOLD))
@@ -861,7 +862,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .withPedestalItem(4, Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(1, Ingredient.of(Tags.Items.ENDER_PEARLS))
                 .withPedestalItem(1, Ingredient.of(ItemsRegistry.WILDEN_TRIBUTE.get()))
-                .buildEnchantmentRecipe(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get(), 4, 9000));
+                .buildEnchantmentRecipe(EnchantmentRegistry.REACTIVE_ENCHANTMENT.getKey(), 4, 9000));
 
         addRecipe(builder()
                 .withResult(BlockRegistry.RELAY_COLLECTOR)
@@ -894,7 +895,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .withReagent(Items.DISPENSER)
                 .withPedestalItem(2, Tags.Items.INGOTS_GOLD)
                 .withPedestalItem(2, Tags.Items.RODS_BLAZE)
-                .withPedestalItem(4, Tags.Items.GUNPOWDER).build());
+                .withPedestalItem(4, Tags.Items.GUNPOWDERS).build());
         addRecipe(builder().withResult(ItemsRegistry.LINGERING_LAUNCHER)
                 .withReagent(ItemsRegistry.SPLASH_LAUNCHER)
                 .withPedestalItem(Items.DRAGON_BREATH)
@@ -1084,7 +1085,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .build());
         addRecipe(builder().withResult(getPerkItem(KnockbackResistPerk.INSTANCE.getRegistryName()))
                 .withReagent(ItemsRegistry.BLANK_THREAD)
-                .withPedestalItem(3, Ingredient.of(Tags.Items.OBSIDIAN))
+                .withPedestalItem(3, Ingredient.of(Tags.Items.OBSIDIANS))
                 .build());
 
     }

@@ -4,10 +4,10 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.scrying.IScryer;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketGetPersistentData;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
@@ -25,11 +25,12 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.LogicalSide;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class ScryEvents {
     }
 
     @SubscribeEvent
-    public static void playerTickEvent(final TickEvent.PlayerTickEvent event) {
+    public static void playerTickEvent(final PlayerTickEvent event) {
         if (event.side == LogicalSide.CLIENT && event.phase == TickEvent.Phase.END && event.player.getEffect(ModPotions.SCRYING_EFFECT.get()) != null && ClientInfo.ticksInGame % 30 == 0) {
 
             List<BlockPos> scryingPos = new ArrayList<>();

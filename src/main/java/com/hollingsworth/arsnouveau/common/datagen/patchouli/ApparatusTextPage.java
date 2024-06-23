@@ -15,10 +15,6 @@ public class ApparatusTextPage extends ApparatusPage{
         super(itemLike);
     }
 
-    public ApparatusTextPage(RegistryObject<? extends ItemLike> itemLike) {
-        super(itemLike);
-    }
-
     @Override
     public ResourceLocation getType() {
         return ArsNouveau.prefix( "no_output_apparatus_recipe");

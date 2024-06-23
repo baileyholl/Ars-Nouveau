@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
-import com.hollingsworth.arsnouveau.api.recipe.DispelEntityRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.MultiRecipeWrapper;
 import com.hollingsworth.arsnouveau.api.registry.BuddingConversionRegistry;
 import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
@@ -22,6 +21,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.LavaLily;
 import com.hollingsworth.arsnouveau.common.command.*;
 import com.hollingsworth.arsnouveau.common.compat.CaelusHandler;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.DispelEntityRecipe;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import com.hollingsworth.arsnouveau.common.entity.debug.FixedStack;
@@ -43,6 +43,7 @@ import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -422,7 +423,8 @@ public class EventHandler {
         if (target.level.isClientSide)
             return;
         double bonus = 0.0;
-        MobEffect effect = event.getEffectInstance().getEffect().value();
+        Holder<MobEffect> holder = event.getEffectInstance().getEffect();
+        MobEffect effect = holder.value();
         if (effect.isBeneficial()) {
             bonus = PerkUtil.valueOrZero(target, PerkAttributes.WIXIE.get());
         } else if (applier instanceof LivingEntity living) {
@@ -433,12 +435,9 @@ public class EventHandler {
             event.getEffectInstance().duration = (int) (event.getEffectInstance().duration * bonus);
         }
 
-        ForgeRegistries.MOB_EFFECTS.getHolder(effect).ifPresent(holder -> {
-            if (holder.is(PotionEffectTags.TO_SYNC)) {
-                Networking.sendToNearby(target.level(), target, new PotionSyncPacket(target.getId(), effect, event.getEffectInstance().getDuration()));
-            }
-        });
-
+        if(holder.is(PotionEffectTags.TO_SYNC)){
+            Networking.sendToNearby(target.level(), target, new PotionSyncPacket(target.getId(), effect, event.getEffectInstance().getDuration()));
+        }
     }
 
     @SubscribeEvent
@@ -454,12 +453,11 @@ public class EventHandler {
     private static void syncPotionRemoval(MobEffectEvent event) {
         if (event.getEntity() instanceof LivingEntity && event.getEffectInstance() != null && !event.getEntity().level.isClientSide) {
             LivingEntity target = event.getEntity();
-            MobEffect effect = event.getEffectInstance().getEffect().value();
-            ForgeRegistries.MOB_EFFECTS.getHolder(effect).ifPresent(holder -> {
-                if (holder.is(PotionEffectTags.TO_SYNC)) {
-                    Networking.sendToNearby(target.level(), target, new PotionSyncPacket(target.getId(), effect, -1));
-                }
-            });
+            Holder<MobEffect> holder = event.getEffectInstance().getEffect();
+            MobEffect effect = holder.value();
+            if(holder.is(PotionEffectTags.TO_SYNC)){
+                Networking.sendToNearby(target.level(), target, new PotionSyncPacket(target.getId(), effect, -1));
+            }
         }
     }
 

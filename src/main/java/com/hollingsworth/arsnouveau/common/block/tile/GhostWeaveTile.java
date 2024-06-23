@@ -14,7 +14,7 @@ public class GhostWeaveTile extends MirrorWeaveTile{
     private boolean invisible;
 
     public GhostWeaveTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.GHOST_WEAVE_TILE, pos, state);
+        super(BlockRegistry.GHOST_WEAVE_TILE.get(), pos, state);
     }
 
 

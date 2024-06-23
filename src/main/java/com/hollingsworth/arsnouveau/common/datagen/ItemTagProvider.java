@@ -14,6 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+
 import java.util.concurrent.CompletableFuture;
 
 public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
@@ -173,7 +174,7 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
         this.tag(ItemTags.BOOKSHELF_BOOKS).add(books);
 
         this.tag(ItemTags.SWORDS).add(ItemsRegistry.ENCHANTERS_SWORD.get());
-        this.tag(Tags.Items.TOOLS_SHIELDS).add(ItemsRegistry.ENCHANTERS_SHIELD.get());
+        this.tag(Tags.Items.TOOLS_SHIELD).add(ItemsRegistry.ENCHANTERS_SHIELD.get());
 
         this.tag(Tags.Items.ARMORS).add(ItemsRegistry.SORCERER_ROBES.asItem(),
                 ItemsRegistry.ARCANIST_ROBES.asItem(),
@@ -188,19 +189,19 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
                 ItemsRegistry.ARCANIST_HOOD.asItem(),
                 ItemsRegistry.BATTLEMAGE_HOOD.asItem());
 
-        this.tag(Tags.Items.ARMORS_BOOTS)
+        this.tag(ItemTags.FOOT_ARMOR)
                 .add(ItemsRegistry.SORCERER_BOOTS.asItem(),
                         ItemsRegistry.ARCANIST_BOOTS.asItem(),
                         ItemsRegistry.BATTLEMAGE_BOOTS.asItem());
-        this.tag(Tags.Items.ARMORS_CHESTPLATES)
+        this.tag(ItemTags.CHEST_ARMOR)
                 .add(ItemsRegistry.SORCERER_ROBES.asItem(),
                         ItemsRegistry.ARCANIST_ROBES.asItem(),
                         ItemsRegistry.BATTLEMAGE_ROBES.asItem());
-        this.tag(Tags.Items.ARMORS_HELMETS)
+        this.tag(ItemTags.HEAD_ARMOR)
                 .add(ItemsRegistry.SORCERER_HOOD.asItem(),
                         ItemsRegistry.ARCANIST_HOOD.asItem(),
                         ItemsRegistry.BATTLEMAGE_HOOD.asItem());
-        this.tag(Tags.Items.ARMORS_LEGGINGS).add(ItemsRegistry.SORCERER_LEGGINGS.asItem(),
+        this.tag(ItemTags.LEG_ARMOR).add(ItemsRegistry.SORCERER_LEGGINGS.asItem(),
                 ItemsRegistry.ARCANIST_LEGGINGS.asItem(),
                 ItemsRegistry.BATTLEMAGE_LEGGINGS.asItem());
 

@@ -10,7 +10,6 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.goal.chimera.*;
-import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import com.hollingsworth.arsnouveau.common.potions.SnareEffect;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectDelay;
@@ -19,6 +18,7 @@ import com.hollingsworth.arsnouveau.common.spell.effect.EffectLaunch;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
+import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
@@ -59,7 +59,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -67,8 +67,8 @@ import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -111,7 +111,7 @@ public class WildenChimera extends Monster implements GeoEntity {
         flyingpathnavigator.setCanOpenDoors(true);
         flyingpathnavigator.setCanFloat(false);
         flyingpathnavigator.setCanPassDoors(true);
-        this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+        this.setPathfindingMalus(PathType.WATER, 0.0F);
         this.flyingNavigator = flyingpathnavigator;
         this.waterNavigation = new WaterBoundPathNavigation(this, level);
         this.groundNavigation = new GroundPathNavigation(this, level);
@@ -335,8 +335,9 @@ public class WildenChimera extends Monster implements GeoEntity {
         }
     }
 
-    protected void dropCustomDeathLoot(DamageSource p_213333_1_, int p_213333_2_, boolean p_213333_3_) {
-        super.dropCustomDeathLoot(p_213333_1_, p_213333_2_, p_213333_3_);
+    @Override
+    protected void dropCustomDeathLoot(ServerLevel p_348683_, DamageSource p_21385_, boolean p_21387_) {
+        super.dropCustomDeathLoot(p_348683_, p_21385_, p_21387_);
         ItemEntity itementity = this.spawnAtLocation(ItemsRegistry.WILDEN_TRIBUTE.get());
         if (itementity != null) {
             itementity.setExtendedLifetime();
@@ -517,7 +518,7 @@ public class WildenChimera extends Monster implements GeoEntity {
     }
 
     public boolean canBeAffected(MobEffectInstance instance) {
-        MobEffect effect = instance.getEffect();
+        MobEffect effect = instance.getEffect().value();
         if (instance.getEffect() instanceof SnareEffect)
             return false;
 
@@ -541,19 +542,19 @@ public class WildenChimera extends Monster implements GeoEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(HAS_HORNS, false);
-        this.entityData.define(HAS_SPIKES, false);
-        this.entityData.define(HAS_WINGS, false);
-        this.entityData.define(PHASE, 1);
-        this.entityData.define(DEFENSIVE_MODE, false);
-        this.entityData.define(PHASE_SWAPPING, false);
-        this.entityData.define(IS_FLYING, false);
-        this.entityData.define(IS_HOWLING, false);
-        this.entityData.define(IS_DIVING, false);
-        this.entityData.define(IS_RAMMING, false);
-        this.entityData.define(RAM_PREP, false);
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(HAS_HORNS, false);
+        pBuilder.define(HAS_SPIKES, false);
+        pBuilder.define(HAS_WINGS, false);
+        pBuilder.define(PHASE, 1);
+        pBuilder.define(DEFENSIVE_MODE, false);
+        pBuilder.define(PHASE_SWAPPING, false);
+        pBuilder.define(IS_FLYING, false);
+        pBuilder.define(IS_HOWLING, false);
+        pBuilder.define(IS_DIVING, false);
+        pBuilder.define(IS_RAMMING, false);
+        pBuilder.define(RAM_PREP, false);
     }
 
     public boolean isFlying() {

@@ -16,13 +16,11 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
-import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -120,7 +118,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
         if (manaCost > 0 && SourceUtil.takeSourceWithParticles(pos, world, 10, manaCost) == null)
             return;
         Networking.sendToNearby(world, pos, new PacketOneShotAnimation(pos));
-        Position iposition = getDispensePosition(world.getBlockState(pos), pos);
+        Position iposition = getDispensePosition(pos, world.getBlockState(pos).getValue(FACING));
         Direction direction = world.getBlockState(pos).getValue(FACING);
         FakePlayer fakePlayer = ANFakePlayer.getPlayer(world);
         fakePlayer.setPos(pos.getX(), pos.getY(), pos.getZ());
@@ -147,8 +145,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
     /**
      * Get the position where the dispenser at the given Coordinates should dispense to.
      */
-    public static Position getDispensePosition(BlockState state, BlockPos pos) {
-        Direction direction = state.getValue(FACING);
+    public static Position getDispensePosition(BlockPos pos, Direction direction) {
         double d0 = pos.getX() + 0.5D * (double) direction.getStepX();
         double d1 = pos.getY() + 0.5D * (double) direction.getStepY();
         double d2 = pos.getZ() + 0.5D * (double) direction.getStepZ();

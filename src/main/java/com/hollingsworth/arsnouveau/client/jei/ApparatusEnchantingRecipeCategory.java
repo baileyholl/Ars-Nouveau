@@ -6,6 +6,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +30,7 @@ public class ApparatusEnchantingRecipeCategory extends EnchantingApparatusRecipe
 
         ItemStack dummy = recipe.enchantLevel > 1 ? EnchantedBookItem.createForEnchantment(new EnchantmentInstance(recipe.enchantment, recipe.enchantLevel-1)) : Items.BOOK.getDefaultInstance();
         Component message = recipe.enchantLevel == 1 ? Component.literal("Any compatible item") : Component.literal("Needs lower level enchantment");
-        dummy.setHoverName(message); //TODO Translatable
+        dummy.set(DataComponents.CUSTOM_NAME, message); //TODO Translatable
 
         builder.addSlot(RecipeIngredientRole.INPUT, 48, 45).addItemStack(dummy);
 

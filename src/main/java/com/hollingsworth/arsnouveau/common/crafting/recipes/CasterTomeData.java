@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.tomes;
+package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -16,22 +16,23 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
-
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ import java.util.List;
 
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
-public class CasterTomeData implements Recipe<Container> {
+public class CasterTomeData implements Recipe<SingleRecipeInput> {
 
     ResourceLocation id;
     String name;
@@ -68,18 +69,18 @@ public class CasterTomeData implements Recipe<Container> {
         ItemStack stack = tome.getDefaultInstance();
         ISpellCaster spellCaster = CasterUtil.getCaster(stack);
         spellCaster.setSpell(spell);
-        stack.setHoverName(Component.literal(name).setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true)));
+        stack.set(DataComponents.CUSTOM_NAME, Component.literal(name).setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true)));
         spellCaster.setFlavorText(flavorText);
         return stack;
     }
 
     @Override
-    public boolean matches(Container pContainer, Level pLevel) {
+    public boolean matches(SingleRecipeInput p_346065_, Level p_345375_) {
         return false;
     }
 
     @Override
-    public ItemStack assemble(Container p_44001_, RegistryAccess p_267165_) {
+    public ItemStack assemble(SingleRecipeInput p_345149_, HolderLookup.Provider p_346030_) {
         return ItemStack.EMPTY;
     }
 
@@ -88,10 +89,12 @@ public class CasterTomeData implements Recipe<Container> {
         return false;
     }
 
+
     @Override
-    public ItemStack getResultItem(RegistryAccess p_267052_) {
-        Item tomeType = ForgeRegistries.ITEMS.getValue(this.type);
-        if (tomeType == null) tomeType = ItemsRegistry.CASTER_TOME.asItem();
+    public ItemStack getResultItem(HolderLookup.Provider p_267052_) {
+        Item tomeType = BuiltInRegistries.ITEM.get(this.type);
+        if (tomeType == Items.AIR)
+            tomeType = ItemsRegistry.CASTER_TOME.asItem();
         Spell spell = new Spell();
         spell.name = this.name;
         if (this.particleColor != null)
@@ -103,12 +106,6 @@ public class CasterTomeData implements Recipe<Container> {
         }
         spell.sound = sound;
         return makeTome(tomeType, name, spell, flavorText);
-    }
-
-    @NotNull
-    @Override
-    public ResourceLocation getId() {
-        return id;
     }
 
     @Override

@@ -17,11 +17,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.event.entity.player.EntityItemPickupEvent;
 import net.neoforged.neoforge.items.wrapper.PlayerMainInvWrapper;
 import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.ArrayList;
 import java.util.Arrays;

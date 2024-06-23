@@ -20,10 +20,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class PerkEvents {
     @SubscribeEvent
     public static void equipmentChangedEvent(final LivingEquipmentChangeEvent event) {
         if (!event.getEntity().level.isClientSide) {
-            if (event.getSlot().getType() != EquipmentSlot.Type.ARMOR)
+            if (event.getSlot().getType() != EquipmentSlot.Type.HUMANOID_ARMOR)
                 return;
             List<PerkInstance> perkInstances = PerkUtil.getPerksFromItem(event.getFrom());
             List<PerkInstance> toInstances = PerkUtil.getPerksFromItem(event.getTo());

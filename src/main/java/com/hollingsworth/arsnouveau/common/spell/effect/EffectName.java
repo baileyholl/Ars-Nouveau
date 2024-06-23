@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -45,12 +46,12 @@ public class EffectName extends AbstractEffect {
         if (entity instanceof Mob mob) {
             mob.setPersistenceRequired();
         } else if (entity instanceof ItemEntity item) {
-            item.getItem().setHoverName(newName);
+            item.getItem().set(DataComponents.CUSTOM_NAME, newName);
         }
 
         if(shooter instanceof Player player && isRealPlayer(shooter) && player.equals(entity)){
             ItemStack offhand = player.getOffhandItem();
-            offhand.setHoverName(newName);
+            offhand.set(DataComponents.CUSTOM_NAME, newName);
         }
     }
 
@@ -95,7 +96,7 @@ public class EffectName extends AbstractEffect {
             if (entity instanceof Mob mob) {
                 mob.setPersistenceRequired();
             } else if (entity instanceof ItemEntity item) {
-                item.getItem().setHoverName(name);
+                item.getItem().set(DataComponents.CUSTOM_NAME, name);
             }
         }
     }

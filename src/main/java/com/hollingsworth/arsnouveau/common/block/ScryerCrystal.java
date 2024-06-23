@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -82,13 +83,13 @@ public class ScryerCrystal extends TickableModBlock {
     /**
      * Get the position where the dispenser at the given Coordinates should dispense to.
      */
-    public static Position getDispensePosition(BlockSource coords, Direction direction) {
+    public static Position getDispensePosition(BlockPos pos, Direction direction) {
         // Offset to get closer to the eye.
         double negOffset = -0.49;
-        double d0 = coords.x() + negOffset * (double) direction.getStepX();
-        double d1 = coords.y() + negOffset * (double) direction.getStepY();
-        double d2 = coords.z() + negOffset * (double) direction.getStepZ();
-        return new PositionImpl(d0, d1, d2);
+        double d0 = pos.getX() + negOffset * (double) direction.getStepX();
+        double d1 = pos.getY() + negOffset * (double) direction.getStepY();
+        double d2 = pos.getZ() + negOffset * (double) direction.getStepZ();
+        return new Vec3(d0, d1, d2);
     }
 
 

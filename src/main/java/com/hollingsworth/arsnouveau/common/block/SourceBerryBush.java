@@ -9,7 +9,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -133,10 +132,10 @@ public class SourceBerryBush extends BushBlock implements BonemealableBlock {
 
     @Nullable
     @Override
-    public BlockPathTypes getBlockPathType(BlockState state, BlockGetter world, BlockPos pos, @Nullable Mob entity) {
+    public PathType getBlockPathType(BlockState state, BlockGetter world, BlockPos pos, @Nullable Mob entity) {
         if(entity instanceof Starbuncle){
-            return BlockPathTypes.WALKABLE;
+            return PathType.WALKABLE;
         }
-        return BlockPathTypes.DAMAGE_OTHER;
+        return PathType.DAMAGE_OTHER;
     }
 }

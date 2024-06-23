@@ -14,7 +14,6 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSourceImpl;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
 import net.minecraft.nbt.CompoundTag;
@@ -168,14 +167,13 @@ public class ScryCaster extends ModItem implements ICasterTool, GeoItem {
                 return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
             }
 
-            BlockSourceImpl blockSource = new BlockSourceImpl((ServerLevel) worldIn, scryPos);
             Position position;
             Direction direction = castingAtState.getValue(ScryerCrystal.FACING);
             // Target the block the crystal is facing if the spell is a touch spell.
             if(spell.getCastMethod() instanceof MethodTouch){
-                position = BasicSpellTurret.getDispensePosition(blockSource);
+                position = BasicSpellTurret.getDispensePosition(scryPos, direction);
             }else{
-                position = ScryerCrystal.getDispensePosition( new BlockSourceImpl((ServerLevel) worldIn, scryPos), direction);
+                position = ScryerCrystal.getDispensePosition(scryPos, direction);
             }
             behavior.onCast(resolver, (ServerLevel) worldIn, scryPos,
                     player,

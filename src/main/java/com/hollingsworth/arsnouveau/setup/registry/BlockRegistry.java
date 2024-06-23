@@ -36,7 +36,6 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import top.theillusivec4.caelus.common.registry.RegistryObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,7 +52,7 @@ public class BlockRegistry {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(BuiltInRegistries.BLOCK, ArsNouveau.MODID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, ArsNouveau.MODID);
     public static final DeferredRegister<BlockStateProviderType<?>> BS_PROVIDERS = DeferredRegister.create(BuiltInRegistries.BLOCKSTATE_PROVIDER_TYPE, ArsNouveau.MODID);
-    public static final RegistryObject<BlockStateProviderType<?>> stateProviderType = BS_PROVIDERS.register(LibBlockNames.STATE_PROVIDER, () -> new BlockStateProviderType<>(SupplierBlockStateProvider.CODEC));
+    public static final DeferredRegister<BlockStateProviderType<?>> stateProviderType = BS_PROVIDERS.register(LibBlockNames.STATE_PROVIDER, () -> new BlockStateProviderType<>(SupplierBlockStateProvider.CODEC));
 
     public static BlockBehaviour.Properties LOG_PROP = BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(2.0F, 3.0F).ignitedByLava().sound(SoundType.WOOD);
     public static BlockBehaviour.Properties SAP_PROP = BlockBehaviour.Properties.of().noCollission().randomTicks().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.DESTROY);

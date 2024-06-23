@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 
-
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
 public class ApparatusPage extends AbstractPage {
@@ -15,10 +14,6 @@ public class ApparatusPage extends AbstractPage {
 
     public ApparatusPage(ItemLike itemLike) {
         this(getRegistryName(itemLike.asItem()).toString());
-    }
-
-    public ApparatusPage(RegistryObject<? extends ItemLike> itemLike) {
-        this(itemLike.get());
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
+import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -29,19 +30,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
-
 public class EnchantmentRecipe extends EnchantingApparatusRecipe {
-    public Enchantment enchantment;
+    public Holder<Enchantment> enchantment;
     public int enchantLevel;
 
-
-    public EnchantmentRecipe(List<Ingredient> pedestalItems, Enchantment enchantment, int level, int manaCost) {
+    public EnchantmentRecipe(List<Ingredient> pedestalItems, Holder<Enchantment> enchantment, int level, int manaCost) {
         this.pedestalItems = pedestalItems;
         this.enchantment = enchantment;
         this.enchantLevel = level;
         this.sourceCost = manaCost;
-        this.id = ArsNouveau.prefix( getRegistryName(enchantment).getPath() + "_" + level);
+        this.id = ArsNouveau.prefix(enchantment.unwrapKey().get().location().getPath() + "_" + level);
     }
 
     @Override
@@ -52,11 +50,11 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
     public boolean doesReagentMatch(ItemStack stack, Player playerEntity) {
         if (stack.isEmpty())
             return false;
-        Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
-        int level = enchantments.getOrDefault(enchantment, 0);
-        Collection<Enchantment> enchantList = EnchantmentHelper.getEnchantments(stack).keySet();
+        ItemEnchantments enchantments = EnchantmentHelper.getEnchantmentsForCrafting(stack);
+        int level = enchantments.getLevel(enchantment);
+        Collection<Holder<Enchantment>> enchantList = enchantments.entrySet().stream().map(Map.Entry::getKey).collect(Collectors.toList());
         enchantList.remove(enchantment);
-        if (stack.getItem() != Items.BOOK && stack.getItem() != Items.ENCHANTED_BOOK && !enchantment.canEnchant(stack)) {
+        if (stack.getItem() != Items.BOOK && stack.getItem() != Items.ENCHANTED_BOOK && !enchantment.value().canEnchant(stack)) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.enchanting.incompatible"));
             return false;
         }
@@ -88,17 +86,19 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
 
     @Override
     public boolean doesReagentMatch(ItemStack stack) {
-        Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
-        int level = enchantments.getOrDefault(enchantment, 0);
-        return enchantment.canEnchant(stack) && this.enchantLevel - level == 1 && EnchantmentHelper.isEnchantmentCompatible(EnchantmentHelper.getEnchantments(stack).keySet(), enchantment);
+        ItemEnchantments enchantments = EnchantmentHelper.getEnchantmentsForCrafting(stack);
+        int level = enchantments.getLevel(enchantment);
+        var val = enchantment.value();
+        return val.canEnchant(stack) && this.enchantLevel - level == 1 && EnchantmentHelper.isEnchantmentCompatible(enchantments.keySet(), enchantment);
     }
 
     @Override
     public ItemStack assemble(EnchantingApparatusTile inv, RegistryAccess p_267165_) {
         ItemStack stack = inv.getStack().getItem() == Items.BOOK ? new ItemStack(Items.ENCHANTED_BOOK) : inv.getStack().copy();
         ItemEnchantments enchantments = EnchantmentHelper.getEnchantmentsForCrafting(stack);
-        enchantments.put(enchantment, enchantLevel);
-        EnchantmentHelper.setEnchantments(enchantments, stack);
+        var mutable = new ItemEnchantments.Mutable(enchantments);
+        mutable.set(enchantment, enchantLevel);
+        EnchantmentHelper.setEnchantments(stack, mutable.toImmutable());
         return stack;
     }
 

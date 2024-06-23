@@ -6,21 +6,19 @@ import com.hollingsworth.arsnouveau.api.client.IDisplayMana;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
-import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
-import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 
 public class GuiManaHUD {
-    public static final IGuiOverlay OVERLAY = GuiManaHUD::renderOverlay;
+    public static final LayeredDraw.Layer OVERLAY = GuiManaHUD::renderOverlay;
 
     private static final Minecraft minecraft = Minecraft.getInstance();
 
@@ -32,8 +30,7 @@ public class GuiManaHUD {
                 || (ManaUtil.getMaxMana(minecraft.player) > ManaUtil.getCurrentMana(minecraft.player));
     }
 
-    public static void renderOverlay(ExtendedGui gui, GuiGraphics guiGraphics, float pt, int width,
-                                     int height) {
+    public static void renderOverlay(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
         if (!shouldDisplayBar())
             return;
         PoseStack ms = guiGraphics.pose();
@@ -53,7 +50,7 @@ public class GuiManaHUD {
         int yOffset = minecraft.getWindow().getGuiScaledHeight() - 5 + Config.MANABAR_Y_OFFSET.get();
 
         guiGraphics.blit( ArsNouveau.prefix( "textures/gui/manabar_gui_border.png"), offsetLeft, yOffset - 18, 0, 0, 108, 18, 256, 256);
-        int manaOffset = (int) (((ClientInfo.ticksInGame + pt) / 3 % (33))) * 6;
+        int manaOffset = (int) (((ClientInfo.ticksInGame + deltaTracker.getGameTimeDeltaTicks()) / 3 % (33))) * 6;
 
         guiGraphics.blit(ArsNouveau.prefix( "textures/gui/manabar_gui_mana.png"), offsetLeft + 9, yOffset - 9, 0, manaOffset, manaLength, 6, 256, 256);
 

@@ -26,8 +26,8 @@ public class PotionEffectTagProvider extends IntrinsicHolderTagsProvider<MobEffe
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
         this.tag(PotionEffectTags.UNSTABLE_GIFTS).add(
-                MobEffects.SLOW_FALLING, MobEffects.NIGHT_VISION, MobEffects.CONDUIT_POWER, MobEffects.ABSORPTION, MobEffects.DAMAGE_BOOST,
-                MobEffects.FIRE_RESISTANCE, MobEffects.DIG_SPEED, MobEffects.MOVEMENT_SPEED, MobEffects.REGENERATION, MobEffects.DAMAGE_RESISTANCE
+                MobEffects.SLOW_FALLING.value(), MobEffects.NIGHT_VISION.value(), MobEffects.CONDUIT_POWER.value(), MobEffects.ABSORPTION.value(), MobEffects.DAMAGE_BOOST.value(),
+                MobEffects.FIRE_RESISTANCE.value(), MobEffects.DIG_SPEED.value(), MobEffects.MOVEMENT_SPEED.value(), MobEffects.REGENERATION.value(), MobEffects.DAMAGE_RESISTANCE.value()
         );
         //placeholder to not leave the tag empty
         this.tag(PotionEffectTags.DISPEL_DENY).add(ModPotions.SUMMONING_SICKNESS_EFFECT.get());

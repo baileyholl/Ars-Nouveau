@@ -1,8 +1,9 @@
 package com.hollingsworth.arsnouveau.api.registry;
 
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
-import com.hollingsworth.arsnouveau.common.tomes.CasterTomeData;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.CasterTomeData;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 
@@ -22,8 +23,8 @@ public class CasterTomeRegistry {
         var recipes = recipeManager.getAllRecipesFor(RecipeRegistry.CASTER_TOME_TYPE.get());
         DungeonLootTables.CASTER_TOMES = new ArrayList<>();
         TOME_DATA = new ArrayList<>();
-        TOME_DATA.addAll(recipes);
-        recipes.forEach(tome -> DungeonLootTables.CASTER_TOMES.add(() -> tome.getResultItem(level.registryAccess())));
+        TOME_DATA.addAll(recipes.stream().map(RecipeHolder::value).toList());
+        recipes.forEach(tome -> DungeonLootTables.CASTER_TOMES.add(() -> tome.value().getResultItem(level.registryAccess())));
         return TOME_DATA;
     }
 

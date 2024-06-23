@@ -6,7 +6,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class FalseWeaveTile extends MirrorWeaveTile{
     public FalseWeaveTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.FALSE_WEAVE_TILE, pos, state);
+        super(BlockRegistry.FALSE_WEAVE_TILE.get(), pos, state);
     }
 
     @Override

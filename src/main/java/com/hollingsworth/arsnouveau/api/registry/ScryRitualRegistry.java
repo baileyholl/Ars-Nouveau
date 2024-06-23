@@ -1,7 +1,8 @@
 package com.hollingsworth.arsnouveau.api.registry;
 
-import com.hollingsworth.arsnouveau.api.recipe.ScryRitualRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.ScryRitualRecipe;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class ScryRitualRegistry {
 
     public static void reloadScryRitualRecipes(RecipeManager recipeManager){
         RECIPES = new ArrayList<>();
-        List<ScryRitualRecipe> recipes = recipeManager.getAllRecipesFor(RecipeRegistry.SCRY_RITUAL_TYPE.get());
-        RECIPES.addAll(recipes);
+        List<RecipeHolder<ScryRitualRecipe>> recipes = recipeManager.getAllRecipesFor(RecipeRegistry.SCRY_RITUAL_TYPE.get());
+        RECIPES.addAll(recipes.stream().map(RecipeHolder::value).toList());
     }
 }

@@ -1,27 +1,22 @@
-package com.hollingsworth.arsnouveau.api.recipe;
+package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -30,21 +25,11 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
 
-public record DispelEntityRecipe(ResourceLocation id, EntityType<?> entity, ResourceLocation lootTable, LootItemCondition[] conditions) implements Recipe<Container> {
-    @Override
-    public boolean matches(Container container, Level level) {
-        return false;
-    }
-
-    @Override
-    public ItemStack assemble(Container p_345149_, HolderLookup.Provider p_346030_) {
-        return null;
-    }
+public record DispelEntityRecipe(EntityType<?> entity, ResourceLocation lootTable, LootItemCondition[] conditions) implements SpecialSingleInputRecipe {
 
     public boolean matches(LivingEntity killer, Entity victim) {
         if (!victim.getType().equals(this.entity)) return false;
@@ -83,28 +68,8 @@ public record DispelEntityRecipe(ResourceLocation id, EntityType<?> entity, Reso
     }
 
     @Override
-    public ItemStack assemble(Container container, RegistryAccess registryAccess) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public boolean canCraftInDimensions(int i, int i1) {
+    public boolean matches(SingleRecipeInput p_346065_, Level p_345375_) {
         return false;
-    }
-
-    @Override
-    public ItemStack getResultItem(HolderLookup.Provider pRegistries) {
-        return null;
-    }
-
-    @Override
-    public ItemStack getResultItem(RegistryAccess registryAccess) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public ResourceLocation getId() {
-        return id;
     }
 
     @Override
@@ -117,40 +82,23 @@ public record DispelEntityRecipe(ResourceLocation id, EntityType<?> entity, Reso
         return RecipeRegistry.DISPEL_ENTITY_TYPE.get();
     }
 
-    @Override
-    public boolean isSpecial() {
-        return true;
-    }
-
-    public JsonElement asRecipe() {
-        JsonElement recipe = Serializer.CODEC.encodeStart(JsonOps.INSTANCE, this).result().orElse(null);
-        if (recipe == null) return null;
-        JsonObject obj = recipe.getAsJsonObject();
-        obj.addProperty("type", getType().toString());
-        return obj;
-    }
-
     public static class Serializer implements RecipeSerializer<DispelEntityRecipe> {
-        public static final Codec<DispelEntityRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                ResourceLocation.CODEC.fieldOf("id").forGetter(DispelEntityRecipe::id),
+        public static final MapCodec<DispelEntityRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity").forGetter(DispelEntityRecipe::entity),
                 ResourceLocation.CODEC.fieldOf("loot_table").forGetter(DispelEntityRecipe::lootTable),
                 IGlobalLootModifier.LOOT_CONDITIONS_CODEC.optionalFieldOf("loot_conditions", new LootItemCondition[]{}).forGetter(DispelEntityRecipe::conditions)
         ).apply(instance, DispelEntityRecipe::new));
 
+        public static final StreamCodec<RegistryFriendlyByteBuf, DispelEntityRecipe> STREAM = CheatSerializer.create(CODEC);
+
         @Override
-        public DispelEntityRecipe fromJson(ResourceLocation resourceLocation, JsonObject jsonObject) {
-            return CODEC.parse(JsonOps.INSTANCE, jsonObject).result().orElse(null);
+        public MapCodec<DispelEntityRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public @Nullable DispelEntityRecipe fromNetwork(ResourceLocation resourceLocation, FriendlyByteBuf friendlyByteBuf) {
-            return friendlyByteBuf.readJsonWithCodec(CODEC);
-        }
-
-        @Override
-        public void toNetwork(FriendlyByteBuf friendlyByteBuf, DispelEntityRecipe buddingConversionRecipe) {
-            friendlyByteBuf.writeJsonWithCodec(CODEC, buddingConversionRecipe);
+        public StreamCodec<RegistryFriendlyByteBuf, DispelEntityRecipe> streamCodec() {
+            return STREAM;
         }
     }
 }

@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.client.container.CraftingTerminalMenu;
 import com.hollingsworth.arsnouveau.client.container.IAutoFillTerminal;
 import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
 import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
-
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
@@ -18,17 +17,19 @@ import mezz.jei.api.registration.IRecipeTransferRegistration;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class CraftingTerminalTransferHandler<C extends AbstractContainerMenu & IAutoFillTerminal> implements IRecipeTransferHandler<C, CraftingRecipe> {
+public class CraftingTerminalTransferHandler<C extends AbstractContainerMenu & IAutoFillTerminal> implements IRecipeTransferHandler<C, RecipeHolder<CraftingRecipe>> {
 	private final Class<C> containerClass;
 	private final IRecipeTransferHandlerHelper helper;
 	private static final List<Class<? extends AbstractContainerMenu>> containerClasses = new ArrayList<>();
@@ -50,7 +51,7 @@ public class CraftingTerminalTransferHandler<C extends AbstractContainerMenu & I
 	}
 
 	@Override
-	public @Nullable IRecipeTransferError transferRecipe(AbstractContainerMenu container, CraftingRecipe recipe,
+	public @Nullable IRecipeTransferError transferRecipe(C container, RecipeHolder<CraftingRecipe> recipe,
 			IRecipeSlotsView recipeSlots, Player player, boolean maxTransfer, boolean doTransfer) {
 		if (container instanceof IAutoFillTerminal term) {
 			List<IRecipeSlotView> missing = new ArrayList<>();
@@ -105,8 +106,7 @@ public class CraftingTerminalTransferHandler<C extends AbstractContainerMenu & I
 							if (stacks[i][j] != null && !stacks[i][j].isEmpty()) {
 								StoredItemStack s = new StoredItemStack(stacks[i][j]);
 								if(stored.contains(s) || player.getInventory().findSlotMatchingItem(stacks[i][j]) != -1) {
-									CompoundTag tag = new CompoundTag();
-									stacks[i][j].save(tag);
+									Tag tag = stacks[i][j].save(player.level.registryAccess());
 									CompoundNBT.put("i" + (k++), tag);
 								}
 							}
@@ -159,7 +159,8 @@ public class CraftingTerminalTransferHandler<C extends AbstractContainerMenu & I
 	}
 
 	@Override
-	public RecipeType<CraftingRecipe> getRecipeType() {
+	public RecipeType<RecipeHolder<CraftingRecipe>> getRecipeType() {
 		return RecipeTypes.CRAFTING;
 	}
+
 }

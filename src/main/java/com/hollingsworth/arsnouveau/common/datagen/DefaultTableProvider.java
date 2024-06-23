@@ -5,7 +5,10 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.block.*;
+import com.hollingsworth.arsnouveau.common.block.AlterationTable;
+import com.hollingsworth.arsnouveau.common.block.ArchfruitPod;
+import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
+import com.hollingsworth.arsnouveau.common.block.ThreePartBlock;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.util.registry.BlockRegistryWrapper;
 import com.hollingsworth.arsnouveau.common.util.registry.RegistryWrapper;
@@ -21,7 +24,6 @@ import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.EntityType;
@@ -39,12 +41,15 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.functions.*;
+import net.minecraft.world.level.storage.loot.functions.CopyCustomDataFunction;
+import net.minecraft.world.level.storage.loot.functions.CopyNameFunction;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
@@ -272,7 +277,7 @@ public class DefaultTableProvider extends LootTableProvider {
 
 
         @Override
-        public void generate(HolderLookup.Provider pRegistries, BiConsumer<ResourceKey<LootTable>, LootTable.Builder> pGenerator) {
+        public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> pGenerator) {
             this.generate();
             Set<ResourceKey<LootTable>> set = new HashSet<>();
 
@@ -373,7 +378,7 @@ public class DefaultTableProvider extends LootTableProvider {
         }
 
         @Override
-        public void generate(HolderLookup.Provider pRegistries, BiConsumer<ResourceKey<LootTable>, LootTable.Builder> pGenerator) {
+        public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> pGenerator) {
             this.generate();
             Set<ResourceKey<LootTable>> set = Sets.newHashSet();
             this.getKnownEntityTypes().map(EntityType::builtInRegistryHolder).forEach((p_249003_) -> {

@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.common.util.registry.RegistryWrapper;
+import com.hollingsworth.arsnouveau.common.util.registry.BlockRegistryWrapper;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
@@ -19,7 +19,7 @@ public class StrippableLog extends RotatedPillarBlock {
         this.strippedState = stateSupplier;
     }
 
-    public StrippableLog(Properties properties, RegistryWrapper<? extends Block> ro) {
+    public StrippableLog(Properties properties, BlockRegistryWrapper<? extends Block> ro) {
         super(properties);
         this.strippedState = () -> ro.get();
     }

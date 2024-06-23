@@ -21,6 +21,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 
 import java.util.ArrayList;
@@ -60,9 +61,9 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         List<EnchantmentRecipe> enchantments = new ArrayList<>();
         List<CrushRecipe> crushRecipes = new ArrayList<>();
         List<ArmorUpgradeRecipe> armorUpgrades = new ArrayList<>();
-        List<ImbuementRecipe> imbuementRecipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get());
+        List<ImbuementRecipe> imbuementRecipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream().map(RecipeHolder::value).toList();
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
-        for (Recipe<?> i : manager.getRecipes()) {
+        for (Recipe<?> i : manager.getRecipes().stream().map(RecipeHolder::value).toList()) {
             if (i instanceof GlyphRecipe glyphRecipe) {
                 recipeList.add(glyphRecipe);
             }
@@ -108,7 +109,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
 
     @Override
     public void registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration registration) {
-        registration.getCraftingCategory().addCategoryExtension(DyeRecipe.class, DyeRecipeCategory::new);
+        registration.getCraftingCategory().addExtension(DyeRecipe.class, new DyeRecipeCategory());
     }
 
     private static IJeiRuntime jeiRuntime;

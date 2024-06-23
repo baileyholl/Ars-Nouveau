@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.api.registry;
 
-import com.hollingsworth.arsnouveau.api.recipe.BuddingConversionRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.BuddingConversionRecipe;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.world.item.crafting.RecipeManager;
 
