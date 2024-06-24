@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.setup.config.ConfigUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.ModConfigSpec;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -11,8 +12,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import static com.hollingsworth.arsnouveau.setup.config.ConfigUtil.writeConfig;
 
 /**
  * Utility class for code around handling spell part configuration.
@@ -110,7 +109,7 @@ public class SpellPartConfigUtil {
     public static ComboLimits buildInvalidCombosConfig(ModConfigSpec.Builder builder, Set<ResourceLocation> defaults) {
         ModConfigSpec.ConfigValue<List<? extends String>> configValue = builder
                 .comment("Prevents the given glyph from being used in the same spell as the given glyph", "Example entry: \"" + GlyphLib.EffectBurstID + "\"")
-                .defineList("invalid_combos", writeComboConfig(defaults), (o) -> o instanceof String s && ResourceLocation.isValidResourceLocation(s));
+                .defineList("invalid_combos", writeComboConfig(defaults), (o) -> o instanceof String s &&  ResourceLocation.read(s).isSuccess());
 
         return new ComboLimits(configValue);
     }

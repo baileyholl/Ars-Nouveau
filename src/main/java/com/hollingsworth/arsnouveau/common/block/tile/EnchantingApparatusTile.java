@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.*;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.ApparatusRecipeInput;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.common.network.HighlightAreaPacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -92,10 +93,8 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
 
             if (this.isCrafting) {
                 IEnchantingRecipe recipe = this.getRecipe(stack, null);
-                List<ItemStack> pedestalItems = getPedestalItems();
                 if (recipe != null) {
-                    pedestalItems.forEach(i -> i = null);
-                    this.stack = recipe.getResult(pedestalItems, this.stack, this);
+                    this.stack = recipe.assemble(new ApparatusRecipeInput(this), level.registryAccess());
                     clearItems();
                     setChanged();
                     ParticleUtil.spawnPoof((ServerLevel) level, worldPosition);
@@ -137,7 +136,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
 
     public IEnchantingRecipe getRecipe(ItemStack stack, @Nullable Player playerEntity) {
         List<ItemStack> pedestalItems = getPedestalItems();
-        var holder = ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes(level).stream().filter(r -> r.value().matches(pedestalItems, stack, this, playerEntity)).findFirst().orElse(null);
+        var holder = ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes(level).stream().filter(r -> r.value().matches(new ApparatusRecipeInput(stack, pedestalItems, playerEntity), level)).findFirst().orElse(null);
         return holder != null ? holder.value() : null;
     }
 

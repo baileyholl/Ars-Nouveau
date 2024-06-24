@@ -2,13 +2,14 @@ package com.hollingsworth.arsnouveau.common.world.saved_data;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,12 +24,18 @@ public class RedstoneSavedData extends SavedData {
 
     }
 
-    public RedstoneSavedData(CompoundTag tag){
+    public static SavedData.Factory<RedstoneSavedData> factory() {
+        return new SavedData.Factory<>(RedstoneSavedData::new, RedstoneSavedData::load, null);
+    }
+
+    public static RedstoneSavedData load(CompoundTag tag, HolderLookup.Provider p_323806_){
+        RedstoneSavedData data = new RedstoneSavedData();
         ListTag signalList = tag.getList("SignalList", 10);
         for(int i = 0; i < signalList.size(); i++){
             var signal = new Entry(signalList.getCompound(i));
-            SIGNAL_MAP.put(signal.pos, signal);
+            data.SIGNAL_MAP.put(signal.pos, signal);
         }
+        return data;
     }
 
     public void tick(ServerLevel serverLevel){
@@ -42,7 +49,7 @@ public class RedstoneSavedData extends SavedData {
         }
         for(var pos : toRemove){
             SIGNAL_MAP.remove(pos);
-            serverLevel.getBlockState(pos).neighborChanged(serverLevel, pos, serverLevel.getBlockState(pos).getBlock(), pos, false);
+            serverLevel.getBlockState(pos).onNeighborChange(serverLevel, pos, pos);
             serverLevel.updateNeighborsAt(pos, serverLevel.getBlockState(pos).getBlock());
         }
     }
@@ -53,7 +60,7 @@ public class RedstoneSavedData extends SavedData {
     }
 
     @Override
-    public CompoundTag save(CompoundTag pCompoundTag) {
+    public CompoundTag save(CompoundTag pCompoundTag, HolderLookup.Provider pRegistries) {
         ListTag signalList = new ListTag();
         for(var signal : SIGNAL_MAP.values()){
             signalList.add(signal.save(new CompoundTag()));
@@ -64,7 +71,7 @@ public class RedstoneSavedData extends SavedData {
 
     public static RedstoneSavedData from(ServerLevel level){
         return level.getDataStorage()
-                .computeIfAbsent(RedstoneSavedData::new, RedstoneSavedData::new, "an_redstone_signals" );
+                .computeIfAbsent(factory(), "an_redstone_signals" );
     }
 
     public static class Entry{
@@ -93,12 +100,12 @@ public class RedstoneSavedData extends SavedData {
     }
 
     @SubscribeEvent
-    public static void serverTick(TickEvent.LevelTickEvent e) {
+    public static void serverTick(LevelTickEvent.Post e) {
 
-        if (e.level.isClientSide || e.phase != TickEvent.Phase.END)
+        if (e.getLevel().isClientSide )
             return;
 
-        RedstoneSavedData data = RedstoneSavedData.from((ServerLevel) e.level);
-        data.tick((ServerLevel) e.level);
+        RedstoneSavedData data = RedstoneSavedData.from((ServerLevel) e.getLevel());
+        data.tick((ServerLevel) e.getLevel());
     }
 }

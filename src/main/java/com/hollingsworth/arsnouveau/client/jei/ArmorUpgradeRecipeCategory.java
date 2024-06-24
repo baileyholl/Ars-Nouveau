@@ -86,6 +86,6 @@ public class ArmorUpgradeRecipeCategory extends EnchantingApparatusRecipeCategor
         graphics.drawString(renderer, Component.translatable("ars_nouveau.tier", 1 + recipe.tier), 0, 0, 10,false);
 
         if (recipe.consumesSource())
-            graphics.drawString(renderer, Component.translatable("ars_nouveau.source", recipe.sourceCost), 0, 100, 10,false);
+            graphics.drawString(renderer, Component.translatable("ars_nouveau.source", recipe.sourceCost()), 0, 100, 10,false);
     }
 }

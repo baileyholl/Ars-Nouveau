@@ -1,10 +1,9 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.common.util.registry.RegistryWrapper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -92,15 +91,16 @@ public class SingleItemTile extends ModdedTile implements Container{
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
         super.loadAdditional(compound, pRegistries);
-        stack = ItemStack.of((CompoundTag) compound.get("itemStack"));
+        if(compound.contains("itemStack")) {
+            ItemStack.parse(pRegistries, compound.get("itemStack")).ifPresent(stack -> this.stack = stack);
+        }
     }
 
     @Override
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
         if (stack != null) {
-            CompoundTag stackTag = new CompoundTag();
-            stack.save(stackTag);
+            Tag stackTag = stack.save(pRegistries);
             tag.put("itemStack", stackTag);
         }
     }
