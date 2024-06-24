@@ -65,6 +65,7 @@ import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.ItemLike;
@@ -332,7 +333,8 @@ public class EventHandler {
                     return;
                 }
             }
-            for (DispelEntityRecipe recipe : level.getRecipeManager().getAllRecipesFor(RecipeRegistry.DISPEL_ENTITY_TYPE.get())) {
+            for (RecipeHolder<DispelEntityRecipe> holder : level.getRecipeManager().getAllRecipesFor(RecipeRegistry.DISPEL_ENTITY_TYPE.get())) {
+                var recipe = holder.value();
                 if (recipe.matches(event.shooter, entity)) {
                     replaceEntityWithItems(level, entity, recipe.result(event.shooter, entity).toArray(ItemStack[]::new));
                     return;

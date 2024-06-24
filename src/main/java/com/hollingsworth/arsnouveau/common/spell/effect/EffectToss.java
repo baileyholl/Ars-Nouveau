@@ -11,7 +11,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -58,8 +57,7 @@ public class EffectToss extends AbstractEffect {
             summonStack(shooter, spellContext, world, pos, manager);
             return;
         }
-        BlockEntity tileEntity = world.getBlockEntity(rayTraceResult.getBlockPos());
-        IItemHandler targetInv = tileEntity.getCapability(Capabilities.ITEM_HANDLER);
+        IItemHandler targetInv = world.getCapability(Capabilities.ItemHandler.BLOCK, rayTraceResult.getBlockPos(), null);
 
         if (targetInv == null) {
             return;

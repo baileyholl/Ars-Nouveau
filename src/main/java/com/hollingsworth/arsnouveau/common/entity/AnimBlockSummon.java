@@ -10,9 +10,8 @@ import com.hollingsworth.arsnouveau.common.entity.goal.ConditionalMeleeGoal;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.Util;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -39,8 +38,8 @@ import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Optional;
@@ -66,8 +65,8 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     @Override
-    public double getAttributeValue(Attribute pAttribute) {
-        if(pAttribute == Attributes.ATTACK_DAMAGE){
+    public double getAttributeValue(Holder<Attribute> pAttribute) {
+        if(pAttribute.is(Attributes.ATTACK_DAMAGE)){
             return super.getAttributeValue(pAttribute) + getStateDamageBonus();
         }
         return super.getAttributeValue(pAttribute);
@@ -93,7 +92,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(4, new ConditionalLeapGoal(this, 0.4F, () -> entityData.get(CAN_WALK)));
         this.goalSelector.addGoal(5, new ConditionalMeleeGoal(this, 1.0D, true, () -> entityData.get(CAN_WALK)));
-        this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
+        this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));

@@ -66,21 +66,21 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
         IDrawableAnimated arrow = this.cachedArrows.getUnchecked(40);
         arrow.draw(matrixStack, 22, 6);
         Font renderer = Minecraft.getInstance().font;
-        for (int i = 0; i < recipe.outputs.size(); i++) {
-            CrushRecipe.CrushOutput output = recipe.outputs.get(i);
-            matrixStack.drawString(renderer, Math.round(100 * output.chance - 0.5f) + "%", 98, 11 + 17 * i, 10,false);
-            if(output.maxRange > 1) {
-                matrixStack.drawString(renderer, "1-" + output.maxRange, 75, 11 + 17 * i, 10,false);
+        for (int i = 0; i < recipe.outputs().size(); i++) {
+            CrushRecipe.CrushOutput output = recipe.outputs().get(i);
+            matrixStack.drawString(renderer, Math.round(100 * output.chance() - 0.5f) + "%", 98, 11 + 17 * i, 10,false);
+            if(output.maxRange() > 1) {
+                matrixStack.drawString(renderer, "1-" + output.maxRange(), 75, 11 + 17 * i, 10,false);
             }
         }
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, CrushRecipe recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 6, 5).addIngredients(recipe.input);
-        for (int i = 0; i < recipe.outputs.size(); i++) {
-            CrushRecipe.CrushOutput output = recipe.outputs.get(i);
-            builder.addSlot(RecipeIngredientRole.OUTPUT, 50, 5 + 16 * i).addItemStack(output.stack);
+        builder.addSlot(RecipeIngredientRole.INPUT, 6, 5).addIngredients(recipe.input());
+        for (int i = 0; i < recipe.outputs().size(); i++) {
+            CrushRecipe.CrushOutput output = recipe.outputs().get(i);
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 50, 5 + 16 * i).addItemStack(output.stack());
         }
     }
 }

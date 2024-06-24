@@ -20,7 +20,7 @@ public class EnchantingApparatusRecipeCategory<T extends EnchantingApparatusReci
     public IDrawable icon;
 
     public EnchantingApparatusRecipeCategory(IGuiHelper helper) {
-        super(helper, (enchantingApparatusRecipe -> new MultiProvider(enchantingApparatusRecipe.result, enchantingApparatusRecipe.pedestalItems, enchantingApparatusRecipe.reagent)));
+        super(helper, (enchantingApparatusRecipe -> new MultiProvider(enchantingApparatusRecipe.result(), enchantingApparatusRecipe.pedestalItems(), enchantingApparatusRecipe.reagent())));
         background = helper.createBlankDrawable(114, 108);
         icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK));
     }
@@ -50,6 +50,6 @@ public class EnchantingApparatusRecipeCategory<T extends EnchantingApparatusReci
     public void draw(EnchantingApparatusRecipe recipe,@NotNull IRecipeSlotsView slotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         Font renderer = Minecraft.getInstance().font;
         if (recipe.consumesSource())
-            guiGraphics.drawString(renderer, Component.translatable("ars_nouveau.source", recipe.sourceCost), 0, 100, 10,false);
+            guiGraphics.drawString(renderer, Component.translatable("ars_nouveau.source", recipe.sourceCost()), 0, 100, 10,false);
     }
 }

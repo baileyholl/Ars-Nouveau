@@ -3,8 +3,9 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.SummonSkeleton;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import com.hollingsworth.arsnouveau.common.util.HolderHelper;
+import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -46,7 +47,7 @@ public class EffectSummonUndead extends AbstractEffect {
             if ((spellStats.hasBuff(AugmentPierce.INSTANCE))) {
                 weapon = Items.BOW.getDefaultInstance();
                 if (spellStats.getAmpMultiplier() > 0)
-                    weapon.enchant(Enchantments.POWER, Math.max(4, (int) spellStats.getAmpMultiplier()) - 1);
+                    weapon.enchant(HolderHelper.unwrap(world, Enchantments.POWER), Math.max(4, (int) spellStats.getAmpMultiplier()) - 1);
             } else {
                 if (spellStats.getAmpMultiplier() >= 3) {
                     weapon = Items.NETHERITE_AXE.getDefaultInstance();

@@ -4,7 +4,9 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import snownee.jade.api.*;
+import snownee.jade.api.BlockAccessor;
+import snownee.jade.api.IBlockComponentProvider;
+import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.impl.EntityAccessorImpl;
 
@@ -23,7 +25,7 @@ public enum MobJarComponent implements IBlockComponentProvider {
                     .build();
 
 //                    ._gatherComponents(($) -> tooltip);
-            tooltip.remove(Identifiers.CORE_MOD_NAME);
+//            tooltip.remove(Identifiers.CORE_MOD_NAME);
         }
     }
 

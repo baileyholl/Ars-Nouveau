@@ -66,6 +66,16 @@ repositories {
             includeGroup("software.bernie.geckolib")
         }
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                url "https://cursemaven.com"
+            }
+        }
+        filter {
+            includeGroup "curse.maven"
+        }
+    }
     maven {
         name = "Illusive Soulworks maven"
         url = "https://maven.theillusivec4.top/"
@@ -101,6 +111,7 @@ dependencies {
     compileOnly "mezz.jei:jei-1.21-neoforge-api:${jei_version}"
     localRuntime "mezz.jei:jei-1.21-neoforge:${jei_version}"
     implementation 'com.github.glitchfiend:TerraBlender-neoforge:1.21-4.0.0.0'
+    implementation "curse.maven:jade-324717:5444008"
 }
 
 tasks.withType(ProcessResources).configureEach {
