@@ -2,13 +2,16 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.*;
 import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.ArmorUpgradeRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.ReactiveEnchantmentRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.SpellWriteRecipe;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.perk.*;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -24,7 +27,6 @@ import net.neoforged.neoforge.common.Tags;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
@@ -38,15 +40,14 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
     @Override
     public void collectJsons(CachedOutput pOutput) {
         addEntries();
-        for (IEnchantingRecipe g : recipes) {
-            if (g instanceof EnchantingApparatusRecipe recipe) {
-                Path path = getRecipePath(output, recipe.getId().getPath());
-                saveStable(pOutput, recipe.asRecipe(), path);
-            }
+        for (ApparatusRecipeBuilder.RecipeWrapper wrapper : recipes) {
+            Path path = getRecipePath(output, wrapper.id().getPath());
+            saveStable(pOutput, wrapper.codec().codec().encodeStart(JsonOps.INSTANCE, wrapper.recipe()).getOrThrow(), path);
+
         }
     }
 
-    public List<EnchantingApparatusRecipe> recipes = new ArrayList<>();
+    public List<ApparatusRecipeBuilder.RecipeWrapper> recipes = new ArrayList<>();
     public ApparatusRecipeBuilder builder() {
         return ApparatusRecipeBuilder.builder();
     }
@@ -89,17 +90,18 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM)
                 .build());
 
-
-        addRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.BELT_OF_UNSTABLE_GIFTS.get()), Ingredient.of(ItemsRegistry.MUNDANE_BELT.get()), Arrays.asList(
-                Ingredient.of(Items.SUGAR),
-                Ingredient.of(Tags.Items.CROPS_NETHER_WART),
-                Ingredient.of(Tags.Items.RODS_BLAZE),
-                Ingredient.of(Tags.Items.DUSTS_GLOWSTONE),
-                Ingredient.of(Items.FERMENTED_SPIDER_EYE),
-                Ingredient.of(Tags.Items.DUSTS_REDSTONE),
-                Ingredient.of(Items.BREWING_STAND),
-                Ingredient.of(Tags.Items.FEATHERS)
-        )));
+        addRecipe(builder()
+                .withResult(ItemsRegistry.BELT_OF_UNSTABLE_GIFTS)
+                .withReagent(ItemsRegistry.MUNDANE_BELT)
+                .withPedestalItem(Ingredient.of(Items.SUGAR))
+                .withPedestalItem(Ingredient.of(Tags.Items.CROPS_NETHER_WART))
+                .withPedestalItem(Ingredient.of(Tags.Items.RODS_BLAZE))
+                .withPedestalItem(Ingredient.of(Tags.Items.DUSTS_GLOWSTONE))
+                .withPedestalItem(Ingredient.of(Items.FERMENTED_SPIDER_EYE))
+                .withPedestalItem(Ingredient.of(Tags.Items.DUSTS_REDSTONE))
+                .withPedestalItem(Ingredient.of(Items.BREWING_STAND))
+                .withPedestalItem(Ingredient.of(Tags.Items.FEATHERS))
+                .build());
 
         addRecipe(builder()
                 .withResult(ItemsRegistry.STARBUNCLE_CHARM)
@@ -1102,7 +1104,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
         return PerkRegistry.getPerkItemMap().get(id);
     }
 
-    public void addRecipe(EnchantingApparatusRecipe recipe) {
+    public void addRecipe(ApparatusRecipeBuilder.RecipeWrapper recipe) {
         recipes.add(recipe);
     }
 

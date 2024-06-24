@@ -15,6 +15,8 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ import java.util.List;
 public class CasterTomeProvider extends SimpleDataProvider {
 
 
-    public List<CasterTomeData> tomes = new ArrayList<>();
+    public List<CasterRecipeWrapper> tomes = new ArrayList<>();
 
     public CasterTomeProvider(DataGenerator generatorIn) {
         super(generatorIn);
@@ -252,8 +254,8 @@ public class CasterTomeProvider extends SimpleDataProvider {
 
         tomes.add(buildTome("uni","Uni's Windshield", new Spell(MethodSelf.INSTANCE, EffectOrbit.INSTANCE, EffectKnockback.INSTANCE).add(AugmentAmplify.INSTANCE, 8), "Stay away!"));
 
-        for (CasterTomeData g : tomes) {
-            Path path = getRecipePath(output, g.getId().getPath());
+        for (CasterRecipeWrapper g : tomes) {
+            Path path = getRecipePath(output, g.id().getPath());
             saveStable(pOutput, g.toJson(), path);
         }
     }
@@ -262,8 +264,8 @@ public class CasterTomeProvider extends SimpleDataProvider {
         return pathIn.resolve("data/ars_nouveau/recipes/tomes/" + str + ".json");
     }
 
-    public CasterTomeData buildTome(String id, String name, Spell spell, String flavorText) {
-        return new CasterTomeData(ArsNouveau.prefix( id + "_tome"),
+    public CasterRecipeWrapper buildTome(String id, String name, Spell spell, String flavorText) {
+        return new CasterRecipeWrapper(ArsNouveau.prefix( id + "_tome"),
                 name,
                 spell.serializeRecipe(),
                 ItemsRegistry.CASTER_TOME.registryObject.getId(),
@@ -271,10 +273,13 @@ public class CasterTomeProvider extends SimpleDataProvider {
                 spell.color.serialize(), spell.sound);
     }
 
-    public CasterTomeData buildTome(String id, String name, Spell spell, String flavorText, ParticleColor color) {
-        CasterTomeData data = buildTome(id, name, spell, flavorText);
-        data.particleColor = color;
-        return data;
+    public CasterRecipeWrapper buildTome(String id, String name, Spell spell, String flavorText, ParticleColor color) {
+        return new CasterRecipeWrapper(ArsNouveau.prefix( id + "_tome"),
+                name,
+                spell.serializeRecipe(),
+                ItemsRegistry.CASTER_TOME.registryObject.getId(),
+                flavorText,
+                color.serialize(), spell.sound);
     }
 
     /**
@@ -283,5 +288,11 @@ public class CasterTomeProvider extends SimpleDataProvider {
     @Override
     public String getName() {
         return "Ars Nouveau Caster Tomes Datagen";
+    }
+
+    public static record CasterRecipeWrapper(ResourceLocation id, String name, List<ResourceLocation> spell, ResourceLocation tomeType, String flavorText, CompoundTag particleColor, ConfiguredSpellSound sound) {
+        public CasterTomeData toData() {
+            return new CasterTomeData(name, spell, tomeType, flavorText, particleColor, sound);
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.api.enchanting_apparatus;
+package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
 import net.minecraft.network.chat.Component;
 

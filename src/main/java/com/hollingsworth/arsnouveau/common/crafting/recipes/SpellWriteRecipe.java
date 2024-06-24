@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.api.enchanting_apparatus;
+package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -7,10 +7,9 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
-import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.spell.casters.ReactiveCaster;
+import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -21,14 +20,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hollingsworth.arsnouveau.api.enchanting_apparatus.ReactiveEnchantmentRecipe.getParchment;
+import static com.hollingsworth.arsnouveau.common.crafting.recipes.ReactiveEnchantmentRecipe.getParchment;
 
 public class SpellWriteRecipe extends EnchantingApparatusRecipe implements ITextOutput {
 
@@ -53,7 +51,7 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe implements IText
         ItemEnchantments enchantments = reagent.get(DataComponents.ENCHANTMENTS);
         int level = enchantments.getLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get());
         ItemStack parchment = getParchment(pedestalItems);
-        return !parchment.isEmpty() && !CasterUtil.getCaster(parchment).getSpell().isEmpty() && level > 0 && super.isMatch(pedestalItems, reagent, enchantingApparatusTile, player);
+        return !parchment.isEmpty() && !CasterUtil.getCaster(parchment).getSpell().isEmpty() && level > 0 && super.matches(pedestalItems, reagent, enchantingApparatusTile, player);
     }
 
     @Override
@@ -75,7 +73,7 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe implements IText
     public JsonElement asRecipe() {
         JsonObject jsonobject = new JsonObject();
         jsonobject.addProperty("type", "ars_nouveau:" + RecipeRegistry.SPELL_WRITE_RECIPE_ID);
-        jsonobject.addProperty("sourceCost", getSourceCost());
+        jsonobject.addProperty("sourceCost", sourceCost());
         JsonArray pedestalArr = new JsonArray();
         for (Ingredient i : this.pedestalItems) {
             JsonObject object = new JsonObject();

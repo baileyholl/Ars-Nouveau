@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.*;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.crafting.Recipe;

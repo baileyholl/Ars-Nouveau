@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.api.enchanting_apparatus;
+package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -47,7 +47,7 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
     public JsonElement asRecipe() {
         JsonObject jsonobject = new JsonObject();
         jsonobject.addProperty("type", "ars_nouveau:" + RecipeRegistry.ARMOR_RECIPE_ID);
-        jsonobject.addProperty("sourceCost", getSourceCost());
+        jsonobject.addProperty("sourceCost", sourceCost());
         JsonArray pedestalArr = new JsonArray();
         for (Ingredient i : this.pedestalItems) {
             JsonObject object = new JsonObject();
@@ -70,7 +70,7 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
         if(!(perkHolder instanceof ArmorPerkHolder armorPerkHolder)){
             return false;
         }
-        return armorPerkHolder.getTier() == (tier - 1) && super.isMatch(pedestalItems, reagent, enchantingApparatusTile, player);
+        return armorPerkHolder.getTier() == (tier - 1) && super.matches(pedestalItems, reagent, enchantingApparatusTile, player);
     }
 
     @Override

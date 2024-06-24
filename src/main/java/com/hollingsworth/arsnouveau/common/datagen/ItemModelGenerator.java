@@ -11,7 +11,7 @@ import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
-import com.hollingsworth.arsnouveau.common.util.registry.RegistryWrapper;
+import com.hollingsworth.arsnouveau.common.util.registry.ItemRegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+
 import java.util.function.Supplier;
 
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
@@ -128,12 +129,7 @@ public class ItemModelGenerator extends ItemModelProvider {
                 .texture("layer0", itemTexture(s));
     }
 
-    public void blockAsItem(RegistryWrapper<? extends Block> block){
-        getBuilder(block.getRegistryName()).parent(new ModelFile.UncheckedModelFile("item/generated"))
-                .texture("layer0", itemTexture(block.get()));
-    }
-
-    public void itemUnchecked(RegistryWrapper<? extends Item> item){
+    public void itemUnchecked(ItemRegistryWrapper<? extends Item> item){
         getBuilder(item.getRegistryName()).parent(new ModelFile.UncheckedModelFile("item/generated"))
                 .texture("layer0", itemTexture(item.get()));
 

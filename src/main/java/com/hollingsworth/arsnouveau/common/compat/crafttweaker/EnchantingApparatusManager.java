@@ -6,7 +6,7 @@
 //import com.blamejared.crafttweaker.api.item.IItemStack;
 //import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 //import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
-//import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
+//import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantingApparatusRecipe;
 //import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 //import net.minecraft.world.item.crafting.RecipeType;
 //import net.minecraft.resources.ResourceLocation;

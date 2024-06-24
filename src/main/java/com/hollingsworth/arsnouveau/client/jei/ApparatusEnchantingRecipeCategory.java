@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.client.jei;
 
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantmentRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantmentRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -28,7 +28,7 @@ public class ApparatusEnchantingRecipeCategory extends EnchantingApparatusRecipe
         double angleBetweenEach = 360.0 / inputs.size();
 
 
-        ItemStack dummy = recipe.enchantLevel > 1 ? EnchantedBookItem.createForEnchantment(new EnchantmentInstance(recipe.enchantment, recipe.enchantLevel-1)) : Items.BOOK.getDefaultInstance();
+        ItemStack dummy = recipe.enchantLevel > 1 ? EnchantedBookItem.createForEnchantment(new EnchantmentInstance(recipe.enchantmentKey, recipe.enchantLevel-1)) : Items.BOOK.getDefaultInstance();
         Component message = recipe.enchantLevel == 1 ? Component.literal("Any compatible item") : Component.literal("Needs lower level enchantment");
         dummy.set(DataComponents.CUSTOM_NAME, message); //TODO Translatable
 
@@ -40,7 +40,7 @@ public class ApparatusEnchantingRecipeCategory extends EnchantingApparatusRecipe
             point = rotatePointAbout(point, center, angleBetweenEach);
         }
 
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 86, 10).addItemStack(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(recipe.enchantment, recipe.enchantLevel)));
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 86, 10).addItemStack(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(recipe.enchantmentKey, recipe.enchantLevel)));
 
     }
 

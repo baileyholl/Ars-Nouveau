@@ -1,7 +1,7 @@
 //package com.hollingsworth.arsnouveau.client.patchouli;
 //
 //
-//import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantmentRecipe;
+//import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantmentRecipe;
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.resources.ResourceLocation;
 //import net.minecraft.world.item.ItemStack;

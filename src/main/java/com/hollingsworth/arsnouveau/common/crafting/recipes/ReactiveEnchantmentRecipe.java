@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.api.enchanting_apparatus;
+package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -6,9 +6,9 @@ import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
-import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.spell.casters.ReactiveCaster;
+import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -31,9 +31,9 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe {
     }
 
     @Override
-    public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile, @Nullable Player player) {
+    public boolean matches(List<ItemStack> pedestalItems, ItemStack reagent, @Nullable Player player) {
         ItemStack parchment = getParchment(pedestalItems);
-        return super.isMatch(pedestalItems, reagent, enchantingApparatusTile, player) && !parchment.isEmpty() && !CasterUtil.getCaster(parchment).getSpell().isEmpty();
+        return super.matches(pedestalItems, reagent, player) && !parchment.isEmpty() && !CasterUtil.getCaster(parchment).getSpell().isEmpty();
     }
 
     public static@NotNull ItemStack getParchment(List<ItemStack> pedestalItems) {
@@ -70,7 +70,7 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe {
     public JsonElement asRecipe() {
         JsonObject jsonobject = new JsonObject();
         jsonobject.addProperty("type", "ars_nouveau:" + RecipeRegistry.REACTIVE_RECIPE_ID);
-        jsonobject.addProperty("sourceCost", getSourceCost());
+        jsonobject.addProperty("sourceCost", sourceCost());
         JsonArray pedestalArr = new JsonArray();
         for (Ingredient i : this.pedestalItems) {
             JsonObject object = new JsonObject();
@@ -123,7 +123,7 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe {
         @Override
         public void toNetwork(FriendlyByteBuf buf, ReactiveEnchantmentRecipe recipe) {
             buf.writeInt(recipe.pedestalItems.size());
-            buf.writeInt(recipe.getSourceCost());
+            buf.writeInt(recipe.sourceCost());
             for (Ingredient i : recipe.pedestalItems) {
                 i.toNetwork(buf);
             }

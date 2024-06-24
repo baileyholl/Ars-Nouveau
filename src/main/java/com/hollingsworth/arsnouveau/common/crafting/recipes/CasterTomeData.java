@@ -28,7 +28,6 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
@@ -40,9 +39,8 @@ import java.util.List;
 
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
-public class CasterTomeData implements Recipe<SingleRecipeInput> {
+public class CasterTomeData implements SpecialSingleInputRecipe {
 
-    ResourceLocation id;
     String name;
     List<ResourceLocation> spell;
     ResourceLocation type;
@@ -50,19 +48,27 @@ public class CasterTomeData implements Recipe<SingleRecipeInput> {
     public ParticleColor particleColor;
     ConfiguredSpellSound sound;
 
+    public CasterTomeData(String name,
+                          List<ResourceLocation> spell,
+                          ResourceLocation type,
+                          String flavorText,
+                          ConfiguredSpellSound sound,
+                          ParticleColor color) {
+        this.name = name;
+        this.spell = spell;
+        this.type = type;
+        this.flavorText = flavorText;
+        this.particleColor = color;
+        this.sound = sound;
+    }
 
-    public CasterTomeData(ResourceLocation id, String name,
+
+    public CasterTomeData(String name,
                           List<ResourceLocation> spell,
                           ResourceLocation type,
                           String flavorText,
                           CompoundTag particleColor, ConfiguredSpellSound sound) {
-        this.name = name;
-        this.spell = spell;
-        this.id = id;
-        this.type = type;
-        this.flavorText = flavorText;
-        this.particleColor = ParticleColorRegistry.from(particleColor);
-        this.sound = sound;
+        this(name, spell, type, flavorText, sound, ParticleColorRegistry.from(particleColor));
     }
 
     public static ItemStack makeTome(Item tome, String name, Spell spell, String flavorText) {
@@ -78,17 +84,6 @@ public class CasterTomeData implements Recipe<SingleRecipeInput> {
     public boolean matches(SingleRecipeInput p_346065_, Level p_345375_) {
         return false;
     }
-
-    @Override
-    public ItemStack assemble(SingleRecipeInput p_345149_, HolderLookup.Provider p_346030_) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public boolean canCraftInDimensions(int pWidth, int pHeight) {
-        return false;
-    }
-
 
     @Override
     public ItemStack getResultItem(HolderLookup.Provider p_267052_) {
@@ -118,10 +113,6 @@ public class CasterTomeData implements Recipe<SingleRecipeInput> {
         return RecipeRegistry.CASTER_TOME_TYPE.get();
     }
 
-    @Override
-    public boolean isSpecial() {
-        return true;
-    }
 
     public JsonElement toJson() {
         JsonObject jsonobject = new JsonObject();

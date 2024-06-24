@@ -3,8 +3,8 @@
 //import com.google.common.collect.ImmutableList;
 //import com.google.gson.annotations.SerializedName;
 //import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-//import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
-//import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
+//import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantingApparatusRecipe;
+//import com.hollingsworth.arsnouveau.common.crafting.recipes.IEnchantingRecipe;
 //import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 //import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 //import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
