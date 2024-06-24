@@ -1,8 +1,10 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
+import com.google.gson.JsonElement;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantmentRecipe;
+import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -102,24 +104,26 @@ public class ApparatusRecipeBuilder {
         return this;
     }
 
-    public RecipeWrapper build() {
+    public RecipeWrapper<EnchantingApparatusRecipe> build() {
         if (id == null || id.getPath().equals("empty"))
             id = ArsNouveau.prefix( getRegistryName(result.getItem()).getPath());
         if(result.isEmpty()){
             throw new IllegalStateException("Enchanting Apparatus Recipe has no result");
         }
 
-        return new RecipeWrapper(id, new EnchantingApparatusRecipe(reagent, result, pedestalItems, sourceCost, keepNbtOfReagent), EnchantingApparatusRecipe.Serializer.CODEC);
+        return new RecipeWrapper<>(id, new EnchantingApparatusRecipe(reagent, result, pedestalItems, sourceCost, keepNbtOfReagent), EnchantingApparatusRecipe.Serializer.CODEC);
     }
 
-    public RecipeWrapper buildEnchantmentRecipe(ResourceKey<Enchantment> enchantment, int level, int mana) {
+    public RecipeWrapper<EnchantmentRecipe> buildEnchantmentRecipe(ResourceKey<Enchantment> enchantment, int level, int mana) {
         if(id == null || id.getPath().equals("empty")){
             id = ArsNouveau.prefix(enchantment.location().getPath() + "_" + level);
         }
-        return new RecipeWrapper(id, new EnchantmentRecipe(this.pedestalItems, enchantment, level, mana), EnchantmentRecipe.Serializer.CODEC);
+        return new RecipeWrapper<>(id, new EnchantmentRecipe(this.pedestalItems, enchantment, level, mana), EnchantmentRecipe.Serializer.CODEC);
     }
 
     public record RecipeWrapper<T extends EnchantingApparatusRecipe>(ResourceLocation id, T recipe, MapCodec<T> codec) {
-
+        public JsonElement serialize() {
+            return codec().codec().encodeStart(JsonOps.INSTANCE, recipe).getOrThrow();
+        }
     }
 }

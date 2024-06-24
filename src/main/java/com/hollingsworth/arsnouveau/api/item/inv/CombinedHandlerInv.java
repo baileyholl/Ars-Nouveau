@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.item.inv;
 
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.wrapper.EmptyItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 public class CombinedHandlerInv implements IItemHandler {
@@ -42,7 +43,7 @@ public class CombinedHandlerInv implements IItemHandler {
     {
         if (index < 0 || index >= itemHandler.length)
         {
-            return EmptyHandler.INSTANCE;
+            return EmptyItemHandler.INSTANCE;
         }
         return itemHandler[index];
     }

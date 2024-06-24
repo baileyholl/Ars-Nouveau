@@ -4,6 +4,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -23,14 +24,14 @@ public class BlockStatesDatagen extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        registerOnlyState(BlockRegistry.SOURCE_GEM_BLOCK, LibBlockNames.SOURCE_GEM_BLOCK);
-        registerOnlyState(BlockRegistry.RED_SBED, LibBlockNames.RED_SBED);
-        registerOnlyState(BlockRegistry.BLUE_SBED, LibBlockNames.BLUE_SBED);
-        registerOnlyState(BlockRegistry.GREEN_SBED, LibBlockNames.GREEN_SBED);
-        registerOnlyState(BlockRegistry.YELLOW_SBED, LibBlockNames.YELLOW_SBED);
-        registerOnlyState(BlockRegistry.ORANGE_SBED, LibBlockNames.ORANGE_SBED);
-        registerOnlyState(BlockRegistry.PURPLE_SBED, LibBlockNames.PURPLE_SBED);
-        registerOnlyState(BlockRegistry.POTION_DIFFUSER, LibBlockNames.POTION_DIFFUSER);
+        registerOnlyState(BlockRegistry.SOURCE_GEM_BLOCK.get(), LibBlockNames.SOURCE_GEM_BLOCK);
+        registerOnlyState(BlockRegistry.RED_SBED.get(), LibBlockNames.RED_SBED);
+        registerOnlyState(BlockRegistry.BLUE_SBED.get(), LibBlockNames.BLUE_SBED);
+        registerOnlyState(BlockRegistry.GREEN_SBED.get(), LibBlockNames.GREEN_SBED);
+        registerOnlyState(BlockRegistry.YELLOW_SBED.get(), LibBlockNames.YELLOW_SBED);
+        registerOnlyState(BlockRegistry.ORANGE_SBED.get(), LibBlockNames.ORANGE_SBED);
+        registerOnlyState(BlockRegistry.PURPLE_SBED.get(), LibBlockNames.PURPLE_SBED);
+        registerOnlyState(BlockRegistry.POTION_DIFFUSER.get(), LibBlockNames.POTION_DIFFUSER);
         registerOnlyState(BlockRegistry.AGRONOMIC_SOURCELINK.get(), LibBlockNames.AGRONOMIC_SOURCELINK);
         registerOnlyState(BlockRegistry.ALCHEMICAL_BLOCK.get(), LibBlockNames.ALCHEMICAL_SOURCELINK);
         registerOnlyState(BlockRegistry.MYCELIAL_BLOCK.get(), LibBlockNames.MYCELIAL_SOURCELINK);
@@ -43,7 +44,7 @@ public class BlockStatesDatagen extends BlockStateProvider {
 
         registerNormalCube(BlockRegistry.VOID_PRISM.get(), LibBlockNames.VOID_PRISM);
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
-            registerNormalCube(ForgeRegistries.BLOCKS.getValue(ArsNouveau.prefix( s)), s);
+            registerNormalCube(BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( s)), s);
         }
         registerNormalCube(BlockRegistry.MAGEBLOOM_BLOCK.get(), LibBlockNames.MAGEBLOOM_BLOCK);
         registerNormalCube(BlockRegistry.FALSE_WEAVE.get(), LibBlockNames.FALSE_WEAVE);
@@ -52,10 +53,10 @@ public class BlockStatesDatagen extends BlockStateProvider {
 
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             ResourceLocation tex = ArsNouveau.prefix( "block/" + s);
-            Block block = ForgeRegistries.BLOCKS.getValue(ArsNouveau.prefix( s + "_stairs"));
+            Block block = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( s + "_stairs"));
             stairsBlock((StairBlock) block, tex);
 
-            Block slab = ForgeRegistries.BLOCKS.getValue(ArsNouveau.prefix( s + "_slab"));
+            Block slab = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( s + "_slab"));
             slabBlock((SlabBlock) slab, ArsNouveau.prefix( s), tex);
         }
     }

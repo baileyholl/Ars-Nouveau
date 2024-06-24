@@ -65,8 +65,8 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
     public ItemStack assemble(ApparatusRecipeInput input, HolderLookup.Provider p_346030_) {
         ItemStack result = this.result.copy();
         ItemStack reagent = input.catalyst();
-        if (keepNbtOfReagent && reagent.hasTag()) {
-            result.setTag(reagent.getTag());
+        if (keepNbtOfReagent) {
+            result.applyComponents(reagent.getComponents());
             result.setDamageValue(0);
         }
         return result.copy();

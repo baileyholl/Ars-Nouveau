@@ -4,6 +4,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ArmorUpgradeRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ReactiveEnchantmentRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.SpellWriteRecipe;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
@@ -11,7 +12,6 @@ import com.hollingsworth.arsnouveau.common.perk.*;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
-import com.mojang.serialization.JsonOps;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -40,14 +40,14 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
     @Override
     public void collectJsons(CachedOutput pOutput) {
         addEntries();
-        for (ApparatusRecipeBuilder.RecipeWrapper wrapper : recipes) {
+        for (ApparatusRecipeBuilder.RecipeWrapper<? extends EnchantingApparatusRecipe> wrapper : recipes) {
             Path path = getRecipePath(output, wrapper.id().getPath());
-            saveStable(pOutput, wrapper.codec().codec().encodeStart(JsonOps.INSTANCE, wrapper.recipe()).getOrThrow(), path);
+            saveStable(pOutput, wrapper.serialize(), path);
 
         }
     }
 
-    public List<ApparatusRecipeBuilder.RecipeWrapper> recipes = new ArrayList<>();
+    public List<ApparatusRecipeBuilder.RecipeWrapper<? extends EnchantingApparatusRecipe>> recipes = new ArrayList<>();
     public ApparatusRecipeBuilder builder() {
         return ApparatusRecipeBuilder.builder();
     }

@@ -9,7 +9,6 @@ import net.minecraft.world.item.crafting.*;
 
 public class DyeRecipe extends ShapelessRecipe {
 
-
     public DyeRecipe(String groupIn, CraftingBookCategory category, ItemStack recipeOutputIn, NonNullList<Ingredient> recipeItemsIn) {
         super(groupIn, CraftingBookCategory.MISC, recipeOutputIn, recipeItemsIn);
     }
@@ -21,7 +20,7 @@ public class DyeRecipe extends ShapelessRecipe {
             for (int i = 0; i < inv.size(); i++) { // For each slot in the crafting inventory,
                 final ItemStack ingredient = inv.getItem(i); // Get the ingredient in the slot
                 if (!ingredient.isEmpty() && ingredient.getItem() instanceof IDyeable) {
-                    output.setTag(ingredient.getOrCreateTag().copy());
+                    output.applyComponents(ingredient.getComponents());
                 }
             }
             for (int i = 0; i < inv.size(); i++) { // For each slot in the crafting inventory,

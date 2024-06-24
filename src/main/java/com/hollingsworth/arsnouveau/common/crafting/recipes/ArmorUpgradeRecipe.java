@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.crafting.recipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
@@ -18,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -27,14 +27,12 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
 
     public int tier; // 0 indexed
 
-    public ArmorUpgradeRecipe(List<Ingredient> pedestalItems, int cost, int tier) {
-        this(ArsNouveau.prefix( "upgrade_" + tier), pedestalItems, cost, tier);
-    }
+//    public ArmorUpgradeRecipe(List<Ingredient> pedestalItems, int cost, int tier) {
+//        this(ArsNouveau.prefix( "upgrade_" + tier), pedestalItems, cost, tier);
+//    }
 
-    public ArmorUpgradeRecipe(ResourceLocation id, List<Ingredient> pedestalItems, int cost, int tier) {
-        this.pedestalItems = pedestalItems;
-        this.id = id;
-        this.sourceCost = cost;
+    public ArmorUpgradeRecipe(List<Ingredient> pedestalItems, int cost, int tier) {
+        super(Ingredient.EMPTY, ItemStack.EMPTY, pedestalItems, cost, false);
         this.tier = tier;
     }
 
@@ -44,24 +42,17 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
     }
 
     @Override
-    public JsonElement asRecipe() {
-        JsonObject jsonobject = new JsonObject();
-        jsonobject.addProperty("type", "ars_nouveau:" + RecipeRegistry.ARMOR_RECIPE_ID);
-        jsonobject.addProperty("sourceCost", sourceCost());
-        JsonArray pedestalArr = new JsonArray();
-        for (Ingredient i : this.pedestalItems) {
-            JsonObject object = new JsonObject();
-            object.add("item", i.toJson());
-            pedestalArr.add(object);
-        }
-        jsonobject.add("pedestalItems", pedestalArr);
-        jsonobject.addProperty("tier", tier);
-        return jsonobject;
+    public boolean doesReagentMatch(ApparatusRecipeInput input, Level level, @org.jetbrains.annotations.Nullable Player player) {
+        return true;
     }
 
     @Override
-    public boolean doesReagentMatch(ItemStack reag) {
-        return true;
+    public boolean matches(ApparatusRecipeInput input, Level level, @org.jetbrains.annotations.Nullable Player player) {
+        IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(input.catalyst());
+        if(!(perkHolder instanceof ArmorPerkHolder armorPerkHolder)){
+            return false;
+        }
+        return armorPerkHolder.getTier() == (tier - 1) && super.matches(input, level, player);
     }
 
     @Override
