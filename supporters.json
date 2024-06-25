@@ -26,7 +26,7 @@
   "0c6a5082-d327-41ec-8722-42d942f30f5a", "728ac916-4aac-439d-af1c-d68e6a51139b", "9c5e5766-0a1c-4563-a8c4-8184994a15a6",
   "92d6215b-0730-44ce-a8b2-1baf4c2cd0d5", "bfde5990-f846-4dae-90d1-0372ce45f522", "c6ad89fd-6625-4290-83b2-2665e9e39225",
   "7dc1de80-c04c-4c0f-8f00-6326d770626b", "8bf034ac-313f-435a-bd2b-200a7857021b", "1dafa767-ce2f-47c4-8142-67b0b4854586",
-    "9eff9013-f8a6-4a1a-9142-32d94d60d8c1", "671ffc64-8b5b-4ac2-87b1-138951be701e"],
+    "9eff9013-f8a6-4a1a-9142-32d94d60d8c1", "671ffc64-8b5b-4ac2-87b1-138951be701e","aac7171c-9bac-42a8-b094-2363599dae59"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -413,6 +413,11 @@
       "adopter": "alissabear01",
       "name": "Yuto",
       "bio": "Full of RAGE!!...or maybe he just needs a snack"
+    },{
+      "color": "orange",
+      "name": "Patches",
+      "adopter": "Mick0604",
+      "bio": "Friendly and carefree, this Starbuncle loves to harvest pumpkins for some reason"
     }
   ]
 }
