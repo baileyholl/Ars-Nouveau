@@ -8,12 +8,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.UUID;
-
 public class RepairingPerk extends Perk {
 
     public static final RepairingPerk INSTANCE = new RepairingPerk(ArsNouveau.prefix( "thread_repairing"));
-    public static final UUID PERK_UUID = UUID.fromString("e2a7e5bc-ab34-4ea2-b3b6-ef23d352fa47");
 
     public RepairingPerk(ResourceLocation key) {
         super(key);
@@ -23,12 +20,13 @@ public class RepairingPerk extends Perk {
         if(entity.level.getGameTime() % 200 != 0 || stack.getDamageValue() <= 0)
             return;
         double repairLevel = PerkUtil.countForPerk(RepairingPerk.INSTANCE, entity);
-        CapabilityRegistry.getMana(entity).ifPresent(mana -> {
-            if (mana.getCurrentMana() > 20) {
-                mana.removeMana(20);
-                stack.setDamageValue(stack.getDamageValue() - Math.min(stack.getDamageValue(), (int)repairLevel + 1));
-            }
-        });
+        var cap = CapabilityRegistry.getMana(entity).orElse(null);
+        if(cap != null){
+            if(cap.getCurrentMana() < 20)
+                return;
+            cap.removeMana(20);
+            stack.setDamageValue(stack.getDamageValue() - Math.min(stack.getDamageValue(), (int)repairLevel + 1));
+        }
     }
 
     @Override

@@ -101,7 +101,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
             if (getRemainingRequired().isEmpty() && !crafting) {
                 crafting = true;
                 craftingTicks = 120;
-                Networking.sendToNearby(level, getBlockPos(), new PacketOneShotAnimation(getBlockPos(), 0));
+                Networking.sendToNearbyClient(level, getBlockPos(), new PacketOneShotAnimation(getBlockPos(), 0));
                 updateBlock();
             }
         }

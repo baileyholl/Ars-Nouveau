@@ -10,8 +10,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundLevelChunkPacketData;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.ChunkEvent;
 import org.spongepowered.asm.mixin.Final;
@@ -63,7 +63,9 @@ public abstract class ClientChunkCacheMixin implements ANIChunkStorageProvider {
      * Handles chunks that are dropped in range of the camera storage
      */
     @Inject(method = "drop", at = @At(value = "HEAD"))
-    public void onDrop(int x, int z, CallbackInfo ci) {
+    public void onDrop(ChunkPos chunkPos, CallbackInfo ci) {
+        int x = chunkPos.x;
+        int z = chunkPos.z;
         ClientChunkCache.Storage cameraStorage = CameraController.getCameraStorage();
 
         if (cameraStorage.inRange(x, z)) {
@@ -106,7 +108,7 @@ public abstract class ClientChunkCacheMixin implements ANIChunkStorageProvider {
     /**
      * If chunks in range of a camera storage need to be acquired, ask the camera storage about these chunks
      */
-    @Inject(method = "getChunk(IILnet/minecraft/world/level/chunk/ChunkStatus;Z)Lnet/minecraft/world/level/chunk/LevelChunk;", at = @At("TAIL"), cancellable = true)
+    @Inject(method = "getChunk(IILnet/minecraft/world/level/chunk/status/ChunkStatus;Z)Lnet/minecraft/world/level/chunk/ChunkAccess;", at = @At("TAIL"), cancellable = true)
     private void onGetChunk(int x, int z, ChunkStatus requiredStatus, boolean load, CallbackInfoReturnable<LevelChunk> callback) {
         if (CameraUtil.isPlayerMountedOnCamera(Minecraft.getInstance().player) && !storage.inRange(x, z) && CameraController.getCameraStorage().inRange(x, z)) {
             LevelChunk chunk = CameraController.getCameraStorage().getChunk(CameraController.getCameraStorage().getIndex(x, z));

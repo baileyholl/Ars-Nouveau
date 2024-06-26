@@ -8,8 +8,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.NeoForgeMod;
+
 import java.util.UUID;
 
 public class StepHeightPerk extends Perk {
@@ -25,7 +26,7 @@ public class StepHeightPerk extends Perk {
     @Override
     public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int slotValue) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> modifiers = new ImmutableMultimap.Builder<>();
-        modifiers.put(NeoForgeMod.STEP_HEIGHT_ADDITION.get(), new AttributeModifier(PERK_STEP_UUID, "StepPerk", slotValue, AttributeModifier.Operation.ADDITION));
+        modifiers.put(Attributes.STEP_HEIGHT.value(), new AttributeModifier(INSTANCE.getRegistryName(), slotValue, AttributeModifier.Operation.ADD_VALUE));
         return modifiers.build();
     }
 

@@ -26,11 +26,11 @@ public class ImmolatePerk extends Perk implements IEffectResolvePerk {
 
         if(caster.isOnFire()){
             caster.extinguishFire();
-            caster.addEffect(new MobEffectInstance(ModPotions.IMMOLATE_EFFECT.get(), 20 * 5, level - 1));
+            caster.addEffect(new MobEffectInstance(ModPotions.IMMOLATE_EFFECT, 20 * 5, level - 1));
         }
         if(caster.level.getBlockState(caster.blockPosition()).is(BlockTags.FIRE)){
             caster.level.removeBlock(caster.blockPosition(), false);
-            caster.addEffect(new MobEffectInstance(ModPotions.IMMOLATE_EFFECT.get(), 20 * 5, level - 1));
+            caster.addEffect(new MobEffectInstance(ModPotions.IMMOLATE_EFFECT, 20 * 5, level - 1));
         }
     }
 

@@ -67,7 +67,7 @@ public class FindPotionGoal extends ExtendedRangeGoal {
             }
             jar.remove(300);
             tile.givePotion();
-            Networking.sendToNearby(world, wixie, new PacketAnimEntity(wixie.getId(), EntityWixie.Animations.SUMMON_ITEM.ordinal()));
+            Networking.sendToNearbyClient(world, wixie, new PacketAnimEntity(wixie.getId(), EntityWixie.Animations.SUMMON_ITEM.ordinal()));
             int color = jar.getColor();
             int r = (color >> 16) & 0xFF;
             int g = (color >> 8) & 0xFF;

@@ -29,7 +29,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.joml.Matrix4f;
@@ -152,7 +151,7 @@ public class GlyphUnlockMenu extends BaseBook {
 
     private void onSelectClick(Button button) {
         if (selectedRecipe != null) {
-            Networking.INSTANCE.sendToServer(new PacketSetScribeRecipe(scribesPos, selectedRecipe.id));
+            Networking.sendToServer(new PacketSetScribeRecipe(scribesPos, selectedRecipe.id));
             Minecraft.getInstance().setScreen(null);
         }
     }

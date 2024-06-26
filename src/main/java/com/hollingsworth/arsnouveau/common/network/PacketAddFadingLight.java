@@ -1,17 +1,21 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.event.FadeLightTimedEvent;
 import com.hollingsworth.arsnouveau.common.light.LightManager;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.NetworkEvent;
-import java.util.function.Supplier;
 
-public class PacketAddFadingLight {
+public class PacketAddFadingLight extends AbstractPacket{
+    public static final Type<PacketAddFadingLight> TYPE = new Type(ArsNouveau.prefix("add_fading_light"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketAddFadingLight> CODEC = StreamCodec.ofMember(PacketAddFadingLight::toBytes, PacketAddFadingLight::new);
     final double x;
     final double y;
     final double z;
@@ -28,33 +32,27 @@ public class PacketAddFadingLight {
         this.z = pos.getZ();
     }
 
-    public static PacketAddFadingLight decode(FriendlyByteBuf buf) {
-        return new PacketAddFadingLight(buf.readDouble(), buf.readDouble(), buf.readDouble());
+    public PacketAddFadingLight(RegistryFriendlyByteBuf buf) {
+        this.x = buf.readDouble();
+        this.y = buf.readDouble();
+        this.z = buf.readDouble();
     }
 
-    public static void encode(PacketAddFadingLight msg, FriendlyByteBuf buf) {
-        buf.writeDouble(msg.x);
-        buf.writeDouble(msg.y);
-        buf.writeDouble(msg.z);
+    @Override
+    public void toBytes(RegistryFriendlyByteBuf buf) {
+        buf.writeDouble(x);
+        buf.writeDouble(y);
+        buf.writeDouble(z);
     }
 
-    public static class Handler {
-        public static void handle(final PacketAddFadingLight m, final Supplier<NetworkEvent.Context> ctx) {
-            if (ctx.get().getDirection().getReceptionSide().isServer()) {
-                ctx.get().setPacketHandled(true);
-                return;
-            }
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
 
-            ctx.get().enqueueWork(new Runnable() {
-                // Use anon - lambda causes classloading issues
-                @Override
-                public void run() {
-                    if (LightManager.shouldUpdateDynamicLight())
-                        EventQueue.getClientQueue().addEvent(new FadeLightTimedEvent(Minecraft.getInstance().level, new Vec3(m.x, m.y, m.z), Config.TOUCH_LIGHT_DURATION.get(), Config.TOUCH_LIGHT_LUMINANCE.get()));
-                }
-            });
-            ctx.get().setPacketHandled(true);
-
-        }
+    @Override
+    public void onClientReceived(Minecraft minecraft, Player player) {
+        if (LightManager.shouldUpdateDynamicLight())
+            EventQueue.getClientQueue().addEvent(new FadeLightTimedEvent(Minecraft.getInstance().level, new Vec3(x,y, z), Config.TOUCH_LIGHT_DURATION.get(), Config.TOUCH_LIGHT_LUMINANCE.get()));
     }
 }

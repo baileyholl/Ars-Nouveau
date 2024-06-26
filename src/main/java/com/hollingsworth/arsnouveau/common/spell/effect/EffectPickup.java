@@ -17,7 +17,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.player.EntityItemPickupEvent;
+import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -42,16 +42,19 @@ public class EffectPickup extends AbstractEffect {
         InventoryManager manager = spellContext.getCaster().getInvManager().extractSlotMax(-1);
         for (ItemEntity i : entityList) {
             ItemStack stack = i.getItem();
-            if (stack.isEmpty() || NeoForge.EVENT_BUS.post(new EntityItemPickupEvent(getPlayer(shooter, (ServerLevel) world), i)))
+            var pickupPre = NeoForge.EVENT_BUS.post(new ItemEntityPickupEvent.Pre(getPlayer(shooter, (ServerLevel) world), i));
+            if (stack.isEmpty() || pickupPre.canPickup().isFalse())
                 continue;
             stack = manager.insertStack(stack);
             i.setItem(stack);
+            NeoForge.EVENT_BUS.post(new ItemEntityPickupEvent.Post(getPlayer(shooter, (ServerLevel) world), i, stack));
         }
         List<ExperienceOrb> orbList = world.getEntitiesOfClass(ExperienceOrb.class, new AABB(
                 posVec.add(expansion, expansion, expansion), posVec.subtract(expansion, expansion, expansion)));
         for (ExperienceOrb i : orbList) {
             if (shooter instanceof Player player && isNotFakePlayer(player) && spellContext.castingTile == null) {
-                if (NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.entity.player.PlayerXpEvent.PickupXp(player, i)))
+                var expPickup = NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.entity.player.PlayerXpEvent.PickupXp(player, i));
+                if (expPickup.isCanceled())
                     continue;
                 player.giveExperiencePoints(i.value);
                 i.remove(Entity.RemovalReason.DISCARDED);

@@ -25,9 +25,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.bus.api.Event;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -80,7 +80,7 @@ public class EffectBlink extends AbstractEffect {
         if (entity == null) return;
 
         if (entity instanceof LivingEntity living){
-            Event event = EventHooks.onEnderTeleport(living, warpScrollData.getPos().getX(),  warpScrollData.getPos().getY(),  warpScrollData.getPos().getZ());
+            EntityTeleportEvent. EnderEntity event = EventHooks.onEnderTeleport(living, warpScrollData.getPos().getX(),  warpScrollData.getPos().getY(),  warpScrollData.getPos().getZ());
             if (event.isCanceled()) return;
         }
         ServerLevel dimension = PortalTile.getServerLevel(warpScrollData.getDimension(), (ServerLevel) entity.level);
@@ -94,14 +94,14 @@ public class EffectBlink extends AbstractEffect {
         if (entity == null) return;
         Level world = entity.level;
         if (entity instanceof LivingEntity living){
-            Event event = EventHooks.onEnderTeleport(living, warpPos.getX(), warpPos.getY(), warpPos.getZ());
+            EntityTeleportEvent.EnderEntity event = EventHooks.onEnderTeleport(living, warpPos.getX(), warpPos.getY(), warpPos.getZ());
             if (event.isCanceled()) return;
         }
         ((ServerLevel) entity.level).sendParticles(ParticleTypes.PORTAL, entity.getX(), entity.getY() + 1, entity.getZ(),
                 4, (world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
 
         entity.teleportTo(warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + 0.5);
-        Networking.sendToNearby(world, entity, new PacketWarpPosition(entity.getId(), entity.getX(), entity.getY(), entity.getZ(), entity.getXRot(), entity.getYRot()));
+        Networking.sendToNearbyClient(world, entity, new PacketWarpPosition(entity.getId(), entity.getX(), entity.getY(), entity.getZ(), entity.getXRot(), entity.getYRot()));
         entity.level.playSound(null, entity.blockPosition(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1.0f, 1.0f);
         ((ServerLevel) entity.level).sendParticles(ParticleTypes.PORTAL, entity.blockPosition().getX() + 0.5, entity.blockPosition().getY() + 1.0, entity.blockPosition().getZ() + 0.5,
                 4, (world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);

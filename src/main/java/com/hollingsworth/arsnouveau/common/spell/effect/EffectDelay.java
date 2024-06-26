@@ -43,7 +43,7 @@ public class EffectDelay extends AbstractEffect {
         spellContext.delay(delayEvent);
 
         EventQueue.getServerInstance().addEvent(delayEvent);
-        Networking.sendToNearby(world, BlockPos.containing(safelyGetHitPos(rayTraceResult)),
+        Networking.sendToNearbyClient(world, BlockPos.containing(safelyGetHitPos(rayTraceResult)),
                 new PacketClientDelayEffect(duration, shooter, spellContext.getSpell(), spellContext, blockResult, hitEntity));
     }
 

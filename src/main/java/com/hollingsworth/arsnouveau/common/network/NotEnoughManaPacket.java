@@ -1,36 +1,45 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
-import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.NetworkEvent;
-import java.util.function.Supplier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
 
-public class NotEnoughManaPacket{
+public class NotEnoughManaPacket extends AbstractPacket{
+    public static final Type<NotEnoughManaPacket> TYPE = new Type<>(ArsNouveau.prefix("not_enough_mana"));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, NotEnoughManaPacket> CODEC = StreamCodec.ofMember(NotEnoughManaPacket::toBytes, NotEnoughManaPacket::new);
 
     int totalCost;
+
     public NotEnoughManaPacket(int totalCost) {
         this.totalCost = totalCost;
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctxSupplier) {
-        NetworkEvent.Context ctx = ctxSupplier.get();
-        // This packet is only registered to be received on the client
-        if (ctx.getDirection().getReceptionSide().isClient()) {
-            ctx.enqueueWork(() -> {
-                ClientInfo.redOverlayTicks = 35;
-                ClientInfo.redOverlayMana = totalCost;
-            });
-        }
-        ctx.setPacketHandled(true);
+    @Override
+    public void onClientReceived(Minecraft minecraft, Player player) {
+        ClientInfo.redOverlayTicks = 35;
+        ClientInfo.redOverlayMana = totalCost;
     }
 
-    public static void encode(NotEnoughManaPacket msg, FriendlyByteBuf friendlyByteBuf) {
-        friendlyByteBuf.writeInt(msg.totalCost);
+    public static void encode(NotEnoughManaPacket msg, RegistryFriendlyByteBuf RegistryFriendlyByteBuf) {
+        RegistryFriendlyByteBuf.writeInt(msg.totalCost);
     }
 
-    public static NotEnoughManaPacket decode(FriendlyByteBuf friendlyByteBuf) {
-        int totalCost = friendlyByteBuf.readInt();
-        return new NotEnoughManaPacket(totalCost);
+    public NotEnoughManaPacket(RegistryFriendlyByteBuf RegistryFriendlyByteBuf) {
+        totalCost = RegistryFriendlyByteBuf.readInt();
     }
 
+    @Override
+    public void toBytes(RegistryFriendlyByteBuf buf) {
+        buf.writeInt(totalCost);
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
 }

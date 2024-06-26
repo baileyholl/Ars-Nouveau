@@ -88,6 +88,10 @@ repositories {
         name = 'Forge'
         url = "https://maven.minecraftforge.net"
     }
+    maven {
+        name = "OctoStudios"
+        url = uri("https://maven.octo-studios.com/releases")
+    }
 }
 
 jarJar.enable()
@@ -103,7 +107,6 @@ dependencies {
     implementation "software.bernie.geckolib:geckolib-neoforge-1.21:${geckolib_version}"
 //
 //    implementation "vazkii.patchouli:Patchouli:1.20.4-${patchouli_version}"
-//    implementation "top.theillusivec4.caelus:neoforge:${caelus_version}+${minecraft_version}"
 //
 //    compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}+${minecraft_version}:api"
 //    localRuntime "top.theillusivec4.curios:curios-neoforge:${curios_version}+${minecraft_version}"
@@ -112,6 +115,7 @@ dependencies {
     localRuntime "mezz.jei:jei-1.21-neoforge:${jei_version}"
     implementation 'com.github.glitchfiend:TerraBlender-neoforge:1.21-4.0.0.0'
     implementation "curse.maven:jade-324717:5444008"
+    implementation 'top.theillusivec4.curios:curios-neoforge:9.0.3+1.21'
 }
 
 tasks.withType(ProcessResources).configureEach {

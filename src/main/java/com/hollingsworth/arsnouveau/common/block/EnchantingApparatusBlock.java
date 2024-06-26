@@ -66,7 +66,7 @@ public class EnchantingApparatusBlock extends TickableModBlock {
                         colorPos.add(ColorPos.centeredAbove(pedPos));
                     }
                 }
-                Networking.sendToNearby(world, tile.getBlockPos(), new HighlightAreaPacket(colorPos, 60));
+                Networking.sendToNearbyClient(world, tile.getBlockPos(), new HighlightAreaPacket(colorPos, 60));
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.norecipe"));
             } else if (recipe.consumesSource() && !SourceUtil.hasSourceNearby(tile.getBlockPos(), tile.getLevel(), 10, recipe.sourceCost())) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.nomana"));

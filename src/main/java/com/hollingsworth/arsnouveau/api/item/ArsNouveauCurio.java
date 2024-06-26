@@ -2,9 +2,10 @@ package com.hollingsworth.arsnouveau.api.item;
 
 import com.hollingsworth.arsnouveau.common.items.ModItem;
 import net.minecraft.world.item.ItemStack;
+import top.theillusivec4.curios.api.SlotContext;
+import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
-//TODO: restore curios
-public abstract class ArsNouveauCurio extends ModItem {
+public abstract class ArsNouveauCurio extends ModItem implements ICurioItem {
 
     public ArsNouveauCurio() {
         this(new Properties().stacksTo(1));
@@ -15,8 +16,8 @@ public abstract class ArsNouveauCurio extends ModItem {
         super(properties);
     }
 
-//    @Override
-//    public boolean canEquipFromUse(SlotContext slotContext, ItemStack stack) {
-//        return true;
-//    }
+    @Override
+    public boolean canEquipFromUse(SlotContext slotContext, ItemStack stack) {
+        return true;
+    }
 }

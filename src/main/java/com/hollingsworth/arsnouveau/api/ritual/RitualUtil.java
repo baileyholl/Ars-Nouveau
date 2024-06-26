@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.api.ritual;
 
 
 import com.hollingsworth.arsnouveau.common.network.ChangeBiomePacket;
-import com.hollingsworth.arsnouveau.common.network.Networking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.QuartPos;
@@ -67,7 +66,7 @@ public class RitualUtil {
         if (level instanceof ServerLevel server) {
             if (!chunkAt.isUnsaved()) chunkAt.setUnsaved(true);
             ChangeBiomePacket message = new ChangeBiomePacket(pos, target);
-            Networking.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunkAt), message);
+            PacketDistributor.sendToPlayersTrackingChunk(server, chunkAt.getPos(), message);
         }
     }
 }

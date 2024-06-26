@@ -58,11 +58,7 @@ import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
-import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -266,7 +262,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
         if (this.droppingShards) {
             tamingTime++;
             if (tamingTime % 20 == 0 && !level.isClientSide())
-                Networking.sendToNearby(level, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, blockPosition(), ParticleColor.GREEN));
+                Networking.sendToNearbyClient(level, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, blockPosition(), ParticleColor.GREEN));
 
             if (tamingTime > 60 && !level.isClientSide) {
                 ItemStack stack = new ItemStack(ItemsRegistry.WHIRLISPRIG_SHARDS, 1 + level.random.nextInt(1));

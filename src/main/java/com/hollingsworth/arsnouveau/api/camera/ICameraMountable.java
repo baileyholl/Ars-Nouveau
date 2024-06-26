@@ -11,7 +11,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 public interface ICameraMountable {
 
@@ -39,7 +38,7 @@ public interface ICameraMountable {
 
 
             serverPlayer.camera = dummyEntity;
-            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new PacketSetCameraView(dummyEntity));
+            Networking.sendToPlayerClient(new PacketSetCameraView(dummyEntity), serverPlayer);
             startViewing();
         }
     }

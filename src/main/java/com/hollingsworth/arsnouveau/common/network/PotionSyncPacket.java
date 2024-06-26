@@ -2,17 +2,16 @@ package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.network.NetworkDirection;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.minecraft.world.entity.player.Player;
 
-import java.util.function.Supplier;
-
-public class PotionSyncPacket {
+public class PotionSyncPacket extends AbstractPacket{
 
     public int entity;
     public int duration;
@@ -30,40 +29,40 @@ public class PotionSyncPacket {
         this.duration = duration;
     }
 
-    public void toBytes(FriendlyByteBuf friendlyByteBuf) {
-        friendlyByteBuf.writeInt(this.entity);
-        friendlyByteBuf.writeResourceLocation(this.effect);
-        friendlyByteBuf.writeInt(this.duration);
+    public void toBytes(RegistryFriendlyByteBuf RegistryFriendlyByteBuf) {
+        RegistryFriendlyByteBuf.writeInt(this.entity);
+        RegistryFriendlyByteBuf.writeResourceLocation(this.effect);
+        RegistryFriendlyByteBuf.writeInt(this.duration);
     }
 
-    public PotionSyncPacket(FriendlyByteBuf friendlyByteBuf) {
-        this.entity = friendlyByteBuf.readInt();
-        this.effect = friendlyByteBuf.readResourceLocation();
-        this.duration = friendlyByteBuf.readInt();
+    public PotionSyncPacket(RegistryFriendlyByteBuf RegistryFriendlyByteBuf) {
+        this.entity = RegistryFriendlyByteBuf.readInt();
+        this.effect = RegistryFriendlyByteBuf.readResourceLocation();
+        this.duration = RegistryFriendlyByteBuf.readInt();
     }
 
-    public void handle(Supplier<NetworkEvent.Context> contextSupplier) {
-
-        if (contextSupplier.get().getDirection() != NetworkDirection.PLAY_TO_CLIENT) return;
-        contextSupplier.get().enqueueWork(() -> {
-
-            Minecraft mc = ArsNouveau.proxy.getMinecraft();
-            if (mc != null && mc.level != null)
-                if (mc.level.getEntity(this.entity) instanceof LivingEntity living && living != ArsNouveau.proxy.getPlayer()) {
-                    MobEffect effect = ForgeRegistries.MOB_EFFECTS.getValue(this.effect);
-                    if (effect == null) return;
-                    if (duration > 0) {
-                        living.addEffect(new MobEffectInstance(effect, duration, 0, false, false, false));
-                    } else {
-                        living.removeEffect(effect);
-                    }
-                }
-        });
-        contextSupplier.get().setPacketHandled(true);
-
+    @Override
+    public void onClientReceived(Minecraft mc, Player player) {
+        if (mc.level.getEntity(this.entity) instanceof LivingEntity living && living != ArsNouveau.proxy.getPlayer()) {
+            MobEffect effect = ForgeRegistries.MOB_EFFECTS.getValue(this.effect);
+            if (effect == null) return;
+            if (duration > 0) {
+                living.addEffect(new MobEffectInstance(effect, duration, 0, false, false, false));
+            } else {
+                living.removeEffect(effect);
+            }
+        }
     }
 
     public static ResourceLocation getRegistryName(MobEffect effect) {
         return ForgeRegistries.MOB_EFFECTS.getKey(effect);
+    }
+
+    public static final Type<PotionSyncPacket> TYPE = new Type<>(ArsNouveau.prefix("potion_sync"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PotionSyncPacket> CODEC = StreamCodec.ofMember(PotionSyncPacket::toBytes, PotionSyncPacket::new);
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

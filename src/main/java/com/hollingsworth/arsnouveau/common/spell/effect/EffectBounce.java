@@ -22,7 +22,7 @@ public class EffectBounce extends AbstractEffect implements IPotionEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult.getEntity() instanceof LivingEntity living) {
-            ((IPotionEffect)this).applyConfigPotion(living, ModPotions.BOUNCE_EFFECT.get(), spellStats);
+            ((IPotionEffect)this).applyConfigPotion(living, ModPotions.BOUNCE_EFFECT, spellStats);
         }
     }
 

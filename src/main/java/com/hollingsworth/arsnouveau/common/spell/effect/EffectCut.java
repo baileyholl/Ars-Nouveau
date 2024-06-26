@@ -21,9 +21,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.IShearable;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -48,7 +48,7 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
         Entity entity = rayTraceResult.getEntity();
         if (entity instanceof IShearable shearable) {
             ItemStack shears = new ItemStack(Items.SHEARS);
-            applyEnchantments(spellStats, shears);
+            applyEnchantments(world, spellStats, shears);
             if (shearable.isShearable(getPlayer(shooter, (ServerLevel) world), shears, world, entity.blockPosition())) {
                 // TODO: restore fortune bonus on augment
                 List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, entity.blockPosition());
@@ -78,7 +78,7 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
 
     public void doStrip(BlockPos p, BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
         ItemStack axe = new ItemStack(Items.DIAMOND_AXE);
-        applyEnchantments(spellStats, axe);
+        applyEnchantments(world, spellStats, axe);
         Player entity = ANFakePlayer.getPlayer((ServerLevel) world);
         entity.setItemInHand(InteractionHand.MAIN_HAND, axe);
         // TODO Replace with AN shears
@@ -90,7 +90,7 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
 
     public void doShear(BlockPos p, BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
         ItemStack shears = new ItemStack(Items.SHEARS);
-        applyEnchantments(spellStats, shears);
+        applyEnchantments(world, spellStats, shears);
         if (world.getBlockState(p).getBlock() instanceof IShearable shearable && shearable.isShearable(getPlayer(shooter, (ServerLevel) world), shears, world, p)) {
             // TODO: restore fortune bonus on augment
             List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, p);

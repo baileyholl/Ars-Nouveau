@@ -5,12 +5,9 @@ import com.hollingsworth.arsnouveau.api.perk.Perk;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.UUID;
-
 public class GlidingPerk extends Perk {
 
     public static final GlidingPerk INSTANCE = new GlidingPerk(ArsNouveau.prefix( "thread_gliding"));
-    public static final UUID PERK_UUID = UUID.fromString("556fd264-22f2-4454-85b1-19070179f09a");
 
     public GlidingPerk(ResourceLocation key) {
         super(key);

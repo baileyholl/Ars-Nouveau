@@ -11,8 +11,8 @@ import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.NodeEvaluator;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
@@ -53,10 +53,10 @@ public class MovementHandler extends MoveControl {
             final PathNavigation pathnavigator = this.mob.getNavigation();
 
             final NodeEvaluator nodeprocessor = pathnavigator.getNodeEvaluator();
-            if (nodeprocessor.getBlockPathType(this.mob.level,
+            if (nodeprocessor.getPathType(this.mob,new BlockPos(
                     Mth.floor(this.mob.getX() + (double) rot1),
                     Mth.floor(this.mob.getY()),
-                    Mth.floor(this.mob.getZ() + (double) rot2)) != PathType.WALKABLE) {
+                    Mth.floor(this.mob.getZ() + (double) rot2))) != PathType.WALKABLE) {
                 this.strafeForwards = 1.0F;
                 this.strafeRight = 0.0F;
                 speed = speedAtt;
@@ -84,7 +84,7 @@ public class MovementHandler extends MoveControl {
             final BlockState blockstate = this.mob.level.getBlockState(blockpos);
             final Block block = blockstate.getBlock();
             final VoxelShape voxelshape = blockstate.getCollisionShape(this.mob.level, blockpos);
-            if ((yDif > this.mob.getStepHeight() && xDif * xDif + zDif * zDif < (double) Math.max(1.0F, this.mob.getBbWidth()))
+            if ((yDif > this.mob.maxUpStep() && xDif * xDif + zDif * zDif < (double) Math.max(1.0F, this.mob.getBbWidth()))
                     || (!voxelshape.isEmpty() && this.mob.getY() < voxelshape.max(Direction.Axis.Y) + (double) blockpos.getY() && !blockstate.is(BlockTags.DOORS) && !blockstate.is(
                     BlockTags.FENCES) && !blockstate.is(BlockTags.FENCE_GATES))
                     && !block.isLadder(blockstate, this.mob.level, blockpos, this.mob)) {

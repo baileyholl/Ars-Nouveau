@@ -27,12 +27,12 @@ public class SpellBowRenderer extends FixedGeoItemRenderer<SpellBow> {
     }
 
     @Override
-    public void renderRecursively(PoseStack poseStack, SpellBow animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderRecursively(PoseStack poseStack, SpellBow animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
         if (bone.getName().equals("gem")) {
             //NOTE: if the bone have a parent, the recursion will get here with the neutral color, making the color getter useless
-            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
         } else {
-            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, Color.WHITE.getRed() / 255f, Color.WHITE.getGreen() / 255f, Color.WHITE.getBlue() / 255f, Color.WHITE.getAlpha() / 255f);
+            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, Color.WHITE.argbInt());
         }
     }
 
@@ -82,7 +82,7 @@ public class SpellBowRenderer extends FixedGeoItemRenderer<SpellBow> {
     }
 
     @Override
-    public void renderFinal(PoseStack poseStack, SpellBow animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTicks, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderFinal(PoseStack poseStack, SpellBow animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTicks, int packedLight, int packedOverlay, int color) {
         GeoBone top = model.getBone("bow_top").get();
         GeoBone gem = model.getBone("gem").get();
         GeoBone bottom = model.getBone("bow_bot").get();

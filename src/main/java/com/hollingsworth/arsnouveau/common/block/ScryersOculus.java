@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenuSlot;
-import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ScryersOculusTile;
 import com.hollingsworth.arsnouveau.common.items.ScryerScroll;
@@ -15,12 +14,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -80,7 +77,7 @@ public class ScryersOculus extends TickableModBlock {
                 PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.scryers_eye.no_pos"));
                 return;
             }
-            Networking.INSTANCE.sendToServer(new PacketMountCamera(data.pos));
+            Networking.sendToServer(new PacketMountCamera(data.pos));
         }, slots, (slotData, posestack, positionx, posy, size, transparent) -> RenderUtil.drawItemAsIcon(slotData.getDefaultInstance(), posestack, positionx, posy, size, transparent), 3)));
     }
 

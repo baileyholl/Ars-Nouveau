@@ -18,13 +18,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.data.ModelData;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
-
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.util.Color;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.util.Color;
 import software.bernie.geckolib.util.RenderUtil;
 
 
@@ -74,13 +73,13 @@ public class AnimBlockRenderer<BOBBY extends AnimBlockSummon> extends GeoEntityR
     }
 
     @Override
-    public void preRender(PoseStack poseStack, BOBBY animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack poseStack, BOBBY animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         this.bufferSource = bufferSource;
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 
     @Override
-    public void renderRecursively(PoseStack poseStack, BOBBY animatable, GeoBone bone, RenderType ty, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderRecursively(PoseStack poseStack, BOBBY animatable, GeoBone bone, RenderType ty, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         if (bone.getName().equals("block")) {
             AnimBlockSummon animBlock = animatable;
             if (animBlock == null) return;
@@ -106,7 +105,7 @@ public class AnimBlockRenderer<BOBBY extends AnimBlockSummon> extends GeoEntityR
                 }
             }
         }
-        super.renderRecursively(poseStack, animatable, bone, ty, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        super.renderRecursively(poseStack, animatable, bone, ty, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 
     @Override

@@ -38,6 +38,7 @@ import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -128,8 +129,6 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
 
     public Starbuncle(EntityType<? extends Starbuncle> entityCarbuncleEntityType, Level world) {
         super(entityCarbuncleEntityType, world);
-        //TODO: check if this still works after AT
-        maxUpStep = 1.1f;
         dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
         reloadGoals();
         this.moveControl = new MovementHandler(this);
@@ -338,7 +337,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     }
 
     public void syncBehavior() {
-        Networking.sendToNearby(level, this, new PacketSyncTag(dynamicBehavior.toTag(new CompoundTag()), getId()));
+        Networking.sendToNearbyClient(level, this, new PacketSyncTag(dynamicBehavior.toTag(new CompoundTag()), getId()));
     }
 
     @Override
@@ -361,7 +360,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
 
     public static AttributeSupplier.Builder attributes() {
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 20.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.2d);
+                .add(Attributes.MOVEMENT_SPEED, 0.2d).add(Attributes.STEP_HEIGHT, 1.1f);
     }
 
 
@@ -766,7 +765,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             bio = null;
 
             if (tag.contains("path")) {
-                pathBlock = ForgeRegistries.BLOCKS.getValue(ResourceLocation.tryParse(tag.getString("path")));
+                pathBlock = BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(tag.getString("path")));
             }
             bedPos = NBTUtil.getBlockPos(tag, "bed_");
             if (bedPos.equals(BlockPos.ZERO))
@@ -774,7 +773,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             if (tag.contains("behavior"))
                 behaviorTag = tag.getCompound("behavior");
             if (tag.contains("cosmetic")) {
-                cosmetic = ItemStack.of(tag.getCompound("cosmetic"));
+                cosmetic = ItemStack.parseOptional(tag.getCompound("cosmetic"));
             }
             if (tag.contains("adopter")) {
                 adopter = tag.getString("adopter");
@@ -792,7 +791,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             if (bedPos != null)
                 NBTUtil.storeBlockPos(tag, "bed_", bedPos);
             if (!starbuncle.getCosmeticItem().isEmpty()) {
-                tag.put("cosmetic", starbuncle.getCosmeticItem().serializeNBT());
+                tag.put("cosmetic", starbuncle.getCosmeticItem().save(starbuncle.level.registryAccess()));
             }
             tag.put("behavior", starbuncle.dynamicBehavior.toTag(new CompoundTag()));
             if (adopter != null) {

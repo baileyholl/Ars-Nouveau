@@ -1,13 +1,15 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.Entity;
-import net.neoforged.neoforge.network.NetworkEvent;
-import java.util.function.Supplier;
+import net.minecraft.world.entity.player.Player;
 
-public class PacketWarpPosition {
+public class PacketWarpPosition extends AbstractPacket{
     private final int entityID;
     double x;
     double y;
@@ -31,42 +33,41 @@ public class PacketWarpPosition {
         this.yRot = yRot;
     }
 
-    public static PacketWarpPosition decode(FriendlyByteBuf buf) {
-        return new PacketWarpPosition(buf.readInt(), buf.readDouble(), buf.readDouble(), buf.readDouble(), buf.readFloat(), buf.readFloat());
+    public PacketWarpPosition(RegistryFriendlyByteBuf buf) {
+        entityID = buf.readInt();
+        x = buf.readDouble();
+        y = buf.readDouble();
+        z = buf.readDouble();
+        xRot = buf.readFloat();
+        yRot = buf.readFloat();
     }
 
-    public static void encode(PacketWarpPosition msg, FriendlyByteBuf buf) {
-        buf.writeInt(msg.entityID);
-        buf.writeDouble(msg.x);
-        buf.writeDouble(msg.y);
-        buf.writeDouble(msg.z);
-        buf.writeFloat(msg.xRot);
-        buf.writeFloat(msg.yRot);
+    @Override
+    public void toBytes(RegistryFriendlyByteBuf buf) {
+        buf.writeInt(entityID);
+        buf.writeDouble(x);
+        buf.writeDouble(y);
+        buf.writeDouble(z);
+        buf.writeFloat(xRot);
+        buf.writeFloat(yRot);
     }
 
-    public static class Handler {
-        public static void handle(final PacketWarpPosition message, final Supplier<NetworkEvent.Context> ctx) {
-            if (ctx.get().getDirection().getReceptionSide().isServer()) {
-                ctx.get().setPacketHandled(true);
-                return;
-            }
+    @Override
+    public void onClientReceived(Minecraft mc, Player player) {
+        ClientLevel world = mc.level;
+        Entity e = world.getEntity(entityID);
+        if (e == null)
+            return;
+        e.setPos(x, y, z);
+        e.setXRot(xRot);
+        e.setYRot(yRot);
+    }
 
-            ctx.get().enqueueWork(new Runnable() {
-                // Use anon - lambda causes classloading issues
-                @Override
-                public void run() {
-                    Minecraft mc = Minecraft.getInstance();
-                    ClientLevel world = mc.level;
-                    Entity e = world.getEntity(message.entityID);
-                    if (e == null)
-                        return;
-                    e.setPos(message.x, message.y, message.z);
-                    e.setXRot(message.xRot);
-                    e.setYRot(message.yRot);
-                }
-            });
-            ctx.get().setPacketHandled(true);
+    public static final Type<PacketWarpPosition> TYPE = new Type<>(ArsNouveau.prefix("warp_position"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketWarpPosition> CODEC = StreamCodec.ofMember(PacketWarpPosition::toBytes, PacketWarpPosition::new);
 
-        }
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

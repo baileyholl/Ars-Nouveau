@@ -13,17 +13,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.common.world.ForcedChunkManager;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 /**
  * Camera work is taken from SecurityCraft:
@@ -96,6 +92,11 @@ public class ScryerCamera extends Entity {
         return false;
     }
 
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+
+    }
+
     public void tick() {
         if (this.level.isClientSide) {
             if (this.screenshotSoundCooldown > 0) {
@@ -132,7 +133,7 @@ public class ScryerCamera extends Entity {
         if (!this.level.isClientSide) {
             this.discardCamera();
             player.camera = player;
-            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new PacketSetCameraView(player));
+            Networking.sendToPlayerClient(new PacketSetCameraView(player), player);
         }
 
     }
@@ -166,17 +167,12 @@ public class ScryerCamera extends Entity {
         return this.loadedChunks;
     }
 
-    protected void defineSynchedData() {
-    }
-
+    @Override
     public void addAdditionalSaveData(CompoundTag tag) {
     }
 
+    @Override
     public void readAdditionalSaveData(CompoundTag tag) {
-    }
-
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return new ClientboundAddEntityPacket(this);
     }
 
     public boolean isAlwaysTicking() {

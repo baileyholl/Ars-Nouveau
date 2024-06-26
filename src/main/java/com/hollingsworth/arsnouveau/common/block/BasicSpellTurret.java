@@ -117,7 +117,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
         int manaCost = tile.getManaCost();
         if (manaCost > 0 && SourceUtil.takeSourceWithParticles(pos, world, 10, manaCost) == null)
             return;
-        Networking.sendToNearby(world, pos, new PacketOneShotAnimation(pos));
+        Networking.sendToNearbyClient(world, pos, new PacketOneShotAnimation(pos));
         Position iposition = getDispensePosition(pos, world.getBlockState(pos).getValue(FACING));
         Direction direction = world.getBlockState(pos).getValue(FACING);
         FakePlayer fakePlayer = ANFakePlayer.getPlayer(world);

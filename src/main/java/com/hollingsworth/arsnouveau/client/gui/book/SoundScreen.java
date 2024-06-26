@@ -17,7 +17,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 
@@ -118,11 +117,11 @@ public class SoundScreen extends BaseBook {
     }
 
     public void onSaveClick(Button button) {
-        Networking.INSTANCE.sendToServer(new PacketSetSound(casterSlot, selectedSound == null ? ConfiguredSpellSound.EMPTY : new ConfiguredSpellSound(selectedSound, (float) volumeSlider.getValue() / 100f, (float) pitchSlider.getValue() / 100f), stackHand == InteractionHand.MAIN_HAND));
+        Networking.sendToServer(new PacketSetSound(casterSlot, selectedSound == null ? ConfiguredSpellSound.EMPTY : new ConfiguredSpellSound(selectedSound, (float) volumeSlider.getValue() / 100f, (float) pitchSlider.getValue() / 100f), stackHand == InteractionHand.MAIN_HAND));
     }
 
     public void onSaveAllClick(Button button) {
-        Networking.INSTANCE.sendToServer(new PacketUpdateSpellSoundAll(casterSlot, selectedSound == null ? ConfiguredSpellSound.EMPTY : new ConfiguredSpellSound(selectedSound, (float) volumeSlider.getValue() / 100f, (float) pitchSlider.getValue() / 100f), stackHand == InteractionHand.MAIN_HAND));
+        Networking.sendToServer(new PacketUpdateSpellSoundAll(casterSlot, selectedSound == null ? ConfiguredSpellSound.EMPTY : new ConfiguredSpellSound(selectedSound, (float) volumeSlider.getValue() / 100f, (float) pitchSlider.getValue() / 100f), stackHand == InteractionHand.MAIN_HAND));
     }
 
     @Override

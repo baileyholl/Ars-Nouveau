@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenuSlot;
-import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.client.registry.ModKeyBindings;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketConsumePotion;
@@ -60,7 +59,7 @@ public class AlchemistsCrown extends ModItem implements IRadialProvider {
             return;
         }
         Minecraft.getInstance().setScreen(new GuiRadialMenu<>(new RadialMenu<>((int index) -> {
-            Networking.INSTANCE.sendToServer(new PacketConsumePotion(slots.get(index).primarySlotIcon().slot));
+            Networking.sendToServer(new PacketConsumePotion(slots.get(index).primarySlotIcon().slot));
         }, slots, (slotData, posestack, positionx, posy, size, transparent) -> RenderUtil.drawItemAsIcon(slotData.stack, posestack, positionx, posy, size, transparent), 3)));
     }
 

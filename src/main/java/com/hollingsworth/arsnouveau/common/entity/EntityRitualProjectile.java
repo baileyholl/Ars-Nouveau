@@ -8,12 +8,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.NetworkHooks;
-import net.neoforged.neoforge.network.PlayMessages;
 
 public class EntityRitualProjectile extends ColoredProjectile {
 
@@ -82,15 +78,6 @@ public class EntityRitualProjectile extends ColoredProjectile {
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
-    public EntityRitualProjectile(PlayMessages.SpawnEntity packet, Level world) {
-        super(ModEntities.ENTITY_RITUAL.get(), world);
-    }
-
-    @Override
     public boolean save(CompoundTag tag) {
         if (tilePos != null)
             tag.put("ritpos", NbtUtils.writeBlockPos(tilePos));
@@ -101,7 +88,7 @@ public class EntityRitualProjectile extends ColoredProjectile {
     public void load(CompoundTag compound) {
         super.load(compound);
         if (compound.contains("ritpos")) {
-            tilePos = NbtUtils.readBlockPos(compound.getCompound("ritpos"));
+            tilePos = NbtUtils.readBlockPos(compound, "ritpos").orElse(null);
         }
     }
 }

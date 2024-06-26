@@ -146,7 +146,6 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         } else {
             this.renderModel(pPoseStack, pBuffer, packedLightIn, flag1, model, 1.0F, 1.0F, 1.0F, this.getArmorResource(itemstack, pSlot, null));
         }
-
     }
 
     protected net.minecraft.client.model.Model getArmorModelHook(ItemStack itemStack, EquipmentSlot slot, HumanoidModel model) {
@@ -186,7 +185,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
 
 
     @Override
-    public void actuallyRender(PoseStack stack, AlterationTile tile, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void actuallyRender(PoseStack stack, AlterationTile tile, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
         if (tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.ALTERATION_TABLE.get())
             return;
         if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(AlterationTable.PART) != ThreePartBlock.HEAD)
@@ -216,13 +215,13 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
 
         }
         renderSlate(model, animatable);
-        super.actuallyRender(stack, tile, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        super.actuallyRender(stack, tile, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
         stack.popPose();
     }
 
     @Override
-    public void renderFinal(PoseStack stack, AlterationTile animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        super.renderFinal(stack, animatable, model, bufferSource, buffer, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+    public void renderFinal(PoseStack stack, AlterationTile animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay, int colour) {
+        super.renderFinal(stack, animatable, model, bufferSource, buffer, partialTick, packedLight, packedOverlay, colour);
         if (animatable.getLevel().getBlockState(animatable.getBlockPos()).getBlock() != BlockRegistry.ALTERATION_TABLE.get())
             return;
         if (animatable.getLevel().getBlockState(animatable.getBlockPos()).getValue(AlterationTable.PART) != ThreePartBlock.HEAD)

@@ -347,7 +347,6 @@ public class EventHandler {
     public static void commandRegister(RegisterCommandsEvent event) {
         ResetCommand.register(event.getDispatcher());
         DataDumpCommand.register(event.getDispatcher());
-        PathCommand.register(event.getDispatcher());
         ToggleLightCommand.register(event.getDispatcher());
         AddTomeCommand.register(event.getDispatcher());
         SummonAnimHeadCommand.register(event.getDispatcher());
@@ -438,7 +437,7 @@ public class EventHandler {
         }
 
         if(holder.is(PotionEffectTags.TO_SYNC)){
-            Networking.sendToNearby(target.level(), target, new PotionSyncPacket(target.getId(), effect, event.getEffectInstance().getDuration()));
+            Networking.sendToNearbyClient(target.level(), target, new PotionSyncPacket(target.getId(), effect, event.getEffectInstance().getDuration()));
         }
     }
 
@@ -458,7 +457,7 @@ public class EventHandler {
             Holder<MobEffect> holder = event.getEffectInstance().getEffect();
             MobEffect effect = holder.value();
             if(holder.is(PotionEffectTags.TO_SYNC)){
-                Networking.sendToNearby(target.level(), target, new PotionSyncPacket(target.getId(), effect, -1));
+                Networking.sendToNearbyClient(target.level(), target, new PotionSyncPacket(target.getId(), effect, -1));
             }
         }
     }

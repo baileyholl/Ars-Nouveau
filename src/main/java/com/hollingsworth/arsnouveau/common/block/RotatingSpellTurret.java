@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -60,7 +61,7 @@ public class RotatingSpellTurret extends BasicSpellTurret {
         int manaCost = tile.getManaCost();
         if (manaCost > 0 && SourceUtil.takeSourceWithParticles(pos, world, 10, manaCost) == null)
             return;
-        Networking.sendToNearby(world, pos, new PacketOneShotAnimation(pos));
+        Networking.sendToNearbyClient(world, pos, new PacketOneShotAnimation(pos));
         Position iposition = getDispensePosition(new BlockSourceImpl(world, pos), tile);
         FakePlayer fakePlayer = ANFakePlayer.getPlayer(world);
         fakePlayer.setPos(pos.getX(), pos.getY(), pos.getZ());

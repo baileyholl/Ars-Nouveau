@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.level.Level;
@@ -26,7 +25,7 @@ public class PotionEffectTags {
             if (effects.isEmpty()) return null;
             ArrayList<MobEffect> effectList = new ArrayList<>();
             for (Holder<MobEffect> mobEffectHolder : effects.get()) {
-                effectList.add(mobEffectHolder.get());
+                effectList.add(mobEffectHolder.value());
             }
             return effectList;
         });

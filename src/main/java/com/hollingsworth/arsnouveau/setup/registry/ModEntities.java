@@ -159,7 +159,7 @@ public class ModEntities {
                     .sized(2.5f, 2.25f)
                     .setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
-    public static final DeferredHolder<EntityType<?>, EntityType<LightningEntity>> LIGHTNING_ENTITY = registerEntity(LibEntityNames.AN_LIGHTNING, EntityType.Builder.<LightningEntity>of(LightningEntity::new, MobCategory.MISC)
+    public static final DeferredHolder<EntityType<?>, EntityType<LightningEntity>> LIGHTNING_ENTITY = registerEntity(LibEntityNames.AN_LIGHTNING, EntityType.Builder.of(LightningEntity::new, MobCategory.MISC)
             .sized(0.0F, 0.0F)
             .clientTrackingRange(16)
             .updateInterval(Integer.MAX_VALUE

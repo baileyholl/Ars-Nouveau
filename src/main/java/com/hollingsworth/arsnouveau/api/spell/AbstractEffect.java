@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.event.SummonEvent;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import com.hollingsworth.arsnouveau.common.util.HolderHelper;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.BlockPos;
@@ -22,8 +23,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -111,14 +112,14 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         return !(entity instanceof FakePlayer);
     }
 
-    public void applyEnchantments(SpellStats stats, ItemStack stack) {
+    public void applyEnchantments(Level level, SpellStats stats, ItemStack stack) {
 
         if (stats.hasBuff(AugmentExtract.INSTANCE)) {
-            stack.enchant(Enchantments.SILK_TOUCH, 1);
+            stack.enchant(HolderHelper.unwrap(level, Enchantments.SILK_TOUCH), 1);
         }
 
         if (stats.hasBuff(AugmentFortune.INSTANCE)) {
-            stack.enchant(Enchantments.FORTUNE, stats.getBuffCount(AugmentFortune.INSTANCE));
+            stack.enchant(HolderHelper.unwrap(level, Enchantments.FORTUNE), stats.getBuffCount(AugmentFortune.INSTANCE));
         }
     }
 

@@ -87,7 +87,7 @@ public class CameraController {
     }
 
     private static void dismount() {
-        Networking.INSTANCE.sendToServer(new PacketDismountCamera());
+        Networking.sendToServer(new PacketDismountCamera());
     }
 
     public static void moveViewUp(ScryerCamera cam) {

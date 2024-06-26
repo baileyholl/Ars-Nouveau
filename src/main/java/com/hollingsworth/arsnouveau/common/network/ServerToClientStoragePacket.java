@@ -1,41 +1,41 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.container.AbstractStorageTerminalScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.NetworkDirection;
-import net.neoforged.neoforge.network.NetworkEvent;
-import java.util.function.Supplier;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
 
-public class ServerToClientStoragePacket {
+public class ServerToClientStoragePacket extends AbstractPacket{
     public CompoundTag tag;
 
     public ServerToClientStoragePacket(CompoundTag tag) {
         this.tag = tag;
     }
 
-    public ServerToClientStoragePacket(FriendlyByteBuf pb) {
-        tag = pb.readAnySizeNbt();
+    public ServerToClientStoragePacket(RegistryFriendlyByteBuf pb) {
+        tag = pb.readNbt();
     }
 
-    public void toBytes(FriendlyByteBuf pb) {
+    public void toBytes(RegistryFriendlyByteBuf pb) {
         pb.writeNbt(tag);
     }
 
-    public static class Handler {
-
-        @SuppressWarnings("Convert2Lambda")
-        public static boolean onMessage(ServerToClientStoragePacket message, Supplier<NetworkEvent.Context> ctx) {
-            if (ctx.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT) {
-                ctx.get().enqueueWork(() -> {
-                    if (Minecraft.getInstance().screen instanceof AbstractStorageTerminalScreen<?> terminalScreen) {
-                        terminalScreen.receive(message.tag);
-                    }
-                });
-            }
-            ctx.get().setPacketHandled(true);
-            return true;
+    @Override
+    public void onClientReceived(Minecraft minecraft, Player player) {
+        if (minecraft.screen instanceof AbstractStorageTerminalScreen<?> terminalScreen) {
+            terminalScreen.receive(tag);
         }
+    }
+
+    public static final Type<ServerToClientStoragePacket> TYPE = new Type<>(ArsNouveau.prefix("server_to_client_storage"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, ServerToClientStoragePacket> CODEC = StreamCodec.ofMember(ServerToClientStoragePacket::toBytes, ServerToClientStoragePacket::new);
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

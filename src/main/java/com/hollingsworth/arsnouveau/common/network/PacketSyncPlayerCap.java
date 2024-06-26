@@ -2,24 +2,25 @@ package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.capability.ANPlayerDataCap;
-import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.network.NetworkEvent;
-import java.util.function.Supplier;
 
-public class PacketSyncPlayerCap {
+public class PacketSyncPlayerCap extends AbstractPacket{
     CompoundTag tag;
 
     //Decoder
-    public PacketSyncPlayerCap(FriendlyByteBuf buf) {
+    public PacketSyncPlayerCap(RegistryFriendlyByteBuf buf) {
         tag = buf.readNbt();
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeNbt(tag);
     }
 
@@ -27,15 +28,20 @@ public class PacketSyncPlayerCap {
         this.tag = famCaps;
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            Player playerEntity = ArsNouveau.proxy.getPlayer();
-            IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerEntity).orElse(new ANPlayerDataCap());
+    @Override
+    public void onClientReceived(Minecraft minecraft, Player playerEntity) {
+        IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerEntity).orElse(new ANPlayerDataCap());
 
-            if (cap != null) {
-                cap.deserializeNBT(tag);
-            }
-        });
-        ctx.get().setPacketHandled(true);
+        if (cap != null) {
+            cap.deserializeNBT(tag);
+        }
+    }
+
+    public static final Type<PacketSyncPlayerCap> TYPE = new Type<>(ArsNouveau.prefix("sync_player_cap"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketSyncPlayerCap> CODEC = StreamCodec.ofMember(PacketSyncPlayerCap::toBytes, PacketSyncPlayerCap::new);
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

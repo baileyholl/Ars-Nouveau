@@ -11,8 +11,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-
-
+import software.bernie.geckolib.cache.object.GeoBone;
 
 import java.util.Random;
 

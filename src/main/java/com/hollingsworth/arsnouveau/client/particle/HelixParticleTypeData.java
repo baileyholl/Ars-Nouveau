@@ -1,14 +1,12 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
-import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 
 public class HelixParticleTypeData extends ColorParticleTypeData {
 
@@ -50,7 +48,7 @@ public class HelixParticleTypeData extends ColorParticleTypeData {
         this.speed = speed;
     }
 
-    public static final Codec<HelixParticleTypeData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final MapCodec<HelixParticleTypeData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                     Codec.FLOAT.fieldOf("r").forGetter(d -> d.color.getRed()),
                     Codec.FLOAT.fieldOf("g").forGetter(d -> d.color.getGreen()),
                     Codec.FLOAT.fieldOf("b").forGetter(d -> d.color.getBlue()),
@@ -65,30 +63,36 @@ public class HelixParticleTypeData extends ColorParticleTypeData {
             )
             .apply(instance, HelixParticleTypeData::new));
 
-    static final ParticleOptions.Deserializer<HelixParticleTypeData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
-        @Override
-        public HelixParticleTypeData fromCommand(ParticleType<HelixParticleTypeData> type, StringReader reader) throws CommandSyntaxException {
-            reader.expect(' ');
-            return new HelixParticleTypeData(type, ParticleColor.fromString(reader.readString()), reader.readBoolean(), 0F, 0.2F, 0.1F, 0.2F);
-        }
+    public static final StreamCodec<RegistryFriendlyByteBuf, HelixParticleTypeData> STREAM_CODEC = StreamCodec.of(
+            HelixParticleTypeData::toNetwork, HelixParticleTypeData::fromNetwork
+    );
 
-        @Override
-        public HelixParticleTypeData fromNetwork(ParticleType<HelixParticleTypeData> type, FriendlyByteBuf buffer) {
-            return new HelixParticleTypeData(type, ParticleColorRegistry.from(buffer.readNbt()), buffer.readBoolean(), buffer.readFloat(), buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
-        }
-    };
-
-    @Override
-    public void writeToNetwork(FriendlyByteBuf packetBuffer) {
-        super.writeToNetwork(packetBuffer);
-        packetBuffer.writeFloat(angle);
-        packetBuffer.writeFloat(radius);
-        packetBuffer.writeFloat(radiusY);
-        packetBuffer.writeFloat(speed);
+    public static HelixParticleTypeData fromNetwork(RegistryFriendlyByteBuf buffer) {
+        float r = buffer.readFloat();
+        float g = buffer.readFloat();
+        float b = buffer.readFloat();
+        boolean disableDepthTest = buffer.readBoolean();
+        float size = buffer.readFloat();
+        float alpha = buffer.readFloat();
+        int age = buffer.readInt();
+        float angle = buffer.readFloat();
+        float radius = buffer.readFloat();
+        float radiusY = buffer.readFloat();
+        float speed = buffer.readFloat();
+        return new HelixParticleTypeData(r, g, b, disableDepthTest, size, alpha, age, angle, radius, radiusY, speed);
     }
 
-    @Override
-    public String writeToString() {
-        return super.writeToString();
+    public static void toNetwork(RegistryFriendlyByteBuf buf, HelixParticleTypeData data) {
+        buf.writeFloat(data.color.getRed());
+        buf.writeFloat(data.color.getGreen());
+        buf.writeFloat(data.color.getBlue());
+        buf.writeBoolean(data.disableDepthTest);
+        buf.writeFloat(data.size);
+        buf.writeFloat(data.alpha);
+        buf.writeInt(data.age);
+        buf.writeFloat(data.angle);
+        buf.writeFloat(data.radius);
+        buf.writeFloat(data.radiusY);
+        buf.writeFloat(data.speed);
     }
 }

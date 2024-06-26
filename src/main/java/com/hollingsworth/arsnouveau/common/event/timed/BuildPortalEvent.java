@@ -90,7 +90,7 @@ public class BuildPortalEvent implements ITimedEvent {
                     tile.gameTime = level.getGameTime();
                     tile.updateBlock();
                 }
-                level.playSound(null, pos, BlockRegistry.getBlock(LibBlockNames.SOURCESTONE).getSoundType(level.getBlockState(pos)).getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.playSound(null, pos, BlockRegistry.getBlock(LibBlockNames.SOURCESTONE).defaultBlockState().getSoundType().getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
                 ParticleUtil.spawnTouchPacket(level, pos, ParticleColor.makeRandomColor(255, 255, 255, level.random));
                 placedBlocks.add(pos);
                 return;
@@ -105,7 +105,7 @@ public class BuildPortalEvent implements ITimedEvent {
             for(BlockPos pos : portalPos) {
                 if (level.getBlockState(pos).canBeReplaced()) {
                     level.setBlock(pos, BlockRegistry.PORTAL_BLOCK.defaultBlockState().setValue(PortalBlock.AXIS, direction.getAxis()), 2);
-                    level.playSound(null, pos, BlockRegistry.PORTAL_BLOCK.get().getSoundType(level.getBlockState(pos)).getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                    level.playSound(null, pos, BlockRegistry.PORTAL_BLOCK.get().defaultBlockState().getSoundType().getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
                     placedBlocks.add(pos);
                 } else {
                     destroyPortal = true;

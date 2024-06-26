@@ -10,7 +10,6 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +33,7 @@ public class LightEvents {
                     }
                 }
             }
-            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
-                    new PacketSyncLitEntities(litID));
+            Networking.sendToPlayerClient(new PacketSyncLitEntities(litID), serverPlayer);
         }
     }
 }

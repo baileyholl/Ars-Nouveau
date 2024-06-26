@@ -32,15 +32,15 @@ public class AmethystGolemRenderer extends GeoEntityRenderer<AmethystGolem> {
     }
 
     @Override
-    public void preRender(PoseStack poseStack, AmethystGolem animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack poseStack, AmethystGolem animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         this.golem = animatable;
         this.buffer = bufferSource;
         this.text = this.getTextureLocation(animatable);
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 
     @Override
-    public void renderRecursively(PoseStack stack, AmethystGolem animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer bufferIn, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderRecursively(PoseStack stack, AmethystGolem animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer bufferIn, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         if (bone.getName().equals("item")) {
             stack.pushPose();
             RenderUtil.translateToPivotPoint(stack, bone);
@@ -50,7 +50,7 @@ public class AmethystGolemRenderer extends GeoEntityRenderer<AmethystGolem> {
             stack.popPose();
             bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(text));
         }
-        super.renderRecursively(stack, animatable, bone, renderType, bufferSource, bufferIn, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        super.renderRecursively(stack, animatable, bone, renderType, bufferSource, bufferIn, isReRender, partialTick, packedLight, packedOverlay, colour);
 
     }
 

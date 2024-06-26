@@ -6,11 +6,11 @@ import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
-import com.hollingsworth.arsnouveau.common.util.PotionUtil;
-import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.common.util.PotionUtil;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -26,8 +26,6 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
@@ -35,8 +33,8 @@ import net.neoforged.neoforge.common.brewing.BrewingRecipe;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,7 +72,7 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
                     if(!data.isEmpty()){
                         data.applyEffects(player, player, player);
                         PortUtil.sendMessage(player, Component.translatable("ars_nouveau.wixie_familiar.applied",data.asPotionStack().getHoverName().getString()));
-                        Networking.sendToNearby(level(), this, new PacketAnimEntity(this.getId(), EntityWixie.Animations.CAST.ordinal()));
+                        Networking.sendToNearbyClient(level(), this, new PacketAnimEntity(this.getId(), EntityWixie.Animations.CAST.ordinal()));
                         ParticleUtil.spawnPoof((ServerLevel) level(), player.blockPosition().above());
                         stack.shrink(1);
                         return InteractionResult.SUCCESS;
@@ -166,7 +164,7 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
                 if (wixie.getTarget().isInvertedHealAndHarm())
                     effect = MobEffects.REGENERATION;
             }
-            Networking.sendToNearby(wixie.level, wixie, new PacketAnimEntity(wixie.getId(), EntityWixie.Animations.CAST.ordinal()));
+            Networking.sendToNearbyClient(wixie.level, wixie, new PacketAnimEntity(wixie.getId(), EntityWixie.Animations.CAST.ordinal()));
             wixie.getTarget().addEffect(new MobEffectInstance(effect, 7 * 20, new Random().nextInt(2)));
             wixie.debuffCooldown = 150;
         }

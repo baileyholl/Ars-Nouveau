@@ -22,7 +22,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -66,7 +65,7 @@ public class RitualScrying extends AbstractRitual {
         CompoundTag tag = playerEntity.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
         tag.put("an_scryer", scryer.toTag(new CompoundTag()));
         playerEntity.getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
-        Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> playerEntity), new PacketGetPersistentData(tag));
+        Networking.sendToPlayerClient(new PacketGetPersistentData(tag), playerEntity);
     }
 
     @Override

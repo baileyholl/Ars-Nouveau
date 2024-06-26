@@ -112,7 +112,7 @@ public class ParticleUtil {
     }
 
     public static void spawnTouchPacket(Level world, BlockPos pos, ParticleColor color) {
-        Networking.sendToNearby(world, pos,
+        Networking.sendToNearbyClient(world, pos,
                 new PacketANEffect(PacketANEffect.EffectType.BURST, pos, color));
     }
 

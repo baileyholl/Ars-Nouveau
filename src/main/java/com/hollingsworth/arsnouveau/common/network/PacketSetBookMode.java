@@ -1,25 +1,28 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.NetworkEvent;
-import java.util.function.Supplier;
 
-public class PacketSetBookMode {
-
+public class PacketSetBookMode extends AbstractPacket{
+    public static final Type<PacketSetBookMode> TYPE = new Type<>(ArsNouveau.prefix("set_book_mode"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketSetBookMode> CODEC = StreamCodec.ofMember(PacketSetBookMode::toBytes, PacketSetBookMode::new);
     public CompoundTag tag;
 
     //Decoder
-    public PacketSetBookMode(FriendlyByteBuf buf) {
+    public PacketSetBookMode(RegistryFriendlyByteBuf buf) {
         tag = buf.readNbt();
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeNbt(tag);
     }
 
@@ -27,18 +30,16 @@ public class PacketSetBookMode {
         this.tag = tag;
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            ctx.get().enqueueWork(() -> {
-                ServerPlayer sender = ctx.get().getSender();
-                if (sender == null) return;
+    @Override
+    public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
+        ItemStack stack = StackUtil.getHeldSpellbook(player);
+        if (stack.getItem() instanceof SpellBook) {
+            stack.setTag(tag);
+        }
+    }
 
-                ItemStack stack = StackUtil.getHeldSpellbook(ctx.get().getSender());
-                if (stack.getItem() instanceof SpellBook) {
-                    stack.setTag(tag);
-                }
-            });
-        });
-        ctx.get().setPacketHandled(true);
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

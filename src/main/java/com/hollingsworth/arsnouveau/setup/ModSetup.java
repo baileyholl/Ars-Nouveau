@@ -5,27 +5,18 @@ import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
-import net.minecraftforge.registries.*;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.InterModComms;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-
-import net.neoforged.neoforge.registries.IForgeRegistry;
 import net.neoforged.neoforge.registries.RegisterEvent;
-
-import top.theillusivec4.curios.Curios;
-import top.theillusivec4.curios.api.SlotTypeMessage;
-import top.theillusivec4.curios.api.SlotTypePreset;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
 public class ModSetup {
 
     public static void sendIntercoms() {
-        // TODO: readd curios
+//         TODO: readd curios
 //        InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.HEAD.getMessageBuilder().build());
 //        InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.CHARM.getMessageBuilder().build());
 //        InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.RING.getMessageBuilder().size(2).build());

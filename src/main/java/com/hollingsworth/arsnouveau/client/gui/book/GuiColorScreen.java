@@ -13,7 +13,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.PageButton;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 
@@ -72,7 +71,7 @@ public class GuiColorScreen extends BaseBook {
 
         // column 2
         addColorButton(73, 44,
-                "textures/gui/color_icons/rainbow_color_icon.png", () -> Networking.INSTANCE.sendToServer(new PacketUpdateSpellColors(slot, new RainbowParticleColor(0, 0, 0), this.stackHand == InteractionHand.MAIN_HAND)));
+                "textures/gui/color_icons/rainbow_color_icon.png", () -> Networking.sendToServer(new PacketUpdateSpellColors(slot, new RainbowParticleColor(0, 0, 0), this.stackHand == InteractionHand.MAIN_HAND)));
         addPresetColorButton(73, 68, ParticleColor.ORANGE, "textures/gui/color_icons/orange_color_icon.png");
         addPresetColorButton(73, 92, ParticleColor.CYAN, "textures/gui/color_icons/cyan_color_icon.png");
         addPresetColorButton(73, 116, ParticleColor.PINK, "textures/gui/color_icons/pink_color_icon.png");
@@ -104,7 +103,7 @@ public class GuiColorScreen extends BaseBook {
         addColorButton(73, 92, "textures/gui/color_icons/orange_color_icon.png", () -> setFromPreset(255, 90, 1));
         addPresetColorButton(73, 116, ParticleColor.CYAN, "textures/gui/color_icons/cyan_color_icon.png");
         addRenderableWidget(new GuiImageButton(bookRight - 73, bookTop + 140, 0, 0, 48, 11, 48, 11,
-                "textures/gui/color_icons/white_color_icon.png", (_2) -> Networking.INSTANCE.sendToServer(new PacketUpdateSpellColors(slot, new RainbowParticleColor(0, 0, 0), this.stackHand == InteractionHand.MAIN_HAND))));
+                "textures/gui/color_icons/white_color_icon.png", (_2) -> Networking.sendToServer(new PacketUpdateSpellColors(slot, new RainbowParticleColor(0, 0, 0), this.stackHand == InteractionHand.MAIN_HAND))));
     }
 
 
@@ -134,11 +133,11 @@ public class GuiColorScreen extends BaseBook {
 
 
     public void onSaveClick(Button button) {
-        Networking.INSTANCE.sendToServer(new PacketUpdateSpellColors(slot, new ParticleColor(redW.getValue(), greenW.getValue(), blueW.getValue()), this.stackHand == InteractionHand.MAIN_HAND));
+        Networking.sendToServer(new PacketUpdateSpellColors(slot, new ParticleColor(redW.getValue(), greenW.getValue(), blueW.getValue()), this.stackHand == InteractionHand.MAIN_HAND));
     }
 
     public void onSaveAllClick(Button button) {
-        Networking.INSTANCE.sendToServer(new PacketUpdateSpellColorAll(slot, new ParticleColor(redW.getValue(), greenW.getValue(), blueW.getValue()), this.stackHand == InteractionHand.MAIN_HAND));
+        Networking.sendToServer(new PacketUpdateSpellColorAll(slot, new ParticleColor(redW.getValue(), greenW.getValue(), blueW.getValue()), this.stackHand == InteractionHand.MAIN_HAND));
     }
 
     @Override

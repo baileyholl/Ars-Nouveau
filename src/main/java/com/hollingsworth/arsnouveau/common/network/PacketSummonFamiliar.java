@@ -1,19 +1,25 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.event.FamiliarSummonEvent;
 import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
-import net.minecraft.network.FriendlyByteBuf;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.network.NetworkEvent;
-import java.util.function.Supplier;
 
-public class PacketSummonFamiliar {
+public class PacketSummonFamiliar extends AbstractPacket{
+
+    public static final Type<PacketSummonFamiliar> TYPE = new Type<>(ArsNouveau.prefix("summon_familiar"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketSummonFamiliar> CODEC = StreamCodec.ofMember(PacketSummonFamiliar::toBytes, PacketSummonFamiliar::new);
+
 
     ResourceLocation familiarID;
 
@@ -22,40 +28,40 @@ public class PacketSummonFamiliar {
     }
 
     //Decoder
-    public PacketSummonFamiliar(FriendlyByteBuf buf) {
+    public PacketSummonFamiliar(RegistryFriendlyByteBuf buf) {
         familiarID = buf.readResourceLocation();
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeResourceLocation(familiarID);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            if (ctx.get().getSender() != null) {
-                IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(ctx.get().getSender()).orElse(null);
-                if (cap == null)
-                    return;
-                Entity owner = ctx.get().getSender();
-                if(owner == null)
-                    return;
+    @Override
+    public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer owner) {
+        IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(owner).orElse(null);
+        if (cap == null)
+            return;
 
-                IFamiliar familiarEntity = cap.getFamiliarData(familiarID).getEntity(ctx.get().getSender().level);
-                familiarEntity.setOwnerID(owner.getUUID());
-                familiarEntity.getThisEntity().setPos(owner.getX(), owner.getY(), owner.getZ());
+        if(owner == null)
+            return;
 
-                FamiliarSummonEvent summonEvent = new FamiliarSummonEvent(familiarEntity.getThisEntity(), owner);
-                NeoForge.EVENT_BUS.post(summonEvent);
+        IFamiliar familiarEntity = cap.getFamiliarData(familiarID).getEntity(owner.level);
+        familiarEntity.setOwnerID(owner.getUUID());
+        familiarEntity.getThisEntity().setPos(owner.getX(), owner.getY(), owner.getZ());
 
-                if (!summonEvent.isCanceled()) {
-                    owner.level.addFreshEntity(familiarEntity.getThisEntity());
-                    ParticleUtil.spawnPoof((ServerLevel) owner.level, familiarEntity.getThisEntity().blockPosition());
-                    cap.setLastSummonedFamiliar(familiarID);
-                }
-            }
-        });
-        ctx.get().setPacketHandled(true);
+        FamiliarSummonEvent summonEvent = new FamiliarSummonEvent(familiarEntity.getThisEntity(), owner);
+        NeoForge.EVENT_BUS.post(summonEvent);
 
+        if (!summonEvent.isCanceled()) {
+            owner.level.addFreshEntity(familiarEntity.getThisEntity());
+            ParticleUtil.spawnPoof((ServerLevel) owner.level, familiarEntity.getThisEntity().blockPosition());
+            cap.setLastSummonedFamiliar(familiarID);
+        }
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

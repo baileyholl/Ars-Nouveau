@@ -1,19 +1,21 @@
 package com.hollingsworth.arsnouveau.common.network;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-
+import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.network.PacketDistributor;
-import java.util.Optional;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public class Networking {
-    public static SimpleChannel INSTANCE;
 
     private static int ID = 0;
 
@@ -21,225 +23,98 @@ public class Networking {
         return ID++;
     }
 
-    public static void registerMessages() {
-        INSTANCE = NetworkRegistry.newSimpleChannel(ArsNouveau.prefix( "network"), () -> "1.0", s -> true, s -> true);
-
-        INSTANCE.registerMessage(nextID(),
-                PacketOpenSpellBook.class,
-                PacketOpenSpellBook::toBytes,
-                PacketOpenSpellBook::new,
-                PacketOpenSpellBook::handle);
-        INSTANCE.registerMessage(nextID(),
-                PacketUpdateCaster.class,
-                PacketUpdateCaster::toBytes,
-                PacketUpdateCaster::new,
-                PacketUpdateCaster::handle);
-
-        INSTANCE.registerMessage(nextID(),
-                PacketUpdateBookGUI.class,
-                PacketUpdateBookGUI::toBytes,
-                PacketUpdateBookGUI::new,
-                PacketUpdateBookGUI::handle);
-        INSTANCE.registerMessage(nextID(),
-                PacketUpdateMana.class,
-                PacketUpdateMana::toBytes,
-                PacketUpdateMana::new,
-                PacketUpdateMana::handle);
-        INSTANCE.registerMessage(nextID(),
-                PacketSetBookMode.class,
-                PacketSetBookMode::toBytes,
-                PacketSetBookMode::new,
-                PacketSetBookMode::handle);
-
-        INSTANCE.registerMessage(nextID(),
-                PacketANEffect.class,
-                PacketANEffect::encode,
-                PacketANEffect::decode,
-                PacketANEffect.Handler::handle);
-
-        INSTANCE.registerMessage(nextID(),
-                PacketReactiveSpell.class,
-                PacketReactiveSpell::toBytes,
-                PacketReactiveSpell::new,
-                PacketReactiveSpell::handle);
-        INSTANCE.registerMessage(nextID(),
-                PacketWarpPosition.class,
-                PacketWarpPosition::encode,
-                PacketWarpPosition::decode,
-                PacketWarpPosition.Handler::handle);
-        INSTANCE.registerMessage(nextID(),
-                PacketUpdateSpellColors.class,
-                PacketUpdateSpellColors::toBytes,
-                PacketUpdateSpellColors::new,
-                PacketUpdateSpellColors::handle);
-        INSTANCE.registerMessage(nextID(),
-                PacketOneShotAnimation.class,
-                PacketOneShotAnimation::encode,
-                PacketOneShotAnimation::decode,
-                PacketOneShotAnimation.Handler::handle);
-
-        INSTANCE.registerMessage(nextID(),
-                PacketAnimEntity.class,
-                PacketAnimEntity::encode,
-                PacketAnimEntity::decode,
-                PacketAnimEntity.Handler::handle);
-
-
-        INSTANCE.registerMessage(nextID(),
-                PacketGetPersistentData.class,
-                PacketGetPersistentData::toBytes,
-                PacketGetPersistentData::new,
-                PacketGetPersistentData::handle);
-
-        INSTANCE.registerMessage(nextID(),
-                PacketNoSpamChatMessage.class,
-                PacketNoSpamChatMessage::toBytes,
-                PacketNoSpamChatMessage::new,
-                PacketNoSpamChatMessage::handle,
-                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-
-        INSTANCE.registerMessage(nextID(),
-                PacketUpdateFlight.class,
-                PacketUpdateFlight::toBytes,
-                PacketUpdateFlight::new,
-                PacketUpdateFlight::handle);
-        INSTANCE.registerMessage(nextID(),
-                PacketClientDelayEffect.class,
-                PacketClientDelayEffect::toBytes,
-                PacketClientDelayEffect::new,
-                PacketClientDelayEffect::handle);
-
-        INSTANCE.registerMessage(nextID(),
-                PacketTimedEvent.class,
-                PacketTimedEvent::toBytes,
-                PacketTimedEvent::new,
-                PacketTimedEvent::handle);
-        INSTANCE.registerMessage(nextID(),
-                PacketSummonFamiliar.class,
-                PacketSummonFamiliar::toBytes,
-                PacketSummonFamiliar::new,
-                PacketSummonFamiliar::handle);
-        INSTANCE.registerMessage(nextID(),
-                PacketSyncPlayerCap.class,
-                PacketSyncPlayerCap::toBytes,
-                PacketSyncPlayerCap::new,
-                PacketSyncPlayerCap::handle);
-
-        INSTANCE.registerMessage(nextID(),
-                PacketTogglePathing.class,
-                PacketTogglePathing::toBytes,
-                PacketTogglePathing::new,
-                PacketTogglePathing::handle);
-
-        INSTANCE.registerMessage(nextID(),
-                PacketHotkeyPressed.class,
-                PacketHotkeyPressed::toBytes,
-                PacketHotkeyPressed::new,
-                PacketHotkeyPressed::handle);
-
-        INSTANCE.registerMessage(nextID(),
-                PacketOpenGlyphCraft.class,
-                PacketOpenGlyphCraft::toBytes,
-                PacketOpenGlyphCraft::new,
-                PacketOpenGlyphCraft::handle);
-
-        INSTANCE.registerMessage(nextID(),
-                PacketSetScribeRecipe.class,
-                PacketSetScribeRecipe::toBytes,
-                PacketSetScribeRecipe::new,
-                PacketSetScribeRecipe::handle);
-        INSTANCE.registerMessage(nextID(),
-                PacketToggleLight.class,
-                PacketToggleLight::toBytes,
-                PacketToggleLight::new,
-                PacketToggleLight::handle);
-        INSTANCE.registerMessage(nextID(),
-                PacketAddFadingLight.class,
-                PacketAddFadingLight::encode,
-                PacketAddFadingLight::decode,
-                PacketAddFadingLight.Handler::handle);
-
-        INSTANCE.registerMessage(nextID(),
-                PacketSetSound.class,
-                PacketSetSound::toBytes,
-                PacketSetSound::new,
-                PacketSetSound::handle);
-        INSTANCE.registerMessage(nextID(),
-                PacketMountCamera.class,
-                PacketMountCamera::encode,
-                PacketMountCamera::decode,
-                PacketMountCamera::onMessage);
-        INSTANCE.registerMessage(nextID(),
-                PacketDismountCamera.class,
-                PacketDismountCamera::encode,
-                PacketDismountCamera::decode,
-                PacketDismountCamera::onMessage);
-        INSTANCE.registerMessage(nextID(),
-                PacketSetCameraView.class,
-                PacketSetCameraView::encode,
-                PacketSetCameraView::decode,
-                PacketSetCameraView::onMessage);
-        INSTANCE.registerMessage(nextID(),
-                PacketSyncLitEntities.class,
-                PacketSyncLitEntities::toBytes,
-                PacketSyncLitEntities::new,
-                PacketSyncLitEntities::handle);
-        INSTANCE.registerMessage(nextID(),
-                PacketSyncTag.class,
-                PacketSyncTag::encode,
-                PacketSyncTag::decode,
-                PacketSyncTag.Handler::handle);
-        INSTANCE.registerMessage(nextID(),
-                PacketQuickCast.class,
-                PacketQuickCast::toBytes,
-                PacketQuickCast::new,
-                PacketQuickCast::handle);
-        INSTANCE.registerMessage(nextID(),
-                PacketConsumePotion.class,
-                PacketConsumePotion::toBytes,
-                PacketConsumePotion::new,
-                PacketConsumePotion::handle);
-        INSTANCE.registerMessage(nextID(),
-                PacketSetLauncher.class,
-                PacketSetLauncher::toBytes,
-                PacketSetLauncher::new,
-                PacketSetLauncher::handle);
-        INSTANCE.registerMessage(nextID(), ChangeBiomePacket.class, ChangeBiomePacket::encode, ChangeBiomePacket::new, ChangeBiomePacket.Handler::onMessage);
-        INSTANCE.registerMessage(nextID(), ServerToClientStoragePacket.class, ServerToClientStoragePacket::toBytes, ServerToClientStoragePacket::new, ServerToClientStoragePacket.Handler::onMessage);
-        INSTANCE.registerMessage(nextID(), ClientToServerStoragePacket.class, ClientToServerStoragePacket::toBytes, ClientToServerStoragePacket::new, ClientToServerStoragePacket.Handler::onMessage);
-        INSTANCE.registerMessage(nextID(), HighlightAreaPacket.class, HighlightAreaPacket::encode, HighlightAreaPacket::decode, HighlightAreaPacket.Handler::handle);
-        INSTANCE.registerMessage(nextID(), PacketToggleFamiliar.class, PacketToggleFamiliar::toBytes, PacketToggleFamiliar::new, PacketToggleFamiliar::handle);
-        INSTANCE.registerMessage(nextID(), PacketDispelFamiliars.class, PacketDispelFamiliars::toBytes, PacketDispelFamiliars::new, PacketDispelFamiliars::handle);
-        INSTANCE.registerMessage(nextID(), PacketGenericClientMessage.class, PacketGenericClientMessage::toBytes, PacketGenericClientMessage::new, PacketGenericClientMessage::handle);
-        INSTANCE.registerMessage(nextID(), NotEnoughManaPacket.class, NotEnoughManaPacket::encode, NotEnoughManaPacket::decode, NotEnoughManaPacket::handle);
-        INSTANCE.registerMessage(nextID(), PacketSummonLily.class, PacketSummonLily::toBytes, PacketSummonLily::new, PacketSummonLily::handle);
-        INSTANCE.registerMessage(nextID(), PacketJoinedServer.class, PacketJoinedServer::toBytes, PacketJoinedServer::new, PacketJoinedServer.Handler::handle);
-        INSTANCE.registerMessage(nextID(), PacketUnsummonLily.class, PacketUnsummonLily::toBytes, PacketUnsummonLily::new, PacketUnsummonLily::handle);
-        INSTANCE.registerMessage(nextID(), SyncPathMessage.class, SyncPathMessage::toBytes, SyncPathMessage::new, SyncPathMessage.Handler::handle);
-        INSTANCE.registerMessage(nextID(), SyncPathReachedMessage.class, SyncPathReachedMessage::toBytes, SyncPathReachedMessage::new, SyncPathReachedMessage.Handler::handle);
-        INSTANCE.registerMessage(nextID(), PacketUpdateSpellColorAll.class, PacketUpdateSpellColorAll::toBytes, PacketUpdateSpellColorAll::new, PacketUpdateSpellColorAll::handle);
-        INSTANCE.registerMessage(nextID(), PacketUpdateSpellSoundAll.class, PacketUpdateSpellSoundAll::toBytes, PacketUpdateSpellSoundAll::new, PacketUpdateSpellSoundAll::handle);
-        INSTANCE.registerMessage(nextID(), PotionSyncPacket.class, PotionSyncPacket::toBytes, PotionSyncPacket::new, PotionSyncPacket::handle);
-        INSTANCE.registerMessage(nextID(), PacketClientRewindEffect.class, PacketClientRewindEffect::toBytes, PacketClientRewindEffect::new, PacketClientRewindEffect::handle);
+    public static void register(final RegisterPayloadHandlersEvent event) {
+        // Sets the current network version
+        final PayloadRegistrar reg = event.registrar("1");
+        reg.playToServer(PacketOpenSpellBook.TYPE, PacketOpenSpellBook.CODEC,  Networking::handle);
+        reg.playToClient(ChangeBiomePacket.TYPE, ChangeBiomePacket.CODEC, Networking::handle);
+        reg.playToServer(PacketSetLauncher.TYPE, PacketSetLauncher.CODEC, Networking::handle);
+        reg.playToServer(ClientToServerStoragePacket.TYPE, ClientToServerStoragePacket.CODEC, Networking::handle);
+        reg.playToClient(HighlightAreaPacket.TYPE, HighlightAreaPacket.CODEC, Networking::handle);
+        reg.playToClient(NotEnoughManaPacket.TYPE, NotEnoughManaPacket.CODEC, Networking::handle);
+        reg.playToClient(PacketAddFadingLight.TYPE, PacketAddFadingLight.CODEC, Networking::handle);
+        reg.playToClient(PacketANEffect.TYPE, PacketANEffect.CODEC, Networking::handle);
+        reg.playToClient(PacketClientDelayEffect.TYPE, PacketClientDelayEffect.CODEC, Networking::handle);
+        reg.playToClient(PacketClientRewindEffect.TYPE, PacketClientRewindEffect.CODEC, Networking::handle);
+        reg.playToServer(PacketConsumePotion.TYPE, PacketConsumePotion.CODEC, Networking::handle);
+        reg.playToServer(PacketDismountCamera.TYPE, PacketDismountCamera.CODEC, Networking::handle);
+        reg.playToServer(PacketDispelFamiliars.TYPE, PacketDispelFamiliars.CODEC, Networking::handle);
+        reg.playToServer(PacketAnimEntity.TYPE, PacketAnimEntity.CODEC, Networking::handle);
+        reg.playToClient(PacketGetPersistentData.TYPE, PacketGetPersistentData.CODEC, Networking::handle);
+        reg.playToServer(PacketHotkeyPressed.TYPE, PacketHotkeyPressed.CODEC, Networking::handle);
+        reg.playToClient(PacketJoinedServer.TYPE, PacketJoinedServer.CODEC, Networking::handle);
+        reg.playToServer(PacketGenericClientMessage.TYPE, PacketGenericClientMessage.CODEC, Networking::handle);
+        reg.playToServer(PacketMountCamera.TYPE, PacketMountCamera.CODEC, Networking::handle);
+        reg.playToClient(PacketNoSpamChatMessage.TYPE, PacketNoSpamChatMessage.CODEC, Networking::handle);
+        reg.playToClient(PacketOneShotAnimation.TYPE, PacketOneShotAnimation.CODEC, Networking::handle);
+        reg.playToClient(PacketOpenGlyphCraft.TYPE, PacketOpenGlyphCraft.CODEC, Networking::handle);
+        reg.playToServer(PacketQuickCast.TYPE, PacketQuickCast.CODEC, Networking::handle);
+        reg.playToServer(PacketReactiveSpell.TYPE, PacketReactiveSpell.CODEC, Networking::handle);
+        reg.playToServer(PacketSetBookMode.TYPE, PacketSetBookMode.CODEC, Networking::handle);
+        reg.playToClient(PacketSetCameraView.TYPE, PacketSetCameraView.CODEC, Networking::handle);
+        reg.playToServer(PacketSetScribeRecipe.TYPE, PacketSetScribeRecipe.CODEC, Networking::handle);
+        reg.playToServer(PacketSetSound.TYPE, PacketSetSound.CODEC, Networking::handle);
+        reg.playToServer(PacketSummonFamiliar.TYPE, PacketSummonFamiliar.CODEC, Networking::handle);
+        reg.playToServer(PacketSummonLily.TYPE, PacketSummonLily.CODEC, Networking::handle);
+        reg.playToClient(PacketSyncLitEntities.TYPE, PacketSyncLitEntities.CODEC, Networking::handle);
+        reg.playToClient(PacketSyncPlayerCap.TYPE, PacketSyncPlayerCap.CODEC, Networking::handle);
+        reg.playToClient(PacketSyncTag.TYPE , PacketSyncTag.CODEC, Networking::handle);
+        reg.playToClient(PacketTimedEvent.TYPE, PacketTimedEvent.CODEC, Networking::handle);
+        reg.playToServer(PacketToggleFamiliar.TYPE, PacketToggleFamiliar.CODEC, Networking::handle);
+        reg.playToClient(PacketToggleLight.TYPE, PacketToggleLight.CODEC, Networking::handle);
+        reg.playToServer(PacketUnsummonLily.TYPE, PacketUnsummonLily.CODEC, Networking::handle);
+        reg.playToClient(PacketUpdateBookGUI.TYPE, PacketUpdateBookGUI.CODEC, Networking::handle);
+        reg.playToServer(PacketUpdateCaster.TYPE, PacketUpdateCaster.CODEC, Networking::handle);
+        reg.playToClient(PacketUpdateFlight.TYPE, PacketUpdateFlight.CODEC, Networking::handle);
+        reg.playToClient(PacketUpdateMana.TYPE, PacketUpdateMana.CODEC, Networking::handle);
+        reg.playToServer(PacketUpdateSpellColorAll.TYPE, PacketUpdateSpellColorAll.CODEC, Networking::handle);
+        reg.playToServer(PacketUpdateSpellColors.TYPE, PacketUpdateSpellColors.CODEC, Networking::handle);
+        reg.playToServer(PacketUpdateSpellSoundAll.TYPE, PacketUpdateSpellSoundAll.CODEC, Networking::handle);
+        reg.playToClient(PacketWarpPosition.TYPE, PacketWarpPosition.CODEC, Networking::handle);
+        reg.playToClient(PotionSyncPacket.TYPE, PotionSyncPacket.CODEC, Networking::handle);
+        reg.playToClient(ServerToClientStoragePacket.TYPE, ServerToClientStoragePacket.CODEC, Networking::handle);
     }
 
-    public static void sendToNearby(Level world, BlockPos pos, Object toSend) {
-        if (world instanceof ServerLevel ws) {
-            ws.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false).stream()
-                    .filter(p -> p.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) < 64 * 64)
-                    .forEach(p -> INSTANCE.send(PacketDistributor.PLAYER.with(() -> p), toSend));
+    private static <T extends AbstractPacket> void handle(T message, IPayloadContext ctx) {
+        if (ctx.flow().getReceptionSide() == LogicalSide.SERVER) {
+            handleServer(message, ctx);
+        } else {
+            //separate class to avoid loading client code on server.
+            //Using OnlyIn on a method in this class would work too, but is discouraged
+            ClientMessageHandler.handleClient(message, ctx);
         }
     }
 
-    public static void sendToNearby(Level world, Entity e, Object toSend) {
-        sendToNearby(world, e.blockPosition(), toSend);
+    private static <T extends AbstractPacket> void handleServer(T message, IPayloadContext ctx) {
+        MinecraftServer server = ctx.player().getServer();
+        message.onServerReceived(server, (ServerPlayer) ctx.player());
     }
 
-    public static void sendToPlayerClient(Object msg, ServerPlayer player) {
-        INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), msg);
+    private static class ClientMessageHandler {
+
+        public static <T extends AbstractPacket> void handleClient(T message, IPayloadContext ctx) {
+            Minecraft minecraft = Minecraft.getInstance();
+            message.onClientReceived(minecraft, minecraft.player);
+        }
     }
 
-    public static void sendToServer(Object msg) {
-        INSTANCE.sendToServer(msg);
+    public static void sendToNearbyClient(Level world, BlockPos pos, CustomPacketPayload toSend) {
+        if (world instanceof ServerLevel ws) {
+            ws.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false).stream()
+                    .filter(p -> p.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) < 64 * 64)
+                    .forEach(p -> Networking.sendToPlayerClient(toSend, p));
+        }
+    }
+
+    public static void sendToNearbyClient(Level world, Entity e, CustomPacketPayload toSend) {
+        sendToNearbyClient(world, e.blockPosition(), toSend);
+    }
+
+    public static void sendToPlayerClient(CustomPacketPayload msg, ServerPlayer player) {
+        PacketDistributor.sendToPlayer(player, msg);
+    }
+
+    public static void sendToServer(CustomPacketPayload msg) {
+        PacketDistributor.sendToServer(msg);
     }
 }

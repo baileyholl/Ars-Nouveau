@@ -33,7 +33,7 @@ public class IgnitePerk extends Perk implements IEffectResolvePerk {
     public void onPreResolve(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver, AbstractEffect effect, PerkInstance perkInstance) {
         if(effect instanceof IDamageEffect damageEffect && rayTraceResult instanceof EntityHitResult entityHitResult){
             if(damageEffect.canDamage(shooter, spellStats, spellContext, resolver, entityHitResult.getEntity()) && shooter != entityHitResult.getEntity()){
-                entityHitResult.getEntity().setSecondsOnFire(20 * 5 * perkInstance.getSlot().value);
+                entityHitResult.getEntity().setRemainingFireTicks(20 * 5 * perkInstance.getSlot().value);
             }
         }
     }

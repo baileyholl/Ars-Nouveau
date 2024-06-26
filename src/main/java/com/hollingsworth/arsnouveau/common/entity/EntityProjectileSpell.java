@@ -16,8 +16,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -38,6 +36,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
+
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
@@ -314,7 +313,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
                 if (entityHitResult.getEntity().equals(this.getOwner())) return;
                 if (this.spellResolver != null) {
                     this.spellResolver.onResolveEffect(level, result);
-                    Networking.sendToNearby(level, BlockPos.containing(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
+                    Networking.sendToNearbyClient(level, BlockPos.containing(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
                             BlockPos.containing(result.getLocation()), getParticleColor()));
                     attemptRemoval();
                 }
@@ -350,7 +349,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
                     this.hitList.add(blockraytraceresult.getBlockPos());
                     this.spellResolver.onResolveEffect(this.level, blockraytraceresult);
                 }
-                Networking.sendToNearby(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
+                Networking.sendToNearbyClient(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
                         BlockPos.containing(result.getLocation()).below(), getParticleColor()));
                 attemptRemoval();
             }

@@ -19,12 +19,13 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.FakePlayer;
+
 import java.util.*;
 import java.util.function.Predicate;
 
 public class SpellUtil {
 
-    public static boolean postEvent(SpellCastEvent e) {
+    public static SpellCastEvent postEvent(SpellCastEvent e) {
         return NeoForge.EVENT_BUS.post(e);
     }
 

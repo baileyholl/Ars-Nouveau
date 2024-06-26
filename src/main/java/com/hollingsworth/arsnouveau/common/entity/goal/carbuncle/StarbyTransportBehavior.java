@@ -56,7 +56,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
             return;
 
         if (tag.contains("itemScroll"))
-            this.itemScroll = ItemStack.of(tag.getCompound("itemScroll"));
+            this.itemScroll = ItemStack.parseOptional(entity.level.registryAccess(), tag.getCompound("itemScroll"));
     }
 
     @Override
@@ -132,20 +132,15 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     public ItemScroll.SortPref sortPrefForStack(@Nullable BlockPos b, ItemStack stack) {
         if (stack == null || stack.isEmpty() || b == null || !level.isLoaded(b))
             return ItemScroll.SortPref.INVALID;
-        return canDepositItem(level.getBlockEntity(b), stack);
+        return canDepositItem(b, stack);
     }
 
     public boolean isPickupDisabled() {
         return starbuncle.getCosmeticItem().getItem() == ItemsRegistry.STARBUNCLE_SHADES.get();
     }
 
-    public @Nullable IItemHandler getItemCapFromTile(BlockEntity blockEntity, @Nullable Direction face) {
-        if (blockEntity != null && blockEntity.getCapability(Capabilities.ITEM_HANDLER, face).isPresent()) {
-            var lazy = blockEntity.getCapability(Capabilities.ITEM_HANDLER, face).resolve();
-            if (lazy.isPresent())
-                return lazy.get();
-        }
-        return null;
+    public @Nullable IItemHandler getItemCapFromTile(BlockPos pos, @Nullable Direction face) {
+        return starbuncle.level.getCapability(Capabilities.ItemHandler.BLOCK, pos, face);
     }
 
     public @Nullable BlockPos getValidTakePos() {
@@ -163,7 +158,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
 
         if (p == null || !level.isLoaded(p)) return false;
         Direction face = FROM_DIRECTION_MAP.get(p.hashCode());
-        IItemHandler iItemHandler = getItemCapFromTile(level.getBlockEntity(p), face);
+        IItemHandler iItemHandler = getItemCapFromTile(p, face);
 
         if (iItemHandler == null) return false;
         for (int j = 0; j < iItemHandler.getSlots(); j++) {
@@ -184,7 +179,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         }
         BlockPos validStorePos = getValidStorePos(stack);
         if (validStorePos == null) return -1;
-        IItemHandler handler = getItemCapFromTile(level.getBlockEntity(validStorePos), FROM_DIRECTION_MAP.get(validStorePos.hashCode()));
+        IItemHandler handler = getItemCapFromTile(validStorePos, FROM_DIRECTION_MAP.get(validStorePos.hashCode()));
         if (handler == null)
             return -1;
 
@@ -204,18 +199,18 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         return -1;
     }
 
-    private ItemScroll.SortPref canDepositItem(BlockEntity tile, ItemStack stack) {
+    private ItemScroll.SortPref canDepositItem(BlockPos pos, ItemStack stack) {
         ItemScroll.SortPref pref = ItemScroll.SortPref.LOW;
-        if (tile == null || stack == null || stack.isEmpty())
+        if (pos == null || stack == null || stack.isEmpty())
             return ItemScroll.SortPref.INVALID;
 
-        IItemHandler handler = getItemCapFromTile(tile, TO_DIRECTION_MAP.get(tile.getBlockPos().hashCode()));
+        IItemHandler handler = getItemCapFromTile(pos, TO_DIRECTION_MAP.get(pos.hashCode()));
         if (handler == null)
             return ItemScroll.SortPref.INVALID;
-        for (ItemFrame i : level.getEntitiesOfClass(ItemFrame.class, new AABB(tile.getBlockPos()).inflate(1))) {
+        for (ItemFrame i : level.getEntitiesOfClass(ItemFrame.class, new AABB(pos).inflate(1))) {
             // Check if these frames are attached to the tile
             BlockEntity adjTile = level.getBlockEntity(i.blockPosition().relative(i.getDirection().getOpposite()));
-            if (adjTile == null || !adjTile.equals(tile) || i.getItem().isEmpty())
+            if (adjTile == null || !adjTile.equals(level.getBlockEntity(pos)) || i.getItem().isEmpty())
                 continue;
 
 
@@ -247,8 +242,8 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         super.onFinishedConnectionFirst(storedPos, side, storedEntity, playerEntity);
         if (storedPos == null)
             return;
-        BlockEntity blockEntity = level.getBlockEntity(storedPos);
-        if (blockEntity != null && blockEntity.getCapability(Capabilities.ITEM_HANDLER, side).isPresent()) {
+        IItemHandler cap = level.getCapability(Capabilities.ItemHandler.BLOCK, storedPos, side);
+        if (cap != null) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.store"));
             addToPos(storedPos, side);
         }
@@ -260,8 +255,8 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         if (storedPos == null)
             return;
 
-        BlockEntity blockEntity = level.getBlockEntity(storedPos);
-        if (blockEntity != null && blockEntity.getCapability(Capabilities.ITEM_HANDLER, side).isPresent()) {
+        IItemHandler cap = level.getCapability(Capabilities.ItemHandler.BLOCK, storedPos, side);
+        if (cap != null) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.take"));
             addFromPos(storedPos, side);
         }
@@ -277,7 +272,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
         if (itemScroll != null) {
-            tag.put("itemScroll", itemScroll.serializeNBT());
+            tag.put("itemScroll", itemScroll.save(level.registryAccess()));
         }
         return tag;
     }

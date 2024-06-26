@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.util.RandomSource;
@@ -29,7 +30,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.scores.Team;
+import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -82,10 +83,11 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     }
 
     @Nullable
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
-        this.populateDefaultEquipmentSlots(getRandom(), difficultyIn);
-        this.populateDefaultEquipmentEnchantments(getRandom(), difficultyIn);
-        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pSpawnType, @Nullable SpawnGroupData pSpawnGroupData) {
+        this.populateDefaultEquipmentSlots(getRandom(), pDifficulty);
+        this.populateDefaultEquipmentEnchantments(pLevel, getRandom(), pDifficulty);
+        return super.finalizeSpawn(pLevel, pDifficulty, pSpawnType, pSpawnGroupData);
     }
 
     /**
@@ -97,13 +99,17 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     }
 
     @Override
-    protected void dropAllDeathLoot(DamageSource pDamageSource) {}
+    protected void dropAllDeathLoot(ServerLevel p_348524_, DamageSource p_21192_) {
+
+    }
 
     @Override
     protected boolean shouldDropLoot() {return false;}
 
     @Override
-    protected void dropCustomDeathLoot(DamageSource pSource, int pLooting, boolean pRecentlyHit) {}
+    protected void dropCustomDeathLoot(ServerLevel p_348477_, DamageSource p_33574_, boolean p_33576_) {
+
+    }
 
     @Override
     protected void dropEquipment() {}
@@ -164,6 +170,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     /**
      * Called to update the entity's position/logic.
      */
+    @Override
     public void tick() {
         super.tick();
         if (--this.limitedLifeTicks <= 0) {
@@ -172,10 +179,12 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
         }
     }
 
-    public Team getTeam() {
+    @Override
+    public PlayerTeam getTeam() {
         if (this.getSummoner() != null) return getSummoner().getTeam();
         return super.getTeam();
     }
+
 
     @Override
     public boolean isAlliedTo(Entity pEntity) {
@@ -219,6 +228,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
+    @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         if (compound.contains("BoundX")) {
@@ -260,11 +270,13 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
         }
     }
 
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(OWNER_UNIQUE_ID, Optional.empty());
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(OWNER_UNIQUE_ID, Optional.of(Util.NIL_UUID));
     }
 
+    @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         if (this.boundOrigin != null) {

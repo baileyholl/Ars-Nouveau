@@ -3,11 +3,13 @@ package com.hollingsworth.arsnouveau.common.network;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
-import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.NetworkEvent;
-import java.util.function.Supplier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
 
-public class PacketUpdateMana {
+public class PacketUpdateMana extends AbstractPacket{
 
     public double mana;
 
@@ -19,7 +21,7 @@ public class PacketUpdateMana {
     public float reserved;
 
     //Decoder
-    public PacketUpdateMana(FriendlyByteBuf buf) {
+    public PacketUpdateMana(RegistryFriendlyByteBuf buf) {
         mana = buf.readDouble();
         maxMana = buf.readInt();
         glyphBonus = buf.readInt();
@@ -28,7 +30,7 @@ public class PacketUpdateMana {
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeDouble(mana);
         buf.writeInt(maxMana);
         buf.writeInt(glyphBonus);
@@ -52,20 +54,24 @@ public class PacketUpdateMana {
         this.reserved = -1;
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            if (ArsNouveau.proxy.getPlayer() == null)
-                return;
-            CapabilityRegistry.getMana(ArsNouveau.proxy.getPlayer()).ifPresent(mana -> {
-                mana.setMana(this.mana);
-                mana.setMaxMana(this.maxMana);
-                mana.setGlyphBonus(this.glyphBonus);
-                mana.setBookTier(this.tierBonus);
-            });
-            //sync the client cache of reserved mana
-            if (ctx.get().getDirection().getReceptionSide().isClient() && reserved != -1)
-                ClientInfo.reservedOverlayMana = reserved;
-        });
-        ctx.get().setPacketHandled(true);
+    @Override
+    public void onClientReceived(Minecraft minecraft, Player player) {
+        var cap = CapabilityRegistry.getMana(ArsNouveau.proxy.getPlayer()).orElse(null);
+        if(cap != null){
+            cap.setMana(this.mana);
+            cap.setMaxMana(this.maxMana);
+            cap.setGlyphBonus(this.glyphBonus);
+            cap.setBookTier(this.tierBonus);
+        }
+        //sync the client cache of reserved mana
+        ClientInfo.reservedOverlayMana = reserved;
+    }
+
+    public static final Type<PacketUpdateMana> TYPE = new Type<>(ArsNouveau.prefix("update_mana"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketUpdateMana> CODEC = StreamCodec.ofMember(PacketUpdateMana::toBytes, PacketUpdateMana::new);
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

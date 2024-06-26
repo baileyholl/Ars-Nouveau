@@ -1,18 +1,20 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.NetworkEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
-import java.util.function.Supplier;
 
-public class PacketUpdateSpellColors {
+public class PacketUpdateSpellColors extends AbstractPacket{
 
     int castSlot;
     ParticleColor color;
@@ -25,34 +27,36 @@ public class PacketUpdateSpellColors {
     }
 
     //Decoder
-    public PacketUpdateSpellColors(FriendlyByteBuf buf) {
+    public PacketUpdateSpellColors(RegistryFriendlyByteBuf buf) {
         castSlot = buf.readInt();
         color = ParticleColorRegistry.from(buf.readNbt());
         mainHand = buf.readBoolean();
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeInt(castSlot);
         buf.writeNbt(color.serialize());
         buf.writeBoolean(mainHand);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            if (ctx.get().getSender() != null) {
-                ItemStack stack = ctx.get().getSender().getItemInHand(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND);
-                if (stack.getItem() instanceof SpellBook) {
-                    ISpellCaster caster = CasterUtil.getCaster(stack);
-                    caster.setColor(color, castSlot);
-                    caster.setCurrentSlot(castSlot);
-                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> ctx.get().getSender()), new PacketUpdateBookGUI(stack));
-                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> ctx.get().getSender()),
-                            new PacketOpenSpellBook(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND));
+    @Override
+    public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
+        ItemStack stack = player.getItemInHand(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND);
+        if (stack.getItem() instanceof SpellBook) {
+            ISpellCaster caster = CasterUtil.getCaster(stack);
+            caster.setColor(color, castSlot);
+            caster.setCurrentSlot(castSlot);
+            Networking.sendToPlayerClient(new PacketUpdateBookGUI(stack), player);
+            Networking.sendToPlayerClient( new PacketOpenSpellBook(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND), player);
+        }
+    }
 
-                }
-            }
-        });
-        ctx.get().setPacketHandled(true);
+    public static final Type<PacketUpdateSpellColors> TYPE = new Type<>(ArsNouveau.prefix("update_spell_colors"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketUpdateSpellColors> CODEC = StreamCodec.ofMember(PacketUpdateSpellColors::toBytes, PacketUpdateSpellColors::new);
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

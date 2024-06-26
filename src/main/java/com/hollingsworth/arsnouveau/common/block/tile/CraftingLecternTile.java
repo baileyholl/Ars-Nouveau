@@ -28,8 +28,8 @@ import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.*;
@@ -69,7 +69,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 	}
 
 	@Override
-	protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+	public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
 		super.saveAdditional(tag, pRegistries);
 
 		ListTag listnbt = new ListTag();
@@ -84,7 +84,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 			}
 		}
 
-		compound.put("CraftingTable", listnbt);
+		tag.put("CraftingTable", listnbt);
 	}
 
 	private boolean reading;

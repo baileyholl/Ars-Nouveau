@@ -60,6 +60,6 @@ public class ReactiveEvents {
     @SubscribeEvent
     public static void leftClickAir(PlayerInteractEvent.LeftClickEmpty e) {
         if (e.getItemStack().getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT) > 0)
-            Networking.INSTANCE.sendToServer(new PacketReactiveSpell());
+            Networking.sendToServer(new PacketReactiveSpell());
     }
 }

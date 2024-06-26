@@ -10,12 +10,9 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.UUID;
-
 public class KnockbackResistPerk extends Perk {
 
     public static final KnockbackResistPerk INSTANCE = new KnockbackResistPerk(ArsNouveau.prefix( "thread_amethyst_golem"));
-    public static final UUID PERK_UUID = UUID.fromString("b1d84c5d-4c84-4626-b275-94698b08aae1");
 
     public KnockbackResistPerk(ResourceLocation key) {
         super(key);
@@ -23,7 +20,7 @@ public class KnockbackResistPerk extends Perk {
 
     @Override
     public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int slotValue) {
-        return attributeBuilder().put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(PERK_UUID, "KnockbackPerk", .15 * slotValue, AttributeModifier.Operation.ADDITION)).build();
+        return attributeBuilder().put(Attributes.KNOCKBACK_RESISTANCE.value(), new AttributeModifier(INSTANCE.getRegistryName(), .15 * slotValue, AttributeModifier.Operation.ADD_VALUE)).build();
     }
 
     @Override

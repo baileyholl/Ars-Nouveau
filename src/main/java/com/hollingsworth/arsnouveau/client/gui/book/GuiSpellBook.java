@@ -13,7 +13,6 @@ import com.hollingsworth.arsnouveau.client.gui.Color;
 import com.hollingsworth.arsnouveau.client.gui.GuiUtils;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.*;
-import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
@@ -496,7 +495,7 @@ public class GuiSpellBook extends BaseBook {
                     spell.add(spellPart);
                 }
             }
-            Networking.INSTANCE.sendToServer(new PacketUpdateCaster(spell, this.selectedSpellSlot, this.spell_name.getValue(), hand == InteractionHand.MAIN_HAND));
+            Networking.sendToServer(new PacketUpdateCaster(spell, this.selectedSpellSlot, this.spell_name.getValue(), hand == InteractionHand.MAIN_HAND));
         }
     }
 

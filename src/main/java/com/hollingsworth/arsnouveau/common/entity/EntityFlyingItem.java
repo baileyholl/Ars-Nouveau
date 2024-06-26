@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -183,7 +184,7 @@ public class EntityFlyingItem extends ColoredProjectile {
     public void load(CompoundTag compound) {
         super.load(compound);
         if (compound.contains("item")) {
-            this.entityData.set(HELD_ITEM, ItemStack.of(compound.getCompound("item")));
+            this.entityData.set(HELD_ITEM, ItemStack.parseOptional(level.registryAccess(), compound.getCompound("item")));
         }
         this.age = compound.getInt("age");
         this.entityData.set(DIDOFFSET, compound.getBoolean("didoffset"));
@@ -196,8 +197,7 @@ public class EntityFlyingItem extends ColoredProjectile {
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         if (getStack() != null) {
-            CompoundTag tag = new CompoundTag();
-            getStack().save(tag);
+            Tag tag = getStack().save(level.registryAccess());
             compound.put("item", tag);
         }
         compound.putInt("age", age);

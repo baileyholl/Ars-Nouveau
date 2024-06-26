@@ -1,14 +1,21 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.ColorPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
-public class HighlightAreaPacket {
+public class HighlightAreaPacket extends AbstractPacket{
+    public static final Type<HighlightAreaPacket> TYPE = new Type<>(ArsNouveau.prefix("highlight_area"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, HighlightAreaPacket> CODEC = StreamCodec.ofMember(HighlightAreaPacket::toBytes, HighlightAreaPacket::decode);
+
     public List<ColorPos> colorPos;
     public int ticks;
 
@@ -17,7 +24,7 @@ public class HighlightAreaPacket {
         this.ticks = ticks;
     }
 
-    public static HighlightAreaPacket decode(FriendlyByteBuf buf) {
+    public static HighlightAreaPacket decode(RegistryFriendlyByteBuf buf) {
         HighlightAreaPacket packet = new HighlightAreaPacket(new ArrayList<>(), 0);
         int size = buf.readInt();
         for(int i = 0; i < size; i++){
@@ -27,30 +34,22 @@ public class HighlightAreaPacket {
         return packet;
     }
 
-    public static void encode(HighlightAreaPacket msg, FriendlyByteBuf buf) {
-        buf.writeInt(msg.colorPos.size());
-        for(ColorPos pos : msg.colorPos){
+    @Override
+    public void toBytes(RegistryFriendlyByteBuf buf) {
+        buf.writeInt(colorPos.size());
+        for(ColorPos pos : colorPos){
             buf.writeNbt(pos.toTag());
         }
-        buf.writeInt(msg.ticks);
+        buf.writeInt(ticks);
     }
 
-    public static class Handler {
-        public static void handle(final HighlightAreaPacket m, final Supplier<NetworkEvent.Context> ctx) {
-            if (ctx.get().getDirection().getReceptionSide().isServer()) {
-                ctx.get().setPacketHandled(true);
-                return;
-            }
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
 
-            ctx.get().enqueueWork(new Runnable() {
-                // Use anon - lambda causes classloading issues
-                @Override
-                public void run() {
-                    ClientInfo.highlightPosition(m.colorPos, m.ticks);
-                }
-            });
-            ctx.get().setPacketHandled(true);
-
-        }
+    @Override
+    public void onClientReceived(Minecraft minecraft, Player player) {
+        ClientInfo.highlightPosition(colorPos, ticks);
     }
 }

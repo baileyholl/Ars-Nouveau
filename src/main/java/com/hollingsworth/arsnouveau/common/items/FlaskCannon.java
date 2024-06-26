@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenuSlot;
-import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.client.registry.ModKeyBindings;
 import com.hollingsworth.arsnouveau.client.renderer.item.FlaskCannonRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericModel;
@@ -27,7 +26,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.*;
-
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.neoforged.api.distmarker.Dist;
@@ -144,7 +142,7 @@ public abstract class FlaskCannon extends ModItem implements IRadialProvider, Ge
             return;
         }
         Minecraft.getInstance().setScreen(new GuiRadialMenu<>(new RadialMenu<>((int index) -> {
-            Networking.INSTANCE.sendToServer(new PacketSetLauncher(slots.get(index).primarySlotIcon().getSlot()));
+            Networking.sendToServer(new PacketSetLauncher(slots.get(index).primarySlotIcon().getSlot()));
         }, slots, (slotData, posestack, positionx, posy, size, transparent) -> RenderUtil.drawItemAsIcon(slotData.getStack(), posestack, positionx, posy, size, transparent), 3)));
     }
 

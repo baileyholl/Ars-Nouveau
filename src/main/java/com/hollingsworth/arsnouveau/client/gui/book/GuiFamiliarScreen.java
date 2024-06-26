@@ -12,7 +12,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 
@@ -61,7 +60,7 @@ public class GuiFamiliarScreen extends BaseBook {
 
     public void onFamiliarClicked(Button button) {
         FamiliarButton button1 = (FamiliarButton) button;
-        Networking.INSTANCE.sendToServer(new PacketSummonFamiliar(button1.familiarHolder.getRegistryName()));
+        Networking.sendToServer(new PacketSummonFamiliar(button1.familiarHolder.getRegistryName()));
         Minecraft.getInstance().setScreen(null);
     }
 }

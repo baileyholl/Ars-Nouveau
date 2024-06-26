@@ -19,7 +19,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 import static com.hollingsworth.arsnouveau.api.util.StackUtil.getHeldSpellbook;
 
@@ -104,7 +103,7 @@ public class KeyHandler {
         }
         int slot = ModKeyBindings.usedQuickSlot(key);
         if (slot != -1) {
-            Networking.INSTANCE.sendToServer(new PacketQuickCast(slot));
+            Networking.sendToServer(new PacketQuickCast(slot));
         }
     }
 
@@ -152,12 +151,12 @@ public class KeyHandler {
                 && !Minecraft.getInstance().player.onGround()
                 && CuriosUtil.hasItem(Minecraft.getInstance().player, ItemsRegistry.JUMP_RING.get())
                 && Minecraft.getInstance().screen == null) {
-                Networking.INSTANCE.sendToServer(new PacketGenericClientMessage(PacketGenericClientMessage.Action.JUMP_RING));
+                Networking.sendToServer(new PacketGenericClientMessage(PacketGenericClientMessage.Action.JUMP_RING));
             }
         }
     }
 
     public static void sendHotkeyPacket(PacketHotkeyPressed.Key key) {
-        Networking.INSTANCE.sendToServer(new PacketHotkeyPressed(key));
+        Networking.sendToServer(new PacketHotkeyPressed(key));
     }
 }

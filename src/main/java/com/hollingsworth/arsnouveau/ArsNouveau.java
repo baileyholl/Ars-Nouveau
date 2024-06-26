@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau;
 
-import com.hollingsworth.arsnouveau.api.registry.BuddingConversionRegistry;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
+import com.hollingsworth.arsnouveau.api.registry.BuddingConversionRegistry;
 import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ScryRitualRegistry;
@@ -77,9 +77,10 @@ public class ArsNouveau {
         if (FMLEnvironment.dist.isClient()) {
             NeoForge.EVENT_BUS.register(ClientEventHandler.class);
         }
-
+        modEventBus.addListener(Networking::register);
         modEventBus.addListener(ModSetup::registerEvents);
         ModSetup.registers(modEventBus);
+        modEventBus.addListener(ModEntities::registerPlacements);
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::postModLoadEvent);
         modEventBus.addListener(this::clientSetup);
@@ -97,8 +98,6 @@ public class ArsNouveau {
 
     public void setup(final FMLCommonSetupEvent event) {
         APIRegistry.postInit();
-        Networking.registerMessages();
-        event.enqueueWork(ModEntities::registerPlacements);
         if (terrablenderLoaded && Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
             event.enqueueWork(Terrablender::registerBiomes);
         }

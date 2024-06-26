@@ -1,15 +1,22 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 
 public class GlowParticleType extends ParticleType<ColorParticleTypeData> {
     public GlowParticleType() {
-        super(false, ColorParticleTypeData.DESERIALIZER);
+        super(false);
     }
 
     @Override
-    public Codec<ColorParticleTypeData> codec() {
+    public MapCodec<ColorParticleTypeData> codec() {
         return ColorParticleTypeData.CODEC;
+    }
+
+    @Override
+    public StreamCodec<? super RegistryFriendlyByteBuf, ColorParticleTypeData> streamCodec() {
+        return ColorParticleTypeData.STREAM_CODEC;
     }
 }

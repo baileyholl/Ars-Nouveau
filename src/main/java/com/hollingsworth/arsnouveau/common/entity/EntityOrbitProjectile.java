@@ -7,8 +7,6 @@ import com.hollingsworth.arsnouveau.setup.registry.DataSerializers;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -169,7 +167,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
             }
             if (this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(level, result);
-                Networking.sendToNearby(level, BlockPos.containing(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
+                Networking.sendToNearbyClient(level, BlockPos.containing(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
                         BlockPos.containing(result.getLocation()), getParticleColor()));
                 attemptRemoval();
             }
@@ -177,7 +175,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
             if (this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(this.level, blockraytraceresult);
             }
-            Networking.sendToNearby(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
+            Networking.sendToNearbyClient(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
                     BlockPos.containing(result.getLocation()).below(), getParticleColor()));
             attemptRemoval();
         }
@@ -222,14 +220,5 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
     @Override
     public EntityType<?> getType() {
         return ModEntities.ORBIT_SPELL.get();
-    }
-
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
-    public EntityOrbitProjectile(PlayMessages.SpawnEntity packet, Level world) {
-        super(ModEntities.ORBIT_SPELL.get(), world);
     }
 }

@@ -10,12 +10,9 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.UUID;
-
 public class SaturationPerk extends Perk {
 
     public static final SaturationPerk INSTANCE = new SaturationPerk(ArsNouveau.prefix( "thread_whirlisprig"));
-    public static final UUID PERK_UUID = UUID.fromString("fe329876-34b0-4349-a60a-6215ca44bd4e");
 
     public SaturationPerk(ResourceLocation key) {
         super(key);
@@ -30,7 +27,7 @@ public class SaturationPerk extends Perk {
             val = 0.6;
         if(slotValue >= 3)
             val = 1.0;
-        return attributeBuilder().put(PerkAttributes.WHIRLIESPRIG.get(), new AttributeModifier(PERK_UUID, "SaturationPerk", val, AttributeModifier.Operation.MULTIPLY_TOTAL)).build();
+        return attributeBuilder().put(PerkAttributes.WHIRLIESPRIG.get(), new AttributeModifier(INSTANCE.getRegistryName(), val, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)).build();
     }
 
     @Override

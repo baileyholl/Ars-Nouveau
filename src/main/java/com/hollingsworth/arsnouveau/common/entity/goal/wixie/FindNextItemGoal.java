@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
+
 import java.util.*;
 
 public class FindNextItemGoal extends ExtendedRangeGoal {
@@ -54,7 +55,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
             BlockEntity blockEntity = world.getBlockEntity(b);
             if(blockEntity == null)
                 continue;
-            IItemHandler itemHandler = blockEntity.getCapability(Capabilities.ITEM_HANDLER).orElse(null);
+            IItemHandler itemHandler = world.getCapability(Capabilities.ItemHandler.BLOCK, b, null);
             if (itemHandler == null)
                 continue;
             for(int i = 0; i < itemHandler.getSlots(); i++){
@@ -113,7 +114,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
                 BlockEntity blockEntity = world.getBlockEntity(b);
                 if(blockEntity == null)
                     continue;
-                IItemHandler itemHandler = blockEntity.getCapability(Capabilities.ITEM_HANDLER).orElse(null);
+                IItemHandler itemHandler = world.getCapability(Capabilities.ItemHandler.BLOCK, b, null);
                 if (itemHandler == null)
                     continue;
                handlers.add(new StorageLecternTile.HandlerPos(b.immutable(), itemHandler));
@@ -137,7 +138,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
                                 spawnFlyingItem(tile.getLevel(), tile.getBlockPos(), handler.pos(), stackToGive, 1 + 3 * spawnDelay++);
                                 tile.giveItem(stackToGive);
                                 if (!anyFound) {
-                                    Networking.sendToNearby(world, wixie, new PacketAnimEntity(wixie.getId(), EntityWixie.Animations.SUMMON_ITEM.ordinal()));
+                                    Networking.sendToNearbyClient(world, wixie, new PacketAnimEntity(wixie.getId(), EntityWixie.Animations.SUMMON_ITEM.ordinal()));
                                     wixie.inventoryBackoff = 60;
                                     anyFound = true;
                                 }

@@ -181,7 +181,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
         return new RadialMenu<>((int slot) -> {
             BookCaster caster = new BookCaster(itemStack);
             caster.setCurrentSlot(slot);
-            Networking.INSTANCE.sendToServer(new PacketSetBookMode(itemStack.getTag()));
+            Networking.sendToServer(new PacketSetBookMode(itemStack.getTag()));
         },
                 getRadialMenuSlotsForSpellpart(itemStack),
                 RenderUtils::drawSpellPart,

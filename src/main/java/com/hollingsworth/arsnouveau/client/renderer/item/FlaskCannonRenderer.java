@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.resources.ResourceLocation;
-
+import net.minecraft.world.item.alchemy.PotionContents;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.GeoModel;
@@ -28,9 +28,9 @@ public class FlaskCannonRenderer extends GeoItemRenderer<FlaskCannon> {
     }
 
     @Override
-    public void renderRecursively(PoseStack poseStack, FlaskCannon animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderRecursively(PoseStack poseStack, FlaskCannon animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int packedColor) {
         if(currentItemStack == null) {
-            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, packedColor);
             return;
         }
         FlaskCannon.PotionLauncherData flask = new FlaskCannon.PotionLauncherData(currentItemStack);
@@ -49,10 +49,10 @@ public class FlaskCannonRenderer extends GeoItemRenderer<FlaskCannon> {
         }
 
         if(bone.getName().equals("potion_levels") || (bone.getParent() != null && bone.getParent().getName().equals("potion_levels"))) {
-            ParticleColor color = ParticleColor.fromInt(PotionUtils.getColor(flask.getLastDataForRender().asPotionStack()));
-            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color.getRed(), color.getGreen(), color.getBlue(), alpha);
+            ParticleColor color = ParticleColor.fromInt(PotionContents.getColor(flask.getLastDataForRender().asPotionStack()));
+            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color.getColor());
         }else{
-            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, packedColor);
         }
     }
 

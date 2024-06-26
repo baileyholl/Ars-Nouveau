@@ -26,6 +26,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.common.NeoForge;
+
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -84,7 +85,7 @@ public class SpellResolver implements Cloneable {
         return canCast;
     }
 
-    public boolean postEvent() {
+    public SpellCastEvent postEvent() {
         return SpellUtil.postEvent(new SpellCastEvent(spell, spellContext));
     }
 
@@ -97,7 +98,7 @@ public class SpellResolver implements Cloneable {
     }
 
     public boolean onCast(ItemStack stack, Level level) {
-        if (canCast(spellContext.getUnwrappedCaster()) && !postEvent()) {
+        if (canCast(spellContext.getUnwrappedCaster()) && !postEvent().isCanceled()) {
             this.hitResult = null;
             CastResolveType resolveType = castType.onCast(stack, spellContext.getUnwrappedCaster(), level, getCastStats(), spellContext, this);
             if (resolveType == CastResolveType.SUCCESS) {
@@ -109,7 +110,7 @@ public class SpellResolver implements Cloneable {
     }
 
     public boolean onCastOnBlock(BlockHitResult blockRayTraceResult) {
-        if (canCast(spellContext.getUnwrappedCaster()) && !postEvent()) {
+        if (canCast(spellContext.getUnwrappedCaster()) && !postEvent().isCanceled()) {
             this.hitResult = blockRayTraceResult;
             CastResolveType resolveType = castType.onCastOnBlock(blockRayTraceResult, spellContext.getUnwrappedCaster(), getCastStats(), spellContext, this);
             if (resolveType == CastResolveType.SUCCESS) {
@@ -122,7 +123,7 @@ public class SpellResolver implements Cloneable {
 
     // Gives context for InteractionHand
     public boolean onCastOnBlock(UseOnContext context) {
-        if (canCast(spellContext.getUnwrappedCaster()) && !postEvent()) {
+        if (canCast(spellContext.getUnwrappedCaster()) && !postEvent().isCanceled()) {
             this.hitResult = context.hitResult;
             CastResolveType resolveType = castType.onCastOnBlock(context, getCastStats(), spellContext, this);
             if (resolveType == CastResolveType.SUCCESS) {
@@ -134,7 +135,7 @@ public class SpellResolver implements Cloneable {
     }
 
     public boolean onCastOnEntity(ItemStack stack, Entity target, InteractionHand hand) {
-        if (canCast(spellContext.getUnwrappedCaster()) && !postEvent()) {
+        if (canCast(spellContext.getUnwrappedCaster()) && !postEvent().isCanceled()) {
             this.hitResult = new EntityHitResult(target);
             CastResolveType resolveType = castType.onCastOnEntity(stack, spellContext.getUnwrappedCaster(), target, hand, getCastStats(), spellContext, this);
             if (resolveType == CastResolveType.SUCCESS) {
@@ -187,7 +188,8 @@ public class SpellResolver implements Cloneable {
                 continue;
 
             EffectResolveEvent.Pre preEvent = new EffectResolveEvent.Pre(world, shooter, this.hitResult, spell, spellContext, effect, stats, this);
-            if (NeoForge.EVENT_BUS.post(preEvent))
+            NeoForge.EVENT_BUS.post(preEvent);
+            if (preEvent.isCanceled())
                 continue;
             effect.onResolve(this.hitResult, world, shooter, stats, spellContext, this);
             NeoForge.EVENT_BUS.post(new EffectResolveEvent.Post(world, shooter, this.hitResult, spell, spellContext, effect, stats, this));
@@ -198,7 +200,10 @@ public class SpellResolver implements Cloneable {
 
     public void expendMana() {
         int totalCost = getResolveCost();
-        CapabilityRegistry.getMana(spellContext.getUnwrappedCaster()).ifPresent(mana -> mana.removeMana(totalCost));
+        var mana = CapabilityRegistry.getMana(spellContext.getUnwrappedCaster()).orElse(null);
+        if(mana != null){
+            mana.removeMana(totalCost);
+        }
     }
 
     /**

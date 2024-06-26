@@ -10,12 +10,10 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.NeoForgeMod;
-import java.util.UUID;
 
 public class DepthsPerk extends Perk {
 
     public static DepthsPerk INSTANCE = new DepthsPerk(ArsNouveau.prefix( "thread_depths"));
-    public static final UUID PERK_UUID = UUID.fromString("ce320c42-9d63-4b83-9e69-ef144790d667");
 
     public DepthsPerk(ResourceLocation key) {
         super(key);
@@ -25,7 +23,7 @@ public class DepthsPerk extends Perk {
     public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int slotValue) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> modifiers = new ImmutableMultimap.Builder<>();
         if(slotValue >= 3){
-            modifiers.put(NeoForgeMod.SWIM_SPEED.get(), new AttributeModifier(PERK_UUID, "DepthsPerk", 2.0, AttributeModifier.Operation.ADDITION));
+            modifiers.put(NeoForgeMod.SWIM_SPEED.value(), new AttributeModifier(INSTANCE.getRegistryName(), 2.0, AttributeModifier.Operation.ADD_VALUE));
         }
 
         return modifiers.build();

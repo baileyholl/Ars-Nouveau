@@ -151,7 +151,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
             SourceUtil.takeSourceWithParticles(worldPosition, level, 10, recipe.sourceCost());
         this.isCrafting = true;
         updateBlock();
-        Networking.sendToNearby(level, worldPosition, new PacketOneShotAnimation(worldPosition));
+        Networking.sendToNearbyClient(level, worldPosition, new PacketOneShotAnimation(worldPosition));
         level.playSound(null, getBlockPos(), SoundRegistry.APPARATUS_CHANNEL.get(), SoundSource.BLOCKS, 1, 1);
         return true;
     }
@@ -167,7 +167,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
                     colorPos.add(ColorPos.centeredAbove(tile.getBlockPos()));
                 }
             }
-            Networking.sendToNearby(level, worldPosition, new HighlightAreaPacket(colorPos, 60));
+            Networking.sendToNearbyClient(level, worldPosition, new HighlightAreaPacket(colorPos, 60));
         }
 
         return recipe != null && (!recipe.consumesSource() || (recipe.consumesSource() && SourceUtil.hasSourceNearby(worldPosition, level, 10, recipe.sourceCost())));

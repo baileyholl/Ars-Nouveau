@@ -26,7 +26,7 @@ public class BookwyrmRenderer extends TextureVariantRenderer<EntityBookwyrm> {
 
 
     @Override
-    public void renderRecursively(PoseStack stack, EntityBookwyrm animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferIn, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderRecursively(PoseStack stack, EntityBookwyrm animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferIn, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
         if (bone.getName().equals("item")) {
             stack.pushPose();
             RenderUtil.translateToPivotPoint(stack, bone);
@@ -37,7 +37,7 @@ public class BookwyrmRenderer extends TextureVariantRenderer<EntityBookwyrm> {
             stack.popPose();
 //            buffer = bufferIn.getBuffer(RenderType.entityCutoutNoCull(text));
         }
-        super.renderRecursively(stack, animatable, bone, renderType, bufferIn, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        super.renderRecursively(stack, animatable, bone, renderType, bufferIn, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
     }
 
     @Override

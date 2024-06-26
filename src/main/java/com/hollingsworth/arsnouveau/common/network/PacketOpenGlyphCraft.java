@@ -1,20 +1,25 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.book.GlyphUnlockMenu;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.NetworkEvent;
-import java.util.function.Supplier;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
 
-public class PacketOpenGlyphCraft {
+public class PacketOpenGlyphCraft extends AbstractPacket{
+    public static final Type<PacketOpenGlyphCraft> TYPE = new Type<>(ArsNouveau.prefix("open_glyph_craft"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketOpenGlyphCraft> CODEC = StreamCodec.ofMember(PacketOpenGlyphCraft::toBytes, PacketOpenGlyphCraft::new);
     BlockPos scribePos;
 
-    public PacketOpenGlyphCraft(FriendlyByteBuf buf) {
+    public PacketOpenGlyphCraft(RegistryFriendlyByteBuf buf) {
         this.scribePos = buf.readBlockPos();
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeBlockPos(scribePos);
     }
 
@@ -22,11 +27,13 @@ public class PacketOpenGlyphCraft {
         this.scribePos = scribesPos;
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() ->{
-            GlyphUnlockMenu.open(scribePos);
-        });
-        ctx.get().setPacketHandled(true);
+    @Override
+    public void onClientReceived(Minecraft minecraft, Player player) {
+        GlyphUnlockMenu.open(scribePos);
     }
 
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
 }

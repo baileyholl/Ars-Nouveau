@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -44,7 +44,7 @@ public class EffectRewind extends AbstractEffect {
             spellContext.delay(delayEvent);
             EventQueue.getServerInstance().addEvent(new RewindEvent(entity, world.getGameTime(), ticksToRewind, spellContext));
             if(rewindable instanceof Player player){
-                Networking.sendToNearby(world, player, new PacketClientRewindEffect(ticksToRewind, player));
+                Networking.sendToNearbyClient(world, player, new PacketClientRewindEffect(ticksToRewind, player));
             }
 
             EventQueue.getServerInstance().addEvent(delayEvent);
@@ -87,19 +87,19 @@ public class EffectRewind extends AbstractEffect {
         return !rewindable.isRewinding();
     }
 
-    public ForgeConfigSpec.IntValue BASE_REWIND_TIME;
+    public ModConfigSpec.IntValue BASE_REWIND_TIME;
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addGenericInt(builder, 60, "Max ticks entities should track for motion and health, etc. Note: Entities ANYWHERE are tracking this, setting this to a high value is not recommended for low-spec machines.", "entityRewindTracking");
         BASE_REWIND_TIME = builder.comment("How many ticks should be rewound before augments").defineInRange("baseRewindTime", 40, 1, 60);
-        addExtendTimeTicksConfig(builder, 20);
+        addExtendTimeConfig(builder, 20);
         addDurationDownConfig(builder, 10);
     }
 
     @Override
-    protected void buildAugmentLimitsConfig(ForgeConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
+    protected void buildAugmentLimitsConfig(ModConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
         super.buildAugmentLimitsConfig(builder, defaults);
         defaults.put(AugmentExtendTime.INSTANCE.getRegistryName(), 1);
         defaults.put(AugmentDurationDown.INSTANCE.getRegistryName(), 5);
