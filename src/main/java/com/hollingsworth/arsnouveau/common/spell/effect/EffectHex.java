@@ -2,8 +2,8 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,7 +27,7 @@ public class EffectHex extends AbstractEffect implements IPotionEffect {
         Entity entity = rayTraceResult.getEntity();
         if (!(entity instanceof LivingEntity living))
             return;
-        ((IPotionEffect)this).applyConfigPotion(living, ModPotions.HEX_EFFECT.get(), spellStats);
+        ((IPotionEffect)this).applyConfigPotion(living, ModPotions.HEX_EFFECT, spellStats);
     }
 
     @Override

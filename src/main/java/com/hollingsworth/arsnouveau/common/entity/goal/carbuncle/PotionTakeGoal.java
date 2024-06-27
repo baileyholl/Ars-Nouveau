@@ -6,12 +6,12 @@ import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.alchemy.PotionContents;
 import org.jetbrains.annotations.Nullable;
 
 public class PotionTakeGoal extends GoToPosGoal<StarbyPotionBehavior> {
     public PotionTakeGoal(Starbuncle starbuncle, StarbyPotionBehavior behavior) {
-        super(starbuncle, behavior, () -> behavior.getHeldPotion().getPotion() == Potions.EMPTY);
+        super(starbuncle, behavior, () -> behavior.getHeldPotion().getPotion() == PotionContents.EMPTY);
     }
 
     @Override

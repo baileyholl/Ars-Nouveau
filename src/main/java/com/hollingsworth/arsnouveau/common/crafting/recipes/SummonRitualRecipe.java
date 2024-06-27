@@ -9,6 +9,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.random.Weight;
 import net.minecraft.util.random.WeightedEntry;
+import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -17,35 +18,40 @@ import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class SummonRitualRecipe implements SpecialSingleInputRecipe {
 
-    public final Ingredient catalyst;
+    public final Ingredient augment;
     public final MobSource mobSource;
     public final int count;
-    public final List<WeightedMobType> mobs;
+    public final WeightedRandomList<WeightedMobType> mobs;
 
-    public SummonRitualRecipe(Ingredient catalyst, MobSource source, int count, List<WeightedMobType> mobs) {
-        this.catalyst = catalyst;
+    public SummonRitualRecipe(Ingredient augment, MobSource source, int count, WeightedRandomList<WeightedMobType> mobs) {
+        this.augment = augment;
         this.mobSource = source;
         this.count = count;
         this.mobs = mobs;
     }
 
-
-    public SummonRitualRecipe(Ingredient catalyst, String source, int count, List<WeightedMobType> mobs) {
-        this(catalyst, MobSource.valueOf(source), count, mobs);
+    public SummonRitualRecipe(Ingredient augment, String source, int count, List<WeightedMobType> mobs) {
+        this.augment = augment;
+        this.mobSource = MobSource.valueOf(source);
+        this.count = count;
+        this.mobs = WeightedRandomList.create(mobs);
     }
 
-    public SummonRitualRecipe(Ingredient catalyst, MobSource source, int count) {
-        this(catalyst, source, count, new ArrayList<>());
+    public SummonRitualRecipe(Ingredient augment, String source, int count, WeightedRandomList<WeightedMobType> mobs) {
+        this(augment, MobSource.valueOf(source), count, mobs);
+    }
+
+    public SummonRitualRecipe(Ingredient augment, MobSource source, int count) {
+        this(augment, source, count, WeightedRandomList.create());
     }
 
     public boolean matches(List<ItemStack> augments) {
-        return EnchantingApparatusRecipe.doItemsMatch(augments, Arrays.stream(this.catalyst.getItems()).map(Ingredient::of).toList());
+        return EnchantingApparatusRecipe.doItemsMatch(augments, Arrays.stream(this.augment.getItems()).map(Ingredient::of).toList());
     }
 
     @Override
@@ -67,10 +73,10 @@ public class SummonRitualRecipe implements SpecialSingleInputRecipe {
     public static class Serializer implements RecipeSerializer<SummonRitualRecipe> {
 
         public static final MapCodec<SummonRitualRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Ingredient.CODEC.fieldOf("augment").forGetter(r -> r.catalyst),
+                Ingredient.CODEC.fieldOf("augment").forGetter(r -> r.augment),
                 Codec.STRING.fieldOf("mobSource").fieldOf("source").forGetter(r -> r.mobSource.toString()),
                 Codec.INT.fieldOf("count").forGetter(r -> r.count),
-                Codec.list(WeightedMobType.CODEC.codec()).fieldOf("mobs").forGetter(r -> r.mobs)
+                Codec.list(WeightedMobType.CODEC.codec()).fieldOf("mobs").forGetter(r -> r.mobs.unwrap())
         ).apply(instance, SummonRitualRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, SummonRitualRecipe> STREAM_CODEC = CheatSerializer.create(CODEC);

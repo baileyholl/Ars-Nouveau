@@ -1,12 +1,11 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
-import com.hollingsworth.arsnouveau.api.scrying.SingleBlockScryer;
 import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
-import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import com.hollingsworth.arsnouveau.common.ritual.RitualScrying;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,7 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 
 public class DowsingRod extends ModItem {
     public DowsingRod(Properties properties) {
@@ -47,7 +45,7 @@ public class DowsingRod extends ModItem {
         if (heldStack.getDamageValue() >= getMaxDamage(heldStack))
             heldStack.shrink(1);
         if (!pLevel.isClientSide) {
-            pPlayer.addEffect(new MobEffectInstance(ModPotions.MAGIC_FIND_EFFECT.get(), 60 * 20));
+            pPlayer.addEffect(new MobEffectInstance(ModPotions.MAGIC_FIND_EFFECT, 60 * 20));
             TagScryer tagScryer = new TagScryer(BlockTagProvider.DOWSING_ROD);
             RitualScrying.grantScrying((ServerPlayer) pPlayer, 60 * 20, tagScryer);
         }

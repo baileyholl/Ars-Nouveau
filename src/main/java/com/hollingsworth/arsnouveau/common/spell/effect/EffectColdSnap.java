@@ -51,7 +51,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
             return;
         this.damage(vec, level, shooter, livingEntity, spellStats, spellContext, resolver, snareSec, damage);
         spawnIce(shooter, level, BlockPos.containing(vec.x, vec.y + (rayTraceResult.getEntity().onGround() ? 1 : 0), vec.z), spellStats, spellContext, resolver);
-        if(livingEntity.hasEffect(ModPotions.FREEZING_EFFECT.get())){
+        if(livingEntity.hasEffect(ModPotions.FREEZING_EFFECT)){
             livingEntity.setTicksFrozen(livingEntity.getTicksRequiredToFreeze() + 3);
         }
     }
@@ -137,7 +137,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
             world.sendParticles(ParticleTypes.SPIT, vec.x, vec.y + 0.5, vec.z, 50,
                     ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), 0.3);
 
-            livingEntity.addEffect(new MobEffectInstance(ModPotions.SNARE_EFFECT.get(), 20 * snareTime));
+            livingEntity.addEffect(new MobEffectInstance(ModPotions.SNARE_EFFECT, 20 * snareTime));
         }
     }
     @Override

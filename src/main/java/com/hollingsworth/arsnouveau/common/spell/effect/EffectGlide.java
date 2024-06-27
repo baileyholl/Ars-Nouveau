@@ -26,7 +26,7 @@ public class EffectGlide extends AbstractEffect implements IPotionEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult.getEntity() instanceof LivingEntity living) {
-            this.applyConfigPotion(living, ModPotions.GLIDE_EFFECT.get(), spellStats);
+            this.applyConfigPotion(living, ModPotions.GLIDE_EFFECT, spellStats);
         }
     }
 
@@ -65,7 +65,7 @@ public class EffectGlide extends AbstractEffect implements IPotionEffect {
     }
 
     public static boolean canGlide(LivingEntity entity) {
-        return entity.hasEffect(ModPotions.GLIDE_EFFECT.get()) || PerkUtil.countForPerk(GlidingPerk.INSTANCE, entity) > 0.0;
+        return entity.hasEffect(ModPotions.GLIDE_EFFECT) || PerkUtil.countForPerk(GlidingPerk.INSTANCE, entity) > 0.0;
     }
 
     @Override

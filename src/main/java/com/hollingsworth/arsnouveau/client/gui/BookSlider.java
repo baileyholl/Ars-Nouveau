@@ -7,7 +7,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 
@@ -20,11 +19,6 @@ public class BookSlider extends ExtendedSlider {
 
     public BookSlider(int x, int y, int width, int height, Component prefix, Component suffix, double minValue, double maxValue, double currentValue, boolean drawString) {
         super(x, y, width, height, prefix, suffix, minValue, maxValue, currentValue, drawString);
-    }
-
-    @Override
-    public void renderTexture(GuiGraphics p_283546_, ResourceLocation p_281674_, int p_281808_, int p_282444_, int p_283651_, int p_281601_, int p_283472_, int p_282390_, int p_281441_, int p_281711_, int p_281541_) {
-        super.renderTexture(p_283546_, p_281674_, p_281808_, p_282444_, p_283651_, p_281601_, p_283472_, p_282390_, p_281441_, p_281711_, p_281541_);
     }
 
     @Override

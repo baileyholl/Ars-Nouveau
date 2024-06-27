@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
-import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.SummonWolf;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -35,7 +35,7 @@ public class EffectSummonWolves extends AbstractEffect {
             wolf.setPos(hit.x(), hit.y(), hit.z());
             wolf.setTarget(shooter.getLastHurtMob());
             wolf.setAggressive(true);
-            wolf.setTame(true);
+            wolf.setTame(true, false);
             wolf.tame((Player) shooter);
             summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, wolf);
         }

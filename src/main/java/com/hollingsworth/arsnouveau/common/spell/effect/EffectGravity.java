@@ -42,7 +42,7 @@ public class EffectGravity extends AbstractEffect implements IPotionEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult.getEntity() instanceof LivingEntity living) {
             if (spellStats.hasBuff(AugmentExtendTime.INSTANCE)) {
-                this.applyConfigPotion(living, ModPotions.GRAVITY_EFFECT.get(), spellStats);
+                this.applyConfigPotion(living, ModPotions.GRAVITY_EFFECT, spellStats);
             } else {
                 Entity entity = rayTraceResult.getEntity();
                 entity.setDeltaMovement(entity.getDeltaMovement().add(0, -1.0 - spellStats.getDurationMultiplier(), 0));

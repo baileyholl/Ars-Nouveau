@@ -48,6 +48,7 @@ public class ModSetup {
         SoundRegistry.SOUND_REG.register(modEventBus);
         StructureRegistry.STRUCTURES.register(modEventBus);
         StructureRegistry.STRUCTURE_PROCESSOR.register(modEventBus);
+        MaterialRegistry.MATERIALS.register(modEventBus);
 
         MenuRegistry.MENU_REG.register(modEventBus);
         VillagerRegistry.POIs.register(modEventBus);

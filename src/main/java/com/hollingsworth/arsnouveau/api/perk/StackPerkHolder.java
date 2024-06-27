@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.api.nbt.ItemstackData;
 import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
 import com.hollingsworth.arsnouveau.common.perk.StarbunclePerk;
-import com.hollingsworth.arsnouveau.common.util.SerializationUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
@@ -33,7 +32,7 @@ public abstract class StackPerkHolder extends ItemstackData implements IPerkHold
             tier = tag.getInt("tier");
         }
         if(tag != null && tag.contains("perks")) {
-            ListTag perkTagList = tag.getList("perks", SerializationUtil.COMPOUND_TAG_TYPE);
+            ListTag perkTagList = tag.getList("perks", 10);
             for (int i = 0; i < perkTagList.size(); i++) {
                 CompoundTag perkTag = perkTagList.getCompound(i);
                 String perkName = perkTag.getString("perk");

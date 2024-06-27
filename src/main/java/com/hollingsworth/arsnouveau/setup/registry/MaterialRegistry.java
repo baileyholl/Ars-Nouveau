@@ -1,7 +1,6 @@
-package com.hollingsworth.arsnouveau.common.armor;
+package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -18,7 +17,7 @@ import java.util.function.Supplier;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
-public class Materials {
+public class MaterialRegistry {
     public static final DeferredRegister<ArmorMaterial> MATERIALS = DeferredRegister.create(BuiltInRegistries.ARMOR_MATERIAL, MODID);
 
 

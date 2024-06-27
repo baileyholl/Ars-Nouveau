@@ -28,7 +28,7 @@ public class TakeItemState extends TravelToPosState{
             starbuncle.addGoalDebug(this, new DebugEvent("TakePosBroken", "Take Tile Broken" ));
             return nextState;
         }
-        IItemHandler iItemHandler = behavior.getItemCapFromTile(tileEntity, behavior.FROM_DIRECTION_MAP.get(targetPos.hashCode()));
+        IItemHandler iItemHandler = behavior.getItemCapFromTile(targetPos, behavior.FROM_DIRECTION_MAP.get(targetPos.hashCode()));
         if (iItemHandler == null) {
             starbuncle.addGoalDebug(this, new DebugEvent("NoItemHandler", "No item handler at " + targetPos.toString()));
             return nextState;

@@ -224,7 +224,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .withPedestalItem(ItemsRegistry.EARTH_ESSENCE)
                 .withPedestalItem(ItemsRegistry.FIRE_ESSENCE)
                 .withPedestalItem(ItemsRegistry.WATER_ESSENCE)
-                .buildEnchantmentRecipe(EnchantmentRegistry.REACTIVE_ENCHANTMENT.getKey(), 2, 6000));
+                .buildEnchantmentRecipe(EnchantmentRegistry.REACTIVE_ENCHANTMENT, 2, 6000));
 
         addRecipe(builder()
                 .withPedestalItem(4, Ingredient.of(Tags.Items.GEMS_EMERALD))
@@ -232,7 +232,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .withPedestalItem(ItemsRegistry.ABJURATION_ESSENCE)
                 .withPedestalItem(ItemsRegistry.CONJURATION_ESSENCE)
                 .withPedestalItem(ItemsRegistry.MANIPULATION_ESSENCE)
-                .buildEnchantmentRecipe(EnchantmentRegistry.REACTIVE_ENCHANTMENT.getKey(), 3, 9000));
+                .buildEnchantmentRecipe(EnchantmentRegistry.REACTIVE_ENCHANTMENT, 3, 9000));
 
         addRecipe(builder()
                 .withPedestalItem(2, Ingredient.of(Items.SPIDER_EYE))
@@ -736,40 +736,40 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
         addRecipe(builder()
                 .withPedestalItem(1, BlockRegistry.SOURCEBERRY_BUSH)
                 .withPedestalItem(4, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.getKey(), 1, 2000));
+                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, 1, 2000));
         addRecipe(builder()
                 .withPedestalItem(1, BlockRegistry.SOURCEBERRY_BUSH)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(4, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
-                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.getKey(), 2, 3500));
+                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, 2, 3500));
 
         addRecipe(builder()
                 .withPedestalItem(1, BlockRegistry.SOURCEBERRY_BUSH)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(4, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
-                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.getKey(), 3, 5000));
+                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, 3, 5000));
 
 
         addRecipe(builder()
                 .withPedestalItem(2, BlockRegistry.SOURCEBERRY_BUSH)
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
-                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.getKey(), 1, 2000));
+                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, 1, 2000));
         addRecipe(builder()
                 .withPedestalItem(2, BlockRegistry.SOURCEBERRY_BUSH)
                 .withPedestalItem(2, ItemsRegistry.ABJURATION_ESSENCE)
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
-                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.getKey(), 2, 3500));
+                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, 2, 3500));
 
         addRecipe(builder()
                 .withPedestalItem(2, BlockRegistry.SOURCEBERRY_BUSH)
                 .withPedestalItem(3, ItemsRegistry.ABJURATION_ESSENCE)
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
-                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.getKey(), 3, 5000));
+                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, 3, 5000));
 
         addRecipe(builder()
                 .withResult(ItemsRegistry.ENCHANTERS_SWORD)
@@ -864,7 +864,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .withPedestalItem(4, Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(1, Ingredient.of(Tags.Items.ENDER_PEARLS))
                 .withPedestalItem(1, Ingredient.of(ItemsRegistry.WILDEN_TRIBUTE.get()))
-                .buildEnchantmentRecipe(EnchantmentRegistry.REACTIVE_ENCHANTMENT.getKey(), 4, 9000));
+                .buildEnchantmentRecipe(EnchantmentRegistry.REACTIVE_ENCHANTMENT, 4, 9000));
 
         addRecipe(builder()
                 .withResult(BlockRegistry.RELAY_COLLECTOR)

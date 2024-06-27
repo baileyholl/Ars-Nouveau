@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.lib.PotionEffectTags;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -51,7 +50,8 @@ public class EffectDispel extends AbstractEffect {
                 //TODO dispel loot table?
                 return;
             }
-            if (NeoForge.EVENT_BUS.post(new DispelEvent.Pre(rayTraceResult, world, shooter, spellStats, spellContext)))
+            var dispelEvent = NeoForge.EVENT_BUS.post(new DispelEvent.Pre(rayTraceResult, world, shooter, spellStats, spellContext));
+            if (dispelEvent.isCanceled())
                 return;
             if (entity instanceof IDispellable iDispellable) {
                 iDispellable.onDispel(shooter);
@@ -62,7 +62,8 @@ public class EffectDispel extends AbstractEffect {
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (NeoForge.EVENT_BUS.post(new DispelEvent.Pre(rayTraceResult, world, shooter, spellStats, spellContext)))
+        var dispelEvent = NeoForge.EVENT_BUS.post(new DispelEvent.Pre(rayTraceResult, world, shooter, spellStats, spellContext));
+        if (dispelEvent.isCanceled())
             return;
         if (world.getBlockState(rayTraceResult.getBlockPos()) instanceof IDispellable dispellable) {
             dispellable.onDispel(shooter);

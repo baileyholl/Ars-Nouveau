@@ -38,7 +38,7 @@ public class RitualAnimalSummoning extends AbstractRitual {
     private WeightedRandomList<? extends WeightedEntry> getMobs(Level world) {
         if (recipe.isPresent()) {
             SummonRitualRecipe summonRitualRecipe = recipe.get().value();
-            return summonRitualRecipe.mobs();
+            return summonRitualRecipe.mobs;
         }
         return WeightedRandomList.create(world.getBiome(getPos()).value().getMobSettings().getMobs(category).unwrap().stream().filter(mob -> !mob.type.is(EntityTags.ANIMAL_SUMMON_BLACKLIST)).collect(Collectors.toList()));
     }
@@ -79,7 +79,7 @@ public class RitualAnimalSummoning extends AbstractRitual {
             });
 
             recipe.ifPresentOrElse(recipe -> {
-                if (getProgress() >= recipe.value().count()) {
+                if (getProgress() >= recipe.value().count) {
                     setFinished();
                 }
             }, () -> {
@@ -111,7 +111,7 @@ public class RitualAnimalSummoning extends AbstractRitual {
 
     @Override
     public boolean canConsumeItem(ItemStack stack) {
-        return getWorld().getRecipeManager().getAllRecipesFor(RecipeRegistry.SUMMON_RITUAL_TYPE.get()).stream().anyMatch(r -> r.value().augment().test(stack));
+        return getWorld().getRecipeManager().getAllRecipesFor(RecipeRegistry.SUMMON_RITUAL_TYPE.get()).stream().anyMatch(r -> r.value().augment.test(stack));
     }
 
     @Override

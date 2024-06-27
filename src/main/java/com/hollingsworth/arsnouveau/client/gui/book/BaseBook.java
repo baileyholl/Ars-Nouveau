@@ -68,7 +68,7 @@ public class BaseBook extends ModdedScreen {
     }
 
     public void drawScreenAfterScale(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        renderBackground(graphics);
+        renderBackground(graphics, mouseX, mouseY, partialTicks);
         PoseStack poseStack = graphics.pose();
         poseStack.pushPose();
         poseStack.translate(bookLeft, bookTop, 0);

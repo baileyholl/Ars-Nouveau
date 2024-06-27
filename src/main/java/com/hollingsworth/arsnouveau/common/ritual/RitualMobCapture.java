@@ -62,13 +62,13 @@ public class RitualMobCapture extends AbstractRitual {
                             ParticleUtil.spawnPoof((ServerLevel) level, e.getOnPos().above());
                             didWorkOnce = true;
                             if(e instanceof Starbuncle starbuncle){
-                                ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.SHRUNK_STARBY, (ServerLevel) level, starbuncle.blockPosition(), 10);
+                                ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.SHRUNK_STARBY.get(), (ServerLevel) level, starbuncle.blockPosition(), 10);
                             }
                             if(e instanceof LightningBolt bolt){
-                                ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.CAUGHT_LIGHTNING, (ServerLevel) level, bolt.blockPosition(), 10);
+                                ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.CAUGHT_LIGHTNING.get(), (ServerLevel) level, bolt.blockPosition(), 10);
                             }
                             if(e instanceof ItemEntity item && item.getItem().getItem() == Items.CLOCK){
-                                ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.TIME_IN_BOTTLE, (ServerLevel) level, item.blockPosition(), 10);
+                                ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.TIME_IN_BOTTLE.get(), (ServerLevel) level, item.blockPosition(), 10);
                             }
                             break;
                         }

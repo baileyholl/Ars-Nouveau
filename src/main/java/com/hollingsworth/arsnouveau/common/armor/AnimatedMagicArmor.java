@@ -13,6 +13,7 @@ import com.hollingsworth.arsnouveau.client.renderer.tile.GenericModel;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
 import com.hollingsworth.arsnouveau.common.perk.RepairingPerk;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.MaterialRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.Holder;
@@ -56,15 +57,15 @@ public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDy
     }
 
     public static AnimatedMagicArmor light(ArmorItem.Type slot) {
-        return new AnimatedMagicArmor(Materials.LIGHT, slot, new GenericModel<AnimatedMagicArmor>("light_armor", "item/light_armor").withEmptyAnim());
+        return new AnimatedMagicArmor(MaterialRegistry.LIGHT, slot, new GenericModel<AnimatedMagicArmor>("light_armor", "item/light_armor").withEmptyAnim());
     }
 
     public static AnimatedMagicArmor medium(ArmorItem.Type slot) {
-        return new AnimatedMagicArmor(Materials.MEDIUM, slot, new GenericModel<AnimatedMagicArmor>("medium_armor", "item/medium_armor").withEmptyAnim());
+        return new AnimatedMagicArmor(MaterialRegistry.MEDIUM, slot, new GenericModel<AnimatedMagicArmor>("medium_armor", "item/medium_armor").withEmptyAnim());
     }
 
     public static AnimatedMagicArmor heavy(ArmorItem.Type slot) {
-        return new AnimatedMagicArmor(Materials.HEAVY, slot, new GenericModel<AnimatedMagicArmor>("heavy_armor", "item/heavy_armor").withEmptyAnim());
+        return new AnimatedMagicArmor(MaterialRegistry.HEAVY, slot, new GenericModel<AnimatedMagicArmor>("heavy_armor", "item/heavy_armor").withEmptyAnim());
     }
 
     @Override

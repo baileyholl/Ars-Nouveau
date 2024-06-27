@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import com.hollingsworth.arsnouveau.common.util.HolderHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -63,11 +64,11 @@ public class EffectBreak extends AbstractEffect {
 
         int numFortune = spellStats.getBuffCount(AugmentFortune.INSTANCE);
         int numSilkTouch = spellStats.getBuffCount(AugmentExtract.INSTANCE);
-        if (numFortune > 0 && stack.getEnchantmentLevel(Enchantments.BLOCK_FORTUNE) < numFortune) {
-            stack.enchant(Enchantments.BLOCK_FORTUNE, numFortune);
+        if (numFortune > 0 && stack.getEnchantmentLevel(HolderHelper.unwrap(world,Enchantments.FORTUNE)) < numFortune) {
+            stack.enchant(HolderHelper.unwrap(world,Enchantments.FORTUNE), numFortune);
         }
-        if (numSilkTouch > 0 && stack.getEnchantmentLevel(Enchantments.SILK_TOUCH) < numSilkTouch) {
-            stack.enchant(Enchantments.SILK_TOUCH, numSilkTouch);
+        if (numSilkTouch > 0 && stack.getEnchantmentLevel(HolderHelper.unwrap(world,Enchantments.SILK_TOUCH)) < numSilkTouch) {
+            stack.enchant(HolderHelper.unwrap(world,Enchantments.SILK_TOUCH), numSilkTouch);
         }
         for (BlockPos pos1 : posList) {
             if (world.random.nextFloat() < spellStats.getBuffCount(AugmentRandomize.INSTANCE) * 0.25F) {

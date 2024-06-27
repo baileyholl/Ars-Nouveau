@@ -183,10 +183,10 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
         this.cachedEntity = null;
         this.entityTag = null;
-        super.onDataPacket(net, pkt);
+        super.onDataPacket(net, pkt, lookupProvider);
     }
 
     public void dispatchBehavior(Consumer<JarBehavior<? extends Entity>> consumer){

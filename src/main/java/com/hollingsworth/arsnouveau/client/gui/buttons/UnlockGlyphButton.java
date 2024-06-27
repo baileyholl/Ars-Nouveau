@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -10,17 +9,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.Recipe;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforgespi.language.IModInfo;
 
 import java.util.List;
 
-@OnlyIn(Dist.CLIENT)
 public class UnlockGlyphButton extends ANButton {
     public boolean isCraftingSlot;
     public AbstractSpellPart spellPart;
@@ -34,8 +29,8 @@ public class UnlockGlyphButton extends ANButton {
         super(x, y, 16, 16, onPress);
         this.isCraftingSlot = isCraftingSlot;
         this.spellPart = spellPart;
-        Recipe recipe = Minecraft.getInstance().level.getRecipeManager().byKey(spellPart.getRegistryName()).orElse(null);
-        this.recipe = recipe instanceof GlyphRecipe ? (GlyphRecipe) recipe : null;
+        RecipeHolder recipe = Minecraft.getInstance().level.getRecipeManager().byKey(spellPart.getRegistryName()).orElse(null);
+        this.recipe = recipe == null || !(recipe.value() instanceof GlyphRecipe glyphRecipe) ? null : glyphRecipe;
     }
 
     @Override

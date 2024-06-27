@@ -9,8 +9,7 @@ import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -20,7 +19,7 @@ public class FindPotionGoal extends ExtendedRangeGoal {
     EntityWixie wixie;
     BlockPos movePos;
     boolean found;
-    Potion potionNeeded;
+    PotionContents potionNeeded;
 
     public FindPotionGoal(EntityWixie wixie) {
         super(15);
@@ -106,7 +105,7 @@ public class FindPotionGoal extends ExtendedRangeGoal {
     @Override
     public void stop() {
         super.stop();
-        potionNeeded = Potions.EMPTY;
+        potionNeeded = PotionContents.EMPTY;
         found = false;
     }
 }

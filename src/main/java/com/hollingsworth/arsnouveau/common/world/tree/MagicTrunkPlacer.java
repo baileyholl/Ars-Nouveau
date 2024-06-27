@@ -5,9 +5,11 @@ import com.hollingsworth.arsnouveau.common.block.ArchfruitPod;
 import com.hollingsworth.arsnouveau.common.block.SconceBlock;
 import com.hollingsworth.arsnouveau.setup.ModSetup;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
@@ -44,7 +46,7 @@ public class MagicTrunkPlacer extends TrunkPlacer {
         return ModSetup.MAGIC_TRUNK_PLACER.get();
     }
 
-    public static final Codec<MagicTrunkPlacer> CODEC = RecordCodecBuilder.create(builder ->
+    public static final MapCodec<MagicTrunkPlacer> CODEC = RecordCodecBuilder.mapCodec(builder ->
             builder.group(Codec.intRange(0, 32).fieldOf("base_height").forGetter(placer -> placer.baseHeight),
                             Codec.intRange(0, 24).fieldOf("height_rand_a").forGetter(placer -> placer.heightRandA),
                             Codec.intRange(0, 24).fieldOf("height_rand_b").forGetter(placer -> placer.heightRandB),
@@ -231,7 +233,7 @@ public class MagicTrunkPlacer extends TrunkPlacer {
     }
 
     public BlockState getPodState(){
-        return ForgeRegistries.BLOCKS.getValue(podID).defaultBlockState();
+        return BuiltInRegistries.BLOCK.get(podID).defaultBlockState();
     }
 
     public void addBranch(LevelSimulatedReader world, BlockPos pos, int height, Direction d, RandomSource random, TreeConfiguration baseTreeFeatureConfig, BiConsumer<BlockPos, BlockState> consumer) {

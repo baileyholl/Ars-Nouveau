@@ -27,7 +27,7 @@ public class ArcanePedestalTile extends SingleItemTile implements Container {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
         tag.putBoolean("hasSignal", hasSignal);
     }

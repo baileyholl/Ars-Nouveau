@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.Tags;
+
 import java.util.List;
 
 public class RitualPillagerRaid extends AbstractRitual {
@@ -26,7 +27,7 @@ public class RitualPillagerRaid extends AbstractRitual {
                 ServerLevel world = (ServerLevel) getWorld();
                 List<ServerPlayer> players = world.getEntitiesOfClass(ServerPlayer.class, new AABB(getPos()).inflate(5.0));
                 if (players.size() > 0) {
-                    Raid raid = world.getRaids().createOrExtendRaid(players.get(0));
+                    Raid raid = world.getRaids().createOrExtendRaid(players.get(0), getPos());
                     if (raid != null) {
                         this.setFinished();
                         if (didConsumeItem(Items.EMERALD))

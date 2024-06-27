@@ -59,7 +59,7 @@ public class EffectSummonUndead extends AbstractEffect {
             }
             SummonSkeleton undeadentity = new SummonSkeleton(world, shooter, weapon);
             undeadentity.moveTo(blockpos, 0.0F, 0.0F);
-            undeadentity.finalizeSpawn((ServerLevelAccessor) world, world.getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, null, null);
+            undeadentity.finalizeSpawn((ServerLevelAccessor) world, world.getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, null);
             undeadentity.setOwner(shooter);
             undeadentity.setLimitedLife(ticks);
             summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, undeadentity);

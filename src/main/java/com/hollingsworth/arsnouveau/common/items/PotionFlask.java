@@ -78,8 +78,8 @@ public abstract class PotionFlask extends ModItem implements IPotionProvider {
             FlaskData data = new FlaskData(stack);
             for (MobEffectInstance effectinstance : data.getPotion().fullEffects()) {
                 effectinstance = getEffectInstance(effectinstance);
-                if (effectinstance.getEffect().isInstantenous()) {
-                    effectinstance.getEffect().applyInstantenousEffect(playerentity, playerentity, entityLiving, effectinstance.getAmplifier(), 1.0D);
+                if (effectinstance.getEffect().value().isInstantenous()) {
+                    effectinstance.getEffect().value().applyInstantenousEffect(playerentity, playerentity, entityLiving, effectinstance.getAmplifier(), 1.0D);
                 } else {
                     entityLiving.addEffect(new MobEffectInstance(effectinstance));
                 }
@@ -225,8 +225,8 @@ public abstract class PotionFlask extends ModItem implements IPotionProvider {
             }
             for (MobEffectInstance effectinstance : fullEffects()) {
                 effectinstance = potionFlask.getEffectInstance(effectinstance);
-                if (effectinstance.getEffect().isInstantenous()) {
-                    effectinstance.getEffect().applyInstantenousEffect(source, inDirectSource, target, effectinstance.getAmplifier(), 1.0D);
+                if (effectinstance.getEffect().value().isInstantenous()) {
+                    effectinstance.getEffect().value().applyInstantenousEffect(source, inDirectSource, target, effectinstance.getAmplifier(), 1.0D);
                 } else {
                     target.addEffect(new MobEffectInstance(effectinstance), source);
                 }
