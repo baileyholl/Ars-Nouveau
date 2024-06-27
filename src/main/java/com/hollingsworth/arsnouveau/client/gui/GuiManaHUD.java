@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.client.IDisplayMana;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -76,7 +77,7 @@ public class GuiManaHUD {
 
         int redManaLength = (int) (98F * Mth.clamp(0F,ClientInfo.redOverlayMana / maxMana , 1F));
         RenderSystem.setShaderTexture(0, ArsNouveau.prefix( "textures/gui/manabar_gui_grayscale.png"));
-        RenderUtil.colorBlit(ms, offsetLeft + 8, yOffset - 10, 0, manaOffset, redManaLength, 8, 256, 256, Color.RED.scaleAlpha(ClientInfo.redOverlayTicks/35f));
+        RenderUtils.colorBlit(ms, offsetLeft + 8, yOffset - 10, 0, manaOffset, redManaLength, 8, 256, 256, Color.RED.scaleAlpha(ClientInfo.redOverlayTicks/35f));
 
     }
 
@@ -91,7 +92,7 @@ public class GuiManaHUD {
         //invert offsets so it aligns with the right side of the bar
         int offset = 96 - reserveManaLength;
         RenderSystem.setShaderTexture(0, ArsNouveau.prefix( "textures/gui/manabar_gui_mana.png"));
-        RenderUtil.colorBlit(ms, offsetLeft + 10 + offset, yOffset - 10, 0, stillBar ? 0 : manaOffset, reserveManaLength, 8, 256, 256, BLACK);
+        RenderUtils.colorBlit(ms, offsetLeft + 10 + offset, yOffset - 10, 0, stillBar ? 0 : manaOffset, reserveManaLength, 8, 256, 256, BLACK);
 
     }
 

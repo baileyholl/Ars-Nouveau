@@ -21,6 +21,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,7 +43,7 @@ public class RitualScrying extends AbstractRitual {
                 ItemStack item = getConsumedItems().stream().filter(i -> i.getItem() != ItemsRegistry.MANIPULATION_ESSENCE.get()).findFirst().orElse(ItemStack.EMPTY);
                 int modifier = didConsumeItem(ItemsRegistry.MANIPULATION_ESSENCE.get()) ? 3 : 1;
                 for (ServerPlayer playerEntity : players) {
-                    Optional<ScryRitualRecipe> hasRecipe = ScryRitualRegistry.getRecipes().stream().filter(recipe -> recipe.matches(item)).findFirst();
+                    Optional<ScryRitualRecipe> hasRecipe = ScryRitualRegistry.getRecipes().stream().filter(recipe -> recipe.matches(new SingleRecipeInput(item), getWorld())).findFirst();
                     IScryer scryer = null;
                     if (hasRecipe.isPresent()) scryer = new TagScryer(hasRecipe.get().highlight());
                     else if (item.getItem() instanceof BlockItem blockItem) scryer = new SingleBlockScryer(blockItem.getBlock());
@@ -83,7 +84,7 @@ public class RitualScrying extends AbstractRitual {
             if (stack.getItem() instanceof BlockItem) {
                 return true;
             }
-            return ScryRitualRegistry.getRecipes().stream().anyMatch(recipe -> recipe.matches(stack));
+            return ScryRitualRegistry.getRecipes().stream().anyMatch(recipe -> recipe.matches(new SingleRecipeInput(stack), getWorld()));
         }
 
         return false;

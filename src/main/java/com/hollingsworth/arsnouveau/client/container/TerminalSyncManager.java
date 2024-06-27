@@ -188,7 +188,7 @@ public class TerminalSyncManager {
 	}
 
 	public static ResourceLocation getItemId(Item item) {
-		return ForgeRegistries.ITEMS.getKey(item);
+		return BuiltInRegistries.ITEM.getKey(item);
 	}
 
 	public static void writeItemId(FriendlyByteBuf buf, Item item) {

@@ -111,9 +111,9 @@ public class GiftStarbuncle extends PathfinderMob implements GeoEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(BEING_TAMED, false);
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(BEING_TAMED, false);
     }
 
     @Override

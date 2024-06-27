@@ -41,11 +41,10 @@ public class GuiImageButton extends ANButton {
         return this;
     }
 
+
     @Override
-    public void render(GuiGraphics graphics,int parX, int parY, float partialTicks) {
-        if (visible) {
-            graphics.blit(image, x, y, u, v, width, height, image_width, image_height);
-        }
+    protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        graphics.blit(image, x, y, u, v, width, height, image_width, image_height);
     }
 
     @Override

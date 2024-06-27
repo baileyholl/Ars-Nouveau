@@ -75,7 +75,7 @@ public class EffectInteract extends AbstractEffect {
             if (!(targetState.getBlock() instanceof BucketPickup bp)) {
                 return false;
             }
-            ItemStack pickup = bp.pickupBlock(world, target, targetState);
+            ItemStack pickup = bp.pickupBlock(player, world, target, targetState);
             if (!pickup.isEmpty() && !player.getAbilities().instabuild) {
                 bp.getPickupSound(targetState).ifPresent(sound -> player.playSound(sound, 1.0F, 1.0F));
                 world.gameEvent(player, GameEvent.FLUID_PICKUP, target);
@@ -144,7 +144,7 @@ public class EffectInteract extends AbstractEffect {
             UseOnContext context = new UseOnContext(player, getHand(player), rayTraceResult);
             item.useOn(context);
         } else {
-            state.use(world, player, InteractionHand.MAIN_HAND, rayTraceResult);
+            state.useItemOn(player.getItemInHand(InteractionHand.MAIN_HAND), world, player, InteractionHand.MAIN_HAND, rayTraceResult);
         }
     }
 

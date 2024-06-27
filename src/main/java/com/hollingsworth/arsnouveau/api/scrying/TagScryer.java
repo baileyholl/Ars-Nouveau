@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.scrying;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -33,7 +34,7 @@ public class TagScryer implements IScryer {
     public IScryer fromTag(CompoundTag tag) {
         TagScryer scryer = new TagScryer();
         if (tag.contains("blockTag")) {
-            scryer.blockTag = ForgeRegistries.BLOCKS.tags().getTag(new TagKey<>(Registries.BLOCK, ResourceLocation.tryParse(tag.getString("blockTag")))).getKey();
+            scryer.blockTag = BuiltInRegistries.BLOCK.getTag(new TagKey<>(Registries.BLOCK, ResourceLocation.tryParse(tag.getString("blockTag")))).get().key();
         }
         return scryer;
     }

@@ -88,7 +88,7 @@ public class EffectHarvest extends AbstractEffect {
                 continue;
             }
 
-            if (state.getBlock() instanceof StemGrownBlock || state.is(BlockTagProvider.HARVEST_STEMS) && state.getBlock() == world.getBlockState(blockpos.below()).getBlock()) {
+            if (state.is(BlockTagProvider.HARVEST_STEMS) && state.getBlock() == world.getBlockState(blockpos.below()).getBlock()) {
                 processAndSpawnDrops(blockpos, state, world, shooter, spellStats, spellContext, false);
                 BlockUtil.destroyBlockSafely(world, blockpos, false, shooter);
                 continue;

@@ -46,7 +46,7 @@ public class CraftingButton extends GuiImageButton {
                 RenderSystem.setShaderColor(1.0F, 0.7F, 0.7F, 1.0F);
             }
             if (this.abstractSpellPart != null) {
-                RenderUtil.drawSpellPart(this.abstractSpellPart, graphics, x + 3, y + 2, 16, !validationErrors.isEmpty(), 0);
+                RenderUtils.drawSpellPart(this.abstractSpellPart, graphics, x + 3, y + 2, 16, !validationErrors.isEmpty(), 0);
             }
         }
         super.render(graphics, parX, parY, partialTicks);

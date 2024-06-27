@@ -26,4 +26,6 @@ public class PublicEffect extends MobEffect {
     public List<ItemStack> getCurativeItems() {
         return this.curativeItems != null ? curativeItems : super.getCurativeItems();
     }
+
+
 }

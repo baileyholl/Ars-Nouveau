@@ -41,7 +41,7 @@ public class ModPotions {
             super.addAttributeModifiers(pAttributeMap, pAmplifier);
         }
     });
-    public static final DeferredHolder<MobEffect, PublicEffect> SUMMONING_SICKNESS_EFFECT = EFFECTS.register(SUMMONING_SICKNESS, () -> new PublicEffect(MobEffectCategory.HARMFUL, 2039587, new ArrayList<>()));
+    public static final DeferredHolder<MobEffect, PublicEffect> SUMMONING_SICKNESS_EFFECT = EFFECTS.register(SUMMONING_SICKNESS, () -> new SummoningSicknessEffect(MobEffectCategory.HARMFUL, 2039587, new ArrayList<>()));
 
     public static final DeferredHolder<MobEffect, PublicEffect> HEX_EFFECT = EFFECTS.register(HEX, () -> new PublicEffect(MobEffectCategory.HARMFUL, 8080895) {
         @Override

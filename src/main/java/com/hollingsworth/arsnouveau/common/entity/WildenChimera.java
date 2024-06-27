@@ -105,7 +105,6 @@ public class WildenChimera extends Monster implements GeoEntity {
     public WildenChimera(EntityType<? extends Monster> type, Level level) {
         super(type, level);
         moveControl = new ChimeraMoveController(this, true);
-        maxUpStep = 3.0f;
         setPersistenceRequired();
         FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, level);
         flyingpathnavigator.setCanOpenDoors(true);
@@ -867,7 +866,8 @@ public class WildenChimera extends Monster implements GeoEntity {
                 .add(Attributes.ATTACK_DAMAGE, 8D)
                 .add(Attributes.ARMOR, 6D)
                 .add(Attributes.FOLLOW_RANGE, 100D)
-                .add(Attributes.FLYING_SPEED, 0.4f);
+                .add(Attributes.FLYING_SPEED, 0.4f)
+                .add(Attributes.STEP_HEIGHT, 3.0f);
     }
 
     private static class ChimeraMusic extends AbstractTickableSoundInstance {

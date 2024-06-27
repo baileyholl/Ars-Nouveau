@@ -18,6 +18,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -80,7 +81,7 @@ public class EffectName extends AbstractEffect {
         BlockState state = world.getBlockState(pos);
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof SkullBlockEntity head){
-            head.setOwner(new GameProfile(null, name.getString()));
+            head.setOwner(new ResolvableProfile(new GameProfile(null, name.getString())));
             world.sendBlockUpdated(pos, state, state, 3);
             head.setChanged();
             return;

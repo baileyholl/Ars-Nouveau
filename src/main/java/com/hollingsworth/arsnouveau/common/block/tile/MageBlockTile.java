@@ -12,7 +12,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 
 public class MageBlockTile extends ModdedTile implements ITickable, IDispellable, IWololoable {
@@ -50,16 +49,12 @@ public class MageBlockTile extends ModdedTile implements ITickable, IDispellable
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         tag.put("age", IntTag.valueOf(age));
         tag.put("lightColor", color.serialize());
         tag.putBoolean("permanent", isPermanent);
         tag.putDouble("modifier", lengthModifier);
-    }
-
-    @Override
-    public AABB getRenderBoundingBox() {
-        return INFINITE_EXTENT_AABB;
     }
 
     @Override

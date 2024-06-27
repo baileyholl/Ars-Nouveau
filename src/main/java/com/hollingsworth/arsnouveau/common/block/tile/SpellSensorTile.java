@@ -154,7 +154,7 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
         tag.putInt("outputDuration", outputDuration);
         tag.putInt("outputStrength", outputStrength);
         tag.putBoolean("isOnResolve", isOnResolve);
-        tag.put("parchment", parchment.save(new CompoundTag()));
+        tag.put("parchment", parchment.save(pRegistries));
     }
 
     @Override
@@ -163,7 +163,7 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
         this.outputDuration = pTag.getInt("outputDuration");
         this.outputStrength = pTag.getInt("outputStrength");
         this.isOnResolve = pTag.getBoolean("isOnResolve");
-        this.parchment = ItemStack.of(pTag.getCompound("parchment"));
+        this.parchment = ItemStack.parseOptional(pRegistries, pTag.getCompound("parchment"));
     }
 
     @Override

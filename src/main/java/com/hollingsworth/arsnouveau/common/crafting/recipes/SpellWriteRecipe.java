@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.crafting.recipes;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.common.spell.casters.ReactiveCaster;
+import com.hollingsworth.arsnouveau.common.util.HolderHelper;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import com.mojang.serialization.Codec;
@@ -44,7 +45,7 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe implements IText
     @Override
     public boolean matches(ApparatusRecipeInput input, Level level, @org.jetbrains.annotations.Nullable Player player) {
         ItemEnchantments enchantments = input.catalyst().get(DataComponents.ENCHANTMENTS);
-        int level1 = enchantments.getLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT);
+        int level1 = enchantments.getLevel(HolderHelper.unwrap(level, EnchantmentRegistry.REACTIVE_ENCHANTMENT));
         ItemStack parchment = getParchment(input.pedestals());
         return !parchment.isEmpty() && !CasterUtil.getCaster(parchment).getSpell().isEmpty() && level1 > 0 && super.matches(input, level, player);
 

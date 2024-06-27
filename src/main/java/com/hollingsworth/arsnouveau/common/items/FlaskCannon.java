@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenuSlot;
+import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.client.registry.ModKeyBindings;
 import com.hollingsworth.arsnouveau.client.renderer.item.FlaskCannonRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericModel;
@@ -143,7 +144,7 @@ public abstract class FlaskCannon extends ModItem implements IRadialProvider, Ge
         }
         Minecraft.getInstance().setScreen(new GuiRadialMenu<>(new RadialMenu<>((int index) -> {
             Networking.sendToServer(new PacketSetLauncher(slots.get(index).primarySlotIcon().getSlot()));
-        }, slots, (slotData, posestack, positionx, posy, size, transparent) -> RenderUtil.drawItemAsIcon(slotData.getStack(), posestack, positionx, posy, size, transparent), 3)));
+        }, slots, (slotData, posestack, positionx, posy, size, transparent) -> RenderUtils.drawItemAsIcon(slotData.getStack(), posestack, positionx, posy, size, transparent), 3)));
     }
 
     public AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);

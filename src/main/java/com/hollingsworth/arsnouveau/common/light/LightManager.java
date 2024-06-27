@@ -1,20 +1,20 @@
 package com.hollingsworth.arsnouveau.common.light;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LightLayer;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -123,7 +123,7 @@ public class LightManager {
     }
 
     public static boolean containsEntity(EntityType<? extends Entity> type){
-        return LIGHT_REGISTRY.containsKey(type) || Config.ENTITY_LIGHT_MAP.containsKey(ForgeRegistries.ENTITY_TYPES.getKey(type));
+        return LIGHT_REGISTRY.containsKey(type) || Config.ENTITY_LIGHT_MAP.containsKey(BuiltInRegistries.ENTITY_TYPE.getKey(type));
     }
 
     /**

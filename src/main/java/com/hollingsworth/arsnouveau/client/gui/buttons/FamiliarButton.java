@@ -23,10 +23,8 @@ public class FamiliarButton extends ANButton {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        if (visible) {
-            RenderUtil.drawItemAsIcon(familiarHolder.getOutputItem(), graphics, x, y, 16, false);
-        }
+    protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        RenderUtils.drawItemAsIcon(familiarHolder.getOutputItem(), graphics, x, y, 16, false);
     }
 
     @Override

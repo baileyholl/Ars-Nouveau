@@ -368,7 +368,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     }
 
     public static AttributeSupplier.Builder attributes() {
-        return Mob.createMobAttributes().add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue())
+        return Mob.createMobAttributes().add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.value().getDefaultValue())
                 .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.2D);
     }
@@ -421,11 +421,11 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(MOOD_SCORE, 0);
-        this.entityData.define(TAMED, false);
-        this.entityData.define(COLOR, "summer");
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(MOOD_SCORE, 0);
+        pBuilder.define(TAMED, false);
+        pBuilder.define(COLOR, "summer");
     }
 
     @Override

@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
 import com.hollingsworth.arsnouveau.common.block.tile.SkyBlockTile;
 import com.hollingsworth.arsnouveau.common.spell.casters.ReactiveCaster;
+import com.hollingsworth.arsnouveau.common.util.HolderHelper;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -75,7 +76,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onTooltip(final ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
-        int level = stack.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT);
+        int level = stack.getEnchantmentLevel(HolderHelper.unwrap(event.getEntity().level, EnchantmentRegistry.REACTIVE_ENCHANTMENT));
         if (level > 0 && new ReactiveCaster(stack).getSpell().isValid()) {
             Spell spell = new ReactiveCaster(stack).getSpell();
             event.getToolTip().add(Component.literal(spell.getDisplayString()));

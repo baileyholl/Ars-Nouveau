@@ -17,10 +17,8 @@ public class SoundButton extends ANButton {
     }
 
     @Override
-    public void render(GuiGraphics ms, int mouseX, int mouseY, float partialTicks) {
-        if (visible && sound != null) {
-            ms.blit(sound.getTexturePath(), x, y, 0, 0, 16, 16, 16, 16);
-        }
+    protected void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        pGuiGraphics.blit(sound.getTexturePath(), x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override

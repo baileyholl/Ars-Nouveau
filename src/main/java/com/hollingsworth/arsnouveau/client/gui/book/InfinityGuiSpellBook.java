@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.client.gui.Color;
 import com.hollingsworth.arsnouveau.client.gui.GuiUtils;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.*;
+import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
@@ -384,12 +385,12 @@ public class InfinityGuiSpellBook extends BaseBook {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scroll) {
+    public boolean mouseScrolled(double mouseX, double mouseY,  double pScrollX, double pScrollY) {
         SoundManager manager = Minecraft.getInstance().getSoundManager();
-        if (scroll < 0 && nextButton.active) {
+        if (pScrollY < 0 && nextButton.active) {
             onPageIncrease(nextButton);
             manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
-        } else if (scroll > 0 && previousButton.active) {
+        } else if (pScrollY > 0 && previousButton.active) {
             onPageDec(previousButton);
             manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
         }
@@ -628,7 +629,7 @@ public class InfinityGuiSpellBook extends BaseBook {
         } else {
             //color rainbow if mana cost = max mana, red if mana cost > max mana
             RenderSystem.setShaderTexture(0, ArsNouveau.prefix( "textures/gui/manabar_gui_grayscale.png"));
-            RenderUtil.colorBlit(graphics.pose(), offsetLeft + 8, yOffset - 10, 0, manaOffset, 100, 8, 256, 256, manaLength < 0 ? Color.RED : Color.rainbowColor(ClientInfo.ticksInGame));
+            RenderUtils.colorBlit(graphics.pose(), offsetLeft + 8, yOffset - 10, 0, manaOffset, 100, 8, 256, 256, manaLength < 0 ? Color.RED : Color.rainbowColor(ClientInfo.ticksInGame));
         }
         if (ArsNouveauAPI.ENABLE_DEBUG_NUMBERS && minecraft != null) {
             String text = currentCostCache + "  /  " + maxManaCache;

@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketReactiveSpell;
 import com.hollingsworth.arsnouveau.common.spell.casters.ReactiveCaster;
+import com.hollingsworth.arsnouveau.common.util.HolderHelper;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,7 +31,7 @@ public class ReactiveEvents {
     }
 
     public static void castSpell(LivingEntity playerIn, ItemStack s) {
-        if (s.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT) * .25 >= Math.random() && new ReactiveCaster(s).getSpell().isValid()) {
+        if (s.getEnchantmentLevel(HolderHelper.unwrap(playerIn.level, EnchantmentRegistry.REACTIVE_ENCHANTMENT)) * .25 >= Math.random() && new ReactiveCaster(s).getSpell().isValid()) {
             ReactiveCaster reactiveCaster = new ReactiveCaster(s);
             reactiveCaster.castSpell(playerIn.getCommandSenderWorld(), playerIn, InteractionHand.MAIN_HAND, null);
         }
@@ -59,7 +60,7 @@ public class ReactiveEvents {
 
     @SubscribeEvent
     public static void leftClickAir(PlayerInteractEvent.LeftClickEmpty e) {
-        if (e.getItemStack().getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT) > 0)
+        if (e.getItemStack().getEnchantmentLevel(HolderHelper.unwrap(e.getLevel(), EnchantmentRegistry.REACTIVE_ENCHANTMENT)) > 0)
             Networking.sendToServer(new PacketReactiveSpell());
     }
 }

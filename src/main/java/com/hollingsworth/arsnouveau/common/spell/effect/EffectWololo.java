@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.common.mixin.MobAccessor;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -28,6 +29,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -66,14 +68,14 @@ public class EffectWololo extends AbstractEffect {
             sheep.setColor(dye.getDyeColor());
         else if (spellStats.isSensitive() || living instanceof ArmorStand) {
             for (ItemStack armorStack : living.getArmorSlots()) {
-                if (!armorStack.isEmpty())
-                    if (armorStack.getItem() instanceof DyeableLeatherItem) {
-                        var temp = DyeableLeatherItem.dyeArmor(armorStack, List.of(dye));
-                        //replace the tag with the new tag instead of replacing the stack
-                        armorStack.setTag(temp.getTag());
+                if (!armorStack.isEmpty()) {
+                    var dyeComponent = armorStack.get(DataComponents.DYED_COLOR);
+                    if (dyeComponent != null) {
+                        armorStack.set(DataComponents.DYED_COLOR, new DyedItemColor(dye.getDyeColor().getTextureDiffuseColor(), false));
                     } else if (armorStack.getItem() instanceof IDyeable iDyeable) {
                         iDyeable.onDye(armorStack, dye.getDyeColor());
                     }
+                }
             }
         } else if (living instanceof Mob mob) {
             player.setItemInHand(InteractionHand.MAIN_HAND, dyeStack);
@@ -138,12 +140,12 @@ public class EffectWololo extends AbstractEffect {
 
     @NotNull
     private ItemStack getDyedResult(ServerLevel world, CraftingContainer craftingcontainer) {
-        Optional<CraftingRecipe> recipe = recipeCache.stream().filter(craftingRecipe -> craftingRecipe.matches(craftingcontainer, world)).findFirst();
+        Optional<CraftingRecipe> recipe = recipeCache.stream().filter(craftingRecipe -> craftingRecipe.matches(craftingcontainer.asCraftInput(), world)).findFirst();
         if (recipe.isPresent()) {
             recipeCache.add(recipe.get());
-            return recipe.get().assemble(craftingcontainer, world.registryAccess());
+            return recipe.get().assemble(craftingcontainer.asCraftInput(), world.registryAccess());
         }
-        return world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingcontainer, world).map((craftingRecipe) -> craftingRecipe.assemble(craftingcontainer, world.registryAccess())).orElse(ItemStack.EMPTY);
+        return world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingcontainer.asCraftInput(), world).map((craftingRecipe) -> craftingRecipe.value().assemble(craftingcontainer.asCraftInput(), world.registryAccess())).orElse(ItemStack.EMPTY);
     }
 
     private static CraftingContainer makeContainer(DyeItem targetColor, Block blockToDye) {

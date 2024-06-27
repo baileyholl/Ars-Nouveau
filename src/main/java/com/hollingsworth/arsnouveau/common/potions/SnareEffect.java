@@ -9,7 +9,7 @@ public class SnareEffect extends MobEffect {
 
     public SnareEffect() {
         super(MobEffectCategory.HARMFUL, 2039587);
-        addAttributeModifier(Attributes.MOVEMENT_SPEED, "0dee8a21-f182-42c8-8361-1ad6186cac30", -1, AttributeModifier.Operation.MULTIPLY_TOTAL);
+        addAttributeModifier(Attributes.MOVEMENT_SPEED, "0dee8a21-f182-42c8-8361-1ad6186cac30", -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     }
 
 }

@@ -41,11 +41,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
-import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -114,8 +111,8 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
     }
 
     @Override
-    public EntityDimensions getDimensions(Pose p_213305_1_) {
-        return isBaby() ? new EntityDimensions(1, 1, true) : super.getDimensions(p_213305_1_);
+    protected EntityDimensions getDefaultDimensions(Pose pPose) {
+        return isBaby() ? EntityDimensions.fixed(1.0f, 1.0f) : super.getDefaultDimensions(pPose);
     }
 
     @Nullable
@@ -205,12 +202,12 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(SMASHING, false);
-        this.entityData.define(CASTING, false);
-        this.entityData.define(BABY, false);
-        this.entityData.define(HOME, Optional.empty());
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(SMASHING, false);
+        pBuilder.define(CASTING, false);
+        pBuilder.define(BABY, false);
+        pBuilder.define(HOME, Optional.empty());
     }
 
     @Override

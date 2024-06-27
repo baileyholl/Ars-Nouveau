@@ -25,7 +25,7 @@ import java.util.List;
 public class ReactiveEnchantmentRecipe extends EnchantmentRecipe {
 
     public ReactiveEnchantmentRecipe(List<Ingredient> pedestalItems, int sourceCost) {
-        super(pedestalItems, EnchantmentRegistry.REACTIVE_ENCHANTMENT.getKey(), 1, sourceCost);
+        super(pedestalItems, EnchantmentRegistry.REACTIVE_ENCHANTMENT, 1, sourceCost);
     }
 
     @Override

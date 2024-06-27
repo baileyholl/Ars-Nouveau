@@ -18,7 +18,6 @@ import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.block.LavaLily;
 import com.hollingsworth.arsnouveau.common.command.*;
 import com.hollingsworth.arsnouveau.common.compat.CaelusHandler;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.DispelEntityRecipe;
@@ -162,16 +161,6 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void livingAttackEvent(LivingAttackEvent e) {
-        if (e.getSource().is(DamageTypes.HOT_FLOOR) && e.getEntity() != null && !e.getEntity().getCommandSenderWorld().isClientSide) {
-            Level world = e.getEntity().level;
-            if (world.getBlockState(e.getEntity().blockPosition()).getBlock() instanceof LavaLily) {
-                e.setCanceled(true);
-            }
-        }
-    }
-
-    @SubscribeEvent
     public static void livingSpawnEvent(FinalizeSpawnEvent checkSpawn) {
         if (checkSpawn.getLevel() instanceof Level level && !level.isClientSide) {
             RitualEventQueue.getRitual(level, DenySpawnRitual.class, ritu -> ritu.denySpawn(checkSpawn));
@@ -306,7 +295,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void eatEvent(LivingEntityUseItemEvent.Finish event) {
-        if (!event.getEntity().level.isClientSide && event.getItem().getItem().getFoodProperties(event.getItem(), event.getEntity()) != null && event.getItem().getItem().isEdible()) {
+        if (!event.getEntity().level.isClientSide && event.getItem().getItem().getFoodProperties(event.getItem(), event.getEntity()) != null) {
             if (event.getEntity() instanceof Player player) {
                 FoodData stats = player.getFoodData();
                 stats.saturationLevel = (float) (stats.saturationLevel * PerkUtil.perkValue(player, PerkAttributes.WHIRLIESPRIG.get()));

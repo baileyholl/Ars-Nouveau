@@ -26,10 +26,10 @@ public class ShockedEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int amp) {
+    public boolean applyEffectTick(LivingEntity entity, int amp) {
         int multiplier = 0;
         for (ItemStack i : entity.getArmorSlots()) {
-            IEnergyStorage energyStorage = i.getCapability(Capabilities.ENERGY).orElse(null);
+            IEnergyStorage energyStorage = i.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage != null) {
                 multiplier++;
             }
@@ -49,5 +49,6 @@ public class ShockedEffect extends MobEffect {
             entity.hurt(entity.level.damageSources().lightningBolt(), 20 * multiplier * (amp + 1));
 
         }
+        return true;
     }
 }

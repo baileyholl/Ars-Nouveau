@@ -76,7 +76,7 @@ public class PiglinBehavior extends JarBehavior<Piglin> {
     }
 
     private static List<ItemStack> getBarterResponseItems(Piglin pPiglin) {
-        LootTable loottable = pPiglin.level().getServer().getLootData().getLootTable(BuiltInLootTables.PIGLIN_BARTERING);
+        LootTable loottable = pPiglin.level().getServer().reloadableRegistries().getLootTable(BuiltInLootTables.PIGLIN_BARTERING);
         List<ItemStack> list = loottable.getRandomItems((new LootParams.Builder((ServerLevel)pPiglin.level())).withParameter(LootContextParams.THIS_ENTITY, pPiglin).create(LootContextParamSets.PIGLIN_BARTER));
         return list;
     }

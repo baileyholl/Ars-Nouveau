@@ -262,10 +262,10 @@ public class GuiRadialMenu<T> extends Screen {
             float pos2InX = x + radiusIn * (float) Math.cos(angle2);
             float pos2InY = y + radiusIn * (float) Math.sin(angle2);
 
-            buffer.addVertex(pos1OutX, pos1OutY, z).color(r, g, b, a).endVertex();
-            buffer.addVertex(pos1InX, pos1InY, z).color(r, g, b, a).endVertex();
-            buffer.addVertex(pos2InX, pos2InY, z).color(r, g, b, a).endVertex();
-            buffer.addVertex(pos2OutX, pos2OutY, z).color(r, g, b, a).endVertex();
+            buffer.addVertex(pos1OutX, pos1OutY, z).setColor(r, g, b, a);
+            buffer.addVertex(pos1InX, pos1InY, z).setColor(r, g, b, a);
+            buffer.addVertex(pos2InX, pos2InY, z).setColor(r, g, b, a);
+            buffer.addVertex(pos2OutX, pos2OutY, z).setColor(r, g, b, a);
         }
     }
 

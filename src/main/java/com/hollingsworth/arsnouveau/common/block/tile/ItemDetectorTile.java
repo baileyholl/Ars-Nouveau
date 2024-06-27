@@ -3,8 +3,8 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ColorPos;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -156,7 +156,7 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
         }
         tag.putInt("neededCount", neededCount);
         if(!filterStack.isEmpty()){
-            tag.put("filterStack", filterStack.save(new CompoundTag()));
+            tag.put("filterStack", filterStack.save(pRegistries));
         }
         tag.putBoolean("isPowered", isPowered);
         tag.putBoolean("inverted", inverted);
@@ -170,7 +170,7 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
         }
         this.neededCount = pTag.getInt("neededCount");
         if(pTag.contains("filterStack")){
-            filterStack = ItemStack.of(pTag.getCompound("filterStack"));
+            filterStack = ItemStack.parseOptional(pRegistries, pTag.getCompound("filterStack"));
         }
         isPowered = pTag.getBoolean("isPowered");
         inverted = pTag.getBoolean("inverted");

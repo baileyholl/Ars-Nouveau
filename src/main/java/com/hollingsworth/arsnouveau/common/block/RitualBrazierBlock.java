@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -96,7 +95,7 @@ public class RitualBrazierBlock extends TickableModBlock {
     }
 
     @Override
-    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
+    public BlockState playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         super.playerWillDestroy(worldIn, pos, state, player);
         if (worldIn.getBlockEntity(pos) instanceof RitualBrazierTile tile) {
             if (tile.ritual != null) {
@@ -106,6 +105,7 @@ public class RitualBrazierBlock extends TickableModBlock {
                 }
             }
         }
+        return state;
     }
 
     @Override
