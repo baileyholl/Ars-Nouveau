@@ -17,6 +17,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.Tags;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +94,7 @@ public class GlyphRecipeProvider extends SimpleDataProvider {
         add(get(EffectLinger.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.DRAGON_BREATH)
                 .withIngredient(Ingredient.of(Tags.Items.STORAGE_BLOCKS_DIAMOND))
                 .withIngredient(Ingredient.of(Tags.Items.RODS_BLAZE), 2));
-        add(get(EffectPhantomBlock.INSTANCE).withIngredient(Tags.Items.GLASS, 8));
+        add(get(EffectPhantomBlock.INSTANCE).withIngredient(Tags.Items.GLASS_BLOCKS, 8));
         add(get(EffectPickup.INSTANCE).withItem(Items.HOPPER, 2));
         add(get(EffectPull.INSTANCE).withItem(Items.FISHING_ROD, 1));
         add(get(EffectRedstone.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withIngredient(Tags.Items.STORAGE_BLOCKS_REDSTONE, 3));
@@ -118,7 +119,7 @@ public class GlyphRecipeProvider extends SimpleDataProvider {
                 .withIngredient(Ingredient.of(Tags.Items.STORAGE_BLOCKS_DIAMOND))
                 .withIngredient(Ingredient.of(Tags.Items.RODS_BLAZE), 2));
         add(get(EffectRotate.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE));
-        add(get(EffectAnimate.INSTANCE).withItem(ItemsRegistry.CONJURATION_ESSENCE).withIngredient(Tags.Items.OBSIDIAN, 3));
+        add(get(EffectAnimate.INSTANCE).withItem(ItemsRegistry.CONJURATION_ESSENCE).withIngredient(Tags.Items.OBSIDIANS, 3));
         add(get(EffectBurst.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.TNT, 5).withItem(Items.FIREWORK_STAR));
         add(get(AugmentRandomize.INSTANCE).withItem(Items.PINK_CARPET, 2));
         add(get(EffectReset.INSTANCE).withItem(Items.TARGET, 1));

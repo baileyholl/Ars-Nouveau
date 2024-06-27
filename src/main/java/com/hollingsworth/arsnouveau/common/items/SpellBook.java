@@ -112,7 +112,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(final ItemStack stack, @Nullable final Level world, final List<Component> tooltip, final TooltipFlag flag) {
+    public void appendHoverText(final ItemStack stack, @Nullable final TooltipContext world, final List<Component> tooltip, final TooltipFlag flag) {
         super.appendHoverText(stack, world, tooltip, flag);
         tooltip.add(Component.translatable("ars_nouveau.spell_book.select", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_RADIAL_HUD.getName()).get()));
         tooltip.add(Component.translatable("ars_nouveau.spell_book.craft", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_BOOK.getName()).get()));

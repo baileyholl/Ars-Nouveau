@@ -68,7 +68,7 @@ public class PatchouliProvider extends SimpleDataProvider{
 
     public void addEntries() {
         Block SOURCESTONE = BlockRegistry.getBlock(LibBlockNames.SOURCESTONE);
-        for (Enchantment g : enchants) {
+        for (ResourceKey<Enchantment> g : enchants) {
             addEnchantmentPage(g);
         }
         for (AbstractRitual r : RitualRegistry.getRitualMap().values()) {
@@ -746,7 +746,7 @@ public class PatchouliProvider extends SimpleDataProvider{
         this.pages.add(new PatchouliPage(builder, this.output.resolve("assets/" + ritual.getRegistryName().getNamespace() + "/patchouli_books/worn_notebook/en_us/entries/rituals/" + ritual.getRegistryName().getPath() + ".json")));
     }
 
-    public void addEnchantmentPage(Enchantment enchantment) {
+    public void addEnchantmentPage(ResourceKey<Enchantment> enchantment) {
         PatchouliBuilder builder = new PatchouliBuilder(ENCHANTMENTS, enchantment.getDescriptionId())
                 .withIcon(getRegistryName(Items.ENCHANTED_BOOK).toString());
         for (int i = enchantment.getMinLevel(); i <= enchantment.getMaxLevel(); i++) {

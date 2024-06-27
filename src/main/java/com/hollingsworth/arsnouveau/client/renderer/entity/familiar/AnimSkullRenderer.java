@@ -20,7 +20,7 @@ public class AnimSkullRenderer extends AnimBlockRenderer<AnimHeadSummon> {
 
 
     @Override
-    public void renderRecursively(PoseStack poseStack, AnimHeadSummon animatable, GeoBone bone, RenderType ty, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderRecursively(PoseStack poseStack, AnimHeadSummon animatable, GeoBone bone, RenderType ty, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
         if (bone.getName().equals("block")) {
             AnimHeadSummon animBlock = animatable;
             if (animBlock == null) return;
@@ -33,6 +33,6 @@ public class AnimSkullRenderer extends AnimBlockRenderer<AnimHeadSummon> {
             poseStack.popPose();
             buffer = this.bufferSource.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
         }
-        super.renderRecursively(poseStack, animatable, bone, ty, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        super.renderRecursively(poseStack, animatable, bone, ty, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
     }
 }

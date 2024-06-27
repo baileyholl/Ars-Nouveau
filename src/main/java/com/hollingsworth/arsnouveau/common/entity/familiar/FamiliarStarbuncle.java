@@ -3,9 +3,10 @@ package com.hollingsworth.arsnouveau.common.entity.familiar;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.scrying.CompoundScryer;
 import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
-import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.ritual.RitualScrying;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
@@ -21,8 +22,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
 import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.Arrays;
 
@@ -71,9 +72,9 @@ public class FamiliarStarbuncle extends FamiliarEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.set(COLOR, DyeColor.ORANGE.getName());
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(COLOR, DyeColor.ORANGE.getName());
     }
 
     @Override

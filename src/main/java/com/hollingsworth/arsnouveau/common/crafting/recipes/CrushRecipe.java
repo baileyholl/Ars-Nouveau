@@ -42,16 +42,6 @@ public record CrushRecipe(Ingredient input, List<CrushOutput> outputs, boolean s
         return finalOutputs;
     }
 
-    public CrushRecipe withItems(ItemStack output, float chance) {
-        this.outputs.add(new CrushOutput(output, chance));
-        return this;
-    }
-
-    public CrushRecipe withItems(ItemStack output) {
-        this.outputs.add(new CrushOutput(output, 1.0f));
-        return this;
-    }
-
     public boolean shouldSkipBlockPlace() {
         return this.skipBlockPlace;
     }

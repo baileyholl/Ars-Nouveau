@@ -23,7 +23,7 @@ public class GhostweaveRenderer implements BlockEntityRenderer<GhostWeaveTile> {
     @Override
     public void render(GhostWeaveTile tileEntityIn, float partialTick, PoseStack pPoseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         BlockState renderState = tileEntityIn.mimicState;
-        boolean hasMagicFind = Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasEffect(ModPotions.MAGIC_FIND_EFFECT.get());
+        boolean hasMagicFind = Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasEffect(ModPotions.MAGIC_FIND_EFFECT);
         boolean shouldShow =  hasMagicFind || !tileEntityIn.isInvisible();
         if(!shouldShow)
             return;

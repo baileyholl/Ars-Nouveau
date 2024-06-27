@@ -17,7 +17,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
@@ -63,8 +62,8 @@ public class Present extends ModItem{
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip2, flagIn);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip2, flagIn);
         PresentData data = new PresentData(stack);
         if(data.uuid != null){
             if(data.uuid.equals(ArsNouveau.proxy.getPlayer().getUUID())){

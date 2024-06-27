@@ -20,6 +20,7 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -265,8 +266,7 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
         tag.putInt("pickup", pickupCooldown);
 
         if (getHeldStack() != null) {
-            CompoundTag itemTag = new CompoundTag();
-            getHeldStack().save(itemTag);
+            Tag itemTag = getHeldStack().save(level.registryAccess());
             tag.put("held", itemTag);
         }
     }
@@ -283,7 +283,7 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
         this.pickupCooldown = tag.getInt("pickup");
 
         if (tag.contains("held"))
-            setHeldStack(ItemStack.of((CompoundTag) tag.get("held")));
+            setHeldStack(ItemStack.parse(level.registryAccess(), tag.get("held")).orElse(ItemStack.EMPTY));
     }
 
     @Override

@@ -6,8 +6,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -19,7 +17,7 @@ public class StarbuncleShard extends ModItem{
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
         if(stack.hasTag()){
             Starbuncle.StarbuncleData data = new Starbuncle.StarbuncleData(stack.getOrCreateTag());
             if (data.name != null) {
@@ -32,7 +30,7 @@ public class StarbuncleShard extends ModItem{
                 tooltip2.add(Component.literal(data.bio).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE)));
             }
         }else{
-            super.appendHoverText(stack, worldIn, tooltip2, flagIn);
+            super.appendHoverText(stack, context, tooltip2, flagIn);
         }
     }
 }

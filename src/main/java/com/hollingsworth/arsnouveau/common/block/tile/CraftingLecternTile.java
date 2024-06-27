@@ -98,7 +98,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 			CompoundTag compoundnbt = listnbt.getCompound(i);
 			int j = compoundnbt.getInt("Slot");
 			if (j >= 0 && j < craftMatrix.getContainerSize()) {
-				craftMatrix.setItem(j, ItemStack.of(compoundnbt));
+				craftMatrix.setItem(j, ItemStack.parseOptional(pRegistries, compoundnbt));
 			}
 		}
 		reading = false;
@@ -139,7 +139,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 		if(currentRecipe == null) {
 			return;
 		}
-		NonNullList<ItemStack> remainder = currentRecipe.getRemainingItems(craftMatrix);
+		NonNullList<ItemStack> remainder = currentRecipe.getRemainingItems(craftMatrix.asCraftInput());
 		boolean playerInvUpdate = false;
 		for (int i = 0; i < remainder.size(); ++i) {
 			ItemStack currentStack = craftMatrix.getItem(i);
@@ -202,14 +202,17 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 	}
 
 	protected void onCraftingMatrixChanged() {
-		if (currentRecipe == null || !currentRecipe.matches(craftMatrix, level)) {
-			currentRecipe = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftMatrix, level).orElse(null);
+		if (currentRecipe == null || !currentRecipe.matches(craftMatrix.asCraftInput(), level)) {
+			var holder = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftMatrix.asCraftInput(), level).orElse(null);
+			if(holder != null){
+				currentRecipe = holder.value();
+			}
 		}
 
 		if (currentRecipe == null) {
 			craftResult.setItem(0, ItemStack.EMPTY);
 		} else {
-			craftResult.setItem(0, currentRecipe.assemble(craftMatrix, level.registryAccess()));
+			craftResult.setItem(0, currentRecipe.assemble(craftMatrix.asCraftInput(), level.registryAccess()));
 		}
 
 		craftingListeners.forEach(CraftingTerminalMenu::onCraftMatrixChanged);

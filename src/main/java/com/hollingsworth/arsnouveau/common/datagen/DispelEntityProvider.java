@@ -35,7 +35,7 @@ public class DispelEntityProvider extends SimpleDataProvider{
 
     protected void addEntries() {
         recipes.add(new DispelEntityRecipe(ArsNouveau.prefix( "blaze_powder"), EntityType.BLAZE, EntityType.BLAZE.getDefaultLootTable(), new LootItemCondition[]{
-                LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().flags(EntityFlagsPredicate.Builder.flags().setOnFire(true).build())).build()
+                LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().flags(EntityFlagsPredicate.Builder.flags().setOnFire(true))).build()
         }));
     }
 

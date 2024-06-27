@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.setup.registry.RegistryHelper;
 import com.hollingsworth.arsnouveau.api.item.IScribeable;
 import com.hollingsworth.arsnouveau.api.nbt.ItemstackData;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.RegistryHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.items.IItemHandler;
+
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +59,7 @@ public abstract class ItemScroll extends ModItem implements IScribeable {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
         if(!stack.hasTag())
             return;
         ItemScrollData scrollData = new ItemScrollData(stack);

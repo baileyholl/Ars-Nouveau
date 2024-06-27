@@ -84,15 +84,15 @@ public class ScryCaster extends ModItem implements ICasterTool, GeoItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
-        getInformation(stack, worldIn, tooltip2, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
+        getInformation(stack, context, tooltip2, flagIn);
         Data data = new Data(stack);
         if(data.scryPos == null){
             tooltip2.add(Component.translatable("ars_nouveau.scry_caster.no_pos"));
         }else{
             tooltip2.add(Component.translatable("ars_nouveau.scryer_scroll.bound", data.getScryPos().getX() + ", " + data.getScryPos().getY() + ", " + data.getScryPos().getZ()));
         }
-        super.appendHoverText(stack, worldIn, tooltip2, flagIn);
+        super.appendHoverText(stack, context, tooltip2, flagIn);
     }
 
     @Override

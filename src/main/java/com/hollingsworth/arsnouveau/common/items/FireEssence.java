@@ -6,7 +6,6 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -24,8 +23,8 @@ public class FireEssence extends ModItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip2, flagIn);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip2, flagIn);
         tooltip2.add(Component.translatable("ars_nouveau.fire_essence.tooltip").withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
     }
 }

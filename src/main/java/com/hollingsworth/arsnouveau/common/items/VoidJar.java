@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.IScribeable;
-import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -81,7 +81,7 @@ public class VoidJar extends ModItem implements IScribeable {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
         if(!stack.hasTag())
             return;
         VoidJarData data = new VoidJarData(stack);
@@ -94,7 +94,7 @@ public class VoidJar extends ModItem implements IScribeable {
             tooltip2.add(s.getHoverName());
         }
 
-        super.appendHoverText(stack, worldIn, tooltip2, flagIn);
+        super.appendHoverText(stack, context, tooltip2, flagIn);
     }
 
     @Override

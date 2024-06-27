@@ -23,7 +23,7 @@ public class RedstoneRelayRenderer extends ArsGeoBlockRenderer<RedstoneRelayTile
     }
 
     @Override
-    public void renderRecursively(PoseStack poseStack, RedstoneRelayTile animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderRecursively(PoseStack poseStack, RedstoneRelayTile animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
         ArrayList<String> strings = new ArrayList<>(List.of(new String[]{
                 "framework_input",
                 "bone",
@@ -33,15 +33,15 @@ public class RedstoneRelayRenderer extends ArsGeoBlockRenderer<RedstoneRelayTile
         }));
         if (strings.contains(bone.getName())) {
             //NOTE: if the bone have a parent, the recursion will get here with the neutral color, making the color getter useless
-            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, Color.WHITE.getRed() / 255f, Color.WHITE.getGreen() / 255f, Color.WHITE.getBlue() / 255f, Color.WHITE.getAlpha() / 255f);
+            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, Color.WHITE.getRed() / 255f, Color.WHITE.argbInt());
         } else {
-            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
         }
     }
 
     @Override
-    public void actuallyRender(PoseStack poseStack, RedstoneRelayTile animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+    public void actuallyRender(PoseStack poseStack, RedstoneRelayTile animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class RedstoneRelayRenderer extends ArsGeoBlockRenderer<RedstoneRelayTile
         return new GenericItemBlockRenderer(new GenericModel<>("redstone_relay")){
 
             @Override
-            public void renderRecursively(PoseStack poseStack, AnimBlockItem animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+            public void renderRecursively(PoseStack poseStack, AnimBlockItem animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay,int color) {
                 ArrayList<String> strings = new ArrayList<>(List.of(new String[]{
                         "framework_input",
                         "bone",
@@ -63,9 +63,9 @@ public class RedstoneRelayRenderer extends ArsGeoBlockRenderer<RedstoneRelayTile
                 }));
                 if (strings.contains(bone.getName())) {
                     //NOTE: if the bone have a parent, the recursion will get here with the neutral color, making the color getter useless
-                    super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, Color.WHITE.getRed() / 255f, Color.WHITE.getGreen() / 255f, Color.WHITE.getBlue() / 255f, Color.WHITE.getAlpha() / 255f);
+                    super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, Color.WHITE.argbInt());
                 } else {
-                    super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+                    super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
                 }
             }
 

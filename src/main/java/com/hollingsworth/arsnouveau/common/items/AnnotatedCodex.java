@@ -18,7 +18,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -106,8 +105,8 @@ public class AnnotatedCodex extends ModItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip2, flagIn);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip2, flagIn);
         CodexData data = new CodexData(stack);
         if (data.glyphs.isEmpty()) {
             tooltip2.add(Component.translatable("ars_nouveau.codex_tooltip"));

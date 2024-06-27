@@ -13,8 +13,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
 import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +30,7 @@ public class FamiliarAmethystGolem extends FamiliarEntity {
             return InteractionResult.SUCCESS;
 
         if (player.getMainHandItem().is(Tags.Items.GEMS_AMETHYST)) {
-            player.addEffect(new MobEffectInstance(ModPotions.DEFENCE_EFFECT.get(), 20 * 60 * 3));
+            player.addEffect(new MobEffectInstance(ModPotions.DEFENCE_EFFECT, 20 * 60 * 3));
             player.getMainHandItem().shrink(1);
             return InteractionResult.SUCCESS;
         }

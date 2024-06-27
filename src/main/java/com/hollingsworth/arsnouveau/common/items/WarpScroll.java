@@ -109,7 +109,7 @@ public class WarpScroll extends ModItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag p_77624_4_) {
+    public void appendHoverText(ItemStack stack, @Nullable TooltipContext world, List<Component> tooltip, TooltipFlag p_77624_4_) {
         WarpScrollData data = new WarpScrollData(stack);
         if (!data.isValid()) {
             tooltip.add(Component.translatable("ars_nouveau.warp_scroll.no_location"));

@@ -60,8 +60,8 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
-        if (worldIn == null)
+    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
+        if (context == null)
             return;
         ISpellCaster caster = getSpellCaster(stack);
 
@@ -71,11 +71,11 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
             }
             if (!caster.getFlavorText().isEmpty())
                 tooltip2.add(Component.literal(caster.getFlavorText()).withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE)));
-        } else getInformation(stack, worldIn, tooltip2, flagIn);
+        } else getInformation(stack, context, tooltip2, flagIn);
 
         tooltip2.add(Component.translatable("tooltip.ars_nouveau.caster_tome"));
 
-        super.appendHoverText(stack, worldIn, tooltip2, flagIn);
+        super.appendHoverText(stack, context, tooltip2, flagIn);
     }
 
     @Override

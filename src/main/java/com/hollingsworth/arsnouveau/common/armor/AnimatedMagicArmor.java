@@ -25,6 +25,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -86,6 +87,11 @@ public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDy
     }
 
     @Override
+    public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
+        return super.getDefaultAttributeModifiers(stack);
+    }
+
+    @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> attributes = new ImmutableMultimap.Builder<>();
         attributes.putAll(super.getDefaultAttributeModifiers(pEquipmentSlot));
@@ -93,8 +99,8 @@ public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDy
             UUID uuid = ARMOR_MODIFIER_UUID_PER_TYPE.get(type);
             IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(stack);
             if (perkHolder != null) {
-                attributes.put(PerkAttributes.MAX_MANA.get(), new AttributeModifier(uuid, "max_mana_armor", 30 * (perkHolder.getTier() + 1), AttributeModifier.Operation.ADDITION));
-                attributes.put(PerkAttributes.MANA_REGEN_BONUS.get(), new AttributeModifier(uuid, "mana_regen_armor", perkHolder.getTier() + 1, AttributeModifier.Operation.ADDITION));
+                attributes.put(PerkAttributes.MAX_MANA.get(), new AttributeModifier(uuid, "max_mana_armor", 30 * (perkHolder.getTier() + 1), AttributeModifier.Operation.ADD_VALUE));
+                attributes.put(PerkAttributes.MANA_REGEN_BONUS.get(), new AttributeModifier(uuid, "mana_regen_armor", perkHolder.getTier() + 1, AttributeModifier.Operation.ADD_VALUE));
                 for (PerkInstance perkInstance : perkHolder.getPerkInstances()) {
                     IPerk perk = perkInstance.getPerk();
                     attributes.putAll(perk.getModifiers(this.type.getSlot(), stack, perkInstance.getSlot().value));
@@ -107,7 +113,7 @@ public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDy
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext world, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, world, tooltip, flag);
         IPerkProvider<ItemStack> perkProvider = PerkRegistry.getPerkProvider(stack.getItem());
         if (perkProvider != null) {
@@ -164,9 +170,9 @@ public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDy
      * Needed to avoid file not found errors since Geckolib doesn't redirect to the correct texture
      */
     @Override
-    public @Nullable String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+    public @Nullable ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
         GenericModel<AnimatedMagicArmor> genericModel = (GenericModel<AnimatedMagicArmor>) model;
-        return ArsNouveau.prefix( "textures/" + genericModel.textPathRoot + "/" + genericModel.name + "_" + this.getColor(stack) + ".png").toString();
+        return ArsNouveau.prefix( "textures/" + genericModel.textPathRoot + "/" + genericModel.name + "_" + this.getColor(stack) + ".png");
     }
 
     @Override

@@ -15,10 +15,9 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.event.entity.living.LootingLevelEvent;
 import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.Arrays;
 
@@ -51,14 +50,14 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
             event.builder.addDamageModifier(2.0f);
         }
     }
-
-    public void onLootingEvent(LootingLevelEvent event) {
-        if (event.getDamageSource() != null && isAlive() && getOwner() != null && event.getDamageSource().getEntity() != null && getOwner().equals(event.getDamageSource().getEntity())) {
-            if (level.random.nextFloat() > 0.4) {
-                event.setLootingLevel(event.getLootingLevel() + 1 + random.nextInt(3));
-            }
-        }
-    }
+// TODO: restore looting event
+//    public void onLootingEvent(LootingLevelEvent event) {
+//        if (event.getDamageSource() != null && isAlive() && getOwner() != null && event.getDamageSource().getEntity() != null && getOwner().equals(event.getDamageSource().getEntity())) {
+//            if (level.random.nextFloat() > 0.4) {
+//                event.setLootingLevel(event.getLootingLevel() + 1 + random.nextInt(3));
+//            }
+//        }
+//    }
 
     @Override
     public PlayState walkPredicate(AnimationState event) {

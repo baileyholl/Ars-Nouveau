@@ -1,15 +1,14 @@
 package com.hollingsworth.arsnouveau.common.items.curios;
 
-import com.google.common.collect.Multimap;
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ArsNouveauCurio;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
-import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
-import top.theillusivec4.curios.api.SlotContext;
-
-import java.util.UUID;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 
 public abstract class AbstractManaCurio extends ArsNouveauCurio implements IManaEquipment {
     public AbstractManaCurio() {
@@ -24,12 +23,18 @@ public abstract class AbstractManaCurio extends ArsNouveauCurio implements IMana
         return 0;
     }
 
+    public static final ResourceLocation CURIOS_MANA = ArsNouveau.prefix("max_mana_modifier_curio");
+    public static final ResourceLocation CURIOS_MANA_REGEN = ArsNouveau.prefix("mana_regen_modifier_curio");
+
     @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(SlotContext slotContext, UUID uuid, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> attributes = super.getAttributeModifiers(slotContext, uuid, stack);
-        attributes.put(PerkAttributes.MAX_MANA.get(), new AttributeModifier(uuid, "max_mana_modifier_curio" ,this.getMaxManaBoost(stack), AttributeModifier.Operation.ADDITION) );
-        attributes.put(PerkAttributes.MANA_REGEN_BONUS.get(), new AttributeModifier(uuid, "mana_regen_modifier_curio" ,this.getManaRegenBonus(stack), AttributeModifier.Operation.ADDITION) );
+    public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
+        ItemAttributeModifiers attributes = super.getDefaultAttributeModifiers(stack);
+        // TODO: fix with curios slot group
+        for(EquipmentSlotGroup group : EquipmentSlotGroup.values()) {
+            attributes.withModifierAdded(PerkAttributes.MAX_MANA, new AttributeModifier(CURIOS_MANA, this.getMaxManaBoost(stack), AttributeModifier.Operation.ADD_VALUE), group);
+
+            attributes.withModifierAdded(PerkAttributes.MANA_REGEN_BONUS, new AttributeModifier(CURIOS_MANA_REGEN, this.getManaRegenBonus(stack), AttributeModifier.Operation.ADD_VALUE), group);
+        }
         return attributes;
     }
-
 }

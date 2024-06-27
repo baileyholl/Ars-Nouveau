@@ -4,9 +4,10 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.AmethystGolem;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
+
 import java.util.function.Supplier;
 
 public class DepositAmethystGoal extends Goal {
@@ -46,10 +47,7 @@ public class DepositAmethystGoal extends Goal {
     }
 
     public void deposit() {
-        BlockEntity tileEntity = golem.level().getBlockEntity(golem.getHome());
-        if (tileEntity == null)
-            return;
-        IItemHandler iItemHandler = tileEntity.getCapability(ITEM_HANDLER).orElse(null);
+        IItemHandler iItemHandler = golem.level.getCapability(Capabilities.ItemHandler.BLOCK, golem.getHome(), null);
         if (iItemHandler != null) {
             ItemStack oldStack = new ItemStack(golem.getHeldStack().getItem(), golem.getHeldStack().getCount());
 
@@ -83,7 +81,6 @@ public class DepositAmethystGoal extends Goal {
     public boolean canUse() {
         if (golem.getHome() == null || golem.getHeldStack().isEmpty())
             return false;
-        BlockEntity entity = golem.level().getBlockEntity(golem.getHome());
-        return canUse.get() && entity != null && entity.getCapability(ITEM_HANDLER).isPresent();
+        return canUse.get() &&  golem.level.getCapability(Capabilities.ItemHandler.BLOCK, golem.getHome(), null) != null;
     }
 }

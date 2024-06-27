@@ -1,14 +1,12 @@
 package com.hollingsworth.arsnouveau.client.gui.utils;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.client.gui.Color;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -52,7 +50,7 @@ public class RenderUtils {
     public static void renderItemModel(PoseStack poseStack, ItemStack stack, int x, int y, int scale, int alpha, BakedModel model, ItemRenderer renderer, boolean transparent, int zIndex) {
         poseStack.pushPose();
         poseStack.translate(x + 8F, y + 8F, zIndex);
-        poseStack.mulPoseMatrix(SCALE_INVERT_Y);
+        poseStack.mulPose(SCALE_INVERT_Y);
         poseStack.scale(scale, scale, scale);
 
         boolean flatLight = !model.usesBlockLight();
@@ -87,26 +85,26 @@ public class RenderUtils {
         return renderType -> new TintedVertexConsumer(buffer.getBuffer(TRANSLUCENT), 1.0f, 1.0f, 1.0f, 0.25f);
     }
 
-    /*
-     * Adapted from Eidolon, Elucent
-     */
-    public static void colorBlit(PoseStack mStack, int x, int y, int uOffset, int vOffset, int width, int height, int textureWidth, int textureHeight, Color color) {
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-        Matrix4f matrix = mStack.last().pose();
-        int maxX = x + width, maxY = y + height;
-        float minU = (float) uOffset / textureWidth, minV = (float) vOffset / textureHeight;
-        float maxU = minU + (float) width / textureWidth, maxV = minV + (float) height / textureHeight;
-        int r = color.getRed(), g = color.getGreen(), b = color.getBlue(), alpha = color.getAlpha();
-        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
-        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        bufferbuilder.vertex(matrix, (float) x, (float) maxY, 0).uv(minU, maxV).color(r, g, b, alpha).endVertex();
-        bufferbuilder.vertex(matrix, (float) maxX, (float) maxY, 0).uv(maxU, maxV).color(r, g, b, alpha).endVertex();
-        bufferbuilder.vertex(matrix, (float) maxX, (float) y, 0).uv(maxU, minV).color(r, g, b, alpha).endVertex();
-        bufferbuilder.vertex(matrix, (float) x, (float) y, 0).uv(minU, minV).color(r, g, b, alpha).endVertex();
-        BufferUploader.drawWithShader(bufferbuilder.end());
-        RenderSystem.disableBlend();
-    }
+//    /*
+//     * Adapted from Eidolon, Elucent
+//     */
+//    public static void colorBlit(PoseStack mStack, int x, int y, int uOffset, int vOffset, int width, int height, int textureWidth, int textureHeight, Color color) {
+//        RenderSystem.enableBlend();
+//        RenderSystem.defaultBlendFunc();
+//        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+//        Matrix4f matrix = mStack.last().pose();
+//        int maxX = x + width, maxY = y + height;
+//        float minU = (float) uOffset / textureWidth, minV = (float) vOffset / textureHeight;
+//        float maxU = minU + (float) width / textureWidth, maxV = minV + (float) height / textureHeight;
+//        int r = color.getRed(), g = color.getGreen(), b = color.getBlue(), alpha = color.getAlpha();
+//        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
+//        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+//        bufferbuilder.addVertex(matrix, (float) x, (float) maxY, 0).uv(minU, maxV).color(r, g, b, alpha).endVertex();
+//        bufferbuilder.addVertex(matrix, (float) maxX, (float) maxY, 0).uv(maxU, maxV).color(r, g, b, alpha).endVertex();
+//        bufferbuilder.addVertex(matrix, (float) maxX, (float) y, 0).uv(maxU, minV).color(r, g, b, alpha).endVertex();
+//        bufferbuilder.addVertex(matrix, (float) x, (float) y, 0).uv(minU, minV).color(r, g, b, alpha).endVertex();
+//        BufferUploader.drawWithShader(bufferbuilder.end());
+//        RenderSystem.disableBlend();
+//    }
 
 }

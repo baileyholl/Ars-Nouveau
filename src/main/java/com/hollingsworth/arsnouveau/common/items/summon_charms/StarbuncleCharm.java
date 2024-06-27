@@ -14,7 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -41,8 +40,8 @@ public class StarbuncleCharm extends AbstractSummonCharm {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip2, flagIn);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip2, flagIn);
         Starbuncle.StarbuncleData data = new Starbuncle.StarbuncleData(stack.getOrCreateTag());
         if (data.name != null) {
             tooltip2.add(data.name);
@@ -53,10 +52,10 @@ public class StarbuncleCharm extends AbstractSummonCharm {
         if(data.bio != null){
             tooltip2.add(Component.literal(data.bio).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE)));
         }
-        if(data.behaviorTag != null && worldIn != null){
+        if(data.behaviorTag != null && context != null){
             // danger zone
             try{
-                ChangeableBehavior behavior = BehaviorRegistry.create(new Starbuncle(worldIn, true), data.behaviorTag);
+                ChangeableBehavior behavior = BehaviorRegistry.create(new Starbuncle(context, true), data.behaviorTag);
                 if(behavior != null){
                     behavior.getTooltip(tooltip2);
                 }

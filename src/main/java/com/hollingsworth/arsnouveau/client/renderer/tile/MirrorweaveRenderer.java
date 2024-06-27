@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.common.block.tile.MirrorWeaveTile;
-import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -24,7 +24,7 @@ public class MirrorweaveRenderer implements BlockEntityRenderer<MirrorWeaveTile>
     @Override
     public void render(MirrorWeaveTile tileEntityIn, float partialTick, PoseStack pPoseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         BlockState renderState = tileEntityIn.mimicState;
-        if(Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasEffect(ModPotions.MAGIC_FIND_EFFECT.get())){
+        if(Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasEffect(ModPotions.MAGIC_FIND_EFFECT)){
             renderState = BlockRegistry.MIRROR_WEAVE.defaultBlockState();
         }
         if (renderState == null)

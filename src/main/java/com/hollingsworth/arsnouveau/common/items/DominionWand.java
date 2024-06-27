@@ -156,7 +156,7 @@ public class DominionWand extends ModItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag p_77624_4_) {
+    public void appendHoverText(ItemStack stack, TooltipContext world, List<Component> tooltip, TooltipFlag p_77624_4_) {
         DominionData data = new DominionData(stack);
         if (data.getStoredEntityID() == -1) {
             tooltip.add(Component.translatable("ars_nouveau.dominion_wand.no_entity"));

@@ -29,7 +29,6 @@ import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -85,9 +84,9 @@ public class EnchantersSword extends SwordItem implements ICasterTool, GeoItem, 
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
-        getInformation(stack, worldIn, tooltip2, flagIn);
-        super.appendHoverText(stack, worldIn, tooltip2, flagIn);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
+        getInformation(stack, context, tooltip2, flagIn);
+        super.appendHoverText(stack, context, tooltip2, flagIn);
     }
 
     @Override

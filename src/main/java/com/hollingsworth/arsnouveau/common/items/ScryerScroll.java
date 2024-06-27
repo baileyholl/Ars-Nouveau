@@ -10,7 +10,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -36,14 +35,14 @@ public class ScryerScroll extends ModItem {
 
 
     @Override
-    public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
         ScryerScrollData data = new ScryerScrollData(stack);
         if (data.pos != null) {
             tooltip2.add(Component.translatable("ars_nouveau.scryer_scroll.bound", data.pos.getX() + ", " + data.pos.getY() + ", " + data.pos.getZ()));
         } else {
             tooltip2.add(Component.translatable("ars_nouveau.scryer_scroll.craft"));
         }
-        super.appendHoverText(stack, worldIn, tooltip2, flagIn);
+        super.appendHoverText(stack, context, tooltip2, flagIn);
     }
 
     public static class ScryerScrollData {

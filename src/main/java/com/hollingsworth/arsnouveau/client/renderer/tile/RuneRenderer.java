@@ -24,17 +24,17 @@ public class RuneRenderer extends ArsGeoBlockRenderer<RuneTile> {
     }
 
     @Override
-    public void preRender(PoseStack poseStack, RuneTile animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack poseStack, RuneTile animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
 
     }
 
     @Override
-    public void renderFinal(PoseStack poseStack, RuneTile animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderFinal(PoseStack poseStack, RuneTile animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay, int color) {
 
     }
 
     @Override
-    public void actuallyRender(PoseStack poseStack, RuneTile animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void actuallyRender(PoseStack poseStack, RuneTile animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
         ParticleColor color = animatable.spell.color;
         poseStack.pushPose();
         Direction direction = animatable.getBlockState().getValue(BasicSpellTurret.FACING);

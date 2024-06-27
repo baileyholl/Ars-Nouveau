@@ -9,7 +9,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.level.SaplingGrowTreeEvent;
+import net.neoforged.neoforge.event.level.BlockGrowFeatureEvent;
 import net.neoforged.neoforge.event.level.block.CropGrowEvent;
 
 @EventBusSubscriber(modid = ArsNouveau.MODID)
@@ -36,7 +36,7 @@ public class AgronomicSourcelinkTile extends SourcelinkTile {
     }
 
     @SubscribeEvent
-    public static void treeGrow(SaplingGrowTreeEvent event) {
+    public static void treeGrow(BlockGrowFeatureEvent event) {
         int mana = 50;
         if (event.getLevel().getBlockState(event.getPos()).is(BlockTagProvider.MAGIC_SAPLINGS)) {
             mana += 50;

@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.items.curios;
 
 import com.hollingsworth.arsnouveau.api.item.ArsNouveauCurio;
 import com.hollingsworth.arsnouveau.common.lib.PotionEffectTags;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -20,7 +21,7 @@ public class BeltOfUnstableGifts extends ArsNouveauCurio {
 
     @Override
     public void curioTick(SlotContext slotContext, ItemStack stack) {
-        ArrayList<MobEffect> effectTable = PotionEffectTags.getEffects(slotContext.entity().level, PotionEffectTags.UNSTABLE_GIFTS);
+        ArrayList<Holder<MobEffect>> effectTable = PotionEffectTags.getEffects(slotContext.entity().level, PotionEffectTags.UNSTABLE_GIFTS);
         if (effectTable == null || effectTable.size() == 0) return;
         LivingEntity wearer = slotContext.entity();
         if (wearer == null) return;

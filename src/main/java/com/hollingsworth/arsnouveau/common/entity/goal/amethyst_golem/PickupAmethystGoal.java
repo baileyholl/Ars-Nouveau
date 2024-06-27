@@ -4,9 +4,9 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.AmethystGolem;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.capabilities.Capabilities;
+
 import java.util.function.Supplier;
 
 import static com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider.SHARD_TAG;
@@ -104,7 +104,6 @@ public class PickupAmethystGoal extends Goal {
     public boolean canUse() {
         if (golem.getHome() == null)
             return false;
-        BlockEntity entity = golem.level().getBlockEntity(golem.getHome());
-        return canUse.get() && golem.pickupCooldown <= 0 && entity != null && entity.getCapability(Capabilities.ITEM_HANDLER).isPresent();
+        return canUse.get() && golem.pickupCooldown <= 0 && golem.level.getCapability(Capabilities.ItemHandler.BLOCK, golem.getHome(), null) != null;
     }
 }

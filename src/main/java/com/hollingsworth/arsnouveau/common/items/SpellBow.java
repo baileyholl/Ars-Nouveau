@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.client.renderer.item.SpellBowRenderer;
 import com.hollingsworth.arsnouveau.common.entity.EntitySpellArrow;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
+import com.hollingsworth.arsnouveau.common.util.HolderHelper;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -29,7 +30,6 @@ import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -77,6 +77,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
         }
     }
 
+    @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack itemstack = playerIn.getItemInHand(handIn);
         ISpellCaster caster = getSpellCaster(playerIn.getItemInHand(handIn));
@@ -112,10 +113,10 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
         //Copied from BowItem, so we can spawn arrows in case there are no items.
         if (!(entityLiving instanceof Player playerentity))
             return;
-        boolean isInfinity = playerentity.abilities.instabuild || bowStack.getEnchantmentLevel(Enchantments.INFINITY_ARROWS) > 0;
+        boolean isInfinity = playerentity.abilities.instabuild || bowStack.getEnchantmentLevel(HolderHelper.unwrap(worldIn, Enchantments.INFINITY)) > 0;
         ItemStack arrowStack = findAmmo(playerentity, bowStack);
 
-        int useTime = this.getUseDuration(bowStack) - timeLeft;
+        int useTime = this.getUseDuration(bowStack, entityLiving) - timeLeft;
         useTime = net.neoforged.neoforge.event.EventHooks.onArrowLoose(bowStack, worldIn, playerentity, useTime, !arrowStack.isEmpty() || isInfinity);
         if (useTime < 0) return;
         boolean canFire = false;
@@ -141,8 +142,8 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
             boolean isArrowInfinite = playerentity.abilities.instabuild || (arrowStack.getItem() instanceof ArrowItem arrowItem && arrowItem.isInfinite(arrowStack, bowStack, playerentity));
             if (!worldIn.isClientSide) {
                 ArrowItem arrowitem = (ArrowItem) (arrowStack.getItem() instanceof ArrowItem ? arrowStack.getItem() : Items.ARROW);
-                AbstractArrow abstractarrowentity = arrowitem.createArrow(worldIn, arrowStack, playerentity);
-                abstractarrowentity = customArrow(abstractarrowentity);
+                AbstractArrow abstractarrowentity = arrowitem.createArrow(worldIn, arrowStack, playerentity, bowStack);
+                abstractarrowentity = customArrow(abstractarrowentity, arrowStack, bowStack);
 
                 List<AbstractArrow> arrows = new ArrayList<>();
                 SpellResolver resolver = new SpellResolver(new SpellContext(worldIn, caster.modifySpellBeforeCasting(worldIn, entityLiving, InteractionHand.MAIN_HAND, caster.getSpell()), playerentity, new PlayerCaster(playerentity), bowStack));
@@ -193,18 +194,18 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
     }
 
     public void addArrow(AbstractArrow abstractarrowentity, ItemStack bowStack, ItemStack arrowStack, boolean isArrowInfinite, Player playerentity) {
-        int power = bowStack.getEnchantmentLevel(Enchantments.POWER_ARROWS);
+        int power = bowStack.getEnchantmentLevel(HolderHelper.unwrap(playerentity.level, Enchantments.POWER));
         if (power > 0) {
             abstractarrowentity.setBaseDamage(abstractarrowentity.getBaseDamage() + power * 0.5D + 0.5D);
         }
 
-        int punch = bowStack.getEnchantmentLevel(Enchantments.PUNCH_ARROWS);
+        int punch = bowStack.getEnchantmentLevel(HolderHelper.unwrap(playerentity.level, Enchantments.PUNCH));
         if (punch > 0) {
             abstractarrowentity.setKnockback(punch);
         }
 
-        if (bowStack.getEnchantmentLevel(Enchantments.FLAMING_ARROWS) > 0) {
-            abstractarrowentity.setSecondsOnFire(100);
+        if (bowStack.getEnchantmentLevel(HolderHelper.unwrap(playerentity.level, Enchantments.FLAME)) > 0) {
+            abstractarrowentity.setRemainingFireTicks(100);
         }
 
         if (isArrowInfinite || playerentity.abilities.instabuild && (arrowStack.getItem() == Items.SPECTRAL_ARROW || arrowStack.getItem() == Items.TIPPED_ARROW)) {
@@ -224,11 +225,6 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
     }
 
-    @Override
-    public AbstractArrow customArrow(AbstractArrow arrow) {
-        return super.customArrow(arrow);
-    }
-
     public AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     @Override
@@ -237,9 +233,9 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
-        getInformation(stack, worldIn, tooltip2, flagIn);
-        super.appendHoverText(stack, worldIn, tooltip2, flagIn);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
+        getInformation(stack, context, tooltip2, flagIn);
+        super.appendHoverText(stack, context, tooltip2, flagIn);
     }
 
     @Override

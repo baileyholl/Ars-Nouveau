@@ -81,10 +81,10 @@ public class EnchantersMirror extends ModItem implements ICasterTool, GeoItem, I
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
-        getInformation(stack, worldIn, tooltip2, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
+        getInformation(stack, context, tooltip2, flagIn);
         new SpellStats.Builder().addDurationModifier(1.0).build().addTooltip(tooltip2);
-        super.appendHoverText(stack, worldIn, tooltip2, flagIn);
+        super.appendHoverText(stack, context, tooltip2, flagIn);
     }
 
     @Override

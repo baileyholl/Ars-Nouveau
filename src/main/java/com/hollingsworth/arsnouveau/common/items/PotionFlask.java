@@ -140,8 +140,8 @@ public abstract class PotionFlask extends ModItem implements IPotionProvider {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip, flagIn);
         FlaskData data = new FlaskData(stack);
         tooltip.add(Component.translatable("ars_nouveau.flask.charges", data.getCount()).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
         data.potionData.appendHoverText(tooltip);

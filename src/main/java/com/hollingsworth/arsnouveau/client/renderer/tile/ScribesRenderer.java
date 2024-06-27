@@ -36,7 +36,7 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
     }
 
     @Override
-    public void preRender(PoseStack stack, ScribesTile tile, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack stack, ScribesTile tile, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
         if (tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.SCRIBES_BLOCK.get())
             return;
         if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.PART) != ThreePartBlock.HEAD)
@@ -64,12 +64,12 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
             stack.translate(0, 0, 0);
 
         }
-        super.preRender(stack, tile, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        super.preRender(stack, tile, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
         stack.popPose();
     }
 
     @Override
-    public void actuallyRender(PoseStack stack, ScribesTile tile, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void actuallyRender(PoseStack stack, ScribesTile tile, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
         if (tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.SCRIBES_BLOCK.get())
             return;
         if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.PART) != ThreePartBlock.HEAD)
@@ -97,13 +97,13 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
             stack.translate(0, 0, 0);
 
         }
-        super.actuallyRender(stack, tile, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        super.actuallyRender(stack, tile, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
         stack.popPose();
     }
 
 
     @Override
-    public void renderFinal(PoseStack stack, ScribesTile tile, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderFinal(PoseStack stack, ScribesTile tile, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay, int color) {
         if (tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.SCRIBES_BLOCK.get())
             return;
         if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.PART) != ThreePartBlock.HEAD)

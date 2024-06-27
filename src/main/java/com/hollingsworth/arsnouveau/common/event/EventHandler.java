@@ -33,7 +33,6 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketJoinedServer;
 import com.hollingsworth.arsnouveau.common.network.PotionSyncPacket;
 import com.hollingsworth.arsnouveau.common.perk.JumpHeightPerk;
-import com.hollingsworth.arsnouveau.common.perk.LootingPerk;
 import com.hollingsworth.arsnouveau.common.ritual.DenySpawnRitual;
 import com.hollingsworth.arsnouveau.common.ritual.RitualFlight;
 import com.hollingsworth.arsnouveau.common.ritual.RitualGravity;
@@ -80,7 +79,9 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.level.BlockGrowFeatureEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.village.VillagerTradesEvent;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
@@ -107,12 +108,12 @@ public class EventHandler {
                     boolean expired;
 
                     @Override
-                    public void tickEvent(TickEvent event) {
-                        if (event instanceof TickEvent.ServerTickEvent serverTickEvent) {
+                    public void tickEvent(ServerTickEvent serverTickEvent) {
+
                             CasterTomeRegistry.reloadTomeData(serverTickEvent.getServer().getRecipeManager(), serverTickEvent.getServer().getLevel(Level.OVERWORLD));
                             BuddingConversionRegistry.reloadBuddingConversionRecipes(serverTickEvent.getServer().getRecipeManager());
                             ScryRitualRegistry.reloadScryRitualRecipes(serverTickEvent.getServer().getRecipeManager());
-                        }
+
                         expired = true;
                     }
 
@@ -396,7 +397,7 @@ public class EventHandler {
             }
 
             level5.add((trader, rand) -> emerToItem(ItemsRegistry.SOURCE_BERRY_PIE, 4, 8, 2));
-            level5.add((trader, rand) -> new MerchantOffer(new ItemCost(Items.EMERALD, 48)), DungeonLootTables.getRandomItem(DungeonLootTables.RARE_LOOT), 1, 20, 0.2F);
+            level5.add((trader, rand) -> new MerchantOffer(new ItemCost(Items.EMERALD, 48), DungeonLootTables.getRandomItem(DungeonLootTables.RARE_LOOT), 1, 20, 0.2F));
 
         }
     }
@@ -409,13 +410,14 @@ public class EventHandler {
         return new VillagerTrades.EmeraldForItems(itemLike.asItem(), cost, uses, exp).getOffer(null, null);
     }
 
+    //TODO: restore looting level event
 
-    @SubscribeEvent
-    public static void onLootingEvent(LootingLevelEvent event) {
-        if (event.getDamageSource() != null && event.getDamageSource().getEntity() instanceof LivingEntity living) {
-            event.setLootingLevel(event.getLootingLevel() + Math.round(PerkUtil.countForPerk(LootingPerk.INSTANCE, living)));
-        }
-    }
+//    @SubscribeEvent
+//    public static void onLootingEvent(LootingLevelEvent event) {
+//        if (event.getDamageSource() != null && event.getDamageSource().getEntity() instanceof LivingEntity living) {
+//            event.setLootingLevel(event.getLootingLevel() + Math.round(PerkUtil.countForPerk(LootingPerk.INSTANCE, living)));
+//        }
+//    }
 
     @SubscribeEvent
     public static void onPotionAdd(MobEffectEvent.Added event) {
@@ -463,9 +465,10 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void treeGrow(SaplingGrowTreeEvent event) {
+    public static void treeGrow(BlockGrowFeatureEvent event) {
         if (!(event.getLevel() instanceof ServerLevel level))
             return;
+
         Set<UUID> sprigs = Whirlisprig.WHIRLI_MAP.getEntities(level);
         List<UUID> sprigsToRemove = new ArrayList<>();
 

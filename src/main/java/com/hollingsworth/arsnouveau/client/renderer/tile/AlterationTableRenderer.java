@@ -24,15 +24,15 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.ClientHooks;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
@@ -56,7 +56,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         outerModel = new ArmorStandArmorModel(p_i226006_1_.bakeLayer(ModelLayers.ARMOR_STAND_OUTER_ARMOR));
     }
 
-    public void renderArmorStack(AlterationTile tile, PoseStack matrixStack, float ticks, MultiBufferSource iRenderTypeBuffer, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float partialTicks) {
+    public void renderArmorStack(AlterationTile tile, PoseStack matrixStack, float ticks, MultiBufferSource iRenderTypeBuffer, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float partialTicks, int colour) {
         matrixStack.pushPose();
         BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());
         if (!(state.getBlock() instanceof AlterationTable))
@@ -78,7 +78,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
             matrixStack.mulPose(Axis.ZP.rotationDegrees(180F));
             matrixStack.translate(0, yOffset + rotForSlot(armorItem.getEquipmentSlot()), 0);
 
-            this.renderArmorPiece(tile, tile.armorStack, matrixStack, iRenderTypeBuffer, packedLightIn, getArmorModel(armorItem.getEquipmentSlot()));
+            this.renderArmorPiece(tile, tile.armorStack, matrixStack, iRenderTypeBuffer, packedLightIn, getArmorModel(armorItem.getEquipmentSlot()), colour);
         } else {
             Minecraft.getInstance().getItemRenderer().renderStatic(tile.armorStack, ItemDisplayContext.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, tile.getLevel(), (int) tile.getBlockPos().asLong());
         }
@@ -129,22 +129,23 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         return (this.usesInnerModel(pSlot) ? this.innerModel : this.outerModel);
     }
 
-    private void renderArmorPiece(AlterationTile tile, ItemStack itemstack, PoseStack pPoseStack, MultiBufferSource pBuffer, int packedLightIn, ArmorStandArmorModel armorModel) {
+    private void renderArmorPiece(AlterationTile tile, ItemStack itemstack, PoseStack pPoseStack, MultiBufferSource pBuffer, int packedLightIn, ArmorStandArmorModel armorModel, int defaultColor) {
         if (!(itemstack.getItem() instanceof ArmorItem armoritem))
             return;
 
         EquipmentSlot pSlot = armoritem.getEquipmentSlot();
         Model model = getArmorModelHook(itemstack, pSlot, armorModel);
         boolean flag1 = itemstack.hasFoil();
-        if (armoritem instanceof DyeableLeatherItem dyeableLeatherItem) {
-            int i = dyeableLeatherItem.getColor(itemstack);
+        DyedItemColor color = itemstack.get(DataComponents.DYED_COLOR);
+        if (color != null) {
+            int i = color.rgb();
             float f = (i >> 16 & 255) / 255.0F;
             float f1 = (i >> 8 & 255) / 255.0F;
             float f2 = (i & 255) / 255.0F;
-            this.renderModel(pPoseStack, pBuffer, packedLightIn, flag1, model, f, f1, f2, this.getArmorResource(itemstack, pSlot, null));
-            this.renderModel(pPoseStack, pBuffer, packedLightIn, flag1, model, 1.0F, 1.0F, 1.0F, this.getArmorResource(itemstack, pSlot, "overlay"));
+            this.renderModel(pPoseStack, pBuffer, packedLightIn, flag1, model, i, this.getArmorResource(itemstack, pSlot, null));
+            this.renderModel(pPoseStack, pBuffer, packedLightIn, flag1, model, i, this.getArmorResource(itemstack, pSlot, "overlay"));
         } else {
-            this.renderModel(pPoseStack, pBuffer, packedLightIn, flag1, model, 1.0F, 1.0F, 1.0F, this.getArmorResource(itemstack, pSlot, null));
+            this.renderModel(pPoseStack, pBuffer, packedLightIn, flag1, model, defaultColor, this.getArmorResource(itemstack, pSlot, null));
         }
     }
 
@@ -152,31 +153,32 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         return net.neoforged.neoforge.client.ClientHooks.getArmorModel(Minecraft.getInstance().player, itemStack, slot, model);
     }
 
-    private void renderModel(PoseStack pPoseStack, MultiBufferSource pBuffer, int packedLight, boolean p_117111_, net.minecraft.client.model.Model pModel, float p_117114_, float p_117115_, float p_117116_, ResourceLocation armorResource) {
-        VertexConsumer vertexconsumer = ItemRenderer.getArmorFoilBuffer(pBuffer, RenderType.armorCutoutNoCull(armorResource), false, p_117111_);
-        pModel.renderToBuffer(pPoseStack, vertexconsumer, packedLight, OverlayTexture.NO_OVERLAY, p_117114_, p_117115_, p_117116_, 1.0F);
+    private void renderModel(PoseStack pPoseStack, MultiBufferSource pBuffer, int packedLight, boolean p_117111_, net.minecraft.client.model.Model pModel, int color, ResourceLocation armorResource) {
+        VertexConsumer vertexconsumer = ItemRenderer.getArmorFoilBuffer(pBuffer, RenderType.armorCutoutNoCull(armorResource), false);
+        pModel.renderToBuffer(pPoseStack, vertexconsumer, packedLight, OverlayTexture.NO_OVERLAY, color);
     }
 
     public ResourceLocation getArmorResource(ItemStack stack, EquipmentSlot slot, @Nullable String type) {
-        ArmorItem item = (ArmorItem) stack.getItem();
-        String texture = item.getMaterial().getName();
-        String domain = "minecraft";
-        int idx = texture.indexOf(':');
-        if (idx != -1) {
-            domain = texture.substring(0, idx);
-            texture = texture.substring(idx + 1);
-        }
-        String s1 = String.format(java.util.Locale.ROOT, "%s:textures/models/armor/%s_layer_%d%s.png", domain, texture, (usesInnerModel(slot) ? 2 : 1), type == null ? "" : String.format(java.util.Locale.ROOT, "_%s", type));
+//        ArmorItem item = (ArmorItem) stack.getItem();
+//        String texture = item.getMaterial().getName();
+//        String domain = "minecraft";
+//        int idx = texture.indexOf(':');
+//        if (idx != -1) {
+//            domain = texture.substring(0, idx);
+//            texture = texture.substring(idx + 1);
+//        }
+//        String s1 = String.format(java.util.Locale.ROOT, "%s:textures/models/armor/%s_layer_%d%s.png", domain, texture, (usesInnerModel(slot) ? 2 : 1), type == null ? "" : String.format(java.util.Locale.ROOT, "_%s", type));
+//
+//        s1 = ClientHooks.getArmorTexture(Minecraft.getInstance().player, stack, s1, slot, type);
+//        ResourceLocation resourcelocation = ARMOR_LOCATION_CACHE.get(s1);
+//
+//        if (resourcelocation == null) {
+//            resourcelocation = ResourceLocation.tryParse(s1);
+//            ARMOR_LOCATION_CACHE.put(s1, resourcelocation);
+//        }
 
-        s1 = ClientHooks.getArmorTexture(Minecraft.getInstance().player, stack, s1, slot, type);
-        ResourceLocation resourcelocation = ARMOR_LOCATION_CACHE.get(s1);
-
-        if (resourcelocation == null) {
-            resourcelocation = ResourceLocation.tryParse(s1);
-            ARMOR_LOCATION_CACHE.put(s1, resourcelocation);
-        }
-
-        return resourcelocation;
+//        return resourcelocation;
+    return null; //TODO: reenable armor rendering
     }
 
     private boolean usesInnerModel(EquipmentSlot pSlot) {
@@ -268,7 +270,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
             stack.translate(-1.5, 1.95, 0);
         }
 
-        this.renderArmorStack(animatable, stack, (float) ticks, bufferSource, buffer, packedLight, packedOverlay, partialTick);
+        this.renderArmorStack(animatable, stack, (float) ticks, bufferSource, buffer, packedLight, packedOverlay, partialTick, colour);
         stack.popPose();
 
 

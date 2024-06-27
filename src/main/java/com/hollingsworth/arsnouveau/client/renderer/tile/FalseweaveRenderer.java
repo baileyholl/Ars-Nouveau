@@ -23,7 +23,7 @@ public class FalseweaveRenderer implements BlockEntityRenderer<FalseWeaveTile> {
     @Override
     public void render(FalseWeaveTile tileEntityIn, float partialTick, PoseStack pPoseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         BlockState renderState = tileEntityIn.mimicState;
-        boolean hasMagicFind = Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasEffect(ModPotions.MAGIC_FIND_EFFECT.get());
+        boolean hasMagicFind = Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasEffect(ModPotions.MAGIC_FIND_EFFECT);
         if(hasMagicFind)
             return;
         ModelBlockRenderer.enableCaching();

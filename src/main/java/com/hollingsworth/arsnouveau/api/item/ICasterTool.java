@@ -18,12 +18,12 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -109,9 +109,7 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
         return true;
     }
 
-    default void getInformation(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
-        if (worldIn == null)
-            return;
+    default void getInformation(ItemStack stack, Item.TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
         ISpellCaster caster = getSpellCaster(stack);
 
         if (caster.getSpell().isEmpty()) {

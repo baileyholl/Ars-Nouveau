@@ -7,16 +7,15 @@ import com.hollingsworth.arsnouveau.api.event.FamiliarSummonEvent;
 import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
 import com.hollingsworth.arsnouveau.api.familiar.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.entity.goal.familiar.FamOwnerHurtByTargetGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.familiar.FamOwnerHurtTargetGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.familiar.FamiliarFollowGoal;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -156,11 +155,11 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(OWNER_UUID, Optional.empty());
-        this.entityData.define(COLOR, "");
-        this.entityData.define(COSMETIC, ItemStack.EMPTY);
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(OWNER_UUID, Optional.empty());
+        pBuilder.define(COLOR, "");
+        pBuilder.define(COSMETIC, ItemStack.EMPTY);
     }
 
     @Override
@@ -196,11 +195,6 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
 
     public void setCosmeticItem(ItemStack stack) {
         setCosmeticItem(stack, true);
-    }
-
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     public static AttributeSupplier.Builder attributes() {
@@ -241,8 +235,7 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
         }
         tag.putString("color", this.entityData.get(COLOR));
         if (!this.entityData.get(COSMETIC).isEmpty()) {
-            CompoundTag cosmeticTag = new CompoundTag();
-            this.entityData.get(COSMETIC).save(cosmeticTag);
+            Tag cosmeticTag = this.entityData.get(COSMETIC).save(level.registryAccess());
             tag.put("cosmetic", cosmeticTag);
         }
     }
@@ -256,7 +249,7 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
         this.holderID = ResourceLocation.tryParse(tag.getString("holderID"));
         this.persistentData = deserializePersistentData(tag.getCompound("familiarData"));
         this.entityData.set(COLOR, tag.getString("color"));
-        this.entityData.set(COSMETIC, ItemStack.of(tag.getCompound("cosmetic")));
+        this.entityData.set(COSMETIC, ItemStack.parseOptional(this.level.registryAccess(), tag.getCompound("cosmetic")));
         syncAfterPersistentFamiliarInit();
     }
 

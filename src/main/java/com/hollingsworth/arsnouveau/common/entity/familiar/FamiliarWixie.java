@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -89,7 +90,7 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
         Entity target = event.getEntity();
         Entity applier = event.getEffectSource();
 
-        boolean isBeneficialOwner = target.equals(getOwner()) && event.getEffectInstance().getEffect().isBeneficial();
+        boolean isBeneficialOwner = target.equals(getOwner()) && event.getEffectInstance().getEffect().value().isBeneficial();
         boolean isApplierOwner = applier != null && applier.equals(this.getOwner());
         if(isBeneficialOwner || isApplierOwner){
             event.getEffectInstance().getCures();
@@ -146,7 +147,7 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
     public static class DebuffTargetGoal extends Goal {
         FamiliarWixie wixie;
 
-        public static ArrayList<MobEffect> effectTable = new ArrayList<>(Arrays.asList(
+        public static ArrayList<Holder<MobEffect>> effectTable = new ArrayList<>(Arrays.asList(
                 MobEffects.MOVEMENT_SLOWDOWN, MobEffects.WEAKNESS, MobEffects.LEVITATION, MobEffects.POISON
         ));
 
@@ -159,7 +160,7 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
             super.tick();
             if (wixie.getTarget() == null)
                 return;
-            MobEffect effect = effectTable.get(new Random().nextInt(effectTable.size()));
+            Holder<MobEffect> effect = effectTable.get(new Random().nextInt(effectTable.size()));
             if (effect == MobEffects.POISON) {
                 if (wixie.getTarget().isInvertedHealAndHarm())
                     effect = MobEffects.REGENERATION;
