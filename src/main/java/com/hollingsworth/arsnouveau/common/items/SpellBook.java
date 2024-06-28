@@ -68,15 +68,11 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     }
 
     @Override
-    public boolean canBeDepleted() {
-        return false;
-    }
-
-    @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (this != ItemsRegistry.CREATIVE_SPELLBOOK.get()) {
-            CapabilityRegistry.getMana(playerIn).ifPresent(iMana -> {
+            var iMana = CapabilityRegistry.getMana(playerIn).orElse(null);
+            if(iMana != null){
                 if (iMana.getBookTier() < this.tier.value) {
                     iMana.setBookTier(this.tier.value);
                 }
@@ -84,17 +80,15 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
                 if (iMana.getGlyphBonus() < cap.getKnownGlyphs().size()) {
                     iMana.setGlyphBonus(cap.getKnownGlyphs().size());
                 }
-            });
+            }
         }
         ISpellCaster caster = getSpellCaster(stack);
 
-        return caster.castSpell(worldIn, (LivingEntity) playerIn, handIn, Component.translatable("ars_nouveau.invalid_spell"));
+        return caster.castSpell(worldIn, playerIn, handIn, Component.translatable("ars_nouveau.invalid_spell"));
     }
 
-    /**
-     * How long it takes to use or consume an item
-     */
-    public int getUseDuration(ItemStack stack) {
+    @Override
+    public int getUseDuration(ItemStack pStack, LivingEntity p_344979_) {
         return 72000;
     }
 

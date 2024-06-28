@@ -37,7 +37,7 @@ public class ModSetup {
         ModEntities.ENTITIES.register(modEventBus);
         ModPotions.EFFECTS.register(modEventBus);
         ModPotions.POTIONS.register(modEventBus);
-        EnchantmentRegistry.ENCHANTMENTS.register(modEventBus);
+        DataComponentRegistry.DATA.register(modEventBus);
         RecipeRegistry.RECIPE_SERIALIZERS.register(modEventBus);
         RecipeRegistry.RECIPE_TYPES.register(modEventBus);
         ModParticles.PARTICLES.register(modEventBus);

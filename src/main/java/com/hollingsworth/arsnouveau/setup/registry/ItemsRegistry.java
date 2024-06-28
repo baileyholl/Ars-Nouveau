@@ -21,7 +21,6 @@ import com.hollingsworth.arsnouveau.common.perk.EmptyPerk;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
-import com.hollingsworth.arsnouveau.common.util.registry.ItemRegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -212,9 +211,9 @@ public class ItemsRegistry {
     public static final ItemRegistryWrapper<ModItem> SPLASH_LAUNCHER = register(LibItemNames.SPLASH_LAUNCHER, () -> new FlaskCannon.SplashLauncher(defaultItemProperties().stacksTo(1)));
     public static final ItemRegistryWrapper<ModItem> LINGERING_LAUNCHER = register(LibItemNames.LINGERING_LAUNCHER, () -> new FlaskCannon.LingeringLauncher(defaultItemProperties().stacksTo(1)));
     // TODO: restore discs
-    public static final ItemRegistryWrapper<RecordItem> FIREL_DISC = register(LibItemNames.FIREL_DISC, () -> new RecordItem(9, () -> SoundRegistry.ARIA_BIBLIO.get(), defaultItemProperties().stacksTo(1).rarity(Rarity.RARE), 20 * 240));
-    public static final ItemRegistryWrapper<RecordItem> SOUND_OF_GLASS = register(LibItemNames.SOUND_OF_GLASS, () -> new RecordItem(9, () -> SoundRegistry.SOUND_OF_GLASS.get(), defaultItemProperties().stacksTo(1).rarity(Rarity.RARE), 20 * 182));
-    public static final ItemRegistryWrapper<RecordItem> WILD_HUNT = register(LibItemNames.FIREL_WILD_HUNT, () -> new RecordItem(9, () -> SoundRegistry.WILD_HUNT.get(), defaultItemProperties().stacksTo(1).rarity(Rarity.RARE), 20 * 121));
+    public static final ItemRegistryWrapper<Item> FIREL_DISC = register(LibItemNames.FIREL_DISC, () -> new Item(defaultItemProperties().stacksTo(1).rarity(Rarity.RARE)));
+    public static final ItemRegistryWrapper<Item> SOUND_OF_GLASS = register(LibItemNames.SOUND_OF_GLASS, () -> new Item(defaultItemProperties().stacksTo(1).rarity(Rarity.RARE)));
+    public static final ItemRegistryWrapper<Item> WILD_HUNT = register(LibItemNames.FIREL_WILD_HUNT, () -> new Item(defaultItemProperties().stacksTo(1).rarity(Rarity.RARE)));
     public static final ItemRegistryWrapper<Present> STARBY_GIFY = register(LibItemNames.STARBY_GIFT, () -> new Present(defaultItemProperties().rarity(Rarity.EPIC)));
     public static final ItemRegistryWrapper<SpellCrossbow> SPELL_CROSSBOW = register(LibItemNames.SPELL_CROSSBOW, () -> new SpellCrossbow(defaultItemProperties().stacksTo(1)));
     public static final ItemRegistryWrapper<StableWarpScroll> STABLE_WARP_SCROLL = register(LibItemNames.STABLE_WARP_SCROLL, () -> new StableWarpScroll(defaultItemProperties().stacksTo(1)));

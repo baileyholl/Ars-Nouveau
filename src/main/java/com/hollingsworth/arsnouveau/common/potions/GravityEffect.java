@@ -10,7 +10,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
@@ -22,12 +21,7 @@ public class GravityEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int p_76397_1_, int p_76397_2_) {
-        return true;
-    }
-
-    @Override
-    public void applyEffectTick(LivingEntity livingEntity, int p_76394_2_) {
+    public boolean applyEffectTick(LivingEntity livingEntity, int p_76394_2_) {
         if (!livingEntity.onGround()) {
             boolean isTooHigh = true;
             Level world = livingEntity.level;
@@ -46,6 +40,7 @@ public class GravityEffect extends MobEffect {
 
         }
 
+        return true;
     }
 
     // Disable flight here because items tick after our potions

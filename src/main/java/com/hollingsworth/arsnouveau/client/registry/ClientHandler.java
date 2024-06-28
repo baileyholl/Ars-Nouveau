@@ -158,7 +158,7 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.LILY.get(), LilyRenderer::new);
     }
 
-    public static LayeredDraw.Layer cameraOverlay = new LayeredDraw.Layer(ArsNouveau.prefix( "scry_camera"), (gui, pose, partialTick, width, height) -> {
+    public static LayeredDraw.Layer cameraOverlay = new LayeredDraw.Layer(ArsNouveau.prefix( "scry_camera"), (gui, pose) -> {
         Minecraft mc = Minecraft.getInstance();
         Level level = mc.level;
         BlockPos pos = mc.cameraEntity.blockPosition();

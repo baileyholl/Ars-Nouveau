@@ -16,14 +16,12 @@ public class CreateSpellButton extends GuiImageButton {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int parX, int parY, float partialTicks) {
-        if (visible) {
-            if (!shouldRenderRed.get()) {
-                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            } else {
-                RenderSystem.setShaderColor(1.0F, 0.7F, 0.7F, 1.0F);
-            }
-            super.render(graphics, parX, parY, partialTicks);
+    protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        if (!shouldRenderRed.get()) {
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        } else {
+            RenderSystem.setShaderColor(1.0F, 0.7F, 0.7F, 1.0F);
         }
+        super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
     }
 }

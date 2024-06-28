@@ -14,9 +14,8 @@ public class SelectableButton extends GuiImageButton {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int parX, int parY, float partialTicks) {
+    protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         this.image = isSelected ? secondImage : image;
-        super.render(graphics, parX, parY, partialTicks);
+        super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
     }
-
 }

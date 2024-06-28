@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.common.util.registry.BlockRegistryWrapper;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistryWrapper;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;

@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.client.container;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.client.container.CraftingTerminalMenu.TerminalRecipeItemHelper;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import net.minecraft.client.gui.GuiGraphics;
@@ -147,7 +146,7 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-		this.renderBackground(graphics);
+		this.renderBackground(graphics, mouseX, mouseY, partialTicks);
 		if (this.recipeBookGui.isVisible() && this.widthTooNarrow) {
 			this.renderBg(graphics, partialTicks, mouseX, mouseY);
 			this.recipeBookGui.render(graphics, mouseX, mouseY, partialTicks);

@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -44,7 +46,7 @@ public class PotionSyncPacket extends AbstractPacket{
     @Override
     public void onClientReceived(Minecraft mc, Player player) {
         if (mc.level.getEntity(this.entity) instanceof LivingEntity living && living != ArsNouveau.proxy.getPlayer()) {
-            MobEffect effect = ForgeRegistries.MOB_EFFECTS.getValue(this.effect);
+            Holder<MobEffect> effect = BuiltInRegistries.MOB_EFFECT.getHolder(this.effect).orElse(null);
             if (effect == null) return;
             if (duration > 0) {
                 living.addEffect(new MobEffectInstance(effect, duration, 0, false, false, false));
@@ -55,7 +57,7 @@ public class PotionSyncPacket extends AbstractPacket{
     }
 
     public static ResourceLocation getRegistryName(MobEffect effect) {
-        return ForgeRegistries.MOB_EFFECTS.getKey(effect);
+        return BuiltInRegistries.MOB_EFFECT.getKey(effect);
     }
 
     public static final Type<PotionSyncPacket> TYPE = new Type<>(ArsNouveau.prefix("potion_sync"));

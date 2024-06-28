@@ -11,7 +11,7 @@ import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
-import com.hollingsworth.arsnouveau.common.util.registry.ItemRegistryWrapper;
+import com.hollingsworth.arsnouveau.setup.registry.ItemRegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;

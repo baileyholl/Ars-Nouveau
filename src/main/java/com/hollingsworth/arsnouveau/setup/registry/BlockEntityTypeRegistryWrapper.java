@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.util.registry;
+package com.hollingsworth.arsnouveau.setup.registry;
 
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;

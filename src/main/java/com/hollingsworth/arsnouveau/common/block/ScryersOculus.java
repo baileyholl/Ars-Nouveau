@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenuSlot;
+import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ScryersOculusTile;
 import com.hollingsworth.arsnouveau.common.items.ScryerScroll;
@@ -78,7 +79,7 @@ public class ScryersOculus extends TickableModBlock {
                 return;
             }
             Networking.sendToServer(new PacketMountCamera(data.pos));
-        }, slots, (slotData, posestack, positionx, posy, size, transparent) -> RenderUtil.drawItemAsIcon(slotData.getDefaultInstance(), posestack, positionx, posy, size, transparent), 3)));
+        }, slots, (slotData, posestack, positionx, posy, size, transparent) -> RenderUtils.drawItemAsIcon(slotData.getDefaultInstance(), posestack, positionx, posy, size, transparent), 3)));
     }
 
     @Nullable

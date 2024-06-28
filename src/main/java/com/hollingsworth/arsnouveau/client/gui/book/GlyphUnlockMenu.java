@@ -384,10 +384,8 @@ public class GlyphUnlockMenu extends BaseBook {
                 k2 = this.height - j - 6;
             }
             pPoseStack.pushPose();
-            Tesselator tesselator = Tesselator.getInstance();
-            BufferBuilder bufferbuilder = tesselator.getBuilder();
+            BufferBuilder tesselator = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
-            bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
             Matrix4f matrix4f = pPoseStack.last().pose();
             net.neoforged.neoforge.client.event.RenderTooltipEvent.Color colorEvent = net.neoforged.neoforge.client.ClientHooks.onRenderTooltipColor(ItemStack.EMPTY, graphics, j2, k2, preEvent.getFont(), pClientTooltipComponents);
             graphics.fillGradient( j2 - 3, k2 - 4, j2 + i + 3, k2 - 3, 400, colorEvent.getBackgroundStart(), colorEvent.getBackgroundStart());
@@ -402,9 +400,9 @@ public class GlyphUnlockMenu extends BaseBook {
             RenderSystem.enableDepthTest();
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
-            BufferUploader.drawWithShader(bufferbuilder.end());
+            BufferUploader.drawWithShader(tesselator.buildOrThrow());
             RenderSystem.disableBlend();
-            MultiBufferSource.BufferSource multibuffersource$buffersource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+            MultiBufferSource.BufferSource multibuffersource$buffersource = MultiBufferSource.immediate(new ByteBufferBuilder(1536));
             pPoseStack.translate(0.0D, 0.0D, 400.0D);
             int l1 = k2;
 

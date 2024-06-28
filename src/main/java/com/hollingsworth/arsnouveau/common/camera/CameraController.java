@@ -37,7 +37,7 @@ public class CameraController {
             Options options = Minecraft.getInstance().options;
 
             //up/down/left/right handling is split to prevent players who are viewing a camera from moving around in a boat or on a horse
-            if (event.phase == TickEvent.Phase.START) {
+            if (event instanceof ClientTickEvent.Pre) {
                 if (wasUpPressed = options.keyUp.isDown())
                     options.keyUp.setDown(false);
 
@@ -54,7 +54,7 @@ public class CameraController {
                     dismount();
                     options.keyShift.setDown(false);
                 }
-            } else if (event.phase == TickEvent.Phase.END) {
+            } else if (event instanceof ClientTickEvent.Post) {
                 if (wasUpPressed) {
                     moveViewUp(cam);
                     options.keyUp.setDown(true);

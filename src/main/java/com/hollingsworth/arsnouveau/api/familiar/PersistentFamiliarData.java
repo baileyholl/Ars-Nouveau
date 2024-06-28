@@ -1,30 +1,48 @@
 package com.hollingsworth.arsnouveau.api.familiar;
 
-import net.minecraft.nbt.CompoundTag;
+import com.hollingsworth.arsnouveau.api.item.NBTComponent;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.CheatSerializer;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 
-public class PersistentFamiliarData<T extends Entity> {
+public class PersistentFamiliarData implements NBTComponent<PersistentFamiliarData> {
+
+    public static MapCodec<PersistentFamiliarData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+        ComponentSerialization.CODEC.fieldOf("name").forGetter(data -> data.name),
+        Codec.STRING.fieldOf("color").forGetter(data -> data.color),
+        ItemStack.CODEC.fieldOf("cosmetic").forGetter(data -> data.cosmetic)
+    ).apply(instance, PersistentFamiliarData::new));
+
+    public static StreamCodec<RegistryFriendlyByteBuf, PersistentFamiliarData>  STREAM_CODEC = CheatSerializer.create(PersistentFamiliarData.CODEC);
+
     public Component name;
     public String color;
     public ItemStack cosmetic;
 
-    public PersistentFamiliarData(CompoundTag tag) {
-        this.name = tag.contains("name") ? Component.Serializer.fromJson(tag.getString("name")) : null;
-        this.color = tag.contains("color") ? tag.getString("color") : null;
-        this.cosmetic = tag.contains("cosmetic") ? ItemStack.of(tag.getCompound("cosmetic")) : null;
+    public PersistentFamiliarData(Component name, String color, ItemStack cosmetic) {
+        this.name = name;
+        this.color = color;
+        this.cosmetic = cosmetic;
     }
 
-    public CompoundTag toTag(T entity, CompoundTag tag) {
-        if (name != null)
-            tag.putString("name", Component.Serializer.toJson(name));
-        if (color != null) {
-            tag.putString("color", color);
-        }
-        if (cosmetic != null) {
-            tag.put("cosmetic", cosmetic.save(new CompoundTag()));
-        }
-        return tag;
+    public PersistentFamiliarData(){
+        this(Component.nullToEmpty(""), "", ItemStack.EMPTY);
+    }
+
+    public static PersistentFamiliarData fromTag(Tag tag){
+        return CODEC.codec().parse(NbtOps.INSTANCE, tag).getOrThrow();
+    }
+
+    @Override
+    public Codec<PersistentFamiliarData> getCodec() {
+        return CODEC.codec();
     }
 }

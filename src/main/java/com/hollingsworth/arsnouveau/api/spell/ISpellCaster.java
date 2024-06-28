@@ -21,6 +21,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -137,7 +138,7 @@ public interface ISpellCaster {
         IWrappedCaster wrappedCaster = entity instanceof Player pCaster ? new PlayerCaster(pCaster) : new LivingCaster(entity);
         SpellResolver resolver = getSpellResolver(new SpellContext(worldIn, spell, entity, wrappedCaster, stack), worldIn, player, handIn);
         boolean isSensitive = resolver.spell.getBuffsAtIndex(0, entity, AugmentSensitive.INSTANCE) > 0;
-        HitResult result = SpellUtil.rayTrace(entity, 0.5 + player.getBlockReach(), 0, isSensitive);
+        HitResult result = SpellUtil.rayTrace(entity, 0.5 + player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE).getValue(), 0, isSensitive);
         if (result instanceof BlockHitResult blockHit) {
             BlockEntity tile = worldIn.getBlockEntity(blockHit.getBlockPos());
             if (tile instanceof ScribesTile)

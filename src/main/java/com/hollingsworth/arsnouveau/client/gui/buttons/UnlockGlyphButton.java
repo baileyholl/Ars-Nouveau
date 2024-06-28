@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -34,13 +35,11 @@ public class UnlockGlyphButton extends ANButton {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        if (visible) {
-            if (this.spellPart != null) {
-                RenderUtil.drawSpellPart(this.spellPart, graphics, x, y, width, !playerKnows, 0);
-                if (selected)
-                    graphics.blit(ArsNouveau.prefix( "textures/gui/glyph_selected.png"), x, y, 0, 0, 16, 16, 16, 16);
-            }
+    protected void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        if (this.spellPart != null) {
+            RenderUtils.drawSpellPart(this.spellPart, pGuiGraphics, x, y, width, !playerKnows, 0);
+            if (selected)
+                pGuiGraphics.blit(ArsNouveau.prefix( "textures/gui/glyph_selected.png"), x, y, 0, 0, 16, 16, 16, 16);
         }
     }
 

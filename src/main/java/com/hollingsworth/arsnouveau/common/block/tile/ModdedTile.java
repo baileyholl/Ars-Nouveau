@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.common.util.registry.BlockEntityTypeRegistryWrapper;
-import com.hollingsworth.arsnouveau.common.util.registry.RegistryWrapper;
+import com.hollingsworth.arsnouveau.setup.registry.BlockEntityTypeRegistryWrapper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;

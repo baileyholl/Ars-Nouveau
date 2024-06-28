@@ -84,7 +84,8 @@ public class GuiRadialMenu<T> extends Screen {
         super.render(graphics, mouseX, mouseY, partialTicks);
         PoseStack ms = graphics.pose();
         float openAnimation = closing ? 1.0f - totalTime / OPEN_ANIMATION_LENGTH : totalTime / OPEN_ANIMATION_LENGTH;
-        float currTick = minecraft.getFrameTime();
+        //todo: is getFrameTimeNs() the right method to use here?
+        float currTick = minecraft.getFrameTimeNs();
         totalTime += (currTick + extraTick - prevTick)/20f;
         extraTick = 0;
         prevTick = currTick;
@@ -114,9 +115,7 @@ public class GuiRadialMenu<T> extends Screen {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
 
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder buffer = tessellator.getBuilder();
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder tessellator = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         boolean hasMouseOver = false;
         int mousedOverSlot = -1;
 
@@ -137,14 +136,14 @@ public class GuiRadialMenu<T> extends Screen {
             float sliceBorderLeft = (((i - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
             float sliceBorderRight = (((i + 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
             if (selectedItem == i) {
-                drawSlice(buffer, centerOfScreenX, centerOfScreenY, 10, radiusIn, radiusOut, sliceBorderLeft, sliceBorderRight, 63, 161, 191, 60);
+                drawSlice(tessellator, centerOfScreenX, centerOfScreenY, 10, radiusIn, radiusOut, sliceBorderLeft, sliceBorderRight, 63, 161, 191, 60);
                 hasMouseOver = true;
                 mousedOverSlot = selectedItem;
             } else
-                drawSlice(buffer, centerOfScreenX, centerOfScreenY, 10, radiusIn, radiusOut, sliceBorderLeft, sliceBorderRight, 0, 0, 0, 64);
+                drawSlice(tessellator, centerOfScreenX, centerOfScreenY, 10, radiusIn, radiusOut, sliceBorderLeft, sliceBorderRight, 0, 0, 0, 64);
         }
 
-        tessellator.end();
+        BufferUploader.drawWithShader(tessellator.buildOrThrow());
         RenderSystem.disableBlend();
         if (hasMouseOver && mousedOverSlot != -1) {
             int adjusted = ((mousedOverSlot + (numberOfSlices / 2 + 1)) % numberOfSlices) - 1;

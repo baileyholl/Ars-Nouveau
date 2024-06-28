@@ -2,14 +2,12 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantedItemInUse;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-
-import java.util.Map;
 
 public abstract class ExperienceGem extends ModItem {
 
@@ -43,9 +41,9 @@ public abstract class ExperienceGem extends ModItem {
     }
 
     public int repairPlayerItems(Player p_147093_, int remainingExp, int initialValue) {
-        Map.Entry<EquipmentSlot, ItemStack> entry = EnchantmentHelper.getRandomItemWith(Enchantments.MENDING, p_147093_, ItemStack::isDamaged);
+        EnchantedItemInUse entry = EnchantmentHelper.getRandomItemWith(EnchantmentEffectComponents.REPAIR_WITH_XP, p_147093_, ItemStack::isDamaged).orElse(null);
         if (entry != null) {
-            ItemStack itemstack = entry.getValue();
+            ItemStack itemstack = entry.itemStack();
             int i = Math.min((int) (initialValue * itemstack.getXpRepairRatio()), itemstack.getDamageValue());
             itemstack.setDamageValue(itemstack.getDamageValue() - i);
             int j = remainingExp - this.durabilityToXp(i);

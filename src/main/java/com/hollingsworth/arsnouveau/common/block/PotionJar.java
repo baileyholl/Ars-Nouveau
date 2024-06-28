@@ -10,7 +10,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -18,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -41,7 +40,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -80,7 +78,7 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
             return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
         Potion potion = PotionUtils.getPotion(stack);
 
-        if (stack.getItem() == Items.POTION && potion != Potions.EMPTY) {
+        if (stack.getItem() == Items.POTION && potion != PotionContents.EMPTY) {
             if (tile.canAccept(new PotionData(stack),100)) {
                 tile.add(new PotionData(stack), 100);
                 if (!player.isCreative()) {

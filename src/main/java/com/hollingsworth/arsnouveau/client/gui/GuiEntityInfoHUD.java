@@ -4,8 +4,8 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -96,13 +96,15 @@ public class GuiEntityInfoHUD {
             tooltipHeight += (tooltip.size() - 1) * 10;
         }
         int xOffset = Config.TOOLTIP_X_OFFSET.get();
+        int width = Minecraft.getInstance().getWindow().getWidth();
+        int height = Minecraft.getInstance().getWindow().getHeight();
         int posX = width / 2 + xOffset;
         int posY = height / 2 + Config.TOOLTIP_Y_OFFSET.get();
 
         posX = Math.min(posX, width - tooltipTextWidth - 20);
         posY = Math.min(posY, height - tooltipHeight - 20);
 
-        float fade = Mth.clamp((hoverTicks + partialTicks) / 12f, 0, 1);
+        float fade = Mth.clamp((hoverTicks + tracker.getGameTimeDeltaTicks()) / 12f, 0, 1);
         Color colorBackground = VANILLA_TOOLTIP_BACKGROUND.scaleAlpha(.75f);
         Color colorBorderTop = VANILLA_TOOLTIP_BORDER_1;
         Color colorBorderBot = VANILLA_TOOLTIP_BORDER_2;
@@ -132,7 +134,8 @@ public class GuiEntityInfoHUD {
         List<ClientTooltipComponent> list = ClientHooks.gatherTooltipComponents(stack, textLines, stack.getTooltipImage(), mouseX, screenWidth, screenHeight, font);
         RenderTooltipEvent.Pre event =
                 new RenderTooltipEvent.Pre(stack, graphics, mouseX, mouseY, screenWidth, screenHeight, font, list, DefaultTooltipPositioner.INSTANCE);
-        if (NeoForge.EVENT_BUS.post(event))
+        NeoForge.EVENT_BUS.post(event);
+        if (event.isCanceled())
             return;
 
         mouseX = event.getX();
@@ -242,8 +245,7 @@ public class GuiEntityInfoHUD {
         graphics.fillGradient(tooltipX - 3, tooltipY + tooltipHeight + 2,
                 tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, borderColorEnd, borderColorEnd);
 
-        MultiBufferSource.BufferSource renderType = MultiBufferSource.immediate(Tesselator.getInstance()
-                .getBuilder());
+        MultiBufferSource.BufferSource renderType = MultiBufferSource.immediate(new ByteBufferBuilder(1536));
         pStack.translate(0.0D, 0.0D, zLevel);
 
         for (int lineNumber = 0; lineNumber < list.size(); ++lineNumber) {

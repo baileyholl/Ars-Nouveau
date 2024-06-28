@@ -15,15 +15,15 @@ public class ShockedEffect extends MobEffect {
         super(MobEffectCategory.HARMFUL, 2039587);
     }
 
-    @Override
-    public boolean isDurationEffectTick(int duration, int amp) {
-        int j = 25 >> amp;
-        if (j > 0) {
-            return duration % j == 0;
-        } else {
-            return true;
-        }
-    }
+//    @Override
+//    public boolean isDurationEffectTick(int duration, int amp) {
+//        int j = 25 >> amp;
+//        if (j > 0) {
+//            return duration % j == 0;
+//        } else {
+//            return true;
+//        }
+//    }
 
     @Override
     public boolean applyEffectTick(LivingEntity entity, int amp) {

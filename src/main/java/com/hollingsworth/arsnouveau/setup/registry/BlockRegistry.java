@@ -9,8 +9,6 @@ import com.hollingsworth.arsnouveau.common.items.MobJarItem;
 import com.hollingsworth.arsnouveau.common.items.ModBlockItem;
 import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
-import com.hollingsworth.arsnouveau.common.util.registry.BlockEntityTypeRegistryWrapper;
-import com.hollingsworth.arsnouveau.common.util.registry.BlockRegistryWrapper;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTree;
 import com.hollingsworth.arsnouveau.common.world.tree.SupplierBlockStateProvider;
 import net.minecraft.ChatFormatting;

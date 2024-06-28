@@ -42,7 +42,7 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable, IDi
 
     @Override
     public void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(pTag, bpRegistries);
+        super.loadAdditional(pTag, pRegistries);
         this.color = ParticleColorRegistry.from(pTag.getCompound("color"));
         lit = pTag.getBoolean("lit");
     }
@@ -50,8 +50,8 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable, IDi
     @Override
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
-        compound.put("color", color.serialize());
-        compound.putBoolean("lit", lit);
+        tag.put("color", color.serialize());
+        tag.putBoolean("lit", lit);
     }
 
     @Override

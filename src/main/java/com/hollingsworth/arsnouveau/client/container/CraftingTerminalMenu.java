@@ -16,9 +16,10 @@ import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFillTerminal {
@@ -197,8 +198,8 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 	}
 
 	@Override
-	public boolean recipeMatches(Recipe<? super CraftingContainer> recipeIn) {
-		return recipeIn.matches(this.craftMatrix, this.pinv.player.level);
+	public boolean recipeMatches(RecipeHolder pRecipe) {
+		return pRecipe.value().matches(this.craftMatrix.asCraftInput(), this.pinv.player.level);
 	}
 
 	@Override
@@ -236,18 +237,16 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void handlePlacement(boolean p_217056_1_, Recipe<?> p_217056_2_, ServerPlayer p_217056_3_) {
-		(new ServerPlaceRecipe(this) {
+	public void handlePlacement(boolean pPlaceAll, RecipeHolder<?> pRecipe, ServerPlayer pPlayer) {
+		(new ServerPlaceRecipe<RecipeInput, Recipe>(this) {
 			{
 				stackedContents = new TerminalRecipeItemHelper();
 			}
 
 
-
 			@Override
-			public void addItemToSlot(Iterator pIngredients, int pSlot, int pMaxAmount, int pY, int pX) {
+			public void addItemToSlot(Object p_346420_, int pSlot, int pMaxAmount, int p_135418_, int p_135419_) {
 				Slot slot = this.menu.getSlot(pSlot);
 				ItemStack itemstack = StackedContents.fromStackingIndex((Integer) pIngredients.next());
 				if (!itemstack.isEmpty()) {
@@ -294,7 +293,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 				((CraftingLecternTile) te).clear(selectedTab);
 				this.menu.clearCraftingContent();
 			}
-		}).recipeClicked(p_217056_3_, p_217056_2_, p_217056_1_);
+		}).recipeClicked(pPlaceAll, pRecipe, pPlayer);
 	}
 
 	@Override
@@ -310,7 +309,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 				stacks[slot] = new ItemStack[l];
 				for (int j = 0;j < l;j++) {
 					CompoundTag tag = nbttagcompound.getCompound("i" + j);
-					stacks[slot][j] = ItemStack.of(tag);
+					stacks[slot][j] = ItemStack.parseOptional(tag);
 				}
 			}
 			((CraftingLecternTile) te).transferToGrid(pinv.player, stacks, selectedTab);

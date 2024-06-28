@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 
@@ -12,7 +11,6 @@ import java.util.List;
  * Slots for selecting the spell recipes stored in the book.
  */
 public class GuiSpellSlot extends GuiImageButton {
-
 
     public int slotNum;
     public boolean isSelected;
@@ -25,12 +23,10 @@ public class GuiSpellSlot extends GuiImageButton {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int parX, int parY, float partialTicks) {
-        if (visible) {
-            image = this.isSelected ? ArsNouveau.prefix( "textures/gui/spell_tab_selected.png") : ArsNouveau.prefix( "textures/gui/spell_tab.png");
-            super.render(graphics, parX, parY, partialTicks);
-            graphics.drawCenteredString(Minecraft.getInstance().font, String.valueOf(this.slotNum + 1), x + 8, y + 3, 16777215); // White
-        }
+    protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        image = this.isSelected ? ArsNouveau.prefix( "textures/gui/spell_tab_selected.png") : ArsNouveau.prefix( "textures/gui/spell_tab.png");
+        super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
+        graphics.drawCenteredString(Minecraft.getInstance().font, String.valueOf(this.slotNum + 1), x + 8, y + 3, 16777215); // White
     }
 
     @Override

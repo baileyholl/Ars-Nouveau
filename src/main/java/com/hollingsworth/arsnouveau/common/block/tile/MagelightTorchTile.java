@@ -94,11 +94,11 @@ public class MagelightTorchTile extends SconceTile {
     @Override
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
-        compound.putBoolean("horizontalFire", horizontalFire);
+        tag.putBoolean("horizontalFire", horizontalFire);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+    public void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
         super.loadAdditional(compound, pRegistries);
         horizontalFire = compound.getBoolean("horizontalFire");
     }

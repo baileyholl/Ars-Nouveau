@@ -15,7 +15,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -53,7 +52,7 @@ public class MobJarItem extends BlockItem implements GeoItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
+    public void appendHoverText(ItemStack stack, TooltipContext pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
         super.appendHoverText(stack, pLevel, pTooltip, pFlag);
         if(pLevel == null)
             return;

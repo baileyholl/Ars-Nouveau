@@ -1,7 +1,6 @@
-package com.hollingsworth.arsnouveau.common.util.registry;
+package com.hollingsworth.arsnouveau.setup.registry;
 
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class ItemRegistryWrapper<T extends Item> extends RegistryWrapper<Item, T> {
