@@ -6,11 +6,10 @@ import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.ChangeableBehavior;
 import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
-import com.hollingsworth.arsnouveau.api.familiar.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
+import com.hollingsworth.arsnouveau.api.item.NBTComponent;
 import com.hollingsworth.arsnouveau.api.registry.BehaviorRegistry;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -27,18 +26,19 @@ import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.UntamedFindItem
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.MinecoloniesAdvancedPathNavigate;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.MovementHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingStuckHandler;
+import com.hollingsworth.arsnouveau.common.items.data.StarbuncleCharmData;
 import com.hollingsworth.arsnouveau.common.items.summon_charms.StarbuncleCharm;
 import com.hollingsworth.arsnouveau.common.network.ITagSyncable;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSyncTag;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -67,7 +67,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirtPathBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathType;
@@ -85,8 +84,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
-
-import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
 public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, ITagSyncable, IVariantColorProvider<Starbuncle> {
 
@@ -121,7 +118,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     public BlockPos jukeboxPos;
     public boolean partyCarby;
     public PathNavigation minecraftPathNav;
-    public StarbuncleData data = new StarbuncleData(new CompoundTag());
+    public StarbuncleCharmData.Mutable data = new StarbuncleCharmData.Mutable();
     public ChangeableBehavior dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
     public boolean canSleep;
     public boolean sleeping;
@@ -250,7 +247,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
                 ItemStack stack = new ItemStack(ItemsRegistry.STARBUNCLE_SHARD.get(), 1 + level.random.nextInt(2));
                 if (this.data.adopter != null) {
                     stack.setCount(1);
-                    stack.setTag(data.toTag(this, new CompoundTag()));
+                    stack.set(DataComponentRegistry.STARBUNCLE_DATA, this.data.immutable());
                 }
                 level.addFreshEntity(new ItemEntity(level, getX(), getY() + 0.5, getZ(), stack));
                 level.playSound(null, getX(), getY(), getZ(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1f, 1f);
@@ -440,7 +437,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
 
     public void dropData() {
         ItemStack stack = new ItemStack(ItemsRegistry.STARBUNCLE_CHARM.get());
-        stack.setTag(data.toTag(this, new CompoundTag()));
+        stack.set(DataComponentRegistry.STARBUNCLE_DATA, data.immutable());
         level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
         if (this.getHeldStack() != null)
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getHeldStack()));
@@ -472,8 +469,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         if(player.getMainHandItem().getItem() instanceof StarbuncleCharm starbuncleCharm){
 
             Starbuncle carbuncle = new Starbuncle(level, true);
-            Starbuncle.StarbuncleData data = new Starbuncle.StarbuncleData(player.getMainHandItem().getOrCreateTag());
-            carbuncle.data = data;
+            carbuncle.data = player.getMainHandItem().getOrDefault(DataComponentRegistry.STARBUNCLE_DATA, new StarbuncleCharmData()).mutable();
             level.addFreshEntity(carbuncle);
             carbuncle.restoreFromTag();
             carbuncle.startRiding(this);
@@ -572,7 +568,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        data = new StarbuncleData(tag.contains("starbuncleData") ? tag.getCompound("starbuncleData") : new CompoundTag());
+        data = NBTComponent.fromTag(StarbuncleCharmData.CODEC.codec(), tag.contains("starbuncleData") ? tag.getCompound("starbuncleData") : new CompoundTag()).mutable();
         if (tag.contains("held"))
             setHeldStack(ItemStack.parseOptional(level.registryAccess(), (CompoundTag) tag.get("held")));
 
@@ -592,7 +588,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        tag.put("starbuncleData", data.toTag(this, new CompoundTag()));
+        tag.put("starbuncleData", data.immutable().toTag(level));
         if (getHeldStack() != null) {
             Tag itemTag = getHeldStack().save(level.registryAccess());
             tag.put("held", itemTag);
@@ -752,55 +748,4 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         }
     }
 
-    public static class StarbuncleData extends PersistentFamiliarData<Starbuncle> {
-        public Block pathBlock;
-        public BlockPos bedPos;
-        public CompoundTag behaviorTag;
-        public String adopter;
-        public String bio;
-
-        public StarbuncleData(CompoundTag tag) {
-            super(tag);
-            adopter = null;
-            bio = null;
-
-            if (tag.contains("path")) {
-                pathBlock = BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(tag.getString("path")));
-            }
-            bedPos = NBTUtil.getBlockPos(tag, "bed_");
-            if (bedPos.equals(BlockPos.ZERO))
-                bedPos = null;
-            if (tag.contains("behavior"))
-                behaviorTag = tag.getCompound("behavior");
-            if (tag.contains("cosmetic")) {
-                cosmetic = ItemStack.parseOptional(tag.getCompound("cosmetic"));
-            }
-            if (tag.contains("adopter")) {
-                adopter = tag.getString("adopter");
-            }
-            if (tag.contains("bio")) {
-                bio = tag.getString("bio");
-            }
-        }
-
-        @Override
-        public CompoundTag toTag(Starbuncle starbuncle, CompoundTag tag) {
-            super.toTag(starbuncle, tag);
-            if (pathBlock != null)
-                tag.putString("path", getRegistryName(pathBlock).toString());
-            if (bedPos != null)
-                NBTUtil.storeBlockPos(tag, "bed_", bedPos);
-            if (!starbuncle.getCosmeticItem().isEmpty()) {
-                tag.put("cosmetic", starbuncle.getCosmeticItem().save(starbuncle.level.registryAccess()));
-            }
-            tag.put("behavior", starbuncle.dynamicBehavior.toTag(new CompoundTag()));
-            if (adopter != null) {
-                tag.putString("adopter", adopter);
-            }
-            if (bio != null) {
-                tag.putString("bio", bio);
-            }
-            return tag;
-        }
-    }
 }

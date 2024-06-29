@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
-import com.hollingsworth.arsnouveau.api.familiar.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
@@ -14,10 +13,13 @@ import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
 import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.RandomStorageVisitGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.TransferGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.TransferTask;
+import com.hollingsworth.arsnouveau.common.items.data.PersistentFamiliarData;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -48,8 +50,8 @@ import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -218,19 +220,17 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
 
     public ItemStack toCharm(){
         ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM.get());
-        PersistentFamiliarData<EntityBookwyrm> data = new PersistentFamiliarData<>(new CompoundTag());
-        data.color = getColor(this);
-        data.name = getCustomName();
-        stack.setTag(data.toTag(this, new CompoundTag()));
+        PersistentFamiliarData data = new PersistentFamiliarData(getName(), getColor(this), getHeldStack());
+        stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, data);
         return stack;
     }
 
     public void readCharm(ItemStack stack){
-        if(stack.hasTag()) {
-            PersistentFamiliarData<EntityBookwyrm> data = new PersistentFamiliarData<>(stack.getOrCreateTag());
-            setColor(data.color, this);
-            setCustomName(data.name);
-        }
+        PersistentFamiliarData data = stack.get(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA);
+        if(data == null)
+            return;
+        setColor(data.color, this);
+        setCustomName(data.name);
     }
 
     @Override
@@ -241,8 +241,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
         }
 
         if (!getHeldStack().isEmpty()) {
-            CompoundTag itemTag = new CompoundTag();
-            getHeldStack().save(itemTag);
+            Tag itemTag = getHeldStack().save(registryAccess());
             tag.put("held", itemTag);
         }
         tag.putInt("backoff", backoffTicks);
@@ -256,7 +255,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
             lecternPos = BlockPos.of(tag.getLong("lectern"));
         }
         if (tag.contains("held"))
-            setHeldStack(ItemStack.of((CompoundTag) tag.get("held")));
+            setHeldStack(ItemStack.parseOptional(registryAccess(), (CompoundTag) tag.get("held")));
 
         this.backoffTicks = tag.getInt("backoff");
         if (tag.contains("color"))

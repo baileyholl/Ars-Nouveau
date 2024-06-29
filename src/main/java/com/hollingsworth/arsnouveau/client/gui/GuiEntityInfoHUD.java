@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
-import com.hollingsworth.arsnouveau.common.items.ItemScroll;
+import com.hollingsworth.arsnouveau.common.items.data.ItemScrollData;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
@@ -58,7 +58,7 @@ public class GuiEntityInfoHUD {
                 iTooltipProvider.getTooltip(tooltip);
             }
             if (result.getEntity() instanceof ItemFrame frame) {
-                ItemScroll.ItemScrollData data = new ItemScroll.ItemScrollData(frame.getItem());
+                ItemScrollData.ItemScrollData data = new ItemScrollData.ItemScrollData(frame.getItem());
                 for(ItemStack i : data.getItems()){
                     tooltip.add(i.getHoverName());
                 }

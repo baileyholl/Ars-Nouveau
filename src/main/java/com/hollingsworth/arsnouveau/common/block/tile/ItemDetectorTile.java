@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
+import com.hollingsworth.arsnouveau.common.items.data.ItemScrollData;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.ChatFormatting;
@@ -180,7 +181,7 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
     public void getTooltip(List<Component> tooltip) {
         tooltip.add(Component.translatable("ars_nouveau.item_detector.count", (inverted ? "< " : "> ") + neededCount));
         if(filterStack.getItem() instanceof ItemScroll && filterStack.hasTag()){
-            ItemScroll.ItemScrollData scrollData = new ItemScroll.ItemScrollData(filterStack);
+            ItemScrollData.ItemScrollData scrollData = new ItemScrollData.ItemScrollData(filterStack);
             for (ItemStack s : scrollData.getItems()) {
                 tooltip.add(Component.literal(s.getHoverName().getString()).withStyle(ChatFormatting.GOLD));
             }

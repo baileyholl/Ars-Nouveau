@@ -13,4 +13,8 @@ public interface NBTComponent<T> {
     default Tag toTag(Level level){
         return getCodec().encode((T) this, level.registryAccess().createSerializationContext(NbtOps.INSTANCE), new CompoundTag()).getOrThrow();
     }
+
+    static <T> T fromTag(Codec<T> codec, Tag tag){
+        return codec.parse(NbtOps.INSTANCE, tag).getOrThrow();
+    }
 }

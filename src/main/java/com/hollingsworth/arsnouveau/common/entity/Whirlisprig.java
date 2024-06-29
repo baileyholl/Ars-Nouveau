@@ -15,7 +15,7 @@ import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.BonemealGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.FollowMobGoalBackoff;
 import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.FollowPlayerGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.InspectPlantGoal;
-import com.hollingsworth.arsnouveau.common.items.ItemScroll;
+import com.hollingsworth.arsnouveau.common.items.data.ItemScrollData;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -113,7 +113,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
             return super.mobInteract(player, hand);
         ItemStack stack = player.getItemInHand(hand);
         if (stack.getItem() == ItemsRegistry.DENY_ITEM_SCROLL.asItem() && getTile() != null) {
-            ItemScroll.ItemScrollData scrollData = new ItemScroll.ItemScrollData(stack);
+            ItemScrollData.ItemScrollData scrollData = new ItemScrollData.ItemScrollData(stack);
             getTile().ignoreItems.addAll(scrollData.getItems());
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.whirlisprig.ignore"));
         }

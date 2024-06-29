@@ -165,6 +165,10 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
                 Codec.INT.fieldOf("exp").forGetter(GlyphRecipe::getExp)
         ).apply(instance, GlyphRecipe::new));
 
+        public static final StreamCodec<RegistryFriendlyByteBuf, GlyphRecipe> STREAM_CODEC = StreamCodec.of(
+                GlyphRecipe.Serializer::toNetwork, GlyphRecipe.Serializer::fromNetwork
+        );
+
         @Override
         public MapCodec<GlyphRecipe> codec() {
             return CODEC;
@@ -172,7 +176,7 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
 
         @Override
         public StreamCodec<RegistryFriendlyByteBuf, GlyphRecipe> streamCodec() {
-            return null;
+            return STREAM_CODEC;
         }
     }
 }
