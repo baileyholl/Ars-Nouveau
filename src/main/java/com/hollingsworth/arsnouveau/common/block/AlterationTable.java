@@ -1,16 +1,15 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
-import com.hollingsworth.arsnouveau.api.perk.StackPerkHolder;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.AlterationTile;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
+import com.hollingsworth.arsnouveau.common.items.data.StackPerkHolder;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;

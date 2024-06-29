@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -11,16 +12,28 @@ import net.minecraft.network.codec.StreamCodec;
 public class CheatSerializer {
 
     public static <T>StreamCodec<RegistryFriendlyByteBuf, T> create(MapCodec<T> codec){
+        return create(codec.codec());
+    }
+
+    public static <T> StreamCodec<RegistryFriendlyByteBuf, T> create(Codec<T> codec){
         return StreamCodec.of(
                 (buf, val) -> CheatSerializer.toNetwork(codec, buf, val), (buf) -> CheatSerializer.fromNetwork(codec, buf)
         );
     }
 
     public static <T> T fromNetwork(MapCodec<T> codec, RegistryFriendlyByteBuf friendlyByteBuf) {
-        return friendlyByteBuf.readJsonWithCodec(codec.codec());
+        return fromNetwork(codec.codec(), friendlyByteBuf);
     }
 
     public static <T> void toNetwork(MapCodec<T> codec, RegistryFriendlyByteBuf friendlyByteBuf, T obj) {
-        friendlyByteBuf.writeJsonWithCodec(codec.codec(), obj);
+        toNetwork(codec.codec(), friendlyByteBuf, obj);
+    }
+
+    public static <T> T fromNetwork(Codec<T> codec, RegistryFriendlyByteBuf friendlyByteBuf) {
+        return friendlyByteBuf.readJsonWithCodec(codec);
+    }
+
+    public static <T> void toNetwork(Codec<T> codec, RegistryFriendlyByteBuf friendlyByteBuf, T obj) {
+        friendlyByteBuf.writeJsonWithCodec(codec, obj);
     }
 }

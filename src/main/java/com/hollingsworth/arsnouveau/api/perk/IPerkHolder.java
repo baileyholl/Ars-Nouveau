@@ -29,7 +29,7 @@ public interface IPerkHolder<T> {
 
     List<IPerk> getPerks();
 
-    void setPerks(List<IPerk> perks);
+    T setPerks(List<IPerk> perks);
 
     List<PerkSlot> getSlotsForTier();
 
@@ -43,20 +43,20 @@ public interface IPerkHolder<T> {
             IPerk perk = perkInstance.getPerk();
             ResourceLocation location = perk.getRegistryName();
             tooltip.add(Component.literal(Component.translatable("item." + location.getNamespace() + "." + location.getPath()).getString()
-                    + " " + RomanNumber.toRoman(perkInstance.getSlot().value)));
+                    + " " + RomanNumber.toRoman(perkInstance.getSlot().value())));
         }
         int missing = getSlotsForTier().size() - getPerkInstances().size();
         for(int i = 0; i < missing; i++){
             PerkSlot slot = new ArrayList<>(getSlotsForTier()).subList(getPerkInstances().size(), getSlotsForTier().size()).get(i);
-            tooltip.add(Component.literal(Component.translatable("Empty").getString() + " " + RomanNumber.toRoman(slot.value)).withStyle(ChatFormatting.RED).withStyle(ChatFormatting.ITALIC));
+            tooltip.add(Component.literal(Component.translatable("Empty").getString() + " " + RomanNumber.toRoman(slot.value())).withStyle(ChatFormatting.RED).withStyle(ChatFormatting.ITALIC));
         }
     }
 
     int getTier();
 
-    void setTier(int tier);
+    T setTier(int tier);
 
     @Nullable CompoundTag getTagForPerk(IPerk perk);
 
-    void setTagForPerk(IPerk perk, CompoundTag tag);
+    T setTagForPerk(IPerk perk, CompoundTag tag);
 }

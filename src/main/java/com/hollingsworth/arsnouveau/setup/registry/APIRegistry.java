@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
-import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import com.hollingsworth.arsnouveau.api.registry.*;
@@ -17,6 +16,7 @@ import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.familiars.*;
+import com.hollingsworth.arsnouveau.common.items.data.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.common.mob_jar.*;
 import com.hollingsworth.arsnouveau.common.perk.*;
 import com.hollingsworth.arsnouveau.common.ritual.*;
@@ -35,6 +35,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.fml.loading.FMLEnvironment;
+
 import java.util.Arrays;
 import java.util.List;
 

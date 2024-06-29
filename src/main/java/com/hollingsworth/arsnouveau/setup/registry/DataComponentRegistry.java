@@ -1,9 +1,6 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
-import com.hollingsworth.arsnouveau.common.items.data.ItemScrollData;
-import com.hollingsworth.arsnouveau.common.items.data.PersistentFamiliarData;
-import com.hollingsworth.arsnouveau.common.items.data.StarbuncleCharmData;
-import com.hollingsworth.arsnouveau.common.items.data.VoidJarData;
+import com.hollingsworth.arsnouveau.common.items.data.*;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -22,4 +19,16 @@ public class DataComponentRegistry {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ItemScrollData>> ITEM_SCROLL_DATA = DATA.register("item_scroll_data", () -> DataComponentType.<ItemScrollData>builder().persistent(ItemScrollData.CODEC).networkSynchronized(ItemScrollData.STREAM_CODEC).build());
 
     public static final DeferredHolder<DataComponentType<?> , DataComponentType<VoidJarData>> VOID_JAR = DATA.register("void_jar", () -> DataComponentType.<VoidJarData>builder().persistent(VoidJarData.CODEC).networkSynchronized(VoidJarData.STREAM_CODEC).build());
+
+    public static final DeferredHolder<DataComponentType<?> , DataComponentType<ArmorPerkHolder>> ARMOR_PERKS = DATA.register("armor_perks", () -> DataComponentType.<ArmorPerkHolder>builder().persistent(ArmorPerkHolder.CODEC).networkSynchronized(ArmorPerkHolder.STREAM_CODEC).build());
+
+    public static final DeferredHolder<DataComponentType<?> , DataComponentType<DominionWandData>> DOMINION_WAND = DATA.register("dominion_wand", () -> DataComponentType.<DominionWandData>builder().persistent(DominionWandData.CODEC).networkSynchronized(DominionWandData.STREAM).build());
+
+    public static final DeferredHolder<DataComponentType<?> , DataComponentType<PresentData>> PRESENT = DATA.register("present", () -> DataComponentType.<PresentData>builder().persistent(PresentData.CODEC).networkSynchronized(PresentData.STREAM_CODEC).build());
+
+    public static final DeferredHolder<DataComponentType<?> , DataComponentType<ScryData>> SCRY_DATA = DATA.register("scry_data", () -> DataComponentType.<ScryData>builder().persistent(ScryData.CODEC).networkSynchronized(ScryData.STREAM_CODEC).build());
+
+    public static final DeferredHolder<DataComponentType<?> , DataComponentType<WarpScrollData>> WARP_SCROLL = DATA.register("warp_scroll", () -> DataComponentType.<WarpScrollData>builder().persistent(WarpScrollData.CODEC).networkSynchronized(WarpScrollData.STREAM_CODEC).build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<MultiPotionContents>> MULTI_POTION = DATA.register("multi_potion", () -> DataComponentType.<MultiPotionContents>builder().persistent(MultiPotionContents.CODEC).networkSynchronized(MultiPotionContents.STREAM_CODEC).build());
 }

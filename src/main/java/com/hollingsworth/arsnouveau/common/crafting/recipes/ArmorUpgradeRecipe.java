@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
-import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
+import com.hollingsworth.arsnouveau.common.items.data.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;

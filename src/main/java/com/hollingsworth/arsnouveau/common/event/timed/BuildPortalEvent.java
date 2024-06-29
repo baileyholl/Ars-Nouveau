@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.PortalBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.PortalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.TemporaryTile;
-import com.hollingsworth.arsnouveau.common.items.WarpScroll;
+import com.hollingsworth.arsnouveau.common.items.data.WarpScrollData;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
@@ -31,9 +31,9 @@ public class BuildPortalEvent implements ITimedEvent {
     List<BlockPos> portalPos = new ArrayList<>();
     int ticks;
     List<BlockPos> placedBlocks = new ArrayList<>();
-    WarpScroll.WarpScrollData warpScrollData;
+    WarpScrollData warpScrollData;
 
-    public BuildPortalEvent(Level level, BlockPos targetPos, Direction direction, WarpScroll.WarpScrollData warpScrollData) {
+    public BuildPortalEvent(Level level, BlockPos targetPos, Direction direction, WarpScrollData warpScrollData) {
         this.level = level;
         this.targetPos = targetPos;
         this.direction = direction;

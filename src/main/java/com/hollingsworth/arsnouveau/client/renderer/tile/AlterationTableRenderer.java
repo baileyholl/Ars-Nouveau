@@ -2,13 +2,13 @@ package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.google.common.collect.Maps;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
-import com.hollingsworth.arsnouveau.api.perk.StackPerkHolder;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
 import com.hollingsworth.arsnouveau.common.block.AlterationTable;
 import com.hollingsworth.arsnouveau.common.block.ThreePartBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.AlterationTile;
+import com.hollingsworth.arsnouveau.common.items.data.StackPerkHolder;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

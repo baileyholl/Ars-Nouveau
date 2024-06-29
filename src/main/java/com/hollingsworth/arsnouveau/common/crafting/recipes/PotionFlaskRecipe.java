@@ -1,13 +1,10 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
-import com.hollingsworth.arsnouveau.api.potion.PotionData;
+import com.hollingsworth.arsnouveau.common.items.data.PotionData;
 import com.hollingsworth.arsnouveau.common.items.PotionFlask;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;

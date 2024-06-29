@@ -1,22 +1,23 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.api.potion.PotionData;
+import com.hollingsworth.arsnouveau.common.items.data.PotionData;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -76,9 +77,9 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
         PotionJarTile tile = (PotionJarTile) worldIn.getBlockEntity(pos);
         if (tile == null)
             return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
-        Potion potion = PotionUtils.getPotion(stack);
+        PotionContents potion = stack.get(DataComponents.POTION_CONTENTS);
 
-        if (stack.getItem() == Items.POTION && potion != PotionContents.EMPTY) {
+        if (stack.getItem() == Items.POTION && potion != null && potion != PotionContents.EMPTY) {
             if (tile.canAccept(new PotionData(stack),100)) {
                 tile.add(new PotionData(stack), 100);
                 if (!player.isCreative()) {
@@ -89,16 +90,22 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
             return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
         }else if (stack.getItem() == Items.GLASS_BOTTLE && tile.getAmount() >= 100) {
             ItemStack potionStack = new ItemStack(Items.POTION);
-            PotionUtils.setPotion(potionStack, tile.getData().getPotion());
-            PotionUtils.setCustomEffects(potionStack, tile.getData().getCustomEffects());
+            PotionContents contents = tile.getData().getPotion();
+            for(MobEffectInstance instance : tile.getData().getCustomEffects()){
+                contents = contents.withEffectAdded(instance);
+            }
+            potionStack.set(DataComponents.POTION_CONTENTS, contents);
             if(player.addItem(potionStack)) {
                 player.getItemInHand(handIn).shrink(1);
                 tile.remove(100);
             }
         }else if(stack.getItem() == Items.ARROW && tile.getAmount() >= 10){
             ItemStack potionStack = new ItemStack(Items.TIPPED_ARROW);
-            PotionUtils.setPotion(potionStack, tile.getData().getPotion());
-            PotionUtils.setCustomEffects(potionStack, tile.getData().getCustomEffects());
+            PotionContents contents = tile.getData().getPotion();
+            for(MobEffectInstance instance : tile.getData().getCustomEffects()){
+                contents = contents.withEffectAdded(instance);
+            }
+            potionStack.set(DataComponents.POTION_CONTENTS, contents);
             if(player.addItem(potionStack)) {
                 player.getItemInHand(handIn).shrink(1);
                 tile.remove(10);
@@ -125,7 +132,6 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
 
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext pContext, List<Component> tooltip, TooltipFlag pTooltipFlag) {
-        super.appendHoverText(stack, pContext, pTootipComponents, pTooltipFlag);
         if (stack.getTag() == null)
             return;
         int fill = stack.getTag().getCompound("BlockEntityTag").getInt("currentFill");

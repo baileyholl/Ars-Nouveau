@@ -10,12 +10,11 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
-import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.config.Config;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -26,14 +25,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
-import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
-import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -230,7 +225,7 @@ public class WhirlisprigTile extends SummoningTile implements GeoBlockEntity {
         tag.putInt("progress", progress);
         tag.putInt("evalTicks", ticksToNextEval);
         if (ignoreItems != null && !ignoreItems.isEmpty())
-            NBTUtil.writeItems(tag, "ignored_", ignoreItems);
+            NBTUtil.writeItems(pRegistries, tag, "ignored_", ignoreItems);
     }
 
     @Override
@@ -240,7 +235,7 @@ public class WhirlisprigTile extends SummoningTile implements GeoBlockEntity {
         diversityScore = compound.getInt("diversityScore");
         progress = compound.getInt("progress");
         ticksToNextEval = compound.getInt("evalTicks");
-        ignoreItems = NBTUtil.readItems(compound, "ignored_");
+        ignoreItems = NBTUtil.readItems(pRegistries, compound, "ignored_");
     }
 
     @Override

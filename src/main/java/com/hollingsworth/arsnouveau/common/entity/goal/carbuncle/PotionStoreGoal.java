@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
-import com.hollingsworth.arsnouveau.api.potion.PotionData;
+import com.hollingsworth.arsnouveau.common.items.data.PotionData;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import net.minecraft.core.BlockPos;

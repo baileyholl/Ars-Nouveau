@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.renderer.item;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.items.FlaskCannon;
+import com.hollingsworth.arsnouveau.common.items.data.PotionLauncherData;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.geom.EntityModelSet;
@@ -33,7 +34,7 @@ public class FlaskCannonRenderer extends GeoItemRenderer<FlaskCannon> {
             super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, packedColor);
             return;
         }
-        FlaskCannon.PotionLauncherData flask = new FlaskCannon.PotionLauncherData(currentItemStack);
+        PotionLauncherData flask = new PotionLauncherData(currentItemStack);
         if(bone == null)
             return;
         if(bone.getName().equalsIgnoreCase("full")){

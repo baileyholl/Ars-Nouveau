@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.api.util;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -65,7 +67,7 @@ public class NBTUtil {
         return tag.contains(prefix + "_x");
     }
 
-    public static List<ItemStack> readItems(CompoundTag tag, String prefix) {
+    public static List<ItemStack> readItems(HolderLookup.Provider pRegistries, CompoundTag tag, String prefix) {
         List<ItemStack> stacks = new ArrayList<>();
 
         if (tag == null)
@@ -75,7 +77,7 @@ public class NBTUtil {
             int numItems = itemsTag.getInt("itemsSize");
             for (int i = 0; i < numItems; i++) {
                 String key = prefix + "_" + i;
-                stacks.add(ItemStack.of(itemsTag.getCompound(key)));
+                stacks.add(ItemStack.parseOptional(pRegistries, itemsTag.getCompound(key)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,12 +85,11 @@ public class NBTUtil {
         return stacks;
     }
 
-    public static void writeItems(CompoundTag tag, String prefix, List<ItemStack> items) {
+    public static void writeItems(HolderLookup.Provider pRegistries, CompoundTag tag, String prefix, List<ItemStack> items) {
         CompoundTag allItemsTag = new CompoundTag();
         for (int i = 0; i < items.size(); i++) {
             ItemStack stack = items.get(i);
-            CompoundTag itemTag = new CompoundTag();
-            stack.save(itemTag);
+            Tag itemTag = stack.save(pRegistries);
             allItemsTag.put(prefix + "_" + i, itemTag);
         }
         allItemsTag.putInt("itemsSize", items.size());
@@ -122,7 +123,7 @@ public class NBTUtil {
     }
 
     public static List<ResourceLocation> readResourceLocations(CompoundTag tag, String prefix) {
-        return readStrings(tag, prefix).stream().map(ResourceLocation::new).collect(Collectors.toList());
+        return readStrings(tag, prefix).stream().map(ResourceLocation::tryParse).collect(Collectors.toList());
     }
 
     public static String getItemKey(ItemStack stack, String prefix) {

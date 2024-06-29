@@ -34,6 +34,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class StarbyTransportBehavior extends StarbyListBehavior {
     public static Cache<BlockPos, List<ItemEntity>> frameCache = CacheBuilder.newBuilder()
@@ -278,12 +279,12 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     }
 
     @Override
-    public void getTooltip(List<Component> tooltip) {
+    public void getTooltip(Consumer<Component> tooltip) {
         super.getTooltip(tooltip);
-        tooltip.add(Component.translatable("ars_nouveau.starbuncle.storing", TO_LIST.size()));
-        tooltip.add(Component.translatable("ars_nouveau.starbuncle.taking", FROM_LIST.size()));
+        tooltip.accept(Component.translatable("ars_nouveau.starbuncle.storing", TO_LIST.size()));
+        tooltip.accept(Component.translatable("ars_nouveau.starbuncle.taking", FROM_LIST.size()));
         if (itemScroll != null && !itemScroll.isEmpty()) {
-            tooltip.add(Component.translatable("ars_nouveau.filtering_with", itemScroll.getHoverName().getString()));
+            tooltip.accept(Component.translatable("ars_nouveau.filtering_with", itemScroll.getHoverName().getString()));
         }
     }
 

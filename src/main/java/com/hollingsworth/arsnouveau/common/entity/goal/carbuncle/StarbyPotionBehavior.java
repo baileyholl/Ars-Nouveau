@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.potion.PotionData;
+import com.hollingsworth.arsnouveau.common.items.data.PotionData;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class StarbyPotionBehavior extends StarbyListBehavior {
     public static final ResourceLocation POTION_ID = ArsNouveau.prefix( "starby_potion");
@@ -106,10 +106,10 @@ public class StarbyPotionBehavior extends StarbyListBehavior {
     }
 
     @Override
-    public void getTooltip(List<Component> tooltip) {
+    public void getTooltip(Consumer<Component> tooltip) {
         super.getTooltip(tooltip);
-        tooltip.add(Component.translatable("ars_nouveau.starbuncle.storing_potions", TO_LIST.size()));
-        tooltip.add(Component.translatable("ars_nouveau.starbuncle.taking_potions", FROM_LIST.size()));
+        tooltip.accept(Component.translatable("ars_nouveau.starbuncle.storing_potions", TO_LIST.size()));
+        tooltip.accept(Component.translatable("ars_nouveau.starbuncle.taking_potions", FROM_LIST.size()));
     }
 
     @Override

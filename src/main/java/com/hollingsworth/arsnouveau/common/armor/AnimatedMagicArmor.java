@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.renderer.item.ArmorRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericModel;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
+import com.hollingsworth.arsnouveau.common.items.data.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.common.perk.RepairingPerk;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.MaterialRegistry;

@@ -4,14 +4,13 @@ import com.hollingsworth.arsnouveau.api.util.FlatPortalAreaHelper;
 import com.hollingsworth.arsnouveau.common.block.tile.PortalTile;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.items.DominionWand;
-import com.hollingsworth.arsnouveau.common.items.WarpScroll;
+import com.hollingsworth.arsnouveau.common.items.data.WarpScrollData;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -37,6 +36,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+
 import javax.annotation.Nullable;
 
 import static com.hollingsworth.arsnouveau.setup.config.ServerConfig.ENABLE_WARP_PORTALS;
@@ -131,13 +131,13 @@ public class PortalBlock extends TickableModBlock {
         }
     }
 
-    public boolean trySpawnPortal(Level worldIn, BlockPos stackPos, WarpScroll.WarpScrollData data, String displayName) {
+    public boolean trySpawnPortal(Level worldIn, BlockPos stackPos, WarpScrollData data, String displayName) {
         if (!ENABLE_WARP_PORTALS.get()) return false;
         return trySpawnVerticalPortal(worldIn, stackPos, data, displayName) || trySpawnHorizontalPortal(worldIn, stackPos, data, displayName);
     }
 
 
-    public boolean trySpawnVerticalPortal(LevelAccessor worldIn, BlockPos stackPos, WarpScroll.WarpScrollData data, String displayName) {
+    public boolean trySpawnVerticalPortal(LevelAccessor worldIn, BlockPos stackPos, WarpScrollData data, String displayName) {
         Size portalblock$size = this.isPortal(worldIn, stackPos);
         if (portalblock$size != null) {
             portalblock$size.placePortalBlocks(data, displayName);
@@ -147,15 +147,15 @@ public class PortalBlock extends TickableModBlock {
         }
     }
 
-    public boolean trySpawnHorizontalPortal(Level worldIn, BlockPos stackPos, WarpScroll.WarpScrollData data, String displayName) {
+    public boolean trySpawnHorizontalPortal(Level worldIn, BlockPos stackPos, WarpScrollData data, String displayName) {
         FlatPortalAreaHelper helper = new FlatPortalAreaHelper().init(worldIn, stackPos, null, (bs) -> bs.is(BlockTagProvider.DECORATIVE_AN));
         if (helper.isValidFrame()) {
             BlockPos.betweenClosed(helper.lowerCorner, helper.lowerCorner.relative(Direction.Axis.X, helper.xSize - 1).relative(Direction.Axis.Z, helper.zSize - 1)).forEach((blockPos) -> {
                 worldIn.setBlock(blockPos, BlockRegistry.PORTAL_BLOCK.defaultBlockState().setValue(PortalBlock.AXIS, Direction.Axis.Y), 18);
                 if (worldIn.getBlockEntity(blockPos) instanceof PortalTile tile) {
-                    tile.warpPos = data.getPos();
-                    tile.dimID = data.getDimension();
-                    tile.rotationVec = data.getRotation();
+                    tile.warpPos = data.pos();
+                    tile.dimID = data.dimension();
+                    tile.rotationVec = data.rotation();
                     tile.displayName = displayName;
                     tile.isHorizontal = true;
                     tile.updateBlock();
@@ -348,16 +348,14 @@ public class PortalBlock extends TickableModBlock {
             return this.bottomLeft != null && this.width >= 1 && this.width <= 21 && this.height >= 1 && this.height <= 21;
         }
 
-        public void placePortalBlocks(WarpScroll.WarpScrollData data, String displayName) {
+        public void placePortalBlocks(WarpScrollData data, String displayName) {
             for (int i = 0; i < this.width; ++i) {
                 BlockPos blockpos = this.bottomLeft.relative(this.rightDir, i);
 
                 for (int j = 0; j < this.height; ++j) {
                     this.world.setBlock(blockpos.above(j), BlockRegistry.PORTAL_BLOCK.defaultBlockState().setValue(PortalBlock.AXIS, this.axis), 18);
                     if (this.world.getBlockEntity(blockpos.above(j)) instanceof PortalTile tile) {
-                        tile.warpPos = data.getPos();
-                        tile.dimID = data.getDimension();
-                        tile.rotationVec = data.getRotation();
+                        tile.setFromScroll(data);
                         tile.displayName = displayName;
                         tile.updateBlock();
                     }

@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.PortalBlock;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
-import com.hollingsworth.arsnouveau.common.items.WarpScroll;
+import com.hollingsworth.arsnouveau.common.items.data.WarpScrollData;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketWarpPosition;
 import net.minecraft.core.BlockPos;
@@ -65,10 +65,10 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
         }
     }
 
-    public void setFromScroll(WarpScroll.WarpScrollData scrollData){
-        this.warpPos = scrollData.getPos();
-        this.dimID = scrollData.getDimension();
-        this.rotationVec = scrollData.getRotation();
+    public void setFromScroll(WarpScrollData scrollData){
+        this.warpPos = scrollData.pos();
+        this.dimID = scrollData.dimension();
+        this.rotationVec = scrollData.rotation();
     }
 
 

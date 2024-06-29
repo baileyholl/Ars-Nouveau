@@ -88,8 +88,8 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         tag.put("spell", spell.serialize());
         tag.putBoolean("charged", isCharged);
         tag.putBoolean("redstone", disabled);
@@ -111,7 +111,6 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
         if (tag.contains("uuid"))
             this.uuid = tag.getUUID("uuid");
         this.isSensitive = tag.getBoolean("sensitive");
-        super.load(tag);
     }
 
     @Override
@@ -155,7 +154,7 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if (ArsNouveau.proxy.getPlayer().hasEffect(ModPotions.MAGIC_FIND_EFFECT.get())) {
+        if (ArsNouveau.proxy.getPlayer().hasEffect(ModPotions.MAGIC_FIND_EFFECT)) {
             tooltip.add(Component.literal(spell.getDisplayString()));
         }
     }

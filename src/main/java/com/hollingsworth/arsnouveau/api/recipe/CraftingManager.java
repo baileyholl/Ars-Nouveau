@@ -3,7 +3,9 @@ package com.hollingsworth.arsnouveau.api.recipe;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -86,24 +88,23 @@ public class CraftingManager {
         this.craftCompleted = true;
     }
 
-    public void write(CompoundTag tag) {
-        CompoundTag stack = new CompoundTag();
-        outputStack.save(stack);
+    public void write(HolderLookup.Provider provider, CompoundTag tag) {
+        Tag stack = outputStack.save(provider);
         tag.put("output_stack", stack);
-        NBTUtil.writeItems(tag, "progress", neededItems);
-        NBTUtil.writeItems(tag, "refund", remainingItems);
+        NBTUtil.writeItems(provider, tag, "progress", neededItems);
+        NBTUtil.writeItems(provider, tag, "refund", remainingItems);
         tag.putBoolean("completed", craftCompleted);
     }
 
-    public void read(CompoundTag tag){
-        outputStack = ItemStack.of(tag.getCompound("output_stack"));
-        neededItems = NBTUtil.readItems(tag, "progress");
-        remainingItems = NBTUtil.readItems(tag, "refund");
+    public void read(HolderLookup.Provider provider, CompoundTag tag){
+        outputStack = ItemStack.parseOptional(provider, tag.getCompound("output_stack"));
+        neededItems = NBTUtil.readItems(provider, tag, "progress");
+        remainingItems = NBTUtil.readItems(provider, tag, "refund");
     }
 
-    public static CraftingManager fromTag(CompoundTag tag){
+    public static CraftingManager fromTag(HolderLookup.Provider provider, CompoundTag tag){
         CraftingManager craftingManager = tag.getBoolean("isPotion") ? new PotionCraftingManager() : new CraftingManager();
-        craftingManager.read(tag);
+        craftingManager.read(provider, tag);
         return craftingManager;
     }
 }

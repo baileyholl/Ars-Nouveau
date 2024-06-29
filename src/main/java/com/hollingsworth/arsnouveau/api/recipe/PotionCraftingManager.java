@@ -1,15 +1,15 @@
 package com.hollingsworth.arsnouveau.api.recipe;
 
-import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
+import com.hollingsworth.arsnouveau.common.items.data.PotionData;
 import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
@@ -79,8 +79,8 @@ public class PotionCraftingManager extends CraftingManager {
 
 
     @Override
-    public void write(CompoundTag tag) {
-        super.write(tag);
+    public void write(HolderLookup.Provider provider,  CompoundTag tag) {
+        super.write(provider, tag);
         CompoundTag outputTag = new CompoundTag();
         PotionUtil.addPotionToTag(potionOut, outputTag);
         tag.put("potionout", outputTag);
@@ -91,8 +91,8 @@ public class PotionCraftingManager extends CraftingManager {
         tag.putBoolean("gotPotion", hasObtainedPotion);
     }
 
-    public void read(CompoundTag tag){
-        super.read(tag);
+    public void read(HolderLookup.Provider provider, CompoundTag tag){
+        super.read(provider, tag);
         potionOut = PotionUtils.getPotion(tag.getCompound("potionout"));
         potionNeeded = PotionUtils.getPotion(tag.getCompound("potionNeeded"));
         hasObtainedPotion = tag.getBoolean("gotPotion");

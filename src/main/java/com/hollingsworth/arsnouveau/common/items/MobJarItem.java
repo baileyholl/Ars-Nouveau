@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.renderer.item.MobJarItemRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
@@ -56,7 +57,7 @@ public class MobJarItem extends BlockItem implements GeoItem {
         super.appendHoverText(stack, pLevel, pTooltip, pFlag);
         if(pLevel == null)
             return;
-        Entity entity = fromItem(stack, pLevel);
+        Entity entity = fromItem(stack, ArsNouveau.proxy.getClientWorld());
         if(entity == null)
             return;
         pTooltip.add(entity.getDisplayName());

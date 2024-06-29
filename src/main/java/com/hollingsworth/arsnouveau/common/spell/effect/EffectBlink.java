@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.api.item.inv.SlotReference;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.common.block.tile.PortalTile;
-import com.hollingsworth.arsnouveau.common.items.WarpScroll;
+import com.hollingsworth.arsnouveau.common.items.data.WarpScrollData;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketWarpPosition;
@@ -49,7 +49,7 @@ public class EffectBlink extends AbstractEffect {
             SlotReference reference = manager.findItem(i -> (i.getItem() == ItemsRegistry.WARP_SCROLL.asItem() || i.getItem() == ItemsRegistry.STABLE_WARP_SCROLL.asItem()), InteractType.EXTRACT);
             if (!reference.isEmpty()) {
                 ItemStack stack = reference.getHandler().getStackInSlot(reference.getSlot());
-                WarpScroll.WarpScrollData data = WarpScroll.WarpScrollData.get(stack);
+                WarpScrollData data = WarpScrollData.get(stack);
                 if (data.isValid() && data.canTeleportWithDim(world)) {
                     warpEntity(rayTraceResult.getEntity(), data);
                     return;
@@ -63,7 +63,7 @@ public class EffectBlink extends AbstractEffect {
         }
 
         if (isRealPlayer(shooter)) {
-            WarpScroll.WarpScrollData scrollData = WarpScroll.WarpScrollData.get(shooter.getOffhandItem());
+            WarpScrollData scrollData = WarpScrollData.get(shooter.getOffhandItem());
             if (scrollData.isValid()) {
                 if (scrollData.isValid() && scrollData.canTeleportWithDim(world)) {
                     warpEntity(rayTraceResult.getEntity(), scrollData);
@@ -76,17 +76,17 @@ public class EffectBlink extends AbstractEffect {
         }
     }
 
-    public static void warpEntity(Entity entity, WarpScroll.WarpScrollData warpScrollData){
+    public static void warpEntity(Entity entity, WarpScrollData warpScrollData){
         if (entity == null) return;
 
         if (entity instanceof LivingEntity living){
-            EntityTeleportEvent. EnderEntity event = EventHooks.onEnderTeleport(living, warpScrollData.getPos().getX(),  warpScrollData.getPos().getY(),  warpScrollData.getPos().getZ());
+            EntityTeleportEvent. EnderEntity event = EventHooks.onEnderTeleport(living, warpScrollData.pos().getX(),  warpScrollData.pos().getY(),  warpScrollData.pos().getZ());
             if (event.isCanceled()) return;
         }
-        ServerLevel dimension = PortalTile.getServerLevel(warpScrollData.getDimension(), (ServerLevel) entity.level);
+        ServerLevel dimension = PortalTile.getServerLevel(warpScrollData.dimension(), (ServerLevel) entity.level);
         if(dimension == null)
             return;
-        PortalTile.teleportEntityTo(entity, dimension, warpScrollData.getPos(), warpScrollData.getRotation());
+        PortalTile.teleportEntityTo(entity, dimension, warpScrollData.pos(), warpScrollData.rotation());
 
     }
 

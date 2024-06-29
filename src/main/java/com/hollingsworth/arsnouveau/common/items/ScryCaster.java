@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
-import com.hollingsworth.arsnouveau.api.nbt.ItemstackData;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
@@ -10,8 +9,10 @@ import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.PlayerCaster;
 import com.hollingsworth.arsnouveau.client.renderer.item.ScryCasterRenderer;
 import com.hollingsworth.arsnouveau.common.block.BasicSpellTurret;
 import com.hollingsworth.arsnouveau.common.block.ScryerCrystal;
+import com.hollingsworth.arsnouveau.common.items.data.ScryData;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -55,7 +56,7 @@ public class ScryCaster extends ModItem implements ICasterTool, GeoItem {
     public InteractionResult useOn(UseOnContext pContext) {
         BlockPos pos = pContext.getClickedPos();
         ItemStack stack = pContext.getItemInHand();
-        ScryCaster.Data data = new Data(stack);
+        ScryData.Data data = new ScryData(stack);
         if(pContext.getLevel().getBlockState(pos).getBlock() instanceof ScryerCrystal){
             if(!pContext.getLevel().isClientSide) {
                 data.setScryPos(pos);
@@ -86,11 +87,11 @@ public class ScryCaster extends ModItem implements ICasterTool, GeoItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
         getInformation(stack, context, tooltip2, flagIn);
-        Data data = new Data(stack);
-        if(data.scryPos == null){
+        ScryData data = stack.get(DataComponentRegistry.SCRY_DATA);
+        if(data == null || data.pos() == null){
             tooltip2.add(Component.translatable("ars_nouveau.scry_caster.no_pos"));
         }else{
-            tooltip2.add(Component.translatable("ars_nouveau.scryer_scroll.bound", data.getScryPos().getX() + ", " + data.getScryPos().getY() + ", " + data.getScryPos().getZ()));
+            tooltip2.add(Component.translatable("ars_nouveau.scryer_scroll.bound", data.pos().getX() + ", " + data.pos().getY() + ", " + data.pos().getZ()));
         }
         super.appendHoverText(stack, context, tooltip2, flagIn);
     }
@@ -146,9 +147,9 @@ public class ScryCaster extends ModItem implements ICasterTool, GeoItem {
                 return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
             }
 
-            ScryCaster.Data data = new Data(stack);
+            ScryData data = stack.get(DataComponentRegistry.SCRY_DATA);
             boolean playerHoldingScroll = entity.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof ScryerScroll;
-            BlockPos scryPos = playerHoldingScroll ? new ScryerScroll.ScryerScrollData(player.getItemInHand(InteractionHand.OFF_HAND)).pos : data.getScryPos();
+            BlockPos scryPos = playerHoldingScroll ? new ScryerScroll.ScryerScrollData(player.getItemInHand(InteractionHand.OFF_HAND)).pos : data.pos();
             if(scryPos == null){
                 PortUtil.sendMessage(entity, Component.translatable("ars_nouveau.scry_caster.no_pos"));
                 return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
@@ -182,42 +183,6 @@ public class ScryCaster extends ModItem implements ICasterTool, GeoItem {
             resolver.expendMana();
             playSound(entity.getOnPos(), worldIn, entity, getCurrentSound(), SoundSource.PLAYERS);
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
-        }
-    }
-
-
-    public static class Data extends ItemstackData{
-        private BlockPos scryPos;
-
-        public Data(ItemStack stack) {
-            super(stack);
-            CompoundTag tag1 = getItemTag(stack);
-            if (tag1 == null || tag1.isEmpty())
-                return;
-            if(tag1.contains("scryPos")){
-                scryPos = BlockPos.of(tag1.getLong("scryPos"));
-            }
-        }
-
-        public void setScryPos(BlockPos pos){
-            this.scryPos = pos;
-            writeItem();
-        }
-
-        public @Nullable BlockPos getScryPos(){
-            return scryPos;
-        }
-
-        @Override
-        public String getTagString() {
-            return "an_scry_data";
-        }
-
-        @Override
-        public void writeToNBT(CompoundTag tag) {
-            if(scryPos != null){
-                tag.putLong("scryPos", scryPos.asLong());
-            }
         }
     }
 }
