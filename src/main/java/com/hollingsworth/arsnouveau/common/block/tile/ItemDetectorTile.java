@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.common.items.data.ItemScrollData;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -180,8 +181,8 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
     @Override
     public void getTooltip(List<Component> tooltip) {
         tooltip.add(Component.translatable("ars_nouveau.item_detector.count", (inverted ? "< " : "> ") + neededCount));
-        if(filterStack.getItem() instanceof ItemScroll && filterStack.hasTag()){
-            ItemScrollData.ItemScrollData scrollData = new ItemScrollData.ItemScrollData(filterStack);
+        if(filterStack.getItem() instanceof ItemScroll){
+            ItemScrollData scrollData =  filterStack.getOrDefault(DataComponentRegistry.ITEM_SCROLL_DATA, new ItemScrollData(List.of()));
             for (ItemStack s : scrollData.getItems()) {
                 tooltip.add(Component.literal(s.getHoverName().getString()).withStyle(ChatFormatting.GOLD));
             }

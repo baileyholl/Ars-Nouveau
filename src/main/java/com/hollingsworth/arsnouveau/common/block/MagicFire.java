@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.google.common.collect.ImmutableMap;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -9,7 +10,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.*;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.BaseFireBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -24,7 +28,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class MagicFire extends BaseFireBlock {
-
+    public static final MapCodec<MagicFire> CODEC = simpleCodec(MagicFire::new);
     public static final int MAX_AGE = 7;
     public static final IntegerProperty AGE = BlockStateProperties.AGE_7;
     public static final BooleanProperty NORTH = PipeBlock.NORTH;
@@ -42,12 +46,21 @@ public class MagicFire extends BaseFireBlock {
     private static final VoxelShape SOUTH_AABB = Block.box(0.0D, 0.0D, 15.0D, 16.0D, 16.0D, 16.0D);
     private final Map<BlockState, VoxelShape> shapesCache;
 
+    public MagicFire(Properties pProperties) {
+        this(pProperties, 1.0F);
+    }
+
     public MagicFire(Properties pProperties, float pFireDamage) {
         super(pProperties, pFireDamage);
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0).setValue(NORTH, Boolean.FALSE).setValue(EAST, Boolean.FALSE).setValue(SOUTH, Boolean.FALSE).setValue(WEST, Boolean.FALSE).setValue(UP, Boolean.FALSE));
         this.shapesCache = ImmutableMap.copyOf(this.stateDefinition.getPossibleStates().stream().filter((p_53497_) -> {
             return p_53497_.getValue(AGE) == 0;
         }).collect(Collectors.toMap(Function.identity(), MagicFire::calculateShape)));
+    }
+
+    @Override
+    protected MapCodec<? extends BaseFireBlock> codec() {
+        return CODEC;
     }
 
     private static VoxelShape calculateShape(BlockState p_53491_) {

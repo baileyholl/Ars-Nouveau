@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodUnderfoot;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.tags.ItemTags;
@@ -127,7 +128,7 @@ public class GlyphRecipeProvider extends SimpleDataProvider {
         add(get(EffectRewind.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.CLOCK, 3));
         for (GlyphRecipe recipe : recipes) {
             Path path = getScribeGlyphPath(output, recipe.output.getItem());
-            saveStable(pOutput, recipe.asRecipe(), path);
+            saveStable(pOutput, GlyphRecipe.CODEC.encodeStart(JsonOps.INSTANCE, recipe).getOrThrow(), path);
         }
     }
 
@@ -136,7 +137,7 @@ public class GlyphRecipeProvider extends SimpleDataProvider {
     }
 
     public GlyphRecipe get(AbstractSpellPart spellPart) {
-        return new GlyphRecipe(spellPart.getRegistryName(), spellPart.glyphItem.getDefaultInstance(), new ArrayList<>(), getExpFromTier(spellPart));
+        return new GlyphRecipe(spellPart.glyphItem.getDefaultInstance(), new ArrayList<>(), getExpFromTier(spellPart));
     }
 
     public int getExpFromTier(AbstractSpellPart spellPart) {

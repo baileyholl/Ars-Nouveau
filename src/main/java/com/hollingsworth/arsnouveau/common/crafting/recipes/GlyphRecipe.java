@@ -10,7 +10,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -28,13 +27,7 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
 
     public final ItemStack output;
     public final List<Ingredient> inputs;
-    public ResourceLocation id;
     public final int exp;
-
-    public GlyphRecipe(ResourceLocation id, ItemStack output, List<Ingredient> inputs, int exp) {
-        this(output, inputs, exp);
-        this.id = id;
-    }
 
     public GlyphRecipe(ItemStack output, List<Ingredient> inputs, int exp) {
         this.output = output;

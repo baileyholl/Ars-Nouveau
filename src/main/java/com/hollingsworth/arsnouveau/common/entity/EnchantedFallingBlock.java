@@ -21,8 +21,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -37,7 +35,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.DirectionalPlaceContext;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
@@ -353,11 +350,6 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
                     if (vec3.lengthSqr() > 0.0D) {
                         livingentity.push(vec3.x, 0.1D, vec3.z);
                     }
-                }
-
-                if (!this.level.isClientSide && owner instanceof LivingEntity) {
-                    EnchantmentHelper.doPostHurtEffects(livingentity, owner);
-                    EnchantmentHelper.doPostDamageEffects((LivingEntity) owner, livingentity);
                 }
 
                 this.doPostHurtEffects(livingentity);

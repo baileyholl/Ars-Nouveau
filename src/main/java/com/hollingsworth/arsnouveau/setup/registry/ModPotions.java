@@ -20,8 +20,6 @@ import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.ArrayList;
-
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 import static com.hollingsworth.arsnouveau.common.lib.LibPotions.*;
 
@@ -41,7 +39,7 @@ public class ModPotions {
             super.addAttributeModifiers(pAttributeMap, pAmplifier);
         }
     });
-    public static final DeferredHolder<MobEffect, PublicEffect> SUMMONING_SICKNESS_EFFECT = EFFECTS.register(SUMMONING_SICKNESS, () -> new SummoningSicknessEffect(MobEffectCategory.HARMFUL, 2039587, new ArrayList<>()));
+    public static final DeferredHolder<MobEffect, SummoningSicknessEffect> SUMMONING_SICKNESS_EFFECT = EFFECTS.register(SUMMONING_SICKNESS, SummoningSicknessEffect::new);
 
     public static final DeferredHolder<MobEffect, PublicEffect> HEX_EFFECT = EFFECTS.register(HEX, () -> new PublicEffect(MobEffectCategory.HARMFUL, 8080895) {
         @Override

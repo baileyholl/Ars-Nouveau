@@ -15,6 +15,7 @@ import net.minecraft.world.item.component.TooltipProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class ItemScrollData implements NBTComponent<ItemScrollData>, TooltipProvider {
 
@@ -63,7 +64,7 @@ public class ItemScrollData implements NBTComponent<ItemScrollData>, TooltipProv
         private final List<ItemStack> list;
 
         public Mutable(ItemScrollData data) {
-            this.list = new ArrayList<>(data.items);
+            this.list = data.items.stream().map(ItemStack::copy).collect(Collectors.toCollection(ArrayList::new));
         }
 
         public boolean add(ItemStack stack) {

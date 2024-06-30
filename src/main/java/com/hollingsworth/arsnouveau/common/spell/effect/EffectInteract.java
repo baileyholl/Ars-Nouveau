@@ -65,7 +65,7 @@ public class EffectInteract extends AbstractEffect {
     }
 
     public boolean handleBucket(ItemStack item, BucketItem bucket, Player player, BlockState state, Level world, BlockPos pos, BlockHitResult rayTraceResult, InteractionHand hand) {
-        if (bucket.getFluid() == Fluids.EMPTY) {
+        if (bucket.content == Fluids.EMPTY) {
             boolean isBucketPickup = state.getBlock() instanceof BucketPickup && world.getFluidState(pos) != Fluids.EMPTY.defaultFluidState();
             BlockPos target = isBucketPickup ? pos : pos.relative(rayTraceResult.getDirection());
             if (world.getFluidState(target) == Fluids.EMPTY.defaultFluidState()) {

@@ -598,7 +598,7 @@ public class InfinityGuiSpellBook extends BaseBook {
         } else {
             // Color code chosen to match GL11.glColor4f(1.0F, 0.7F, 0.7F, 1.0F);
             Component textComponent = Component.translatable("ars_nouveau.spell_book_gui.create")
-                    .withStyle(s -> s.withStrikethrough(true).withColor(TextColor.parseColor("#FFB2B2")));
+                    .withStyle(s -> s.withStrikethrough(true).withColor(TextColor.parseColor("#FFB2B2").getOrThrow()));
             // The final argument to draw desaturates the above color from the text component
             graphics.drawString(font, textComponent, 233, 183, -8355712, false);
         }

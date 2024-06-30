@@ -18,20 +18,16 @@ public class FlightEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int p_76397_1_, int p_76397_2_) {
+    public boolean applyEffectTick(LivingEntity entity, int p_76394_2_) {
+        if (entity instanceof Player player) {
+            player.abilities.mayfly = player.isCreative() || entity.isSpectator() || getFlightDuration(entity) > 2;
+        }
         return true;
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int p_76394_2_) {
-        if (entity instanceof Player player) {
-            player.abilities.mayfly = player.isCreative() || entity.isSpectator() || getFlightDuration(entity) > 2;
-        }
-    }
-
-    @Override
-    public void removeAttributeModifiers(LivingEntity entity, AttributeMap p_111187_2_, int p_111187_3_) {
-        super.removeAttributeModifiers(entity, p_111187_2_, p_111187_3_);
+    public void removeAttributeModifiers(AttributeMap pAttributeMap) {
+        super.removeAttributeModifiers(pAttributeMap);
         if (entity instanceof Player player) {
             // check for effect duration because this is also called from LivingEntity::onEffectUpdated
             boolean canFly = player.isCreative() || entity.isSpectator() || getFlightDuration(entity) > 2;
@@ -43,7 +39,7 @@ public class FlightEffect extends MobEffect {
     }
 
     public int getFlightDuration(LivingEntity entity) {
-        MobEffectInstance effect = entity.getEffect(ModPotions.FLIGHT_EFFECT.get());
+        MobEffectInstance effect = entity.getEffect(ModPotions.FLIGHT_EFFECT);
         return effect != null ? effect.getDuration() : 0;
     }
 }

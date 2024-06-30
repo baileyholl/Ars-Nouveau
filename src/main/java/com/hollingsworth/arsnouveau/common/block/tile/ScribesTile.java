@@ -269,7 +269,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
         }
         CompoundTag itemsTag = new CompoundTag();
         itemsTag.putInt("numStacks", consumedStacks.size());
-        this.consumedStacks = NBTUtil.readItems(compound, "consumed");
+        this.consumedStacks = NBTUtil.readItems(pRegistries, compound, "consumed");
         this.craftingTicks = compound.getInt("craftingTicks");
         this.crafting = compound.getBoolean("crafting");
         this.autoYoink = !compound.contains("autoYoink") || compound.getBoolean("autoYoink");
@@ -288,7 +288,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
         } else {
             compound.putString("recipe", "");
         }
-        NBTUtil.writeItems(compound, "consumed", consumedStacks);
+        NBTUtil.writeItems(pRegistries, compound, "consumed", consumedStacks);
         compound.putInt("craftingTicks", craftingTicks);
         compound.putBoolean("crafting", crafting);
         compound.putBoolean("autoYoink", autoYoink);

@@ -3,8 +3,6 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
@@ -46,6 +44,7 @@ public class EnchantedSkull extends EnchantedFallingBlock {
         ItemStack stack = item.getDefaultInstance();
         if (item instanceof PlayerHeadItem){
             stack.setTag(this.blockData);
+
         }
         return stack;
     }

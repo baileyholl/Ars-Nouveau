@@ -19,6 +19,7 @@ import com.hollingsworth.arsnouveau.common.items.data.ItemScrollData;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
@@ -113,8 +114,8 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
             return super.mobInteract(player, hand);
         ItemStack stack = player.getItemInHand(hand);
         if (stack.getItem() == ItemsRegistry.DENY_ITEM_SCROLL.asItem() && getTile() != null) {
-            ItemScrollData.ItemScrollData scrollData = new ItemScrollData.ItemScrollData(stack);
-            getTile().ignoreItems.addAll(scrollData.getItems());
+            ItemScrollData scrollData = stack.getOrDefault(DataComponentRegistry.ITEM_SCROLL_DATA, new ItemScrollData());
+            getTile().ignoreItems.addAll(scrollData.mutable().getItems());
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.whirlisprig.ignore"));
         }
         return super.mobInteract(player, hand);

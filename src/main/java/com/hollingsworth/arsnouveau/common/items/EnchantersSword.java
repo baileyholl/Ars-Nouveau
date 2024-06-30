@@ -12,6 +12,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -42,7 +43,7 @@ public class EnchantersSword extends SwordItem implements ICasterTool, GeoItem, 
     }
 
     public EnchantersSword(Tier iItemTier, int baseDamage, float baseAttackSpeed, Properties properties) {
-        super(iItemTier, baseDamage, baseAttackSpeed, properties);
+        super(iItemTier, properties.component(DataComponents.TOOL, createToolProperties()).attributes(SwordItem.createAttributes(iItemTier, baseDamage, baseAttackSpeed)));
     }
 
     @Override

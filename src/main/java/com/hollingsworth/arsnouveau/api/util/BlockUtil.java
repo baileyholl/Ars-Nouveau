@@ -22,7 +22,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.UsernameCache;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
@@ -88,7 +87,7 @@ public class BlockUtil {
         if (!(world instanceof ServerLevel))
             return false;
         Player playerEntity = caster instanceof Player ? (Player) caster : ANFakePlayer.getPlayer((ServerLevel) world);
-        if (NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), playerEntity)))
+        if (ANEventBus.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), playerEntity)))
             return false;
         world.getBlockState(pos).getBlock().playerWillDestroy(world, pos, world.getBlockState(pos), playerEntity);
         return world.destroyBlock(pos, dropBlock);
@@ -102,7 +101,7 @@ public class BlockUtil {
 
     public static boolean destroyRespectsClaim(Entity caster, Level world, BlockPos pos) {
         Player playerEntity = caster instanceof Player ? (Player) caster : ANFakePlayer.getPlayer((ServerLevel) world);
-        return !NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), playerEntity));
+        return !ANEventBus.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), playerEntity));
     }
 
     public static void safelyUpdateState(Level world, BlockPos pos, BlockState state) {
@@ -123,7 +122,7 @@ public class BlockUtil {
             return false;
 
         Player playerEntity = caster instanceof Player ? (Player) caster : ANFakePlayer.getPlayer((ServerLevel) world);
-        if (NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), playerEntity)))
+        if (ANEventBus.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), playerEntity)))
             return false;
 
         return destroyBlockWithoutSound(world, pos, dropBlock);

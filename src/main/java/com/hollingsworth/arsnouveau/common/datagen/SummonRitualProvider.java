@@ -7,6 +7,7 @@ import com.mojang.serialization.JsonOps;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -35,7 +36,7 @@ public class SummonRitualProvider extends SimpleDataProvider{
     protected void addEntries() {
          ArrayList<SummonRitualRecipe.WeightedMobType> bats = new ArrayList<>();
          bats.add(new SummonRitualRecipe.WeightedMobType(EntityType.getKey(EntityType.BAT)));
-         recipes.add(new SummonRitualRecipeWrapper(ArsNouveau.prefix( "bats"), new SummonRitualRecipe(Ingredient.of(Items.AMETHYST_SHARD), SummonRitualRecipe.MobSource.MOB_LIST, 5, bats)));
+         recipes.add(new SummonRitualRecipeWrapper(ArsNouveau.prefix( "bats"), new SummonRitualRecipe(Ingredient.of(Items.AMETHYST_SHARD), SummonRitualRecipe.MobSource.MOB_LIST, 5, WeightedRandomList.create(bats))));
     }
 
     protected static Path getRecipePath(Path path, String id) {

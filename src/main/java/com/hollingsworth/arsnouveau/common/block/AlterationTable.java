@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.AlterationTile;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
@@ -44,7 +43,7 @@ public class AlterationTable extends TableBlock{
         ItemStack stack = player.getMainHandItem();
         // Attempt to put armor and remove perks
         if(tile.isMasterTile()){
-            IPerkHolder<ItemStack> holder = PerkUtil.getPerkHolder(stack);
+            var holder = PerkUtil.getPerkHolder(stack);
             if (holder instanceof StackPerkHolder) {
                 if(tile.armorStack.isEmpty()){
                     tile.setArmorStack(stack, player);

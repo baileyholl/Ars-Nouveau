@@ -1,10 +1,11 @@
 package com.hollingsworth.arsnouveau.client.jei;
 
-import com.hollingsworth.arsnouveau.api.perk.IPerkProvider;
+import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
 import com.hollingsworth.arsnouveau.common.armor.AnimatedMagicArmor;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ArmorUpgradeRecipe;
 import com.hollingsworth.arsnouveau.common.items.data.ArmorPerkHolder;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ArmorUpgradeRecipeCategory extends EnchantingApparatusRecipeCategory<ArmorUpgradeRecipe> {
@@ -50,14 +52,12 @@ public class ArmorUpgradeRecipeCategory extends EnchantingApparatusRecipeCategor
         }
         for (ItemStack stack: stacks){
             ItemStack copy = stack.copy();
-            IPerkProvider<ItemStack> perkProvider = PerkRegistry.getPerkProvider(stack.getItem());
+            List<List<PerkSlot>> perkProvider = PerkRegistry.getPerkProvider(stack.getItem());
             if (perkProvider != null) {
-                if (perkProvider.getPerkHolder(stack) instanceof ArmorPerkHolder armorPerkHolder) {
-                    armorPerkHolder.setTier(recipe.tier-1);
-                }
-                if (perkProvider.getPerkHolder(copy) instanceof ArmorPerkHolder armorPerkHolder) {
-                    armorPerkHolder.setTier(recipe.tier);
-                }
+                ArmorPerkHolder perkHolder = stack.getOrDefault(DataComponentRegistry.ARMOR_PERKS, new ArmorPerkHolder(null, List.of(), 0, new HashMap<>()));
+                stack.set(DataComponentRegistry.ARMOR_PERKS, perkHolder.setTier(recipe.tier-1));
+                ArmorPerkHolder copyHolder = copy.getOrDefault(DataComponentRegistry.ARMOR_PERKS, new ArmorPerkHolder(null, List.of(), 0, new HashMap<>()));
+                copy.set(DataComponentRegistry.ARMOR_PERKS, copyHolder.setTier(recipe.tier));
             }
             outputs.add(copy);
         }

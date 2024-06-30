@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.RotatingTurretTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
-import com.hollingsworth.arsnouveau.common.items.WarpScroll;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
@@ -14,12 +13,10 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
-import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -41,17 +38,6 @@ public class RotatingSpellTurret extends BasicSpellTurret {
 
     public static HashMap<AbstractCastMethod, ITurretBehavior> ROT_TURRET_BEHAVIOR_MAP = new HashMap<>();
 
-    @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (player.getItemInHand(handIn).getItem() instanceof WarpScroll) {
-            BlockPos aimPos = WarpScroll.WarpScrollData.get(player.getItemInHand(handIn)).getPos();
-            if (player.level().getBlockEntity(pos) instanceof RotatingTurretTile tile) {
-                tile.aim(aimPos, player);
-            }
-        }
-        return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
-    }
-
     //Direction Adjustments
     public void shootSpell(ServerLevel world, BlockPos pos) {
         if (!(world.getBlockEntity(pos) instanceof RotatingTurretTile tile)) return;
@@ -62,7 +48,7 @@ public class RotatingSpellTurret extends BasicSpellTurret {
         if (manaCost > 0 && SourceUtil.takeSourceWithParticles(pos, world, 10, manaCost) == null)
             return;
         Networking.sendToNearbyClient(world, pos, new PacketOneShotAnimation(pos));
-        Position iposition = getDispensePosition(new BlockSourceImpl(world, pos), tile);
+        Position iposition = getDispensePosition(pos, tile);
         FakePlayer fakePlayer = ANFakePlayer.getPlayer(world);
         fakePlayer.setPos(pos.getX(), pos.getY(), pos.getZ());
         EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(world, caster.getSpell(), fakePlayer, new TileCaster(tile, SpellContext.CasterType.TURRET)));
@@ -75,12 +61,12 @@ public class RotatingSpellTurret extends BasicSpellTurret {
     /**
      * Get the position where the dispenser at the given Coordinates should dispense to.
      */
-    public static Position getDispensePosition(BlockSource coords, RotatingTurretTile tile) {
+    public static Position getDispensePosition(BlockPos coords, RotatingTurretTile tile) {
         Vec3 direction = tile.getShootAngle().normalize();
-        double d0 = coords.x() + 0.5D * direction.x();
-        double d1 = coords.y() + 0.5D * direction.y();
-        double d2 = coords.z() + 0.5D * direction.z();
-        return new PositionImpl(d0, d1, d2);
+        double d0 = coords.getX() + 0.5D * direction.x();
+        double d1 = coords.getY() + 0.5D * direction.y();
+        double d2 = coords.getZ() + 0.5D * direction.z();
+        return new Vec3(d0, d1, d2);
     }
 
     public static Direction[] orderedByNearest(RotatingTurretTile pEntity) {

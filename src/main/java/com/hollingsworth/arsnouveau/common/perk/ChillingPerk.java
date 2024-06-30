@@ -36,7 +36,7 @@ public class ChillingPerk extends Perk implements IEffectResolvePerk {
         if(effect instanceof IDamageEffect damageEffect && rayTraceResult instanceof EntityHitResult entityHitResult && entityHitResult.getEntity() instanceof LivingEntity livingEntity){
             if(damageEffect.canDamage(shooter, spellStats, spellContext, resolver, entityHitResult.getEntity()) && shooter != entityHitResult.getEntity()){
                 livingEntity.setTicksFrozen(livingEntity.getTicksFrozen() + 1);
-                livingEntity.addEffect(new MobEffectInstance(ModPotions.FREEZING_EFFECT, perkInstance.getSlot().value * 10 * 20, perkInstance.getSlot().value >= 3 ? 2 : 1));
+                livingEntity.addEffect(new MobEffectInstance(ModPotions.FREEZING_EFFECT, perkInstance.getSlot().value() * 10 * 20, perkInstance.getSlot().value() >= 3 ? 2 : 1));
             }
         }
     }

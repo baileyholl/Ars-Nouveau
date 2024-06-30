@@ -146,13 +146,14 @@ public class LightningEntity extends LightningBolt {
     public float getDamage(Entity entity) {
         float baseDamage = getDamage() + ampScalar * amps + (entity.isInWaterOrRain() ? wetBonus : 0.0f);
         int multiplier = 1;
-        for (ItemStack i : entity.getArmorSlots()) {
-            IEnergyStorage energyStorage = i.getCapability(Capabilities.EnergyStorage.ITEM);
-            if (energyStorage != null) {
-                multiplier++;
+
+        if (entity instanceof LivingEntity livingEntity) {
+            for (ItemStack i : livingEntity.getArmorSlots()) {
+                IEnergyStorage energyStorage = i.getCapability(Capabilities.EnergyStorage.ITEM);
+                if (energyStorage != null) {
+                    multiplier++;
+                }
             }
-        }
-        if (entity instanceof LivingEntity) {
             IEnergyStorage energyStorage = ((LivingEntity) entity).getMainHandItem().getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage != null)
                 multiplier++;

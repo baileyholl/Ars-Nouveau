@@ -12,6 +12,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketWarpPosition;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -49,8 +50,8 @@ public class EffectBlink extends AbstractEffect {
             SlotReference reference = manager.findItem(i -> (i.getItem() == ItemsRegistry.WARP_SCROLL.asItem() || i.getItem() == ItemsRegistry.STABLE_WARP_SCROLL.asItem()), InteractType.EXTRACT);
             if (!reference.isEmpty()) {
                 ItemStack stack = reference.getHandler().getStackInSlot(reference.getSlot());
-                WarpScrollData data = WarpScrollData.get(stack);
-                if (data.isValid() && data.canTeleportWithDim(world)) {
+                WarpScrollData data = stack.get(DataComponentRegistry.WARP_SCROLL);
+                if (data != null && data.isValid() && data.canTeleportWithDim(world)) {
                     warpEntity(rayTraceResult.getEntity(), data);
                     return;
                 }
@@ -63,11 +64,9 @@ public class EffectBlink extends AbstractEffect {
         }
 
         if (isRealPlayer(shooter)) {
-            WarpScrollData scrollData = WarpScrollData.get(shooter.getOffhandItem());
-            if (scrollData.isValid()) {
-                if (scrollData.isValid() && scrollData.canTeleportWithDim(world)) {
-                    warpEntity(rayTraceResult.getEntity(), scrollData);
-                }
+            WarpScrollData scrollData = shooter.getOffhandItem().get(DataComponentRegistry.WARP_SCROLL);
+            if (scrollData != null && scrollData.isValid() && scrollData.canTeleportWithDim(world)) {
+                warpEntity(rayTraceResult.getEntity(), scrollData);
             } else {
                 shooter.teleportTo(vec.x(), vec.y(), vec.z());
             }

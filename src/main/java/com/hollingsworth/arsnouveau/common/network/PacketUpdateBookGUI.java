@@ -16,12 +16,12 @@ public class PacketUpdateBookGUI extends AbstractPacket{
 
     //Decoder
     public PacketUpdateBookGUI(RegistryFriendlyByteBuf buf) {
-        bookStack = buf.readItem();
+        bookStack =  ItemStack.STREAM_CODEC.decode(buf);
     }
 
     //Encoder
     public void toBytes(RegistryFriendlyByteBuf buf) {
-        buf.writeItem(bookStack);
+        ItemStack.STREAM_CODEC.encode(buf, bookStack);
     }
 
     public PacketUpdateBookGUI(ItemStack stack) {

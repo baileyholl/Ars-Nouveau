@@ -6,8 +6,10 @@ import com.hollingsworth.arsnouveau.common.items.data.WarpScrollData;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketWarpPosition;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -32,8 +34,8 @@ public class WarpScroll extends ModItem {
         if (entity.getCommandSenderWorld().isClientSide)
             return false;
 
-        String displayName = stack.hasCustomHoverName() ? stack.getHoverName().getString() : "";
-        WarpScrollData data = WarpScrollData.get(stack);
+        String displayName = stack.get(DataComponents.CUSTOM_NAME) != null ? stack.getHoverName().getString() : "";
+        WarpScrollData data = stack.getOrDefault(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(null, null, null, false));
         if (data.isValid()
             && data.canTeleportWithDim(entity.getCommandSenderWorld().dimension().location().toString())
             && SourceUtil.hasSourceNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
@@ -44,7 +46,7 @@ public class WarpScroll extends ModItem {
             world.sendParticles(ParticleTypes.PORTAL, pos.getX(), pos.getY() + 1.0, pos.getZ(),
                     10, (world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
             world.playSound(null, pos, SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.NEUTRAL, 1.0f, 1.0f);
-            ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.CREATE_PORTAL, world, pos, 4);
+            ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.CREATE_PORTAL.get(), world, pos, 4);
             stack.shrink(1);
             return true;
         }
@@ -54,7 +56,7 @@ public class WarpScroll extends ModItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        WarpScrollData data = WarpScrollData.get(stack);
+        WarpScrollData data = stack.getOrDefault(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(null, null, null, false));
         if (hand == InteractionHand.OFF_HAND)
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
 
@@ -67,7 +69,7 @@ public class WarpScroll extends ModItem {
                 return InteractionResultHolder.fail(stack);
             }
             BlockPos pos = data.pos();
-            player.teleportToWithTicket(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+            player.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
             Vec2 rotation = data.rotation();
             player.setXRot(rotation.x);
             player.setYRot(rotation.y);
@@ -80,8 +82,7 @@ public class WarpScroll extends ModItem {
         }
         if (player.isShiftKeyDown()) {
             ItemStack newWarpStack = new ItemStack(ItemsRegistry.WARP_SCROLL.get());
-            WarpScrollData newData = new WarpScrollData(newWarpStack);
-            newData.setData(player.blockPosition(), player.getCommandSenderWorld().dimension().location().toString(), player.getRotationVector());
+            newWarpStack.set(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(player.blockPosition(), player.getCommandSenderWorld().dimension().location().toString(), player.getRotationVector(), false));
             boolean didAdd;
             if (stack.getCount() == 1) {
                 stack = newWarpStack;

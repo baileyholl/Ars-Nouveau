@@ -2,15 +2,15 @@ package com.hollingsworth.arsnouveau.api.util;
 
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
-import com.hollingsworth.arsnouveau.api.perk.IPerkProvider;
 import com.hollingsworth.arsnouveau.api.perk.PerkInstance;
 import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
+import com.hollingsworth.arsnouveau.common.items.data.ArmorPerkHolder;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
@@ -19,9 +19,8 @@ import java.util.List;
 
 public class PerkUtil {
 
-    public static @Nullable IPerkHolder<ItemStack> getPerkHolder(ItemStack stack){
-        IPerkProvider<ItemStack> holder = PerkRegistry.getPerkProvider(stack.getItem());
-        return holder == null ? null : holder.getPerkHolder(stack);
+    public static @Nullable IPerkHolder getPerkHolder(ItemStack stack){
+        return stack.get(DataComponentRegistry.ARMOR_PERKS);
     }
 
     public static double perkValue(LivingEntity entity, Holder<Attribute> attribute){
@@ -34,7 +33,7 @@ public class PerkUtil {
     }
 
     public static List<PerkItem> getPerksAsItems(ItemStack stack){
-        IPerkHolder<ItemStack> holder = getPerkHolder(stack);
+        ArmorPerkHolder holder = stack.get(DataComponentRegistry.ARMOR_PERKS);
         List<PerkItem> perkItems = new ArrayList<>();
         if(holder == null){
             return perkItems;
@@ -50,16 +49,12 @@ public class PerkUtil {
 
     public static List<PerkInstance> getPerksFromItem(ItemStack stack){
         List<PerkInstance> perkInstances = new ArrayList<>();
-        IPerkHolder<ItemStack> holder = getPerkHolder(stack);
-        if(holder == null)
+        var data = stack.get(DataComponentRegistry.ARMOR_PERKS);
+        if(data == null){
             return perkInstances;
-        perkInstances.addAll(holder.getPerkInstances());
+        }
+        perkInstances.addAll(data.getPerkInstances(stack));
         return perkInstances;
-    }
-
-    @Deprecated
-    public static List<PerkInstance> getPerksFromPlayer(Player player){
-        return getPerksFromLiving(player);
     }
 
     public static List<PerkInstance> getPerksFromLiving(LivingEntity player){
@@ -73,42 +68,34 @@ public class PerkUtil {
     public static int countForPerk(IPerk perk, LivingEntity player){
         int maxCount = 0;
         for(ItemStack stack : player.getArmorSlots()){
-            IPerkHolder<ItemStack> holder = getPerkHolder(stack);
-            if(holder == null)
+            var data = stack.get(DataComponentRegistry.ARMOR_PERKS);
+            if(data == null){
                 continue;
-            for(PerkInstance instance : holder.getPerkInstances()){
+            }
+            for(PerkInstance instance : data.getPerkInstances(stack)){
                 if(instance.getPerk() == perk){
-                    maxCount = Math.max(maxCount, instance.getSlot().value);
+                    maxCount = Math.max(maxCount, instance.getSlot().value());
                 }
             }
         }
         return maxCount;
     }
 
-    @Deprecated(forRemoval = true)
-    public static int countForPerk(IPerk perk, Player player){
-        return countForPerk(perk, (LivingEntity) player);
-    }
-
-    public static @Nullable IPerkHolder<ItemStack> getHolderForPerk(IPerk perk, LivingEntity entity){
-        IPerkHolder<ItemStack> highestHolder = null;
+    public static @Nullable ArmorPerkHolder getHolderForPerk(IPerk perk, LivingEntity entity){
+        ArmorPerkHolder highestHolder = null;
         int maxCount = 0;
         for(ItemStack stack : entity.getArmorSlots()){
-            IPerkHolder<ItemStack> holder = getPerkHolder(stack);
-            if(holder == null)
+            var data = stack.get(DataComponentRegistry.ARMOR_PERKS);
+            if(data == null){
                 continue;
-            for(PerkInstance instance : holder.getPerkInstances()){
+            }
+            for(PerkInstance instance : data.getPerkInstances(stack)){
                 if(instance.getPerk() == perk){
-                    maxCount = Math.max(maxCount, instance.getSlot().value);
-                    highestHolder = holder;
+                    maxCount = Math.max(maxCount, instance.getSlot().value());
+                    highestHolder = data;
                 }
             }
         }
         return highestHolder;
-    }
-
-    @Deprecated(forRemoval = true)
-    public static @Nullable IPerkHolder<ItemStack> getHolderForPerk(IPerk perk, Player player){
-        return getHolderForPerk(perk, (LivingEntity) player);
     }
 }

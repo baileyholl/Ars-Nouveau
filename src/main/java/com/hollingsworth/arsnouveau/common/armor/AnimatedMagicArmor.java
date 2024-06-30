@@ -6,13 +6,13 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
 import com.hollingsworth.arsnouveau.api.perk.*;
-import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.renderer.item.ArmorRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericModel;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
 import com.hollingsworth.arsnouveau.common.items.data.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.common.perk.RepairingPerk;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.MaterialRegistry;
 import net.minecraft.ChatFormatting;
@@ -105,7 +105,7 @@ public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDy
                 attributes.put(PerkAttributes.MANA_REGEN_BONUS.get(), new AttributeModifier(uuid, "mana_regen_armor", perkHolder.getTier() + 1, AttributeModifier.Operation.ADD_VALUE));
                 for (PerkInstance perkInstance : perkHolder.getPerkInstances()) {
                     IPerk perk = perkInstance.getPerk();
-                    attributes.putAll(perk.getModifiers(this.type.getSlot(), stack, perkInstance.getSlot().value));
+                    attributes.putAll(perk.getModifiers(this.type.getSlot(), stack, perkInstance.getSlot().value()));
                 }
 
             }
@@ -117,21 +117,22 @@ public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDy
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, TooltipContext world, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, world, tooltip, flag);
-        IPerkProvider<ItemStack> perkProvider = PerkRegistry.getPerkProvider(stack.getItem());
-        if (perkProvider != null) {
-            if (perkProvider.getPerkHolder(stack) instanceof ArmorPerkHolder armorPerkHolder) {
-                tooltip.add(Component.translatable("ars_nouveau.tier", armorPerkHolder.getTier() + 1).withStyle(ChatFormatting.GOLD));
-            }
-            perkProvider.getPerkHolder(stack).appendPerkTooltip(tooltip, stack);
+        var data = stack.get(DataComponentRegistry.ARMOR_PERKS);
+        if (data != null) {
+            tooltip.add(Component.translatable("ars_nouveau.tier", data.getTier() + 1).withStyle(ChatFormatting.GOLD));
+            data.appendPerkTooltip(tooltip, stack);
         }
     }
 
     @Override
     public void onDye(ItemStack stack, DyeColor dyeColor) {
-        IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(stack);
-        if (perkHolder instanceof ArmorPerkHolder armorPerkHolder) {
-            armorPerkHolder.setColor(dyeColor.getName());
+
+        var data = stack.get(DataComponentRegistry.ARMOR_PERKS);
+        if(data == null){
+            return;
         }
+        stack.set(DataComponentRegistry.ARMOR_PERKS, data.setColor(dyeColor.getName()));
+
     }
 
     @Override
@@ -184,7 +185,7 @@ public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDy
 
     @Override
     public String getColor(ItemStack object) {
-        IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(object);
+        var perkHolder = PerkUtil.getPerkHolder(object);
         if(!(perkHolder instanceof ArmorPerkHolder data)){
             return "purple";
         }

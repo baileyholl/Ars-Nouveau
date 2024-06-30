@@ -49,7 +49,7 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
 
     @Override
     public boolean matches(ApparatusRecipeInput input, Level level, @org.jetbrains.annotations.Nullable Player player) {
-        IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(input.catalyst());
+        IPerkHolder perkHolder = PerkUtil.getPerkHolder(input.catalyst());
         if(!(perkHolder instanceof ArmorPerkHolder armorPerkHolder)){
             return false;
         }
@@ -64,7 +64,7 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
     @Override
     public ItemStack assemble(ApparatusRecipeInput input, HolderLookup.Provider p_346030_) {
         ItemStack reagent = input.catalyst();
-        IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(reagent);
+        IPerkHolder perkHolder = PerkUtil.getPerkHolder(reagent);
         if(!(perkHolder instanceof ArmorPerkHolder armorPerkHolder)){
             return reagent.copy();
         }

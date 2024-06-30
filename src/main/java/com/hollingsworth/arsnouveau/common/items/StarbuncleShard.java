@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.common.items.data.StarbuncleCharmData;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -18,8 +19,8 @@ public class StarbuncleShard extends ModItem{
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
-        if(stack.hasTag()){
-            StarbuncleCharmData.StarbuncleCharmData data = new StarbuncleCharmData.StarbuncleCharmData(stack.getOrCreateTag());
+        StarbuncleCharmData data = stack.get(DataComponentRegistry.STARBUNCLE_DATA);
+        if(data != null){
             if (data.name != null) {
                 tooltip2.add(data.name);
             }

@@ -16,7 +16,6 @@ import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.familiars.*;
-import com.hollingsworth.arsnouveau.common.items.data.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.common.mob_jar.*;
 import com.hollingsworth.arsnouveau.common.perk.*;
 import com.hollingsworth.arsnouveau.common.ritual.*;
@@ -196,74 +195,74 @@ public class APIRegistry {
         api.getEnchantingRecipeTypes().add(RecipeRegistry.REACTIVE_TYPE.get());
         api.getEnchantingRecipeTypes().add(RecipeRegistry.SPELL_WRITE_TYPE.get());
         api.getEnchantingRecipeTypes().add(RecipeRegistry.ARMOR_UPGRADE_TYPE.get());
-        PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_BOOTS, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+        PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_BOOTS, Arrays.asList(
                 Arrays.asList(PerkSlot.ONE),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.ONE),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.TWO)
-        )));
-        PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_HOOD, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+        ));
+        PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_HOOD, Arrays.asList(
                 Arrays.asList(PerkSlot.ONE),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.ONE),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.TWO)
-        )));
-        PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_LEGGINGS, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+        ));
+        PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_LEGGINGS, Arrays.asList(
                 Arrays.asList(PerkSlot.ONE),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.THREE)
-        )));
-        PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_ROBES, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+        ));
+        PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_ROBES, Arrays.asList(
                 List.of(PerkSlot.ONE),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.THREE)
-        )));
+        ));
 
-        PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_HOOD, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+        PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_HOOD, Arrays.asList(
                 Arrays.asList(PerkSlot.ONE),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.THREE)
-        )));
-        PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_BOOTS, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+        ));
+        PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_BOOTS, Arrays.asList(
                 Arrays.asList(PerkSlot.ONE),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.TWO)
-        )));
+        ));
 
-        PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_LEGGINGS, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+        PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_LEGGINGS, Arrays.asList(
                 Arrays.asList(PerkSlot.ONE),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.THREE),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
-        )));
+        ));
 
-        PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_ROBES, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+        PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_ROBES, Arrays.asList(
                 Arrays.asList(PerkSlot.ONE),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.THREE),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
-        )));
+        ));
 
 
-        PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_BOOTS, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+        PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_BOOTS, Arrays.asList(
                 Arrays.asList(PerkSlot.ONE),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
-        )));
+        ));
 
-        PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_ROBES, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+        PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_ROBES,Arrays.asList(
                 Arrays.asList(PerkSlot.TWO),
                 Arrays.asList(PerkSlot.TWO, PerkSlot.THREE),
                 Arrays.asList(PerkSlot.TWO, PerkSlot.TWO, PerkSlot.THREE)
-        )));
+        ));
 
-        PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_LEGGINGS, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+        PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_LEGGINGS, Arrays.asList(
                 Arrays.asList(PerkSlot.TWO),
                 Arrays.asList(PerkSlot.TWO, PerkSlot.THREE),
                 Arrays.asList(PerkSlot.TWO, PerkSlot.TWO, PerkSlot.THREE)
-        )));
+        ));
 
-        PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_HOOD, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+        PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_HOOD, Arrays.asList(
                 Arrays.asList(PerkSlot.ONE),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
-        )));
+        ));
 
         SoundRegistry.DEFAULT_SPELL_SOUND = new SpellSound(SoundRegistry.DEFAULT_FAMILY.get(), Component.translatable("ars_nouveau.sound.default_family"));
         SoundRegistry.EMPTY_SPELL_SOUND = new SpellSound(SoundRegistry.EMPTY_SOUND_FAMILY.get(), Component.translatable("ars_nouveau.sound.empty"));

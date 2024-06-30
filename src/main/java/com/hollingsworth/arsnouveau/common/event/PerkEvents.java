@@ -7,9 +7,9 @@ import com.hollingsworth.arsnouveau.api.event.SpellDamageEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.api.perk.IEffectResolvePerk;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
-import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.PerkInstance;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
+import com.hollingsworth.arsnouveau.common.items.data.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.common.perk.TotemPerk;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.network.chat.Component;
@@ -18,7 +18,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
@@ -131,7 +130,7 @@ public class PerkEvents {
     @SubscribeEvent
     public static void totemEvent(final LivingDeathEvent event) {
         LivingEntity entity = event.getEntity();
-        IPerkHolder<ItemStack> holder = PerkUtil.getHolderForPerk(TotemPerk.INSTANCE, entity);
+        ArmorPerkHolder holder = PerkUtil.getHolderForPerk(TotemPerk.INSTANCE, entity);
         if (holder == null)
             return;
         TotemPerk.Data perkData = new TotemPerk.Data(holder);
@@ -151,7 +150,7 @@ public class PerkEvents {
     @SubscribeEvent
     public static void sleepEvent(final SleepFinishedTimeEvent event) {
         for (Player p : event.getLevel().players()) {
-            IPerkHolder<ItemStack> holder = PerkUtil.getHolderForPerk(TotemPerk.INSTANCE, (LivingEntity) p);
+            ArmorPerkHolder holder = PerkUtil.getHolderForPerk(TotemPerk.INSTANCE, p);
             if (holder == null)
                 continue;
             TotemPerk.Data perkData = new TotemPerk.Data(holder);

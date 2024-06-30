@@ -33,7 +33,7 @@ public class WorldgenProvider extends DatapackBuiltinEntriesProvider {
             .add(Registries.CONFIGURED_FEATURE, WorldgenRegistry::bootstrapConfiguredFeatures)
             .add(Registries.PLACED_FEATURE, WorldgenRegistry::bootstrapPlacedFeatures)
             .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, BiomeModifierRegistry::bootstrap)
-            .add(NeoForgeRegistries.Keys.BIOMES, BiomeRegistry::bootstrap);
+            .add(Registries.BIOME, BiomeRegistry::bootstrap);
 
     public WorldgenProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries, BUILDER, Set.of(ArsNouveau.MODID));

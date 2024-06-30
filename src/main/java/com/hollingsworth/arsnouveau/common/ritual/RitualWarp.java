@@ -5,7 +5,9 @@ import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.items.WarpScroll;
+import com.hollingsworth.arsnouveau.common.items.data.WarpScrollData;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -41,8 +43,8 @@ public class RitualWarp extends AbstractRitual {
                 List<Entity> entities = getWorld().getEntitiesOfClass(Entity.class, new AABB(getPos()).inflate(5));
 
                 ItemStack i = getConsumedItems().get(0);
-                WarpScroll.WarpScrollData data = WarpScroll.WarpScrollData.get(i);
-                BlockPos b = data.getPos();
+                WarpScrollData data = i.get(DataComponentRegistry.WARP_SCROLL);
+                BlockPos b = data.pos();
                 for (Entity a : entities) {
                     if (b != null)
                         a.teleportTo(b.getX(), b.getY(), b.getZ());
@@ -68,8 +70,8 @@ public class RitualWarp extends AbstractRitual {
     public boolean canConsumeItem(ItemStack stack) {
         if (!(stack.getItem() instanceof WarpScroll) || !getConsumedItems().isEmpty())
             return false;
-        WarpScroll.WarpScrollData data = WarpScroll.WarpScrollData.get(stack);
-        return data.isValid() && data.canTeleportWithDim(tile.getLevel());
+        WarpScrollData data = stack.get(DataComponentRegistry.WARP_SCROLL);
+        return data != null && data.isValid() && data.canTeleportWithDim(tile.getLevel());
     }
 
     @Override

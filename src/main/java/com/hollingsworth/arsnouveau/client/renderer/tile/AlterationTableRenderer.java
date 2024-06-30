@@ -292,10 +292,11 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         if (!(PerkUtil.getPerkHolder(tile.armorStack) instanceof StackPerkHolder armorPerkHolder)) {
             return;
         }
-        List<PerkSlot> perks = armorPerkHolder.getSlotsForTier();
+        List<PerkSlot> perks = armorPerkHolder.getSlotsForTier(tile.armorStack);
+
         for (int i = 0; i < Math.min(perks.size(), rowNames.length); i++) {
             PerkSlot perkSlot = perks.get(i);
-            setSlateRow(model, rowNames[i], perkSlot.value);
+            setSlateRow(model, rowNames[i], perkSlot.value());
         }
         List<String> remainingRows = List.of(rowNames);
         remainingRows.subList(perks.size(), remainingRows.size()).forEach(s -> setSlateRow(model, s, 0));
