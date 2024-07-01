@@ -2,20 +2,16 @@ package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.event.*;
-import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.PlayerCaster;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
 import com.hollingsworth.arsnouveau.common.block.tile.SpellSensorTile;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectInvisibility;
-import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
-import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
@@ -94,15 +90,16 @@ public class ArsEvents {
                 return;
             } else if (itemStack.getItem() instanceof ShieldItem && !(event.getSlotType() == EquipmentSlot.OFFHAND))
                 return;
+            //TODO: reimplement manaboost/regen attributes
 
-            if (itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT) > 0) {
-                ResourceLocation uuid = getEnchantBoostBySlot(event.getSlotType());
-                event.addModifier(PerkAttributes.MAX_MANA, new AttributeModifier(uuid, ServerConfig.MANA_BOOST_BONUS.get() * itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT), AttributeModifier.Operation.ADD_VALUE));
-            }
-            if (itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT) > 0) {
-                ResourceLocation uuid = getEnchantBoostBySlot(event.getSlotType());
-                event.addModifier(PerkAttributes.MANA_REGEN_BONUS, new AttributeModifier(uuid, ServerConfig.MANA_REGEN_ENCHANT_BONUS.get() * itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT), AttributeModifier.Operation.ADD_VALUE));
-            }
+//            if (itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT) > 0) {
+//                ResourceLocation uuid = getEnchantBoostBySlot(event.getSlotType());
+//                event.addModifier(PerkAttributes.MAX_MANA, new AttributeModifier(uuid, ServerConfig.MANA_BOOST_BONUS.get() * itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT), AttributeModifier.Operation.ADD_VALUE));
+//            }
+//            if (itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT) > 0) {
+//                ResourceLocation uuid = getEnchantBoostBySlot(event.getSlotType());
+//                event.addModifier(PerkAttributes.MANA_REGEN_BONUS, new AttributeModifier(uuid, ServerConfig.MANA_REGEN_ENCHANT_BONUS.get() * itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT), AttributeModifier.Operation.ADD_VALUE));
+//            }
         }
 
     }

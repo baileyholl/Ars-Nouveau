@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.entity.goal.ConditionalMeleeGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.chimera.*;
 import com.hollingsworth.arsnouveau.common.potions.SnareEffect;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
@@ -126,7 +127,7 @@ public class WildenChimera extends Monster implements GeoEntity {
     protected void registerGoals() {
         super.registerGoals();
 
-        this.goalSelector.addGoal(5, new ChimeraMeleeGoal(this, 1.2d, true, ()-> !this.isHowling() && !this.isFlying() && !this.isDefensive() && !this.isDiving() && !this.getPhaseSwapping() && !isRamming() && !isRamPrep()));
+        this.goalSelector.addGoal(5, new ConditionalMeleeGoal(this, 1.2d, true, ()-> !this.isHowling() && !this.isFlying() && !this.isDefensive() && !this.isDiving() && !this.getPhaseSwapping() && !isRamming() && !isRamPrep()));
         this.goalSelector.addGoal(3, new ChimeraSummonGoal(this));
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, true));
         this.goalSelector.addGoal(1, new ChimeraRageGoal(this));
@@ -867,7 +868,13 @@ public class WildenChimera extends Monster implements GeoEntity {
                 .add(Attributes.ARMOR, 6D)
                 .add(Attributes.FOLLOW_RANGE, 100D)
                 .add(Attributes.FLYING_SPEED, 0.4f)
-                .add(Attributes.STEP_HEIGHT, 3.0f);
+                .add(Attributes.STEP_HEIGHT, 3.0f)
+                .add(Attributes.ENTITY_INTERACTION_RANGE, 10.0f);
+    }
+
+    @Override
+    public boolean isWithinMeleeAttackRange(LivingEntity pEntity) {
+        return super.isWithinMeleeAttackRange(pEntity);
     }
 
     private static class ChimeraMusic extends AbstractTickableSoundInstance {

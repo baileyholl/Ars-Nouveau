@@ -1,27 +1,37 @@
 package com.hollingsworth.arsnouveau.api.sound;
 
 import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.nbt.CompoundTag;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class ConfiguredSpellSound {
+
+    public static final MapCodec<ConfiguredSpellSound> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            SpellSound.CODEC.codec().fieldOf("sound").forGetter(s -> s.sound),
+            Codec.FLOAT.optionalFieldOf("volume", 1.0f).forGetter(s -> s.volume),
+            Codec.FLOAT.optionalFieldOf("pitch", 1.0f).forGetter(s -> s.pitch)
+    ).apply(instance, ConfiguredSpellSound::new));
+
     public static ConfiguredSpellSound EMPTY = new ConfiguredSpellSound(SoundRegistry.EMPTY_SPELL_SOUND, 1, 1); // If the user wants no sound, make it empty.
     public static ConfiguredSpellSound DEFAULT = new ConfiguredSpellSound(SoundRegistry.DEFAULT_SPELL_SOUND, 1, 1); // The default sound to be returned for null casters.
 
-    public @Nullable SpellSound sound;
+    public SpellSound sound;
     public float volume;
     public float pitch;
 
-    public ConfiguredSpellSound(@Nullable SpellSound sound) {
+    public ConfiguredSpellSound(SpellSound sound) {
         this(sound, 1, 1);
     }
 
-    public ConfiguredSpellSound(@Nullable SpellSound sound, float volume, float pitch) {
-        this.sound = sound;
-        this.volume = volume;
-        this.pitch = pitch;
+    public ConfiguredSpellSound(@Nullable SpellSound spellSound, float aFloat, float aFloat1) {
+        this.sound = spellSound;
+        this.volume = aFloat;
+        this.pitch = aFloat1;
     }
 
     public CompoundTag serialize() {

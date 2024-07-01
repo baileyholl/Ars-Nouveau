@@ -4,6 +4,9 @@ import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,6 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Spell implements Cloneable {
+
+    public static final MapCodec<Spell> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Codec.STRING.fieldOf("name").forGetter(s -> s.name),
+            ParticleColor.CODEC.fieldOf("color").forGetter(s -> s.color),
+            ConfiguredSpellSound.CODEC.fieldOf("sound").forGetter(s -> s.sound),
+            Codec.list(AbstractSpellPart.CODEC).fieldOf("recipe").forGetter(s -> s.recipe)
+    ).apply(instance, Spell::new));
 
     public List<AbstractSpellPart> recipe = new ArrayList<>();
     public String name = "";
@@ -30,6 +40,13 @@ public class Spell implements Cloneable {
     public Spell(AbstractSpellPart... spellParts) {
         super();
         add(spellParts);
+    }
+
+    public Spell(String s, ParticleColor color, ConfiguredSpellSound configuredSpellSound, List<AbstractSpellPart> abstractSpellParts) {
+        this.name = s;
+        this.color = color;
+        this.sound = configuredSpellSound;
+        this.recipe = abstractSpellParts;
     }
 
     public Spell add(AbstractSpellPart spellPart) {

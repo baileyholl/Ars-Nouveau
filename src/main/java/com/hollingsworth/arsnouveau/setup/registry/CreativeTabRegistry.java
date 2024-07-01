@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
@@ -16,17 +17,21 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
 import java.util.Comparator;
 
 import static com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry.ITEMS;
 
 public class CreativeTabRegistry {
-    public static Comparator<AbstractSpellPart> COMPARE_GLYPH_BY_TYPE = Comparator.comparingInt(AbstractSpellPart::getTypeIndex);
+    public static Comparator<RecipeHolder<GlyphRecipe>> COMPARE_GLYPH_BY_TYPE = Comparator.comparingInt(holder -> holder.value().getSpellPart().getTypeIndex());
 
-    public static Comparator<AbstractSpellPart> COMPARE_TYPE_THEN_NAME = COMPARE_GLYPH_BY_TYPE.thenComparing(AbstractSpellPart::getLocaleName);
-    public static Comparator<AbstractSpellPart> COMPARE_TIER_THEN_NAME = COMPARE_GLYPH_BY_TYPE.thenComparingInt(o -> o.getConfigTier().value).thenComparing(AbstractSpellPart::getLocaleName);
+    public static Comparator<RecipeHolder<GlyphRecipe>> COMPARE_TYPE_THEN_NAME = COMPARE_GLYPH_BY_TYPE.thenComparing(holder -> holder.value().getSpellPart().getLocaleName());
+    public static Comparator<RecipeHolder<GlyphRecipe>> COMPARE_TIER_THEN_NAME = COMPARE_GLYPH_BY_TYPE.thenComparingInt(o -> o.value().getSpellPart().getConfigTier().value).thenComparing(holder -> holder.value().getSpellPart().getLocaleName());
+
+    public static Comparator<AbstractSpellPart> COMPARE_SPELL_TYPE_NAME = Comparator.comparingInt(AbstractSpellPart::getTypeIndex).thenComparing(AbstractSpellPart::getLocaleName);
 
 
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ArsNouveau.MODID);
@@ -58,7 +63,7 @@ public class CreativeTabRegistry {
             .displayItems((params, output) -> {
 
                 for (var glyph : GlyphRegistry.getSpellpartMap().values().stream()
-                        .sorted(COMPARE_TYPE_THEN_NAME).toList()) {
+                        .sorted(COMPARE_SPELL_TYPE_NAME).toList()) {
                     output.accept(glyph.getGlyph().getDefaultInstance());
                 }
 

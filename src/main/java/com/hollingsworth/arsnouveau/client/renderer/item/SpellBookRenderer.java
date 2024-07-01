@@ -10,8 +10,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemDisplayContext;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.GeoModel;
@@ -102,7 +102,8 @@ public class SpellBookRenderer extends FixedGeoItemRenderer<SpellBook> {
         @Override
     public ResourceLocation getTextureLocation(SpellBook o) {
         String base = "textures/item/spellbook_";
-        String color = !currentItemStack.hasTag() || !currentItemStack.getTag().contains("color") ? "purple" : DyeColor.byId(currentItemStack.getOrCreateTag().getInt("color")).getName();
+        var dyeColor = currentItemStack.get(DataComponents.BASE_COLOR);
+        String color = dyeColor == null ? "purple" : dyeColor.getName();
         return ArsNouveau.prefix( base + color + ".png");
     }
 

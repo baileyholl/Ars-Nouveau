@@ -1,18 +1,15 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.common.items.data.PotionData;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -80,8 +77,8 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
         PotionContents potion = stack.get(DataComponents.POTION_CONTENTS);
 
         if (stack.getItem() == Items.POTION && potion != null && potion != PotionContents.EMPTY) {
-            if (tile.canAccept(new PotionData(stack),100)) {
-                tile.add(new PotionData(stack), 100);
+            if (tile.canAccept(potion,100)) {
+                tile.add(potion, 100);
                 if (!player.isCreative()) {
                     stack.shrink(1);
                     player.addItem(new ItemStack(Items.GLASS_BOTTLE));
@@ -90,22 +87,16 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
             return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
         }else if (stack.getItem() == Items.GLASS_BOTTLE && tile.getAmount() >= 100) {
             ItemStack potionStack = new ItemStack(Items.POTION);
-            PotionContents contents = tile.getData().getPotion();
-            for(MobEffectInstance instance : tile.getData().getCustomEffects()){
-                contents = contents.withEffectAdded(instance);
-            }
-            potionStack.set(DataComponents.POTION_CONTENTS, contents);
+            PotionContents contents = tile.getData();
+            potionStack.set(DataComponents.POTION_CONTENTS, new PotionContents(contents.potion(), contents.customColor(), contents.customEffects()));
             if(player.addItem(potionStack)) {
                 player.getItemInHand(handIn).shrink(1);
                 tile.remove(100);
             }
         }else if(stack.getItem() == Items.ARROW && tile.getAmount() >= 10){
             ItemStack potionStack = new ItemStack(Items.TIPPED_ARROW);
-            PotionContents contents = tile.getData().getPotion();
-            for(MobEffectInstance instance : tile.getData().getCustomEffects()){
-                contents = contents.withEffectAdded(instance);
-            }
-            potionStack.set(DataComponents.POTION_CONTENTS, contents);
+            PotionContents contents = tile.getData();
+            potionStack.set(DataComponents.POTION_CONTENTS, new PotionContents(contents.potion(), contents.customColor(), contents.customEffects()));
             if(player.addItem(potionStack)) {
                 player.getItemInHand(handIn).shrink(1);
                 tile.remove(10);
@@ -132,15 +123,16 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
 
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext pContext, List<Component> tooltip, TooltipFlag pTooltipFlag) {
-        if (stack.getTag() == null)
-            return;
-        int fill = stack.getTag().getCompound("BlockEntityTag").getInt("currentFill");
-        tooltip.add(Component.literal((fill * 100) / 10000 + "% full"));
-        CompoundTag blockTag = stack.getTag().getCompound("BlockEntityTag");
-        if(blockTag.contains("potionData")){
-            PotionData data = PotionData.fromTag(blockTag.getCompound("potionData"));
-            data.appendHoverText(tooltip);
-        }
+        //todo: restore potion jar item tooltip
+//        if (stack.getTag() == null)
+//            return;
+//        int fill = stack.getTag().getCompound("BlockEntityTag").getInt("currentFill");
+//        tooltip.add(Component.literal((fill * 100) / 10000 + "% full"));
+//        CompoundTag blockTag = stack.getTag().getCompound("BlockEntityTag");
+//        if(blockTag.contains("potionData")){
+//            PotionData data = PotionData.fromTag(blockTag.getCompound("potionData"));
+//            data.appendHoverText(tooltip);
+//        }
     }
 
     @Override

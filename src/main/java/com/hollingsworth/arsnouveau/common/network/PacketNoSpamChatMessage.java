@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.chat.MessageSignature;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.codec.StreamCodec;
@@ -60,14 +61,14 @@ public class PacketNoSpamChatMessage extends AbstractPacket {
 
     // Decoder
     public PacketNoSpamChatMessage(RegistryFriendlyByteBuf buf) {
-        this.message = buf.readComponent();
+        this.message = ComponentSerialization.STREAM_CODEC.decode(buf);
         this.messageChannelId = buf.readInt();
         this.overlayMessage = buf.readBoolean();
     }
 
     // Encoder
     public void toBytes(RegistryFriendlyByteBuf buf) {
-        buf.writeComponent(message);
+        ComponentSerialization.STREAM_CODEC.encode(buf, message);
         buf.writeInt(messageChannelId);
         buf.writeBoolean(overlayMessage);
     }

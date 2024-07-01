@@ -4,8 +4,8 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
-import com.hollingsworth.arsnouveau.common.items.data.PotionData;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
+import com.hollingsworth.arsnouveau.client.container.CraftingTerminalScreen;
 import com.hollingsworth.arsnouveau.client.gui.GuiEntityInfoHUD;
 import com.hollingsworth.arsnouveau.client.gui.GuiManaHUD;
 import com.hollingsworth.arsnouveau.client.gui.GuiSpellHUD;
@@ -17,12 +17,14 @@ import com.hollingsworth.arsnouveau.client.renderer.tile.*;
 import com.hollingsworth.arsnouveau.common.block.tile.MageBlockTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionMelderTile;
-import com.hollingsworth.arsnouveau.common.items.PotionFlask;
 import com.hollingsworth.arsnouveau.common.items.data.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.common.util.CameraUtil;
+import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -33,6 +35,7 @@ import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -49,6 +52,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.jetbrains.annotations.Nullable;
 
@@ -179,6 +183,11 @@ public class ClientHandler {
     });
 
     @SubscribeEvent
+    public static void registerMenu(final RegisterMenuScreensEvent event){
+        event.register(MenuRegistry.STORAGE.get(), CraftingTerminalScreen::new);
+    }
+
+    @SubscribeEvent
     public static void registerOverlays(final RegisterGuiLayersEvent event) {
         event.registerAboveAll(ArsNouveau.prefix("scry_camera"), cameraOverlay);
         event.registerAbove(VanillaGuiLayers.HOTBAR, ArsNouveau.prefix("tooltip"), GuiEntityInfoHUD.OVERLAY);
@@ -246,7 +255,7 @@ public class ClientHandler {
 
         event.register((stack, color) -> color > 0 ? -1 :
                         new ParticleColor(200, 0, 200).getColor(),
-                ForgeRegistries.ITEMS.getValue(ArsNouveau.prefix( LibBlockNames.POTION_MELDER_BLOCK)));
+                BuiltInRegistries.ITEM.get(ArsNouveau.prefix( LibBlockNames.POTION_MELDER_BLOCK)));
 
         event.register((stack, color) -> color > 0 ? -1 :
                         colorFromArmor(stack),
@@ -312,8 +321,8 @@ public class ClientHandler {
             }
             CompoundTag blockTag = stack.getOrCreateTag().getCompound("BlockEntityTag");
             if (blockTag.contains("potionData")) {
-                PotionData data = PotionData.fromTag(blockTag.getCompound("potionData"));
-                return PotionUtils.getColor(data.fullEffects());
+                PotionContents data = ANCodecs.decode(PotionContents.CODEC, blockTag.getCompound("potionData"));
+                return data.getColor();
             }
             return -1;
         }, BlockRegistry.POTION_JAR);
@@ -328,7 +337,7 @@ public class ClientHandler {
     }
 
     public static int colorFromFlask(ItemStack stack) {
-        PotionFlask.FlaskData data = new PotionFlask.FlaskData(stack);
-        return data.getPotion().getPotion() == PotionContents.EMPTY ? -1 : data.getPotion().getPotion().getColor();
+        PotionContents contents = PotionUtil.getContents(stack);
+        return contents == PotionContents.EMPTY ? -1 : contents.getColor();
     }
 }

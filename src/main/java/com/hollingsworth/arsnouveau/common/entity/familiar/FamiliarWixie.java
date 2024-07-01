@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.entity.familiar;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.common.items.data.PotionData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
@@ -12,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -27,6 +27,8 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
@@ -68,11 +70,13 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
                 ItemStack awkward = PotionUtil.getPotion(Potions.AWKWARD);
 
                 if(r.isIngredient(stack) && (r.getInput().test(awkward) || r.getInput().test(water))){
-                    PotionData data = new PotionData(r.getOutput().copy());
+                    PotionContents contents = PotionUtil.getContents(r.getOutput());
 
-                    if(!data.isEmpty()){
-                        data.applyEffects(player, player, player);
-                        PortUtil.sendMessage(player, Component.translatable("ars_nouveau.wixie_familiar.applied",data.asPotionStack().getHoverName().getString()));
+                    if(!PotionUtil.isEmpty(contents)){
+                        PotionUtil.applyContents(contents, player, player, player);
+                        ItemStack potionStack = new ItemStack(Items.POTION);
+                        potionStack.set(DataComponents.POTION_CONTENTS, contents);
+                        PortUtil.sendMessage(player, Component.translatable("ars_nouveau.wixie_familiar.applied", potionStack.getHoverName().getString()));
                         Networking.sendToNearbyClient(level(), this, new PacketAnimEntity(this.getId(), EntityWixie.Animations.CAST.ordinal()));
                         ParticleUtil.spawnPoof((ServerLevel) level(), player.blockPosition().above());
                         stack.shrink(1);

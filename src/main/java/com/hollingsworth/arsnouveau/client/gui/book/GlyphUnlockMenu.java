@@ -13,6 +13,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetScribeRecipe;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.CreativeTabRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.ChatFormatting;
@@ -31,6 +32,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.joml.Matrix4f;
 
 import java.util.ArrayList;
@@ -40,8 +42,8 @@ import java.util.stream.Collectors;
 public class GlyphUnlockMenu extends BaseBook {
 
 
-    public List<AbstractSpellPart> displayedGlyphs = new ArrayList<>();
-    public List<AbstractSpellPart> allParts = new ArrayList<>();
+    public List<RecipeHolder<GlyphRecipe>> displayedGlyphs = new ArrayList<>();
+    public List<RecipeHolder<GlyphRecipe>> allParts = new ArrayList<>();
     public int page = 0;
     public PageButton nextButton;
     public PageButton previousButton;
@@ -54,8 +56,8 @@ public class GlyphUnlockMenu extends BaseBook {
     int tier3Row = 0;
     BlockPos scribesPos;
     Filter filterSelected = Filter.ALL;
-    public GlyphRecipe hoveredRecipe;
-    public GlyphRecipe selectedRecipe;
+    public RecipeHolder<GlyphRecipe> hoveredRecipe;
+    public RecipeHolder<GlyphRecipe> selectedRecipe;
 
     enum Filter {
         ALL,
@@ -71,7 +73,7 @@ public class GlyphUnlockMenu extends BaseBook {
 
     public GlyphUnlockMenu(BlockPos pos) {
         super();
-        allParts = new ArrayList<>(GlyphRegistry.getSpellpartMap().values().stream().filter(AbstractSpellPart::shouldShowInUnlock).toList());
+        allParts = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.GLYPH_TYPE.get());
         this.displayedGlyphs = new ArrayList<>(allParts);
         this.scribesPos = pos;
     }
@@ -151,7 +153,7 @@ public class GlyphUnlockMenu extends BaseBook {
 
     private void onSelectClick(Button button) {
         if (selectedRecipe != null) {
-            Networking.sendToServer(new PacketSetScribeRecipe(scribesPos, selectedRecipe.id));
+            Networking.sendToServer(new PacketSetScribeRecipe(scribesPos, selectedRecipe.id()));
             Minecraft.getInstance().setScreen(null);
         }
     }
@@ -172,8 +174,8 @@ public class GlyphUnlockMenu extends BaseBook {
             searchBar.setSuggestion("");
             displayedGlyphs = new ArrayList<>();
 
-            for (AbstractSpellPart spellPart : allParts) {
-                if (spellPart.getLocaleName().toLowerCase().contains(searchBar.value.toLowerCase())) {
+            for (RecipeHolder<GlyphRecipe> spellPart : allParts) {
+                if (spellPart.value().getSpellPart().getLocaleName().toLowerCase().contains(searchBar.value.toLowerCase())) {
                     displayedGlyphs.add(spellPart);
                 }
             }
@@ -223,15 +225,15 @@ public class GlyphUnlockMenu extends BaseBook {
         int xStart = nextPage ? bookLeft + 154 : bookLeft + 20;
         int adjustedRowsPlaced = 0;
         int yStart = bookTop + 20;
-        List<AbstractSpellPart> sorted = new ArrayList<>(displayedGlyphs);
+        List<RecipeHolder<GlyphRecipe>> sorted = new ArrayList<>(displayedGlyphs);
         sorted.sort(CreativeTabRegistry.COMPARE_TIER_THEN_NAME);
         sorted = sorted.subList(maxPerPage * page, Math.min(sorted.size(), maxPerPage * (page + 1)));
         int adjustedXPlaced = 0;
         tier1Row = 0;
         adjustedRowsPlaced++;
         for (int i = 0; i < sorted.size(); i++) {
-            AbstractSpellPart part = sorted.get(i);
-
+            var holder = sorted.get(i);
+            var spellPart = holder.value().getSpellPart();
             if (adjustedXPlaced >= PER_ROW) {
                 adjustedRowsPlaced++;
 
@@ -248,10 +250,10 @@ public class GlyphUnlockMenu extends BaseBook {
             }
             int xOffset = 20 * ((adjustedXPlaced) % PER_ROW) + (nextPage ? 134 : 0);
             int yPlace = adjustedRowsPlaced * 18 + yStart;
-            UnlockGlyphButton cell = new UnlockGlyphButton(xStart + xOffset, yPlace, false, part, this::onGlyphClick);
+            UnlockGlyphButton cell = new UnlockGlyphButton(xStart + xOffset, yPlace, false, holder, this::onGlyphClick);
             IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player).orElse(null);
             if (cap != null) {
-                if (cap.knowsGlyph(part) || GlyphRegistry.getDefaultStartingSpells().contains(part)) {
+                if (cap.knowsGlyph(spellPart) || GlyphRegistry.getDefaultStartingSpells().contains(spellPart)) {
                     cell.playerKnows = true;
                 }
             }
@@ -261,16 +263,16 @@ public class GlyphUnlockMenu extends BaseBook {
         }
     }
 
-    public List<AbstractSpellPart> applyFilter(List<AbstractSpellPart> spellParts) {
+    public List<RecipeHolder<GlyphRecipe>> applyFilter(List<RecipeHolder<GlyphRecipe>> spellParts) {
         if (filterSelected == Filter.ALL)
             return spellParts;
         if (filterSelected == Filter.TIER1) {
-            return spellParts.stream().filter(a -> a.getConfigTier().value == 1).collect(Collectors.toList());
+            return spellParts.stream().filter(a -> a.value().getSpellPart().getConfigTier().value == 1).collect(Collectors.toList());
         }
         if (filterSelected == Filter.TIER2) {
-            return spellParts.stream().filter(a -> a.getConfigTier().value == 2).collect(Collectors.toList());
+            return spellParts.stream().filter(a -> a.value().getSpellPart().getConfigTier().value == 2).collect(Collectors.toList());
         }
-        return spellParts.stream().filter(a -> a.getConfigTier().value == 3).collect(Collectors.toList());
+        return spellParts.stream().filter(a -> a.value().getSpellPart().getConfigTier().value == 3).collect(Collectors.toList());
     }
 
     public void onGlyphClick(Button button) {
@@ -286,11 +288,11 @@ public class GlyphUnlockMenu extends BaseBook {
             unlockGlyphButton.selected = true;
             if (selectedRecipe == null)
                 return;
-            for (int i = 0; i < selectedRecipe.inputs.size(); i++) {
+            for (int i = 0; i < selectedRecipe.value().inputs.size(); i++) {
                 if (i > itemButtons.size())
                     break;
                 itemButtons.get(i).visible = true;
-                itemButtons.get(i).ingredient = selectedRecipe.inputs.get(i);
+                itemButtons.get(i).ingredient = selectedRecipe.value().inputs.get(i);
 
             }
         }
@@ -346,12 +348,12 @@ public class GlyphUnlockMenu extends BaseBook {
         List<Component> tooltip = new ArrayList<>();
         super.collectTooltips(stack, mouseX, mouseY, tooltip);
         if (hoveredRecipe != null) {
-            MutableComponent component = Component.translatable("ars_nouveau.levels_required", ScribesTile.getLevelsFromExp(hoveredRecipe.exp)).withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN));
+            MutableComponent component = Component.translatable("ars_nouveau.levels_required", ScribesTile.getLevelsFromExp(hoveredRecipe.value().exp)).withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN));
             tooltip.add(component);
         }
         List<ClientTooltipComponent> components = new ArrayList<>(net.neoforged.neoforge.client.ClientHooks.gatherTooltipComponents(ItemStack.EMPTY, tooltip, mouseX, width, height, this.font));
         if (hoveredRecipe != null)
-            components.add(new GlyphRecipeTooltip(hoveredRecipe.inputs));
+            components.add(new GlyphRecipeTooltip(hoveredRecipe.value().inputs));
         renderTooltipInternal(stack, components, mouseX, mouseY);
 
     }

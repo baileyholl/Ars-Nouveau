@@ -653,7 +653,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         }
 
         if (dynamicBehavior != null)
-            dynamicBehavior.getTooltip(tooltip);
+            dynamicBehavior.getTooltip(tooltip::add);
         if (pathBlockDesc() != null && !pathBlockDesc().isEmpty()) {
             tooltip.add(Component.translatable("ars_nouveau.starbuncle.pathing", this.entityData.get(PATH_BLOCK)));
         }

@@ -221,7 +221,7 @@ public class GuiSpellBook extends BaseBook {
         sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractCastMethod).toList());
         sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractAugment).toList());
         sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractEffect).toList());
-        sorted.sort(CreativeTabRegistry.COMPARE_TYPE_THEN_NAME);
+        sorted.sort(CreativeTabRegistry.COMPARE_SPELL_TYPE_NAME);
         sorted = sorted.subList(glyphsPerPage * page, Math.min(sorted.size(), glyphsPerPage * (page + 1)));
         int adjustedXPlaced = 0;
         int totalRowsPlaced = 0;
@@ -367,12 +367,12 @@ public class GuiSpellBook extends BaseBook {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scroll) {
+    public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
         SoundManager manager = Minecraft.getInstance().getSoundManager();
-        if (scroll < 0 && nextButton.active) {
+        if (pScrollX < 0 && nextButton.active) {
             onPageIncrease(nextButton);
             manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
-        } else if (scroll > 0 && previousButton.active) {
+        } else if (pScrollX > 0 && previousButton.active) {
             onPageDec(previousButton);
             manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
         }

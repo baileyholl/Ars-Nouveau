@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.IRadialProvider;
-import com.hollingsworth.arsnouveau.common.items.data.PotionData;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenuSlot;
@@ -10,6 +9,7 @@ import com.hollingsworth.arsnouveau.client.registry.ModKeyBindings;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketConsumePotion;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -49,8 +49,8 @@ public class AlchemistsCrown extends ModItem implements IRadialProvider {
             if(slots.size() >= 9)
                 break;
             ItemStack item = player.inventory.getItem(i);
-            PotionContents contents = PotionData.from(item);
-            if(contents == null || item.getItem() instanceof ArrowItem)
+            PotionContents contents = PotionUtil.getContents(item);
+            if(contents == PotionContents.EMPTY || item.getItem() instanceof ArrowItem)
                 continue;
             slots.add(new RadialMenuSlot<>(item.getHoverName().getString(), new AlchemistsCrown.SlotData(i, item)));
         }

@@ -113,7 +113,7 @@ public class SoundScreen extends BaseBook {
             return;
         LocalPlayer localPlayer = Minecraft.getInstance().player;
         BlockPos pos = localPlayer.getOnPos().above(2);
-        localPlayer.level.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), selectedSound.getSoundEvent(), SoundSource.PLAYERS, (float) volumeSlider.getValue() / 100f, (float) pitchSlider.getValue() / 100f, false);
+        localPlayer.level.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), selectedSound.getSoundEvent().value(), SoundSource.PLAYERS, (float) volumeSlider.getValue() / 100f, (float) pitchSlider.getValue() / 100f, false);
     }
 
     public void onSaveClick(Button button) {

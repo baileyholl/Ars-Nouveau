@@ -2,16 +2,15 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
+import com.hollingsworth.arsnouveau.common.items.data.CodexData;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -22,8 +21,6 @@ import net.minecraft.world.level.Level;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class AnnotatedCodex extends ModItem {
 
@@ -45,26 +42,26 @@ public class AnnotatedCodex extends ModItem {
         if (pPlayer.level.isClientSide)
             return super.use(pLevel, pPlayer, pUsedHand);
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
-        CodexData data = new CodexData(stack);
+        CodexData data = stack.getOrDefault(DataComponentRegistry.CODEX_DATA, new CodexData((String) null, null, List.of()));
 
         IPlayerCap playerCap = CapabilityRegistry.getPlayerDataCap(pPlayer).orElse(null);
         if (playerCap == null)
             return super.use(pLevel, pPlayer, pUsedHand);
         Collection<AbstractSpellPart> known = playerCap.getKnownGlyphs();
-        Collection<AbstractSpellPart> storedGlyphs = data.getGlyphs();
+        Collection<AbstractSpellPart> storedGlyphs = data.glyphIds().stream().map(GlyphRegistry::getSpellPart).toList();
 
-        if (data.getPlayerID() == null) { // Player writing to codex
+        if (data.uuid() == null) { // Player writing to codex
             int levelCost = getUnlockLevelCost(playerCap.getKnownGlyphs());
             int expCost = ScribesTile.getExperienceForLevel(levelCost);
             if (expCost > ScribesTile.getTotalPlayerExperience(pPlayer)) {
                 PortUtil.sendMessageNoSpam(pPlayer, Component.translatable("ars_nouveau.codex_not_enough_exp", levelCost));
             } else {
-                data.setGlyphs(playerCap.getKnownGlyphs());
-                data.setPlayer(pPlayer);
+                var newData = new CodexData(pPlayer.getUUID(), pPlayer.getName().getString(), playerCap.getKnownGlyphs().stream().map(AbstractSpellPart::getRegistryName).toList());
+                stack.set(DataComponentRegistry.CODEX_DATA, newData);
                 PortUtil.sendMessageNoSpam(pPlayer, Component.translatable("ars_nouveau.recorded_codex"));
                 pPlayer.giveExperiencePoints(-expCost);
             }
-        } else if (pPlayer.getUUID().equals(data.getPlayerID())) { // Player updating codex
+        } else if (pPlayer.getUUID().equals(data.uuid())) { // Player updating codex
             Collection<AbstractSpellPart> difference = new ArrayList<>();
             for (AbstractSpellPart spellPart : known) {
                 if (!storedGlyphs.contains(spellPart)) {
@@ -78,7 +75,9 @@ public class AnnotatedCodex extends ModItem {
                     PortUtil.sendMessageNoSpam(pPlayer, Component.translatable("ars_nouveau.codex_not_enough_exp", levelCost));
                 } else {
                     pPlayer.giveExperiencePoints(-expCost);
-                    data.setGlyphs(playerCap.getKnownGlyphs());
+                    var newData = new CodexData(pPlayer.getUUID(), pPlayer.getName().getString(), playerCap.getKnownGlyphs().stream().map(AbstractSpellPart::getRegistryName).toList());
+                    stack.set(DataComponentRegistry.CODEX_DATA, newData);
+                    
                     PortUtil.sendMessageNoSpam(pPlayer, Component.translatable("ars_nouveau.updated_codex"));
                 }
             } else {
@@ -107,63 +106,13 @@ public class AnnotatedCodex extends ModItem {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
-        CodexData data = new CodexData(stack);
-        if (data.glyphs.isEmpty()) {
+        CodexData data = stack.getOrDefault(DataComponentRegistry.CODEX_DATA, new CodexData((String) null, null, List.of()));
+        if (data.glyphIds().isEmpty()) {
             tooltip2.add(Component.translatable("ars_nouveau.codex_tooltip"));
         } else {
-            tooltip2.add(Component.translatable("ars_nouveau.contains_glyphs", data.glyphs.size()));
+            tooltip2.add(Component.translatable("ars_nouveau.contains_glyphs", data.glyphIds().size()));
         }
-        if (data.playerName != null)
-            tooltip2.add(Component.translatable("ars_nouveau.recorded_by", data.playerName));
-    }
-
-    public static class CodexData {
-        ItemStack stack;
-        private List<AbstractSpellPart> glyphs = new ArrayList<>();
-        private UUID playerID;
-        public String playerName;
-
-        public CodexData(ItemStack stack) {
-            this.stack = stack;
-            CompoundTag tag = stack.getOrCreateTag();
-            for (ResourceLocation s : NBTUtil.readResourceLocations(tag, "glyph_")) {
-                if (GlyphRegistry.getSpellpartMap().containsKey(s)) {
-                    glyphs.add(GlyphRegistry.getSpellpartMap().get(s));
-                }
-            }
-            playerName = tag.contains("playerName") ? tag.getString("playerName") : null;
-            playerID = tag.hasUUID("player") ? tag.getUUID("player") : null;
-        }
-
-        public void setPlayer(Player player) {
-            this.playerID = player.getUUID();
-            this.playerName = player.getName().getString();
-            write();
-        }
-
-        public void setGlyphs(Collection<AbstractSpellPart> glyphs) {
-            this.glyphs = new ArrayList<>(glyphs);
-            write();
-        }
-
-        public UUID getPlayerID() {
-            return playerID;
-        }
-
-        public List<AbstractSpellPart> getGlyphs() {
-            return glyphs;
-        }
-
-        public void write() {
-            CompoundTag tag = new CompoundTag();
-            NBTUtil.writeResourceLocations(tag, "glyph_", glyphs.stream().map(AbstractSpellPart::getRegistryName).collect(Collectors.toList()));
-            if (playerID != null) {
-                tag.putUUID("player", playerID);
-            }
-            if (playerName != null) {
-                tag.putString("playerName", playerName);
-            }
-            stack.setTag(tag);
-        }
+        if (data.playerName() != null)
+            tooltip2.add(Component.translatable("ars_nouveau.recorded_by", data.playerName()));
     }
 }

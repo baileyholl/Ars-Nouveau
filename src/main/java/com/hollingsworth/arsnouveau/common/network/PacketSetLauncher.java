@@ -1,16 +1,19 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.items.data.PotionData;
+import com.hollingsworth.arsnouveau.api.potion.IPotionProvider;
+import com.hollingsworth.arsnouveau.api.potion.PotionProviderRegistry;
 import com.hollingsworth.arsnouveau.common.items.FlaskCannon;
-import com.hollingsworth.arsnouveau.common.items.PotionFlask;
+import com.hollingsworth.arsnouveau.common.items.data.PotionLauncherData;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.alchemy.PotionContents;
 
 public class PacketSetLauncher extends AbstractPacket{
     public static final Type<PacketSetLauncher> TYPE = new Type<>(ArsNouveau.prefix("set_launcher"));
@@ -45,17 +48,15 @@ public class PacketSetLauncher extends AbstractPacket{
         if(launcherStack.isEmpty()){
             return;
         }
-        FlaskCannon.PotionLauncherData data = new FlaskCannon.PotionLauncherData(launcherStack);
-        if (stack.getItem() instanceof PotionFlask ) {
-            PotionFlask.FlaskData flaskData = new PotionFlask.FlaskData(stack);
-            data.setLastDataForRender(flaskData.getPotion());
-            data.setLastSlot(inventorySlot);
-            data.setAmountLeft(flaskData.getCount());
-        }else if(stack.getItem() instanceof PotionItem){
-            PotionData potionData = new PotionData(stack);
-            data.setLastDataForRender(potionData);
-            data.setLastSlot(inventorySlot);
-            data.setAmountLeft(stack.getCount());
+        IPotionProvider provider = PotionProviderRegistry.from(stack);
+        if (provider != null) {
+            stack.set(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData(provider.getPotionData(stack), provider.usesRemaining(stack), inventorySlot));
+        }else {
+            PotionContents contents = stack.get(DataComponents.POTION_CONTENTS);
+            if(contents == null){
+                return;
+            }
+            stack.set(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData(contents, stack.getCount(), inventorySlot));
         }
     }
 

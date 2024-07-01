@@ -14,16 +14,15 @@ import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
+import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RitualBrazierBlock;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -41,8 +40,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -224,7 +221,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
             ritual = RitualRegistry.getRitual(ritualID);
             if (ritual != null) {
                 ritual.tile = this;
-                ritual.read(tag);
+                ritual.read(pRegistries, tag);
             }
         } else {
             ritual = null;
@@ -243,7 +240,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
         super.saveAdditional(tag, pRegistries);
         if (ritual != null) {
             tag.putString("ritualID", ritual.getRegistryName().toString());
-            ritual.write(tag);
+            ritual.write(pRegistries, tag);
         } else {
             tag.remove("ritualID");
         }

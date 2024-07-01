@@ -2,6 +2,10 @@ package com.hollingsworth.arsnouveau.client.particle;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.particle.IParticleColor;
+import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -12,6 +16,14 @@ import java.util.Random;
  * Modified class of ElementType: https://github.com/Sirttas/ElementalCraft/blob/b91ca42b3d139904d9754d882a595406bad1bd18/src/main/java/sirttas/elementalcraft/ElementType.java
  */
 public class ParticleColor implements IParticleColor, Cloneable {
+
+    public static final MapCodec<ParticleColor> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            ResourceLocation.CODEC.fieldOf("id").forGetter(ParticleColor::getRegistryName),
+            Codec.INT.fieldOf("r").forGetter(ParticleColor::getRedInt),
+            Codec.INT.fieldOf("g").forGetter(ParticleColor::getGreenInt),
+            Codec.INT.fieldOf("b").forGetter(ParticleColor::getBlueInt)
+    ).apply(instance, ParticleColorRegistry::from));
+
     public static final ResourceLocation ID = ArsNouveau.prefix( "constant");
 
     public static final ParticleColor DEFAULT = new ParticleColor(255, 25, 180);
@@ -81,12 +93,24 @@ public class ParticleColor implements IParticleColor, Cloneable {
         return r;
     }
 
+    public int getRedInt() {
+        return (int) (r * 255.0);
+    }
+
     public float getGreen() {
         return g;
     }
 
+    public int getGreenInt() {
+        return (int) (g * 255.0);
+    }
+
     public float getBlue() {
         return b;
+    }
+
+    public int getBlueInt() {
+        return (int) (b * 255.0);
     }
 
     public int getColor() {
@@ -129,14 +153,6 @@ public class ParticleColor implements IParticleColor, Cloneable {
     public ParticleColor transition(int ticks) {
         ParticleColor.IntWrapper wrapper = toWrapper();
         return new ParticleColor(random.nextInt(wrapper.r), random.nextInt(wrapper.g), random.nextInt(wrapper.b));
-    }
-
-    // Needed because particles can be created over commands
-    public static ParticleColor fromString(String string) {
-        if (string == null || string.isEmpty())
-            return defaultParticleColor();
-        String[] arr = string.split(",");
-        return new ParticleColor(Integer.parseInt(arr[0].trim()), Integer.parseInt(arr[1].trim()), Integer.parseInt(arr[2].trim()));
     }
 
     public double euclideanDistance(ParticleColor color) {

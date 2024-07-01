@@ -18,7 +18,7 @@ public class GuiSpellHUD {
 
     public static void renderOverlay(GuiGraphics graphics, DeltaTracker deltaTracker) {
         ItemStack stack = StackUtil.getHeldSpellbook(minecraft.player);
-        if (stack != ItemStack.EMPTY && stack.getItem() instanceof SpellBook && stack.getTag() != null) {
+        if (stack != ItemStack.EMPTY && stack.getItem() instanceof SpellBook) {
             int offsetLeft = 10;
             ISpellCaster caster = CasterUtil.getCaster(stack);
             String renderString = caster.getCurrentSlot() + 1 + " " + caster.getSpellName();

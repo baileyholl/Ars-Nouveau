@@ -2,12 +2,12 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
-import com.hollingsworth.arsnouveau.common.items.data.PotionData;
 import com.hollingsworth.arsnouveau.common.block.SourceJar;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
+import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -16,14 +16,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWandable {
 
     public boolean isLocked;
-    private PotionData data = new PotionData();
+    private PotionContents data = PotionContents.EMPTY;
     int currentFill;
 
     public PotionJarTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
@@ -65,23 +63,23 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
         level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition),  level.getBlockState(worldPosition), 8);
     }
 
-    public@NotNull PotionData getData() {
+    public @NotNull PotionContents getData() {
         return data;
     }
 
     public int getColor() {
-        return this.data.getPotion() == null ? 16253176 : PotionContents.getColor(this.data.fullEffects());
+        return this.data == PotionContents.EMPTY ? 16253176 : this.data.getColor();
     }
 
-    public boolean canAccept(PotionData otherData, int amount){
-        if(otherData == null || otherData.getPotion() == PotionContents.EMPTY)
+    public boolean canAccept(PotionContents otherData, int amount){
+        if(otherData == null || PotionUtil.isEmpty(otherData))
             return false;
-        return (!this.isLocked && this.getAmount() <= 0) || (amount <= (this.getMaxFill() - this.getAmount()) && otherData.areSameEffects(this.data));
+        return (!this.isLocked && this.getAmount() <= 0) || (amount <= (this.getMaxFill() - this.getAmount()) && PotionUtil.arePotionContentsEqual(otherData, this.data));
     }
 
-    public void add(PotionData other, int amount){
+    public void add(PotionContents other, int amount){
         if(this.currentFill == 0){
-            if(!this.data.equals(other) || (this.data.getPotion() == PotionContents.EMPTY)) {
+            if(!this.data.equals(other) || (this.data == PotionContents.EMPTY)) {
                 this.data = other;
             }
             currentFill += amount;
@@ -95,14 +93,14 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     public void remove(int amount){
         currentFill = Math.max(currentFill - amount, 0);
         if(currentFill == 0 && !isLocked){
-            this.data = new PotionData();
+            this.data = PotionContents.EMPTY;
         }
         updateBlock();
     }
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        data.appendHoverText(tooltip);
+        PotionContents.addPotionTooltip(data.getAllEffects(), tooltip::add, 1.0F, 20.0f);
         tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", (getAmount() * 100) / this.getMaxFill()));
         if (isLocked)
             tooltip.add(Component.translatable("ars_nouveau.locked"));
@@ -112,7 +110,7 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(tag, pRegistries);
         if(tag.contains("potionData"))
-            this.data = PotionData.fromTag(tag.getCompound("potionData"));
+            this.data = ANCodecs.decode(PotionContents.CODEC, tag.get("potionData"));
         this.isLocked = tag.getBoolean("locked");
         this.currentFill = tag.getInt("currentFill");
     }
@@ -120,15 +118,17 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     @Override
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
-        tag.put("potionData", this.data.toTag());
+        tag.put("potionData", ANCodecs.encode(PotionContents.CODEC, this.data));
         tag.putBoolean("locked", this.isLocked);
         tag.putInt("currentFill", this.currentFill);
 
+        //TODO: restore string list of serialized potions
+
         // Include a sorted list of potion names so quests can check the jar's contents
-        Set<PotionContents> potionSet = this.data.getIncludedPotions();
-        List<String> potionNames = new ArrayList<>(potionSet.stream().map(potion -> BuiltInRegistries.POTION.getKey(potion).toString()).toList());
-        potionNames.sort(String::compareTo);
-        tag.putString("potionNames", String.join(",", potionNames));
+//        Set<PotionContents> potionSet = this.data.getIncludedPotions();
+//        List<String> potionNames = new ArrayList<>(potionSet.stream().map(potion -> BuiltInRegistries.POTION.getKey(potion).toString()).toList());
+//        potionNames.sort(String::compareTo);
+//        tag.putString("potionNames", String.join(",", potionNames));
 
     }
 

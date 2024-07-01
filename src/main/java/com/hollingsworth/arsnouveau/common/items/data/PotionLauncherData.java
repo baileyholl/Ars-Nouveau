@@ -1,86 +1,61 @@
 package com.hollingsworth.arsnouveau.common.items.data;
 
-import com.hollingsworth.arsnouveau.common.items.PotionFlask;
-import net.minecraft.nbt.CompoundTag;
+import com.hollingsworth.arsnouveau.api.potion.PotionProviderRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.alchemy.PotionContents;
 
-public class PotionLauncherData {
-    private PotionData lastDataForRender;
-    private int lastSlot;
-    public int amountLeft;
+public record PotionLauncherData(PotionContents renderData, int amountLeft, int lastSlot) {
 
-    public PotionLauncherData(ItemStack stack) {
-        super(stack);
-        CompoundTag tag = getItemTag(stack);
-        if(tag == null)
-            return;
-        lastDataForRender = PotionData.fromTag(tag.getCompound("lastDataForRender"));
-        lastSlot = tag.getInt("lastSlot");
-        amountLeft = tag.getInt("amountLeft");
+    public static MapCodec<PotionLauncherData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+        PotionContents.CODEC.fieldOf("lastDataForRender").forGetter(PotionLauncherData::renderData),
+        Codec.INT.fieldOf("amountLeft").forGetter(PotionLauncherData::amountLeft),
+        Codec.INT.fieldOf("lastSlot").forGetter(PotionLauncherData::lastSlot)
+    ).apply(instance, PotionLauncherData::new));
+
+    public static StreamCodec<RegistryFriendlyByteBuf, PotionLauncherData> STREAM = StreamCodec.composite(
+            PotionContents.STREAM_CODEC,
+            PotionLauncherData::renderData,
+            ByteBufCodecs.INT,
+            PotionLauncherData::amountLeft,
+            ByteBufCodecs.INT,
+            PotionLauncherData::lastSlot,
+            PotionLauncherData::new
+    );
+
+    public PotionLauncherData(){
+        this(PotionContents.EMPTY, 0, -1);
     }
 
-    public PotionData getPotionDataFromSlot(Player player){
+    public PotionContents getPotionDataFromSlot(Player player){
         if(lastSlot < 0 || lastSlot >= player.inventory.getContainerSize())
-            return new PotionData();
+            return PotionContents.EMPTY;
         ItemStack stack = player.inventory.getItem(lastSlot);
-        return new PotionData(stack);
+        var provider = PotionProviderRegistry.from(stack);
+        return provider == null ? PotionContents.EMPTY : provider.getPotionData(stack);
     }
 
-    public PotionData expendPotion(Player player){
+    public PotionContents expendPotion(Player player, ItemStack launcherStack){
         if(lastSlot >= player.inventory.getContainerSize())
-            return new PotionData();
+            return PotionContents.EMPTY;
         ItemStack item = player.inventory.getItem(lastSlot);
-        if(item.getItem() instanceof PotionFlask){
-            PotionFlask.FlaskData flaskData = new PotionFlask.FlaskData(item);
-            if(flaskData.getCount() <= 0 || flaskData.getPotion().isEmpty())
-                return new PotionData();
-            PotionData data = flaskData.getPotion().clone();
-            flaskData.setCount(flaskData.getCount() - 1);
-            setAmountLeft(flaskData.getCount());
-            return data;
-        }else if(item.getItem() instanceof PotionItem){
-            PotionData data = new PotionData(item).clone();
-            if(data.isEmpty())
-                return new PotionData();
-            item.shrink(1);
-            player.inventory.add(new ItemStack(Items.GLASS_BOTTLE));
-            setAmountLeft(0);
-            return data;
+        var provider = PotionProviderRegistry.from(item);
+        if(provider == null){
+            return PotionContents.EMPTY;
         }
-        return new PotionData();
-    }
-
-    public void setAmountLeft(int amount){
-        amountLeft = amount;
-        writeItem();
-    }
-
-    public void setLastSlot(int lastSlot) {
-        this.lastSlot = lastSlot;
-        writeItem();
-    }
-
-    public void setLastDataForRender(PotionData lastDataForRender) {
-        this.lastDataForRender = lastDataForRender;
-        writeItem();
-    }
-
-    @Override
-    public void writeToNBT(CompoundTag tag) {
-        tag.putInt("lastSlot", lastSlot);
-        tag.put("lastDataForRender", lastDataForRender.toTag());
-        tag.putInt("amountLeft", amountLeft);
-    }
-
-    public PotionData getLastDataForRender() {
-        return lastDataForRender;
-    }
-
-    @Override
-    public String getTagString() {
-        return "potion_launcher";
+        if(provider.usesRemaining(item) <= 0){
+            return PotionContents.EMPTY;
+        }
+        PotionContents contents = provider.getPotionData(item);
+        provider.consumeUses(item, 1, player);
+        launcherStack.set(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData(provider.getPotionData(item), provider.usesRemaining(item), lastSlot));
+        return contents;
     }
 }

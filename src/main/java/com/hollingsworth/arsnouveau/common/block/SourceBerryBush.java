@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -43,6 +44,13 @@ public class SourceBerryBush extends BushBlock implements BonemealableBlock {
     public SourceBerryBush(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0));
+    }
+
+    public static final MapCodec<SourceBerryBush> CODEC = simpleCodec(SourceBerryBush::new);
+
+    @Override
+    protected MapCodec<? extends BushBlock> codec() {
+        return CODEC;
     }
 
     @Override

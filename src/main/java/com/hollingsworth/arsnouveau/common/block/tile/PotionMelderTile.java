@@ -2,19 +2,19 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
-import com.hollingsworth.arsnouveau.common.items.data.PotionData;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
+import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import com.hollingsworth.arsnouveau.setup.config.Config;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -24,19 +24,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
-import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -88,7 +84,7 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
 
         PotionJarTile tile1 = (PotionJarTile) level.getBlockEntity(fromJars.get(0));
         PotionJarTile tile2 = (PotionJarTile) level.getBlockEntity(fromJars.get(1));
-        PotionData data = tile1.getData().mergeEffects(tile2.getData());
+        PotionContents data = PotionUtil.merge(tile1.getData(), tile2.getData());
         if (!combJar.canAccept(data, Config.MELDER_OUTPUT.get())) {
             isMixing = false;
             timeMixing = 0;
@@ -108,13 +104,13 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
                     double d1 = worldPosition.getY() + 1 + ParticleUtil.inRange(-0.1, 0.4);
                     double d2 = worldPosition.getZ() + .5 + ParticleUtil.inRange(-0.25, 0.25);
                     level.addParticle(GlowParticleData.createData(
-                                    ParticleColor.fromInt(PotionUtils.getColor(data.fullEffects()))),
+                                    ParticleColor.fromInt(PotionContents.getColor(data.getAllEffects()))),
                             d0, d1, d2,
                             0,
                             0.01f,
                             0);
                 }
-                lastMixedColor = PotionUtils.getColor(data.fullEffects());
+                lastMixedColor = PotionContents.getColor(data.getAllEffects());
             }
             if (timeMixing >= 160)
                 timeMixing = 0;
@@ -138,8 +134,9 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
         }
     }
 
-    public void mergePotions(PotionJarTile combJar, PotionJarTile take1, PotionJarTile take2, PotionData data){
-        combJar.add(data, Config.MELDER_OUTPUT.get());
+    public void mergePotions(PotionJarTile combJar, PotionJarTile take1, PotionJarTile take2, PotionContents data){
+        combJar.add(
+                data, Config.MELDER_OUTPUT.get());
         take1.remove(Config.MELDER_INPUT_COST.get());
         take2.remove(Config.MELDER_INPUT_COST.get());
         hasSource = false;
@@ -165,8 +162,8 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
         return true;
     }
 
-    public PotionData getCombinedResult(PotionJarTile jar1, PotionJarTile jar2) {
-        return jar1.getData().mergeEffects(jar2.getData());
+    public PotionContents getCombinedResult(PotionJarTile jar1, PotionJarTile jar2) {
+        return PotionUtil.merge(jar1.getData(), jar2.getData());
     }
 
     @Override
@@ -294,7 +291,7 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
             if(tile1 == null || tile1.getAmount() < inputCost || tile2 == null || tile2.getAmount() < inputCost) {
                 return;
             }
-            PotionData data = getCombinedResult(tile1, tile2);
+            PotionContents data = getCombinedResult(tile1, tile2);
             if(!combJar.canAccept(data, Config.MELDER_OUTPUT.get())){
                 tooltip.add(Component.translatable("ars_nouveau.melder.destination_invalid").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
             }

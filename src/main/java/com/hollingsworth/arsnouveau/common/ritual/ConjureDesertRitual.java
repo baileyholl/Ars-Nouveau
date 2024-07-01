@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ritual.ConjureBiomeRitual;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -66,8 +67,8 @@ public class ConjureDesertRitual extends ConjureBiomeRitual {
     }
 
     @Override
-    public void read(CompoundTag tag) {
-        super.read(tag);
+    public void read(HolderLookup.Provider provider,  CompoundTag tag) {
+        super.read(provider, tag);
         boolean isBadlands = getConsumedItems().stream().anyMatch(i -> i.is(ItemTags.TERRACOTTA));
         if(isBadlands){
             biome = Biomes.BADLANDS;

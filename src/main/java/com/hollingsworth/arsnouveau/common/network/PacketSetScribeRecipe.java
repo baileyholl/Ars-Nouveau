@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.network;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
+import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -10,7 +11,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 public class PacketSetScribeRecipe extends AbstractPacket{
     public static final Type<PacketSetScribeRecipe> TYPE = new Type<>(ArsNouveau.prefix("set_scribe_recipe"));
@@ -37,10 +38,8 @@ public class PacketSetScribeRecipe extends AbstractPacket{
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
         if (player.level.getBlockEntity(scribePos) instanceof ScribesTile scribesTile) {
-            Recipe recipe = player.level.getRecipeManager().byKey(recipeID).orElse(null);
-            if (recipe instanceof GlyphRecipe glyphRecipe) {
-                scribesTile.setRecipe(glyphRecipe, player);
-            }
+            RecipeHolder<GlyphRecipe> recipe = player.level.getRecipeManager().byKeyTyped(RecipeRegistry.GLYPH_TYPE.get(), recipeID);
+            scribesTile.setRecipe(recipe, player);
         }
     }
 

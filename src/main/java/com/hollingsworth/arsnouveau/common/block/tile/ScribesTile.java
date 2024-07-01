@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -28,6 +29,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -50,7 +52,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
     private ItemStack stack = ItemStack.EMPTY;
     boolean synced;
     public List<ItemStack> consumedStacks = new ArrayList<>();
-    public GlyphRecipe recipe;
+    public RecipeHolder<GlyphRecipe> recipe;
     ResourceLocation recipeID; // Cached for after load
     public boolean crafting;
     public int craftingTicks;
@@ -75,8 +77,8 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
             recipe = null; // Used on client to remove recipe since for some forsaken reason world is missing during load.
         }
 
-        if (recipeID != null && !recipeID.toString().isEmpty() && (recipe == null || !recipe.id.equals(recipeID))) {
-            recipe = (GlyphRecipe) level.getRecipeManager().byKey(recipeID).orElse(null);
+        if (recipeID != null && !recipeID.toString().isEmpty() && (recipe == null || !recipe.id().equals(recipeID))) {
+            recipe = level.getRecipeManager().byKeyTyped(RecipeRegistry.GLYPH_TYPE.get(), recipeID);
             setChanged();
         }
         if (!level.isClientSide && level.getGameTime() % 5 == 0 && recipe != null) {
@@ -110,7 +112,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
             setChanged();
         }
         if (!level.isClientSide && crafting && craftingTicks == 0 && recipe != null) {
-            level.addFreshEntity(new ItemEntity(level, getX() + 0.5, getY() + 1.1, getZ() + 0.5, recipe.output.copy()));
+            level.addFreshEntity(new ItemEntity(level, getX() + 0.5, getY() + 1.1, getZ() + 0.5, recipe.value().output.copy()));
             recipe = null;
             recipeID = ResourceLocation.withDefaultNamespace("");
             crafting = false;
@@ -157,7 +159,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
             consumedStacks = new ArrayList<>();
         }
         if (recipe != null) {
-            int exp = recipe.exp;
+            int exp = recipe.value().getExp();
             if (level instanceof ServerLevel serverLevel)
                 ExperienceOrb.award(serverLevel, new Vec3(getX(), getY(), getZ()), exp);
         }
@@ -168,19 +170,19 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
         updateBlock();
     }
 
-    public void setRecipe(GlyphRecipe recipe, Player player) {
-        if (ScribesTile.getTotalPlayerExperience(player) < recipe.exp && !player.isCreative()) {
+    public void setRecipe(RecipeHolder<GlyphRecipe> recipe, Player player) {
+        if (ScribesTile.getTotalPlayerExperience(player) < recipe.value().exp && !player.isCreative()) {
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.not_enough_exp").withStyle(ChatFormatting.GOLD));
             return;
         } else if (!player.isCreative()) {
-            player.giveExperiencePoints(-recipe.exp);
+            player.giveExperiencePoints(-recipe.value().exp);
         }
         ScribesTile tile = getLogicTile();
         if (tile == null)
             return;
         tile.refundConsumed();
         tile.recipe = recipe;
-        tile.recipeID = recipe.getId();
+        tile.recipeID = recipe.id();
         PortUtil.sendMessage(player, Component.translatable("ars_nouveau.scribes_table.started_crafting").withStyle(ChatFormatting.GOLD));
         tile.updateBlock();
     }
@@ -230,13 +232,13 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
 
     public List<Ingredient> getRemainingRequired() {
         if (consumedStacks.isEmpty())
-            return recipe.inputs;
+            return recipe.value().inputs;
         List<Ingredient> unaccountedIngredients = new ArrayList<>();
         List<ItemStack> remainingItems = new ArrayList<>();
         for (ItemStack stack : consumedStacks) {
             remainingItems.add(stack.copy());
         }
-        for (Ingredient ingred : recipe.inputs) {
+        for (Ingredient ingred : recipe.value().inputs) {
             ItemStack matchingStack = null;
 
             for (ItemStack item : remainingItems) {
@@ -284,7 +286,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
             compound.put("itemStack", reagentTag);
         }
         if (recipe != null) {
-            compound.putString("recipe", recipe.getId().toString());
+            compound.putString("recipe", recipe.id().toString());
         } else {
             compound.putString("recipe", "");
         }
@@ -384,7 +386,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
             return;
         }
         if(recipe != null){
-            tooltip.add(Component.translatable("ars_nouveau.crafting", recipe.output.getHoverName()));
+            tooltip.add(Component.translatable("ars_nouveau.crafting", recipe.value().output.getHoverName()));
             tooltip.add(Component.translatable("ars_nouveau.scribes_table.throw_items").withStyle(ChatFormatting.GOLD));
         }
         if(!autoYoink){

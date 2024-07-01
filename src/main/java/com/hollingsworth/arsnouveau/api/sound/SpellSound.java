@@ -1,8 +1,12 @@
 package com.hollingsworth.arsnouveau.api.sound;
 
 import com.hollingsworth.arsnouveau.api.registry.SpellSoundRegistry;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
@@ -11,20 +15,26 @@ import java.util.Objects;
 
 public class SpellSound {
 
+    public static MapCodec<SpellSound> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            ResourceLocation.CODEC.fieldOf("id").forGetter(s -> s.id),
+            SoundEvent.CODEC.fieldOf("soundEvent").forGetter(s -> s.soundEvent),
+            ComponentSerialization.CODEC.fieldOf("soundName").forGetter(s -> s.soundName)
+    ).apply(instance, SpellSound::new));
+
     private ResourceLocation id;
 
-    private SoundEvent soundEvent;
+    private Holder<SoundEvent> soundEvent;
 
     private Component soundName;
 
-    public SpellSound(ResourceLocation id, SoundEvent soundEvent, Component soundName) {
+    public SpellSound(ResourceLocation id, Holder<SoundEvent> soundEvent, Component soundName) {
         this.id = id;
         this.soundEvent = soundEvent;
         this.soundName = soundName;
     }
 
-    public SpellSound(SoundEvent soundEvent, Component soundName) {
-        this(soundEvent.getLocation(), soundEvent, soundName);
+    public SpellSound(Holder<SoundEvent> soundEvent, Component soundName) {
+        this(soundEvent.unwrapKey().get().location(), soundEvent, soundName);
     }
 
     public ResourceLocation getId() {
@@ -35,11 +45,11 @@ public class SpellSound {
         this.id = id;
     }
 
-    public SoundEvent getSoundEvent() {
+    public Holder<SoundEvent> getSoundEvent() {
         return soundEvent;
     }
 
-    public void setSoundEvent(SoundEvent soundEvent) {
+    public void setSoundEvent(Holder<SoundEvent> soundEvent) {
         this.soundEvent = soundEvent;
     }
 

@@ -1,13 +1,14 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
-import com.hollingsworth.arsnouveau.common.items.data.PotionData;
 import com.hollingsworth.arsnouveau.common.items.PotionFlask;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.crafting.*;
 
 public class PotionFlaskRecipe extends ShapelessRecipe {
@@ -37,7 +38,7 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
         if(flaskPotionStack.isEmpty() || potionStack.isEmpty())
             return ItemStack.EMPTY;
         PotionFlask.FlaskData flaskData = new PotionFlask.FlaskData(flaskPotionStack);
-        PotionData potionData = new PotionData(potionStack);
+        PotionContents potionData = potionStack.get(DataComponents.POTION_CONTENTS);
         if(flaskData.getCount() <= 0){
             flaskData.setPotion(potionData);
             flaskData.setCount(1);

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
+import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.common.items.data.*;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -33,4 +34,10 @@ public class DataComponentRegistry {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<MultiPotionContents>> MULTI_POTION = DATA.register("multi_potion", () -> DataComponentType.<MultiPotionContents>builder().persistent(MultiPotionContents.CODEC).networkSynchronized(MultiPotionContents.STREAM_CODEC).build());
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<LightJarData>> LIGHT_JAR = DATA.register("light_jar", () -> DataComponentType.<LightJarData>builder().persistent(LightJarData.CODEC).networkSynchronized(LightJarData.STREAM_CODEC).build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CodexData>> CODEX_DATA = DATA.register("codex_data", () -> DataComponentType.<CodexData>builder().persistent(CodexData.CODEC).networkSynchronized(CodexData.STREAM).build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<SpellCaster>> SPELL_CASTER = DATA.register("spell_caster", () -> DataComponentType.<SpellCaster>builder().persistent(SpellCaster.CODEC.codec()).networkSynchronized(SpellCaster.STREAM).build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<PotionLauncherData>> POTION_LAUNCHER = DATA.register("potion_launcher", () -> DataComponentType.<PotionLauncherData>builder().persistent(PotionLauncherData.CODEC.codec()).networkSynchronized(PotionLauncherData.STREAM).build());
 }

@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class PotionTakeGoal extends GoToPosGoal<StarbyPotionBehavior> {
     public PotionTakeGoal(Starbuncle starbuncle, StarbyPotionBehavior behavior) {
-        super(starbuncle, behavior, () -> behavior.getHeldPotion().getPotion() == PotionContents.EMPTY);
+        super(starbuncle, behavior, () -> behavior.getHeldPotion() == PotionContents.EMPTY);
     }
 
     @Override

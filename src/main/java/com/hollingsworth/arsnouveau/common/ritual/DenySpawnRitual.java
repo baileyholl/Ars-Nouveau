@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.ritual;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ritual.RangeRitual;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.MobSpawnType;
@@ -79,15 +80,15 @@ public class DenySpawnRitual extends RangeRitual {
     }
 
     @Override
-    public void read(CompoundTag tag) {
-        super.read(tag);
+    public void read(HolderLookup.Provider provider, CompoundTag tag) {
+        super.read(provider, tag);
         radius = tag.getInt("radius");
         deniedSpawn = tag.getBoolean("deniedSpawn");
     }
 
     @Override
-    public void write(CompoundTag tag) {
-        super.write(tag);
+    public void write(HolderLookup.Provider provider, CompoundTag tag) {
+        super.write(provider, tag);
         tag.putInt("radius", radius);
         tag.putBoolean("deniedSpawn", deniedSpawn);
     }

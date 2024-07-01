@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.client.CosmeticRenderUtil;
 import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
 import com.hollingsworth.arsnouveau.client.registry.ShaderRegistry;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
-import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -21,7 +21,7 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.util.RenderUtil;
 
 public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
-    public static MultiBufferSource.BufferSource cosmeticBuffer = MultiBufferSource.immediate(new BufferBuilder(256));
+    public static MultiBufferSource.BufferSource cosmeticBuffer = MultiBufferSource.immediate(new ByteBufferBuilder(1536));
 
     public StarbuncleRenderer(EntityRendererProvider.Context manager) {
         super(manager, new StarbuncleModel());

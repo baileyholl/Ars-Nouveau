@@ -20,6 +20,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ClipBlockStateContext;
@@ -174,7 +175,7 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
             tooltip.add(Component.translatable("ars_nouveau.sensor.on_cast"));
         }
         if(!this.parchment.isEmpty() && parchment.getItem() instanceof SpellParchment spellParchment){
-            spellParchment.getInformation(parchment, level, tooltip, TooltipFlag.Default.NORMAL);
+            spellParchment.getInformation(parchment, Item.TooltipContext.of(level), tooltip, TooltipFlag.Default.NORMAL);
         }
     }
 }

@@ -1,8 +1,10 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.util.SpellPartConfigUtil;
+import com.mojang.serialization.Codec;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -16,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart> {
-
+    public static final Codec<AbstractSpellPart> CODEC = ResourceLocation.CODEC.xmap(GlyphRegistry::getSpellPart, AbstractSpellPart::getRegistryName);
     private final ResourceLocation registryName;
     public String name;
     public Glyph glyphItem;

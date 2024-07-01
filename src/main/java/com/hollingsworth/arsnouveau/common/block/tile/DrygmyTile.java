@@ -10,8 +10,8 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
-import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.config.Config;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -132,7 +132,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
 
     public void refreshEntitiesAndBonus() {
         Set<ResourceLocation> uniqueEntities;
-        this.nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, new AABB(getBlockPos().north(10).west(10).below(6), getBlockPos().south(10).east(10).above(6)));
+        this.nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, new AABB(getBlockPos().north(10).west(10).below(6).getBottomCenter(), getBlockPos().south(10).east(10).above(6).getBottomCenter()));
         for(BlockPos b : BlockPos.withinManhattan(getBlockPos(), 10, 10, 10)){
             if(level.getBlockEntity(b) instanceof MobJarTile mobJarTile && mobJarTile.getEntity() instanceof LivingEntity livingEntity){
                 nearbyEntities.add(livingEntity);

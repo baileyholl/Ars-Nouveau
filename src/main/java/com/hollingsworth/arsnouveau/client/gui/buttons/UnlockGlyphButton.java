@@ -22,16 +22,15 @@ public class UnlockGlyphButton extends ANButton {
     public AbstractSpellPart spellPart;
 
     public String tooltip = "";
-    public GlyphRecipe recipe;
+    public RecipeHolder<GlyphRecipe> recipe;
     public boolean playerKnows;
     public boolean selected;
 
-    public UnlockGlyphButton(int x, int y, boolean isCraftingSlot, AbstractSpellPart spellPart, OnPress onPress) {
+    public UnlockGlyphButton(int x, int y, boolean isCraftingSlot, RecipeHolder<GlyphRecipe> spellRecipe, OnPress onPress) {
         super(x, y, 16, 16, onPress);
         this.isCraftingSlot = isCraftingSlot;
         this.spellPart = spellPart;
-        RecipeHolder recipe = Minecraft.getInstance().level.getRecipeManager().byKey(spellPart.getRegistryName()).orElse(null);
-        this.recipe = recipe == null || !(recipe.value() instanceof GlyphRecipe glyphRecipe) ? null : glyphRecipe;
+        this.recipe = spellRecipe;
     }
 
     @Override

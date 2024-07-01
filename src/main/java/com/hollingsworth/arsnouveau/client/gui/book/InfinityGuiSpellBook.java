@@ -240,7 +240,7 @@ public class InfinityGuiSpellBook extends BaseBook {
         sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractCastMethod).toList());
         sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractAugment).toList());
         sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractEffect).toList());
-        sorted.sort(CreativeTabRegistry.COMPARE_TYPE_THEN_NAME);
+        sorted.sort(CreativeTabRegistry.COMPARE_SPELL_TYPE_NAME);
         sorted = sorted.subList(glyphsPerPage * page, Math.min(sorted.size(), glyphsPerPage * (page + 1)));
         int adjustedXPlaced = 0;
         int totalRowsPlaced = 0;

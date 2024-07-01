@@ -264,11 +264,11 @@ public class APIRegistry {
                 Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
         ));
 
-        SoundRegistry.DEFAULT_SPELL_SOUND = new SpellSound(SoundRegistry.DEFAULT_FAMILY.get(), Component.translatable("ars_nouveau.sound.default_family"));
-        SoundRegistry.EMPTY_SPELL_SOUND = new SpellSound(SoundRegistry.EMPTY_SOUND_FAMILY.get(), Component.translatable("ars_nouveau.sound.empty"));
-        SoundRegistry.GAIA_SPELL_SOUND = new SpellSound(SoundRegistry.GAIA_FAMILY.get(), Component.translatable("ars_nouveau.sound.gaia_family"));
-        SoundRegistry.TEMPESTRY_SPELL_SOUND = new SpellSound(SoundRegistry.TEMPESTRY_FAMILY.get(), Component.translatable("ars_nouveau.sound.tempestry_family"));
-        SoundRegistry.FIRE_SPELL_SOUND = new SpellSound(SoundRegistry.FIRE_FAMILY.get(), Component.translatable("ars_nouveau.sound.fire_family"));
+        SoundRegistry.DEFAULT_SPELL_SOUND = new SpellSound(SoundRegistry.DEFAULT_FAMILY, Component.translatable("ars_nouveau.sound.default_family"));
+        SoundRegistry.EMPTY_SPELL_SOUND = new SpellSound(SoundRegistry.EMPTY_SOUND_FAMILY, Component.translatable("ars_nouveau.sound.empty"));
+        SoundRegistry.GAIA_SPELL_SOUND = new SpellSound(SoundRegistry.GAIA_FAMILY, Component.translatable("ars_nouveau.sound.gaia_family"));
+        SoundRegistry.TEMPESTRY_SPELL_SOUND = new SpellSound(SoundRegistry.TEMPESTRY_FAMILY, Component.translatable("ars_nouveau.sound.tempestry_family"));
+        SoundRegistry.FIRE_SPELL_SOUND = new SpellSound(SoundRegistry.FIRE_FAMILY, Component.translatable("ars_nouveau.sound.fire_family"));
 
         SpellSoundRegistry.registerSpellSound(SoundRegistry.DEFAULT_SPELL_SOUND);
         SpellSoundRegistry.registerSpellSound(SoundRegistry.EMPTY_SPELL_SOUND);

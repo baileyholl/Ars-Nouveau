@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -63,14 +64,14 @@ public class ConjurePlainsRitual extends ConjureBiomeRitual {
     }
 
     @Override
-    public void write(CompoundTag tag) {
-        super.write(tag);
+    public void write(HolderLookup.Provider provider,  CompoundTag tag) {
+        super.write(provider, tag);
         tag.putBoolean("isSnowy", isSnowy);
     }
 
     @Override
-    public void read(CompoundTag tag) {
-        super.read(tag);
+    public void read(HolderLookup.Provider provider, CompoundTag tag) {
+        super.read(provider, tag);
         isSnowy = tag.getBoolean("isSnowy");
         if(isSnowy){
             biome = Biomes.SNOWY_PLAINS;

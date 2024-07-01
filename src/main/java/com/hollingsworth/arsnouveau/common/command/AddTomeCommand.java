@@ -8,11 +8,12 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.Optional;
 
 public class AddTomeCommand {
-    private static final SuggestionProvider<CommandSourceStack> sugg = (ctx, builder) -> SharedSuggestionProvider.suggestResource(CasterTomeRegistry.getTomeData().stream().map(CasterTomeData::getId), builder);
+    private static final SuggestionProvider<CommandSourceStack> sugg = (ctx, builder) -> SharedSuggestionProvider.suggestResource(CasterTomeRegistry.getTomeData().stream().map(RecipeHolder::id), builder);
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("ars-tome").
@@ -23,9 +24,9 @@ public class AddTomeCommand {
     }
 
     private static int spawnTome(CommandSourceStack source, String tome) {
-        Optional<CasterTomeData> data = CasterTomeRegistry.getTomeData().stream().filter(t -> t.getId().toString().equals(tome)).findFirst();
+        Optional<RecipeHolder<CasterTomeData>> data = CasterTomeRegistry.getTomeData().stream().filter(t -> t.id().toString().equals(tome)).findFirst();
         if (data.isPresent() && source.getPlayer() != null){
-            source.getPlayer().addItem(data.get().getResultItem(source.getLevel().registryAccess()).copy());
+            source.getPlayer().addItem(data.get().value().getResultItem(source.getLevel().registryAccess()).copy());
         }
         return 1;
     }

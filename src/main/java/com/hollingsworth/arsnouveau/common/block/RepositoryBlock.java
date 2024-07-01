@@ -3,7 +3,10 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.common.block.tile.RepositoryTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.stats.Stats;
-import net.minecraft.world.*;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
@@ -28,9 +31,6 @@ public class RepositoryBlock extends ModBlock implements EntityBlock {
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @javax.annotation.Nullable LivingEntity pPlacer, ItemStack pStack) {
         BlockEntity blockentity = pLevel.getBlockEntity(pPos);
         if (blockentity instanceof RepositoryTile tile) {
-            if (pStack.hasCustomHoverName()) {
-                tile.setCustomName(pStack.getHoverName());
-            }
             tile.configuration = pLevel.random.nextInt(RepositoryTile.CONFIGURATIONS.length);
             tile.updateBlock();
         }

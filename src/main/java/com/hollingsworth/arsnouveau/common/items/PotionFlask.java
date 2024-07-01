@@ -1,8 +1,10 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.potion.IPotionProvider;
+import com.hollingsworth.arsnouveau.api.potion.PotionProviderRegistry;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.items.data.MultiPotionContents;
+import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.ChatFormatting;
@@ -23,10 +25,13 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class PotionFlask extends ModItem implements IPotionProvider {
+public abstract class PotionFlask extends ModItem {
 
     public PotionFlask() {
-        this(ItemsRegistry.defaultItemProperties().stacksTo(1).durability(8));
+        this(ItemsRegistry.defaultItemProperties()
+                .stacksTo(1)
+                .durability(8)
+                .component(DataComponentRegistry.MULTI_POTION, new MultiPotionContents(0, PotionContents.EMPTY, 8)));
     }
 
     public PotionFlask(Item.Properties props) {
@@ -39,30 +44,32 @@ public abstract class PotionFlask extends ModItem implements IPotionProvider {
                 !(context.getLevel().getBlockEntity(context.getClickedPos()) instanceof PotionJarTile jarTile))
             return super.useOn(context);
         ItemStack thisStack = context.getItemInHand();
-        MultiPotionContents data = thisStack.getOrDefault(DataComponentRegistry.MULTI_POTION, new MultiPotionContents(0, PotionContents.EMPTY));
+        IPotionProvider data = PotionProviderRegistry.from(thisStack);
         Player playerEntity = context.getPlayer();
 
-        if (playerEntity.isShiftKeyDown() && data.charges() > 0 && jarTile.getMaxFill() - jarTile.getAmount() >= 0 && jarTile.canAccept(data.contents(), 100)) {
-            jarTile.add(data.contents(), 100);
-            var contents = data.withCharges(data.charges() - 1);
-            thisStack.set(DataComponentRegistry.MULTI_POTION, contents);
-        }else if (!playerEntity.isShiftKeyDown() && !isMax(thisStack) && jarTile.getAmount() >= 100) {
-            if (data.potionData.areSameEffects(jarTile.getData())) {
-                var contents = data.withCharges(data.charges() + 1);
+        if(data == null || playerEntity == null)
+            return super.useOn(context);
+
+        PotionContents contents = data.getPotionData(thisStack);
+        int usesRemaining = data.usesRemaining(thisStack);
+        int maxUses = data.maxUses(thisStack);
+
+        if (playerEntity.isShiftKeyDown() && usesRemaining > 0 && jarTile.getMaxFill() - jarTile.getAmount() >= 0 && jarTile.canAccept(contents, 100)) {
+            jarTile.add(contents, 100);
+            var newContents = new MultiPotionContents(usesRemaining - 1, contents, maxUses);
+            thisStack.set(DataComponentRegistry.MULTI_POTION, newContents);
+        }else if (!playerEntity.isShiftKeyDown() && usesRemaining < maxUses && jarTile.getAmount() >= 100) {
+            if (PotionUtil.arePotionContentsEqual(contents, jarTile.getData())) {
+                var newContents = new MultiPotionContents(usesRemaining + 1, contents, maxUses);
                 jarTile.remove(100);
-                thisStack.set(DataComponentRegistry.MULTI_POTION, contents);
-            }else if (data.charges() == 0){
-                var contents = new MultiPotionContents(1, jarTile.getData());
-                thisStack.set(DataComponentRegistry.MULTI_POTION, contents);
+                thisStack.set(DataComponentRegistry.MULTI_POTION, newContents);
+            }else if (usesRemaining == 0){
+                var newContents = new MultiPotionContents(1, jarTile.getData(), maxUses);
+                thisStack.set(DataComponentRegistry.MULTI_POTION, newContents);
                 jarTile.remove(100);
             }
         }
         return super.useOn(context);
-    }
-
-    public boolean isMax(ItemStack stack) {
-        MultiPotionContents data = stack.getOrDefault(DataComponentRegistry.MULTI_POTION, new MultiPotionContents(0, PotionContents.EMPTY));
-        return data.charges() >= getMaxCapacity();
     }
 
     public int getMaxCapacity() {
@@ -74,7 +81,7 @@ public abstract class PotionFlask extends ModItem implements IPotionProvider {
         Player playerentity = entityLiving instanceof Player player ? player : null;
 
         if (!worldIn.isClientSide) {
-            MultiPotionContents data = stack.getOrDefault(DataComponentRegistry.MULTI_POTION, new MultiPotionContents(0, PotionContents.EMPTY));
+            MultiPotionContents data = stack.getOrDefault(DataComponentRegistry.MULTI_POTION, new MultiPotionContents(0, PotionContents.EMPTY, 8));
             for (MobEffectInstance effectinstance : data.contents().getAllEffects()) {
                 effectinstance = getEffectInstance(effectinstance);
                 if (effectinstance.getEffect().value().isInstantenous()) {
@@ -94,7 +101,7 @@ public abstract class PotionFlask extends ModItem implements IPotionProvider {
 
     @Override
     public int getDamage(ItemStack stack) {
-        MultiPotionContents data = stack.getOrDefault(DataComponentRegistry.MULTI_POTION, new MultiPotionContents(0, PotionContents.EMPTY));
+        MultiPotionContents data = stack.getOrDefault(DataComponentRegistry.MULTI_POTION, new MultiPotionContents(0, PotionContents.EMPTY, 8));
         return (getMaxDamage(stack) - data.charges());
     }
 
@@ -134,14 +141,14 @@ public abstract class PotionFlask extends ModItem implements IPotionProvider {
 
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-        MultiPotionContents data = stack.getOrDefault(DataComponentRegistry.MULTI_POTION, new MultiPotionContents(0, PotionContents.EMPTY));
+        MultiPotionContents data = stack.getOrDefault(DataComponentRegistry.MULTI_POTION, new MultiPotionContents(0, PotionContents.EMPTY, 8));
         return data.charges() > 0 ? ItemUtils.startUsingInstantly(worldIn, playerIn, handIn) : InteractionResultHolder.pass(playerIn.getItemInHand(handIn));
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip, flagIn);
-        MultiPotionContents data = stack.getOrDefault(DataComponentRegistry.MULTI_POTION, new MultiPotionContents(0, PotionContents.EMPTY));
+        MultiPotionContents data = stack.getOrDefault(DataComponentRegistry.MULTI_POTION, new MultiPotionContents(0, PotionContents.EMPTY, 8));
         tooltip.add(Component.translatable("ars_nouveau.flask.charges", data.charges()).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
         PotionContents.addPotionTooltip(data.contents().getAllEffects(), tooltip::add, 1.0F, context.tickRate());
     }

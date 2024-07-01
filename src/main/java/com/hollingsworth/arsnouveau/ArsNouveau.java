@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ScryRitualRegistry;
 import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
-import com.hollingsworth.arsnouveau.client.container.CraftingTerminalScreen;
 import com.hollingsworth.arsnouveau.client.registry.ClientHandler;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
@@ -22,9 +21,11 @@ import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import com.hollingsworth.arsnouveau.setup.proxy.ClientProxy;
 import com.hollingsworth.arsnouveau.setup.proxy.IProxy;
 import com.hollingsworth.arsnouveau.setup.proxy.ServerProxy;
-import com.hollingsworth.arsnouveau.setup.registry.*;
+import com.hollingsworth.arsnouveau.setup.registry.APIRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -48,6 +49,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 
+import java.util.function.Supplier;
 
 
 @Mod(ArsNouveau.MODID)
@@ -55,7 +57,7 @@ import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 public class ArsNouveau {
     public static final String MODID = "ars_nouveau";
     @SuppressWarnings("deprecation") // Has to be runForDist, SafeRunForDist will throw a sided crash
-    public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
+    public static IProxy proxy;
     public static boolean caelusLoaded = false;
     public static boolean terrablenderLoaded = false;
     public static boolean optifineLoaded = false;
@@ -93,6 +95,16 @@ public class ArsNouveau {
             thread.start();
         }catch (Exception e){
             e.printStackTrace();
+        }
+        if(FMLEnvironment.dist.isClient()){
+            ArsNouveau.proxy = new Supplier<IProxy>() {
+                @Override
+                public IProxy get() {
+                    return new ClientProxy();
+                }
+            }.get();
+        }else{
+            ArsNouveau.proxy = new ServerProxy();
         }
     }
 
@@ -142,9 +154,6 @@ public class ArsNouveau {
 
     public void clientSetup(final FMLClientSetupEvent event) {
         ModLoadingContext.get().getActiveContainer().getEventBus().addListener(ClientHandler::init);
-        event.enqueueWork(() ->{
-            MenuScreens.register(MenuRegistry.STORAGE.get(), CraftingTerminalScreen::new);
-        });
         try {
             Class.forName("net.optifine.Config");
             optifineLoaded = true;

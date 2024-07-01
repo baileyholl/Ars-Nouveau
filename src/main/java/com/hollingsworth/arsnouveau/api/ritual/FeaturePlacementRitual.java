@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.ritual.features.IPlaceableFeature;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -115,8 +116,8 @@ public abstract class FeaturePlacementRitual extends AbstractRitual {
     }
 
     @Override
-    public void read(CompoundTag tag) {
-        super.read(tag);
+    public void read(HolderLookup.Provider provider,  CompoundTag tag) {
+        super.read(provider, tag);
         featureIndex = tag.getInt("featureIndex");
         positionIndex = tag.getInt("positionIndex");
         checkRadius = tag.getInt("checkRadius");
@@ -124,8 +125,8 @@ public abstract class FeaturePlacementRitual extends AbstractRitual {
     }
 
     @Override
-    public void write(CompoundTag tag) {
-        super.write(tag);
+    public void write(HolderLookup.Provider provider, CompoundTag tag) {
+        super.write(provider, tag);
         tag.putInt("featureIndex", featureIndex);
         tag.putInt("positionIndex", positionIndex);
         tag.putInt("checkRadius", checkRadius);

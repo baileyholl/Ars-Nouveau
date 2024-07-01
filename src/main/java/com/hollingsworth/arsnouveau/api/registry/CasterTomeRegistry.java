@@ -13,17 +13,17 @@ import java.util.List;
 
 public class CasterTomeRegistry {
 
-    private static List<CasterTomeData> TOME_DATA = new ArrayList<>();
+    private static List<RecipeHolder<CasterTomeData>> TOME_DATA = new ArrayList<>();
 
-    public static List<CasterTomeData> getTomeData(){
+    public static List<RecipeHolder<CasterTomeData>> getTomeData(){
         return Collections.unmodifiableList(TOME_DATA);
     }
 
-    public static List<CasterTomeData> reloadTomeData(RecipeManager recipeManager, Level level){
+    public static List<RecipeHolder<CasterTomeData>> reloadTomeData(RecipeManager recipeManager, Level level){
         var recipes = recipeManager.getAllRecipesFor(RecipeRegistry.CASTER_TOME_TYPE.get());
         DungeonLootTables.CASTER_TOMES = new ArrayList<>();
         TOME_DATA = new ArrayList<>();
-        TOME_DATA.addAll(recipes.stream().map(RecipeHolder::value).toList());
+        TOME_DATA.addAll(recipes);
         recipes.forEach(tome -> DungeonLootTables.CASTER_TOMES.add(() -> tome.value().getResultItem(level.registryAccess())));
         return TOME_DATA;
     }

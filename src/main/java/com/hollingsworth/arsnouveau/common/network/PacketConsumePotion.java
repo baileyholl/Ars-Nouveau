@@ -1,8 +1,11 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.items.data.PotionData;
+import com.hollingsworth.arsnouveau.api.potion.IPotionProvider;
+import com.hollingsworth.arsnouveau.api.potion.PotionProviderRegistry;
 import com.hollingsworth.arsnouveau.common.items.PotionFlask;
+import com.hollingsworth.arsnouveau.common.util.PotionUtil;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -13,6 +16,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.alchemy.PotionContents;
 
 public class PacketConsumePotion extends AbstractPacket{
     public static final Type<PacketConsumePotion> TYPE = new Type<>(ArsNouveau.prefix("consume_potion"));
@@ -42,17 +46,20 @@ public class PacketConsumePotion extends AbstractPacket{
             return;
         ItemStack stack = player.inventory.getItem(inventorySlot);
         if(stack.getItem() instanceof PotionItem){
-            PotionData data = new PotionData(stack);
-            data.applyEffects(player, player, player);
+            PotionContents contents = stack.get(DataComponents.POTION_CONTENTS);
+            if(contents == null){
+                return;
+            }
+            PotionUtil.applyContents(contents, player, player, player);
             stack.shrink(1);
             player.inventory.add(new ItemStack(Items.GLASS_BOTTLE));
             player.level.playSound(null, player.blockPosition(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 0.5f, player.level.random.nextFloat() * 0.1F + 0.9F);
         }else if(stack.getItem() instanceof PotionFlask){
-            PotionFlask.FlaskData data = new PotionFlask.FlaskData(stack);
-            if(data.getPotion().isEmpty() || data.getCount() <= 0)
+            IPotionProvider data = PotionProviderRegistry.from(stack);
+            if(data == null || data.getPotionData(stack) == PotionContents.EMPTY || data.usesRemaining(stack) <= 0)
                 return;
-            data.getPotion().applyEffects(player, player, player);
-            data.setCount(data.getCount() - 1);
+            data.applyEffects(stack, player, player, player);
+            data.consumeUses(stack, 1, player);
             player.level.playSound(null, player.blockPosition(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 0.5f, player.level.random.nextFloat() * 0.1F + 0.9F);
         }
     }

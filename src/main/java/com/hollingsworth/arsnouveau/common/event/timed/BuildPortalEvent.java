@@ -120,13 +120,13 @@ public class BuildPortalEvent implements ITimedEvent {
             for(BlockPos pos : placedBlocks){
                 level.destroyBlock(pos, false);
             }
-            level.playSound(null, targetPos, SoundRegistry.GAIA_SPELL_SOUND.getSoundEvent(), SoundSource.BLOCKS, 1.0F, 1.0F);
+            level.playSound(null, targetPos, SoundRegistry.GAIA_SPELL_SOUND.getSoundEvent().value(), SoundSource.BLOCKS, 1.0F, 1.0F);
             portalPos.clear();
             framePos.clear();
             return;
         }
         if(portalPos.isEmpty()){
-            level.playSound(null, targetPos.above(2), SoundRegistry.TEMPESTRY_SPELL_SOUND.getSoundEvent(), SoundSource.BLOCKS, 1.0F, 1.0F);
+            level.playSound(null, targetPos.above(2), SoundRegistry.TEMPESTRY_SPELL_SOUND.getSoundEvent().value(), SoundSource.BLOCKS, 1.0F, 1.0F);
             for(BlockPos pos : placedBlocks){
                 if(level.getBlockEntity(pos) instanceof PortalTile portalTile){
                     portalTile.setFromScroll(warpScrollData);
