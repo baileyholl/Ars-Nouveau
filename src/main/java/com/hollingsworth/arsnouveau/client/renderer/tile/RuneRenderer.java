@@ -35,7 +35,7 @@ public class RuneRenderer extends ArsGeoBlockRenderer<RuneTile> {
 
     @Override
     public void actuallyRender(PoseStack poseStack, RuneTile animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
-        ParticleColor particleColor = animatable.spell.color;
+        ParticleColor particleColor = animatable.spell.color();
         poseStack.pushPose();
         Direction direction = animatable.getBlockState().getValue(BasicSpellTurret.FACING);
         if (direction == Direction.UP) {

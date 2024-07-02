@@ -1,5 +1,6 @@
-package com.hollingsworth.arsnouveau.api.particle;
+package com.hollingsworth.arsnouveau.api.registry;
 
+import com.hollingsworth.arsnouveau.api.particle.IParticleProvider;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.RainbowParticleColor;
 import net.minecraft.nbt.CompoundTag;

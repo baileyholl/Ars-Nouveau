@@ -107,12 +107,10 @@ public class EventHandler {
                     boolean expired;
 
                     @Override
-                    public void tickEvent(ServerTickEvent serverTickEvent) {
-
-                            CasterTomeRegistry.reloadTomeData(serverTickEvent.getServer().getRecipeManager(), serverTickEvent.getServer().getLevel(Level.OVERWORLD));
-                            BuddingConversionRegistry.reloadBuddingConversionRecipes(serverTickEvent.getServer().getRecipeManager());
-                            ScryRitualRegistry.reloadScryRitualRecipes(serverTickEvent.getServer().getRecipeManager());
-
+                    public void tick(ServerTickEvent serverTickEvent) {
+                        CasterTomeRegistry.reloadTomeData(serverTickEvent.getServer().getRecipeManager(), serverTickEvent.getServer().getLevel(Level.OVERWORLD));
+                        BuddingConversionRegistry.reloadBuddingConversionRecipes(serverTickEvent.getServer().getRecipeManager());
+                        ScryRitualRegistry.reloadScryRitualRecipes(serverTickEvent.getServer().getRecipeManager());
                         expired = true;
                     }
 
@@ -261,8 +259,8 @@ public class EventHandler {
                 || entity.getTicksFrozen() >= entity.getTicksRequiredToFreeze())) {
             e.setAmount(e.getAmount() + 0.5f + 0.33f * entity.getEffect(ModPotions.HEX_EFFECT).getAmplifier());
         }
-        double warding = PerkUtil.valueOrZero(entity, PerkAttributes.WARDING.get());
-        double feather = PerkUtil.valueOrZero(entity, PerkAttributes.FEATHER.get());
+        double warding = PerkUtil.valueOrZero(entity, PerkAttributes.WARDING);
+        double feather = PerkUtil.valueOrZero(entity, PerkAttributes.FEATHER);
         if (e.getSource().is(DamageTypes.MAGIC)) {
             e.setAmount((float) (e.getAmount() - warding));
         }
@@ -298,7 +296,7 @@ public class EventHandler {
         if (!event.getEntity().level.isClientSide && event.getItem().getItem().getFoodProperties(event.getItem(), event.getEntity()) != null) {
             if (event.getEntity() instanceof Player player) {
                 FoodData stats = player.getFoodData();
-                stats.saturationLevel = (float) (stats.saturationLevel * PerkUtil.perkValue(player, PerkAttributes.WHIRLIESPRIG.get()));
+                stats.saturationLevel = (float) (stats.saturationLevel * PerkUtil.perkValue(player, PerkAttributes.WHIRLIESPRIG));
             }
         }
     }
@@ -418,9 +416,9 @@ public class EventHandler {
         Holder<MobEffect> holder = event.getEffectInstance().getEffect();
         MobEffect effect = holder.value();
         if (effect.isBeneficial()) {
-            bonus = PerkUtil.valueOrZero(target, PerkAttributes.WIXIE.get());
+            bonus = PerkUtil.valueOrZero(target, PerkAttributes.WIXIE);
         } else if (applier instanceof LivingEntity living) {
-            bonus = PerkUtil.valueOrZero(living, PerkAttributes.WIXIE.get());
+            bonus = PerkUtil.valueOrZero(living, PerkAttributes.WIXIE);
         }
 
         if (bonus > 0.0) {

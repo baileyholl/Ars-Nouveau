@@ -1,8 +1,10 @@
-package com.hollingsworth.arsnouveau.api.potion;
+package com.hollingsworth.arsnouveau.api.registry;
 
+import com.hollingsworth.arsnouveau.api.potion.IPotionProvider;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
@@ -39,25 +41,30 @@ public class PotionProviderRegistry {
         }
 
         @Override
-        public void consumeUses(ItemStack stack, int amount, @Nullable Player player) {
+        public void consumeUses(ItemStack stack, int amount, @Nullable LivingEntity entity) {
             if(stack.getItem() instanceof PotionItem potionItem){
                 stack.shrink(1);
-                if(player != null){
+                if(entity instanceof Player player){
                     player.inventory.add(new ItemStack(Items.GLASS_BOTTLE));
                 }
             }
         }
 
         @Override
-        public void addUse(ItemStack stack, int amount, @Nullable Player player) {
+        public void addUse(ItemStack stack, int amount, @Nullable LivingEntity entity) {
             if(stack.getItem() instanceof BottleItem bottleItem){
                 ItemStack bottle = new ItemStack(Items.GLASS_BOTTLE);
                 bottle.set(DataComponents.POTION_CONTENTS, stack.get(DataComponents.POTION_CONTENTS));
-                if(player != null){
+                if(entity instanceof Player player){
                     stack.shrink(1);
                     player.inventory.add(bottle);
                 }
             }
+        }
+
+        @Override
+        public void setData(PotionContents contents, int usesRemaining, int maxUses, ItemStack stack) {
+            stack.set(DataComponents.POTION_CONTENTS, contents);
         }
     };
 

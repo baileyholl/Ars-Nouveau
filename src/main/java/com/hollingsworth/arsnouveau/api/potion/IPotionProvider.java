@@ -1,10 +1,10 @@
 package com.hollingsworth.arsnouveau.api.potion;
 
+import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
 import org.jetbrains.annotations.NotNull;
@@ -20,9 +20,15 @@ public interface IPotionProvider {
 
     int maxUses(ItemStack stack);
 
-    void consumeUses(ItemStack stack, int amount, @Nullable Player player);
+    default int roomLeft(ItemStack stack){
+        return maxUses(stack) - usesRemaining(stack);
+    }
 
-    void addUse(ItemStack stack, int amount, @Nullable Player player);
+    void consumeUses(ItemStack stack, int amount, @Nullable LivingEntity player);
+
+    void addUse(ItemStack stack, int amount, @Nullable LivingEntity player);
+
+    void setData(PotionContents contents, int usesRemaining, int maxUses, ItemStack stack);
 
     /**
      * Modify the effect instance before applying it to the target
@@ -45,5 +51,9 @@ public interface IPotionProvider {
     default void addTooltip(ItemStack stack, List<Component> tooltips){
         PotionContents potionStack = getPotionData(stack);
         potionStack.addPotionTooltip(tooltips::add, 1.0F, 20.0f);
+    }
+
+    default boolean isEmpty(ItemStack stack){
+        return PotionUtil.isEmpty(getPotionData(stack)) || usesRemaining(stack) <= 0;
     }
 }

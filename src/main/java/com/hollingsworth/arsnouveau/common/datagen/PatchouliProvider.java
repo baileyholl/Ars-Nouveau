@@ -213,11 +213,11 @@ public class PatchouliProvider extends SimpleDataProvider{
         addPage(new PatchouliBuilder(EQUIPMENT, "reactive_enchantment")
                 .withIcon(Items.ENCHANTED_BOOK)
                 .withLocalizedText()
-                .withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get()).getPath() + "_" + 1))
+                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 1))
                 .withLocalizedText()
-                .withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get()).getPath() + "_" + 2))
-                .withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get()).getPath() + "_" + 3))
-                .withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get()).getPath() + "_" + 4))
+                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 2))
+                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 3))
+                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 4))
                 .withLocalizedText()
                 .withPage(new ApparatusTextPage("ars_nouveau:spell_write")), getPath(EQUIPMENT, "reactive_enchantment"));
 
@@ -750,9 +750,9 @@ public class PatchouliProvider extends SimpleDataProvider{
         PatchouliBuilder builder = new PatchouliBuilder(ENCHANTMENTS, enchantment.getDescriptionId())
                 .withIcon(getRegistryName(Items.ENCHANTED_BOOK).toString());
         for (int i = enchantment.getMinLevel(); i <= enchantment.getMaxLevel(); i++) {
-            builder.withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(enchantment).getPath() + "_" + i));
+            builder.withPage(new EnchantingPage("ars_nouveau:" + enchantment.location().getPath() + "_" + i));
         }
-        this.pages.add(new PatchouliPage(builder, this.output.resolve("assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/" + getRegistryName(enchantment).getPath() + ".json")));
+        this.pages.add(new PatchouliPage(builder, this.output.resolve("assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/" + enchantment.location().getPath() + ".json")));
     }
 
     public void addPerkPage(IPerk perk){
@@ -792,8 +792,8 @@ public class PatchouliProvider extends SimpleDataProvider{
             Enchantments.SWEEPING_EDGE,
             Enchantments.THORNS,
             Enchantments.UNBREAKING,
-            EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.getKey(),
-            EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.getKey()
+            EnchantmentRegistry.MANA_BOOST_ENCHANTMENT,
+            EnchantmentRegistry.MANA_REGEN_ENCHANTMENT
     );
 
     @Override

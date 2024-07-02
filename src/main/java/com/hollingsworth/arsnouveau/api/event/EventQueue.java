@@ -1,15 +1,15 @@
 package com.hollingsworth.arsnouveau.api.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import org.jetbrains.annotations.NotNull;
-
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.neoforged.bus.api.SubscribeEvent;
 
 /**
  * For queuing deferred or over-time tasks. Tick refers to the Server or Client Tick event.
@@ -19,7 +19,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class EventQueue {
     @NotNull List<ITimedEvent> events = new ArrayList<>();;
 
-    public void tick(boolean serverSide) {
+    public void tick(@Nullable ServerTickEvent.Post e) {
         if (events.isEmpty()) {
             return;
         }
@@ -31,7 +31,10 @@ public class EventQueue {
             if (event.isExpired()) {
                 stale.add(event);
             } else {
-                event.tick(serverSide);
+                if(e == null)
+                    event.tick(false);
+                else
+                    event.tick(e);
             }
         }
         this.events.removeAll(stale);
@@ -72,12 +75,12 @@ public class EventQueue {
 
     @SubscribeEvent
     public static void serverTick(ServerTickEvent.Post e) {
-        EventQueue.getServerInstance().tick(true);
+        EventQueue.getServerInstance().tick(e);
     }
 
     @SubscribeEvent
     public static void clientTickEvent(ClientTickEvent.Post e) {
-        EventQueue.getClientQueue().tick(false);
+        EventQueue.getClientQueue().tick(null);
     }
 
 }

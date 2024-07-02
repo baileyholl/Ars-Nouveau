@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.event;
 
 import net.minecraft.nbt.CompoundTag;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /**
  * A basic timed event for the EventQueue.
@@ -8,6 +9,10 @@ import net.minecraft.nbt.CompoundTag;
 public interface ITimedEvent {
 
     void tick(boolean serverSide);
+
+    default void tick(ServerTickEvent serverTickEvent){
+        tick(true);
+    }
 
     /**
      * If this event should be removed from the queue

@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.item.inv.IInvProvider;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
-import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.ILightable;

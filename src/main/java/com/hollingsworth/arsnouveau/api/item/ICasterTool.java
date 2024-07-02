@@ -1,18 +1,17 @@
 package com.hollingsworth.arsnouveau.api.item;
 
 import com.hollingsworth.arsnouveau.api.client.IDisplayMana;
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCasterProvider;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
-import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
@@ -34,19 +33,24 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
     @Override
     default boolean onScribe(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack tableStack) {
         ItemStack heldStack = player.getItemInHand(handIn);
-        ISpellCaster thisCaster = CasterUtil.getCaster(tableStack);
+        SpellCaster tableCaster =  SpellCasterRegistry.from(tableStack);
         if (!((heldStack.getItem() instanceof SpellBook) || (heldStack.getItem() instanceof SpellParchment) || (heldStack.getItem() == ItemsRegistry.MANIPULATION_ESSENCE.asItem())))
             return false;
+        if(tableCaster == null){
+            return false;
+        }
         boolean success;
 
+        SpellCaster heldCaster = SpellCasterRegistry.from(heldStack);
         Spell spell = new Spell();
-        if (heldStack.getItem() instanceof ICasterTool) {
-            ISpellCaster heldCaster = CasterUtil.getCaster(heldStack);
+        if (heldCaster != null) {
             spell = heldCaster.getSpell();
-            thisCaster.setColor(heldCaster.getColor());
-            thisCaster.setFlavorText(heldCaster.getFlavorText());
-            thisCaster.setSpellName(heldCaster.getSpellName());
-            thisCaster.setSound(heldCaster.getCurrentSound());
+            tableCaster.setColor(heldCaster.getColor())
+                    .setFlavorText(heldCaster.getFlavorText())
+                    .setSpellName(heldCaster.getSpellName())
+                    .setSound(heldCaster.getCurrentSound())
+                    .saveToStack(tableStack);
+
         } else if (heldStack.getItem() == ItemsRegistry.MANIPULATION_ESSENCE.asItem()) {
             // Thanks mojang
             String[] words = new String[]{"the", "elder", "scrolls", "klaatu", "berata", "niktu", "xyzzy", "bless", "curse", "light", "darkness", "fire", "air", "earth", "water", "hot", "dry", "cold", "wet", "ignite", "snuff", "embiggen", "twist", "shorten", "stretch", "fiddle", "destroy", "imbue", "galvanize", "enchant", "free", "limited", "range", "of", "towards", "inside", "sphere", "cube", "self", "other", "ball", "mental", "physical", "grow", "shrink", "demon", "elemental", "spirit", "animal", "creature", "beast", "humanoid", "undead", "fresh", "stale", "phnglui", "mglwnafh", "cthulhu", "rlyeh", "wgahnagl", "fhtagn", "baguette"};
@@ -56,17 +60,17 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
             for (int i = 0; i < numWords; i++) {
                 sb.append(words[world.random.nextInt(words.length)]).append(" ");
             }
-            thisCaster.setSpellHidden(true);
-            thisCaster.setHiddenRecipe(sb.toString());
+            tableCaster.setHidden(true)
+                    .setHiddenRecipe(sb.toString())
+                    .saveToStack(tableStack);
             PortUtil.sendMessageNoSpam(player, Component.translatable("ars_nouveau.spell_hidden"));
             return true;
         }
-        if (isScribedSpellValid(thisCaster, player, handIn, tableStack, spell)) {
-            success = setSpell(thisCaster, player, handIn, tableStack, spell);
-            if (success) {
-                sendSetMessage(player);
-                return true;
-            }
+        if (isScribedSpellValid(tableCaster, player, handIn, tableStack, spell)) {
+            var mutableSpell = spell.mutable();
+            scribeModifiedSpell(tableCaster, player, handIn, tableStack, mutableSpell);
+            tableCaster.setSpell(mutableSpell.immutable()).saveToStack(tableStack);
+            sendSetMessage(player);
         } else {
             sendInvalidMessage(player);
         }
@@ -81,26 +85,14 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
         PortUtil.sendMessageNoSpam(player, Component.translatable("ars_nouveau.invalid_spell"));
     }
 
-    default @NotNull ISpellCaster getSpellCaster(ItemStack stack) {
-        return new SpellCaster(stack);
-    }
-
     @Override
-    default ISpellCaster getSpellCaster() {
-        return getSpellCaster(new CompoundTag());
+    default @NotNull SpellCaster getSpellCaster(ItemStack stack) {
+        return SpellCasterRegistry.from(stack);
     }
 
-    @Override
-    default ISpellCaster getSpellCaster(CompoundTag tag) {
-        return new SpellCaster(tag);
-    }
+    default void scribeModifiedSpell(SpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell.Mutable spell){}
 
-    default boolean setSpell(ISpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
-        caster.setSpell(spell);
-        return true;
-    }
-
-    default boolean isScribedSpellValid(ISpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
+    default boolean isScribedSpellValid(SpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
         return spell.isValid();
     }
 

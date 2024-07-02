@@ -54,8 +54,8 @@ public class EnchantersSword extends SwordItem implements ICasterTool, GeoItem, 
     }
 
     @Override
-    public boolean isScribedSpellValid(ISpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
-        return spell.recipe.stream().noneMatch(s -> s instanceof AbstractCastMethod);
+    public boolean isScribedSpellValid(SpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
+        return spell.unsafeList().stream().noneMatch(s -> s instanceof AbstractCastMethod);
     }
 
     @Override
@@ -64,13 +64,12 @@ public class EnchantersSword extends SwordItem implements ICasterTool, GeoItem, 
     }
 
     @Override
-    public boolean setSpell(ISpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
+    public void scribeModifiedSpell(SpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell.Mutable spell) {
         ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
         recipe.add(MethodTouch.INSTANCE);
         recipe.addAll(spell.recipe);
         recipe.add(AugmentAmplify.INSTANCE);
         spell.recipe = recipe;
-        return ICasterTool.super.setSpell(caster, player, hand, stack, spell);
     }
 
     @Override

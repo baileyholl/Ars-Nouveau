@@ -1,6 +1,9 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
+import com.hollingsworth.arsnouveau.api.potion.IPotionProvider;
+import com.hollingsworth.arsnouveau.api.registry.PotionProviderRegistry;
 import com.hollingsworth.arsnouveau.common.items.PotionFlask;
+import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
@@ -28,7 +31,8 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
             final ItemStack stack = inv.getItem(i);
             if (stack.getItem() instanceof PotionFlask flask) {
                 flaskPotionStack = stack.copy();
-                if(flask.isMax(stack))
+                IPotionProvider provider = PotionProviderRegistry.from(flaskPotionStack);
+                if(provider == null || provider.roomLeft(flaskPotionStack) <= 0)
                     return ItemStack.EMPTY;
             }
             if(stack.getItem() instanceof PotionItem){
@@ -37,16 +41,18 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
         }
         if(flaskPotionStack.isEmpty() || potionStack.isEmpty())
             return ItemStack.EMPTY;
-        PotionFlask.FlaskData flaskData = new PotionFlask.FlaskData(flaskPotionStack);
+        IPotionProvider provider = PotionProviderRegistry.from(flaskPotionStack);
         PotionContents potionData = potionStack.get(DataComponents.POTION_CONTENTS);
-        if(flaskData.getCount() <= 0){
-            flaskData.setPotion(potionData);
-            flaskData.setCount(1);
-            return flaskPotionStack.copy();
-        }
-        if(flaskData.getPotion().areSameEffects(potionData)){
-            flaskData.setCount(flaskData.getCount() + 1);
-            return flaskPotionStack.copy();
+        if(provider == null)
+            return ItemStack.EMPTY;
+        int count = provider.usesRemaining(flaskPotionStack);
+        ItemStack copyStack = flaskPotionStack.copy();
+        if(count <= 0){
+            provider.setData(potionData, 1, provider.maxUses(flaskPotionStack), copyStack);
+            return copyStack;
+        }else if(PotionUtil.arePotionContentsEqual(potionData, provider.getPotionData(potionStack))){
+            provider.setData(potionData, count + 1, provider.maxUses(flaskPotionStack), copyStack);
+            return copyStack;
         }
         return ItemStack.EMPTY; // Return the modified output
     }

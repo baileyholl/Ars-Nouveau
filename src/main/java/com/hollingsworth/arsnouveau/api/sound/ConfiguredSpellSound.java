@@ -9,7 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public class ConfiguredSpellSound {
+public class ConfiguredSpellSound implements Cloneable{
 
     public static final MapCodec<ConfiguredSpellSound> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             SpellSound.CODEC.codec().fieldOf("sound").forGetter(s -> s.sound),
@@ -20,9 +20,9 @@ public class ConfiguredSpellSound {
     public static ConfiguredSpellSound EMPTY = new ConfiguredSpellSound(SoundRegistry.EMPTY_SPELL_SOUND, 1, 1); // If the user wants no sound, make it empty.
     public static ConfiguredSpellSound DEFAULT = new ConfiguredSpellSound(SoundRegistry.DEFAULT_SPELL_SOUND, 1, 1); // The default sound to be returned for null casters.
 
-    public SpellSound sound;
-    public float volume;
-    public float pitch;
+    private final SpellSound sound;
+    private final float volume;
+    private final float pitch;
 
     public ConfiguredSpellSound(SpellSound sound) {
         this(sound, 1, 1);
@@ -69,5 +69,28 @@ public class ConfiguredSpellSound {
                 ", volume=" + volume +
                 ", pitch=" + pitch +
                 '}';
+    }
+
+    @Override
+    public ConfiguredSpellSound clone() {
+        try {
+            ConfiguredSpellSound clone = (ConfiguredSpellSound) super.clone();
+            // TODO: copy mutable state here, so the clone can't change the internals of the original
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
+    public SpellSound getSound() {
+        return sound;
+    }
+
+    public float getVolume() {
+        return volume;
+    }
+
+    public float getPitch() {
+        return pitch;
     }
 }

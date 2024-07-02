@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
-import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.BasicSpellTurretTile;
 import com.hollingsworth.arsnouveau.common.block.tile.RotatingTurretTile;
@@ -185,7 +185,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
         if (worldIn.isClientSide)
             return ItemInteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(handIn);
-        Spell spell = CasterUtil.getCaster(stack).getSpell();
+        Spell spell = SpellCasterRegistry.from(stack).getSpell();
         if (!spell.isEmpty()) {
             if(spell.getCastMethod() == null){
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.turret_needs_form"));
@@ -196,7 +196,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
                 return ItemInteractionResult.SUCCESS;
             }
             if (worldIn.getBlockEntity(pos) instanceof BasicSpellTurretTile tile) {
-                tile.spellCaster.copyFromCaster(CasterUtil.getCaster(stack));
+                tile.spellCaster.copyFromCaster(SpellCasterRegistry.from(stack));
                 tile.spellCaster.setSpell(spell.clone());
                 tile.updateBlock();
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.spell_set"));

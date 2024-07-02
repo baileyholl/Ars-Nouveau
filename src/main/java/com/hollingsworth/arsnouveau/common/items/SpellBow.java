@@ -100,7 +100,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
     }
 
     public EntitySpellArrow buildSpellArrow(Level worldIn, Player playerentity, ISpellCaster caster, boolean isSpellArrow, ItemStack bowStack) {
-        EntitySpellArrow spellArrow = new EntitySpellArrow(worldIn, playerentity);
+        EntitySpellArrow spellArrow = new EntitySpellArrow(worldIn, playerentity, ItemStack.EMPTY, bowStack);
         spellArrow.spellResolver = new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerentity, new PlayerCaster(playerentity), bowStack)).withSilent(true);
         spellArrow.setColors(caster.getColor());
         if (isSpellArrow)
@@ -194,14 +194,10 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
     }
 
     public void addArrow(AbstractArrow abstractarrowentity, ItemStack bowStack, ItemStack arrowStack, boolean isArrowInfinite, Player playerentity) {
+        // TODO: verify if enchant checking is needed here
         int power = bowStack.getEnchantmentLevel(HolderHelper.unwrap(playerentity.level, Enchantments.POWER));
         if (power > 0) {
             abstractarrowentity.setBaseDamage(abstractarrowentity.getBaseDamage() + power * 0.5D + 0.5D);
-        }
-
-        int punch = bowStack.getEnchantmentLevel(HolderHelper.unwrap(playerentity.level, Enchantments.PUNCH));
-        if (punch > 0) {
-            abstractarrowentity.setKnockback(punch);
         }
 
         if (bowStack.getEnchantmentLevel(HolderHelper.unwrap(playerentity.level, Enchantments.FLAME)) > 0) {
@@ -239,8 +235,8 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
     }
 
     @Override
-    public boolean isScribedSpellValid(ISpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
-        return spell.recipe.stream().noneMatch(s -> s instanceof AbstractCastMethod);
+    public boolean isScribedSpellValid(SpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
+        return spell.unsafeList().stream().noneMatch(s -> s instanceof AbstractCastMethod);
     }
 
     @Override
@@ -249,12 +245,11 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
     }
 
     @Override
-    public boolean setSpell(ISpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
+    public void scribeModifiedSpell(SpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell.Mutable spell) {
         ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
         recipe.add(MethodProjectile.INSTANCE);
         recipe.addAll(spell.recipe);
         spell.recipe = recipe;
-        return ICasterTool.super.setSpell(caster, player, hand, stack, spell);
     }
 
     @Override

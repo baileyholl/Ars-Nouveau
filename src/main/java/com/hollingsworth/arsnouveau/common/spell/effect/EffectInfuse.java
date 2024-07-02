@@ -2,9 +2,10 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.item.inv.ExtractedStack;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
+import com.hollingsworth.arsnouveau.api.potion.IPotionProvider;
+import com.hollingsworth.arsnouveau.api.registry.PotionProviderRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
-import com.hollingsworth.arsnouveau.common.items.PotionFlask;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
@@ -51,7 +52,9 @@ public class EffectInfuse extends AbstractEffect {
         }
         Item potionItem = spellStats.getAoeMultiplier() > 0 ? Items.SPLASH_POTION : Items.LINGERING_POTION;
         ThrownPotion potion = new ThrownPotion(world, shooter);
-        potion.setItem(potionData.asPotionStack(potionItem));
+        ItemStack stack = new ItemStack(potionItem);
+        stack.set(DataComponents.POTION_CONTENTS, potionData);
+        potion.setItem(stack);
         potion.setPos(rayTraceResult.getLocation());
         world.addFreshEntity(potion);
     }
@@ -72,13 +75,13 @@ public class EffectInfuse extends AbstractEffect {
         PotionContents potionData = null;
         InventoryManager manager = spellContext.getCaster().getInvManager();
         ExtractedStack extractedFlask = manager.extractItem(i -> {
-            PotionFlask.FlaskData data = new PotionFlask.FlaskData(i);
-            return !data.getPotion().isEmpty() && data.getCount() > 0;
+            IPotionProvider provider = PotionProviderRegistry.from(i);
+            return provider != null && !provider.isEmpty(i);
         }, 1);
         if (!extractedFlask.isEmpty()) {
-            PotionFlask.FlaskData data = new PotionFlask.FlaskData(extractedFlask.getStack());
-            potionData = data.getPotion().clone();
-            data.setCount(data.getCount() - 1);
+            IPotionProvider provider = PotionProviderRegistry.from(extractedFlask.stack);
+            potionData = provider.getPotionData(extractedFlask.stack);
+            provider.consumeUses(extractedFlask.stack, 1,  shooter);
             extractedFlask.returnOrDrop(world, shooter.getOnPos());
         } else {
             ExtractedStack potion = manager.extractItem(i -> i.getItem() instanceof PotionItem, 1);
@@ -93,7 +96,7 @@ public class EffectInfuse extends AbstractEffect {
         if(potionData == null){
             BlockEntity jarEntity = spellContext.getCaster().getNearbyBlockEntity(i -> i instanceof PotionJarTile jar && jar.getAmount() > 100);
             if(jarEntity instanceof PotionJarTile jar){
-                potionData = jar.getData().clone();
+                potionData = jar.getData();
                 jar.remove(100);
             }
         }

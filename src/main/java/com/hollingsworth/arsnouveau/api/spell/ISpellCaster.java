@@ -13,7 +13,6 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -39,75 +38,91 @@ import java.util.Map;
  * An interface for handling NBT as it relates to items that may cast spells.
  * See SpellCaster for implementation.
  */
-public interface ISpellCaster {
+public interface ISpellCaster<T extends ISpellCaster<T>> {
 
     @NotNull
-    Spell getSpell();
+    default Spell getSpell(){
+        return getSpell(getCurrentSlot());
+    }
 
     @NotNull
     Spell getSpell(int slot);
 
     int getMaxSlots();
 
+    T setMaxSlots(int slots);
+
     int getCurrentSlot();
 
-    void setCurrentSlot(int slot);
+    T setCurrentSlot(int slot);
 
-    default void setNextSlot() {
+    default T setNextSlot() {
         int slot = getCurrentSlot() + 1;
         if (slot >= getMaxSlots()) {
             slot = 0;
         }
-        setCurrentSlot(slot);
+        return setCurrentSlot(slot);
     }
 
-    default void setPreviousSlot() {
+    default T setPreviousSlot() {
         int slot = getCurrentSlot() - 1;
         if (slot < 0)
             slot = getMaxSlots() - 1;
-        setCurrentSlot(slot);
+        return setCurrentSlot(slot);
     }
 
-    void setSpell(Spell spell, int slot);
+    T setSpell(Spell spell, int slot);
 
-    void setSpell(Spell spell);
+    default T setSpell(Spell spell){
+        return setSpell(spell, getCurrentSlot());
+    }
 
     @NotNull
     ParticleColor getColor(int slot);
 
     @NotNull
-    ParticleColor getColor();
+    default ParticleColor getColor(){
+        return getColor(getCurrentSlot());
+    }
 
-    void setColor(ParticleColor color);
+    default T setColor(ParticleColor color){
+        return setColor(color, getCurrentSlot());
+    }
 
-    void setColor(ParticleColor color, int slot);
+    T setColor(ParticleColor color, int slot);
 
     @NotNull
     ConfiguredSpellSound getSound(int slot);
 
-    void setSound(ConfiguredSpellSound sound);
+    default T setSound(ConfiguredSpellSound sound){
+        return setSound(sound, getCurrentSlot());
+    }
 
-    void setSound(ConfiguredSpellSound sound, int slot);
+    T setSound(ConfiguredSpellSound sound, int slot);
 
     default ConfiguredSpellSound getCurrentSound() {
         return getSound(getCurrentSlot());
     }
 
-    void setFlavorText(String str);
+    T setFlavorText(String str);
 
     String getSpellName(int slot);
 
-    String getSpellName();
+    default String getSpellName(){
+        return getSpellName(getCurrentSlot());
+    }
 
-    void setSpellName(String name);
+    default T setSpellName(String name){
+        return setSpellName(name, getCurrentSlot());
+    }
 
-    void setSpellName(String name, int slot);
-
-    void setSpellHidden(boolean hidden);
+    T setSpellName(String name, int slot);
 
     boolean isSpellHidden();
 
-    void setHiddenRecipe(String recipe);
+    T setHidden(boolean hidden);
+
+    T setHiddenRecipe(String recipe);
 
     String getHiddenRecipe();
 
@@ -175,11 +190,13 @@ public interface ISpellCaster {
         return castSpell(worldIn, playerIn, handIn, invalidMessage, getSpell(worldIn, playerIn, handIn, this));
     }
 
-    default void copyFromCaster(ISpellCaster other) {
+    default T copyFromCaster(ISpellCaster other) {
+        T self = (T) this;
         for (int i = 0; i < getMaxSlots() && i < other.getMaxSlots(); i++) {
-            setSpell(other.getSpell(i), i);
-            setFlavorText(other.getFlavorText());
+            self = self.setSpell(other.getSpell(i), i);
+            self = self.setFlavorText(other.getFlavorText());
         }
+        return self;
     }
 
     default SpellResolver getSpellResolver(SpellContext context, Level worldIn, LivingEntity playerIn, InteractionHand handIn) {
@@ -187,10 +204,8 @@ public interface ISpellCaster {
     }
 
     default void playSound(BlockPos pos, Level worldIn, @Nullable Entity playerIn, ConfiguredSpellSound configuredSound, SoundSource source) {
-        if (configuredSound == null || configuredSound.sound == null || configuredSound.sound.getSoundEvent() == null || configuredSound.equals(ConfiguredSpellSound.EMPTY))
+        if (configuredSound == null || configuredSound.getSound() == null || configuredSound.getSound().getSoundEvent() == null || configuredSound.equals(ConfiguredSpellSound.EMPTY))
             return;
-        worldIn.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, configuredSound.sound.getSoundEvent(), source, configuredSound.volume, configuredSound.pitch);
+        worldIn.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, configuredSound.getSound().getSoundEvent(), source, configuredSound.getVolume(), configuredSound.getPitch());
     }
-
-    ResourceLocation getTagID();
 }

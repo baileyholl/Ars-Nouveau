@@ -55,14 +55,14 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
     }
 
     public void setSpell(Spell spell) {
-        this.spell = spell;
+        this.spell = spell.clone();
         updateBlock();
     }
 
     public void castSpell(Entity entity) {
         if (entity == null)
             return;
-        if (!this.isCharged || spell.isEmpty() || !(level instanceof ServerLevel) || !(spell.recipe.get(0) instanceof MethodTouch))
+        if (!this.isCharged || spell.isEmpty() || !(level instanceof ServerLevel) || !(spell.get(0) instanceof MethodTouch))
             return;
         if (!this.isTemporary && this.disabled) return;
         try {
@@ -161,12 +161,12 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
 
     @Override
     public void setColor(ParticleColor color) {
-        spell.withColor(color);
+        this.spell = spell.withColor(color);
         updateBlock();
     }
 
     @Override
     public ParticleColor getColor() {
-        return spell.color;
+        return spell.color();
     }
 }

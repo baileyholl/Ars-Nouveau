@@ -17,7 +17,6 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -56,10 +55,9 @@ public class ScryCaster extends ModItem implements ICasterTool, GeoItem {
     public InteractionResult useOn(UseOnContext pContext) {
         BlockPos pos = pContext.getClickedPos();
         ItemStack stack = pContext.getItemInHand();
-        ScryData.Data data = new ScryData(stack);
         if(pContext.getLevel().getBlockState(pos).getBlock() instanceof ScryerCrystal){
             if(!pContext.getLevel().isClientSide) {
-                data.setScryPos(pos);
+                stack.set(DataComponentRegistry.SCRY_DATA, new ScryData(pos));
                 PortUtil.sendMessage(pContext.getPlayer(), Component.translatable("ars_nouveau.dominion_wand.position_set"));
             }
             return InteractionResult.SUCCESS;
@@ -70,18 +68,8 @@ public class ScryCaster extends ModItem implements ICasterTool, GeoItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
-        ISpellCaster caster = getSpellCaster(stack);
-        return caster.castSpell(pLevel, (LivingEntity) pPlayer, pUsedHand, Component.translatable("ars_nouveau.invalid_spell"));
-    }
-
-    @Override
-    public ISpellCaster getSpellCaster(CompoundTag tag) {
-        return new ScryCasterType(tag);
-    }
-
-    @Override
-    public @NotNull ISpellCaster getSpellCaster(ItemStack stack) {
-        return new ScryCasterType(stack);
+        SpellCaster caster = getSpellCaster(stack);
+        return caster.castSpell(pLevel, pPlayer, pUsedHand, Component.translatable("ars_nouveau.invalid_spell"));
     }
 
     @Override
@@ -119,14 +107,6 @@ public class ScryCaster extends ModItem implements ICasterTool, GeoItem {
 
     public static class ScryCasterType extends SpellCaster{
 
-        public ScryCasterType(ItemStack stack) {
-            super(stack);
-        }
-
-        public ScryCasterType(CompoundTag itemTag) {
-            super(itemTag);
-        }
-
         @Override
         public InteractionResultHolder<ItemStack> castSpell(Level worldIn, LivingEntity entity, InteractionHand handIn, @org.jetbrains.annotations.Nullable Component invalidMessage, @NotNull Spell spell) {
             ItemStack stack = entity.getItemInHand(handIn);
@@ -149,7 +129,7 @@ public class ScryCaster extends ModItem implements ICasterTool, GeoItem {
 
             ScryData data = stack.get(DataComponentRegistry.SCRY_DATA);
             boolean playerHoldingScroll = entity.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof ScryerScroll;
-            BlockPos scryPos = playerHoldingScroll ? new ScryerScroll.ScryerScrollData(player.getItemInHand(InteractionHand.OFF_HAND)).pos : data.pos();
+            BlockPos scryPos = playerHoldingScroll ? player.getItemInHand(InteractionHand.OFF_HAND).getOrDefault(DataComponentRegistry.SCRY_DATA, new ScryData(null)).pos() : data.pos();
             if(scryPos == null){
                 PortUtil.sendMessage(entity, Component.translatable("ars_nouveau.scry_caster.no_pos"));
                 return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);

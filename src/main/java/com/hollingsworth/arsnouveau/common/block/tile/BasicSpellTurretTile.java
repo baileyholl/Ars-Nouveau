@@ -1,9 +1,8 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCasterProvider;
-import com.hollingsworth.arsnouveau.api.spell.TurretSpellCaster;
+import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -22,7 +21,7 @@ import java.util.List;
 public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider, GeoBlockEntity, IAnimationListener, ITickable, ISpellCasterProvider {
 
     boolean playRecoil;
-    public TurretSpellCaster spellCaster = new TurretSpellCaster(new CompoundTag());
+    public SpellCaster spellCaster = new SpellCaster(new CompoundTag());
 
     public BasicSpellTurretTile(BlockEntityType<?> p_i48289_1_, BlockPos pos, BlockState state) {
         super(p_i48289_1_, pos, state);
@@ -84,13 +83,4 @@ public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider
         this.playRecoil = true;
     }
 
-    @Override
-    public ISpellCaster getSpellCaster() {
-        return spellCaster;
-    }
-
-    @Override
-    public ISpellCaster getSpellCaster(CompoundTag tag) {
-        return spellCaster;
-    }
 }

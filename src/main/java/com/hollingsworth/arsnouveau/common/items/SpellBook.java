@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.item.IRadialProvider;
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
@@ -25,7 +26,6 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.InteractionHand;
@@ -41,7 +41,6 @@ import net.minecraft.world.level.LevelReader;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -126,22 +125,6 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
         return factory;
     }
 
-    @NotNull
-    @Override
-    public ISpellCaster getSpellCaster(ItemStack stack) {
-        return new BookCaster(stack);
-    }
-
-    @Override
-    public ISpellCaster getSpellCaster() {
-        return new BookCaster(new CompoundTag());
-    }
-
-    @Override
-    public ISpellCaster getSpellCaster(CompoundTag tag) {
-        return new BookCaster(tag);
-    }
-
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
@@ -173,9 +156,9 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
 
     public RadialMenu<AbstractSpellPart> getRadialMenuProviderForSpellpart(ItemStack itemStack) {
         return new RadialMenu<>((int slot) -> {
-            BookCaster caster = new BookCaster(itemStack);
+            SpellCaster caster =  SpellCasterRegistry.from(itemStack);
             caster.setCurrentSlot(slot);
-            Networking.sendToServer(new PacketSetBookMode(itemStack.getTag()));
+            Networking.sendToServer(new PacketSetBookMode(caster));
         },
                 getRadialMenuSlotsForSpellpart(itemStack),
                 RenderUtils::drawSpellPart,
@@ -183,13 +166,13 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     }
 
     public List<RadialMenuSlot<AbstractSpellPart>> getRadialMenuSlotsForSpellpart(ItemStack itemStack) {
-        BookCaster spellCaster = new BookCaster(itemStack);
+        SpellCaster spellCaster = SpellCasterRegistry.from(itemStack);
         List<RadialMenuSlot<AbstractSpellPart>> radialMenuSlots = new ArrayList<>();
         for (int i = 0; i < spellCaster.getMaxSlots(); i++) {
             Spell spell = spellCaster.getSpell(i);
             AbstractSpellPart primaryIcon = null;
             List<AbstractSpellPart> secondaryIcons = new ArrayList<>();
-            for (AbstractSpellPart p : spell.recipe) {
+            for (AbstractSpellPart p : spell.recipe()) {
                 if (p instanceof AbstractCastMethod) {
                     secondaryIcons.add(p);
                 }
@@ -207,21 +190,5 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     @Override
     public boolean canQuickCast() {
         return true;
-    }
-
-    public static class BookCaster extends SpellCaster {
-
-        public BookCaster(ItemStack stack) {
-            super(stack);
-        }
-
-        public BookCaster(CompoundTag tag) {
-            super(tag);
-        }
-
-        @Override
-        public int getMaxSlots() {
-            return 10;
-        }
     }
 }

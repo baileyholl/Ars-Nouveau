@@ -1,10 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
-import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
-import com.hollingsworth.arsnouveau.api.spell.Spell;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.renderer.item.WandRenderer;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
@@ -65,8 +62,8 @@ public class Wand extends ModItem implements GeoItem, ICasterTool {
     }
 
     @Override
-    public boolean isScribedSpellValid(ISpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
-        return spell.recipe.stream().noneMatch(s -> s instanceof AbstractCastMethod);
+    public boolean isScribedSpellValid(SpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
+        return spell.mutable().recipe.stream().noneMatch(s -> s instanceof AbstractCastMethod);
     }
 
     @Override
@@ -75,13 +72,12 @@ public class Wand extends ModItem implements GeoItem, ICasterTool {
     }
 
     @Override
-    public boolean setSpell(ISpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
+    public void scribeModifiedSpell(SpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell.Mutable spell) {
         ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
         recipe.add(MethodProjectile.INSTANCE);
         recipe.add(AugmentAccelerate.INSTANCE);
         recipe.addAll(spell.recipe);
         spell.recipe = recipe;
-        return ICasterTool.super.setSpell(caster, player, hand, stack, spell);
     }
 
     @Override

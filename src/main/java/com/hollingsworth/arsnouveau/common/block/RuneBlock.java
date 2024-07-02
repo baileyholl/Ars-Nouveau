@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.IFilter;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
-import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
 import com.hollingsworth.arsnouveau.common.items.RunicChalk;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
@@ -16,7 +16,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
@@ -84,11 +83,11 @@ public class RuneBlock extends TickableModBlock {
             }
             if (!(stack.getItem() instanceof SpellParchment) || worldIn.isClientSide)
                 return ItemInteractionResult.SUCCESS;
-            Spell spell = CasterUtil.getCaster(stack).getSpell();
+            Spell spell = SpellCasterRegistry.from(stack).getSpell();
             if (spell.isEmpty())
                 return ItemInteractionResult.SUCCESS;
 
-            if (!(spell.recipe.get(0) instanceof MethodTouch)) {
+            if (!(spell.get(0) instanceof MethodTouch)) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.rune.touch"));
                 return ItemInteractionResult.SUCCESS;
             }
@@ -124,7 +123,7 @@ public class RuneBlock extends TickableModBlock {
         }));
         if (!entities.isEmpty() && worldIn.getBlockEntity(pos) instanceof RuneTile rune) {
             if (rune.spell != null) {
-                for (AbstractSpellPart part : rune.spell.recipe) {
+                for (AbstractSpellPart part : rune.spell.recipe()) {
                     if ( part instanceof IFilter filter) {
                         if (!filter.shouldResolveOnEntity(entityIn,worldIn)) {
                             return;

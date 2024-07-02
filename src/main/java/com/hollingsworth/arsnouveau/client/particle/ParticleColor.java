@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.client.particle;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.particle.IParticleColor;
-import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ParticleColorRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -163,6 +163,7 @@ public class ParticleColor implements IParticleColor, Cloneable {
     public ParticleColor clone() {
         try {
             ParticleColor clone = (ParticleColor) super.clone();
+
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();

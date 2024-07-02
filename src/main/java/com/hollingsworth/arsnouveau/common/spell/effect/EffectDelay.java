@@ -30,7 +30,7 @@ public class EffectDelay extends AbstractEffect {
     }
 
     public void sendPacket(Level world, HitResult rayTraceResult, @Nullable LivingEntity shooter, SpellContext spellContext, SpellStats spellStats, BlockHitResult blockResult, Entity hitEntity, SpellResolver spellResolver) {
-        if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
+        if (spellContext.getCurrentIndex() >= spellContext.getSpell().size())
             return;
         int duration = GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getBuffCount(AugmentExtendTime.INSTANCE) * 20;
         int decreasedTime = EXTEND_TIME.get() * 10 * spellStats.getBuffCount(AugmentDurationDown.INSTANCE);

@@ -82,7 +82,7 @@ public class EffectWololo extends AbstractEffect {
             ((MobAccessor) mob).callMobInteract(player, InteractionHand.MAIN_HAND);
             player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
         }
-        world.playSound(null, living.getX(), living.getY(), living.getZ(), SoundEvents.EVOKER_PREPARE_WOLOLO, SoundSource.PLAYERS, spellContext.getSpell().sound.volume, spellContext.getSpell().sound.pitch);
+        world.playSound(null, living.getX(), living.getY(), living.getZ(), SoundEvents.EVOKER_PREPARE_WOLOLO, SoundSource.PLAYERS, spellContext.getSpell().sound().getVolume(), spellContext.getSpell().sound().getPitch());
     }
 
     @NotNull
@@ -111,7 +111,7 @@ public class EffectWololo extends AbstractEffect {
         BlockPos blockPos = rayTraceResult.getBlockPos();
         BlockEntity blockEntity = world.getBlockEntity(blockPos);
         if (blockEntity instanceof IWololoable tileToDye) {
-            ParticleColor color = spellStats.isRandomized() ? ParticleColor.makeRandomColor(255, 255, 255, shooter.getRandom()) : spellContext.getSpell().color;
+            ParticleColor color = spellStats.isRandomized() ? ParticleColor.makeRandomColor(255, 255, 255, shooter.getRandom()) : spellContext.getSpell().color();
             tileToDye.setColor(color);
         } else {
             ItemStack dyeStack = getDye(shooter, spellStats, spellContext, ANFakePlayer.getPlayer((ServerLevel) world));
@@ -198,7 +198,7 @@ public class EffectWololo extends AbstractEffect {
     }
 
     private static DyeItem getDyeItemFromSpell(SpellContext spellContext) {
-        ParticleColor spellColor = spellContext.getSpell().color;
+        ParticleColor spellColor = spellContext.getSpell().color();
 
         ParticleColor targetColor = vanillaColors.keySet().stream().min(Comparator.comparingDouble(d -> d.euclideanDistance(spellColor))).orElse(ParticleColor.WHITE);
         return (DyeItem) vanillaColors.get(targetColor);

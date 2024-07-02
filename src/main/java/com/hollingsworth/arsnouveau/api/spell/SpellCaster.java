@@ -1,45 +1,53 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.google.common.collect.ImmutableMap;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.CheatSerializer;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.Util;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Map;
 
-public class SpellCaster implements ISpellCaster {
+public class SpellCaster implements ISpellCaster<SpellCaster> {
 
     public static final MapCodec<SpellCaster> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.INT.optionalFieldOf("current_slot", 0).forGetter(s -> s.slot),
             Codec.STRING.optionalFieldOf("flavor_text", "").forGetter(s -> s.flavorText),
             Codec.BOOL.optionalFieldOf("is_hidden", false).forGetter(s -> s.isHidden),
-            Codec.STRING.optionalFieldOf("hidden_text", "").forGetter(s -> s.hiddenText)
+            Codec.STRING.optionalFieldOf("hidden_text", "").forGetter(s -> s.hiddenText),
+            Codec.INT.optionalFieldOf("max_slots", 1).forGetter(s -> s.maxSlots)
     ).apply(instance, SpellCaster::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, SpellCaster> STREAM = CheatSerializer.create(SpellCaster.CODEC);
 
-    private Map<Integer, Spell> spells = new HashMap<>();
-    private int slot;
-    public ItemStack stack = ItemStack.EMPTY;
-    public String flavorText = "";
-    public boolean isHidden;
-    public String hiddenText = "";
+    private final Map<Integer, Spell> spells;
+    private final int slot;
+    private final String flavorText;
+    private final boolean isHidden;
+    private final String hiddenText;
+    private final int maxSlots;
 
+    public SpellCaster(Integer slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots) {
+        this(slot, flavorText, isHidden, hiddenText, maxSlots, ImmutableMap.of());
+    }
 
-    public SpellCaster(Integer slot, String flavorText, Boolean isHidden, String hiddenText) {
+    public SpellCaster(Integer slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots, Map<Integer, Spell> spells){
         this.slot = slot;
         this.flavorText = flavorText;
         this.isHidden = isHidden;
         this.hiddenText = hiddenText;
+        this.spells = ImmutableMap.copyOf(spells);
+        this.maxSlots = maxSlots;
     }
 
     @NotNull
@@ -55,7 +63,12 @@ public class SpellCaster implements ISpellCaster {
 
     @Override
     public int getMaxSlots() {
-        return 1;
+        return maxSlots;
+    }
+
+    @Override
+    public SpellCaster setMaxSlots(int slots) {
+        return new SpellCaster(slot, flavorText, isHidden, hiddenText, slots, spells);
     }
 
     @Override
@@ -64,53 +77,34 @@ public class SpellCaster implements ISpellCaster {
     }
 
     @Override
-    public void setCurrentSlot(int slot) {
-        this.slot = slot;
+    public SpellCaster setCurrentSlot(int slot) {
+        return new SpellCaster(slot, flavorText, isHidden, hiddenText, maxSlots, spells);
     }
 
     @Override
-    public void setSpell(Spell spell, int slot) {
-        this.spells.put(slot, spell);
-    }
-
-    @Override
-    public void setSpell(Spell spell) {
-        setSpell(spell, getCurrentSlot());
+    public SpellCaster setSpell(Spell spell, int slot) {
+        return new SpellCaster(slot, flavorText, isHidden, hiddenText, maxSlots, Util.copyAndPut(this.spells, slot, spell));
     }
 
     @Override
     public ParticleColor getColor(int slot) {
-        return this.getSpell(slot).color;
+        return this.getSpell(slot).color();
     }
 
     @Override
-    public void setFlavorText(String str) {
-        this.flavorText = str;
+    public SpellCaster setFlavorText(String str) {
+        return new SpellCaster(slot, str, isHidden, hiddenText, maxSlots, spells);
     }
 
     @Override
     public String getSpellName(int slot) {
-        return this.getSpell(slot).name;
+        return this.getSpell(slot).name();
     }
 
     @Override
-    public String getSpellName() {
-        return this.getSpellName(getCurrentSlot());
-    }
-
-    @Override
-    public void setSpellName(String name) {
-        setSpellName(name, getCurrentSlot());
-    }
-
-    @Override
-    public void setSpellName(String name, int slot) {
-        this.getSpell(slot).name = name;
-    }
-
-    @Override
-    public void setSpellHidden(boolean hidden) {
-        this.isHidden = hidden;
+    public SpellCaster setSpellName(String name, int slot) {
+        var spell = this.getSpell(slot);
+        return new SpellCaster(slot, flavorText, isHidden, hiddenText, maxSlots, Util.copyAndPut(this.spells, slot, new Spell(name, spell.color(), spell.sound(), new ArrayList<>(spell.unsafeList()))));
     }
 
     @Override
@@ -119,8 +113,13 @@ public class SpellCaster implements ISpellCaster {
     }
 
     @Override
-    public void setHiddenRecipe(String recipe) {
-        this.hiddenText = recipe;
+    public SpellCaster setHidden(boolean hidden) {
+        return new SpellCaster(slot, flavorText, hidden, hiddenText, maxSlots, spells);
+    }
+
+    @Override
+    public SpellCaster setHiddenRecipe(String recipe) {
+        return new SpellCaster(slot, flavorText, isHidden, recipe, maxSlots, spells);
     }
 
     @Override
@@ -134,35 +133,27 @@ public class SpellCaster implements ISpellCaster {
     }
 
     @Override
-    public void setColor(ParticleColor color) {
-        setColor(color, getCurrentSlot());
-    }
-
-    @Override
-    public void setColor(ParticleColor color, int slot) {
-        this.getSpell(slot).color = color;
+    public SpellCaster setColor(ParticleColor color, int slot) {
+        var spell = this.getSpell(slot);
+        return new SpellCaster(slot, flavorText, isHidden, hiddenText, maxSlots, Util.copyAndPut(this.spells, slot, new Spell(spell.name(), color, spell.sound(), new ArrayList<>(spell.unsafeList()))));
     }
 
    @NotNull
     @Override
     public ConfiguredSpellSound getSound(int slot) {
-        return this.getSpell(slot).sound;
+        return this.getSpell(slot).sound();
     }
 
     @Override
-    public void setSound(ConfiguredSpellSound sound) {
-        this.setSound(sound, getCurrentSlot());
-    }
-
-    @Override
-    public void setSound(ConfiguredSpellSound sound, int slot) {
-        this.getSpell(slot).sound = sound;
+    public SpellCaster setSound(ConfiguredSpellSound sound, int slot) {
+        var spell = this.getSpell(slot);
+        return new SpellCaster(slot, flavorText, isHidden, hiddenText, maxSlots, Util.copyAndPut(this.spells, slot, new Spell(spell.name(), spell.color(), sound, new ArrayList<>(spell.unsafeList()))));
     }
 
    @NotNull
     @Override
     public ParticleColor getColor() {
-        return this.getSpell().color;
+        return this.getSpell().color();
     }
 
     @Override
@@ -170,8 +161,11 @@ public class SpellCaster implements ISpellCaster {
         return spells;
     }
 
-    @Override
-    public ResourceLocation getTagID() {
-        return ArsNouveau.prefix( "caster");
+    public DataComponentType getComponentType() {
+        return DataComponentRegistry.SPELL_CASTER.get();
+    }
+
+    public void saveToStack(ItemStack stack){
+        stack.set(this.getComponentType(), this);
     }
 }

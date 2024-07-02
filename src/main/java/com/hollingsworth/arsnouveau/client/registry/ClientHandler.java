@@ -330,7 +330,7 @@ public class ClientHandler {
     }
 
     public static int colorFromArmor(ItemStack stack) {
-        IPerkHolder<ItemStack> holder = PerkUtil.getPerkHolder(stack);
+        IPerkHolder holder = PerkUtil.getPerkHolder(stack);
         if (!(holder instanceof ArmorPerkHolder armorPerkHolder))
             return DyeColor.PURPLE.getTextColor();
         return DyeColor.byName(armorPerkHolder.getColor(), DyeColor.PURPLE).getTextColor();

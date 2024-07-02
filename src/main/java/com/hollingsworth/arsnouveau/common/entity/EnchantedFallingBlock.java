@@ -11,9 +11,9 @@ import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.spell.rewind.BlockToEntityRewind;
 import com.hollingsworth.arsnouveau.common.spell.rewind.EntityToBlockRewind;
 import com.hollingsworth.arsnouveau.common.spell.rewind.RewindAttachment;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
-import com.mojang.authlib.GameProfile;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.core.BlockPos;
@@ -34,6 +34,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.item.context.DirectionalPlaceContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
@@ -258,9 +259,9 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
                     if (blockentity != null) {
 
                         try {
-                            blockentity.load(this.blockData);
+                            blockentity.loadWithComponents(this.blockData, level.registryAccess());
                             if(blockentity instanceof SkullBlockEntity sk && this.blockData != null && this.blockData.contains("SkullOwner")){
-                                sk.setOwner(new GameProfile(null, this.blockData.getString("SkullOwner")));
+                                sk.setOwner(ANCodecs.decode(ResolvableProfile.CODEC, this.blockData.getCompound("SkullOwner")));
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
@@ -279,9 +280,10 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
                 this.discard();
                 this.callOnBrokenAfterFall(block, blockpos);
                 ItemStack itemstack = new ItemStack(block);
-                if(this.blockData != null && !itemstack.hasTag() && this.getBlockState().is(Blocks.PLAYER_HEAD)){
-                    itemstack.setTag(this.blockData);
-                }
+                //todo: restore player head
+//                if(this.blockData != null && !itemstack.hasTag() && this.getBlockState().is(Blocks.PLAYER_HEAD)){
+//                    itemstack.setTag(this.blockData);
+//                }
                 this.spawnAtLocation(itemstack);
                 return null;
             }
@@ -290,9 +292,10 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
             if (this.dropItem && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
                 this.callOnBrokenAfterFall(block, blockpos);
                 ItemStack itemstack = new ItemStack(block);
-                if(this.blockData != null && !itemstack.hasTag() && this.getBlockState().is(Blocks.PLAYER_HEAD)){
-                    itemstack.setTag(this.blockData);
-                }
+                //todo: restore player head
+//                if(this.blockData != null && !itemstack.hasTag() && this.getBlockState().is(Blocks.PLAYER_HEAD)){
+//                    itemstack.setTag(this.blockData);
+//                }
                 this.spawnAtLocation(itemstack);
             }
         }

@@ -208,11 +208,11 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
             ISpellCaster caster = getSpellCaster(pCrossbowStack);
             SpellResolver resolver = new SpellResolver(new SpellContext(worldIn, caster.modifySpellBeforeCasting(worldIn, pShooter, InteractionHand.MAIN_HAND, caster.getSpell()), pShooter, livingCaster, pCrossbowStack));
             if (pAmmoStack.getItem() == Items.ARROW && isSpell) {
-                projectile = buildSpellArrow(worldIn, pShooter, caster);
+                projectile = buildSpellArrow(worldIn, pShooter, caster, pCrossbowStack);
                 ((EntitySpellArrow) projectile).pierceLeft += EnchantmentHelper.getTagEnchantmentLevel(Enchantments.PIERCING, pCrossbowStack);
             }else if(pAmmoStack.getItem() instanceof SpellArrow && projectile instanceof EntitySpellArrow spellArrow){
                 spellArrow.pierceLeft += EnchantmentHelper.getTagEnchantmentLevel(Enchantments.PIERCING, pCrossbowStack);
-                spellArrow.setColors(resolver.spell.color);
+                spellArrow.setColors(resolver.spell.color());
             }
 
             if (pShooter instanceof CrossbowAttackMob crossbowattackmob) {
@@ -292,8 +292,8 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
         return super.getAllSupportedProjectiles().or(i -> i.getItem() instanceof SpellArrow);
     }
 
-    public EntitySpellArrow buildSpellArrow(Level worldIn, LivingEntity playerentity, ISpellCaster caster) {
-        EntitySpellArrow spellArrow = new EntitySpellArrow(worldIn, playerentity);
+    public EntitySpellArrow buildSpellArrow(Level worldIn, LivingEntity playerentity, ISpellCaster caster, ItemStack bowStack) {
+        EntitySpellArrow spellArrow = new EntitySpellArrow(worldIn, playerentity, ItemStack.EMPTY, bowStack);
         spellArrow.spellResolver = new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerentity, LivingCaster.from(playerentity), playerentity.getMainHandItem())).withSilent(true);
         spellArrow.setColors(caster.getColor());
         return spellArrow;
@@ -306,8 +306,8 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
     }
 
     @Override
-    public boolean isScribedSpellValid(ISpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
-        return spell.recipe.stream().noneMatch(s -> s instanceof AbstractCastMethod);
+    public boolean isScribedSpellValid(SpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
+        return spell.unsafeList().stream().noneMatch(s -> s instanceof AbstractCastMethod);
     }
 
     @Override
@@ -316,12 +316,11 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
     }
 
     @Override
-    public boolean setSpell(ISpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
+    public void scribeModifiedSpell(SpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell.Mutable spell) {
         ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
         recipe.add(MethodProjectile.INSTANCE);
         recipe.addAll(spell.recipe);
         spell.recipe = recipe;
-        return ICasterTool.super.setSpell(caster, player, hand, stack, spell);
     }
 
     @Override

@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
-import com.hollingsworth.arsnouveau.api.util.CasterUtil;
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
+import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
-import com.hollingsworth.arsnouveau.common.spell.casters.ReactiveCaster;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import com.mojang.serialization.Codec;
@@ -32,17 +32,17 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe {
     public ItemStack assemble(ApparatusRecipeInput input, HolderLookup.Provider lookup) {
         ItemStack result = super.assemble(input, lookup);
         ItemStack parchment = getParchment(input.pedestals());
-        ISpellCaster parchmentCaster = CasterUtil.getCaster(parchment);
-        ReactiveCaster reactiveCaster = new ReactiveCaster(result);
-        reactiveCaster.setColor(parchmentCaster.getColor());
-        reactiveCaster.setSpell(parchmentCaster.getSpell());
+        SpellCaster parchmentCaster = SpellCasterRegistry.from(parchment);
+        result.set(DataComponentRegistry.SPELL_CASTER, new SpellCaster(0, null, false, null, 1)
+                .setColor(parchmentCaster.getColor())
+                .setSpell(parchmentCaster.getSpell()));
         return result;
     }
 
     @Override
     public boolean matches(ApparatusRecipeInput input, Level level, @org.jetbrains.annotations.Nullable Player player) {
         ItemStack parchment = getParchment(input.pedestals());
-        return super.matches(input, level, player) && !parchment.isEmpty() && !CasterUtil.getCaster(parchment).getSpell().isEmpty();
+        return super.matches(input, level, player) && !parchment.isEmpty() && !SpellCasterRegistry.from(parchment).getSpell().isEmpty();
     }
 
     public static@NotNull ItemStack getParchment(List<ItemStack> pedestalItems) {

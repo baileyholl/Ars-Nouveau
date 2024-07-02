@@ -5,9 +5,9 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.spell.*;
-import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.Color;
@@ -126,7 +126,7 @@ public class InfinityGuiSpellBook extends BaseBook {
     @Override
     public void init() {
         super.init();
-        ISpellCaster caster = CasterUtil.getCaster(bookStack);
+        ISpellCaster caster = SpellCasterRegistry.from(bookStack);
         int selectedSlot = caster.getCurrentSlot();
         //Crafting slots
         for (int i = 0; i < numLinks; i++) {
@@ -206,7 +206,7 @@ public class InfinityGuiSpellBook extends BaseBook {
 
         validate();
 
-        List<AbstractSpellPart> recipe = CasterUtil.getCaster(bookStack).getSpell(selectedSlot).recipe;
+        List<AbstractSpellPart> recipe = SpellCasterRegistry.from(bookStack).getSpell(selectedSlot).unsafeList();
         spell = new ArrayList<>(recipe);
 
         //infinite spells
@@ -411,12 +411,12 @@ public class InfinityGuiSpellBook extends BaseBook {
     }
 
     public void onColorClick(Button button) {
-        ParticleColor.IntWrapper color = CasterUtil.getCaster(bookStack).getColor(selectedSpellSlot).toWrapper();
+        ParticleColor.IntWrapper color = SpellCasterRegistry.from(bookStack).getColor(selectedSpellSlot).toWrapper();
         Minecraft.getInstance().setScreen(new GuiColorScreen(color.r, color.g, color.b, selectedSpellSlot, this.hand));
     }
 
     public void onSoundsClick(Button button) {
-        ConfiguredSpellSound spellSound = CasterUtil.getCaster(bookStack).getSound(selectedSpellSlot);
+        ConfiguredSpellSound spellSound = SpellCasterRegistry.from(bookStack).getSound(selectedSpellSlot);
         Minecraft.getInstance().setScreen(new SoundScreen(spellSound, selectedSpellSlot, this.hand));
     }
 
@@ -482,8 +482,8 @@ public class InfinityGuiSpellBook extends BaseBook {
         this.selected_slot.isSelected = true;
         this.selectedSpellSlot = this.selected_slot.slotNum;
         updateCraftingSlots(this.selectedSpellSlot);
-        spell_name.setValue(CasterUtil.getCaster(bookStack).getSpellName(selectedSpellSlot));
-        this.spell = CasterUtil.getCaster(bookStack).getSpell(selectedSpellSlot).recipe;
+        spell_name.setValue(SpellCasterRegistry.from(bookStack).getSpellName(selectedSpellSlot));
+        this.spell = SpellCasterRegistry.from(bookStack).getSpell(selectedSpellSlot).recipe;
         updateWindowOffset(0); //includes validation
     }
 
@@ -507,7 +507,7 @@ public class InfinityGuiSpellBook extends BaseBook {
 
     public void updateCraftingSlots(int bookSlot) {
         //Crafting slots
-        List<AbstractSpellPart> recipe = CasterUtil.getCaster(bookStack).getSpell(bookSlot).recipe;
+        List<AbstractSpellPart> recipe = SpellCasterRegistry.from(bookStack).getSpell(bookSlot).recipe;
         for (int i = 0; i < craftingCells.size(); i++) {
             InfinityCraftingButton slot = craftingCells.get(i);
             slot.clear();

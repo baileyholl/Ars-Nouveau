@@ -13,6 +13,7 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodUnderfoot;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.nbt.CompoundTag;
@@ -256,7 +257,7 @@ public class CasterTomeProvider extends SimpleDataProvider {
 
         for (CasterRecipeWrapper g : tomes) {
             Path path = getRecipePath(output, g.id().getPath());
-            saveStable(pOutput, g.toJson(), path);
+            saveStable(pOutput, CasterTomeData.Serializer.CODEC.codec().encodeStart(JsonOps.INSTANCE, g.toData()).getOrThrow(), path);
         }
     }
 
@@ -270,7 +271,7 @@ public class CasterTomeProvider extends SimpleDataProvider {
                 spell.serializeRecipe(),
                 ItemsRegistry.CASTER_TOME.registryObject.getId(),
                 flavorText,
-                spell.color.serialize(), spell.sound);
+                spell.color().serialize(), spell.sound());
     }
 
     public CasterRecipeWrapper buildTome(String id, String name, Spell spell, String flavorText, ParticleColor color) {
@@ -279,7 +280,7 @@ public class CasterTomeProvider extends SimpleDataProvider {
                 spell.serializeRecipe(),
                 ItemsRegistry.CASTER_TOME.registryObject.getId(),
                 flavorText,
-                color.serialize(), spell.sound);
+                color.serialize(), spell.sound());
     }
 
     /**
@@ -290,7 +291,7 @@ public class CasterTomeProvider extends SimpleDataProvider {
         return "Ars Nouveau Caster Tomes Datagen";
     }
 
-    public static record CasterRecipeWrapper(ResourceLocation id, String name, List<ResourceLocation> spell, ResourceLocation tomeType, String flavorText, CompoundTag particleColor, ConfiguredSpellSound sound) {
+    public record CasterRecipeWrapper(ResourceLocation id, String name, List<ResourceLocation> spell, ResourceLocation tomeType, String flavorText, CompoundTag particleColor, ConfiguredSpellSound sound) {
         public CasterTomeData toData() {
             return new CasterTomeData(name, spell, tomeType, flavorText, particleColor, sound);
         }

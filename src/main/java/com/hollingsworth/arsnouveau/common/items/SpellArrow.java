@@ -33,7 +33,7 @@ public class SpellArrow extends ArrowItem {
         this.numParts = numParts;
     }
 
-    public void modifySpell(Spell spell) {
+    public void modifySpell(Spell.Mutable spell) {
         for (int i = 0; i < numParts; i++) {
             spell.recipe.add(part);
         }
@@ -47,21 +47,21 @@ public class SpellArrow extends ArrowItem {
         EntitySpellArrow spellArrow = new EntitySpellArrow(world, shooter, ItemStack.EMPTY, bowStack);
         if (!(shooter instanceof Player entity) || !((shooter).getMainHandItem().getItem() instanceof ICasterTool caster))
             return super.createArrow(world, stack, shooter, bowStack);
-        ISpellCaster spellCaster = caster.getSpellCaster(entity.getMainHandItem());
-        Spell spell = spellCaster.getSpell();
-        modifySpell(spell);
-        spellArrow.spellResolver = new SpellResolver(new SpellContext(world, spell, entity, new PlayerCaster(entity), shooter.getMainHandItem())).withSilent(true);
-        spellArrow.pierceLeft = spell.getBuffsAtIndex(0, shooter, AugmentPierce.INSTANCE);
+        SpellCaster spellCaster = caster.getSpellCaster(entity.getMainHandItem());
+        var mutableSpell = spellCaster.getSpell().mutable();
+        modifySpell(mutableSpell);
+        spellArrow.spellResolver = new SpellResolver(new SpellContext(world, mutableSpell.immutable(), entity, new PlayerCaster(entity), shooter.getMainHandItem())).withSilent(true);
+        spellArrow.pierceLeft = mutableSpell.immutable().getBuffsAtIndex(0, shooter, AugmentPierce.INSTANCE);
         return spellArrow;
     }
 
     @Override
     public void appendHoverText(ItemStack pStack, TooltipContext pContext, List<Component> pTooltipComponents, TooltipFlag pTooltipFlag) {
         pTooltipComponents.add(Component.translatable("ars_nouveau.spell_arrow.desc"));
-        Spell spell = new Spell();
+        var spell = new Spell().mutable();
         for (int i = 0; i < numParts; i++) {
             spell.recipe.add(part);
         }
-        pTooltipComponents.add(Component.literal(spell.getDisplayString()));
+        pTooltipComponents.add(Component.literal(spell.immutable().getDisplayString()));
     }
 }

@@ -30,7 +30,7 @@ public class EffectWall extends AbstractEffect {
     public void onResolve(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Vec3 hit = safelyGetHitPos(rayTraceResult);
         EntityWallSpell entityWallSpell = new EntityWallSpell(world, shooter);
-        if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
+        if (spellContext.getCurrentIndex() >= spellContext.getSpell().size())
             return;
 
         SpellContext newContext = spellContext.makeChildContext();

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.item;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.items.ScryCaster;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -46,10 +47,10 @@ public class ScryCasterRenderer extends FixedGeoItemRenderer<ScryCaster>{
     @Override
     public Color getRenderColor(ScryCaster animatable, float partialTick, int packedLight) {
         ParticleColor color = ParticleColor.defaultParticleColor();
-        if (currentItemStack.hasTag())
-            if (currentItemStack.getOrCreateTag().contains("ars_nouveau:caster")) {
-                color = animatable.getSpellCaster(currentItemStack).getColor();
-            }
+        var caster = SpellCasterRegistry.from(currentItemStack);
+        if (caster != null){
+            color = caster.getColor();
+        }
         return Color.ofRGBA(color.getRed(), color.getGreen(), color.getBlue(), 0.85f).brighter(1.2f);
     }
 

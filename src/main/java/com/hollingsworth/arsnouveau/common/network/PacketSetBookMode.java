@@ -1,9 +1,11 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import net.minecraft.nbt.CompoundTag;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -14,27 +16,27 @@ import net.minecraft.world.item.ItemStack;
 public class PacketSetBookMode extends AbstractPacket{
     public static final Type<PacketSetBookMode> TYPE = new Type<>(ArsNouveau.prefix("set_book_mode"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketSetBookMode> CODEC = StreamCodec.ofMember(PacketSetBookMode::toBytes, PacketSetBookMode::new);
-    public CompoundTag tag;
+    public SpellCaster spellCaster;
 
     //Decoder
     public PacketSetBookMode(RegistryFriendlyByteBuf buf) {
-        tag = buf.readNbt();
+        spellCaster = ANCodecs.decode(SpellCaster.CODEC.codec(), buf.readNbt());
     }
 
     //Encoder
     public void toBytes(RegistryFriendlyByteBuf buf) {
-        buf.writeNbt(tag);
+        buf.writeNbt(ANCodecs.encode(SpellCaster.CODEC.codec(), spellCaster));
     }
 
-    public PacketSetBookMode(CompoundTag tag) {
-        this.tag = tag;
+    public PacketSetBookMode(SpellCaster spellCaster) {
+        this.spellCaster = spellCaster;
     }
 
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
         ItemStack stack = StackUtil.getHeldSpellbook(player);
         if (stack.getItem() instanceof SpellBook) {
-            stack.setTag(tag);
+            stack.set(DataComponentRegistry.SPELL_CASTER, spellCaster);
         }
     }
 

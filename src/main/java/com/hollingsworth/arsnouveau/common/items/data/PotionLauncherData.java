@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items.data;
 
-import com.hollingsworth.arsnouveau.api.potion.PotionProviderRegistry;
+import com.hollingsworth.arsnouveau.api.registry.PotionProviderRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;

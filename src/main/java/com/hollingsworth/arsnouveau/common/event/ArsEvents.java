@@ -57,7 +57,7 @@ public class ArsEvents {
     @SubscribeEvent
     public static void spellResolve(SpellResolveEvent.Post e) {
         SpellSensorTile.onSpellResolve(e);
-        if (e.spell.recipe.contains(EffectInvisibility.INSTANCE) && e.rayTraceResult instanceof BlockHitResult blockHitResult) {
+        if (e.spell.unsafeList().contains(EffectInvisibility.INSTANCE) && e.rayTraceResult instanceof BlockHitResult blockHitResult) {
             if (e.world.getBlockEntity(blockHitResult.getBlockPos()) instanceof GhostWeaveTile ghostWeaveTile) {
                 ghostWeaveTile.setVisibility(true);
             }

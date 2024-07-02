@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.item;
 
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
-import com.hollingsworth.arsnouveau.api.util.CasterUtil;
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
+import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -92,7 +92,7 @@ public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
             Vec3 laserPos = playerPos.add(right);
             laserPos = laserPos.add(forward);
             laserPos = laserPos.add(down);
-            ISpellCaster tool = CasterUtil.getCaster(itemStack);
+            SpellCaster tool = SpellCasterRegistry.from(itemStack);
 
 
             if (timeHeld > 0 && timeHeld != 72000 || SpellCrossbow.isCharged(itemStack)) {
@@ -114,8 +114,9 @@ public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
     @Override
     public Color getRenderColor(SpellCrossbow animatable, float partialTick, int packedLight) {
         ParticleColor color = ParticleColor.defaultParticleColor();
-        if (currentItemStack.hasTag()) {
-            color = animatable.getSpellCaster(currentItemStack).getColor();
+        var caster = SpellCasterRegistry.from(currentItemStack);
+        if (caster != null){
+            color = caster.getColor();
         }
         return Color.ofRGBA(color.getRed(), color.getGreen(), color.getBlue(), 0.75f);
     }

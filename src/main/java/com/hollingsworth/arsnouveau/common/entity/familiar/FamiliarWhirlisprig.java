@@ -53,7 +53,7 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
         if (getOwner() != null && getOwner().equals(event.context.getUnwrappedCaster())) {
             int discount = 0;
             Spell spell = event.context.getSpell();
-            for (AbstractSpellPart part : spell.recipe) {
+            for (AbstractSpellPart part : spell.recipe()) {
                 if (SpellSchools.ELEMENTAL_EARTH.isPartOfSchool(part)) {
                     discount += part.getCastingCost() * .5;
                 }

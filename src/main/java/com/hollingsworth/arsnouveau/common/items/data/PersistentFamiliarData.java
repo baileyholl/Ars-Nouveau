@@ -42,6 +42,18 @@ public class PersistentFamiliarData implements NBTComponent<PersistentFamiliarDa
         this(Component.nullToEmpty(""), "", ItemStack.EMPTY);
     }
 
+    public PersistentFamiliarData setName(Component name){
+        return new PersistentFamiliarData(name, color, cosmetic);
+    }
+
+    public PersistentFamiliarData setColor(String color){
+        return new PersistentFamiliarData(name, color, cosmetic);
+    }
+
+    public PersistentFamiliarData setCosmetic(ItemStack cosmetic){
+        return new PersistentFamiliarData(name, color, cosmetic);
+    }
+
     public static PersistentFamiliarData fromTag(Tag tag){
         return CODEC.codec().parse(NbtOps.INSTANCE, tag).getOrThrow();
     }
@@ -56,6 +68,10 @@ public class PersistentFamiliarData implements NBTComponent<PersistentFamiliarDa
         if(name != null){
             pTooltipAdder.accept(name);
         }
+    }
+
+    public Mutable mutable(){
+        return new Mutable(name, color, cosmetic);
     }
 
     public static class Mutable{

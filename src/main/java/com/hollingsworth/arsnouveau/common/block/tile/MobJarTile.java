@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
-import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
+import com.hollingsworth.arsnouveau.api.registry.JarBehaviorRegistry;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.MobJar;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;

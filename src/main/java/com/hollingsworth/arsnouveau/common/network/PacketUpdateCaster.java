@@ -2,9 +2,9 @@ package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
-import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -12,6 +12,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.ArrayList;
 
 public class PacketUpdateCaster extends AbstractPacket{
 
@@ -50,11 +52,11 @@ public class PacketUpdateCaster extends AbstractPacket{
         if(!(stack.getItem() instanceof ICasterTool))
             return;
         if (spellRecipe != null) {
-            ISpellCaster caster = CasterUtil.getCaster(stack);
+            ISpellCaster caster = SpellCasterRegistry.from(stack);
             caster.setCurrentSlot(cast_slot);
             // Update just the recipe, don't overwrite the entire spell.
-            Spell spell = caster.getSpell(cast_slot).setRecipe(spellRecipe.recipe);
-            caster.setSpell(spell, cast_slot);
+            var spell = caster.getSpell(cast_slot).mutable().setRecipe(new ArrayList<>(spellRecipe.unsafeList()));
+            caster.setSpell(spell.immutable(), cast_slot);
             caster.setSpellName(spellName, cast_slot);
 
             Networking.sendToPlayerClient(new PacketUpdateBookGUI(stack), player);

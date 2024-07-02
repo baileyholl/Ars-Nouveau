@@ -26,7 +26,7 @@ public class EffectLinger extends AbstractEffect {
         super.onResolve(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
         Vec3 hit = safelyGetHitPos(rayTraceResult);
         EntityLingeringSpell entityLingeringSpell = new EntityLingeringSpell(world, shooter);
-        if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
+        if (spellContext.getCurrentIndex() >= spellContext.getSpell().size())
             return;
 
         SpellContext newContext = spellContext.makeChildContext();

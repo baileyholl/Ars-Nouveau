@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.renderer.item;
 
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.items.Wand;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -28,8 +29,9 @@ public class WandRenderer extends FixedGeoItemRenderer<Wand> {
     @Override
     public Color getRenderColor(Wand animatable, float partialTick, int packedLight) {
         ParticleColor color = ParticleColor.defaultParticleColor();
-        if (currentItemStack.hasTag()) {
-            color = animatable.getSpellCaster(currentItemStack).getColor();
+        var caster = SpellCasterRegistry.from(currentItemStack);
+        if (caster != null){
+            color = caster.getColor();
         }
         return Color.ofRGBA(color.getRed(), color.getGreen(), color.getBlue(), 0.75f);
     }

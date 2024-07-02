@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.potion.IPotionProvider;
-import com.hollingsworth.arsnouveau.api.potion.PotionProviderRegistry;
+import com.hollingsworth.arsnouveau.api.registry.PotionProviderRegistry;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.items.data.MultiPotionContents;
 import com.hollingsworth.arsnouveau.common.util.PotionUtil;

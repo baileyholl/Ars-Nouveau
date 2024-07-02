@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
-import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.common.spell.casters.ReactiveCaster;
 import com.hollingsworth.arsnouveau.common.util.HolderHelper;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
@@ -47,14 +47,14 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe implements IText
         ItemEnchantments enchantments = input.catalyst().get(DataComponents.ENCHANTMENTS);
         int level1 = enchantments.getLevel(HolderHelper.unwrap(level, EnchantmentRegistry.REACTIVE_ENCHANTMENT));
         ItemStack parchment = getParchment(input.pedestals());
-        return !parchment.isEmpty() && !CasterUtil.getCaster(parchment).getSpell().isEmpty() && level1 > 0 && super.matches(input, level, player);
+        return !parchment.isEmpty() && !SpellCasterRegistry.from(parchment).getSpell().isEmpty() && level1 > 0 && super.matches(input, level, player);
 
     }
 
     @Override
     public ItemStack assemble(ApparatusRecipeInput input, HolderLookup.Provider p_346030_) {
         ItemStack parchment = getParchment(input.pedestals());
-        ISpellCaster caster = CasterUtil.getCaster(parchment);
+        ISpellCaster caster = SpellCasterRegistry.from(parchment);
         ItemStack result = input.catalyst().copy();
         ReactiveCaster reactiveCaster = new ReactiveCaster(result);
         reactiveCaster.setSpell(caster.getSpell());

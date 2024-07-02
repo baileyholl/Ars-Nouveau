@@ -7,7 +7,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
 import org.jetbrains.annotations.NotNull;
@@ -50,12 +50,17 @@ public record MultiPotionContents(int charges, PotionContents contents, int maxU
     }
 
     @Override
-    public void consumeUses(ItemStack stack, int amount, Player player) {
+    public void consumeUses(ItemStack stack, int amount, @Nullable LivingEntity player) {
         stack.set(DataComponentRegistry.MULTI_POTION, withCharges(charges - amount));
     }
 
     @Override
-    public void addUse(ItemStack stack, int amount, @Nullable Player player) {
+    public void addUse(ItemStack stack, int amount, @Nullable LivingEntity player) {
         stack.set(DataComponentRegistry.MULTI_POTION, withCharges(charges + amount));
+    }
+
+    @Override
+    public void setData(PotionContents contents, int usesRemaining, int maxUses, ItemStack stack) {
+        stack.set(DataComponentRegistry.MULTI_POTION, new MultiPotionContents(usesRemaining, contents, maxUses));
     }
 }

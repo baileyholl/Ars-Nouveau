@@ -79,7 +79,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 			if (!itemstack.isEmpty()) {
 				CompoundTag compoundnbt = new CompoundTag();
 				compoundnbt.putInt("Slot", i);
-				itemstack.save(compoundnbt);
+				compoundnbt.put("item", itemstack.save(pRegistries));
 				listnbt.add(compoundnbt);
 			}
 		}
@@ -98,7 +98,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 			CompoundTag compoundnbt = listnbt.getCompound(i);
 			int j = compoundnbt.getInt("Slot");
 			if (j >= 0 && j < craftMatrix.getContainerSize()) {
-				craftMatrix.setItem(j, ItemStack.parseOptional(pRegistries, compoundnbt));
+				craftMatrix.setItem(j, ItemStack.parse(pRegistries, compoundnbt.get("item")).orElse(ItemStack.EMPTY));
 			}
 		}
 		reading = false;

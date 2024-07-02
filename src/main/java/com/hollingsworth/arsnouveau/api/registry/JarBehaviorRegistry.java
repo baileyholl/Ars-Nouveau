@@ -1,5 +1,6 @@
-package com.hollingsworth.arsnouveau.api.mob_jar;
+package com.hollingsworth.arsnouveau.api.registry;
 
+import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 

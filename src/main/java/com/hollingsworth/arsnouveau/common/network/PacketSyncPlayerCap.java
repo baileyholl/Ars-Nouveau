@@ -33,7 +33,7 @@ public class PacketSyncPlayerCap extends AbstractPacket{
         IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerEntity).orElse(new ANPlayerDataCap());
 
         if (cap != null) {
-            cap.deserializeNBT(tag);
+            cap.deserializeNBT(minecraft.level.registryAccess(), tag);
         }
     }
 

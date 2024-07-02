@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.potion.IPotionProvider;
-import com.hollingsworth.arsnouveau.api.potion.PotionProviderRegistry;
+import com.hollingsworth.arsnouveau.api.registry.PotionProviderRegistry;
 import com.hollingsworth.arsnouveau.common.items.FlaskCannon;
 import com.hollingsworth.arsnouveau.common.items.data.PotionLauncherData;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;

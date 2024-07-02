@@ -76,7 +76,7 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
     @Override
     public void setCustomName(@Nullable Component pName) {
         super.setCustomName(pName);
-        persistentData.name = pName;
+        persistentData = persistentData.setName(pName);
         syncTag();
     }
 
@@ -189,7 +189,7 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
         if (!this.entityData.get(COSMETIC).isEmpty() && shouldDrop)
             this.level().addFreshEntity(new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), this.entityData.get(COSMETIC)));
         this.entityData.set(COSMETIC, stack);
-        this.persistentData.cosmetic = stack;
+        this.persistentData = persistentData.setCosmetic(stack);
         syncTag();
     }
 
@@ -273,7 +273,7 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
 
     public void setColor(String color) {
         this.entityData.set(COLOR, color);
-        this.getPersistentFamiliarData().color = color;
+        persistentData = persistentData.setColor(color);
         syncTag();
     }
 

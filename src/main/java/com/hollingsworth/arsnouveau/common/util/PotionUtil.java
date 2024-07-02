@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.util;
 
 import com.hollingsworth.arsnouveau.api.potion.IPotionProvider;
-import com.hollingsworth.arsnouveau.api.potion.PotionProviderRegistry;
+import com.hollingsworth.arsnouveau.api.registry.PotionProviderRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -25,6 +25,9 @@ public class PotionUtil {
     }
 
     public static boolean arePotionContentsEqual(PotionContents pot1, PotionContents pot2){
+        if(pot1 == null || pot2 == null){
+            return false;
+        }
         List<MobEffectInstance> pot1Effects = new ArrayList<>();
         List<MobEffectInstance> pot2Effects = new ArrayList<>();
         pot1.getAllEffects().forEach(pot1Effects::add);

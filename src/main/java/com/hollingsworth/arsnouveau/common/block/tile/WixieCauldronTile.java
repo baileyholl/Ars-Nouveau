@@ -2,7 +2,10 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
-import com.hollingsworth.arsnouveau.api.recipe.*;
+import com.hollingsworth.arsnouveau.api.recipe.CraftingManager;
+import com.hollingsworth.arsnouveau.api.recipe.IRecipeWrapper;
+import com.hollingsworth.arsnouveau.api.recipe.MultiRecipeWrapper;
+import com.hollingsworth.arsnouveau.api.recipe.PotionCraftingManager;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -38,6 +41,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -167,11 +171,10 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         IRecipeWrapper.InstructionsForRecipe instructions = recipeWrapper.canCraft(count, level, worldPosition);
         if(instructions == null)
             return;
-        if (!recipeWrapper.isEmpty() && instructions.recipe().recipeIngredients.get(0) instanceof PotionIngredient potionIngred) {
-
+        if (!recipeWrapper.isEmpty() && instructions.recipe().recipeIngredients.get(0).getCustomIngredient() instanceof DataComponentIngredient custom) {
             Ingredient itemIngred = instructions.recipe().recipeIngredients.get(1);
             List<ItemStack> needed = new ArrayList<>(Arrays.asList(itemIngred.getItems()));
-            PotionContents potionNeeded = PotionUtil.getContents(potionIngred.getStack());
+            PotionContents potionNeeded = custom.getItems().toList().get(0).get(DataComponents.POTION_CONTENTS);
             PotionContents potionOutput = PotionUtil.getContents(instructions.recipe().outputStack);
             boolean foundInput = potionNeeded.is(Potions.WATER) || findNeededPotion(potionNeeded, 300, level, worldPosition) != null;
             boolean foundRoomForOutput = findPotionStorage(level, worldPosition, potionOutput) != null;

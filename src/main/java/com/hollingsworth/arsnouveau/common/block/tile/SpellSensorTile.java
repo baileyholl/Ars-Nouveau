@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
@@ -93,16 +94,16 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
         if(!this.parchment.isEmpty()){
             // Compare spell to parchment
             if(this.parchment.getItem() instanceof SpellParchment spellParchment){
-                Spell listeningSpell = spellParchment.getSpellCaster(parchment.getOrCreateTag()).getSpell();
-                List<AbstractSpellPart> spellParts = listeningSpell.recipe.stream().filter(Objects::nonNull).toList();
-                List<AbstractSpellPart> spellParts1 = spell.recipe.stream().filter(Objects::nonNull).toList();
+                Spell listeningSpell = SpellCasterRegistry.from(parchment).getSpell();
+                List<AbstractSpellPart> spellParts = listeningSpell.unsafeList().stream().filter(Objects::nonNull).toList();
+                List<AbstractSpellPart> spellParts1 = spell.unsafeList().stream().filter(Objects::nonNull).toList();
                 if(!spellParts.equals(spellParts1)){
                     return;
                 }
             }
             str = 15;
         }else{
-            str = spell.recipe.size();
+            str = spell.size();
         }
         outputDuration = 40;
         this.outputStrength = str;

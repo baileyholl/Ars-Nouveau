@@ -29,9 +29,9 @@ public class SoundScreen extends BaseBook {
 
     public SoundScreen(ConfiguredSpellSound configuredSpellSound, int slot, InteractionHand stackHand) {
         super();
-        volume = configuredSpellSound.volume * 100;
-        pitch = configuredSpellSound.pitch * 100;
-        selectedSound = configuredSpellSound.sound;
+        volume = configuredSpellSound.getVolume() * 100;
+        pitch = configuredSpellSound.getPitch() * 100;
+        selectedSound = configuredSpellSound.getSound();
         casterSlot = slot;
         this.stackHand = stackHand;
     }

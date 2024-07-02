@@ -56,7 +56,7 @@ public class SpellResolver implements Cloneable {
 
     public boolean canCast(LivingEntity entity) {
         // Validate the spell
-        List<SpellValidationError> validationErrors = spellValidator.validate(spell.recipe);
+        List<SpellValidationError> validationErrors = spellValidator.validate(spell.unsafeList());
 
         if (validationErrors.isEmpty()) {
             // Validation successful. We can check the player's mana now.

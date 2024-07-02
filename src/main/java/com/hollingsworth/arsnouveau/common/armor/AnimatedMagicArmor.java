@@ -81,7 +81,7 @@ public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDy
         IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(stack);
         if (perkHolder == null)
             return;
-        for (PerkInstance instance : perkHolder.getPerkInstances()) {
+        for (PerkInstance instance : perkHolder.getPerkInstances(stack)) {
             if (instance.getPerk() instanceof ITickablePerk tickablePerk) {
                 tickablePerk.tick(stack, world, player, instance);
             }

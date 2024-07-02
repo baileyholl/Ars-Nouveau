@@ -25,7 +25,6 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -52,11 +51,6 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
         ISpellCaster caster = getSpellCaster(stack);
         Spell spell = caster.getSpell();
         return caster.castSpell(worldIn, playerIn, handIn, Component.empty(), spell);
-    }
-
-    @Override
-    public @NotNull ISpellCaster getSpellCaster(ItemStack stack) {
-        return new TomeSpellCaster(stack);
     }
 
     @Override
