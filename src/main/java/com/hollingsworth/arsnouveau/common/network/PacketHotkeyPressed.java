@@ -39,7 +39,7 @@ public class PacketHotkeyPressed extends AbstractPacket{
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
         // Returns the hand holding an item with slots > 1, this only checks for NEXT/PREVIOUS slots for hotkeys.
-        InteractionHand hand = StackUtil.getHeldCasterTool(player, (tool) -> tool.getSpellCaster().getMaxSlots() > 1);
+        InteractionHand hand = StackUtil.getHeldCasterTool(player, (tool) -> tool.getMaxSlots() > 1);
         if (hand == null)
             return;
         ItemStack stack = player.getItemInHand(hand);

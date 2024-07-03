@@ -483,7 +483,7 @@ public class InfinityGuiSpellBook extends BaseBook {
         this.selectedSpellSlot = this.selected_slot.slotNum;
         updateCraftingSlots(this.selectedSpellSlot);
         spell_name.setValue(SpellCasterRegistry.from(bookStack).getSpellName(selectedSpellSlot));
-        this.spell = SpellCasterRegistry.from(bookStack).getSpell(selectedSpellSlot).recipe;
+        this.spell = new ArrayList<>(SpellCasterRegistry.from(bookStack).getSpell(selectedSpellSlot).unsafeList());
         updateWindowOffset(0); //includes validation
     }
 
@@ -507,11 +507,11 @@ public class InfinityGuiSpellBook extends BaseBook {
 
     public void updateCraftingSlots(int bookSlot) {
         //Crafting slots
-        List<AbstractSpellPart> recipe = SpellCasterRegistry.from(bookStack).getSpell(bookSlot).recipe;
+        var recipe = SpellCasterRegistry.from(bookStack).getSpell(bookSlot);
         for (int i = 0; i < craftingCells.size(); i++) {
             InfinityCraftingButton slot = craftingCells.get(i);
             slot.clear();
-            if (recipe != null && i < recipe.size()) {
+            if (i < recipe.size()) {
                 slot.setAbstractSpellPart(recipe.get(i));
             }
         }

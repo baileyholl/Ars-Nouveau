@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.perk.Perk;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 public class RepairingPerk extends Perk {
@@ -16,7 +16,7 @@ public class RepairingPerk extends Perk {
         super(key);
     }
 
-    public static void attemptRepair(ItemStack stack, Player entity){
+    public static void attemptRepair(ItemStack stack, LivingEntity entity){
         if(entity.level.getGameTime() % 200 != 0 || stack.getDamageValue() <= 0)
             return;
         double repairLevel = PerkUtil.countForPerk(RepairingPerk.INSTANCE, entity);

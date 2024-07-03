@@ -139,12 +139,7 @@ public class StoredItemStack {
 	@Override
 	public int hashCode() {
 		if(hash == 0) {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((stack == null) ? 0 : stack.getItem().hashCode());
-			result = prime * result + ((stack == null || !stack.hasTag()) ? 0 : stack.getTag().hashCode());
-			hash = result;
-			return result;
+			hash = ItemStack.hashItemAndComponents(stack);
 		}
 		return hash;
 	}

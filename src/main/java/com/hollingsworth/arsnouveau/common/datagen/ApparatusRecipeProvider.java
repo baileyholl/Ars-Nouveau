@@ -854,11 +854,13 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
         reactiveIngredients.add(Ingredient.of(ItemsRegistry.SPELL_PARCHMENT.get()));
         reactiveIngredients.add(Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS));
         reactiveIngredients.add(RecipeDatagen.SOURCE_GEM_BLOCK);
-        addRecipe(new ReactiveEnchantmentRecipe(reactiveIngredients, 3000));
+        addRecipe(new ApparatusRecipeBuilder.RecipeWrapper<>(ArsNouveau.prefix("reactive"),
+                new ReactiveEnchantmentRecipe(reactiveIngredients, 3000),
+                ReactiveEnchantmentRecipe.Serializer.CODEC));
 
         List<Ingredient> spellWriteList = new ArrayList<>();
         spellWriteList.add(Ingredient.of(ItemsRegistry.SPELL_PARCHMENT.get()));
-        addRecipe(new SpellWriteRecipe(spellWriteList));
+        addRecipe(new ApparatusRecipeBuilder.RecipeWrapper<>(ArsNouveau.prefix("spell_write"), new SpellWriteRecipe(spellWriteList, 3000), SpellWriteRecipe.Serializer.CODEC));
 
         addRecipe(builder()
                 .withPedestalItem(4, Ingredient.of(Tags.Items.GEMS_DIAMOND))
@@ -904,8 +906,12 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .withPedestalItem(2, ItemsRegistry.AIR_ESSENCE)
                 .build());
 
-        addRecipe(new ArmorUpgradeRecipe(List.of(Ingredient.of(Tags.Items.RODS_BLAZE), Ingredient.of(Tags.Items.RODS_BLAZE)), 2500, 1));
-        addRecipe(new ArmorUpgradeRecipe(List.of(Ingredient.of(Tags.Items.ENDER_PEARLS), Ingredient.of(Tags.Items.ENDER_PEARLS), Ingredient.of(Items.CHORUS_FRUIT)), 5000, 2));
+        addRecipe(new ApparatusRecipeBuilder.RecipeWrapper<>(ArsNouveau.prefix("first_armor_upgrade"),
+                new ArmorUpgradeRecipe(List.of(Ingredient.of(Tags.Items.RODS_BLAZE), Ingredient.of(Tags.Items.RODS_BLAZE)), 2500, 1),
+                ArmorUpgradeRecipe.Serializer.CODEC));
+        addRecipe(new ApparatusRecipeBuilder.RecipeWrapper<>(ArsNouveau.prefix("second_armor_upgrade"),
+                new ArmorUpgradeRecipe(List.of(Ingredient.of(Tags.Items.ENDER_PEARLS), Ingredient.of(Tags.Items.ENDER_PEARLS), Ingredient.of(Items.CHORUS_FRUIT)), 5000, 2),
+                ArmorUpgradeRecipe.Serializer.CODEC));
 
 
         addRecipe(builder().withResult(getPerkItem(StarbunclePerk.INSTANCE.getRegistryName()))

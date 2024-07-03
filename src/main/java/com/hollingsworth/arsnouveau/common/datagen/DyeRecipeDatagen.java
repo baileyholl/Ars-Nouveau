@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.gson.JsonElement;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.DyeRecipe;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
@@ -10,8 +9,6 @@ import net.minecraft.world.level.ItemLike;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
 public class DyeRecipeDatagen extends SimpleDataProvider {
     List<FileObj> files = new ArrayList<>();
@@ -48,8 +45,10 @@ public class DyeRecipeDatagen extends SimpleDataProvider {
     }
 
     public void addDyeRecipe(ItemLike inputItem){
-        JsonElement dyeRecipe = DyeRecipe.asRecipe(inputItem.asItem());
-        add(new FileObj(output.resolve("data/ars_nouveau/recipes/dye_" + getRegistryName(inputItem.asItem()).getPath() + ".json"), dyeRecipe));
+        //todo: restore dye serializer
+//        var dyeRecipe = new DyeRecipe("", CraftingBookCategory.MISC, inputItem, List.of())
+//        RecipeRegistry.DYE_RECIPE.get().codec().codec().encode(new DyeRecipe())
+//        add(new FileObj(output.resolve("data/ars_nouveau/recipes/dye_" + getRegistryName(inputItem.asItem()).getPath() + ".json"), DyeRecipe.));
     }
 
     @Override

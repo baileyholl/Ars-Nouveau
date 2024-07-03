@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.renderer.item.MobJarItemRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
@@ -73,10 +74,10 @@ public class MobJarItem extends BlockItem implements GeoItem {
     }
 
     public static Entity fromItem(ItemStack stack, Level level){
-        if(!stack.hasTag())
+        var jarData = stack.get(DataComponentRegistry.MOB_JAR);
+        if(jarData == null)
             return null;
-        CompoundTag blockTag = stack.getTag().getCompound("BlockEntityTag");
-        CompoundTag entityTag = blockTag.getCompound("entityTag");
+        CompoundTag entityTag = jarData.entityTag();
         if(entityTag.isEmpty())
             return null;
         return MobJarTile.loadEntityFromTag(level, entityTag);

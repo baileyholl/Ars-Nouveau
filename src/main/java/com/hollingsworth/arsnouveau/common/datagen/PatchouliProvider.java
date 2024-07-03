@@ -747,12 +747,12 @@ public class PatchouliProvider extends SimpleDataProvider{
     }
 
     public void addEnchantmentPage(ResourceKey<Enchantment> enchantment) {
-        PatchouliBuilder builder = new PatchouliBuilder(ENCHANTMENTS, enchantment.getDescriptionId())
-                .withIcon(getRegistryName(Items.ENCHANTED_BOOK).toString());
-        for (int i = enchantment.getMinLevel(); i <= enchantment.getMaxLevel(); i++) {
-            builder.withPage(new EnchantingPage("ars_nouveau:" + enchantment.location().getPath() + "_" + i));
-        }
-        this.pages.add(new PatchouliPage(builder, this.output.resolve("assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/" + enchantment.location().getPath() + ".json")));
+//        PatchouliBuilder builder = new PatchouliBuilder(ENCHANTMENTS, enchantment.getDescriptionId())
+//                .withIcon(getRegistryName(Items.ENCHANTED_BOOK).toString());
+//        for (int i = enchantment.getMinLevel(); i <= enchantment.getMaxLevel(); i++) {
+//            builder.withPage(new EnchantingPage("ars_nouveau:" + enchantment.location().getPath() + "_" + i));
+//        }
+//        this.pages.add(new PatchouliPage(builder, this.output.resolve("assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/" + enchantment.location().getPath() + ".json")));
     }
 
     public void addPerkPage(IPerk perk){

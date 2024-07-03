@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.entity.statemachine.SimpleStateMachin
 import com.hollingsworth.arsnouveau.common.entity.statemachine.starbuncle.DecideStarbyActionState;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.starbuncle.StarbyState;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
+import com.hollingsworth.arsnouveau.common.util.ItemUtil;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
@@ -188,7 +189,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
             ItemStack handlerStack = handler.getStackInSlot(i);
             if (handlerStack.isEmpty()) {
                 return handler.getSlotLimit(i);
-            } else if (ItemHandlerHelper.canItemStacksStack(handler.getStackInSlot(i), stack)) {
+            } else if (ItemUtil.canStack(handler.getStackInSlot(i), stack)) {
                 int originalCount = stack.getCount();
                 ItemStack simStack = handler.insertItem(i, stack, true);
                 int maxRoom = originalCount - simStack.getCount();

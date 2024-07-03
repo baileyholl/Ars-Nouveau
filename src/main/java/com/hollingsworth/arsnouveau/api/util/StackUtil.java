@@ -3,6 +3,8 @@ package com.hollingsworth.arsnouveau.api.util;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.item.IRadialProvider;
 import com.hollingsworth.arsnouveau.api.item.ISpellHotkeyListener;
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
+import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -31,14 +33,17 @@ public class StackUtil {
     }
 
     public static @Nullable InteractionHand getHeldCasterTool(Player player) {
-        InteractionHand casterTool = player.getMainHandItem().getItem() instanceof ICasterTool ? InteractionHand.MAIN_HAND : null;
-        return casterTool == null ? (player.getOffhandItem().getItem() instanceof ICasterTool ? InteractionHand.OFF_HAND : null) : casterTool;
+        return getHeldCasterTool(player, (tool) -> true);
     }
 
-    public static @Nullable InteractionHand getHeldCasterTool(Player player, Predicate<ICasterTool> filter){
-        if(player.getMainHandItem().getItem() instanceof ICasterTool casterTool && filter.test(casterTool))
+    public static @Nullable InteractionHand getHeldCasterTool(Player player, Predicate<SpellCaster> filter){
+        var mainStack = player.getMainHandItem();
+        var offStack = player.getOffhandItem();
+        var mainCaster = SpellCasterRegistry.from(mainStack);
+        var offCaster = SpellCasterRegistry.from(offStack);
+        if(mainCaster != null && filter.test(mainCaster))
             return InteractionHand.MAIN_HAND;
-        if(player.getOffhandItem().getItem() instanceof ICasterTool casterTool && filter.test(casterTool))
+        if(offCaster != null && filter.test(offCaster))
             return InteractionHand.OFF_HAND;
         return null;
     }

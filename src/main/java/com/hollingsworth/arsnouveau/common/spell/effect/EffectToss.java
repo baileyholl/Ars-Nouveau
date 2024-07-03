@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.util.ItemUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -73,7 +74,7 @@ public class EffectToss extends AbstractEffect {
                 ItemStack stackInTarget = targetInv.getStackInSlot(i);
                 if(stackInTarget.isEmpty()){
                     return targetInv.getSlotLimit(i);
-                }else if (ItemHandlerHelper.canItemStacksStack(stackInTarget, stackToExtract)) {
+                }else if (ItemUtil.canStack(stackInTarget, stackToExtract)) {
                     int origSize = stackToExtract.getCount();
                     ItemStack simReturn = targetInv.insertItem(i, stackToExtract, true);
                     int maxRoom = origSize - simReturn.getCount();

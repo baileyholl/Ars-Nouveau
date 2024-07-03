@@ -1,11 +1,12 @@
 package com.hollingsworth.arsnouveau.common.armor;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
-import com.hollingsworth.arsnouveau.api.perk.*;
+import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
+import com.hollingsworth.arsnouveau.api.perk.ITickablePerk;
+import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
+import com.hollingsworth.arsnouveau.api.perk.PerkInstance;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.renderer.item.ArmorRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericModel;
@@ -22,10 +23,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
@@ -42,7 +43,6 @@ import software.bernie.geckolib.renderer.GeoArmorRenderer;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Consumer;
 
 public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDyeable, GeoItem, IVariantColorProvider<ItemStack> {
@@ -74,43 +74,36 @@ public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDy
     }
 
     @Override
-    public void onArmorTick(ItemStack stack, Level world, Player player) {
-        if (world.isClientSide())
-            return;
-        RepairingPerk.attemptRepair(stack, player);
-        IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(stack);
-        if (perkHolder == null)
-            return;
-        for (PerkInstance instance : perkHolder.getPerkInstances(stack)) {
-            if (instance.getPerk() instanceof ITickablePerk tickablePerk) {
-                tickablePerk.tick(stack, world, player, instance);
+    public void inventoryTick(ItemStack stack, Level world, Entity player, int slotId, boolean pIsSelected) {
+        super.inventoryTick(stack, world, player, slotId, pIsSelected);
+        if(slotId >= Inventory.INVENTORY_SIZE && slotId < Inventory.INVENTORY_SIZE + 4){
+            if (world.isClientSide())
+                return;
+            if(player instanceof LivingEntity livingEntity) {
+                RepairingPerk.attemptRepair(stack, livingEntity);
+                IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(stack);
+                if (perkHolder == null)
+                    return;
+                for (PerkInstance instance : perkHolder.getPerkInstances(stack)) {
+                    if (instance.getPerk() instanceof ITickablePerk tickablePerk) {
+                        tickablePerk.tick(stack, world, livingEntity, instance);
+                    }
+                }
             }
         }
     }
 
     @Override
     public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
-        return super.getDefaultAttributeModifiers(stack);
-    }
+        var modifiers = super.getDefaultAttributeModifiers(stack);
+        IPerkHolder perkHolder = PerkUtil.getPerkHolder(stack);
+        if(perkHolder == null)
+            return modifiers;
+        modifiers.withModifierAdded(PerkAttributes.MAX_MANA, new AttributeModifier(ArsNouveau.prefix("max_mana_armor"), 30 * (perkHolder.getTier() + 1), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.bySlot(this.type.getSlot()));
 
-    @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack) {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> attributes = new ImmutableMultimap.Builder<>();
-        attributes.putAll(super.getDefaultAttributeModifiers(pEquipmentSlot));
-        if (this.type.getSlot() == pEquipmentSlot) {
-            UUID uuid = ARMOR_MODIFIER_UUID_PER_TYPE.get(type);
-            IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(stack);
-            if (perkHolder != null) {
-                attributes.put(PerkAttributes.MAX_MANA.get(), new AttributeModifier(uuid, "max_mana_armor", 30 * (perkHolder.getTier() + 1), AttributeModifier.Operation.ADD_VALUE));
-                attributes.put(PerkAttributes.MANA_REGEN_BONUS.get(), new AttributeModifier(uuid, "mana_regen_armor", perkHolder.getTier() + 1, AttributeModifier.Operation.ADD_VALUE));
-                for (PerkInstance perkInstance : perkHolder.getPerkInstances()) {
-                    IPerk perk = perkInstance.getPerk();
-                    attributes.putAll(perk.getModifiers(this.type.getSlot(), stack, perkInstance.getSlot().value()));
-                }
+        modifiers.withModifierAdded(PerkAttributes.MANA_REGEN_BONUS, new AttributeModifier(ArsNouveau.prefix("mana_regen_armor"), perkHolder.getTier() + 1, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.bySlot(this.type.getSlot()));
 
-            }
-        }
-        return attributes.build();
+        return modifiers;
     }
 
     @Override
@@ -126,13 +119,11 @@ public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDy
 
     @Override
     public void onDye(ItemStack stack, DyeColor dyeColor) {
-
         var data = stack.get(DataComponentRegistry.ARMOR_PERKS);
         if(data == null){
             return;
         }
         stack.set(DataComponentRegistry.ARMOR_PERKS, data.setColor(dyeColor.getName()));
-
     }
 
     @Override

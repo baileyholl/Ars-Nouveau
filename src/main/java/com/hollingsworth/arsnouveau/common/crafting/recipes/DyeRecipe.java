@@ -40,4 +40,5 @@ public class DyeRecipe extends ShapelessRecipe {
     public RecipeSerializer<?> getSerializer() {
         return RecipeRegistry.DYE_RECIPE.get();
     }
+
 }

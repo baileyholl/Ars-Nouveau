@@ -22,7 +22,6 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.event.EventHooks;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -132,7 +131,9 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 		}
 
 		crafted.onCraftedBy(player.level, player, amountCrafted);
-		EventHooks.firePlayerCraftingEvent(player, ItemHandlerHelper.copyStackWithSize(crafted, amountCrafted), craftMatrix);
+		var copyStack = crafted.copy();
+		copyStack.setCount(amountCrafted);
+		EventHooks.firePlayerCraftingEvent(player, copyStack, craftMatrix);
 	}
 
 	public void craft(Player thePlayer, @Nullable String tab) {

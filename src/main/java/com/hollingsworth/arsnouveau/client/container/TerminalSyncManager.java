@@ -192,11 +192,13 @@ public class TerminalSyncManager {
 	}
 
 	public static void writeItemId(FriendlyByteBuf buf, Item item) {
-		buf.writeId(BuiltInRegistries.ITEM, item);
+		var key = item.builtInRegistryHolder().key().location();
+		buf.writeResourceLocation(key);
 	}
 
 	public static Item readItemId(FriendlyByteBuf buf) {
-		return buf.readById(BuiltInRegistries.ITEM);
+		var loc = buf.readResourceLocation();
+		return BuiltInRegistries.ITEM.get(loc);
 	}
 
 	public static CompoundTag getSyncTag(ItemStack stack) {

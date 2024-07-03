@@ -4,10 +4,10 @@ import com.google.common.collect.Lists;
 import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
 import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
 import net.minecraft.client.RecipeBookCategories;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
-import net.minecraft.recipebook.ServerPlaceRecipe;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -15,9 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeInput;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -239,66 +237,67 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 
 	@Override
 	public void handlePlacement(boolean pPlaceAll, RecipeHolder<?> pRecipe, ServerPlayer pPlayer) {
-		(new ServerPlaceRecipe<RecipeInput, Recipe>(this) {
-			{
-				stackedContents = new TerminalRecipeItemHelper();
-			}
-
-
-			@Override
-			public void addItemToSlot(Object p_346420_, int pSlot, int pMaxAmount, int p_135418_, int p_135419_) {
-				Slot slot = this.menu.getSlot(pSlot);
-				ItemStack itemstack = StackedContents.fromStackingIndex((Integer) pIngredients.next());
-				if (!itemstack.isEmpty()) {
-					for(int i = 0; i < pMaxAmount; ++i) {
-						this.moveItemToGrid(slot, itemstack);
-					}
-				}
-			}
-
-			@Override
-			protected void moveItemToGrid(Slot slotToFill, ItemStack ingredientIn) {
-				int i = this.inventory.findSlotMatchingUnusedItem(ingredientIn);
-				if (i != -1) {
-					ItemStack itemstack = this.inventory.getItem(i).copy();
-					if (!itemstack.isEmpty()) {
-						if (itemstack.getCount() > 1) {
-							this.inventory.removeItem(i, 1);
-						} else {
-							this.inventory.removeItemNoUpdate(i);
-						}
-
-						itemstack.setCount(1);
-						if (slotToFill.getItem().isEmpty()) {
-							slotToFill.set(itemstack);
-						} else {
-							slotToFill.getItem().grow(1);
-						}
-
-					}
-				} else if(te != null) {
-					StoredItemStack st = te.pullStack(new StoredItemStack(ingredientIn), 1, selectedTab);
-					if(st != null) {
-						if (slotToFill.getItem().isEmpty()) {
-							slotToFill.set(st.getActualStack());
-						} else {
-							slotToFill.getItem().grow(1);
-						}
-					}
-				}
-			}
-
-			@Override
-			protected void clearGrid() {
-				((CraftingLecternTile) te).clear(selectedTab);
-				this.menu.clearCraftingContent();
-			}
-		}).recipeClicked(pPlaceAll, pRecipe, pPlayer);
+		//todo: reenable recipe placement
+//		(new ServerPlaceRecipe<RecipeInput, Recipe>(this) {
+//			{
+//				stackedContents = new TerminalRecipeItemHelper();
+//			}
+//
+//
+//			@Override
+//			public void addItemToSlot(Object p_346420_, int pSlot, int pMaxAmount, int p_135418_, int p_135419_) {
+//				Slot slot = this.menu.getSlot(pSlot);
+//				ItemStack itemstack = StackedContents.fromStackingIndex((Integer) pIngredients.next());
+//				if (!itemstack.isEmpty()) {
+//					for(int i = 0; i < pMaxAmount; ++i) {
+//						this.moveItemToGrid(slot, itemstack);
+//					}
+//				}
+//			}
+//
+//			@Override
+//			protected void moveItemToGrid(Slot slotToFill, ItemStack ingredientIn) {
+//				int i = this.inventory.findSlotMatchingUnusedItem(ingredientIn);
+//				if (i != -1) {
+//					ItemStack itemstack = this.inventory.getItem(i).copy();
+//					if (!itemstack.isEmpty()) {
+//						if (itemstack.getCount() > 1) {
+//							this.inventory.removeItem(i, 1);
+//						} else {
+//							this.inventory.removeItemNoUpdate(i);
+//						}
+//
+//						itemstack.setCount(1);
+//						if (slotToFill.getItem().isEmpty()) {
+//							slotToFill.set(itemstack);
+//						} else {
+//							slotToFill.getItem().grow(1);
+//						}
+//
+//					}
+//				} else if(te != null) {
+//					StoredItemStack st = te.pullStack(new StoredItemStack(ingredientIn), 1, selectedTab);
+//					if(st != null) {
+//						if (slotToFill.getItem().isEmpty()) {
+//							slotToFill.set(st.getActualStack());
+//						} else {
+//							slotToFill.getItem().grow(1);
+//						}
+//					}
+//				}
+//			}
+//
+//			@Override
+//			protected void clearGrid() {
+//				((CraftingLecternTile) te).clear(selectedTab);
+//				this.menu.clearCraftingContent();
+//			}
+//		}).recipeClicked(pPlaceAll, pRecipe, pPlayer);
 	}
 
 	@Override
-	public void receive(CompoundTag message) {
-		super.receive(message);
+	public void receive(HolderLookup.Provider reg, CompoundTag message) {
+		super.receive(reg, message);
 		if(message.contains("i")) {
 			ItemStack[][] stacks = new ItemStack[9][];
 			ListTag list = message.getList("i", 10);
@@ -309,7 +308,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 				stacks[slot] = new ItemStack[l];
 				for (int j = 0;j < l;j++) {
 					CompoundTag tag = nbttagcompound.getCompound("i" + j);
-					stacks[slot][j] = ItemStack.parseOptional(tag);
+					stacks[slot][j] = ItemStack.parseOptional(reg, tag);
 				}
 			}
 			((CraftingLecternTile) te).transferToGrid(pinv.player, stacks, selectedTab);

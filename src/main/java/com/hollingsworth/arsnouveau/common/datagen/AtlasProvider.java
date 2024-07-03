@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.atlas.sources.SingleFile;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.ChestType;
@@ -15,6 +16,7 @@ import net.neoforged.neoforge.common.data.SpriteSourceProvider;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 public class AtlasProvider extends SpriteSourceProvider {
     public static final Map<Block, EnumMap<ChestType, Material>> MATERIALS;
@@ -25,8 +27,8 @@ public class AtlasProvider extends SpriteSourceProvider {
         builder.put(BlockRegistry.ARCHWOOD_CHEST.get(), chestMaterial("archwood"));
         MATERIALS = builder.build();
     }
-    public AtlasProvider(PackOutput output, ExistingFileHelper helper) {
-        super(output, helper, ArsNouveau.MODID);
+    public AtlasProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, ExistingFileHelper helper) {
+        super(output, provider, ArsNouveau.MODID, helper);
     }
 
     private static EnumMap<ChestType, Material> chestMaterial(String type) {

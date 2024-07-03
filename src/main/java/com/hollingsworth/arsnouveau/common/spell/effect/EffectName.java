@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.api.item.inv.InteractType;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.item.inv.SlotReference;
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
@@ -66,7 +67,7 @@ public class EffectName extends AbstractEffect {
         if (newName == null && isRealPlayer(shooter) && shooter instanceof Player player) {
             ItemStack stack = StackUtil.getHeldCasterToolOrEmpty(player);
             if (stack != ItemStack.EMPTY) {
-                ISpellCaster caster = SpellCasterRegistry.from(stack);
+                SpellCaster caster = SpellCasterRegistry.from(stack);
                 newName = Component.literal(caster.getSpellName());
             }
         }
@@ -86,7 +87,7 @@ public class EffectName extends AbstractEffect {
             return;
         }
         if(blockEntity instanceof BaseContainerBlockEntity nameable){
-            nameable.setCustomName(name);
+            nameable.name = name;
             world.sendBlockUpdated(pos, state, state, 3);
             nameable.setChanged();
             return;

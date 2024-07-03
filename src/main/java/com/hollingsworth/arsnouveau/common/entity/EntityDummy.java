@@ -8,6 +8,7 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -31,6 +32,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.PlayerTeam;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -191,7 +193,7 @@ public class EntityDummy extends PathfinderMob implements ISummon {
     @OnlyIn(Dist.CLIENT)
     public boolean isSlim() {
         if (this.playerInfo != null) {
-            return playerInfo.getModelName().equals("slim");
+            return playerInfo.getSkin().model() == PlayerSkin.Model.SLIM;
         }else return false;
     }
 

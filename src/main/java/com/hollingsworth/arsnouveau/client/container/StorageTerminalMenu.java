@@ -1,20 +1,23 @@
 package com.hollingsworth.arsnouveau.client.container;
 
 import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
-import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
 import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.RecipeBookMenu;
+import net.minecraft.world.inventory.RecipeBookType;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.ArrayList;
@@ -241,7 +244,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 		if(onPacket != null)onPacket.run();
 	}
 
-	public void receive(CompoundTag message) {
+	public void receive(HolderLookup.Provider reg, CompoundTag message) {
 		if(pinv.player.isSpectator())return;
 		if(message.contains("search")) {
 			te.setLastSearch(message.getString("search"));

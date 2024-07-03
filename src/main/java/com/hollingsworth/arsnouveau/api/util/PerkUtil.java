@@ -65,9 +65,9 @@ public class PerkUtil {
         return perkInstances;
     }
 
-    public static int countForPerk(IPerk perk, LivingEntity player){
+    public static int countForPerk(IPerk perk, LivingEntity entity){
         int maxCount = 0;
-        for(ItemStack stack : player.getArmorSlots()){
+        for(ItemStack stack : entity.getArmorSlots()){
             var data = stack.get(DataComponentRegistry.ARMOR_PERKS);
             if(data == null){
                 continue;

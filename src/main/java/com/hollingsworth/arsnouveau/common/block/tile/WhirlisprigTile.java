@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import com.hollingsworth.arsnouveau.setup.config.Config;
@@ -171,7 +172,7 @@ public class WhirlisprigTile extends SummoningTile implements GeoBlockEntity {
             return 2;
 
 
-        if (state.getBlock() instanceof StemGrownBlock)
+        if (state.is(BlockTagProvider.HARVEST_STEMS))
             return 2;
 
         if (state.is(BlockTags.LOGS))

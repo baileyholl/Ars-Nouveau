@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
+import com.hollingsworth.arsnouveau.common.items.data.BlockFillContents;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -125,9 +126,7 @@ public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip, flagIn);
-        if (stack.getTag() == null)
-            return;
-        int mana = stack.getTag().getCompound("BlockEntityTag").getInt("source");
+        int mana = BlockFillContents.get(stack);
         tooltip.add(Component.literal((mana * 100) / 10000 + "% full"));
     }
 
