@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.api.item;
 import com.hollingsworth.arsnouveau.api.client.IDisplayMana;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCasterProvider;
+import com.hollingsworth.arsnouveau.api.spell.ItemCasterProvider;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
@@ -29,7 +29,7 @@ import java.util.List;
  * An interface for caster items that provides default behavior for scribing, displaying mana, and tooltips
  */
 // TODO 1.20: Split ISpellHotkeyListener out
-public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyListener, ISpellCasterProvider {
+public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyListener, ItemCasterProvider {
     @Override
     default boolean onScribe(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack tableStack) {
         ItemStack heldStack = player.getItemInHand(handIn);

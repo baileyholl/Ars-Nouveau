@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenuSlot;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ScryersOculusTile;
-import com.hollingsworth.arsnouveau.common.items.data.ScryData;
+import com.hollingsworth.arsnouveau.common.items.data.ScryPosData;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketMountCamera;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -74,7 +74,7 @@ public class ScryersOculus extends TickableModBlock {
             return;
         }
         Minecraft.getInstance().setScreen(new GuiRadialMenu<>(new RadialMenu<>((int scroll) -> {
-            ScryData data = stackList.get(scroll).get(DataComponentRegistry.SCRY_DATA);
+            ScryPosData data = stackList.get(scroll).get(DataComponentRegistry.SCRY_DATA);
             if (data == null || data.pos() == null) {
                 PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.scryers_eye.no_pos"));
                 return;

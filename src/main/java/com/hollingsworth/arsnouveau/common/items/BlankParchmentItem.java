@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.items;
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
 import com.hollingsworth.arsnouveau.api.item.IScribeable;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
-import com.hollingsworth.arsnouveau.common.items.data.ScryData;
+import com.hollingsworth.arsnouveau.common.items.data.ScryPosData;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
@@ -31,7 +31,7 @@ public class BlankParchmentItem extends ModItem implements IScribeable {
             return super.useOn(pContext);
         if (pContext.getLevel().getBlockEntity(pContext.getClickedPos()) instanceof ICameraMountable) {
             ItemStack stack = new ItemStack(ItemsRegistry.SCRYER_SCROLL.get());
-            stack.set(DataComponentRegistry.SCRY_DATA, new ScryData(pContext.getClickedPos()));
+            stack.set(DataComponentRegistry.SCRY_DATA, new ScryPosData(pContext.getClickedPos()));
             if (!pContext.getPlayer().addItem(stack)) {
                 pContext.getLevel().addFreshEntity(new ItemEntity(pContext.getLevel(), pContext.getPlayer().getX(), pContext.getPlayer().getY(), pContext.getPlayer().getZ(), stack));
             }

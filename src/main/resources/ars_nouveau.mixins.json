@@ -17,7 +17,6 @@
     "light.LightEntityMixin"
   ],
   "mixins": [
-    "CrossbowMixin",
     "DamageSourceMixin",
     "LivingAccessor",
     "MobAccessor",

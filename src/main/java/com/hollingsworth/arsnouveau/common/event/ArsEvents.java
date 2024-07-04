@@ -12,9 +12,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -82,14 +80,14 @@ public class ArsEvents {
     public static void modifyItemAttributes(ItemAttributeModifierEvent event) {
         ItemStack itemStack = event.getItemStack();
         if (itemStack.isEnchanted()) {
-            if (itemStack.getItem() instanceof ArmorItem armor) {
-                if (!(event.getSlotType() == armor.getEquipmentSlot())) {
-                    return;
-                }
-            } else if (event.getSlotType() != EquipmentSlot.MAINHAND && event.getSlotType() != EquipmentSlot.OFFHAND) {
-                return;
-            } else if (itemStack.getItem() instanceof ShieldItem && !(event.getSlotType() == EquipmentSlot.OFFHAND))
-                return;
+//            if (itemStack.getItem() instanceof ArmorItem armor) {
+//                if (!(event.getSlotType() == armor.getEquipmentSlot())) {
+//                    return;
+//                }
+//            } else if (event.getSlotType() != EquipmentSlot.MAINHAND && event.getSlotType() != EquipmentSlot.OFFHAND) {
+//                return;
+//            } else if (itemStack.getItem() instanceof ShieldItem && !(event.getSlotType() == EquipmentSlot.OFFHAND))
+//                return;
             //TODO: reimplement manaboost/regen attributes
 
 //            if (itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT) > 0) {

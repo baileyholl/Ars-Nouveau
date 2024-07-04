@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCasterProvider;
+import com.hollingsworth.arsnouveau.api.spell.ItemCasterProvider;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -18,7 +18,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 
-public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider, GeoBlockEntity, IAnimationListener, ITickable, ISpellCasterProvider {
+public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider, GeoBlockEntity, IAnimationListener, ITickable, ItemCasterProvider {
 
     boolean playRecoil;
     public SpellCaster spellCaster = new SpellCaster(new CompoundTag());

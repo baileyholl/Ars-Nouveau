@@ -10,6 +10,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -17,7 +18,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.entity.projectile.ProjectileDeflection;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -207,53 +210,52 @@ public class EntitySpellArrow extends Arrow {
     protected void onHitEntity(EntityHitResult p_213868_1_) {
         super.onHitEntity(p_213868_1_);
         Entity entity = p_213868_1_.getEntity();
-        float f = (float) this.getDeltaMovement().length();
-        int i = Mth.ceil(Mth.clamp((double) f * this.getBaseDamage(), 0.0D, 2.147483647E9D));
-
-        if (this.isCritArrow()) {
-            long j = this.random.nextInt(i / 2 + 2);
-            i = (int) Math.min(j + (long) i, 2147483647L);
+        float f = (float)this.getDeltaMovement().length();
+        double d0 = this.getBaseDamage();
+        Entity entity1 = this.getOwner();
+        DamageSource damagesource = this.damageSources().arrow(this, entity1 != null ? entity1 : this);
+        if (this.getWeaponItem() != null && this.level() instanceof ServerLevel serverlevel) {
+            d0 = (double)EnchantmentHelper.modifyDamage(serverlevel, this.getWeaponItem(), entity, damagesource, (float)d0);
         }
 
-        Entity entity1 = this.getOwner();
-        DamageSource damagesource;
-        if (entity1 == null) {
-            damagesource = level.damageSources().arrow(this, this);
-        } else {
-            damagesource = level.damageSources().arrow(this, entity1);
-            if (entity1 instanceof LivingEntity) {
-                ((LivingEntity) entity1).setLastHurtMob(entity);
-            }
+        int j = Mth.ceil(Mth.clamp((double)f * d0, 0.0, 2.147483647E9));
+
+        if (this.isCritArrow()) {
+            long k = (long)this.random.nextInt(j / 2 + 2);
+            j = (int)Math.min(k + (long)j, 2147483647L);
+        }
+
+        if (entity1 instanceof LivingEntity livingentity1) {
+            livingentity1.setLastHurtMob(entity);
         }
 
         boolean flag = entity.getType() == EntityType.ENDERMAN;
-        int k = entity.getRemainingFireTicks();
+        int i = entity.getRemainingFireTicks();
         if (this.isOnFire() && !flag) {
-            entity.setRemainingFireTicks(100);
+            entity.igniteForSeconds(5.0F);
         }
 
-        if (entity.hurt(damagesource, (float) i)) {
+        if (entity.hurt(damagesource, (float)j)) {
             if (flag) {
                 return;
             }
 
             if (entity instanceof LivingEntity livingentity) {
-                if (!this.level.isClientSide && this.getPierceLevel() <= 0) {
+                if (!this.level().isClientSide && this.getPierceLevel() <= 0) {
                     livingentity.setArrowCount(livingentity.getArrowCount() + 1);
                 }
 
-                if (this.knockback > 0) {
-                    Vec3 vector3d = this.getDeltaMovement().multiply(1.0D, 0.0D, 1.0D).normalize().scale((double) this.knockback * 0.6D);
-                    if (vector3d.lengthSqr() > 0.0D) {
-                        livingentity.push(vector3d.x, 0.1D, vector3d.z);
-                    }
+                this.doKnockback(livingentity, damagesource);
+                if (this.level() instanceof ServerLevel serverlevel1) {
+                    EnchantmentHelper.doPostAttackEffectsWithItemSource(serverlevel1, livingentity, damagesource, this.getWeaponItem());
                 }
 
                 this.doPostHurtEffects(livingentity);
             }
         } else {
-            entity.setRemainingFireTicks(k);
-
+            entity.setRemainingFireTicks(i);
+            this.deflect(ProjectileDeflection.REVERSE, entity, this.getOwner(), false);
+            this.setDeltaMovement(this.getDeltaMovement().scale(0.2));
         }
 
     }

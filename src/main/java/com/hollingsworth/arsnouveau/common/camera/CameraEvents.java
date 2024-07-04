@@ -9,8 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
@@ -32,7 +31,7 @@ public class CameraEvents {
     }
 
     @SubscribeEvent
-    public static void onDamageTaken(LivingHurtEvent event) {
+    public static void onDamageTaken(LivingDamageEvent event) {
         LivingEntity entity = event.getEntity();
         Level level = entity.level;
 

@@ -6,7 +6,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
@@ -14,7 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-public record BuddingConversionRecipe(ResourceLocation id, Block input, Block result) implements SpecialSingleInputRecipe {
+public record BuddingConversionRecipe(Block input, Block result) implements SpecialSingleInputRecipe {
 
 
     public boolean matches(BlockState block) {
@@ -39,7 +38,6 @@ public record BuddingConversionRecipe(ResourceLocation id, Block input, Block re
 
     public static class Serializer implements RecipeSerializer<BuddingConversionRecipe> {
         public static final MapCodec<BuddingConversionRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                ResourceLocation.CODEC.fieldOf("id").forGetter(BuddingConversionRecipe::id),
                 BuiltInRegistries.BLOCK.byNameCodec().fieldOf("input").forGetter(BuddingConversionRecipe::input),
                 BuiltInRegistries.BLOCK.byNameCodec().fieldOf("result").forGetter(BuddingConversionRecipe::result)
         ).apply(instance, BuddingConversionRecipe::new));

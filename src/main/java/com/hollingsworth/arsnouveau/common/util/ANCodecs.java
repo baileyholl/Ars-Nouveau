@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.common.util;
 
+import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -23,5 +25,9 @@ public class ANCodecs {
 
     public static <T> T decode(Codec<T> codec, Tag tag){
         return codec.parse(NbtOps.INSTANCE, tag).getOrThrow();
+    }
+
+    public static <T> JsonElement toJson(Codec<T> codec, T value){
+        return codec.encodeStart(JsonOps.INSTANCE, value).getOrThrow();
     }
 }

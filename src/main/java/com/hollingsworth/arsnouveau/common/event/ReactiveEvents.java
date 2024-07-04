@@ -3,8 +3,8 @@ package com.hollingsworth.arsnouveau.common.event;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketReactiveSpell;
-import com.hollingsworth.arsnouveau.common.spell.casters.ReactiveCaster;
 import com.hollingsworth.arsnouveau.common.util.HolderHelper;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
@@ -20,7 +20,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 public class ReactiveEvents {
 
     @SubscribeEvent
-    public static void livingHitEvent(LivingHurtEvent e) {
+    public static void livingHitEvent(LivingDamageEvent.Post e) {
         LivingEntity entity = e.getEntity();
         if (entity.getCommandSenderWorld().isClientSide)
             return;
@@ -30,9 +30,10 @@ public class ReactiveEvents {
         }
     }
 
-    public static void castSpell(LivingEntity playerIn, ItemStack s) {
-        if (s.getEnchantmentLevel(HolderHelper.unwrap(playerIn.level, EnchantmentRegistry.REACTIVE_ENCHANTMENT)) * .25 >= Math.random() && new ReactiveCaster(s).getSpell().isValid()) {
-            ReactiveCaster reactiveCaster = new ReactiveCaster(s);
+    public static void castSpell(LivingEntity playerIn, ItemStack stack) {
+        int level = stack.getEnchantmentLevel(playerIn.level.holderOrThrow(EnchantmentRegistry.REACTIVE_ENCHANTMENT));
+        var reactiveCaster = stack.get(DataComponentRegistry.REACTIVE_CASTER);
+        if (level * .25 >= Math.random() && reactiveCaster != null && reactiveCaster.getSpell().isValid()) {
             reactiveCaster.castSpell(playerIn.getCommandSenderWorld(), playerIn, InteractionHand.MAIN_HAND, null);
         }
     }

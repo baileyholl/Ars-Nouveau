@@ -136,7 +136,7 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void shieldEvent(ShieldBlockEvent e) {
+    public static void shieldEvent(LivingShieldBlockEvent e) {
         if (!e.getEntity().level.isClientSide && e.getEntity() instanceof Player player && player.isBlocking()) {
             if (player.getUseItem().getItem() == ItemsRegistry.ENCHANTERS_SHIELD.asItem()) {
                 player.addEffect(new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT, 200, 1));
@@ -146,7 +146,7 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void livingHurtEvent(LivingHurtEvent e) {
+    public static void livingHurtEvent(LivingDamageEvent.Post e) {
         if (e.getEntity().level.isClientSide)
             return;
         if (e.getSource().getEntity() instanceof LivingEntity livingUser) {
@@ -237,16 +237,19 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void entityHurt(LivingHurtEvent e) {
-        if (e.getEntity() != null && e.getEntity().hasEffect(ModPotions.DEFENCE_EFFECT) && (e.getSource().is(DamageTypes.MAGIC) || e.getSource().is(DamageTypes.GENERIC) || e.getSource().is(DamageTypes.MOB_ATTACK))) {
-            if (e.getAmount() > 0.5) {
-                e.setAmount((float) Math.max(0.5, e.getAmount() - 1.0f - e.getEntity().getEffect(ModPotions.DEFENCE_EFFECT).getAmplifier()));
+    public static void entityHurt(LivingDamageEvent.Pre e) {
+        var container = e.getContainer();
+        var source = container.getSource();
+        var amount = container.getNewDamage();
+        if (e.getEntity().hasEffect(ModPotions.DEFENCE_EFFECT) && (source.is(DamageTypes.MAGIC) || source.is(DamageTypes.GENERIC) || source.is(DamageTypes.MOB_ATTACK))) {
+            if (amount > 0.5) {
+                container.setNewDamage((float) Math.max(0.5, amount - 1.0f - e.getEntity().getEffect(ModPotions.DEFENCE_EFFECT).getAmplifier()));
             }
         }
 
-        if (e.getEntity() != null && e.getSource().is(DamageTypes.LIGHTNING_BOLT) && e.getEntity().hasEffect(ModPotions.SHOCKED_EFFECT)) {
-            float damage = e.getAmount() + 3.0f + 3.0f * e.getEntity().getEffect(ModPotions.SHOCKED_EFFECT).getAmplifier();
-            e.setAmount(Math.max(0, damage));
+        if (source.is(DamageTypes.LIGHTNING_BOLT) && e.getEntity().hasEffect(ModPotions.SHOCKED_EFFECT)) {
+            float damage = amount + 3.0f + 3.0f * e.getEntity().getEffect(ModPotions.SHOCKED_EFFECT).getAmplifier();
+            container.setNewDamage(Math.max(0, damage));
         }
         LivingEntity entity = e.getEntity();
         if (entity == null)
@@ -257,16 +260,16 @@ public class EventHandler {
                 || entity.isOnFire()
                 || entity.hasEffect(ModPotions.SHOCKED_EFFECT)
                 || entity.getTicksFrozen() >= entity.getTicksRequiredToFreeze())) {
-            e.setAmount(e.getAmount() + 0.5f + 0.33f * entity.getEffect(ModPotions.HEX_EFFECT).getAmplifier());
+            container.setNewDamage(amount + 0.5f + 0.33f * entity.getEffect(ModPotions.HEX_EFFECT).getAmplifier());
         }
         double warding = PerkUtil.valueOrZero(entity, PerkAttributes.WARDING);
         double feather = PerkUtil.valueOrZero(entity, PerkAttributes.FEATHER);
-        if (e.getSource().is(DamageTypes.MAGIC)) {
-            e.setAmount((float) (e.getAmount() - warding));
+        if (source.is(DamageTypes.MAGIC)) {
+            container.setNewDamage((float) (amount - warding));
         }
 
-        if (e.getSource().is(DamageTypes.FALL)) {
-            e.setAmount((float) (e.getAmount() - (e.getAmount() * feather)));
+        if (source.is(DamageTypes.FALL)) {
+            container.setNewDamage((float) (amount - (amount * feather)));
         }
     }
 

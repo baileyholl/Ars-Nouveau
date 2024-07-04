@@ -69,7 +69,7 @@ public class EffectLight extends AbstractEffect implements IPotionEffect {
             lightable.onLight(rayTraceResult, world, shooter, spellStats, spellContext);
             return;
         } else if (world.getBlockEntity(pos) instanceof SignBlockEntity sign) {
-            sign.updateText((a) -> sign.getTextFacingPlayer(player).setHasGlowingText(true),
+            sign.updateText((a) -> sign.getText(true).setHasGlowingText(true),
                     sign.isFacingFrontText(player)
             );
             world.gameEvent(GameEvent.BLOCK_CHANGE, sign.getBlockPos(), GameEvent.Context.of(player, sign.getBlockState()));

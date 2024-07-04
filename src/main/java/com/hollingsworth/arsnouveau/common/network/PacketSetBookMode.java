@@ -20,12 +20,12 @@ public class PacketSetBookMode extends AbstractPacket{
 
     //Decoder
     public PacketSetBookMode(RegistryFriendlyByteBuf buf) {
-        spellCaster = ANCodecs.decode(SpellCaster.CODEC.codec(), buf.readNbt());
+        spellCaster = ANCodecs.decode(SpellCaster.DEFAULT_CODEC.codec(), buf.readNbt());
     }
 
     //Encoder
     public void toBytes(RegistryFriendlyByteBuf buf) {
-        buf.writeNbt(ANCodecs.encode(SpellCaster.CODEC.codec(), spellCaster));
+        buf.writeNbt(ANCodecs.encode(SpellCaster.DEFAULT_CODEC.codec(), spellCaster));
     }
 
     public PacketSetBookMode(SpellCaster spellCaster) {

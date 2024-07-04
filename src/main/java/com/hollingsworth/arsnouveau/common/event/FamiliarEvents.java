@@ -10,8 +10,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.neoforge.event.entity.living.LivingKnockBackEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 
@@ -132,7 +132,7 @@ public class FamiliarEvents {
     }
 
     @SubscribeEvent
-    public static void livingHurtEvent(LivingHurtEvent event){
+    public static void livingHurtEvent(LivingDamageEvent.Post event){
         if(!event.getSource().is(DamageTypeTags.BYPASSES_ARMOR) && event.getEntity() instanceof Player player) {
             List<FamiliarEntity> golems = getFamiliars((familiarEntity -> familiarEntity instanceof FamiliarAmethystGolem golem && golem.getOwner() != null && golem.getOwner().equals(event.getEntity())));
             if (!golems.isEmpty()) {

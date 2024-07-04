@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.CheatSerializer;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
+import com.mojang.datafixers.util.Function5;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -20,7 +21,7 @@ import java.util.Map;
 
 public class SpellCaster implements ISpellCaster<SpellCaster> {
 
-    public static final MapCodec<SpellCaster> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+    public static final MapCodec<SpellCaster> DEFAULT_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.INT.optionalFieldOf("current_slot", 0).forGetter(s -> s.slot),
             Codec.STRING.optionalFieldOf("flavor_text", "").forGetter(s -> s.flavorText),
             Codec.BOOL.optionalFieldOf("is_hidden", false).forGetter(s -> s.isHidden),
@@ -28,14 +29,24 @@ public class SpellCaster implements ISpellCaster<SpellCaster> {
             Codec.INT.optionalFieldOf("max_slots", 1).forGetter(s -> s.maxSlots)
     ).apply(instance, SpellCaster::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, SpellCaster> STREAM = CheatSerializer.create(SpellCaster.CODEC);
+    public static final StreamCodec<RegistryFriendlyByteBuf, SpellCaster> DEFAULT_STREAM = CheatSerializer.create(SpellCaster.DEFAULT_CODEC);
 
-    private final Map<Integer, Spell> spells;
-    private final int slot;
-    private final String flavorText;
-    private final boolean isHidden;
-    private final String hiddenText;
-    private final int maxSlots;
+    public static <T extends SpellCaster> MapCodec<T> createCodec(Function5<Integer, String, Boolean, String, Integer, T> constructor) {
+        return RecordCodecBuilder.mapCodec(instance -> instance.group(
+                Codec.INT.optionalFieldOf("current_slot", 0).forGetter(s -> s.slot),
+                Codec.STRING.optionalFieldOf("flavor_text", "").forGetter(s -> s.flavorText),
+                Codec.BOOL.optionalFieldOf("is_hidden", false).forGetter(s -> s.isHidden),
+                Codec.STRING.optionalFieldOf("hidden_text", "").forGetter(s -> s.hiddenText),
+                Codec.INT.optionalFieldOf("max_slots", 1).forGetter(s -> s.maxSlots)
+        ).apply(instance, constructor));
+    }
+
+    protected final Map<Integer, Spell> spells;
+    protected final int slot;
+    protected final String flavorText;
+    protected final boolean isHidden;
+    protected final String hiddenText;
+    protected final int maxSlots;
 
     public SpellCaster(Integer slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots) {
         this(slot, flavorText, isHidden, hiddenText, maxSlots, ImmutableMap.of());

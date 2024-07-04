@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 @EventBusSubscriber(modid = ArsNouveau.MODID)
@@ -52,9 +52,12 @@ public class GravityEffect extends MobEffect {
     }
 
     @SubscribeEvent
-    public static void entityHurt(LivingHurtEvent e) {
-        if (e.getSource().is(DamageTypes.FALL) && e.getEntity().hasEffect(ModPotions.GRAVITY_EFFECT)) {
-            e.setAmount(e.getAmount() * 2.0f);
+    public static void entityHurt(LivingDamageEvent.Pre e) {
+        var container = e.getContainer();
+        var source = container.getSource();
+        var amount = container.getNewDamage();
+        if (source.is(DamageTypes.FALL) && e.getEntity().hasEffect(ModPotions.GRAVITY_EFFECT)) {
+            container.setNewDamage(amount * 2.0f);
         }
     }
 }

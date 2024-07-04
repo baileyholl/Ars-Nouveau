@@ -12,9 +12,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 
 @EventBusSubscriber(modid = ArsNouveau.MODID)
 public class BounceEffect extends MobEffect {
@@ -58,7 +57,9 @@ public class BounceEffect extends MobEffect {
     }
 
     @SubscribeEvent
-    public static void onFlyWallDamage(LivingHurtEvent event) {
+    public static void onFlyWallDamage(LivingDamageEvent.Pre event) {
+        var container = event.getContainer();
+        var source = container.getSource();
         LivingEntity entity = event.getEntity();
         if (entity == null || !entity.hasEffect(ModPotions.BOUNCE_EFFECT)) {
             return;
@@ -67,8 +68,8 @@ public class BounceEffect extends MobEffect {
         if (!isPlayer) {
             return;
         }
-        if(event.getSource().is(DamageTypes.FLY_INTO_WALL)){
-            event.setAmount(0);
+        if(source.is(DamageTypes.FLY_INTO_WALL)){
+            container.setNewDamage(0);
             Vec3 lookAngle = entity.getLookAngle();
 
             entity.setDeltaMovement(lookAngle.scale(-2));

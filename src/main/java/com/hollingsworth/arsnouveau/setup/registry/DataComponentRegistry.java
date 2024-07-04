@@ -27,7 +27,7 @@ public class DataComponentRegistry {
 
     public static final DeferredHolder<DataComponentType<?> , DataComponentType<PresentData>> PRESENT = DATA.register("present", () -> DataComponentType.<PresentData>builder().persistent(PresentData.CODEC).networkSynchronized(PresentData.STREAM_CODEC).build());
 
-    public static final DeferredHolder<DataComponentType<?> , DataComponentType<ScryData>> SCRY_DATA = DATA.register("scry_data", () -> DataComponentType.<ScryData>builder().persistent(ScryData.CODEC).networkSynchronized(ScryData.STREAM_CODEC).build());
+    public static final DeferredHolder<DataComponentType<?> , DataComponentType<ScryPosData>> SCRY_DATA = DATA.register("scry_data", () -> DataComponentType.<ScryPosData>builder().persistent(ScryPosData.CODEC).networkSynchronized(ScryPosData.STREAM_CODEC).build());
 
     public static final DeferredHolder<DataComponentType<?> , DataComponentType<WarpScrollData>> WARP_SCROLL = DATA.register("warp_scroll", () -> DataComponentType.<WarpScrollData>builder().persistent(WarpScrollData.CODEC).networkSynchronized(WarpScrollData.STREAM_CODEC).build());
 
@@ -37,11 +37,17 @@ public class DataComponentRegistry {
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CodexData>> CODEX_DATA = DATA.register("codex_data", () -> DataComponentType.<CodexData>builder().persistent(CodexData.CODEC).networkSynchronized(CodexData.STREAM).build());
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<SpellCaster>> SPELL_CASTER = DATA.register("spell_caster", () -> DataComponentType.<SpellCaster>builder().persistent(SpellCaster.CODEC.codec()).networkSynchronized(SpellCaster.STREAM).build());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<SpellCaster>> SPELL_CASTER = DATA.register("spell_caster", () -> DataComponentType.<SpellCaster>builder().persistent(SpellCaster.DEFAULT_CODEC.codec()).networkSynchronized(SpellCaster.DEFAULT_STREAM).build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ScryCasterData>> SCRY_CASTER = DATA.register("scry_caster", () -> DataComponentType.<ScryCasterData>builder().persistent(ScryCasterData.CODEC.codec()).networkSynchronized(ScryCasterData.STREAM_CODEC).build());
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<PotionLauncherData>> POTION_LAUNCHER = DATA.register("potion_launcher", () -> DataComponentType.<PotionLauncherData>builder().persistent(PotionLauncherData.CODEC.codec()).networkSynchronized(PotionLauncherData.STREAM).build());
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockFillContents>> BLOCK_FILL_CONTENTS = DATA.register("block_fill_contents", () -> DataComponentType.<BlockFillContents>builder().persistent(BlockFillContents.CODEC).networkSynchronized(BlockFillContents.STREAM_CODEC).build());
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<MobJarData>> MOB_JAR = DATA.register("mob_jar", () -> DataComponentType.<MobJarData>builder().persistent(MobJarData.CODEC).networkSynchronized(MobJarData.STREAM).build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<TomeCasterData>> TOME_CASTER = DATA.register("tome_caster", () -> DataComponentType.<TomeCasterData>builder().persistent(TomeCasterData.CODEC.codec()).networkSynchronized(TomeCasterData.STREAM_CODEC).build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ReactiveCasterData>> REACTIVE_CASTER = DATA.register("reactive_caster", () -> DataComponentType.<ReactiveCasterData>builder().persistent(ReactiveCasterData.CODEC.codec()).networkSynchronized(ReactiveCasterData.STREAM_CODEC).build());
 }
