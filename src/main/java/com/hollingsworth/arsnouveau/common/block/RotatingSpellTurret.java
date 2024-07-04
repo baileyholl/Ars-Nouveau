@@ -41,7 +41,7 @@ public class RotatingSpellTurret extends BasicSpellTurret {
     //Direction Adjustments
     public void shootSpell(ServerLevel world, BlockPos pos) {
         if (!(world.getBlockEntity(pos) instanceof RotatingTurretTile tile)) return;
-        ISpellCaster caster = tile.getSpellCaster();
+        SpellCaster caster = tile.spellCaster;
         if (caster.getSpell().isEmpty())
             return;
         int manaCost = tile.getManaCost();

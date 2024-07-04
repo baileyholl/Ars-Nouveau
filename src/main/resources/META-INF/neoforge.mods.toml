@@ -1,29 +1,21 @@
 modLoader="javafml" #mandatory
 # A version range to match for said mod loader - for regular FML @Mod it will be the forge version
-loaderVersion="[40,)" #mandatory (28 is current forge version)
+loaderVersion="[4,)"
 # A URL to refer people to when problems occur with this mod
 issueTrackerURL="https://github.com/baileyholl/Ars-Nouveau" #optional
 license="GNU GENERAL PUBLIC LICENSE"
 
-# A list of mods - how many allowed here is determined by the individual mod loader
-[[mods]] #mandatory
-# The modid of the mod
-modId="ars_nouveau" #mandatory
-# The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
-version="${file.jarVersion}" #mandatory
- # A display name for the mod
-displayName="Ars Nouveau" #mandatory
-# A file name (in the root of the mod JAR) containing a logo for display
-logoFile="examplemod.png" #optional
-# A text field displayed in the mod UI
-credits="Vazkii, Azanor, Elucent, Gigaherz" #optional
-license="GNU GENERAL PUBLIC LICENSE"
-# A text field displayed in the mod UI
-authors="Bailey Hollingsworth" #optional
-# The description text for the mod (multi line!) (#mandatory)
-description='''
-Craft spells, create powerful baubles, and summon magical creatures!
-'''
+[[mods]]
+    modId="ars_nouveau"
+    version="${file.jarVersion}"
+    displayName="Ars Nouveau"
+    logoFile="examplemod.png" #optional
+    credits="Vazkii, Azanor, Elucent, Gigaherz" #optional
+    license="GNU GENERAL PUBLIC LICENSE"
+    authors="Bailey Hollingsworth"
+    description='''
+    Craft spells, create powerful baubles, and summon magical creatures!
+    '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.ars_nouveau]] #optional
     # the modid of the dependency
@@ -31,7 +23,7 @@ Craft spells, create powerful baubles, and summon magical creatures!
     # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
     # The version range of the dependency
-    versionRange="[47.1.0,)" #mandatory
+    versionRange="[21,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER

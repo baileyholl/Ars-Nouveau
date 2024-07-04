@@ -66,7 +66,9 @@ public class TerminalSyncManager {
 		long count = (flags & 1) != 0 ? 0 : buf.readVarLong();
 		stack.setCount(count);
 		if(rd && (flags & 2) != 0) {
-			stack.getStack().setTag(buf.readNbt());
+			//todo: check storage terminal for this
+//		stack.getStack().
+//			stack.getStack().setTag(buf.readNbt());
 		}
 		idMap.put(stack, id);
 		idMap2.put(id, stack);
@@ -204,9 +206,10 @@ public class TerminalSyncManager {
 	public static CompoundTag getSyncTag(ItemStack stack) {
 		Item item = stack.getItem();
 		CompoundTag compoundtag = null;
-		if (item.isDamageable(stack) || item.shouldOverrideMultiplayerNbt()) {
-			compoundtag = stack.getShareTag();
-		}
+		// todo: storage check if this is needed
+//		if (item.isDamageable(stack) || item.shouldOverrideMultiplayerNbt()) {
+//			compoundtag = stack.getShareTag();
+//		}
 		return compoundtag;
 	}
 }

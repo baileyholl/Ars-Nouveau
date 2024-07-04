@@ -1,13 +1,14 @@
 package com.hollingsworth.arsnouveau.setup.config;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import java.nio.file.Path;
-import java.util.function.Function;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ConfigFileTypeHandler;
 import net.neoforged.fml.config.IConfigSpec;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.loading.FMLPaths;
+
+import java.nio.file.Path;
+import java.util.function.Function;
 
 public class ANModConfig extends ModConfig {
     private static final ANConfigFileTypeHandler AN_TOML = new ANConfigFileTypeHandler();
@@ -16,11 +17,10 @@ public class ANModConfig extends ModConfig {
         super(type, iConfigSpec, container, fileName + ".toml");
 
     }
-    @Override
-    public ConfigFileTypeHandler getHandler() {
-        return AN_TOML;
-    }
-
+//    @Override
+//    public ConfigFileTypeHandler getHandler() {
+//        return AN_TOML;
+//    }
 
     private static class ANConfigFileTypeHandler extends ConfigFileTypeHandler {
 
@@ -37,9 +37,9 @@ public class ANModConfig extends ModConfig {
             return super.reader(getPath(configBasePath));
         }
 
-        @Override
-        public void unload(Path configBasePath, ModConfig config) {
-            super.unload(getPath(configBasePath), config);
-        }
+//        @Override
+//        public void unload(Path configBasePath, ModConfig config) {
+//            super.unload(getPath(configBasePath), config);
+//        }
     }
 }

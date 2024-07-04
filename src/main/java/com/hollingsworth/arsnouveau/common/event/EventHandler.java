@@ -129,7 +129,7 @@ public class EventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void itemPickupEvent(ItemEntityPickupEvent event) {
+    public static void itemPickupEvent(ItemEntityPickupEvent.Pre event) {
         Player player = event.getPlayer();
         ItemStack pickingUp = event.getItemEntity().getItem();
         VoidJar.tryVoiding(player, pickingUp);
@@ -208,7 +208,7 @@ public class EventHandler {
 
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void onGlideTick(PlayerTickEvent event) {
+    public static void onGlideTick(PlayerTickEvent.Pre event) {
         var player = event.getEntity();
         if (ArsNouveau.caelusLoaded && EffectGlide.canGlide(player)) {
             CaelusHandler.setFlying(player);

@@ -2,15 +2,14 @@ package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
-import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
-import com.hollingsworth.arsnouveau.common.capability.*;
+import com.hollingsworth.arsnouveau.common.capability.ANPlayerDataCap;
+import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
+import com.hollingsworth.arsnouveau.common.capability.ManaCap;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSyncPlayerCap;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -24,7 +23,6 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class CapabilityRegistry {
@@ -80,21 +78,21 @@ public class CapabilityRegistry {
         }
     }
 
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerEntity(MANA_CAPABILITY, EntityType.PLAYER, (player, ctx) -> new ManaCap());
+        event.registerEntity(PLAYER_DATA_CAP, EntityType.PLAYER, (player, ctx) -> new ANPlayerDataCap());
+        var containers = List.of(BlockRegistry.ENCHANTING_APP_TILE, BlockRegistry.IMBUEMENT_TILE, BlockRegistry.SCRIBES_TABLE_TILE);
+        for(var container : containers){
+            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, container.get(), (c, side) -> new InvWrapper(c));
+        }
+
+        event.registerBlockEntity(LECTERN_CAP, BlockRegistry.CRAFTING_LECTERN_TILE.get(), (c, side) -> c.getCapability(c, side));
+    }
+
+
     @SuppressWarnings("unused")
     @EventBusSubscriber(modid = ArsNouveau.MODID)
     public static class EventHandler {
-
-        @SubscribeEvent
-        public static void registerCapabilities(final RegisterCapabilitiesEvent event) {
-            event.registerEntity(MANA_CAPABILITY, EntityType.PLAYER, (player, ctx) -> new ManaCap());
-            event.registerEntity(PLAYER_DATA_CAP, EntityType.PLAYER, (player, ctx) -> new ANPlayerDataCap());
-            var containers = List.of(BlockRegistry.ENCHANTING_APP_TILE, BlockRegistry.IMBUEMENT_TILE, BlockRegistry.SCRIBES_TABLE_TILE);
-            for(var container : containers){
-                event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, container.get(), (c, side) -> new InvWrapper(c));
-            }
-
-            event.registerBlockEntity(LECTERN_CAP, BlockRegistry.CRAFTING_LECTERN_TILE.get(), (c, side) -> c.getCapability(c, side));
-        }
 
         /**
          * Copy the player's mana when they respawn after dying or returning from the end.

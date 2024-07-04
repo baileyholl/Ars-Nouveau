@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau;
 
-import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.registry.BuddingConversionRegistry;
 import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
@@ -10,7 +9,6 @@ import com.hollingsworth.arsnouveau.client.registry.ClientHandler;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
-import com.hollingsworth.arsnouveau.common.entity.pathfinding.Pathfinding;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.world.Terrablender;
@@ -21,10 +19,7 @@ import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import com.hollingsworth.arsnouveau.setup.proxy.ClientProxy;
 import com.hollingsworth.arsnouveau.setup.proxy.IProxy;
 import com.hollingsworth.arsnouveau.setup.proxy.ServerProxy;
-import com.hollingsworth.arsnouveau.setup.registry.APIRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
+import com.hollingsworth.arsnouveau.setup.registry.*;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -33,11 +28,9 @@ import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoadingContext;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -46,14 +39,14 @@ import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
+import net.neoforged.neoforge.common.world.chunk.TicketController;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
-import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 
 import java.util.function.Supplier;
 
 
 @Mod(ArsNouveau.MODID)
-@EventBusSubscriber(modid = ArsNouveau.MODID)
 public class ArsNouveau {
     public static final String MODID = "ars_nouveau";
     @SuppressWarnings("deprecation") // Has to be runForDist, SafeRunForDist will throw a sided crash
@@ -63,10 +56,9 @@ public class ArsNouveau {
     public static boolean optifineLoaded = false;
     public static boolean sodiumLoaded = false;
     public static boolean patchouliLoaded = false;
-
+    public static TicketController ticketController;
     public ArsNouveau(IEventBus modEventBus, ModContainer modContainer){
-        NeoForge.EVENT_BUS.register(this);
-        NeoForge.EVENT_BUS.register(FMLEventHandler.class);
+        NeoForge.EVENT_BUS.addListener(FMLEventHandler::onServerStopped);
         caelusLoaded = ModList.get().isLoaded("caelus");
         terrablenderLoaded = ModList.get().isLoaded("terrablender");
         sodiumLoaded = ModList.get().isLoaded("rubidium");
@@ -81,13 +73,17 @@ public class ArsNouveau {
         }
         modEventBus.addListener(Networking::register);
         modEventBus.addListener(ModSetup::registerEvents);
+        modEventBus.addListener(CapabilityRegistry::registerCapabilities);
         ModSetup.registers(modEventBus);
         modEventBus.addListener(ModEntities::registerPlacements);
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::postModLoadEvent);
         modEventBus.addListener(this::clientSetup);
         modEventBus.addListener(this::sendImc);
-        NeoForge.EVENT_BUS.register(this);
+        modEventBus.addListener((RegisterTicketControllersEvent e) ->{
+            ticketController = new TicketController(ArsNouveau.prefix("ticket_controller"));
+            e.register(ticketController);
+        });
         ANCriteriaTriggers.init();
         try {
             Thread thread = new Thread(Rewards::init);
@@ -164,13 +160,6 @@ public class ArsNouveau {
 
     public void sendImc(InterModEnqueueEvent evt) {
         ModSetup.sendIntercoms();
-    }
-
-    @SubscribeEvent
-    public static void onServerStopped(final ServerStoppingEvent event) {
-        Pathfinding.shutdown();
-        EventQueue.getServerInstance().clear();
-        EventQueue.getClientQueue().clear();
     }
 
     public static ResourceLocation prefix(String str) {

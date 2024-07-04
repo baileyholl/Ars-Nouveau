@@ -118,26 +118,26 @@ dependencies {
     implementation 'top.theillusivec4.curios:curios-neoforge:9.0.3+1.21'
 }
 
-tasks.withType(ProcessResources).configureEach {
-    var replaceProperties = [
-            minecraft_version      : minecraft_version,
-            minecraft_version_range: minecraft_version_range,
-            neo_version            : neo_version,
-            neo_version_range      : neo_version_range,
-            loader_version_range   : loader_version_range,
-            mod_id                 : mod_id,
-            mod_name               : mod_name,
-            mod_license            : mod_license,
-            mod_version            : mod_version,
-            mod_authors            : mod_authors,
-            mod_description        : mod_description
-    ]
-    inputs.properties replaceProperties
-
-    filesMatching(['META-INF/neoforge.mods.toml']) {
-        expand replaceProperties
-    }
-}
+//tasks.withType(ProcessResources).configureEach {
+//    var replaceProperties = [
+//            minecraft_version      : minecraft_version,
+//            minecraft_version_range: minecraft_version_range,
+//            neo_version            : neo_version,
+//            neo_version_range      : neo_version_range,
+//            loader_version_range   : loader_version_range,
+//            mod_id                 : mod_id,
+//            mod_name               : mod_name,
+//            mod_license            : mod_license,
+//            mod_version            : mod_version,
+//            mod_authors            : mod_authors,
+//            mod_description        : mod_description
+//    ]
+//    inputs.properties replaceProperties
+//
+//    filesMatching(['META-INF/neoforge.mods.toml']) {
+//        expand replaceProperties
+//    }
+//}
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation

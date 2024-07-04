@@ -32,7 +32,7 @@ public interface ICameraMountable {
 
             for (int x = chunkPos.getX() - viewDistance; x <= chunkPos.getX() + viewDistance; x++) {
                 for (int z = chunkPos.getZ() - viewDistance; z <= chunkPos.getZ() + viewDistance; z++) {
-                    ForcedChunkManager.forceChunk(serverLevel, ArsNouveau.MODID, dummyEntity, x, z, true, false);
+                    ArsNouveau.ticketController.forceChunk(serverLevel, dummyEntity, x, z, true, true);
                 }
             }
 

@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -58,7 +59,7 @@ public class SpellUtil {
         };
         if (strength > 5)
             tier = Tiers.NETHERITE;
-        return TierSortingRegistry.isCorrectTierForDrops(tier, state);
+        return !BuiltInRegistries.BLOCK.getOrCreateTag(tier.getIncorrectBlocksForDrops()).contains(state.getBlockHolder());
     }
 
 

@@ -150,7 +150,7 @@ public class ScryerCamera extends Entity {
 
             for (int x = chunkPos.getX() - view; x <= chunkPos.getX() + view; x++) {
                 for (int z = chunkPos.getZ() - view; z <= chunkPos.getZ() + view; z++) {
-                    ForcedChunkManager.forceChunk((ServerLevel) this.level, ArsNouveau.MODID, this, x, z, false, false);
+                    ArsNouveau.ticketController.forceChunk((ServerLevel) this.level, this, x, z, false, false);
                 }
             }
         }

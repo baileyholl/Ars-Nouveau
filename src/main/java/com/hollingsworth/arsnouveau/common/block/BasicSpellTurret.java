@@ -111,7 +111,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
 
     public void shootSpell(ServerLevel world, BlockPos pos) {
         if (!(world.getBlockEntity(pos) instanceof BasicSpellTurretTile tile)) return;
-        ISpellCaster caster = tile.getSpellCaster();
+        SpellCaster caster = tile.spellCaster;
         if (caster.getSpell().isEmpty())
             return;
         int manaCost = tile.getManaCost();

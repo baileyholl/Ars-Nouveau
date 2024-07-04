@@ -53,7 +53,7 @@ public class IntangibleAirRenderer implements BlockEntityRenderer<IntangibleAirT
     }
 
 
-    private void renderModelBrightnessColorQuads(PoseStack.Pose matrixEntry, VertexConsumer builder, int color, List<BakedQuad> listQuads, int combinedLightsIn, int combinedOverlayIn) {
+    private void renderModelBrightnessColorQuads(PoseStack.Pose matrixEntry, VertexConsumer builder, float red, float green, float blue, float alpha, List<BakedQuad> listQuads, int combinedLightsIn, int combinedOverlayIn) {
         for (BakedQuad bakedquad : listQuads) {
             float f;
             float f1;

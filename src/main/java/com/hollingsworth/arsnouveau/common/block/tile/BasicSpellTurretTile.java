@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
-import com.hollingsworth.arsnouveau.api.spell.ItemCasterProvider;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -11,6 +11,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
@@ -18,10 +20,10 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 
-public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider, GeoBlockEntity, IAnimationListener, ITickable, ItemCasterProvider {
+public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider, GeoBlockEntity, IAnimationListener, ITickable,  ICapabilityProvider<BasicSpellTurretTile, Void, SpellCaster> {
 
     boolean playRecoil;
-    public SpellCaster spellCaster = new SpellCaster(new CompoundTag());
+    public SpellCaster spellCaster = new SpellCaster(0, null, false, null, 1);
 
     public BasicSpellTurretTile(BlockEntityType<?> p_i48289_1_, BlockPos pos, BlockState state) {
         super(p_i48289_1_, pos, state);
@@ -38,13 +40,13 @@ public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider
     @Override
     protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(pTag, pRegistries);
-        spellCaster.serializeOnTag(pTag);
+        pTag.put("spell_caster", ANCodecs.encode(SpellCaster.DEFAULT_CODEC.codec(), spellCaster));
     }
 
     @Override
     protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(pTag, pRegistries);
-        this.spellCaster = new TurretSpellCaster(pTag);
+        this.spellCaster = ANCodecs.decode(SpellCaster.DEFAULT_CODEC.codec(), pTag.get("spell_caster"));
     }
 
     @Override
@@ -83,4 +85,8 @@ public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider
         this.playRecoil = true;
     }
 
+    @Override
+    public @Nullable SpellCaster getCapability(BasicSpellTurretTile object, Void context) {
+        return spellCaster;
+    }
 }

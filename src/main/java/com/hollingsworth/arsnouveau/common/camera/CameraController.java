@@ -30,7 +30,7 @@ public class CameraController {
     private static boolean wasRightPressed;
 
     @SubscribeEvent
-    public static void onClientTick(ClientTickEvent event) {
+    public static void onClientTick(ClientTickEvent.Pre event) {
         Entity cameraEntity = Minecraft.getInstance().cameraEntity;
 
         if (cameraEntity instanceof ScryerCamera cam) {
@@ -54,7 +54,19 @@ public class CameraController {
                     dismount();
                     options.keyShift.setDown(false);
                 }
-            } else if (event instanceof ClientTickEvent.Post) {
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onClientTick(ClientTickEvent.Post event) {
+        Entity cameraEntity = Minecraft.getInstance().cameraEntity;
+
+        if (cameraEntity instanceof ScryerCamera cam) {
+            Options options = Minecraft.getInstance().options;
+
+            //up/down/left/right handling is split to prevent players who are viewing a camera from moving around in a boat or on a horse
+            if (event instanceof ClientTickEvent.Post) {
                 if (wasUpPressed) {
                     moveViewUp(cam);
                     options.keyUp.setDown(true);

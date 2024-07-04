@@ -31,7 +31,7 @@ public class CameraEvents {
     }
 
     @SubscribeEvent
-    public static void onDamageTaken(LivingDamageEvent event) {
+    public static void onDamageTaken(LivingDamageEvent.Pre event) {
         LivingEntity entity = event.getEntity();
         Level level = entity.level;
 
