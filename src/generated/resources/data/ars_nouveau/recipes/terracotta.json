@@ -1,0 +1,15 @@
+{
+  "input": {
+    "item": "minecraft:terracotta"
+  },
+  "output": [
+    {
+      "chance": 1.0,
+      "maxRange": 1,
+      "stack": {
+        "count": 1,
+        "id": "minecraft:red_sand"
+      }
+    }
+  ]
+}

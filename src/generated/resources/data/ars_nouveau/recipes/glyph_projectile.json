@@ -1,18 +1,9 @@
 {
   "type": "ars_nouveau:glyph",
-  "count": 1,
   "exp": 27,
-  "inputItems": [
-    {
-      "item": {
-        "item": "minecraft:fletching_table"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:arrow"
-      }
-    }
-  ],
-  "output": "ars_nouveau:glyph_projectile"
+  "inputs": [],
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:glyph_projectile"
+  }
 }

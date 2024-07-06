@@ -1,0 +1,15 @@
+{
+  "input": {
+    "tag": "minecraft:storage_blocks/quartz"
+  },
+  "output": [
+    {
+      "chance": 1.0,
+      "maxRange": 1,
+      "stack": {
+        "count": 4,
+        "id": "minecraft:quartz"
+      }
+    }
+  ]
+}

@@ -1,5 +1,5 @@
-// 1.20.1	2023-10-26T12:16:43.4980133	Tags for minecraft:damage_type mod id ars_nouveau
-8641b05da5b216be05123e3ed96b606930b31f26 data/forge/tags/damage_type/is_magic.json
+// 1.21	2024-07-05T22:41:47.5316058	Tags for minecraft:damage_type mod id ars_nouveau
+8641b05da5b216be05123e3ed96b606930b31f26 data/c/tags/damage_type/is_magic.json
 8641b05da5b216be05123e3ed96b606930b31f26 data/minecraft/tags/damage_type/always_hurts_ender_dragons.json
 c07768ed08384f5d693ed8bed719a825a531b78e data/minecraft/tags/damage_type/bypasses_armor.json
 4eb8deadc24e4e017387ef06cfa6543373cea902 data/minecraft/tags/damage_type/is_fall.json

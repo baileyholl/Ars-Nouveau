@@ -1,6 +1,4 @@
 {
-  "type": "ars_nouveau:scry_ritual",
-  "augment": "forge:ores/emerald",
-  "highlight": "forge:ores/emerald",
-  "id": "ars_nouveau:emerald_ores"
+  "augment": "neoforge:ores/emerald",
+  "highlight": "neoforge:ores/emerald"
 }

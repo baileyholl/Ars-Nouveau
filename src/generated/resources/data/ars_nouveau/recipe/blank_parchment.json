@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "x": {
+      "item": "minecraft:paper"
+    },
+    "y": {
+      "item": "ars_nouveau:magebloom_fiber"
+    }
+  },
+  "pattern": [
+    "yyy",
+    "yxy",
+    "yyy"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:blank_parchment"
+  }
+}

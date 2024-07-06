@@ -1,38 +1,9 @@
 {
   "type": "ars_nouveau:glyph",
-  "count": 1,
   "exp": 55,
-  "inputItems": [
-    {
-      "item": {
-        "item": "ars_nouveau:air_essence"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:anvil"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:anvil"
-      }
-    },
-    {
-      "item": {
-        "tag": "forge:feathers"
-      }
-    },
-    {
-      "item": {
-        "tag": "forge:feathers"
-      }
-    },
-    {
-      "item": {
-        "tag": "forge:feathers"
-      }
-    }
-  ],
-  "output": "ars_nouveau:glyph_gravity"
+  "inputs": [],
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:glyph_gravity"
+  }
 }

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:experience_gem"
+    },
+    {
+      "item": "ars_nouveau:experience_gem"
+    },
+    {
+      "item": "ars_nouveau:experience_gem"
+    },
+    {
+      "item": "ars_nouveau:experience_gem"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:greater_experience_gem"
+  }
+}

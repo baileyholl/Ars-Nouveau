@@ -1,47 +1,30 @@
 {
-  "type": "ars_nouveau:enchantment",
   "enchantment": "ars_nouveau:reactive",
   "level": 3,
   "pedestalItems": [
     {
-      "item": {
-        "tag": "forge:gems/emerald"
-      }
+      "tag": "c:gems/emerald"
     },
     {
-      "item": {
-        "tag": "forge:gems/emerald"
-      }
+      "tag": "c:gems/emerald"
     },
     {
-      "item": {
-        "tag": "forge:gems/emerald"
-      }
+      "tag": "c:gems/emerald"
     },
     {
-      "item": {
-        "tag": "forge:gems/emerald"
-      }
+      "tag": "c:gems/emerald"
     },
     {
-      "item": {
-        "tag": "forge:ender_pearls"
-      }
+      "tag": "c:ender_pearls"
     },
     {
-      "item": {
-        "item": "ars_nouveau:abjuration_essence"
-      }
+      "item": "ars_nouveau:abjuration_essence"
     },
     {
-      "item": {
-        "item": "ars_nouveau:conjuration_essence"
-      }
+      "item": "ars_nouveau:conjuration_essence"
     },
     {
-      "item": {
-        "item": "ars_nouveau:manipulation_essence"
-      }
+      "item": "ars_nouveau:manipulation_essence"
     }
   ],
   "sourceCost": 9000

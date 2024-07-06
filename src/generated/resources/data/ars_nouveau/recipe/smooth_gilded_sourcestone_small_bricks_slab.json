@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "wooden_slab",
+  "key": {
+    "#": {
+      "item": "ars_nouveau:smooth_gilded_sourcestone_small_bricks"
+    }
+  },
+  "pattern": [
+    "###"
+  ],
+  "result": {
+    "count": 6,
+    "id": "ars_nouveau:smooth_gilded_sourcestone_small_bricks_slab"
+  }
+}

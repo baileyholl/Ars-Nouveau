@@ -1,23 +1,9 @@
 {
   "type": "ars_nouveau:glyph",
-  "count": 1,
   "exp": 55,
-  "inputItems": [
-    {
-      "item": {
-        "item": "ars_nouveau:water_essence"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:powder_snow_bucket"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:ice"
-      }
-    }
-  ],
-  "output": "ars_nouveau:glyph_cold_snap"
+  "inputs": [],
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:glyph_cold_snap"
+  }
 }

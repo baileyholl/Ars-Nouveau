@@ -1,9 +1,5 @@
 {
-  "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": true,
-  "output": {
-    "item": "ars_nouveau:sorcerer_hood"
-  },
   "pedestalItems": [
     {
       "item": "ars_nouveau:magebloom_fiber"
@@ -18,10 +14,12 @@
       "item": "ars_nouveau:magebloom_fiber"
     }
   ],
-  "reagent": [
-    {
-      "item": "minecraft:golden_helmet"
-    }
-  ],
+  "reagent": {
+    "item": "minecraft:golden_helmet"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:sorcerer_hood"
+  },
   "sourceCost": 0
 }

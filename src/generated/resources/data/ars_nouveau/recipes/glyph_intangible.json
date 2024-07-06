@@ -1,38 +1,9 @@
 {
   "type": "ars_nouveau:glyph",
-  "count": 1,
   "exp": 160,
-  "inputItems": [
-    {
-      "item": {
-        "item": "ars_nouveau:manipulation_essence"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:phantom_membrane"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:phantom_membrane"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:phantom_membrane"
-      }
-    },
-    {
-      "item": {
-        "tag": "forge:ender_pearls"
-      }
-    },
-    {
-      "item": {
-        "tag": "forge:ender_pearls"
-      }
-    }
-  ],
-  "output": "ars_nouveau:glyph_intangible"
+  "inputs": [],
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:glyph_intangible"
+  }
 }

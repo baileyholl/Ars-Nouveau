@@ -1,9 +1,5 @@
 {
-  "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": true,
-  "output": {
-    "item": "ars_nouveau:enchanters_eye"
-  },
   "pedestalItems": [
     {
       "item": "minecraft:blaze_powder"
@@ -18,22 +14,24 @@
       "item": "minecraft:blaze_powder"
     },
     {
-      "tag": "forge:ender_pearls"
+      "tag": "c:ender_pearls"
     },
     {
-      "tag": "forge:ender_pearls"
+      "tag": "c:ender_pearls"
     },
     {
-      "tag": "forge:ender_pearls"
+      "tag": "c:ender_pearls"
     },
     {
-      "tag": "forge:ender_pearls"
+      "tag": "c:ender_pearls"
     }
   ],
-  "reagent": [
-    {
-      "item": "ars_nouveau:scryers_crystal"
-    }
-  ],
+  "reagent": {
+    "item": "ars_nouveau:scryers_crystal"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:enchanters_eye"
+  },
   "sourceCost": 0
 }

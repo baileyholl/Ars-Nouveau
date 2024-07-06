@@ -1,0 +1,15 @@
+{
+  "input": {
+    "item": "minecraft:glowstone"
+  },
+  "output": [
+    {
+      "chance": 1.0,
+      "maxRange": 1,
+      "stack": {
+        "count": 4,
+        "id": "minecraft:glowstone_dust"
+      }
+    }
+  ]
+}

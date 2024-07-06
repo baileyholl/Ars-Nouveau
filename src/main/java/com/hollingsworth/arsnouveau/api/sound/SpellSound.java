@@ -16,7 +16,6 @@ import java.util.Objects;
 public class SpellSound {
 
     public static MapCodec<SpellSound> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("id").forGetter(s -> s.id),
             SoundEvent.CODEC.fieldOf("soundEvent").forGetter(s -> s.soundEvent),
             ComponentSerialization.CODEC.fieldOf("soundName").forGetter(s -> s.soundName)
     ).apply(instance, SpellSound::new));

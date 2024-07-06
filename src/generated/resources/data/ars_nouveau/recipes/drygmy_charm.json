@@ -1,9 +1,5 @@
 {
-  "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
-  "output": {
-    "item": "ars_nouveau:drygmy_charm"
-  },
   "pedestalItems": [
     {
       "tag": "minecraft:fishes"
@@ -18,22 +14,24 @@
       "item": "minecraft:carrot"
     },
     {
-      "tag": "forge:seeds"
+      "tag": "c:seeds"
     },
     {
-      "tag": "forge:gems/source"
+      "tag": "neoforge:gems/source"
     },
     {
-      "tag": "forge:gems/source"
+      "tag": "neoforge:gems/source"
     },
     {
-      "tag": "forge:gems/source"
+      "tag": "neoforge:gems/source"
     }
   ],
-  "reagent": [
-    {
-      "item": "ars_nouveau:drygmy_shard"
-    }
-  ],
+  "reagent": {
+    "item": "ars_nouveau:drygmy_shard"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:drygmy_charm"
+  },
   "sourceCost": 0
 }

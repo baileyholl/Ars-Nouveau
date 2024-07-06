@@ -1,0 +1,21 @@
+{
+  "input": {
+    "tag": "neoforge:gems/source"
+  },
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:abjuration_essence"
+  },
+  "pedestalItems": [
+    {
+      "item": "minecraft:fermented_spider_eye"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "minecraft:milk_bucket"
+    }
+  ],
+  "source": 2000
+}

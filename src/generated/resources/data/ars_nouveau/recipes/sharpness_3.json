@@ -1,27 +1,18 @@
 {
-  "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:sharpness",
   "level": 3,
   "pedestalItems": [
     {
-      "item": {
-        "tag": "forge:storage_blocks/quartz"
-      }
+      "item": "minecraft:quartz_block"
     },
     {
-      "item": {
-        "tag": "forge:storage_blocks/quartz"
-      }
+      "item": "minecraft:quartz_block"
     },
     {
-      "item": {
-        "tag": "forge:gems/diamond"
-      }
+      "tag": "c:gems/diamond"
     },
     {
-      "item": {
-        "tag": "forge:storage_blocks/lapis"
-      }
+      "tag": "c:storage_blocks/lapis"
     }
   ],
   "sourceCost": 5000

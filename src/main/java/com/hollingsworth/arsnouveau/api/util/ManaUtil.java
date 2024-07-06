@@ -17,7 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.NeoForge;
 
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ManaUtil {
@@ -59,8 +58,8 @@ public class ManaUtil {
 
     // UUIDs for the configurable bonus on mana attributes, to include them in multiplier calculations.
     // Only updated if the value changes.
-    static final ResourceLocation MAX_MANA_MODIFIER = ArsNouveau.prefix("MAX_MANA_MOD");
-    static final ResourceLocation MANA_REGEN_MODIFIER = ArsNouveau.prefix("MANA_REGEN_MOD");
+    static final ResourceLocation MAX_MANA_MODIFIER = ArsNouveau.prefix("max_mana_mod");
+    static final ResourceLocation MANA_REGEN_MODIFIER = ArsNouveau.prefix("max_regen_mod");
 
     // Calculate Max Mana & Mana Reserve to keep track of the mana reserved by familiars & co.
     public static Mana calcMaxMana(Player e) {

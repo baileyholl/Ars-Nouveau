@@ -1,12 +1,8 @@
 {
-  "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
-  "output": {
-    "item": "ars_nouveau:whirlisprig_charm"
-  },
   "pedestalItems": [
     {
-      "tag": "forge:gems/source"
+      "tag": "neoforge:gems/source"
     },
     {
       "item": "ars_nouveau:magebloom_crop"
@@ -15,7 +11,7 @@
       "item": "ars_nouveau:magebloom"
     },
     {
-      "tag": "forge:gems/diamond"
+      "tag": "c:gems/diamond"
     },
     {
       "item": "minecraft:oak_sapling"
@@ -27,13 +23,15 @@
       "item": "minecraft:birch_sapling"
     },
     {
-      "tag": "forge:seeds/wheat"
+      "tag": "c:seeds/wheat"
     }
   ],
-  "reagent": [
-    {
-      "item": "ars_nouveau:whirlisprig_shards"
-    }
-  ],
+  "reagent": {
+    "item": "ars_nouveau:whirlisprig_shards"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:whirlisprig_charm"
+  },
   "sourceCost": 0
 }

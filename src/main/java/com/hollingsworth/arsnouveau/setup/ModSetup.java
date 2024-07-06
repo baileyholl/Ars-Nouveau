@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
+import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import net.minecraft.core.registries.Registries;
@@ -49,7 +50,7 @@ public class ModSetup {
         StructureRegistry.STRUCTURES.register(modEventBus);
         StructureRegistry.STRUCTURE_PROCESSOR.register(modEventBus);
         MaterialRegistry.MATERIALS.register(modEventBus);
-
+        ANCriteriaTriggers.TRIGGERS.register(modEventBus);
         MenuRegistry.MENU_REG.register(modEventBus);
         VillagerRegistry.POIs.register(modEventBus);
         VillagerRegistry.VILLAGERS.register(modEventBus);
@@ -58,12 +59,12 @@ public class ModSetup {
     }
 
     public static void registerEvents(RegisterEvent event) {
-        if (event.getRegistryKey().equals(Registries.BLOCK.registryKey())) {
+        event.register(Registries.BLOCK, helper ->{
             BlockRegistry.onBlocksRegistry();
-        }
-        if (event.getRegistryKey().equals(Registries.BLOCK.registryKey())) {
+        });
+        event.register(Registries.ITEM, helper ->{
             BlockRegistry.onBlockItemsRegistry();
             ItemsRegistry.onItemRegistry();
-        }
+        });
     }
 }

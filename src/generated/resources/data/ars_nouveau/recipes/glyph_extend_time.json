@@ -1,18 +1,9 @@
 {
   "type": "ars_nouveau:glyph",
-  "count": 1,
   "exp": 55,
-  "inputItems": [
-    {
-      "item": {
-        "item": "minecraft:clock"
-      }
-    },
-    {
-      "item": {
-        "tag": "forge:storage_blocks/redstone"
-      }
-    }
-  ],
-  "output": "ars_nouveau:glyph_extend_time"
+  "inputs": [],
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:glyph_extend_time"
+  }
 }

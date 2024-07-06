@@ -1,24 +1,22 @@
 {
-  "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
-  "output": {
-    "item": "ars_nouveau:dominion_wand"
-  },
   "pedestalItems": [
     {
-      "tag": "forge:gems/source"
+      "tag": "neoforge:gems/source"
     },
     {
-      "tag": "forge:gems/source"
+      "tag": "neoforge:gems/source"
     },
     {
-      "tag": "forge:ingots/gold"
+      "tag": "c:ingots/gold"
     }
   ],
-  "reagent": [
-    {
-      "item": "minecraft:stick"
-    }
-  ],
+  "reagent": {
+    "item": "minecraft:stick"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:dominion_wand"
+  },
   "sourceCost": 0
 }

@@ -15,10 +15,11 @@ import java.util.concurrent.CompletableFuture;
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class ModDatagen {
     public static CompletableFuture<HolderLookup.Provider> registries;
+    public static PackOutput output;
     @SubscribeEvent
     public static void datagen(GatherDataEvent event) {
         APIRegistry.postInit();
-        PackOutput output = event.getGenerator().getPackOutput();
+        output = event.getGenerator().getPackOutput();
         CompletableFuture<HolderLookup.Provider> provider = event.getLookupProvider();
         ExistingFileHelper fileHelper = event.getExistingFileHelper();
         ModDatagen.registries = provider;
@@ -39,8 +40,10 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new PlacedFeatureTagProvider(output, provider, fileHelper));
         event.getGenerator().addProvider(event.includeServer(), new PotionEffectTagProvider(output, provider, fileHelper));
         event.getGenerator().addProvider(event.includeServer(), new DyeRecipeDatagen(event.getGenerator()));
-        event.getGenerator().addProvider(event.includeServer(), new ANAdvancements(output, provider, fileHelper));
-        event.getGenerator().addProvider(event.includeServer(), new CasterTomeProvider(event.getGenerator()));
+//        event.getGenerator().addProvider(event.includeServer(), new SimpleAdvancements(event.getGenerator()));
+
+//        event.getGenerator().addProvider(event.includeServer(), new AdvancementProvider(output, provider, fileHelper));
+//        event.getGenerator().addProvider(event.includeServer(), new CasterTomeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new SummonRitualProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new BuddingConversionProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new ScryRitualProvider(event.getGenerator()));

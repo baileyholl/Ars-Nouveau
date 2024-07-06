@@ -1,6 +1,4 @@
 {
-  "type": "ars_nouveau:scry_ritual",
-  "augment": "forge:ores/copper",
-  "highlight": "forge:ores/copper",
-  "id": "ars_nouveau:copper_ores"
+  "augment": "neoforge:ores/copper",
+  "highlight": "neoforge:ores/copper"
 }

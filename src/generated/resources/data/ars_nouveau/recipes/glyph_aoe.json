@@ -1,13 +1,9 @@
 {
   "type": "ars_nouveau:glyph",
-  "count": 1,
   "exp": 55,
-  "inputItems": [
-    {
-      "item": {
-        "item": "minecraft:firework_star"
-      }
-    }
-  ],
-  "output": "ars_nouveau:glyph_aoe"
+  "inputs": [],
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:glyph_aoe"
+  }
 }

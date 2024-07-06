@@ -1,39 +1,37 @@
 {
-  "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
-  "output": {
-    "item": "ars_nouveau:ring_of_greater_discount"
-  },
   "pedestalItems": [
     {
-      "tag": "forge:gems/diamond"
+      "tag": "c:gems/diamond"
     },
     {
-      "tag": "forge:gems/diamond"
+      "tag": "c:gems/diamond"
     },
     {
-      "tag": "forge:gems/diamond"
+      "tag": "c:gems/diamond"
     },
     {
-      "tag": "forge:gems/diamond"
+      "tag": "c:gems/diamond"
     },
     {
-      "tag": "forge:rods/blaze"
+      "tag": "c:rods/blaze"
     },
     {
-      "tag": "forge:rods/blaze"
+      "tag": "c:rods/blaze"
     },
     {
-      "tag": "forge:gems/source"
+      "tag": "neoforge:gems/source"
     },
     {
-      "tag": "forge:gems/source"
+      "tag": "neoforge:gems/source"
     }
   ],
-  "reagent": [
-    {
-      "item": "ars_nouveau:ring_of_lesser_discount"
-    }
-  ],
+  "reagent": {
+    "item": "ars_nouveau:ring_of_lesser_discount"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:ring_of_greater_discount"
+  },
   "sourceCost": 0
 }

@@ -1,23 +1,9 @@
 {
   "type": "ars_nouveau:glyph",
-  "count": 1,
   "exp": 55,
-  "inputItems": [
-    {
-      "item": {
-        "item": "minecraft:powered_rail"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:sugar"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:clock"
-      }
-    }
-  ],
-  "output": "ars_nouveau:glyph_accelerate"
+  "inputs": [],
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:glyph_accelerate"
+  }
 }

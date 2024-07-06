@@ -1,33 +1,9 @@
 {
   "type": "ars_nouveau:glyph",
-  "count": 1,
   "exp": 160,
-  "inputItems": [
-    {
-      "item": {
-        "item": "ars_nouveau:manipulation_essence"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:dragon_breath"
-      }
-    },
-    {
-      "item": {
-        "tag": "forge:storage_blocks/diamond"
-      }
-    },
-    {
-      "item": {
-        "tag": "forge:rods/blaze"
-      }
-    },
-    {
-      "item": {
-        "tag": "forge:rods/blaze"
-      }
-    }
-  ],
-  "output": "ars_nouveau:glyph_linger"
+  "inputs": [],
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:glyph_linger"
+  }
 }

@@ -1,23 +1,9 @@
 {
   "type": "ars_nouveau:glyph",
-  "count": 1,
   "exp": 160,
-  "inputItems": [
-    {
-      "item": {
-        "item": "minecraft:compass"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:ender_eye"
-      }
-    },
-    {
-      "item": {
-        "tag": "forge:rods/blaze"
-      }
-    }
-  ],
-  "output": "ars_nouveau:glyph_orbit"
+  "inputs": [],
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:glyph_orbit"
+  }
 }

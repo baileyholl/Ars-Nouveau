@@ -1,0 +1,21 @@
+{
+  "input": {
+    "tag": "neoforge:gems/source"
+  },
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:air_essence"
+  },
+  "pedestalItems": [
+    {
+      "item": "minecraft:feather"
+    },
+    {
+      "item": "ars_nouveau:wilden_wing"
+    },
+    {
+      "tag": "minecraft:arrows"
+    }
+  ],
+  "source": 2000
+}

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:purple_archwood_log"
+    },
+    {
+      "tag": "ars_nouveau:magic_shards"
+    },
+    {
+      "tag": "ars_nouveau:magic_shards"
+    },
+    {
+      "tag": "ars_nouveau:magic_shards"
+    },
+    {
+      "item": "minecraft:lapis_block"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:ritual_animal_summon"
+  }
+}

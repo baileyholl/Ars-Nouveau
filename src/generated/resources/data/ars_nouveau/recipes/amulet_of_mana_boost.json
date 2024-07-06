@@ -1,39 +1,37 @@
 {
-  "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
-  "output": {
-    "item": "ars_nouveau:amulet_of_mana_boost"
-  },
   "pedestalItems": [
     {
-      "tag": "forge:gems/diamond"
+      "tag": "c:gems/diamond"
     },
     {
-      "tag": "forge:gems/diamond"
+      "tag": "c:gems/diamond"
     },
     {
-      "tag": "forge:gems/diamond"
+      "tag": "c:gems/diamond"
     },
     {
-      "tag": "forge:gems/source"
+      "tag": "neoforge:gems/source"
     },
     {
-      "tag": "forge:gems/source"
+      "tag": "neoforge:gems/source"
     },
     {
-      "tag": "forge:gems/source"
+      "tag": "neoforge:gems/source"
     },
     {
-      "tag": "forge:gems/source"
+      "tag": "neoforge:gems/source"
     },
     {
-      "tag": "forge:gems/source"
+      "tag": "neoforge:gems/source"
     }
   ],
-  "reagent": [
-    {
-      "item": "ars_nouveau:dull_trinket"
-    }
-  ],
+  "reagent": {
+    "item": "ars_nouveau:dull_trinket"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:amulet_of_mana_boost"
+  },
   "sourceCost": 0
 }

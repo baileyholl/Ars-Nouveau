@@ -1,38 +1,9 @@
 {
   "type": "ars_nouveau:glyph",
-  "count": 1,
   "exp": 160,
-  "inputItems": [
-    {
-      "item": {
-        "item": "ars_nouveau:abjuration_essence"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:fermented_spider_eye"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:blaze_rod"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:blaze_rod"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:blaze_rod"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:wither_rose"
-      }
-    }
-  ],
-  "output": "ars_nouveau:glyph_hex"
+  "inputs": [],
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:glyph_hex"
+  }
 }

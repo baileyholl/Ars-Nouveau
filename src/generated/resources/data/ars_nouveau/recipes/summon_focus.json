@@ -1,9 +1,5 @@
 {
-  "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
-  "output": {
-    "item": "ars_nouveau:summon_focus"
-  },
   "pedestalItems": [
     {
       "item": "ars_nouveau:wilden_horn"
@@ -18,13 +14,15 @@
       "item": "ars_nouveau:wilden_tribute"
     },
     {
-      "tag": "forge:ingots/gold"
+      "tag": "c:ingots/gold"
     }
   ],
-  "reagent": [
-    {
-      "tag": "forge:storage_blocks/source"
-    }
-  ],
+  "reagent": {
+    "tag": "neoforge:storage_blocks/source"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:summon_focus"
+  },
   "sourceCost": 0
 }

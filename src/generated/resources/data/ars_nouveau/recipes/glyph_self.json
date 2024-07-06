@@ -1,18 +1,9 @@
 {
   "type": "ars_nouveau:glyph",
-  "count": 1,
   "exp": 27,
-  "inputItems": [
-    {
-      "item": {
-        "tag": "minecraft:wooden_pressure_plates"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:iron_chestplate"
-      }
-    }
-  ],
-  "output": "ars_nouveau:glyph_self"
+  "inputs": [],
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:glyph_self"
+  }
 }

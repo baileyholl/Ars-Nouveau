@@ -1,21 +1,17 @@
 {
-  "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
-  "output": {
-    "item": "ars_nouveau:relay_warp"
-  },
   "pedestalItems": [
     {
-      "tag": "forge:ender_pearls"
+      "tag": "c:ender_pearls"
     },
     {
-      "tag": "forge:ender_pearls"
+      "tag": "c:ender_pearls"
     },
     {
-      "tag": "forge:ender_pearls"
+      "tag": "c:ender_pearls"
     },
     {
-      "tag": "forge:ender_pearls"
+      "tag": "c:ender_pearls"
     },
     {
       "item": "minecraft:popped_chorus_fruit"
@@ -30,10 +26,12 @@
       "item": "minecraft:popped_chorus_fruit"
     }
   ],
-  "reagent": [
-    {
-      "item": "ars_nouveau:relay"
-    }
-  ],
+  "reagent": {
+    "item": "ars_nouveau:relay"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:relay_warp"
+  },
   "sourceCost": 0
 }

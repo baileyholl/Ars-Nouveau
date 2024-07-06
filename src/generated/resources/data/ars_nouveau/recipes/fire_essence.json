@@ -1,0 +1,21 @@
+{
+  "input": {
+    "tag": "neoforge:gems/source"
+  },
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:fire_essence"
+  },
+  "pedestalItems": [
+    {
+      "item": "minecraft:flint_and_steel"
+    },
+    {
+      "item": "minecraft:torch"
+    },
+    {
+      "item": "minecraft:gunpowder"
+    }
+  ],
+  "source": 2000
+}

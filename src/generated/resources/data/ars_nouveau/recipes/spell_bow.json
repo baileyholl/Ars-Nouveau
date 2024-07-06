@@ -1,24 +1,22 @@
 {
-  "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": true,
-  "output": {
-    "item": "ars_nouveau:spell_bow"
-  },
   "pedestalItems": [
     {
-      "tag": "forge:storage_blocks/source"
+      "tag": "neoforge:storage_blocks/source"
     },
     {
-      "tag": "forge:storage_blocks/gold"
+      "tag": "c:storage_blocks/gold"
     },
     {
       "item": "ars_nouveau:manipulation_essence"
     }
   ],
-  "reagent": [
-    {
-      "item": "minecraft:bow"
-    }
-  ],
+  "reagent": {
+    "item": "minecraft:bow"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:spell_bow"
+  },
   "sourceCost": 0
 }

@@ -1,7 +1,5 @@
 {
-  "type": "ars_nouveau:dispel_entity",
   "entity": "minecraft:blaze",
-  "id": "ars_nouveau:blaze_powder",
   "loot_conditions": [
     {
       "condition": "minecraft:entity_properties",

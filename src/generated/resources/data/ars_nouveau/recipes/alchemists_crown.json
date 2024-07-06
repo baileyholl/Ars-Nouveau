@@ -1,9 +1,5 @@
 {
-  "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
-  "output": {
-    "item": "ars_nouveau:alchemists_crown"
-  },
   "pedestalItems": [
     {
       "item": "minecraft:glass_bottle"
@@ -15,10 +11,12 @@
       "item": "minecraft:glass_bottle"
     }
   ],
-  "reagent": [
-    {
-      "item": "minecraft:golden_helmet"
-    }
-  ],
+  "reagent": {
+    "item": "minecraft:golden_helmet"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:alchemists_crown"
+  },
   "sourceCost": 0
 }

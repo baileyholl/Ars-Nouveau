@@ -1,0 +1,16 @@
+{
+  "enchantment": "minecraft:sweeping_edge",
+  "level": 1,
+  "pedestalItems": [
+    {
+      "item": "ars_nouveau:manipulation_essence"
+    },
+    {
+      "tag": "neoforge:storage_blocks/source"
+    },
+    {
+      "tag": "c:storage_blocks/lapis"
+    }
+  ],
+  "sourceCost": 2000
+}

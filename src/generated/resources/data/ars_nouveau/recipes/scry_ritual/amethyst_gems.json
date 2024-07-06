@@ -1,6 +1,4 @@
 {
-  "type": "ars_nouveau:scry_ritual",
-  "augment": "forge:gems/amethyst",
-  "highlight": "forge:storage_blocks/amethyst",
-  "id": "ars_nouveau:amethyst_gems"
+  "augment": "neoforge:gems/amethyst",
+  "highlight": "neoforge:storage_blocks/amethyst"
 }

@@ -1,9 +1,5 @@
 {
-  "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
-  "output": {
-    "item": "ars_nouveau:potion_flask_amplify"
-  },
   "pedestalItems": [
     {
       "item": "ars_nouveau:abjuration_essence"
@@ -30,10 +26,12 @@
       "item": "ars_nouveau:abjuration_essence"
     }
   ],
-  "reagent": [
-    {
-      "item": "ars_nouveau:potion_flask"
-    }
-  ],
+  "reagent": {
+    "item": "ars_nouveau:potion_flask"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:potion_flask_amplify"
+  },
   "sourceCost": 0
 }

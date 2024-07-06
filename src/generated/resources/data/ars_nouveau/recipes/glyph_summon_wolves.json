@@ -1,48 +1,9 @@
 {
   "type": "ars_nouveau:glyph",
-  "count": 1,
   "exp": 27,
-  "inputItems": [
-    {
-      "item": {
-        "item": "ars_nouveau:conjuration_essence"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:bone"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:bone"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:bone"
-      }
-    },
-    {
-      "item": {
-        "item": "ars_nouveau:wilden_wing"
-      }
-    },
-    {
-      "item": {
-        "item": "ars_nouveau:wilden_wing"
-      }
-    },
-    {
-      "item": {
-        "item": "ars_nouveau:wilden_wing"
-      }
-    },
-    {
-      "item": {
-        "item": "ars_nouveau:wilden_wing"
-      }
-    }
-  ],
-  "output": "ars_nouveau:glyph_summon_wolves"
+  "inputs": [],
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:glyph_summon_wolves"
+  }
 }

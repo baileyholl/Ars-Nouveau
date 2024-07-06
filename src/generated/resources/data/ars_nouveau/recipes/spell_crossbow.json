@@ -1,24 +1,22 @@
 {
-  "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": true,
-  "output": {
-    "item": "ars_nouveau:spell_crossbow"
-  },
   "pedestalItems": [
     {
-      "tag": "forge:storage_blocks/gold"
+      "tag": "c:storage_blocks/gold"
     },
     {
       "item": "ars_nouveau:manipulation_essence"
     },
     {
-      "tag": "forge:storage_blocks/source"
+      "tag": "neoforge:storage_blocks/source"
     }
   ],
-  "reagent": [
-    {
-      "item": "minecraft:crossbow"
-    }
-  ],
+  "reagent": {
+    "item": "minecraft:crossbow"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:spell_crossbow"
+  },
   "sourceCost": 0
 }

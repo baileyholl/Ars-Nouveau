@@ -140,25 +140,33 @@ public class ANAdvancementBuilder implements net.neoforged.neoforge.common.exten
      * Tries to resolve the parent of this advancement, if possible. Returns true on success.
      */
     public boolean canBuild(Function<ResourceLocation, Advancement> pParentLookup) {
-        return this.parentId != null;
-    }
-
-    public Advancement build() {
-        if (!this.canBuild((p_138407_) -> {
-            return null;
-        })) {
-            throw new IllegalStateException("Tried to build incomplete advancement!");
+        if (this.parentId == null) {
+            return true;
         } else {
-            if (this.requirements == null) {
-                this.requirements = this.requirementsStrategy.create(this.criteria.keySet());
+            if (this.parent == null) {
+                this.parent = pParentLookup.apply(this.parentId);
             }
 
-            return new Advancement(Optional.ofNullable(this.parentId), Optional.ofNullable(this.display), this.rewards, this.criteria, this.requirements, false);
+            return this.parent != null;
         }
     }
 
+    public Advancement build() {
+
+        if (this.requirements == null) {
+            this.requirements = this.requirementsStrategy.create(this.criteria.keySet());
+        }
+        if(this.criteria.isEmpty()){
+            throw new IllegalStateException("Advancement " + fileKey + " has no criteria " + this);
+        }
+
+        return new Advancement(Optional.ofNullable(this.parentId), Optional.ofNullable(this.display), this.rewards, this.criteria, this.requirements, false);
+
+    }
+
     public AdvancementHolder save(Consumer<AdvancementHolder> pConsumer, ResourceLocation pId) {
-        AdvancementHolder advancement = new AdvancementHolder(pId, this.build());
+        var adv =  this.build();
+        AdvancementHolder advancement = new AdvancementHolder(pId, adv);
         pConsumer.accept(advancement);
         return advancement;
     }
@@ -168,7 +176,7 @@ public class ANAdvancementBuilder implements net.neoforged.neoforge.common.exten
     }
 
     public String toString() {
-        return "Task Advancement{parentId=" + this.parentId + ", display=" + this.display + ", rewards=" + this.rewards + ", criteria=" + this.criteria + ", requirements=" + this.requirements.toString() + "}";
+        return "Task Advancement{parentId=" + this.parentId + ", display=" + this.display + ", rewards=" + this.rewards + ", criteria=" + this.criteria + ", requirements=" + this.requirements + "}";
     }
 
     public Map<String, Criterion<?>> getCriteria() {

@@ -1,0 +1,15 @@
+{
+  "input": {
+    "item": "minecraft:peony"
+  },
+  "output": [
+    {
+      "chance": 1.0,
+      "maxRange": 1,
+      "stack": {
+        "count": 4,
+        "id": "minecraft:pink_dye"
+      }
+    }
+  ]
+}

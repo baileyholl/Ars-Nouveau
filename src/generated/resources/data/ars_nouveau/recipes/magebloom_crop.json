@@ -1,27 +1,25 @@
 {
-  "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
-  "output": {
-    "item": "ars_nouveau:magebloom_crop"
-  },
   "pedestalItems": [
     {
-      "tag": "forge:gems/source"
+      "tag": "neoforge:gems/source"
     },
     {
-      "tag": "forge:gems/source"
+      "tag": "neoforge:gems/source"
     },
     {
-      "tag": "forge:gems/source"
+      "tag": "neoforge:gems/source"
     },
     {
-      "tag": "forge:gems/source"
+      "tag": "neoforge:gems/source"
     }
   ],
-  "reagent": [
-    {
-      "tag": "forge:seeds"
-    }
-  ],
+  "reagent": {
+    "tag": "c:seeds"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:magebloom_crop"
+  },
   "sourceCost": 0
 }

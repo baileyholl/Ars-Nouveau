@@ -1,13 +1,9 @@
 {
   "type": "ars_nouveau:glyph",
-  "count": 1,
   "exp": 27,
-  "inputItems": [
-    {
-      "item": {
-        "tag": "minecraft:buttons"
-      }
-    }
-  ],
-  "output": "ars_nouveau:glyph_touch"
+  "inputs": [],
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:glyph_touch"
+  }
 }

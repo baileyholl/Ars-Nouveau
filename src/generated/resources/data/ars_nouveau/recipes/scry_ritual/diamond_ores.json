@@ -1,6 +1,4 @@
 {
-  "type": "ars_nouveau:scry_ritual",
-  "augment": "forge:ores/diamond",
-  "highlight": "forge:ores/diamond",
-  "id": "ars_nouveau:diamond_ores"
+  "augment": "neoforge:ores/diamond",
+  "highlight": "neoforge:ores/diamond"
 }

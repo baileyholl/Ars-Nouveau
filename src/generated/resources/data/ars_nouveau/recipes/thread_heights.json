@@ -1,9 +1,5 @@
 {
-  "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
-  "output": {
-    "item": "ars_nouveau:thread_heights"
-  },
   "pedestalItems": [
     {
       "item": "minecraft:spider_eye"
@@ -24,10 +20,12 @@
       "item": "ars_nouveau:air_essence"
     }
   ],
-  "reagent": [
-    {
-      "item": "ars_nouveau:blank_thread"
-    }
-  ],
+  "reagent": {
+    "item": "ars_nouveau:blank_thread"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:thread_heights"
+  },
   "sourceCost": 0
 }

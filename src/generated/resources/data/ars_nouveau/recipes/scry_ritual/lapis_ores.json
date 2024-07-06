@@ -1,6 +1,4 @@
 {
-  "type": "ars_nouveau:scry_ritual",
-  "augment": "forge:ores/lapis",
-  "highlight": "forge:ores/lapis",
-  "id": "ars_nouveau:lapis_ores"
+  "augment": "neoforge:ores/lapis",
+  "highlight": "neoforge:ores/lapis"
 }

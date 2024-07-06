@@ -1,13 +1,9 @@
 {
   "type": "ars_nouveau:glyph",
-  "count": 1,
   "exp": 27,
-  "inputItems": [
-    {
-      "item": {
-        "item": "minecraft:diamond_pickaxe"
-      }
-    }
-  ],
-  "output": "ars_nouveau:glyph_amplify"
+  "inputs": [],
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:glyph_amplify"
+  }
 }

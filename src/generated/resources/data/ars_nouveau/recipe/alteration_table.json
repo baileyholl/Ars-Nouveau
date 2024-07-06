@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "x": {
+      "item": "ars_nouveau:magebloom_fiber"
+    },
+    "y": {
+      "item": "ars_nouveau:scribes_table"
+    }
+  },
+  "pattern": [
+    " x ",
+    "xyx",
+    " x "
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:alteration_table"
+  }
+}

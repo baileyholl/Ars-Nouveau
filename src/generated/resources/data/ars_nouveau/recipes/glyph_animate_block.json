@@ -1,28 +1,9 @@
 {
   "type": "ars_nouveau:glyph",
-  "count": 1,
   "exp": 55,
-  "inputItems": [
-    {
-      "item": {
-        "item": "ars_nouveau:conjuration_essence"
-      }
-    },
-    {
-      "item": {
-        "tag": "forge:obsidian"
-      }
-    },
-    {
-      "item": {
-        "tag": "forge:obsidian"
-      }
-    },
-    {
-      "item": {
-        "tag": "forge:obsidian"
-      }
-    }
-  ],
-  "output": "ars_nouveau:glyph_animate_block"
+  "inputs": [],
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:glyph_animate_block"
+  }
 }
