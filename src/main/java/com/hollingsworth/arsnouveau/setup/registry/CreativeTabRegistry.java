@@ -1,16 +1,10 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
-import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
-import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
-import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
-import com.hollingsworth.arsnouveau.common.items.PerkItem;
-import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -44,15 +38,15 @@ public class CreativeTabRegistry {
                         output.accept(entry.get().getDefaultInstance());
                     }
                 }
-                for (PerkItem perk : PerkRegistry.getPerkItemMap().values()) {
-                    output.accept(perk.getDefaultInstance());
-                }
-                for (RitualTablet ritual : RitualRegistry.getRitualItemMap().values()) {
-                    output.accept(ritual.getDefaultInstance());
-                }
-                for (FamiliarScript familiar : FamiliarRegistry.getFamiliarScriptMap().values()) {
-                    output.accept(familiar.getDefaultInstance());
-                }
+//                for (PerkItem perk : PerkRegistry.getPerkItemMap().values()) {
+//                    output.accept(perk.getDefaultInstance());
+//                }
+//                for (RitualTablet ritual : RitualRegistry.getRitualItemMap().values()) {
+//                    output.accept(ritual.getDefaultInstance());
+//                }
+//                for (FamiliarScript familiar : FamiliarRegistry.getFamiliarScriptMap().values()) {
+//                    output.accept(familiar.getDefaultInstance());
+//                }
 
             }).withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
             .build());

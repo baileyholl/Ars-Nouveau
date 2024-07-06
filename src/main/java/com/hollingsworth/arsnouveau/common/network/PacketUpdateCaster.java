@@ -3,8 +3,9 @@ package com.hollingsworth.arsnouveau.common.network;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
+import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -31,7 +32,7 @@ public class PacketUpdateCaster extends AbstractPacket{
 
     //Decoder
     public PacketUpdateCaster(RegistryFriendlyByteBuf buf) {
-        spellRecipe = Spell.fromTag(buf.readNbt());
+        spellRecipe = ANCodecs.decode(Spell.CODEC.codec(), buf.readNbt());
         cast_slot = buf.readInt();
         spellName = buf.readUtf(32767);
         this.mainHand = buf.readBoolean();
@@ -39,7 +40,7 @@ public class PacketUpdateCaster extends AbstractPacket{
 
     //Encoder
     public void toBytes(RegistryFriendlyByteBuf buf) {
-        buf.writeNbt(spellRecipe.serialize());
+        buf.writeNbt(ANCodecs.encode(Spell.CODEC.codec(), spellRecipe));
         buf.writeInt(cast_slot);
         buf.writeUtf(spellName);
         buf.writeBoolean(mainHand);
@@ -52,12 +53,10 @@ public class PacketUpdateCaster extends AbstractPacket{
         if(!(stack.getItem() instanceof ICasterTool))
             return;
         if (spellRecipe != null) {
-            ISpellCaster caster = SpellCasterRegistry.from(stack);
-            caster.setCurrentSlot(cast_slot);
+            SpellCaster caster = SpellCasterRegistry.from(stack);
             // Update just the recipe, don't overwrite the entire spell.
             var spell = caster.getSpell(cast_slot).mutable().setRecipe(new ArrayList<>(spellRecipe.unsafeList()));
-            caster.setSpell(spell.immutable(), cast_slot);
-            caster.setSpellName(spellName, cast_slot);
+            caster.setCurrentSlot(cast_slot).setSpell(spell.immutable(), cast_slot).setSpellName(spellName, cast_slot).saveToStack(stack);
 
             Networking.sendToPlayerClient(new PacketUpdateBookGUI(stack), player);
         }

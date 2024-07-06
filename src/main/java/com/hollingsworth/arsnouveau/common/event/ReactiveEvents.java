@@ -1,12 +1,6 @@
 package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketReactiveSpell;
-import com.hollingsworth.arsnouveau.common.util.HolderHelper;
-import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -31,11 +25,12 @@ public class ReactiveEvents {
     }
 
     public static void castSpell(LivingEntity playerIn, ItemStack stack) {
-        int level = stack.getEnchantmentLevel(playerIn.level.holderOrThrow(EnchantmentRegistry.REACTIVE_ENCHANTMENT));
-        var reactiveCaster = stack.get(DataComponentRegistry.REACTIVE_CASTER);
-        if (level * .25 >= Math.random() && reactiveCaster != null && reactiveCaster.getSpell().isValid()) {
-            reactiveCaster.castSpell(playerIn.getCommandSenderWorld(), playerIn, InteractionHand.MAIN_HAND, null);
-        }
+        //todo: reenable reactive
+//        int level = stack.getEnchantmentLevel(playerIn.level.holderOrThrow(EnchantmentRegistry.REACTIVE_ENCHANTMENT));
+//        var reactiveCaster = stack.get(DataComponentRegistry.REACTIVE_CASTER);
+//        if (level * .25 >= Math.random() && reactiveCaster != null && reactiveCaster.getSpell().isValid()) {
+//            reactiveCaster.castSpell(playerIn.getCommandSenderWorld(), playerIn, InteractionHand.MAIN_HAND, null);
+//        }
     }
 
     @SubscribeEvent
@@ -50,18 +45,21 @@ public class ReactiveEvents {
 
     @SubscribeEvent
     public static void playerAttackEntity(AttackEntityEvent e) {
-        Player entity = e.getEntity();
-
-        if (entity == null || entity.getCommandSenderWorld().isClientSide)
-            return;
-        ItemStack s = e.getEntity().getMainHandItem();
-        castSpell(entity, s);
+        //todo: reenable reactive
+//        Player entity = e.getEntity();
+//
+//        if (entity == null || entity.getCommandSenderWorld().isClientSide)
+//            return;
+//        ItemStack s = e.getEntity().getMainHandItem();
+//        castSpell(entity, s);
     }
 
 
     @SubscribeEvent
     public static void leftClickAir(PlayerInteractEvent.LeftClickEmpty e) {
-        if (e.getItemStack().getEnchantmentLevel(HolderHelper.unwrap(e.getLevel(), EnchantmentRegistry.REACTIVE_ENCHANTMENT)) > 0)
-            Networking.sendToServer(new PacketReactiveSpell());
+        //todo: reenable reactive
     }
+//        if (e.getItemStack().getEnchantmentLevel(HolderHelper.unwrap(e.getLevel(), EnchantmentRegistry.REACTIVE_ENCHANTMENT)) > 0)
+//            Networking.sendToServer(new PacketReactiveSpell());
+//    }
 }

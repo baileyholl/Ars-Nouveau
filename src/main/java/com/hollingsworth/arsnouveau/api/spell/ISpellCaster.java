@@ -32,7 +32,6 @@ import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.Map;
 
 /**
  * An interface for handling NBT as it relates to items that may cast spells.
@@ -128,7 +127,7 @@ public interface ISpellCaster<T extends ISpellCaster<T>> {
 
     String getFlavorText();
 
-    Map<Integer, Spell> getSpells();
+    SpellSlotMap getSpells();
 
     @NotNull
     default Spell getSpell(Level world, LivingEntity playerEntity, InteractionHand hand, ISpellCaster caster) {

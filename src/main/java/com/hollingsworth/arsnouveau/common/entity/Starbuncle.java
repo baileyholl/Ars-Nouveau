@@ -589,7 +589,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.put("starbuncleData", data.immutable().toTag(level));
-        if (getHeldStack() != null) {
+        if (!getHeldStack().isEmpty()) {
             Tag itemTag = getHeldStack().save(level.registryAccess());
             tag.put("held", itemTag);
         }

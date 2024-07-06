@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.PlayerCaster;
 import com.hollingsworth.arsnouveau.common.block.BasicSpellTurret;
 import com.hollingsworth.arsnouveau.common.block.ScryerCrystal;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.CheatSerializer;
 import com.hollingsworth.arsnouveau.common.items.ScryerScroll;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -16,6 +15,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
@@ -31,19 +31,17 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
-
 public class ScryCasterData extends SpellCaster {
 
     public static final MapCodec<ScryCasterData> CODEC = createCodec(ScryCasterData::new);
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ScryCasterData> STREAM_CODEC = CheatSerializer.create(CODEC);
+    public static final StreamCodec<RegistryFriendlyByteBuf, ScryCasterData> STREAM_CODEC = createStream(ScryCasterData::new);
 
     public ScryCasterData(Integer slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots) {
         super(slot, flavorText, isHidden, hiddenText, maxSlots);
     }
 
-    public ScryCasterData(Integer slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots, Map<Integer, Spell> spells) {
+    public ScryCasterData(Integer slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots, SpellSlotMap spells) {
         super(slot, flavorText, isHidden, hiddenText, maxSlots, spells);
     }
 
@@ -103,5 +101,10 @@ public class ScryCasterData extends SpellCaster {
         resolver.expendMana();
         playSound(entity.getOnPos(), worldIn, entity, getCurrentSound(), SoundSource.PLAYERS);
         return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
+    }
+
+    @Override
+    public DataComponentType getComponentType() {
+        return DataComponentRegistry.SCRY_CASTER.get();
     }
 }

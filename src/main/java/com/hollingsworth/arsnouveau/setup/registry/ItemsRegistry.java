@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
+import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.common.armor.AnimatedMagicArmor;
 import com.hollingsworth.arsnouveau.common.items.*;
@@ -182,7 +183,7 @@ public class ItemsRegistry {
     public static final ItemRegistryWrapper<ShapersFocus> SHAPERS_FOCUS = register(LibItemNames.SHAPERS_FOCUS, () -> new ShapersFocus(defaultItemProperties().stacksTo(1)));
     public static final ItemRegistryWrapper<ModItem> SOURCE_BERRY_PIE = register(LibItemNames.SOURCE_BERRY_PIE, () -> new ModItem(defaultItemProperties().food(SOURCE_PIE_FOOD)).withTooltip(Component.translatable("tooltip.ars_nouveau.source_food")));
     public static final ItemRegistryWrapper<ModItem> SOURCE_BERRY_ROLL = register(LibItemNames.SOURCE_BERRY_ROLL, () -> new ModItem(defaultItemProperties().food(SOURCE_ROLL_FOOD)).withTooltip(Component.translatable("tooltip.ars_nouveau.source_food")));
-    public static final ItemRegistryWrapper<EnchantersMirror> ENCHANTERS_MIRROR = register(LibItemNames.ENCHANTERS_MIRROR, () -> new EnchantersMirror(defaultItemProperties().stacksTo(1)));
+    public static final ItemRegistryWrapper<EnchantersMirror> ENCHANTERS_MIRROR = register(LibItemNames.ENCHANTERS_MIRROR, () -> new EnchantersMirror(defaultItemProperties().stacksTo(1).component(DataComponentRegistry.SPELL_CASTER, new SpellCaster())));
     public static final ItemRegistryWrapper<AnimatedMagicArmor> SORCERER_BOOTS = register(LibItemNames.SORCERER_BOOTS, () -> AnimatedMagicArmor.light(ArmorItem.Type.BOOTS));
     public static final ItemRegistryWrapper<AnimatedMagicArmor> SORCERER_LEGGINGS = register(LibItemNames.SORCERER_LEGGINGS, () -> AnimatedMagicArmor.light(ArmorItem.Type.LEGGINGS));
     public static final ItemRegistryWrapper<AnimatedMagicArmor> SORCERER_ROBES = register(LibItemNames.SORCERER_ROBES, () -> AnimatedMagicArmor.light(ArmorItem.Type.CHESTPLATE));
@@ -215,9 +216,9 @@ public class ItemsRegistry {
     public static final ItemRegistryWrapper<Item> SOUND_OF_GLASS = register(LibItemNames.SOUND_OF_GLASS, () -> new Item(defaultItemProperties().stacksTo(1).rarity(Rarity.RARE)));
     public static final ItemRegistryWrapper<Item> WILD_HUNT = register(LibItemNames.FIREL_WILD_HUNT, () -> new Item(defaultItemProperties().stacksTo(1).rarity(Rarity.RARE)));
     public static final ItemRegistryWrapper<Present> STARBY_GIFY = register(LibItemNames.STARBY_GIFT, () -> new Present(defaultItemProperties().rarity(Rarity.EPIC)));
-    public static final ItemRegistryWrapper<SpellCrossbow> SPELL_CROSSBOW = register(LibItemNames.SPELL_CROSSBOW, () -> new SpellCrossbow(defaultItemProperties().stacksTo(1)));
+    public static final ItemRegistryWrapper<SpellCrossbow> SPELL_CROSSBOW = register(LibItemNames.SPELL_CROSSBOW, () -> new SpellCrossbow(defaultItemProperties().stacksTo(1).component(DataComponentRegistry.SPELL_CASTER, new SpellCaster())));
     public static final ItemRegistryWrapper<StableWarpScroll> STABLE_WARP_SCROLL = register(LibItemNames.STABLE_WARP_SCROLL, () -> new StableWarpScroll(defaultItemProperties().stacksTo(1)));
-    public static final ItemRegistryWrapper<ScryCaster> SCRY_CASTER = register(LibItemNames.SCRY_CASTER, () -> new ScryCaster(defaultItemProperties().stacksTo(1)));
+    public static final ItemRegistryWrapper<ScryCaster> SCRY_CASTER = register(LibItemNames.SCRY_CASTER, () -> new ScryCaster(defaultItemProperties().stacksTo(1).component(DataComponentRegistry.SPELL_CASTER, new SpellCaster())));
     public static final ItemRegistryWrapper<JumpingRing> JUMP_RING = register(LibItemNames.JUMP_RING, JumpingRing::new);
 
     public static <T extends Item> ItemRegistryWrapper<T> register(String name, Supplier<T> item) {

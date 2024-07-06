@@ -563,14 +563,14 @@ public class InfinityGuiSpellBook extends BaseBook {
     public void onCreateClick(Button button) {
         validate();
         if (validationErrors.isEmpty()) {
-            Spell spell = new Spell();
+            Spell.Mutable spell = new Spell().mutable();
 
             for (AbstractSpellPart spellPart : this.spell) {
                 if (spellPart != null) {
                     spell.add(spellPart);
                 }
             }
-            Networking.sendToServer(new PacketUpdateCaster(spell, this.selectedSpellSlot, this.spell_name.getValue(), hand == InteractionHand.MAIN_HAND));
+            Networking.sendToServer(new PacketUpdateCaster(spell.immutable(), this.selectedSpellSlot, this.spell_name.getValue(), hand == InteractionHand.MAIN_HAND));
         }
     }
 

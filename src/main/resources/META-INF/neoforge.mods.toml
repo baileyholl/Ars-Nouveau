@@ -48,3 +48,5 @@ license="GNU GENERAL PUBLIC LICENSE"
     versionRange="[4.2.1,)"
     ordering="AFTER"
     side="BOTH"
+[[mixins]]
+    config="ars_nouveau.mixins.json"

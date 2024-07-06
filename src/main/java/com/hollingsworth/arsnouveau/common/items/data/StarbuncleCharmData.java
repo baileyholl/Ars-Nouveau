@@ -24,14 +24,15 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.level.block.Block;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, TooltipProvider {
 
     public static MapCodec<StarbuncleCharmData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ComponentSerialization.CODEC.fieldOf("name").forGetter(data -> data.name),
+            ComponentSerialization.CODEC.optionalFieldOf("name").forGetter(data -> data.name),
             Codec.STRING.optionalFieldOf("color", DyeColor.ORANGE.getName()).forGetter(data -> data.color),
-            Block.CODEC.fieldOf("path").forGetter(data -> data.pathBlock),
+//            Block.CODEC.fieldOf("path").forGetter(data -> data.pathBlock),
             BlockPos.CODEC.optionalFieldOf("bed", BlockPos.ZERO).forGetter(data -> data.bedPos == null ? BlockPos.ZERO : data.bedPos),
             ItemStack.CODEC.optionalFieldOf("cosmetic", ItemStack.EMPTY).forGetter(data -> data.cosmetic),
             CompoundTag.CODEC.optionalFieldOf("behavior", new CompoundTag()).forGetter(data -> data.behaviorTag),
@@ -40,7 +41,7 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
     ).apply(instance, StarbuncleCharmData::new));
 
     public static StreamCodec<RegistryFriendlyByteBuf, StarbuncleCharmData> STREAM_CODEC = CheatSerializer.create(CODEC);
-    public final Component name;
+    public final Optional<Component> name;
     public final String color;
     public final ItemStack cosmetic;
     public final Block pathBlock;
@@ -49,7 +50,18 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
     public final String adopter;
     public final String bio;
 
-    public StarbuncleCharmData(Component name, String color, Block pathBlock, BlockPos bedPos, ItemStack cosmetic, CompoundTag behaviorTag, String adopter, String bio) {
+    public StarbuncleCharmData(Optional<Component> name, String color, BlockPos bedPos, ItemStack cosmetic, CompoundTag behaviorTag, String adopter, String bio) {
+        this.name = name;
+        this.color = color;
+        this.cosmetic = cosmetic;
+        this.pathBlock = null;
+        this.bedPos = bedPos;
+        this.behaviorTag = behaviorTag;
+        this.adopter = adopter;
+        this.bio = bio;
+    }
+
+    public StarbuncleCharmData(Optional<Component> name, String color, Block pathBlock, BlockPos bedPos, ItemStack cosmetic, CompoundTag behaviorTag, String adopter, String bio) {
         this.name = name;
         this.color = color;
         this.cosmetic = cosmetic;
@@ -71,13 +83,13 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
     }
 
     public Mutable mutable() {
-        return new Mutable(name, color, cosmetic, pathBlock, bedPos, behaviorTag, adopter, bio);
+        return new Mutable(name.orElse(null), color, cosmetic, pathBlock, bedPos, behaviorTag, adopter, bio);
     }
 
     @Override
     public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltip2, TooltipFlag pTooltipFlag) {
-        if (name != null) {
-            tooltip2.accept(name);
+        if (!name.isEmpty()) {
+            tooltip2.accept(name.get());
         }
         if(adopter != null){
             tooltip2.accept(Component.translatable("ars_nouveau.adopter", adopter).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
@@ -124,7 +136,7 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
         }
 
         public StarbuncleCharmData immutable() {
-            return new StarbuncleCharmData(name, color, pathBlock, bedPos, cosmetic, behaviorTag, adopter, bio);
+            return new StarbuncleCharmData(Optional.ofNullable(name), color, pathBlock, bedPos, cosmetic, behaviorTag, adopter, bio);
         }
     }
 }

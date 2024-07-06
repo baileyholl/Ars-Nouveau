@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -30,14 +31,14 @@ public class PacketSetSound extends AbstractPacket{
     public PacketSetSound(RegistryFriendlyByteBuf buf) {
         castSlot = buf.readInt();
         CompoundTag tag = buf.readNbt();
-        sound = tag == null ? ConfiguredSpellSound.DEFAULT : ConfiguredSpellSound.fromTag(tag);
+        sound = tag == null ? ConfiguredSpellSound.DEFAULT : ANCodecs.decode(ConfiguredSpellSound.CODEC.codec(), tag);
         mainHand = buf.readBoolean();
     }
 
     //Encoder
     public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeInt(castSlot);
-        buf.writeNbt(sound.serialize());
+        buf.writeNbt(ANCodecs.encode(ConfiguredSpellSound.CODEC.codec(), sound));
         buf.writeBoolean(mainHand);
     }
 

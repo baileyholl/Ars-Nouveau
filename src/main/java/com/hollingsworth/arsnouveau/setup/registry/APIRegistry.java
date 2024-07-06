@@ -11,7 +11,6 @@ import com.hollingsworth.arsnouveau.api.scrying.CompoundScryer;
 import com.hollingsworth.arsnouveau.api.scrying.IScryer;
 import com.hollingsworth.arsnouveau.api.scrying.SingleBlockScryer;
 import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
-import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.familiars.*;
@@ -25,7 +24,6 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodUnderfoot;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -263,11 +261,6 @@ public class APIRegistry {
                 Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
         ));
 
-        SoundRegistry.DEFAULT_SPELL_SOUND = new SpellSound(SoundRegistry.DEFAULT_FAMILY, Component.translatable("ars_nouveau.sound.default_family"));
-        SoundRegistry.EMPTY_SPELL_SOUND = new SpellSound(SoundRegistry.EMPTY_SOUND_FAMILY, Component.translatable("ars_nouveau.sound.empty"));
-        SoundRegistry.GAIA_SPELL_SOUND = new SpellSound(SoundRegistry.GAIA_FAMILY, Component.translatable("ars_nouveau.sound.gaia_family"));
-        SoundRegistry.TEMPESTRY_SPELL_SOUND = new SpellSound(SoundRegistry.TEMPESTRY_FAMILY, Component.translatable("ars_nouveau.sound.tempestry_family"));
-        SoundRegistry.FIRE_SPELL_SOUND = new SpellSound(SoundRegistry.FIRE_FAMILY, Component.translatable("ars_nouveau.sound.fire_family"));
 
         SpellSoundRegistry.registerSpellSound(SoundRegistry.DEFAULT_SPELL_SOUND);
         SpellSoundRegistry.registerSpellSound(SoundRegistry.EMPTY_SPELL_SOUND);

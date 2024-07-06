@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.client.renderer.item.WandRenderer;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -36,7 +37,7 @@ public class Wand extends ModItem implements GeoItem, ICasterTool {
     }
 
     public Wand() {
-        super(new Item.Properties().stacksTo(1));
+        super(new Item.Properties().stacksTo(1).component(DataComponentRegistry.SPELL_CASTER, new SpellCaster()));
     }
 
     private <P extends Item & GeoAnimatable> PlayState predicate(AnimationState<P> event) {

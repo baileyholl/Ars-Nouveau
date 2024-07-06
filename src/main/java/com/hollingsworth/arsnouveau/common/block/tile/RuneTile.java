@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RuneBlock;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
@@ -55,7 +56,7 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
     }
 
     public void setSpell(Spell spell) {
-        this.spell = spell.clone();
+        this.spell = spell;
         updateBlock();
     }
 
@@ -90,7 +91,7 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
     @Override
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
-        tag.put("spell", spell.serialize());
+        tag.put("spell", ANCodecs.encode(Spell.CODEC.codec(), spell));
         tag.putBoolean("charged", isCharged);
         tag.putBoolean("redstone", disabled);
         tag.putBoolean("temp", isTemporary);
@@ -103,7 +104,7 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(tag, pRegistries);
-        this.spell = Spell.fromTag(tag.getCompound("spell"));
+        this.spell = ANCodecs.decode(Spell.CODEC.codec(), tag.getCompound("spell"));
         this.isCharged = tag.getBoolean("charged");
         this.disabled = tag.getBoolean("redstone");
         this.isTemporary = tag.getBoolean("temp");

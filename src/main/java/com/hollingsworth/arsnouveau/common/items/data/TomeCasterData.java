@@ -1,16 +1,17 @@
 package com.hollingsworth.arsnouveau.common.items.data;
 
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
-import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.CheatSerializer;
+import com.hollingsworth.arsnouveau.api.spell.SpellSlotMap;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.NotEnoughManaPacket;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.mojang.serialization.MapCodec;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
@@ -20,19 +21,17 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
-import java.util.Map;
-
 public class TomeCasterData extends SpellCaster {
     public static final MapCodec<TomeCasterData> CODEC = SpellCaster.createCodec(TomeCasterData::new);
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, TomeCasterData> STREAM_CODEC = CheatSerializer.create(TomeCasterData.CODEC);
+    public static final StreamCodec<RegistryFriendlyByteBuf, TomeCasterData> STREAM_CODEC = createStream(TomeCasterData::new);
 
 
     public TomeCasterData(Integer slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots) {
         super(slot, flavorText, isHidden, hiddenText, maxSlots);
     }
 
-    public TomeCasterData(Integer slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots, Map<Integer, Spell> spells) {
+    public TomeCasterData(Integer slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots, SpellSlotMap spells) {
         super(slot, flavorText, isHidden, hiddenText, maxSlots, spells);
     }
 
@@ -55,5 +54,10 @@ public class TomeCasterData extends SpellCaster {
             }
 
         };
+    }
+
+    @Override
+    public DataComponentType getComponentType() {
+        return DataComponentRegistry.TOME_CASTER.get();
     }
 }

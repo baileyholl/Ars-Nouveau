@@ -242,7 +242,7 @@ public class SpellContext implements Cloneable {
      * Returns a new copy of the spell with the recipe set to the remainder of the unresolved spell.
      */
     public @NotNull Spell getRemainingSpell() {
-        Spell.Mutable remainder = getSpell().clone().mutable();
+        Spell.Mutable remainder = getSpell().mutable();
         var spell = getSpell().mutable();
         if (getCurrentIndex() >= spell.recipe.size())
             return remainder.setRecipe(new ArrayList<>()).immutable();
@@ -258,7 +258,7 @@ public class SpellContext implements Cloneable {
     public SpellContext clone() {
         try {
             SpellContext clone = (SpellContext) super.clone();
-            clone.spell = this.spell.clone();
+            clone.spell = this.spell;
             clone.colors = this.colors.clone();
             clone.tag = this.tag.copy();
             clone.caster = this.caster;

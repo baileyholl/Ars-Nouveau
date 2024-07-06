@@ -4,13 +4,13 @@ import com.hollingsworth.arsnouveau.api.registry.SpellSoundRegistry;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
-import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class SpellSound {
@@ -19,6 +19,11 @@ public class SpellSound {
             SoundEvent.CODEC.fieldOf("soundEvent").forGetter(s -> s.soundEvent),
             ComponentSerialization.CODEC.fieldOf("soundName").forGetter(s -> s.soundName)
     ).apply(instance, SpellSound::new));
+
+    public static StreamCodec<RegistryFriendlyByteBuf, SpellSound> STREAM = StreamCodec.of(
+            (buf, val) -> buf.writeResourceLocation(val.id),
+            buf -> SpellSoundRegistry.getSpellSoundsRegistry().get(buf.readResourceLocation())
+    );
 
     private ResourceLocation id;
 
@@ -58,20 +63,6 @@ public class SpellSound {
 
     public void setSoundName(Component soundName) {
         this.soundName = soundName;
-    }
-
-    public CompoundTag serialize() {
-        CompoundTag tag = new CompoundTag();
-        tag.putString("id", id.toString());
-        return tag;
-    }
-
-    public static @Nullable SpellSound fromTag(CompoundTag tag) {
-        if (!tag.contains("id"))
-            return null;
-
-        ResourceLocation id = ResourceLocation.tryParse(tag.getString("id"));
-        return SpellSoundRegistry.getSpellSoundsRegistry().get(id);
     }
 
     public ResourceLocation getTexturePath() {

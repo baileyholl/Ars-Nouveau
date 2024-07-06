@@ -1,8 +1,9 @@
 package com.hollingsworth.arsnouveau.common.items.data;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.CheatSerializer;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.mojang.serialization.MapCodec;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.InteractionHand;
@@ -11,18 +12,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.FakePlayer;
 
-import java.util.Map;
-
 public class ReactiveCasterData extends SpellCaster {
     public static MapCodec<ReactiveCasterData> CODEC = SpellCaster.createCodec(ReactiveCasterData::new);
 
-    public static StreamCodec<RegistryFriendlyByteBuf, ReactiveCasterData> STREAM_CODEC = CheatSerializer.create(ReactiveCasterData.CODEC.codec());
+    public static StreamCodec<RegistryFriendlyByteBuf, ReactiveCasterData> STREAM_CODEC = createStream(ReactiveCasterData::new);
 
     public ReactiveCasterData(Integer slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots) {
         super(slot, flavorText, isHidden, hiddenText, maxSlots);
     }
 
-    public ReactiveCasterData(Integer slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots, Map<Integer, Spell> spells) {
+    public ReactiveCasterData(Integer slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots, SpellSlotMap spells) {
         super(slot, flavorText, isHidden, hiddenText, maxSlots, spells);
     }
 
@@ -32,5 +31,10 @@ public class ReactiveCasterData extends SpellCaster {
             return new EntitySpellResolver(context);
         }
         return super.getSpellResolver(context, worldIn, playerIn, handIn);
+    }
+
+    @Override
+    public DataComponentType getComponentType() {
+        return DataComponentRegistry.REACTIVE_CASTER.get();
     }
 }

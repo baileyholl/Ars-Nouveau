@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.perk.RepairingPerk;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -43,7 +44,7 @@ public class EnchantersSword extends SwordItem implements ICasterTool, GeoItem, 
     }
 
     public EnchantersSword(Tier iItemTier, int baseDamage, float baseAttackSpeed, Properties properties) {
-        super(iItemTier, properties.component(DataComponents.TOOL, createToolProperties()).attributes(SwordItem.createAttributes(iItemTier, baseDamage, baseAttackSpeed)));
+        super(iItemTier, properties.component(DataComponents.TOOL, createToolProperties()).attributes(SwordItem.createAttributes(iItemTier, baseDamage, baseAttackSpeed)).component(DataComponentRegistry.SPELL_CASTER, new SpellCaster()));
     }
 
     @Override

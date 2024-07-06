@@ -20,6 +20,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetBookMode;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
@@ -57,8 +58,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     public SpellBook(SpellTier tier) {
-        super(new Item.Properties().stacksTo(1));
-        this.tier = tier;
+        this(new Item.Properties().stacksTo(1).component(DataComponentRegistry.SPELL_CASTER, new SpellCaster(10)), tier);
     }
 
     public SpellBook(Properties properties, SpellTier tier) {

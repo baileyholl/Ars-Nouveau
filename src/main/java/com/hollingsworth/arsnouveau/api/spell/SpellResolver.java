@@ -245,7 +245,7 @@ public class SpellResolver implements Cloneable {
             clone.spellContext = spellContext.clone();
             clone.previousResolver = this.previousResolver != null ? this.previousResolver.clone() : null;
             clone.castType = this.castType;
-            clone.spell = this.spell.clone();
+            clone.spell = this.spell;
             clone.silent = this.silent;
             clone.hitResult = this.hitResult;
             return clone;

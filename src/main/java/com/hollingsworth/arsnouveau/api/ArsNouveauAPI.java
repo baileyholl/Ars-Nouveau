@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.recipe.PotionIngredient;
 import com.hollingsworth.arsnouveau.api.scrying.IScryer;
 import com.hollingsworth.arsnouveau.api.spell.ISpellValidator;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IEnchantingRecipe;
-import com.hollingsworth.arsnouveau.common.mixin.PotionRecipeMixin;
 import com.hollingsworth.arsnouveau.common.spell.validation.StandardSpellValidator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.alchemy.Potion;
@@ -75,7 +74,7 @@ public class ArsNouveauAPI {
                 if (ib instanceof BrewingRecipe brewingRecipe)
                     brewingRecipes.add(brewingRecipe);
             });
-            for(PotionBrewing.Mix<Potion> mix : PotionRecipeMixin.mixList()){
+            for(PotionBrewing.Mix<Potion> mix : world.potionBrewing().potionMixes){
                 brewingRecipes.add(new BrewingRecipe(
                         PotionIngredient.fromPotion(mix.from()),
                         mix.ingredient(),

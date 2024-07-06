@@ -5,7 +5,9 @@ import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.util.SpellPartConfigUtil;
 import com.mojang.serialization.Codec;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +21,28 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart> {
     public static final Codec<AbstractSpellPart> CODEC = ResourceLocation.CODEC.xmap(GlyphRegistry::getSpellPart, AbstractSpellPart::getRegistryName);
+    public static final StreamCodec<RegistryFriendlyByteBuf, AbstractSpellPart> STREAM = StreamCodec.of(
+            (buf, val) -> buf.writeResourceLocation(val.getRegistryName()),
+            buf -> GlyphRegistry.getSpellPart(buf.readResourceLocation())
+    );
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, List<AbstractSpellPart>> STREAM_LIST = StreamCodec.of(
+            (buf, val) -> {
+                buf.writeInt(val.size());
+                for (AbstractSpellPart part : val) {
+                    AbstractSpellPart.STREAM.encode(buf, part);
+                }
+            },
+            buf -> {
+                int size = buf.readInt();
+                List<AbstractSpellPart> parts = new CopyOnWriteArrayList<>();
+                for (int i = 0; i < size; i++) {
+                    parts.add(AbstractSpellPart.STREAM.decode(buf));
+                }
+                return parts;
+            }
+    );
+
     private final ResourceLocation registryName;
     public String name;
     public Glyph glyphItem;

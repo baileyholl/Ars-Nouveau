@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,7 +37,7 @@ public class PacketClientDelayEffect extends AbstractPacket{
     //Decoder
     public PacketClientDelayEffect(RegistryFriendlyByteBuf buf) {
         duration = buf.readInt();
-        spell = Spell.fromTag(buf.readNbt());
+        spell = ANCodecs.decode(Spell.CODEC.codec(), buf.readNbt());
         shooterID = buf.readInt();
         hitEntityID = buf.readInt();
         if (hitEntityID == -1) {
@@ -47,7 +48,7 @@ public class PacketClientDelayEffect extends AbstractPacket{
     //Encoder
     public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeInt(duration);
-        buf.writeNbt(spell.serialize());
+        buf.writeNbt(ANCodecs.encode(Spell.CODEC.codec(), spell));
         buf.writeInt(shooterID);
         buf.writeInt(hitEntityID);
 

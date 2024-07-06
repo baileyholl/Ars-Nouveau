@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.util.HolderHelper;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
@@ -42,7 +43,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
     }
 
     public SpellBow() {
-        this(ItemsRegistry.defaultItemProperties().stacksTo(1));
+        this(ItemsRegistry.defaultItemProperties().stacksTo(1).component(DataComponentRegistry.SPELL_CASTER, new SpellCaster()));
     }
 
     public boolean canPlayerCastSpell(ItemStack bow, Player playerentity) {

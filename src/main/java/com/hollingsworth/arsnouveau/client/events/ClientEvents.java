@@ -1,15 +1,11 @@
 package com.hollingsworth.arsnouveau.client.events;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.spell.Spell;
-import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.PatchouliTooltipEvent;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
 import com.hollingsworth.arsnouveau.common.block.tile.SkyBlockTile;
-import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
@@ -25,8 +21,6 @@ import net.neoforged.neoforge.client.event.RenderHighlightEvent;
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
-
-import java.util.Collections;
 
 @EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
 public class ClientEvents {
@@ -75,15 +69,16 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onTooltip(final ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
-        int level = stack.getEnchantmentLevel(event.getEntity().level.holderOrThrow(EnchantmentRegistry.REACTIVE_ENCHANTMENT));
-        var reactiveCaster = stack.get(DataComponentRegistry.REACTIVE_CASTER);
-
-        if (reactiveCaster != null && level > 0 && reactiveCaster.getSpell().isValid()) {
-            Spell spell = reactiveCaster.getSpell();
-            event.getToolTip().add(Component.literal(spell.getDisplayString()));
-        }
-
-        Collections.addAll(event.getToolTip(), ClientInfo.storageTooltip);
+        //todo: reenable reactive
+//        int level = stack.getEnchantmentLevel(event.getEntity().level.holderOrThrow(EnchantmentRegistry.REACTIVE_ENCHANTMENT));
+//        var reactiveCaster = stack.get(DataComponentRegistry.REACTIVE_CASTER);
+//
+//        if (reactiveCaster != null && level > 0 && reactiveCaster.getSpell().isValid()) {
+//            Spell spell = reactiveCaster.getSpell();
+//            event.getToolTip().add(Component.literal(spell.getDisplayString()));
+//        }
+//
+//        Collections.addAll(event.getToolTip(), ClientInfo.storageTooltip);
     }
 
     public static Component localize(String key, Object... params) {

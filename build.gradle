@@ -112,10 +112,10 @@ dependencies {
     compileOnly "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}:api"
 
     compileOnly "mezz.jei:jei-1.21-neoforge-api:${jei_version}"
-    localRuntime "mezz.jei:jei-1.21-neoforge:${jei_version}"
+//    localRuntime "mezz.jei:jei-1.21-neoforge:${jei_version}"
     implementation 'com.github.glitchfiend:TerraBlender-neoforge:1.21-4.0.0.0'
     implementation "curse.maven:jade-324717:5444008"
-    implementation 'top.theillusivec4.curios:curios-neoforge:9.0.3+1.21'
+    implementation 'top.theillusivec4.curios:curios-neoforge:9.0.4+1.21'
 }
 
 //tasks.withType(ProcessResources).configureEach {

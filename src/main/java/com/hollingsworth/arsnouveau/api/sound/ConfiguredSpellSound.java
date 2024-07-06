@@ -4,7 +4,8 @@ import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -12,10 +13,24 @@ import java.util.Objects;
 public class ConfiguredSpellSound implements Cloneable{
 
     public static final MapCodec<ConfiguredSpellSound> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            SpellSound.CODEC.codec().fieldOf("sound").forGetter(s -> s.sound),
+            SpellSound.CODEC.codec().optionalFieldOf("sound", SoundRegistry.DEFAULT_SPELL_SOUND).forGetter(s -> s.sound),
             Codec.FLOAT.optionalFieldOf("volume", 1.0f).forGetter(s -> s.volume),
             Codec.FLOAT.optionalFieldOf("pitch", 1.0f).forGetter(s -> s.pitch)
     ).apply(instance, ConfiguredSpellSound::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf,ConfiguredSpellSound> STREAM = StreamCodec.of(
+            (buf, val) -> {
+                SpellSound.STREAM.encode(buf, val.getSound());
+                buf.writeFloat(val.getVolume());
+                buf.writeFloat(val.getPitch());
+            },
+            buf -> {
+                SpellSound sound = SpellSound.STREAM.decode(buf);
+                float volume = buf.readFloat();
+                float pitch = buf.readFloat();
+                return new ConfiguredSpellSound(sound, volume, pitch);
+            }
+    );
 
     public static ConfiguredSpellSound EMPTY = new ConfiguredSpellSound(SoundRegistry.EMPTY_SPELL_SOUND, 1, 1); // If the user wants no sound, make it empty.
     public static ConfiguredSpellSound DEFAULT = new ConfiguredSpellSound(SoundRegistry.DEFAULT_SPELL_SOUND, 1, 1); // The default sound to be returned for null casters.
@@ -29,24 +44,9 @@ public class ConfiguredSpellSound implements Cloneable{
     }
 
     public ConfiguredSpellSound(@Nullable SpellSound spellSound, float aFloat, float aFloat1) {
-        this.sound = spellSound;
+        this.sound = spellSound ;
         this.volume = aFloat;
         this.pitch = aFloat1;
-    }
-
-    public CompoundTag serialize() {
-        CompoundTag tag = new CompoundTag();
-        tag.put("soundTag", sound == null ? new CompoundTag() : sound.serialize());
-        tag.putFloat("volume", volume);
-        tag.putFloat("pitch", pitch);
-        return tag;
-    }
-
-    public static ConfiguredSpellSound fromTag(CompoundTag tag) {
-        SpellSound sound = SpellSound.fromTag(tag.getCompound("soundTag"));
-        float volume = tag.getFloat("volume");
-        float pitch = tag.getFloat("pitch");
-        return new ConfiguredSpellSound(sound, volume, pitch);
     }
 
     @Override
