@@ -139,6 +139,39 @@ dependencies {
 //    }
 //}
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            from components.java
+            // Allows the maven pom file to be modified.
+            pom.withXml {
+
+                // Go through all the dependencies.
+                asNode().dependencies.dependency.each { dep ->
+
+                    println 'Surpressing artifact ' + dep.artifactId.last().value().last() + ' from maven dependencies.'
+                    assert dep.parent().remove(dep)
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url "file://" + System.getenv("local_maven")
+        }
+    }
+}
+
+// Disables Gradle's custom module metadata from being published to maven. The
+// metadata includes mapped dependencies which are not reasonably consumable by
+// other mod developers.
+tasks.withType(GenerateModuleMetadata) {
+    enabled = false
+}
+
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
