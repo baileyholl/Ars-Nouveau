@@ -1,4 +1,5 @@
 {
+  "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:sweeping_edge",
   "level": 3,
   "pedestalItems": [

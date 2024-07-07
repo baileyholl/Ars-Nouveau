@@ -33,7 +33,7 @@ public class ImbuementRecipeProvider extends SimpleDataProvider{
         return ModDatagen.registries.thenCompose((registry) -> {
             for (ImbuementRecipe g : recipes) {
                 Path path = getRecipePath(output, g.id.getPath());
-                futures.add(DataProvider.saveStable(pOutput, registry, ImbuementRecipe.Serializer.CODEC.codec(), g, path));
+                futures.add(DataProvider.saveStable(pOutput, registry, ImbuementRecipe.CODEC, g, path));
             }
             return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
         });

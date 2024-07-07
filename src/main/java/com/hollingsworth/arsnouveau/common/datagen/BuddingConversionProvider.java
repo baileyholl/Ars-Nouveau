@@ -26,7 +26,7 @@ public class BuddingConversionProvider extends SimpleDataProvider{
         addEntries();
         for (Wrapper recipe : recipes) {
             Path path = getRecipePath(output, recipe.location().getPath());
-            saveStable(pOutput, ANCodecs.toJson(BuddingConversionRecipe.Serializer.CODEC.codec(), recipe.recipe), path);
+            saveStable(pOutput, ANCodecs.toJson(BuddingConversionRecipe.CODEC, recipe.recipe), path);
         }
     }
 

@@ -257,7 +257,7 @@ public class CasterTomeProvider extends SimpleDataProvider {
 
         for (CasterRecipeWrapper g : tomes) {
             Path path = getRecipePath(output, g.id().getPath());
-            saveStable(pOutput, CasterTomeData.Serializer.CODEC.codec().encodeStart(JsonOps.INSTANCE, g.toData()).getOrThrow(), path);
+            saveStable(pOutput, CasterTomeData.CODEC.encodeStart(JsonOps.INSTANCE, g.toData()).getOrThrow(), path);
         }
     }
 

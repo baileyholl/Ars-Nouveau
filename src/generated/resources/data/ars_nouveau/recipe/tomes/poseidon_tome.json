@@ -1,0 +1,34 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": {
+    "b": 255,
+    "g": 1,
+    "id": "ars_nouveau:constant",
+    "r": 1
+  },
+  "flavour_text": "Fire at a body of water to create a Ice bubble in the depths.",
+  "name": "Poseidon's Refuge",
+  "sound": {
+    "sound": {
+      "soundEvent": {
+        "sound_id": "ars_nouveau:tempestry_family"
+      },
+      "soundName": {
+        "translate": "ars_nouveau.sound.tempestry_family"
+      }
+    }
+  },
+  "spell": [
+    "ars_nouveau:glyph_projectile",
+    "ars_nouveau:glyph_sensitive",
+    "ars_nouveau:glyph_light",
+    "ars_nouveau:burst",
+    "ars_nouveau:glyph_aoe",
+    "ars_nouveau:glyph_aoe",
+    "ars_nouveau:glyph_sensitive",
+    "ars_nouveau:glyph_freeze",
+    "ars_nouveau:glyph_break",
+    "ars_nouveau:glyph_freeze"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

@@ -1,0 +1,20 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": {
+    "b": 180,
+    "g": 25,
+    "id": "ars_nouveau:constant",
+    "r": 255
+  },
+  "flavour_text": "Cures status effects and heals the user.",
+  "name": "Rune of Renewing",
+  "sound": {},
+  "spell": [
+    "ars_nouveau:glyph_touch",
+    "ars_nouveau:glyph_rune",
+    "ars_nouveau:glyph_dispel",
+    "ars_nouveau:glyph_heal",
+    "ars_nouveau:glyph_amplify"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

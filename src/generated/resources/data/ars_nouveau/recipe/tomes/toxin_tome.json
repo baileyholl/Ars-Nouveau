@@ -1,0 +1,19 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": {
+    "b": 180,
+    "g": 25,
+    "id": "ars_nouveau:constant",
+    "r": 255
+  },
+  "flavour_text": "Poisons that target and causes them to take additional damage from all sources.",
+  "name": "Potent Toxin",
+  "sound": {},
+  "spell": [
+    "ars_nouveau:glyph_projectile",
+    "ars_nouveau:glyph_hex",
+    "ars_nouveau:glyph_harm",
+    "ars_nouveau:glyph_extend_time"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

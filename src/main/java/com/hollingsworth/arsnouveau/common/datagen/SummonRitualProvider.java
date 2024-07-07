@@ -29,7 +29,7 @@ public class SummonRitualProvider extends SimpleDataProvider{
         addEntries();
         for (SummonRitualRecipeWrapper recipe : recipes) {
             Path path = getRecipePath(output, recipe.id().getPath());
-            saveStable(pOutput, SummonRitualRecipe.Serializer.CODEC.codec().encodeStart(JsonOps.INSTANCE, recipe.recipe()).getOrThrow(), path);
+            saveStable(pOutput, SummonRitualRecipe.CODEC.encodeStart(JsonOps.INSTANCE, recipe.recipe()).getOrThrow(), path);
         }
     }
 

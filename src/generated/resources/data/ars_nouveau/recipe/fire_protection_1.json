@@ -1,4 +1,5 @@
 {
+  "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:fire_protection",
   "level": 1,
   "pedestalItems": [

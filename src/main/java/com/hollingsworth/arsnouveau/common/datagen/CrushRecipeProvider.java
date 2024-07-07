@@ -60,7 +60,7 @@ public class CrushRecipeProvider extends SimpleDataProvider {
 
         for (CrushWrapper g : recipes) {
             Path path = getRecipePath(output, g.path.getPath());
-            saveStable(pOutput, CrushRecipe.Serializer.CODEC.codec().encodeStart(JsonOps.INSTANCE, g.asRecipe()).getOrThrow(), path);
+            saveStable(pOutput, CrushRecipe.CODEC.encodeStart(JsonOps.INSTANCE, g.asRecipe()).getOrThrow(), path);
         }
     }
 

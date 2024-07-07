@@ -1,4 +1,5 @@
 {
+  "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:aqua_affinity",
   "level": 1,
   "pedestalItems": [

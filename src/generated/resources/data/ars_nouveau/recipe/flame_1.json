@@ -1,4 +1,5 @@
 {
+  "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:flame",
   "level": 1,
   "pedestalItems": [

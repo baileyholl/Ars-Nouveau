@@ -31,7 +31,7 @@ public class DispelEntityProvider extends SimpleDataProvider{
         addEntries();
         for (Wrapper recipe : recipes) {
             Path path = getRecipePath(output, recipe.location().getPath());
-            saveStable(pOutput, DispelEntityRecipe.Serializer.CODEC.codec().encodeStart(JsonOps.INSTANCE, recipe.recipe).getOrThrow(), path);
+            saveStable(pOutput, DispelEntityRecipe.CODEC.encodeStart(JsonOps.INSTANCE, recipe.recipe).getOrThrow(), path);
         }
     }
 

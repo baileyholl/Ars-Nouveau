@@ -1,4 +1,5 @@
 {
+  "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:smite",
   "level": 2,
   "pedestalItems": [

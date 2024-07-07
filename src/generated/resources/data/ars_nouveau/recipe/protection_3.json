@@ -1,4 +1,5 @@
 {
+  "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:protection",
   "level": 3,
   "pedestalItems": [

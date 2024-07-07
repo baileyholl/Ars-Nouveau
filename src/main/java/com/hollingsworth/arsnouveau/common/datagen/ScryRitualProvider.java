@@ -30,7 +30,7 @@ public class ScryRitualProvider extends SimpleDataProvider{
         addEntries();
         for (ScryRecipeWrapper recipe : recipes) {
             Path path = getRecipePath(output, recipe.id().getPath());
-            saveStable(pOutput, ScryRitualRecipe.Serializer.CODEC.codec().encodeStart(JsonOps.INSTANCE, recipe.recipe()).getOrThrow(), path);
+            saveStable(pOutput, ScryRitualRecipe.CODEC.encodeStart(JsonOps.INSTANCE, recipe.recipe()).getOrThrow(), path);
         }
     }
 

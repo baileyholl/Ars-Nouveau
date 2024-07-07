@@ -1,0 +1,20 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": {
+    "b": 180,
+    "g": 25,
+    "id": "ars_nouveau:constant",
+    "r": 255
+  },
+  "flavour_text": "Snares the target and grants other targets Glowing.",
+  "name": "Glow Trap",
+  "sound": {},
+  "spell": [
+    "ars_nouveau:glyph_touch",
+    "ars_nouveau:glyph_rune",
+    "ars_nouveau:glyph_snare",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_light"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

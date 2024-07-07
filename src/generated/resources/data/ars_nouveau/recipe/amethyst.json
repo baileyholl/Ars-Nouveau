@@ -1,4 +1,5 @@
 {
+  "type": "ars_nouveau:imbuement",
   "input": {
     "item": "minecraft:amethyst_shard"
   },

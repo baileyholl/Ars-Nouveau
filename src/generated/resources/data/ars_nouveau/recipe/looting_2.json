@@ -1,4 +1,5 @@
 {
+  "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:looting",
   "level": 2,
   "pedestalItems": [

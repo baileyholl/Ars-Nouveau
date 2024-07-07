@@ -1,4 +1,5 @@
 {
+  "type": "ars_nouveau:dispel_entity",
   "entity": "minecraft:blaze",
   "loot_conditions": [
     {
