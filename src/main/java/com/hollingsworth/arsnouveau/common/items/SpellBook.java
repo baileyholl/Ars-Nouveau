@@ -31,12 +31,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.neoforged.api.distmarker.Dist;
@@ -81,21 +79,9 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
                 }
             }
         }
-        ISpellCaster caster = getSpellCaster(stack);
+        SpellCaster caster = getSpellCaster(stack);
 
         return caster.castSpell(worldIn, playerIn, handIn, Component.translatable("ars_nouveau.invalid_spell"));
-    }
-
-    @Override
-    public int getUseDuration(ItemStack pStack, LivingEntity p_344979_) {
-        return 72000;
-    }
-
-    /**
-     * returns the action that specifies what animation to play when the items is being used
-     */
-    public UseAnim getUseAnimation(ItemStack stack) {
-        return UseAnim.BOW;
     }
 
     @Override

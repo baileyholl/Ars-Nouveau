@@ -125,10 +125,8 @@ public abstract class PotionFlask extends ModItem {
         return 0.0f;
     }
 
-    /**
-     * How long it takes to use or consume an item
-     */
-    public int getUseDuration(ItemStack stack) {
+    @Override
+    public int getUseDuration(ItemStack pStack, LivingEntity p_344979_) {
         return 32;
     }
 
