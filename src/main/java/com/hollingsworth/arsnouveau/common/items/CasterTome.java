@@ -2,10 +2,10 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.mana.IManaDiscountEquipment;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
+import com.hollingsworth.arsnouveau.common.items.data.TomeCasterData;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
@@ -34,7 +34,7 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
     }
 
     public CasterTome() {
-        super(ItemsRegistry.defaultItemProperties().component(DataComponentRegistry.SPELL_CASTER, new SpellCaster()));
+        super(ItemsRegistry.defaultItemProperties().component(DataComponentRegistry.TOME_CASTER, new TomeCasterData()));
     }
 
     @Override
@@ -45,7 +45,7 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-        ISpellCaster caster = getSpellCaster(stack);
+        SpellCaster caster = getSpellCaster(stack);
         Spell spell = caster.getSpell();
         return caster.castSpell(worldIn, playerIn, handIn, Component.empty(), spell);
     }
@@ -54,7 +54,7 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
     public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
         if (context == null)
             return;
-        ISpellCaster caster = getSpellCaster(stack);
+        SpellCaster caster = getSpellCaster(stack);
 
         if (Config.GLYPH_TOOLTIPS.get() || Screen.hasShiftDown()) {
             if (caster.isSpellHidden()) {
@@ -62,7 +62,9 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
             }
             if (!caster.getFlavorText().isEmpty())
                 tooltip2.add(Component.literal(caster.getFlavorText()).withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE)));
-        } else getInformation(stack, context, tooltip2, flagIn);
+        } else{
+            getInformation(stack, context, tooltip2, flagIn);
+        }
 
         tooltip2.add(Component.translatable("tooltip.ars_nouveau.caster_tome"));
 
@@ -76,7 +78,7 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
-        ISpellCaster caster = getSpellCaster(pStack);
+        SpellCaster caster = getSpellCaster(pStack);
         if (!Screen.hasShiftDown() && Config.GLYPH_TOOLTIPS.get() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
             return Optional.of(new SpellTooltip(caster));
         return Optional.empty();

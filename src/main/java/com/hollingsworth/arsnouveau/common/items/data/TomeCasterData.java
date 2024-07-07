@@ -27,6 +27,10 @@ public class TomeCasterData extends SpellCaster {
     public static final StreamCodec<RegistryFriendlyByteBuf, TomeCasterData> STREAM_CODEC = createStream(TomeCasterData::new);
 
 
+    public TomeCasterData() {
+        super();
+    }
+
     public TomeCasterData(Integer slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots) {
         super(slot, flavorText, isHidden, hiddenText, maxSlots);
     }

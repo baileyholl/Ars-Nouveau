@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.setup.config.Config;
@@ -29,23 +28,19 @@ public class SpellParchment extends ModItem implements ICasterTool {
 
     @Override
     public Component getName(ItemStack pStack) {
-        ISpellCaster caster = getSpellCaster(pStack);
+        SpellCaster caster = getSpellCaster(pStack);
         return caster.getSpellName().isEmpty() ? super.getName(pStack) : Component.literal(caster.getSpellName());
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
-        ISpellCaster caster = getSpellCaster(stack);
-
-        if (!Config.GLYPH_TOOLTIPS.get() || Screen.hasShiftDown() || caster.isSpellHidden() || caster.getSpell().isEmpty())
-            getInformation(stack, context, tooltip2, flagIn);
-
+        stack.addToTooltip(DataComponentRegistry.SPELL_CASTER, context, tooltip2::add, flagIn);
         super.appendHoverText(stack, context, tooltip2, flagIn);
     }
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
-        ISpellCaster caster = getSpellCaster(pStack);
+        SpellCaster caster = getSpellCaster(pStack);
         if (Config.GLYPH_TOOLTIPS.get() && !Screen.hasShiftDown() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
             return Optional.of(new SpellTooltip(caster));
         return Optional.empty();

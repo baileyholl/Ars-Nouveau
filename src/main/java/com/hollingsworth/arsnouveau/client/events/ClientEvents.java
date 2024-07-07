@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.events;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.registry.DynamicTooltipRegistry;
 import com.hollingsworth.arsnouveau.client.gui.PatchouliTooltipEvent;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
@@ -69,6 +70,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onTooltip(final ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
+        DynamicTooltipRegistry.appendTooltips(stack, event.getContext(), event.getToolTip()::add, event.getFlags());
         //todo: reenable reactive
 //        int level = stack.getEnchantmentLevel(event.getEntity().level.holderOrThrow(EnchantmentRegistry.REACTIVE_ENCHANTMENT));
 //        var reactiveCaster = stack.get(DataComponentRegistry.REACTIVE_CASTER);

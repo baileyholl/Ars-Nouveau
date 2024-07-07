@@ -37,6 +37,10 @@ public class ScryCasterData extends SpellCaster {
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ScryCasterData> STREAM_CODEC = createStream(ScryCasterData::new);
 
+    public ScryCasterData() {
+        super();
+    }
+
     public ScryCasterData(Integer slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots) {
         super(slot, flavorText, isHidden, hiddenText, maxSlots);
     }

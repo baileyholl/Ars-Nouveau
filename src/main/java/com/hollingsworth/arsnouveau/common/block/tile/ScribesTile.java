@@ -265,7 +265,9 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
         super.loadAdditional(compound, pRegistries);
-        stack = ItemStack.parseOptional(pRegistries, (CompoundTag) compound.get("itemStack"));
+        if(compound.contains("itemStack")) {
+            stack = ItemStack.parseOptional(pRegistries, compound.getCompound("itemStack"));
+        }
         if (compound.contains("recipe")) {
             recipeID = ResourceLocation.tryParse(compound.getString("recipe"));
         }
@@ -280,7 +282,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
     @Override
     public void saveAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
         super.saveAdditional(compound, pRegistries);
-        if (stack != null) {
+        if (!stack.isEmpty()) {
             Tag reagentTag = stack.save(pRegistries);
 
             compound.put("itemStack", reagentTag);

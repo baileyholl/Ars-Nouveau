@@ -46,6 +46,7 @@ public class ModItem extends Item {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip2, flagIn);
         if (tooltip != null && !tooltip.isEmpty()) {
             tooltip2.addAll(tooltip);
         }

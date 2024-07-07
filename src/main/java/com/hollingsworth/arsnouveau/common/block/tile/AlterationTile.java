@@ -159,8 +159,10 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
-        Tag armorTag = armorStack.save(pRegistries);
-        tag.put("armorStack", armorTag);
+        if(!armorStack.isEmpty()) {
+            Tag armorTag = armorStack.save(pRegistries);
+            tag.put("armorStack", armorTag);
+        }
         tag.putInt("numPerks", perkList.size());
         int count = 0;
         for(ItemStack i : perkList){
@@ -174,7 +176,9 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
         super.loadAdditional(compound, pRegistries);
-        this.armorStack = ItemStack.parseOptional(pRegistries, compound.getCompound("armorStack"));
+        if(compound.contains("armorStack")) {
+            this.armorStack = ItemStack.parseOptional(pRegistries, compound.getCompound("armorStack"));
+        }
         int count = compound.getInt("numPerks");
         perkList = new ArrayList<>();
         for(int i = 0; i < count; i++){

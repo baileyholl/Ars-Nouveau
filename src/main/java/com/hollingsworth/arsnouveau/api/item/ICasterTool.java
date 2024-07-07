@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.api.item;
 
 import com.hollingsworth.arsnouveau.api.client.IDisplayMana;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.ItemCasterProvider;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
@@ -10,11 +9,8 @@ import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -102,22 +98,7 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
     }
 
     default void getInformation(ItemStack stack, Item.TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
-        ISpellCaster caster = getSpellCaster(stack);
-
-        if (caster.getSpell().isEmpty()) {
-            tooltip2.add(Component.translatable("ars_nouveau.tooltip.can_inscribe"));
-            return;
-        }
-        if (!caster.getSpellName().isEmpty()) {
-            tooltip2.add(Component.literal(caster.getSpellName()));
-        }
-        if (caster.isSpellHidden()) {
-            tooltip2.add(Component.literal(caster.getHiddenRecipe()).withStyle(Style.EMPTY.withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "alt")).withColor(ChatFormatting.GOLD)));
-        } else {
-            Spell spell = caster.getSpell();
-            tooltip2.add(Component.literal(spell.getDisplayString()));
-        }
-        if (!caster.getFlavorText().isEmpty())
-            tooltip2.add(Component.literal(caster.getFlavorText()).withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE)));
+        SpellCaster caster = getSpellCaster(stack);
+        stack.addToTooltip(caster.getComponentType(), context, tooltip2::add, flagIn);
     }
 }

@@ -169,7 +169,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
-        if (stack != null) {
+        if (!stack.isEmpty()) {
             Tag reagentTag = stack.save(pRegistries);
             tag.put("itemStack", reagentTag);
         }

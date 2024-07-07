@@ -14,13 +14,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public class AnnotatedCodex extends ModItem {
 
@@ -29,7 +32,7 @@ public class AnnotatedCodex extends ModItem {
     }
 
     public AnnotatedCodex() {
-        this(ItemsRegistry.defaultItemProperties().stacksTo(1));
+        this(ItemsRegistry.defaultItemProperties().stacksTo(1).component(DataComponentRegistry.CODEX_DATA, new CodexData(Optional.empty(), null, List.of())));
     }
 
     public int getUnlockLevelCost(Collection<AbstractSpellPart> spellParts) {
@@ -42,7 +45,7 @@ public class AnnotatedCodex extends ModItem {
         if (pPlayer.level.isClientSide)
             return super.use(pLevel, pPlayer, pUsedHand);
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
-        CodexData data = stack.getOrDefault(DataComponentRegistry.CODEX_DATA, new CodexData((String) null, null, List.of()));
+        CodexData data = stack.get(DataComponentRegistry.CODEX_DATA);
 
         IPlayerCap playerCap = CapabilityRegistry.getPlayerDataCap(pPlayer).orElse(null);
         if (playerCap == null)
@@ -50,7 +53,7 @@ public class AnnotatedCodex extends ModItem {
         Collection<AbstractSpellPart> known = playerCap.getKnownGlyphs();
         Collection<AbstractSpellPart> storedGlyphs = data.glyphIds().stream().map(GlyphRegistry::getSpellPart).toList();
 
-        if (data.uuid() == null) { // Player writing to codex
+        if (!data.wasRecorded()) { // Player writing to codex
             int levelCost = getUnlockLevelCost(playerCap.getKnownGlyphs());
             int expCost = ScribesTile.getExperienceForLevel(levelCost);
             if (expCost > ScribesTile.getTotalPlayerExperience(pPlayer)) {
@@ -77,7 +80,7 @@ public class AnnotatedCodex extends ModItem {
                     pPlayer.giveExperiencePoints(-expCost);
                     var newData = new CodexData(pPlayer.getUUID(), pPlayer.getName().getString(), playerCap.getKnownGlyphs().stream().map(AbstractSpellPart::getRegistryName).toList());
                     stack.set(DataComponentRegistry.CODEX_DATA, newData);
-                    
+
                     PortUtil.sendMessageNoSpam(pPlayer, Component.translatable("ars_nouveau.updated_codex"));
                 }
             } else {
@@ -104,15 +107,8 @@ public class AnnotatedCodex extends ModItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
-        CodexData data = stack.getOrDefault(DataComponentRegistry.CODEX_DATA, new CodexData((String) null, null, List.of()));
-        if (data.glyphIds().isEmpty()) {
-            tooltip2.add(Component.translatable("ars_nouveau.codex_tooltip"));
-        } else {
-            tooltip2.add(Component.translatable("ars_nouveau.contains_glyphs", data.glyphIds().size()));
-        }
-        if (data.playerName() != null)
-            tooltip2.add(Component.translatable("ars_nouveau.recorded_by", data.playerName()));
+        stack.addToTooltip(DataComponentRegistry.CODEX_DATA, context, tooltip2::add, flagIn);
     }
 }

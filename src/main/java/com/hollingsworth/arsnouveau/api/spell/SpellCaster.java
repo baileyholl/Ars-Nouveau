@@ -8,11 +8,14 @@ import com.mojang.datafixers.util.Function6;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -208,6 +211,20 @@ public class SpellCaster implements ISpellCaster<SpellCaster>, TooltipProvider {
 
     @Override
     public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag) {
-
+        if (getSpell().isEmpty()) {
+            pTooltipAdder.accept(Component.translatable("ars_nouveau.tooltip.can_inscribe"));
+            return;
+        }
+        if (!getSpellName().isEmpty()) {
+            pTooltipAdder.accept(Component.literal(getSpellName()));
+        }
+        if (isSpellHidden()) {
+            pTooltipAdder.accept(Component.literal(getHiddenRecipe()).withStyle(Style.EMPTY.withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "alt")).withColor(ChatFormatting.GOLD)));
+        } else {
+            Spell spell = getSpell();
+            pTooltipAdder.accept(Component.literal(spell.getDisplayString()));
+        }
+        if (!getFlavorText().isEmpty())
+            pTooltipAdder.accept(Component.literal(getFlavorText()).withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE)));
     }
 }

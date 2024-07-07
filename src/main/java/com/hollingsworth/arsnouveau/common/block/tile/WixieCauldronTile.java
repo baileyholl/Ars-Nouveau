@@ -370,7 +370,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     public void saveAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
         super.saveAdditional(compound, pRegistries);
 
-        if (setStack != null) {
+        if (setStack != null && !setStack.isEmpty()) {
             Tag itemTag = setStack.save(pRegistries);
             compound.put("crafting", itemTag);
         }

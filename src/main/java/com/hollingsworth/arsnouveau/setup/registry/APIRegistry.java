@@ -293,6 +293,8 @@ public class APIRegistry {
                 }
             }
         });
+
+        DynamicTooltipRegistry.register(DataComponentRegistry.REACTIVE_CASTER.get());
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {
