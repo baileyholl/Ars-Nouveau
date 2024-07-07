@@ -39,7 +39,7 @@ public class BuddingConversionProvider extends SimpleDataProvider{
     }
 
     protected static Path getRecipePath(Path path, String id) {
-        return path.resolve("data/ars_nouveau/recipes/budding_conversion/" + id + ".json");
+        return path.resolve("data/ars_nouveau/recipe/budding_conversion/" + id + ".json");
     }
 
     /**

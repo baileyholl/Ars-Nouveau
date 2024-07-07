@@ -1119,7 +1119,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
     }
 
     protected static Path getRecipePath(Path pathIn, String str) {
-        return pathIn.resolve("data/ars_nouveau/recipes/" + str + ".json");
+        return pathIn.resolve("data/ars_nouveau/recipe/" + str + ".json");
     }
 
     @Override

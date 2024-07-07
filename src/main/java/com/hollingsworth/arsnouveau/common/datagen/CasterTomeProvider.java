@@ -262,7 +262,7 @@ public class CasterTomeProvider extends SimpleDataProvider {
     }
 
     protected Path getRecipePath(Path pathIn, String str) {
-        return pathIn.resolve("data/ars_nouveau/recipes/tomes/" + str + ".json");
+        return pathIn.resolve("data/ars_nouveau/recipe/tomes/" + str + ".json");
     }
 
     public CasterRecipeWrapper buildTome(String id, String name, Spell spell, String flavorText) {

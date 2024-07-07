@@ -60,7 +60,7 @@ public class ScryRitualProvider extends SimpleDataProvider{
     }
 
     protected static Path getRecipePath(Path path, String id) {
-        return path.resolve("data/ars_nouveau/recipes/scry_ritual/" + id + ".json");
+        return path.resolve("data/ars_nouveau/recipe/scry_ritual/" + id + ".json");
     }
 
     /**

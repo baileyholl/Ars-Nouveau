@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.Tags;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +91,7 @@ public class ImbuementRecipeProvider extends SimpleDataProvider{
     }
 
     private static Path getRecipePath(Path pathIn, String str) {
-        return pathIn.resolve("data/ars_nouveau/recipes/" + str + ".json");
+        return pathIn.resolve("data/ars_nouveau/recipe/" + str + ".json");
     }
 
     @Override

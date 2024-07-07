@@ -40,7 +40,7 @@ public class SummonRitualProvider extends SimpleDataProvider{
     }
 
     protected static Path getRecipePath(Path path, String id) {
-        return path.resolve("data/ars_nouveau/recipes/summon_ritual/" + id + ".json");
+        return path.resolve("data/ars_nouveau/recipe/summon_ritual/" + id + ".json");
     }
 
     /**

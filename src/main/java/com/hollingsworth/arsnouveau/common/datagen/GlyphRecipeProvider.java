@@ -155,7 +155,7 @@ public class GlyphRecipeProvider extends SimpleDataProvider {
     }
 
     protected static Path getScribeGlyphPath(Path pathIn, Item glyph) {
-        return pathIn.resolve("data/ars_nouveau/recipes/" + getRegistryName(glyph).getPath() + ".json");
+        return pathIn.resolve("data/ars_nouveau/recipe/" + getRegistryName(glyph).getPath() + ".json");
 
     }
 

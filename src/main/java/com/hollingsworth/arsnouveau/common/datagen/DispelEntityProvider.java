@@ -46,7 +46,7 @@ public class DispelEntityProvider extends SimpleDataProvider{
     }
 
     protected static Path getRecipePath(Path path, String id) {
-        return path.resolve("data/ars_nouveau/recipes/dispel_entity/" + id + ".json");
+        return path.resolve("data/ars_nouveau/recipe/dispel_entity/" + id + ".json");
     }
 
     /**
