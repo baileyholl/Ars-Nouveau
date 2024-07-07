@@ -21,52 +21,35 @@ public class SpellSound {
     ).apply(instance, SpellSound::new));
 
     public static StreamCodec<RegistryFriendlyByteBuf, SpellSound> STREAM = StreamCodec.of(
-            (buf, val) -> buf.writeResourceLocation(val.id),
+            (buf, val) -> buf.writeResourceLocation(val.getId()),
             buf -> SpellSoundRegistry.getSpellSoundsRegistry().get(buf.readResourceLocation())
     );
 
-    private ResourceLocation id;
 
     private Holder<SoundEvent> soundEvent;
 
     private Component soundName;
 
-    public SpellSound(ResourceLocation id, Holder<SoundEvent> soundEvent, Component soundName) {
-        this.id = id;
+    public SpellSound(Holder<SoundEvent> soundEvent, Component soundName) {
         this.soundEvent = soundEvent;
         this.soundName = soundName;
     }
 
-    public SpellSound(Holder<SoundEvent> soundEvent, Component soundName) {
-        this(soundEvent.unwrapKey().get().location(), soundEvent, soundName);
-    }
-
     public ResourceLocation getId() {
-        return id;
+        return soundEvent.unwrapKey().get().location();
     }
 
-    public void setId(ResourceLocation id) {
-        this.id = id;
-    }
 
     public Holder<SoundEvent> getSoundEvent() {
         return soundEvent;
-    }
-
-    public void setSoundEvent(Holder<SoundEvent> soundEvent) {
-        this.soundEvent = soundEvent;
     }
 
     public Component getSoundName() {
         return soundName;
     }
 
-    public void setSoundName(Component soundName) {
-        this.soundName = soundName;
-    }
-
     public ResourceLocation getTexturePath() {
-        return ResourceLocation.fromNamespaceAndPath(this.id.getNamespace(), "textures/sounds/" + this.id.getPath() + ".png");
+        return ResourceLocation.fromNamespaceAndPath(this.getId().getNamespace(), "textures/sounds/" + this.getId().getPath() + ".png");
     }
 
     @Override
@@ -74,19 +57,18 @@ public class SpellSound {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SpellSound that = (SpellSound) o;
-        return Objects.equals(id, that.id) && Objects.equals(soundEvent, that.soundEvent) && Objects.equals(soundName, that.soundName);
+        return Objects.equals(soundEvent, that.soundEvent) && Objects.equals(soundName, that.soundName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, soundEvent, soundName);
+        return Objects.hash(soundEvent, soundName);
     }
 
     @Override
     public String toString() {
         return "SpellSound{" +
-                "id=" + id +
-                ", soundEvent=" + soundEvent +
+                "soundEvent=" + soundEvent +
                 ", soundName=" + soundName +
                 '}';
     }
