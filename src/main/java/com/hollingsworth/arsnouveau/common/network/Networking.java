@@ -26,7 +26,7 @@ public class Networking {
     public static void register(final RegisterPayloadHandlersEvent event) {
         // Sets the current network version
         final PayloadRegistrar reg = event.registrar("1");
-        reg.playToServer(PacketOpenSpellBook.TYPE, PacketOpenSpellBook.CODEC,  Networking::handle);
+        reg.playToClient(PacketOpenSpellBook.TYPE, PacketOpenSpellBook.CODEC,  Networking::handle);
         reg.playToClient(ChangeBiomePacket.TYPE, ChangeBiomePacket.CODEC, Networking::handle);
         reg.playToServer(PacketSetLauncher.TYPE, PacketSetLauncher.CODEC, Networking::handle);
         reg.playToServer(ClientToServerStoragePacket.TYPE, ClientToServerStoragePacket.CODEC, Networking::handle);
@@ -50,7 +50,7 @@ public class Networking {
         reg.playToClient(PacketOpenGlyphCraft.TYPE, PacketOpenGlyphCraft.CODEC, Networking::handle);
         reg.playToServer(PacketQuickCast.TYPE, PacketQuickCast.CODEC, Networking::handle);
         reg.playToServer(PacketReactiveSpell.TYPE, PacketReactiveSpell.CODEC, Networking::handle);
-        reg.playToServer(PacketSetBookMode.TYPE, PacketSetBookMode.CODEC, Networking::handle);
+        reg.playToServer(PacketSetCasterSlot.TYPE, PacketSetCasterSlot.CODEC, Networking::handle);
         reg.playToClient(PacketSetCameraView.TYPE, PacketSetCameraView.CODEC, Networking::handle);
         reg.playToServer(PacketSetScribeRecipe.TYPE, PacketSetScribeRecipe.CODEC, Networking::handle);
         reg.playToServer(PacketSetSound.TYPE, PacketSetSound.CODEC, Networking::handle);

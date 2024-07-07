@@ -4,12 +4,12 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.client.gui.book.InfinityGuiSpellBook;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 
 
 public class PacketOpenSpellBook extends AbstractPacket{
@@ -37,7 +37,7 @@ public class PacketOpenSpellBook extends AbstractPacket{
     }
 
     @Override
-    public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
+    public void onClientReceived(Minecraft minecraft, Player player) {
         InteractionHand hand = isMainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
         if (ServerConfig.INFINITE_SPELLS.get())
             InfinityGuiSpellBook.open(hand);

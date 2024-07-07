@@ -17,7 +17,7 @@ import com.hollingsworth.arsnouveau.common.capability.ANPlayerDataCap;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
 import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketSetBookMode;
+import com.hollingsworth.arsnouveau.common.network.PacketSetCasterSlot;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
@@ -156,9 +156,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
 
     public RadialMenu<AbstractSpellPart> getRadialMenuProviderForSpellpart(ItemStack itemStack) {
         return new RadialMenu<>((int slot) -> {
-            SpellCaster caster =  SpellCasterRegistry.from(itemStack);
-            caster.setCurrentSlot(slot);
-            Networking.sendToServer(new PacketSetBookMode(caster));
+            Networking.sendToServer(new PacketSetCasterSlot(slot));
         },
                 getRadialMenuSlotsForSpellpart(itemStack),
                 RenderUtils::drawSpellPart,

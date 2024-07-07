@@ -110,7 +110,7 @@ public class SpellCaster implements ISpellCaster<SpellCaster>, TooltipProvider {
 
     @Override
     public SpellCaster setSpell(Spell spell, int slot) {
-        return new SpellCaster(slot, flavorText, isHidden, hiddenText, maxSlots, spells.put(slot, spell));
+        return new SpellCaster(this.slot, flavorText, isHidden, hiddenText, maxSlots, spells.put(slot, spell));
     }
 
     @Override
@@ -131,7 +131,7 @@ public class SpellCaster implements ISpellCaster<SpellCaster>, TooltipProvider {
     @Override
     public SpellCaster setSpellName(String name, int slot) {
         var spell = this.getSpell(slot);
-        return new SpellCaster(slot, flavorText, isHidden, hiddenText, maxSlots, spells.put(slot, new Spell(name, spell.color(), spell.sound(), new ArrayList<>(spell.unsafeList()))));
+        return new SpellCaster(this.slot, flavorText, isHidden, hiddenText, maxSlots, spells.put(slot, new Spell(name, spell.color(), spell.sound(), new ArrayList<>(spell.unsafeList()))));
     }
 
     @Override
@@ -162,7 +162,7 @@ public class SpellCaster implements ISpellCaster<SpellCaster>, TooltipProvider {
     @Override
     public SpellCaster setColor(ParticleColor color, int slot) {
         var spell = this.getSpell(slot);
-        return new SpellCaster(slot, flavorText, isHidden, hiddenText, maxSlots, this.spells.put(slot, new Spell(spell.name(), color, spell.sound(), new ArrayList<>(spell.unsafeList()))));
+        return new SpellCaster(this.slot, flavorText, isHidden, hiddenText, maxSlots, this.spells.put(slot, new Spell(spell.name(), color, spell.sound(), new ArrayList<>(spell.unsafeList()))));
     }
 
    @NotNull
@@ -174,7 +174,7 @@ public class SpellCaster implements ISpellCaster<SpellCaster>, TooltipProvider {
     @Override
     public SpellCaster setSound(ConfiguredSpellSound sound, int slot) {
         var spell = this.getSpell(slot);
-        return new SpellCaster(slot, flavorText, isHidden, hiddenText, maxSlots, this.spells.put(slot, new Spell(spell.name(), spell.color(), sound, new ArrayList<>(spell.unsafeList()))));
+        return new SpellCaster(this.slot, flavorText, isHidden, hiddenText, maxSlots, this.spells.put(slot, new Spell(spell.name(), spell.color(), sound, new ArrayList<>(spell.unsafeList()))));
     }
 
    @NotNull

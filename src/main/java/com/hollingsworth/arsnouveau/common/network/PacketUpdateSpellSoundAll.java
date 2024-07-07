@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -26,10 +27,6 @@ public class PacketUpdateSpellSoundAll extends PacketSetSound {
         super(buf);
     }
 
-    public void toBytes(RegistryFriendlyByteBuf buf) {
-        super.toBytes(buf);
-    }
-
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
         ItemStack stack = player.getItemInHand(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND);
@@ -42,5 +39,10 @@ public class PacketUpdateSpellSoundAll extends PacketSetSound {
             Networking.sendToPlayerClient(new PacketUpdateBookGUI(stack), player);
             Networking.sendToPlayerClient(new PacketOpenSpellBook(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND), player);
         }
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

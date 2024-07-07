@@ -11,7 +11,7 @@ public abstract class AbstractPacket implements CustomPacketPayload {
 
     public AbstractPacket(){}
 
-    public abstract void toBytes(RegistryFriendlyByteBuf buf);
+    void toBytes(RegistryFriendlyByteBuf buf){}
 
     public void onClientReceived(Minecraft minecraft, Player player){}
 
