@@ -202,7 +202,6 @@ public class GuiSpellBook extends BaseBook {
         return (int) Math.ceil((double) displayedGlyphs.size() / 58);
     }
 
-
     private void layoutAllGlyphs(int page) {
         clearButtons(glyphButtons);
         formTextRow = 0;

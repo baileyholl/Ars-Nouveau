@@ -128,6 +128,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
         pBuilder.define(OWNER_ID, -1);
     }
 

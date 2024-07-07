@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.client.gui.buttons.ANButton;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -76,11 +77,18 @@ public class BaseBook extends ModdedScreen {
         drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
         drawForegroundElements(mouseX, mouseY, partialTicks);
         poseStack.popPose();
-        super.render(graphics, mouseX, mouseY, partialTicks);
+        for (Renderable renderable : this.renderables) {
+            renderable.render(graphics, mouseX, mouseY, partialTicks);
+        }
         drawTooltip(graphics, mouseX, mouseY);
     }
 
     public BookSlider buildSlider(int x, int y, Component prefix, Component suffix, double currentVal) {
         return new BookSlider(x, y, 100, 20, prefix, suffix, 1.0D, 255.0D, currentVal, 1, 1, true);
+    }
+
+    @Override
+    protected void renderBlurredBackground(float pPartialTick) {
+
     }
 }
