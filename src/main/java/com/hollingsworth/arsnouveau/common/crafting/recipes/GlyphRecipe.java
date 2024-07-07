@@ -154,7 +154,7 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
 
         public static final MapCodec<GlyphRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 ItemStack.CODEC.fieldOf("output").forGetter(GlyphRecipe::getOutput),
-                Ingredient.CODEC.listOf().fieldOf("inputs").forGetter(GlyphRecipe::getIngredients),
+                Ingredient.CODEC.listOf().fieldOf("inputs").forGetter(GlyphRecipe::getInputs),
                 Codec.INT.fieldOf("exp").forGetter(GlyphRecipe::getExp)
         ).apply(instance, GlyphRecipe::new));
 

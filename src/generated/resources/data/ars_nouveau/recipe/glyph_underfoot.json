@@ -1,7 +1,14 @@
 {
   "type": "ars_nouveau:glyph",
   "exp": 27,
-  "inputs": [],
+  "inputs": [
+    {
+      "item": "minecraft:iron_boots"
+    },
+    {
+      "tag": "minecraft:wooden_pressure_plates"
+    }
+  ],
   "output": {
     "count": 1,
     "id": "ars_nouveau:glyph_underfoot"

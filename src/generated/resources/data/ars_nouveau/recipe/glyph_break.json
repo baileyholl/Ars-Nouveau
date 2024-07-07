@@ -1,7 +1,11 @@
 {
   "type": "ars_nouveau:glyph",
   "exp": 27,
-  "inputs": [],
+  "inputs": [
+    {
+      "item": "minecraft:iron_pickaxe"
+    }
+  ],
   "output": {
     "count": 1,
     "id": "ars_nouveau:glyph_break"

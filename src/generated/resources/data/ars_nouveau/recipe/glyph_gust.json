@@ -1,7 +1,20 @@
 {
   "type": "ars_nouveau:glyph",
   "exp": 27,
-  "inputs": [],
+  "inputs": [
+    {
+      "item": "ars_nouveau:air_essence"
+    },
+    {
+      "item": "minecraft:piston"
+    },
+    {
+      "item": "minecraft:piston"
+    },
+    {
+      "item": "minecraft:piston"
+    }
+  ],
   "output": {
     "count": 1,
     "id": "ars_nouveau:glyph_gust"

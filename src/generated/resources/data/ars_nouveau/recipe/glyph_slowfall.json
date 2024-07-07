@@ -1,7 +1,29 @@
 {
   "type": "ars_nouveau:glyph",
   "exp": 55,
-  "inputs": [],
+  "inputs": [
+    {
+      "item": "ars_nouveau:air_essence"
+    },
+    {
+      "item": "ars_nouveau:wilden_wing"
+    },
+    {
+      "item": "minecraft:feather"
+    },
+    {
+      "item": "minecraft:feather"
+    },
+    {
+      "item": "minecraft:feather"
+    },
+    {
+      "tag": "c:rods/blaze"
+    },
+    {
+      "tag": "c:crops/nether_wart"
+    }
+  ],
   "output": {
     "count": 1,
     "id": "ars_nouveau:glyph_slowfall"

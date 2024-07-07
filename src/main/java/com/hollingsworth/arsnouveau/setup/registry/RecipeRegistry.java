@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.crafting.Recipe;
@@ -64,7 +65,7 @@ public class RecipeRegistry {
     public static final DeferredHolder<RecipeType<?>, ModRecipeType<SpellWriteRecipe>> SPELL_WRITE_TYPE = RECIPE_TYPES.register(SPELL_WRITE_RECIPE_ID, () -> new ModRecipeType<>());
     public static final DeferredHolder<RecipeSerializer<?>, SpellWriteRecipe.Serializer> SPELL_WRITE_RECIPE = RECIPE_SERIALIZERS.register(SPELL_WRITE_RECIPE_ID, () -> new SpellWriteRecipe.Serializer());
 
-    public static final DeferredHolder<RecipeType<?>, ModRecipeType<GlyphRecipe>> GLYPH_TYPE = RECIPE_TYPES.register(GLYPH_RECIPE_ID, () -> new ModRecipeType<>());
+    public static final DeferredHolder<RecipeType<?>, RecipeType<GlyphRecipe>> GLYPH_TYPE = RECIPE_TYPES.register(GLYPH_RECIPE_ID, () -> RecipeType.simple(ArsNouveau.prefix(GLYPH_RECIPE_ID)));
     public static final DeferredHolder<RecipeSerializer<?>, GlyphRecipe.Serializer> GLYPH_SERIALIZER = RECIPE_SERIALIZERS.register(GLYPH_RECIPE_ID, () -> new GlyphRecipe.Serializer());
 
     public static final DeferredHolder<RecipeType<?>, ModRecipeType<ArmorUpgradeRecipe>> ARMOR_UPGRADE_TYPE = RECIPE_TYPES.register(ARMOR_RECIPE_ID, () -> new ModRecipeType<>());

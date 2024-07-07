@@ -1,7 +1,14 @@
 {
   "type": "ars_nouveau:glyph",
   "exp": 160,
-  "inputs": [],
+  "inputs": [
+    {
+      "item": "ars_nouveau:conjuration_essence"
+    },
+    {
+      "item": "minecraft:totem_of_undying"
+    }
+  ],
   "output": {
     "count": 1,
     "id": "ars_nouveau:glyph_summon_vex"

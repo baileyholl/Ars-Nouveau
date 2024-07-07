@@ -1,7 +1,11 @@
 {
   "type": "ars_nouveau:glyph",
   "exp": 27,
-  "inputs": [],
+  "inputs": [
+    {
+      "item": "ars_nouveau:manipulation_essence"
+    }
+  ],
   "output": {
     "count": 1,
     "id": "ars_nouveau:glyph_rotate"

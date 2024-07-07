@@ -1,7 +1,20 @@
 {
   "type": "ars_nouveau:glyph",
   "exp": 160,
-  "inputs": [],
+  "inputs": [
+    {
+      "item": "ars_nouveau:abjuration_essence"
+    },
+    {
+      "item": "minecraft:wither_skeleton_skull"
+    },
+    {
+      "item": "minecraft:wither_skeleton_skull"
+    },
+    {
+      "item": "minecraft:wither_skeleton_skull"
+    }
+  ],
   "output": {
     "count": 1,
     "id": "ars_nouveau:glyph_wither"

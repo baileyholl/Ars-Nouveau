@@ -1,7 +1,20 @@
 {
   "type": "ars_nouveau:glyph",
   "exp": 55,
-  "inputs": [],
+  "inputs": [
+    {
+      "item": "ars_nouveau:conjuration_essence"
+    },
+    {
+      "tag": "c:obsidians"
+    },
+    {
+      "tag": "c:obsidians"
+    },
+    {
+      "tag": "c:obsidians"
+    }
+  ],
   "output": {
     "count": 1,
     "id": "ars_nouveau:glyph_animate_block"

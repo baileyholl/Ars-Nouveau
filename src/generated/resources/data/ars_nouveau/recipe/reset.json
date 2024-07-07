@@ -1,7 +1,11 @@
 {
   "type": "ars_nouveau:glyph",
   "exp": 27,
-  "inputs": [],
+  "inputs": [
+    {
+      "item": "minecraft:target"
+    }
+  ],
   "output": {
     "count": 1,
     "id": "ars_nouveau:reset"

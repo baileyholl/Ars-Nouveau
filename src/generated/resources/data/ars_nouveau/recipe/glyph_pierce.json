@@ -1,7 +1,14 @@
 {
   "type": "ars_nouveau:glyph",
   "exp": 55,
-  "inputs": [],
+  "inputs": [
+    {
+      "item": "minecraft:arrow"
+    },
+    {
+      "item": "ars_nouveau:wilden_spike"
+    }
+  ],
   "output": {
     "count": 1,
     "id": "ars_nouveau:glyph_pierce"

@@ -1,7 +1,26 @@
 {
   "type": "ars_nouveau:glyph",
   "exp": 55,
-  "inputs": [],
+  "inputs": [
+    {
+      "item": "ars_nouveau:fire_essence"
+    },
+    {
+      "item": "minecraft:blast_furnace"
+    },
+    {
+      "item": "minecraft:blast_furnace"
+    },
+    {
+      "item": "minecraft:blast_furnace"
+    },
+    {
+      "item": "minecraft:blast_furnace"
+    },
+    {
+      "tag": "c:rods/blaze"
+    }
+  ],
   "output": {
     "count": 1,
     "id": "ars_nouveau:glyph_smelt"
