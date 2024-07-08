@@ -15,7 +15,7 @@ import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.CreativeTabRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -359,7 +359,6 @@ public class GlyphUnlockMenu extends BaseBook {
     }
 
     public void renderTooltipInternal(GuiGraphics graphics, List<ClientTooltipComponent> pClientTooltipComponents, int pMouseX, int pMouseY) {
-
         if (!pClientTooltipComponents.isEmpty()) {
             PoseStack pPoseStack = graphics.pose();
             net.neoforged.neoforge.client.event.RenderTooltipEvent.Pre preEvent = net.neoforged.neoforge.client.ClientHooks.onRenderTooltipPre(ItemStack.EMPTY, graphics, pMouseX, pMouseY, width, height, pClientTooltipComponents, this.font, DefaultTooltipPositioner.INSTANCE);
@@ -386,10 +385,10 @@ public class GlyphUnlockMenu extends BaseBook {
                 k2 = this.height - j - 6;
             }
             pPoseStack.pushPose();
-            BufferBuilder tesselator = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
             Matrix4f matrix4f = pPoseStack.last().pose();
             net.neoforged.neoforge.client.event.RenderTooltipEvent.Color colorEvent = net.neoforged.neoforge.client.ClientHooks.onRenderTooltipColor(ItemStack.EMPTY, graphics, j2, k2, preEvent.getFont(), pClientTooltipComponents);
+
             graphics.fillGradient( j2 - 3, k2 - 4, j2 + i + 3, k2 - 3, 400, colorEvent.getBackgroundStart(), colorEvent.getBackgroundStart());
             graphics.fillGradient(j2 - 3, k2 + j + 3, j2 + i + 3, k2 + j + 4, 400, colorEvent.getBackgroundEnd(), colorEvent.getBackgroundEnd());
             graphics.fillGradient(j2 - 3, k2 - 3, j2 + i + 3, k2 + j + 3, 400, colorEvent.getBackgroundStart(), colorEvent.getBackgroundEnd());
@@ -399,12 +398,12 @@ public class GlyphUnlockMenu extends BaseBook {
             graphics.fillGradient(j2 + i + 2, k2 - 3 + 1, j2 + i + 3, k2 + j + 3 - 1, 400, colorEvent.getBorderStart(), colorEvent.getBorderEnd());
             graphics.fillGradient(j2 - 3, k2 - 3, j2 + i + 3, k2 - 3 + 1, 400, colorEvent.getBorderStart(), colorEvent.getBorderStart());
             graphics.fillGradient(j2 - 3, k2 + j + 2, j2 + i + 3, k2 + j + 3, 400, colorEvent.getBorderEnd(), colorEvent.getBorderEnd());
+
             RenderSystem.enableDepthTest();
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
-            BufferUploader.drawWithShader(tesselator.buildOrThrow());
             RenderSystem.disableBlend();
-            MultiBufferSource.BufferSource multibuffersource$buffersource = MultiBufferSource.immediate(new ByteBufferBuilder(1536));
+            MultiBufferSource.BufferSource multibuffersource$buffersource = graphics.bufferSource();
             pPoseStack.translate(0.0D, 0.0D, 400.0D);
             int l1 = k2;
 
@@ -413,8 +412,6 @@ public class GlyphUnlockMenu extends BaseBook {
                 clienttooltipcomponent1.renderText(preEvent.getFont(), j2, l1, matrix4f, multibuffersource$buffersource);
                 l1 += clienttooltipcomponent1.getHeight() + (i2 == 0 ? 2 : 0);
             }
-
-            multibuffersource$buffersource.endBatch();
             l1 = k2;
 
             pPoseStack.translate(0,0,600);

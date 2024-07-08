@@ -9,11 +9,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class GlyphRecipeTooltip implements ClientTooltipComponent {
-    public static final ResourceLocation TEXTURE_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/container/bundle.png");
+    // TODO: fix background render on tooltip
+    public static final ResourceLocation TEXTURE_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/container/bundle/background.png");
     private static final int MARGIN_Y = 4;
     private static final int BORDER_WIDTH = 1;
     private static final int TEX_SIZE = 128;

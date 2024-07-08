@@ -142,12 +142,7 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
             List<Ingredient> stacks = new ArrayList<>();
 
             for (int i = 0; i < length; i++) {
-                try {
-                    Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    break;
-                }
+                stacks.add(Ingredient.CONTENTS_STREAM_CODEC.decode(buffer));
             }
             return new GlyphRecipe(ItemStack.STREAM_CODEC.decode(buffer), stacks, buffer.readInt());
         }

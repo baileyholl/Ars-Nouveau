@@ -29,7 +29,7 @@ public class UnlockGlyphButton extends ANButton {
     public UnlockGlyphButton(int x, int y, boolean isCraftingSlot, RecipeHolder<GlyphRecipe> spellRecipe, OnPress onPress) {
         super(x, y, 16, 16, onPress);
         this.isCraftingSlot = isCraftingSlot;
-        this.spellPart = spellPart;
+        this.spellPart = spellRecipe.value().getSpellPart();
         this.recipe = spellRecipe;
     }
 
