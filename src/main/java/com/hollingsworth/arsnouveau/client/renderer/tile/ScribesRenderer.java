@@ -21,6 +21,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
@@ -42,28 +43,28 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
         if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.PART) != ThreePartBlock.HEAD)
             return;
         stack.pushPose();
-        Direction direction = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.FACING);
-        if (direction == Direction.NORTH) {
-            stack.mulPose(Axis.YP.rotationDegrees(-90));
-            stack.translate(1, 0, -1);
-        }
-
-        if (direction == Direction.SOUTH) {
-            stack.mulPose(Axis.YP.rotationDegrees(270));
-            stack.translate(-1, 0, -1);
-        }
-
-        if (direction == Direction.WEST) {
-            stack.mulPose(Axis.YP.rotationDegrees(270));
-
-            stack.translate(0, 0, -2);
-        }
-
-        if (direction == Direction.EAST) {
-            stack.mulPose(Axis.YP.rotationDegrees(-90));
-            stack.translate(0, 0, 0);
-
-        }
+//        Direction direction = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.FACING);
+//        if (direction == Direction.NORTH) {
+//            stack.mulPose(Axis.YP.rotationDegrees(-90));
+//            stack.translate(1, 0, -1);
+//        }
+//
+//        if (direction == Direction.SOUTH) {
+//            stack.mulPose(Axis.YP.rotationDegrees(270));
+//            stack.translate(-1, 0, -1);
+//        }
+//
+//        if (direction == Direction.WEST) {
+//            stack.mulPose(Axis.YP.rotationDegrees(270));
+//
+//            stack.translate(0, 0, -2);
+//        }
+//
+//        if (direction == Direction.EAST) {
+//            stack.mulPose(Axis.YP.rotationDegrees(-90));
+//            stack.translate(0, 0, 0);
+//
+//        }
         super.preRender(stack, tile, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
         stack.popPose();
     }
@@ -76,6 +77,7 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
             return;
         Direction direction = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.FACING);
         stack.pushPose();
+        stack.translate(-0.5, 0, 0.5);
          if (direction == Direction.NORTH) {
             stack.mulPose(Axis.YP.rotationDegrees(-90));
             stack.translate(1, 0, -1);
@@ -185,5 +187,20 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
     @Override
     public RenderType getRenderType(ScribesTile animatable, ResourceLocation texture, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityTranslucent(texture);
+    }
+
+    @Override
+    public boolean shouldRenderOffScreen(ScribesTile pBlockEntity) {
+        return true;
+    }
+
+    @Override
+    public int getViewDistance() {
+        return 256;
+    }
+
+    @Override
+    public AABB getRenderBoundingBox(ScribesTile blockEntity) {
+        return AABB.INFINITE;
     }
 }

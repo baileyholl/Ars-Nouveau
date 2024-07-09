@@ -41,7 +41,7 @@
 					},
 					"position": {
 						"0.0": {
-							"vector": ["math.lerp(0, -20, (query.anim_time)*.75) + 12- math.cos(query.anim_time*200) - 10", "math.lerp(math.lerp(0, 12, query.anim_time*0.75), math.lerp(12, 6, query.anim_time*.75), query.anim_time*0.75)", "math.lerp(0, -11, query.anim_time*0.75) + 8 * math.sin(query.anim_time*200)"]
+							"vector": ["math.lerp(0, -20, (query.anim_time)*0.75) + 12- math.cos(query.anim_time*200) - 10", "math.lerp(0, math.lerp(12, 6, query.anim_time * 0.75), query.anim_time * 0.75)", "math.lerp(0, -11, query.anim_time*0.75) + 8 * math.sin(query.anim_time*200)"]
 						},
 						"1.3333": {
 							"vector": [-20, 4, -11]
@@ -74,7 +74,7 @@
 							"easing": "easeOutSine"
 						},
 						"4.375": {
-							"vector": ["math.lerp(-7, 0, (query.anim_time-4.375)*0.75)", "2+math.lerp(math.lerp(0, 20, (query.anim_time-4.375)*0.75), math.lerp(20 , 0, (query.anim_time-4.375)*0.75), (query.anim_time-4.375)*0.75)", "math.lerp(-7, 0, (query.anim_time-4.375)*0.75)"]
+							"vector": ["math.lerp(-7, 0, (query.anim_time - 4.375) * 0.75)", "2 + math.lerp(math.lerp(0, 20, (query.anim_time - 4.375)*0.75), math.lerp(20, 0, (query.anim_time - 4.375) * 0.75), (query.anim_time - 4.375) * 0.75)", "math.lerp(-7, 0, (query.anim_time - 4.375) * 0.75)"]
 						},
 						"5.5417": {
 							"vector": [0, 0, 0],

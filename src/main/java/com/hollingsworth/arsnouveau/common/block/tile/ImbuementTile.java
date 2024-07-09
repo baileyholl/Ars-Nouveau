@@ -85,7 +85,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
                             getX() + 0.5, getY() + 0.5, getZ() + 0.5);
                 }
             }
-            if(!stack.isEmpty() && recipe == null){
+            if (!stack.isEmpty() && recipe == null) {
                 RecipeHolder<ImbuementRecipe> holder = getRecipeNow();
                 this.recipe = holder != null ? holder.value() : null;
             }
@@ -105,7 +105,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         // Restore the recipe on world restart
         if (recipe == null) {
             RecipeHolder<ImbuementRecipe> foundRecipe = getRecipeNow();
-            if(foundRecipe != null){
+            if (foundRecipe != null) {
                 this.recipe = foundRecipe.value();
                 this.craftTicks = 100;
             }
@@ -160,7 +160,11 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(tag, pRegistries);
-        stack = ItemStack.parseOptional(pRegistries, (CompoundTag) tag.get("itemStack"));
+        if (tag.contains("itemStack")) {
+            stack = ItemStack.parseOptional(pRegistries, tag.getCompound("itemStack"));
+        }else{
+            stack = ItemStack.EMPTY;
+        }
         draining = tag.getBoolean("draining");
         this.hasRecipe = tag.getBoolean("hasRecipe");
         this.craftTicks = tag.getInt("craftTicks");
@@ -288,7 +292,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         return pedestalList(getBlockPos(), 1, getLevel());
     }
 
-    public @Nullable RecipeHolder<ImbuementRecipe> getRecipeNow(){
+    public @Nullable RecipeHolder<ImbuementRecipe> getRecipeNow() {
         return level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream()
                 .filter(f -> f.value().matches(this, level)).findFirst().orElse(null);
     }
@@ -296,9 +300,9 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     @Override
     public void getTooltip(List<Component> tooltip) {
         RecipeHolder<ImbuementRecipe> recipe = getRecipeNow();
-        if(recipe != null && !recipe.value().output.isEmpty() && stack != null && !stack.isEmpty()) {
+        if (recipe != null && !recipe.value().output.isEmpty() && stack != null && !stack.isEmpty()) {
             tooltip.add(Component.translatable("ars_nouveau.crafting", recipe.value().output.getHoverName()));
-            if(recipe.value().source > 0) {
+            if (recipe.value().source > 0) {
                 tooltip.add(Component.translatable("ars_nouveau.crafting_progress", Math.min(100, (getSource() * 100) / recipe.value().source)).withStyle(ChatFormatting.GOLD));
             }
         }
