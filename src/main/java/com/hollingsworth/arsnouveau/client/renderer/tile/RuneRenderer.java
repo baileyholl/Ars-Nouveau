@@ -14,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.util.Color;
 
 public class RuneRenderer extends ArsGeoBlockRenderer<RuneTile> {
 
@@ -38,37 +39,43 @@ public class RuneRenderer extends ArsGeoBlockRenderer<RuneTile> {
         ParticleColor particleColor = animatable.spell.color();
         poseStack.pushPose();
         Direction direction = animatable.getBlockState().getValue(BasicSpellTurret.FACING);
+//        poseStack.translate(0.5, 0.5, 0);
         if (direction == Direction.UP) {
-            poseStack.translate(0, -0.5, 0.5);
+            poseStack.translate(0.5, 0, 0.5);
 
             poseStack.mulPose(Axis.XP.rotationDegrees(-90));
         } else if (direction == Direction.EAST) {
-            poseStack.translate(0, 0, 0);
+            poseStack.translate(0, 0.5, 0.5);
             poseStack.mulPose(Axis.YP.rotationDegrees(-90));
             poseStack.mulPose(Axis.XP.rotationDegrees(-90));
         }else if(direction == Direction.NORTH){
-            poseStack.translate(1, 1, 1);
+            poseStack.translate(0.5, 0.5, 1);
             poseStack.mulPose(Axis.XP.rotationDegrees(90));
             poseStack.mulPose(Axis.ZP.rotationDegrees(180));
         }else if(direction == Direction.DOWN){
-            poseStack.translate(1, 0.5, 0.5);
+            poseStack.translate(0.5, 0.98, 0.5);
             poseStack.mulPose(Axis.XP.rotationDegrees(90));
-            poseStack.mulPose(Axis.YP.rotationDegrees(180));
         }else if(direction == Direction.WEST){
-            poseStack.translate(1, 0, 0);
+            poseStack.translate(1, 0.5, 0.5);
             poseStack.mulPose(Axis.ZP.rotationDegrees(90));
         }else if(direction == Direction.SOUTH){
-            poseStack.translate(1, 0, 0);
+            poseStack.translate(0.5, 0.5, 0);
             poseStack.mulPose(Axis.XP.rotationDegrees(-90));
             poseStack.mulPose(Axis.ZP.rotationDegrees(-180));
         }
-        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, animatable.isCharged ? particleColor.getColor() : color);
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay,  color);
         poseStack.popPose();
     }
 
     @Override
     public RenderType getRenderType(RuneTile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucent(texture);
+        return RenderType.entityCutoutNoCull(texture);
+    }
+
+    @Override
+    public Color getRenderColor(RuneTile animatable, float partialTick, int packedLight) {
+        var color = animatable.spell.color();
+        return animatable.isCharged ? Color.ofOpaque(color.getColor()) :  super.getRenderColor(animatable, partialTick, packedLight);
     }
 
     public static GenericItemBlockRenderer getISTER() {
