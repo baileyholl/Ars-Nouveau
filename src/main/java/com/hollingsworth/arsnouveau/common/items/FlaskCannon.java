@@ -49,7 +49,7 @@ import java.util.function.Consumer;
 
 public abstract class FlaskCannon extends ModItem implements IRadialProvider, GeoItem {
     public FlaskCannon(Properties properties) {
-        super(properties);
+        super(properties.component(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData()));
     }
 
 

@@ -12,12 +12,13 @@ import net.minecraft.resources.ResourceLocation;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Serializes a set of perks from an itemstack.
  */
 public abstract class StackPerkHolder<T> implements IPerkHolder<T> {
-    
+
     public static Codec<IPerk> PERK_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             ResourceLocation.CODEC.fieldOf("perk").forGetter(IPerk::getRegistryName)
     ).apply(instance, (name) -> PerkRegistry.getPerkMap().getOrDefault(name, StarbunclePerk.INSTANCE)));
@@ -50,5 +51,18 @@ public abstract class StackPerkHolder<T> implements IPerkHolder<T> {
     @Override
     public @Nullable CompoundTag getTagForPerk(IPerk perk) {
         return this.perkTags.getOrDefault(perk, null);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StackPerkHolder<?> that = (StackPerkHolder<?>) o;
+        return getTier() == that.getTier() && Objects.equals(getPerks(), that.getPerks()) && Objects.equals(getPerkTags(), that.getPerkTags());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPerks(), getTier(), getPerkTags());
     }
 }

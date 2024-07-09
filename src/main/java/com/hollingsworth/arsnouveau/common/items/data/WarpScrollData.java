@@ -18,6 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public record WarpScrollData(BlockPos pos, String dimension, Vec2 rotation, boolean crossDim) implements TooltipProvider {
@@ -67,5 +68,18 @@ public record WarpScrollData(BlockPos pos, String dimension, Vec2 rotation, bool
         if (!ServerConfig.ENABLE_WARP_PORTALS.get()) {
             pTooltipAdder.accept(Component.translatable("ars_nouveau.warp_scroll.disabled_warp_portal").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WarpScrollData that = (WarpScrollData) o;
+        return crossDim == that.crossDim && Objects.equals(pos, that.pos) && Objects.equals(rotation, that.rotation) && Objects.equals(dimension, that.dimension);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pos, dimension, rotation, crossDim);
     }
 }

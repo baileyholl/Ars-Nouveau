@@ -18,7 +18,7 @@ import net.minecraft.world.level.Level;
 public class VoidJar extends ModItem implements IScribeable {
 
     public VoidJar() {
-        super(ItemsRegistry.defaultItemProperties().stacksTo(1));
+        super(ItemsRegistry.defaultItemProperties().stacksTo(1).component(DataComponentRegistry.VOID_JAR, new VoidJarData()));
     }
 
     public void toggleStatus(Player playerEntity, ItemStack stack) {

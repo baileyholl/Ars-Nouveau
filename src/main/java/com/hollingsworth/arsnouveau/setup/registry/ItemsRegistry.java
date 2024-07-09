@@ -13,6 +13,7 @@ import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.common.armor.AnimatedMagicArmor;
 import com.hollingsworth.arsnouveau.common.items.*;
 import com.hollingsworth.arsnouveau.common.items.curios.*;
+import com.hollingsworth.arsnouveau.common.items.data.PresentData;
 import com.hollingsworth.arsnouveau.common.items.data.ScryCasterData;
 import com.hollingsworth.arsnouveau.common.items.itemscrolls.AllowItemScroll;
 import com.hollingsworth.arsnouveau.common.items.itemscrolls.DenyItemScroll;
@@ -216,7 +217,7 @@ public class ItemsRegistry {
     public static final ItemRegistryWrapper<Item> FIREL_DISC = register(LibItemNames.FIREL_DISC, () -> new Item(defaultItemProperties().stacksTo(1).rarity(Rarity.RARE)));
     public static final ItemRegistryWrapper<Item> SOUND_OF_GLASS = register(LibItemNames.SOUND_OF_GLASS, () -> new Item(defaultItemProperties().stacksTo(1).rarity(Rarity.RARE)));
     public static final ItemRegistryWrapper<Item> WILD_HUNT = register(LibItemNames.FIREL_WILD_HUNT, () -> new Item(defaultItemProperties().stacksTo(1).rarity(Rarity.RARE)));
-    public static final ItemRegistryWrapper<Present> STARBY_GIFY = register(LibItemNames.STARBY_GIFT, () -> new Present(defaultItemProperties().rarity(Rarity.EPIC)));
+    public static final ItemRegistryWrapper<Present> STARBY_GIFY = register(LibItemNames.STARBY_GIFT, () -> new Present(defaultItemProperties().rarity(Rarity.EPIC).component(DataComponentRegistry.PRESENT, new PresentData())));
     public static final ItemRegistryWrapper<SpellCrossbow> SPELL_CROSSBOW = register(LibItemNames.SPELL_CROSSBOW, () -> new SpellCrossbow(defaultItemProperties().stacksTo(1).component(DataComponentRegistry.SPELL_CASTER, new SpellCaster())));
     public static final ItemRegistryWrapper<StableWarpScroll> STABLE_WARP_SCROLL = register(LibItemNames.STABLE_WARP_SCROLL, () -> new StableWarpScroll(defaultItemProperties().stacksTo(1)));
     public static final ItemRegistryWrapper<ScryCaster> SCRY_CASTER = register(LibItemNames.SCRY_CASTER, () -> new ScryCaster(defaultItemProperties().stacksTo(1).component(DataComponentRegistry.SCRY_CASTER, new ScryCasterData())));

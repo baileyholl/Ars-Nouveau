@@ -13,10 +13,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ArmorPerkHolder extends StackPerkHolder<ArmorPerkHolder> {
 
@@ -66,5 +63,18 @@ public class ArmorPerkHolder extends StackPerkHolder<ArmorPerkHolder> {
     @Override
     public ArmorPerkHolder setTagForPerk(IPerk perk, CompoundTag tag) {
         return new ArmorPerkHolder(color, getPerks(), getTier(), Util.copyAndPut(getPerkTags(), perk, tag));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ArmorPerkHolder that = (ArmorPerkHolder) o;
+        return Objects.equals(color, that.color);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(color);
     }
 }

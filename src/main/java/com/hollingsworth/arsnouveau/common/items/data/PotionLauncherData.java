@@ -12,6 +12,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
 
+import java.util.Objects;
+
 public record PotionLauncherData(PotionContents renderData, int amountLeft, int lastSlot) {
 
     public static MapCodec<PotionLauncherData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -57,5 +59,18 @@ public record PotionLauncherData(PotionContents renderData, int amountLeft, int 
         provider.consumeUses(item, 1, player);
         launcherStack.set(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData(provider.getPotionData(item), provider.usesRemaining(item), lastSlot));
         return contents;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PotionLauncherData that = (PotionLauncherData) o;
+        return lastSlot == that.lastSlot && amountLeft == that.amountLeft && Objects.equals(renderData, that.renderData);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(renderData, amountLeft, lastSlot);
     }
 }

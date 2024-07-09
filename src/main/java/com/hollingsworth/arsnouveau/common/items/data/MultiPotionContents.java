@@ -13,6 +13,8 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 public record MultiPotionContents(int charges, PotionContents contents, int maxUses) implements IPotionProvider {
     public static Codec<MultiPotionContents> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("charges").forGetter(MultiPotionContents::charges),
@@ -62,5 +64,18 @@ public record MultiPotionContents(int charges, PotionContents contents, int maxU
     @Override
     public void setData(PotionContents contents, int usesRemaining, int maxUses, ItemStack stack) {
         stack.set(DataComponentRegistry.MULTI_POTION, new MultiPotionContents(usesRemaining, contents, maxUses));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MultiPotionContents that = (MultiPotionContents) o;
+        return charges == that.charges && maxUses == that.maxUses && Objects.equals(contents, that.contents);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(charges, contents, maxUses);
     }
 }

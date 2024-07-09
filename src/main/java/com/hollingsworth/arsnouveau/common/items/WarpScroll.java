@@ -26,7 +26,7 @@ import net.minecraft.world.phys.Vec2;
 
 public class WarpScroll extends ModItem {
     public WarpScroll() {
-        super(ItemsRegistry.defaultItemProperties());
+        super(ItemsRegistry.defaultItemProperties().component(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(null, null, null, false)));
     }
 
     @Override

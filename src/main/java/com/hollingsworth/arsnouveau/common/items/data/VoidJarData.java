@@ -11,6 +11,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public record VoidJarData(ItemScrollData scrollData, boolean active) implements NBTComponent<VoidJarData>, TooltipProvider {
@@ -44,5 +45,18 @@ public record VoidJarData(ItemScrollData scrollData, boolean active) implements 
             pTooltipAdder.accept(Component.translatable("ars_nouveau.off"));
         }
         scrollData.addToTooltip(pContext, pTooltipAdder, pTooltipFlag);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VoidJarData that = (VoidJarData) o;
+        return active == that.active && Objects.equals(scrollData, that.scrollData);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(scrollData, active);
     }
 }

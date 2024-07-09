@@ -21,7 +21,7 @@ import net.minecraft.world.level.Level;
 public class StableWarpScroll extends ModItem{
 
     public StableWarpScroll(Item.Properties properties) {
-        super(properties.stacksTo(1));
+        super(properties.stacksTo(1).component(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(null, null, null, true)));
     }
 
     @Override

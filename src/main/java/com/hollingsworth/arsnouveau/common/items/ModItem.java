@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +21,7 @@ public class ModItem extends Item {
     }
 
     public ModItem() {
-        this(ItemsRegistry.defaultItemProperties());
+        this(defaultProps());
     }
 
     public ModItem withTooltip(Component tip) {
@@ -38,6 +37,10 @@ public class ModItem extends Item {
     public ModItem withRarity(Rarity rarity) {
         this.rarity = rarity;
         return this;
+    }
+
+    protected static Properties defaultProps(){
+        return new Item.Properties();
     }
 
     /**

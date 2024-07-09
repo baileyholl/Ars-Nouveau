@@ -14,6 +14,7 @@ import net.minecraft.world.item.component.TooltipProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -58,6 +59,19 @@ public class ItemScrollData implements NBTComponent<ItemScrollData>, TooltipProv
         for (ItemStack s : items) {
             pTooltipAdder.accept(s.getHoverName());
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ItemScrollData that = (ItemScrollData) o;
+        return Objects.equals(getItems(), that.getItems());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getItems());
     }
 
     public static class Mutable {

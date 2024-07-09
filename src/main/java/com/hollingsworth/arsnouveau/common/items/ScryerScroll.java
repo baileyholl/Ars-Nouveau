@@ -15,7 +15,7 @@ import java.util.List;
 public class ScryerScroll extends ModItem {
 
     public ScryerScroll() {
-        super();
+        super(defaultProps().component(DataComponentRegistry.SCRY_DATA, new ScryPosData(null)));
         withTooltip(Component.translatable("tooltip.ars_nouveau.scryer_scroll"));
     }
 

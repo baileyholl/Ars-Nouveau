@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.items;
 import com.hollingsworth.arsnouveau.api.item.IScribeable;
 import com.hollingsworth.arsnouveau.common.items.data.ItemScrollData;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -16,7 +17,7 @@ import java.util.List;
 public abstract class ItemScroll extends ModItem implements IScribeable {
 
     public ItemScroll() {
-        super();
+        super(ItemsRegistry.defaultItemProperties().component(DataComponentRegistry.ITEM_SCROLL_DATA, new ItemScrollData(List.of())));
     }
 
     public ItemScroll(Properties properties) {

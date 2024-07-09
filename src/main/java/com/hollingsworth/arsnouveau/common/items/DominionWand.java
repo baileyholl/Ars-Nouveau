@@ -28,7 +28,7 @@ import java.util.List;
 
 public class DominionWand extends ModItem {
     public DominionWand() {
-        super(ItemsRegistry.defaultItemProperties().stacksTo(1));
+        super(ItemsRegistry.defaultItemProperties().stacksTo(1).component(DataComponentRegistry.DOMINION_WAND, new DominionWandData()));
     }
 
     @Override

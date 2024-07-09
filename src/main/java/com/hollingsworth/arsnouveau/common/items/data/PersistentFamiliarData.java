@@ -16,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class PersistentFamiliarData implements NBTComponent<PersistentFamiliarData>, TooltipProvider {
@@ -72,6 +73,19 @@ public class PersistentFamiliarData implements NBTComponent<PersistentFamiliarDa
 
     public Mutable mutable(){
         return new Mutable(name, color, cosmetic);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PersistentFamiliarData that = (PersistentFamiliarData) o;
+        return Objects.equals(name, that.name) && Objects.equals(color, that.color) && Objects.equals(cosmetic, that.cosmetic);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, color, cosmetic);
     }
 
     public static class Mutable{

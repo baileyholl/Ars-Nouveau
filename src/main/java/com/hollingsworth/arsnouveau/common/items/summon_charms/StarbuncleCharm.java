@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 
 public class StarbuncleCharm extends AbstractSummonCharm {
     public StarbuncleCharm() {
-        super();
+        super(defaultProps().component(DataComponentRegistry.STARBUNCLE_DATA, new StarbuncleCharmData()));
     }
 
     @Override

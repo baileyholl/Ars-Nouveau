@@ -1,12 +1,10 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootEnhancerModifier;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.items.data.PresentData;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -19,6 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.List;
+import java.util.Optional;
 
 public class Present extends ModItem{
 
@@ -32,7 +31,7 @@ public class Present extends ModItem{
         if(pLevel.isClientSide)
             return;
         if(pEntity instanceof Player player && !pStack.has(DataComponentRegistry.PRESENT)){
-            pStack.set(DataComponentRegistry.PRESENT, new PresentData(player.getName().getString(), player.getUUID()));
+            pStack.set(DataComponentRegistry.PRESENT, new PresentData(player.getName().getString(), Optional.ofNullable(player.getUUID())));
         }
     }
 
@@ -43,7 +42,7 @@ public class Present extends ModItem{
         PresentData presentData = pPlayer.getItemInHand(pUsedHand).get(DataComponentRegistry.PRESENT);
         if(presentData == null)
             return super.use(pLevel, pPlayer, pUsedHand);
-        int bonusRolls = presentData.uuid() != null && !presentData.uuid().equals(pPlayer.getUUID()) ? 2 : 0;
+        int bonusRolls = presentData.uuid().isPresent() && !presentData.uuid().get().equals(pPlayer.getUUID()) ? 2 : 0;
         DungeonLootEnhancerModifier modifier = new DungeonLootEnhancerModifier(new LootItemCondition[]{},
                 0.5, 0.2, 0.1,3 + bonusRolls, 1 + bonusRolls, 1 + bonusRolls);
         List<ItemStack> stacks = DungeonLootTables.getRandomRoll(modifier);
@@ -64,12 +63,6 @@ public class Present extends ModItem{
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
         PresentData data = stack.get(DataComponentRegistry.PRESENT);
-        if(data != null && data.uuid() != null){
-            if(data.uuid().equals(ArsNouveau.proxy.getPlayer().getUUID())){
-                tooltip2.add(Component.translatable("ars_nouveau.present.give"));
-            }else {
-                tooltip2.add(Component.translatable("ars_nouveau.present.from", data.name()).withStyle(ChatFormatting.GOLD));
-            }
-        }
+        stack.addToTooltip(DataComponentRegistry.PRESENT, context, tooltip2::add, flagIn);
     }
 }

@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.common.block.LightBlock;
 import com.hollingsworth.arsnouveau.common.items.data.LightJarData;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -20,10 +21,8 @@ import net.minecraft.world.level.block.state.BlockState;
 public class JarOfLight extends ModItem {
 
     public JarOfLight() {
-        super();
+        super(ItemsRegistry.defaultItemProperties().component(DataComponentRegistry.LIGHT_JAR, new LightJarData(null, false)));
     }
-    //If the light is dispatched
-
 
     @Override
     public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {

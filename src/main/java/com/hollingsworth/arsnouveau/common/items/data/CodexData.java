@@ -14,6 +14,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -50,5 +51,18 @@ public record CodexData(Optional<UUID> uuid, String playerName, List<ResourceLoc
         }
         if (this.wasRecorded())
             pTooltipAdder.accept(Component.translatable("ars_nouveau.recorded_by", playerName()));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CodexData codexData = (CodexData) o;
+        return Objects.equals(playerName, codexData.playerName) && Objects.equals(uuid, codexData.uuid) && Objects.equals(glyphIds, codexData.glyphIds);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, playerName, glyphIds);
     }
 }

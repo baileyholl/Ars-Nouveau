@@ -24,6 +24,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.level.block.Block;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -108,6 +109,19 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
                 // :-)
             }
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StarbuncleCharmData that = (StarbuncleCharmData) o;
+        return Objects.equals(name, that.name) && Objects.equals(color, that.color) && Objects.equals(cosmetic, that.cosmetic) && Objects.equals(pathBlock, that.pathBlock) && Objects.equals(bedPos, that.bedPos) && Objects.equals(behaviorTag, that.behaviorTag) && Objects.equals(adopter, that.adopter) && Objects.equals(bio, that.bio);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, color, cosmetic, pathBlock, bedPos, behaviorTag, adopter, bio);
     }
 
     public static class Mutable {

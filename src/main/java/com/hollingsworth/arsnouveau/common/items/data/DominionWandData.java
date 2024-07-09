@@ -9,6 +9,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 public record DominionWandData(BlockPos storedPos, Direction face, boolean strict, int storedEntityId) {
 
@@ -63,4 +64,16 @@ public record DominionWandData(BlockPos storedPos, Direction face, boolean stric
         return new DominionWandData(storedPos, face, !strict, storedEntityId);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DominionWandData that = (DominionWandData) o;
+        return strict == that.strict && storedEntityId == that.storedEntityId && face == that.face && Objects.equals(storedPos, that.storedPos);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(storedPos, face, strict, storedEntityId);
+    }
 }
