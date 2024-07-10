@@ -21,12 +21,12 @@ public class StarbuncleShard extends ModItem{
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
         StarbuncleCharmData data = stack.get(DataComponentRegistry.STARBUNCLE_DATA);
         if(data != null){
-            data.name.ifPresent(tooltip2::add);
-            if(data.adopter != null){
-                tooltip2.add(Component.translatable("ars_nouveau.adopter", data.adopter).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
+            data.getName().ifPresent(tooltip2::add);
+            if(data.getAdopter() != null){
+                tooltip2.add(Component.translatable("ars_nouveau.adopter", data.getAdopter()).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
             }
-            if(data.bio != null){
-                tooltip2.add(Component.literal(data.bio).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE)));
+            if(data.getBio() != null){
+                tooltip2.add(Component.literal(data.getBio()).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE)));
             }
         }else{
             super.appendHoverText(stack, context, tooltip2, flagIn);

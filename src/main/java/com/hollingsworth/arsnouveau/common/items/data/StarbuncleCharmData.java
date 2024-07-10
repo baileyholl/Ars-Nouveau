@@ -34,54 +34,53 @@ import java.util.function.Consumer;
 public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, TooltipProvider {
 
     public static MapCodec<StarbuncleCharmData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ComponentSerialization.CODEC.optionalFieldOf("name").forGetter(data -> data.name),
-            Codec.STRING.optionalFieldOf("color", DyeColor.ORANGE.getName()).forGetter(data -> data.color),
+            ComponentSerialization.CODEC.optionalFieldOf("name").forGetter(StarbuncleCharmData::getName),
+            Codec.STRING.optionalFieldOf("color", DyeColor.ORANGE.getName()).forGetter(StarbuncleCharmData::getColor),
 //            Block.CODEC.fieldOf("path").forGetter(data -> data.pathBlock),
-            BlockPos.CODEC.optionalFieldOf("bed").forGetter(data -> data.bedPos),
-            ItemStack.CODEC.optionalFieldOf("cosmetic", ItemStack.EMPTY).forGetter(data -> data.cosmetic),
-            ResourceLocation.CODEC.optionalFieldOf("behavior", StarbyTransportBehavior.TRANSPORT_ID).forGetter(data -> data.behavior),
-            CompoundTag.CODEC.optionalFieldOf("behaviorTag", new CompoundTag()).forGetter(data -> data.behaviorTag),
-            Codec.STRING.optionalFieldOf("adopter", null).forGetter(data -> data.adopter),
-            Codec.STRING.optionalFieldOf("bio", null).forGetter(data -> data.bio)
+            BlockPos.CODEC.optionalFieldOf("bed").forGetter(StarbuncleCharmData::getBedPos),
+            ItemStack.CODEC.optionalFieldOf("cosmetic").forGetter(StarbuncleCharmData::getCosmetic),
+            ResourceLocation.CODEC.optionalFieldOf("behavior", StarbyTransportBehavior.TRANSPORT_ID).forGetter(StarbuncleCharmData::getBehavior),
+            CompoundTag.CODEC.optionalFieldOf("behaviorTag", new CompoundTag()).forGetter(StarbuncleCharmData::getBehaviorTag),
+            Codec.STRING.optionalFieldOf("adopter", "").forGetter(StarbuncleCharmData::getAdopter),
+            Codec.STRING.optionalFieldOf("bio", "").forGetter(StarbuncleCharmData::getBio)
     ).apply(instance, StarbuncleCharmData::new));
 
     public static StreamCodec<RegistryFriendlyByteBuf, StarbuncleCharmData> STREAM_CODEC = ANCodecs.composite(
             ComponentSerialization.STREAM_CODEC.apply(ByteBufCodecs::optional),
-            s -> s.name,
+            StarbuncleCharmData::getName,
             ByteBufCodecs.STRING_UTF8,
-            s -> s.color,
+            StarbuncleCharmData::getColor,
             BlockPos.STREAM_CODEC.apply(ByteBufCodecs::optional),
-            s -> s.bedPos,
-            ItemStack.STREAM_CODEC,
-            s -> s.cosmetic,
+            StarbuncleCharmData::getBedPos,
+            ItemStack.STREAM_CODEC.apply(ByteBufCodecs::optional),
+            StarbuncleCharmData::getCosmetic,
             ResourceLocation.STREAM_CODEC,
-            s -> s.behavior,
+            StarbuncleCharmData::getBehavior,
             ByteBufCodecs.COMPOUND_TAG,
-            s -> s.behaviorTag,
+            StarbuncleCharmData::getBehaviorTag,
             ByteBufCodecs.STRING_UTF8,
-            s -> s.adopter,
+            StarbuncleCharmData::getAdopter,
             ByteBufCodecs.STRING_UTF8,
-            s -> s.bio,
+            StarbuncleCharmData::getBio,
             StarbuncleCharmData::new
     );
 
 
+    private final Optional<Component> name;
+    private final String color;
+    private final Optional<ItemStack> cosmetic;
+    private final Block pathBlock;
+    private final Optional<BlockPos> bedPos;
+    private final ResourceLocation behavior;
+    private final CompoundTag behaviorTag;
+    private final String adopter;
+    private final String bio;
 
-    public final Optional<Component> name;
-    public final String color;
-    public final ItemStack cosmetic;
-    public final Block pathBlock;
-    public final Optional<BlockPos> bedPos;
-    public final ResourceLocation behavior;
-    public final CompoundTag behaviorTag;
-    public final String adopter;
-    public final String bio;
-
-    public StarbuncleCharmData(Optional<Component> name, String color,  Optional<BlockPos> bedPos, ItemStack cosmetic, ResourceLocation behavior, CompoundTag behaviorTag, String adopter, String bio) {
+    public StarbuncleCharmData(Optional<Component> name, String color,  Optional<BlockPos> bedPos, Optional<ItemStack> cosmetic, ResourceLocation behavior, CompoundTag behaviorTag, String adopter, String bio) {
         this(name, color, null, bedPos, cosmetic, behavior, behaviorTag, adopter, bio);
     }
 
-    public StarbuncleCharmData(Optional<Component> name, String color, Block pathBlock,  Optional<BlockPos> bedPos, ItemStack cosmetic,ResourceLocation behavior,  CompoundTag behaviorTag, String adopter, String bio) {
+    public StarbuncleCharmData(Optional<Component> name, String color, Block pathBlock,  Optional<BlockPos> bedPos, Optional<ItemStack> cosmetic,ResourceLocation behavior,  CompoundTag behaviorTag, String adopter, String bio) {
         this.name = name;
         this.color = color;
         this.cosmetic = cosmetic;
@@ -94,7 +93,7 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
     }
 
     public StarbuncleCharmData() {
-        this(Optional.empty(), DyeColor.ORANGE.getName(), null, Optional.empty(), ItemStack.EMPTY, StarbyTransportBehavior.TRANSPORT_ID, new CompoundTag(), null, null);
+        this(Optional.empty(), DyeColor.ORANGE.getName(), null, Optional.empty(), Optional.empty(), StarbyTransportBehavior.TRANSPORT_ID, new CompoundTag(), "", "");
 
     }
 
@@ -104,7 +103,7 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
     }
 
     public Mutable mutable() {
-        return new Mutable(name.orElse(null), color, cosmetic, pathBlock, bedPos.orElse(null), behavior, new CompoundTag(), adopter, bio);
+        return new Mutable(name.orElse(null), color, cosmetic.orElse(null), pathBlock, bedPos.orElse(null), behavior, new CompoundTag(), adopter, bio);
     }
 
     @Override
@@ -118,7 +117,7 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
         if(bio != null){
             tooltip2.accept(Component.literal(bio).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE)));
         }
-        if(behavior != null && context != null){
+        if(behavior != null){
             // danger zone
             try{
                 ChangeableBehavior behavior = BehaviorRegistry.create(this.behavior, new Starbuncle(ArsNouveau.proxy.getClientWorld(), true), this.behaviorTag);
@@ -145,6 +144,42 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
         return Objects.hash(name, color, cosmetic, pathBlock, bedPos, behavior, adopter, bio);
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public Optional<Component> getName() {
+        return name;
+    }
+
+    public Optional<ItemStack> getCosmetic() {
+        return cosmetic;
+    }
+
+    public Block getPathBlock() {
+        return pathBlock;
+    }
+
+    public Optional<BlockPos> getBedPos() {
+        return bedPos;
+    }
+
+    public ResourceLocation getBehavior() {
+        return behavior;
+    }
+
+    public CompoundTag getBehaviorTag() {
+        return behaviorTag;
+    }
+
+    public String getAdopter() {
+        return adopter;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
     public static class Mutable {
         public Component name;
         public String color;
@@ -169,11 +204,11 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
         }
 
         public Mutable() {
-            this(null, DyeColor.ORANGE.getName(), ItemStack.EMPTY, null, BlockPos.ZERO, StarbyTransportBehavior.TRANSPORT_ID, new CompoundTag(), null, null);
+            this(null, DyeColor.ORANGE.getName(), null, null, BlockPos.ZERO, StarbyTransportBehavior.TRANSPORT_ID, new CompoundTag(), "", "");
         }
 
         public StarbuncleCharmData immutable() {
-            return new StarbuncleCharmData(Optional.ofNullable(name), color, pathBlock, Optional.ofNullable(bedPos), cosmetic, behaviorKey, behaviorTag, adopter, bio);
+            return new StarbuncleCharmData(Optional.ofNullable(name), color, pathBlock, Optional.ofNullable(bedPos), Optional.ofNullable(cosmetic), behaviorKey, behaviorTag, adopter, bio);
         }
     }
 }
