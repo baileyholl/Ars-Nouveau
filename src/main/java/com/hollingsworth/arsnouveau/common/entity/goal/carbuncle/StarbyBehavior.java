@@ -72,7 +72,7 @@ public class StarbyBehavior extends ChangeableBehavior {
     }
 
     @Override
-    protected ResourceLocation getRegistryName() {
+    public ResourceLocation getRegistryName() {
         return ArsNouveau.prefix( "starby");
     }
 

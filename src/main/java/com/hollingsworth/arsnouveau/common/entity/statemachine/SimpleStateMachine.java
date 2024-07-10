@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.statemachine;
 
 import com.hollingsworth.arsnouveau.common.util.Log;
-import net.neoforged.fml.loading.FMLEnvironment;
 
 import javax.annotation.Nonnull;
 
@@ -45,6 +44,6 @@ public class SimpleStateMachine<State extends IState, Event extends IStateEvent>
     }
 
     public boolean isDebug(){
-        return !FMLEnvironment.production;
+        return false;// !FMLEnvironment.production;
     }
 }

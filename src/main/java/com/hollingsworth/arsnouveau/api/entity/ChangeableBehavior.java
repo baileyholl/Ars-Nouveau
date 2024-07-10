@@ -36,7 +36,6 @@ public abstract class ChangeableBehavior implements IWandable {
     public void getTooltip(Consumer<Component> tooltip){}
 
     public CompoundTag toTag(CompoundTag tag) {
-        tag.putString("id", getRegistryName().toString());
         return tag;
     }
 
@@ -54,7 +53,7 @@ public abstract class ChangeableBehavior implements IWandable {
 
     public void pickUpItem(ItemEntity entity) {}
 
-    protected abstract ResourceLocation getRegistryName();
+    public abstract ResourceLocation getRegistryName();
 
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         return InteractionResult.PASS;

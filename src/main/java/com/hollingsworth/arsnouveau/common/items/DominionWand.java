@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -38,9 +39,9 @@ public class DominionWand extends ModItem {
             return;
         }
         DominionWandData data = pStack.getOrDefault(DataComponentRegistry.DOMINION_WAND, new DominionWandData());
-        BlockPos pos = data.storedPos();
-        if (pos != null) {
-            if (pLevel.getBlockEntity(pos) instanceof IWandable wandable) {
+
+        if (data.storedPos().isPresent()) {
+            if (pLevel.getBlockEntity(data.storedPos().get()) instanceof IWandable wandable) {
                 Networking.sendToPlayerClient(new HighlightAreaPacket(wandable.getWandHighlight(new ArrayList<>()), 10), (ServerPlayer) pEntity);
             }
             return;
@@ -71,12 +72,12 @@ public class DominionWand extends ModItem {
         }
         Level world = playerEntity.getCommandSenderWorld();
 
-        if (data.storedPos() != null && world.getBlockEntity(data.storedPos()) instanceof IWandable wandable) {
-            wandable.onFinishedConnectionFirst(data.storedPos(), data.face(), target, playerEntity);
+        if (data.storedPos().isPresent() && world.getBlockEntity(data.storedPos().get()) instanceof IWandable wandable) {
+            wandable.onFinishedConnectionFirst(data.storedPos().orElse(null), data.face().orElse(null), target, playerEntity);
         }
 
         if (target instanceof IWandable wandable) {
-            wandable.onFinishedConnectionLast(data.storedPos(), data.face(), target, playerEntity);
+            wandable.onFinishedConnectionLast(data.storedPos().orElse(null), data.face().orElse(null), target, playerEntity);
             clear(stack, playerEntity);
         }
 
@@ -131,18 +132,19 @@ public class DominionWand extends ModItem {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.dominion_wand.position_set"));
             return InteractionResult.SUCCESS;
         }
-        if (data.face() == null && data.strict()){
+        if (data.face().isEmpty() && data.strict()){
             stack.set(DataComponentRegistry.DOMINION_WAND, data.setFace(context.getClickedFace()));
         }
-
-        if (data.storedPos() != null && world.getBlockEntity(data.storedPos()) instanceof IWandable wandable) {
-            wandable.onFinishedConnectionFirst(pos, data.face(), (LivingEntity) world.getEntity(data.storedEntityId()), playerEntity);
+        BlockPos storedPos = data.storedPos().orElse(null);
+        Direction storedDirection = data.face().orElse(null);
+        if (storedPos != null && world.getBlockEntity(storedPos) instanceof IWandable wandable) {
+            wandable.onFinishedConnectionFirst(pos, storedDirection, (LivingEntity) world.getEntity(data.storedEntityId()), playerEntity);
         }
         if (world.getBlockEntity(pos) instanceof IWandable wandable) {
-            wandable.onFinishedConnectionLast(data.storedPos(), data.face(), (LivingEntity) world.getEntity(data.storedEntityId()), playerEntity);
+            wandable.onFinishedConnectionLast(storedPos, storedDirection, (LivingEntity) world.getEntity(data.storedEntityId()), playerEntity);
         }
         if (data.storedEntityId() != DominionWandData.NULL_ENTITY && world.getEntity(data.storedEntityId()) instanceof IWandable wandable) {
-            wandable.onFinishedConnectionFirst(pos, data.face(), null, playerEntity);
+            wandable.onFinishedConnectionFirst(pos, storedDirection, null, playerEntity);
         }
 
         clear(stack, playerEntity);
@@ -165,10 +167,10 @@ public class DominionWand extends ModItem {
             tooltip.add(Component.translatable("ars_nouveau.dominion_wand.entity_stored"));
         }
 
-        if (data.storedPos() == null) {
+        if (data.storedPos().isEmpty()) {
             tooltip.add(Component.translatable("ars_nouveau.dominion_wand.no_location"));
         } else {
-            tooltip.add(Component.translatable("ars_nouveau.dominion_wand.position_stored", getPosString(data.storedPos())));
+            tooltip.add(Component.translatable("ars_nouveau.dominion_wand.position_stored", getPosString(data.getValidPos())));
         }
 
         if (data.strict()) tooltip.add(Component.literal("Side-Sensitive"));

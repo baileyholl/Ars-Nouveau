@@ -290,7 +290,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     }
 
     @Override
-    protected ResourceLocation getRegistryName() {
+    public ResourceLocation getRegistryName() {
         return TRANSPORT_ID;
     }
 }

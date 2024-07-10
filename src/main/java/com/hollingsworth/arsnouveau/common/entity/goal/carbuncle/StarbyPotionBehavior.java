@@ -134,7 +134,7 @@ public class StarbyPotionBehavior extends StarbyListBehavior {
     }
 
     @Override
-    protected ResourceLocation getRegistryName() {
+    public ResourceLocation getRegistryName() {
         return POTION_ID;
     }
 }

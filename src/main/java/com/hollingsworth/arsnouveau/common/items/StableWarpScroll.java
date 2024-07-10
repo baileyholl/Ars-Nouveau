@@ -15,8 +15,12 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class StableWarpScroll extends ModItem{
 
@@ -57,5 +61,11 @@ public class StableWarpScroll extends ModItem{
             player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.already_recorded"));
         }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip2, flagIn);
+        stack.addToTooltip(DataComponentRegistry.WARP_SCROLL, context, tooltip2::add, flagIn);
     }
 }

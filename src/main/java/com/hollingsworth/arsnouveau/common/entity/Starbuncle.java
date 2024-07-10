@@ -165,6 +165,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
 
     public void setBehavior(ChangeableBehavior behavior) {
         this.dynamicBehavior = behavior;
+        this.data.behaviorKey = behavior.getRegistryName();
         getEntityData().set(Starbuncle.BEHAVIOR_TAG, dynamicBehavior.toTag(new CompoundTag()));
         reloadGoals();
         syncBehavior();
@@ -608,7 +609,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             this.entityData.set(HEAD_COSMETIC, data.cosmetic);
         setCustomName(data.name);
         if (data.behaviorTag != null) {
-            this.dynamicBehavior = BehaviorRegistry.create(this, data.behaviorTag);
+            this.dynamicBehavior = BehaviorRegistry.create(data.behaviorKey, this, data.behaviorTag);
             this.entityData.set(BEHAVIOR_TAG, dynamicBehavior.toTag(new CompoundTag()));
             this.reloadGoals();
         } else if (this.isTamed()) {
@@ -625,7 +626,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     public void onSyncedDataUpdated(EntityDataAccessor<?> pKey) {
         super.onSyncedDataUpdated(pKey);
         if (pKey == BEHAVIOR_TAG) {
-            this.dynamicBehavior = BehaviorRegistry.create(this, this.entityData.get(BEHAVIOR_TAG));
+            this.dynamicBehavior = BehaviorRegistry.create( data.behaviorKey,this, this.entityData.get(BEHAVIOR_TAG));
         }
     }
 
@@ -744,7 +745,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     @Override
     public void onTagSync(CompoundTag tag) {
         if (level.isClientSide) {
-            this.dynamicBehavior = BehaviorRegistry.create(this, tag);
+            this.dynamicBehavior = BehaviorRegistry.create(data.behaviorKey, this, tag);
         }
     }
 
