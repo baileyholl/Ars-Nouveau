@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GuiEntityInfoHUD {
+    public static MultiBufferSource.BufferSource renderType = MultiBufferSource.immediate(new ByteBufferBuilder(1536));
     public static final LayeredDraw.Layer OVERLAY = GuiEntityInfoHUD::renderOverlay;
 
     public static int hoverTicks = 0;
@@ -97,8 +98,8 @@ public class GuiEntityInfoHUD {
             tooltipHeight += (tooltip.size() - 1) * 10;
         }
         int xOffset = Config.TOOLTIP_X_OFFSET.get();
-        int width = Minecraft.getInstance().getWindow().getWidth();
-        int height = Minecraft.getInstance().getWindow().getHeight();
+        int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+        int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
         int posX = width / 2 + xOffset;
         int posY = height / 2 + Config.TOOLTIP_Y_OFFSET.get();
 
@@ -116,7 +117,6 @@ public class GuiEntityInfoHUD {
             colorBorderTop.scaleAlpha(fade);
             colorBorderBot.scaleAlpha(fade);
         }
-
         drawHoveringText(ItemStack.EMPTY, graphics, tooltip,  posX, posY, width, height, -1, colorBackground.getRGB(),
                 colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
         poseStack.popPose();
@@ -131,6 +131,7 @@ public class GuiEntityInfoHUD {
                                         int maxTextWidth, int backgroundColor, int borderColorStart, int borderColorEnd, Font font) {
         if (textLines.isEmpty())
             return;
+
         PoseStack pStack = graphics.pose();
         List<ClientTooltipComponent> list = ClientHooks.gatherTooltipComponents(stack, textLines, stack.getTooltipImage(), mouseX, screenWidth, screenHeight, font);
         RenderTooltipEvent.Pre event =
@@ -245,10 +246,7 @@ public class GuiEntityInfoHUD {
                 tooltipY - 3 + 1, borderColorStart, borderColorStart);
         graphics.fillGradient(tooltipX - 3, tooltipY + tooltipHeight + 2,
                 tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, borderColorEnd, borderColorEnd);
-
-        MultiBufferSource.BufferSource renderType = MultiBufferSource.immediate(new ByteBufferBuilder(1536));
         pStack.translate(0.0D, 0.0D, zLevel);
-
         for (int lineNumber = 0; lineNumber < list.size(); ++lineNumber) {
             ClientTooltipComponent line = list.get(lineNumber);
 
@@ -260,7 +258,6 @@ public class GuiEntityInfoHUD {
 
             tooltipY += 10;
         }
-
         renderType.endBatch();
         pStack.popPose();
 
