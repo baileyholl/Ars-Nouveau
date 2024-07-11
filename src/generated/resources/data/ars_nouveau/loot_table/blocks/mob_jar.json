@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_name",
+              "source": "block_entity"
+            },
+            {
+              "function": "minecraft:copy_custom_data",
+              "ops": [
+                {
+                  "op": "replace",
+                  "source": "entityTag",
+                  "target": "BlockEntityTag.entityTag"
+                },
+                {
+                  "op": "replace",
+                  "source": "entityId",
+                  "target": "entityId"
+                }
+              ],
+              "source": "block_entity"
+            }
+          ],
+          "name": "ars_nouveau:mob_jar"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "ars_nouveau:blocks/mob_jar"
+}

@@ -32,7 +32,7 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new GlyphRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new ApparatusRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new PatchouliProvider(event.getGenerator()));
-//        event.getGenerator().addProvider(event.includeServer(), new DefaultTableProvider(output, provider));
+        event.getGenerator().addProvider(event.includeServer(), new DefaultTableProvider(output, provider));
         event.getGenerator().addProvider(event.includeServer(), new ImbuementRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new CrushRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new ItemTagProvider(output, provider, fileHelper));
