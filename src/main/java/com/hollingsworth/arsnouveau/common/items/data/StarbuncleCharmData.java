@@ -103,7 +103,7 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
     }
 
     public Mutable mutable() {
-        return new Mutable(name.orElse(null), color, cosmetic.orElse(null), pathBlock, bedPos.orElse(null), behavior, new CompoundTag(), adopter, bio);
+        return new Mutable(name.orElse(null), color, cosmetic.orElse(null), pathBlock, bedPos.orElse(null), behavior, behaviorTag, adopter, bio);
     }
 
     @Override

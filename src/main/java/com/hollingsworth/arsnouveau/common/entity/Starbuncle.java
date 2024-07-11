@@ -570,6 +570,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         data = NBTComponent.fromTag(StarbuncleCharmData.CODEC.codec(), tag.contains("starbuncleData") ? tag.getCompound("starbuncleData") : new CompoundTag()).mutable();
+        this.dynamicBehavior = BehaviorRegistry.create(data.behaviorKey, this, data.behaviorTag);
         if (tag.contains("held"))
             setHeldStack(ItemStack.parseOptional(level.registryAccess(), (CompoundTag) tag.get("held")));
 
@@ -589,6 +590,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
+        data.behaviorTag = this.dynamicBehavior.toTag(new CompoundTag());
         tag.put("starbuncleData", data.immutable().toTag(level));
         if (!getHeldStack().isEmpty()) {
             Tag itemTag = getHeldStack().save(level.registryAccess());
