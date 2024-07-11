@@ -10,9 +10,7 @@ import com.hollingsworth.arsnouveau.common.block.ArchfruitPod;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.block.ThreePartBlock;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
-import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.BlockRegistryWrapper;
-import com.hollingsworth.arsnouveau.setup.registry.RegistryWrapper;
+import com.hollingsworth.arsnouveau.setup.registry.*;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.WritableRegistry;
@@ -41,11 +39,13 @@ import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.CopyCustomDataFunction;
 import net.minecraft.world.level.storage.loot.functions.CopyNameFunction;
+import net.minecraft.world.level.storage.loot.functions.EnchantedCountIncreaseFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -344,24 +344,24 @@ public class DefaultTableProvider extends LootTableProvider {
 
         @Override
         public void generate() {
-//            add(ModEntities.WILDEN_STALKER.get(), LootTable.lootTable()
-//                    .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
-//                            .add(LootItem.lootTableItem(ItemsRegistry.WILDEN_WING.get())
-//                                    .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))
-//                                    .apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0.0F, 1.0F)))))
-//            );
-//            add(ModEntities.WILDEN_GUARDIAN.get(), LootTable.lootTable()
-//                    .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
-//                            .add(LootItem.lootTableItem(ItemsRegistry.WILDEN_SPIKE.get())
-//                                    .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))
-//                                    .apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0.0F, 1.0F)))))
-//            );
-//            add(ModEntities.WILDEN_HUNTER.get(), LootTable.lootTable()
-//                    .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
-//                            .add(LootItem.lootTableItem(ItemsRegistry.WILDEN_HORN.get())
-//                                    .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))
-//                                    .apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0.0F, 1.0F)))))
-//            );
+            add(ModEntities.WILDEN_STALKER.get(), LootTable.lootTable()
+                    .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                            .add(LootItem.lootTableItem(ItemsRegistry.WILDEN_WING.get())
+                                    .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))
+                                    .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, 1.0F)))))
+            );
+            add(ModEntities.WILDEN_GUARDIAN.get(), LootTable.lootTable()
+                    .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                            .add(LootItem.lootTableItem(ItemsRegistry.WILDEN_SPIKE.get())
+                                    .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))
+                                    .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, 1.0F)))))
+            );
+            add(ModEntities.WILDEN_HUNTER.get(), LootTable.lootTable()
+                    .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                            .add(LootItem.lootTableItem(ItemsRegistry.WILDEN_HORN.get())
+                                    .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))
+                                    .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, 1.0F)))))
+            );
         }
 
         @Override

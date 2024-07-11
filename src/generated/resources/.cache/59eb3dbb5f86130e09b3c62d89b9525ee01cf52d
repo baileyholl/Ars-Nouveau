@@ -1,4 +1,4 @@
-// 1.21	2024-07-11T09:03:13.3968254	Loot Tables
+// 1.21	2024-07-11T09:06:55.9670549	Loot Tables
 4f70eae621815da8d08d3ea0b9fd479b48bad2d3 data/ars_nouveau/loot_table/blocks/agronomic_sourcelink.json
 8a6d60f2b39de0408c7e4537b53e866a04236d22 data/ars_nouveau/loot_table/blocks/alchemical_sourcelink.json
 8bdff8a0a49a9f3f21a822eb1d1d01a950d6ad1a data/ars_nouveau/loot_table/blocks/alteration_table.json
@@ -165,3 +165,6 @@ ffc0c8a426bf2b1cd56d2c4cd909a7289cd902f4 data/ars_nouveau/loot_table/blocks/sour
 b7c7dfedc82b75fad6c44b41b53664b086f17e20 data/ars_nouveau/loot_table/blocks/volcanic_sourcelink.json
 5a7f8da8da17f592fe60568b87cba566dbfa6105 data/ars_nouveau/loot_table/blocks/wixie_cauldron.json
 6a4107b990568ff31b9c3251ac2d03330dff96d7 data/ars_nouveau/loot_table/blocks/yellow_sbed.json
+8acf67783a1a936e05e1c351380da320c575ff32 data/ars_nouveau/loot_table/entities/wilden_guardian.json
+93f3c19d89891b175b026838172e8b1d240e42db data/ars_nouveau/loot_table/entities/wilden_hunter.json
+11298f214fe5e17eb24190b6843c11848050116b data/ars_nouveau/loot_table/entities/wilden_stalker.json
