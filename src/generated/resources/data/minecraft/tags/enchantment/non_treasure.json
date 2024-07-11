@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "ars_nouveau:mana_boost",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:mana_regen",
+      "required": false
+    }
+  ]
+}

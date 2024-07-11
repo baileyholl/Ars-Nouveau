@@ -43,9 +43,6 @@ public class DamageTypesProvider  extends DatapackBuiltinEntriesProvider {
         return "Ars Nouveau's Damage Type Data";
     }
 
-
-
-
     public static class DamageTypesTagsProvider extends DamageTypeTagsProvider {
 
         TagKey<DamageType> FORGE_MAGIC = TagKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("c", "is_magic"));

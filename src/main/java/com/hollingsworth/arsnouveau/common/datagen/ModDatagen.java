@@ -50,6 +50,9 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new DispelEntityProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new StructureTagProvider(output, provider, fileHelper));
         event.getGenerator().addProvider(event.includeClient(), new AtlasProvider(output, provider, fileHelper));
+        event.getGenerator().addProvider(event.includeServer(), new EnchantmentProvider(output, provider));
+        event.getGenerator().addProvider(event.includeServer(), new EnchantmentProvider.EnchantmentTagsProvider(output, provider, fileHelper));
+
         event.getGenerator().addProvider(event.includeServer(), new DamageTypesProvider(output, provider));
         event.getGenerator().addProvider(event.includeServer(), new DamageTypesProvider.DamageTypesTagsProvider(output, provider, fileHelper));
         event.getGenerator().addProvider(event.includeServer(), new CompostablesProvider(output, provider));
