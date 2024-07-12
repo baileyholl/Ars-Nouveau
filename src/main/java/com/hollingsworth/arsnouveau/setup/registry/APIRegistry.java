@@ -183,6 +183,7 @@ public class APIRegistry {
         registerPerk(VampiricPerk.INSTANCE);
         registerPerk(KnockbackResistPerk.INSTANCE);
 
+        ImbuementRecipeRegistry.INSTANCE.addRecipeType(RecipeRegistry.IMBUEMENT_TYPE);
     }
 
     //register things only in dev, safe from production
@@ -196,7 +197,6 @@ public class APIRegistry {
         api.getEnchantingRecipeTypes().add(RecipeRegistry.REACTIVE_TYPE.get());
         api.getEnchantingRecipeTypes().add(RecipeRegistry.SPELL_WRITE_TYPE.get());
         api.getEnchantingRecipeTypes().add(RecipeRegistry.ARMOR_UPGRADE_TYPE.get());
-        api.getImbuementRecipeTypes().add(RecipeRegistry.IMBUEMENT_TYPE.get());
         PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_BOOTS, stack -> new ArmorPerkHolder(stack, Arrays.asList(
                 Arrays.asList(PerkSlot.ONE),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.ONE),

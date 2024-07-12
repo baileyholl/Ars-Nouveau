@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.imbuement_chamber.IImbuementRecipe;
+import com.hollingsworth.arsnouveau.api.registry.ImbuementRecipeRegistry;
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
@@ -310,7 +311,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     }
 
     public @Nullable IImbuementRecipe getRecipeNow(){
-        return ArsNouveauAPI.getInstance().getImbuementRecipes(level).stream().filter(r -> r.isMatch(this)).findFirst().orElse(null);
+        return ImbuementRecipeRegistry.INSTANCE.getRecipes().stream().filter(r -> r.isMatch(this)).findFirst().orElse(null);
     }
 
     @Override
