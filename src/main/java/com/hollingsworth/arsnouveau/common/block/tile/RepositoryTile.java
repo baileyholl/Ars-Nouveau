@@ -175,9 +175,9 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
 
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries) {
-        CompoundTag tag = new CompoundTag();
+        CompoundTag tag = super.getUpdateTag(pRegistries);
         this.saveAdditional(tag, pRegistries);
-        return super.getUpdateTag(pRegistries);
+        return tag;
     }
 
     @Override
