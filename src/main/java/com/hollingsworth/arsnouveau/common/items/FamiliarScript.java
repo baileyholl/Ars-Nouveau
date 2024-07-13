@@ -34,7 +34,7 @@ public class FamiliarScript extends ModItem {
         if (worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND)
             return super.use(worldIn, playerIn, handIn);
 
-        IPlayerCap familiarCap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(null);
+        IPlayerCap familiarCap = CapabilityRegistry.getPlayerDataCap(playerIn);
         if (familiarCap != null) {
             if (familiarCap.ownsFamiliar(familiar)) {
                 playerIn.sendSystemMessage(Component.translatable("ars_nouveau.familiar.owned"));

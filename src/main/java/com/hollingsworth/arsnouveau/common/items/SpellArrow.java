@@ -41,7 +41,7 @@ public class SpellArrow extends ArrowItem {
 
     @Override
     public AbstractArrow createArrow(Level world, ItemStack stack, LivingEntity shooter, @Nullable ItemStack bowStack) {
-        IManaCap mana = CapabilityRegistry.getMana(shooter).orElse(null);
+        IManaCap mana = CapabilityRegistry.getMana(shooter);
         if (mana == null)
             return new Arrow(world, shooter, new ItemStack(Items.ARROW), bowStack);
         EntitySpellArrow spellArrow = new EntitySpellArrow(world, shooter, ItemStack.EMPTY, bowStack);

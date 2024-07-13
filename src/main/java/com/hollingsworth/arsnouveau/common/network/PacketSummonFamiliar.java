@@ -39,7 +39,7 @@ public class PacketSummonFamiliar extends AbstractPacket{
 
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer owner) {
-        IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(owner).orElse(null);
+        IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(owner);
         if (cap == null)
             return;
 

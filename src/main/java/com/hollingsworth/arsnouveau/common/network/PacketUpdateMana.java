@@ -34,7 +34,7 @@ public class PacketUpdateMana extends AbstractPacket{
         ManaData data = new ManaData();
         data.deserializeNBT(player.registryAccess(), this.tag);
         player.setData(AttachmentsRegistry.MANA_ATTACHMENT, data);
-        var cap = CapabilityRegistry.getMana(ArsNouveau.proxy.getPlayer()).orElse(null);
+        var cap = CapabilityRegistry.getMana(ArsNouveau.proxy.getPlayer());
         if(cap != null){
             cap.setManaData(data);
         }

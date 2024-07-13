@@ -73,7 +73,7 @@ public class SpellResolver implements Cloneable {
 
     protected boolean enoughMana(LivingEntity entity) {
         int totalCost = getResolveCost();
-        IManaCap manaCap = CapabilityRegistry.getMana(entity).orElse(null);
+        IManaCap manaCap = CapabilityRegistry.getMana(entity);
         if (manaCap == null)
             return false;
         boolean canCast = totalCost <= manaCap.getCurrentMana() || (entity instanceof Player player && player.isCreative());
@@ -200,7 +200,7 @@ public class SpellResolver implements Cloneable {
 
     public void expendMana() {
         int totalCost = getResolveCost();
-        var mana = CapabilityRegistry.getMana(spellContext.getUnwrappedCaster()).orElse(null);
+        var mana = CapabilityRegistry.getMana(spellContext.getUnwrappedCaster());
         if(mana != null){
             mana.removeMana(totalCost);
         }

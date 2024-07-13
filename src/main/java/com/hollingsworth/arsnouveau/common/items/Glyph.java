@@ -41,7 +41,7 @@ public class Glyph extends ModItem {
             playerIn.sendSystemMessage(Component.translatable("ars_nouveau.spell.disabled"));
             return super.use(worldIn, playerIn, handIn);
         }
-        IPlayerCap playerDataCap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(null);
+        IPlayerCap playerDataCap = CapabilityRegistry.getPlayerDataCap(playerIn);
         if (playerDataCap != null) {
             if (playerDataCap.knowsGlyph(spellPart) || GlyphRegistry.getDefaultStartingSpells().contains(spellPart)) {
                 playerIn.sendSystemMessage(Component.literal("You already know this spell!"));
@@ -79,7 +79,7 @@ public class Glyph extends ModItem {
         if (Minecraft.getInstance().player == null)
             return;
 
-        IPlayerCap playerDataCap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player).orElse(null);
+        IPlayerCap playerDataCap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player);
         if (playerDataCap != null) {
             if (playerDataCap.knowsGlyph(spellPart) || GlyphRegistry.getDefaultStartingSpells().contains(spellPart)) {
                 tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_known").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN)));

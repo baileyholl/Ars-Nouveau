@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
-import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.minecraft.commands.CommandSourceStack;
@@ -15,7 +14,6 @@ import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -43,7 +41,7 @@ public class LearnGlyphCommand {
         if (source.getPlayer() == null) return 0;
 
         for (ServerPlayer player : players) {
-            IPlayerCap playerCap = CapabilityRegistry.getPlayerDataCap(player).orElse(null);
+            IPlayerCap playerCap = CapabilityRegistry.getPlayerDataCap(player);
 
             if (glyph == null) {
                 if (playerCap == null) continue;

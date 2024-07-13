@@ -23,7 +23,7 @@ public class ManaCapEvents {
         if (!(player instanceof ServerPlayer serverPlayer) || player.getCommandSenderWorld().getGameTime() % ServerConfig.REGEN_INTERVAL.get() != 0)
             return;
 
-        ManaCap mana = CapabilityRegistry.getMana(player).orElse(null);
+        ManaCap mana = CapabilityRegistry.getMana(player);
         if (mana == null)
             return;
         boolean sync = false;
@@ -81,7 +81,7 @@ public class ManaCapEvents {
 
     public static void syncPlayerEvent(Player playerEntity) {
         if (playerEntity instanceof ServerPlayer serverPlayer) {
-            var mana = CapabilityRegistry.getMana(playerEntity).orElse(null);
+            var mana = CapabilityRegistry.getMana(playerEntity);
             if (mana != null) {
                 var manaCalc = ManaUtil.calcMaxMana(playerEntity);
                 mana.setMaxMana(manaCalc.getRealMax());

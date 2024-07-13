@@ -68,14 +68,14 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (this != ItemsRegistry.CREATIVE_SPELLBOOK.get()) {
-            var iMana = CapabilityRegistry.getMana(playerIn).orElse(null);
+            var iMana = CapabilityRegistry.getMana(playerIn);
             if(iMana != null){
                 boolean shouldSync = false;
                 if (iMana.getBookTier() < this.tier.value) {
                     iMana.setBookTier(this.tier.value);
                     shouldSync = true;
                 }
-                IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(null);
+                IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerIn);
                 if (iMana.getGlyphBonus() < cap.getKnownGlyphs().size()) {
                     iMana.setGlyphBonus(cap.getKnownGlyphs().size());
                     shouldSync = true;

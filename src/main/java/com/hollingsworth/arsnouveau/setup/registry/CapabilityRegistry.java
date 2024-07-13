@@ -34,10 +34,10 @@ public class CapabilityRegistry {
      * @param entity The entity
      * @return A lazy optional containing the IMana, if any
      */
-    public static LazyOptional<ManaCap> getMana(final LivingEntity entity) {
+    public static ManaCap getMana(final LivingEntity entity) {
         if (entity == null)
-            return LazyOptional.empty();
-        return LazyOptional.of(entity.getCapability(MANA_CAPABILITY));
+            return null;
+        return entity.getCapability(MANA_CAPABILITY);
     }
 
     /**
@@ -46,33 +46,10 @@ public class CapabilityRegistry {
      * @param entity The entity
      * @return A lazy optional containing the IMana, if any
      */
-    public static LazyOptional<ANPlayerDataCap> getPlayerDataCap(final LivingEntity entity) {
+    public static ANPlayerDataCap getPlayerDataCap(final LivingEntity entity) {
         if (entity == null)
-            return LazyOptional.empty();
-        return LazyOptional.of(entity.getCapability(PLAYER_DATA_CAP));
-    }
-
-    /**
-     * todo: DELETE
-     * @deprecated
-     */
-    public static class LazyOptional<T> {
-        private T val;
-        private LazyOptional(T value) {
-            this.val = value;
-        }
-
-        public static <T> LazyOptional<T> of(T value) {
-            return new LazyOptional<>(value);
-        }
-
-        public T orElse(T value) {
-            return val == null ? value : val;
-        }
-
-        public static <T> LazyOptional<T> empty() {
             return null;
-        }
+        return entity.getCapability(PLAYER_DATA_CAP);
     }
 
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
@@ -154,7 +131,7 @@ public class CapabilityRegistry {
 
         public static void syncPlayerCap(Player player) {
             if(player instanceof ServerPlayer serverPlayer){
-                ANPlayerDataCap playerData = getPlayerDataCap(serverPlayer).orElse(null);
+                ANPlayerDataCap playerData = getPlayerDataCap(serverPlayer);
                 if(playerData != null){
                     playerData.syncToClient(serverPlayer);
                 }

@@ -23,7 +23,7 @@ public class JumpingRing extends ArsNouveauCurio {
 
     public static void doJump(Player player){
         if(CuriosUtil.hasItem(player, ItemsRegistry.JUMP_RING.get())){
-            IManaCap manaCap = CapabilityRegistry.getMana(player).orElse(null);
+            IManaCap manaCap = CapabilityRegistry.getMana(player);
             if(manaCap == null || (manaCap.getCurrentMana() < Config.JUMP_RING_COST.get() && !player.isCreative())){
                 return;
             }

@@ -56,7 +56,7 @@ public class VoidJar extends ModItem implements IScribeable {
     }
 
     public void preConsume(Player player, ItemStack jar, ItemStack voided, int amount) {
-        var mana =  CapabilityRegistry.getMana(player).orElse(null);
+        var mana =  CapabilityRegistry.getMana(player);
         if(mana == null){
             return;
         }

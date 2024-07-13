@@ -251,7 +251,7 @@ public class GlyphUnlockMenu extends BaseBook {
             int xOffset = 20 * ((adjustedXPlaced) % PER_ROW) + (nextPage ? 134 : 0);
             int yPlace = adjustedRowsPlaced * 18 + yStart;
             UnlockGlyphButton cell = new UnlockGlyphButton(xStart + xOffset, yPlace, false, holder, this::onGlyphClick);
-            IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player).orElse(null);
+            IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player);
             if (cap != null) {
                 if (cap.knowsGlyph(spellPart) || GlyphRegistry.getDefaultStartingSpells().contains(spellPart)) {
                     cell.playerKnows = true;

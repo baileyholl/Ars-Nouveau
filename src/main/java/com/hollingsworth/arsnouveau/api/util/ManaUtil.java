@@ -43,7 +43,7 @@ public class ManaUtil {
     }
 
     public static double getCurrentMana(LivingEntity e) {
-        IManaCap mana = CapabilityRegistry.getMana(e).orElse(null);
+        IManaCap mana = CapabilityRegistry.getMana(e);
         if (mana == null)
             return 0;
         return mana.getCurrentMana();
@@ -63,7 +63,7 @@ public class ManaUtil {
 
     // Calculate Max Mana & Mana Reserve to keep track of the mana reserved by familiars & co.
     public static Mana calcMaxMana(Player e) {
-        IManaCap mana = CapabilityRegistry.getMana(e).orElse(null);
+        IManaCap mana = CapabilityRegistry.getMana(e);
         if (mana == null)
             return new Mana(0, 0f);
 
@@ -101,7 +101,7 @@ public class ManaUtil {
     }
 
     public static double getManaRegen(Player e) {
-        IManaCap mana = CapabilityRegistry.getMana(e).orElse(null);
+        IManaCap mana = CapabilityRegistry.getMana(e);
 
         if (mana == null) return 0;
         double regen = 0;

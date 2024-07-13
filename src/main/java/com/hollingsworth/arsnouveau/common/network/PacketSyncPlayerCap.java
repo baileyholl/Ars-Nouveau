@@ -33,7 +33,7 @@ public class PacketSyncPlayerCap extends AbstractPacket{
         ANPlayerData data = new ANPlayerData();
         data.deserializeNBT(playerEntity.registryAccess(), this.tag);
         playerEntity.setData(AttachmentsRegistry.PLAYER_DATA, data);
-        var cap = CapabilityRegistry.getPlayerDataCap(ArsNouveau.proxy.getPlayer()).orElse(null);
+        var cap = CapabilityRegistry.getPlayerDataCap(ArsNouveau.proxy.getPlayer());
         if(cap != null){
             cap.setPlayerData(data);
         }

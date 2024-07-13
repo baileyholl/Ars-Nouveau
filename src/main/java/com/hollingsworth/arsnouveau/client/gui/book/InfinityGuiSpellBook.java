@@ -102,7 +102,7 @@ public class InfinityGuiSpellBook extends BaseBook {
     public InfinityGuiSpellBook(InteractionHand hand) {
         super();
         this.hand = hand;
-        IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player).orElse(null);
+        IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player);
         ItemStack heldStack = Minecraft.getInstance().player.getItemInHand(hand);
         List<AbstractSpellPart> parts = cap == null ? new ArrayList<>() : new ArrayList<>(cap.getKnownGlyphs().stream().filter(AbstractSpellPart::shouldShowInSpellBook).toList());
         maxManaCache = ManaUtil.getMaxMana(Minecraft.getInstance().player);
@@ -422,7 +422,7 @@ public class InfinityGuiSpellBook extends BaseBook {
 
     public void onFamiliarClick(Button button) {
         Collection<ResourceLocation> familiarHolders = new ArrayList<>();
-        IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(ArsNouveau.proxy.getPlayer()).orElse(null);
+        IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(ArsNouveau.proxy.getPlayer());
         if (cap != null) {
             familiarHolders = cap.getUnlockedFamiliars().stream().map(s -> s.familiarHolder.getRegistryName()).collect(Collectors.toList());
         }

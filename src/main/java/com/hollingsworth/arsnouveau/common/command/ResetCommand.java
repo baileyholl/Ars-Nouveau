@@ -27,12 +27,12 @@ public class ResetCommand {
         for (Entity e : entities) {
             if (!(e instanceof LivingEntity))
                 continue;
-            var iMana = CapabilityRegistry.getMana((LivingEntity) e).orElse(null);
+            var iMana = CapabilityRegistry.getMana((LivingEntity) e);
             if (iMana != null) {
                 iMana.setBookTier(0);
                 iMana.setGlyphBonus(0);
             }
-            var playerCap = CapabilityRegistry.getPlayerDataCap((LivingEntity) e).orElse(null);
+            var playerCap = CapabilityRegistry.getPlayerDataCap((LivingEntity) e);
             if (playerCap != null) {
                 playerCap.setKnownGlyphs(new ArrayList<>());
                 playerCap.setUnlockedFamiliars(new ArrayList<>());

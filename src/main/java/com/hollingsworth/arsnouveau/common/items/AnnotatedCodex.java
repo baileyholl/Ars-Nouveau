@@ -47,7 +47,7 @@ public class AnnotatedCodex extends ModItem {
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
         CodexData data = stack.get(DataComponentRegistry.CODEX_DATA);
 
-        IPlayerCap playerCap = CapabilityRegistry.getPlayerDataCap(pPlayer).orElse(null);
+        IPlayerCap playerCap = CapabilityRegistry.getPlayerDataCap(pPlayer);
         if (playerCap == null)
             return super.use(pLevel, pPlayer, pUsedHand);
         Collection<AbstractSpellPart> known = playerCap.getKnownGlyphs();

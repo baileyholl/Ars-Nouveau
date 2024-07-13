@@ -28,7 +28,7 @@ public class GuiManaHUD {
         ItemStack offHand = minecraft.player.getOffhandItem();
         var isMainDisplayable = mainHand.getItem() instanceof IDisplayMana iDisplayMana && iDisplayMana.shouldDisplay(mainHand);
         var isOffhandDisplayable = offHand.getItem() instanceof IDisplayMana iDisplayManaOffhand && iDisplayManaOffhand.shouldDisplay(offHand);
-        ManaCap cap = CapabilityRegistry.getMana(minecraft.player).orElse(null);
+        ManaCap cap = CapabilityRegistry.getMana(minecraft.player);
         boolean isRegenerating = false;
         if(cap != null){
             isRegenerating = cap.getMaxMana() > cap.getCurrentMana();
@@ -40,7 +40,7 @@ public class GuiManaHUD {
         if (!shouldDisplayBar())
             return;
         PoseStack ms = guiGraphics.pose();
-        IManaCap mana = CapabilityRegistry.getMana(minecraft.player).orElse(null);
+        IManaCap mana = CapabilityRegistry.getMana(minecraft.player);
         if(mana == null){
             return;
         }

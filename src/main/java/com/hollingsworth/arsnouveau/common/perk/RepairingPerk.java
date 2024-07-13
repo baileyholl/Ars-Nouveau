@@ -20,7 +20,7 @@ public class RepairingPerk extends Perk {
         if(entity.level.getGameTime() % 200 != 0 || stack.getDamageValue() <= 0)
             return;
         double repairLevel = PerkUtil.countForPerk(RepairingPerk.INSTANCE, entity);
-        var cap = CapabilityRegistry.getMana(entity).orElse(null);
+        var cap = CapabilityRegistry.getMana(entity);
         if(cap != null){
             if(cap.getCurrentMana() < 20)
                 return;

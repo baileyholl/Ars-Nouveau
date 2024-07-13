@@ -52,7 +52,7 @@ public class TomeCasterData extends AbstractCaster<TomeCasterData> {
             @Override
             protected boolean enoughMana(LivingEntity entity) {
                 int totalCost = getResolveCost();
-                IManaCap manaCap = CapabilityRegistry.getMana(entity).orElse(null);
+                IManaCap manaCap = CapabilityRegistry.getMana(entity);
                 if (manaCap == null)
                     return false;
                 boolean canCast = totalCost <= manaCap.getCurrentMana() || manaCap.getCurrentMana() == manaCap.getMaxMana() || (entity instanceof Player player && player.isCreative());

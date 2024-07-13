@@ -292,7 +292,7 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
      * Get the owner from getOwner
      */
     public void syncTag() {
-        IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(getOwner()).orElse(null);
+        IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(getOwner());
         if (cap != null && persistentData != null) {
             cap.getFamiliarData(getHolderID()).entityTag.put("familiarData", persistentData.toTag(level));
         }
