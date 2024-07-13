@@ -34,7 +34,12 @@ public class TagScryer implements IScryer {
     public IScryer fromTag(CompoundTag tag) {
         TagScryer scryer = new TagScryer();
         if (tag.contains("blockTag")) {
-            scryer.blockTag = BuiltInRegistries.BLOCK.getTag(new TagKey<>(Registries.BLOCK, ResourceLocation.tryParse(tag.getString("blockTag")))).get().key();
+            var tagKey = TagKey.create(Registries.BLOCK, ResourceLocation.tryParse(tag.getString("blockTag")));
+            var blocks = BuiltInRegistries.BLOCK.getTag(tagKey);
+            if(blocks.isEmpty()){
+                return scryer;
+            }
+            scryer.blockTag = tagKey;
         }
         return scryer;
     }
