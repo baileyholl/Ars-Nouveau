@@ -126,7 +126,7 @@ public class InfinityGuiSpellBook extends BaseBook {
     @Override
     public void init() {
         super.init();
-        ISpellCaster caster = SpellCasterRegistry.from(bookStack);
+        AbstractCaster<?> caster = SpellCasterRegistry.from(bookStack);
         int selectedSlot = caster.getCurrentSlot();
         //Crafting slots
         for (int i = 0; i < numLinks; i++) {

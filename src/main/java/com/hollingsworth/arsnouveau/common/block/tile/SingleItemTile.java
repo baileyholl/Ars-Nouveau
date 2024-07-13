@@ -100,8 +100,12 @@ public class SingleItemTile extends ModdedTile implements Container{
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
         if (!stack.isEmpty()) {
-            Tag stackTag = stack.save(pRegistries);
-            tag.put("itemStack", stackTag);
+            try {
+                Tag stackTag = stack.save(pRegistries);
+                tag.put("itemStack", stackTag);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 }

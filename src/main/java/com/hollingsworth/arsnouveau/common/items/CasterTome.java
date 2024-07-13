@@ -2,8 +2,8 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.mana.IManaDiscountEquipment;
+import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
-import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.common.items.data.TomeCasterData;
 import com.hollingsworth.arsnouveau.setup.config.Config;
@@ -45,7 +45,7 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-        SpellCaster caster = getSpellCaster(stack);
+        AbstractCaster<?> caster = getSpellCaster(stack);
         Spell spell = caster.getSpell();
         return caster.castSpell(worldIn, playerIn, handIn, Component.empty(), spell);
     }
@@ -54,7 +54,7 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
     public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
         if (context == null)
             return;
-        SpellCaster caster = getSpellCaster(stack);
+        AbstractCaster<?> caster = getSpellCaster(stack);
 
         if (Config.GLYPH_TOOLTIPS.get() || Screen.hasShiftDown()) {
             if (caster.isSpellHidden()) {
@@ -78,7 +78,7 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
-        SpellCaster caster = getSpellCaster(pStack);
+        AbstractCaster<?> caster = getSpellCaster(pStack);
         if (!Screen.hasShiftDown() && Config.GLYPH_TOOLTIPS.get() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
             return Optional.of(new SpellTooltip(caster));
         return Optional.empty();

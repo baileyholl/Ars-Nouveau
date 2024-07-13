@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
-import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
+import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.common.items.data.ReactiveCasterData;
 import com.hollingsworth.arsnouveau.common.util.HolderHelper;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
@@ -55,9 +55,9 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe implements IText
     @Override
     public ItemStack assemble(ApparatusRecipeInput input, HolderLookup.Provider p_346030_) {
         ItemStack parchment = getParchment(input.pedestals());
-        SpellCaster caster = SpellCasterRegistry.from(parchment);
+        AbstractCaster<?> caster = SpellCasterRegistry.from(parchment);
         ItemStack result = input.catalyst().copy();
-        ReactiveCasterData data = (ReactiveCasterData) new ReactiveCasterData(0, null, false, null, 1, caster.getSpells())
+        ReactiveCasterData data = new ReactiveCasterData(0, null, false, null, 1, caster.getSpells())
                 .setColor(caster.getColor(), 0);
         result.set(DataComponentRegistry.REACTIVE_CASTER, data);
         return result;

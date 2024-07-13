@@ -79,7 +79,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
                 }
             }
         }
-        SpellCaster caster = getSpellCaster(stack);
+        AbstractCaster<?> caster = getSpellCaster(stack);
 
         return caster.castSpell(worldIn, playerIn, handIn, Component.translatable("ars_nouveau.invalid_spell"));
     }
@@ -150,7 +150,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     }
 
     public List<RadialMenuSlot<AbstractSpellPart>> getRadialMenuSlotsForSpellpart(ItemStack itemStack) {
-        SpellCaster spellCaster = SpellCasterRegistry.from(itemStack);
+        AbstractCaster<?> spellCaster = SpellCasterRegistry.from(itemStack);
         List<RadialMenuSlot<AbstractSpellPart>> radialMenuSlots = new ArrayList<>();
         for (int i = 0; i < spellCaster.getMaxSlots(); i++) {
             Spell spell = spellCaster.getSpell(i);

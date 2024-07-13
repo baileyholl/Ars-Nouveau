@@ -31,12 +31,19 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-public class ScryCasterData extends SpellCaster {
+public class ScryCasterData extends AbstractCaster<ScryCasterData> {
 
     public static final MapCodec<ScryCasterData> CODEC = createCodec(ScryCasterData::new);
 
+
     public static final StreamCodec<RegistryFriendlyByteBuf, ScryCasterData> STREAM_CODEC = createStream(ScryCasterData::new);
 
+    public MapCodec<ScryCasterData> codec(){
+        return CODEC;
+    }
+    public StreamCodec<RegistryFriendlyByteBuf, ScryCasterData> streamCodec(){
+        return STREAM_CODEC;
+    }
     public ScryCasterData() {
         super();
     }
@@ -108,7 +115,12 @@ public class ScryCasterData extends SpellCaster {
     }
 
     @Override
-    public DataComponentType getComponentType() {
+    public DataComponentType<ScryCasterData> getComponentType() {
         return DataComponentRegistry.SCRY_CASTER.get();
+    }
+
+    @Override
+    protected ScryCasterData build(int slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots, SpellSlotMap spells) {
+        return new ScryCasterData(slot, flavorText, isHidden, hiddenText, maxSlots, spells);
     }
 }

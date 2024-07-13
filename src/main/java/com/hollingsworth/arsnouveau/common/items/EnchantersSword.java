@@ -55,7 +55,7 @@ public class EnchantersSword extends SwordItem implements ICasterTool, GeoItem, 
     }
 
     @Override
-    public boolean isScribedSpellValid(SpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
+    public boolean isScribedSpellValid(AbstractCaster<?> caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
         return spell.unsafeList().stream().noneMatch(s -> s instanceof AbstractCastMethod);
     }
 
@@ -65,7 +65,7 @@ public class EnchantersSword extends SwordItem implements ICasterTool, GeoItem, 
     }
 
     @Override
-    public void scribeModifiedSpell(SpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell.Mutable spell) {
+    public void scribeModifiedSpell(AbstractCaster<?> caster, Player player, InteractionHand hand, ItemStack stack, Spell.Mutable spell) {
         ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
         recipe.add(MethodTouch.INSTANCE);
         recipe.addAll(spell.recipe);
@@ -75,7 +75,7 @@ public class EnchantersSword extends SwordItem implements ICasterTool, GeoItem, 
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity entity) {
-        ISpellCaster caster = getSpellCaster(stack);
+        AbstractCaster<?> caster = getSpellCaster(stack);
         IWrappedCaster wrappedCaster = entity instanceof  Player player ? new PlayerCaster(player) : new LivingCaster(entity);
         SpellContext context = new SpellContext(entity.level, caster.modifySpellBeforeCasting(target.level, entity, InteractionHand.MAIN_HAND, caster.getSpell()), entity, wrappedCaster, stack);
         SpellResolver resolver = entity instanceof Player ? new SpellResolver(context) : new EntitySpellResolver(context);

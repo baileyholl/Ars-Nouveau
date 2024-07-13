@@ -32,7 +32,6 @@ public class AllayBehavior extends JarBehavior<Allay> {
     @Override
     public void use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit, MobJarTile tile) {
         super.use(state, world, pos, player, handIn, hit, tile);
-        Allay allay = entityFromJar(tile);
     }
 
     @Override

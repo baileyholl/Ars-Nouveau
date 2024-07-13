@@ -37,7 +37,7 @@ public class DataComponentRegistry {
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CodexData>> CODEX_DATA = DATA.register("codex_data", () -> DataComponentType.<CodexData>builder().persistent(CodexData.CODEC).networkSynchronized(CodexData.STREAM).build());
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<SpellCaster>> SPELL_CASTER = DATA.register("spell_caster", () -> DataComponentType.<SpellCaster>builder().persistent(SpellCaster.DEFAULT_CODEC.codec()).networkSynchronized(SpellCaster.DEFAULT_STREAM).build());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<SpellCaster>> SPELL_CASTER = DATA.register("spell_caster", () -> DataComponentType.<SpellCaster>builder().persistent(SpellCaster.CODEC.codec()).networkSynchronized(SpellCaster.STREAM_CODEC).build());
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ScryCasterData>> SCRY_CASTER = DATA.register("scry_caster", () -> DataComponentType.<ScryCasterData>builder().persistent(ScryCasterData.CODEC.codec()).networkSynchronized(ScryCasterData.STREAM_CODEC).build());
 

@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.api.registry;
 
+import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.spell.ItemCasterProvider;
-import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.resources.ResourceLocation;
@@ -25,7 +25,7 @@ public class SpellCasterRegistry {
         register(ItemsRegistry.SPELL_PARCHMENT, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
     }
 
-    public static @Nullable SpellCaster from(ItemStack stack){
+    public static @Nullable AbstractCaster<?> from(ItemStack stack){
         return MAP.getOrDefault(stack.getItem().builtInRegistryHolder().key().location(), (s) -> s.get(DataComponentRegistry.SPELL_CASTER)).getSpellCaster(stack);
     }
 

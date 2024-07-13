@@ -10,6 +10,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Player;
@@ -24,6 +25,7 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -132,8 +134,17 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
                 Codec.INT.fieldOf("sourceCost").forGetter(EnchantmentRecipe::sourceCost)
         ).apply(instance, EnchantmentRecipe::new));
 
-        //TODO: use proper codec
-        public static StreamCodec<RegistryFriendlyByteBuf, EnchantmentRecipe> STREAM_CODEC = CheatSerializer.create(CODEC);
+        public static StreamCodec<RegistryFriendlyByteBuf, EnchantmentRecipe> STREAM_CODEC = StreamCodec.composite(
+                Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.collection(ArrayList::new)),
+                EnchantmentRecipe::pedestalItems,
+                ResourceKey.streamCodec(Registries.ENCHANTMENT),
+                EnchantmentRecipe::enchantmentKey,
+                ByteBufCodecs.INT,
+                EnchantmentRecipe::enchantLevel,
+                ByteBufCodecs.INT,
+                EnchantmentRecipe::sourceCost,
+                EnchantmentRecipe::new
+                );
 
         @Override
         public MapCodec<EnchantmentRecipe> codec() {

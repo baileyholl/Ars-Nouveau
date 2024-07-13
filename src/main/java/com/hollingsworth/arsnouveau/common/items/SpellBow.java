@@ -47,7 +47,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
     }
 
     public boolean canPlayerCastSpell(ItemStack bow, Player playerentity) {
-        ISpellCaster caster = getSpellCaster(bow);
+        AbstractCaster<?> caster = getSpellCaster(bow);
         return new SpellResolver(new SpellContext(playerentity.level, caster.getSpell(), playerentity, new PlayerCaster(playerentity), bow)).withSilent(true).canCast(playerentity);
     }
 
@@ -81,7 +81,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack itemstack = playerIn.getItemInHand(handIn);
-        ISpellCaster caster = getSpellCaster(playerIn.getItemInHand(handIn));
+        AbstractCaster<?> caster = getSpellCaster(playerIn.getItemInHand(handIn));
         boolean hasAmmo = !findAmmo(playerIn, itemstack).isEmpty();
 
         InteractionResultHolder<ItemStack> ret = net.neoforged.neoforge.event.EventHooks.onArrowNock(itemstack, worldIn, playerIn, handIn, hasAmmo);
@@ -100,7 +100,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
         }
     }
 
-    public EntitySpellArrow buildSpellArrow(Level worldIn, Player playerentity, ISpellCaster caster, boolean isSpellArrow, ItemStack bowStack) {
+    public EntitySpellArrow buildSpellArrow(Level worldIn, Player playerentity, AbstractCaster<?> caster, boolean isSpellArrow, ItemStack bowStack) {
         EntitySpellArrow spellArrow = new EntitySpellArrow(worldIn, playerentity, ItemStack.EMPTY, bowStack);
         spellArrow.spellResolver = new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerentity, new PlayerCaster(playerentity), bowStack)).withSilent(true);
         spellArrow.setColors(caster.getColor());
@@ -127,7 +127,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
             }
             canFire = true;
         }
-        ISpellCaster caster = getSpellCaster(bowStack);
+        AbstractCaster<?> caster = getSpellCaster(bowStack);
         boolean isSpellArrow = false;
         if (arrowStack.isEmpty() && caster.getSpell().isValid() && new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerentity, new PlayerCaster(playerentity), bowStack)).canCast(playerentity)) {
             canFire = true;
@@ -236,7 +236,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
     }
 
     @Override
-    public boolean isScribedSpellValid(SpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
+    public boolean isScribedSpellValid(AbstractCaster<?> caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
         return spell.unsafeList().stream().noneMatch(s -> s instanceof AbstractCastMethod);
     }
 
@@ -246,7 +246,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
     }
 
     @Override
-    public void scribeModifiedSpell(SpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell.Mutable spell) {
+    public void scribeModifiedSpell(AbstractCaster<?> caster, Player player, InteractionHand hand, ItemStack stack, Spell.Mutable spell) {
         ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
         recipe.add(MethodProjectile.INSTANCE);
         recipe.addAll(spell.recipe);

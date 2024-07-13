@@ -3,8 +3,8 @@ package com.hollingsworth.arsnouveau.common.network;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
+import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
-import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -53,7 +53,7 @@ public class PacketUpdateCaster extends AbstractPacket{
         if(!(stack.getItem() instanceof ICasterTool))
             return;
         if (spellRecipe != null) {
-            SpellCaster caster = SpellCasterRegistry.from(stack);
+            AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
             // Update just the recipe, don't overwrite the entire spell.
             var spell = caster.getSpell(cast_slot).mutable().setRecipe(new ArrayList<>(spellRecipe.unsafeList()));
             caster.setCurrentSlot(cast_slot).setSpell(spell.immutable(), cast_slot).setSpellName(spellName, cast_slot).saveToStack(stack);

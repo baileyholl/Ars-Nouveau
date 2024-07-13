@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
@@ -23,9 +24,9 @@ import java.util.function.Predicate;
 public class EffectBurst extends AbstractEffect {
 
     public static final EffectBurst INSTANCE = new EffectBurst();
-    //TODO: fix burst not using proper ID
+
     public EffectBurst() {
-        super("burst", "Burst");
+        super(GlyphLib.EffectBurstID, "Burst");
         EffectReset.RESET_LIMITS.add(this);
     }
 

@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.network;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
-import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
+import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -44,7 +44,7 @@ public class PacketUpdateSpellColors extends AbstractPacket{
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
         ItemStack stack = player.getItemInHand(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND);
         if (stack.getItem() instanceof SpellBook) {
-            SpellCaster caster = SpellCasterRegistry.from(stack);
+            AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
             caster.setColor(color, castSlot).setCurrentSlot(castSlot).saveToStack(stack);
             Networking.sendToPlayerClient(new PacketUpdateBookGUI(stack), player);
             Networking.sendToPlayerClient( new PacketOpenSpellBook(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND), player);

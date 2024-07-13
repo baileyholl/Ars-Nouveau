@@ -2,9 +2,9 @@ package com.hollingsworth.arsnouveau.api.item;
 
 import com.hollingsworth.arsnouveau.api.client.IDisplayMana;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
+import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.spell.ItemCasterProvider;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
-import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -29,7 +29,7 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
     @Override
     default boolean onScribe(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack tableStack) {
         ItemStack heldStack = player.getItemInHand(handIn);
-        SpellCaster tableCaster =  SpellCasterRegistry.from(tableStack);
+        AbstractCaster<?> tableCaster = SpellCasterRegistry.from(tableStack);
         if (!((heldStack.getItem() instanceof SpellBook) || (heldStack.getItem() instanceof SpellParchment) || (heldStack.getItem() == ItemsRegistry.MANIPULATION_ESSENCE.asItem())))
             return false;
         if(tableCaster == null){
@@ -37,7 +37,7 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
         }
         boolean success;
 
-        SpellCaster heldCaster = SpellCasterRegistry.from(heldStack);
+        AbstractCaster<?> heldCaster = SpellCasterRegistry.from(heldStack);
         Spell spell = new Spell();
         if (heldCaster != null) {
             spell = heldCaster.getSpell();
@@ -82,13 +82,13 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
     }
 
     @Override
-    default @NotNull SpellCaster getSpellCaster(ItemStack stack) {
+    default @NotNull AbstractCaster<?> getSpellCaster(ItemStack stack) {
         return SpellCasterRegistry.from(stack);
     }
 
-    default void scribeModifiedSpell(SpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell.Mutable spell){}
+    default void scribeModifiedSpell(AbstractCaster<?> caster, Player player, InteractionHand hand, ItemStack stack, Spell.Mutable spell){}
 
-    default boolean isScribedSpellValid(SpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
+    default boolean isScribedSpellValid(AbstractCaster<?> caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
         return spell.isValid();
     }
 
@@ -98,7 +98,7 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
     }
 
     default void getInformation(ItemStack stack, Item.TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
-        SpellCaster caster = getSpellCaster(stack);
+        AbstractCaster<?> caster = getSpellCaster(stack);
         stack.addToTooltip(caster.getComponentType(), context, tooltip2::add, flagIn);
     }
 }

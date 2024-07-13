@@ -1,8 +1,9 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
-import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
+import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
+import com.hollingsworth.arsnouveau.common.items.data.ReactiveCasterData;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
@@ -32,8 +33,8 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe {
     public ItemStack assemble(ApparatusRecipeInput input, HolderLookup.Provider lookup) {
         ItemStack result = super.assemble(input, lookup);
         ItemStack parchment = getParchment(input.pedestals());
-        SpellCaster parchmentCaster = SpellCasterRegistry.from(parchment);
-        result.set(DataComponentRegistry.SPELL_CASTER, new SpellCaster(0, null, false, null, 1)
+        AbstractCaster<?> parchmentCaster = SpellCasterRegistry.from(parchment);
+        result.set(DataComponentRegistry.REACTIVE_CASTER, new ReactiveCasterData(0, "", false, "", 1)
                 .setColor(parchmentCaster.getColor())
                 .setSpell(parchmentCaster.getSpell()));
         return result;

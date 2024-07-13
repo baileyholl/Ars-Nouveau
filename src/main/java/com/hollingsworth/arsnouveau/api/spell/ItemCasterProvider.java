@@ -4,5 +4,5 @@ import net.minecraft.world.item.ItemStack;
 
 public interface ItemCasterProvider {
 
-    SpellCaster getSpellCaster(ItemStack stack);
+    AbstractCaster<?> getSpellCaster(ItemStack stack);
 }

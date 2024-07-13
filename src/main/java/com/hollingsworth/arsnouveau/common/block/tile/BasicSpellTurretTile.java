@@ -40,13 +40,13 @@ public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider
     @Override
     protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(pTag, pRegistries);
-        pTag.put("spell_caster", ANCodecs.encode(SpellCaster.DEFAULT_CODEC.codec(), spellCaster));
+        pTag.put("spell_caster", ANCodecs.encode(SpellCaster.CODEC.codec(), spellCaster));
     }
 
     @Override
     protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(pTag, pRegistries);
-        this.spellCaster = ANCodecs.decode(SpellCaster.DEFAULT_CODEC.codec(), pTag.get("spell_caster"));
+        this.spellCaster = ANCodecs.decode(SpellCaster.CODEC.codec(), pTag.get("spell_caster"));
     }
 
     @Override

@@ -84,7 +84,7 @@ public class GuiRadialMenu<T> extends Screen {
         super.render(graphics, mouseX, mouseY, partialTicks);
         PoseStack ms = graphics.pose();
         float openAnimation = closing ? 1.0f - totalTime / OPEN_ANIMATION_LENGTH : totalTime / OPEN_ANIMATION_LENGTH;
-        //todo: is getFrameTimeNs() the right method to use here?
+
         float currTick = minecraft.getFrameTimeNs();
         totalTime += (currTick + extraTick - prevTick)/20f;
         extraTick = 0;

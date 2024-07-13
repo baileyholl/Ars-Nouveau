@@ -1,10 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items.data;
 
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
-import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
-import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
-import com.hollingsworth.arsnouveau.api.spell.SpellSlotMap;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.NotEnoughManaPacket;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -21,11 +18,21 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
-public class TomeCasterData extends SpellCaster {
+public class TomeCasterData extends AbstractCaster<TomeCasterData> {
     public static final MapCodec<TomeCasterData> CODEC = SpellCaster.createCodec(TomeCasterData::new);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, TomeCasterData> STREAM_CODEC = createStream(TomeCasterData::new);
 
+
+    @Override
+    public MapCodec<TomeCasterData> codec() {
+        return CODEC;
+    }
+
+    @Override
+    public StreamCodec<RegistryFriendlyByteBuf, TomeCasterData> streamCodec() {
+        return STREAM_CODEC;
+    }
 
     public TomeCasterData() {
         super();
@@ -61,7 +68,12 @@ public class TomeCasterData extends SpellCaster {
     }
 
     @Override
-    public DataComponentType getComponentType() {
+    public DataComponentType<TomeCasterData> getComponentType() {
         return DataComponentRegistry.TOME_CASTER.get();
+    }
+
+    @Override
+    protected TomeCasterData build(int slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots, SpellSlotMap spells) {
+        return new TomeCasterData(slot, flavorText, isHidden, hiddenText, maxSlots, spells);
     }
 }

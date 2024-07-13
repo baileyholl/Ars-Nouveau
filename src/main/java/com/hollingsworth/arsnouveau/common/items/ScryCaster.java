@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
-import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
+import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.client.renderer.item.ScryCasterRenderer;
 import com.hollingsworth.arsnouveau.common.block.ScryerCrystal;
 import com.hollingsworth.arsnouveau.common.items.data.ScryPosData;
@@ -55,7 +55,7 @@ public class ScryCaster extends ModItem implements ICasterTool, GeoItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
-        SpellCaster caster = getSpellCaster(stack);
+        AbstractCaster<?> caster = getSpellCaster(stack);
         return caster.castSpell(pLevel, pPlayer, pUsedHand, Component.translatable("ars_nouveau.invalid_spell"));
     }
 

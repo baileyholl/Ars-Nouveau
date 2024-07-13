@@ -56,22 +56,19 @@ public class SkyTextureHandler {
             FogRenderer.levelFogColor();
             //rendering the actual sky
             RenderSystem.setShader(GameRenderer::getPositionShader);
-            // todo: check, was previously poseStack instead of modelViewMatrix
             levelRenderer.renderSky(event.getModelViewMatrix(), projectionMatrix, partialTick, camera, isFoggy, () -> {
                 FogRenderer.setupFog(camera, FogRenderer.FogMode.FOG_SKY, gameRenderer.getRenderDistance(), isFoggy, partialTick);
             });
 
             Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
             modelViewStack.pushMatrix();
-            //todo: check mul vs mulPose
             modelViewStack.mul(poseStack.last().pose());
             RenderSystem.applyModelViewMatrix();
 
             //rendering the clouds
             if (minecraft.options.getCloudsType() != CloudStatus.OFF) {
                 RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-                //todo: check, projectionMatrix as frustrum matrix?
-                levelRenderer.renderClouds(poseStack, projectionMatrix, projectionMatrix, partialTick, cameraPosition.x, cameraPosition.y, cameraPosition.z);
+                levelRenderer.renderClouds(poseStack, event.getModelViewMatrix(), projectionMatrix, partialTick, cameraPosition.x, cameraPosition.y, cameraPosition.z);
             }
 
             //the rain!

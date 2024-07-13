@@ -71,16 +71,6 @@ public class ClientEvents {
     public static void onTooltip(final ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
         DynamicTooltipRegistry.appendTooltips(stack, event.getContext(), event.getToolTip()::add, event.getFlags());
-        //todo: reenable reactive
-//        int level = stack.getEnchantmentLevel(event.getEntity().level.holderOrThrow(EnchantmentRegistry.REACTIVE_ENCHANTMENT));
-//        var reactiveCaster = stack.get(DataComponentRegistry.REACTIVE_CASTER);
-//
-//        if (reactiveCaster != null && level > 0 && reactiveCaster.getSpell().isValid()) {
-//            Spell spell = reactiveCaster.getSpell();
-//            event.getToolTip().add(Component.literal(spell.getDisplayString()));
-//        }
-//
-//        Collections.addAll(event.getToolTip(), ClientInfo.storageTooltip);
     }
 
     public static Component localize(String key, Object... params) {

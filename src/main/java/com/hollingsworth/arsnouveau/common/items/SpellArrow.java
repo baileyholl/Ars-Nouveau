@@ -47,7 +47,7 @@ public class SpellArrow extends ArrowItem {
         EntitySpellArrow spellArrow = new EntitySpellArrow(world, shooter, ItemStack.EMPTY, bowStack);
         if (!(shooter instanceof Player entity) || !((shooter).getMainHandItem().getItem() instanceof ICasterTool caster))
             return super.createArrow(world, stack, shooter, bowStack);
-        SpellCaster spellCaster = caster.getSpellCaster(entity.getMainHandItem());
+        AbstractCaster<?> spellCaster = caster.getSpellCaster(entity.getMainHandItem());
         var mutableSpell = spellCaster.getSpell().mutable();
         modifySpell(mutableSpell);
         spellArrow.spellResolver = new SpellResolver(new SpellContext(world, mutableSpell.immutable(), entity, new PlayerCaster(entity), shooter.getMainHandItem())).withSilent(true);

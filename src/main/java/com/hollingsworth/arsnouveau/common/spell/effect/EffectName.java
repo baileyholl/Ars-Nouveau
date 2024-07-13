@@ -67,7 +67,7 @@ public class EffectName extends AbstractEffect {
         if (newName == null && isRealPlayer(shooter) && shooter instanceof Player player) {
             ItemStack stack = StackUtil.getHeldCasterToolOrEmpty(player);
             if (stack != ItemStack.EMPTY) {
-                SpellCaster caster = SpellCasterRegistry.from(stack);
+                AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
                 newName = Component.literal(caster.getSpellName());
             }
         }

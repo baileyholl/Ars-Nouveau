@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
+import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -11,14 +11,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import org.joml.Matrix4f;
 
-public record SpellTooltip(ISpellCaster spellcaster, boolean showName) implements TooltipComponent {
+public record SpellTooltip(AbstractCaster<?> spellcaster, boolean showName) implements TooltipComponent {
 
-    public SpellTooltip(ISpellCaster spellcaster) {
+    public SpellTooltip(AbstractCaster<?> spellcaster) {
         this(spellcaster, false);
     }
 
     public static class SpellTooltipRenderer implements ClientTooltipComponent {
-        private final ISpellCaster spellCaster;
+        private final AbstractCaster<?> spellCaster;
         private final boolean showName;
 
         public SpellTooltipRenderer(SpellTooltip pSpellTooltip) {

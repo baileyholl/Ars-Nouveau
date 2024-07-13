@@ -42,7 +42,7 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new DyeRecipeDatagen(event.getGenerator()));
 //        event.getGenerator().addProvider(event.includeServer(), new SimpleAdvancements(event.getGenerator()));
 
-//        event.getGenerator().addProvider(event.includeServer(), new AdvancementProvider(output, provider, fileHelper));
+        event.getGenerator().addProvider(event.includeServer(), new AdvancementProvider(output, provider, fileHelper));
         event.getGenerator().addProvider(event.includeServer(), new CasterTomeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new SummonRitualProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new BuddingConversionProvider(event.getGenerator()));

@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.item.IRadialProvider;
 import com.hollingsworth.arsnouveau.api.item.ISpellHotkeyListener;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
-import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
+import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -36,7 +36,7 @@ public class StackUtil {
         return getHeldCasterTool(player, (tool) -> true);
     }
 
-    public static @Nullable InteractionHand getHeldCasterTool(Player player, Predicate<SpellCaster> filter){
+    public static @Nullable InteractionHand getHeldCasterTool(Player player, Predicate<AbstractCaster<?>> filter){
         var mainStack = player.getMainHandItem();
         var offStack = player.getOffhandItem();
         var mainCaster = SpellCasterRegistry.from(mainStack);

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.datagen.advancement;
 
 import com.google.common.collect.Maps;
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -172,7 +173,7 @@ public class ANAdvancementBuilder implements net.neoforged.neoforge.common.exten
     }
 
     public AdvancementHolder save(Consumer<AdvancementHolder> pConsumer) {
-        return this.save(pConsumer, ResourceLocation.fromNamespaceAndPath(modid, fileKey));
+        return this.save(pConsumer, ArsNouveau.prefix(fileKey));
     }
 
     public String toString() {

@@ -52,7 +52,7 @@ public class EnchantersMirror extends ModItem implements ICasterTool, GeoItem, I
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-        ISpellCaster caster = getSpellCaster(stack);
+        AbstractCaster<?> caster = getSpellCaster(stack);
         return caster.castSpell(worldIn, playerIn, handIn, Component.translatable("ars_nouveau.mirror.invalid"), caster.getSpell());
     }
 
@@ -62,7 +62,7 @@ public class EnchantersMirror extends ModItem implements ICasterTool, GeoItem, I
     }
 
     @Override
-    public boolean isScribedSpellValid(SpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
+    public boolean isScribedSpellValid(AbstractCaster<?> caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
         return spell.unsafeList().stream().noneMatch(s -> s instanceof AbstractCastMethod);
     }
 
@@ -72,7 +72,7 @@ public class EnchantersMirror extends ModItem implements ICasterTool, GeoItem, I
     }
 
     @Override
-    public void scribeModifiedSpell(SpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell.Mutable spell) {
+    public void scribeModifiedSpell(AbstractCaster<?> caster, Player player, InteractionHand hand, ItemStack stack, Spell.Mutable spell) {
         ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
         recipe.add(MethodSelf.INSTANCE);
         recipe.addAll(spell.recipe);

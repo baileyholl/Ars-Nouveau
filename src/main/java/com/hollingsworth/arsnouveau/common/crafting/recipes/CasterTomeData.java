@@ -4,9 +4,9 @@ import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
+import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
-import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
@@ -47,7 +47,7 @@ public record CasterTomeData(String name, List<ResourceLocation> spell, Resource
 
     public static ItemStack makeTome(Item tome, String name, Spell spell, String flavorText) {
         ItemStack stack = tome.getDefaultInstance();
-        SpellCaster spellCaster = SpellCasterRegistry.from(stack);
+        AbstractCaster<?> spellCaster = SpellCasterRegistry.from(stack);
         spellCaster.setSpell(spell);
         stack.set(DataComponents.CUSTOM_NAME, Component.literal(name).setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true)));
         spellCaster.setFlavorText(flavorText);

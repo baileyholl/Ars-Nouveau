@@ -16,8 +16,7 @@ public class SpellTier {
     public int value;
     public ResourceLocation id;
 
-    @Deprecated //TODO:1.20 Make private in favor of create tier method
-    public SpellTier(ResourceLocation id, int value) {
+    private SpellTier(ResourceLocation id, int value) {
         this.value = value;
         this.id = id;
         if(value > 99){

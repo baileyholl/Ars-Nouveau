@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
-import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
+import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -29,7 +29,7 @@ public class PacketSetCasterSlot extends AbstractPacket{
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
         ItemStack stack = StackUtil.getHeldSpellbook(player);
-        SpellCaster caster = SpellCasterRegistry.from(stack);
+        AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
         if(caster != null){
             caster.setCurrentSlot(slot).saveToStack(stack);
         }

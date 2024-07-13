@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
+import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.client.DeltaTracker;
@@ -20,7 +20,7 @@ public class GuiSpellHUD {
         ItemStack stack = StackUtil.getHeldSpellbook(minecraft.player);
         if (stack != ItemStack.EMPTY && stack.getItem() instanceof SpellBook) {
             int offsetLeft = 10;
-            ISpellCaster caster = SpellCasterRegistry.from(stack);
+            AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
             String renderString = caster.getCurrentSlot() + 1 + " " + caster.getSpellName();
             graphics.drawString(Minecraft.getInstance().font, renderString, offsetLeft, minecraft.getWindow().getGuiScaledHeight() - 30, 0xFFFFFF);
         }
