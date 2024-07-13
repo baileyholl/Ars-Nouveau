@@ -282,8 +282,7 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
         this.harvestCooldown = tag.getInt("harvest");
         this.pickupCooldown = tag.getInt("pickup");
 
-        if (tag.contains("held"))
-            setHeldStack(ItemStack.parse(level.registryAccess(), tag.get("held")).orElse(ItemStack.EMPTY));
+        setHeldStack(ItemStack.parseOptional(level.registryAccess(), tag.getCompound("held")));
     }
 
     @Override

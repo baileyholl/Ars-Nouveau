@@ -97,7 +97,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 			CompoundTag compoundnbt = listnbt.getCompound(i);
 			int j = compoundnbt.getInt("Slot");
 			if (j >= 0 && j < craftMatrix.getContainerSize()) {
-				craftMatrix.setItem(j, ItemStack.parse(pRegistries, compoundnbt.get("item")).orElse(ItemStack.EMPTY));
+				craftMatrix.setItem(j, ItemStack.parseOptional(pRegistries, compoundnbt.getCompound("item")));
 			}
 		}
 		reading = false;

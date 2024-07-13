@@ -176,9 +176,7 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
         super.loadAdditional(compound, pRegistries);
-        if(compound.contains("armorStack")) {
-            this.armorStack = ItemStack.parseOptional(pRegistries, compound.getCompound("armorStack"));
-        }
+        this.armorStack = ItemStack.parseOptional(pRegistries, compound.getCompound("armorStack"));
         int count = compound.getInt("numPerks");
         perkList = new ArrayList<>();
         for(int i = 0; i < count; i++){

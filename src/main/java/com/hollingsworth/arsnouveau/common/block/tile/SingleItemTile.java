@@ -91,9 +91,7 @@ public class SingleItemTile extends ModdedTile implements Container{
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
         super.loadAdditional(compound, pRegistries);
-        if(compound.contains("itemStack")) {
-            ItemStack.parse(pRegistries, compound.get("itemStack")).ifPresent(stack -> this.stack = stack);
-        }
+        this.stack = ItemStack.parseOptional(pRegistries, compound.getCompound("itemStack"));
     }
 
     @Override

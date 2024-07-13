@@ -171,9 +171,8 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
             connectedPos = BlockPos.of(pTag.getLong("connectedPos"));
         }
         this.neededCount = pTag.getInt("neededCount");
-        if(pTag.contains("filterStack")){
-            filterStack = ItemStack.parseOptional(pRegistries, pTag.getCompound("filterStack"));
-        }
+        filterStack = ItemStack.parseOptional(pRegistries, pTag.getCompound("filterStack"));
+
         isPowered = pTag.getBoolean("isPowered");
         inverted = pTag.getBoolean("inverted");
     }

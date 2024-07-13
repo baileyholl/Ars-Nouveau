@@ -183,9 +183,7 @@ public class EntityFlyingItem extends ColoredProjectile {
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        if (compound.contains("item")) {
-            this.entityData.set(HELD_ITEM, ItemStack.parseOptional(level.registryAccess(), compound.getCompound("item")));
-        }
+        this.entityData.set(HELD_ITEM, ItemStack.parseOptional(level.registryAccess(), compound.getCompound("item")));
         this.age = compound.getInt("age");
         this.entityData.set(DIDOFFSET, compound.getBoolean("didoffset"));
         this.entityData.set(OFFSET, compound.getFloat("offset"));

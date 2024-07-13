@@ -160,11 +160,8 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(tag, pRegistries);
-        if (tag.contains("itemStack")) {
-            stack = ItemStack.parseOptional(pRegistries, tag.getCompound("itemStack"));
-        }else{
-            stack = ItemStack.EMPTY;
-        }
+        stack = ItemStack.parseOptional(pRegistries, tag.getCompound("itemStack"));
+
         draining = tag.getBoolean("draining");
         this.hasRecipe = tag.getBoolean("hasRecipe");
         this.craftTicks = tag.getInt("craftTicks");

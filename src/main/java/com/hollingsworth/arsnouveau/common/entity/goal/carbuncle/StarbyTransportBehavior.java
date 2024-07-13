@@ -57,8 +57,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         if (!entity.isTamed())
             return;
 
-        if (tag.contains("itemScroll"))
-            this.itemScroll = ItemStack.parseOptional(entity.level.registryAccess(), tag.getCompound("itemScroll"));
+        this.itemScroll = ItemStack.parseOptional(entity.level.registryAccess(), tag.getCompound("itemScroll"));
     }
 
     @Override

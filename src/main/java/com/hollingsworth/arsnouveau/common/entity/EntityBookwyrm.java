@@ -254,8 +254,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
         if (tag.contains("lectern")){
             lecternPos = BlockPos.of(tag.getLong("lectern"));
         }
-        if (tag.contains("held"))
-            setHeldStack(ItemStack.parseOptional(registryAccess(), (CompoundTag) tag.get("held")));
+        setHeldStack(ItemStack.parseOptional(registryAccess(), tag.getCompound("held")));
 
         this.backoffTicks = tag.getInt("backoff");
         if (tag.contains("color"))
