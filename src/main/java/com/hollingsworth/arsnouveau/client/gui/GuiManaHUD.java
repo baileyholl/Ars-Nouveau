@@ -4,9 +4,9 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.client.IDisplayMana;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
-import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
+import com.hollingsworth.arsnouveau.common.capability.ManaCap;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -26,9 +26,14 @@ public class GuiManaHUD {
     public static boolean shouldDisplayBar() {
         ItemStack mainHand = minecraft.player.getMainHandItem();
         ItemStack offHand = minecraft.player.getOffhandItem();
-        return (mainHand.getItem() instanceof IDisplayMana iDisplayMana && iDisplayMana.shouldDisplay(mainHand))
-                || (offHand.getItem() instanceof IDisplayMana iDisplayManaOffhand && iDisplayManaOffhand.shouldDisplay(offHand))
-                || (ManaUtil.getMaxMana(minecraft.player) > ManaUtil.getCurrentMana(minecraft.player));
+        var isMainDisplayable = mainHand.getItem() instanceof IDisplayMana iDisplayMana && iDisplayMana.shouldDisplay(mainHand);
+        var isOffhandDisplayable = offHand.getItem() instanceof IDisplayMana iDisplayManaOffhand && iDisplayManaOffhand.shouldDisplay(offHand);
+        ManaCap cap = CapabilityRegistry.getMana(minecraft.player).orElse(null);
+        boolean isRegenerating = false;
+        if(cap != null){
+            isRegenerating = cap.getMaxMana() > cap.getCurrentMana();
+        }
+        return isMainDisplayable || isOffhandDisplayable || isRegenerating;
     }
 
     public static void renderOverlay(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {

@@ -5,10 +5,7 @@ import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.common.capability.ANPlayerDataCap;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.capability.ManaCap;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketSyncPlayerCap;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,8 +24,8 @@ import java.util.List;
 
 public class CapabilityRegistry {
 
-    public static final EntityCapability<IManaCap, Void> MANA_CAPABILITY = EntityCapability.createVoid(ArsNouveau.prefix("mana"), IManaCap.class);
-    public static final EntityCapability<IPlayerCap, Void> PLAYER_DATA_CAP = EntityCapability.createVoid(ArsNouveau.prefix("player_data"), IPlayerCap.class);
+    public static final EntityCapability<ManaCap, Void> MANA_CAPABILITY = EntityCapability.createVoid(ArsNouveau.prefix("mana"), ManaCap.class);
+    public static final EntityCapability<ANPlayerDataCap, Void> PLAYER_DATA_CAP = EntityCapability.createVoid(ArsNouveau.prefix("player_data"), ANPlayerDataCap.class);
 
     public static final BlockCapability<IItemHandler, Direction> LECTERN_CAP = BlockCapability.create(ArsNouveau.prefix("lectern_handler"), IItemHandler.class, Direction.class);
     /**
@@ -37,7 +34,7 @@ public class CapabilityRegistry {
      * @param entity The entity
      * @return A lazy optional containing the IMana, if any
      */
-    public static LazyOptional<IManaCap> getMana(final LivingEntity entity) {
+    public static LazyOptional<ManaCap> getMana(final LivingEntity entity) {
         if (entity == null)
             return LazyOptional.empty();
         return LazyOptional.of(entity.getCapability(MANA_CAPABILITY));
@@ -49,7 +46,7 @@ public class CapabilityRegistry {
      * @param entity The entity
      * @return A lazy optional containing the IMana, if any
      */
-    public static LazyOptional<IPlayerCap> getPlayerDataCap(final LivingEntity entity) {
+    public static LazyOptional<ANPlayerDataCap> getPlayerDataCap(final LivingEntity entity) {
         if (entity == null)
             return LazyOptional.empty();
         return LazyOptional.of(entity.getCapability(PLAYER_DATA_CAP));
@@ -79,8 +76,8 @@ public class CapabilityRegistry {
     }
 
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerEntity(MANA_CAPABILITY, EntityType.PLAYER, (player, ctx) -> new ManaCap());
-        event.registerEntity(PLAYER_DATA_CAP, EntityType.PLAYER, (player, ctx) -> new ANPlayerDataCap());
+        event.registerEntity(MANA_CAPABILITY, EntityType.PLAYER, (player, ctx) -> new ManaCap(player));
+        event.registerEntity(PLAYER_DATA_CAP, EntityType.PLAYER, (player, ctx) -> new ANPlayerDataCap(player));
         var containers = List.of(BlockRegistry.ENCHANTING_APP_TILE, BlockRegistry.IMBUEMENT_TILE, BlockRegistry.SCRIBES_TABLE_TILE);
         for(var container : containers){
             event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, container.get(), (c, side) -> new InvWrapper(c));
@@ -93,36 +90,37 @@ public class CapabilityRegistry {
     @SuppressWarnings("unused")
     @EventBusSubscriber(modid = ArsNouveau.MODID)
     public static class EventHandler {
+//TODO: verify if player clone needed
 
-        /**
-         * Copy the player's mana when they respawn after dying or returning from the end.
-         *
-         * @param event The event
-         */
-        @SubscribeEvent
-        public static void playerClone(PlayerEvent.Clone event) {
-            Player oldPlayer = event.getOriginal();
-//            oldPlayer.revive();
-            var oldMana = getMana(oldPlayer).orElse(null);
-            var newMana = getMana(event.getEntity()).orElse(null);
-            if (oldMana != null && newMana != null) {
-                newMana.setMaxMana(oldMana.getMaxMana());
-                newMana.setMana(oldMana.getCurrentMana());
-                newMana.setBookTier(oldMana.getBookTier());
-                newMana.setGlyphBonus(oldMana.getGlyphBonus());
-            }
-
-            var oldPlayerCap = getPlayerDataCap(oldPlayer).orElse(null);
-            var newPlayerCap = getPlayerDataCap(event.getEntity()).orElse(new ANPlayerDataCap());
-            if (oldPlayerCap != null) {
-                CompoundTag tag = oldPlayerCap.serializeNBT(event.getOriginal().level.registryAccess());
-                newPlayerCap.deserializeNBT(event.getOriginal().level.registryAccess(), tag);
-                syncPlayerCap(event.getEntity());
-            }
-
-
-//            event.getOriginal().invalidateCaps();
-        }
+//        /**
+//         * Copy the player's mana when they respawn after dying or returning from the end.
+//         *
+//         * @param event The event
+//         */
+//        @SubscribeEvent
+//        public static void playerClone(PlayerEvent.Clone event) {
+//            Player oldPlayer = event.getOriginal();
+////            oldPlayer.revive();
+//            var oldMana = getMana(oldPlayer).orElse(null);
+//            var newMana = getMana(event.getEntity()).orElse(null);
+//            if (oldMana != null && newMana != null) {
+//                newMana.setMaxMana(oldMana.getMaxMana());
+//                newMana.setMana(oldMana.getCurrentMana());
+//                newMana.setBookTier(oldMana.getBookTier());
+//                newMana.setGlyphBonus(oldMana.getGlyphBonus());
+//            }
+//
+//            var oldPlayerCap = getPlayerDataCap(oldPlayer).orElse(null);
+//            var newPlayerCap = getPlayerDataCap(event.getEntity()).orElse(new ANPlayerDataCap(event.getEntity()));
+//            if (oldPlayerCap != null) {
+//                CompoundTag tag = oldPlayerCap.serializeNBT(event.getOriginal().level.registryAccess());
+//                newPlayerCap.deserializeNBT(event.getOriginal().level.registryAccess(), tag);
+//                syncPlayerCap(event.getEntity());
+//            }
+//
+//
+////            event.getOriginal().invalidateCaps();
+//        }
 
 
         @SubscribeEvent
@@ -155,10 +153,11 @@ public class CapabilityRegistry {
         }
 
         public static void syncPlayerCap(Player player) {
-            IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(player).orElse(new ANPlayerDataCap());
-            CompoundTag tag = cap.serializeNBT(player.level.registryAccess());
             if(player instanceof ServerPlayer serverPlayer){
-                Networking.sendToPlayerClient(new PacketSyncPlayerCap(tag), serverPlayer);
+                ANPlayerDataCap playerData = getPlayerDataCap(serverPlayer).orElse(null);
+                if(playerData != null){
+                    playerData.syncToClient(serverPlayer);
+                }
             }
         }
     }

@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.capability.ANPlayerDataCap;
-import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
+import com.hollingsworth.arsnouveau.common.capability.ANPlayerData;
+import com.hollingsworth.arsnouveau.setup.registry.AttachmentsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -30,10 +30,12 @@ public class PacketSyncPlayerCap extends AbstractPacket{
 
     @Override
     public void onClientReceived(Minecraft minecraft, Player playerEntity) {
-        IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerEntity).orElse(new ANPlayerDataCap());
-
-        if (cap != null) {
-            cap.deserializeNBT(minecraft.level.registryAccess(), tag);
+        ANPlayerData data = new ANPlayerData();
+        data.deserializeNBT(playerEntity.registryAccess(), this.tag);
+        playerEntity.setData(AttachmentsRegistry.PLAYER_DATA, data);
+        var cap = CapabilityRegistry.getPlayerDataCap(ArsNouveau.proxy.getPlayer()).orElse(null);
+        if(cap != null){
+            cap.setPlayerData(data);
         }
     }
 

@@ -56,6 +56,7 @@ public class ModSetup {
         VillagerRegistry.VILLAGERS.register(modEventBus);
         CreativeTabRegistry.TABS.register(modEventBus);
         DataSerializers.DS.register(modEventBus);
+        AttachmentsRegistry.ATTACHMENT_TYPES.register(modEventBus);
     }
 
     public static void registerEvents(RegisterEvent event) {
