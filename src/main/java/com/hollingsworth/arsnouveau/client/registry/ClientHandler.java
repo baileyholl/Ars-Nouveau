@@ -2,9 +2,9 @@ package com.hollingsworth.arsnouveau.client.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
-import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.registry.PotionProviderRegistry;
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.container.CraftingTerminalScreen;
 import com.hollingsworth.arsnouveau.client.gui.GuiEntityInfoHUD;
@@ -38,6 +38,7 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -307,8 +308,8 @@ public class ClientHandler {
                 ItemsRegistry.BATTLEMAGE_LEGGINGS);
 
         event.register((stack, color) -> {
-            if (color == 1 && stack.getItem() instanceof ICasterTool i) {
-                return i.getSpellCaster(stack).getColor().getColor();
+            if (color == 1 && SpellCasterRegistry.from(stack) != null) {
+                return FastColor.ABGR32.opaque(SpellCasterRegistry.from(stack).getColor().getColor());
             }
             return -1;
 
@@ -327,12 +328,16 @@ public class ClientHandler {
     public static int colorFromArmor(ItemStack stack) {
         IPerkHolder holder = PerkUtil.getPerkHolder(stack);
         if (!(holder instanceof ArmorPerkHolder armorPerkHolder))
-            return DyeColor.PURPLE.getTextColor();
-        return DyeColor.byName(armorPerkHolder.getColor(), DyeColor.PURPLE).getTextColor();
+            return FastColor.ABGR32.opaque(DyeColor.PURPLE.getTextColor());
+        return FastColor.ABGR32.opaque(DyeColor.byName(armorPerkHolder.getColor(), DyeColor.PURPLE).getTextColor());
     }
 
     public static int colorFromFlask(ItemStack stack) {
         PotionContents contents = PotionUtil.getContents(stack);
+        var provider = PotionProviderRegistry.from(stack);
+        if(provider != null){
+            return provider.usesRemaining(stack) <= 0 ? 0 : provider.getPotionData(stack).getColor();
+        }
         return contents == PotionContents.EMPTY ? -1 : contents.getColor();
     }
 }

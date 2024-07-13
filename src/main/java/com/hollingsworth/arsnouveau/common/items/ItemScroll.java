@@ -5,12 +5,16 @@ import com.hollingsworth.arsnouveau.common.items.data.ItemScrollData;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.items.IItemHandler;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -52,7 +56,13 @@ public abstract class ItemScroll extends ModItem implements IScribeable {
         ItemScrollData existingList = thisStack.getOrDefault(DataComponentRegistry.ITEM_SCROLL_DATA, new ItemScrollData(List.of()));
         var mutable = existingList.mutable();
         var success = mutable.writeWithFeedback(player, stackToWrite);
-        stackToWrite.set(DataComponentRegistry.ITEM_SCROLL_DATA, mutable.toImmutable());
+        thisStack.set(DataComponentRegistry.ITEM_SCROLL_DATA, mutable.toImmutable());
         return success;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip2, flagIn);
+        stack.addToTooltip(DataComponentRegistry.ITEM_SCROLL_DATA, context, tooltip2::add, flagIn);
     }
 }
