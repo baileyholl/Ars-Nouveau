@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.client.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
-import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.registry.PotionProviderRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
@@ -326,7 +325,7 @@ public class ClientHandler {
     }
 
     public static int colorFromArmor(ItemStack stack) {
-        IPerkHolder holder = PerkUtil.getPerkHolder(stack);
+        ArmorPerkHolder holder = PerkUtil.getPerkHolder(stack);
         if (!(holder instanceof ArmorPerkHolder armorPerkHolder))
             return FastColor.ABGR32.opaque(DyeColor.PURPLE.getTextColor());
         return FastColor.ABGR32.opaque(DyeColor.byName(armorPerkHolder.getColor(), DyeColor.PURPLE).getTextColor());

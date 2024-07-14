@@ -420,7 +420,7 @@
   "ars_nouveau.mirror.invalid": "Invalid spell. Mirrors accept Effects and Augments only.",
   "ars_nouveau.mod_news": "Mod News",
   "ars_nouveau.mod_news_desc": "The latest releases and news",
-  "ars_nouveau.no_stack_crafting": "No valid craft nearby. Place pedestals with items adjacent to set a recipe. Provide items by binding inventories.",
+  "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
   "ars_nouveau.norecipe": "No recipe found.",
   "ars_nouveau.not_enough_exp": "Not enough EXP for this glyph.",
   "ars_nouveau.nothing": "Nothing",

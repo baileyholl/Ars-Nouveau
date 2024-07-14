@@ -70,6 +70,8 @@ public class PotionProviderRegistry {
 
     static{
         MAP.put(ItemsRegistry.POTION_FLASK.asItem(), (stack) -> stack.get(DataComponentRegistry.MULTI_POTION));
+        MAP.put(ItemsRegistry.POTION_FLASK_AMPLIFY.asItem(), (stack) -> stack.get(DataComponentRegistry.MULTI_POTION));
+        MAP.put(ItemsRegistry.POTION_FLASK_EXTEND_TIME.asItem(), (stack) -> stack.get(DataComponentRegistry.MULTI_POTION));
         MAP.put(Items.POTION, (stack) -> DEFAULT);
     }
 

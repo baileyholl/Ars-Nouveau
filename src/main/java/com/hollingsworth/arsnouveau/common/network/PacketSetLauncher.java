@@ -50,13 +50,13 @@ public class PacketSetLauncher extends AbstractPacket{
         }
         IPotionProvider provider = PotionProviderRegistry.from(stack);
         if (provider != null) {
-            stack.set(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData(provider.getPotionData(stack), provider.usesRemaining(stack), inventorySlot));
+            launcherStack.set(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData(provider.getPotionData(stack), inventorySlot));
         }else {
             PotionContents contents = stack.get(DataComponents.POTION_CONTENTS);
             if(contents == null){
                 return;
             }
-            stack.set(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData(contents, stack.getCount(), inventorySlot));
+            stack.set(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData(contents, inventorySlot));
         }
     }
 

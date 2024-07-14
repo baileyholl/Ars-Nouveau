@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.items.data.PotionLauncherData;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -35,7 +36,7 @@ public class FlaskCannonRenderer extends GeoItemRenderer<FlaskCannon> {
             return;
         }
         PotionLauncherData flask = currentItemStack.getOrDefault(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData());
-        int amountLeft = flask.amountLeft();
+        int amountLeft = flask.amountLeft(Minecraft.getInstance().player);
         if(bone == null)
             return;
         if(bone.getName().equalsIgnoreCase("full")){

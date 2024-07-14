@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items.data;
 
+import com.hollingsworth.arsnouveau.api.potion.IPotionProvider;
 import com.hollingsworth.arsnouveau.api.registry.PotionProviderRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.mojang.serialization.Codec;
@@ -12,13 +13,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 
-public record PotionLauncherData(PotionContents renderData, int amountLeft, int lastSlot) {
+public record PotionLauncherData(PotionContents renderData, int lastSlot) {
 
     public static MapCodec<PotionLauncherData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
         PotionContents.CODEC.fieldOf("lastDataForRender").forGetter(PotionLauncherData::renderData),
-        Codec.INT.fieldOf("amountLeft").forGetter(PotionLauncherData::amountLeft),
         Codec.INT.fieldOf("lastSlot").forGetter(PotionLauncherData::lastSlot)
     ).apply(instance, PotionLauncherData::new));
 
@@ -26,22 +27,23 @@ public record PotionLauncherData(PotionContents renderData, int amountLeft, int 
             PotionContents.STREAM_CODEC,
             PotionLauncherData::renderData,
             ByteBufCodecs.INT,
-            PotionLauncherData::amountLeft,
-            ByteBufCodecs.INT,
             PotionLauncherData::lastSlot,
             PotionLauncherData::new
     );
 
     public PotionLauncherData(){
-        this(PotionContents.EMPTY, 0, -1);
+        this(PotionContents.EMPTY, -1);
     }
 
-    public PotionContents getPotionDataFromSlot(Player player){
+    public @Nullable IPotionProvider getPotionDataFromSlot(Player player){
+        ItemStack stack = getSelectedStack(player);
+        return PotionProviderRegistry.from(stack);
+    }
+
+    public ItemStack getSelectedStack(Player player){
         if(lastSlot < 0 || lastSlot >= player.inventory.getContainerSize())
-            return PotionContents.EMPTY;
-        ItemStack stack = player.inventory.getItem(lastSlot);
-        var provider = PotionProviderRegistry.from(stack);
-        return provider == null ? PotionContents.EMPTY : provider.getPotionData(stack);
+            return ItemStack.EMPTY;
+        return player.inventory.getItem(lastSlot);
     }
 
     public PotionContents expendPotion(Player player, ItemStack launcherStack){
@@ -57,8 +59,17 @@ public record PotionLauncherData(PotionContents renderData, int amountLeft, int 
         }
         PotionContents contents = provider.getPotionData(item);
         provider.consumeUses(item, 1, player);
-        launcherStack.set(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData(provider.getPotionData(item), provider.usesRemaining(item), lastSlot));
+        launcherStack.set(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData(provider.getPotionData(item), lastSlot));
         return contents;
+    }
+
+    public int amountLeft(Player player){
+        ItemStack stack = getSelectedStack(player);
+        var provider = PotionProviderRegistry.from(stack);
+        if(provider == null){
+            return 0;
+        }
+        return provider.usesRemaining(stack);
     }
 
     @Override
@@ -66,11 +77,11 @@ public record PotionLauncherData(PotionContents renderData, int amountLeft, int 
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PotionLauncherData that = (PotionLauncherData) o;
-        return lastSlot == that.lastSlot && amountLeft == that.amountLeft && Objects.equals(renderData, that.renderData);
+        return lastSlot == that.lastSlot && Objects.equals(renderData, that.renderData);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(renderData, amountLeft, lastSlot);
+        return Objects.hash(renderData, lastSlot);
     }
 }

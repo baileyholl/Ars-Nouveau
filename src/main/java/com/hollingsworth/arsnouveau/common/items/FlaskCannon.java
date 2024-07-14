@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.IRadialProvider;
+import com.hollingsworth.arsnouveau.api.potion.IPotionProvider;
 import com.hollingsworth.arsnouveau.api.registry.PotionProviderRegistry;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenu;
@@ -46,7 +47,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-
+//TODO: Give flask cannons internal inventory instead of using player inventory
 public abstract class FlaskCannon extends ModItem implements IRadialProvider, GeoItem {
     public FlaskCannon(Properties properties) {
         super(properties.component(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData()));
@@ -71,18 +72,19 @@ public abstract class FlaskCannon extends ModItem implements IRadialProvider, Ge
         if(lastSlot < 0 || lastSlot >= player.inventory.getContainerSize())
             return;
         ItemStack item = player.inventory.getItem(lastSlot);
-        if (potionLauncherData.amountLeft() > 0 && PotionProviderRegistry.from(item) == null && !(item.getItem() instanceof PotionItem)) {
-            pStack.set(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData(potionLauncherData.renderData(), 0, lastSlot));
+        if (potionLauncherData.amountLeft(player) > 0 && PotionProviderRegistry.from(item) == null && !(item.getItem() instanceof PotionItem)) {
+            pStack.set(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData(potionLauncherData.renderData(), lastSlot));
         }
     }
 
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
-        PotionLauncherData potionLauncherData = itemstack.getOrDefault(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData());
+        PotionLauncherData potionLauncherData = itemstack.get(DataComponentRegistry.POTION_LAUNCHER);
         if(pLevel.isClientSide)
             return InteractionResultHolder.consume(itemstack);
-        PotionContents potionData = potionLauncherData.getPotionDataFromSlot(pPlayer);
-        if(PotionUtil.isEmpty(potionData)){
+        ItemStack selectedPotion = potionLauncherData.getSelectedStack(pPlayer);
+        IPotionProvider potionData = potionLauncherData.getPotionDataFromSlot(pPlayer);
+        if(potionData == null || PotionUtil.isEmpty(potionData.getPotionData(selectedPotion)) || potionData.usesRemaining(selectedPotion) <= 0){
             PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.flask_cannon.no_potion"));
             return InteractionResultHolder.sidedSuccess(itemstack, pLevel.isClientSide());
         }
@@ -96,7 +98,7 @@ public abstract class FlaskCannon extends ModItem implements IRadialProvider, Ge
         thrownpotion.shootFromRotation(pPlayer, pPlayer.getXRot(), pPlayer.getYRot(), -20.0F, 0.5F, 1.0F);
         pLevel.addFreshEntity(thrownpotion);
         pPlayer.getCooldowns().addCooldown(this, 10);
-        itemstack.set(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData(contents, potionLauncherData.amountLeft(), potionLauncherData.lastSlot()));
+        itemstack.set(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData(contents, potionLauncherData.lastSlot()));
         return new InteractionResultHolder<>(InteractionResult.CONSUME, itemstack);
     }
 

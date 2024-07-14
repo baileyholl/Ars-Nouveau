@@ -18,10 +18,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.Optional;
+
 public class JarOfLight extends ModItem {
 
     public JarOfLight() {
-        super(ItemsRegistry.defaultItemProperties().component(DataComponentRegistry.LIGHT_JAR, new LightJarData(null, false)));
+        super(ItemsRegistry.defaultItemProperties().component(DataComponentRegistry.LIGHT_JAR, new LightJarData()));
     }
 
     @Override
@@ -30,15 +32,15 @@ public class JarOfLight extends ModItem {
 
         if (worldIn.isClientSide)
             return;
-        LightJarData data = stack.getOrDefault(DataComponentRegistry.LIGHT_JAR, new LightJarData(null, false));
-        if (!data.enabled()) {
+        LightJarData data = stack.get(DataComponentRegistry.LIGHT_JAR);
+        if (data == null || !data.enabled() || data.pos().isEmpty()) {
             return;
         }
-        BlockPos lightLocation = data.pos();
+        BlockPos lightLocation = data.pos().get();
         BlockState state = worldIn.getBlockState(lightLocation);
         // The previous light block was destroyed.
         if (!(state.getBlock() instanceof LightBlock)) {
-            stack.set(DataComponentRegistry.LIGHT_JAR, new LightJarData(null, true));
+            stack.set(DataComponentRegistry.LIGHT_JAR, new LightJarData(Optional.empty(), true));
         }
 
         if (BlockUtil.distanceFrom(lightLocation, entityIn.blockPosition()) > 7) {
@@ -63,15 +65,15 @@ public class JarOfLight extends ModItem {
         if (worldIn.isClientSide)
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
 
-        LightJarData tag = itemstack.getOrDefault(DataComponentRegistry.LIGHT_JAR, new LightJarData(null, false));
-        if (tag.pos() != null) {
+        LightJarData tag = itemstack.get(DataComponentRegistry.LIGHT_JAR);
+        if (tag.pos().isPresent()) {
             removeLight(worldIn, tag);
-            itemstack.set(DataComponentRegistry.LIGHT_JAR, new LightJarData(null, false));
+            itemstack.set(DataComponentRegistry.LIGHT_JAR, new LightJarData(Optional.empty(), false));
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
         }
         // No light exists. Place a new one.
         placeLight(worldIn, playerIn.blockPosition());
-
+        itemstack.set(DataComponentRegistry.LIGHT_JAR, new LightJarData(playerIn.blockPosition(), true));
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
     }
 
@@ -84,10 +86,10 @@ public class JarOfLight extends ModItem {
     }
 
     public void removeLight(Level world, LightJarData lightJarData) {
-        BlockPos pos = lightJarData.pos();
-        if(pos == null){
+        if(lightJarData.pos().isEmpty()){
             return;
         }
+        BlockPos pos = lightJarData.pos().get();
         if (world.getBlockState(pos).getBlock() instanceof LightBlock)
             world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
     }

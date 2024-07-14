@@ -12,8 +12,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class VoidJar extends ModItem implements IScribeable {
 
@@ -23,7 +28,8 @@ public class VoidJar extends ModItem implements IScribeable {
 
     public void toggleStatus(Player playerEntity, ItemStack stack) {
         VoidJarData jarData = stack.getOrDefault(DataComponentRegistry.VOID_JAR, new VoidJarData());
-        var newData = stack.set(DataComponentRegistry.VOID_JAR, jarData.setActive(!jarData.active()));
+        var newData = jarData.setActive(!jarData.active());
+        stack.set(DataComponentRegistry.VOID_JAR, newData);
         if (newData.active()) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.on"));
         } else {
@@ -92,4 +98,9 @@ public class VoidJar extends ModItem implements IScribeable {
         return written;
     }
 
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip2, flagIn);
+        stack.addToTooltip(DataComponentRegistry.VOID_JAR, context, tooltip2::add, flagIn);
+    }
 }
