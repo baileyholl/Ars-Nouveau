@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
+import com.hollingsworth.arsnouveau.common.util.ItemUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -89,16 +90,14 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionContents contents = tile.getData();
             potionStack.set(DataComponents.POTION_CONTENTS, new PotionContents(contents.potion(), contents.customColor(), contents.customEffects()));
-            if(player.addItem(potionStack)) {
-                player.getItemInHand(handIn).shrink(1);
+            if(ItemUtil.shrinkHandAndAddStack(potionStack, handIn, player)){
                 tile.remove(100);
             }
         }else if(stack.getItem() == Items.ARROW && tile.getAmount() >= 10){
             ItemStack potionStack = new ItemStack(Items.TIPPED_ARROW);
             PotionContents contents = tile.getData();
             potionStack.set(DataComponents.POTION_CONTENTS, new PotionContents(contents.potion(), contents.customColor(), contents.customEffects()));
-            if(player.addItem(potionStack)) {
-                player.getItemInHand(handIn).shrink(1);
+            if(ItemUtil.shrinkHandAndAddStack(potionStack, handIn, player)) {
                 tile.remove(10);
             }
         }

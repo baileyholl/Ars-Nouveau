@@ -1,11 +1,13 @@
 {
   "type": "minecraft:crafting_shapeless",
+  "category": "misc",
   "ingredients": [
     {
       "item": "ars_nouveau:stable_warp_scroll"
     }
   ],
   "result": {
-    "item": "ars_nouveau:stable_warp_scroll"
+    "count": 1,
+    "id": "ars_nouveau:stable_warp_scroll"
   }
 }

@@ -13,7 +13,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -43,6 +42,13 @@ public class RecipeDatagen extends RecipeProvider {
         {
             this.consumer = pRecipeOutput;
             Block SOURCESTONE = BlockRegistry.getBlock(LibBlockNames.SOURCESTONE);
+
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ItemsRegistry.NOVICE_SPELLBOOK).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
+                    .requires(Items.BOOK).requires(Items.IRON_SHOVEL).requires(Items.IRON_PICKAXE).requires(Items.IRON_AXE).requires(Items.IRON_SWORD).save(consumer);
+
+            shapelessBuilder(ItemsRegistry.STABLE_WARP_SCROLL).requires(ItemsRegistry.STABLE_WARP_SCROLL).save(consumer, ArsNouveau.prefix("reset_stable_warp_scroll"));
+
+            shapelessBuilder(ItemsRegistry.WARP_SCROLL).requires(ItemsRegistry.WARP_SCROLL).save(consumer, ArsNouveau.prefix("reset_warp_scroll"));
 
 
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ItemsRegistry.WORN_NOTEBOOK).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))

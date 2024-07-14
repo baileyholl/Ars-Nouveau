@@ -44,13 +44,14 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
 
     public static final ResourceLocation TRANSPORT_ID = ArsNouveau.prefix( "starby_transport");
 
-    public ItemStack itemScroll;
+    public ItemStack itemScroll = ItemStack.EMPTY;
 
     public SimpleStateMachine<StarbyState, IStateEvent> stateMachine;
 
     public int berryBackoff;
     public int findItemBackoff;
     public int takeItemBackoff;
+
     public StarbyTransportBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
         stateMachine = new SimpleStateMachine<>(new DecideStarbyActionState(starbuncle, this));
@@ -272,7 +273,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        if (itemScroll != null) {
+        if (!itemScroll.isEmpty()) {
             tag.put("itemScroll", itemScroll.save(level.registryAccess()));
         }
         return tag;
@@ -283,7 +284,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         super.getTooltip(tooltip);
         tooltip.accept(Component.translatable("ars_nouveau.starbuncle.storing", TO_LIST.size()));
         tooltip.accept(Component.translatable("ars_nouveau.starbuncle.taking", FROM_LIST.size()));
-        if (itemScroll != null && !itemScroll.isEmpty()) {
+        if (!itemScroll.isEmpty()) {
             tooltip.accept(Component.translatable("ars_nouveau.filtering_with", itemScroll.getHoverName().getString()));
         }
     }

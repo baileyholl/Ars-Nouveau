@@ -1,4 +1,4 @@
-// 1.21	2024-07-05T22:41:47.5546454	Recipes
+// 1.21	2024-07-14T16:49:32.7547917	Recipes
 a76e5d9eef406841f56740535ec2afdd509de507 data/ars_nouveau/advancement/recipes/building_blocks/archwood_button.json
 443515bb80018fbe37a128cb6849f5e818be315d data/ars_nouveau/advancement/recipes/building_blocks/archwood_door.json
 4dfc3afae271aae8423d20dedb67dc601ff71fa0 data/ars_nouveau/advancement/recipes/building_blocks/archwood_fence.json
@@ -167,6 +167,7 @@ f6f9ce0e87bc1e86a77a14e0d733955e615c5b31 data/ars_nouveau/advancement/recipes/mi
 ebc4ca30ff3290926a30485b72ab6c4a7a288bbf data/ars_nouveau/advancement/recipes/misc/moonfall_2.json
 1b554c4e460b09ab8dfa3fbe86d54d25deb34f39 data/ars_nouveau/advancement/recipes/misc/mundane_belt.json
 fcbdea7a47c81d7b81d78dc923da2b6e8f053c62 data/ars_nouveau/advancement/recipes/misc/mycelial_sourcelink.json
+c991770cb9c5b745fda1da97825a5a146ff4547b data/ars_nouveau/advancement/recipes/misc/novice_spell_book.json
 8b0d8a29fda79d30b45a74888be2a59e6a78f6f4 data/ars_nouveau/advancement/recipes/misc/orange_sbed.json
 4359acbc033050e0ed9799a3bfd98b885b3a9cf5 data/ars_nouveau/advancement/recipes/misc/platform_to_pedestal.json
 0e66cca3efe59a05c6bdabe7b4402b6eeabb95a4 data/ars_nouveau/advancement/recipes/misc/polished_sconce.json
@@ -180,6 +181,8 @@ bb32cde2de07df7f88b2ebc92986f1d4b3c14679 data/ars_nouveau/advancement/recipes/mi
 69f6e2bab56586ac49f320eeb09ba6d0c60c8ad3 data/ars_nouveau/advancement/recipes/misc/red_sbed.json
 f230680eb5c4b413a6dab4982a27632136878308 data/ars_nouveau/advancement/recipes/misc/relay.json
 96008186e68872c56e524c819bdd1d8b6a98657c data/ars_nouveau/advancement/recipes/misc/repository.json
+f1fd2db5b3d12da41f0453b5473b8009b1451d1e data/ars_nouveau/advancement/recipes/misc/reset_stable_warp_scroll.json
+d6646d684d97610b9de0796456f8ccc8785fb86d data/ars_nouveau/advancement/recipes/misc/reset_warp_scroll.json
 6e07b1ac1089cb77c8d52e4b7eb51f382077bfa0 data/ars_nouveau/advancement/recipes/misc/ring_of_potential.json
 93d0f7b6a18a85830f2bdd9bc18e6f25de6fbb23 data/ars_nouveau/advancement/recipes/misc/ritual_animal_summon.json
 516c48e6f05c4a8863569d4b5d5d5cd237eef50f data/ars_nouveau/advancement/recipes/misc/ritual_awakening.json
@@ -369,6 +372,7 @@ e1884cca124df55bf412d95549f86800492deaac data/ars_nouveau/recipe/mob_jar.json
 60f6f54acffb0880bac374b48177fd9bd1dd4106 data/ars_nouveau/recipe/moonfall_2.json
 d14d1bcf99c787e770333aca4cf115074615676a data/ars_nouveau/recipe/mundane_belt.json
 4ad6635b57eec4221ff24ef683d4286578c9c180 data/ars_nouveau/recipe/mycelial_sourcelink.json
+b95a26ec7ca85f4b6c2d897f08188bcbce4aadf1 data/ars_nouveau/recipe/novice_spell_book.json
 ca12f5dca463bbf0aca09c46b8efe2f6446c90ce data/ars_nouveau/recipe/orange_sbed.json
 598c51209c60374d958b0a81afe37462dad45081 data/ars_nouveau/recipe/platform_to_pedestal.json
 27e2e8438ba3dfdff05440abd1f751c50f0be420 data/ars_nouveau/recipe/polished_sconce.json
@@ -382,6 +386,8 @@ aebabb5b244a14c33336386f60c98912fd05e099 data/ars_nouveau/recipe/redstone_relay.
 8ff451fad137ccc8a670fb3d335299810ea8eea0 data/ars_nouveau/recipe/red_sbed.json
 9c9b067f9aa4bdcdf9766f4f959a638799a04e06 data/ars_nouveau/recipe/relay.json
 6cb8d39204d624ee51b5f0d5450833632a0ac194 data/ars_nouveau/recipe/repository.json
+d69b689c9d3d9beacb19470d85ae0563d16eaf21 data/ars_nouveau/recipe/reset_stable_warp_scroll.json
+e4fa6ed6a2cb95d4d609eb9f63342b4ff0cbaad9 data/ars_nouveau/recipe/reset_warp_scroll.json
 9a850855f9eeddb1e20cde0399bd93d10ff42638 data/ars_nouveau/recipe/ring_of_potential.json
 8a46330ef6197232cc0e87155b9834eb57f56620 data/ars_nouveau/recipe/ritual_animal_summon.json
 b7e8f61b9faf2b00693d209870838f790c6ea3d4 data/ars_nouveau/recipe/ritual_awakening.json

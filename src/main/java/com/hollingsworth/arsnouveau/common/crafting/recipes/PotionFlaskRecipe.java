@@ -14,10 +14,18 @@ import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.crafting.*;
 
+import java.util.List;
+
 public class PotionFlaskRecipe extends ShapelessRecipe {
-    public PotionFlaskRecipe(String groupIn, CraftingBookCategory category, ItemStack recipeOutputIn, NonNullList<Ingredient> recipeItemsIn) {
-        super(groupIn, CraftingBookCategory.MISC, recipeOutputIn, recipeItemsIn);
+
+    public PotionFlaskRecipe(String groupIn, ItemStack result, ItemStack recipeOutputIn) {
+        super(groupIn, CraftingBookCategory.MISC, recipeOutputIn, NonNullList.copyOf(List.of(Ingredient.of(result), Ingredient.of(Items.POTION))));
     }
+
+    public PotionFlaskRecipe(String pGroup, CraftingBookCategory pCategory, ItemStack pResult, NonNullList<Ingredient> pIngredients) {
+        super(pGroup, pCategory, pResult, pIngredients);
+    }
+
 
 
     @Override
