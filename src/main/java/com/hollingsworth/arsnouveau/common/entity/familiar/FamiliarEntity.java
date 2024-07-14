@@ -314,12 +314,12 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
      * Use this to de-duplify your persistent entity data as it relates to your PersistentFamiliarData.
      */
     public void syncAfterPersistentFamiliarInit() {
-        setCustomName(persistentData.name);
-        if (persistentData.color != null) {
-            setColor(persistentData.color);
+        setCustomName(persistentData.name());
+        if (persistentData.color() != null) {
+            setColor(persistentData.color());
         }
-        if (persistentData.cosmetic != null) {
-            setCosmeticItem(persistentData.cosmetic, false);
+        if (persistentData.cosmetic() != null) {
+            setCosmeticItem(persistentData.cosmetic(), false);
         }
     }
 }

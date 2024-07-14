@@ -229,8 +229,8 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
         PersistentFamiliarData data = stack.get(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA);
         if(data == null)
             return;
-        setColor(data.color, this);
-        setCustomName(data.name);
+        setColor(data.color(), this);
+        setCustomName(data.name());
     }
 
     @Override

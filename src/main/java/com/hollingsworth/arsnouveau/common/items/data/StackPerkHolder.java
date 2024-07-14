@@ -58,11 +58,11 @@ public abstract class StackPerkHolder<T> implements IPerkHolder<T> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         StackPerkHolder<?> that = (StackPerkHolder<?>) o;
-        return getTier() == that.getTier() && Objects.equals(getPerks(), that.getPerks()) && Objects.equals(getPerkTags(), that.getPerkTags());
+        return tier == that.tier && Objects.equals(perks, that.perks) && Objects.equals(perkTags, that.perkTags);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPerks(), getTier(), getPerkTags());
+        return Objects.hash(perks, tier, perkTags);
     }
 }

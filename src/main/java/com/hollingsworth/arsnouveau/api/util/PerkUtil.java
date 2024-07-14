@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.api.util;
 
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
-import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.PerkInstance;
 import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
@@ -19,7 +18,7 @@ import java.util.List;
 
 public class PerkUtil {
 
-    public static @Nullable IPerkHolder getPerkHolder(ItemStack stack){
+    public static @Nullable ArmorPerkHolder getPerkHolder(ItemStack stack){
         return stack.get(DataComponentRegistry.ARMOR_PERKS);
     }
 

@@ -1,15 +1,16 @@
 package com.hollingsworth.arsnouveau.common.items.data;
 
 import com.hollingsworth.arsnouveau.api.item.NBTComponent;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.CheatSerializer;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -22,21 +23,22 @@ import java.util.function.Consumer;
 public class PersistentFamiliarData implements NBTComponent<PersistentFamiliarData>, TooltipProvider {
 
     public static MapCodec<PersistentFamiliarData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-        ComponentSerialization.CODEC.fieldOf("name").forGetter(data -> data.name),
-        Codec.STRING.fieldOf("color").forGetter(data -> data.color),
-        ItemStack.CODEC.fieldOf("cosmetic").forGetter(data -> data.cosmetic)
+        ComponentSerialization.CODEC.optionalFieldOf("name", CommonComponents.EMPTY).forGetter(data -> data.name),
+        Codec.STRING.optionalFieldOf("color", "").forGetter(data -> data.color),
+        ItemStack.CODEC.optionalFieldOf("cosmetic", ItemStack.EMPTY).forGetter(data -> data.cosmetic)
     ).apply(instance, PersistentFamiliarData::new));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, PersistentFamiliarData>  STREAM_CODEC = CheatSerializer.create(PersistentFamiliarData.CODEC);
+    public static StreamCodec<RegistryFriendlyByteBuf, PersistentFamiliarData>  STREAM_CODEC = StreamCodec.composite(ComponentSerialization.STREAM_CODEC, s -> s.name,
+            ByteBufCodecs.STRING_UTF8, s -> s.color, ItemStack.STREAM_CODEC, s -> s.cosmetic, PersistentFamiliarData::new);
 
-    public final Component name;
-    public final String color;
-    public final ItemStack cosmetic;
+    private final Component name;
+    private final String color;
+    private final ItemStack cosmetic;
 
     public PersistentFamiliarData(Component name, String color, ItemStack cosmetic) {
-        this.name = name;
-        this.color = color;
-        this.cosmetic = cosmetic;
+        this.name = name == null ? CommonComponents.EMPTY : name;
+        this.color = color == null ? "" : color;
+        this.cosmetic = cosmetic == null ? ItemStack.EMPTY : cosmetic;
     }
 
     public PersistentFamiliarData(){
@@ -86,6 +88,18 @@ public class PersistentFamiliarData implements NBTComponent<PersistentFamiliarDa
     @Override
     public int hashCode() {
         return Objects.hash(name, color, cosmetic);
+    }
+
+    public Component name() {
+        return name == CommonComponents.EMPTY ? null : name;
+    }
+
+    public String color() {
+        return color.isEmpty() ? null : color;
+    }
+
+    public ItemStack cosmetic() {
+        return cosmetic;
     }
 
     public static class Mutable{

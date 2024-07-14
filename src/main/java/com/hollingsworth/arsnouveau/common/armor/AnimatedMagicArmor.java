@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.armor;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
-import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.ITickablePerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.perk.PerkInstance;
@@ -54,7 +53,7 @@ public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDy
     }
 
     public AnimatedMagicArmor(Holder<ArmorMaterial> materialIn, ArmorItem.Type slot, GeoModel<AnimatedMagicArmor> model) {
-        this(materialIn, slot, ItemsRegistry.defaultItemProperties().stacksTo(1), model);
+        this(materialIn, slot, ItemsRegistry.defaultItemProperties().stacksTo(1).component(DataComponentRegistry.ARMOR_PERKS, new ArmorPerkHolder()), model);
     }
 
     public static AnimatedMagicArmor light(ArmorItem.Type slot) {
@@ -81,7 +80,7 @@ public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDy
                 return;
             if(player instanceof LivingEntity livingEntity) {
                 RepairingPerk.attemptRepair(stack, livingEntity);
-                IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(stack);
+                var perkHolder = PerkUtil.getPerkHolder(stack);
                 if (perkHolder == null)
                     return;
                 for (PerkInstance instance : perkHolder.getPerkInstances(stack)) {
@@ -96,7 +95,7 @@ public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDy
     @Override
     public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
         var modifiers = super.getDefaultAttributeModifiers(stack);
-        IPerkHolder perkHolder = PerkUtil.getPerkHolder(stack);
+        var perkHolder = PerkUtil.getPerkHolder(stack);
         if(perkHolder == null)
             return modifiers;
         modifiers.withModifierAdded(PerkAttributes.MAX_MANA, new AttributeModifier(ArsNouveau.prefix("max_mana_armor"), 30 * (perkHolder.getTier() + 1), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.bySlot(this.type.getSlot()));

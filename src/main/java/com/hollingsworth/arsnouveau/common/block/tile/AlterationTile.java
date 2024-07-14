@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
-import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.common.block.AlterationTable;
@@ -9,7 +8,6 @@ import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.ThreePartBlock;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.data.ArmorPerkHolder;
-import com.hollingsworth.arsnouveau.common.items.data.StackPerkHolder;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
@@ -99,17 +97,17 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
     }
 
     public void removeArmorStack(Player player){
-        IPerkHolder perkHolder = PerkUtil.getPerkHolder(armorStack);
-        if (perkHolder instanceof StackPerkHolder armorPerkHolder) {
-            armorPerkHolder.setPerks(perkList.stream().map(i ->{
-                if(i.getItem() instanceof PerkItem perkItem){
-                    return perkItem.perk;
-                }
-                return null;
-            }).filter(Objects::nonNull).toList());
-        }
-        if(!player.addItem(armorStack.copy())){
-            level.addFreshEntity(new ItemEntity(level, player.position().x(), player.position().y(), player.position().z(), armorStack.copy()));
+        ArmorPerkHolder perkHolder = PerkUtil.getPerkHolder(armorStack);
+        var newHolder = perkHolder.setPerks(new ArrayList<>(perkList.stream().map(i ->{
+            if(i.getItem() instanceof PerkItem perkItem){
+                return perkItem.perk;
+            }
+            return null;
+        }).filter(Objects::nonNull).toList()));
+        var copyStack = armorStack.copy();
+        copyStack.set(DataComponentRegistry.ARMOR_PERKS, newHolder);
+        if(!player.addItem(copyStack)){
+            level.addFreshEntity(new ItemEntity(level, player.position().x(), player.position().y(), player.position().z(), copyStack));
         }
         this.armorStack = ItemStack.EMPTY;
         this.perkList = new ArrayList<>();
@@ -117,16 +115,16 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
     }
 
     public void addPerkStack(ItemStack stack, Player player){
-        IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(armorStack);
-        if (!(perkHolder instanceof StackPerkHolder armorPerkHolder)) {
+        ArmorPerkHolder perkHolder = PerkUtil.getPerkHolder(armorStack);
+        if (perkHolder == null) {
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.set_armor"));
             return;
         }
-        if(this.perkList.size() >= 3 || this.perkList.size() >= armorPerkHolder.getSlotsForTier(stack).size()){
+        if(this.perkList.size() >= 3 || this.perkList.size() >= perkHolder.getSlotsForTier(armorStack).size()){
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.max_perks"));
             return;
         }
-        PerkSlot foundSlot = getAvailableSlot(perkHolder, stack);
+        PerkSlot foundSlot = getAvailableSlot(perkHolder);
         if(stack.getItem() instanceof PerkItem perkItem) {
             IPerk perk = perkItem.perk;
             if (foundSlot != null && perk.validForSlot(foundSlot, armorStack, player)) {
@@ -139,11 +137,11 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
         }
     }
 
-    private PerkSlot getAvailableSlot(IPerkHolder<ItemStack> perkHolder, ItemStack stack){
-        if(this.perkList.size() >= perkHolder.getSlotsForTier(stack).size()){
+    private PerkSlot getAvailableSlot(ArmorPerkHolder perkHolder){
+        if(this.perkList.size() >= perkHolder.getSlotsForTier(armorStack).size()){
             return null;
         }else{
-            return perkHolder.getSlotsForTier(stack).get(this.perkList.size());
+            return perkHolder.getSlotsForTier(armorStack).get(this.perkList.size());
         }
     }
 

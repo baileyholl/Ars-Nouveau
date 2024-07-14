@@ -31,6 +31,7 @@ public class FamiliarStarbuncle extends FamiliarEntity {
 
     public FamiliarStarbuncle(EntityType<? extends PathfinderMob> ent, Level world) {
         super(ent, world);
+        this.entityData.set(COLOR, DyeColor.ORANGE.getName());
     }
 
     @Override
@@ -74,7 +75,6 @@ public class FamiliarStarbuncle extends FamiliarEntity {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
         super.defineSynchedData(pBuilder);
-        pBuilder.define(COLOR, DyeColor.ORANGE.getName());
     }
 
     @Override

@@ -34,6 +34,10 @@ public class ArmorPerkHolder extends StackPerkHolder<ArmorPerkHolder> {
         this.color = color;
     }
 
+    public ArmorPerkHolder() {
+        this("", new ArrayList<>(), 0, new HashMap<>());
+    }
+
     public String getColor() {
         return color == null ? DyeColor.PURPLE.getName() : color;
     }
@@ -50,6 +54,9 @@ public class ArmorPerkHolder extends StackPerkHolder<ArmorPerkHolder> {
     @Override
     public List<PerkSlot> getSlotsForTier(ItemStack stack) {
         List<List<PerkSlot>> slotsForTier = PerkRegistry.getPerkProvider(stack.getItem());
+        if (slotsForTier == null) {
+            return Collections.emptyList();
+        }
         List<PerkSlot> slots = new ArrayList<>(slotsForTier.get(getTier()));
         slots.sort(Comparator.comparingInt((a) -> -a.value()));
         return slots;
@@ -69,12 +76,13 @@ public class ArmorPerkHolder extends StackPerkHolder<ArmorPerkHolder> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         ArmorPerkHolder that = (ArmorPerkHolder) o;
         return Objects.equals(color, that.color);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(color);
+        return Objects.hash(super.hashCode(), color);
     }
 }
