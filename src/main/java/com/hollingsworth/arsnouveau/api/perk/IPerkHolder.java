@@ -49,7 +49,7 @@ public interface IPerkHolder<T> {
         int missing = getSlotsForTier(stack).size() - getPerkInstances(stack).size();
         for(int i = 0; i < missing; i++){
             PerkSlot slot = new ArrayList<>(getSlotsForTier(stack)).subList(getPerkInstances(stack).size(), getSlotsForTier(stack).size()).get(i);
-            tooltip.add(Component.literal(Component.translatable("Empty").getString() + " " + RomanNumber.toRoman(slot.value())).withStyle(ChatFormatting.RED).withStyle(ChatFormatting.ITALIC));
+            tooltip.add(Component.literal(Component.translatable("ars_nouveau.empty").getString() + " " + RomanNumber.toRoman(slot.value())).withStyle(ChatFormatting.RED).withStyle(ChatFormatting.ITALIC));
         }
     }
 

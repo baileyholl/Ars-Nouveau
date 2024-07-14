@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Supplier;
@@ -1277,6 +1278,7 @@ public class LangDatagen extends LanguageProvider {
         add("effect.ars_nouveau.immolate", "Immolate");
         add("effect.ars_nouveau.immolate.desc", "Enhances fire spells.");
         add("block.ars_nouveau.sourceberry_sack", "Sourceberry Sack");
+        add("ars_nouveau.empty","Empty");
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             String key = "block.ars_nouveau." + s;
             String val = data.get(key);
