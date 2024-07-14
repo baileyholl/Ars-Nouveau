@@ -18,6 +18,8 @@ import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegi
 
 public class NBTUtil {
 
+    public static int INT_LIST_TAG_TYPE = 11;
+
     public static CompoundTag storeBlockPos(CompoundTag tag, String prefix, BlockPos pos) {
         if (pos == null)
             return tag;
@@ -47,6 +49,10 @@ public class NBTUtil {
     @Deprecated
     public static BlockPos getBlockPos(CompoundTag tag, String prefix) {
         return BlockPos.containing(tag.getDouble(prefix + "_x"), tag.getDouble(prefix + "_y"), tag.getDouble(prefix + "_z"));
+    }
+
+    public static BlockPos getPos(int[] arr){
+        return new BlockPos(arr[0], arr[1], arr[2]);
     }
 
     public static Vec3 getVec(CompoundTag tag, String prefix){

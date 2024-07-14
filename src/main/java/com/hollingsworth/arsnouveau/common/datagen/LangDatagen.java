@@ -220,7 +220,7 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.wand", "Enchanter's Wand");
         add("ars_nouveau.wixie.has_wixie", "This cauldron already has a wixie.");
         add("ars_nouveau.wixie.no_recipe", "No recipes found.");
-        add("ars_nouveau.wixie.recipe_set", "Recipe set.");
+        add("ars_nouveau.wixie.recipe_set", "Place pedestals nearby for recipes to craft.");
         add("tooltip.wixie_shard", "Obtained by using Dispel on a witch while it is less than half health.");
         add("tooltip.starbuncle_shard", "Obtained by giving a wild Starbuncle a Gold Nugget.");
         add("tooltip.whirlisprig_shard", "Obtained by growing a tree near a wild Whirlisprig.");
@@ -1267,7 +1267,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.sensor.on_cast", "Mode: On Cast");
         add("block.ars_nouveau.spell_sensor", "Spell Sensor");
         add("ars_nouveau.page1.spell_sensor", "Outputs a redstone signal when a spell is cast nearby. Output strength is determined by the length of the spell cast. Using a Dominion Wand will cause it to trigger when a spell resolves nearby, instead of being cast. Using a Spell Parchment will set the sensor to only output when that exact spell is detected.");
-        add("ars_nouveau.no_stack_crafting", "No valid craft nearby.");
+        add("ars_nouveau.no_stack_crafting", "No valid craft nearby. Place pedestals with items adjacent to set a recipe. Provide items by binding inventories.");
         add("item.ars_nouveau.jump_ring", "Ring of Jumping");
         add("ars_nouveau.page1.jump_ring", "Allows the user to continue jumping in the air. Each jump will expend mana.");
         add("ars_nouveau.connections.remove", "Connection removed.");

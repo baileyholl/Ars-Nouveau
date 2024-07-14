@@ -98,7 +98,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
     public void tick() {
         super.tick();
 
-        if (!found && movePos != null && BlockUtil.distanceFrom(wixie.position(), movePos.above()) < 2.0 + this.extendedRange) {
+        if (!found && movePos != null && BlockUtil.distanceFrom(wixie.position(), Vec3.atCenterOf(movePos)) < 1.3 + this.extendedRange) {
 
             WixieCauldronTile tile = (WixieCauldronTile) wixie.getCommandSenderWorld().getBlockEntity(wixie.cauldronPos);
             Level world = wixie.getCommandSenderWorld();

@@ -39,7 +39,7 @@ public class Networking {
         reg.playToServer(PacketConsumePotion.TYPE, PacketConsumePotion.CODEC, Networking::handle);
         reg.playToServer(PacketDismountCamera.TYPE, PacketDismountCamera.CODEC, Networking::handle);
         reg.playToServer(PacketDispelFamiliars.TYPE, PacketDispelFamiliars.CODEC, Networking::handle);
-        reg.playToServer(PacketAnimEntity.TYPE, PacketAnimEntity.CODEC, Networking::handle);
+        reg.playToClient(PacketAnimEntity.TYPE, PacketAnimEntity.CODEC, Networking::handle);
         reg.playToClient(PacketGetPersistentData.TYPE, PacketGetPersistentData.CODEC, Networking::handle);
         reg.playToServer(PacketHotkeyPressed.TYPE, PacketHotkeyPressed.CODEC, Networking::handle);
         reg.playToClient(PacketJoinedServer.TYPE, PacketJoinedServer.CODEC, Networking::handle);

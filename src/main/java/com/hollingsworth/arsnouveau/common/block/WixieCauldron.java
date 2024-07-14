@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -43,7 +42,6 @@ public class WixieCauldron extends SummonBlock {
             if (wrapper.isEmpty()) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.wixie.no_recipe"));
             } else {
-                cauldronTile.setSetStack(player.getMainHandItem().copy());
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.wixie.recipe_set"));
             }
             return ItemInteractionResult.CONSUME;
