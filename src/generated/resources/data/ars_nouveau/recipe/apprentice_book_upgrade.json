@@ -1,0 +1,37 @@
+{
+  "type": "ars_nouveau:book_upgrade",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:novice_spell_book"
+    },
+    {
+      "tag": "c:obsidians"
+    },
+    {
+      "tag": "c:gems/diamond"
+    },
+    {
+      "tag": "c:gems/diamond"
+    },
+    {
+      "tag": "c:gems/diamond"
+    },
+    {
+      "item": "minecraft:quartz_block"
+    },
+    {
+      "item": "minecraft:quartz_block"
+    },
+    {
+      "tag": "c:rods/blaze"
+    },
+    {
+      "tag": "c:rods/blaze"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:apprentice_spell_book"
+  }
+}
