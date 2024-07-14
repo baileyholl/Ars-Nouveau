@@ -335,45 +335,38 @@ public class BlockUtil {
         }
 
         GameType type = player.getAbilities().instabuild ? GameType.CREATIVE : GameType.SURVIVAL;
-        //TODO: check block breaking rules
-        int exp = 1;// net.neoforged.neoforge.common.CommonHooks.onBlockBreakEvent(world, type, player, pos);
-        if (exp == -1) {
+        boolean canceled = net.neoforged.neoforge.common.CommonHooks.fireBlockBreak(world, type, player, pos, blockstate).isCanceled();
+        if (canceled) {
+            return false;
+        }
+        BlockEntity tileentity = world.getBlockEntity(pos);
+        Block block = blockstate.getBlock();
+        if ((block instanceof CommandBlock || block instanceof StructureBlock || block instanceof JigsawBlock) && !player.canUseGameMasterBlocks()) {
+            world.sendBlockUpdated(pos, blockstate, blockstate, 3);
+            return false;
+        } else if (player.blockActionRestricted(world, pos, type)) {
             return false;
         } else {
-            BlockEntity tileentity = world.getBlockEntity(pos);
-            Block block = blockstate.getBlock();
-            if ((block instanceof CommandBlock || block instanceof StructureBlock || block instanceof JigsawBlock) && !player.canUseGameMasterBlocks()) {
-                world.sendBlockUpdated(pos, blockstate, blockstate, 3);
-                return false;
-            } else if (false){// player.getMainHandItem().onBlockStartBreak(pos, player)) {
-                return false;
-            } else if (player.blockActionRestricted(world, pos, type)) {
-                return false;
+            if (player.getAbilities().instabuild) {
+                removeBlock(world, player, pos, false);
+                return true;
             } else {
-                if (player.getAbilities().instabuild) {
-                    removeBlock(world, player, pos, false);
-                    return true;
-                } else {
-                    ItemStack copyMain = mainhand.copy();
-                    boolean canHarvest = blockstate.canHarvestBlock(world, pos, player) || bypassToolCheck;
-                    mainhand.mineBlock(world, blockstate, pos, player);
-                    if (mainhand.isEmpty() && !copyMain.isEmpty()){
-                        net.neoforged.neoforge.event.EventHooks.onPlayerDestroyItem(player, copyMain, InteractionHand.MAIN_HAND);
-                    }
-                    boolean removed = removeBlock(world, player, pos, canHarvest);
-
-                    if (removed && canHarvest) {
-                        block.playerDestroy(world, player, pos, blockstate, tileentity, copyMain);
-                    }
-
-                    if (removed && exp > 0){
-                        blockstate.getBlock().popExperience(world, pos, exp);
-                    }
-
-                    return true;
+                ItemStack copyMain = mainhand.copy();
+                boolean canHarvest = blockstate.canHarvestBlock(world, pos, player) || bypassToolCheck;
+                mainhand.mineBlock(world, blockstate, pos, player);
+                if (mainhand.isEmpty() && !copyMain.isEmpty()){
+                    net.neoforged.neoforge.event.EventHooks.onPlayerDestroyItem(player, copyMain, InteractionHand.MAIN_HAND);
                 }
+                boolean removed = removeBlock(world, player, pos, canHarvest);
+
+                if (removed && canHarvest) {
+                    block.playerDestroy(world, player, pos, blockstate, tileentity, copyMain);
+                }
+
+                return true;
             }
         }
+
     }
 
     /**
