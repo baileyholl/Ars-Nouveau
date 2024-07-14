@@ -1279,6 +1279,8 @@ public class LangDatagen extends LanguageProvider {
         add("effect.ars_nouveau.immolate.desc", "Enhances fire spells.");
         add("block.ars_nouveau.sourceberry_sack", "Sourceberry Sack");
         add("ars_nouveau.empty","Empty");
+        add("ars_nouveau.melder.output_not_unique", "Output potion is not a unique mix.");
+        add("ars_nouveau.melder.output_duplicate_effect", "Cannot mix potions with the same effect but different levels.");
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             String key = "block.ars_nouveau." + s;
             String val = data.get(key);

@@ -64,11 +64,15 @@ public class CraftingManager {
     }
 
     public boolean canBeCompleted() {
-        return !outputStack.isEmpty() && neededItems.isEmpty();
+        return !isCraftInvalid() && neededItems.isEmpty();
     }
 
     public boolean isCraftCompleted(){
-        return craftCompleted;
+        return isCraftInvalid() || craftCompleted;
+    }
+
+    public boolean isCraftInvalid(){
+        return outputStack.isEmpty();
     }
 
     public void completeCraft(WixieCauldronTile tile){

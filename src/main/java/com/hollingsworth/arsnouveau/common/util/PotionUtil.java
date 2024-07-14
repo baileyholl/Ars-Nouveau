@@ -14,7 +14,9 @@ import net.minecraft.world.item.alchemy.Potions;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class PotionUtil {
 
@@ -28,14 +30,10 @@ public class PotionUtil {
         if(pot1 == null || pot2 == null){
             return false;
         }
-        List<MobEffectInstance> pot1Effects = new ArrayList<>();
-        List<MobEffectInstance> pot2Effects = new ArrayList<>();
+        Set<MobEffectInstance> pot1Effects = new HashSet<>();
+        Set<MobEffectInstance> pot2Effects = new HashSet<>();
         pot1.getAllEffects().forEach(pot1Effects::add);
         pot2.getAllEffects().forEach(pot2Effects::add);
-        if(pot1Effects.size() != pot2Effects.size())
-            return false;
-        pot2Effects.sort(Comparator.comparing(MobEffectInstance::toString));
-        pot1Effects.sort(Comparator.comparing(MobEffectInstance::toString));
         return pot1Effects.equals(pot2Effects);
     }
 
@@ -75,6 +73,7 @@ public class PotionUtil {
         for(MobEffectInstance effect : contents2.getAllEffects()){
             set.add(new MobEffectInstance(effect));
         }
+        contents1.potion().get().value().getEffects().forEach(set::remove);
         return new PotionContents(contents1.potion(), contents1.customColor(), new ArrayList<>(set));
     }
 }

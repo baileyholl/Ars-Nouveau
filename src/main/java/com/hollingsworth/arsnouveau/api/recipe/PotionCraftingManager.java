@@ -76,13 +76,15 @@ public class PotionCraftingManager extends CraftingManager {
         super.completeCraft(tile);
     }
 
+    @Override
+    public boolean isCraftInvalid() {
+        return false;
+    }
 
     @Override
     public void write(HolderLookup.Provider provider,  CompoundTag tag) {
         super.write(provider, tag);
         tag.put("potionout", ANCodecs.encode(PotionContents.CODEC, potionOut));
-
-        CompoundTag neededTag = new CompoundTag();
         tag.put("potionNeeded", ANCodecs.encode(PotionContents.CODEC, getPotionNeeded()));
         tag.putBoolean("gotPotion", hasObtainedPotion);
     }

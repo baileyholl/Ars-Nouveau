@@ -22,6 +22,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.alchemy.PotionContents;
@@ -36,6 +37,7 @@ import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITickable, IWandable, ITooltipProvider {
@@ -84,7 +86,10 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
 
         PotionJarTile tile1 = (PotionJarTile) level.getBlockEntity(fromJars.get(0));
         PotionJarTile tile2 = (PotionJarTile) level.getBlockEntity(fromJars.get(1));
-        PotionContents data = PotionUtil.merge(tile1.getData(), tile2.getData());
+        PotionContents data = getCombinedResult(tile1, tile2);
+        if(!isOutputUnique(data, tile1, tile2) || outputHasDuplicateEffect(data)){
+            return;
+        }
         if (!combJar.canAccept(data, Config.MELDER_OUTPUT.get())) {
             isMixing = false;
             timeMixing = 0;
@@ -166,6 +171,21 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
         return PotionUtil.merge(jar1.getData(), jar2.getData());
     }
 
+    public boolean isOutputUnique(PotionContents mix, PotionJarTile take1, PotionJarTile take2){
+        return !PotionUtil.arePotionContentsEqual(mix, take1.getData()) && !PotionUtil.arePotionContentsEqual(mix, take2.getData());
+    }
+
+    public boolean outputHasDuplicateEffect(PotionContents mix){
+        var effects = mix.getAllEffects();
+        var effectSet = new HashSet<MobEffect>();
+        for(var effect : effects){
+            if(!effectSet.add(effect.getEffect().value())){
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void onWanded(Player playerEntity) {
         this.toPos = null;
@@ -216,7 +236,7 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
     }
 
     public boolean closeEnough(BlockPos pos1, BlockPos pos2){
-        return BlockUtil.distanceFrom(pos1, pos2) <= 3;
+        return BlockUtil.distanceFrom(Vec3.atCenterOf(pos1), Vec3.atCenterOf(pos2)) <= 3.5;
     }
 
     private <E extends BlockEntity & GeoAnimatable> PlayState idlePredicate(AnimationState<E> event) {
@@ -278,7 +298,7 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
         }
         if(fromJars.size() < 2)
             tooltip.add(Component.translatable("ars_nouveau.melder.from_set", fromJars.size()).setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
-        if(toPos == null){
+        if(toPos == null || !level.isLoaded(toPos) || !(level.getBlockEntity(toPos) instanceof PotionJarTile)){
             tooltip.add(Component.translatable("ars_nouveau.melder.no_to_pos").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
         }
         if(toPos != null && fromJars.size() == 2 && hasSource && !isMixing && !takeJarsValid()){
@@ -292,6 +312,15 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
                 return;
             }
             PotionContents data = getCombinedResult(tile1, tile2);
+
+            if(!isOutputUnique(data, tile1, tile2)){
+                tooltip.add(Component.translatable("ars_nouveau.melder.output_not_unique").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
+                return;
+            }
+            if(outputHasDuplicateEffect(data)){
+                tooltip.add(Component.translatable("ars_nouveau.melder.output_duplicate_effect").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
+                return;
+            }
             if(!combJar.canAccept(data, Config.MELDER_OUTPUT.get())){
                 tooltip.add(Component.translatable("ars_nouveau.melder.destination_invalid").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
             }

@@ -8,10 +8,14 @@ import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -68,18 +72,22 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     }
 
     public int getColor() {
-        return this.data == PotionContents.EMPTY ? 16253176 : this.data.getColor();
+        return this.data.equals(PotionContents.EMPTY) ? 16253176 : this.data.getColor();
     }
 
     public boolean canAccept(PotionContents otherData, int amount){
-        if(otherData == null || PotionUtil.isEmpty(otherData))
+        if(otherData == null || !validContentTypeForJar(otherData))
             return false;
         return (!this.isLocked && this.getAmount() <= 0) || (amount <= (this.getMaxFill() - this.getAmount()) && PotionUtil.arePotionContentsEqual(otherData, this.data));
     }
 
+    public boolean validContentTypeForJar(PotionContents otherData){
+        return !otherData.is(Potions.WATER) && !otherData.is(Potions.MUNDANE);
+    }
+
     public void add(PotionContents other, int amount){
         if(this.currentFill == 0){
-            if(!this.data.equals(other) || (this.data == PotionContents.EMPTY)) {
+            if(!this.data.equals(other) || (this.data.equals(PotionContents.EMPTY))) {
                 this.data = other;
             }
             currentFill += amount;
@@ -100,6 +108,11 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
 
     @Override
     public void getTooltip(List<Component> tooltip) {
+        if(!data.equals(PotionContents.EMPTY)) {
+            ItemStack potion = new ItemStack(Items.POTION);
+            potion.set(DataComponents.POTION_CONTENTS, data);
+            tooltip.add(Component.translatable(potion.getDescriptionId()));
+        }
         PotionContents.addPotionTooltip(data.getAllEffects(), tooltip::add, 1.0F, 20.0f);
         tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", (getAmount() * 100) / this.getMaxFill()));
         if (isLocked)
