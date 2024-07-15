@@ -306,7 +306,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
             return;
         }
         controller.forceAnimationReset();
-        controller.setAnimation(RawAnimation.begin().thenPlay("create_glyph"));
+        controller.setAnimation(RawAnimation.begin().thenPlay("create_glyph2"));
     }
 
     @Override

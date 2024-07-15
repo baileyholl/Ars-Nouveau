@@ -1,8 +1,9 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"create_glyph": {
-			"animation_length": 5.54167,
+		"create_glyph2": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 6,
 			"bones": {
 				"quill": {
 					"rotation": {
@@ -15,21 +16,30 @@
 						"1.5833": {
 							"vector": [0, 0, 0]
 						},
-						"3.1667": {
+						"3.0417": {
 							"vector": [21.19748, -334.76902, 42.29628],
 							"easing": "easeInOutSine"
 						},
-						"3.375": {
-							"vector": [11.2, -334.77, 42.3]
+						"3.2083": {
+							"vector": [-3.8, -334.77, 42.3]
 						},
-						"3.5833": {
+						"3.5": {
 							"vector": [44.69727, -329.36252, 36.413]
 						},
-						"3.7917": {
+						"3.7083": {
 							"vector": [27.42091, -340.63038, 49.78379]
 						},
-						"4.0": {
+						"3.9167": {
 							"vector": [34.02249, -333.34799, 39.32521]
+						},
+						"4.0417": {
+							"vector": [6.52249, -333.34799, 39.32521]
+						},
+						"4.125": {
+							"vector": [44.83898, -308.59464, 52.96324]
+						},
+						"4.2083": {
+							"vector": [20.71136, -304.43681, 37.26108]
 						},
 						"4.3333": {
 							"vector": [0, -334.76902, 0],
@@ -41,40 +51,57 @@
 					},
 					"position": {
 						"0.0": {
-							"vector": ["math.lerp(0, -20, (query.anim_time)*0.75) + 12- math.cos(query.anim_time*200) - 10", "math.lerp(0, math.lerp(12, 6, query.anim_time * 0.75), query.anim_time * 0.75)", "math.lerp(0, -11, query.anim_time*0.75) + 8 * math.sin(query.anim_time*200)"]
+							"vector": [
+								"-11+math.lerp(0, -20, (query.anim_time)*0.75) + 12- math.cos(query.anim_time*200)",
+								"math.lerp(math.lerp(0, 12, query.anim_time*0.75), math.lerp(12, 6, query.anim_time*0.75), query.anim_time*0.75)",
+								"math.lerp(0, -11, (query.anim_time)*0.75) + 8 * math.sin(query.anim_time*200)"
+							]
 						},
 						"1.3333": {
 							"vector": [-20, 4, -11]
 						},
+						"1.5417": {
+							"vector": [-20, 6, -11],
+							"easing": "easeInOutSine"
+						},
 						"1.6667": {
 							"vector": [-20, 2, -11],
-							"easing": "easeInSine"
+							"easing": "linear"
 						},
 						"1.7083": {
-							"vector": ["math.lerp(-20, -7, (query.anim_time-1.7083)*0.75)", "2+math.lerp(math.lerp(0, 20, (query.anim_time-1.7083)*0.75), math.lerp(20,0,(query.anim_time-1.7083)*0.75), (query.anim_time-1.7083)*0.75)", "math.lerp(-11, -7, (query.anim_time-1.7083)*0.75)"]
+							"vector": [
+								"math.lerp(-20, -7, query.anim_time-1.7083)",
+								"math.lerp(math.lerp(2, 20, query.anim_time-1.7083), math.lerp(20, -1, query.anim_time-1.7083), query.anim_time-1.7083)",
+								"math.lerp(-11, -7, query.anim_time-1.7083)"
+							]
 						},
-						"3.1667": {
+						"3.0417": {
 							"vector": [-7, -1, -7],
 							"easing": "easeOutSine"
 						},
-						"3.375": {
+						"3.2083": {
 							"vector": [-10.69552, -1, -8.53073]
 						},
-						"3.5833": {
+						"3.5": {
 							"vector": [-4.54643, -1, -9.2309]
 						},
-						"3.7917": {
+						"3.7083": {
 							"vector": [-10.6994, -1, -9.12342]
 						},
-						"4.0": {
+						"3.9167": {
 							"vector": [-7.00029, -1, -4.24299]
 						},
-						"4.3333": {
-							"vector": [-7, -1, -7],
-							"easing": "easeOutSine"
+						"4.0417": {
+							"vector": [-11.61969, -1, -6.15641]
 						},
-						"4.375": {
-							"vector": ["math.lerp(-7, 0, (query.anim_time - 4.375) * 0.75)", "2 + math.lerp(math.lerp(0, 20, (query.anim_time - 4.375)*0.75), math.lerp(20, 0, (query.anim_time - 4.375) * 0.75), (query.anim_time - 4.375) * 0.75)", "math.lerp(-7, 0, (query.anim_time - 4.375) * 0.75)"]
+						"4.125": {
+							"vector": [-7.00029, -1, -4.24299]
+						},
+						"4.2083": {
+							"vector": [-7.85851, -1, -10.01044]
+						},
+						"4.3333": {
+							"vector": ["math.cos(query.anim_time*150) -7.8585", "0.5*math.cos(query.anim_time*150) -1", "math.cos(query.anim_time*150) -10.0104"]
 						},
 						"5.5417": {
 							"vector": [0, 0, 0],
@@ -115,6 +142,11 @@
 							"vector": [0, 0, 0]
 						}
 					}
+				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "scribing_desk_take_4"
 				}
 			}
 		}

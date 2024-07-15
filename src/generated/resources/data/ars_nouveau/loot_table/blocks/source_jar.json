@@ -12,18 +12,9 @@
               "source": "block_entity"
             },
             {
-              "function": "minecraft:copy_custom_data",
-              "ops": [
-                {
-                  "op": "replace",
-                  "source": "inv",
-                  "target": "BlockEntityTag.inv"
-                },
-                {
-                  "op": "replace",
-                  "source": "source",
-                  "target": "BlockEntityTag.source"
-                }
+              "function": "minecraft:copy_components",
+              "include": [
+                "ars_nouveau:block_fill_contents"
               ],
               "source": "block_entity"
             }

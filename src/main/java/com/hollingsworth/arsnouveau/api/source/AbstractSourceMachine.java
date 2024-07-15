@@ -3,8 +3,11 @@ package com.hollingsworth.arsnouveau.api.source;
 import com.hollingsworth.arsnouveau.api.util.IWololoable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.ModdedTile;
+import com.hollingsworth.arsnouveau.common.items.data.BlockFillContents;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -130,6 +133,19 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
     @Override
     public void setColor(ParticleColor color) {
         this.color = color;
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput pComponentInput) {
+        super.applyImplicitComponents(pComponentInput);
+        var fill = pComponentInput.getOrDefault(DataComponentRegistry.BLOCK_FILL_CONTENTS, new BlockFillContents(0));
+        this.source = fill.amount();
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder pComponents) {
+        super.collectImplicitComponents(pComponents);
+        pComponents.set(DataComponentRegistry.BLOCK_FILL_CONTENTS, new BlockFillContents(this.source));
     }
 }
 
