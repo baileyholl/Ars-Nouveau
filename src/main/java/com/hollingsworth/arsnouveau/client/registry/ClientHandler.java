@@ -19,13 +19,11 @@ import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionMelderTile;
 import com.hollingsworth.arsnouveau.common.items.data.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.common.items.data.BlockFillContents;
+import com.hollingsworth.arsnouveau.common.items.data.PotionJarData;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.util.CameraUtil;
 import com.hollingsworth.arsnouveau.common.util.PotionUtil;
-import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
+import com.hollingsworth.arsnouveau.setup.registry.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.Font;
@@ -214,7 +212,7 @@ public class ClientHandler {
                 }
             });
             ItemProperties.register(BlockRegistry.POTION_JAR.asItem(), ArsNouveau.prefix("amount"), (stack, level, entity, seed) -> {
-                int amount = BlockFillContents.get(stack);
+                int amount = stack.getOrDefault(DataComponentRegistry.POTION_JAR, new PotionJarData(0, PotionContents.EMPTY, false)).fill();
                 return amount / 10000.0f;
             });
             ItemProperties.register(BlockRegistry.SOURCE_JAR.asItem(), ArsNouveau.prefix("source"), (stack, level, entity, seed) -> {
@@ -315,11 +313,11 @@ public class ClientHandler {
         }, ItemsRegistry.SPELL_PARCHMENT);
 
         event.register((stack, color) -> {
-            var contents = PotionProviderRegistry.from(stack);
+            var contents = stack.get(DataComponentRegistry.POTION_JAR);
             if (contents == null) {
                 return -1;
             }
-            return contents.getPotionData(stack).getColor();
+            return contents.contents().getColor();
         }, BlockRegistry.POTION_JAR);
 
     }

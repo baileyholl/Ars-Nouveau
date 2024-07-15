@@ -186,12 +186,7 @@ public class DefaultTableProvider extends LootTableProvider {
                     .setRolls(ConstantValue.exactly(1))
                     .add(LootItem.lootTableItem(BlockRegistry.POTION_JAR)
                             .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
-                            .apply(CopyCustomDataFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
-                                    .copy("potionData", "BlockEntityTag.potionData", CopyCustomDataFunction.MergeStrategy.REPLACE)
-                                    .copy("currentFill", "BlockEntityTag.currentFill", CopyCustomDataFunction.MergeStrategy.REPLACE)
-                                    .copy("locked", "BlockEntityTag.locked", CopyCustomDataFunction.MergeStrategy.REPLACE)
-                                    .copy("potionNames", "potionNames", CopyCustomDataFunction.MergeStrategy.REPLACE)
-                                    .copy("currentFill", "fill", CopyCustomDataFunction.MergeStrategy.REPLACE))
+                            .apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY).include(DataComponentRegistry.POTION_JAR.get()))
                     );
             add(BlockRegistry.POTION_JAR.get(), LootTable.lootTable().withPool(potionJarBuilder));
             add(BlockRegistry.BASTION_POD.get(), LootTable.lootTable().withPool(POD_BUILDER(BlockRegistry.BASTION_POD.asItem(), BlockRegistry.BASTION_POD.get())));

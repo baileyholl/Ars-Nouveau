@@ -3,11 +3,14 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.common.block.SourceJar;
+import com.hollingsworth.arsnouveau.common.items.data.PotionJarData;
 import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -151,6 +154,21 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
 
     public int getAmount() {
         return currentFill;
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput pComponentInput) {
+        super.applyImplicitComponents(pComponentInput);
+        var jarContents = pComponentInput.getOrDefault(DataComponentRegistry.POTION_JAR, new PotionJarData(0, PotionContents.EMPTY, false));
+        this.currentFill = jarContents.fill();
+        this.data = jarContents.contents();
+        this.isLocked = jarContents.locked();
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder pComponents) {
+        super.collectImplicitComponents(pComponents);
+        pComponents.set(DataComponentRegistry.POTION_JAR, new PotionJarData(this.currentFill, this.data, this.isLocked));
     }
 }
 

@@ -1,4 +1,4 @@
-// 1.21	2024-07-14T19:21:35.339459	Loot Tables
+// 1.21	2024-07-15T08:49:19.3032836	Loot Tables
 4f70eae621815da8d08d3ea0b9fd479b48bad2d3 data/ars_nouveau/loot_table/blocks/agronomic_sourcelink.json
 8a6d60f2b39de0408c7e4537b53e866a04236d22 data/ars_nouveau/loot_table/blocks/alchemical_sourcelink.json
 8bdff8a0a49a9f3f21a822eb1d1d01a950d6ad1a data/ars_nouveau/loot_table/blocks/alteration_table.json
@@ -61,7 +61,7 @@ df5ba05995044413998b7cbbf02d6c7a63e7c583 data/ars_nouveau/loot_table/blocks/item
 6bf8bd330d83e260cd4fcf8311560fd37399f016 data/ars_nouveau/loot_table/blocks/orange_sbed.json
 b6f8c60f021cc50669d4a4f75056334922fdd5b1 data/ars_nouveau/loot_table/blocks/polished_sconce.json
 a3b768d587399b35b7b094b7bce9f70e9033ef44 data/ars_nouveau/loot_table/blocks/potion_diffuser.json
-490aa4411864ad19dcb8dfc09bc32df3313cbe6b data/ars_nouveau/loot_table/blocks/potion_jar.json
+bb3ffccb3f8ae3f0fa476304f82ded4f62a14cfd data/ars_nouveau/loot_table/blocks/potion_jar.json
 8653cbc9f5368a9767156cf5842781623f1c76ed data/ars_nouveau/loot_table/blocks/potion_melder.json
 2983589b24f1fa835eae3c40877e0728eb9a5981 data/ars_nouveau/loot_table/blocks/potted_blue_archwood_sapling.json
 040c5c292dd024010db00c1433781b44351f52a4 data/ars_nouveau/loot_table/blocks/potted_green_archwood_sapling.json

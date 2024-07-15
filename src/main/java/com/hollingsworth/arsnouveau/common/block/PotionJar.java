@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.util.ItemUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -122,16 +123,18 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
 
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext pContext, List<Component> tooltip, TooltipFlag pTooltipFlag) {
-        //todo: restore potion jar item tooltip
-//        if (stack.getTag() == null)
-//            return;
-//        int fill = stack.getTag().getCompound("BlockEntityTag").getInt("currentFill");
-//        tooltip.add(Component.literal((fill * 100) / 10000 + "% full"));
-//        CompoundTag blockTag = stack.getTag().getCompound("BlockEntityTag");
-//        if(blockTag.contains("potionData")){
-//            PotionData data = PotionData.fromTag(blockTag.getCompound("potionData"));
-//            data.appendHoverText(tooltip);
-//        }
+        var potion = stack.get(DataComponentRegistry.POTION_JAR);
+        if(potion == null)
+            return;
+        var fill = potion.fill();
+        var data = potion.contents();
+        if(!data.equals(PotionContents.EMPTY)) {
+            ItemStack potionItem = new ItemStack(Items.POTION);
+            potionItem.set(DataComponents.POTION_CONTENTS, data);
+            tooltip.add(Component.translatable(potionItem.getDescriptionId()));
+        }
+        PotionContents.addPotionTooltip(data.getAllEffects(), tooltip::add, 1.0F, 20.0f);
+        tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", (fill * 100) / 10000));
     }
 
     @Override
