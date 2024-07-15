@@ -1,9 +1,10 @@
-// 1.21	2024-07-14T12:08:42.8984246	Ars Nouveau Caster Tomes Datagen
+// 1.21	2024-07-14T19:09:57.1955072	Ars Nouveau Caster Tomes Datagen
+ab9cf50e4958592dcee6f5dae6d6bad2e7fe08ab data/ars_nouveau/recipe/tomes/alex_tome.json
 dae41a867bde9258624fe4676128e8140f2e7fe4 data/ars_nouveau/recipe/tomes/arachne_tome.json
-991d75b27429c69fdce017dc2c7d033872f1daa1 data/ars_nouveau/recipe/tomes/aurellia_tome.json
+71e004bfa5837d293c6ee00dd9fd99493b9b9aba data/ars_nouveau/recipe/tomes/aurellia_tome.json
 2027d79f560de6a1a7829a478f64ccd8f1723bc2 data/ars_nouveau/recipe/tomes/bailey_tome.json
 0be05276a18b4cac328dc05898e560b28f7e3a31 data/ars_nouveau/recipe/tomes/chems_tome.json
-0d097b7148d90a64199a8de9fcd4f5cbe5cecb03 data/ars_nouveau/recipe/tomes/darkfira_tome.json
+e9b37b1592c51345f27cd0571a12a373a469be73 data/ars_nouveau/recipe/tomes/darkfira_tome.json
 3c4d9ad61832042e38046f7763047126dbc320a0 data/ars_nouveau/recipe/tomes/farfalla_tome.json
 f64772fb96f68b7865f64ee40a8718e1a2412fce data/ars_nouveau/recipe/tomes/fireball_tome.json
 47410afb03915eaf6626f6cbfb872b647c9ea826 data/ars_nouveau/recipe/tomes/glow_tome.json
@@ -12,7 +13,7 @@ fa2eefd9631a78bf8c31e4c9aad34a2517bb9736 data/ars_nouveau/recipe/tomes/ivy_tome.
 488adf82fa89d69891e333e9bb94290f8ff6b6b1 data/ars_nouveau/recipe/tomes/kirin_tome.json
 9836505724bc647ab6d1f92f212ad618456c878c data/ars_nouveau/recipe/tomes/lyrellion_tome.json
 d7ff05ccece42ac8ee440c7ef0d707e7c3f7e78b data/ars_nouveau/recipe/tomes/othy_tome.json
-97e4c0165cd35d15736134d56c20453ef919f312 data/ars_nouveau/recipe/tomes/poseidon_tome.json
+b7b6cc3145b830c0e936f67d3aec459142c85a2c data/ars_nouveau/recipe/tomes/poseidon_tome.json
 2a0f47cc40a8be0d2cd08db1a457463b10ed3cf9 data/ars_nouveau/recipe/tomes/renew_rune_tome.json
 f50e62b11676774b3822a8cbd7acf1b0efe8df85 data/ars_nouveau/recipe/tomes/shadow_tome.json
 a2701c983e0c938a26238d7707a1342cfb74d209 data/ars_nouveau/recipe/tomes/silvanus_tome.json

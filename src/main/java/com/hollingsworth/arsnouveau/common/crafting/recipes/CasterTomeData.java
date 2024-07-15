@@ -48,9 +48,8 @@ public record CasterTomeData(String name, List<ResourceLocation> spell, Resource
     public static ItemStack makeTome(Item tome, String name, Spell spell, String flavorText) {
         ItemStack stack = tome.getDefaultInstance();
         AbstractCaster<?> spellCaster = SpellCasterRegistry.from(stack);
-        spellCaster.setSpell(spell);
         stack.set(DataComponents.CUSTOM_NAME, Component.literal(name).setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true)));
-        spellCaster.setFlavorText(flavorText);
+        spellCaster.setSpell(spell).setFlavorText(flavorText).saveToStack(stack);
         return stack;
     }
 

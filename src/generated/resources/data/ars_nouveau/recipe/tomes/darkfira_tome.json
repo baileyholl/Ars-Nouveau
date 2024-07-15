@@ -11,12 +11,7 @@
   "sound": {
     "pitch": 1.9,
     "sound": {
-      "soundEvent": {
-        "sound_id": "ars_nouveau:tempestry_family"
-      },
-      "soundName": {
-        "translate": "ars_nouveau.sound.tempestry_family"
-      }
+      "id": "ars_nouveau:tempestry_family"
     },
     "volume": 1.69
   },

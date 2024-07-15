@@ -76,7 +76,7 @@ public class SoundScreen extends BaseBook {
         int adjustedRowsPlaced = 0;
         int yStart = bookTop + 22;
         int adjustedXPlaced = 0;
-        List<SpellSound> sounds = SpellSoundRegistry.getSpellSoundsRegistry().values().stream().toList();
+        List<SpellSound> sounds = SpellSoundRegistry.getSpellSounds();
         for (int i = 0; i < sounds.size(); i++) {
             SpellSound part = sounds.get(i);
 

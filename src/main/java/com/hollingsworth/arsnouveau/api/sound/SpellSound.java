@@ -6,7 +6,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -16,27 +15,29 @@ import java.util.Objects;
 public class SpellSound {
 
     public static MapCodec<SpellSound> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            SoundEvent.CODEC.fieldOf("soundEvent").forGetter(s -> s.soundEvent),
-            ComponentSerialization.CODEC.fieldOf("soundName").forGetter(s -> s.soundName)
-    ).apply(instance, SpellSound::new));
+            ResourceLocation.CODEC.fieldOf("id").forGetter(SpellSound::getId)
+    ).apply(instance, SpellSoundRegistry::get));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, SpellSound> STREAM = StreamCodec.of(
-            (buf, val) -> buf.writeResourceLocation(val.getId()),
-            buf -> SpellSoundRegistry.getSpellSoundsRegistry().get(buf.readResourceLocation())
+    public static StreamCodec<RegistryFriendlyByteBuf, SpellSound> STREAM = StreamCodec.composite(
+            ResourceLocation.STREAM_CODEC,
+            SpellSound::getId,
+            SpellSoundRegistry::get
     );
 
 
     private Holder<SoundEvent> soundEvent;
 
     private Component soundName;
+    private ResourceLocation id;
 
-    public SpellSound(Holder<SoundEvent> soundEvent, Component soundName) {
+    public SpellSound(Holder<SoundEvent> soundEvent, Component soundName, ResourceLocation id) {
         this.soundEvent = soundEvent;
         this.soundName = soundName;
+        this.id = id;
     }
 
     public ResourceLocation getId() {
-        return soundEvent.unwrapKey().get().location();
+        return id;
     }
 
 
