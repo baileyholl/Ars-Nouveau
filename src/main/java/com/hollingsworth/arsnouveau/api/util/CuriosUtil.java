@@ -3,16 +3,16 @@ package com.hollingsworth.arsnouveau.api.util;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
+import top.theillusivec4.curios.api.CuriosApi;
 
 import javax.annotation.Nullable;
 
 public class CuriosUtil {
-    // TODO: restore curios support
+
     public static @Nullable IItemHandlerModifiable getAllWornItems(@NotNull LivingEntity living) {
-        return null;// CuriosApi.getCuriosHelper().getEquippedCurios(living);
+        return CuriosApi.getCuriosHelper().getEquippedCurios(living).orElse(null);
     }
 
     public static boolean hasItem(@Nullable LivingEntity entity, ItemStack stack) {
