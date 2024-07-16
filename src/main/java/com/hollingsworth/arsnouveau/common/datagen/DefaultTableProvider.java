@@ -37,10 +37,12 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.functions.*;
+import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
+import net.minecraft.world.level.storage.loot.functions.CopyNameFunction;
+import net.minecraft.world.level.storage.loot.functions.EnchantedCountIncreaseFunction;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
-import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
@@ -198,9 +200,7 @@ public class DefaultTableProvider extends LootTableProvider {
                     .setRolls(ConstantValue.exactly(1))
                     .add(LootItem.lootTableItem(BlockRegistry.MOB_JAR)
                             .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
-                            .apply(CopyCustomDataFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
-                                    .copy("entityTag", "BlockEntityTag.entityTag", CopyCustomDataFunction.MergeStrategy.REPLACE)
-                                    .copy("entityId", "entityId", CopyCustomDataFunction.MergeStrategy.REPLACE))
+                            .apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY).include(DataComponentRegistry.MOB_JAR.get()))
                     );
             add(BlockRegistry.MOB_JAR.get(), LootTable.lootTable().withPool(mobJarBuilder));
             //CustomName

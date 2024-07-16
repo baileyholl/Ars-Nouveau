@@ -45,11 +45,13 @@ public class DataComponentRegistry {
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockFillContents>> BLOCK_FILL_CONTENTS = DATA.register("block_fill_contents", () -> DataComponentType.<BlockFillContents>builder().persistent(BlockFillContents.CODEC).networkSynchronized(BlockFillContents.STREAM_CODEC).build());
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<MobJarData>> MOB_JAR = DATA.register("mob_jar", () -> DataComponentType.<MobJarData>builder().persistent(MobJarData.CODEC).networkSynchronized(MobJarData.STREAM).build());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<MobJarData>> MOB_JAR = DATA.register("mob_jar", () -> DataComponentType.<MobJarData>builder().persistent(MobJarData.CODEC).networkSynchronized(MobJarData.STREAM_CODEC).build());
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<TomeCasterData>> TOME_CASTER = DATA.register("tome_caster", () -> DataComponentType.<TomeCasterData>builder().persistent(TomeCasterData.CODEC.codec()).networkSynchronized(TomeCasterData.STREAM_CODEC).build());
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ReactiveCasterData>> REACTIVE_CASTER = DATA.register("reactive_caster", () -> DataComponentType.<ReactiveCasterData>builder().persistent(ReactiveCasterData.CODEC.codec()).networkSynchronized(ReactiveCasterData.STREAM_CODEC).build());
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<PotionJarData>> POTION_JAR = DATA.register("potion_jar", () -> DataComponentType.<PotionJarData>builder().persistent(PotionJarData.CODEC).networkSynchronized(PotionJarData.STREAM).build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ContainmentJarData>> CONTAINMENT_JAR = DATA.register("containment_jar", () -> DataComponentType.<ContainmentJarData>builder().persistent(ContainmentJarData.CODEC).networkSynchronized(ContainmentJarData.STREAM_CODEC).build());
 }

@@ -1,0 +1,4 @@
+{
+  "entities": ["minecraft:player"],
+  "slots": ["head", "ring", "necklace", "an_focus"]
+}

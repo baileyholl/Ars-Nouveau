@@ -12,18 +12,9 @@
               "source": "block_entity"
             },
             {
-              "function": "minecraft:copy_custom_data",
-              "ops": [
-                {
-                  "op": "replace",
-                  "source": "entityTag",
-                  "target": "BlockEntityTag.entityTag"
-                },
-                {
-                  "op": "replace",
-                  "source": "entityId",
-                  "target": "entityId"
-                }
+              "function": "minecraft:copy_components",
+              "include": [
+                "ars_nouveau:mob_jar"
               ],
               "source": "block_entity"
             }

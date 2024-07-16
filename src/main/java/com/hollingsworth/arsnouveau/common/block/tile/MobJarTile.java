@@ -6,10 +6,13 @@ import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
 import com.hollingsworth.arsnouveau.api.registry.JarBehaviorRegistry;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.MobJar;
+import com.hollingsworth.arsnouveau.common.items.data.MobJarData;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
@@ -228,5 +231,20 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
                 behavior.getTooltip(this, tooltip);
             });
         }
+    }
+
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput pComponentInput) {
+        super.applyImplicitComponents(pComponentInput);
+        var jar = pComponentInput.getOrDefault(DataComponentRegistry.MOB_JAR, new MobJarData(new CompoundTag(), new CompoundTag()));
+        this.entityTag = jar.entityTag();
+        this.extraDataTag = jar.extraDataTag();
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder pComponents) {
+        super.collectImplicitComponents(pComponents);
+        pComponents.set(DataComponentRegistry.MOB_JAR, new MobJarData(this.entityTag, this.extraDataTag));
     }
 }

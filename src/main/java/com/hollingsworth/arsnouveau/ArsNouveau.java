@@ -36,7 +36,6 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
@@ -79,7 +78,6 @@ public class ArsNouveau {
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::postModLoadEvent);
         modEventBus.addListener(this::clientSetup);
-        modEventBus.addListener(this::sendImc);
         modEventBus.addListener((RegisterTicketControllersEvent e) ->{
             ticketController = new TicketController(ArsNouveau.prefix("ticket_controller"));
             e.register(ticketController);
@@ -156,10 +154,6 @@ public class ArsNouveau {
         } catch (Exception e) {
             optifineLoaded = false;
         }
-    }
-
-    public void sendImc(InterModEnqueueEvent evt) {
-        ModSetup.sendIntercoms();
     }
 
     public static ResourceLocation prefix(String str) {

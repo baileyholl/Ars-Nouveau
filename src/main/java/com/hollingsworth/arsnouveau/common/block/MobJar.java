@@ -72,7 +72,7 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
         }
         if (tile.getEntity() == null && !pLevel.isClientSide) {
             if (stack.getItem() instanceof SpawnEggItem spawnEggItem) {
-                EntityType<?> type = spawnEggItem.getType(null);
+                EntityType<?> type = spawnEggItem.getType(stack);
                 Entity entity = type.create(pLevel);
                 if (entity != null) {
                     tile.setEntityData(entity);

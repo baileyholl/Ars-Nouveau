@@ -1,4 +1,4 @@
-// 1.21	2024-07-15T08:49:19.3032836	Loot Tables
+// 1.21	2024-07-15T09:45:11.2617252	Loot Tables
 4f70eae621815da8d08d3ea0b9fd479b48bad2d3 data/ars_nouveau/loot_table/blocks/agronomic_sourcelink.json
 8a6d60f2b39de0408c7e4537b53e866a04236d22 data/ars_nouveau/loot_table/blocks/alchemical_sourcelink.json
 8bdff8a0a49a9f3f21a822eb1d1d01a950d6ad1a data/ars_nouveau/loot_table/blocks/alteration_table.json
@@ -56,7 +56,7 @@ df5ba05995044413998b7cbbf02d6c7a63e7c583 data/ars_nouveau/loot_table/blocks/item
 072841a4552421b48e60a01206d4b1f42dd90da5 data/ars_nouveau/loot_table/blocks/magelight_torch.json
 9d551107c336c6341450da44650d007e795ae962 data/ars_nouveau/loot_table/blocks/mendosteen_pod.json
 019635e76547e287688dc710b66e2f96d86ba011 data/ars_nouveau/loot_table/blocks/mirrorweave.json
-092c90aaab488eb24e3de25645c3653c44cb5686 data/ars_nouveau/loot_table/blocks/mob_jar.json
+2f78f083e1ee6ccd18496465ce740c8353faf834 data/ars_nouveau/loot_table/blocks/mob_jar.json
 06f0d996eea4783dd302764820d1d0e87178cc04 data/ars_nouveau/loot_table/blocks/mycelial_sourcelink.json
 6bf8bd330d83e260cd4fcf8311560fd37399f016 data/ars_nouveau/loot_table/blocks/orange_sbed.json
 b6f8c60f021cc50669d4a4f75056334922fdd5b1 data/ars_nouveau/loot_table/blocks/polished_sconce.json

@@ -9,20 +9,19 @@ import net.minecraft.network.codec.StreamCodec;
 
 import java.util.Objects;
 
-public record MobJarData(CompoundTag entityTag, CompoundTag extraDataTag){
-    public static Codec<MobJarData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            CompoundTag.CODEC.fieldOf("entity_tag").forGetter(MobJarData::entityTag),
-            CompoundTag.CODEC.fieldOf("extra_data_tag").forGetter(MobJarData::extraDataTag)
-    ).apply(instance, MobJarData::new));
+public record ContainmentJarData(CompoundTag entityTag, CompoundTag extraDataTag){
+    public static Codec<ContainmentJarData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            CompoundTag.CODEC.fieldOf("entityTag").forGetter(ContainmentJarData::entityTag),
+            CompoundTag.CODEC.fieldOf("extraDataTag").forGetter(ContainmentJarData::extraDataTag)
+    ).apply(instance, ContainmentJarData::new));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, MobJarData> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.COMPOUND_TAG, MobJarData::entityTag, ByteBufCodecs.COMPOUND_TAG, MobJarData::extraDataTag, MobJarData::new);
-
+    public static StreamCodec<RegistryFriendlyByteBuf, ContainmentJarData> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.COMPOUND_TAG, ContainmentJarData::entityTag, ByteBufCodecs.COMPOUND_TAG, ContainmentJarData::extraDataTag, ContainmentJarData::new);
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MobJarData that = (MobJarData) o;
+        ContainmentJarData that = (ContainmentJarData) o;
         return Objects.equals(entityTag, that.entityTag) && Objects.equals(extraDataTag, that.extraDataTag);
     }
 
