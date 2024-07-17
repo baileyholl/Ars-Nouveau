@@ -3,6 +3,20 @@
   "description": {
     "translate": "enchantment.ars_nouveau.mana_boost"
   },
+  "effects": {
+    "minecraft:attributes": [
+      {
+        "amount": {
+          "type": "minecraft:linear",
+          "base": 25.0,
+          "per_level_above_first": 25.0
+        },
+        "attribute": "ars_nouveau:ars_nouveau.perk.max_mana",
+        "id": "ars_nouveau:enchantment.max_mana",
+        "operation": "add_value"
+      }
+    ]
+  },
   "max_cost": {
     "base": 12,
     "per_level_above_first": 11

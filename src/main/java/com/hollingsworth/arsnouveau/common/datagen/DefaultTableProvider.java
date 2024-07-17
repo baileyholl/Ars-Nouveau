@@ -54,10 +54,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class DefaultTableProvider extends LootTableProvider {
-    //todo: reenable loot tables
-    public DefaultTableProvider(PackOutput pOutput, Set<ResourceKey<LootTable>> pRequiredTables, List<SubProviderEntry> pSubProviders, CompletableFuture<HolderLookup.Provider> pRegistries) {
-        super(pOutput, pRequiredTables, pSubProviders, pRegistries);
-    }
+
     public DefaultTableProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pRegistries) {
         super(pOutput, new HashSet<>(), List.of(new LootTableProvider.SubProviderEntry(BlockLootTable::new, LootContextParamSets.BLOCK), new LootTableProvider.SubProviderEntry(EntityLootTable::new, LootContextParamSets.ENTITY)), pRegistries);
     }

@@ -9,14 +9,10 @@ import com.hollingsworth.arsnouveau.common.block.tile.SpellSensorTile;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectInvisibility;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 
 @EventBusSubscriber(modid = ArsNouveau.MODID)
 public class ArsEvents {
@@ -39,17 +35,6 @@ public class ArsEvents {
     @SubscribeEvent
     public static void castEvent(SpellCastEvent castEvent) {
         SpellSensorTile.onSpellCast(castEvent);
-    }
-
-
-    @SubscribeEvent
-    public static void regenCalc(ManaRegenCalcEvent e) {
-
-        /* Replaced by negative multiplier on AttributeModifier
-        if (e.getEntity() != null && e.getEntity().hasEffect(ModPotions.HEX_EFFECT.get())) {
-            e.setRegen(e.getRegen() / 2.0);
-        }
-         */
     }
 
     @SubscribeEvent
@@ -75,45 +60,4 @@ public class ArsEvents {
             ghostWeaveTile.setVisibility(false);
         }
     }
-
-    @SubscribeEvent
-    public static void modifyItemAttributes(ItemAttributeModifierEvent event) {
-        ItemStack itemStack = event.getItemStack();
-        if (itemStack.isEnchanted()) {
-//            if (itemStack.getItem() instanceof ArmorItem armor) {
-//                if (!(event.getSlotType() == armor.getEquipmentSlot())) {
-//                    return;
-//                }
-//            } else if (event.getSlotType() != EquipmentSlot.MAINHAND && event.getSlotType() != EquipmentSlot.OFFHAND) {
-//                return;
-//            } else if (itemStack.getItem() instanceof ShieldItem && !(event.getSlotType() == EquipmentSlot.OFFHAND))
-//                return;
-            //TODO: reimplement manaboost/regen attributes
-
-//            if (itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT) > 0) {
-//                ResourceLocation uuid = getEnchantBoostBySlot(event.getSlotType());
-//                event.addModifier(PerkAttributes.MAX_MANA, new AttributeModifier(uuid, ServerConfig.MANA_BOOST_BONUS.get() * itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT), AttributeModifier.Operation.ADD_VALUE));
-//            }
-//            if (itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT) > 0) {
-//                ResourceLocation uuid = getEnchantBoostBySlot(event.getSlotType());
-//                event.addModifier(PerkAttributes.MANA_REGEN_BONUS, new AttributeModifier(uuid, ServerConfig.MANA_REGEN_ENCHANT_BONUS.get() * itemStack.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT), AttributeModifier.Operation.ADD_VALUE));
-//            }
-        }
-
-    }
-
-    public static ResourceLocation getEnchantBoostBySlot(EquipmentSlot type) {
-        return switch (type) {
-            case CHEST -> ArsEvents.CHEST;
-            case LEGS -> ArsEvents.LEGS;
-            case FEET -> ArsEvents.FEET;
-            case HEAD -> ArsEvents.HEAD;
-            default -> ArsEvents.CHEST;
-        };
-    }
-
-    static final ResourceLocation CHEST = ArsNouveau.prefix("chest_enchant");
-    static final ResourceLocation LEGS = ArsNouveau.prefix("legs_enchant");
-    static final ResourceLocation FEET = ArsNouveau.prefix("feet_enchant");
-    static final ResourceLocation HEAD = ArsNouveau.prefix("head_enchant");
 }

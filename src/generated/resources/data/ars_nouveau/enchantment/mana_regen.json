@@ -3,6 +3,20 @@
   "description": {
     "translate": "enchantment.ars_nouveau.mana_regen"
   },
+  "effects": {
+    "minecraft:attributes": [
+      {
+        "amount": {
+          "type": "minecraft:linear",
+          "base": 2.0,
+          "per_level_above_first": 2.0
+        },
+        "attribute": "ars_nouveau:ars_nouveau.perk.mana_regen",
+        "id": "ars_nouveau:enchantment.mana_regen",
+        "operation": "add_value"
+      }
+    ]
+  },
   "max_cost": {
     "base": 12,
     "per_level_above_first": 11

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
@@ -12,8 +13,12 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
+import net.minecraft.world.item.enchantment.LevelBasedValue;
+import net.minecraft.world.item.enchantment.effects.EnchantmentAttributeEffect;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +42,13 @@ public class EnchantmentProvider extends DatapackBuiltinEntriesProvider {
                 Enchantment.dynamicCost(12, 11),
                 1,
                 EquipmentSlotGroup.ARMOR
-        )));
+        )).withEffect(EnchantmentEffectComponents.ATTRIBUTES,
+                new EnchantmentAttributeEffect(
+                        ArsNouveau.prefix("enchantment.max_mana"),
+                        PerkAttributes.MAX_MANA,
+                        LevelBasedValue.perLevel(25F),
+                        AttributeModifier.Operation.ADD_VALUE
+                )));
 
         register(ctx, EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, Enchantment.enchantment(Enchantment.definition(
                 holdergetter2.getOrThrow(ItemTags.ARMOR_ENCHANTABLE),
@@ -47,7 +58,13 @@ public class EnchantmentProvider extends DatapackBuiltinEntriesProvider {
                 Enchantment.dynamicCost(12, 11),
                 1,
                 EquipmentSlotGroup.ARMOR
-        )));
+        )).withEffect(EnchantmentEffectComponents.ATTRIBUTES,
+                new EnchantmentAttributeEffect(
+                        ArsNouveau.prefix("enchantment.mana_regen"),
+                        PerkAttributes.MANA_REGEN_BONUS,
+                        LevelBasedValue.perLevel(2.0F),
+                        AttributeModifier.Operation.ADD_VALUE
+                )));
 
         register(ctx, EnchantmentRegistry.REACTIVE_ENCHANTMENT, Enchantment.enchantment(Enchantment.definition(
                 holdergetter2.getOrThrow(ItemTags.ARMOR_ENCHANTABLE),

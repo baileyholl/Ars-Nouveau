@@ -10,6 +10,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.function.Function;
@@ -23,9 +24,6 @@ public class PerkAttributes {
     public static final DeferredHolder<Attribute, Attribute> MANA_REGEN_BONUS = registerAttribute("ars_nouveau.perk.mana_regen", (id) -> new RangedAttribute(id, 0.0D, 0.0D, 2000.0D).setSyncable(true), "0c877091-ee4f-4eda-9868-4194d9a18833");
 
     public static final DeferredHolder<Attribute, Attribute> MAX_MANA = registerAttribute("ars_nouveau.perk.max_mana", (id) -> new RangedAttribute(id, 0.0D, 0.0D, 10000.0D).setSyncable(true), "22980b24-83e5-4683-a215-8997c4011389");
-
-    @Deprecated
-    public static final DeferredHolder<Attribute, Attribute> MAX_MANA_BONUS = MAX_MANA, FLAT_MANA_BONUS = MAX_MANA;
 
     public static final DeferredHolder<Attribute, Attribute> SPELL_DAMAGE_BONUS = registerAttribute("ars_nouveau.perk.spell_damage", (id) -> new RangedAttribute(id, 0.0D, 0.0D, 10000.0D).setSyncable(true), "50b50137-9c92-4e64-b350-6044e9e609de");
     public static final DeferredHolder<Attribute, Attribute> WHIRLIESPRIG = registerAttribute("ars_nouveau.perk.saturation", (id) -> new RangedAttribute(id, 1.0, 0.0D, 10000.0D).setSyncable(true), "152810f7-0d01-484e-a512-73fe70af3db7");

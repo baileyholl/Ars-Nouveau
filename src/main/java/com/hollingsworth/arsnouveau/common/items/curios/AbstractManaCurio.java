@@ -1,14 +1,15 @@
 package com.hollingsworth.arsnouveau.common.items.curios;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.google.common.collect.Multimap;
 import com.hollingsworth.arsnouveau.api.item.ArsNouveauCurio;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.ItemAttributeModifiers;
+import top.theillusivec4.curios.api.SlotContext;
 
 public abstract class AbstractManaCurio extends ArsNouveauCurio implements IManaEquipment {
     public AbstractManaCurio() {
@@ -23,18 +24,11 @@ public abstract class AbstractManaCurio extends ArsNouveauCurio implements IMana
         return 0;
     }
 
-    public static final ResourceLocation CURIOS_MANA = ArsNouveau.prefix("max_mana_modifier_curio");
-    public static final ResourceLocation CURIOS_MANA_REGEN = ArsNouveau.prefix("mana_regen_modifier_curio");
-
     @Override
-    public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
-        ItemAttributeModifiers attributes = super.getDefaultAttributeModifiers(stack);
-        // TODO: fix with curios slot group
-        for(EquipmentSlotGroup group : EquipmentSlotGroup.values()) {
-            attributes.withModifierAdded(PerkAttributes.MAX_MANA, new AttributeModifier(CURIOS_MANA, this.getMaxManaBoost(stack), AttributeModifier.Operation.ADD_VALUE), group);
-
-            attributes.withModifierAdded(PerkAttributes.MANA_REGEN_BONUS, new AttributeModifier(CURIOS_MANA_REGEN, this.getManaRegenBonus(stack), AttributeModifier.Operation.ADD_VALUE), group);
-        }
+    public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
+        Multimap<Holder<Attribute>, AttributeModifier> attributes = super.getAttributeModifiers(slotContext, id, stack);
+        attributes.put(PerkAttributes.MAX_MANA, new AttributeModifier(id, this.getMaxManaBoost(stack), AttributeModifier.Operation.ADD_VALUE) );
+        attributes.put(PerkAttributes.MANA_REGEN_BONUS, new AttributeModifier(id, this.getManaRegenBonus(stack), AttributeModifier.Operation.ADD_VALUE) );
         return attributes;
     }
 }
