@@ -151,7 +151,7 @@ public class BlockUtil {
         if (world == null || pos == null) return new ArrayList<>();
         ArrayList<IItemHandler> iInventories = new ArrayList<>();
         for (Direction d : Direction.values()) {
-            var cap = world.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
+            var cap = world.getCapability(Capabilities.ItemHandler.BLOCK, pos.relative(d), null);
             if(cap != null){
                 iInventories.add(cap);
             }

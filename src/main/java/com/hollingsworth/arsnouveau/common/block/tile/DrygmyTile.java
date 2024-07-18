@@ -15,7 +15,6 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -151,13 +150,18 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
         DamageSource damageSource = level.damageSources().playerAttack(fakePlayer);
         int numberItems = Config.DRYGMY_BASE_ITEM.get() + this.bonus;
         int exp = 0;
+        if(!(this.level instanceof ServerLevel serverLevel)){
+            return;
+        }
         // Create the loot table and exp count
         for (LivingEntity entity : getNearbyEntities()) {
             if (entity.getType().is(EntityTags.DRYGMY_BLACKLIST)) {
                 continue;
             }
 
-            LootTable loottable = this.level.registryAccess().registry(Registries.LOOT_TABLE).get().get(entity.getLootTable());
+            var key = entity.getLootTable();
+            LootTable loottable = serverLevel.getServer().reloadableRegistries().getLootTable(key);
+
             LootParams.Builder lootcontext$builder = (new LootParams.Builder((ServerLevel) this.level))
                     .withParameter(LootContextParams.THIS_ENTITY, entity).withParameter(LootContextParams.ORIGIN, entity.position())
                     .withParameter(LootContextParams.DAMAGE_SOURCE, damageSource)
