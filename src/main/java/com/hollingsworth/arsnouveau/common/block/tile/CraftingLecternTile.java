@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.Container;
@@ -140,12 +139,11 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 		if(currentRecipe == null) {
 			return;
 		}
-		NonNullList<ItemStack> remainder = currentRecipe.getRemainingItems(craftMatrix.asCraftInput());
 		boolean playerInvUpdate = false;
-		for (int i = 0; i < remainder.size(); ++i) {
+		for (int i = 0; i < 9; ++i) {
 			ItemStack currentStack = craftMatrix.getItem(i);
 			ItemStack oldItem = currentStack.copy();
-			ItemStack rem = remainder.get(i);
+			ItemStack rem = currentStack.getCraftingRemainingItem();
 			if (!currentStack.isEmpty()) {
 				craftMatrix.removeItemNoUpdate(i, 1);
 				currentStack = craftMatrix.getItem(i);
@@ -205,9 +203,8 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 	protected void onCraftingMatrixChanged() {
 		if (currentRecipe == null || !currentRecipe.matches(craftMatrix.asCraftInput(), level)) {
 			var holder = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftMatrix.asCraftInput(), level).orElse(null);
-			if(holder != null){
-				currentRecipe = holder.value();
-			}
+			currentRecipe = holder == null ? null : holder.value();
+
 		}
 
 		if (currentRecipe == null) {

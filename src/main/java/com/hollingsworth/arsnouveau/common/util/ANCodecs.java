@@ -12,6 +12,7 @@ import net.minecraft.world.phys.Vec2;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 public class ANCodecs {
@@ -27,6 +28,10 @@ public class ANCodecs {
 
     public static <T> T decode(Codec<T> codec, Tag tag){
         return codec.parse(NbtOps.INSTANCE, tag).getOrThrow();
+    }
+
+    public static <T> Optional<T> decodeOptional(Codec<T> codec, Tag tag){
+        return codec.parse(NbtOps.INSTANCE, tag).result();
     }
 
     public static <T> JsonElement toJson(Codec<T> codec, T value){

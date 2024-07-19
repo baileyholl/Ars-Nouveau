@@ -528,6 +528,11 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		refreshItemList = true;
 	}
 
+	public void updateItems(List<StoredItemStack> items){
+		menu.updateItems(items);
+		refreshItemList = true;
+	}
+
 	private FakeSlot fakeSlotUnderMouse = new FakeSlot();
 
 	@Override

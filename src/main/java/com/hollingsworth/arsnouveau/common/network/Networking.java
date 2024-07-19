@@ -73,6 +73,7 @@ public class Networking {
         reg.playToClient(PacketWarpPosition.TYPE, PacketWarpPosition.CODEC, Networking::handle);
         reg.playToClient(PotionSyncPacket.TYPE, PotionSyncPacket.CODEC, Networking::handle);
         reg.playToClient(ServerToClientStoragePacket.TYPE, ServerToClientStoragePacket.CODEC, Networking::handle);
+        reg.playToClient(UpdateStorageItemsPacket.TYPE, UpdateStorageItemsPacket.CODEC, Networking::handle);
     }
 
     private static <T extends AbstractPacket> void handle(T message, IPayloadContext ctx) {

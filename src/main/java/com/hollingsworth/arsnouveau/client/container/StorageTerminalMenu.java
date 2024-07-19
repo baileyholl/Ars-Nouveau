@@ -214,16 +214,18 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 		Networking.sendToServer(new ClientToServerStoragePacket(compound));
 	}
 
-	public final void receiveClientNBTPacket(CompoundTag message) {
-		if(sync.receiveUpdate(message)) {
-			itemList = sync.getAsList();
-			if(noSort) {
-				itemListClient.forEach(s -> s.setCount(sync.getAmount(s)));
-			} else {
-				itemListClient = new ArrayList<>(itemList);
-			}
-			pinv.setChanged();
+	public void updateItems(List<StoredItemStack> stacks){
+		sync.updateItemList(stacks);
+		itemList = sync.getAsList();
+		if(noSort) {
+			itemListClient.forEach(s -> s.setCount(sync.getAmount(s)));
+		} else {
+			itemListClient = new ArrayList<>(itemList);
 		}
+		pinv.setChanged();
+	}
+
+	public final void receiveClientNBTPacket(CompoundTag message) {
 		if(message.contains("search"))
 			search = message.getString("search");
 		if(message.contains("sortSettings")) {

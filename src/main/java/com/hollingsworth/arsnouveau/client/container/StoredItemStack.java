@@ -1,14 +1,26 @@
 package com.hollingsworth.arsnouveau.client.container;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Comparator;
 import java.util.function.Function;
 
 public class StoredItemStack {
+
+	public static final Codec<StoredItemStack> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			ItemStack.CODEC.fieldOf("stack").forGetter(StoredItemStack::getStack),
+			Codec.LONG.fieldOf("count").forGetter(StoredItemStack::getQuantity)
+	).apply(instance, StoredItemStack::new));
+
+	public static final StreamCodec<RegistryFriendlyByteBuf, StoredItemStack> STREAM = StreamCodec.composite(ItemStack.STREAM_CODEC, StoredItemStack::getStack, ByteBufCodecs.VAR_LONG, StoredItemStack:: getQuantity, StoredItemStack::new);
+
 	private ItemStack stack;
 	private long count;
-	private static final String ITEM_COUNT_NAME = "c", ITEMSTACK_NAME = "s";
 	private int hash;
 
 	public StoredItemStack(ItemStack stack, long count) {
@@ -34,6 +46,26 @@ public class StoredItemStack {
 		ItemStack s = stack.copy();
 		s.setCount((int) count);
 		return s;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		StoredItemStack other = (StoredItemStack) obj;
+		if (stack == null) {
+			return other.stack == null;
+		} else return ItemStack.isSameItem(stack, other.stack) && ItemStack.matches(stack, other.stack);
+	}
+
+	@Override
+	public int hashCode() {
+		if(hash == 0) {
+			hash = ItemStack.hashItemAndComponents(stack);
+		}
+		return hash;
 	}
 //
 //	public CompoundTag writeToNBT(CompoundTag tag) {
@@ -136,36 +168,8 @@ public class StoredItemStack {
 		}
 	}
 
-	@Override
-	public int hashCode() {
-		if(hash == 0) {
-			hash = ItemStack.hashItemAndComponents(stack);
-		}
-		return hash;
-	}
-
 	public String getDisplayName() {
 		return stack.getHoverName().getString();
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		StoredItemStack other = (StoredItemStack) obj;
-		if (stack == null) {
-			return other.stack == null;
-		} else return ItemStack.isSameItem(stack, other.stack) && ItemStack.matches(stack, other.stack);
-	}
-
-	public boolean equals(StoredItemStack other) {
-		if (this == other) return true;
-		if (other == null) return false;
-		if (count != other.count) return false;
-		if (stack == null) {
-			return other.stack == null;
-		} else return ItemStack.isSameItem(stack, other.stack) && ItemStack.matches(stack, other.stack);
 	}
 
 	public void grow(long c) {
