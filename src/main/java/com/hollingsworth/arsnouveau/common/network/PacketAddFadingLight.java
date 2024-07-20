@@ -52,7 +52,13 @@ public class PacketAddFadingLight extends AbstractPacket{
 
     @Override
     public void onClientReceived(Minecraft minecraft, Player player) {
-        if (LightManager.shouldUpdateDynamicLight())
-            EventQueue.getClientQueue().addEvent(new FadeLightTimedEvent(Minecraft.getInstance().level, new Vec3(x,y, z), Config.TOUCH_LIGHT_DURATION.get(), Config.TOUCH_LIGHT_LUMINANCE.get()));
+        Handle.handle(this, minecraft, player);
+    }
+
+    private static class Handle{
+        public static void handle(PacketAddFadingLight packet, Minecraft minecraft, Player player){
+            if (LightManager.shouldUpdateDynamicLight())
+                EventQueue.getClientQueue().addEvent(new FadeLightTimedEvent(minecraft.level, new Vec3(packet.x, packet.y, packet.z), Config.TOUCH_LIGHT_DURATION.get(), Config.TOUCH_LIGHT_LUMINANCE.get()));
+        }
     }
 }
