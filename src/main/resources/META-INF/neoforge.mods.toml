@@ -23,7 +23,7 @@ license="GNU GENERAL PUBLIC LICENSE"
     # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
     # The version range of the dependency
-    versionRange="[21,)" #mandatory
+    versionRange="[21.0.86-beta,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
@@ -50,3 +50,10 @@ license="GNU GENERAL PUBLIC LICENSE"
     side="BOTH"
 [[mixins]]
     config="ars_nouveau.mixins.json"
+
+[[dependencies.ars_nouveau]]
+    modId="jei"
+    mandatory=true
+    versionRange="[1.19-5.0.7.1,)"
+    ordering="AFTER"
+    side="BOTH"
