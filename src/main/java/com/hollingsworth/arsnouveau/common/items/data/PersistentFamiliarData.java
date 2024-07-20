@@ -82,7 +82,7 @@ public class PersistentFamiliarData implements NBTComponent<PersistentFamiliarDa
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PersistentFamiliarData that = (PersistentFamiliarData) o;
-        return Objects.equals(name, that.name) && Objects.equals(color, that.color) && Objects.equals(cosmetic, that.cosmetic);
+        return Objects.equals(name, that.name) && Objects.equals(color, that.color) && ItemStack.isSameItemSameComponents(cosmetic, that.cosmetic);
     }
 
     @Override

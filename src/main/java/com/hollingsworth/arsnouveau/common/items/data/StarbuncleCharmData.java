@@ -136,12 +136,12 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         StarbuncleCharmData that = (StarbuncleCharmData) o;
-        return Objects.equals(name, that.name) && Objects.equals(color, that.color) && Objects.equals(cosmetic, that.cosmetic) && Objects.equals(pathBlock, that.pathBlock) && Objects.equals(bedPos, that.bedPos) && Objects.equals(behavior, that.behavior) && Objects.equals(adopter, that.adopter) && Objects.equals(bio, that.bio);
+        return Objects.equals(name, that.name) && Objects.equals(color, that.color) && Objects.equals(pathBlock, that.pathBlock) && Objects.equals(bedPos, that.bedPos) && Objects.equals(behavior, that.behavior) && Objects.equals(adopter, that.adopter) && Objects.equals(bio, that.bio) && ItemStack.isSameItemSameComponents(cosmetic.orElse(ItemStack.EMPTY), that.cosmetic.orElse(ItemStack.EMPTY)) && Objects.equals(behaviorTag, that.behaviorTag);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, color, cosmetic, pathBlock, bedPos, behavior, adopter, bio);
+        return Objects.hash(name, color, cosmetic, pathBlock, bedPos, behavior, adopter, bio, behaviorTag);
     }
 
     public String getColor() {
