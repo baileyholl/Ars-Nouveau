@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.function.Consumer;
 
-// https://github.com/Geforce132/SecurityCraft/blob/1.18.2/src/main/java/net/geforcemods/securitycraft/mixin/camera/ClientChunkCacheMixin.java
+// https://github.com/Geforce132/an/blob/1.18.2/src/main/java/net/geforcemods/an/mixin/camera/ClientChunkCacheMixin.java
 
 /**
  * These mixins aim at implementing the camera chunk storage from CameraController into all the places
@@ -47,25 +47,43 @@ public abstract class ClientChunkCacheMixin implements ANIChunkStorageProvider {
      * Initializes the camera storage
      */
     @Inject(method = "<init>", at = @At(value = "TAIL"))
-    public void onInit(ClientLevel level, int viewDistance, CallbackInfo ci) {
+    public void an$onInit(ClientLevel level, int viewDistance, CallbackInfo ci) {
         CameraController.setCameraStorage(ANnewStorage(Math.max(2, viewDistance) + 3));
     }
 
     /**
-     * Updates the camera storage with the new view radius
+     * Updates the camera storage's view radius by creating a new Storage instance with the same view center and chunks as the
+     * previous one
      */
-    @Inject(method = "updateViewRadius", at = @At(value = "HEAD"))
-    public void onUpdateViewRadius(int viewDistance, CallbackInfo ci) {
-        CameraController.setCameraStorage(ANnewStorage(Math.max(2, viewDistance) + 3));
+    @Inject(method = "updateViewRadius", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientChunkCache$Storage;<init>(Lnet/minecraft/client/multiplayer/ClientChunkCache;I)V"))
+    public void an$onUpdateViewRadius(int viewDistance, CallbackInfo ci) {
+        ClientChunkCache.Storage oldStorage = CameraController.getCameraStorage();
+        ClientChunkCache.Storage newStorage = ANnewStorage(Math.max(2, viewDistance) + 3);
+
+        newStorage.viewCenterX = oldStorage.viewCenterX;
+        newStorage.viewCenterZ = oldStorage.viewCenterZ;
+
+        for (int i = 0; i < oldStorage.chunks.length(); ++i) {
+            LevelChunk chunk = oldStorage.chunks.get(i);
+
+            if (chunk != null) {
+                ChunkPos pos = chunk.getPos();
+
+                if (newStorage.inRange(pos.x, pos.z))
+                    newStorage.replace(newStorage.getIndex(pos.x, pos.z), chunk);
+            }
+        }
+
+        CameraController.setCameraStorage(newStorage);
     }
 
     /**
      * Handles chunks that are dropped in range of the camera storage
      */
     @Inject(method = "drop", at = @At(value = "HEAD"))
-    public void onDrop(ChunkPos chunkPos, CallbackInfo ci) {
-        int x = chunkPos.x;
-        int z = chunkPos.z;
+    public void an$onDrop(ChunkPos pos, CallbackInfo ci) {
+        int x = pos.x;
+        int z = pos.z;
         ClientChunkCache.Storage cameraStorage = CameraController.getCameraStorage();
 
         if (cameraStorage.inRange(x, z)) {
@@ -75,19 +93,20 @@ public abstract class ClientChunkCacheMixin implements ANIChunkStorageProvider {
             if (chunk != null && chunk.getPos().x == x && chunk.getPos().z == z) {
                 NeoForge.EVENT_BUS.post(new ChunkEvent.Unload(chunk));
                 cameraStorage.replace(i, chunk, null);
+
             }
         }
     }
 
     /**
-     * Handles chunks that get sent to the client which are in range of the camera storage, i.e. place them into the storage
-     * for them to be acquired afterwards
+     * Handles chunks that get sent to the client which are in range of the camera storage, i.e. place them into the storage for
+     * them to be acquired afterwards
      */
     @Inject(method = "replaceWithPacketData", at = @At(value = "HEAD"), cancellable = true)
-    private void onReplace(int x, int z, FriendlyByteBuf buffer, CompoundTag chunkTag, Consumer<ClientboundLevelChunkPacketData.BlockEntityTagOutput> tagOutputConsumer, CallbackInfoReturnable<LevelChunk> callback) {
+    private void an$onReplace(int x, int z, FriendlyByteBuf buffer, CompoundTag chunkTag, Consumer<ClientboundLevelChunkPacketData.BlockEntityTagOutput> tagOutputConsumer, CallbackInfoReturnable<LevelChunk> callback) {
         ClientChunkCache.Storage cameraStorage = CameraController.getCameraStorage();
 
-        if (CameraUtil.isPlayerMountedOnCamera(Minecraft.getInstance().player) && !storage.inRange(x, z) && cameraStorage.inRange(x, z)) {
+        if (CameraUtil.isPlayerMountedOnCamera(Minecraft.getInstance().player) && cameraStorage.inRange(x, z)) {
             int index = cameraStorage.getIndex(x, z);
             LevelChunk chunk = cameraStorage.getChunk(index);
             ChunkPos chunkPos = new ChunkPos(x, z);
@@ -96,10 +115,13 @@ public abstract class ClientChunkCacheMixin implements ANIChunkStorageProvider {
                 chunk = new LevelChunk(level, chunkPos);
                 chunk.replaceWithPacketData(buffer, chunkTag, tagOutputConsumer);
                 cameraStorage.replace(index, chunk);
-            } else
+            }
+            else
                 chunk.replaceWithPacketData(buffer, chunkTag, tagOutputConsumer);
 
             level.onChunkLoaded(chunkPos);
+
+
             NeoForge.EVENT_BUS.post(new ChunkEvent.Load(chunk, false));
             callback.setReturnValue(chunk);
         }
@@ -108,9 +130,9 @@ public abstract class ClientChunkCacheMixin implements ANIChunkStorageProvider {
     /**
      * If chunks in range of a camera storage need to be acquired, ask the camera storage about these chunks
      */
-    @Inject(method = "getChunk(IILnet/minecraft/world/level/chunk/status/ChunkStatus;Z)Lnet/minecraft/world/level/chunk/ChunkAccess;", at = @At("TAIL"), cancellable = true)
-    private void onGetChunk(int x, int z, ChunkStatus requiredStatus, boolean load, CallbackInfoReturnable<LevelChunk> callback) {
-        if (CameraUtil.isPlayerMountedOnCamera(Minecraft.getInstance().player) && !storage.inRange(x, z) && CameraController.getCameraStorage().inRange(x, z)) {
+    @Inject(method = "getChunk(IILnet/minecraft/world/level/chunk/status/ChunkStatus;Z)Lnet/minecraft/world/level/chunk/LevelChunk;", at = @At("TAIL"), cancellable = true)
+    private void an$onGetChunk(int x, int z, ChunkStatus requiredStatus, boolean load, CallbackInfoReturnable<LevelChunk> callback) {
+        if (CameraUtil.isPlayerMountedOnCamera(Minecraft.getInstance().player) && CameraController.getCameraStorage().inRange(x, z)) {
             LevelChunk chunk = CameraController.getCameraStorage().getChunk(CameraController.getCameraStorage().getIndex(x, z));
 
             if (chunk != null && chunk.getPos().x == x && chunk.getPos().z == z)

@@ -55,7 +55,12 @@ public class ArsNouveau {
     public static boolean optifineLoaded = false;
     public static boolean sodiumLoaded = false;
     public static boolean patchouliLoaded = false;
-    public static TicketController ticketController;
+    public static TicketController ticketController = new TicketController(ArsNouveau.prefix("ticket_controller"),  (level, ticketHelper) -> {
+        ticketHelper.getEntityTickets().forEach(((uuid, chunk) -> {
+            if (level.getEntity(uuid) == null)
+                ticketHelper.removeAllTickets(uuid);
+        }));
+    });
     public ArsNouveau(IEventBus modEventBus, ModContainer modContainer){
         NeoForge.EVENT_BUS.addListener(FMLEventHandler::onServerStopped);
         caelusLoaded = ModList.get().isLoaded("caelus");
@@ -79,7 +84,6 @@ public class ArsNouveau {
         modEventBus.addListener(this::postModLoadEvent);
         modEventBus.addListener(this::clientSetup);
         modEventBus.addListener((RegisterTicketControllersEvent e) ->{
-            ticketController = new TicketController(ArsNouveau.prefix("ticket_controller"));
             e.register(ticketController);
         });
         ANCriteriaTriggers.init();

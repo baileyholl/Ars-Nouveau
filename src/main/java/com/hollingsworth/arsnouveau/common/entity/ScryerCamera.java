@@ -14,12 +14,17 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ChunkTrackingView;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Camera work is taken from SecurityCraft:
@@ -35,6 +40,9 @@ public class ScryerCamera extends Entity {
     public boolean zooming;
     private int viewDistance;
     private boolean loadedChunks;
+    boolean hasSentChunks;
+    private ChunkTrackingView cameraChunks = null;
+    private static final List<Player> DISMOUNTED_PLAYERS = new ArrayList<>();
 
     public ScryerCamera(EntityType<ScryerCamera> type, Level level) {
         super(type, level);
@@ -88,6 +96,10 @@ public class ScryerCamera extends Entity {
 
     }
 
+    public static boolean hasRecentlyDismounted(Player player) {
+        return DISMOUNTED_PLAYERS.remove(player);
+    }
+
     protected boolean repositionEntityAfterLoad() {
         return false;
     }
@@ -116,6 +128,23 @@ public class ScryerCamera extends Entity {
 
     }
 
+    public ChunkTrackingView getCameraChunks() {
+        return cameraChunks;
+    }
+
+    public void setChunkLoadingDistance(int chunkLoadingDistance) {
+        cameraChunks = ChunkTrackingView.of(chunkPosition(), chunkLoadingDistance);
+    }
+
+
+    public boolean hasSentChunks() {
+        return hasSentChunks;
+    }
+
+    public void setHasSentChunks(boolean hasSentChunks) {
+        this.hasSentChunks = hasSentChunks;
+    }
+
     public float getZoomAmount() {
         return this.zoomAmount;
     }
@@ -131,11 +160,17 @@ public class ScryerCamera extends Entity {
 
     public void stopViewing(ServerPlayer player) {
         if (!this.level.isClientSide) {
-            this.discardCamera();
+            this.discard();
             player.camera = player;
             Networking.sendToPlayerClient(new PacketSetCameraView(player), player);
+            DISMOUNTED_PLAYERS.add(player);
         }
+    }
 
+    @Override
+    public void remove(RemovalReason pReason) {
+        super.remove(pReason);
+        discardCamera();
     }
 
     public void discardCamera() {
@@ -145,17 +180,15 @@ public class ScryerCamera extends Entity {
                 camMount.stopViewing();
             }
 
-            SectionPos chunkPos = SectionPos.of(this.blockPosition());
-            int view = this.viewDistance <= 0 ? this.level.getServer().getPlayerList().getViewDistance() : this.viewDistance;
+            SectionPos chunkPos = SectionPos.of(blockPosition());
+            int chunkLoadingDistance = cameraChunks instanceof ChunkTrackingView.Positioned positionedChunks ? positionedChunks.viewDistance() : level().getServer().getPlayerList().getViewDistance();
 
-            for (int x = chunkPos.getX() - view; x <= chunkPos.getX() + view; x++) {
-                for (int z = chunkPos.getZ() - view; z <= chunkPos.getZ() + view; z++) {
-                    ArsNouveau.ticketController.forceChunk((ServerLevel) this.level, this, x, z, false, false);
+            for (int x = chunkPos.getX() - chunkLoadingDistance; x <= chunkPos.getX() + chunkLoadingDistance; x++) {
+                for (int z = chunkPos.getZ() - chunkLoadingDistance; z <= chunkPos.getZ() + chunkLoadingDistance; z++) {
+                    ArsNouveau.ticketController.forceChunk((ServerLevel) level(), this, x, z, false, false);
                 }
             }
         }
-
-        this.discard();
     }
 
     public void setHasLoadedChunks(int initialViewDistance) {

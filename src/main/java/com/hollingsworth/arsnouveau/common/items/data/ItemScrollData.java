@@ -66,7 +66,7 @@ public class ItemScrollData implements NBTComponent<ItemScrollData>, TooltipProv
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ItemScrollData that = (ItemScrollData) o;
-        return Objects.equals(getItems(), that.getItems());
+        return ItemStack.listMatches(items, that.items);
     }
 
     @Override
