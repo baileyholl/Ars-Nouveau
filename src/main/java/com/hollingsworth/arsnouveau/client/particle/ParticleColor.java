@@ -12,6 +12,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -186,6 +187,19 @@ public class ParticleColor implements IParticleColor, Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ParticleColor that = (ParticleColor) o;
+        return Objects.equals(getRegistryName(), that.getRegistryName()) && Float.compare(r, that.r) == 0 && Float.compare(g, that.g) == 0 && Float.compare(b, that.b) == 0 && color == that.color;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getRegistryName(), r, g, b, color);
     }
 
     @Deprecated(forRemoval = true)

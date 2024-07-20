@@ -58,12 +58,12 @@ public class SpellSound {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SpellSound that = (SpellSound) o;
-        return Objects.equals(soundEvent, that.soundEvent) && Objects.equals(soundName, that.soundName);
+        return Objects.equals(id, that.id) ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(soundEvent, soundName);
+        return Objects.hash(id);
     }
 
     @Override

@@ -10,6 +10,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -180,6 +181,9 @@ public class InventoryManager {
         IItemHandler itemHandler = filterableItemHandler.getHandler();
         for (int i = 0; i < itemHandler.getSlots(); i++) {
             ItemStack stack = itemHandler.extractItem(i, remaining, true);
+            if(stack.isEmpty()){
+                continue;
+            }
             if (!ItemStack.isSameItem(stack, desiredStack) || !ItemStack.isSameItemSameComponents(stack, desiredStack)) {
                 continue;
             }

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.mojang.serialization.Codec;
@@ -51,7 +52,7 @@ public class Spell {
 
 
     public Spell() {
-        this("", ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, new ArrayList<>());
+        this("", ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, ImmutableList.of());
     }
 
     public Spell(AbstractSpellPart... spellParts) {
@@ -66,7 +67,7 @@ public class Spell {
         this.name = name;
         this.color = color;
         this.sound = configuredSpellSound;
-        this.recipe = abstractSpellParts;
+        this.recipe = ImmutableList.copyOf(abstractSpellParts);
     }
 
     public ConfiguredSpellSound sound(){
@@ -117,7 +118,7 @@ public class Spell {
     }
 
     public Spell setRecipe(@NotNull List<AbstractSpellPart> recipe) {
-        return new Spell(name, color, sound, new ArrayList<>(recipe));
+        return new Spell(name, color, sound, ImmutableList.copyOf(recipe));
     }
 
     public Spell withColor(@NotNull ParticleColor color) {

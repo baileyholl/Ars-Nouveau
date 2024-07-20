@@ -330,7 +330,11 @@ public abstract class AbstractCaster <T extends AbstractCaster<T>> implements To
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AbstractCaster caster = (AbstractCaster) o;
-        return slot == caster.slot && isHidden == caster.isHidden && maxSlots == caster.maxSlots && Objects.equals(spells, caster.spells) && Objects.equals(flavorText, caster.flavorText) && Objects.equals(hiddenText, caster.hiddenText);
+        return slot == caster.slot && isHidden == caster.isHidden
+                && maxSlots == caster.maxSlots
+                && Objects.equals(spells, caster.spells)
+                && Objects.equals(flavorText, caster.flavorText)
+                && Objects.equals(hiddenText, caster.hiddenText);
     }
 
     @Override

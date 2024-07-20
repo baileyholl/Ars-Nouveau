@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.util;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.*;
 import com.mojang.serialization.Codec;
@@ -10,7 +11,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.phys.Vec2;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -43,14 +43,14 @@ public class ANCodecs {
      */
     public static <MapVal, Obj> Codec<Obj> intMap(Codec<MapVal> codec, Function<Map<Integer, MapVal>, Obj> constructor, Function<Obj, Map<Integer, MapVal>> intMap){
         return Codec.unboundedMap(Codec.STRING, codec).xmap((stringMap) ->{
-            Map<Integer, MapVal> map = new HashMap<>(stringMap.size());
-            stringMap.forEach((key, value) -> map.put(Integer.parseInt(key), value));
-            return constructor.apply(map);
+            var builder = ImmutableMap.<Integer, MapVal>builder();
+            stringMap.forEach((key, value) -> builder.put(Integer.parseInt(key), value));
+            return constructor.apply(builder.build());
         }, obj -> {
             var ints = intMap.apply(obj);
-            Map<String, MapVal> stringMap = new HashMap<>(ints.size());
-            ints.forEach((key, value) -> stringMap.put(key.toString(), value));
-            return stringMap;
+            var builder = ImmutableMap.<String, MapVal>builder();
+            ints.forEach((key, value) -> builder.put(key.toString(), value));
+            return builder.build();
         });
     }
 

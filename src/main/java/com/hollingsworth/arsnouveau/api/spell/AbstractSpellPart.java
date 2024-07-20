@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -279,5 +280,18 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
 
     public String getLocaleName() {
         return Component.translatable(getLocalizationKey()).getString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AbstractSpellPart that = (AbstractSpellPart) o;
+        return Objects.equals(registryName, that.registryName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(registryName);
     }
 }
