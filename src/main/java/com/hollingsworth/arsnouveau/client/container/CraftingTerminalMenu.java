@@ -316,6 +316,11 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 	}
 
 	@Override
+	public void sendMessage(CompoundTag compound) {
+
+	}
+
+	@Override
 	public List<StoredItemStack> getStoredItems() {
 		return itemList;
 	}

@@ -26,7 +26,7 @@ public class GuiImageButton extends ANButton {
     }
 
     public GuiImageButton(int x, int y, int u, int v, int w, int h, int image_width, int image_height, ResourceLocation image, Button.OnPress onPress) {
-        super(x, y, w, h, Component.literal(""), onPress);
+        super(x, y, w, h, Component.empty(), onPress);
         this.x = x;
         this.y = y;
         this.u = u;

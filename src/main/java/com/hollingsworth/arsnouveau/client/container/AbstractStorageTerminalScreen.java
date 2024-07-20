@@ -9,6 +9,9 @@ import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StateButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StorageSettingsButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StorageTabButton;
+import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -18,6 +21,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -35,7 +39,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.hollingsworth.arsnouveau.client.container.StorageTerminalMenu.SlotAction.*;
-import static com.hollingsworth.arsnouveau.client.container.TerminalSyncManager.getItemId;
 
 public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMenu> extends AbstractContainerScreen<T> {
 	private static final LoadingCache<StoredItemStack, List<String>> tooltipCache = CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build(new CacheLoader<>() {
@@ -76,6 +79,9 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	List<String> tabNames = new ArrayList<>();
 	public List<StorageTabButton> tabButtons = new ArrayList<>();
 	public String selectedTab = null;
+
+	List<StoredItemStack> itemsSorted = new ArrayList<>();
+	List<StoredItemStack> itemsUnsorted = new ArrayList<>();
 
 	public AbstractStorageTerminalScreen(T screenContainer, Inventory inv, Component titleIn) {
 		super(screenContainer, inv, titleIn);
@@ -128,7 +134,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		}
 		CompoundTag msg = new CompoundTag();
 		msg.put("termData", c);
-		menu.sendMessage(msg);
+		Networking.sendToServer(new ClientToServerStoragePacket(msg));
 	}
 
 	public SortSettings getSortSettings() {
@@ -144,6 +150,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	@Override
 	protected void init() {
 		clearWidgets();
+		scrollTo(0);
 		inventoryLabelY = imageHeight - 92;
 		super.init();
 
@@ -204,8 +211,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		}
 
 		if (refreshItemList || !searchLast.equals(searchString)) {
-
-			getMenu().itemListClientSorted.clear();
+			this.itemsSorted = new ArrayList<>();
 			boolean searchMod = false;
 			String search = searchString;
 			if (searchString.startsWith("@")) {
@@ -224,50 +230,70 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			}
 			boolean notDone;
 			try {
-				for (int i = 0;i < getMenu().itemListClient.size();i++) {
-					StoredItemStack is = getMenu().itemListClient.get(i);
-					if (is != null && is.getStack() != null) {
-						String dspName = searchMod ? getItemId(is.getStack().getItem()).getNamespace() : is.getStack().getHoverName().getString();
-						notDone = true;
-						if (m.matcher(dspName.toLowerCase()).find()) {
-							addStackToClientList(is);
-							notDone = false;
-						}
-						if (notDone) {
-							for (String lp : tooltipCache.get(is)) {
-								if (m.matcher(lp).find()) {
-									addStackToClientList(is);
-									break;
-								}
-							}
-						}
-					}
-				}
+                for (StoredItemStack is : this.itemsUnsorted) {
+                    if (is != null && is.getStack() != null) {
+                        String dspName = searchMod ? BuiltInRegistries.ITEM.getKey(is.getStack().getItem()).getNamespace() : is.getStack().getHoverName().getString();
+                        notDone = true;
+                        if (m.matcher(dspName.toLowerCase()).find()) {
+                            addStackToClientList(is);
+                            notDone = false;
+                        }
+                        if (notDone) {
+                            for (String lp : tooltipCache.get(is)) {
+                                if (m.matcher(lp).find()) {
+                                    addStackToClientList(is);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			Collections.sort(getMenu().itemListClientSorted, menu.noSort ? sortComp : comparator);
+			Collections.sort(this.itemsSorted, menu.noSort ? sortComp : comparator);
 			if(!searchLast.equals(searchString)) {
-				getMenu().scrollTo(0);
+				this.scrollTo(0);
 				this.currentScroll = 0;
 				if (searchType == 1) {
 					IAutoFillTerminal.sync(searchString);
 				}
 				CompoundTag nbt = new CompoundTag();
 				nbt.putString("search", searchString);
-				menu.sendMessage(nbt);
-
+				Networking.sendToServer(new ClientToServerStoragePacket(nbt));
 				onUpdateSearch(searchString);
 			} else {
-				getMenu().scrollTo(this.currentScroll);
+				this.scrollTo(this.currentScroll);
 			}
 			refreshItemList = false;
 			this.searchLast = searchString;
 		}
 	}
 
+	public final void scrollTo(float p_148329_1_) {
+		int lines = this.getSortSettings() == null || !this.getSortSettings().expanded ? 3 : 7;
+		int i = (this.itemsSorted.size() + 9 - 1) / 9 - lines;
+		int j = (int) (p_148329_1_ * i + 0.5D);
+
+		if (j < 0) {
+			j = 0;
+		}
+
+		for (int k = 0;k < lines;++k) {
+			for (int l = 0;l < 9;++l) {
+				int i1 = l + (k + j) * 9;
+
+				if (i1 >= 0 && i1 < this.itemsSorted.size()) {
+					menu.setSlotContents(l + k * 9, this.itemsSorted.get(i1));
+				} else {
+					menu.setSlotContents(l + k * 9, null);
+				}
+			}
+		}
+	}
+
 	private void addStackToClientList(StoredItemStack is) {
-		getMenu().itemListClientSorted.add(is);
+		this.itemsSorted.add(is);
 	}
 
 	public static TooltipFlag getTooltipFlag(){
@@ -292,7 +318,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 		if(hasShiftDown()) {
 			if(!menu.noSort) {
-				List<StoredItemStack> list = getMenu().itemListClientSorted;
+				List<StoredItemStack> list = this.itemsSorted;
 				Object2IntMap<StoredItemStack> map = new Object2IntOpenHashMap<>();
 				map.defaultReturnValue(Integer.MAX_VALUE);
 				for (int m = 0; m < list.size(); m++) {
@@ -305,7 +331,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			sortComp = null;
 			menu.noSort = false;
 			refreshItemList = true;
-			menu.itemListClient = new ArrayList<>(menu.itemList);
+			this.itemsUnsorted = new ArrayList<>(menu.itemList);
 		}
 
 		if (!this.wasClicking && flag && mouseX >= k && mouseY >= l && mouseX < i1 && mouseY < j1) {
@@ -320,7 +346,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		if (this.isScrolling) {
 			this.currentScroll = (mouseY - l - 7.5F) / (j1 - l - 15.0F);
 			this.currentScroll = Mth.clamp(this.currentScroll, 0.0F, 1.0F);
-			getMenu().scrollTo(this.currentScroll);
+			this.scrollTo(this.currentScroll);
 		}
 		super.render(graphics, mouseX, mouseY, partialTicks);
 
@@ -367,6 +393,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		PoseStack st = p_281635_.pose();
 		st.pushPose();
 		slotIDUnderMouse = drawSlots(p_281635_, mouseX, mouseY);
+//		System.out.println(slotIDUnderMouse);
 		st.popPose();
 	}
 
@@ -420,7 +447,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	}
 
 	protected boolean needsScrollBars() {
-		return this.getMenu().itemListClientSorted.size() > rowCount * 9;
+		return itemsSorted.size() > rowCount * 9;
 	}
 
 	@Override
@@ -461,7 +488,15 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	}
 
 	protected void storageSlotClick(StoredItemStack slotStack, StorageTerminalMenu.SlotAction act, boolean pullOne) {
-		menu.sync.sendClientInteract(slotStack, act, pullOne);
+		CompoundTag interactTag = new CompoundTag();
+		interactTag.putBoolean("pullOne", pullOne);
+		interactTag.putInt("action", act.ordinal());
+		if(slotStack != null){
+			interactTag.put("stack", ANCodecs.encode(StoredItemStack.CODEC, slotStack));
+		}
+		CompoundTag dataTag = new CompoundTag();
+		dataTag.put("interaction", interactTag);
+		Networking.sendToServer(new ClientToServerStoragePacket(dataTag));
 	}
 
 	public boolean isPullOne(int mouseButton) {
@@ -505,10 +540,10 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		if (!this.needsScrollBars()) {
 			return false;
 		} else {
-			int i = ((this.menu).itemListClientSorted.size() + 9 - 1) / 9 - 5;
+			int i = (itemsSorted.size() + 9 - 1) / 9 - 5;
 			this.currentScroll = (float)(this.currentScroll - p_mouseScrolled_5_ / i);
 			this.currentScroll = Mth.clamp(this.currentScroll, 0.0F, 1.0F);
-			this.menu.scrollTo(this.currentScroll);
+			this.scrollTo(this.currentScroll);
 			return true;
 		}
 	}
@@ -531,6 +566,15 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	public void updateItems(List<StoredItemStack> items){
 		menu.updateItems(items);
 		refreshItemList = true;
+
+		if(menu.noSort) {
+			itemsUnsorted.forEach(s ->{
+				StoredItemStack mapStack = menu.itemMap.get(s);
+				s.setCount(mapStack != null ? mapStack.getQuantity() : 0L);
+			});
+		} else {
+			itemsUnsorted = new ArrayList<>(menu.itemList);
+		}
 	}
 
 	private FakeSlot fakeSlotUnderMouse = new FakeSlot();
