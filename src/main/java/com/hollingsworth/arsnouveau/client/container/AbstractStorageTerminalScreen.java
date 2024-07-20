@@ -23,6 +23,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -80,12 +81,13 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	public List<StorageTabButton> tabButtons = new ArrayList<>();
 	public String selectedTab = null;
 
+	boolean noSort;
+
 	List<StoredItemStack> itemsSorted = new ArrayList<>();
 	List<StoredItemStack> itemsUnsorted = new ArrayList<>();
 
 	public AbstractStorageTerminalScreen(T screenContainer, Inventory inv, Component titleIn) {
 		super(screenContainer, inv, titleIn);
-		screenContainer.onPacket = this::onPacket;
 	}
 
 	protected void onPacket() {
@@ -99,13 +101,13 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			buttonSearchType.state = searchType;
 			expanded = s.expanded;
 		}
-		if(menu.tabNames != null && !menu.tabNames.isEmpty()){
+		if(tabNames != null && !tabNames.isEmpty()){
 			for(StorageTabButton tabButton : tabButtons){
 				tabButton.visible = false;
 			}
 			// Set isAll tab visible
 			tabButtons.get(0).visible = true;
-			List<String> names = new ArrayList<>(new HashSet<>(menu.tabNames));
+			List<String> names = new ArrayList<>(new HashSet<>(tabNames));
 			names.sort(String::compareToIgnoreCase);
 			for(int i = 0; i < names.size() && i < tabButtons.size(); i++){
 				tabButtons.get(i+1).visible = true;
@@ -251,7 +253,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			Collections.sort(this.itemsSorted, menu.noSort ? sortComp : comparator);
+			Collections.sort(this.itemsSorted, noSort ? sortComp : comparator);
 			if(!searchLast.equals(searchString)) {
 				this.scrollTo(0);
 				this.currentScroll = 0;
@@ -317,7 +319,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		int j1 = l + rowCount * 18;
 
 		if(hasShiftDown()) {
-			if(!menu.noSort) {
+			if(!noSort) {
 				List<StoredItemStack> list = this.itemsSorted;
 				Object2IntMap<StoredItemStack> map = new Object2IntOpenHashMap<>();
 				map.defaultReturnValue(Integer.MAX_VALUE);
@@ -325,11 +327,11 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 					map.put(list.get(m), m);
 				}
 				sortComp = Comparator.comparing(map::getInt);
-				menu.noSort = true;
+				noSort = true;
 			}
-		} else if(menu.noSort) {
+		} else if(noSort) {
 			sortComp = null;
-			menu.noSort = false;
+			noSort = false;
 			refreshItemList = true;
 			this.itemsUnsorted = new ArrayList<>(menu.itemList);
 		}
@@ -561,13 +563,24 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	public void receive(CompoundTag tag) {
 		menu.receiveClientNBTPacket(tag);
 		refreshItemList = true;
+		if(tag.contains("tabs")){
+			ListTag tabs = tag.getList("tabs", 10);
+			tabNames = new ArrayList<>();
+			for(int i = 0;i < tabs.size();i++){
+				tabNames.add(tabs.getCompound(i).getString("name"));
+			}
+			Collections.sort(tabNames);
+		}
+
+
+		this.onPacket();
 	}
 
 	public void updateItems(List<StoredItemStack> items){
 		menu.updateItems(items);
 		refreshItemList = true;
 
-		if(menu.noSort) {
+		if(noSort) {
 			itemsUnsorted.forEach(s ->{
 				StoredItemStack mapStack = menu.itemMap.get(s);
 				s.setCount(mapStack != null ? mapStack.getQuantity() : 0L);

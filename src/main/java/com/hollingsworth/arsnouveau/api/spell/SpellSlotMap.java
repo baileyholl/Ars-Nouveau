@@ -8,6 +8,7 @@ import net.minecraft.network.codec.StreamCodec;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public record SpellSlotMap(Map<Integer, Spell> slots) {
 
@@ -42,5 +43,18 @@ public record SpellSlotMap(Map<Integer, Spell> slots) {
 
     public SpellSlotMap put(int slot, Spell spell){
         return new SpellSlotMap(Util.copyAndPut(slots, slot, spell));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SpellSlotMap that = (SpellSlotMap) o;
+        return Objects.equals(slots, that.slots);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(slots);
     }
 }
