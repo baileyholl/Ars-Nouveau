@@ -37,10 +37,6 @@ public class ShapersFocus extends ArsNouveauCurio implements ISpellModifierItem 
     public static @Nullable SpellContext tryPropagateEntitySpell(EnchantedFallingBlock fallingblockentity, Level level, Entity shooter, SpellContext spellContext, SpellResolver resolver) {
         if (!resolver.hasFocus(ItemsRegistry.SHAPERS_FOCUS.get()))
             return null;
-        boolean wasCanceled = spellContext.isCanceled();
-        if(wasCanceled) {
-            return null;
-        }
         SpellContext context = spellContext.makeChildContext();
         spellContext.setCanceled(true);
         fallingblockentity.context = context;
@@ -69,10 +65,6 @@ public class ShapersFocus extends ArsNouveauCurio implements ISpellModifierItem 
     public static @Nullable SpellContext tryPropagateBlockSpell(BlockHitResult blockHitResult, Level level, Entity shooter, SpellContext spellContext, SpellResolver resolver) {
         if (!resolver.hasFocus(ItemsRegistry.SHAPERS_FOCUS.get()))
             return null;
-        boolean wasCanceled = spellContext.isCanceled();
-        if(wasCanceled){
-            return null;
-        }
         SpellContext context = spellContext.makeChildContext();
         spellContext.setCanceled(true);
         SpellResolver newResolver = resolver.getNewResolver(context);
