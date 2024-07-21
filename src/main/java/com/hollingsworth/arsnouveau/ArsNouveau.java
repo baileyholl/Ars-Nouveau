@@ -1,10 +1,7 @@
 package com.hollingsworth.arsnouveau;
 
-import com.hollingsworth.arsnouveau.api.registry.BuddingConversionRegistry;
+import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
-import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
-import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
-import com.hollingsworth.arsnouveau.api.registry.ScryRitualRegistry;
 import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
 import com.hollingsworth.arsnouveau.client.container.CraftingTerminalScreen;
 import com.hollingsworth.arsnouveau.client.registry.ClientHandler;
@@ -101,6 +98,7 @@ public class ArsNouveau {
             event.enqueueWork(Terrablender::registerBiomes);
         }
         MinecraftForge.EVENT_BUS.addListener((ServerStartedEvent e) -> {
+            GenericRecipeRegistry.reloadAll(e.getServer().getRecipeManager());
             CasterTomeRegistry.reloadTomeData(e.getServer().getRecipeManager(), e.getServer().getLevel(Level.OVERWORLD));
             BuddingConversionRegistry.reloadBuddingConversionRecipes(e.getServer().getRecipeManager());
             ScryRitualRegistry.reloadScryRitualRecipes(e.getServer().getRecipeManager());

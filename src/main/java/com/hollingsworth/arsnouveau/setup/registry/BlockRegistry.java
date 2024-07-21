@@ -367,7 +367,7 @@ public class BlockRegistry {
 
     public static MagicLeaves createLeavesBlock(MapColor color) {
         return new MagicLeaves(BlockBehaviour.Properties.of().mapColor(color).strength(0.2F).randomTicks().sound(SoundType.GRASS).noOcclusion().isValidSpawn(
-                BlockRegistry::allowsSpawnOnLeaves).isSuffocating(BlockRegistry::isntSolid).isViewBlocking(BlockRegistry::isntSolid).pushReaction(PushReaction.DESTROY).ignitedByLava());
+                BlockRegistry::allowsSpawnOnLeaves).isSuffocating(BlockRegistry::isntSolid).isViewBlocking(BlockRegistry::isntSolid).pushReaction(PushReaction.DESTROY).isRedstoneConductor(BlockRegistry::isntSolid).ignitedByLava());
     }
 
 
