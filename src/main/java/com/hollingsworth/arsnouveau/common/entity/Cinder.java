@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
@@ -17,28 +18,13 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class Cinder extends EnchantedFallingBlock {
     public LivingEntity shooter;
+
     public Cinder(EntityType<? extends Cinder> type, Level worldIn) {
         super(type, worldIn);
     }
 
-    public Cinder(EntityType<? extends Cinder> type, Level worldIn, double x, double y, double z) {
-        this(type, worldIn);
-        setPos(x, y, z);
-    }
-
-    public Cinder(EntityType<? extends Cinder> type, Level worldIn, LivingEntity shooter) {
-        this(type, worldIn);
-        setOwner(shooter);
-    }
-
-    public Cinder(Level worldIn, double x, double y, double z, BlockState fallingBlockState) {
-        super(ModEntities.CINDER.get(), worldIn, x, y, z, fallingBlockState);
-    }
-
-
-    public Cinder(Level worldIn, double x, double y, double z) {
-        this(ModEntities.CINDER.get(), worldIn);
-        setPos(x, y, z);
+    public Cinder(Level worldIn, double x, double y, double z, BlockState fallingBlockState, SpellResolver resolver) {
+        super(ModEntities.CINDER.get(), worldIn, x, y, z, fallingBlockState, resolver);
     }
 
     @Override
