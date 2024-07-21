@@ -183,6 +183,7 @@ public class APIRegistry {
         registerPerk(VampiricPerk.INSTANCE);
         registerPerk(KnockbackResistPerk.INSTANCE);
 
+        ImbuementRecipeRegistry.INSTANCE.addRecipeType(RecipeRegistry.IMBUEMENT_TYPE);
     }
 
     //register things only in dev, safe from production
