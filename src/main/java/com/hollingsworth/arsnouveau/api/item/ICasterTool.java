@@ -46,7 +46,7 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
             thisCaster.setColor(heldCaster.getColor());
             thisCaster.setFlavorText(heldCaster.getFlavorText());
             thisCaster.setSpellName(heldCaster.getSpellName());
-            thisCaster.setSound(heldCaster.getCurrentSound());
+            thisCaster.setSound(spell.sound);
         } else if (heldStack.getItem() == ItemsRegistry.MANIPULATION_ESSENCE.asItem()) {
             // Thanks mojang
             String[] words = new String[]{"the", "elder", "scrolls", "klaatu", "berata", "niktu", "xyzzy", "bless", "curse", "light", "darkness", "fire", "air", "earth", "water", "hot", "dry", "cold", "wet", "ignite", "snuff", "embiggen", "twist", "shorten", "stretch", "fiddle", "destroy", "imbue", "galvanize", "enchant", "free", "limited", "range", "of", "towards", "inside", "sphere", "cube", "self", "other", "ball", "mental", "physical", "grow", "shrink", "demon", "elemental", "spirit", "animal", "creature", "beast", "humanoid", "undead", "fresh", "stale", "phnglui", "mglwnafh", "cthulhu", "rlyeh", "wgahnagl", "fhtagn", "baguette"};
