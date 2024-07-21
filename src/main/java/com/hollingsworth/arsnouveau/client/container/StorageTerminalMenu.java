@@ -230,7 +230,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 		if(message.contains("tabs")){
 			ListTag tabs = message.getList("tabs", 10);
 			tabNames = new ArrayList<>();
-			for(int i = 0;i < tabs.size();i++){
+			for(int i = 0; i < Math.min(tabs.size(), 12); i++){
 				tabNames.add(tabs.getCompound(i).getString("name"));
 			}
 			Collections.sort(tabNames);
