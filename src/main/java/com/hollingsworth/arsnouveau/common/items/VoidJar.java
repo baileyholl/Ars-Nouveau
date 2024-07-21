@@ -37,24 +37,29 @@ public class VoidJar extends ModItem implements IScribeable {
     public static boolean tryVoiding(Player player, ItemStack pickingUp) {
         NonNullList<ItemStack> list = player.inventory.items;
         for (ItemStack jar : list) {
-            if (jar.getItem() == ItemsRegistry.VOID_JAR.get()) {
-                return voidStack(player, jar, pickingUp);
+            if (jar.getItem() instanceof VoidJar voidJar) {
+                return voidJar.voidStack(player, jar, pickingUp);
             }
         }
-        if (player.getOffhandItem().is(ItemsRegistry.VOID_JAR.get())) {
-            return voidStack(player, player.getOffhandItem(), pickingUp);
+        if (player.getOffhandItem().getItem() instanceof  VoidJar voidJar) {
+            return voidJar.voidStack(player, player.getOffhandItem(), pickingUp);
         }
         return false;
     }
 
-    public static boolean voidStack(Player player, ItemStack jarStack, ItemStack stackToVoid){
+    public boolean voidStack(Player player, ItemStack jarStack, ItemStack stackToVoid){
         VoidJarData jarData = new VoidJarData(jarStack);
         if (jarData.isActive() && jarData.containsStack(stackToVoid)) {
-            CapabilityRegistry.getMana(player).ifPresent(iMana -> iMana.addMana(5.0 * stackToVoid.getCount()));
+            int amount = stackToVoid.getCount();
+            preConsume(player, jarStack, stackToVoid, amount);
             stackToVoid.setCount(0);
             return true;
         }
         return false;
+    }
+
+    public void preConsume(Player player, ItemStack jar, ItemStack voided, int amount) {
+        CapabilityRegistry.getMana(player).ifPresent(iMana -> iMana.addMana(5.0 * amount));
     }
 
     @Override

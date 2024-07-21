@@ -1,0 +1,6 @@
+{
+  "type": "ars_nouveau:scry_ritual",
+  "augment": "forge:ores/quartz",
+  "highlight": "forge:ores/quartz",
+  "id": "ars_nouveau:quartz_ores"
+}
