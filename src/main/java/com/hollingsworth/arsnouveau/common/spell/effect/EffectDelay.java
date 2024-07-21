@@ -74,7 +74,7 @@ public class EffectDelay extends AbstractEffect {
    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
+        return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentRandomize.INSTANCE);
     }
 
     @Override

@@ -33,6 +33,8 @@ public class EffectDispel extends AbstractEffect {
 
     @Override
     public void onResolveEntity(@NotNull EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (MinecraftForge.EVENT_BUS.post(new DispelEvent.Pre(rayTraceResult, world, shooter, spellStats, spellContext)))
+            return;
         if (rayTraceResult.getEntity() instanceof LivingEntity entity) {
             Collection<MobEffectInstance> effects = entity.getActiveEffects();
             MobEffectInstance[] array = effects.toArray(new MobEffectInstance[0]);
@@ -51,8 +53,6 @@ public class EffectDispel extends AbstractEffect {
                 //TODO dispel loot table?
                 return;
             }
-            if (MinecraftForge.EVENT_BUS.post(new DispelEvent.Pre(rayTraceResult, world, shooter, spellStats, spellContext)))
-                return;
             if (entity instanceof IDispellable iDispellable) {
                 iDispellable.onDispel(shooter);
             }
