@@ -90,7 +90,7 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
                     hit.z() - radiusMultiplier * Math.cos(random.nextInt(360)));
             Vec3 scaleVec =  new Vec3(ParticleUtil.inRange(0.1, 0.5), 1, ParticleUtil.inRange(0.1, 0.5));
 
-            Cinder fallingBlock = new Cinder(level, vec3.x(), vec3.y(), vec3.z(), BlockRegistry.MAGIC_FIRE.defaultBlockState());
+            Cinder fallingBlock = new Cinder(level, vec3.x(), vec3.y(), vec3.z(), BlockRegistry.MAGIC_FIRE.defaultBlockState(), resolver);
             // Send the falling block the opposite direction of the target
             fallingBlock.setDeltaMovement(vec3.x() - hit.x(), ParticleUtil.inRange(0.1, 0.5), vec3.z() - hit.z());
             fallingBlock.setDeltaMovement(fallingBlock.getDeltaMovement().multiply(scaleVec));

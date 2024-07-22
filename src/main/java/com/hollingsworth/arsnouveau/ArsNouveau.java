@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau;
 
-import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
-import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.registry.*;
+import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
 import com.hollingsworth.arsnouveau.client.container.CraftingTerminalScreen;
 import com.hollingsworth.arsnouveau.client.registry.ClientHandler;
@@ -97,7 +97,12 @@ public class ArsNouveau {
         if (terrablenderLoaded && Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
             event.enqueueWork(Terrablender::registerBiomes);
         }
-        MinecraftForge.EVENT_BUS.addListener((ServerStartedEvent e) -> CasterTomeRegistry.reloadTomeData(e.getServer().getRecipeManager(), e.getServer().getLevel(Level.OVERWORLD)));
+        MinecraftForge.EVENT_BUS.addListener((ServerStartedEvent e) -> {
+            GenericRecipeRegistry.reloadAll(e.getServer().getRecipeManager());
+            CasterTomeRegistry.reloadTomeData(e.getServer().getRecipeManager(), e.getServer().getLevel(Level.OVERWORLD));
+            BuddingConversionRegistry.reloadBuddingConversionRecipes(e.getServer().getRecipeManager());
+            ScryRitualRegistry.reloadScryRitualRecipes(e.getServer().getRecipeManager());
+        });
     }
 
     public void postModLoadEvent(final FMLLoadCompleteEvent event) {
@@ -150,5 +155,7 @@ public class ArsNouveau {
     @SubscribeEvent
     public static void onServerStopped(final ServerStoppingEvent event) {
         Pathfinding.shutdown();
+        EventQueue.getServerInstance().clear();
+        EventQueue.getClientQueue().clear();
     }
 }

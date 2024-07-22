@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.util.DamageUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
@@ -26,8 +27,8 @@ public class IceShardEntity extends EnchantedFallingBlock {
     }
 
 
-    public IceShardEntity(Level worldIn, double x, double y, double z, BlockState fallingBlockState) {
-        super(ModEntities.ICE_SHARD.get(), worldIn, x, y, z, fallingBlockState);
+    public IceShardEntity(Level worldIn, double x, double y, double z, BlockState fallingBlockState, SpellResolver resolver) {
+        super(ModEntities.ICE_SHARD.get(), worldIn, x, y, z, fallingBlockState, resolver);
     }
 
     @Override

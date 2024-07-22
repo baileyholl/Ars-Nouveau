@@ -124,6 +124,7 @@ public class GlyphRecipeProvider extends SimpleDataProvider {
         add(get(AugmentRandomize.INSTANCE).withItem(Items.PINK_CARPET, 2));
         add(get(EffectReset.INSTANCE).withItem(Items.TARGET, 1));
         add(get(EffectWololo.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withIngredient(Ingredient.of(Tags.Items.DYES), 3));
+        add(get(EffectRewind.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.CLOCK, 3));
         for (GlyphRecipe recipe : recipes) {
             Path path = getScribeGlyphPath(output, recipe.output.getItem());
             saveStable(pOutput, recipe.asRecipe(), path);

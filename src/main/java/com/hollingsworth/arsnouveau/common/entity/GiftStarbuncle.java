@@ -141,7 +141,7 @@ public class GiftStarbuncle extends PathfinderMob implements GeoEntity {
 
     private PlayState dancePredicate(AnimationState<?> event) {
         if (this.entityData.get(BEING_TAMED)) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay("dance_master"));
+            event.getController().setAnimation(RawAnimation.begin().thenPlay("dance"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;

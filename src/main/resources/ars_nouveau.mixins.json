@@ -34,6 +34,7 @@
     "jar.MobAccessorMixin",
     "perks.PerkLivingEntity",
     "redstone.RedstoneLevelMixin",
+    "rewind.RewindEntityMixin",
     "structure.StructureProcessorAccessor",
     "structure.StructureTemplateAccessor",
     "structure.StructureTemplateMixin"

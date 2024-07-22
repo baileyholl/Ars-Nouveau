@@ -1,0 +1,24 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": {
+    "type": "ars_nouveau:constant",
+    "blue": 1,
+    "green": 255,
+    "red": 1
+  },
+  "flavour_text": "When you want to go deeper but just don't have the torches",
+  "name": "Emergency Flair",
+  "sound": {
+    "family": "ars_nouveau:fire_family",
+    "pitch": 1.0,
+    "volume": 1.0
+  },
+  "spell": [
+    "ars_nouveau:glyph_touch",
+    "ars_nouveau:glyph_light",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_extend_time"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

@@ -343,19 +343,19 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		} else
 			this.renderTooltip(graphics, mouseX, mouseY);
 
-		if (buttonSortingType.isHoveredOrFocused()) {
+		if (buttonSortingType.isHovered()) {
 			graphics.renderTooltip(font, Component.translatable("tooltip.ars_nouveau.sorting_" + buttonSortingType.state), mouseX, mouseY);
 		}
-		if (buttonSearchType.isHoveredOrFocused()) {
+		if (buttonSearchType.isHovered()) {
 			graphics.renderTooltip(font, Component.translatable("tooltip.ars_nouveau.search_" + buttonSearchType.state, IAutoFillTerminal.getHandlerName()), mouseX, mouseY);
 		}
-		if(buttonDirection.isHoveredOrFocused()){
+		if(buttonDirection.isHovered()){
 			graphics.renderTooltip(font, Component.translatable("tooltip.ars_nouveau.direction_" + buttonDirection.state, IAutoFillTerminal.getHandlerName()), mouseX, mouseY);
 		}
 		for(StorageTabButton tabButton : tabButtons) {
-			if(tabButton.isHoveredOrFocused() && tabButton.isAll){
+			if(tabButton.isHovered() && tabButton.isAll){
 				graphics.renderTooltip(font, Component.translatable("tooltip.ars_nouveau.master_tab"), mouseX, mouseY);
-			}else if (tabButton.isHoveredOrFocused() && tabButton.highlightText != null) {
+			}else if (tabButton.isHovered() && tabButton.highlightText != null) {
 				graphics.renderTooltip(font, Component.literal(tabButton.highlightText), mouseX, mouseY);
 			}
 		}

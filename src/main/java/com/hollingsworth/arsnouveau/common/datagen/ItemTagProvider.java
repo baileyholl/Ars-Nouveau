@@ -31,6 +31,7 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
     public static TagKey<Item> JAR_ITEM_BLACKLIST = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "interact_jar_blacklist"));
     public static TagKey<Item> RITUAL_LOOT_BLACKLIST = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "ritual_loot_blacklist"));
     public static TagKey<Item> RITUAL_TRADE_BLACKLIST = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "ritual_trade_blacklist"));
+    public static TagKey<Item> SHADY_WIZARD_FRUITS = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "shady_wizard_fruits"));
 
     public ItemTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
         super(output, Registries.ITEM, future, item -> item.builtInRegistryHolder().key(), ArsNouveau.MODID, helper);
@@ -208,5 +209,12 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
         this.tag(JAR_ITEM_BLACKLIST);
         this.tag(RITUAL_LOOT_BLACKLIST);
         this.tag(RITUAL_TRADE_BLACKLIST);
+
+        this.tag(SHADY_WIZARD_FRUITS).add(
+                BlockRegistry.BOMBEGRANTE_POD.asItem(),
+                BlockRegistry.BASTION_POD.asItem(),
+                BlockRegistry.FROSTAYA_POD.asItem(),
+                BlockRegistry.MENDOSTEEN_POD.asItem()
+        );
     }
 }
