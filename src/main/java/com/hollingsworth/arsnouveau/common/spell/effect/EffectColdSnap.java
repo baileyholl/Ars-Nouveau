@@ -104,7 +104,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
 
     public void spawnIce(Level level, BlockPos pos, BlockPos targetPos, Vec3 scaleVec, SpellStats spellStats, SpellContext context, SpellResolver resolver, LivingEntity shooter){
         level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-        IceShardEntity fallingBlock = new IceShardEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, Blocks.ICE.defaultBlockState());
+        IceShardEntity fallingBlock = new IceShardEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, Blocks.ICE.defaultBlockState(), resolver);
         // Send the falling block the opposite direction of the target
         fallingBlock.setDeltaMovement(pos.getX() - targetPos.getX(), pos.getY() - targetPos.getY(), pos.getZ() - targetPos.getZ());
         fallingBlock.setDeltaMovement(fallingBlock.getDeltaMovement().multiply(scaleVec));

@@ -31,6 +31,9 @@ public class EffectDispel extends AbstractEffect {
 
     @Override
     public void onResolveEntity(@NotNull EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        var dispelEvent = NeoForge.EVENT_BUS.post(new DispelEvent.Pre(rayTraceResult, world, shooter, spellStats, spellContext));
+        if (dispelEvent.isCanceled())
+            return;
         if (rayTraceResult.getEntity() instanceof LivingEntity entity) {
             Collection<MobEffectInstance> effects = entity.getActiveEffects();
             MobEffectInstance[] array = effects.toArray(new MobEffectInstance[0]);
@@ -49,9 +52,6 @@ public class EffectDispel extends AbstractEffect {
                 //TODO dispel loot table?
                 return;
             }
-            var dispelEvent = NeoForge.EVENT_BUS.post(new DispelEvent.Pre(rayTraceResult, world, shooter, spellStats, spellContext));
-            if (dispelEvent.isCanceled())
-                return;
             if (entity instanceof IDispellable iDispellable) {
                 iDispellable.onDispel(shooter);
             }

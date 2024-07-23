@@ -80,12 +80,12 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         super(p_31950_, p_31951_);
     }
 
-    public EnchantedFallingBlock(EntityType<? extends ColoredProjectile> p_31950_, Level p_31951_, double p_31952_, double p_31953_, double p_31954_) {
+    protected EnchantedFallingBlock(EntityType<? extends ColoredProjectile> p_31950_, Level p_31951_, double p_31952_, double p_31953_, double p_31954_) {
         this(p_31950_, p_31951_);
         this.setPos(p_31952_, p_31953_, p_31954_);
     }
 
-    public EnchantedFallingBlock(EntityType<? extends ColoredProjectile> p_31950_, Level world, double v, double y, double v1, BlockState blockState) {
+    public EnchantedFallingBlock(EntityType<? extends ColoredProjectile> p_31950_, Level world, double v, double y, double v1, BlockState blockState, SpellResolver resolver) {
         this(p_31950_, world);
         this.blockState = blockState;
         this.blocksBuilding = true;
@@ -95,14 +95,25 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         this.yo = y;
         this.zo = v1;
         this.setStartPos(this.blockPosition());
+        this.resolver = resolver;
     }
 
+    public EnchantedFallingBlock(Level world, double v, double y, double v1, BlockState blockState, SpellResolver resolver) {
+        this(ModEntities.ENCHANTED_FALLING_BLOCK.get(), world, v, y, v1, blockState, resolver);
+    }
+
+    public EnchantedFallingBlock(Level world, BlockPos pos, BlockState blockState, SpellResolver resolver) {
+        this(world, pos.getX(), pos.getY(), pos.getZ(), blockState, resolver);
+    }
+
+    @Deprecated(forRemoval = true)
     public EnchantedFallingBlock(Level world, double v, double y, double v1, BlockState blockState) {
-        this(ModEntities.ENCHANTED_FALLING_BLOCK.get(), world, v, y, v1, blockState);
+        this(ModEntities.ENCHANTED_FALLING_BLOCK.get(), world, v, y, v1, blockState, null);
     }
 
+    @Deprecated(forRemoval = true)
     public EnchantedFallingBlock(Level world, BlockPos pos, BlockState blockState) {
-        this(world, pos.getX(), pos.getY(), pos.getZ(), blockState);
+        this(world, pos.getX(), pos.getY(), pos.getZ(), blockState, null);
     }
 
     @Deprecated(forRemoval = true)
@@ -133,14 +144,13 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
             fallingblockentity = new EnchantedSkull(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, blockState.hasProperty(BlockStateProperties.WATERLOGGED) ? blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE) : blockState);
             fallingblockentity.blockData = tile.saveWithoutMetadata(level.registryAccess());
         } else {
-            fallingblockentity = new EnchantedFallingBlock(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, blockState.hasProperty(BlockStateProperties.WATERLOGGED) ? blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE) : blockState);
+            fallingblockentity = new EnchantedFallingBlock(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, blockState.hasProperty(BlockStateProperties.WATERLOGGED) ? blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE) : blockState, resolver);
         }
         level.addFreshEntity(fallingblockentity);
         fallingblockentity.setOwner(owner);
         fallingblockentity.context = context;
         fallingblockentity.baseDamage = (float) (9.0f + spellStats.getDamageModifier());
         fallingblockentity.dropItem = !blockState.is(BlockTagProvider.GRAVITY_BLACKLIST);
-        fallingblockentity.resolver = resolver;
         fallingblockentity.spellStats = spellStats;
         if (resolver.hasFocus(ItemsRegistry.SHAPERS_FOCUS.get())) {
             fallingblockentity.hurtEntities = true;

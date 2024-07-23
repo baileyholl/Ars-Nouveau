@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.registry.ImbuementRecipeRegistry;
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
@@ -12,7 +13,6 @@ import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -86,7 +86,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
                 }
             }
             if (!stack.isEmpty() && recipe == null) {
-                RecipeHolder<ImbuementRecipe> holder = getRecipeNow();
+                var holder = getRecipeNow();
                 this.recipe = holder != null ? holder.value() : null;
             }
             return;
@@ -104,7 +104,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
         // Restore the recipe on world restart
         if (recipe == null) {
-            RecipeHolder<ImbuementRecipe> foundRecipe = getRecipeNow();
+            var foundRecipe = getRecipeNow();
             if (foundRecipe != null) {
                 this.recipe = foundRecipe.value();
                 this.craftTicks = 100;
@@ -123,12 +123,13 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
         int transferRate = 200;
 
+        int cost = recipe.getSourceCost(this);
 
-        if (this.level.getGameTime() % 20 == 0 && this.getSource() < recipe.source) {
-            if (!canAcceptSource(Math.min(200, recipe.source)))
+        if (this.level.getGameTime() % 20 == 0 && this.getSource() < cost) {
+            if (!canAcceptSource(Math.min(200, cost)))
                 return;
 
-            ISpecialSourceProvider takePos = SourceUtil.takeSource(worldPosition, level, 2, Math.min(200, recipe.source));
+            ISpecialSourceProvider takePos = SourceUtil.takeSource(worldPosition, level, 2, Math.min(200, cost));
             if (takePos != null) {
                 this.addSource(transferRate);
                 EntityFlyingItem item = new EntityFlyingItem(level, takePos.getCurrentPos().above(), worldPosition, 255, 50, 80)
@@ -149,9 +150,9 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
         }
 
-        if (this.getSource() >= recipe.source && craftTicks <= 0) {
-            this.setItem(0, recipe.output.copy());
-            this.addSource(-recipe.source);
+        if (this.getSource() >= cost && craftTicks <= 0) {
+            this.setItem(0, recipe.getResultItem(this.level.registryAccess()).copy());
+            this.addSource(-cost);
             ParticleUtil.spawnTouchPacket(level, worldPosition, ParticleColor.defaultParticleColor());
             updateBlock();
         }
@@ -199,7 +200,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         if (stack.isEmpty() || !this.stack.isEmpty())
             return false;
         this.stack = stack.copy();
-        RecipeHolder<ImbuementRecipe> recipe = getRecipeNow();
+        var recipe = getRecipeNow();
         this.stack = ItemStack.EMPTY;
         return recipe != null;
     }
@@ -289,14 +290,13 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         return pedestalList(getBlockPos(), 1, getLevel());
     }
 
-    public @Nullable RecipeHolder<ImbuementRecipe> getRecipeNow() {
-        return level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream()
-                .filter(f -> f.value().matches(this, level)).findFirst().orElse(null);
+    public @Nullable RecipeHolder<? extends ImbuementRecipe> getRecipeNow() {
+        return ImbuementRecipeRegistry.INSTANCE.getRecipes().stream().filter(r -> r.value().matches(this, level)).findFirst().orElse(null);
     }
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        RecipeHolder<ImbuementRecipe> recipe = getRecipeNow();
+        var recipe = getRecipeNow();
         if (recipe != null && !recipe.value().output.isEmpty() && stack != null && !stack.isEmpty()) {
             tooltip.add(Component.translatable("ars_nouveau.crafting", recipe.value().output.getHoverName()));
             if (recipe.value().source > 0) {

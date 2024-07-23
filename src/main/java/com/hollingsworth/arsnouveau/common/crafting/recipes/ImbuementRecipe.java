@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.imbuement_chamber.IImbuementRecipe;
 import com.hollingsworth.arsnouveau.common.block.tile.ImbuementTile;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import com.mojang.serialization.Codec;
@@ -11,22 +12,17 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-
-public class ImbuementRecipe implements Recipe<ImbuementTile> {
+public class ImbuementRecipe implements IImbuementRecipe {
 
     public final Ingredient input;
     public final ItemStack output;
@@ -61,9 +57,9 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
         return this;
     }
 
-    public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, ImbuementTile imbuementTile, @Nullable Player player) {
-        pedestalItems = pedestalItems.stream().filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList());
-        return doesReagentMatch(reagent) && this.pedestalItems.size() == pedestalItems.size() && EnchantingApparatusRecipe.doItemsMatch(pedestalItems, this.pedestalItems);
+    @Override
+    public int getSourceCost(ImbuementTile imbuementTile) {
+        return this.source;
     }
 
     public boolean doesReagentMatch(ItemStack reag) {

@@ -138,8 +138,19 @@ public class DefaultTableProvider extends LootTableProvider {
 
             registerDropSelf(BlockRegistry.AGRONOMIC_SOURCELINK);
             registerDropSelf(BlockRegistry.ENCHANTING_APP_BLOCK);
-            registerDropSelf(BlockRegistry.ARCANE_PEDESTAL);
-            registerDropSelf(BlockRegistry.ARCANE_PLATFORM);
+
+            LootPool.Builder pedestal = LootPool.lootPool()
+                    .setRolls(ConstantValue.exactly(1))
+                    .add(LootItem.lootTableItem(BlockRegistry.ARCANE_PEDESTAL)
+                            .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY)));
+            add(BlockRegistry.ARCANE_PEDESTAL.get(), LootTable.lootTable().withPool(pedestal));
+
+            LootPool.Builder platform = LootPool.lootPool()
+                    .setRolls(ConstantValue.exactly(1))
+                    .add(LootItem.lootTableItem(BlockRegistry.ARCANE_PLATFORM)
+                            .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY)));
+            add(BlockRegistry.ARCANE_PLATFORM.get(), LootTable.lootTable().withPool(platform));
+
             registerDropSelf(BlockRegistry.RELAY);
             registerDropSelf(BlockRegistry.RELAY_SPLITTER);
             registerDropSelf(BlockRegistry.ARCANE_CORE_BLOCK);

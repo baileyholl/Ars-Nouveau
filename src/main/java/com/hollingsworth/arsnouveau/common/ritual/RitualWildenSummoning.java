@@ -13,7 +13,9 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import static com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider.WILDEN_DROP_TAG;
 
@@ -45,6 +47,7 @@ public class RitualWildenSummoning extends AbstractRitual {
                         if (!net.neoforged.neoforge.event.EventHooks.canEntityGrief(this.getWorld(), chimera)) {
                             continue;
                         }
+                        if (Float.compare(this.getWorld().getBlockState(b).getDestroySpeed(getWorld(), b), -1.0f) == 0) continue;
                         if (SpellUtil.isCorrectHarvestLevel(4, this.getWorld().getBlockState(b))) {
                             BlockUtil.destroyBlockSafelyWithoutSound(getWorld(), b, true);
                         }
@@ -57,6 +60,16 @@ public class RitualWildenSummoning extends AbstractRitual {
 
     public boolean isBossSpawn() {
         return didConsumeItem(ItemsRegistry.WILDEN_HORN) && didConsumeItem(ItemsRegistry.WILDEN_WING) && didConsumeItem(ItemsRegistry.WILDEN_SPIKE);
+    }
+
+    @Override
+    public boolean canStart(@Nullable Player player) {
+        if (isBossSpawn()) {
+            for (BlockPos blockPos : BlockPos.betweenClosed(getPos().east(5).north(5).above(), getPos().west(5).south(5).above(5))) {
+                if (Float.compare(this.getWorld().getBlockState(blockPos).getDestroySpeed(getWorld(), blockPos), -1.0f) == 0) return false;
+            }
+        }
+        return super.canStart(player);
     }
 
     public void summon(Mob mob, BlockPos pos) {
