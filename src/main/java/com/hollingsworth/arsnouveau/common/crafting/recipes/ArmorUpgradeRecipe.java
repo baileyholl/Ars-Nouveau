@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.crafting.recipes;
 import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.common.items.data.ArmorPerkHolder;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -64,11 +65,11 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
     @Override
     public ItemStack assemble(ApparatusRecipeInput input, HolderLookup.Provider p_346030_) {
         ItemStack reagent = input.catalyst();
-        IPerkHolder perkHolder = PerkUtil.getPerkHolder(reagent);
+        ArmorPerkHolder perkHolder = PerkUtil.getPerkHolder(reagent);
         if(!(perkHolder instanceof ArmorPerkHolder armorPerkHolder)){
             return reagent.copy();
         }
-        armorPerkHolder.setTier(tier);
+        reagent.set(DataComponentRegistry.ARMOR_PERKS, armorPerkHolder.setTier(tier));
         return reagent.copy();
     }
 
