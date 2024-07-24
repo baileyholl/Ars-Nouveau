@@ -4,12 +4,11 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.potions.*;
-import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
+import com.hollingsworth.arsnouveau.setup.config.StartupConfig;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
@@ -31,24 +30,12 @@ public class ModPotions {
 
     public static final DeferredHolder<MobEffect, ShockedEffect> SHOCKED_EFFECT = EFFECTS.register(SHOCKED, ShockedEffect::new);
 
-    //TODO Consider switching to vanilla builder method for adding attribute modifiers
-    public static final DeferredHolder<MobEffect, PublicEffect> MANA_REGEN_EFFECT = EFFECTS.register(MANA_REGEN, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, 8080895) {
-        @Override
-        public void addAttributeModifiers(AttributeMap pAttributeMap, int pAmplifier) {
-            AttributeModifier attributemodifier = new AttributeModifier(ArsNouveau.prefix("mana_regen_bonus"), ServerConfig.MANA_REGEN_POTION.get() * (1 + pAmplifier), AttributeModifier.Operation.ADD_VALUE);
-            pAttributeMap.getInstance(PerkAttributes.MANA_REGEN_BONUS).addTransientModifier(attributemodifier);
-            super.addAttributeModifiers(pAttributeMap, pAmplifier);
-        }
-    });
+    public static final DeferredHolder<MobEffect, MobEffect> MANA_REGEN_EFFECT = EFFECTS.register(MANA_REGEN, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, 8080895).addAttributeModifier(PerkAttributes.MANA_REGEN_BONUS, ArsNouveau.prefix("mana_regen_bonus"), StartupConfig.MANA_REGEN_POTION.get(), AttributeModifier.Operation.ADD_VALUE));
     public static final DeferredHolder<MobEffect, SummoningSicknessEffect> SUMMONING_SICKNESS_EFFECT = EFFECTS.register(SUMMONING_SICKNESS, SummoningSicknessEffect::new);
 
-    public static final DeferredHolder<MobEffect, PublicEffect> HEX_EFFECT = EFFECTS.register(HEX, () -> new PublicEffect(MobEffectCategory.HARMFUL, 8080895) {
-        @Override
-        public void addAttributeModifiers(AttributeMap pAttributeMap, int pAmplifier) {
-            pAttributeMap.getInstance(PerkAttributes.MANA_REGEN_BONUS).addTransientModifier(new AttributeModifier(ArsNouveau.prefix("hex_regen_penalty"), -0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
-            super.addAttributeModifiers(pAttributeMap, pAmplifier);
-        }
-    });
+    public static final DeferredHolder<MobEffect, MobEffect> HEX_EFFECT = EFFECTS.register(HEX, () -> new PublicEffect(MobEffectCategory.HARMFUL, 8080895)
+            .addAttributeModifier(PerkAttributes.MANA_REGEN_BONUS, ArsNouveau.prefix("hex_regen_penalty"), -0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+
     public static final DeferredHolder<MobEffect, PublicEffect> SCRYING_EFFECT = EFFECTS.register(SCRYING, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, 2039587));
     public static final DeferredHolder<MobEffect, PublicEffect> GLIDE_EFFECT = EFFECTS.register(GLIDE, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, 8080895));
     public static final DeferredHolder<MobEffect, SnareEffect> SNARE_EFFECT = EFFECTS.register(SNARE, SnareEffect::new);

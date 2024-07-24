@@ -13,6 +13,7 @@ import com.hollingsworth.arsnouveau.common.world.Terrablender;
 import com.hollingsworth.arsnouveau.setup.ModSetup;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
+import com.hollingsworth.arsnouveau.setup.config.StartupConfig;
 import com.hollingsworth.arsnouveau.setup.proxy.ClientProxy;
 import com.hollingsworth.arsnouveau.setup.proxy.IProxy;
 import com.hollingsworth.arsnouveau.setup.proxy.ServerProxy;
@@ -65,8 +66,7 @@ public class ArsNouveau {
         sodiumLoaded = ModList.get().isLoaded("rubidium");
         patchouliLoaded = ModList.get().isLoaded("patchouli");
         APIRegistry.setup();
-//        ANModConfig serverConfig = new ANModConfig(ModConfig.Type.SERVER, ServerConfig.SERVER_CONFIG, modContainer,MODID + "-server");
-//        modContainer.addConfig(serverConfig);
+        modContainer.registerConfig(ModConfig.Type.STARTUP, StartupConfig.STARTUP_CONFIG);
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SERVER_CONFIG);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
         modContainer.registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);

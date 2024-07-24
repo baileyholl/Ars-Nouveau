@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.setup.config;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
-import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ServerConfig {
 
@@ -13,7 +12,6 @@ public class ServerConfig {
     public static ModConfigSpec.IntValue TIER_REGEN_BONUS;
     public static ModConfigSpec.IntValue MANA_BOOST_BONUS;
     public static ModConfigSpec.IntValue MANA_REGEN_ENCHANT_BONUS;
-    public static ModConfigSpec.IntValue MANA_REGEN_POTION;
     public static ModConfigSpec.IntValue REGEN_INTERVAL;
     public static ModConfigSpec.DoubleValue GLYPH_REGEN_BONUS;
     public static ModConfigSpec.BooleanValue ENFORCE_AUGMENT_CAP_ON_CAST;
@@ -38,7 +36,6 @@ public class ServerConfig {
         MANA_BOOST_BONUS = SERVER_BUILDER.comment("Mana Boost value per level").defineInRange("manaBoost", 25, 0, Integer.MAX_VALUE);
         MANA_REGEN_ENCHANT_BONUS = SERVER_BUILDER.comment("(enchantment) Mana regen per second per level").defineInRange("manaRegenEnchantment", 2, 0, Integer.MAX_VALUE);
         GLYPH_REGEN_BONUS = SERVER_BUILDER.comment("Regen bonus per glyph").defineInRange("glyphRegen", 0.33, 0.0, Integer.MAX_VALUE);
-        MANA_REGEN_POTION = SERVER_BUILDER.comment("Regen bonus per potion level").defineInRange("potionRegen", 10, 0, Integer.MAX_VALUE);
         SERVER_BUILDER.pop();
         SERVER_BUILDER.push("spell_casting");
         ENFORCE_AUGMENT_CAP_ON_CAST = SERVER_BUILDER.comment("Enforce augment cap on casting? Turn this off if you are a pack maker and want to create more powerful items than players.")

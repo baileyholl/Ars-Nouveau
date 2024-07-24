@@ -39,8 +39,7 @@ public class GlyphRegistry {
         part.buildConfig(spellBuilder);
         spec = spellBuilder.build();
         part.CONFIG = spec;
-//        ANModConfig anModConfig = new ANModConfig(ModConfig.Type.SERVER, part.CONFIG, ModLoadingContext.get().getActiveContainer(), part.getRegistryName().getNamespace() + "/" + part.getRegistryName().getPath());
-        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.SERVER, spec, part.getRegistryName().getNamespace() + "/" + part.getRegistryName().getPath());
+        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.SERVER, spec, part.getRegistryName().getNamespace() + "/" + part.getRegistryName().getPath() + ".toml");
         return spellpartMap.put(part.getRegistryName(), part);
     }
 
