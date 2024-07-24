@@ -1,4 +1,4 @@
-// 1.21	2024-07-22T20:22:40.0361541	Loot Tables
+// 1.21	2024-07-23T20:42:37.1745902	Loot Tables
 4f70eae621815da8d08d3ea0b9fd479b48bad2d3 data/ars_nouveau/loot_table/blocks/agronomic_sourcelink.json
 8a6d60f2b39de0408c7e4537b53e866a04236d22 data/ars_nouveau/loot_table/blocks/alchemical_sourcelink.json
 8bdff8a0a49a9f3f21a822eb1d1d01a950d6ad1a data/ars_nouveau/loot_table/blocks/alteration_table.json
@@ -53,6 +53,7 @@ a28c937d10a3fe9217162d764863964ce6d63c58 data/ars_nouveau/loot_table/blocks/gree
 e220cb0773c9e33776b5909041613d3291d06548 data/ars_nouveau/loot_table/blocks/imbuement_chamber.json
 df5ba05995044413998b7cbbf02d6c7a63e7c583 data/ars_nouveau/loot_table/blocks/item_detector.json
 2af90b26f5f047e3168626ce05aad7a64f42d2ec data/ars_nouveau/loot_table/blocks/magebloom_block.json
+db151abe9a1ec4db50b9318d812d049a98154756 data/ars_nouveau/loot_table/blocks/magebloom_crop.json
 072841a4552421b48e60a01206d4b1f42dd90da5 data/ars_nouveau/loot_table/blocks/magelight_torch.json
 9d551107c336c6341450da44650d007e795ae962 data/ars_nouveau/loot_table/blocks/mendosteen_pod.json
 019635e76547e287688dc710b66e2f96d86ba011 data/ars_nouveau/loot_table/blocks/mirrorweave.json
@@ -125,6 +126,7 @@ be49357c6ee04402a71b75963b5b2e047fee8938 data/ars_nouveau/loot_table/blocks/smoo
 ee44c86873143caf5b8e9fc05d74acb98fa9f3b9 data/ars_nouveau/loot_table/blocks/smooth_sourcestone_small_bricks_slab.json
 eda12a15644f4ac9fbf901cd738434df58db11a9 data/ars_nouveau/loot_table/blocks/smooth_sourcestone_small_bricks_stairs.json
 62a4e61ba7b3bbd78d5cdca0cba621c98113638b data/ars_nouveau/loot_table/blocks/smooth_sourcestone_stairs.json
+585b4114f9b56f12e653eb71bf4faa0c563645b1 data/ars_nouveau/loot_table/blocks/sourceberry_bush.json
 1fc8c5595757f818906588e2a7ad87f3ee7ad89d data/ars_nouveau/loot_table/blocks/sourceberry_sack.json
 42e5040c6a81a4617c6ef147e12e17267bbbcd2a data/ars_nouveau/loot_table/blocks/sourcestone.json
 b56aaf60ce3bafd66649843757a01d84d1cc8453 data/ars_nouveau/loot_table/blocks/sourcestone_alternating.json

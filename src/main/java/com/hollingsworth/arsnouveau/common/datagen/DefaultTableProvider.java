@@ -5,16 +5,14 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.block.AlterationTable;
-import com.hollingsworth.arsnouveau.common.block.ArchfruitPod;
-import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
-import com.hollingsworth.arsnouveau.common.block.ThreePartBlock;
+import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.EntityLootSubProvider;
@@ -26,8 +24,11 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.properties.Property;
@@ -37,12 +38,10 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
-import net.minecraft.world.level.storage.loot.functions.CopyNameFunction;
-import net.minecraft.world.level.storage.loot.functions.EnchantedCountIncreaseFunction;
-import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.functions.*;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
@@ -70,6 +69,7 @@ public class DefaultTableProvider extends LootTableProvider {
 
         @Override
         protected void generate() {
+            HolderLookup.RegistryLookup<Enchantment> registrylookup = this.registries.lookupOrThrow(Registries.ENCHANTMENT);
             registerDropSelf(BlockRegistry.ENCHANTED_SPELL_TURRET);
 
             registerDropSelf(BlockRegistry.BLAZING_LOG);
@@ -222,6 +222,54 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.ARCHWOOD_SCONCE_BLOCK.get());
             registerDropSelf(BlockRegistry.REDSTONE_RELAY.get());
             registerDropSelf(BlockRegistry.SOURCEBERRY_SACK.get());
+            LootItemCondition.Builder lootitemcondition$builder1 = LootItemBlockStatePropertyCondition.hasBlockStateProperties(BlockRegistry.MAGE_BLOOM_CROP.get())
+                    .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(CropBlock.AGE, 7));
+            add(BlockRegistry.MAGE_BLOOM_CROP.get(), createCropDrops(BlockRegistry.MAGE_BLOOM_CROP.get(), ItemsRegistry.MAGE_BLOOM.asItem(), BlockRegistry.MAGE_BLOOM_CROP.get().asItem(),lootitemcondition$builder1, 0));
+
+            this.add(
+                    BlockRegistry.SOURCEBERRY_BUSH.get(),
+                    p_249159_ -> this.applyExplosionDecay(
+                            p_249159_,
+                            LootTable.lootTable()
+                                    .withPool(
+                                            LootPool.lootPool()
+                                                    .when(
+                                                            LootItemBlockStatePropertyCondition.hasBlockStateProperties(BlockRegistry.SOURCEBERRY_BUSH.get())
+                                                                    .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SourceBerryBush.AGE, 3))
+                                                    )
+                                                    .add(LootItem.lootTableItem(BlockRegistry.SOURCEBERRY_BUSH.asItem()))
+                                                    .apply(SetItemCountFunction.setCount(UniformGenerator.between(2.0F, 3.0F)))
+                                                    .apply(ApplyBonusCount.addUniformBonusCount(registrylookup.getOrThrow(Enchantments.FORTUNE)))
+                                    )
+                                    .withPool(
+                                            LootPool.lootPool()
+                                                    .when(
+                                                            LootItemBlockStatePropertyCondition.hasBlockStateProperties(BlockRegistry.SOURCEBERRY_BUSH.get())
+                                                                    .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SourceBerryBush.AGE, 2))
+                                                    )
+                                                    .add(LootItem.lootTableItem(BlockRegistry.SOURCEBERRY_BUSH.asItem()))
+                                                    .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F)))
+                                                    .apply(ApplyBonusCount.addUniformBonusCount(registrylookup.getOrThrow(Enchantments.FORTUNE)))
+                                    )
+                    )
+            );
+        }
+
+        protected LootTable.Builder createCropDrops(Block pCropBlock, Item pGrownCropItem, Item pSeedsItem, LootItemCondition.Builder pDropGrownCropCondition, int bonus) {
+            HolderLookup.RegistryLookup<Enchantment> registrylookup = this.registries.lookupOrThrow(Registries.ENCHANTMENT);
+            return this.applyExplosionDecay(
+                    pCropBlock,
+                    LootTable.lootTable()
+                            .withPool(LootPool.lootPool().add(LootItem.lootTableItem(pGrownCropItem).when(pDropGrownCropCondition).otherwise(LootItem.lootTableItem(pSeedsItem))))
+                            .withPool(
+                                    LootPool.lootPool()
+                                            .when(pDropGrownCropCondition)
+                                            .add(
+                                                    LootItem.lootTableItem(pSeedsItem)
+                                                            .apply(ApplyBonusCount.addBonusBinomialDistributionCount(registrylookup.getOrThrow(Enchantments.FORTUNE), 0.5714286F, bonus))
+                                            )
+                            )
+            );
         }
 
         @Override
