@@ -89,7 +89,7 @@ public class ImbuementRecipe implements IImbuementRecipe {
 
     @Override
     public ItemStack assemble(ImbuementTile pCraftingContainer, HolderLookup.Provider pRegistries) {
-        return ItemStack.EMPTY;
+        return this.output.copy();
     }
 
     @Override
@@ -99,7 +99,7 @@ public class ImbuementRecipe implements IImbuementRecipe {
 
     @Override
     public ItemStack getResultItem(HolderLookup.Provider pRegistries) {
-        return ItemStack.EMPTY;
+        return this.output.copy();
     }
 
     @Override
