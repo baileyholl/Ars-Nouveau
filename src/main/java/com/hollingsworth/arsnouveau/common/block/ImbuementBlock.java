@@ -64,7 +64,7 @@ public class ImbuementBlock extends TickableModBlock {
                 tile.stack = ItemStack.EMPTY;
             } else {
                 tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
-                PortUtil.sendMessageNoSpam(player, Component.translatable("ars_nouveau.imbuement.crafting_started", recipe.getResult(tile).getHoverName()));
+                PortUtil.sendMessageNoSpam(player, recipe.getCraftingStartedText(tile));
                 tile.updateBlock();
             }
         } else {
