@@ -40,10 +40,10 @@ public class SpellPrismBlock extends ModBlock implements IPrismaticBlock {
         return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
-    public static Position getDispensePosition(BlockPos pos, Direction direction) {
-        double d0 = pos.getX() + 0.3D * direction.getStepX();
-        double d1 = pos.getY() + 0.3D * direction.getStepY();
-        double d2 = pos.getZ() + 0.3D * direction.getStepZ();
+    public Position getDispensePosition(BlockPos pos, Direction direction) {
+        double d0 = pos.getX() + 0.5 + 0.3D * direction.getStepX();
+        double d1 = pos.getY() + 0.5 + 0.3D * direction.getStepY();
+        double d2 = pos.getZ() + 0.5 + 0.3D * direction.getStepZ();
         return new Vec3(d0, d1, d2);
     }
 

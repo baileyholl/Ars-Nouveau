@@ -1,17 +1,31 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
+import com.hollingsworth.arsnouveau.common.block.BasicSpellTurret;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Position;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -23,7 +37,7 @@ import java.util.List;
 public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider, GeoBlockEntity, IAnimationListener, ITickable,  ICapabilityProvider<BasicSpellTurretTile, Void, SpellCaster> {
 
     boolean playRecoil;
-    public SpellCaster spellCaster = new SpellCaster(0, null, false, null, 1);
+    protected SpellCaster spellCaster = new SpellCaster(0, null, false, null, 1);
 
     public BasicSpellTurretTile(BlockEntityType<?> p_i48289_1_, BlockPos pos, BlockState state) {
         super(p_i48289_1_, pos, state);
@@ -35,6 +49,30 @@ public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider
 
     public int getManaCost() {
         return this.spellCaster.getSpell().getCost();
+    }
+
+    public void setSpell(Spell spell){
+        this.spellCaster = this.spellCaster.setSpell(spell, 0);
+    }
+
+    public void shootSpell(){
+        BlockPos pos = this.getBlockPos();
+
+        if (spellCaster.getSpell().isEmpty() || !(this.level instanceof ServerLevel level))
+            return;
+        int manaCost = getManaCost();
+        if (manaCost > 0 && SourceUtil.takeSourceWithParticles(pos, level, 10, manaCost) == null)
+            return;
+        Networking.sendToNearbyClient(level, pos, new PacketOneShotAnimation(pos));
+        Position iposition = BasicSpellTurret.getDispensePosition(pos, level.getBlockState(pos).getValue(BasicSpellTurret.FACING));
+        Direction direction = level.getBlockState(pos).getValue(BasicSpellTurret.FACING);
+        FakePlayer fakePlayer = ANFakePlayer.getPlayer(level);
+        fakePlayer.setPos(pos.getX(), pos.getY(), pos.getZ());
+        EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(level, spellCaster.getSpell(), fakePlayer, new TileCaster(this, SpellContext.CasterType.TURRET)));
+        if (resolver.castType != null && BasicSpellTurret.TURRET_BEHAVIOR_MAP.containsKey(resolver.castType)) {
+            BasicSpellTurret.TURRET_BEHAVIOR_MAP.get(resolver.castType).onCast(resolver, level, pos, fakePlayer, iposition, direction);
+            spellCaster.playSound(pos, level, null, spellCaster.getCurrentSound(), SoundSource.BLOCKS);
+        }
     }
 
     @Override

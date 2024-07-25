@@ -1,16 +1,20 @@
 package com.hollingsworth.arsnouveau.common.items.data;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 
 import java.util.Objects;
+import java.util.Optional;
 
-public record ScryPosData(BlockPos pos) {
-    public static Codec<ScryPosData> CODEC = BlockPos.CODEC.xmap(ScryPosData::new, ScryPosData::pos);
+public record ScryPosData(Optional<BlockPos> pos) {
+    public static Codec<ScryPosData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            BlockPos.CODEC.optionalFieldOf("pos").forGetter(ScryPosData::pos)
+    ).apply(instance, ScryPosData::new));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, ScryPosData> STREAM_CODEC = StreamCodec.composite(BlockPos.STREAM_CODEC, ScryPosData::pos, ScryPosData::new);
+    public ScryPosData(BlockPos pos){
+        this(Optional.ofNullable(pos));
+    }
 
     @Override
     public boolean equals(Object o) {

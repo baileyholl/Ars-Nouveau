@@ -1,15 +1,13 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
-import com.hollingsworth.arsnouveau.api.spell.*;
-import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
-import com.hollingsworth.arsnouveau.api.util.SourceUtil;
+import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
+import com.hollingsworth.arsnouveau.api.spell.ITurretBehavior;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
+import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.common.block.tile.BasicSpellTurretTile;
 import com.hollingsworth.arsnouveau.common.block.tile.RotatingTurretTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -18,7 +16,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -44,7 +41,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -52,7 +48,6 @@ import java.util.List;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-@SuppressWarnings("deprecation")
 public class BasicSpellTurret extends TickableModBlock implements SimpleWaterloggedBlock {
 
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
@@ -72,7 +67,9 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
 
     @Override
     public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource rand) {
-        this.shootSpell(worldIn, pos);
+        if(worldIn.getBlockEntity(pos) instanceof BasicSpellTurretTile tile){
+            tile.shootSpell();
+        }
     }
 
     static {
@@ -109,27 +106,6 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
         });
     }
 
-    public void shootSpell(ServerLevel world, BlockPos pos) {
-        if (!(world.getBlockEntity(pos) instanceof BasicSpellTurretTile tile)) return;
-        SpellCaster caster = tile.spellCaster;
-        if (caster.getSpell().isEmpty())
-            return;
-        int manaCost = tile.getManaCost();
-        if (manaCost > 0 && SourceUtil.takeSourceWithParticles(pos, world, 10, manaCost) == null)
-            return;
-        Networking.sendToNearbyClient(world, pos, new PacketOneShotAnimation(pos));
-        Position iposition = getDispensePosition(pos, world.getBlockState(pos).getValue(FACING));
-        Direction direction = world.getBlockState(pos).getValue(FACING);
-        FakePlayer fakePlayer = ANFakePlayer.getPlayer(world);
-        fakePlayer.setPos(pos.getX(), pos.getY(), pos.getZ());
-        EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(world, caster.getSpell(), fakePlayer, new TileCaster(tile, SpellContext.CasterType.TURRET)));
-        if (resolver.castType != null && TURRET_BEHAVIOR_MAP.containsKey(resolver.castType)) {
-            TURRET_BEHAVIOR_MAP.get(resolver.castType).onCast(resolver, world, pos, fakePlayer, iposition, direction);
-            caster.playSound(pos, world, null, caster.getCurrentSound(), SoundSource.BLOCKS);
-        }
-    }
-
-
     public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         boolean neighborSignal = worldIn.hasNeighborSignal(pos) || worldIn.hasNeighborSignal(pos.above());
         boolean isTriggered = state.getValue(TRIGGERED);
@@ -146,9 +122,9 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
      * Get the position where the dispenser at the given Coordinates should dispense to.
      */
     public static Position getDispensePosition(BlockPos pos, Direction direction) {
-        double d0 = pos.getX() + 0.5D * (double) direction.getStepX();
-        double d1 = pos.getY() + 0.5D * (double) direction.getStepY();
-        double d2 = pos.getZ() + 0.5D * (double) direction.getStepZ();
+        double d0 = pos.getX() +  0.5 + 0.5D * (double) direction.getStepX();
+        double d1 = pos.getY() + 0.5 + 0.5D * (double) direction.getStepY();
+        double d2 = pos.getZ()  + 0.5 + 0.5D * (double) direction.getStepZ();
         return new Vec3(d0, d1, d2);
     }
 
@@ -196,8 +172,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
                 return ItemInteractionResult.SUCCESS;
             }
             if (worldIn.getBlockEntity(pos) instanceof BasicSpellTurretTile tile) {
-                tile.spellCaster.copyFromCaster(SpellCasterRegistry.from(stack));
-                tile.spellCaster.setSpell(spell);
+                tile.setSpell(spell);
                 tile.updateBlock();
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.spell_set"));
                 worldIn.sendBlockUpdated(pos, state, state, 2);

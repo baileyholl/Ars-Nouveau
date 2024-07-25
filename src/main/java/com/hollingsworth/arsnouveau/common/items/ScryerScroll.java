@@ -11,11 +11,12 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ScryerScroll extends ModItem {
 
     public ScryerScroll() {
-        super(defaultProps().component(DataComponentRegistry.SCRY_DATA, new ScryPosData(null)));
+        super(defaultProps().component(DataComponentRegistry.SCRY_DATA, new ScryPosData(Optional.empty())));
         withTooltip(Component.translatable("tooltip.ars_nouveau.scryer_scroll"));
     }
 
@@ -34,9 +35,10 @@ public class ScryerScroll extends ModItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
-        ScryPosData data = stack.getOrDefault(DataComponentRegistry.SCRY_DATA, new ScryPosData(null));
-        if (data.pos() != null) {
-            tooltip2.add(Component.translatable("ars_nouveau.scryer_scroll.bound", data.pos().getX() + ", " + data.pos().getY() + ", " + data.pos().getZ()));
+        ScryPosData data = stack.get(DataComponentRegistry.SCRY_DATA);
+        var pos = data.pos().orElse(null);
+        if (pos != null) {
+            tooltip2.add(Component.translatable("ars_nouveau.scryer_scroll.bound", pos.getX() + ", " + pos.getY() + ", " + pos.getZ()));
         } else {
             tooltip2.add(Component.translatable("ars_nouveau.scryer_scroll.craft"));
         }

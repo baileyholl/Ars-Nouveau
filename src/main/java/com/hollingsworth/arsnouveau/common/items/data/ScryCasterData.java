@@ -31,6 +31,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class ScryCasterData extends AbstractCaster<ScryCasterData> {
 
     public static final MapCodec<ScryCasterData> CODEC = createCodec(ScryCasterData::new);
@@ -78,7 +80,7 @@ public class ScryCasterData extends AbstractCaster<ScryCasterData> {
 
         ScryPosData data = stack.get(DataComponentRegistry.SCRY_DATA);
         boolean playerHoldingScroll = entity.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof ScryerScroll;
-        BlockPos scryPos = playerHoldingScroll ? player.getItemInHand(InteractionHand.OFF_HAND).getOrDefault(DataComponentRegistry.SCRY_DATA, new ScryPosData(null)).pos() : data.pos();
+        BlockPos scryPos = playerHoldingScroll ? player.getItemInHand(InteractionHand.OFF_HAND).getOrDefault(DataComponentRegistry.SCRY_DATA, new ScryPosData(Optional.empty())).pos().orElse(null) : data.pos().orElse(null);
         if(scryPos == null){
             PortUtil.sendMessage(entity, Component.translatable("ars_nouveau.scry_caster.no_pos"));
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);

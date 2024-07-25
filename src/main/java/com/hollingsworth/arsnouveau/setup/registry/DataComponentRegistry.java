@@ -27,7 +27,7 @@ public class DataComponentRegistry {
 
     public static final DeferredHolder<DataComponentType<?> , DataComponentType<PresentData>> PRESENT = DATA.register("present", () -> DataComponentType.<PresentData>builder().persistent(PresentData.CODEC).networkSynchronized(PresentData.STREAM_CODEC).build());
 
-    public static final DeferredHolder<DataComponentType<?> , DataComponentType<ScryPosData>> SCRY_DATA = DATA.register("scry_data", () -> DataComponentType.<ScryPosData>builder().persistent(ScryPosData.CODEC).networkSynchronized(ScryPosData.STREAM_CODEC).build());
+    public static final DeferredHolder<DataComponentType<?> , DataComponentType<ScryPosData>> SCRY_DATA = DATA.register("scry_data", () -> DataComponentType.<ScryPosData>builder().persistent(ScryPosData.CODEC).build());
 
     public static final DeferredHolder<DataComponentType<?> , DataComponentType<WarpScrollData>> WARP_SCROLL = DATA.register("warp_scroll", () -> DataComponentType.<WarpScrollData>builder().persistent(WarpScrollData.CODEC).networkSynchronized(WarpScrollData.STREAM_CODEC).build());
 

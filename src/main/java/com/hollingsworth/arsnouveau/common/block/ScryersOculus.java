@@ -79,7 +79,7 @@ public class ScryersOculus extends TickableModBlock {
                 PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.scryers_eye.no_pos"));
                 return;
             }
-            Networking.sendToServer(new PacketMountCamera(data.pos()));
+            Networking.sendToServer(new PacketMountCamera(data.pos().orElse(null)));
         }, slots, (slotData, posestack, positionx, posy, size, transparent) -> RenderUtils.drawItemAsIcon(slotData.getDefaultInstance(), posestack, positionx, posy, size, transparent), 3)));
     }
 
