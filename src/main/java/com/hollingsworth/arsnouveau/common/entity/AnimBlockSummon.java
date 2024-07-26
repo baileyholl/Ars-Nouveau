@@ -12,10 +12,13 @@ import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -234,11 +237,12 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         String spawnAnim = "spawn";
-        data.add(new AnimationController<>(this, spawnAnim, 0, (e) -> {
+        data.add(new AnimationController<>(this, spawnAnim, 1, (e) -> {
             if (!entityData.get(CAN_WALK)) {
                 e.getController().setAnimation(RawAnimation.begin().thenPlay(spawnAnim));
                 return PlayState.CONTINUE;
             }
+            e.getController().forceAnimationReset();
             return PlayState.STOP;
         }));
 
@@ -261,6 +265,16 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     public BlockState getBlockState() {
         return blockState != null ? blockState : BlockRegistry.MAGE_BLOCK.get().defaultBlockState();
     }
+
+    @Override
+    public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity p_352287_) {
+        return new ClientboundAddEntityPacket(this, p_352287_, Block.getId(this.getBlockState()));
+    }
+
+//    @Override
+//    public double getBoneResetTime() {
+//        return 0;
+//    }
 
     @Override
     public void recreateFromPacket(ClientboundAddEntityPacket pPacket) {

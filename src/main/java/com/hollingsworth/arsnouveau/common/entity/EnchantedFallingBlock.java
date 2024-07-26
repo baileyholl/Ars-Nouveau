@@ -21,11 +21,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
@@ -78,11 +81,13 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
 
     public EnchantedFallingBlock(EntityType<? extends ColoredProjectile> p_31950_, Level p_31951_) {
         super(p_31950_, p_31951_);
+        this.blocksBuilding = true;
     }
 
     protected EnchantedFallingBlock(EntityType<? extends ColoredProjectile> p_31950_, Level p_31951_, double p_31952_, double p_31953_, double p_31954_) {
         this(p_31950_, p_31951_);
         this.setPos(p_31952_, p_31953_, p_31954_);
+        this.blocksBuilding = true;
     }
 
     public EnchantedFallingBlock(EntityType<? extends ColoredProjectile> p_31950_, Level world, double v, double y, double v1, BlockState blockState, SpellResolver resolver) {
@@ -257,7 +262,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
                 this.discard();
                 if (block instanceof Fallable fallable) {
                     fallable.onLand(this.level, blockpos, this.blockState, blockstate, new FallingBlockEntity(level, this.getX(), this.getY(), this.getZ(), this.blockState));
-                }else if(context != null){
+                }else if(context != null && resolver != null){
                     RewindAttachment.get(context).addRewindEvent(level.getGameTime(), new EntityToBlockRewind(this, blockpos, this.blockState));
                     ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
                             new Vec3(blockpos.getX(), blockpos.getY(), blockpos.getZ()), Direction.DOWN, blockpos, false
@@ -385,6 +390,11 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
 
     public BlockState getBlockState() {
         return this.blockState;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity p_352287_) {
+        return new ClientboundAddEntityPacket(this, p_352287_, Block.getId(this.getBlockState()));
     }
 
     public boolean onlyOpCanSetNbt() {

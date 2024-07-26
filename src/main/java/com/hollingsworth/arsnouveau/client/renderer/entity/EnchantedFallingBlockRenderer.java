@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.client.renderer.tile;
+package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -34,7 +34,7 @@ public class EnchantedFallingBlockRenderer<T extends EnchantedFallingBlock> exte
                 pMatrixStack.translate(-0.5D, 0.0D, -0.5D);
                 var model = this.dispatcher.getBlockModel(blockstate);
                 for (var renderType : model.getRenderTypes(blockstate, RandomSource.create(blockstate.getSeed(pEntity.getStartPos())), net.neoforged.neoforge.client.model.data.ModelData.EMPTY))
-                    this.dispatcher.getModelRenderer().tesselateBlock(level, model, blockstate, blockpos, pMatrixStack, pBuffer.getBuffer(renderType), false, RandomSource.create(), blockstate.getSeed(pEntity.getStartPos()), OverlayTexture.NO_OVERLAY, net.neoforged.neoforge.client.model.data.ModelData.EMPTY, renderType);
+                    this.dispatcher.getModelRenderer().tesselateBlock(level, model, blockstate, blockpos, pMatrixStack, pBuffer.getBuffer(net.neoforged.neoforge.client.RenderTypeHelper.getMovingBlockRenderType(renderType)), false, RandomSource.create(), blockstate.getSeed(pEntity.getStartPos()), OverlayTexture.NO_OVERLAY, net.neoforged.neoforge.client.model.data.ModelData.EMPTY, renderType);
                 pMatrixStack.popPose();
                 super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
             }
