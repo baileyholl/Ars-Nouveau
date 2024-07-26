@@ -6,6 +6,8 @@ import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.sounds.SoundEvents;
@@ -36,6 +38,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
+    public static EntityDataAccessor<Optional<UUID>> OWNER_UNIQUE_ID = SynchedEntityData.defineId(EntityAllyVex.class, EntityDataSerializers.OPTIONAL_UUID);
+
     private LivingEntity owner;
     @Nullable
     private BlockPos boundOrigin;
