@@ -319,9 +319,10 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         var recipe = getRecipeNow();
         if(recipe != null && !recipe.getResult(this).isEmpty() && stack != null && !stack.isEmpty()) {
             int cost = recipe.getSourceCost(this);
-            tooltip.add(Component.translatable("ars_nouveau.crafting", recipe.getResult(this).getHoverName()));
+            tooltip.add(recipe.getCraftingText(this));
             if(cost > 0) {
-                tooltip.add(Component.translatable("ars_nouveau.crafting_progress", Math.min(100, (getSource() * 100) / cost)).withStyle(ChatFormatting.GOLD));
+                int progress = Math.min(100, (getSource() * 100 / cost));
+                tooltip.add(recipe.getCraftingProgressText(this, progress));
             }
         }
     }
