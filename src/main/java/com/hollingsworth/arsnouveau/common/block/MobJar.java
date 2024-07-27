@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
@@ -80,7 +81,7 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
                     stack.shrink(1);
                     return InteractionResult.CONSUME;
                 }
-            } else if (!stack.isEmpty() && !(stack.getItem() instanceof MobJarItem)) {
+            } else if (!stack.isEmpty() && !(stack.getItem() instanceof MobJarItem) && !(pPlayer instanceof ANFakePlayer)) {
                 ItemEntity entity = new ItemEntity(EntityType.ITEM, pLevel);
                 entity.setItem(stack.copy());
                 tile.setEntityData(entity);
