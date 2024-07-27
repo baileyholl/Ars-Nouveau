@@ -25,11 +25,6 @@ public class HarvestBerryState extends TravelToPosState{
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
     public StarbyState onDestinationReached() {
         if (level.getBlockState(targetPos).getBlock() instanceof SourceBerryBush) {
             int i = level.getBlockState(targetPos).getValue(AGE);
@@ -59,7 +54,9 @@ public class HarvestBerryState extends TravelToPosState{
     public static BlockPos getNearbyManaBerry(Level world, Starbuncle entity) {
         List<BlockPos> posList = new ArrayList<>();
         for (BlockPos blockpos : BlockPos.withinManhattan(entity.blockPosition(), 10, 3, 10)) {
-            if (world.getBlockState(blockpos).getBlock() instanceof SourceBerryBush && world.getBlockState(blockpos).getValue(AGE) > 1) {
+            var state = world.getBlockState(blockpos).getBlock();
+            if (state instanceof SourceBerryBush
+                    && world.getBlockState(blockpos).getValue(AGE) > 1) {
                 posList.add(blockpos.immutable());
             }
         }

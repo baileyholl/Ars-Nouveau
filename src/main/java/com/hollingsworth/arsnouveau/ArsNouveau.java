@@ -42,7 +42,6 @@ import net.neoforged.neoforge.event.server.ServerStartedEvent;
 
 import java.util.function.Supplier;
 
-
 @Mod(ArsNouveau.MODID)
 public class ArsNouveau {
     public static final String MODID = "ars_nouveau";
@@ -53,12 +52,14 @@ public class ArsNouveau {
     public static boolean optifineLoaded = false;
     public static boolean sodiumLoaded = false;
     public static boolean patchouliLoaded = false;
+
     public static TicketController ticketController = new TicketController(ArsNouveau.prefix("ticket_controller"),  (level, ticketHelper) -> {
         ticketHelper.getEntityTickets().forEach(((uuid, chunk) -> {
             if (level.getEntity(uuid) == null)
                 ticketHelper.removeAllTickets(uuid);
         }));
     });
+    public static boolean isDebug = !FMLEnvironment.production;
     public ArsNouveau(IEventBus modEventBus, ModContainer modContainer){
         NeoForge.EVENT_BUS.addListener(FMLEventHandler::onServerStopped);
         caelusLoaded = ModList.get().isLoaded("caelus");

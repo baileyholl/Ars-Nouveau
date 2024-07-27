@@ -2,8 +2,10 @@ package com.hollingsworth.arsnouveau.common.entity.statemachine.starbuncle;
 
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyTransportBehavior;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -49,7 +51,8 @@ public class DecideStarbyActionState extends StarbyState{
             }
             if(behavior.berryBackoff <= 0) {
                 BlockPos takeBerryPos = HarvestBerryState.getNearbyManaBerry(starbuncle.level, starbuncle);
-                if (takeBerryPos != null) {
+                if (takeBerryPos != null
+                        && behavior.getValidStorePos(new ItemStack(BlockRegistry.SOURCEBERRY_BUSH)) != null) {
                     return new HarvestBerryState(starbuncle, behavior, takeBerryPos);
                 }
                 behavior.berryBackoff = 20 + starbuncle.getRandom().nextInt(20);

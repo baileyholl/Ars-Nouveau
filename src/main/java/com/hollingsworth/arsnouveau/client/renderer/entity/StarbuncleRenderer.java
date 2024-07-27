@@ -63,6 +63,10 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
         }else if(animatable.getName().getString().equals("Bailey")){
             return ShaderRegistry.rainbowEntity(textureLocation, ArsNouveau.prefix( "textures/entity/starbuncle_mask.png"),true);
         }
+
+        if(animatable.getName().getString().equals("Gootastic")){
+            return RenderType.entityTranslucent(textureLocation);
+        }
         return RenderType.entityCutoutNoCull(textureLocation);
     }
 }

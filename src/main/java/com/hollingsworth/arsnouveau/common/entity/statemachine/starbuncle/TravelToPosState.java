@@ -23,12 +23,7 @@ public class TravelToPosState extends StarbyState{
     @Override
     public void onStart() {
         super.onStart();
-        if (targetPos == null) {
-            starbuncle.setBackOff(60 + starbuncle.level.random.nextInt(60));
-            return;
-        }
         starbuncle.addGoalDebug(this, new DebugEvent("StartedGoal", "Started goal "));
-
     }
 
     @Override

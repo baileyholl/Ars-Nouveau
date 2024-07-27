@@ -63,7 +63,7 @@ public class FindItemState extends StarbyState{
     @Override
     public @Nullable StarbyState tick() {
         if(dest == null){
-            starbuncle.setBackOff(30 + starbuncle.level.random.nextInt(30));
+            behavior.findItemBackoff = 30 + starbuncle.level.random.nextInt(30);
             starbuncle.addGoalDebug(this, new DebugEvent("NotReachable", "No pathable items nearby"));
             return new DecideStarbyActionState(starbuncle, behavior);
         }
@@ -77,7 +77,6 @@ public class FindItemState extends StarbyState{
             Starbuncle nextAvailableStarby = starbuncle.getStarbuncleWithSpace();
             List<ItemEntity> nearbyItems = FindItemState.nearbyItems(starbuncle, behavior);
             if(nextAvailableStarby != null && !nearbyItems.isEmpty()){
-                System.out.println(this + " set next starby to " + nextAvailableStarby);
                 return new FindItemState(starbuncle, behavior, nearbyItems);
             }
             return new DecideStarbyActionState(starbuncle, behavior);
