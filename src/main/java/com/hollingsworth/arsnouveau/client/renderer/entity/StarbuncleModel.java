@@ -30,6 +30,9 @@ public class StarbuncleModel extends GeoModel<Starbuncle> {
 
     @Override
     public ResourceLocation getModelResource(Starbuncle carbuncle) {
+        if(carbuncle.getName().getString().equals("Gootastic")){
+            return new ResourceLocation(ArsNouveau.MODID, "geo/goobuncle.geo.json");
+        }
         return new ResourceLocation(ArsNouveau.MODID, "geo/starbuncle.geo.json");
     }
 

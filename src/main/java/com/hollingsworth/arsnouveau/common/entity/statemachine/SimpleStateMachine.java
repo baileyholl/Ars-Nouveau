@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.statemachine;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.util.Log;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import javax.annotation.Nonnull;
 
@@ -16,7 +16,7 @@ public class SimpleStateMachine<State extends IState, Event extends IStateEvent>
     }
 
     protected void changeState(@Nonnull State nextState) {
-        if(isDebug()){
+        if(ArsNouveau.isDebug){
             Log.getLogger().debug("Changing state from " + currentState + " to " + nextState);
         }
         currentState.onEnd();
@@ -44,7 +44,4 @@ public class SimpleStateMachine<State extends IState, Event extends IStateEvent>
         return currentState;
     }
 
-    public boolean isDebug(){
-        return !FMLEnvironment.production;
-    }
 }
