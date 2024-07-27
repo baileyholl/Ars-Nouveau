@@ -210,4 +210,13 @@ public class Spell implements Cloneable {
             throw new AssertionError();
         }
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        } else {
+            return other instanceof Spell otherSpell && serialize().equals(otherSpell.serialize());
+        }
+    }
 }
