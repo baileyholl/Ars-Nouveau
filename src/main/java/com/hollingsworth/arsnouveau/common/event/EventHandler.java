@@ -19,6 +19,7 @@ import com.hollingsworth.arsnouveau.common.command.*;
 import com.hollingsworth.arsnouveau.common.compat.CaelusHandler;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.DispelEntityRecipe;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
+import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import com.hollingsworth.arsnouveau.common.entity.debug.FixedStack;
 import com.hollingsworth.arsnouveau.common.items.EnchantersSword;
@@ -72,6 +73,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -471,6 +473,15 @@ public class EventHandler {
         }
         for (UUID uuid : sprigsToRemove) {
             Whirlisprig.WHIRLI_MAP.removeEntity(level, uuid);
+        }
+    }
+
+    @SubscribeEvent
+    public static void endDupePatch(EntityTravelToDimensionEvent event) {
+        if (event.getDimension() == Level.END) {
+            if (event.getEntity() instanceof EnchantedFallingBlock) {
+                event.setCanceled(true);
+            }
         }
     }
 

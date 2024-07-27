@@ -13,7 +13,6 @@ import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -296,11 +295,14 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        var recipe = getRecipeNow();
-        if (recipe != null && !recipe.value().output.isEmpty() && stack != null && !stack.isEmpty()) {
-            tooltip.add(Component.translatable("ars_nouveau.crafting", recipe.value().output.getHoverName()));
-            if (recipe.value().source > 0) {
-                tooltip.add(Component.translatable("ars_nouveau.crafting_progress", Math.min(100, (getSource() * 100) / recipe.value().source)).withStyle(ChatFormatting.GOLD));
+        var holder = getRecipeNow();
+        var recipe = holder == null ? null : holder.value();
+        if(recipe != null && !recipe.getResultItem(this.level.registryAccess()).isEmpty() && stack != null && !stack.isEmpty()) {
+            int cost = recipe.getSourceCost(this);
+            tooltip.add(recipe.getCraftingText(this));
+            if(cost > 0) {
+                int progress = Math.min(100, (getSource() * 100 / cost));
+                tooltip.add(recipe.getCraftingProgressText(this, progress));
             }
         }
     }
