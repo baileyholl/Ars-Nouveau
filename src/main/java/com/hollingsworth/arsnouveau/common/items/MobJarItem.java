@@ -77,7 +77,7 @@ public class MobJarItem extends BlockItem implements GeoItem {
         var jarData = stack.get(DataComponentRegistry.MOB_JAR);
         if(jarData == null)
             return null;
-        CompoundTag entityTag = jarData.entityTag();
+        CompoundTag entityTag = jarData.entityTag().orElse(new CompoundTag());
         if(entityTag.isEmpty())
             return null;
         return MobJarTile.loadEntityFromTag(level, entityTag);

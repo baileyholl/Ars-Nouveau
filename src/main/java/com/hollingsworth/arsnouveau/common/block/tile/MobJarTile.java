@@ -37,7 +37,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
 
     private CompoundTag entityTag;
 
-    private CompoundTag extraDataTag;
+    private CompoundTag extraDataTag ;
 
     public MobJarTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.MOB_JAR_TILE, pos, state);
@@ -237,9 +237,9 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     @Override
     protected void applyImplicitComponents(DataComponentInput pComponentInput) {
         super.applyImplicitComponents(pComponentInput);
-        var jar = pComponentInput.getOrDefault(DataComponentRegistry.MOB_JAR, new MobJarData(new CompoundTag(), new CompoundTag()));
-        this.entityTag = jar.entityTag();
-        this.extraDataTag = jar.extraDataTag();
+        var jar = pComponentInput.getOrDefault(DataComponentRegistry.MOB_JAR, new MobJarData(Optional.empty(), Optional.empty()));
+        this.entityTag = jar.entityTag().orElse(null);
+        this.extraDataTag = jar.extraDataTag().orElse(null);
     }
 
     @Override
