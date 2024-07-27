@@ -689,7 +689,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     @Override
     public ResourceLocation getTexture(Starbuncle entity) {
         if(entity.getName().getString().equals("Gootastic")){
-            return new ResourceLocation(ArsNouveau.MODID, "textures/entity/starbuncle_goo.png");
+            return ArsNouveau.prefix( "textures/entity/starbuncle_goo.png");
         }
         String color = getColor(entity);
         if (color.isEmpty()) color = DyeColor.ORANGE.getName();
