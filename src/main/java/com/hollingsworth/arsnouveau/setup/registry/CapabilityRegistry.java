@@ -55,7 +55,12 @@ public class CapabilityRegistry {
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerEntity(MANA_CAPABILITY, EntityType.PLAYER, (player, ctx) -> new ManaCap(player));
         event.registerEntity(PLAYER_DATA_CAP, EntityType.PLAYER, (player, ctx) -> new ANPlayerDataCap(player));
-        var containers = List.of(BlockRegistry.ENCHANTING_APP_TILE, BlockRegistry.IMBUEMENT_TILE, BlockRegistry.SCRIBES_TABLE_TILE);
+        var containers = List.of(BlockRegistry.ENCHANTING_APP_TILE,
+                BlockRegistry.IMBUEMENT_TILE,
+                BlockRegistry.SCRIBES_TABLE_TILE,
+                BlockRegistry.ARCANE_PEDESTAL_TILE,
+                BlockRegistry.ARCHWOOD_CHEST_TILE,
+                BlockRegistry.REPOSITORY_TILE);
         for(var container : containers){
             event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, container.get(), (c, side) -> new InvWrapper(c));
         }
@@ -67,38 +72,6 @@ public class CapabilityRegistry {
     @SuppressWarnings("unused")
     @EventBusSubscriber(modid = ArsNouveau.MODID)
     public static class EventHandler {
-//TODO: verify if player clone needed
-
-//        /**
-//         * Copy the player's mana when they respawn after dying or returning from the end.
-//         *
-//         * @param event The event
-//         */
-//        @SubscribeEvent
-//        public static void playerClone(PlayerEvent.Clone event) {
-//            Player oldPlayer = event.getOriginal();
-////            oldPlayer.revive();
-//            var oldMana = getMana(oldPlayer).orElse(null);
-//            var newMana = getMana(event.getEntity()).orElse(null);
-//            if (oldMana != null && newMana != null) {
-//                newMana.setMaxMana(oldMana.getMaxMana());
-//                newMana.setMana(oldMana.getCurrentMana());
-//                newMana.setBookTier(oldMana.getBookTier());
-//                newMana.setGlyphBonus(oldMana.getGlyphBonus());
-//            }
-//
-//            var oldPlayerCap = getPlayerDataCap(oldPlayer).orElse(null);
-//            var newPlayerCap = getPlayerDataCap(event.getEntity()).orElse(new ANPlayerDataCap(event.getEntity()));
-//            if (oldPlayerCap != null) {
-//                CompoundTag tag = oldPlayerCap.serializeNBT(event.getOriginal().level.registryAccess());
-//                newPlayerCap.deserializeNBT(event.getOriginal().level.registryAccess(), tag);
-//                syncPlayerCap(event.getEntity());
-//            }
-//
-//
-////            event.getOriginal().invalidateCaps();
-//        }
-
 
         @SubscribeEvent
         public static void onPlayerLoginEvent(PlayerEvent.PlayerLoggedInEvent event) {
