@@ -10,6 +10,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -17,16 +18,46 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.stream.Stream;
 
 import static com.hollingsworth.arsnouveau.common.block.tile.SummoningTile.CONVERTED;
 
 public class WixieCauldron extends SummonBlock {
+
+    public static final VoxelShape shape = Stream.of(
+            Block.box(2, 0, 4, 4, 13, 14),
+            Block.box(4, 0, 12, 14, 13, 14),
+            Block.box(12, 0, 2, 14, 13, 12),
+            Block.box(2, 0, 2, 12, 13, 4),
+            Block.box(4, 0, 4, 12, 5, 12),
+            Block.box(4, 0, 4, 12, 5, 12),
+            Block.box(14, 0, 5, 16, 4, 16),
+            Block.box(14, 4, 9, 16, 8, 16),
+            Block.box(9, 0, 14, 14, 4, 16),
+            Block.box(2, 0, 14, 7, 4, 16),
+            Block.box(0, 0, 11, 2, 4, 16),
+            Block.box(0, 0, 2, 2, 9, 7),
+            Block.box(0, 0, 0, 2, 9, 2),
+            Block.box(2, 0, 0, 7, 9, 2),
+            Block.box(7, 0, 0, 11, 5, 2),
+            Block.box(9, 4, 14, 14, 8, 16)
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     public static final BooleanProperty FILLED = BooleanProperty.create("filled");
 
     public WixieCauldron() {
         super(defaultProperties().noOcclusion());
         registerDefaultState(defaultBlockState().setValue(CONVERTED, false).setValue(FILLED, false));
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        return shape;
     }
 
     @Override

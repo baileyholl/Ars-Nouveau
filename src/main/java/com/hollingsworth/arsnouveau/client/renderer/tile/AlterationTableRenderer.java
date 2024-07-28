@@ -38,6 +38,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.armortrim.ArmorTrim;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
@@ -316,6 +317,16 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
 
     @Override
     public boolean shouldRenderOffScreen(AlterationTile pBlockEntity) {
-        return false;
+        return true;
+    }
+
+    @Override
+    public int getViewDistance() {
+        return 256;
+    }
+
+    @Override
+    public AABB getRenderBoundingBox(AlterationTile blockEntity) {
+        return AABB.INFINITE;
     }
 }

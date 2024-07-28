@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+
 import java.util.concurrent.CompletableFuture;
 
 public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
@@ -301,6 +302,10 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(VEXING_LOGS).add(BlockRegistry.VEXING_LOG.get(), BlockRegistry.VEXING_WOOD.get(), BlockRegistry.STRIPPED_AWLOG_PURPLE.get(), BlockRegistry.STRIPPED_AWWOOD_PURPLE.get());
 
         this.tag(DOWSING_ROD).addTag(BUDDING_BLOCKS);
+
+        this.tag(BlockTags.SNOW_LAYER_CANNOT_SURVIVE_ON).add(BlockRegistry.ALTERATION_TABLE.get(), BlockRegistry.WIXIE_CAULDRON.get(), BlockRegistry.POTION_MELDER.get(),
+                BlockRegistry.SCRIBES_BLOCK.get(), BlockRegistry.IMBUEMENT_BLOCK.get(), BlockRegistry.SCRYERS_OCULUS.get(), BlockRegistry.ARCANE_PEDESTAL.get(),
+                BlockRegistry.CRAFTING_LECTERN.get(), BlockRegistry.ENCHANTING_APP_BLOCK.get());
     }
 
     public String getName() {

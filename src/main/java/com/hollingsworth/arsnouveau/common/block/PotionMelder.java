@@ -18,11 +18,27 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.stream.Stream;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
 public class PotionMelder extends TickableModBlock implements SimpleWaterloggedBlock {
+
+    public static VoxelShape shape = Stream.of(
+            Block.box(0, 13, 0, 16, 15, 16),
+            Block.box(1, 4, 1, 15, 13, 15),
+            Block.box(1, 0, 7, 6, 4, 9),
+            Block.box(7, 0, 1, 9, 4, 6),
+            Block.box(10, 0, 7, 15, 4, 9),
+            Block.box(7, 0, 10, 9, 4, 15)
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+
     public PotionMelder(Properties properties) {
         super(properties);
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
@@ -53,7 +69,17 @@ public class PotionMelder extends TickableModBlock implements SimpleWaterloggedB
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
     }
 
-   @NotNull
+    @Override
+    protected VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        return super.getCollisionShape(pState, pLevel, pPos, pContext);
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState p_220053_1_, BlockGetter p_220053_2_, BlockPos p_220053_3_, CollisionContext p_220053_4_) {
+        return shape;
+    }
+
+    @NotNull
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());

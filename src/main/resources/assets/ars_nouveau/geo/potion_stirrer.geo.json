@@ -13,16 +13,16 @@
 			"bones": [
 				{
 					"name": "stirrer2",
-					"pivot": [0, 17, 0]
+					"pivot": [0, 0, 0]
 				},
 				{
 					"name": "stirrer",
 					"parent": "stirrer2",
-					"pivot": [0, 18, 0],
+					"pivot": [0.75, 18, 0],
 					"rotation": [0, 0, 22.5],
 					"cubes": [
 						{
-							"origin": [3, 6, -1],
+							"origin": [3.75, 6, -1],
 							"size": [2, 16, 2],
 							"uv": {
 								"north": {"uv": [0, 0], "uv_size": [2, 16]},
@@ -34,7 +34,7 @@
 							}
 						},
 						{
-							"origin": [5, 19, -1],
+							"origin": [5.75, 19, -1],
 							"size": [2, 3, 2],
 							"uv": {
 								"north": {"uv": [8, 0], "uv_size": [2, 3]},
