@@ -39,6 +39,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.armortrim.ArmorTrim;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.client.ClientHooks;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
@@ -62,12 +63,13 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         this.armorTrimAtlas = Minecraft.getInstance().getModelManager().getAtlas(Sheets.ARMOR_TRIMS_SHEET);
     }
 
-    public void renderArmorStack(AlterationTile tile, PoseStack matrixStack, float ticks, MultiBufferSource iRenderTypeBuffer, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float partialTicks, int colour) {
+    public void renderArmorStack(AlterationTile tile, PoseStack matrixStack, float ticks, MultiBufferSource iRenderTypeBuffer, int packedLightIn, int packedOverlayIn) {
         matrixStack.pushPose();
         BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());
         if (!(state.getBlock() instanceof AlterationTable))
             return;
-        if (tile.armorStack.getItem() instanceof ArmorItem armorItem) {
+        ItemStack stack = tile.armorStack;
+        if (stack.getItem() instanceof ArmorItem armorItem) {
             // to rotate around a point: scale, point translate, rotate, object translate
             matrixStack.scale(0.5f, 0.5f, 0.5f);
             matrixStack.translate(-2.1, 3.3, 0);
@@ -84,14 +86,14 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
             matrixStack.mulPose(Axis.ZP.rotationDegrees(180F));
             matrixStack.translate(0, yOffset + rotForSlot(armorItem.getEquipmentSlot()), 0);
 
-            this.renderArmorPiece(tile, tile.armorStack, matrixStack, iRenderTypeBuffer, packedLightIn, getArmorModel(armorItem.getEquipmentSlot()), colour);
+            this.renderArmorPiece(tile,stack, matrixStack, iRenderTypeBuffer, packedLightIn, getArmorModel(armorItem.getEquipmentSlot()));
         } else {
-            Minecraft.getInstance().getItemRenderer().renderStatic(tile.armorStack, ItemDisplayContext.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, tile.getLevel(), (int) tile.getBlockPos().asLong());
+            Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, tile.getLevel(), (int) tile.getBlockPos().asLong());
         }
         matrixStack.popPose();
     }
 
-    public void renderPerks(AlterationTile tile, PoseStack matrixStack, float ticks, MultiBufferSource iRenderTypeBuffer, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float partialTicks) {
+    public void renderPerks(AlterationTile tile, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int packedLightIn, int packedOverlayIn) {
         if (tile.perkList.isEmpty()) {
             return;
         }
@@ -135,19 +137,21 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         return (this.usesInnerModel(pSlot) ? this.innerModel : this.outerModel);
     }
 
-    private void renderArmorPiece(AlterationTile tile, ItemStack itemstack, PoseStack pPoseStack, MultiBufferSource pBuffer, int packedLightIn, ArmorStandArmorModel armorModel, int defaultColor) {
+    private void renderArmorPiece(AlterationTile tile, ItemStack itemstack, PoseStack pPoseStack, MultiBufferSource pBuffer, int packedLightIn, ArmorStandArmorModel armorModel) {
         if (!(itemstack.getItem() instanceof ArmorItem armoritem))
             return;
 
         EquipmentSlot pSlot = armoritem.getEquipmentSlot();
-        Model model = getArmorModelHook(itemstack, pSlot, armorModel);
+        setPartVisibility(armorModel, pSlot);
+
+        Model model = ClientHooks.getArmorModel(Minecraft.getInstance().player, itemstack, pSlot, armorModel);
         boolean innerModel = this.usesInnerModel(pSlot);
         var dyeColor = itemstack.get(DataComponents.DYED_COLOR);
         int color = dyeColor != null ? FastColor.ABGR32.opaque(dyeColor.rgb()) : -1;
         ArmorMaterial armormaterial = armoritem.getMaterial().value();
         for (ArmorMaterial.Layer armormaterial$layer : armormaterial.layers()) {
             int j = armormaterial$layer.dyeable() ? color : -1;
-            var texture = net.neoforged.neoforge.client.ClientHooks.getArmorTexture(Minecraft.getInstance().player, itemstack, armormaterial$layer, innerModel, pSlot);
+            var texture = ClientHooks.getArmorTexture(Minecraft.getInstance().player, itemstack, armormaterial$layer, innerModel, pSlot);
             this.renderModel(pPoseStack, pBuffer, packedLightIn, model, j, texture);
         }
 
@@ -159,10 +163,6 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         if (itemstack.hasFoil()) {
             this.renderGlint(pPoseStack, pBuffer, packedLightIn, model);
         }
-    }
-
-    protected net.minecraft.client.model.Model getArmorModelHook(ItemStack itemStack, EquipmentSlot slot, HumanoidModel model) {
-        return net.neoforged.neoforge.client.ClientHooks.getArmorModel(Minecraft.getInstance().player, itemStack, slot, model);
     }
 
     private void renderModel(PoseStack p_289664_, MultiBufferSource p_289689_, int p_289681_, net.minecraft.client.model.Model p_289658_, int p_350798_, ResourceLocation p_324344_) {
@@ -225,8 +225,8 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
     }
 
     @Override
-    public void renderFinal(PoseStack stack, AlterationTile animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay, int colour) {
-        super.renderFinal(stack, animatable, model, bufferSource, buffer, partialTick, packedLight, packedOverlay, colour);
+    public void render(AlterationTile animatable, float partialTick, PoseStack stack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+        super.render(animatable, partialTick, stack, bufferSource, packedLight, packedOverlay);
         if (animatable.getLevel().getBlockState(animatable.getBlockPos()).getBlock() != BlockRegistry.ALTERATION_TABLE.get())
             return;
         if (animatable.getLevel().getBlockState(animatable.getBlockPos()).getValue(AlterationTable.PART) != ThreePartBlock.HEAD)
@@ -263,14 +263,14 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
             stack.translate(-1.5, 1.95, 0);
         }
 
-        this.renderArmorStack(animatable, stack, (float) ticks, bufferSource, buffer, packedLight, packedOverlay, partialTick, colour);
+        this.renderArmorStack(animatable, stack, (float) ticks, bufferSource, packedLight, packedOverlay);
         stack.popPose();
 
 
         stack.pushPose();
         stack.mulPose(perkQuat);
         stack.translate(perkTranslate.x, perkTranslate.y, perkTranslate.z);
-        this.renderPerks(animatable, stack, (float) ticks, bufferSource, buffer, packedLight, packedOverlay, partialTick);
+        this.renderPerks(animatable, stack, bufferSource, packedLight, packedOverlay);
         stack.popPose();
     }
 
@@ -314,6 +314,30 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
     public RenderType getRenderType(AlterationTile animatable, ResourceLocation texture, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityTranslucent(texture);
     }
+
+    protected void setPartVisibility(HumanoidModel pModel, EquipmentSlot pSlot) {
+        pModel.setAllVisible(false);
+        switch (pSlot) {
+            case HEAD:
+                pModel.head.visible = true;
+                pModel.hat.visible = true;
+                break;
+            case CHEST:
+                pModel.body.visible = true;
+                pModel.rightArm.visible = true;
+                pModel.leftArm.visible = true;
+                break;
+            case LEGS:
+                pModel.body.visible = true;
+                pModel.rightLeg.visible = true;
+                pModel.leftLeg.visible = true;
+                break;
+            case FEET:
+                pModel.rightLeg.visible = true;
+                pModel.leftLeg.visible = true;
+        }
+    }
+
 
     @Override
     public boolean shouldRenderOffScreen(AlterationTile pBlockEntity) {
