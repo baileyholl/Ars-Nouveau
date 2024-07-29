@@ -1,4 +1,4 @@
-// 1.21	2024-07-05T22:41:47.5461209	AN tags
+// 1.21	2024-07-29T18:47:02.5107712	AN tags
 939cde8f97e4e8d7ea8445415522f703b2b927d4 data/ars_nouveau/tags/block/an_decorative.json
 de95bc21249101b079255a1a00274f60d55e0602 data/ars_nouveau/tags/block/blazing_logs.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/block/break_blacklist.json
@@ -49,6 +49,7 @@ f898aac12b01b598949701b1f6e45aa0cd1d9a25 data/minecraft/tags/block/planks.json
 5a18f153ac2947c6cea854e2fa5be21d85eb6766 data/minecraft/tags/block/portals.json
 ce9ccf92ade8cd330c990516ee0f8a30c35adea9 data/minecraft/tags/block/saplings.json
 c5ffd8d59cb98c262e42a783ddf9a73a9b76ad9d data/minecraft/tags/block/slabs.json
+e1f9228fcfd5239b31f41c19010ba7d145266843 data/minecraft/tags/block/snow_layer_cannot_survive_on.json
 e0e9a39db9de083bbe33dbea99e0f4c0be9627d0 data/minecraft/tags/block/stairs.json
 23fc13405d4dc43512deb39ee5bbbb73da177166 data/minecraft/tags/block/trapdoors.json
 43a847dca5f71ae27537abc65fabcd8d3fdb1c72 data/minecraft/tags/block/wooden_buttons.json
