@@ -55,7 +55,7 @@ public class ModSetup {
         });
         event.register(Registries.ITEM, helper ->{
             BlockRegistry.onBlockItemsRegistry();
-            ItemsRegistry.onItemRegistry();
+            ItemsRegistry.onItemRegistry(helper);
         });
     }
 }
