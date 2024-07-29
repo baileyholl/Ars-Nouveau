@@ -39,7 +39,7 @@ public record CodexData(Optional<UUID> uuid, String playerName, List<ResourceLoc
     }
 
     public boolean wasRecorded(){
-        return uuid.isPresent() && playerName != null && !playerName.isEmpty() && !uuid.get().equals(UUID.fromString(""));
+        return uuid.isPresent() && playerName != null && !playerName.isEmpty();
     }
 
     @Override
