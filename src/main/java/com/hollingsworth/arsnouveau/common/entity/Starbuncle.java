@@ -246,7 +246,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
 
             if (tamingTime > 60 && !level.isClientSide) {
                 ItemStack stack = new ItemStack(ItemsRegistry.STARBUNCLE_SHARD.get(), 1 + level.random.nextInt(2));
-                if (this.data.adopter != null) {
+                if (this.data.adopter != null && !this.data.adopter.isEmpty()) {
                     stack.setCount(1);
                     stack.set(DataComponentRegistry.STARBUNCLE_DATA, this.data.immutable());
                 }

@@ -204,7 +204,7 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
         }
 
         public Mutable() {
-            this(null, DyeColor.ORANGE.getName(), null, null, BlockPos.ZERO, StarbyTransportBehavior.TRANSPORT_ID, new CompoundTag(), "", "");
+            this(null, DyeColor.ORANGE.getName(), null, null, null, StarbyTransportBehavior.TRANSPORT_ID, new CompoundTag(), "", "");
         }
 
         public StarbuncleCharmData immutable() {

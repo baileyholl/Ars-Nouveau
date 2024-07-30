@@ -22,10 +22,10 @@ public class StarbuncleShard extends ModItem{
         StarbuncleCharmData data = stack.get(DataComponentRegistry.STARBUNCLE_DATA);
         if(data != null){
             data.getName().ifPresent(tooltip2::add);
-            if(data.getAdopter() != null){
+            if(data.getAdopter() != null && !data.getAdopter().isEmpty()){
                 tooltip2.add(Component.translatable("ars_nouveau.adopter", data.getAdopter()).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
             }
-            if(data.getBio() != null){
+            if(data.getBio() != null && !data.getBio().isEmpty()){
                 tooltip2.add(Component.literal(data.getBio()).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE)));
             }
         }else{
