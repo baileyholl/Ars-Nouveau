@@ -51,6 +51,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.jetbrains.annotations.Nullable;
 
 import static com.hollingsworth.arsnouveau.client.events.ClientEvents.localize;
@@ -186,10 +187,10 @@ public class ClientHandler {
 
     @SubscribeEvent
     public static void registerOverlays(final RegisterGuiLayersEvent event) {
-        event.registerAboveAll(ArsNouveau.prefix("scry_camera"), cameraOverlay);
-        event.registerAboveAll(ArsNouveau.prefix("tooltip"), GuiEntityInfoHUD.OVERLAY);
-        event.registerAboveAll(ArsNouveau.prefix("mana_hud"), GuiManaHUD.OVERLAY);
-        event.registerAboveAll(ArsNouveau.prefix("spell_hud"), GuiSpellHUD.OVERLAY);
+        event.registerAbove(VanillaGuiLayers.CROSSHAIR, ArsNouveau.prefix("scry_camera"), cameraOverlay);
+        event.registerAbove(VanillaGuiLayers.CROSSHAIR, ArsNouveau.prefix("tooltip"), GuiEntityInfoHUD.OVERLAY);
+        event.registerAbove(VanillaGuiLayers.CROSSHAIR, ArsNouveau.prefix("mana_hud"), GuiManaHUD.OVERLAY);
+        event.registerAbove(VanillaGuiLayers.CROSSHAIR, ArsNouveau.prefix("spell_hud"), GuiSpellHUD.OVERLAY);
 
     }
 
