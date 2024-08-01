@@ -6,7 +6,7 @@
       "tag": "c:ingots/gold"
     },
     "n": {
-      "tag": "minecraft:storage_blocks/quartz"
+      "tag": "c:storage_blocks/quartz"
     },
     "x": {
       "item": "ars_nouveau:archwood_planks"

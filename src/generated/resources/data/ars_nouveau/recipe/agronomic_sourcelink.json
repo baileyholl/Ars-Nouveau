@@ -9,7 +9,7 @@
       "item": "minecraft:wheat"
     },
     "s": {
-      "tag": "neoforge:gems/source"
+      "tag": "c:gems/source"
     }
   },
   "pattern": [

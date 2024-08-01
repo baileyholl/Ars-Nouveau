@@ -3,7 +3,7 @@
   "keepNbtOfReagent": false,
   "pedestalItems": [
     {
-      "tag": "neoforge:gems/source"
+      "tag": "c:gems/source"
     },
     {
       "item": "ars_nouveau:magebloom_crop"

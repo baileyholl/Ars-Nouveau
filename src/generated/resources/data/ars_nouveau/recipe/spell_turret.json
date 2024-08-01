@@ -3,7 +3,7 @@
   "keepNbtOfReagent": false,
   "pedestalItems": [
     {
-      "tag": "neoforge:storage_blocks/source"
+      "tag": "c:storage_blocks/source"
     },
     {
       "tag": "c:rods/blaze"

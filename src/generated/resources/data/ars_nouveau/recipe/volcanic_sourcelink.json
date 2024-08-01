@@ -9,7 +9,7 @@
       "item": "minecraft:lava_bucket"
     },
     "s": {
-      "tag": "neoforge:gems/source"
+      "tag": "c:gems/source"
     }
   },
   "pattern": [

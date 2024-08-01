@@ -8,7 +8,7 @@
       "tag": "c:storage_blocks/lapis"
     },
     {
-      "tag": "neoforge:storage_blocks/source"
+      "tag": "c:storage_blocks/source"
     }
   ],
   "sourceCost": 3000

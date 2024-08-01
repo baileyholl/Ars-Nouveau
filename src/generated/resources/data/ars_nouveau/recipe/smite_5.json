@@ -16,10 +16,10 @@
       "item": "minecraft:bone_block"
     },
     {
-      "tag": "neoforge:storage_blocks/source"
+      "tag": "c:storage_blocks/source"
     },
     {
-      "tag": "neoforge:storage_blocks/source"
+      "tag": "c:storage_blocks/source"
     },
     {
       "tag": "c:storage_blocks/lapis"

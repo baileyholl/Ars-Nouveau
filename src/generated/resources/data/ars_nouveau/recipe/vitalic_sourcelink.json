@@ -9,7 +9,7 @@
       "item": "minecraft:glistering_melon_slice"
     },
     "s": {
-      "tag": "neoforge:gems/source"
+      "tag": "c:gems/source"
     }
   },
   "pattern": [

@@ -3,7 +3,7 @@
   "category": "misc",
   "ingredients": [
     {
-      "tag": "neoforge:logs/archwood"
+      "tag": "c:logs/archwood"
     }
   ],
   "result": {

@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "M": {
-      "tag": "neoforge:storage_blocks/source"
+      "tag": "c:storage_blocks/source"
     },
     "g": {
       "tag": "c:ingots/gold"
