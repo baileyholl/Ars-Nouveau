@@ -10,6 +10,8 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import org.jetbrains.annotations.NotNull;
 
 
 /**
@@ -17,16 +19,32 @@ import net.minecraft.world.item.ItemStack;
  */
 public interface IPerk {
 
-    default Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int slotValue){
+    /**
+     * @param modifiers The current modifiers, remember {ItemAttributeModifiers#withModifierAdded} creates a new instance,
+     *                  so you must assign it back to the original or chain the call in the return
+     * @param stack     The stack with the perk
+     * @param slotValue The value of the slot the perk is in
+     * @return Modified modifiers
+     */
+    default @NotNull ItemAttributeModifiers applyAttributeModifiers(ItemAttributeModifiers modifiers, ItemStack stack, int slotValue) {
+        return modifiers;
+    }
+
+    /**
+     * Use IPerk#applyAttributeModifiers instead
+     */
+    @Deprecated(forRemoval = true)
+    default Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int slotValue) {
         return new ImmutableMultimap.Builder<Attribute, AttributeModifier>().build();
     }
 
-    default ImmutableMultimap.Builder<Attribute, AttributeModifier> attributeBuilder(){
+    @Deprecated(forRemoval = true)
+    default ImmutableMultimap.Builder<Attribute, AttributeModifier> attributeBuilder() {
         return new ImmutableMultimap.Builder<>();
     }
 
 
-    default PerkSlot minimumSlot(){
+    default PerkSlot minimumSlot() {
         return PerkSlot.ONE;
     }
 
@@ -36,8 +54,8 @@ public interface IPerk {
      * @param player The player applying the perk
      * @return Whether the perk is valid for the given slot, defaults to check slot level
      */
-    default boolean validForSlot(PerkSlot slot, ItemStack stack, Player player){
-        if(this.minimumSlot().value() > slot.value()){
+    default boolean validForSlot(PerkSlot slot, ItemStack stack, Player player) {
+        if (this.minimumSlot().value() > slot.value()) {
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.invalid_for_slot", this.minimumSlot().value()));
             return false;
         }
@@ -50,11 +68,11 @@ public interface IPerk {
         return Component.translatable(getRegistryName().getNamespace() + ".thread_of", Component.translatable("item." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()).getString()).getString();
     }
 
-    default String getLangName(){
+    default String getLangName() {
         return "";
     }
 
-    default String getLangDescription(){
+    default String getLangDescription() {
         return "";
     }
 

@@ -19,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 
 public class IceShardEntity extends EnchantedFallingBlock {
     public LivingEntity shooter;
@@ -56,7 +57,7 @@ public class IceShardEntity extends EnchantedFallingBlock {
     }
 
     @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.ICE_SHARD.get();
     }
 }

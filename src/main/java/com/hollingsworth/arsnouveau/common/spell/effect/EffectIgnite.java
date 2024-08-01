@@ -33,7 +33,7 @@ public class EffectIgnite extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         int duration = (int) (POTION_TIME.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier());
-        rayTraceResult.getEntity().setRemainingFireTicks(duration);
+        rayTraceResult.getEntity().setRemainingFireTicks(duration * 20);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items.curios;
 
+import com.hollingsworth.arsnouveau.api.mana.IManaDiscountEquipment;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -7,7 +8,7 @@ import net.minecraft.world.item.TooltipFlag;
 
 import java.util.List;
 
-public abstract class DiscountRing extends AbstractManaCurio {
+public abstract class DiscountRing extends AbstractManaCurio implements IManaDiscountEquipment {
 
     public abstract int getManaDiscount();
 

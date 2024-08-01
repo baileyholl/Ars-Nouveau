@@ -15,6 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 public class Cinder extends EnchantedFallingBlock {
     public LivingEntity shooter;
@@ -60,12 +61,12 @@ public class Cinder extends EnchantedFallingBlock {
     }
 
     @Override
-    protected boolean canHitEntity(Entity entity) {
+    protected boolean canHitEntity(@NotNull Entity entity) {
         return super.canHitEntity(entity) || entity.getType().is(EntityTags.SPELL_CAN_HIT);
     }
 
     @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.CINDER.get();
     }
 
