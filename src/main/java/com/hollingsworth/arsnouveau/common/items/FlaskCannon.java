@@ -38,8 +38,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
@@ -55,12 +56,12 @@ public abstract class FlaskCannon extends ModItem implements IRadialProvider, Ge
 
 
     @Override
-    public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
+    public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack pStack, @NotNull Player pPlayer, @NotNull LivingEntity pInteractionTarget, @NotNull InteractionHand pUsedHand) {
         return InteractionResult.FAIL;
     }
 
     @Override
-    public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
+    public void inventoryTick(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull Entity pEntity, int pSlotId, boolean pIsSelected) {
         super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
         if(pLevel.isClientSide)
             return;
@@ -77,7 +78,7 @@ public abstract class FlaskCannon extends ModItem implements IRadialProvider, Ge
         }
     }
 
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, @NotNull InteractionHand pHand) {
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
         PotionLauncherData potionLauncherData = itemstack.get(DataComponentRegistry.POTION_LAUNCHER);
         if(pLevel.isClientSide)
@@ -105,12 +106,12 @@ public abstract class FlaskCannon extends ModItem implements IRadialProvider, Ge
     public abstract ItemStack getThrownStack(Level pLevel, Player pPlayer, InteractionHand pHand, ItemStack launcherStack);
 
     @Override
-    public boolean doesSneakBypassUse(ItemStack stack, LevelReader world, BlockPos pos, Player player) {
+    public boolean doesSneakBypassUse(@NotNull ItemStack stack, @NotNull LevelReader world, @NotNull BlockPos pos, @NotNull Player player) {
         return true;
     }
 
     @Override
-    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+    public boolean shouldCauseReequipAnimation(@NotNull ItemStack oldStack, @NotNull ItemStack newStack, boolean slotChanged) {
         return false;
     }
 
@@ -168,16 +169,16 @@ public abstract class FlaskCannon extends ModItem implements IRadialProvider, Ge
         }
 
         @Override
-        public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-            super.initializeClient(consumer);
-            consumer.accept(new IClientItemExtensions() {
+        public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
+            consumer.accept(new GeoRenderProvider() {
                 private final BlockEntityWithoutLevelRenderer renderer = new FlaskCannonRenderer(new GenericModel<>("splash_flask_cannon", "item").withEmptyAnim());
 
-                public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
                     return renderer;
                 }
             });
         }
+
     }
 
     public static class LingeringLauncher extends FlaskCannon {
@@ -195,17 +196,18 @@ public abstract class FlaskCannon extends ModItem implements IRadialProvider, Ge
             return splashStack;
         }
 
+
         @Override
-        public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-            super.initializeClient(consumer);
-            consumer.accept(new IClientItemExtensions() {
+        public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
+            consumer.accept(new GeoRenderProvider() {
                 private final BlockEntityWithoutLevelRenderer renderer = new FlaskCannonRenderer(new GenericModel<>("lingering_flask_cannon", "item").withEmptyAnim());
 
-                public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
                     return renderer;
                 }
             });
         }
+
     }
 
 }

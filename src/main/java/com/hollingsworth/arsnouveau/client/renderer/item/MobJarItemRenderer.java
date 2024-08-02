@@ -11,11 +11,12 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
 
-public class MobJarItemRenderer extends FixedGeoItemRenderer<MobJarItem> {
+public class MobJarItemRenderer extends GeoItemRenderer<MobJarItem> {
     private static MobJarTile jarTile;
     public MobJarItemRenderer() {
-        super(new GenericModel("mob_jar"));
+        super(new GenericModel<>("mob_jar"));
     }
 
     @Override
