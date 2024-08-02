@@ -16,7 +16,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -66,11 +66,11 @@ public class VoidJar extends ModItem implements IScribeable {
         if(mana == null){
             return;
         }
-        mana.removeMana(5.0 * amount);
+        mana.addMana(5.0 * amount);
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player player, InteractionHand handIn) {
+    public @NotNull InteractionResultHolder<ItemStack> use(Level worldIn, @NotNull Player player, @NotNull InteractionHand handIn) {
         if (worldIn.isClientSide)
             return super.use(worldIn, player, handIn);
         ItemStack stack = player.getItemInHand(handIn);
@@ -99,7 +99,7 @@ public class VoidJar extends ModItem implements IScribeable {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
         stack.addToTooltip(DataComponentRegistry.VOID_JAR, context, tooltip2::add, flagIn);
     }

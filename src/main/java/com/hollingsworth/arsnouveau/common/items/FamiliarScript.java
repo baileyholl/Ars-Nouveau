@@ -10,6 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class FamiliarScript extends ModItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public @NotNull InteractionResultHolder<ItemStack> use(Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
         if (worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND)
             return super.use(worldIn, playerIn, handIn);
 
@@ -49,12 +50,12 @@ public class FamiliarScript extends ModItem {
     }
 
     @Override
-    public Component getName(ItemStack pStack) {
+    public @NotNull Component getName(@NotNull ItemStack pStack) {
         return Component.translatable("ars_nouveau.bound_script", familiar.getLangName().getString());
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         tooltip2.add(Component.translatable("ars_nouveau.familiar.script"));
     }
 }

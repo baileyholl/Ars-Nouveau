@@ -23,6 +23,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class DominionWand extends ModItem {
     }
 
     @Override
-    public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
+    public void inventoryTick(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull Entity pEntity, int pSlotId, boolean pIsSelected) {
         super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
         if (!pIsSelected || pLevel.isClientSide || pLevel.getGameTime() % 5 != 0) {
             return;
@@ -52,7 +53,7 @@ public class DominionWand extends ModItem {
     }
 
     @Override
-    public InteractionResult interactLivingEntity(ItemStack doNotUseStack, Player playerEntity, LivingEntity target, InteractionHand hand) {
+    public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack doNotUseStack, Player playerEntity, @NotNull LivingEntity target, @NotNull InteractionHand hand) {
 
         if (playerEntity.level.isClientSide || hand != InteractionHand.MAIN_HAND)
             return InteractionResult.PASS;
@@ -88,7 +89,7 @@ public class DominionWand extends ModItem {
         return InteractionResult.SUCCESS;
     }
 
-    public boolean doesSneakBypassUse(ItemStack stack, LevelReader world, BlockPos pos, Player player) {
+    public boolean doesSneakBypassUse(@NotNull ItemStack stack, @NotNull LevelReader world, @NotNull BlockPos pos, @NotNull Player player) {
         return false;
     }
 
@@ -101,7 +102,7 @@ public class DominionWand extends ModItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player pPlayer, @NotNull InteractionHand pUsedHand) {
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
         DominionWandData data = stack.getOrDefault(DataComponentRegistry.DOMINION_WAND, new DominionWandData());
         if (pPlayer.isShiftKeyDown() && !data.hasStoredData()) {
@@ -112,7 +113,7 @@ public class DominionWand extends ModItem {
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext context) {
+    public @NotNull InteractionResult useOn(UseOnContext context) {
         if (context.getLevel().isClientSide || context.getPlayer() == null)
             return super.useOn(context);
         BlockPos pos = context.getClickedPos();
@@ -152,14 +153,14 @@ public class DominionWand extends ModItem {
     }
 
     @Override
-    public String getDescriptionId(ItemStack pStack) {
+    public @NotNull String getDescriptionId(ItemStack pStack) {
         DominionWandData data = pStack.getOrDefault(DataComponentRegistry.DOMINION_WAND, new DominionWandData());
         if (data.strict()) return super.getDescriptionId(pStack) + ".strict";
         return super.getDescriptionId(pStack);
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext world, List<Component> tooltip, TooltipFlag p_77624_4_) {
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext world, @NotNull List<Component> tooltip, @NotNull TooltipFlag p_77624_4_) {
         DominionWandData data = stack.getOrDefault(DataComponentRegistry.DOMINION_WAND, new DominionWandData());
         if (data.storedEntityId() == DominionWandData.NULL_ENTITY) {
             tooltip.add(Component.translatable("ars_nouveau.dominion_wand.no_entity"));

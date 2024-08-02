@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.spell.Spell;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public abstract class DiscountRing extends AbstractManaCurio implements IManaDis
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
         tooltip2.add(Component.translatable("tooltip.discount_item", getManaDiscount(stack)));
     }

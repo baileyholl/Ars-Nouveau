@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -29,12 +29,12 @@ public class StableWarpScroll extends ModItem{
     }
 
     @Override
-    public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
+    public boolean onEntityItemUpdate(@NotNull ItemStack stack, @NotNull ItemEntity entity) {
         return ItemsRegistry.WARP_SCROLL.get().onEntityItemUpdate(stack, entity);
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext context) {
+    public @NotNull InteractionResult useOn(UseOnContext context) {
         if (!context.getLevel().isClientSide) {
             WarpScrollData scrollData = context.getItemInHand().getOrDefault(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(null, null, null, true));
             if(!scrollData.isValid())
@@ -46,7 +46,7 @@ public class StableWarpScroll extends ModItem{
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand pUsedHand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, @NotNull Player player, @NotNull InteractionHand pUsedHand) {
         if(pUsedHand != InteractionHand.MAIN_HAND)
             return InteractionResultHolder.success(player.getItemInHand(pUsedHand));
         ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
@@ -64,7 +64,7 @@ public class StableWarpScroll extends ModItem{
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, Item.@NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
         stack.addToTooltip(DataComponentRegistry.WARP_SCROLL, context, tooltip2::add, flagIn);
     }

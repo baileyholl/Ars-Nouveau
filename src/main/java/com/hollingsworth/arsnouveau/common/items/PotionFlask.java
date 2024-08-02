@@ -22,7 +22,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class PotionFlask extends ModItem {
@@ -39,7 +38,7 @@ public abstract class PotionFlask extends ModItem {
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext context) {
+    public @NotNull InteractionResult useOn(UseOnContext context) {
         if (context.getLevel().isClientSide ||
                 !(context.getLevel().getBlockEntity(context.getClickedPos()) instanceof PotionJarTile jarTile))
             return super.useOn(context);
@@ -77,7 +76,7 @@ public abstract class PotionFlask extends ModItem {
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
+    public @NotNull ItemStack finishUsingItem(@NotNull ItemStack stack, Level worldIn, @NotNull LivingEntity entityLiving) {
         Player playerentity = entityLiving instanceof Player player ? player : null;
 
         if (!worldIn.isClientSide) {
@@ -106,45 +105,45 @@ public abstract class PotionFlask extends ModItem {
     }
 
     @Override
-    public int getMaxDamage(ItemStack stack) {
+    public int getMaxDamage(@NotNull ItemStack stack) {
         return getMaxCapacity();
     }
 
     @Override
-    public boolean isDamaged(ItemStack stack) {
+    public boolean isDamaged(@NotNull ItemStack stack) {
         return false;
     }
 
     @Override
-    public boolean isBarVisible(ItemStack pStack) {
+    public boolean isBarVisible(@NotNull ItemStack pStack) {
         return true;
     }
 
     @Override
-    public float getXpRepairRatio(ItemStack stack) {
+    public float getXpRepairRatio(@NotNull ItemStack stack) {
         return 0.0f;
     }
 
     @Override
-    public int getUseDuration(ItemStack pStack, LivingEntity p_344979_) {
+    public int getUseDuration(@NotNull ItemStack pStack, @NotNull LivingEntity p_344979_) {
         return 32;
     }
 
     /**
      * returns the action that specifies what animation to play when the items is being used
      */
-    public UseAnim getUseAnimation(ItemStack stack) {
+    public @NotNull UseAnim getUseAnimation(@NotNull ItemStack stack) {
         return UseAnim.DRINK;
     }
 
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         MultiPotionContents data = stack.getOrDefault(DataComponentRegistry.MULTI_POTION, new MultiPotionContents(0, PotionContents.EMPTY, 8));
         return data.charges() > 0 ? ItemUtils.startUsingInstantly(worldIn, playerIn, handIn) : InteractionResultHolder.pass(playerIn.getItemInHand(handIn));
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip, flagIn);
         MultiPotionContents data = stack.getOrDefault(DataComponentRegistry.MULTI_POTION, new MultiPotionContents(0, PotionContents.EMPTY, 8));
         tooltip.add(Component.translatable("ars_nouveau.flask.charges", data.charges()).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
