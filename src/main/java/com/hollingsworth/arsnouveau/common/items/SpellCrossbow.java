@@ -33,11 +33,12 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
@@ -58,7 +59,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
 
     // Duplicate override except we use our own tryLoadProjectiles
     @Override
-    public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity pEntityLiving, int pTimeLeft) {
+    public void releaseUsing(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving, int pTimeLeft) {
         int i = this.getUseDuration(pStack, pEntityLiving) - pTimeLeft;
         float f = getPowerForTime(i, pStack, pEntityLiving);
         if (f >= 1.0F && !isCharged(pStack) && tryLoadProjectiles(pEntityLiving, pStack)) {
@@ -170,7 +171,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
     }
 
     @Override
-    public void performShooting(Level pLevel, LivingEntity pShooter, InteractionHand pUsedHand, ItemStack pCrossbowStack, float pVelocity, float pInaccuracy, @Nullable LivingEntity pTarget){
+    public void performShooting(@NotNull Level pLevel, @NotNull LivingEntity pShooter, @NotNull InteractionHand pUsedHand, @NotNull ItemStack pCrossbowStack, float pVelocity, float pInaccuracy, @Nullable LivingEntity pTarget) {
         if (pShooter instanceof Player player && net.neoforged.neoforge.event.EventHooks.onArrowLoose(pCrossbowStack, pShooter.level, player, 1, true) < 0) return;
         ChargedProjectiles chargedprojectiles = pCrossbowStack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
         if(chargedprojectiles == null)
@@ -201,7 +202,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
     }
 
     @Override
-    public Predicate<ItemStack> getAllSupportedProjectiles() {
+    public @NotNull Predicate<ItemStack> getAllSupportedProjectiles() {
         return super.getAllSupportedProjectiles().or(i -> i.getItem() instanceof SpellArrow);
     }
 
@@ -213,7 +214,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         getInformation(stack, context, tooltip2, flagIn);
         super.appendHoverText(stack, context, tooltip2, flagIn);
     }
@@ -242,31 +243,20 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
     }
 
     @Override
-    public boolean isEnchantable(ItemStack stack) {
+    public boolean isEnchantable(@NotNull ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        return true;
-    }
-
-    @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        super.initializeClient(consumer);
-        consumer.accept(new IClientItemExtensions() {
+    public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
+        consumer.accept(new GeoRenderProvider() {
             private final BlockEntityWithoutLevelRenderer renderer = new SpellCrossbowRenderer();
 
             @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
                 return renderer;
             }
         });
-    }
-
-    @Override
-    public boolean useOnRelease(ItemStack pStack) {
-        return pStack.is(this);
     }
 
     @Override

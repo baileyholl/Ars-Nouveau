@@ -12,24 +12,25 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
 import software.bernie.geckolib.util.Color;
 
-public class ScryCasterRenderer extends FixedGeoItemRenderer<ScryCaster>{
+public class ScryCasterRenderer extends GeoItemRenderer<ScryCaster> {
     public ScryCasterRenderer() {
-        super(new GeoModel<ScryCaster>() {
+        super(new GeoModel<>() {
             @Override
             public ResourceLocation getModelResource(ScryCaster wand) {
-                return ArsNouveau.prefix( "geo/enchanters_eye.geo.json");
+                return ArsNouveau.prefix("geo/enchanters_eye.geo.json");
             }
 
             @Override
             public ResourceLocation getTextureResource(ScryCaster wand) {
-                return ArsNouveau.prefix( "textures/item/enchanters_eye.png");
+                return ArsNouveau.prefix("textures/item/enchanters_eye.png");
             }
 
             @Override
             public ResourceLocation getAnimationResource(ScryCaster wand) {
-                return ArsNouveau.prefix( "animations/enchanters_eye.json");
+                return ArsNouveau.prefix("animations/enchanters_eye.json");
             }
         });
     }

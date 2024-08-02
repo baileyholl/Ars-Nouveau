@@ -21,6 +21,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
@@ -44,7 +45,7 @@ public class FamiliarStarbuncle extends FamiliarEntity {
     }
 
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+    protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (!player.level.isClientSide && player.equals(getOwner())) {
             ItemStack stack = player.getItemInHand(hand);
             if (stack.is(Tags.Items.NUGGETS_GOLD)) {
@@ -73,7 +74,7 @@ public class FamiliarStarbuncle extends FamiliarEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
         super.defineSynchedData(pBuilder);
     }
 
@@ -86,7 +87,7 @@ public class FamiliarStarbuncle extends FamiliarEntity {
     }
 
     @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get();
     }
 

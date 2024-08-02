@@ -29,6 +29,8 @@
     "elytra.MixinLivingEntity",
     "jar.DispenserMixin",
     "jar.MobAccessorMixin",
+    "looting.EnchantedCountIncreaseFunctionMixin",
+    "looting.LootItemRandomChanceWithEnchantedBonusConditionMixin",
     "perks.PerkLivingEntity",
     "redstone.RedstoneLevelMixin",
     "rewind.RewindEntityMixin",

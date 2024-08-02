@@ -34,9 +34,8 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.brewing.BrewingRecipe;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.ArrayList;
@@ -52,7 +51,7 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
 
 
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+    protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (level().isClientSide || hand != InteractionHand.MAIN_HAND)
             return InteractionResult.SUCCESS;
 
@@ -64,15 +63,15 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
                 return InteractionResult.SUCCESS;
             setColor(color);
             return InteractionResult.SUCCESS;
-        }else{
+        } else {
             for (BrewingRecipe r : ArsNouveauAPI.getInstance().getAllPotionRecipes(level())) {
                 ItemStack water = PotionUtil.getPotion(Potions.WATER);
                 ItemStack awkward = PotionUtil.getPotion(Potions.AWKWARD);
 
-                if(r.isIngredient(stack) && (r.getInput().test(awkward) || r.getInput().test(water))){
+                if (r.isIngredient(stack) && (r.getInput().test(awkward) || r.getInput().test(water))) {
                     PotionContents contents = PotionUtil.getContents(r.getOutput());
 
-                    if(!PotionUtil.isEmpty(contents)){
+                    if (!PotionUtil.isEmpty(contents)) {
                         PotionUtil.applyContents(contents, player, player, player);
                         ItemStack potionStack = new ItemStack(Items.POTION);
                         potionStack.set(DataComponents.POTION_CONTENTS, contents);
@@ -89,15 +88,15 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
     }
 
     public void potionEvent(MobEffectEvent.Added event) {
-        if (!isAlive())
+        if (!isAlive() || event.getEffectInstance() == null)
             return;
         Entity target = event.getEntity();
         Entity applier = event.getEffectSource();
 
         boolean isBeneficialOwner = target.equals(getOwner()) && event.getEffectInstance().getEffect().value().isBeneficial();
         boolean isApplierOwner = applier != null && applier.equals(this.getOwner());
-        if(isBeneficialOwner || isApplierOwner){
-            event.getEffectInstance().getCures();
+        if (isBeneficialOwner || isApplierOwner) {
+            //event.getEffectInstance().getCures(); why is this here Jarva
             event.getEffectInstance().mapDuration(duration -> duration + duration * 2);
         }
     }
@@ -116,18 +115,13 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
     }
 
     @Override
-    public PlayState walkPredicate(AnimationState event) {
-        return PlayState.CONTINUE;
-    }
-
-    @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.ENTITY_FAMILIAR_WIXIE.get();
     }
 
     @Override
     public void startAnimation(int arg) {
-        if(controller == null)
+        if (controller == null)
             return;
         if (arg == EntityWixie.Animations.CAST.ordinal()) {
             controller.forceAnimationReset();
@@ -140,7 +134,7 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
         String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "blue";
-        return ArsNouveau.prefix( "textures/entity/wixie_" + color + ".png");
+        return ArsNouveau.prefix("textures/entity/wixie_" + color + ".png");
     }
 
     @Override

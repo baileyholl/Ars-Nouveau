@@ -15,11 +15,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
 import software.bernie.geckolib.util.Color;
 
 import javax.annotation.Nullable;
 
-public class SpellBookRenderer extends FixedGeoItemRenderer<SpellBook> {
+public class SpellBookRenderer extends GeoItemRenderer<SpellBook> {
     public GeoModel<SpellBook> closedModel;
 
 

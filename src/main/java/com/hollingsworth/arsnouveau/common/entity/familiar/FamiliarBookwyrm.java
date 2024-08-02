@@ -19,6 +19,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.items.wrapper.PlayerMainInvWrapper;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
@@ -33,7 +34,7 @@ public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCast
     }
 
     @Override
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+    public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (level.isClientSide || hand != InteractionHand.MAIN_HAND)
             return InteractionResult.SUCCESS;
 
@@ -96,7 +97,7 @@ public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCast
     }
 
     @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get();
     }
 

@@ -19,11 +19,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
 import software.bernie.geckolib.util.Color;
 
-public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
+public class SpellCrossbowRenderer extends GeoItemRenderer<SpellCrossbow> {
     public SpellCrossbowRenderer() {
-        super(new ANGeoModel<SpellCrossbow>("geo/spell_crossbow.geo.json", "textures/item/spell_crossbow.png", "animations/wand_animation.json"));
+        super(new ANGeoModel<>("geo/spell_crossbow.geo.json", "textures/item/spell_crossbow.png", "animations/wand_animation.json"));
     }
 
     @Override
@@ -77,7 +78,7 @@ public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
             int timeHeld = 72000 - Minecraft.getInstance().player.getUseItemRemainingTicks();
             //These are used to calculate where the particles are going. We want them going into the laser, so we move the destination right, down, and forward a bit.
             if(timeHeld > 72000){
-                right = right.scale(+0.1 - player.attackAnim);
+                right = right.scale(0.1 - player.attackAnim);
                 forward = forward.scale(0.25f);
                 down = down.scale(-0.1 - player.attackAnim);
             }else if(SpellCrossbow.isCharged(itemStack)){
