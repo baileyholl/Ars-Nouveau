@@ -20,9 +20,9 @@ public class DepthsPerk extends Perk {
 
 
     @Override
-    public @NotNull ItemAttributeModifiers applyAttributeModifiers(ItemAttributeModifiers modifiers, ItemStack stack, int slotValue) {
+    public @NotNull ItemAttributeModifiers applyAttributeModifiers(ItemAttributeModifiers modifiers, ItemStack stack, int slotValue, EquipmentSlotGroup equipmentSlotGroup) {
         if (slotValue >= 3) {
-            return modifiers.withModifierAdded(NeoForgeMod.SWIM_SPEED, new AttributeModifier(INSTANCE.getRegistryName(), 2.0, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.ARMOR);
+            return modifiers.withModifierAdded(NeoForgeMod.SWIM_SPEED, new AttributeModifier(INSTANCE.getRegistryName(), 2.0, AttributeModifier.Operation.ADD_VALUE), equipmentSlotGroup);
         }
         return modifiers;
 

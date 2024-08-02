@@ -19,8 +19,8 @@ public class FeatherPerk extends Perk {
     }
 
     @Override
-    public @NotNull ItemAttributeModifiers applyAttributeModifiers(ItemAttributeModifiers modifiers, ItemStack stack, int slotValue) {
-        return modifiers.withModifierAdded(PerkAttributes.FEATHER, new AttributeModifier(INSTANCE.getRegistryName(), 0.2 * slotValue, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.ARMOR);
+    public @NotNull ItemAttributeModifiers applyAttributeModifiers(ItemAttributeModifiers modifiers, ItemStack stack, int slotValue, EquipmentSlotGroup equipmentSlotGroup) {
+        return modifiers.withModifierAdded(PerkAttributes.FEATHER, new AttributeModifier(INSTANCE.getRegistryName(), 0.2 * slotValue, AttributeModifier.Operation.ADD_VALUE), equipmentSlotGroup);
     }
 
     @Override

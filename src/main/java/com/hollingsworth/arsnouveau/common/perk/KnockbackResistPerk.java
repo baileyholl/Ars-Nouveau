@@ -20,8 +20,8 @@ public class KnockbackResistPerk extends Perk {
 
 
     @Override
-    public @NotNull ItemAttributeModifiers applyAttributeModifiers(ItemAttributeModifiers modifiers, ItemStack stack, int slotValue) {
-        return modifiers.withModifierAdded(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(INSTANCE.getRegistryName(), .15 * slotValue, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.ARMOR);
+    public @NotNull ItemAttributeModifiers applyAttributeModifiers(ItemAttributeModifiers modifiers, ItemStack stack, int slotValue, EquipmentSlotGroup equipmentSlotGroup) {
+        return modifiers.withModifierAdded(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(INSTANCE.getRegistryName(), .15 * slotValue, AttributeModifier.Operation.ADD_VALUE), equipmentSlotGroup);
     }
 
     @Override

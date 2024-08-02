@@ -23,8 +23,8 @@ public class StepHeightPerk extends Perk {
     }
 
     @Override
-    public @NotNull ItemAttributeModifiers applyAttributeModifiers(ItemAttributeModifiers modifiers, ItemStack stack, int slotValue) {
-        return modifiers.withModifierAdded(Attributes.STEP_HEIGHT, new AttributeModifier(INSTANCE.getRegistryName(), slotValue, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.ARMOR);
+    public @NotNull ItemAttributeModifiers applyAttributeModifiers(ItemAttributeModifiers modifiers, ItemStack stack, int slotValue, EquipmentSlotGroup equipmentSlotGroup) {
+        return modifiers.withModifierAdded(Attributes.STEP_HEIGHT, new AttributeModifier(INSTANCE.getRegistryName(), slotValue, AttributeModifier.Operation.ADD_VALUE), equipmentSlotGroup);
     }
 
     @Override

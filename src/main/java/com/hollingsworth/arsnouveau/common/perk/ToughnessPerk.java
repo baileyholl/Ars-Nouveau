@@ -19,8 +19,8 @@ public class ToughnessPerk extends Perk {
     }
 
     @Override
-    public @NotNull ItemAttributeModifiers applyAttributeModifiers(ItemAttributeModifiers modifiers, ItemStack stack, int slotValue) {
-        return modifiers.withModifierAdded(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(INSTANCE.getRegistryName(), 1F * slotValue, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.ARMOR);
+    public @NotNull ItemAttributeModifiers applyAttributeModifiers(ItemAttributeModifiers modifiers, ItemStack stack, int slotValue, EquipmentSlotGroup equipmentSlotGroup) {
+        return modifiers.withModifierAdded(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(INSTANCE.getRegistryName(), 1F * slotValue, AttributeModifier.Operation.ADD_VALUE), equipmentSlotGroup);
     }
 
     @Override

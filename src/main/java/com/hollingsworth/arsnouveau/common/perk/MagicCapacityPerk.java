@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import org.jetbrains.annotations.NotNull;
@@ -20,8 +19,8 @@ public class MagicCapacityPerk extends Perk {
     }
 
     @Override
-    public @NotNull ItemAttributeModifiers applyAttributeModifiers(ItemAttributeModifiers modifiers, ItemStack stack, int slotValue) {
-        return modifiers.withModifierAdded(PerkAttributes.MAX_MANA, new AttributeModifier(INSTANCE.getRegistryName(), 0.1 * slotValue, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL), stack.getItem() instanceof ArmorItem ? EquipmentSlotGroup.ARMOR : EquipmentSlotGroup.ANY);
+    public @NotNull ItemAttributeModifiers applyAttributeModifiers(ItemAttributeModifiers modifiers, ItemStack stack, int slotValue, EquipmentSlotGroup equipmentSlotGroup) {
+        return modifiers.withModifierAdded(PerkAttributes.MAX_MANA, new AttributeModifier(INSTANCE.getRegistryName(), 0.1 * slotValue, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL), equipmentSlotGroup);
     }
 
     @Override

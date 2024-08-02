@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
@@ -20,18 +21,19 @@ import org.jetbrains.annotations.NotNull;
 public interface IPerk {
 
     /**
-     * @param modifiers The current modifiers, remember {ItemAttributeModifiers#withModifierAdded} creates a new instance,
-     *                  so you must assign it back to the original or chain the call in the return
-     * @param stack     The stack with the perk
-     * @param slotValue The value of the slot the perk is in
+     * @param modifiers          The current modifiers, remember {@link ItemAttributeModifiers#withModifierAdded} creates a new instance,
+     *                           so you must assign it back to the original or chain the call in the return
+     * @param stack              The stack with the perk
+     * @param slotValue          The value of the slot the perk is in
+     * @param equipmentSlotGroup The slot where the attribute will be applied, seen in tooltips
      * @return Modified modifiers
      */
-    default @NotNull ItemAttributeModifiers applyAttributeModifiers(ItemAttributeModifiers modifiers, ItemStack stack, int slotValue) {
+    default @NotNull ItemAttributeModifiers applyAttributeModifiers(ItemAttributeModifiers modifiers, ItemStack stack, int slotValue, EquipmentSlotGroup equipmentSlotGroup) {
         return modifiers;
     }
 
     /**
-     * Use IPerk#applyAttributeModifiers instead
+     * Use {@link IPerk#applyAttributeModifiers} instead
      */
     @Deprecated(forRemoval = true)
     default Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int slotValue) {
