@@ -1,0 +1,32 @@
+{
+  "parent": "ars_nouveau:poof_mob",
+  "criteria": {
+    "has_starbuncle_charm": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ars_nouveau:starbuncle_charm"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.starby_charm"
+    },
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:starbuncle_charm"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.starby_charm"
+    }
+  },
+  "requirements": [
+    [
+      "has_starbuncle_charm"
+    ]
+  ]
+}

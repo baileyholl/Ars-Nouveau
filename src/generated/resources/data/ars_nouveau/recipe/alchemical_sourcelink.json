@@ -9,7 +9,7 @@
       "item": "minecraft:brewing_stand"
     },
     "s": {
-      "tag": "neoforge:gems/source"
+      "tag": "c:gems/source"
     }
   },
   "pattern": [

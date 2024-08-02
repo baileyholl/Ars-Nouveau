@@ -1,7 +1,7 @@
 {
   "type": "ars_nouveau:imbuement",
   "input": {
-    "tag": "neoforge:gems/source"
+    "tag": "c:gems/source"
   },
   "output": {
     "count": 1,

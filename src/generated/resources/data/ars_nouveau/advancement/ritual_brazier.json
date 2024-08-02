@@ -1,0 +1,32 @@
+{
+  "parent": "ars_nouveau:root",
+  "criteria": {
+    "has_ritual_brazier": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ars_nouveau:ritual_brazier"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.ritual_brazier"
+    },
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:ritual_brazier"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.ritual_brazier"
+    }
+  },
+  "requirements": [
+    [
+      "has_ritual_brazier"
+    ]
+  ]
+}

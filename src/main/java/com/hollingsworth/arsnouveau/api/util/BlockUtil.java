@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.UsernameCache;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
@@ -92,11 +93,6 @@ public class BlockUtil {
         world.getBlockState(pos).getBlock().playerWillDestroy(world, pos, world.getBlockState(pos), playerEntity);
         return world.destroyBlock(pos, dropBlock);
 
-    }
-
-    @Deprecated(forRemoval = true)
-    public static boolean destroyRespectsClaim(LivingEntity caster, Level world, BlockPos pos) {
-        return destroyRespectsClaim((Entity) caster, world, pos);
     }
 
     public static boolean destroyRespectsClaim(Entity caster, Level world, BlockPos pos) {
@@ -323,7 +319,8 @@ public class BlockUtil {
         BlockState blockstate = world.getBlockState(pos);
         FakePlayer player;
         if (source != null) {
-            player = FakePlayerFactory.get(world, new GameProfile(source, UsernameCache.getLastKnownUsername(source)));
+            String lastKnownUsername = UsernameCache.getLastKnownUsername(source);
+            player = FakePlayerFactory.get(world, lastKnownUsername != null ? new GameProfile(source, lastKnownUsername) : ANFakePlayer.PROFILE);
             Player realPlayer = world.getPlayerByUUID(source);
             if (realPlayer != null) player.setPos(realPlayer.position());
         } else player = FakePlayerFactory.getMinecraft(world);
@@ -335,7 +332,7 @@ public class BlockUtil {
         }
 
         GameType type = player.getAbilities().instabuild ? GameType.CREATIVE : GameType.SURVIVAL;
-        boolean canceled = net.neoforged.neoforge.common.CommonHooks.fireBlockBreak(world, type, player, pos, blockstate).isCanceled();
+        boolean canceled = CommonHooks.fireBlockBreak(world, type, player, pos, blockstate).isCanceled();
         if (canceled) {
             return false;
         }

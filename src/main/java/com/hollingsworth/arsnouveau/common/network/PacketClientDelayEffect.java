@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.event.DelayedSpellEvent;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import net.minecraft.client.Minecraft;
@@ -21,10 +22,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class PacketClientDelayEffect extends AbstractPacket{
+public class PacketClientDelayEffect extends AbstractPacket {
     public static final Type<PacketClientDelayEffect> TYPE = new Type<>(ArsNouveau.prefix("client_delay_effect"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketClientDelayEffect> CODEC = StreamCodec.ofMember(PacketClientDelayEffect::toBytes, PacketClientDelayEffect::new);
 
@@ -52,7 +54,7 @@ public class PacketClientDelayEffect extends AbstractPacket{
         buf.writeInt(shooterID);
         buf.writeInt(hitEntityID);
 
-        if (hitEntityID == -1) {
+        if (hitEntityID == -1 && hitPos != null) {
             buf.writeBlockHitResult(hitPos);
         }
         // buf.writeBlockHitResult();
@@ -78,12 +80,13 @@ public class PacketClientDelayEffect extends AbstractPacket{
         } else {
             result = new EntityHitResult(hitEntity);
         }
-        EventQueue.getClientQueue().addEvent(new DelayedSpellEvent(duration, spell, result, world, (LivingEntity) world.getEntity(shooterID),
-                new SpellContext(world, spell, (LivingEntity) world.getEntity(shooterID), new LivingCaster((LivingEntity) world.getEntity(shooterID)))));
+        LivingEntity entity = (LivingEntity) world.getEntity(shooterID);
+        EventQueue.getClientQueue().addEvent(new DelayedSpellEvent(duration, result, world,
+                new SpellResolver(new SpellContext(world, spell, entity, new LivingCaster(entity)))));
     }
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public @NotNull Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 }

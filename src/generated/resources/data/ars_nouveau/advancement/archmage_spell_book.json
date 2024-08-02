@@ -1,0 +1,32 @@
+{
+  "parent": "ars_nouveau:wilden_tribute",
+  "criteria": {
+    "has_archmage_spell_book": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ars_nouveau:archmage_spell_book"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.archmage_spell_book"
+    },
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:archmage_spell_book"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.archmage_spell_book"
+    }
+  },
+  "requirements": [
+    [
+      "has_archmage_spell_book"
+    ]
+  ]
+}

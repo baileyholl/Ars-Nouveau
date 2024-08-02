@@ -22,8 +22,8 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,7 +43,7 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         AbstractCaster<?> caster = getSpellCaster(stack);
         Spell spell = caster.getSpell();
@@ -51,9 +51,7 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
-        if (context == null)
-            return;
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         AbstractCaster<?> caster = getSpellCaster(stack);
 
         if (Config.GLYPH_TOOLTIPS.get() || Screen.hasShiftDown()) {
@@ -77,7 +75,7 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
     }
 
     @Override
-    public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
+    public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
         AbstractCaster<?> caster = getSpellCaster(pStack);
         if (!Screen.hasShiftDown() && Config.GLYPH_TOOLTIPS.get() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
             return Optional.of(new SpellTooltip(caster));

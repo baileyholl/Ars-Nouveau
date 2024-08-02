@@ -1,32 +1,32 @@
 package com.hollingsworth.arsnouveau.common.perk;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.Perk;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.neoforged.neoforge.common.NeoForgeMod;
+import org.jetbrains.annotations.NotNull;
 
 public class DepthsPerk extends Perk {
 
-    public static DepthsPerk INSTANCE = new DepthsPerk(ArsNouveau.prefix( "thread_depths"));
+    public static DepthsPerk INSTANCE = new DepthsPerk(ArsNouveau.prefix("thread_depths"));
 
     public DepthsPerk(ResourceLocation key) {
         super(key);
     }
 
-    @Override
-    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int slotValue) {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> modifiers = new ImmutableMultimap.Builder<>();
-        if(slotValue >= 3){
-            modifiers.put(NeoForgeMod.SWIM_SPEED.value(), new AttributeModifier(INSTANCE.getRegistryName(), 2.0, AttributeModifier.Operation.ADD_VALUE));
-        }
 
-        return modifiers.build();
+    @Override
+    public @NotNull ItemAttributeModifiers applyAttributeModifiers(ItemAttributeModifiers modifiers, ItemStack stack, int slotValue, EquipmentSlotGroup equipmentSlotGroup) {
+        if (slotValue >= 3) {
+            return modifiers.withModifierAdded(NeoForgeMod.SWIM_SPEED, new AttributeModifier(INSTANCE.getRegistryName(), 2.0, AttributeModifier.Operation.ADD_VALUE), equipmentSlotGroup);
+        }
+        return modifiers;
+
+
     }
 
     @Override

@@ -1,4 +1,4 @@
-// 1.21	2024-07-07T16:24:07.0947972	Crush
+// 1.21	2024-08-01T23:52:13.9514851	Crush
 b74461afbe445ac042cd1d04298474b2403054ae data/ars_nouveau/recipe/blue_dye.json
 0ba5aafe171e9aab7bec69520d99698d5829fd97 data/ars_nouveau/recipe/brown_dye.json
 dfee25791763eafe3dacdb2ce45173e1f5862a70 data/ars_nouveau/recipe/cobblestone.json
@@ -13,7 +13,7 @@ b667cbe48d5657fbb6b93fb7ff87b7314edd4fb9 data/ars_nouveau/recipe/magenta_dye_lil
 fa479269c71bb00c91df23e08e2bf701c64dae9c data/ars_nouveau/recipe/orange_dye.json
 dea87ef323ffd7180447688f935fe8afc1031abb data/ars_nouveau/recipe/pink_dye.json
 78fa095a707a79aca21c05b7efec251ae1bddbf8 data/ars_nouveau/recipe/pink_dye_peony.json
-683c09d8ed09d69a1044486d8d9fc3f65d9f5b17 data/ars_nouveau/recipe/quartz_block_to_quartz.json
+f2d6a6686cb251547ec6d9dececa4fdc8dbf3dc0 data/ars_nouveau/recipe/quartz_block_to_quartz.json
 5122d980c0da3a720e186ec2c1e490ca7c990333 data/ars_nouveau/recipe/red_dye_beetroot.json
 8a755ef772635b520a59ade0adcd3528194416b4 data/ars_nouveau/recipe/red_dye_poppy.json
 506b0eba7d9ea4066203c5161c4eac26a71a4c7a data/ars_nouveau/recipe/red_dye_rose_bush.json

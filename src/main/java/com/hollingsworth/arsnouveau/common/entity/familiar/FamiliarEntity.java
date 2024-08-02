@@ -21,6 +21,8 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
@@ -34,6 +36,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -62,6 +65,10 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
         super(p_i48575_1_, p_i48575_2_);
         if (!level.isClientSide)
             FAMILIAR_SET.add(this);
+    }
+
+    protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
+        return super.mobInteract(player, hand);
     }
 
     @Override
@@ -123,7 +130,7 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
         this.targetSelector.addGoal(2, new FamOwnerHurtTargetGoal(this));
     }
 
-    public PlayState walkPredicate(AnimationState event) {
+    public PlayState walkPredicate(AnimationState<? extends FamiliarEntity> event) {
         return PlayState.CONTINUE;
     }
 
@@ -155,7 +162,7 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
         super.defineSynchedData(pBuilder);
         pBuilder.define(OWNER_UUID, Optional.empty());
         pBuilder.define(COLOR, "");
@@ -180,7 +187,7 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
         this.getEntityData().set(OWNER_UUID, Optional.of(uuid));
     }
 
-    public ItemStack getCosmeticItem() {
+    public @NotNull ItemStack getCosmeticItem() {
         return this.entityData.get(COSMETIC);
     }
 
@@ -204,12 +211,12 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
     }
 
     @Override
-    public boolean canTrample(BlockState state, BlockPos pos, float fallDistance) {
+    public boolean canTrample(@NotNull BlockState state, @NotNull BlockPos pos, float fallDistance) {
         return false;
     }
 
     @Override
-    protected boolean canRide(Entity p_184228_1_) {
+    protected boolean canRide(@NotNull Entity p_184228_1_) {
         return false;
     }
 
@@ -224,13 +231,13 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         if (getOwnerID() != null)
             tag.putUUID("ownerID", getOwnerID());
         tag.putBoolean("terminated", terminatedFamiliar);
         tag.put("familiarData", getPersistentFamiliarData().toTag(level));
-        if(holderID != null) {
+        if (holderID != null) {
             tag.putString("holderID", holderID.toString());
         }
         tag.putString("color", this.entityData.get(COLOR));
@@ -241,7 +248,7 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if (tag.hasUUID("ownerID"))
             setOwnerID(tag.getUUID("ownerID"));

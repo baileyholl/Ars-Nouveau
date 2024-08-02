@@ -6,13 +6,16 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class CuriosUtil {
 
     public static @Nullable IItemHandlerModifiable getAllWornItems(@NotNull LivingEntity living) {
-        return CuriosApi.getCuriosHelper().getEquippedCurios(living).orElse(null);
+        Optional<ICuriosItemHandler> curioInv = CuriosApi.getCuriosInventory(living);
+        return curioInv.map(ICuriosItemHandler::getEquippedCurios).orElse(null);
     }
 
     public static boolean hasItem(@Nullable LivingEntity entity, ItemStack stack) {

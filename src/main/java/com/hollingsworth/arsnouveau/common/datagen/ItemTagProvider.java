@@ -14,14 +14,15 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
 public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
     public static TagKey<Item> SUMMON_BED_ITEMS = ItemTags.create(ArsNouveau.prefix( "summon_bed"));
-    public static TagKey<Item> SOURCE_GEM_TAG = ItemTags.create(ResourceLocation.tryParse("neoforge:gems/source"));
-    public static TagKey<Item> SOURCE_GEM_BLOCK_TAG = ItemTags.create(ResourceLocation.tryParse("neoforge:storage_blocks/source"));
-    public static TagKey<Item> ARCHWOOD_LOG_TAG = ItemTags.create(ResourceLocation.tryParse("neoforge:logs/archwood"));
+    public static TagKey<Item> SOURCE_GEM_TAG = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "gems/source"));
+    public static TagKey<Item> SOURCE_GEM_BLOCK_TAG = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/source"));
+    public static TagKey<Item> ARCHWOOD_LOG_TAG = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "logs/archwood"));
     public static TagKey<Item> MAGIC_FOOD = ItemTags.create(ArsNouveau.prefix( "magic_food"));
     public static TagKey<Item> WILDEN_DROP_TAG = ItemTags.create(ArsNouveau.prefix( "wilden_drop"));
     public static TagKey<Item> SHARD_TAG = ItemTags.create(ArsNouveau.prefix( "golem/shard"));
@@ -30,7 +31,7 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
     public static TagKey<Item> JAR_ITEM_BLACKLIST = ItemTags.create(ArsNouveau.prefix( "interact_jar_blacklist"));
     public static TagKey<Item> RITUAL_LOOT_BLACKLIST = ItemTags.create(ArsNouveau.prefix( "ritual_loot_blacklist"));
     public static TagKey<Item> RITUAL_TRADE_BLACKLIST = ItemTags.create(ArsNouveau.prefix( "ritual_trade_blacklist"));
-    public static TagKey<Item> STORAGE_BLOCKS_QUARTZ = ItemTags.create(ResourceLocation.tryParse("storage_blocks/quartz"));
+    public static TagKey<Item> STORAGE_BLOCKS_QUARTZ = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/quartz"));
     public static TagKey<Item> SHADY_WIZARD_FRUITS = ItemTags.create(ArsNouveau.prefix( "shady_wizard_fruits"));
 
 
@@ -39,7 +40,7 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider pProvider) {
+    protected void addTags(HolderLookup.@NotNull Provider pProvider) {
         this.tag(SUMMON_SHARDS_TAG)
                 .add(ItemsRegistry.DRYGMY_SHARD.get(),
                         ItemsRegistry.STARBUNCLE_SHARD.get(),

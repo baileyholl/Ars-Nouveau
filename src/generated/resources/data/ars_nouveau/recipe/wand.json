@@ -3,16 +3,16 @@
   "keepNbtOfReagent": false,
   "pedestalItems": [
     {
-      "tag": "neoforge:gems/source"
+      "tag": "c:gems/source"
     },
     {
-      "tag": "neoforge:gems/source"
+      "tag": "c:gems/source"
     },
     {
-      "tag": "neoforge:gems/source"
+      "tag": "c:gems/source"
     },
     {
-      "tag": "neoforge:gems/source"
+      "tag": "c:gems/source"
     },
     {
       "tag": "c:ingots/gold"
@@ -28,7 +28,7 @@
     }
   ],
   "reagent": {
-    "tag": "neoforge:logs/archwood"
+    "tag": "c:logs/archwood"
   },
   "result": {
     "count": 1,

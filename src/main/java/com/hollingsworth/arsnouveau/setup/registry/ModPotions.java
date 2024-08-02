@@ -15,6 +15,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.Potions;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -23,6 +24,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 import static com.hollingsworth.arsnouveau.common.lib.LibPotions.*;
 
+@EventBusSubscriber(modid = MODID)
 public class ModPotions {
 
     public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(BuiltInRegistries.MOB_EFFECT, MODID);

@@ -10,10 +10,10 @@
       "tag": "c:slimeballs"
     },
     {
-      "tag": "neoforge:storage_blocks/source"
+      "tag": "c:storage_blocks/source"
     },
     {
-      "tag": "neoforge:storage_blocks/source"
+      "tag": "c:storage_blocks/source"
     }
   ],
   "sourceCost": 2000

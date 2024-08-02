@@ -18,13 +18,13 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * Copied from Advancements.Builder with extentions to reduce copy pasta
+ * Copied from Advancements.Builder with extensions to reduce copy pasta
  */
-public class ANAdvancementBuilder implements net.neoforged.neoforge.common.extensions.IAdvancementBuilderExtension{
+public class ANAdvancementBuilder implements net.neoforged.neoforge.common.extensions.IAdvancementBuilderExtension {
     @Nullable
     private ResourceLocation parentId;
     @Nullable
-    private Advancement parent;
+    private AdvancementHolder parent;
     @Nullable
     private DisplayInfo display;
     private AdvancementRewards rewards = AdvancementRewards.EMPTY;
@@ -53,6 +53,7 @@ public class ANAdvancementBuilder implements net.neoforged.neoforge.common.exten
     }
 
     public ANAdvancementBuilder parent(AdvancementHolder parent) {
+        this.parent = parent;
         return this.parent(parent.id());
     }
 
@@ -76,7 +77,7 @@ public class ANAdvancementBuilder implements net.neoforged.neoforge.common.exten
 
     // The following displays cannot be used for roots.
     public ANAdvancementBuilder display(ItemStack pItem, AdvancementType pFrame) {
-        return this.display(new DisplayInfo(pItem, this.getComponent("title"), this.getComponent("desc"), null, pFrame, true, true, false));
+        return this.display(new DisplayInfo(pItem, this.getComponent("title"), this.getComponent("desc"), Optional.empty(), pFrame, true, true, false));
     }
 
     public ANAdvancementBuilder display(ItemLike pItem, AdvancementType pFrame) {
@@ -85,7 +86,7 @@ public class ANAdvancementBuilder implements net.neoforged.neoforge.common.exten
 
     // The following displays cannot be used for roots.
     public ANAdvancementBuilder display(ItemStack pItem, AdvancementType pFrame, boolean hidden) {
-        return this.display(new DisplayInfo(pItem, this.getComponent("title"), this.getComponent("desc"), null, pFrame, true, true, hidden));
+        return this.display(new DisplayInfo(pItem, this.getComponent("title"), this.getComponent("desc"), Optional.empty(), pFrame, true, true, hidden));
     }
 
     public ANAdvancementBuilder display(ItemLike pItem, AdvancementType pFrame, boolean hidden) {
@@ -125,22 +126,22 @@ public class ANAdvancementBuilder implements net.neoforged.neoforge.common.exten
         return this;
     }
 
-    public ANAdvancementBuilder normalItemRequirement(ItemLike item){
+    public ANAdvancementBuilder normalItemRequirement(ItemLike item) {
         return this.display(item, AdvancementType.TASK).requireItem(item);
     }
 
-    public ANAdvancementBuilder requireItem(ItemLike item){
+    public ANAdvancementBuilder requireItem(ItemLike item) {
         return this.addCriterion("has_" + BuiltInRegistries.ITEM.getKey(item.asItem()).getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(item));
     }
 
-    public MutableComponent getComponent(String type){
+    public MutableComponent getComponent(String type) {
         return Component.translatable(modid + ".adv." + type + "." + fileKey);
     }
 
     /**
      * Tries to resolve the parent of this advancement, if possible. Returns true on success.
      */
-    public boolean canBuild(Function<ResourceLocation, Advancement> pParentLookup) {
+    public boolean canBuild(Function<ResourceLocation, AdvancementHolder> pParentLookup) {
         if (this.parentId == null) {
             return true;
         } else {
@@ -157,12 +158,10 @@ public class ANAdvancementBuilder implements net.neoforged.neoforge.common.exten
         if (this.requirements == null) {
             this.requirements = this.requirementsStrategy.create(this.criteria.keySet());
         }
-        if(this.criteria.isEmpty()){
+        if (this.criteria.isEmpty()) {
             throw new IllegalStateException("Advancement " + fileKey + " has no criteria " + this);
         }
-
         return new Advancement(Optional.ofNullable(this.parentId), Optional.ofNullable(this.display), this.rewards, this.criteria, this.requirements, false);
-
     }
 
     public AdvancementHolder save(Consumer<AdvancementHolder> pConsumer, ResourceLocation pId) {

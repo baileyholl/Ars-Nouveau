@@ -15,6 +15,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
@@ -28,7 +29,7 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
     }
 
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+    protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (level.isClientSide || hand != InteractionHand.MAIN_HAND)
             return InteractionResult.SUCCESS;
 
@@ -69,7 +70,7 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
     }
 
     @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.ENTITY_FAMILIAR_DRYGMY.get();
     }
 
@@ -77,6 +78,6 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
     public ResourceLocation getTexture(FamiliarEntity entity) {
         String color = getColor().toLowerCase();
         if (color.isEmpty()) color = "brown";
-        return ArsNouveau.prefix( "textures/entity/drygmy_" + color + ".png");
+        return ArsNouveau.prefix("textures/entity/drygmy_" + color + ".png");
     }
 }

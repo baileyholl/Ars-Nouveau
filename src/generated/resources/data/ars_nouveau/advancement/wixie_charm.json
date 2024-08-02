@@ -1,0 +1,32 @@
+{
+  "parent": "ars_nouveau:poof_mob",
+  "criteria": {
+    "has_wixie_charm": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ars_nouveau:wixie_charm"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.wixie_charm"
+    },
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:wixie_charm"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.wixie_charm"
+    }
+  },
+  "requirements": [
+    [
+      "has_wixie_charm"
+    ]
+  ]
+}

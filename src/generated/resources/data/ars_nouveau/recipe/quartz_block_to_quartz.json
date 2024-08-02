@@ -1,7 +1,7 @@
 {
   "type": "ars_nouveau:crush",
   "input": {
-    "tag": "minecraft:storage_blocks/quartz"
+    "tag": "c:storage_blocks/quartz"
   },
   "output": [
     {

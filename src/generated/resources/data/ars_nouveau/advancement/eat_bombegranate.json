@@ -1,0 +1,31 @@
+{
+  "parent": "ars_nouveau:root",
+  "criteria": {
+    "eat_bombegranate": {
+      "conditions": {
+        "item": {
+          "items": "ars_nouveau:bombegranate_pod"
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.eat_bombegranate"
+    },
+    "hidden": true,
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:bombegranate_pod"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.eat_bombegranate"
+    }
+  },
+  "requirements": [
+    [
+      "eat_bombegranate"
+    ]
+  ]
+}

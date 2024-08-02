@@ -19,11 +19,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
 import software.bernie.geckolib.util.Color;
 
-public class SpellBowRenderer extends FixedGeoItemRenderer<SpellBow> {
+public class SpellBowRenderer extends GeoItemRenderer<SpellBow> {
     public SpellBowRenderer() {
-        super(new ANGeoModel<SpellBow>("geo/spellbow.geo.json", "textures/item/spellbow.png", "animations/wand_animation.json"));
+        super(new ANGeoModel<>("geo/spellbow.geo.json", "textures/item/spellbow.png", "animations/wand_animation.json"));
     }
 
     @Override
