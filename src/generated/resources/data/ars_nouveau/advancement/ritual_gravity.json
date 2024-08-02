@@ -1,0 +1,31 @@
+{
+  "parent": "ars_nouveau:ritual_brazier",
+  "criteria": {
+    "gravity_effect": {
+      "conditions": {
+        "effects": {
+          "ars_nouveau:gravity": {}
+        }
+      },
+      "trigger": "minecraft:effects_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.ritual_gravity"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:ritual_gravity"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.ritual_gravity"
+    }
+  },
+  "requirements": [
+    [
+      "gravity_effect"
+    ]
+  ]
+}

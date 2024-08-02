@@ -1,0 +1,32 @@
+{
+  "parent": "ars_nouveau:imbuement_chamber",
+  "criteria": {
+    "has_source_jar": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ars_nouveau:source_jar"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.source_jar"
+    },
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:source_jar"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.source_jar"
+    }
+  },
+  "requirements": [
+    [
+      "has_source_jar"
+    ]
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "parent": "ars_nouveau:warp_scroll",
+  "criteria": {
+    "create_portal": {
+      "trigger": "ars_nouveau:portals"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.create_portal"
+    },
+    "frame": "challenge",
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:creative_source_jar"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.create_portal"
+    }
+  },
+  "requirements": [
+    [
+      "create_portal"
+    ]
+  ]
+}

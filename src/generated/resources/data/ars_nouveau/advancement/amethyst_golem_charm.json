@@ -1,0 +1,32 @@
+{
+  "parent": "ars_nouveau:ritual_brazier",
+  "criteria": {
+    "has_amethyst_golem_charm": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ars_nouveau:amethyst_golem_charm"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.amethyst_golem_charm"
+    },
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:amethyst_golem_charm"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.amethyst_golem_charm"
+    }
+  },
+  "requirements": [
+    [
+      "has_amethyst_golem_charm"
+    ]
+  ]
+}

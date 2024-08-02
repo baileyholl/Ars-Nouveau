@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
@@ -22,7 +23,7 @@ public abstract class SimpleDataProvider implements DataProvider {
     public abstract void collectJsons(CachedOutput pOutput);
 
     @Override
-    public CompletableFuture<?> run(CachedOutput pOutput) {
+    public @NotNull CompletableFuture<?> run(@NotNull CachedOutput pOutput) {
         collectJsons(pOutput);
         return CompletableFuture.allOf(futuresBuilder.build().toArray(CompletableFuture[]::new));
     }

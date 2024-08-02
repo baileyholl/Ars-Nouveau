@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.Tags;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class ImbuementRecipeProvider extends SimpleDataProvider{
     }
 
     @Override
-    public CompletableFuture<?> run(CachedOutput pOutput) {
+    public @NotNull CompletableFuture<?> run(@NotNull CachedOutput pOutput) {
         collectJsons(pOutput);
         List<CompletableFuture<?>> futures = new ArrayList<>();
         return ModDatagen.registries.thenCompose((registry) -> {
@@ -95,7 +96,7 @@ public class ImbuementRecipeProvider extends SimpleDataProvider{
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "Imbuement";
     }
 }

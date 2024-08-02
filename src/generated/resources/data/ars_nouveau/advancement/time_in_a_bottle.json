@@ -1,0 +1,27 @@
+{
+  "parent": "ars_nouveau:mob_jar",
+  "criteria": {
+    "time_in_a_bottle": {
+      "trigger": "ars_nouveau:time_in_bottle"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.time_in_a_bottle"
+    },
+    "frame": "challenge",
+    "hidden": true,
+    "icon": {
+      "count": 1,
+      "id": "minecraft:clock"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.time_in_a_bottle"
+    }
+  },
+  "requirements": [
+    [
+      "time_in_a_bottle"
+    ]
+  ]
+}
