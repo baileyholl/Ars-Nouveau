@@ -71,6 +71,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
@@ -82,6 +83,7 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.village.VillagerTradesEvent;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -93,12 +95,12 @@ public class EventHandler {
     public static void resourceLoadEvent(AddReloadListenerEvent event) {
         event.addListener(new SimplePreparableReloadListener<>() {
             @Override
-            protected Object prepare(ResourceManager pResourceManager, ProfilerFiller pProfiler) {
+            protected Object prepare(@NotNull ResourceManager pResourceManager, ProfilerFiller pProfiler) {
                 return null;
             }
 
             @Override
-            protected void apply(Object pObject, ResourceManager pResourceManager, ProfilerFiller pProfiler) {
+            protected void apply(@NotNull Object pObject, @NotNull ResourceManager pResourceManager, @NotNull ProfilerFiller pProfiler) {
                 MultiRecipeWrapper.RECIPE_CACHE = new HashMap<>();
                 EffectWololo.recipeCache = new FixedStack<>(EffectWololo.MAX_RECIPE_CACHE);
                 ArsNouveauAPI.getInstance().onResourceReload();
@@ -168,7 +170,8 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void jumpEvent(LivingEvent.LivingJumpEvent e) {
-        if (e.getEntity() != null && e.getEntity().hasEffect(ModPotions.SNARE_EFFECT)) {
+        e.getEntity();
+        if (e.getEntity().hasEffect(ModPotions.SNARE_EFFECT)) {
             e.getEntity().setDeltaMovement(0, 0, 0);
             return;
         }
@@ -215,9 +218,9 @@ public class EventHandler {
         }
 
         if (player.hasEffect(ModPotions.FLIGHT_EFFECT)
-            && player.level.getGameTime() % 20 == 0
-            && player.getEffect(ModPotions.FLIGHT_EFFECT).getDuration() <= 30 * 20
-            && player instanceof ServerPlayer serverPlayer) {
+                && player.level.getGameTime() % 20 == 0
+                && player.getEffect(ModPotions.FLIGHT_EFFECT).getDuration() <= 30 * 20
+                && player instanceof ServerPlayer serverPlayer) {
             RitualEventQueue.getRitual(player.level, RitualFlight.class, flight -> flight.attemptRefresh(serverPlayer));
         }
 
@@ -252,10 +255,8 @@ public class EventHandler {
             container.setNewDamage(Math.max(0, damage));
         }
         LivingEntity entity = e.getEntity();
-        if (entity == null)
-            return;
         if (entity.hasEffect(ModPotions.HEX_EFFECT)
-            && (entity.hasEffect(MobEffects.POISON)
+                && (entity.hasEffect(MobEffects.POISON)
                 || entity.hasEffect(MobEffects.WITHER)
                 || entity.isOnFire()
                 || entity.hasEffect(ModPotions.SHOCKED_EFFECT)
@@ -264,7 +265,7 @@ public class EventHandler {
         }
         double warding = PerkUtil.valueOrZero(entity, PerkAttributes.WARDING);
         double feather = PerkUtil.valueOrZero(entity, PerkAttributes.FEATHER);
-        if (source.is(DamageTypes.MAGIC)) {
+        if (source.is(Tags.DamageTypes.IS_MAGIC)) {
             container.setNewDamage((float) (amount - warding));
         }
 
@@ -285,11 +286,11 @@ public class EventHandler {
     @SubscribeEvent
     public static void entityHeal(LivingHealEvent e) {
         LivingEntity entity = e.getEntity();
-        if (entity != null && entity.hasEffect(ModPotions.HEX_EFFECT)) {
+        if (entity.hasEffect(ModPotions.HEX_EFFECT)) {
             e.setAmount(e.getAmount() / 2.0f);
         }
 
-        if (entity != null && entity.hasEffect(ModPotions.RECOVERY_EFFECT)) {
+        if (entity.hasEffect(ModPotions.RECOVERY_EFFECT)) {
             e.setAmount(e.getAmount() + 1 + entity.getEffect(ModPotions.RECOVERY_EFFECT).getAmplifier());
         }
     }
@@ -304,7 +305,7 @@ public class EventHandler {
         }
     }
 
-    private static void replaceEntityWithItems(ServerLevel level, Entity entity, ItemStack ...items) {
+    private static void replaceEntityWithItems(ServerLevel level, Entity entity, ItemStack... items) {
         entity.remove(Entity.RemovalReason.KILLED);
         ParticleUtil.spawnPoof(level, entity.blockPosition());
         for (ItemStack item : items) {
@@ -354,36 +355,34 @@ public class EventHandler {
             List<VillagerTrades.ItemListing> level4 = trades.get(4);
             List<VillagerTrades.ItemListing> level5 = trades.get(5);
 
-            level1.add((trader, rand) -> itemToEmer(trader,BlockRegistry.SOURCEBERRY_BUSH, 16, 16, 2));
-            level1.add((trader, rand) -> itemToEmer(trader,ItemsRegistry.MAGE_FIBER, 16, 16, 2));
+            level1.add((trader, rand) -> itemToEmer(trader, BlockRegistry.SOURCEBERRY_BUSH, 16, 16, 2));
+            level1.add((trader, rand) -> itemToEmer(trader, ItemsRegistry.MAGE_FIBER, 16, 16, 2));
 
             for (ItemStack fruit : Ingredient.of(ItemTagProvider.SHADY_WIZARD_FRUITS).getItems()) {
-                level1.add((trader, rand) -> itemToEmer(trader,fruit.getItem(), 6, 16, 2));
+                level1.add((trader, rand) -> itemToEmer(trader, fruit.getItem(), 6, 16, 2));
             }
 
-            level1.add((trader, rand) -> itemToEmer(trader,Items.AMETHYST_SHARD, 32, 16, 2));
+            level1.add((trader, rand) -> itemToEmer(trader, Items.AMETHYST_SHARD, 32, 16, 2));
 
-            level1.add((trader, rand) -> emerToItem(trader,ItemsRegistry.SOURCE_BERRY_ROLL, 4, 16, 2));
+            level1.add((trader, rand) -> emerToItem(trader, ItemsRegistry.SOURCE_BERRY_ROLL, 4, 16, 2));
 
-            level2.add((trader, rand) -> emerToItem(trader,BlockRegistry.GHOST_WEAVE, 1, 8, 2));
-            level2.add((trader, rand) -> emerToItem(trader,BlockRegistry.MIRROR_WEAVE, 1, 8, 2));
-            level2.add((trader, rand) -> emerToItem(trader,BlockRegistry.FALSE_WEAVE, 1, 8, 2));
-            level2.add((trader, rand) -> emerToItem(trader,ItemsRegistry.WARP_SCROLL, 1, 8, 2));
+            level2.add((trader, rand) -> emerToItem(trader, BlockRegistry.GHOST_WEAVE, 1, 8, 2));
+            level2.add((trader, rand) -> emerToItem(trader, BlockRegistry.MIRROR_WEAVE, 1, 8, 2));
+            level2.add((trader, rand) -> emerToItem(trader, BlockRegistry.FALSE_WEAVE, 1, 8, 2));
+            level2.add((trader, rand) -> emerToItem(trader, ItemsRegistry.WARP_SCROLL, 1, 8, 2));
 
             for (ItemStack wilden : Ingredient.of(ItemTagProvider.WILDEN_DROP_TAG).getItems()) {
-                level2.add((trader, rand) -> itemToEmer(trader,wilden.getItem(), 4, 8, 12));
+                level2.add((trader, rand) -> itemToEmer(trader, wilden.getItem(), 4, 8, 12));
             }
 
             List<RitualTablet> tablets = new ArrayList<>(RitualRegistry.getRitualItemMap().values());
             for (RitualTablet tablet : tablets) {
-                if (new ItemStack(tablet).is(ItemTagProvider.RITUAL_TRADE_BLACKLIST)) continue;
-                if (tablet.ritual.canBeTraded()) {
-                    level3.add((trader, rand) -> emerToItem(trader,tablet, 4, 1, 12));
-                }
+                if (tablet.getDefaultInstance().is(ItemTagProvider.RITUAL_TRADE_BLACKLIST)) continue;
+                level3.add((trader, rand) -> emerToItem(trader, tablet, 4, 1, 12));
             }
 
             for (ItemStack shard : Ingredient.of(ItemTagProvider.SUMMON_SHARDS_TAG).getItems()) {
-                level4.add((trader, rand) -> emerToItem(trader,shard.getItem(), 20, 1, 20));
+                level4.add((trader, rand) -> emerToItem(trader, shard.getItem(), 20, 1, 20));
             }
             level5.add((trader, rand) -> emerToItem(trader, ItemsRegistry.SOURCE_BERRY_PIE, 4, 8, 2));
             level5.add((trader, rand) -> new MerchantOffer(new ItemCost(Items.EMERALD, 48), DungeonLootTables.getRandomItem(DungeonLootTables.RARE_LOOT), 1, 20, 0.2F));
@@ -395,7 +394,7 @@ public class EventHandler {
         return new VillagerTrades.ItemsForEmeralds(itemLike.asItem(), cost, uses, exp).getOffer(trader, trader.getRandom());
     }
 
-    public static MerchantOffer itemToEmer(Entity trader,ItemLike itemLike, int cost, int uses, int exp) {
+    public static MerchantOffer itemToEmer(Entity trader, ItemLike itemLike, int cost, int uses, int exp) {
         return new VillagerTrades.EmeraldForItems(itemLike.asItem(), cost, uses, exp).getOffer(trader, trader.getRandom());
     }
 
@@ -427,7 +426,7 @@ public class EventHandler {
             event.getEffectInstance().duration = (int) (event.getEffectInstance().duration * bonus);
         }
 
-        if(holder.is(PotionEffectTags.TO_SYNC)){
+        if (holder.is(PotionEffectTags.TO_SYNC)) {
             Networking.sendToNearbyClient(target.level(), target, new PotionSyncPacket(target.getId(), effect, event.getEffectInstance().getDuration()));
         }
     }
@@ -447,7 +446,7 @@ public class EventHandler {
             LivingEntity target = event.getEntity();
             Holder<MobEffect> holder = event.getEffectInstance().getEffect();
             MobEffect effect = holder.value();
-            if(holder.is(PotionEffectTags.TO_SYNC)){
+            if (holder.is(PotionEffectTags.TO_SYNC)) {
                 Networking.sendToNearbyClient(target.level(), target, new PotionSyncPacket(target.getId(), effect, -1));
             }
         }
