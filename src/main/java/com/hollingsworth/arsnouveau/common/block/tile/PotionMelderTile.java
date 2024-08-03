@@ -305,15 +305,15 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
             tooltip.add(Component.translatable("ars_nouveau.melder.needs_potion").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
         }
         if(fromJars.size() >= 2 && toPos != null && level.getBlockEntity(toPos) instanceof PotionJarTile combJar){
-            PotionJarTile tile1 = (PotionJarTile) level.getBlockEntity(fromJars.get(0));
-            PotionJarTile tile2 = (PotionJarTile) level.getBlockEntity(fromJars.get(1));
+            BlockEntity tile1 = level.getBlockEntity(fromJars.get(0));
+            BlockEntity tile2 =  level.getBlockEntity(fromJars.get(1));
             int inputCost = Config.MELDER_INPUT_COST.get();
-            if(tile1 == null || tile1.getAmount() < inputCost || tile2 == null || tile2.getAmount() < inputCost) {
+            if(!(tile1 instanceof PotionJarTile jar1) || !(tile2 instanceof PotionJarTile jar2) || jar1.getAmount() < inputCost || jar2.getAmount() < inputCost) {
                 return;
             }
-            PotionContents data = getCombinedResult(tile1, tile2);
+            PotionContents data = getCombinedResult(jar1, jar2);
 
-            if(!isOutputUnique(data, tile1, tile2)){
+            if(!isOutputUnique(data, jar1, jar2)){
                 tooltip.add(Component.translatable("ars_nouveau.melder.output_not_unique").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
                 return;
             }
