@@ -272,10 +272,6 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new CraftingPage(SOURCESTONE))
                 .withLocalizedText(), getPath(RESOURCES, "decorative"));
 
-        addPage(new PatchouliBuilder(RESOURCES, BlockRegistry.LAVA_LILY)
-                .withLocalizedText()
-                .withPage(new CraftingPage(BlockRegistry.LAVA_LILY)), getPath(RESOURCES, "lava_lily"));
-
         addPage(new PatchouliBuilder(RESOURCES, BlockRegistry.SOURCEBERRY_BUSH)
                 .withLocalizedText()
                 .withPage(new CraftingPage(ItemsRegistry.SOURCE_BERRY_PIE).withRecipe2(ItemsRegistry.SOURCE_BERRY_ROLL)), getPath(RESOURCES, "sourceberry"));
@@ -415,8 +411,7 @@ public class PatchouliProvider implements DataProvider {
                 .withLocalizedText()
                 .withPage(new TextPage(getLangPath("volcanic_sourcelink", 2)).withTitle("ars_nouveau.active_generation"))
                 .withPage(new TextPage(getLangPath("volcanic_sourcelink", 3)).withTitle("ars_nouveau.heat"))
-                .withPage(new CraftingPage(BlockRegistry.VOLCANIC_BLOCK).withRecipe2(BlockRegistry.LAVA_LILY))
-                .withPage(new TextPage(getLangPath("volcanic_sourcelink", 4))), getPath(SOURCE, "volcanic_sourcelink"));
+                .withPage(new CraftingPage(BlockRegistry.VOLCANIC_BLOCK)), getPath(SOURCE, "volcanic_sourcelink"));
         addPage(new PatchouliBuilder(ENCHANTMENTS, "how_to_enchant")
                 .withIcon(BlockRegistry.ENCHANTING_APP_BLOCK)
                 .withSortNum(-1)
