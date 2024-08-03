@@ -29,7 +29,9 @@ public class StarbyPotionBehavior extends StarbyListBehavior {
 
     public StarbyPotionBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
-        heldPotion = ANCodecs.decode(PotionContents.CODEC, tag.get("potionData"));
+        if(tag.contains("potionData")) {
+            heldPotion = ANCodecs.decode(PotionContents.CODEC, tag.get("potionData"));
+        }
         amount = tag.getInt("amount");
         goals.add(new WrappedGoal(4, new GoToBedGoal(starbuncle, this)));
         goals.add(new WrappedGoal(3, new PotionTakeGoal(entity, this)));
