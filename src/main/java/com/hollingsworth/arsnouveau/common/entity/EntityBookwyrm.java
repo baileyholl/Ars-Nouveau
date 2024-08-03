@@ -220,7 +220,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
 
     public ItemStack toCharm(){
         ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM.get());
-        PersistentFamiliarData data = new PersistentFamiliarData(getName(), getColor(this), getHeldStack());
+        PersistentFamiliarData data = new PersistentFamiliarData(getCustomName(), getColor(this), getHeldStack());
         stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, data);
         return stack;
     }

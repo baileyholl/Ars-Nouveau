@@ -29,7 +29,7 @@ public class PersistentFamiliarData implements NBTComponent<PersistentFamiliarDa
     ).apply(instance, PersistentFamiliarData::new));
 
     public static StreamCodec<RegistryFriendlyByteBuf, PersistentFamiliarData>  STREAM_CODEC = StreamCodec.composite(ComponentSerialization.STREAM_CODEC, s -> s.name,
-            ByteBufCodecs.STRING_UTF8, s -> s.color, ItemStack.STREAM_CODEC, s -> s.cosmetic, PersistentFamiliarData::new);
+            ByteBufCodecs.STRING_UTF8, s -> s.color, ItemStack.OPTIONAL_STREAM_CODEC, s -> s.cosmetic, PersistentFamiliarData::new);
 
     private final Component name;
     private final String color;
@@ -42,7 +42,7 @@ public class PersistentFamiliarData implements NBTComponent<PersistentFamiliarDa
     }
 
     public PersistentFamiliarData(){
-        this(Component.nullToEmpty(""), "", ItemStack.EMPTY);
+        this(null, null, null);
     }
 
     public PersistentFamiliarData setName(Component name){
