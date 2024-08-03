@@ -48,7 +48,7 @@ public class AnnotatedCodex extends ModItem {
         CodexData data = stack.get(DataComponentRegistry.CODEX_DATA);
 
         IPlayerCap playerCap = CapabilityRegistry.getPlayerDataCap(pPlayer);
-        if (playerCap == null)
+        if (data == null || playerCap == null)
             return super.use(pLevel, pPlayer, pUsedHand);
         Collection<AbstractSpellPart> known = playerCap.getKnownGlyphs();
         Collection<AbstractSpellPart> storedGlyphs = data.glyphIds().stream().map(GlyphRegistry::getSpellPart).toList();
@@ -64,7 +64,7 @@ public class AnnotatedCodex extends ModItem {
                 PortUtil.sendMessageNoSpam(pPlayer, Component.translatable("ars_nouveau.recorded_codex"));
                 pPlayer.giveExperiencePoints(-expCost);
             }
-        } else if (pPlayer.getUUID().equals(data.uuid())) { // Player updating codex
+        } else if (pPlayer.getUUID().equals(data.uuid().orElse(null))) { // Player updating codex
             Collection<AbstractSpellPart> difference = new ArrayList<>();
             for (AbstractSpellPart spellPart : known) {
                 if (!storedGlyphs.contains(spellPart)) {
