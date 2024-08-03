@@ -16,7 +16,12 @@ public abstract class ParticleMobEffect extends PublicEffect {
             if (living.level.random.nextInt(getChance()) == 0) {
                 living.level.addParticle(getParticle(), living.getRandomX(1.0D), living.getRandomY(), living.getRandomZ(1.0D), 0.0D, 0.0D, 0.0D);
             }
-        return false;
+        return true;
+    }
+
+    @Override
+    public boolean shouldApplyEffectTickThisTick(int pDuration, int pAmplifier) {
+        return true;
     }
 
     public abstract ParticleOptions getParticle();

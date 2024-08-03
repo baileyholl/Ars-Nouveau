@@ -20,4 +20,9 @@ public class BlastEffect extends MobEffect {
     public static void explode(LivingEntity pLivingEntity, int pAmplifier) {
         pLivingEntity.level.explode(null, pLivingEntity.getX(), pLivingEntity.getY() + 1, pLivingEntity.getZ(), 2.0f + pAmplifier, false, Level.ExplosionInteraction.NONE);
     }
+
+    @Override
+    public boolean shouldApplyEffectTickThisTick(int pDuration, int pAmplifier) {
+        return pDuration == 1;
+    }
 }

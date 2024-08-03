@@ -43,6 +43,11 @@ public class GravityEffect extends MobEffect {
         return true;
     }
 
+    @Override
+    public boolean shouldApplyEffectTickThisTick(int pDuration, int pAmplifier) {
+        return true;
+    }
+
     // Disable flight here because items tick after our potions
     @SubscribeEvent
     public static void entityTick(PlayerTickEvent.Post e) {
