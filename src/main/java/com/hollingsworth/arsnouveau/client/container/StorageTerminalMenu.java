@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.container;
 import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.ServerToClientStoragePacket;
+import com.hollingsworth.arsnouveau.common.network.SetTerminalSettingsPacket;
 import com.hollingsworth.arsnouveau.common.network.UpdateStorageItemsPacket;
 import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
@@ -32,7 +33,6 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 	protected List<SlotStorage> storageSlotList = new ArrayList<>();
 	public List<StoredItemStack> itemList = new ArrayList<>();
     protected Inventory pinv;
-	public SortSettings terminalData = null;
 	public String search;
 	public String selectedTab = null;
 	public Map<StoredItemStack, StoredItemStack> itemMap = new HashMap<>();
@@ -46,15 +46,11 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 		super(type, id);
 		this.te = te;
 		this.pinv = inv;
-		addStorageSlots();
+		addStorageSlots(false);
 	}
 
 	public StorageTerminalMenu(MenuType<?> type, int id, Inventory inv) {
 		this(type, id, inv, null);
-	}
-
-	protected void addStorageSlots() {
-		addStorageSlots(8, 18);
 	}
 
 	protected void addPlayerSlots(Inventory playerInventory, int x, int y) {
@@ -70,12 +66,12 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 		}
 	}
 
-	public void addStorageSlots(int x, int y) {
+	public void addStorageSlots(boolean expanded) {
 		storageSlotList.clear();
-        int lines = this.terminalData == null || !terminalData.expanded ? 3 : 7;
+        int lines = !expanded ? 3 : 7;
 		for (int i = 0; i < lines; ++i) {
 			for (int j = 0;j < 9;++j) {
-				storageSlotList.add(new SlotStorage(this.te, i * 9 + j, x + j * 18, y + i * 18));
+				storageSlotList.add(new SlotStorage(this.te, i * 9 + j, 13 + j * 18, 21 + i * 18));
 			}
 		}
 	}
@@ -131,7 +127,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 			tabs.add(nameTag);
 		}
 		tag.put("tabs", tabs);
-		tag.put("sortSettings", te.sortSettings.toTag());
+		Networking.sendToPlayerClient(new SetTerminalSettingsPacket(te.sortSettings, null), (ServerPlayer) pinv.player);
 		Networking.sendToPlayerClient(new ServerToClientStoragePacket(tag), (ServerPlayer) pinv.player);
 		super.broadcastChanges();
 	}
@@ -211,13 +207,6 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 	public final void receiveClientNBTPacket(CompoundTag message) {
 		if(message.contains("search"))
 			search = message.getString("search");
-		if(message.contains("sortSettings")) {
-			boolean isExpanded = terminalData != null && terminalData.expanded;
-			terminalData = SortSettings.fromTag(message.getCompound("sortSettings"));
-			if(isExpanded != terminalData.expanded) {
-				addStorageSlots();
-			}
-		}
 	}
 
 
@@ -227,14 +216,11 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 			te.setLastSearch(message.getString("search"));
 		}
 		this.receiveInteract(message);
-		if(message.contains("termData")) {
-			CompoundTag d = message.getCompound("termData");
-			te.setSorting(SortSettings.fromTag(d.getCompound("sortSettings")));
-			selectedTab = null;
-			if(d.contains("selectedTab")){
-				selectedTab = d.getString("selectedTab");
-			}
-		}
+	}
+
+	public void receiveSettings(SortSettings settings, String selectedTab) {
+		this.selectedTab = selectedTab;
+		te.setSorting(settings);
 	}
 
 	public void receiveInteract(CompoundTag tag) {

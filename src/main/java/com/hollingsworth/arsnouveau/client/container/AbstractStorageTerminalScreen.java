@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.client.gui.buttons.StorageSettingsButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StorageTabButton;
 import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.SetTerminalSettingsPacket;
 import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -79,7 +80,6 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	private Comparator<StoredItemStack> sortComp;
 	List<String> tabNames = new ArrayList<>();
 	public List<StorageTabButton> tabButtons = new ArrayList<>();
-	public String selectedTab = null;
 
 	boolean noSort;
 
@@ -90,17 +90,23 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		super(screenContainer, inv, titleIn);
 	}
 
-	protected void onPacket() {
-		SortSettings s = menu.terminalData;
-		if(s != null) {
-			controllMode = s.controlMode;
-			comparator = StoredItemStack.SortingTypes.VALUES[s.sortType % StoredItemStack.SortingTypes.VALUES.length].create(s.reverseSort);
-			searchType = s.searchType;
-			buttonSortingType.state = s.sortType;
-			buttonDirection.state = s.reverseSort ? 1 : 0;
+	public void receiveSettings(SortSettings settings){
+		boolean wasExpanded = expanded;
+		if(settings != null) {
+			controllMode = settings.controlMode();
+			comparator = StoredItemStack.SortingTypes.VALUES[settings.sortType() % StoredItemStack.SortingTypes.VALUES.length].create(settings.reverseSort());
+			searchType = settings.searchType();
+			buttonSortingType.state = settings.sortType();
+			buttonDirection.state = settings.reverseSort() ? 1 : 0;
 			buttonSearchType.state = searchType;
-			expanded = s.expanded;
+			expanded = settings.expanded();
 		}
+		if(expanded != wasExpanded) {
+			menu.addStorageSlots(expanded);
+		}
+	}
+
+	protected void onPacket() {
 		if(tabNames != null && !tabNames.isEmpty()){
 			for(StorageTabButton tabButton : tabButtons){
 				tabButton.visible = false;
@@ -127,16 +133,9 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		}
 	}
 
-	protected void sendUpdate() {
-		CompoundTag c = new CompoundTag();
-		c.put("sortSettings", getSortSettings().toTag());
+	protected void syncSortSettings() {
 		StorageTabButton selectedTabButton = tabButtons.stream().filter(i -> i.visible && i.isSelected).findFirst().orElse(null);
-		if(selectedTabButton != null && selectedTabButton.highlightText != null){
-			c.putString("selectedTab", selectedTabButton.highlightText);
-		}
-		CompoundTag msg = new CompoundTag();
-		msg.put("termData", c);
-		Networking.sendToServer(new ClientToServerStoragePacket(msg));
+		Networking.sendToServer(new SetTerminalSettingsPacket(getSortSettings(), selectedTabButton == null ? null : selectedTabButton.highlightText));
 	}
 
 	public SortSettings getSortSettings() {
@@ -167,26 +166,26 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		buttonSortingType = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 14, 22, 12, 44, 13, 0, ArsNouveau.prefix( "textures/gui/sort_type.png"), b -> {
 			comparator = StoredItemStack.SortingTypes.VALUES[(comparator.type() + 1) % StoredItemStack.SortingTypes.VALUES.length].create(comparator.isReversed());
 			buttonSortingType.state = comparator.type();
-			sendUpdate();
+			syncSortSettings();
 			refreshItemList = true;
 		}));
 
 		buttonDirection = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 29, 22, 12, 44, 13, 0, ArsNouveau.prefix( "textures/gui/sort_order.png"), b -> {
 			comparator.setReversed(!comparator.isReversed());
 			buttonDirection.state = comparator.isReversed() ? 1 : 0;
-			sendUpdate();
+			syncSortSettings();
 			refreshItemList = true;
 		}));
 		buttonSearchType = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 44, 22, 12, 44, 13, 0, ArsNouveau.prefix( "textures/gui/search_sync.png"), b -> {
 			searchType = searchType == 0 ? 1 : 0;
 			buttonSearchType.state = searchType;
-			sendUpdate();
+			syncSortSettings();
 		}));
 		for(int i = 0; i < 12; i++){
 			var button = addRenderableWidget(new StorageTabButton(leftPos - 13, topPos + 59 + i * 15, 18, 12, 256, 13, i, 0, tabImages, b -> {
 				StorageTabButton tabButton = (StorageTabButton) b;
 				setSelectedTab(tabButton.state);
-				sendUpdate();
+				syncSortSettings();
 			}));
 			button.visible = false;
 			if(i == 0){
@@ -273,7 +272,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	}
 
 	public final void scrollTo(float p_148329_1_) {
-		int lines = this.getSortSettings() == null || !this.getSortSettings().expanded ? 3 : 7;
+		int lines = this.getSortSettings() == null || !this.getSortSettings().expanded() ? 3 : 7;
 		int i = (this.itemsSorted.size() + 9 - 1) / 9 - lines;
 		int j = (int) (p_148329_1_ * i + 0.5D);
 

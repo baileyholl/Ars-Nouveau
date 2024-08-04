@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
 import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.TransferTask;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -473,7 +474,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     @Override
     public void saveAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
         super.saveAdditional(compound, pRegistries);
-        compound.put("sortSettings", sortSettings.toTag());
+        compound.put("settings", ANCodecs.encode(SortSettings.CODEC, sortSettings));
         ListTag list = new ListTag();
         for (BlockPos pos : connectedInventories) {
             CompoundTag c = new CompoundTag();
@@ -496,8 +497,8 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
         super.loadAdditional(compound, pRegistries);
-        if (compound.contains("sortSettings")) {
-            sortSettings = SortSettings.fromTag(compound.getCompound("sortSettings"));
+        if (compound.contains("settings")) {
+            sortSettings = ANCodecs.decode(SortSettings.CODEC, compound.getCompound("settings"));
         }
         ListTag list = compound.getList("invs", 10);
         connectedInventories.clear();

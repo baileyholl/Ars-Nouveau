@@ -113,20 +113,18 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 	}
 
 	@Override
-	protected void onPacket() {
-		super.onPacket();
-		SortSettings s = menu.terminalData;
-		if (s != null) {
-			btnCollapse.visible = this.expanded;
-			btnExpand.visible = !this.expanded;
-			btnClr.visible = !this.expanded;
-			btnRecipeBook.visible = !this.expanded && Config.SHOW_RECIPE_BOOK.get();
-		}
+	public void receiveSettings(SortSettings settings) {
+		super.receiveSettings(settings);
+		btnCollapse.visible = this.expanded;
+		btnExpand.visible = !this.expanded;
+		btnClr.visible = !this.expanded;
+		btnRecipeBook.visible = !this.expanded && Config.SHOW_RECIPE_BOOK.get();
 	}
+
 	public void collapseScreen(){
 		rowCount = 3;
 		this.expanded = false;
-		sendUpdate();
+		syncSortSettings();
 	}
 
 	public void expandScreen(){
@@ -135,7 +133,7 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 		if(this.recipeBookGui.isVisible()){
 			btnRecipeBook.onPress();
 		}
-		sendUpdate();
+		syncSortSettings();
 	}
 
 	@Override

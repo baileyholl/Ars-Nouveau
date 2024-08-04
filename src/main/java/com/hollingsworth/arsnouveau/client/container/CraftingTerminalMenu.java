@@ -105,7 +105,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 				}
 			}
 		});
-		if(this.terminalData == null || !terminalData.expanded) {
+		if(te == null || te.sortSettings == null || !te.sortSettings.expanded()) {
 			for (int i = 0; i < 3; ++i) {
 				for (int j = 0; j < 3; ++j) {
 					SlotCrafting slot = new SlotCrafting(craftMatrix, j + i * 3, x + 36 + j * 18,  89 + i * 18);
@@ -117,18 +117,13 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 	}
 
 	@Override
-	protected void addStorageSlots() {
-		addStorageSlots(13, 21);
-	}
-
-	@Override
-	public void addStorageSlots(int slotOffsetX, int slotOffsetY) {
-		super.addStorageSlots(slotOffsetX, slotOffsetY);
-		if(craftSlotList != null && terminalData != null){
+	public void addStorageSlots(boolean expanded) {
+		super.addStorageSlots(expanded);
+		if(craftSlotList != null){
 			for(SlotCrafting slot : craftSlotList){
-				slot.active = !terminalData.expanded;
+				slot.active = !expanded;
 			}
-			craftingResultSlot.active = !terminalData.expanded;
+			craftingResultSlot.active = !expanded;
 		}
 	}
 
