@@ -23,11 +23,13 @@ public class InvUtil {
     public static List<FilterableItemHandler> adjacentInventories(Level level, BlockPos pos){
         List<FilterableItemHandler> inventories = new ArrayList<>();
         for (Direction d : Direction.values()) {
-            BlockEntity adjacentInvTile = level.getBlockEntity(pos.relative(d));
+            BlockPos relativePos = pos.relative(d);
+            // TODO: Disentangle inventory handling from block entities due to new capabilities system
+            BlockEntity adjacentInvTile = level.getBlockEntity(relativePos);
             if (adjacentInvTile == null || adjacentInvTile.isRemoved())
                 continue;
 
-            IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, d);
+            IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, relativePos, d);
             if(handler == null)
                 continue;
             inventories.add(new FilterableItemHandler(handler, filtersOnTile(adjacentInvTile)));
