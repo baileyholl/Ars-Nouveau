@@ -1139,6 +1139,8 @@
   "effect.ars_nouveau.shielding": "Shielding",
   "effect.ars_nouveau.shocked": "Shocked",
   "effect.ars_nouveau.snared": "Snared",
+  "effect.ars_nouveau.soaked": "Soaked",
+  "effect.ars_nouveau.soaked.desc": "Wets the target, protecting from fire and triggering effects as if under the rain.",
   "effect.ars_nouveau.spell_damage": "Spell Damage",
   "effect.ars_nouveau.summoning_sickness": "Summoning Sickness",
   "enchantment.ars_nouveau.mana_boost": "Mana Boost",
