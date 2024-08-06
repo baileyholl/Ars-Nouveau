@@ -30,7 +30,7 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe {
     }
 
     @Override
-    public ItemStack assemble(ApparatusRecipeInput input, HolderLookup.Provider lookup) {
+    public @NotNull ItemStack assemble(ApparatusRecipeInput input, HolderLookup.@NotNull Provider lookup) {
         ItemStack result = super.assemble(input, lookup);
         ItemStack parchment = getParchment(input.pedestals());
         AbstractCaster<?> parchmentCaster = SpellCasterRegistry.from(parchment);
@@ -56,12 +56,12 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe {
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public @NotNull RecipeType<?> getType() {
         return RecipeRegistry.REACTIVE_TYPE.get();
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public @NotNull RecipeSerializer<?> getSerializer() {
         return RecipeRegistry.REACTIVE_RECIPE.get();
     }
 
@@ -76,12 +76,12 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe {
         public static final StreamCodec<RegistryFriendlyByteBuf, ReactiveEnchantmentRecipe> STREAM = CheatSerializer.create(CODEC);
 
         @Override
-        public MapCodec<ReactiveEnchantmentRecipe> codec() {
+        public @NotNull MapCodec<ReactiveEnchantmentRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public StreamCodec<RegistryFriendlyByteBuf, ReactiveEnchantmentRecipe> streamCodec() {
+        public @NotNull StreamCodec<RegistryFriendlyByteBuf, ReactiveEnchantmentRecipe> streamCodec() {
             return STREAM;
         }
     }

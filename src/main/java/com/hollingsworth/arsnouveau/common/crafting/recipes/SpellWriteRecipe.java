@@ -22,6 +22,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe implements IText
     }
 
     @Override
-    public ItemStack assemble(ApparatusRecipeInput input, HolderLookup.Provider p_346030_) {
+    public @NotNull ItemStack assemble(ApparatusRecipeInput input, HolderLookup.@NotNull Provider p_346030_) {
         ItemStack parchment = getParchment(input.pedestals());
         AbstractCaster<?> caster = SpellCasterRegistry.from(parchment);
         ItemStack result = input.catalyst().copy();
@@ -64,7 +65,7 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe implements IText
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public @NotNull RecipeType<?> getType() {
         return RecipeRegistry.SPELL_WRITE_TYPE.get();
     }
 
@@ -75,7 +76,7 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe implements IText
 
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public @NotNull RecipeSerializer<?> getSerializer() {
         return RecipeRegistry.SPELL_WRITE_RECIPE.get();
     }
 
@@ -90,12 +91,12 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe implements IText
         public static final StreamCodec<RegistryFriendlyByteBuf, SpellWriteRecipe> STREAM = CheatSerializer.create(CODEC);
 
         @Override
-        public MapCodec<SpellWriteRecipe> codec() {
+        public @NotNull MapCodec<SpellWriteRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public StreamCodec<RegistryFriendlyByteBuf, SpellWriteRecipe> streamCodec() {
+        public @NotNull StreamCodec<RegistryFriendlyByteBuf, SpellWriteRecipe> streamCodec() {
             return STREAM;
         }
     }
