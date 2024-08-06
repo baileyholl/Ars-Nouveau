@@ -16,7 +16,7 @@ public class ConfigUtil {
      * Expected format is "string=int"
      * Example: "fortune=3"
      */
-    public static final Pattern STRING_INT_MAP = Pattern.compile("([^/=]+)=(\\p{Digit}+)");
+    public static final Pattern STRING_INT_MAP = Pattern.compile("(.+?)=(\\d+)");
 
     /** Parse glyph_limits into a Map from augment glyph tags to limits. */
     public static Map<String, Integer> parseMapConfig(ForgeConfigSpec.ConfigValue<List<? extends String>> configValue) {
