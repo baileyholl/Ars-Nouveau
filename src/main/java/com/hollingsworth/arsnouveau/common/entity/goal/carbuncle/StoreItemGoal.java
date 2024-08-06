@@ -70,6 +70,6 @@ public class StoreItemGoal<T extends StarbyTransportBehavior> extends GoToPosGoa
 
     @Override
     public boolean isDestinationStillValid(BlockPos pos) {
-        return behavior.isValidStorePos(pos, starbuncle.getHeldStack()) != ItemScroll.SortPref.INVALID;
+        return behavior.sortPrefForStack(pos, starbuncle.getHeldStack()) != ItemScroll.SortPref.INVALID;
     }
 }

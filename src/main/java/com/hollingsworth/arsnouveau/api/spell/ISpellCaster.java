@@ -150,7 +150,7 @@ public interface ISpellCaster {
 
         if (result instanceof EntityHitResult entityHitResult && entityHitResult.getEntity() instanceof LivingEntity) {
             if (resolver.onCastOnEntity(stack, entityHitResult.getEntity(), handIn))
-                playSound(entity.getOnPos(), worldIn, entity, getCurrentSound(), SoundSource.PLAYERS);
+                playSound(entity.getOnPos(), worldIn, entity, spell.sound, SoundSource.PLAYERS);
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
 
@@ -158,15 +158,15 @@ public interface ISpellCaster {
             if (entity instanceof Player) {
                 UseOnContext context = new UseOnContext(player, handIn, (BlockHitResult) result);
                 if (resolver.onCastOnBlock(context))
-                    playSound(entity.getOnPos(), worldIn, entity, getCurrentSound(), SoundSource.PLAYERS);
+                    playSound(entity.getOnPos(), worldIn, entity, spell.sound, SoundSource.PLAYERS);
             } else if (resolver.onCastOnBlock(blockHitResult)) {
-                playSound(entity.getOnPos(), worldIn, entity, getCurrentSound(), SoundSource.NEUTRAL);
+                playSound(entity.getOnPos(), worldIn, entity, spell.sound, SoundSource.NEUTRAL);
             }
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
 
         if (resolver.onCast(stack, worldIn))
-            playSound(entity.getOnPos(), worldIn, entity, getCurrentSound(), SoundSource.PLAYERS);
+            playSound(entity.getOnPos(), worldIn, entity, spell.sound, SoundSource.PLAYERS);
         return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
     }
 

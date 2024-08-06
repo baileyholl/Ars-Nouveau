@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.recipe.SummonRitualRecipe;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
@@ -33,7 +34,7 @@ public class SummonRitualProvider extends SimpleDataProvider{
     protected void addEntries() {
          ArrayList<SummonRitualRecipe.WeightedMobType> bats = new ArrayList<>();
          bats.add(new SummonRitualRecipe.WeightedMobType(EntityType.getKey(EntityType.BAT)));
-         recipes.add(new SummonRitualRecipe(new ResourceLocation("", ""), Ingredient.of(Items.AMETHYST_SHARD), SummonRitualRecipe.MobSource.MOB_LIST, 5, bats));
+         recipes.add(new SummonRitualRecipe(new ResourceLocation(ArsNouveau.MODID, "bats"), Ingredient.of(Items.AMETHYST_SHARD), SummonRitualRecipe.MobSource.MOB_LIST, 5, bats));
     }
 
     protected static Path getRecipePath(Path path, String id) {

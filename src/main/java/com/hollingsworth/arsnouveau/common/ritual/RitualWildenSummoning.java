@@ -45,6 +45,7 @@ public class RitualWildenSummoning extends AbstractRitual {
                         if (!net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.getWorld(), chimera)) {
                             continue;
                         }
+                        if (getWorld().getBlockState(b).getDestroySpeed(getWorld(), b) < 0) continue;
                         if (SpellUtil.isCorrectHarvestLevel(4, this.getWorld().getBlockState(b))) {
                             BlockUtil.destroyBlockSafelyWithoutSound(getWorld(), b, true);
                         }

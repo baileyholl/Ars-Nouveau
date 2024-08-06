@@ -1,7 +1,10 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.imbuement_chamber.IImbuementRecipe;
+import com.hollingsworth.arsnouveau.api.registry.ImbuementRecipeRegistry;
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
@@ -51,7 +54,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     public ItemStack stack = ItemStack.EMPTY;
     public ItemEntity entity;
     public boolean draining;
-    ImbuementRecipe recipe;
+    IImbuementRecipe recipe;
     int backoff;
     public float frames;
     boolean hasRecipe;
@@ -118,7 +121,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
             }
         }
 
-        if (recipe == null || !recipe.matches(this, level)) {
+        if (recipe == null || !recipe.isMatch(this)) {
             backoff = 20;
             recipe = null;
             if (this.draining) {
@@ -130,12 +133,13 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
         int transferRate = 200;
 
+        int cost = recipe.getSourceCost(this);
 
-        if (this.level.getGameTime() % 20 == 0 && this.getSource() < recipe.source) {
-            if (!canAcceptSource(Math.min(200, recipe.source)))
+        if (this.level.getGameTime() % 20 == 0 && this.getSource() < cost) {
+            if (!canAcceptSource(Math.min(200, cost)))
                 return;
 
-            ISpecialSourceProvider takePos = SourceUtil.takeSource(worldPosition, level, 2, Math.min(200, recipe.source));
+            ISpecialSourceProvider takePos = SourceUtil.takeSource(worldPosition, level, 2, Math.min(200, cost));
             if (takePos != null) {
                 this.addSource(transferRate);
                 EntityFlyingItem item = new EntityFlyingItem(level, takePos.getCurrentPos().above(), worldPosition, 255, 50, 80)
@@ -156,9 +160,9 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
         }
 
-        if (this.getSource() >= recipe.source && craftTicks <= 0) {
-            this.setItem(0, recipe.output.copy());
-            this.addSource(-recipe.source);
+        if (this.getSource() >= cost && craftTicks <= 0) {
+            this.setItem(0, recipe.getResult(this).copy());
+            this.addSource(-cost);
             ParticleUtil.spawnTouchPacket(level, worldPosition, ParticleColor.defaultParticleColor());
             updateBlock();
         }
@@ -206,7 +210,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         if (stack.isEmpty() || !this.stack.isEmpty())
             return false;
         this.stack = stack.copy();
-        ImbuementRecipe recipe = getRecipeNow();
+        IImbuementRecipe recipe = getRecipeNow();
         this.stack = ItemStack.EMPTY;
         return recipe != null;
     }
@@ -306,18 +310,19 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         return pedestalList(getBlockPos(), 1, getLevel());
     }
 
-    public @Nullable ImbuementRecipe getRecipeNow(){
-        return level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream()
-                .filter(f -> f.matches(this, level)).findFirst().orElse(null);
+    public @Nullable IImbuementRecipe getRecipeNow(){
+        return ImbuementRecipeRegistry.INSTANCE.getRecipes().stream().filter(r -> r.isMatch(this)).findFirst().orElse(null);
     }
 
     @Override
     public void getTooltip(List<Component> tooltip) {
         var recipe = getRecipeNow();
-        if(recipe != null && !recipe.output.isEmpty() && stack != null && !stack.isEmpty()) {
-            tooltip.add(Component.translatable("ars_nouveau.crafting", recipe.output.getHoverName()));
-            if(recipe.source > 0) {
-                tooltip.add(Component.translatable("ars_nouveau.crafting_progress", Math.min(100, (getSource() * 100) / recipe.source)).withStyle(ChatFormatting.GOLD));
+        if(recipe != null && !recipe.getResult(this).isEmpty() && stack != null && !stack.isEmpty()) {
+            int cost = recipe.getSourceCost(this);
+            tooltip.add(recipe.getCraftingText(this));
+            if(cost > 0) {
+                int progress = Math.min(100, (getSource() * 100 / cost));
+                tooltip.add(recipe.getCraftingProgressText(this, progress));
             }
         }
     }

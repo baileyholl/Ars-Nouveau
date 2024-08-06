@@ -179,7 +179,8 @@ public class PatchouliProvider extends SimpleDataProvider{
                 .withPage(new TextPage(getLangPath("starbuncle_charm", 4)).withTitle("ars_nouveau.item_transport"))
                 .withPage(new TextPage(getLangPath("starbuncle_charm", 5)).withTitle("ars_nouveau.filtering"))
                 .withPage(new TextPage(getLangPath("starbuncle_charm", 6)).withTitle("ars_nouveau.pathing"))
-                .withPage(new TextPage(getLangPath("starbuncle_charm", 7)).withTitle("ars_nouveau.starbuncle_bed")), getPath(AUTOMATION, "starbuncle_charm"));
+                .withPage(new TextPage(getLangPath("starbuncle_charm", 7)).withTitle("ars_nouveau.starbuncle_bed"))
+                .withPage(new TextPage(getLangPath("starbuncle_charm", 8)).withTitle("ars_nouveau.starbuncle_stacking")), getPath(AUTOMATION, "starbuncle_charm"));
 
         addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.DRYGMY_CHARM)
                 .withLocalizedText()

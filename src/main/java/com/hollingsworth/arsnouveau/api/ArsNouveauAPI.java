@@ -57,7 +57,6 @@ public class ArsNouveauAPI {
         return enchantingRecipeTypes;
     }
 
-
     public List<IEnchantingRecipe> getEnchantingApparatusRecipes(Level world) {
         List<IEnchantingRecipe> recipes = new ArrayList<>(enchantingApparatusRecipes);
         RecipeManager manager = world.getRecipeManager();

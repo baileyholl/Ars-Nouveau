@@ -124,6 +124,7 @@ public class APIRegistry {
         registerSpell(EffectOrbit.INSTANCE);
         registerSpell(EffectReset.INSTANCE);
         registerSpell(EffectWololo.INSTANCE);
+        registerSpell(EffectRewind.INSTANCE);
 
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());
@@ -182,6 +183,7 @@ public class APIRegistry {
         registerPerk(VampiricPerk.INSTANCE);
         registerPerk(KnockbackResistPerk.INSTANCE);
 
+        ImbuementRecipeRegistry.INSTANCE.addRecipeType(RecipeRegistry.IMBUEMENT_TYPE);
     }
 
     //register things only in dev, safe from production
@@ -301,6 +303,7 @@ public class APIRegistry {
                 }
             }
         });
+        JarBehaviorRegistry.register(EntityType.WITHER, new WitherBehavior());
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {

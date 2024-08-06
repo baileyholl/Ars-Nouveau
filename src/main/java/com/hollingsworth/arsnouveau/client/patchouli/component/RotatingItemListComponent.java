@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
+import com.hollingsworth.arsnouveau.api.imbuement_chamber.IImbuementRecipe;
+import com.hollingsworth.arsnouveau.api.registry.ImbuementRecipeRegistry;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
@@ -38,7 +40,7 @@ public class RotatingItemListComponent extends RotatingItemListComponentBase {
         Map<ResourceLocation, ? extends Recipe<?>> map;
         if ("enchanting_apparatus".equals(recipeType)) {
             EnchantingApparatusRecipe recipe = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.APPARATUS_TYPE.get()).stream().filter(f -> f.id.toString().equals(recipeName)).findFirst().orElse(null);
-            for(RecipeType type : ArsNouveauAPI.getInstance().getEnchantingRecipeTypes()){
+            for(RecipeType type : ArsNouveauAPI.getInstance().getEnchantingRecipeTypes()) {
                 RecipeType<IEnchantingRecipe> enchantingRecipeRecipeType = (RecipeType<IEnchantingRecipe>) type;
                 Recipe<?> recipe1 = world.getRecipeManager().getAllRecipesFor(enchantingRecipeRecipeType).stream().filter(f -> f.getId().toString().equals(recipeName)).findFirst().orElse(null);
                 if(recipe1 instanceof EnchantingApparatusRecipe enchantingApparatusRecipe){
@@ -49,6 +51,14 @@ public class RotatingItemListComponent extends RotatingItemListComponentBase {
             return recipe == null ? ImmutableList.of() : recipe.pedestalItems;
         } else if ("imbuement_chamber".equals(recipeType)) {
             ImbuementRecipe recipe = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream().filter(f -> f.id.toString().equals(recipeName)).findFirst().orElse(null);
+            for (RecipeType<? extends IImbuementRecipe> type : ImbuementRecipeRegistry.INSTANCE.getRecipeTypes()) {
+                RecipeType<IImbuementRecipe> imbuementRecipeType = (RecipeType<IImbuementRecipe>) type;
+                Recipe<?> recipe1 = world.getRecipeManager().getAllRecipesFor(imbuementRecipeType).stream().filter(f -> f.getId().toString().equals(recipeName)).findFirst().orElse(null);
+                if (recipe1 instanceof ImbuementRecipe imbuementRecipe){
+                    recipe = imbuementRecipe;
+                    break;
+                }
+            }
             return recipe == null ? ImmutableList.of() : recipe.pedestalItems;
         } else if ("glyph_recipe".equals(recipeType)) {
             GlyphRecipe recipe = (GlyphRecipe) world.getRecipeManager().byKey(new ResourceLocation(recipeName)).orElse(null);

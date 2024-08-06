@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
+import com.hollingsworth.arsnouveau.api.imbuement_chamber.IImbuementRecipe;
 import com.hollingsworth.arsnouveau.common.block.tile.ImbuementTile;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.core.RegistryAccess;
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
 
-public class ImbuementRecipe implements Recipe<ImbuementTile> {
+public class ImbuementRecipe implements IImbuementRecipe {
     public final Ingredient input;
     public final ItemStack output;
     public final int source;
@@ -74,9 +75,19 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
         return this;
     }
 
-    public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, ImbuementTile imbuementTile, @Nullable Player player) {
+    public boolean isMatch(ImbuementTile imbuementTile) {
         pedestalItems = pedestalItems.stream().filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList());
-        return doesReagentMatch(reagent) && this.pedestalItems.size() == pedestalItems.size() && EnchantingApparatusRecipe.doItemsMatch(pedestalItems, this.pedestalItems);
+        return doesReagentMatch(imbuementTile.getItem(0)) && this.pedestalItems.size() == imbuementTile.getPedestalItems().size() && EnchantingApparatusRecipe.doItemsMatch(imbuementTile.getPedestalItems(), this.pedestalItems);
+    }
+
+    @Override
+    public ItemStack getResult(ImbuementTile imbuementTile) {
+        return this.output;
+    }
+
+    @Override
+    public int getSourceCost(ImbuementTile imbuementTile) {
+        return this.source;
     }
 
     public boolean doesReagentMatch(ItemStack reag) {
@@ -85,7 +96,7 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
 
     @Override
     public boolean matches(ImbuementTile pContainer, Level pLevel) {
-        return this.input.test(pContainer.getItem(0)) && EnchantingApparatusRecipe.doItemsMatch(pContainer.getPedestalItems(), pedestalItems);
+        return isMatch(pContainer);
     }
 
     @Override

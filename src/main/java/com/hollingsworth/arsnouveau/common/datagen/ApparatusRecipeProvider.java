@@ -507,27 +507,32 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
 
 
         addRecipe(builder()
+                .withPedestalItem(1, Items.ARROW)
                 .withPedestalItem(1, ItemsRegistry.AIR_ESSENCE)
                 .withPedestalItem(1, ItemsRegistry.ABJURATION_ESSENCE)
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.PROJECTILE_PROTECTION, 1, 2000));
         addRecipe(builder()
+                .withPedestalItem(1, Items.ARROW)
                 .withPedestalItem(2, ItemsRegistry.AIR_ESSENCE)
                 .withPedestalItem(1, ItemsRegistry.ABJURATION_ESSENCE)
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.PROJECTILE_PROTECTION, 2, 3500));
         addRecipe(builder()
+                .withPedestalItem(1, Items.ARROW)
                 .withPedestalItem(2, ItemsRegistry.AIR_ESSENCE)
                 .withPedestalItem(1, ItemsRegistry.ABJURATION_ESSENCE)
                 .withPedestalItem(3, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.PROJECTILE_PROTECTION, 3, 5000));
         addRecipe(builder()
+                .withPedestalItem(1, Items.ARROW)
                 .withPedestalItem(2, ItemsRegistry.AIR_ESSENCE)
                 .withPedestalItem(2, ItemsRegistry.ABJURATION_ESSENCE)
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.PROJECTILE_PROTECTION, 4, 6500));
 
         addRecipe(builder()
+                .withPedestalItem(1, Items.ARROW)
                 .withPedestalItem(3, ItemsRegistry.AIR_ESSENCE)
                 .withPedestalItem(3, ItemsRegistry.ABJURATION_ESSENCE)
                 .withPedestalItem(1, RecipeDatagen.SOURCE_GEM_BLOCK)
@@ -589,7 +594,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
         addRecipe(builder()
                 .withPedestalItem(1, ItemsRegistry.AIR_ESSENCE)
                 .withPedestalItem(2, ItemsRegistry.ABJURATION_ESSENCE)
-                .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
+                .withPedestalItem(3, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.QUICK_CHARGE, 3, 6000));
 
 
