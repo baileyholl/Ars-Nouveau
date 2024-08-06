@@ -23,7 +23,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -44,10 +44,10 @@ public class EffectConjureWater extends AbstractEffect implements IPotionEffect 
             entity.clearFire();
         }
         if (entity instanceof LivingEntity livingEntity && spellStats.getDurationMultiplier() > 0) {
-            applyConfigPotion(livingEntity, ModPotions.SOAKED_EFFECT.get(), spellStats);
+            applyConfigPotion(livingEntity, ModPotions.SOAKED_EFFECT, spellStats);
         }
         if (spellStats.isSensitive() && !world.dimensionType().ultraWarm()) {
-            placeWater(world, shooter, spellContext, resolver, entity.blockPosition(), Direction.UP);
+            placeWater((ServerLevel) world, shooter, spellContext, resolver, entity.blockPosition(), Direction.UP);
         }
 
     }
@@ -59,17 +59,17 @@ public class EffectConjureWater extends AbstractEffect implements IPotionEffect 
         if (world.dimensionType().ultraWarm())
             return;
         for (BlockPos pos1 : posList) {
-            placeWater(world, shooter, spellContext, resolver, pos1, rayTraceResult.getDirection());
+            placeWater((ServerLevel) world, shooter, spellContext, resolver, pos1, rayTraceResult.getDirection());
         }
     }
 
-    private void placeWater(Level world, @NotNull LivingEntity shooter, SpellContext spellContext, SpellResolver resolver, BlockPos pos1, Direction direction) {
-        if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1))
+    private void placeWater(ServerLevel world, @NotNull LivingEntity shooter, SpellContext spellContext, SpellResolver resolver, BlockPos pos1, Direction direction) {
+        if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, world), world, pos1))
             return;
         if (!world.isInWorldBounds(pos1))
             return;
         BlockState hitState = world.getBlockState(pos1);
-        if (hitState.getBlock() instanceof LiquidBlockContainer liquidBlockContainer && liquidBlockContainer.canPlaceLiquid(world, pos1, world.getBlockState(pos1), Fluids.WATER)) {
+        if (hitState.getBlock() instanceof LiquidBlockContainer liquidBlockContainer && liquidBlockContainer.canPlaceLiquid(getPlayer(shooter, world), world, pos1, world.getBlockState(pos1), Fluids.WATER)) {
             liquidBlockContainer.placeLiquid(world, pos1, hitState, Fluids.WATER.getSource(true));
             ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
                     new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), direction, pos1, false
@@ -122,7 +122,7 @@ public class EffectConjureWater extends AbstractEffect implements IPotionEffect 
     }
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addPotionConfig(builder, 20);
         addExtendTimeConfig(builder, 10);
