@@ -32,9 +32,6 @@ public class EffectDelay extends AbstractEffect {
     public void sendPacket(Level world, HitResult rayTraceResult, @Nullable LivingEntity shooter, SpellContext spellContext, SpellStats spellStats, BlockHitResult blockResult, Entity hitEntity, SpellResolver spellResolver) {
         if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
-        Spell newSpell = spellContext.getRemainingSpell();
-        SpellContext newContext = spellContext.clone().withSpell(newSpell);
-        spellContext.setCanceled(true);
         int duration = GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getBuffCount(AugmentExtendTime.INSTANCE) * 20;
         int decreasedTime = EXTEND_TIME.get() * 10 * spellStats.getBuffCount(AugmentDurationDown.INSTANCE);
         duration -= decreasedTime;
@@ -42,10 +39,13 @@ public class EffectDelay extends AbstractEffect {
             double randomize = spellStats.getBuffCount(AugmentRandomize.INSTANCE) * RANDOMIZE_CHANCE.get();
             duration = world.random.nextIntBetweenInclusive((int) (duration * (1 - randomize)), (int) (duration * (1 + randomize)));
         }
-        EventQueue.getServerInstance().addEvent(
-                new DelayedSpellEvent(duration, rayTraceResult, world, spellResolver.getNewResolver(newContext)));
+
+        var delayEvent = new DelayedSpellEvent(duration, rayTraceResult, world, spellResolver);
+        spellContext.delay(delayEvent);
+
+        EventQueue.getServerInstance().addEvent(delayEvent);
         Networking.sendToNearby(world, BlockPos.containing(safelyGetHitPos(rayTraceResult)),
-                new PacketClientDelayEffect(duration, shooter, newSpell, newContext, blockResult, hitEntity));
+                new PacketClientDelayEffect(duration, shooter, spellContext.getSpell(), spellContext, blockResult, hitEntity));
     }
 
 
@@ -62,7 +62,7 @@ public class EffectDelay extends AbstractEffect {
     @Override
     public void buildConfig(ForgeConfigSpec.Builder builder) {
         super.buildConfig(builder);
-        addExtendTimeConfig(builder, 1);
+        addExtendTimeTicksConfig(builder, 20);
         addGenericInt(builder, 20, "The base duration of the delay effect in ticks.", "base_duration");
         addRandomizeConfig(builder, 0.25f);
     }
@@ -72,10 +72,10 @@ public class EffectDelay extends AbstractEffect {
         return 0;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-       return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentRandomize.INSTANCE);
+        return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentRandomize.INSTANCE);
     }
 
     @Override
