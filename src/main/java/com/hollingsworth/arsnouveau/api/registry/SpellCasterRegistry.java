@@ -11,6 +11,7 @@ import net.minecraft.world.level.ItemLike;
 import javax.annotation.Nullable;
 import java.util.concurrent.ConcurrentHashMap;
 
+@SuppressWarnings("deprecation")
 public class SpellCasterRegistry {
 
     private static final ConcurrentHashMap<ResourceLocation, ItemCasterProvider> MAP = new ConcurrentHashMap<>();
@@ -27,6 +28,10 @@ public class SpellCasterRegistry {
 
     public static @Nullable AbstractCaster<?> from(ItemStack stack){
         return MAP.getOrDefault(stack.getItem().builtInRegistryHolder().key().location(), (s) -> s.get(DataComponentRegistry.SPELL_CASTER)).getSpellCaster(stack);
+    }
+
+    public static boolean hasCaster(ItemStack stack) {
+        return MAP.containsKey(stack.getItem().builtInRegistryHolder().key().location());
     }
 
     public static void register(ItemLike itemLike, ItemCasterProvider provider){

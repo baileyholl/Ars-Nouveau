@@ -51,7 +51,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public abstract class AbstractCaster <T extends AbstractCaster<T>> implements TooltipProvider {
+public abstract class AbstractCaster<T extends AbstractCaster<T>> implements TooltipProvider {
 
     public static <T extends AbstractCaster<T>> MapCodec<T> createCodec(Function6<Integer, String, Boolean, String, Integer, SpellSlotMap, T> constructor) {
         return RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -71,6 +71,7 @@ public abstract class AbstractCaster <T extends AbstractCaster<T>> implements To
     }
 
     public abstract MapCodec<T> codec();
+
     public abstract StreamCodec<RegistryFriendlyByteBuf, T> streamCodec();
 
     protected final SpellSlotMap spells;
@@ -80,7 +81,7 @@ public abstract class AbstractCaster <T extends AbstractCaster<T>> implements To
     protected final String hiddenText;
     protected final int maxSlots;
 
-    public AbstractCaster(int slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots, SpellSlotMap spells){
+    public AbstractCaster(int slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots, SpellSlotMap spells) {
         this.slot = slot;
         this.flavorText = flavorText == null ? "" : flavorText;
         this.isHidden = isHidden;
@@ -89,11 +90,11 @@ public abstract class AbstractCaster <T extends AbstractCaster<T>> implements To
         this.spells = spells;
     }
 
-    public AbstractCaster(){
+    public AbstractCaster() {
         this(0, "", false, "", 1);
     }
 
-    public AbstractCaster(int maxSlots){
+    public AbstractCaster(int maxSlots) {
         this(0, "", false, "", maxSlots);
     }
 
@@ -210,22 +211,22 @@ public abstract class AbstractCaster <T extends AbstractCaster<T>> implements To
         return setCurrentSlot(slot);
     }
 
-    public T setSpell(Spell spell){
+    public T setSpell(Spell spell) {
         return setSpell(spell, getCurrentSlot());
     }
 
 
     @NotNull
-    public ParticleColor getColor(){
+    public ParticleColor getColor() {
         return getColor(getCurrentSlot());
     }
 
-    public T setColor(ParticleColor color){
+    public T setColor(ParticleColor color) {
         return setColor(color, getCurrentSlot());
     }
 
 
-    public T setSound(ConfiguredSpellSound sound){
+    public T setSound(ConfiguredSpellSound sound) {
         return setSound(sound, getCurrentSlot());
     }
 
@@ -233,11 +234,11 @@ public abstract class AbstractCaster <T extends AbstractCaster<T>> implements To
         return getSound(getCurrentSlot());
     }
 
-    public String getSpellName(){
+    public String getSpellName() {
         return getSpellName(getCurrentSlot());
     }
 
-    public T setSpellName(String name){
+    public T setSpellName(String name) {
         return setSpellName(name, getCurrentSlot());
     }
 
@@ -310,10 +311,12 @@ public abstract class AbstractCaster <T extends AbstractCaster<T>> implements To
         return self;
     }
 
-    public void saveToStack(ItemStack stack){
+    @SuppressWarnings("unchecked")
+    public void saveToStack(ItemStack stack) {
         stack.set(this.getComponentType(), this);
     }
 
+    @SuppressWarnings("rawtypes")
     public abstract DataComponentType getComponentType();
 
     public SpellResolver getSpellResolver(SpellContext context, Level worldIn, LivingEntity playerIn, InteractionHand handIn) {
@@ -325,6 +328,7 @@ public abstract class AbstractCaster <T extends AbstractCaster<T>> implements To
             return;
         worldIn.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, configuredSound.getSound().getSoundEvent(), source, configuredSound.getVolume(), configuredSound.getPitch());
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -345,7 +349,7 @@ public abstract class AbstractCaster <T extends AbstractCaster<T>> implements To
     protected abstract T build(int slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots, SpellSlotMap spells);
 
     @Override
-    public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag) {
+    public void addToTooltip(Item.@NotNull TooltipContext pContext, @NotNull Consumer<Component> pTooltipAdder, @NotNull TooltipFlag pTooltipFlag) {
         if (getSpell().isEmpty()) {
             pTooltipAdder.accept(Component.translatable("ars_nouveau.tooltip.can_inscribe"));
             return;
