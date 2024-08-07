@@ -3,14 +3,14 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.client.particle.RainbowParticleColor;
 import com.hollingsworth.arsnouveau.common.block.SconceBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
 import com.hollingsworth.arsnouveau.common.block.tile.TempLightTile;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketUpdateGlowColor;
+import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -49,8 +49,11 @@ public class EffectLight extends AbstractEffect implements IPotionEffect {
 
         if (!(rayTraceResult.getEntity() instanceof LivingEntity living))
             return;
-        if (!shooter.equals(living)) {
+        if (!shooter.equals(living) || spellStats.isSensitive()) {
             this.applyConfigPotion(living, MobEffects.GLOWING, spellStats);
+            // apply custom color to the entity if sensitive and the effect is successfully applied
+            if (living.hasEffect(MobEffects.GLOWING) && spellStats.isSensitive())
+                Networking.sendToNearbyClient(world, living, new PacketUpdateGlowColor(living.getId(), spellContext.getColors() instanceof RainbowParticleColor ? -1 : spellContext.getColors().getColor()));
         }
         this.applyConfigPotion(living, MobEffects.NIGHT_VISION, spellStats);
     }
@@ -76,8 +79,8 @@ public class EffectLight extends AbstractEffect implements IPotionEffect {
         }
 
         if (world.getBlockState(pos).canBeReplaced()
-            && world.isUnobstructed(BlockRegistry.LIGHT_BLOCK.get().defaultBlockState(), pos, CollisionContext.of(ANFakePlayer.getPlayer((ServerLevel) world)))
-            && world.isInWorldBounds(pos)) {
+                && world.isUnobstructed(BlockRegistry.LIGHT_BLOCK.get().defaultBlockState(), pos, CollisionContext.of(ANFakePlayer.getPlayer((ServerLevel) world)))
+                && world.isInWorldBounds(pos)) {
             BlockState lightBlockState = (spellStats.getDurationMultiplier() != 0 ? BlockRegistry.T_LIGHT_BLOCK.get() : BlockRegistry.LIGHT_BLOCK.get()).defaultBlockState().setValue(WATERLOGGED, world.getFluidState(pos).getType() == Fluids.WATER);
             world.setBlockAndUpdate(pos, lightBlockState.setValue(SconceBlock.LIGHT_LEVEL, Math.max(0, Math.min(15, 14 + (int) spellStats.getAmpMultiplier()))));
             if (world.getBlockEntity(pos) instanceof LightTile tile) {
@@ -110,12 +113,12 @@ public class EffectLight extends AbstractEffect implements IPotionEffect {
     @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDurationDown.INSTANCE, AugmentDampen.INSTANCE, AugmentExtendTime.INSTANCE);
+        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDurationDown.INSTANCE, AugmentDampen.INSTANCE, AugmentExtendTime.INSTANCE, AugmentSensitive.INSTANCE);
     }
 
     @Override
     public String getBookDescription() {
-        return "If cast on a block, a permanent light source is created. May be amplified up to Glowstone brightness, or Dampened for a lower light level. When cast on yourself, you will receive night vision. When cast on other entities, they will receive Night Vision and Glowing.";
+        return "If cast on a block, a permanent light source is created. May be amplified up to Glowstone brightness, or Dampened for a lower light level. When cast on yourself, you will receive night vision. When cast on other entities or with Sensitive, they will receive Night Vision and Glowing. If Sensitive, Glowing will use the spell color.";
     }
 
     @NotNull
