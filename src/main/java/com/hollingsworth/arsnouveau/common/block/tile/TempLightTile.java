@@ -5,9 +5,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
-public class TempLightTile extends LightTile{
+public class TempLightTile extends LightTile {
 
     int age;
     public double lengthModifier;
@@ -17,23 +19,23 @@ public class TempLightTile extends LightTile{
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries) {
+    public void loadAdditional(@NotNull CompoundTag nbt, HolderLookup.@NotNull Provider pRegistries) {
         super.loadAdditional(nbt, pRegistries);
         this.age = nbt.getInt("age");
         this.lengthModifier = nbt.getDouble("modifier");
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+    public void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
         tag.putDouble("modifier", lengthModifier);
         tag.put("age", IntTag.valueOf(age));
     }
 
     @Override
-    public void tick() {
-        super.tick();
-        if (level != null && !level.isClientSide) {
+    public void tick(Level level, BlockState state, BlockPos pos) {
+        super.tick(level, state, pos);
+        if (!level.isClientSide) {
             age++;
             //15 seconds
             if (age > (20 * 15 + 20 * 5 * lengthModifier)) {
