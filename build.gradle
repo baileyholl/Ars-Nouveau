@@ -106,7 +106,7 @@ dependencies {
 //    }
     implementation "software.bernie.geckolib:geckolib-neoforge-1.21:${geckolib_version}"
 //
-//    implementation "vazkii.patchouli:Patchouli:1.20.4-${patchouli_version}"
+    implementation "vazkii.patchouli:Patchouli:1.21-${patchouli_version}"
 //
     runtimeOnly "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}"
     compileOnly "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}:api"
