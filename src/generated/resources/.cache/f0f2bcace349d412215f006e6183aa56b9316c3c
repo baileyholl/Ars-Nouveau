@@ -1,10 +1,10 @@
-// 1.21	2024-07-14T12:08:42.895409	Glyph Recipes
+// 1.21	2024-08-07T20:42:54.1489715	Glyph Recipes
 231d9f126c606465601e36e83948dda99a508834 data/ars_nouveau/recipe/glyph_accelerate.json
 dbad772acd31382cfcf19c7f276da5f91354dfcf data/ars_nouveau/recipe/glyph_amplify.json
 1a8499b67d1ce8614ef1d420106d32d27567eeb9 data/ars_nouveau/recipe/glyph_animate_block.json
 232197139f5fa7a33b4e1d42c453833394a4c4ba data/ars_nouveau/recipe/glyph_aoe.json
 c827180b8f5111736c1641e4683e63b3f764a80a data/ars_nouveau/recipe/glyph_blink.json
-10e7f63b9784ce9693c7ec690dc13b21e9106297 data/ars_nouveau/recipe/glyph_bounce.json
+e7d1836f1f0438e05c86aee27c2de1d32742f217 data/ars_nouveau/recipe/glyph_bounce.json
 6989360984c711d43b4e9175efbec3a23608db8e data/ars_nouveau/recipe/glyph_break.json
 c5d245630add4160c2ea36ef8df4add7a45f7616 data/ars_nouveau/recipe/glyph_burst.json
 5a951b64a1a102d1e71ee5ba85524cf1877378d5 data/ars_nouveau/recipe/glyph_cold_snap.json

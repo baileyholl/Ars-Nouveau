@@ -218,5 +218,9 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
                 BlockRegistry.FROSTAYA_POD.asItem(),
                 BlockRegistry.MENDOSTEEN_POD.asItem()
         );
+
+        this.tag(ItemTags.BOW_ENCHANTABLE).add(ItemsRegistry.SPELL_BOW.get());
+        this.tag(ItemTags.CROSSBOW_ENCHANTABLE).add(ItemsRegistry.SPELL_CROSSBOW.get());
+        this.tag(ItemTags.DURABILITY_ENCHANTABLE).add(ItemsRegistry.ENCHANTERS_SHIELD.get());
     }
 }

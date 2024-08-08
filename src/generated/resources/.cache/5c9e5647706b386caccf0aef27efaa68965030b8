@@ -1,4 +1,4 @@
-// 1.21	2024-08-01T23:52:13.9453716	Tags for minecraft:item mod id ars_nouveau
+// 1.21	2024-08-07T20:42:54.1584909	Tags for minecraft:item mod id ars_nouveau
 bde6ca31173d1f22d5f6fe355dc90c9faa35b239 data/ars_nouveau/tags/item/golem/shard.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/item/interact_jar_blacklist.json
 a0800fbffa0e00aecb2e86a1e991d42904427191 data/ars_nouveau/tags/item/magic_food.json
@@ -32,6 +32,9 @@ f898aac12b01b598949701b1f6e45aa0cd1d9a25 data/c/tags/item/planks/archwood.json
 43a847dca5f71ae27537abc65fabcd8d3fdb1c72 data/minecraft/tags/item/buttons.json
 debde73c045884d2f3335478b8e70e443135fe48 data/minecraft/tags/item/chest_armor.json
 a01909919207615cda1bb44f33db287efa02333b data/minecraft/tags/item/doors.json
+46865d605d1c44b2ab5023e21848213c969eec08 data/minecraft/tags/item/enchantable/bow.json
+d856556e7a50694e4fafc11b5b85240ad831548b data/minecraft/tags/item/enchantable/crossbow.json
+877c63c507be1e55a9f5eeed6e73dfabea015dab data/minecraft/tags/item/enchantable/durability.json
 87c0ae6c7a718897569f2f2b4d81fdcf8e9b269b data/minecraft/tags/item/fences.json
 c417d25dbf09fa35316563dab44086ea9c57398f data/minecraft/tags/item/foot_armor.json
 b11f943ffa45a788b39c9d51e5bd83e321044249 data/minecraft/tags/item/head_armor.json
