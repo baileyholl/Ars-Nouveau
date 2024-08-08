@@ -27,6 +27,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -37,13 +38,13 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class WildenGuardian extends Monster implements GeoEntity {
+public class WildenGuardian extends AbstractWilden {
     AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
     public int armorCooldown;
     public int armorTimeRemaining;
     public static final EntityDataAccessor<Boolean> IS_ARMORED = SynchedEntityData.defineId(WildenGuardian.class, EntityDataSerializers.BOOLEAN);
 
-    public WildenGuardian(EntityType<? extends Monster> type, Level worldIn) {
+    public WildenGuardian(EntityType<? extends AbstractWilden> type, Level worldIn) {
         super(type, worldIn);
     }
 
@@ -54,11 +55,8 @@ public class WildenGuardian extends Monster implements GeoEntity {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
         this.goalSelector.addGoal(5, new ConditionalMeleeGoal(this, 1.2d, true, () -> !this.isArmored()));
         this.goalSelector.addGoal(8, new ConditionalWaterAvoidingGoal(this, 1.0D, () -> !this.isArmored()));
-        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         if (Config.GUARDIAN_ATTACK_ANIMALS.get())
             this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Animal.class, 10, true, false, (entity) -> !(entity instanceof SummonWolf) || !((SummonWolf) entity).isWildenSummon));
@@ -68,7 +66,7 @@ public class WildenGuardian extends Monster implements GeoEntity {
         return pLevel.isUnobstructed(this);
     }
 
-    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+    public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
     }
 
@@ -81,7 +79,7 @@ public class WildenGuardian extends Monster implements GeoEntity {
     }
 
     @Override
-    protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
+    protected void actuallyHurt(@NotNull DamageSource damageSrc, float damageAmount) {
         if (!level.isClientSide && armorCooldown == 0) {
             setArmored(true);
             armorCooldown = 200;
@@ -89,7 +87,7 @@ public class WildenGuardian extends Monster implements GeoEntity {
             this.navigation.stop();
         }
         if (!level.isClientSide && isArmored() && !damageSrc.is(DamageTypeTags.BYPASSES_ARMOR)) {
-            damageAmount *= 0.75;
+            damageAmount *= 0.75F;
 
             if (damageSrc.getEntity() != null && BlockUtil.distanceFrom(damageSrc.getEntity().position, this.position) <= 2.0 && !damageSrc.type().msgId().equals("thorns")) {
                 damageSrc.getEntity().hurt(level.damageSources().thorns(this), 3.0f);
@@ -207,7 +205,7 @@ public class WildenGuardian extends Monster implements GeoEntity {
     }
 
     @Override
-    public void load(CompoundTag compound) {
+    public void load(@NotNull CompoundTag compound) {
         super.load(compound);
         armorCooldown = compound.getInt("armorCooldown");
         armorTimeRemaining = compound.getInt("armorTimeRemaining");
@@ -221,7 +219,7 @@ public class WildenGuardian extends Monster implements GeoEntity {
     public static AttributeSupplier.Builder getModdedAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 25D)
-                .add(Attributes.MOVEMENT_SPEED, 0.25D)
+                .add(Attributes.MOVEMENT_SPEED, 0.35D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.6F)
                 .add(Attributes.ATTACK_KNOCKBACK, 1.0D)
                 .add(Attributes.ATTACK_DAMAGE, 4.5D)
