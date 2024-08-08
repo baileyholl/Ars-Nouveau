@@ -474,6 +474,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             level.addFreshEntity(carbuncle);
             carbuncle.restoreFromTag();
             carbuncle.startRiding(this);
+            stack.shrink(1);
             return InteractionResult.SUCCESS;
         }
 
