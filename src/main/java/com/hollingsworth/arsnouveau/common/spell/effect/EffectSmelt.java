@@ -8,12 +8,14 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -50,12 +52,15 @@ public class EffectSmelt extends AbstractEffect {
         double aoeBuff = spellStats.getAoeMultiplier();
         int pierceBuff = spellStats.getBuffCount(AugmentPierce.INSTANCE);
         int maxItemSmelt = (int) Math.round(4 * (1 + aoeBuff + pierceBuff));
-        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
-        List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AABB(rayTraceResult.getBlockPos()).inflate(aoeBuff + 1.0));
-        smeltItems(world, itemEntities, maxItemSmelt, spellStats);
+        if (spellStats.isSensitive()) {
+            List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AABB(rayTraceResult.getBlockPos()).inflate(aoeBuff + 1.0));
+            smeltItems(world, itemEntities, maxItemSmelt, spellStats);
+        } else {
+            List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
 
-        for (BlockPos pos : posList) {
-            smeltBlock(world, pos, shooter, rayTraceResult, spellStats, spellContext, resolver);
+            for (BlockPos pos : posList) {
+                smeltBlock(world, pos, shooter, rayTraceResult, spellStats, spellContext, resolver);
+            }
         }
     }
 
