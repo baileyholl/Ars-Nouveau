@@ -1,14 +1,23 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.gson.JsonElement;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.DyeRecipe;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.mojang.serialization.JsonOps;
+import net.minecraft.core.NonNullList;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.neoforged.neoforge.common.Tags;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
 public class DyeRecipeDatagen extends SimpleDataProvider {
     List<FileObj> files = new ArrayList<>();
@@ -40,22 +49,25 @@ public class DyeRecipeDatagen extends SimpleDataProvider {
     }
 
 
-    public void add(FileObj fileObj){
+    public void add(FileObj fileObj) {
         files.add(fileObj);
     }
 
-    public void addDyeRecipe(ItemLike inputItem){
-        //todo: restore dye serializer
-//        var dyeRecipe = new DyeRecipe("", CraftingBookCategory.MISC, inputItem, List.of())
-//        RecipeRegistry.DYE_RECIPE.get().codec().codec().encode(new DyeRecipe())
-//        add(new FileObj(output.resolve("data/ars_nouveau/recipes/dye_" + getRegistryName(inputItem.asItem()).getPath() + ".json"), DyeRecipe.));
+    public void addDyeRecipe(ItemLike inputItem) {
+        var dyeRecipe = new DyeRecipe("", CraftingBookCategory.MISC, inputItem.asItem().getDefaultInstance(), NonNullList.of(Ingredient.EMPTY, Ingredient.of(Tags.Items.DYES), Ingredient.of(inputItem)));
+        files.add(new FileObj(resolvePath("data/ars_nouveau/recipe/dye_" + getRegistryName(inputItem.asItem()).getPath() + ".json"), DyeRecipe.CODEC.encodeStart(JsonOps.INSTANCE, dyeRecipe).getOrThrow()));
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "ArsNouveau: Json Datagen";
     }
-    public record FileObj(Path path, JsonElement element){
+
+    Path resolvePath(String path) {
+        return this.generator.getPackOutput().getOutputFolder().resolve(path);
+    }
+
+    public record FileObj(Path path, JsonElement element) {
 
     }
 }
