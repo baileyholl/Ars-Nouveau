@@ -17,6 +17,9 @@ public class GuiSpellHUD {
     private static final Minecraft minecraft = Minecraft.getInstance();
 
     public static void renderOverlay(GuiGraphics graphics, DeltaTracker deltaTracker) {
+        if (Minecraft.getInstance().options.hideGui) {
+            return;
+        }
         ItemStack stack = StackUtil.getHeldSpellbook(minecraft.player);
         if (stack != ItemStack.EMPTY && stack.getItem() instanceof SpellBook) {
             int offsetLeft = 10;

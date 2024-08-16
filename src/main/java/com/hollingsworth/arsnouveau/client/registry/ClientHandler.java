@@ -164,7 +164,7 @@ public class ClientHandler {
         Minecraft mc = Minecraft.getInstance();
         Level level = mc.level;
         BlockPos pos = mc.cameraEntity.blockPosition();
-        if (!CameraUtil.isPlayerMountedOnCamera(mc.player)) {
+        if (!CameraUtil.isPlayerMountedOnCamera(mc.player) || mc.options.hideGui) {
             return;
         }
         if (!mc.options.reducedDebugInfo().get()) {
