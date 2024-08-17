@@ -53,5 +53,4 @@ public class DataComponentRegistry {
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<PotionJarData>> POTION_JAR = DATA.register("potion_jar", () -> DataComponentType.<PotionJarData>builder().persistent(PotionJarData.CODEC).networkSynchronized(PotionJarData.STREAM).build());
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ContainmentJarData>> CONTAINMENT_JAR = DATA.register("containment_jar", () -> DataComponentType.<ContainmentJarData>builder().persistent(ContainmentJarData.CODEC).networkSynchronized(ContainmentJarData.STREAM_CODEC).build());
 }

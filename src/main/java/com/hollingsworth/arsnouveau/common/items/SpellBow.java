@@ -102,8 +102,8 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
         }
     }
 
-    public EntitySpellArrow buildSpellArrow(Level worldIn, Player playerentity, AbstractCaster<?> caster, boolean isSpellArrow, ItemStack bowStack) {
-        EntitySpellArrow spellArrow = new EntitySpellArrow(worldIn, playerentity, ItemStack.EMPTY, bowStack);
+    public EntitySpellArrow buildSpellArrow(Level worldIn, Player playerentity, AbstractCaster<?> caster, boolean isSpellArrow, ItemStack bowStack, ItemStack arrowStack) {
+        EntitySpellArrow spellArrow = new EntitySpellArrow(worldIn, playerentity, arrowStack, bowStack);
         spellArrow.spellResolver = new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerentity, new PlayerCaster(playerentity), bowStack)).withSilent(true);
         spellArrow.setColors(caster.getColor());
         if (isSpellArrow)
@@ -150,17 +150,17 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
 
                 List<AbstractArrow> arrows = new ArrayList<>();
                 SpellResolver resolver = new SpellResolver(new SpellContext(worldIn, caster.modifySpellBeforeCasting(worldIn, entityLiving, InteractionHand.MAIN_HAND, caster.getSpell()), playerentity, new PlayerCaster(playerentity), bowStack));
-                if (arrowitem == Items.ARROW && resolver.withSilent(true).canCast(playerentity)) {
-                    abstractarrowentity = buildSpellArrow(worldIn, playerentity, caster, isSpellArrow, bowStack);
-                    resolver.expendMana();
-                    didCastSpell = true;
-                } else if (arrowitem instanceof SpellArrow) {
+                if (arrowitem instanceof SpellArrow) {
                     if (!(resolver.canCast(playerentity))) {
                         return;
                     } else if (resolver.canCast(playerentity)) {
                         resolver.expendMana();
                         didCastSpell = true;
                     }
+                }else if (resolver.withSilent(true).canCast(playerentity)) {
+                    abstractarrowentity = buildSpellArrow(worldIn, playerentity, caster, isSpellArrow, bowStack, arrowStack);
+                    resolver.expendMana();
+                    didCastSpell = true;
                 }
                 arrows.add(abstractarrowentity);
                 if (caster.getSpell().isValid() && didCastSpell) {
@@ -170,7 +170,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
                     }
 
                     for (int i = 0; i < numSplits; i++) {
-                        EntitySpellArrow spellArrow = buildSpellArrow(worldIn, playerentity, caster, isSpellArrow, bowStack);
+                        EntitySpellArrow spellArrow = buildSpellArrow(worldIn, playerentity, caster, isSpellArrow, bowStack, arrowStack);
                         arrows.add(spellArrow);
                     }
                 }
