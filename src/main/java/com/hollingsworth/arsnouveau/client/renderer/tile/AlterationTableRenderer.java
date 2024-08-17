@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.renderer.tile;
 import com.google.common.collect.Maps;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
 import com.hollingsworth.arsnouveau.common.block.AlterationTable;
 import com.hollingsworth.arsnouveau.common.block.ThreePartBlock;
@@ -29,6 +30,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
@@ -68,22 +70,22 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
             return;
         ItemStack stack = tile.armorStack;
 //        if (stack.getItem() instanceof ArmorItem armorItem) {
-//            // to rotate around a point: scale, point translate, rotate, object translate
-//            matrixStack.scale(0.5f, 0.5f, 0.5f);
+            // to rotate around a point: scale, point translate, rotate, object translate
+            matrixStack.scale(0.5f, 0.5f, 0.5f);
 //            matrixStack.translate(-2.1, 3.3, 0);
-//            double yOffset = Mth.smoothstepDerivative((Math.sin((ClientInfo.ticksInGame + ticks) / 20f) + 1f) / 2f) * 0.0625;
-//            if (tile.newPerkTimer >= 0) {
-//                // need zero it out or else it fights the translation we're doing below
-//                yOffset = 0;
-//                float percentage = Mth.abs(tile.newPerkTimer - 20) / 20f;
-//                double smooooooooth = Mth.smoothstep(percentage);
-//                double perkYOffset = 0.625 - (smooooooooth * 0.625);
+            double yOffset = Mth.smoothstepDerivative((Math.sin((ClientInfo.ticksInGame + ticks) / 20f) + 1f) / 2f) * 0.0625;
+            if (tile.newPerkTimer >= 0) {
+                // need zero it out or else it fights the translation we're doing below
+                yOffset = 0;
+                float percentage = Mth.abs(tile.newPerkTimer - 20) / 20f;
+                double smooooooooth = Mth.smoothstep(percentage);
+                double perkYOffset = 0.625 - (smooooooooth * 0.625);
 //                matrixStack.mulPose(Axis.YP.rotationDegrees((float) (Mth.smoothstep(tile.newPerkTimer / 40f) * 360)));
-//                matrixStack.translate(0, perkYOffset, 0);
-//            }
+                matrixStack.translate(0, perkYOffset, 0);
+            }
 //            matrixStack.mulPose(Axis.ZP.rotationDegrees(180F));
-//            matrixStack.translate(0, yOffset + rotForSlot(armorItem.getEquipmentSlot()), 0);
-//
+            matrixStack.translate(0, yOffset, 0);
+
 //            this.renderArmorPiece(tile,stack, matrixStack, iRenderTypeBuffer, packedLightIn, getArmorModel(armorItem.getEquipmentSlot()));
 //        } else {
             Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, tile.getLevel(), (int) tile.getBlockPos().asLong());
@@ -256,10 +258,10 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         stack.mulPose(perkQuat);
         stack.translate(perkTranslate.x, perkTranslate.y + 0.2, perkTranslate.z);
 
-        if (!(animatable.armorStack.getItem() instanceof ArmorItem)) {
+//        if (!(animatable.armorStack.getItem() instanceof ArmorItem)) {
             stack.scale(0.75f, 0.75f, 0.75f);
             stack.translate(-1.5, 1.95, 0);
-        }
+//        }
 
         this.renderArmorStack(animatable, stack, (float) ticks, bufferSource, packedLight, packedOverlay);
         stack.popPose();
