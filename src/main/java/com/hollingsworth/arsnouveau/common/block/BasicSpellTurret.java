@@ -80,11 +80,13 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
                 EntityProjectileSpell spell = new EntityProjectileSpell(world, resolver);
                 spell.setOwner(fakePlayer);
                 spell.setPos(iposition.x(), iposition.y(), iposition.z());
+                SpellStats stats = resolver.getCastStats();
+                float velocity = Math.max(0.1f, 0.75f + stats.getAccMultiplier() / 2);
                 if (world.getBlockEntity(pos) instanceof RotatingTurretTile rotatingTurretTile) {
                     Vec3 vec3d = rotatingTurretTile.getShootAngle().normalize();
-                    spell.shoot(vec3d.x(), vec3d.y(), vec3d.z(), 0.5f, 0);
+                    spell.shoot(vec3d.x(), vec3d.y(), vec3d.z(), velocity, 0);
                 } else {
-                    spell.shoot(direction.getStepX(), ((float) direction.getStepY()), direction.getStepZ(), 0.5f, 0);
+                    spell.shoot(direction.getStepX(), ((float) direction.getStepY()), direction.getStepZ(), velocity, 0);
                 }
                 world.addFreshEntity(spell);
             }
