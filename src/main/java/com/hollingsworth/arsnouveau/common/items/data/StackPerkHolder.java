@@ -23,16 +23,18 @@ public abstract class StackPerkHolder<T> implements IPerkHolder<T> {
             ResourceLocation.CODEC.fieldOf("perk").forGetter(IPerk::getRegistryName)
     ).apply(instance, (name) -> PerkRegistry.getPerkMap().getOrDefault(name, StarbunclePerk.INSTANCE)));
 
-    public static Codec<Map<IPerk, CompoundTag>> PERK_TAG_CODEC = Codec.unboundedMap(PERK_CODEC, CompoundTag.CODEC);
-
     private List<IPerk> perks;
     private int tier;
-    private Map<IPerk, CompoundTag> perkTags;
+    private PerkMap perkTags;
 
     public StackPerkHolder(List<IPerk> perks, int tier, Map<IPerk, CompoundTag> perkTags) {
+        this(perks, tier, new PerkMap(Map.copyOf(perkTags)));
+    }
+
+    public StackPerkHolder(List<IPerk> perks, int tier, PerkMap perkTags) {
         this.perks = List.copyOf(perks);
         this.tier = tier;
-        this.perkTags = Map.copyOf(perkTags);
+        this.perkTags = perkTags;
     }
 
     @Override
@@ -44,13 +46,13 @@ public abstract class StackPerkHolder<T> implements IPerkHolder<T> {
         return this.tier;
     }
 
-    protected Map<IPerk, CompoundTag> getPerkTags() {
+    public PerkMap getPerkTags() {
         return this.perkTags;
     }
 
     @Override
     public @Nullable CompoundTag getTagForPerk(IPerk perk) {
-        return this.perkTags.getOrDefault(perk, null);
+        return this.perkTags.map().getOrDefault(perk, null);
     }
 
     @Override

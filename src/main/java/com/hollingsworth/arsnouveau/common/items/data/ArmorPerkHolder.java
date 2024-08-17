@@ -3,13 +3,9 @@ package com.hollingsworth.arsnouveau.common.items.data;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.CheatSerializer;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 
@@ -21,15 +17,17 @@ public class ArmorPerkHolder extends StackPerkHolder<ArmorPerkHolder> {
             Codec.STRING.fieldOf("color").forGetter(ArmorPerkHolder::getColor),
             StackPerkHolder.PERK_CODEC.listOf().fieldOf("perks").forGetter(ArmorPerkHolder::getPerks),
             Codec.INT.fieldOf("tier").forGetter(ArmorPerkHolder::getTier),
-            StackPerkHolder.PERK_TAG_CODEC.fieldOf("perkTags").forGetter(ArmorPerkHolder::getPerkTags)
+            PerkMap.CODEC.fieldOf("perkTags").forGetter(ArmorPerkHolder::getPerkTags)
     ).apply(instance, ArmorPerkHolder::new));
-
-    public static final StreamCodec<RegistryFriendlyByteBuf, ArmorPerkHolder> STREAM_CODEC = CheatSerializer.create(CODEC);
 
     private String color;
 
-
     public ArmorPerkHolder(String color, List<IPerk> perks, int tier, Map<IPerk, CompoundTag> perkTags) {
+        super(perks, tier, perkTags);
+        this.color = color;
+    }
+
+    public ArmorPerkHolder(String color, List<IPerk> perks, int tier, PerkMap perkTags) {
         super(perks, tier, perkTags);
         this.color = color;
     }
@@ -69,7 +67,11 @@ public class ArmorPerkHolder extends StackPerkHolder<ArmorPerkHolder> {
 
     @Override
     public ArmorPerkHolder setTagForPerk(IPerk perk, CompoundTag tag) {
-        return new ArmorPerkHolder(color, getPerks(), getTier(), Util.copyAndPut(getPerkTags(), perk, tag));
+        return new ArmorPerkHolder(color, getPerks(), getTier(), getPerkTags().put(perk, tag));
+    }
+
+    public ArmorPerkHolder setPerkTags(Map<IPerk, CompoundTag> perkTags) {
+        return new ArmorPerkHolder(color, getPerks(), getTier(), perkTags);
     }
 
     @Override

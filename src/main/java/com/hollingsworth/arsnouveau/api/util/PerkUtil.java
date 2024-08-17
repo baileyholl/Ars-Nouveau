@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.item.ItemStack;
+import oshi.util.tuples.Pair;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -80,8 +81,9 @@ public class PerkUtil {
         return maxCount;
     }
 
-    public static @Nullable ArmorPerkHolder getHolderForPerk(IPerk perk, LivingEntity entity){
+    public static @Nullable Pair<ItemStack, ArmorPerkHolder> getHolderForPerk(IPerk perk, LivingEntity entity){
         ArmorPerkHolder highestHolder = null;
+        ItemStack selectedStack = null;
         int maxCount = 0;
         for(ItemStack stack : entity.getArmorSlots()){
             var data = stack.get(DataComponentRegistry.ARMOR_PERKS);
@@ -92,9 +94,13 @@ public class PerkUtil {
                 if(instance.getPerk() == perk){
                     maxCount = Math.max(maxCount, instance.getSlot().value());
                     highestHolder = data;
+                    selectedStack = stack;
                 }
             }
         }
-        return highestHolder;
+        if(highestHolder == null){
+            return null;
+        }
+        return new Pair<>(selectedStack, highestHolder);
     }
 }

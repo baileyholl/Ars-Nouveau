@@ -21,7 +21,7 @@ public class DataComponentRegistry {
 
     public static final DeferredHolder<DataComponentType<?> , DataComponentType<VoidJarData>> VOID_JAR = DATA.register("void_jar", () -> DataComponentType.<VoidJarData>builder().persistent(VoidJarData.CODEC).networkSynchronized(VoidJarData.STREAM_CODEC).build());
 
-    public static final DeferredHolder<DataComponentType<?> , DataComponentType<ArmorPerkHolder>> ARMOR_PERKS = DATA.register("armor_perks", () -> DataComponentType.<ArmorPerkHolder>builder().persistent(ArmorPerkHolder.CODEC).networkSynchronized(ArmorPerkHolder.STREAM_CODEC).build());
+    public static final DeferredHolder<DataComponentType<?> , DataComponentType<ArmorPerkHolder>> ARMOR_PERKS = DATA.register("armor_perks", () -> DataComponentType.<ArmorPerkHolder>builder().persistent(ArmorPerkHolder.CODEC).build());
 
     public static final DeferredHolder<DataComponentType<?> , DataComponentType<DominionWandData>> DOMINION_WAND = DATA.register("dominion_wand", () -> DataComponentType.<DominionWandData>builder().persistent(DominionWandData.CODEC).networkSynchronized(DominionWandData.STREAM).build());
 

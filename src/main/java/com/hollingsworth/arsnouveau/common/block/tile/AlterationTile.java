@@ -30,10 +30,7 @@ import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITickable {
 
@@ -98,14 +95,20 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
 
     public void removeArmorStack(Player player){
         ArmorPerkHolder perkHolder = PerkUtil.getPerkHolder(armorStack);
+        Map<IPerk, CompoundTag> perkTags = new HashMap<>();
         var newHolder = perkHolder.setPerks(new ArrayList<>(perkList.stream().map(i ->{
             if(i.getItem() instanceof PerkItem perkItem){
-                return perkItem.perk;
+                var perk = perkItem.perk;
+                CompoundTag initTag = perk.getInitTag();
+                if(initTag != null && perkHolder.getTagForPerk(perk) == null){
+                    perkTags.put(perk, initTag);
+                }
+                return perk;
             }
             return null;
         }).filter(Objects::nonNull).toList()));
         var copyStack = armorStack.copy();
-        copyStack.set(DataComponentRegistry.ARMOR_PERKS, newHolder);
+        copyStack.set(DataComponentRegistry.ARMOR_PERKS, newHolder.setPerkTags(perkTags));
         if(!player.addItem(copyStack)){
             level.addFreshEntity(new ItemEntity(level, player.position().x(), player.position().y(), player.position().z(), copyStack));
         }

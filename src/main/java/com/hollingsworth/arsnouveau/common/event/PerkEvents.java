@@ -9,9 +9,10 @@ import com.hollingsworth.arsnouveau.api.perk.IEffectResolvePerk;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkInstance;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
-import com.hollingsworth.arsnouveau.common.items.data.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.common.perk.TotemPerk;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -130,19 +131,23 @@ public class PerkEvents {
     @SubscribeEvent
     public static void totemEvent(final LivingDeathEvent event) {
         LivingEntity entity = event.getEntity();
-        ArmorPerkHolder holder = PerkUtil.getHolderForPerk(TotemPerk.INSTANCE, entity);
+        if(!(entity instanceof Player player))
+            return;
+        var holder = PerkUtil.getHolderForPerk(TotemPerk.INSTANCE, entity);
         if (holder == null)
             return;
-        TotemPerk.Data perkData = new TotemPerk.Data(holder);
-        if (!perkData.isActive())
+        CompoundTag tag = holder.getB().getTagForPerk(TotemPerk.INSTANCE);
+        if (tag == null || !tag.getBoolean("isActive")) {
             return;
+        }
         entity.setHealth(1.0F);
         entity.removeAllEffects();
         entity.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 900, 1));
         entity.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
         entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));
         entity.level.broadcastEntityEvent(entity, (byte) 35);
-        perkData.setActive(false);
+        tag.putBoolean("isActive", false);
+        holder.getA().set(DataComponentRegistry.ARMOR_PERKS, holder.getB().setTagForPerk(TotemPerk.INSTANCE, tag));
         PortUtil.sendMessage(entity, Component.translatable("ars_nouveau.totem_perk.trigger"));
         event.setCanceled(true);
     }
@@ -150,11 +155,14 @@ public class PerkEvents {
     @SubscribeEvent
     public static void sleepEvent(final SleepFinishedTimeEvent event) {
         for (Player p : event.getLevel().players()) {
-            ArmorPerkHolder holder = PerkUtil.getHolderForPerk(TotemPerk.INSTANCE, p);
+            var holder = PerkUtil.getHolderForPerk(TotemPerk.INSTANCE, p);
             if (holder == null)
                 continue;
-            TotemPerk.Data perkData = new TotemPerk.Data(holder);
-            perkData.setActive(true);
+            CompoundTag tag = holder.getB().getTagForPerk(TotemPerk.INSTANCE);
+            if(tag != null){
+                tag.putBoolean("isActive", true);
+                holder.getA().set(DataComponentRegistry.ARMOR_PERKS, holder.getB().setTagForPerk(TotemPerk.INSTANCE, tag));
+            }
             PortUtil.sendMessage(p, Component.translatable("ars_nouveau.totem_perk.active"));
         }
     }
