@@ -27,6 +27,9 @@ public class JumpingRing extends ArsNouveauCurio {
             if(manaCap == null || (manaCap.getCurrentMana() < Config.JUMP_RING_COST.get() && !player.isCreative())){
                 return;
             }
+            if(player.isSpectator() || player.abilities.flying || player.isSwimming()){
+                return;
+            }
             manaCap.removeMana(Config.JUMP_RING_COST.get());
             LivingAccessor accessor = (LivingAccessor) player;
             double d0 = (double)accessor.callGetJumpPower() + player.getJumpBoostPower() + 0.1f;
