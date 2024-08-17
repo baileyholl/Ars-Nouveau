@@ -77,15 +77,16 @@ public class EffectBlink extends AbstractEffect {
 
     public static void warpEntity(Entity entity, WarpScrollData warpScrollData){
         if (entity == null) return;
-
+        var pos = warpScrollData.pos().get();
         if (entity instanceof LivingEntity living){
-            EntityTeleportEvent. EnderEntity event = EventHooks.onEnderTeleport(living, warpScrollData.pos().getX(),  warpScrollData.pos().getY(),  warpScrollData.pos().getZ());
+
+            EntityTeleportEvent. EnderEntity event = EventHooks.onEnderTeleport(living, pos.getX(),  pos.getY(),  pos.getZ());
             if (event.isCanceled()) return;
         }
         ServerLevel dimension = PortalTile.getServerLevel(warpScrollData.dimension(), (ServerLevel) entity.level);
         if(dimension == null)
             return;
-        PortalTile.teleportEntityTo(entity, dimension, warpScrollData.pos(), warpScrollData.rotation());
+        PortalTile.teleportEntityTo(entity, dimension, pos, warpScrollData.rotation());
 
     }
 

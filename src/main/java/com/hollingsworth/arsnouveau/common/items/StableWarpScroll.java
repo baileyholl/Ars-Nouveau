@@ -21,11 +21,12 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Optional;
 
 public class StableWarpScroll extends ModItem{
 
     public StableWarpScroll(Item.Properties properties) {
-        super(properties.stacksTo(1).component(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(null, null, null, true)));
+        super(properties.stacksTo(1).component(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(true)));
     }
 
     @Override
@@ -36,7 +37,7 @@ public class StableWarpScroll extends ModItem{
     @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
         if (!context.getLevel().isClientSide) {
-            WarpScrollData scrollData = context.getItemInHand().getOrDefault(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(null, null, null, true));
+            WarpScrollData scrollData = context.getItemInHand().get(DataComponentRegistry.WARP_SCROLL);
             if(!scrollData.isValid())
                 return InteractionResult.FAIL;
             EventQueue.getServerInstance().addEvent(new BuildPortalEvent(context.getLevel(), context.getClickedPos(), context.getPlayer().getDirection().getClockWise(), scrollData));
@@ -50,12 +51,12 @@ public class StableWarpScroll extends ModItem{
         if(pUsedHand != InteractionHand.MAIN_HAND)
             return InteractionResultHolder.success(player.getItemInHand(pUsedHand));
         ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
-        WarpScrollData data = stack.getOrDefault(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(null, null, null, true));
+        WarpScrollData data = stack.get(DataComponentRegistry.WARP_SCROLL);
 
         if (!(pLevel instanceof ServerLevel serverLevel))
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
         if (player.isShiftKeyDown() && !data.isValid()) {
-            stack.set(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(player.blockPosition(), player.getCommandSenderWorld().dimension().location().toString(), player.getRotationVector(), true));
+            stack.set(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(Optional.of(player.blockPosition()), player.getCommandSenderWorld().dimension().location().toString(), player.getRotationVector(), true));
             player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.recorded"));
         }else if(player.isShiftKeyDown() && data.isValid()){
             player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.already_recorded"));
