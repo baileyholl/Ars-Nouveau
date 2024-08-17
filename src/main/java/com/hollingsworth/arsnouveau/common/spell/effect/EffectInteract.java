@@ -15,6 +15,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,7 +25,6 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.state.BlockState;
@@ -133,19 +133,28 @@ public class EffectInteract extends AbstractEffect {
         }
     }
 
-    public void useOnBlock(Player player, SpellStats spellStats, BlockPos pos, BlockState state, Level world, BlockHitResult rayTraceResult) {
+    public void useOnBlock(Player player, SpellStats spellStats, BlockPos blockpos, BlockState blockstate, Level pLevel, BlockHitResult pHitResult) {
+        var pPlayer = (ServerPlayer) player;
+        InteractionHand pHand = spellStats.isSensitive() ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
+        ItemStack itemstack = pPlayer.getItemInHand(pHand);
+        ItemInteractionResult iteminteractionresult = blockstate.useItemOn(pPlayer.getItemInHand(pHand), pLevel, pPlayer, pHand, pHitResult);
 
-        if (spellStats.isSensitive()) {
-            ItemStack item = player.getItemInHand(getHand(player));
-            if (item.getItem() instanceof BucketItem bucket) {
-                handleBucket(item, bucket, player, state, world, pos, rayTraceResult, getHand(player));
-                return;
-            }
-            UseOnContext context = new UseOnContext(player, getHand(player), rayTraceResult);
-            item.useOn(context);
-        } else {
-            state.useItemOn(player.getItemInHand(InteractionHand.MAIN_HAND), world, player, InteractionHand.MAIN_HAND, rayTraceResult);
+        if (itemstack.getItem() instanceof BucketItem bucket) {
+            handleBucket(itemstack, bucket, player, blockstate, pLevel, blockpos, pHitResult, getHand(player));
+            return;
         }
+
+        if (iteminteractionresult.consumesAction()) {
+            CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(pPlayer, blockpos, itemstack);
+        }
+
+        if (iteminteractionresult == ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION && pHand == InteractionHand.MAIN_HAND) {
+            InteractionResult interactionresult = blockstate.useWithoutItem(pLevel, pPlayer, pHitResult);
+            if (interactionresult.consumesAction()) {
+                CriteriaTriggers.DEFAULT_BLOCK_USE.trigger(pPlayer, blockpos);
+            }
+        }
+
     }
 
     @Override
