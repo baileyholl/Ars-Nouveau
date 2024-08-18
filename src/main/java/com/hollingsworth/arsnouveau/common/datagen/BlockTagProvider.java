@@ -45,6 +45,8 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     public static TagKey<Block> BLAZING_LOGS = BlockTags.create(ArsNouveau.prefix( "blazing_logs"));
     public static TagKey<Block> DOWSING_ROD = BlockTags.create(ArsNouveau.prefix( "dowsing_rod"));
     public static TagKey<Block> BUSHES = BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", "bushes"));
+    public static TagKey<Block> ALAKARKINOS_SAND = BlockTags.create(ArsNouveau.prefix("alakarkinos/sand"));
+    public static TagKey<Block> ALAKARKINOS_GRAVEL = BlockTags.create(ArsNouveau.prefix("alakarkinos/gravel"));
 
     public BlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
         super(output, Registries.BLOCK, future, block -> block.builtInRegistryHolder().key(), ArsNouveau.MODID, helper);
@@ -306,6 +308,9 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(BlockTags.SNOW_LAYER_CANNOT_SURVIVE_ON).add(BlockRegistry.ALTERATION_TABLE.get(), BlockRegistry.WIXIE_CAULDRON.get(), BlockRegistry.POTION_MELDER.get(),
                 BlockRegistry.SCRIBES_BLOCK.get(), BlockRegistry.IMBUEMENT_BLOCK.get(), BlockRegistry.SCRYERS_OCULUS.get(), BlockRegistry.ARCANE_PEDESTAL.get(),
                 BlockRegistry.CRAFTING_LECTERN.get(), BlockRegistry.ENCHANTING_APP_BLOCK.get());
+
+        this.tag(ALAKARKINOS_GRAVEL).add(Blocks.GRAVEL);
+        this.tag(ALAKARKINOS_SAND).add(Blocks.SAND);
     }
 
     public String getName() {

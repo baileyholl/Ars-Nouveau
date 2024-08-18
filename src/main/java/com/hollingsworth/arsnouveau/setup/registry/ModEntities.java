@@ -87,6 +87,11 @@ public class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<Starbuncle>> STARBUNCLE_TYPE = registerEntity(LibEntityNames.STARBUNCLE, EntityType.Builder.<Starbuncle>of(Starbuncle::new, MobCategory.CREATURE)
             .sized(0.6F, 0.63F).setTrackingRange(10)
             .setShouldReceiveVelocityUpdates(true));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<Alakarkinos>> ALAKARKINOS_TYPE = registerEntity(LibEntityNames.ALAKARKINOS, EntityType.Builder.<Alakarkinos>of(Alakarkinos::new, MobCategory.CREATURE)
+            .sized(0.6F, 0.63F).setTrackingRange(10)
+            .setShouldReceiveVelocityUpdates(true));
+
     public static final DeferredHolder<EntityType<?>, EntityType<EntityFollowProjectile>> ENTITY_FOLLOW_PROJ = registerEntity(
             LibEntityNames.FOLLOW_PROJ,
             EntityType.Builder.<EntityFollowProjectile>of(EntityFollowProjectile::new, MobCategory.MISC)
@@ -357,6 +362,7 @@ public class ModEntities {
             event.put(ANIMATED_BLOCK.get(), AnimBlockSummon.createAttributes().build());
             event.put(ANIMATED_HEAD.get(), AnimBlockSummon.createAttributes().build());
             event.put(LILY.get(), Lily.createAttributes().build());
+            event.put(ALAKARKINOS_TYPE.get(), Starbuncle.attributes().build());
         }
     }
 
