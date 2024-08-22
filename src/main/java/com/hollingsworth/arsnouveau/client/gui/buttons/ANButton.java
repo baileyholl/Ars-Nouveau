@@ -17,27 +17,6 @@ public class ANButton extends Button implements ITooltipProvider {
 		this(x, y, w, h, Component.empty(), onPress);
 	}
 
-	public void setX(int i) {
-		x = i;
-	}
-
-	public void setY(int i) {
-		y = i;
-	}
-
-	public int getX() {
-		return x;
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public void setPosition(int x, int y) {
-		this.x = x;
-		this.y = y;
-	}
-
 	@Override
 	public void getTooltip(List<Component> tooltip) {}
 }

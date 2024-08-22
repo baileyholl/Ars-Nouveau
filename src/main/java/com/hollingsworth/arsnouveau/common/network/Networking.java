@@ -18,12 +18,6 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public class Networking {
 
-    private static int ID = 0;
-
-    public static int nextID() {
-        return ID++;
-    }
-
     public static void register(final RegisterPayloadHandlersEvent event) {
         // Sets the current network version
         final PayloadRegistrar reg = event.registrar("1");
