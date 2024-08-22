@@ -368,10 +368,10 @@ public class GuiSpellBook extends BaseBook {
     @Override
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
         SoundManager manager = Minecraft.getInstance().getSoundManager();
-        if (pScrollX < 0 && nextButton.active) {
+        if (pScrollY < 0 && nextButton.active) {
             onPageIncrease(nextButton);
             manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
-        } else if (pScrollX > 0 && previousButton.active) {
+        } else if (pScrollY > 0 && previousButton.active) {
             onPageDec(previousButton);
             manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
         }

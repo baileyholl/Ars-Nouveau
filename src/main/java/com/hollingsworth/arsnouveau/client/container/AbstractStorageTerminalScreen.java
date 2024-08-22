@@ -542,7 +542,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			return false;
 		} else {
 			int i = (itemsSorted.size() + 9 - 1) / 9 - 5;
-			this.currentScroll = (float)(this.currentScroll - p_mouseScrolled_5_ / i);
+			this.currentScroll = (float)(this.currentScroll + scrollY / i);
 			this.currentScroll = Mth.clamp(this.currentScroll, 0.0F, 1.0F);
 			this.scrollTo(this.currentScroll);
 			return true;
