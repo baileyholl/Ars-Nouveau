@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.imbuement_chamber.IImbuementRecipe;
 import com.hollingsworth.arsnouveau.api.registry.ImbuementRecipeRegistry;
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
@@ -42,7 +43,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     public ItemStack stack = ItemStack.EMPTY;
     public ItemEntity entity;
     public boolean draining;
-    ImbuementRecipe recipe;
+    IImbuementRecipe recipe;
     int backoff;
     public float frames;
     boolean hasRecipe;
@@ -289,7 +290,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         return pedestalList(getBlockPos(), 1, getLevel());
     }
 
-    public @Nullable RecipeHolder<? extends ImbuementRecipe> getRecipeNow() {
+    public @Nullable RecipeHolder<? extends IImbuementRecipe> getRecipeNow() {
         return ImbuementRecipeRegistry.INSTANCE.getRecipes().stream().filter(r -> r.value().matches(this, level)).findFirst().orElse(null);
     }
 
