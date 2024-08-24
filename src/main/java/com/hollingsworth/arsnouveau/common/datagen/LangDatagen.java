@@ -1258,6 +1258,7 @@ public class LangDatagen extends LanguageProvider {
         add("mob_jar.dummy", "A player dummy in a jar will attract nearby mobs.");
         add("ars_nouveau.turret.tooltip", "Can be rotated to face any direction. Use a dominion wand on the turret, and then on the target block.");
         add("ars_nouveau.scribes_table.auto_take_disabled", "Auto Take Disabled");
+        add("item.ars_nouveau.debug", "Ars Nouveau Debugger");
         add("ars_nouveau.alert.turret_needs_form", "Spell must have a form.");
         add("item.ars_nouveau.music_disc_thistle_the_sound_of_glass", "Music Disc");
         add("jukebox_song.ars_nouveau.thistle_the_sound_of_glass", "Thistle - The Sound of Glass");

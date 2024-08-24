@@ -2,8 +2,8 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
@@ -48,7 +48,7 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
         this.tag(EntityTags.FAMILIAR).add(ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get(), ModEntities.ENTITY_FAMILIAR_SYLPH.get(),
                 ModEntities.ENTITY_FAMILIAR_WIXIE.get(), ModEntities.ENTITY_FAMILIAR_DRYGMY.get(),
                 ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get());
-        this.tag(EntityTags.JAR_BLACKLIST).addTag(EntityTags.FAMILIAR);
+        this.tag(EntityTags.JAR_BLACKLIST).addTag(EntityTags.FAMILIAR).addTag(Tags.EntityTypes.CAPTURING_NOT_SUPPORTED);
 
         this.tag(EntityTags.JAR_WHITELIST)
                 .add(EntityType.ITEM)
