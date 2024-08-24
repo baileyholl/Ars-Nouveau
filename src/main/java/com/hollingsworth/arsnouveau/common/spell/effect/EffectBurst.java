@@ -93,7 +93,6 @@ public class EffectBurst extends AbstractEffect {
 
     @Override
     protected void addDefaultInvalidCombos(Set<ResourceLocation> defaults) {
-        defaults.add(EffectLinger.INSTANCE.getRegistryName());
         defaults.add(EffectWall.INSTANCE.getRegistryName());
     }
 }
