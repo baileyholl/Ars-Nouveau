@@ -85,8 +85,14 @@ public class BuildPortalEvent implements ITimedEvent {
             BlockPos pos = framePos.get(0);
             framePos.remove(pos);
             BlockState bs = level.getBlockState(pos);
-            if (bs.is(BlockTagProvider.DECORATIVE_AN)) {
+            if (bs.is(BlockTagProvider.DECORATIVE_AN) || level.getBlockEntity(pos) instanceof TemporaryTile tile && tile.mimicState.is(BlockTagProvider.DECORATIVE_AN)) {
                 tick(true);
+                if(level.getBlockEntity(pos) instanceof TemporaryTile tile){
+                    tile.mimicState = BlockRegistry.getBlock(LibBlockNames.SOURCESTONE).defaultBlockState();
+                    tile.tickDuration = 20 * 60;
+                    tile.gameTime = level.getGameTime();
+                    tile.updateBlock();
+                }
                 return;
             }
             if(bs.canBeReplaced() || level.getBlockEntity(pos) instanceof TemporaryTile tile && tile.mimicState.is(BlockTagProvider.DECORATIVE_AN)) {
