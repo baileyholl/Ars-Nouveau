@@ -56,15 +56,30 @@ public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem, 
     }
 
     public static AnimatedMagicArmor light(ArmorItem.Type slot) {
-        return new AnimatedMagicArmor(MaterialRegistry.LIGHT, slot, new GenericModel<AnimatedMagicArmor>("light_armor", "item/light_armor").withEmptyAnim());
+        return new AnimatedMagicArmor(MaterialRegistry.LIGHT, slot,
+                ItemsRegistry.defaultItemProperties()
+                        .stacksTo(1)
+                        .component(DataComponentRegistry.ARMOR_PERKS, new ArmorPerkHolder())
+                        .durability(slot.getDurability(20)), new GenericModel<AnimatedMagicArmor>("light_armor", "item/light_armor").withEmptyAnim());
     }
 
     public static AnimatedMagicArmor medium(ArmorItem.Type slot) {
-        return new AnimatedMagicArmor(MaterialRegistry.MEDIUM, slot, new GenericModel<AnimatedMagicArmor>("medium_armor", "item/medium_armor").withEmptyAnim());
+        return new AnimatedMagicArmor(MaterialRegistry.MEDIUM, slot,ItemsRegistry.defaultItemProperties()
+                .stacksTo(1)
+                .component(DataComponentRegistry.ARMOR_PERKS, new ArmorPerkHolder())
+                .durability(slot.getDurability(25)), new GenericModel<AnimatedMagicArmor>("medium_armor", "item/medium_armor").withEmptyAnim());
     }
 
     public static AnimatedMagicArmor heavy(ArmorItem.Type slot) {
-        return new AnimatedMagicArmor(MaterialRegistry.HEAVY, slot, new GenericModel<AnimatedMagicArmor>("heavy_armor", "item/heavy_armor").withEmptyAnim());
+        return new AnimatedMagicArmor(MaterialRegistry.HEAVY, slot,ItemsRegistry.defaultItemProperties()
+                .stacksTo(1)
+                .component(DataComponentRegistry.ARMOR_PERKS, new ArmorPerkHolder())
+                .durability(slot.getDurability(35)), new GenericModel<AnimatedMagicArmor>("heavy_armor", "item/heavy_armor").withEmptyAnim());
+    }
+
+    @Override
+    public boolean isEnchantable(ItemStack pStack) {
+        return true;
     }
 
     @Override
