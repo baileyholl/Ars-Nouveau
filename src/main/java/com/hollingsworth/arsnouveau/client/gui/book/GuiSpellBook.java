@@ -26,6 +26,7 @@ import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.CreativeTabRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
@@ -378,6 +379,15 @@ public class GuiSpellBook extends BaseBook {
 
     @Override
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
+        boolean isShiftDown =  InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), Minecraft.getInstance().options.keyShift.getKey().getValue());
+        if(ServerConfig.INFINITE_SPELLS.get() && isShiftDown){
+            if (pScrollY < 0 && nextGlyphButton.active) {
+                updateWindowOffset(spellWindowOffset + 1);
+            } else if (pScrollY > 0 && prevGlyphButton.active) {
+                updateWindowOffset(spellWindowOffset - 1);
+            }
+            return true;
+        }
         SoundManager manager = Minecraft.getInstance().getSoundManager();
         if (pScrollY < 0 && nextButton.active) {
             onPageIncrease(nextButton);
@@ -642,8 +652,7 @@ public class GuiSpellBook extends BaseBook {
 
     private int getCurrentManaCost() {
         Spell spell = new Spell();
-        for (CraftingButton button : craftingCells) {
-            AbstractSpellPart part = button.getAbstractSpellPart();
+        for (AbstractSpellPart part : this.spell) {
             if (part != null) {
                 spell = spell.add(part);
             }
