@@ -2,8 +2,6 @@ package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
-import com.hollingsworth.arsnouveau.client.gui.book.InfinityGuiSpellBook;
-import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -39,9 +37,7 @@ public class PacketOpenSpellBook extends AbstractPacket{
     @Override
     public void onClientReceived(Minecraft minecraft, Player player) {
         InteractionHand hand = isMainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
-        if (ServerConfig.INFINITE_SPELLS.get())
-            InfinityGuiSpellBook.open(hand);
-        else GuiSpellBook.open(hand);
+        GuiSpellBook.open(hand);
     }
 
     @Override
