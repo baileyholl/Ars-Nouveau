@@ -321,17 +321,17 @@ public class BlockUtil {
      */
     public static boolean breakExtraBlock(ServerLevel level, BlockPos pos, ItemStack mainhand, @Nullable UUID source, boolean bypassTool) {
         BlockState state = level.getBlockState(pos);
-        FakePlayer player;
+        FakePlayer player = ANFakePlayer.getPlayer(level);
         if (source != null) {
-            player = FakePlayerFactory.get(level, new GameProfile(source, UsernameCache.getLastKnownUsername(source)));
-            Player realPlayer = level.getPlayerByUUID(source);
-            if (realPlayer != null) {
-                // Move the fakeplayer to the position of the real player, if one is known
-                player.setPos(realPlayer.position());
+            var username = UsernameCache.getLastKnownUsername(source);
+            if(username != null){
+                player = FakePlayerFactory.get(level, new GameProfile(source, username));
+                Player realPlayer = level.getPlayerByUUID(source);
+                if (realPlayer != null) {
+                    // Move the fakeplayer to the position of the real player, if one is known
+                    player.setPos(realPlayer.position());
+                }
             }
-        }
-        else {
-            player = FakePlayerFactory.getMinecraft(level);
         }
 
         player.getInventory().items.set(player.getInventory().selected, mainhand);
