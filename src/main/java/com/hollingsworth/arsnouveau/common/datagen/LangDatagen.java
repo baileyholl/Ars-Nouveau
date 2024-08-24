@@ -1134,7 +1134,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.void_prism", "Void Prism");
         add("ars_nouveau.page.void_prism", "Destroys any spell projectiles that pass through it.");
         add("item.ars_nouveau.music_disc_aria_biblio", "Music Disc");
-        add("item.ars_nouveau.music_disc_aria_biblio.desc", "Firel - Aria Biblio");
+        add("jukebox_song.ars_nouveau.aria_biblio", "Firel - Aria Biblio");
         add("item.ars_nouveau.starby_gift", "Starbuncle Gift");
         add("ars_nouveau.present.give", "Give this to a friend and they will get bonus items, or open it for yourself!");
         add("ars_nouveau.present.from", "A gift from %s");
@@ -1260,9 +1260,9 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.scribes_table.auto_take_disabled", "Auto Take Disabled");
         add("ars_nouveau.alert.turret_needs_form", "Spell must have a form.");
         add("item.ars_nouveau.music_disc_thistle_the_sound_of_glass", "Music Disc");
-        add("item.ars_nouveau.music_disc_thistle_the_sound_of_glass.desc", "Thistle - The Sound of Glass");
+        add("jukebox_song.ars_nouveau.thistle_the_sound_of_glass", "Thistle - The Sound of Glass");
         add("item.ars_nouveau.music_disc_firel_the_wild_hunt", "Music Disc");
-        add("item.ars_nouveau.music_disc_firel_the_wild_hunt.desc", "Firel - The Wild Hunt");
+        add("jukebox_song.ars_nouveau.firel_the_wild_hunt", "Firel - The Wild Hunt");
         add("ars_nouveau.sensor.set_spell", "Sensor will now trigger on this spell only.");
         add("ars_nouveau.sensor.on_resolve", "Mode: On Resolve");
         add("ars_nouveau.sensor.on_cast", "Mode: On Cast");
