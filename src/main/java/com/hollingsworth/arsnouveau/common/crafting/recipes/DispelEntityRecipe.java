@@ -28,6 +28,7 @@ import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public record DispelEntityRecipe(EntityType<?> entity, ResourceLocation lootTable, LootItemCondition[] conditions) implements SpecialSingleInputRecipe {
 
@@ -38,7 +39,7 @@ public record DispelEntityRecipe(EntityType<?> entity, ResourceLocation lootTabl
 
         LootParams params = getLootParams(killer, victim);
         LootContext context = new LootContext.Builder(params)
-                .create(null);
+                .create(Optional.empty());
 
         return Arrays.stream(conditions).allMatch(condition -> condition.test(context));
     }
