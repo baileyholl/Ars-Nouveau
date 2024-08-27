@@ -126,7 +126,7 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(tag, pRegistries);
         if(tag.contains("potionData"))
-            this.data = ANCodecs.decode(PotionContents.CODEC, tag.get("potionData"));
+            this.data = ANCodecs.decode(pRegistries, PotionContents.CODEC, tag.get("potionData"));
         this.isLocked = tag.getBoolean("locked");
         this.currentFill = tag.getInt("currentFill");
     }
@@ -134,7 +134,7 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     @Override
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
-        tag.put("potionData", ANCodecs.encode(PotionContents.CODEC, this.data));
+        tag.put("potionData", ANCodecs.encode(pRegistries, PotionContents.CODEC, this.data));
         tag.putBoolean("locked", this.isLocked);
         tag.putInt("currentFill", this.currentFill);
 

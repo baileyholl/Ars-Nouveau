@@ -119,7 +119,7 @@ public class StarbyPotionBehavior extends StarbyListBehavior {
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         if (heldPotion != null) {
-            tag.put("potionData", ANCodecs.encode(PotionContents.CODEC, heldPotion));
+            tag.put("potionData", ANCodecs.encode(starbuncle.level.registryAccess(), PotionContents.CODEC, heldPotion));
         }
         tag.putInt("amount", amount);
         return super.toTag(tag);

@@ -84,15 +84,15 @@ public class PotionCraftingManager extends CraftingManager {
     @Override
     public void write(HolderLookup.Provider provider,  CompoundTag tag) {
         super.write(provider, tag);
-        tag.put("potionout", ANCodecs.encode(PotionContents.CODEC, potionOut));
-        tag.put("potionNeeded", ANCodecs.encode(PotionContents.CODEC, getPotionNeeded()));
+        tag.put("potionout", ANCodecs.encode(provider, PotionContents.CODEC, potionOut));
+        tag.put("potionNeeded", ANCodecs.encode(provider, PotionContents.CODEC, getPotionNeeded()));
         tag.putBoolean("gotPotion", hasObtainedPotion);
     }
 
     public void read(HolderLookup.Provider provider, CompoundTag tag){
         super.read(provider, tag);
-        potionOut = ANCodecs.decode(PotionContents.CODEC, tag.getCompound("potionout"));
-        potionNeeded = ANCodecs.decode(PotionContents.CODEC, tag.getCompound("potionNeeded"));
+        potionOut = ANCodecs.decode(provider, PotionContents.CODEC, tag.getCompound("potionout"));
+        potionNeeded = ANCodecs.decode(provider, PotionContents.CODEC, tag.getCompound("potionNeeded"));
         hasObtainedPotion = tag.getBoolean("gotPotion");
     }
 }

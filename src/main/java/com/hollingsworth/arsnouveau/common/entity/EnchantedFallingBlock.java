@@ -269,7 +269,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
                         try {
                             blockentity.loadWithComponents(this.blockData, level.registryAccess());
                             if (blockentity instanceof SkullBlockEntity sk && this.blockData != null && this.blockData.contains("SkullOwner")) {
-                                sk.setOwner(ANCodecs.decode(ResolvableProfile.CODEC, this.blockData.getCompound("SkullOwner")));
+                                sk.setOwner(ANCodecs.decode(level.registryAccess(), ResolvableProfile.CODEC, this.blockData.getCompound("SkullOwner")));
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();

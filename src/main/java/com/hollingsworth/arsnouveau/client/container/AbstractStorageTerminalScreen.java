@@ -493,7 +493,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		interactTag.putBoolean("pullOne", pullOne);
 		interactTag.putInt("action", act.ordinal());
 		if(slotStack != null){
-			interactTag.put("stack", ANCodecs.encode(StoredItemStack.CODEC, slotStack));
+			interactTag.put("stack", ANCodecs.encode(ArsNouveau.proxy.getMinecraft().level.registryAccess(), StoredItemStack.CODEC, slotStack));
 		}
 		CompoundTag dataTag = new CompoundTag();
 		dataTag.put("interaction", interactTag);
