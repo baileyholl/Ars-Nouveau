@@ -35,8 +35,7 @@ public class PacketUpdateFlight extends AbstractPacket{
 
     @Override
     public void onClientReceived(Minecraft minecraft, Player player) {
-        ArsNouveau.proxy.getPlayer().getAbilities().mayfly = canFly;
-        ArsNouveau.proxy.getPlayer().getAbilities().flying = wasFlying;
+
     }
     public static final Type<PacketUpdateFlight> TYPE = new Type<>(ArsNouveau.prefix("update_flight"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketUpdateFlight> CODEC = StreamCodec.ofMember(PacketUpdateFlight::toBytes, PacketUpdateFlight::new);
