@@ -116,8 +116,8 @@ public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem, 
                 modifiers = instance.getPerk().applyAttributeModifiers(modifiers, stack, instance.getSlot().value(), EquipmentSlotGroup.bySlot(this.type.getSlot()));
             }
 
-            modifiers = modifiers.withModifierAdded(PerkAttributes.MAX_MANA, new AttributeModifier(ArsNouveau.prefix("max_mana_armor"), 30 * (perkHolder.getTier() + 1), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.bySlot(this.type.getSlot()));
-            modifiers = modifiers.withModifierAdded(PerkAttributes.MANA_REGEN_BONUS, new AttributeModifier(ArsNouveau.prefix("mana_regen_armor"), perkHolder.getTier() + 1, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.bySlot(this.type.getSlot()));
+            modifiers = modifiers.withModifierAdded(PerkAttributes.MAX_MANA, new AttributeModifier(ArsNouveau.prefix("max_mana_armor_" + this.type.getName()), 30 * (perkHolder.getTier() + 1), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.bySlot(this.type.getSlot()));
+            modifiers = modifiers.withModifierAdded(PerkAttributes.MANA_REGEN_BONUS, new AttributeModifier(ArsNouveau.prefix("mana_regen_armor_" + this.type.getName()), perkHolder.getTier() + 1, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.bySlot(this.type.getSlot()));
         }
         return modifiers;
     }
