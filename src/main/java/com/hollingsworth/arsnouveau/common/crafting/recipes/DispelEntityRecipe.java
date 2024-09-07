@@ -7,6 +7,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -63,8 +64,7 @@ public record DispelEntityRecipe(EntityType<?> entity, ResourceLocation lootTabl
 
         LootParams params = getLootParams(killer, victim);
 
-        LootTable lootTable = killer.level().registryAccess().registryOrThrow(Registries.LOOT_TABLE).get(lootTable());
-
+        LootTable lootTable = killer.level().getServer().reloadableRegistries().getLootTable(ResourceKey.create(Registries.LOOT_TABLE, lootTable()));
         return lootTable.getRandomItems(params);
     }
 
