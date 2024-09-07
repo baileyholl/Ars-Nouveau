@@ -41,6 +41,7 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
 
     @Override
     protected void addTags(HolderLookup.@NotNull Provider pProvider) {
+        this.tag(STORAGE_BLOCKS_QUARTZ).add(Items.QUARTZ_BLOCK);
         this.tag(SUMMON_SHARDS_TAG)
                 .add(ItemsRegistry.DRYGMY_SHARD.get(),
                         ItemsRegistry.STARBUNCLE_SHARD.get(),
