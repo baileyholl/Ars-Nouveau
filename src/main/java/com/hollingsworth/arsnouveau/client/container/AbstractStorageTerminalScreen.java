@@ -565,9 +565,11 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		if(tag.contains("tabs")){
 			ListTag tabs = tag.getList("tabs", 10);
 			tabNames = new ArrayList<>();
-			for(int i = 0;i < Math.min(tabs.size(), 12);i++){
-				tabNames.add(tabs.getCompound(i).getString("name"));
+			Set<String> nameSet = new HashSet<>();
+			for(int i = 0; i < tabs.size(); i++){
+				nameSet.add(tabs.getCompound(i).getString("name"));
 			}
+			tabNames.addAll(new ArrayList<>(nameSet).subList(0, Math.min(nameSet.size(), 11)));
 			Collections.sort(tabNames);
 		}
 
