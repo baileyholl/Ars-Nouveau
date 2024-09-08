@@ -1,7 +1,8 @@
 package com.hollingsworth.arsnouveau.client.jei;
 
-import com.hollingsworth.arsnouveau.api.recipe.ScryRitualRecipe;
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.ScryRitualRecipe;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ScryRitualRecipeCategory implements IRecipeCategory<ScryRitualRecipe> {
-    public static final ResourceLocation SCRY_RITUAL = new ResourceLocation("ars_nouveau", RitualLib.SCRYING);
+    public static final ResourceLocation SCRY_RITUAL = ArsNouveau.prefix(RitualLib.SCRYING);
     private final IDrawableAnimated arrow;
     public IDrawable background;
     public IDrawable icon;
@@ -68,7 +69,7 @@ public class ScryRitualRecipeCategory implements IRecipeCategory<ScryRitualRecip
     public void setRecipe(IRecipeLayoutBuilder builder, ScryRitualRecipe recipe, IFocusGroup focuses) {
         List<ItemStack> items = new ArrayList<>();
         for (Holder<Block> blockHolder : BuiltInRegistries.BLOCK.getTagOrEmpty(recipe.highlight())) {
-            items.add(blockHolder.get().asItem().getDefaultInstance());
+            items.add(blockHolder.value().asItem().getDefaultInstance());
         }
         ItemStack[] stacks = items.toArray(new ItemStack[]{});
         builder.addSlot(RecipeIngredientRole.OUTPUT, 120-16-6, 4).addIngredients(Ingredient.of(stacks));
