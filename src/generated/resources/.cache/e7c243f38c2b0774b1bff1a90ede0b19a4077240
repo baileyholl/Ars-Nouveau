@@ -1,4 +1,4 @@
-// 1.21.1	2024-09-11T19:10:19.339699	Patchouli
+// 1.21.1	2024-09-11T20:30:24.4012426	Patchouli
 2ec536fea831588201432d61d70af61385882054 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/alteration_table.json
 a82f4fc73946d228b1e3f5e03d0ecef46f33cdfb assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/applying_perks.json
 8ce1d8e886b45066bc5c1d9d8e87bdabbb27ae27 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/armor.json
@@ -30,6 +30,7 @@ c7d187c5baed53c4ddb63b6b6dc9ec9847c21a45 assets/ars_nouveau/patchouli_books/worn
 f13c06f8bad4eea6dc04fe65a11e7dee635edcd7 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/grates.json
 2aa6f0796e1c44db6a5f89ce86c71b51d30f55ab assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/mimic_scroll.json
 8d8c1da8e10e4e6bdb2e372d9091d6520bb050ee assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/redstone_relay.json
+b619a9ff2b42715a4f02335f3d16e0d38278131f assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/source_lamp.json
 269964459879bd2f251da0caecebfdd380dd3c77 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/spell_prism.json
 756f36ebd89cd34e9beee7dc014e59ca6e651f2a assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/spell_sensor.json
 c5c734978c587616db905cdcdd4da1bd054ab42b assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/spell_turret.json

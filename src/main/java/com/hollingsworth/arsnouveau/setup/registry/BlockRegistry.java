@@ -192,6 +192,7 @@ public class BlockRegistry {
     public static BlockRegistryWrapper<ItemGrate> SMOOTH_SOURCESTONE_GRATE = registerBlockAndItem(LibBlockNames.SMOOTH_SOURCESTONE_GRATE, ItemGrate::new);
     public static BlockRegistryWrapper<ItemGrate> GOLD_GRATE = registerBlockAndItem(LibBlockNames.GOLD_GRATE, ItemGrate::new);
     public static BlockRegistryWrapper<ItemGrate> ARCHWOOD_GRATE = registerBlockAndItem(LibBlockNames.ARCHWOOD_GRATE, ItemGrate::new);
+    public static BlockRegistryWrapper<SourceLamp> SOURCE_LAMP = registerBlockAndItem(LibBlockNames.SOURCE_LAMP, SourceLamp::new);
 
     public static BlockRegistryWrapper<MagicFire> MAGIC_FIRE = registerBlockAndItem(LibBlockNames.MAGIC_FIRE, () -> new MagicFire(BlockBehaviour.Properties.of().mapColor(MapColor.FIRE).replaceable().noCollission().instabreak().lightLevel((p_152607_) -> {
         return 15;

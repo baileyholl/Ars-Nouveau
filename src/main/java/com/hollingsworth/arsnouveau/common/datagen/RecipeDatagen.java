@@ -737,34 +737,44 @@ public class RecipeDatagen extends RecipeProvider {
             shapelessBuilder(BlockRegistry.SOURCEBERRY_BUSH, 9).requires(BlockRegistry.SOURCEBERRY_SACK).save(consumer, ArsNouveau.prefix( "sourceberry_sack_to_bush"));
 
             shapedBuilder(BlockRegistry.GOLD_GRATE)
-                    .pattern("ggg")
+                    .pattern(" g ")
                     .pattern("gMg")
-                    .pattern("ggg")
+                    .pattern(" g ")
                     .define('g', Items.IRON_BARS)
                     .define('M', Tags.Items.INGOTS_GOLD)
                     .save(consumer);
 
             shapedBuilder(BlockRegistry.ARCHWOOD_GRATE)
-                    .pattern("ggg")
+                    .pattern(" g ")
                     .pattern("gMg")
-                    .pattern("ggg")
+                    .pattern(" g ")
                     .define('g', Items.IRON_BARS)
                     .define('M', ARCHWOOD_LOG)
                     .save(consumer);
             shapedBuilder(BlockRegistry.SOURCESTONE_GRATE)
-                    .pattern("ggg")
+                    .pattern(" g ")
                     .pattern("gMg")
-                    .pattern("ggg")
+                    .pattern(" g ")
                     .define('g', Items.IRON_BARS)
                     .define('M', SOURCESTONE)
                     .save(consumer);
             shapedBuilder(BlockRegistry.SMOOTH_SOURCESTONE_GRATE)
-                    .pattern("ggg")
+                    .pattern(" g ")
                     .pattern("gMg")
-                    .pattern("ggg")
+                    .pattern(" g ")
                     .define('g', Items.IRON_BARS)
                     .define('M', BlockRegistry.getBlock(LibBlockNames.SMOOTH_SOURCESTONE))
                     .save(consumer);
+
+            shapedBuilder(BlockRegistry.SOURCE_LAMP)
+                    .pattern(" x ")
+                    .pattern("xbx")
+                    .pattern(" r ")
+                    .define('x', SOURCE_GEM)
+                    .define('b', Tags.Items.RODS_BLAZE)
+                    .define('r', Tags.Items.DUSTS_REDSTONE)
+                    .save(consumer);
+
 
         }
     }

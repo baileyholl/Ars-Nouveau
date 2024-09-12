@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "b": {
+      "tag": "c:rods/blaze"
+    },
+    "r": {
+      "tag": "c:dusts/redstone"
+    },
+    "x": {
+      "tag": "c:gems/source"
+    }
+  },
+  "pattern": [
+    " x ",
+    "xbx",
+    " r "
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:source_lamp"
+  }
+}

@@ -650,6 +650,7 @@ public class PatchouliProvider extends SimpleDataProvider{
         addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.ARCHWOOD_GRATE).withLocalizedText()
                 .withPage(new CraftingPage(BlockRegistry.ARCHWOOD_GRATE).withRecipe2(BlockRegistry.GOLD_GRATE))
                 .withPage(new CraftingPage(BlockRegistry.SMOOTH_SOURCESTONE_GRATE).withRecipe2(BlockRegistry.SOURCESTONE_GRATE)), getPath(AUTOMATION, "grates"));
+        addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.SOURCE_LAMP).withLocalizedText().withPage(new CraftingPage(BlockRegistry.SOURCE_LAMP)), getPath(AUTOMATION, "source_lamp"));
     }
 
     public String getLangPath(String name, int count) {

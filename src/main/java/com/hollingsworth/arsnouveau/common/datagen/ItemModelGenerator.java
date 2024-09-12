@@ -125,6 +125,7 @@ public class ItemModelGenerator extends ItemModelProvider {
         getBuilder(LibBlockNames.ARCHWOOD_GRATE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.ARCHWOOD_GRATE));
         getBuilder(LibBlockNames.SMOOTH_SOURCESTONE_GRATE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.SMOOTH_SOURCESTONE_GRATE));
         getBuilder(LibBlockNames.GOLD_GRATE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.GOLD_GRATE));
+        getBuilder(LibBlockNames.SOURCE_LAMP).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.SOURCE_LAMP));
 
     }
 
