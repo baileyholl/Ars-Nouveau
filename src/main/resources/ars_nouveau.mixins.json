@@ -17,7 +17,6 @@
     "light.LightEntityMixin"
   ],
   "mixins": [
-    "BucketItemAccessor",
     "DamageSourceMixin",
     "LivingAccessor",
     "MobAccessor",

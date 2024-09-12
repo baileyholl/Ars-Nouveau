@@ -1285,6 +1285,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.empty","Empty");
         add("ars_nouveau.melder.output_not_unique", "Output potion is not a unique mix.");
         add("ars_nouveau.melder.output_duplicate_effect", "Cannot mix potions with the same effect but different levels.");
+        add("ars_nouveau.page1.archwood_grate", "Liquids placed on top of them will be transported below, waterlogging the below block if possible. Interacting with the grate will also act as if you are interacting with the block below it, allowing you to bucket liquids below. Additionally, items and projectiles will pass through it. Can be placed in any direction.");
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             String key = "block.ars_nouveau." + s;
             String val = data.get(key);
