@@ -3,9 +3,9 @@ package com.hollingsworth.arsnouveau.common.entity.statemachine.alakarkinos;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.Alakarkinos;
+import com.hollingsworth.arsnouveau.common.mixin.BrushableBlockEntityAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BrushableBlockEntity;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,9 +23,9 @@ public class ConvertBlockState extends CrabState{
         if(BlockUtil.distanceFrom(alakarkinos.blockPosition(), target) <= 2){
             var wasGravel = alakarkinos.level.getBlockState(target).is(BlockTagProvider.ALAKARKINOS_GRAVEL);
             alakarkinos.level.setBlock(target, wasGravel ? Blocks.SUSPICIOUS_GRAVEL.defaultBlockState() : Blocks.SUSPICIOUS_SAND.defaultBlockState(), 3);
-            if(alakarkinos.level.getBlockEntity(target) instanceof BrushableBlockEntity brushableBlock){
-                brushableBlock.lootTable = BuiltInLootTables.DESERT_PYRAMID_ARCHAEOLOGY;
-                brushableBlock.lootTableSeed = alakarkinos.getRandom().nextLong();
+            if(alakarkinos.level.getBlockEntity(target) instanceof BrushableBlockEntityAccessor brushableBlock){
+                brushableBlock.setLootTable(BuiltInLootTables.DESERT_PYRAMID_ARCHAEOLOGY);
+                brushableBlock.setLootTableSeed(alakarkinos.getRandom().nextLong());
             }
             alakarkinos.findBlockCooldown = 5 * 60;
             return new DecideCrabActionState(alakarkinos);
