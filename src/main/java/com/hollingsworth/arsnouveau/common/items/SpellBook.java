@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
-import com.hollingsworth.arsnouveau.client.gui.book.InfinityGuiSpellBook;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenuSlot;
@@ -17,7 +16,6 @@ import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetCasterSlot;
-import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
@@ -136,7 +134,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
         if (hand == null) {
             return;
         }
-        Minecraft.getInstance().setScreen(ServerConfig.INFINITE_SPELLS.get() ? new InfinityGuiSpellBook(hand) : new GuiSpellBook(hand));
+        Minecraft.getInstance().setScreen(new GuiSpellBook(hand));
     }
 
     @OnlyIn(Dist.CLIENT)

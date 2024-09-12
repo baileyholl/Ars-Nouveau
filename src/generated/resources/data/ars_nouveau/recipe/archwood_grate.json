@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "M": {
+      "tag": "c:logs/archwood"
+    },
+    "g": {
+      "item": "minecraft:iron_bars"
+    }
+  },
+  "pattern": [
+    " g ",
+    "gMg",
+    " g "
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:archwood_grate"
+  }
+}

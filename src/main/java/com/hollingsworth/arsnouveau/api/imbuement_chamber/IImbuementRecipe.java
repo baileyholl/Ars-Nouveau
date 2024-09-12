@@ -9,11 +9,11 @@ public interface IImbuementRecipe extends Recipe<ImbuementTile> {
     int getSourceCost(ImbuementTile imbuementTile);
 
     default Component getCraftingStartedText(ImbuementTile imbuementTile) {
-        return Component.translatable("ars_nouveau.imbuement.crafting_started", this.getResultItem(imbuementTile.getLevel().registryAccess()).getHoverName());
+        return Component.translatable("ars_nouveau.imbuement.crafting_started", this.assemble(imbuementTile, imbuementTile.getLevel().registryAccess()).getHoverName());
     }
 
     default Component getCraftingText(ImbuementTile imbuementTile) {
-        return Component.translatable("ars_nouveau.crafting", this.getResultItem(imbuementTile.getLevel().registryAccess()).getHoverName());
+        return Component.translatable("ars_nouveau.crafting", this.assemble(imbuementTile, imbuementTile.getLevel().registryAccess()).getHoverName());
     }
 
     default Component getCraftingProgressText(ImbuementTile imbuementTile, int progress) {

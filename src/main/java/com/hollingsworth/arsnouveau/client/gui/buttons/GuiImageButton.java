@@ -59,9 +59,4 @@ public class GuiImageButton extends ANButton {
             return;
         super.playDownSound(pHandler);
     }
-
-    public void setPosition(int pX, int pY) {
-        this.x = pX;
-        this.y = pY;
-    }
 }

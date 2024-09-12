@@ -229,6 +229,10 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         if (storedPos == null || level == null) {
             return;
         }
+        BlockEntity tile = level.getBlockEntity(storedPos);
+        if(tile instanceof StorageLecternTile newMasterLectern){
+            return;
+        }
 
         IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, storedPos, side);
         if (handler == null) {
@@ -237,6 +241,9 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         }
         if (BlockUtil.distanceFrom(storedPos, worldPosition) > 30) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.inv_too_far"));
+            return;
+        }
+        if(this.getBlockPos().equals(storedPos)){
             return;
         }
 
@@ -261,10 +268,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         if (storedPos == null || storedPos.equals(worldPosition) || level == null) {
             return;
         }
-        BlockEntity tile = level.getBlockEntity(storedPos);
-        if (!(tile instanceof StorageLecternTile)) {
-            return;
-        }
+
         if (BlockUtil.distanceFrom(storedPos, worldPosition) > 30) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.lectern_too_far"));
             return;
@@ -546,6 +550,9 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         }
         List<IItemHandler> modifiables = new ArrayList<>();
         for (BlockPos pos : lecternTile.connectedInventories) {
+            if (pos.equals(this.getBlockPos())) {
+                continue;
+            }
             BlockEntity invTile = lecternTile.level.getBlockEntity(pos);
             if (invTile != null) {
                 IItemHandler lih = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);

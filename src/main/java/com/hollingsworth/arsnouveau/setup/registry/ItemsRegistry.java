@@ -216,10 +216,10 @@ public class ItemsRegistry {
     public static final ItemRegistryWrapper<ModItem> ALCHEMISTS_CROWN = register(LibItemNames.ALCHEMISTS_CROWN, () -> new AlchemistsCrown(defaultItemProperties().stacksTo(1)));
     public static final ItemRegistryWrapper<ModItem> SPLASH_LAUNCHER = register(LibItemNames.SPLASH_LAUNCHER, () -> new FlaskCannon.SplashLauncher(defaultItemProperties().stacksTo(1)));
     public static final ItemRegistryWrapper<ModItem> LINGERING_LAUNCHER = register(LibItemNames.LINGERING_LAUNCHER, () -> new FlaskCannon.LingeringLauncher(defaultItemProperties().stacksTo(1)));
-    // TODO: restore discs
-    public static final ItemRegistryWrapper<Item> FIREL_DISC = register(LibItemNames.FIREL_DISC, () -> new Item(defaultItemProperties().stacksTo(1).rarity(Rarity.RARE)));
-    public static final ItemRegistryWrapper<Item> SOUND_OF_GLASS = register(LibItemNames.SOUND_OF_GLASS, () -> new Item(defaultItemProperties().stacksTo(1).rarity(Rarity.RARE)));
-    public static final ItemRegistryWrapper<Item> WILD_HUNT = register(LibItemNames.FIREL_WILD_HUNT, () -> new Item(defaultItemProperties().stacksTo(1).rarity(Rarity.RARE)));
+
+    public static final ItemRegistryWrapper<Item> FIREL_DISC = register(LibItemNames.FIREL_DISC, () -> new Item(defaultItemProperties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(JukeboxRegistry.ARIA_BIBLIO)));
+    public static final ItemRegistryWrapper<Item> SOUND_OF_GLASS = register(LibItemNames.SOUND_OF_GLASS, () -> new Item(defaultItemProperties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(JukeboxRegistry.SOUND_OF_GLASS)));
+    public static final ItemRegistryWrapper<Item> WILD_HUNT = register(LibItemNames.FIREL_WILD_HUNT, () -> new Item(defaultItemProperties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(JukeboxRegistry.WILD_HUNT)));
     public static final ItemRegistryWrapper<Present> STARBY_GIFY = register(LibItemNames.STARBY_GIFT, () -> new Present(defaultItemProperties().rarity(Rarity.EPIC).component(DataComponentRegistry.PRESENT, new PresentData())));
     public static final ItemRegistryWrapper<SpellCrossbow> SPELL_CROSSBOW = register(LibItemNames.SPELL_CROSSBOW, () -> new SpellCrossbow(defaultItemProperties().stacksTo(1).component(DataComponentRegistry.SPELL_CASTER, new SpellCaster())));
     public static final ItemRegistryWrapper<StableWarpScroll> STABLE_WARP_SCROLL = register(LibItemNames.STABLE_WARP_SCROLL, () -> new StableWarpScroll(defaultItemProperties().stacksTo(1)));

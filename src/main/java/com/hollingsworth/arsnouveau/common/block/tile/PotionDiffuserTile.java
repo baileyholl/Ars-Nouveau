@@ -106,7 +106,7 @@ public class PotionDiffuserTile extends ModdedTile implements ITickable, IWandab
         isOff = pTag.getBoolean("isOff");
         ticksToConsume = pTag.getInt("ticksToConsume");
         if(pTag.contains("lastConsumedPotion")){
-            lastConsumedPotion = ANCodecs.decode(PotionContents.CODEC, pTag.getCompound("lastConsumedPotion"));
+            lastConsumedPotion = ANCodecs.decode(pRegistries, PotionContents.CODEC, pTag.getCompound("lastConsumedPotion"));
         }
     }
 
@@ -119,7 +119,7 @@ public class PotionDiffuserTile extends ModdedTile implements ITickable, IWandab
         tag.putBoolean("isOff", isOff);
         tag.putInt("ticksToConsume", ticksToConsume);
         if(lastConsumedPotion != null){
-            tag.put("lastConsumedPotion", ANCodecs.encode(PotionContents.CODEC, lastConsumedPotion));
+            tag.put("lastConsumedPotion", ANCodecs.encode(pRegistries, PotionContents.CODEC, lastConsumedPotion));
         }
     }
 

@@ -5,19 +5,16 @@ import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.common.capability.ANPlayerDataCap;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.capability.ManaCap;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.EntityCapability;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
 
 import java.util.List;
@@ -27,7 +24,6 @@ public class CapabilityRegistry {
     public static final EntityCapability<ManaCap, Void> MANA_CAPABILITY = EntityCapability.createVoid(ArsNouveau.prefix("mana"), ManaCap.class);
     public static final EntityCapability<ANPlayerDataCap, Void> PLAYER_DATA_CAP = EntityCapability.createVoid(ArsNouveau.prefix("player_data"), ANPlayerDataCap.class);
 
-    public static final BlockCapability<IItemHandler, Direction> LECTERN_CAP = BlockCapability.create(ArsNouveau.prefix("lectern_handler"), IItemHandler.class, Direction.class);
     /**
      * Get the {@link IManaCap} from the specified entity.
      *
@@ -65,7 +61,7 @@ public class CapabilityRegistry {
             event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, container.get(), (c, side) -> new InvWrapper(c));
         }
 
-        event.registerBlockEntity(LECTERN_CAP, BlockRegistry.CRAFTING_LECTERN_TILE.get(), (c, side) -> c.getCapability(c, side));
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BlockRegistry.CRAFTING_LECTERN_TILE.get(), (c, side) -> c.getCapability(c, side));
     }
 
 

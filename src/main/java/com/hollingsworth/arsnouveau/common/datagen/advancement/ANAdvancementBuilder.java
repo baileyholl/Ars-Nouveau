@@ -10,17 +10,17 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+import net.neoforged.neoforge.common.extensions.IAdvancementBuilderExtension;
 
 import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * Copied from Advancements.Builder with extensions to reduce copy pasta
  */
-public class ANAdvancementBuilder implements net.neoforged.neoforge.common.extensions.IAdvancementBuilderExtension {
+public class ANAdvancementBuilder implements IAdvancementBuilderExtension {
     @Nullable
     private ResourceLocation parentId;
     @Nullable
@@ -136,21 +136,6 @@ public class ANAdvancementBuilder implements net.neoforged.neoforge.common.exten
 
     public MutableComponent getComponent(String type) {
         return Component.translatable(modid + ".adv." + type + "." + fileKey);
-    }
-
-    /**
-     * Tries to resolve the parent of this advancement, if possible. Returns true on success.
-     */
-    public boolean canBuild(Function<ResourceLocation, AdvancementHolder> pParentLookup) {
-        if (this.parentId == null) {
-            return true;
-        } else {
-            if (this.parent == null) {
-                this.parent = pParentLookup.apply(this.parentId);
-            }
-
-            return this.parent != null;
-        }
     }
 
     public Advancement build() {

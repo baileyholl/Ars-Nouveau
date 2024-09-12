@@ -80,6 +80,12 @@ public class LibBlockNames {
     public final static String SOURCESTONE_SCONCE = "sourcestone_sconce";
     public final static String POLISHED_SCONCE = "polished_sconce";
     public final static String ARCHWOOD_SCONCE = "archwood_sconce";
+    public final static String SOURCESTONE_GRATE = "sourcestone_grate";
+    public final static String SMOOTH_SOURCESTONE_GRATE = "smooth_sourcestone_grate";
+    public final static String GOLD_GRATE = "gold_grate";
+    public final static String ARCHWOOD_GRATE = "archwood_grate";
+    public final static String SOURCE_LAMP = "source_lamp";
+
     public static final String SOURCESTONE = "sourcestone";
     public static final String SOURCESTONE_MOSAIC = "sourcestone_mosaic";
     public static final String SOURCESTONE_BASKET = "sourcestone_basketweave";

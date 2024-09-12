@@ -111,7 +111,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
             }
             ItemStack checkedAmmo = useAmmo(pCrossbowStack, ammoStack, pShooter, k > 0);
             if(!checkedAmmo.isEmpty()) {
-                stacks.add(useAmmo(pCrossbowStack, ammoStack, pShooter, k > 0));
+                stacks.add(checkedAmmo);
             }
         }
 
@@ -140,8 +140,8 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
             LivingCaster livingCaster = pShooter instanceof Player ? new PlayerCaster((Player)pShooter) : new LivingCaster(pShooter);
             AbstractCaster<?> caster = getSpellCaster(pCrossbowStack);
             SpellResolver resolver = new SpellResolver(new SpellContext(worldIn, caster.modifySpellBeforeCasting(worldIn, pShooter, InteractionHand.MAIN_HAND, caster.getSpell()), pShooter, livingCaster, pCrossbowStack));
-            if (pAmmoStack.getItem() == Items.ARROW && isSpell) {
-                projectile = buildSpellArrow(worldIn, pShooter, caster, pCrossbowStack);
+            if (isSpell) {
+                projectile = buildSpellArrow(worldIn, pShooter, caster, pCrossbowStack, pAmmoStack);
                 ((EntitySpellArrow) projectile).pierceLeft += EnchantmentHelper.getTagEnchantmentLevel(worldIn.holderOrThrow(Enchantments.PIERCING), pCrossbowStack);
             }else if(pAmmoStack.getItem() instanceof SpellArrow && projectile instanceof EntitySpellArrow spellArrow){
                 spellArrow.pierceLeft += EnchantmentHelper.getTagEnchantmentLevel(worldIn.holderOrThrow(Enchantments.PIERCING), pCrossbowStack);
@@ -206,8 +206,8 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
         return super.getAllSupportedProjectiles().or(i -> i.getItem() instanceof SpellArrow);
     }
 
-    public EntitySpellArrow buildSpellArrow(Level worldIn, LivingEntity playerentity, AbstractCaster<?> caster, ItemStack bowStack) {
-        EntitySpellArrow spellArrow = new EntitySpellArrow(worldIn, playerentity, ItemStack.EMPTY, bowStack);
+    public EntitySpellArrow buildSpellArrow(Level worldIn, LivingEntity playerentity, AbstractCaster<?> caster, ItemStack bowStack, ItemStack arrowStack) {
+        EntitySpellArrow spellArrow = new EntitySpellArrow(worldIn, playerentity, arrowStack, bowStack);
         spellArrow.spellResolver = new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerentity, LivingCaster.from(playerentity), playerentity.getMainHandItem())).withSilent(true);
         spellArrow.setColors(caster.getColor());
         return spellArrow;

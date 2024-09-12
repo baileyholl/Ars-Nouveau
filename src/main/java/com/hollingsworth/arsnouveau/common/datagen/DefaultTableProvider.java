@@ -253,6 +253,11 @@ public class DefaultTableProvider extends LootTableProvider {
                                     )
                     )
             );
+            registerDropSelf(BlockRegistry.ARCHWOOD_GRATE);
+            registerDropSelf(BlockRegistry.GOLD_GRATE);
+            registerDropSelf(BlockRegistry.SMOOTH_SOURCESTONE_GRATE);
+            registerDropSelf(BlockRegistry.SOURCESTONE_GRATE);
+            registerDropSelf(BlockRegistry.SOURCE_LAMP);
         }
 
         protected LootTable.Builder createCropDrops(Block pCropBlock, Item pGrownCropItem, Item pSeedsItem, LootItemCondition.Builder pDropGrownCropCondition, int bonus) {

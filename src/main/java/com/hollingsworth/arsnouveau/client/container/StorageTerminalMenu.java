@@ -215,7 +215,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 		if(message.contains("search")) {
 			te.setLastSearch(message.getString("search"));
 		}
-		this.receiveInteract(message);
+		this.receiveInteract(reg, message);
 	}
 
 	public void receiveSettings(SortSettings settings, String selectedTab) {
@@ -223,7 +223,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 		te.setSorting(settings);
 	}
 
-	public void receiveInteract(CompoundTag tag) {
+	public void receiveInteract(HolderLookup.Provider provider, CompoundTag tag) {
 		if(!tag.contains("interaction"))
 			return;
 
@@ -231,7 +231,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 		boolean pullOne = interactTag.getBoolean("pullOne");
 		StoredItemStack stack = null;
 		if(interactTag.contains("stack")){
-			stack = ANCodecs.decode(StoredItemStack.CODEC, interactTag.get("stack"));
+			stack = ANCodecs.decode(provider, StoredItemStack.CODEC, interactTag.get("stack"));
 		}
 		StorageTerminalMenu.SlotAction action = StorageTerminalMenu.SlotAction.values()[interactTag.getInt("action")];
 		onInteract(stack, action, pullOne);

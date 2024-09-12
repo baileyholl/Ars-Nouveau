@@ -31,6 +31,7 @@ public class SoundRegistry {
     public static DeferredHolder<SoundEvent, SoundEvent> FIRE_FAMILY = SOUND_REG.register(FIRE_SOUND_LIB, () -> makeSound(FIRE_SOUND_LIB));
     public static DeferredHolder<SoundEvent, SoundEvent> ARIA_BIBLIO = SOUND_REG.register("aria_biblio", () -> makeSound("aria_biblio"));
     public static DeferredHolder<SoundEvent, SoundEvent> WILD_HUNT = SOUND_REG.register("firel_the_wild_hunt", () -> makeSound("firel_the_wild_hunt"));
+
     public static DeferredHolder<SoundEvent, SoundEvent> SOUND_OF_GLASS = SOUND_REG.register("thistle_the_sound_of_glass", () -> makeSound("thistle_the_sound_of_glass"));
 
 

@@ -27,6 +27,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import org.jetbrains.annotations.NotNull;
@@ -43,6 +44,9 @@ public class EffectBlink extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Vec3 vec = safelyGetHitPos(rayTraceResult);
+        if(rayTraceResult.getEntity().getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED)){
+            return;
+        }
         double distance = GENERIC_INT.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
 
         if (spellContext.getCaster() instanceof TileCaster) {

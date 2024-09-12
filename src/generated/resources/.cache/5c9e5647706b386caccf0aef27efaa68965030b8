@@ -1,4 +1,4 @@
-// 1.21.1	2024-08-17T10:54:39.1951343	Tags for minecraft:item mod id ars_nouveau
+// 1.21.1	2024-09-07T14:19:18.6385251	Tags for minecraft:item mod id ars_nouveau
 bde6ca31173d1f22d5f6fe355dc90c9faa35b239 data/ars_nouveau/tags/item/golem/shard.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/item/interact_jar_blacklist.json
 a0800fbffa0e00aecb2e86a1e991d42904427191 data/ars_nouveau/tags/item/magic_food.json
@@ -28,6 +28,7 @@ a350e3112294fc7f7f26561673046c76017f3198 data/c/tags/item/music_discs.json
 f898aac12b01b598949701b1f6e45aa0cd1d9a25 data/c/tags/item/planks/archwood.json
 3737e6b65e87993bd971b233c3aca5088721eb32 data/c/tags/item/seeds.json
 6febc815f11d70abf442be0be941a9132ddd072d data/c/tags/item/storage_blocks.json
+fbb0fe25e25b7fd86df64c2f168425efedf11710 data/c/tags/item/storage_blocks/quartz.json
 6febc815f11d70abf442be0be941a9132ddd072d data/c/tags/item/storage_blocks/source.json
 46865d605d1c44b2ab5023e21848213c969eec08 data/c/tags/item/tools/bow.json
 d856556e7a50694e4fafc11b5b85240ad831548b data/c/tags/item/tools/crossbow.json

@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -41,12 +42,12 @@ public class EntityChimeraProjectile extends AbstractArrow implements GeoEntity 
 
     @Override
     protected ItemStack getPickupItem() {
-        return ItemStack.EMPTY;
+        return new ItemStack(Items.ARROW);
     }
 
     @Override
     protected ItemStack getDefaultPickupItem() {
-        return ItemStack.EMPTY;
+        return new ItemStack(Items.ARROW);
     }
 
     @Override

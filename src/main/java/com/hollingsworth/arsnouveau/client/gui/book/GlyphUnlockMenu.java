@@ -26,10 +26,13 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -137,6 +140,20 @@ public class GlyphUnlockMenu extends BaseBook {
         for (SelectableButton button : filterButtons) {
             addRenderableWidget(button);
         }
+    }
+
+    @Override
+    public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
+        SoundManager manager = Minecraft.getInstance().getSoundManager();
+        if (pScrollY < 0 && nextButton.active) {
+            onPageIncrease(nextButton);
+            manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
+        } else if (pScrollY > 0 && previousButton.active) {
+            onPageDec(previousButton);
+            manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
+        }
+
+        return true;
     }
 
     public void setFilter(Filter filter, SelectableButton button, String displayTitle) {

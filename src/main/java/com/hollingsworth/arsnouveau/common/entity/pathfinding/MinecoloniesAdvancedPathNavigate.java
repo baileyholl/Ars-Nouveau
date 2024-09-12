@@ -280,6 +280,9 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
 
     @Override
     public boolean tryMoveToBlockPos(final BlockPos pos, final double speedFactor) {
+        if(pos == null){
+            return false;
+        }
         moveToXYZ(pos.getX(), pos.getY(), pos.getZ(), speedFactor);
         return true;
     }

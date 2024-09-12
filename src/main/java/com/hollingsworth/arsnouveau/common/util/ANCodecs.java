@@ -6,6 +6,7 @@ import com.mojang.datafixers.util.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.codec.StreamCodec;
@@ -22,12 +23,20 @@ public class ANCodecs {
             Codec.FLOAT.fieldOf("y").forGetter(v -> v.y)
     ).apply(instance, Vec2::new));
 
+    public static <T> Tag encode(HolderLookup.Provider provider, Codec<T> codec, T value){
+        return codec.encodeStart(provider.createSerializationContext(NbtOps.INSTANCE), value).getOrThrow();
+    }
+
     public static <T> Tag encode(Codec<T> codec, T value){
         return codec.encodeStart(NbtOps.INSTANCE, value).getOrThrow();
     }
 
     public static <T> T decode(Codec<T> codec, Tag tag){
         return codec.parse(NbtOps.INSTANCE, tag).getOrThrow();
+    }
+
+    public static <T> T decode(HolderLookup.Provider provider, Codec<T> codec, Tag tag){
+        return codec.parse(provider.createSerializationContext(NbtOps.INSTANCE), tag).getOrThrow();
     }
 
     public static <T> Optional<T> decodeOptional(Codec<T> codec, Tag tag){
