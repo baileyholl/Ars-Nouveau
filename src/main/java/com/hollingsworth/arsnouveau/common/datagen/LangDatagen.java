@@ -1291,6 +1291,10 @@ public class LangDatagen extends LanguageProvider {
             add(key + "_slab", val + " Slab");
             add(key + "_stairs", val + " Stairs");
         }
+        add("block.ars_nouveau.sourcestone_grate","Sourcestone Grate");
+        add("block.ars_nouveau.gold_grate","Gold Grate");
+        add("block.ars_nouveau.archwood_grate","Archwood Grate");
+        add("block.ars_nouveau.smooth_sourcestone_grate","Smooth Sourcestone Grate");
     }
 
     @Override

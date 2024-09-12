@@ -85,6 +85,7 @@ public class ArsNouveau {
         modEventBus.addListener((RegisterTicketControllersEvent e) ->{
             e.register(ticketController);
         });
+
         ANCriteriaTriggers.init();
         try {
             Thread thread = new Thread(Rewards::init);

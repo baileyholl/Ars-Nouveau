@@ -188,6 +188,11 @@ public class BlockRegistry {
     public static BlockRegistryWrapper<SconceBlock> SOURCESTONE_SCONCE_BLOCK = registerBlockAndItem(LibBlockNames.SOURCESTONE_SCONCE, SconceBlock::new);
     public static BlockRegistryWrapper<SconceBlock> POLISHED_SCONCE_BLOCK = registerBlockAndItem(LibBlockNames.POLISHED_SCONCE, SconceBlock::new);
     public static BlockRegistryWrapper<SconceBlock> ARCHWOOD_SCONCE_BLOCK = registerBlockAndItem(LibBlockNames.ARCHWOOD_SCONCE, SconceBlock::new);
+    public static BlockRegistryWrapper<ItemGrate> SOURCESTONE_GRATE = registerBlockAndItem(LibBlockNames.SOURCESTONE_GRATE, ItemGrate::new);
+    public static BlockRegistryWrapper<ItemGrate> SMOOTH_SOURCESTONE_GRATE = registerBlockAndItem(LibBlockNames.SMOOTH_SOURCESTONE_GRATE, ItemGrate::new);
+    public static BlockRegistryWrapper<ItemGrate> GOLD_GRATE = registerBlockAndItem(LibBlockNames.GOLD_GRATE, ItemGrate::new);
+    public static BlockRegistryWrapper<ItemGrate> ARCHWOOD_GRATE = registerBlockAndItem(LibBlockNames.ARCHWOOD_GRATE, ItemGrate::new);
+
     public static BlockRegistryWrapper<MagicFire> MAGIC_FIRE = registerBlockAndItem(LibBlockNames.MAGIC_FIRE, () -> new MagicFire(BlockBehaviour.Properties.of().mapColor(MapColor.FIRE).replaceable().noCollission().instabreak().lightLevel((p_152607_) -> {
         return 15;
     }).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY), 1.0f));
