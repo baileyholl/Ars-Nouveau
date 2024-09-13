@@ -12,6 +12,7 @@ import com.hollingsworth.arsnouveau.common.entity.statemachine.alakarkinos.Decid
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -51,6 +52,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
 
     public boolean partyCrab = false;
     public BlockPos jukeboxPos = null;
+    public BlockPos hatPos = null;
 
     public SimpleStateMachine stateMachine = new SimpleStateMachine(new DecideCrabActionState(this));
 
@@ -170,5 +172,29 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return manager;
+    }
+
+    @Override
+    public boolean save(CompoundTag pCompound) {
+        if(this.entityData.get(HOME).isPresent()){
+            pCompound.putLong("home", this.entityData.get(HOME).get().asLong());
+        }
+        pCompound.putInt("findBlockCooldown", findBlockCooldown);
+        if(this.hatPos != null){
+            pCompound.putLong("hatPos", this.hatPos.asLong());
+        }
+        return super.save(pCompound);
+    }
+
+    @Override
+    public void load(CompoundTag pCompound) {
+        super.load(pCompound);
+        if(pCompound.contains("home")){
+            this.entityData.set(HOME, Optional.of(BlockPos.of(pCompound.getLong("home"))));
+        }
+        findBlockCooldown = pCompound.getInt("findBlockCooldown");
+        if(pCompound.contains("hatPos")){
+            this.hatPos = BlockPos.of(pCompound.getLong("hatPos"));
+        }
     }
 }
