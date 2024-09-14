@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 @EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class ShaderRegistry extends RenderType {
@@ -93,5 +94,48 @@ public class ShaderRegistry extends RenderType {
                 return "memoize/3[function=" + pMemoBiFunction + ", size=" + this.cache.size() + "]";
             }
         };
+    }
+
+    /**
+     * Usable for rendering simple flat textures
+     *
+     * @param  resLoc texture location
+     * @return        render type
+     */
+    public static RenderType worldEntityIcon(final ResourceLocation resLoc)
+    {
+        return InnerRenderTypes.WORLD_ENTITY_ICON.apply(resLoc);
+    }
+
+    public static final class InnerRenderTypes extends RenderType
+    {
+
+        private InnerRenderTypes(final String nameIn,
+                                 final VertexFormat formatIn,
+                                 final VertexFormat.Mode drawModeIn,
+                                 final int bufferSizeIn,
+                                 final boolean useDelegateIn,
+                                 final boolean needsSortingIn,
+                                 final Runnable setupTaskIn,
+                                 final Runnable clearTaskIn)
+        {
+            super(nameIn, formatIn, drawModeIn, bufferSizeIn, useDelegateIn, needsSortingIn, setupTaskIn, clearTaskIn);
+            throw new IllegalStateException();
+        }
+
+        private static final Function<ResourceLocation, RenderType> WORLD_ENTITY_ICON = Util.memoize((p_173202_) -> {
+            return create("cafetier_entity_icon",
+                    DefaultVertexFormat.POSITION_TEX,
+                    VertexFormat.Mode.QUADS,
+                    1024,
+                    false,
+                    true,
+                    CompositeState.builder()
+                            .setShaderState(POSITION_TEX_SHADER)
+                            .setTextureState(new TextureStateShard(p_173202_, false, false))
+                            .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                            .setDepthTestState(RenderStateShard.LEQUAL_DEPTH_TEST)
+                            .createCompositeState(false));
+        });
     }
 }
