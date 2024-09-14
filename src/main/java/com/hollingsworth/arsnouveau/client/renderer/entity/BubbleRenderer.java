@@ -2,26 +2,29 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.registry.ShaderRegistry;
-import com.hollingsworth.arsnouveau.client.renderer.tile.GenericModel;
 import com.hollingsworth.arsnouveau.common.entity.BubbleEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class BubbleRenderer extends GeoEntityRenderer<BubbleEntity> {
+public class BubbleRenderer extends EntityRenderer<BubbleEntity> {
 
     public BubbleRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new GenericModel<>("bubble", "entity").withEmptyAnim());
+        super(renderManager);
     }
 
     @Override
-    public void actuallyRender(PoseStack matrixStack, BubbleEntity entityIn, BakedGeoModel model, @Nullable RenderType renderType, MultiBufferSource buffer, @Nullable VertexConsumer ver, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
+    public ResourceLocation getTextureLocation(BubbleEntity pEntity) {
+        return ArsNouveau.prefix("textures/entity/bubble.png");
+    }
+
+
+    @Override
+    public void render(BubbleEntity entityIn, float pEntityYaw, float pPartialTick, PoseStack matrixStack, MultiBufferSource buffer, int pPackedLight) {
         double y = entityIn.getBbHeight();
         matrixStack.pushPose();
         matrixStack.translate(0, y, 0);
