@@ -14,6 +14,10 @@ public class DecideCrabActionState extends CrabState {
             return null;
         }
 
+        if(!alakarkinos.getEntityData().get(Alakarkinos.HAS_HAT)){
+            return new GetHatState(alakarkinos);
+        }
+
         if(alakarkinos.findBlockCooldown <= 0){
             return new FindBlockState(alakarkinos);
         }
