@@ -140,7 +140,7 @@ public class EntityFlyingItem extends ColoredProjectile {
             this.setPos(lerpX, lerpY, lerpZ);
         }
 
-        if (level.isClientSide && this.age > 1) {
+        if (level.isClientSide && this.age > 1 && !this.getEntityData().get(IS_BUBBLE)) {
             double deltaX = getX() - xOld;
             double deltaY = getY() - yOld;
             double deltaZ = getZ() - zOld;

@@ -22,7 +22,7 @@ public class ConvertBlockState extends CrabState{
     int waitTicks;
     boolean didBubbles;
     boolean didHatAnimate;
-
+    boolean spawnedFlyingItem;
     public ConvertBlockState(Alakarkinos alakarkinos, BlockPos target) {
         super(alakarkinos);
         this.target = target;
@@ -37,7 +37,7 @@ public class ConvertBlockState extends CrabState{
 
     public BlockPos findHatPos(){
 
-        for(BlockPos b : BlockPos.withinManhattan(target, 3, 1, 3)) {
+        for(BlockPos b : BlockPos.withinManhattan(alakarkinos.getHome(), 3, 1, 3)) {
             if(alakarkinos.level.getBlockState(b).canBeReplaced()){
                 return b.immutable();
             }
@@ -59,7 +59,7 @@ public class ConvertBlockState extends CrabState{
             if(BlockUtil.distanceFrom(alakarkinos.blockPosition(), placeHatPos) <= 2){
                 didHatAnimate = true;
                 alakarkinos.getNavigation().stop();
-                waitTicks = 25;
+                waitTicks = 20;
                 Networking.sendToNearbyClient(alakarkinos.level, alakarkinos, new PacketAnimEntity(alakarkinos.getId(), 0));
             }
             return null;
@@ -92,20 +92,26 @@ public class ConvertBlockState extends CrabState{
                 alakarkinos.getEntityData().set(Alakarkinos.BLOWING_AT, Optional.of(target));
                 return null;
             }
-            alakarkinos.setBlowingBubbles(false);
-            alakarkinos.level.setBlockAndUpdate(target, Blocks.AIR.defaultBlockState());
-            EntityFlyingItem flyingItem = new EntityFlyingItem(alakarkinos.level, target, placeHatPos.above());
-            flyingItem.getEntityData().set(EntityFlyingItem.IS_BUBBLE, true);
-            alakarkinos.level.addFreshEntity(flyingItem);
-            var wasGravel = alakarkinos.level.getBlockState(target).is(BlockTagProvider.ALAKARKINOS_GRAVEL);
-            flyingItem.setStack(alakarkinos.level.getBlockState(target).getBlock().asItem().getDefaultInstance());
+            if(!spawnedFlyingItem) {
+                spawnedFlyingItem = true;
+                alakarkinos.setBlowingBubbles(false);
+                EntityFlyingItem flyingItem = new EntityFlyingItem(alakarkinos.level, target, placeHatPos);
+                flyingItem.getEntityData().set(EntityFlyingItem.IS_BUBBLE, true);
+                alakarkinos.level.addFreshEntity(flyingItem);
+                var wasGravel = alakarkinos.level.getBlockState(target).is(BlockTagProvider.ALAKARKINOS_GRAVEL);
+                flyingItem.setStack(alakarkinos.level.getBlockState(target).getBlock().asItem().getDefaultInstance());
+                alakarkinos.level.setBlockAndUpdate(target, Blocks.AIR.defaultBlockState());
 //            alakarkinos.level.setBlock(target, wasGravel ? Blocks.SUSPICIOUS_GRAVEL.defaultBlockState() : Blocks.SUSPICIOUS_SAND.defaultBlockState(), 3);
 //            if(alakarkinos.level.getBlockEntity(target) instanceof BrushableBlockEntityAccessor brushableBlock){
 //                brushableBlock.setLootTable(BuiltInLootTables.DESERT_PYRAMID_ARCHAEOLOGY);
 //                brushableBlock.setLootTableSeed(alakarkinos.getRandom().nextLong());
 //            }
-            alakarkinos.findBlockCooldown = 60;
-            return new DecideCrabActionState(alakarkinos);
+                waitTicks = 30;
+                return null;
+            }else{
+                alakarkinos.findBlockCooldown = 60;
+                return new DecideCrabActionState(alakarkinos);
+            }
         }else{
             alakarkinos.getNavigation().moveTo(target.getX() + 0.5, target.getY() + 0.5, target.getZ() + 0.5, 1.0);
         }

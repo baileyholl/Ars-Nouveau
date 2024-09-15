@@ -5,9 +5,8 @@ import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
-import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
-import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.arsnouveau.common.entity.debug.IDebugger;
@@ -22,6 +21,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -62,6 +63,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     public BlockPos hatPos = null;
 
     public SimpleStateMachine stateMachine = new SimpleStateMachine(new DecideCrabActionState(this));
+    int ticksBlowingAnim;
 
     public Alakarkinos(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -88,27 +90,40 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         } else {
 
             if (blowingBubbles()) {
+                ticksBlowingAnim++;
+                if(ticksBlowingAnim < 10){
+                    return;
+                }
                 var optPos = this.entityData.get(BLOWING_AT);
                 if (optPos.isEmpty()) {
                     return;
                 }
                 BlockPos to = optPos.get();
                 Vec3 towards = new Vec3(to.getX() + 0.5, to.getY() + 0.5, to.getZ() + 0.5);
-                var xRot = this.xRot;
-                var yRot = this.yRot;
                 // Spawn particles from this mob to the target
                 float randScale = 0.2f;
                 Vec3 from = new Vec3(this.getX() + ParticleUtil.inRange(-randScale, randScale), this.getY() + 0.75 + ParticleUtil.inRange(-randScale, randScale), this.getZ() + ParticleUtil.inRange(-randScale, randScale));
                 Vec3 dir = towards.subtract(from).normalize();
                 Vec3 pos = from.add(dir.scale(0.5));
-                Vec3 motion = dir.scale(0.1);
-                level.addParticle(GlowParticleData.createData(new ParticleColor(
-                        50,
-                        50,
-                        200
-                )), pos.x, pos.y, pos.z, motion.x, motion.y, motion.z);
-
-
+                Vec3 motion = dir.scale(0.2);
+                level.addAlwaysVisibleParticle(
+                        ModParticles.BUBBLE_TYPE.get(),
+                        pos.x, pos.y, pos.z,motion.x, motion.y * 0.05, motion.z
+                );
+                if (getRandom().nextInt(20) == 0) {
+                    level.playLocalSound(
+                            getX(),
+                            getY(),
+                            getZ(),
+                            SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_AMBIENT,
+                            SoundSource.BLOCKS,
+                            0.8F + getRandom().nextFloat() * 0.2F,
+                            0.9F + getRandom().nextFloat() * 0.15F,
+                            false
+                    );
+                }
+            }else{
+                ticksBlowingAnim = 0;
             }
         }
     }

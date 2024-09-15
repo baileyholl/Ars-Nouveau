@@ -20,11 +20,14 @@ public class RenderFlyingItem extends EntityRenderer<EntityFlyingItem> {
     @Override
     public void render(EntityFlyingItem entityIn, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int packedLightIn) {
         super.render(entityIn, entityYaw, partialTicks, matrixStack, bufferIn, packedLightIn);
-        if(entityIn.getEntityData().get(EntityFlyingItem.IS_BUBBLE)){
+        var isBubble = entityIn.getEntityData().get(EntityFlyingItem.IS_BUBBLE);
+        if(isBubble){
             BubbleRenderer.renderBubble(entityIn, this.entityRenderDispatcher, matrixStack, bufferIn);
-            return;
         }
         matrixStack.pushPose();
+        if(isBubble){
+            matrixStack.translate(0, 0.5, 0);
+        }
         matrixStack.scale(0.35f, 0.35f, 0.35F);
         Minecraft.getInstance().getItemRenderer().renderStatic(entityIn.getStack(), ItemDisplayContext.FIXED, 15728880, OverlayTexture.NO_OVERLAY, matrixStack, bufferIn, entityIn.level, (int) entityIn.blockPosition().asLong());
         matrixStack.popPose();
