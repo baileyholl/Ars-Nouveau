@@ -116,7 +116,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
                             getY(),
                             getZ(),
                             SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_AMBIENT,
-                            SoundSource.BLOCKS,
+                            SoundSource.NEUTRAL,
                             0.8F + getRandom().nextFloat() * 0.2F,
                             0.9F + getRandom().nextFloat() * 0.15F,
                             false

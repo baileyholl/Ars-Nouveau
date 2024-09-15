@@ -22,7 +22,7 @@ public class FindBlockState extends CrabState{
         for(BlockPos pos1 : BlockPos.withinManhattan(pos, radius, radius, radius)){
             var state = alakarkinos.level.getBlockState(pos1);
             if(state.is(BlockTagProvider.ALAKARKINOS_GRAVEL) || state.is(BlockTagProvider.ALAKARKINOS_SAND)){
-                return new ConvertBlockState(alakarkinos, pos1);
+                return new PlaceHatState(alakarkinos, PlaceHatState.findHatPos(alakarkinos), pos1);
             }
         }
 
