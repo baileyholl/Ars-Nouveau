@@ -75,7 +75,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         if (BlockUtil.distanceFrom(pos, this.worldPosition) > getMaxDistance() || pos.equals(getBlockPos())) {
             return false;
         }
-        if (!(level.getBlockEntity(pos) instanceof AbstractSourceMachine) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, pos) == null) {
+        if (!(level.getBlockEntity(pos) instanceof AbstractSourceMachine) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, pos, null) == null) {
             return false;
         }
         this.toPos = pos;
@@ -112,7 +112,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         if (storedPos == null || level.isClientSide || storedPos.equals(getBlockPos())) {
             return;
         }
-        if (!(level.getBlockEntity(storedPos) instanceof AbstractSourceMachine) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, storedPos) == null) {
+        if (!(level.getBlockEntity(storedPos) instanceof AbstractSourceMachine) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, storedPos, null) == null) {
             return;
         }
         // Let relays take from us, no action needed.
@@ -128,7 +128,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         if (storedPos == null || storedPos.equals(getBlockPos()) || level.getBlockEntity(storedPos) instanceof RelayTile)
             return;
-        if (!(level.getBlockEntity(storedPos) instanceof AbstractSourceMachine) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, storedPos) == null) {
+        if (!(level.getBlockEntity(storedPos) instanceof AbstractSourceMachine) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, storedPos, null) == null) {
             return;
         }
         if (this.setTakeFrom(storedPos.immutable())) {
@@ -166,11 +166,11 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
 
         if (fromPos != null && level.isLoaded(fromPos)) {
             // Block has been removed
-            if (!(level.getBlockEntity(fromPos) instanceof AbstractSourceMachine) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, fromPos) == null) {
+            if (!(level.getBlockEntity(fromPos) instanceof AbstractSourceMachine) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, fromPos, null) == null) {
                 fromPos = null;
                 updateBlock();
                 return;
-            } else if (level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, fromPos) instanceof ISourceCap sourceHandler) {
+            } else if (level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, fromPos, null) instanceof ISourceCap sourceHandler) {
                 // Transfer mana fromPos to this
                 if (transferSource(sourceHandler, getSourceStorage()) > 0) {
                     ParticleUtil.spawnFollowProjectile(level, fromPos, worldPosition, this.getColor());
@@ -185,12 +185,12 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         }
 
         if (toPos != null && level.isLoaded(toPos)) {
-            if (!(level.getBlockEntity(toPos) instanceof AbstractSourceMachine) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, toPos) == null) {
+            if (!(level.getBlockEntity(toPos) instanceof AbstractSourceMachine) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, toPos, null) == null) {
                 toPos = null;
                 updateBlock();
                 return;
             }
-            if (level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, toPos) instanceof ISourceCap sourceHandler) {
+            if (level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, toPos, null) instanceof ISourceCap sourceHandler) {
                 // Transfer mana from this to toPos
                 if (transferSource(this.getSourceStorage(), sourceHandler) > 0) {
                     ParticleUtil.spawnFollowProjectile(level, worldPosition, toPos, this.getColor());
