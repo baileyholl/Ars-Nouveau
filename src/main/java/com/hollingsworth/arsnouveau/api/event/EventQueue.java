@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import net.minecraft.server.ServerTickRateManager;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
@@ -73,14 +74,26 @@ public class EventQueue {
         events = new ArrayList<>();
     }
 
+    private static boolean tickStepping = false;
+
     @SubscribeEvent
     public static void serverTick(ServerTickEvent.Post e) {
+        ServerTickRateManager trm = e.getServer().tickRateManager();
+
+        if (trm.isFrozen() && !tickStepping && !trm.isSprinting()) {
+            return;
+        }
+
         EventQueue.getServerInstance().tick(e);
+    }
+
+    @SubscribeEvent
+    public static void serverTickPre(ServerTickEvent.Pre e) {
+        tickStepping = e.getServer().tickRateManager().isSteppingForward();
     }
 
     @SubscribeEvent
     public static void clientTickEvent(ClientTickEvent.Post e) {
         EventQueue.getClientQueue().tick(null);
     }
-
 }
