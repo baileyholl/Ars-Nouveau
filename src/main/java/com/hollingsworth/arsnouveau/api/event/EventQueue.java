@@ -15,6 +15,7 @@ import java.util.List;
 /**
  * For queuing deferred or over-time tasks. Tick refers to the Server or Client Tick event.
  */
+@SuppressWarnings("ForLoopReplaceableByForEach")
 @EventBusSubscriber(modid = ArsNouveau.MODID)
 public class EventQueue {
     @NotNull List<ITimedEvent> events = new ObjectArrayList<>();
