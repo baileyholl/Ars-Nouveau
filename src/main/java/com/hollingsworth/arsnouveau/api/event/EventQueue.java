@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.ListIterator;
 
 /**
  * For queuing deferred or over-time tasks. Tick refers to the Server or Client Tick event.
@@ -25,22 +24,21 @@ public class EventQueue {
             return;
         }
 
-        int length = events.size();
-        int index = 0;
-        ListIterator<ITimedEvent> iter = events.listIterator();
-        while (index++ < length && iter.hasNext()) {
-            ITimedEvent event = iter.next();
+        List<ITimedEvent> stale = new ObjectArrayList<>();
+        // Enhanced-for or iterator will cause a concurrent modification.
+        int size = events.size();
+        for (int i = 0; i < size; i++) {
+            ITimedEvent event = events.get(i);
             if (event.isExpired()) {
-                iter.remove();
-                continue;
-            }
-
-            if (e == null) {
-                event.tick(false);
+                stale.add(event);
             } else {
-                event.tick(e);
+                if(e == null)
+                    event.tick(false);
+                else
+                    event.tick(e);
             }
         }
+        this.events.removeAll(stale);
     }
 
     public void addEvent(ITimedEvent event) {
