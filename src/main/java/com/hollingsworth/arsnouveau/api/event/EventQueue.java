@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.ServerTickRateManager;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -9,36 +10,37 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * For queuing deferred or over-time tasks. Tick refers to the Server or Client Tick event.
  */
-@SuppressWarnings("ForLoopReplaceableByForEach")
 @EventBusSubscriber(modid = ArsNouveau.MODID)
 public class EventQueue {
-    @NotNull List<ITimedEvent> events = new ArrayList<>();;
+    @NotNull List<ITimedEvent> events = new ObjectArrayList<>();
 
     public void tick(@Nullable ServerTickEvent.Post e) {
         if (events.isEmpty()) {
             return;
         }
 
-        List<ITimedEvent> stale = new ArrayList<>();
-        // Enhanced-for or iterator will cause a concurrent modification.
-        for (int i = 0; i < events.size(); i++) {
-            ITimedEvent event = events.get(i);
+        int length = events.size();
+        int index = 0;
+        ListIterator<ITimedEvent> iter = events.listIterator();
+        while (index++ < length && iter.hasNext()) {
+            ITimedEvent event = iter.next();
             if (event.isExpired()) {
-                stale.add(event);
+                iter.remove();
+                continue;
+            }
+
+            if (e == null) {
+                event.tick(false);
             } else {
-                if(e == null)
-                    event.tick(false);
-                else
-                    event.tick(e);
+                event.tick(e);
             }
         }
-        this.events.removeAll(stale);
     }
 
     public void addEvent(ITimedEvent event) {
@@ -63,7 +65,7 @@ public class EventQueue {
         for(ITimedEvent event : events){
             event.onServerStopping();
         }
-        this.events = new ArrayList<>();
+        this.events = new ObjectArrayList<>();
     }
 
     // Split these because our integrated servers are CURSED and both tick.
@@ -71,7 +73,7 @@ public class EventQueue {
     private static EventQueue clientQueue;
 
     private EventQueue() {
-        events = new ArrayList<>();
+        events = new ObjectArrayList<>();
     }
 
     private static boolean tickStepping = false;
@@ -80,7 +82,7 @@ public class EventQueue {
     public static void serverTick(ServerTickEvent.Post e) {
         ServerTickRateManager trm = e.getServer().tickRateManager();
 
-        if (trm.isFrozen() && !tickStepping && !trm.isSprinting()) {
+        if (trm.isFrozen() && !tickStepping) {
             return;
         }
 
