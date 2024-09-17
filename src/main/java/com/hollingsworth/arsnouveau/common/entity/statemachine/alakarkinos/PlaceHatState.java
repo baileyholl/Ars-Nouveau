@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class PlaceHatState extends CrabState{
@@ -34,6 +35,11 @@ public class PlaceHatState extends CrabState{
     }
 
     @Override
+    public void onEnd() {
+        alakarkinos.lookAt = null;
+    }
+
+    @Override
     public @Nullable CrabState tick() {
         if(placeHatPos == null){
             if(placeTries > 4){
@@ -42,6 +48,7 @@ public class PlaceHatState extends CrabState{
             placeHatPos = findHatPos(alakarkinos);
             return null;
         }
+        alakarkinos.lookAt = Vec3.atCenterOf(placeHatPos);
         if(!didHatAnimate){
             alakarkinos.getNavigation().moveTo(placeHatPos.getX() + 0.5, placeHatPos.getY() + 0.5, placeHatPos.getZ(), 1.0);
             if(BlockUtil.distanceFrom(alakarkinos.blockPosition(), placeHatPos) <= 2){

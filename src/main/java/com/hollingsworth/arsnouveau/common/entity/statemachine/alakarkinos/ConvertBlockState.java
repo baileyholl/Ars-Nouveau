@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.entity.Alakarkinos;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -22,6 +23,11 @@ public class ConvertBlockState extends CrabState {
         this.target = target;
     }
 
+    @Override
+    public void onEnd() {
+        super.onEnd();
+        alakarkinos.lookAt = null;
+    }
 
     @Override
     public @Nullable CrabState tick() {
@@ -37,7 +43,7 @@ public class ConvertBlockState extends CrabState {
         }
         if (!didBubbles) {
             alakarkinos.getNavigation().stop();
-            alakarkinos.getLookControl().setLookAt(target.getX() + 0.5, target.getY() + 0.5, target.getZ() + 0.5);
+            alakarkinos.lookAt = Vec3.atCenterOf(target);
             didBubbles = true;
             waitTicks = 60;
             alakarkinos.setBlowingBubbles(true);

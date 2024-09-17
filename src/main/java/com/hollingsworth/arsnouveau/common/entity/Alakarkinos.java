@@ -11,6 +11,8 @@ import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.arsnouveau.common.entity.debug.IDebugger;
 import com.hollingsworth.arsnouveau.common.entity.debug.IDebuggerProvider;
+import com.hollingsworth.arsnouveau.common.entity.goal.ConditionalLookAtMob;
+import com.hollingsworth.arsnouveau.common.entity.goal.LookAtTarget;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.SimpleStateMachine;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.alakarkinos.DecideCrabActionState;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -29,7 +31,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -61,6 +62,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     public boolean partyCrab = false;
     public BlockPos jukeboxPos = null;
     public BlockPos hatPos = null;
+    public Vec3 lookAt = null;
 
     public SimpleStateMachine stateMachine = new SimpleStateMachine(new DecideCrabActionState(this));
     int ticksBlowingAnim;
@@ -143,10 +145,11 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         List<WrappedGoal> list = new ArrayList<>();
         list.add(new WrappedGoal(0, new FloatGoal(this)));
         if (!tamed) {
-            list.add(new WrappedGoal(4, new LookAtPlayerGoal(this, Player.class, 3.0F, 0.02F)));
-            list.add(new WrappedGoal(4, new LookAtPlayerGoal(this, Mob.class, 8.0F)));
+            list.add(new WrappedGoal(4, new ConditionalLookAtMob(this, Player.class, 3.0F, 0.02F, () -> this.lookAt != null)));
+            list.add(new WrappedGoal(4, new ConditionalLookAtMob(this, Mob.class, 8.0F,  () -> this.lookAt != null)));
 //            list.add(new WrappedGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.2D)));
             list.add(new WrappedGoal(0, new FloatGoal(this)));
+            list.add(new WrappedGoal(4, new LookAtTarget(this, 8.0f, () -> this.lookAt)));
         }
         return list;
     }

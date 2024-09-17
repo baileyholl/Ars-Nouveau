@@ -11,13 +11,22 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class SpawnLootState extends CrabState{
     boolean backToHat;
     int waitTicks;
     public SpawnLootState(Alakarkinos alakarkinos) {
         super(alakarkinos);
+    }
+
+    @Override
+    public void onEnd() {
+        super.onEnd();
+        alakarkinos.lookAt = null;
     }
 
     @Override
@@ -30,7 +39,7 @@ public class SpawnLootState extends CrabState{
             waitTicks--;
             return null;
         }
-        alakarkinos.getLookControl().setLookAt(hatPos.getX() + 0.5, hatPos.getY() + 0.5, hatPos.getZ() + 0.5);
+        alakarkinos.lookAt = Vec3.atCenterOf(hatPos);
         if (BlockUtil.distanceFrom(alakarkinos.blockPosition(), hatPos) > 2) {
             alakarkinos.getNavigation().moveTo(hatPos.getX() + 0.5, hatPos.getY() + 0.5, hatPos.getZ() + 0.5, 1.0);
             return null;
@@ -38,6 +47,7 @@ public class SpawnLootState extends CrabState{
         if (!backToHat) {
             backToHat = true;
             waitTicks = 60;
+            alakarkinos.getEntityData().set(Alakarkinos.BLOWING_AT, Optional.of(hatPos));
             alakarkinos.setBlowingBubbles(true);
             alakarkinos.getNavigation().stop();
             return null;
