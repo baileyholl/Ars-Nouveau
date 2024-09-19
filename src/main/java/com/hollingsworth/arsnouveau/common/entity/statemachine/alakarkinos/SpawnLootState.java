@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity.statemachine.alakarkinos;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.Alakarkinos;
+import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -12,6 +13,9 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -32,7 +36,7 @@ public class SpawnLootState extends CrabState{
     @Override
     public @Nullable CrabState tick() {
         var hatPos = alakarkinos.hatPos;
-        if(hatPos == null){
+        if(hatPos == null || alakarkinos.getHome() == null){
             return new DecideCrabActionState(alakarkinos);
         }
         if(waitTicks > 0){
@@ -55,6 +59,12 @@ public class SpawnLootState extends CrabState{
         alakarkinos.setBlowingBubbles(false);
         alakarkinos.findBlockCooldown = 60;
         ItemStack loot = getLoot();
+        EntityFlyingItem flyingItem = new EntityFlyingItem(alakarkinos.level, hatPos, alakarkinos.getHome().above());
+        flyingItem.getEntityData().set(EntityFlyingItem.IS_BUBBLE, true);
+        alakarkinos.level.addFreshEntity(flyingItem);
+        flyingItem.setStack(loot);
+        IItemHandler handler = alakarkinos.level.getCapability(Capabilities.ItemHandler.BLOCK, alakarkinos.getHome(), null);
+        ItemHandlerHelper.insertItemStacked(handler, loot, false);
         return new DecideCrabActionState(alakarkinos);
     }
 
