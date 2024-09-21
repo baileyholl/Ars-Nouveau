@@ -114,6 +114,7 @@ public class DominionWand extends ModItem implements IRadialProvider {
         if (context.getLevel().isClientSide || context.getPlayer() == null)
             return super.useOn(context);
         BlockPos pos = context.getClickedPos();
+        Direction face = context.getClickedFace();
         Level world = context.getLevel();
         Player playerEntity = context.getPlayer();
         ItemStack stack = context.getItemInHand();
@@ -126,13 +127,13 @@ public class DominionWand extends ModItem implements IRadialProvider {
         }
 
         if (!data.hasStoredData()) {
-            stack.set(DataComponentRegistry.DOMINION_WAND, data.storePos(pos.immutable()));
+            data = data.storePos(pos.immutable());
+            if (data.strict()) data = data.setFace(face);
+            stack.set(DataComponentRegistry.DOMINION_WAND, data);
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.dominion_wand.position_set"));
             return InteractionResult.SUCCESS;
         }
-        if (data.face().isEmpty() && data.strict()) {
-            stack.set(DataComponentRegistry.DOMINION_WAND, data.setFace(context.getClickedFace()));
-        }
+
         BlockPos storedPos = data.storedPos().orElse(null);
         Direction storedDirection = data.face().orElse(null);
         if (storedPos != null && world.getBlockEntity(storedPos) instanceof IWandable wandable) {
@@ -142,7 +143,7 @@ public class DominionWand extends ModItem implements IRadialProvider {
             wandable.onFinishedConnectionLast(storedPos, storedDirection, (LivingEntity) world.getEntity(data.storedEntityId()), playerEntity);
         }
         if (data.storedEntityId() != DominionWandData.NULL_ENTITY && world.getEntity(data.storedEntityId()) instanceof IWandable wandable) {
-            wandable.onFinishedConnectionFirst(pos, storedDirection, null, playerEntity);
+            wandable.onFinishedConnectionFirst(pos, data.strict() ? face : null, null, playerEntity);
         }
 
         clear(stack, playerEntity);
