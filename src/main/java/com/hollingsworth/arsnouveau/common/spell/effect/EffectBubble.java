@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.BubbleEntity;
-import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
@@ -27,7 +26,7 @@ public class EffectBubble extends AbstractEffect {
     @Override
     public void onResolve(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         super.onResolve(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
-        var bubble = new BubbleEntity(ModEntities.BUBBLE.get(), world);
+        var bubble = new BubbleEntity(world, 100, 1.0f);
         bubble.setPos(rayTraceResult.getLocation().x, rayTraceResult.getLocation().y, rayTraceResult.getLocation().z);
         world.addFreshEntity(bubble);
     }
