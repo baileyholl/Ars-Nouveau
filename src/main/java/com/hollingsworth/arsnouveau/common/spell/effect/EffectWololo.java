@@ -39,7 +39,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
@@ -146,17 +145,7 @@ public class EffectWololo extends AbstractEffect {
                     if (result.isEmpty() || !(result.getItem() instanceof BlockItem)) return;
                 }
                 blockItem = (BlockItem) result.getItem();
-                BlockState newState = blockItem.getBlock().defaultBlockState();
-                // Extremely haunted
-                try {
-                    for (Property prop : hitBlock.getProperties()) {
-                        if (newState.hasProperty(prop)) {
-                            newState = newState.trySetValue(prop, hitBlock.getValue(prop));
-                        }
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
+                BlockState newState = blockItem.getBlock().withPropertiesOf(hitBlock);
                 world.setBlockAndUpdate(blockPos, newState);
             }
         }
