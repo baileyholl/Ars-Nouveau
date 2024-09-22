@@ -697,10 +697,30 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         if (entity.getName().getString().equals("Gootastic")) {
             return ArsNouveau.prefix("textures/entity/starbuncle_goo.png");
         }
+        var customTexture = getCustomBuncle();
+        if(customTexture != null){
+            return ArsNouveau.prefix("textures/entity/" + customTexture + ".png");
+        }
         String color = getColor(entity);
         if (color.isEmpty()) color = DyeColor.ORANGE.getName();
 
         return ArsNouveau.prefix("textures/entity/starbuncle_" + color.toLowerCase() + ".png");
+    }
+
+    public ResourceLocation getModel(){
+        var modelName = getCustomBuncle();
+        return ArsNouveau.prefix( "geo/" + (modelName == null ? "starbuncle" : modelName) + ".geo.json");
+    }
+
+    public @Nullable String getCustomBuncle(){
+        var nameString = getName().getString();
+        return switch (nameString) {
+            case "Gootastic" -> "goobuncle";
+            case "Sir Squirrely" -> "sir_squirrely";
+            case "Zieg" -> "zieg";
+            case "Xacris" -> "xacris";
+            default -> null;
+        };
     }
 
     @SuppressWarnings("all")

@@ -276,7 +276,7 @@
   "ars_nouveau.glyph_desc.glyph_sense_magic": "Applies Magic Find to the target, causing magical mobs to glow within 75 blocks of them. Magic Find also reveals spells on Runes.",
   "ars_nouveau.glyph_desc.glyph_sensitive": "Causes forms to target blocks they normally cannot target. Projectile and Orbit will target grass, and Touch will target fluids and air. Changes targeting rules of certain effects.",
   "ars_nouveau.glyph_desc.glyph_slowfall": "Applies the Slow Fall buff.",
-  "ars_nouveau.glyph_desc.glyph_smelt": "Smelts blocks and items in the world. AOE will increase the number of items and radius of blocks that can be smelted at once, while Amplify will allow Smelt to work on blocks of higher hardness, Sensitive will make it only smelt items and not blocks.",
+  "ars_nouveau.glyph_desc.glyph_smelt": "Smelts blocks and items in the world. AOE will increase the number of items and radius of blocks that can be smelted at once, while Amplify will allow Smelt to work on blocks of higher hardness, Sensitive will make it only smelt items and not blocks. Dampen will cause Smelt to use smoking recipes.",
   "ars_nouveau.glyph_desc.glyph_snare": "Stops entities from moving and jumping. Extend Time will increase the duration of this effect. Snaring a block created from the Focus of Block Shaping will cause it to attempt to place itself immediately.",
   "ars_nouveau.glyph_desc.glyph_split": "Causes multiple projectiles to be cast at once. Each projectile applies a set of effects.",
   "ars_nouveau.glyph_desc.glyph_summon_decoy": "Summons a decoy of yourself. Upon summoning, the decoy will attract any nearby mobs to attack it.",
