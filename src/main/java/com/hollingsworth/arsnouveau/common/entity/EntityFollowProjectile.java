@@ -78,6 +78,12 @@ public class EntityFollowProjectile extends ColoredProjectile {
         pBuilder.define(DESPAWN, 10);
     }
 
+    @Override
+    public void onRemovedFromLevel() {
+        super.onRemovedFromLevel();
+        this.remove(RemovalReason.DISCARDED);
+    }
+
     public boolean defaultsBurst() {
         return false;
     }
