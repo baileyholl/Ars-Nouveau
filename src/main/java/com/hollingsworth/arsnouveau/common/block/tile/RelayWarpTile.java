@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.source.ISourceCap;
 import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -44,6 +45,23 @@ public class RelayWarpTile extends RelaySplitterTile {
             }
         }
         return super.transferSource(from, to, fromTransferRate);
+    }
+
+    @Override
+    public int transferSource(ISourceCap from, ISourceCap to) {
+        if (to instanceof RelayWarpTile toWarp) {
+            double adjustedDist = BlockUtil.distanceFrom(toWarp.worldPosition, this.worldPosition) - 30;
+            double probLoss = adjustedDist / 100.0;
+            if (adjustedDist > 0 && level.getRandom().nextFloat() < probLoss) {
+                int transfer = to.receiveSource(from.getSource(), true);
+                if (transfer == 0)
+                    return 0;
+                from.extractSource(transfer, false);
+                int lossyTransfer = Math.max(1, (int) (transfer * 0.7));
+                to.receiveSource(lossyTransfer, false);
+            }
+        }
+        return super.transferSource(from, to);
     }
 
     @Override

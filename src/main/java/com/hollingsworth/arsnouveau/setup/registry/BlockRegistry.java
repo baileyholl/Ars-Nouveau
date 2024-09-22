@@ -237,7 +237,7 @@ public class BlockRegistry {
         }
     });
     public static BlockEntityTypeRegistryWrapper<TimerSpellTurretTile> TIMER_SPELL_TURRET_TILE = registerTile(LibBlockNames.TIMER_SPELL_TURRET, TimerSpellTurretTile::new, TIMER_SPELL_TURRET);
-    public static BlockRegistryWrapper<ArchwoodChest> ARCHWOOD_CHEST = registerBlockAndItem(LibBlockNames.ARCHWOOD_CHEST, ArchwoodChest::new, (reg) -> new ArchwoodChest.Item(reg.get(), defaultItemProperties()));
+    public static BlockRegistryWrapper<ArchwoodChest> ARCHWOOD_CHEST = registerBlockAndItem(LibBlockNames.ARCHWOOD_CHEST, ArchwoodChest::new);
     public static BlockEntityTypeRegistryWrapper<ArchwoodChestTile> ARCHWOOD_CHEST_TILE = registerTile(LibBlockNames.ARCHWOOD_CHEST, ArchwoodChestTile::new, ARCHWOOD_CHEST);
     public static BlockRegistryWrapper<SpellPrismBlock> SPELL_PRISM = registerBlockAndItem(LibBlockNames.SPELL_PRISM, SpellPrismBlock::new);
     public static BlockRegistryWrapper<WhirlisprigFlower> WHIRLISPRIG_FLOWER = registerBlockAndItem(LibBlockNames.WHIRLISPRIG_BLOCK, WhirlisprigFlower::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
