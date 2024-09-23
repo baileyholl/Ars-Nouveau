@@ -28,7 +28,7 @@
     "7dc1de80-c04c-4c0f-8f00-6326d770626b", "8bf034ac-313f-435a-bd2b-200a7857021b", "1dafa767-ce2f-47c4-8142-67b0b4854586",
     "9eff9013-f8a6-4a1a-9142-32d94d60d8c1", "671ffc64-8b5b-4ac2-87b1-138951be701e","aac7171c-9bac-42a8-b094-2363599dae59",
     "47f9c9d2-89b2-4987-af6b-31e7b1f74da2", "ec77d204-6e8b-4dac-8b66-71b2a03c5e65", "98e72ae4-10c9-4696-970b-804eb9b176ae",
-    "0421ad40-0881-47d4-b086-38c90c1ab62f", "a8875ecb-6e84-4c6d-ac68-3251b945d963" ],
+    "0421ad40-0881-47d4-b086-38c90c1ab62f", "a8875ecb-6e84-4c6d-ac68-3251b945d963", "cf1f7109-266d-4e5a-8a8a-d93684cf60b9" ],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -445,6 +445,11 @@
       "color": "cyan",
       "adopter": "cloud8ine",
       "bio": "This starbuncle is just here for the rest of the ride"
+    },{
+      "name": "Fen",
+      "color": "black",
+      "adopter": "Hayesx369",
+      "bio": "Introducing Fen, your adorable friend who thrives among berry bushes! With a warm personality, Fen is always eager to meet new friends, whether they are human or furry."
     }
   ]
 }
