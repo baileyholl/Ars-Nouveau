@@ -22,14 +22,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 public class StarbyPotionBehavior extends StarbyListBehavior {
-    public static final ResourceLocation POTION_ID = ArsNouveau.prefix( "starby_potion");
+    public static final ResourceLocation POTION_ID = ArsNouveau.prefix("starby_potion");
 
     private @Nullable PotionContents heldPotion = PotionContents.EMPTY;
     private int amount;
 
     public StarbyPotionBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
-        if(tag.contains("potionData")) {
+        if (tag.contains("potionData")) {
             heldPotion = ANCodecs.decode(PotionContents.CODEC, tag.get("potionData"));
         }
         amount = tag.getInt("amount");
@@ -39,22 +39,32 @@ public class StarbyPotionBehavior extends StarbyListBehavior {
     }
 
     @Override
-    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable Direction face, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        super.onFinishedConnectionFirst(storedPos, face, storedEntity, playerEntity);
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable Direction face, @Nullable LivingEntity storedEntity, Player playerEntity, boolean remove) {
+        super.onFinishedConnectionFirst(storedPos, face, storedEntity, playerEntity, remove);
         if (storedPos != null && level.getBlockEntity(storedPos) instanceof PotionJarTile) {
-            addToPos(storedPos);
+            if (remove) {
+                removeToPos(storedPos, face);
+                PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.potion_to_remove"));
+            } else {
+                addToPos(storedPos);
+                PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.potion_to"));
+            }
             syncTag();
-            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.potion_to"));
         }
     }
 
     @Override
-    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable Direction face, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        super.onFinishedConnectionLast(storedPos, face, storedEntity, playerEntity);
+    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable Direction face, @Nullable LivingEntity storedEntity, Player playerEntity, boolean remove) {
+        super.onFinishedConnectionLast(storedPos, face, storedEntity, playerEntity, remove);
         if (storedPos != null && level.getBlockEntity(storedPos) instanceof PotionJarTile) {
-            addFromPos(storedPos);
+            if (remove) {
+                removeFromPos(storedPos);
+                PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.potion_from_remove"));
+            } else {
+                addFromPos(storedPos);
+                PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.potion_from"));
+            }
             syncTag();
-            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.potion_from"));
         }
     }
 

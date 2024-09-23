@@ -6,7 +6,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -50,11 +49,14 @@ public class LootUtil {
                 .withParameter(LootContextParams.THIS_ENTITY, slainEntity)
                 .withParameter(LootContextParams.ORIGIN, new Vec3(slainEntity.getX(), slainEntity.getY(), slainEntity.getZ()))
                 .withParameter(LootContextParams.LAST_DAMAGE_PLAYER, ANFakePlayer.getPlayer(world))
-                .withParameter(LootContextParams.DAMAGE_SOURCE, source).withOptionalParameter(LootContextParams.ATTACKING_ENTITY, source.getEntity())
-                .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, source.getDirectEntity())
-                .withParameter(LootContextParams.ATTACKING_ENTITY, player).withLuck(player instanceof Player ? ((Player) player).getLuck() : 1.0f)
+                .withParameter(LootContextParams.DAMAGE_SOURCE, source)
+                .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, player)
+                .withParameter(LootContextParams.ATTACKING_ENTITY, player)
+                //.withLuck(player instanceof Player ? ((Player) player).getLuck() : 1.0f)
                 .withParameter(LootContextParams.TOOL, stack).withParameter(LootContextParams.EXPLOSION_RADIUS, 0.0f)
                 .withParameter(LootContextParams.BLOCK_STATE, Blocks.AIR.defaultBlockState())
-                .withOptionalParameter(LootContextParams.BLOCK_ENTITY, null);
+                .withOptionalParameter(LootContextParams.BLOCK_ENTITY, null)
+                .withParameter(LootContextParams.ENCHANTMENT_ACTIVE, looting > 0)
+                .withParameter(LootContextParams.ENCHANTMENT_LEVEL, looting);
     }
 }

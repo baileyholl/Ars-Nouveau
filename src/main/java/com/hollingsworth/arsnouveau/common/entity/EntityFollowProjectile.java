@@ -15,6 +15,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class EntityFollowProjectile extends ColoredProjectile {
     public static final EntityDataAccessor<BlockPos> to = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.BLOCK_POS);
@@ -81,7 +82,7 @@ public class EntityFollowProjectile extends ColoredProjectile {
     @Override
     public void onRemovedFromLevel() {
         super.onRemovedFromLevel();
-        this.remove(RemovalReason.DISCARDED);
+        if (!isRemoved()) this.remove(RemovalReason.DISCARDED);
     }
 
     public boolean defaultsBurst() {
@@ -155,7 +156,7 @@ public class EntityFollowProjectile extends ColoredProjectile {
     }
 
     @Override
-    public void setRemoved(RemovalReason reason) {
+    public void setRemoved(@NotNull RemovalReason reason) {
         if (reason == RemovalReason.UNLOADED_TO_CHUNK)
             reason = RemovalReason.DISCARDED;
         super.setRemoved(reason);

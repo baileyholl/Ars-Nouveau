@@ -37,8 +37,12 @@ public class PacketUpdateDominionWand extends AbstractPacket {
                     .setFace(null)
                     .storeEntity(DominionWandData.NULL_ENTITY)
                     .storePos(null);
-            case 1 -> stack.getOrDefault(DataComponentRegistry.DOMINION_WAND, new DominionWandData()).toggleMode(false);
-            case 2 -> stack.getOrDefault(DataComponentRegistry.DOMINION_WAND, new DominionWandData()).toggleMode(true);
+            case 1 ->
+                    stack.getOrDefault(DataComponentRegistry.DOMINION_WAND, new DominionWandData()).toggleStrictMode(false).toggleRemoveMode(false);
+            case 2 ->
+                    stack.getOrDefault(DataComponentRegistry.DOMINION_WAND, new DominionWandData()).toggleStrictMode(true).toggleRemoveMode(false);
+            case 3 ->
+                    stack.getOrDefault(DataComponentRegistry.DOMINION_WAND, new DominionWandData()).toggleRemoveMode(true).toggleStrictMode(false);
         });
     }
 

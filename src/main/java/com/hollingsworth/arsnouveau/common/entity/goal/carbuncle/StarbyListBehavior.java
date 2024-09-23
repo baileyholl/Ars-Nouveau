@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,9 +92,25 @@ public abstract class StarbyListBehavior extends StarbyBehavior {
         }
     }
 
+    public void removeFromPos(BlockPos fromPos) {
+        if (FROM_LIST.contains(fromPos)) {
+            FROM_LIST.remove(fromPos);
+            FROM_DIRECTION_MAP.remove(fromPos.hashCode());
+            syncTag();
+        }
+    }
+
     public void addToPos(BlockPos toPos) {
         if (!TO_LIST.contains(toPos)) {
             TO_LIST.add(toPos.immutable());
+            syncTag();
+        }
+    }
+
+    public void removeToPos(BlockPos toPos, @Nullable Direction side) {
+        if (TO_LIST.contains(toPos)) {
+            TO_LIST.remove(toPos);
+            TO_DIRECTION_MAP.remove(toPos.hashCode());
             syncTag();
         }
     }
