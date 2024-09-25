@@ -420,6 +420,7 @@
   "ars_nouveau.melder.to_set": "Melder will send combined potions to this jar.",
   "ars_nouveau.melder.too_far": "Jars must be within 3 blocks.",
   "ars_nouveau.mirror.invalid": "Invalid spell. Mirrors accept Effects and Augments only.",
+  "ars_nouveau.missing.patchouli": "Patchouli is not installed; opening online wiki.",
   "ars_nouveau.mod_news": "Mod News",
   "ars_nouveau.mod_news_desc": "The latest releases and news",
   "ars_nouveau.no_stack_crafting": "No valid craft nearby.",

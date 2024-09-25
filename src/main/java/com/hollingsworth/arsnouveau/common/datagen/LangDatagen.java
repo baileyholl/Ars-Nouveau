@@ -1298,6 +1298,8 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.smooth_sourcestone_grate","Smooth Sourcestone Grate");
         add("block.ars_nouveau.source_lamp", "Source Gem Lamp");
         add("ars_nouveau.page1.source_lamp", "Behaves like a copper bulb, but the light and comparator values can be adjusted by casting Light with dampen.");
+
+        add("ars_nouveau.missing.patchouli", "Patchouli is not installed; opening online wiki.");
     }
 
     @Override
