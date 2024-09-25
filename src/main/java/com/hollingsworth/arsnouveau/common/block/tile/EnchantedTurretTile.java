@@ -3,22 +3,18 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.*;
 
 
 public class EnchantedTurretTile extends BasicSpellTurretTile {
 
     public EnchantedTurretTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.ENCHANTED_SPELL_TURRET_TYPE, pos, state);
+        super(BlockRegistry.ENCHANTED_SPELL_TURRET_TYPE.get(), pos, state);
     }
 
     @Override
     public int getManaCost() {
-        return getSpellCaster().getSpell().getCost() / 2;
+        return this.spellCaster.getSpell().getCost() / 2;
     }
 
     @Override

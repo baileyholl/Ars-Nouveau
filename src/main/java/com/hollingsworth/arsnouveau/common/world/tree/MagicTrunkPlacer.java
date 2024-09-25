@@ -5,9 +5,11 @@ import com.hollingsworth.arsnouveau.common.block.ArchfruitPod;
 import com.hollingsworth.arsnouveau.common.block.SconceBlock;
 import com.hollingsworth.arsnouveau.setup.ModSetup;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
@@ -22,7 +24,6 @@ import net.minecraft.world.level.levelgen.feature.configurations.TreeConfigurati
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacer;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -37,7 +38,7 @@ public class MagicTrunkPlacer extends TrunkPlacer {
     public MagicTrunkPlacer(int baseHeight, int height_rand_a, int height_rand_b, boolean isWorldGen, String podName) {
         this(baseHeight, height_rand_a, height_rand_b);
         this.isWorldGen = isWorldGen;
-        this.podID = new ResourceLocation(podName);
+        this.podID = ResourceLocation.tryParse(podName);
     }
 
     @Override
@@ -45,7 +46,7 @@ public class MagicTrunkPlacer extends TrunkPlacer {
         return ModSetup.MAGIC_TRUNK_PLACER.get();
     }
 
-    public static final Codec<MagicTrunkPlacer> CODEC = RecordCodecBuilder.create(builder ->
+    public static final MapCodec<MagicTrunkPlacer> CODEC = RecordCodecBuilder.mapCodec(builder ->
             builder.group(Codec.intRange(0, 32).fieldOf("base_height").forGetter(placer -> placer.baseHeight),
                             Codec.intRange(0, 24).fieldOf("height_rand_a").forGetter(placer -> placer.heightRandA),
                             Codec.intRange(0, 24).fieldOf("height_rand_b").forGetter(placer -> placer.heightRandB),
@@ -232,7 +233,7 @@ public class MagicTrunkPlacer extends TrunkPlacer {
     }
 
     public BlockState getPodState(){
-        return ForgeRegistries.BLOCKS.getValue(podID).defaultBlockState();
+        return BuiltInRegistries.BLOCK.get(podID).defaultBlockState();
     }
 
     public void addBranch(LevelSimulatedReader world, BlockPos pos, int height, Direction d, RandomSource random, TreeConfiguration baseTreeFeatureConfig, BiConsumer<BlockPos, BlockState> consumer) {

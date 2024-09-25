@@ -2,15 +2,15 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -25,6 +25,7 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
         this.tag(Tags.EntityTypes.BOSSES).add(ModEntities.WILDEN_BOSS.get());
+        this.tag(EntityTags.REWIND_BLACKLIST).addTags(Tags.EntityTypes.BOSSES);
         this.tag(EntityTags.DISINTEGRATION_BLACKLIST);
         this.tag(EntityTags.DISINTEGRATION_WHITELIST);
         this.tag(EntityTags.DRYGMY_BLACKLIST).add(EntityType.IRON_GOLEM);
@@ -47,7 +48,7 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
         this.tag(EntityTags.FAMILIAR).add(ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get(), ModEntities.ENTITY_FAMILIAR_SYLPH.get(),
                 ModEntities.ENTITY_FAMILIAR_WIXIE.get(), ModEntities.ENTITY_FAMILIAR_DRYGMY.get(),
                 ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get());
-        this.tag(EntityTags.JAR_BLACKLIST).addTag(EntityTags.FAMILIAR);
+        this.tag(EntityTags.JAR_BLACKLIST).addTag(EntityTags.FAMILIAR).addTag(Tags.EntityTypes.CAPTURING_NOT_SUPPORTED);
 
         this.tag(EntityTags.JAR_WHITELIST)
                 .add(EntityType.ITEM)
@@ -63,7 +64,7 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
                 .add(EntityType.ARMOR_STAND)
                 .add(EntityType.LIGHTNING_BOLT)
                 .add(ModEntities.LIGHTNING_ENTITY.get())
-                .add(EntityType.TRIDENT).addOptional(new ResourceLocation("create:contraption"));
+                .add(EntityType.TRIDENT).addOptional(ResourceLocation.parse("create:contraption"));
         this.tag(EntityTags.LINGERING_BLACKLIST)
                 .add(ModEntities.LIGHTNING_ENTITY.get(), ModEntities.LINGER_SPELL.get(), ModEntities.WALL_SPELL.get());
         this.tag(EntityTags.BERRY_BLACKLIST)

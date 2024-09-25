@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:manipulation_essence"
+    },
+    {
+      "item": "ars_nouveau:purple_archwood_sapling"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:red_archwood_sapling"
+  }
+}

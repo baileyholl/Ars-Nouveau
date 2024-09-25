@@ -3,11 +3,13 @@ package com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.BuddingConversionRecipe;
 import com.hollingsworth.arsnouveau.common.entity.AmethystGolem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class ConvertBuddingGoal extends Goal {
@@ -46,9 +48,13 @@ public class ConvertBuddingGoal extends Goal {
     }
 
     public void convert() {
-        if (targetCluster != null && golem.level.getBlockState(targetCluster).getBlock() == Blocks.AMETHYST_BLOCK) {
-            golem.level.setBlock(targetCluster, Blocks.BUDDING_AMETHYST.defaultBlockState(), 3);
-            ParticleUtil.spawnTouchPacket(golem.level, targetCluster, ParticleColor.defaultParticleColor());
+        if (targetCluster != null) {
+            BlockState targetState = golem.level.getBlockState(targetCluster);
+            Optional<BuddingConversionRecipe> recipe = golem.recipes.stream().filter(r -> r.matches(targetState)).findFirst();
+            recipe.ifPresent(r -> {
+                golem.level.setBlock(targetCluster, r.result().defaultBlockState(), 3);
+                ParticleUtil.spawnTouchPacket(golem.level, targetCluster, ParticleColor.defaultParticleColor());
+            });
         }
         golem.convertCooldown = 20 * 60 * 5;
         golem.setImbueing(false);
@@ -59,10 +65,13 @@ public class ConvertBuddingGoal extends Goal {
     public void start() {
         this.isDone = false;
         this.usingTicks = 120;
+        outerLoop:
         for (BlockPos pos : golem.amethystBlocks) {
-            if (golem.level.getBlockState(pos).getBlock() == Blocks.AMETHYST_BLOCK) {
-                targetCluster = pos;
-                break;
+            for (BuddingConversionRecipe recipe : golem.recipes) {
+                if (recipe.matches(golem.level.getBlockState(pos))) {
+                    targetCluster = pos;
+                    break outerLoop;
+                }
             }
         }
         golem.goalState = AmethystGolem.AmethystGolemGoalState.CONVERT;

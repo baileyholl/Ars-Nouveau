@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -47,9 +48,9 @@ public class SpellSensor extends TickableModBlock{
     }
 
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if(pLevel.isClientSide){
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
         ItemStack heldStack = pPlayer.getItemInHand(pHand);
         if(heldStack.getItem() instanceof SpellParchment){
@@ -57,10 +58,10 @@ public class SpellSensor extends TickableModBlock{
                 sensorTile.parchment = heldStack.copy();
                 sensorTile.updateBlock();
                 pPlayer.sendSystemMessage(Component.translatable("ars_nouveau.sensor.set_spell"));
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
         }
-        return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+        return super.useItemOn(stack, pState, pLevel, pPos, pPlayer, pHand, pHit);
     }
 
     @Override

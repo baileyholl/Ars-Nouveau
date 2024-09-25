@@ -7,8 +7,6 @@ import com.hollingsworth.arsnouveau.setup.registry.DataSerializers;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -20,8 +18,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -171,7 +167,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
             }
             if (this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(level, result);
-                Networking.sendToNearby(level, BlockPos.containing(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
+                Networking.sendToNearbyClient(level, BlockPos.containing(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
                         BlockPos.containing(result.getLocation()), getParticleColor()));
                 attemptRemoval();
             }
@@ -179,20 +175,20 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
             if (this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(this.level, blockraytraceresult);
             }
-            Networking.sendToNearby(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
+            Networking.sendToNearbyClient(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
                     BlockPos.containing(result.getLocation()).below(), getParticleColor()));
             attemptRemoval();
         }
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(OFFSET, 0);
-        this.entityData.define(ACCELERATES, 0);
-        this.entityData.define(AOE, 0f);
-        this.entityData.define(TOTAL, 0);
-        this.entityData.define(LAST_POS, Vec3.ZERO);
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(OFFSET, 0);
+        pBuilder.define(ACCELERATES, 0);
+        pBuilder.define(AOE, 0f);
+        pBuilder.define(TOTAL, 0);
+        pBuilder.define(LAST_POS, Vec3.ZERO);
     }
 
     @Override
@@ -224,14 +220,5 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
     @Override
     public EntityType<?> getType() {
         return ModEntities.ORBIT_SPELL.get();
-    }
-
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
-    public EntityOrbitProjectile(PlayMessages.SpawnEntity packet, Level world) {
-        super(ModEntities.ORBIT_SPELL.get(), world);
     }
 }

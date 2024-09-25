@@ -18,8 +18,8 @@ public class ImbuementRenderer extends ArsGeoBlockRenderer<ImbuementTile> {
     }
 
     @Override
-    public void actuallyRender(PoseStack matrixStack, ImbuementTile tileEntityIn, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        super.actuallyRender(matrixStack, tileEntityIn, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+    public void actuallyRender(PoseStack matrixStack, ImbuementTile tileEntityIn, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
+        super.actuallyRender(matrixStack, tileEntityIn, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
         double x = tileEntityIn.getBlockPos().getX();
         double y = tileEntityIn.getBlockPos().getY();
         double z = tileEntityIn.getBlockPos().getZ();
@@ -29,7 +29,7 @@ public class ImbuementRenderer extends ArsGeoBlockRenderer<ImbuementTile> {
         }
         if (tileEntityIn.entity != null) {
             ItemEntity entityItem = tileEntityIn.entity;
-            tileEntityIn.frames += 1.5f * Minecraft.getInstance().getDeltaFrameTime();
+            tileEntityIn.frames += 1.5f * partialTick;
             entityItem.setYHeadRot(tileEntityIn.frames);
             entityItem.age = (int) tileEntityIn.frames;
             matrixStack.pushPose();

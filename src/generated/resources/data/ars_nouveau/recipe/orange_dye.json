@@ -1,0 +1,16 @@
+{
+  "type": "ars_nouveau:crush",
+  "input": {
+    "item": "minecraft:orange_tulip"
+  },
+  "output": [
+    {
+      "chance": 1.0,
+      "maxRange": 1,
+      "stack": {
+        "count": 2,
+        "id": "minecraft:orange_dye"
+      }
+    }
+  ]
+}

@@ -41,7 +41,7 @@ public class MethodTouch extends AbstractCastMethod {
         Level world = context.getLevel();
         BlockHitResult res = new BlockHitResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), false);
         resolver.onResolveEffect(world, res);
-        Networking.sendToNearby(context.getLevel(), context.getPlayer(),
+        Networking.sendToNearbyClient(context.getLevel(), context.getPlayer(),
                 new PacketANEffect(PacketANEffect.EffectType.BURST, res.getBlockPos(), spellContext.getColors()));
         addFadingLight(context.getLevel(), res.getBlockPos().getX() + 0.5, res.getBlockPos().getY() + 0.5, res.getBlockPos().getZ() + 0.5);
         return CastResolveType.SUCCESS;
@@ -50,7 +50,7 @@ public class MethodTouch extends AbstractCastMethod {
     @Override
     public CastResolveType onCastOnBlock(BlockHitResult res, LivingEntity caster, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         resolver.onResolveEffect(caster.getCommandSenderWorld(), res);
-        Networking.sendToNearby(caster.level, caster, new PacketANEffect(PacketANEffect.EffectType.BURST, res.getBlockPos(), spellContext.getColors()));
+        Networking.sendToNearbyClient(caster.level, caster, new PacketANEffect(PacketANEffect.EffectType.BURST, res.getBlockPos(), spellContext.getColors()));
         addFadingLight(caster.level(), res.getBlockPos().getX() + 0.5, res.getBlockPos().getY() + 0.5, res.getBlockPos().getZ() + 0.5);
         return CastResolveType.SUCCESS;
     }
@@ -58,13 +58,13 @@ public class MethodTouch extends AbstractCastMethod {
     @Override
     public CastResolveType onCastOnEntity(ItemStack stack, LivingEntity caster, Entity target, InteractionHand hand, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         resolver.onResolveEffect(caster.getCommandSenderWorld(), new EntityHitResult(target));
-        Networking.sendToNearby(caster.level, caster, new PacketANEffect(PacketANEffect.EffectType.BURST, target.blockPosition(), spellContext.getColors()));
+        Networking.sendToNearbyClient(caster.level, caster, new PacketANEffect(PacketANEffect.EffectType.BURST, target.blockPosition(), spellContext.getColors()));
         addFadingLight(caster.level(), target.blockPosition().getX() + 0.5, target.blockPosition().getY() + 0.5, target.blockPosition().getZ() + 0.5);
         return spellContext.getCaster().getCasterType() != SpellContext.CasterType.RUNE ? CastResolveType.SUCCESS : CastResolveType.SUCCESS_NO_EXPEND;
     }
 
     public void addFadingLight(Level level, double x, double y, double z) {
-        Networking.sendToNearby(level, BlockPos.containing(x, y, z), new PacketAddFadingLight(x, y, z));
+        Networking.sendToNearbyClient(level, BlockPos.containing(x, y, z), new PacketAddFadingLight(x, y, z));
     }
 
    @NotNull

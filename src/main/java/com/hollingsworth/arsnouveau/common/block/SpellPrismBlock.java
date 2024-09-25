@@ -6,14 +6,20 @@ import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDecelerate;
-import net.minecraft.core.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 
@@ -34,12 +40,11 @@ public class SpellPrismBlock extends ModBlock implements IPrismaticBlock {
         return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
-    public static Position getDispensePosition(BlockSource coords) {
-        Direction direction = coords.getBlockState().getValue(FACING);
-        double d0 = coords.x() + 0.3D * direction.getStepX();
-        double d1 = coords.y() + 0.3D * direction.getStepY();
-        double d2 = coords.z() + 0.3D * direction.getStepZ();
-        return new PositionImpl(d0, d1, d2);
+    public Position getDispensePosition(BlockPos pos, Direction direction) {
+        double d0 = pos.getX() + 0.5 + 0.3D * direction.getStepX();
+        double d1 = pos.getY() + 0.5 + 0.3D * direction.getStepY();
+        double d2 = pos.getZ() + 0.5 + 0.3D * direction.getStepZ();
+        return new Vec3(d0, d1, d2);
     }
 
     @Override
@@ -57,12 +62,12 @@ public class SpellPrismBlock extends ModBlock implements IPrismaticBlock {
 
     @Override
     public void onHit(ServerLevel world, BlockPos pos, EntityProjectileSpell spell) {
-        Position iposition = getDispensePosition(new BlockSourceImpl(world, pos));
-        Direction direction = world.getBlockState(pos).getValue(DispenserBlock.FACING);
+        Direction direction = world.getBlockState(pos).getValue(FACING);
+        Position iposition = getDispensePosition(pos, direction);
         spell.setPos(iposition.x(), iposition.y(), iposition.z());
         spell.prismRedirect++;
         if(spell.prismRedirect >= 3){
-            ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.PRISMATIC, world, pos, 10);
+            ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.PRISMATIC.get(), world, pos, 10);
         }
         if (spell.spellResolver == null) {
             spell.remove(Entity.RemovalReason.DISCARDED);

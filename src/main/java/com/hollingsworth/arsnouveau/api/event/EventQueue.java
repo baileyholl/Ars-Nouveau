@@ -1,42 +1,48 @@
 package com.hollingsworth.arsnouveau.api.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.server.ServerTickRateManager;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * For queuing deferred or over-time tasks. Tick refers to the Server or Client Tick event.
  */
 @SuppressWarnings("ForLoopReplaceableByForEach")
-@Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
+@EventBusSubscriber(modid = ArsNouveau.MODID)
 public class EventQueue {
-    List<ITimedEvent> events;
+    @NotNull List<ITimedEvent> events = new ObjectArrayList<>();
 
-    public void tick(TickEvent tickEvent) {
-        if (events == null || events.isEmpty()) {
+    public void tick(@Nullable ServerTickEvent.Post e) {
+        if (events.isEmpty()) {
             return;
         }
 
-        List<ITimedEvent> stale = new ArrayList<>();
+        List<ITimedEvent> stale = new ObjectArrayList<>();
         // Enhanced-for or iterator will cause a concurrent modification.
-        for (int i = 0; i < events.size(); i++) {
+        int size = events.size();
+        for (int i = 0; i < size; i++) {
             ITimedEvent event = events.get(i);
             if (event.isExpired()) {
                 stale.add(event);
             } else {
-                event.tickEvent(tickEvent);
+                if(e == null)
+                    event.tick(false);
+                else
+                    event.tick(e);
             }
         }
         this.events.removeAll(stale);
     }
 
     public void addEvent(ITimedEvent event) {
-        if (events == null)
-            events = new ArrayList<>();
         events.add(event);
     }
 
@@ -55,7 +61,10 @@ public class EventQueue {
 
     // Tear down on world unload
     public void clear() {
-        this.events = null;
+        for(ITimedEvent event : events){
+            event.onServerStopping();
+        }
+        this.events = new ObjectArrayList<>();
     }
 
     // Split these because our integrated servers are CURSED and both tick.
@@ -63,24 +72,29 @@ public class EventQueue {
     private static EventQueue clientQueue;
 
     private EventQueue() {
-        events = new ArrayList<>();
+        events = new ObjectArrayList<>();
     }
 
-    @SubscribeEvent
-    public static void serverTick(TickEvent.ServerTickEvent e) {
+    private static boolean tickStepping = false;
 
-        if (e.phase != TickEvent.Phase.END)
+    @SubscribeEvent
+    public static void serverTick(ServerTickEvent.Post e) {
+        ServerTickRateManager trm = e.getServer().tickRateManager();
+
+        if (trm.isFrozen() && !tickStepping) {
             return;
+        }
 
         EventQueue.getServerInstance().tick(e);
     }
 
     @SubscribeEvent
-    public static void clientTickEvent(TickEvent.ClientTickEvent e) {
+    public static void serverTickPre(ServerTickEvent.Pre e) {
+        tickStepping = e.getServer().tickRateManager().isSteppingForward();
+    }
 
-        if (e.phase != TickEvent.Phase.END)
-            return;
-
-        EventQueue.getClientQueue().tick(e);
+    @SubscribeEvent
+    public static void clientTickEvent(ClientTickEvent.Post e) {
+        EventQueue.getClientQueue().tick(null);
     }
 }

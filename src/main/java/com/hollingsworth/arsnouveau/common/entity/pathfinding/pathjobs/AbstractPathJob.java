@@ -20,9 +20,9 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
@@ -1208,10 +1208,11 @@ public abstract class AbstractPathJob implements Callable<Path> {
                 }
 
                 if (shape.isEmpty() || shape.max(Direction.Axis.Y) <= 0.1 && !isLiquid((block)) && (block.getBlock() != Blocks.SNOW || block.getValue(SnowLayerBlock.LAYERS) == 1)) {
-                    final BlockPathTypes pathType = block.getBlockPathType(world, pos, (Mob) entity.get());
-                    if (pathType == null || pathType.getDanger() == null) {
+                    final PathType pathType = block.getBlockPathType(world, pos, (Mob) entity.get());
+                    //TODO: Check readd danger check?
+//                    if (pathType == null || pathType.getDanger() == null) {
                         return true;
-                    }
+//                    }
                 }
                 return false;
             }

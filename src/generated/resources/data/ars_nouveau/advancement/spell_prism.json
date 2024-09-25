@@ -1,0 +1,32 @@
+{
+  "parent": "ars_nouveau:basic_spell_turret",
+  "criteria": {
+    "has_spell_prism": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ars_nouveau:spell_prism"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.spell_prism"
+    },
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:spell_prism"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.spell_prism"
+    }
+  },
+  "requirements": [
+    [
+      "has_spell_prism"
+    ]
+  ]
+}

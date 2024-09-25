@@ -1,45 +1,48 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
-import com.hollingsworth.arsnouveau.api.util.CasterUtil;
+import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.PacketDistributor;
-
-import java.util.function.Supplier;
 
 public class PacketUpdateSpellSoundAll extends PacketSetSound {
+
+    public static final Type<PacketUpdateSpellSoundAll> TYPE = new Type<>(ArsNouveau.prefix("update_spell_sound_all"));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketUpdateSpellSoundAll> CODEC = StreamCodec.ofMember(PacketUpdateSpellSoundAll::toBytes, PacketUpdateSpellSoundAll::new);
+
     public PacketUpdateSpellSoundAll(int castSlot, ConfiguredSpellSound sound, boolean mainHand) {
         super(castSlot, sound, mainHand);
     }
 
-    public PacketUpdateSpellSoundAll(FriendlyByteBuf buf) {
+    public PacketUpdateSpellSoundAll(RegistryFriendlyByteBuf buf) {
         super(buf);
     }
 
-    public void toBytes(FriendlyByteBuf buf) {
-        super.toBytes(buf);
+    @Override
+    public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
+        ItemStack stack = player.getItemInHand(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND);
+        if (stack.getItem() instanceof SpellBook) {
+            AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
+            for (int i = 0; i < caster.getMaxSlots(); i++) {
+                caster = caster.setSound(sound, i);
+            }
+            caster.saveToStack(stack);
+            Networking.sendToPlayerClient(new PacketUpdateBookGUI(stack), player);
+            Networking.sendToPlayerClient(new PacketOpenSpellBook(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND), player);
+        }
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            if (ctx.get().getSender() != null) {
-                ItemStack stack = ctx.get().getSender().getItemInHand(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND);
-                if (stack.getItem() instanceof SpellBook) {
-                    ISpellCaster caster = CasterUtil.getCaster(stack);
-                    for (int i = 0; i < caster.getMaxSlots(); i++) {
-                        caster.setSound(sound, i);
-                    }
-                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> ctx.get().getSender()), new PacketUpdateBookGUI(stack));
-                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> ctx.get().getSender()),
-                            new PacketOpenSpellBook(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND));
-                }
-            }
-        });
-        ctx.get().setPacketHandled(true);
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

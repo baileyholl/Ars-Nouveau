@@ -17,11 +17,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.BlockSnapshot;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.event.level.BlockEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.util.BlockSnapshot;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -57,11 +57,16 @@ public class EffectRedstone extends AbstractEffect {
                 if (!world.isInWorldBounds(pos1))
                     return;
                 boolean notReplaceable = !world.getBlockState(pos1).canBeReplaced();
-                if (notReplaceable || MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer)))
+                if (notReplaceable)
                     continue;
+                var event = NeoForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer));
+                if(event.isCanceled()){
+                    continue;
+                }
                 BlockState state1 = BlockRegistry.TEMPORARY_BLOCK.get().defaultBlockState().setValue(TemporaryBlock.POWER, signalModifier);
                 world.setBlockAndUpdate(pos1, state1);
                 if(world.getBlockEntity(pos1) instanceof TemporaryTile tile){
+                    tile.gameTime = world.getGameTime();
                     tile.tickDuration = delay;
                     tile.mimicState = Blocks.REDSTONE_BLOCK.defaultBlockState();
                     tile.updateBlock();
@@ -72,10 +77,10 @@ public class EffectRedstone extends AbstractEffect {
 
     }
 
-    public ForgeConfigSpec.IntValue BONUS_TIME;
+    public ModConfigSpec.IntValue BONUS_TIME;
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addGenericInt(builder, 5, "Base time in ticks", "base_duration");
         BONUS_TIME = builder.comment("Extend time bonus, in ticks").defineInRange("extend_time", 10, 0, Integer.MAX_VALUE);

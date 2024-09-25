@@ -8,8 +8,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.MinecraftForge;
-
+import net.neoforged.neoforge.common.NeoForge;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
@@ -29,7 +28,7 @@ public interface ISummon extends OwnableEntity {
     void setOwnerID(UUID uuid);
 
     default void onSummonDeath(Level world, @Nullable DamageSource source, boolean didExpire) {
-        MinecraftForge.EVENT_BUS.post(new SummonEvent.Death(world, this, source, didExpire));
+        NeoForge.EVENT_BUS.post(new SummonEvent.Death(world, this, source, didExpire));
     }
 
     default void writeOwner(CompoundTag tag) {

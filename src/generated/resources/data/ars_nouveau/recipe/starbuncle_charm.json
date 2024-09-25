@@ -1,0 +1,26 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": true,
+  "pedestalItems": [
+    {
+      "tag": "c:ingots/gold"
+    },
+    {
+      "tag": "c:ingots/gold"
+    },
+    {
+      "tag": "c:ingots/gold"
+    },
+    {
+      "tag": "c:ingots/gold"
+    }
+  ],
+  "reagent": {
+    "item": "ars_nouveau:starbuncle_shards"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:starbuncle_charm"
+  },
+  "sourceCost": 0
+}

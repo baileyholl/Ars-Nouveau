@@ -18,10 +18,10 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 
 public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellCastListener {
@@ -53,7 +53,7 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
         if (getOwner() != null && getOwner().equals(event.context.getUnwrappedCaster())) {
             int discount = 0;
             Spell spell = event.context.getSpell();
-            for (AbstractSpellPart part : spell.recipe) {
+            for (AbstractSpellPart part : spell.recipe()) {
                 if (SpellSchools.ELEMENTAL_EARTH.isPartOfSchool(part)) {
                     discount += part.getCastingCost() * .5;
                 }
@@ -68,9 +68,9 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
 
         if (!event.getEntity().level.isClientSide && getOwner() != null && getOwner().equals(event.getEntity())) {
             FoodProperties food = event.getItem().getItem().getFoodProperties(event.getItem(), getOwner());
-            if (food != null && event.getItem().getItem().isEdible()) {
-                float saturationModifier = food.getSaturationModifier();
-                int nutrition = food.getNutrition();
+            if (food != null) {
+                float saturationModifier = food.saturation();
+                int nutrition = food.nutrition();
                 float satAmount = nutrition * saturationModifier * 2.0f;
                 if (event.getEntity() instanceof Player) {
                     FoodData stats = ((Player) event.getEntity()).getFoodData();
@@ -97,6 +97,6 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
 
     @Override
     public ResourceLocation getTexture(FamiliarEntity entity) {
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/whirlisprig_" + (getColor().isEmpty() ? "summer" : getColor().toLowerCase()) + ".png");
+        return ArsNouveau.prefix( "textures/entity/whirlisprig_" + (getColor().isEmpty() ? "summer" : getColor().toLowerCase()) + ".png");
     }
 }

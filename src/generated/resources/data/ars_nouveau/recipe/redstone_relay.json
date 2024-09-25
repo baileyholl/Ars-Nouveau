@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "M": {
+      "tag": "c:storage_blocks/source"
+    },
+    "g": {
+      "tag": "c:ingots/gold"
+    },
+    "x": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "pattern": [
+    "gxg",
+    "gMg",
+    "gxg"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:redstone_relay"
+  }
+}

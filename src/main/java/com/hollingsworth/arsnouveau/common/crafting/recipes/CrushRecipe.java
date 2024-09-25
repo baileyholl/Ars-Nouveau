@@ -1,60 +1,26 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
-import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
+public record CrushRecipe(Ingredient input, List<CrushOutput> outputs, boolean skipBlockPlace) implements SpecialSingleInputRecipe {
 
-public class CrushRecipe implements Recipe<Container> {
-
-    public final Ingredient input;
-    public final List<CrushOutput> outputs;
-    public final ResourceLocation id;
-    private boolean skipBlockPlace;
-
-    public CrushRecipe(ResourceLocation id, Ingredient input, List<CrushOutput> outputs, boolean skipBlockPlace) {
-        this.input = input;
-        this.outputs = outputs;
-        this.id = id;
-        this.skipBlockPlace = skipBlockPlace;
-    }
-
-    @Deprecated
-    public CrushRecipe(ResourceLocation id, Ingredient input, List<CrushOutput> outputs) {
-        this(id, input, outputs, false);
-    }
-
-    public CrushRecipe(String id, Ingredient input, List<CrushOutput> outputs) {
-        this(new ResourceLocation(ArsNouveau.MODID, "crush_" + id), input, outputs, false);
-    }
-
-    public CrushRecipe(String id, Ingredient input, List<CrushOutput> outputs, boolean skipBlockPlace) {
-        this(new ResourceLocation(ArsNouveau.MODID, "crush_" + id), input, outputs, skipBlockPlace);
-    }
-
-    public CrushRecipe(String id, Ingredient input) {
-        this(id, input, new ArrayList<>());
+    public CrushRecipe(Ingredient input, List<CrushOutput> outputs) {
+        this(input, outputs, false);
     }
 
     public List<ItemStack> getRolledOutputs(RandomSource random) {
@@ -76,53 +42,13 @@ public class CrushRecipe implements Recipe<Container> {
         return finalOutputs;
     }
 
-    public CrushRecipe withItems(ItemStack output, float chance) {
-        this.outputs.add(new CrushOutput(output, chance));
-        return this;
-    }
-
-    public CrushRecipe withItems(ItemStack output) {
-        this.outputs.add(new CrushOutput(output, 1.0f));
-        return this;
-    }
-
-    public CrushRecipe skipBlockPlace() {
-        this.skipBlockPlace = true;
-        return this;
-    }
-
-    public Boolean shouldSkipBlockPlace() {
+    public boolean shouldSkipBlockPlace() {
         return this.skipBlockPlace;
     }
 
     @Override
-    public boolean matches(Container inventory, Level world) {
-        return this.input.test(inventory.getItem(0));
-    }
-
-    public boolean matches(ItemStack i, Level world) {
-        return this.input.test(i);
-    }
-
-    @Override
-    public ItemStack assemble(Container p_44001_, RegistryAccess p_267165_) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public boolean canCraftInDimensions(int p_194133_1_, int p_194133_2_) {
-        return true;
-    }
-
-    @Override
-    public ItemStack getResultItem(RegistryAccess p_267052_) {
-        return ItemStack.EMPTY;
-    }
-
-    @NotNull
-    @Override
-    public ResourceLocation getId() {
-        return id;
+    public boolean matches(SingleRecipeInput p_346065_, Level p_345375_) {
+        return this.input.test(p_346065_.getItem(0));
     }
 
     @Override
@@ -135,91 +61,51 @@ public class CrushRecipe implements Recipe<Container> {
         return RecipeRegistry.CRUSH_TYPE.get();
     }
 
-    public JsonElement asRecipe() {
-        JsonObject jsonobject = new JsonObject();
-        jsonobject.addProperty("type", "ars_nouveau:crush");
-        jsonobject.add("input", input.toJson());
-        JsonArray array = new JsonArray();
-        for (CrushOutput output : outputs) {
-            JsonObject element = new JsonObject();
-            element.addProperty("item", getRegistryName(output.stack.getItem()).toString());
-            element.addProperty("chance", output.chance);
-            element.addProperty("count", output.stack.getCount());
-            element.addProperty("maxRange", output.maxRange);
-            array.add(element);
-        }
-        jsonobject.add("output", array);
-        jsonobject.addProperty("skip_block_place", skipBlockPlace);
-        return jsonobject;
-    }
-
-    public static class CrushOutput {
-        public ItemStack stack;
-        public float chance;
-        public int maxRange; // Can drop the stack multiple times if this is greater than 1
+    public record CrushOutput(ItemStack stack, float chance, int maxRange) {
 
         public CrushOutput(ItemStack stack, float chance) {
             this(stack, chance, 1);
         }
 
-        public CrushOutput(ItemStack stack, float chance, int maxRange) {
-            this.stack = stack;
-            this.chance = chance;
-            this.maxRange = maxRange;
-        }
+        public static final Codec<CrushOutput> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                ItemStack.CODEC.fieldOf("stack").forGetter(CrushOutput::stack),
+                Codec.FLOAT.fieldOf("chance").forGetter(CrushOutput::chance),
+                Codec.INT.fieldOf("maxRange").forGetter(CrushOutput::maxRange)
+        ).apply(instance, CrushOutput::new));
     }
 
     public static class Serializer implements RecipeSerializer<CrushRecipe> {
 
-        @Override
-        public CrushRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            Ingredient input;
-            if (GsonHelper.isArrayNode(json, "input")) {
-                input = Ingredient.fromJson(GsonHelper.getAsJsonArray(json, "input"));
-            } else {
-                input = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "input"));
-            }
-            JsonArray outputs = GsonHelper.getAsJsonArray(json, "output");
-            List<CrushOutput> parsedOutputs = new ArrayList<>();
+        public static final MapCodec<CrushRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                Ingredient.CODEC.fieldOf("input").forGetter(CrushRecipe::input),
+                CrushOutput.CODEC.listOf().fieldOf("output").forGetter(CrushRecipe::outputs),
+                Codec.BOOL.optionalFieldOf("skip_block_place", false).forGetter(CrushRecipe::shouldSkipBlockPlace)
+        ).apply(instance, CrushRecipe::new));
 
-            for (JsonElement e : outputs) {
-                JsonObject obj = e.getAsJsonObject();
-                float chance = GsonHelper.getAsFloat(obj, "chance");
-                String itemId = GsonHelper.getAsString(obj, "item");
-                int count = obj.has("count") ? GsonHelper.getAsInt(obj, "count") : 1;
-                ItemStack output = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId)), count);
-                int maxRange = obj.has("maxRange") ? GsonHelper.getAsInt(obj, "maxRange") : 1;
-                parsedOutputs.add(new CrushOutput(output, chance, maxRange));
-            }
-            boolean skipBlockPlace = json.has("skip_block_place") && GsonHelper.getAsBoolean(json, "skip_block_place");
+        public static final StreamCodec<RegistryFriendlyByteBuf, CrushRecipe> STREAM_CODEC = StreamCodec.of(
+                CrushRecipe.Serializer::toNetwork, CrushRecipe.Serializer::fromNetwork
+        );
 
-            return new CrushRecipe(recipeId, input, parsedOutputs, skipBlockPlace);
-        }
-
-
-        @Override
-        public void toNetwork(FriendlyByteBuf buf, CrushRecipe recipe) {
+        public static void toNetwork(RegistryFriendlyByteBuf buf, CrushRecipe recipe) {
             buf.writeInt(recipe.outputs.size());
-            recipe.input.toNetwork(buf);
+            Ingredient.CONTENTS_STREAM_CODEC.encode(buf, recipe.input);
             for (CrushOutput i : recipe.outputs) {
                 buf.writeFloat(i.chance);
-                buf.writeItemStack(i.stack, false);
+                ItemStack.STREAM_CODEC.encode(buf, i.stack);
                 buf.writeInt(i.maxRange);
             }
             buf.writeBoolean(recipe.skipBlockPlace);
         }
 
-        @Nullable
-        @Override
-        public CrushRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+        public static CrushRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
             int length = buffer.readInt();
-            Ingredient input = Ingredient.fromNetwork(buffer);
+            Ingredient input = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
             List<CrushOutput> stacks = new ArrayList<>();
 
             for (int i = 0; i < length; i++) {
                 try {
                     float chance = buffer.readFloat();
-                    ItemStack outStack = buffer.readItem();
+                    ItemStack outStack = ItemStack.STREAM_CODEC.decode(buffer);
                     int maxRange = buffer.readInt();
                     stacks.add(new CrushOutput(outStack, chance, maxRange));
                 } catch (Exception e) {
@@ -228,7 +114,17 @@ public class CrushRecipe implements Recipe<Container> {
                 }
             }
             boolean skipBlockPlace = buffer.readBoolean();
-            return new CrushRecipe(recipeId, input, stacks, skipBlockPlace);
+            return new CrushRecipe(input, stacks, skipBlockPlace);
+        }
+
+        @Override
+        public MapCodec<CrushRecipe> codec() {
+            return CODEC;
+        }
+
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, CrushRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
     }
 }

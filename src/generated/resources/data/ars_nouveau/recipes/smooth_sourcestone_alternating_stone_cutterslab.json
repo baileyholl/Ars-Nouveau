@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "count": 2,
-  "ingredient": {
-    "item": "ars_nouveau:smooth_sourcestone_alternating"
-  },
-  "result": "ars_nouveau:smooth_sourcestone_alternating_slab"
-}

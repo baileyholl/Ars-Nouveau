@@ -10,7 +10,8 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.util.Mth;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
+import software.bernie.geckolib.cache.object.GeoBone;
+
 
 public class ScryerOculusRenderer extends ArsGeoBlockRenderer<ScryersOculusTile> {
 
@@ -21,8 +22,8 @@ public class ScryerOculusRenderer extends ArsGeoBlockRenderer<ScryersOculusTile>
 
 
     @Override
-    public void actuallyRender(PoseStack poseStack, ScryersOculusTile pBlockEntity, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        CoreGeoBone eye = this.getGeoModel().getBone("eye").orElse(null);
+    public void actuallyRender(PoseStack poseStack, ScryersOculusTile pBlockEntity, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
+        GeoBone eye = this.getGeoModel().getBone("eye").orElse(null);
         if (eye == null)
             return;
 
@@ -37,7 +38,7 @@ public class ScryerOculusRenderer extends ArsGeoBlockRenderer<ScryersOculusTile>
         float f2 = pBlockEntity.oRot + f1 * ClientInfo.partialTicks - 4.7f;
         eye.setRotY(-f2);
         eye.setPosY((Mth.sin((ClientInfo.ticksInGame + ClientInfo.partialTicks) / 10.0f)) / 2f);
-        super.actuallyRender(poseStack, pBlockEntity, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        super.actuallyRender(poseStack, pBlockEntity, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
     }
 
     public static GenericItemBlockRenderer getISTER() {

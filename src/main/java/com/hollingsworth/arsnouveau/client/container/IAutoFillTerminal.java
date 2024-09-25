@@ -1,7 +1,5 @@
 package com.hollingsworth.arsnouveau.client.container;
 
-import net.minecraft.nbt.CompoundTag;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,7 +7,6 @@ import java.util.stream.Collectors;
 public interface IAutoFillTerminal {
 	List<ISearchHandler> updateSearch = new ArrayList<>();
 
-	void sendMessage(CompoundTag compound);
 	List<StoredItemStack> getStoredItems();
 
 	static boolean hasSync() {

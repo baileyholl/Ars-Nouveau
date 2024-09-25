@@ -18,10 +18,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class Glyph extends ModItem {
@@ -33,7 +33,7 @@ public class Glyph extends ModItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public @NotNull InteractionResultHolder<ItemStack> use(Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
         if (worldIn.isClientSide)
             return super.use(worldIn, playerIn, handIn);
 
@@ -41,7 +41,7 @@ public class Glyph extends ModItem {
             playerIn.sendSystemMessage(Component.translatable("ars_nouveau.spell.disabled"));
             return super.use(worldIn, playerIn, handIn);
         }
-        IPlayerCap playerDataCap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(null);
+        IPlayerCap playerDataCap = CapabilityRegistry.getPlayerDataCap(playerIn);
         if (playerDataCap != null) {
             if (playerDataCap.knowsGlyph(spellPart) || GlyphRegistry.getDefaultStartingSpells().contains(spellPart)) {
                 playerIn.sendSystemMessage(Component.literal("You already know this spell!"));
@@ -56,13 +56,13 @@ public class Glyph extends ModItem {
     }
 
     @Override
-    public Component getName(ItemStack pStack) {
+    public @NotNull Component getName(@NotNull ItemStack pStack) {
         return Component.translatable("ars_nouveau.glyph_of", this.spellPart.getLocaleName());
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         if (spellPart == null)
             return;
 
@@ -79,7 +79,7 @@ public class Glyph extends ModItem {
         if (Minecraft.getInstance().player == null)
             return;
 
-        IPlayerCap playerDataCap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player).orElse(null);
+        IPlayerCap playerDataCap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player);
         if (playerDataCap != null) {
             if (playerDataCap.knowsGlyph(spellPart) || GlyphRegistry.getDefaultStartingSpells().contains(spellPart)) {
                 tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_known").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN)));

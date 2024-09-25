@@ -1,17 +1,17 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.common.network.HighlightAreaPacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -45,17 +45,17 @@ public class EnchantingApparatusBlock extends TickableModBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 
         if (world.isClientSide || handIn != InteractionHand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof EnchantingApparatusTile tile))
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         if (tile.isCrafting)
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
 
 
         if (!(world.getBlockState(pos.below()).getBlock() instanceof ArcaneCore)) {
             PortUtil.sendMessage(player, Component.translatable("alert.core"));
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
         if (tile.getStack() == null || tile.getStack().isEmpty()) {
             IEnchantingRecipe recipe = tile.getRecipe(player.getMainHandItem(), player);
@@ -66,9 +66,9 @@ public class EnchantingApparatusBlock extends TickableModBlock {
                         colorPos.add(ColorPos.centeredAbove(pedPos));
                     }
                 }
-                Networking.sendToNearby(world, tile.getBlockPos(), new HighlightAreaPacket(colorPos, 60));
+                Networking.sendToNearbyClient(world, tile.getBlockPos(), new HighlightAreaPacket(colorPos, 60));
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.norecipe"));
-            } else if (recipe.consumesSource() && !SourceUtil.hasSourceNearby(tile.getBlockPos(), tile.getLevel(), 10, recipe.getSourceCost())) {
+            } else if (recipe.consumesSource() && !SourceUtil.hasSourceNearby(tile.getBlockPos(), tile.getLevel(), 10, recipe.sourceCost())) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.nomana"));
             } else {
                 if (tile.attemptCraft(player.getMainHandItem(), player)) {
@@ -85,7 +85,7 @@ public class EnchantingApparatusBlock extends TickableModBlock {
         }
 
         world.sendBlockUpdated(pos, state, state, 2);
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Override
@@ -94,11 +94,12 @@ public class EnchantingApparatusBlock extends TickableModBlock {
     }
 
     @Override
-    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
+    public BlockState playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         super.playerWillDestroy(worldIn, pos, state, player);
         if (worldIn.getBlockEntity(pos) instanceof EnchantingApparatusTile tile && tile.getStack() != null) {
             worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.getStack()));
         }
+        return state;
     }
 
     @Override
@@ -107,7 +108,7 @@ public class EnchantingApparatusBlock extends TickableModBlock {
     }
 
     @Override
-    public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+    public boolean isPathfindable(BlockState pState, PathComputationType pType) {
         return false;
     }
 }

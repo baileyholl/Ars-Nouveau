@@ -18,19 +18,20 @@ public class MagicFindEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
+    public boolean applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
         Level level = pLivingEntity.level;
         if (level.isClientSide || level.getGameTime() % 60 != 0)
-            return;
+            return true;
         for (Entity e : level.getEntities(pLivingEntity, new AABB(pLivingEntity.blockPosition()).inflate(75))) {
             if (e instanceof LivingEntity living && living.getType().is(EntityTags.MAGIC_FIND)) {
                 living.addEffect(new MobEffectInstance(MobEffects.GLOWING, 60 * 20));
             }
         }
+        return true;
     }
 
     @Override
-    public boolean isDurationEffectTick(int pDuration, int pAmplifier) {
+    public boolean shouldApplyEffectTickThisTick(int pDuration, int pAmplifier) {
         return true;
     }
 }

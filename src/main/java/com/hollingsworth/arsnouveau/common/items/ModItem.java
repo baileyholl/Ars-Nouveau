@@ -1,16 +1,14 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +21,7 @@ public class ModItem extends Item {
     }
 
     public ModItem() {
-        this(ItemsRegistry.defaultItemProperties());
+        this(defaultProps());
     }
 
     public ModItem withTooltip(Component tip) {
@@ -41,16 +39,17 @@ public class ModItem extends Item {
         return this;
     }
 
-    @Override
-    public Rarity getRarity(ItemStack stack) {
-        return rarity != null ? rarity : super.getRarity(stack);
+    protected static Properties defaultProps(){
+        return new Item.Properties();
     }
 
     /**
      * allows items to add custom lines of information to the mouseover description
      */
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
+    @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip2, flagIn);
         if (tooltip != null && !tooltip.isEmpty()) {
             tooltip2.addAll(tooltip);
         }

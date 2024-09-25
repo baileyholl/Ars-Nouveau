@@ -149,6 +149,6 @@ public class RitualAwakening extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, RitualLib.AWAKENING);
+        return ArsNouveau.prefix( RitualLib.AWAKENING);
     }
 }

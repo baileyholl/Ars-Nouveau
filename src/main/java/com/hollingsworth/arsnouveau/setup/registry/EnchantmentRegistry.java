@@ -1,20 +1,19 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
-import com.hollingsworth.arsnouveau.common.enchantment.ManaBoost;
-import com.hollingsworth.arsnouveau.common.enchantment.ManaRegenEnchantment;
-import com.hollingsworth.arsnouveau.common.enchantment.ReactiveEnchantment;
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
-
-import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
 public class EnchantmentRegistry {
 
-    public static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, MODID);
-    public static RegistryObject<Enchantment> MANA_REGEN_ENCHANTMENT = ENCHANTMENTS.register("mana_regen", ManaRegenEnchantment::new);
-    public static RegistryObject<Enchantment> MANA_BOOST_ENCHANTMENT = ENCHANTMENTS.register("mana_boost", ManaBoost::new);
-    public static RegistryObject<Enchantment> REACTIVE_ENCHANTMENT = ENCHANTMENTS.register("reactive", ReactiveEnchantment::new);
+    public static ResourceKey<Enchantment> MANA_REGEN_ENCHANTMENT = key("mana_regen");
 
+
+    public static ResourceKey<Enchantment> MANA_BOOST_ENCHANTMENT = key("mana_boost");
+    public static ResourceKey<Enchantment> REACTIVE_ENCHANTMENT = key("reactive");
+
+    private static ResourceKey<Enchantment> key(String p_345314_) {
+        return ResourceKey.create(Registries.ENCHANTMENT, ArsNouveau.prefix(p_345314_));
+    }
 }

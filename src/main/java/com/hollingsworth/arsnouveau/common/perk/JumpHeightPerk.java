@@ -4,12 +4,9 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.Perk;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.UUID;
-
 public class JumpHeightPerk extends Perk {
 
-    public static final JumpHeightPerk INSTANCE = new JumpHeightPerk(new ResourceLocation(ArsNouveau.MODID, "thread_heights"));
-    public static final UUID PERK_UUID = UUID.fromString("e5f68a8c-589f-4dde-978d-b4c507a4485b");
+    public static final JumpHeightPerk INSTANCE = new JumpHeightPerk(ArsNouveau.prefix( "thread_heights"));
 
     public JumpHeightPerk(ResourceLocation key) {
         super(key);

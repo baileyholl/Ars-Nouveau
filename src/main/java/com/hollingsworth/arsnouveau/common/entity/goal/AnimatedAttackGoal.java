@@ -132,7 +132,7 @@ public class AnimatedAttackGoal extends Goal {
 
     public void onArrive() {
         this.arrived = true;
-        Networking.sendToNearby(mob.level, mob, new PacketAnimEntity(mob.getId(), animationID));
+        Networking.sendToNearbyClient(mob.level, mob, new PacketAnimEntity(mob.getId(), animationID));
     }
 
     public void tick() {

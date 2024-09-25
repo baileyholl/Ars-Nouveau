@@ -23,7 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -50,9 +50,9 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
         this.damage(vec, level, shooter, livingEntity, spellStats, spellContext, resolver, snareSec, damage);
         spawnCinders(shooter, level,rayTraceResult.getLocation().add(0, (rayTraceResult.getEntity().onGround() ? 1 : 0),0), spellStats, spellContext, resolver);
 
-        if(rayTraceResult.getEntity() instanceof LivingEntity living && living.hasEffect(ModPotions.BLAST_EFFECT.get())){
-            int amplifier = living.getEffect(ModPotions.BLAST_EFFECT.get()).getAmplifier();
-            living.removeEffect(ModPotions.BLAST_EFFECT.get());
+        if(rayTraceResult.getEntity() instanceof LivingEntity living && living.hasEffect(ModPotions.BLAST_EFFECT)){
+            int amplifier = living.getEffect(ModPotions.BLAST_EFFECT).getAmplifier();
+            living.removeEffect(ModPotions.BLAST_EFFECT);
             BlastEffect.explode(living, amplifier + 1);
         }
     }
@@ -75,7 +75,7 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
     }
 
     public boolean canDamage(LivingEntity livingEntity) {
-        return livingEntity.isOnFire() || livingEntity.hasEffect(ModPotions.BLAST_EFFECT.get()) || livingEntity.level.getBlockState(livingEntity.blockPosition()).is(BlockTags.FIRE);
+        return livingEntity.isOnFire() || livingEntity.hasEffect(ModPotions.BLAST_EFFECT) || livingEntity.level.getBlockState(livingEntity.blockPosition()).is(BlockTags.FIRE);
     }
 
     public void spawnCinders(LivingEntity shooter, Level level, Vec3 hit, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
@@ -90,7 +90,7 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
                     hit.z() - radiusMultiplier * Math.cos(random.nextInt(360)));
             Vec3 scaleVec =  new Vec3(ParticleUtil.inRange(0.1, 0.5), 1, ParticleUtil.inRange(0.1, 0.5));
 
-            Cinder fallingBlock = new Cinder(level, vec3.x(), vec3.y(), vec3.z(), BlockRegistry.MAGIC_FIRE.defaultBlockState());
+            Cinder fallingBlock = new Cinder(level, vec3.x(), vec3.y(), vec3.z(), BlockRegistry.MAGIC_FIRE.defaultBlockState(), resolver);
             // Send the falling block the opposite direction of the target
             fallingBlock.setDeltaMovement(vec3.x() - hit.x(), ParticleUtil.inRange(0.1, 0.5), vec3.z() - hit.z());
             fallingBlock.setDeltaMovement(fallingBlock.getDeltaMovement().multiply(scaleVec));
@@ -110,7 +110,7 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
             world.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, vec.x, vec.y + 0.5, vec.z, 50,
                     ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), 0.3);
 
-            livingEntity.addEffect(new MobEffectInstance(ModPotions.SNARE_EFFECT.get(), 20 * snareTime));
+            livingEntity.addEffect(new MobEffectInstance(ModPotions.SNARE_EFFECT, 20 * snareTime));
         }
     }
 
@@ -126,7 +126,7 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addDamageConfig(builder, 7.0);
         addAmpConfig(builder, 3.0);

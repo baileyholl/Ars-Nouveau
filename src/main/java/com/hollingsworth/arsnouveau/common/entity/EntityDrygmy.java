@@ -49,14 +49,10 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -81,7 +77,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     public static String[] COLORS = {"brown", "cyan", "orange"};
 
     @Override
-    public int getExperienceReward() {
+    protected int getBaseExperienceReward() {
         return 0;
     }
 
@@ -166,7 +162,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
 
             tamingTime++;
             if (tamingTime % 20 == 0 && !level.isClientSide())
-                Networking.sendToNearby(level, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, blockPosition(), ParticleColor.ORANGE));
+                Networking.sendToNearbyClient(level, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, blockPosition(), ParticleColor.ORANGE));
 
             if (tamingTime > 60 && !level.isClientSide) {
                 ItemStack stack = new ItemStack(ItemsRegistry.DRYGMY_SHARD, 1 + level.random.nextInt(2));
@@ -208,14 +204,14 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(CHANNELING, false);
-        this.entityData.define(TAMED, false);
-        this.entityData.define(HOLDING_ESSENCE, false);
-        this.entityData.define(CHANNELING_ENTITY, -1);
-        this.entityData.define(BEING_TAMED, false);
-        this.entityData.define(COLOR, "brown");
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(CHANNELING, false);
+        pBuilder.define(TAMED, false);
+        pBuilder.define(HOLDING_ESSENCE, false);
+        pBuilder.define(CHANNELING_ENTITY, -1);
+        pBuilder.define(BEING_TAMED, false);
+        pBuilder.define(COLOR, "brown");
     }
 
     public boolean holdingEssence() {
@@ -358,7 +354,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
         String color = getColor(entity).toLowerCase();
         if (color.isEmpty())
             color = "brown";
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/drygmy_" + color + ".png");
+        return ArsNouveau.prefix( "textures/entity/drygmy_" + color + ".png");
     }
 
     @Override

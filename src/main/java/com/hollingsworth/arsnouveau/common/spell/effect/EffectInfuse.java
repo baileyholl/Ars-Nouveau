@@ -2,13 +2,15 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.item.inv.ExtractedStack;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
-import com.hollingsworth.arsnouveau.api.potion.PotionData;
+import com.hollingsworth.arsnouveau.api.potion.IPotionProvider;
+import com.hollingsworth.arsnouveau.api.registry.PotionProviderRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
-import com.hollingsworth.arsnouveau.common.items.PotionFlask;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
+import com.hollingsworth.arsnouveau.common.util.PotionUtil;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrownPotion;
@@ -16,6 +18,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.EntityHitResult;
@@ -43,13 +46,15 @@ public class EffectInfuse extends AbstractEffect {
     }
 
     public void spawnPotionEntity(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
-        PotionData potionData = getPotionData(world, shooter, spellContext);
+        PotionContents potionData = getPotionData(world, shooter, spellContext);
         if(potionData == null){
             return;
         }
         Item potionItem = spellStats.getAoeMultiplier() > 0 ? Items.SPLASH_POTION : Items.LINGERING_POTION;
         ThrownPotion potion = new ThrownPotion(world, shooter);
-        potion.setItem(potionData.asPotionStack(potionItem));
+        ItemStack stack = new ItemStack(potionItem);
+        stack.set(DataComponents.POTION_CONTENTS, potionData);
+        potion.setItem(stack);
         potion.setPos(rayTraceResult.getLocation());
         world.addFreshEntity(potion);
     }
@@ -59,31 +64,30 @@ public class EffectInfuse extends AbstractEffect {
         if(!(rayTraceResult.getEntity() instanceof LivingEntity livingEntity)){
             return;
         }
-        PotionData potionData = getPotionData(world, shooter, spellContext);
+        PotionContents potionData = getPotionData(world, shooter, spellContext);
         if(potionData == null){
             return;
         }
-        potionData.applyEffects(shooter, shooter, livingEntity);
-
+        PotionUtil.applyContents(potionData, shooter, shooter, livingEntity);
     }
 
-    public @Nullable PotionData getPotionData(Level world, @NotNull LivingEntity shooter, SpellContext spellContext){
-        PotionData potionData = null;
+    public @Nullable PotionContents getPotionData(Level world, @NotNull LivingEntity shooter, SpellContext spellContext){
+        PotionContents potionData = null;
         InventoryManager manager = spellContext.getCaster().getInvManager();
         ExtractedStack extractedFlask = manager.extractItem(i -> {
-            PotionFlask.FlaskData data = new PotionFlask.FlaskData(i);
-            return !data.getPotion().isEmpty() && data.getCount() > 0;
+            IPotionProvider provider = PotionProviderRegistry.from(i);
+            return provider != null && !provider.isEmpty(i);
         }, 1);
         if (!extractedFlask.isEmpty()) {
-            PotionFlask.FlaskData data = new PotionFlask.FlaskData(extractedFlask.getStack());
-            potionData = data.getPotion().clone();
-            data.setCount(data.getCount() - 1);
+            IPotionProvider provider = PotionProviderRegistry.from(extractedFlask.stack);
+            potionData = provider.getPotionData(extractedFlask.stack);
+            provider.consumeUses(extractedFlask.stack, 1,  shooter);
             extractedFlask.returnOrDrop(world, shooter.getOnPos());
         } else {
             ExtractedStack potion = manager.extractItem(i -> i.getItem() instanceof PotionItem, 1);
             if (!potion.isEmpty()) {
                 ItemStack stack = potion.getStack();
-                potionData = new PotionData(stack.copy());
+                potionData = stack.get(DataComponents.POTION_CONTENTS);
                 stack.shrink(1);
                 potion.replaceAndReturnOrDrop(new ItemStack(Items.GLASS_BOTTLE), world, shooter.getOnPos());
             }
@@ -92,7 +96,7 @@ public class EffectInfuse extends AbstractEffect {
         if(potionData == null){
             BlockEntity jarEntity = spellContext.getCaster().getNearbyBlockEntity(i -> i instanceof PotionJarTile jar && jar.getAmount() > 100);
             if(jarEntity instanceof PotionJarTile jar){
-                potionData = jar.getData().clone();
+                potionData = jar.getData();
                 jar.remove(100);
             }
         }

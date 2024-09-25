@@ -4,9 +4,12 @@ import com.hollingsworth.arsnouveau.api.ritual.features.IPlaceableFeature;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import oshi.util.tuples.Pair;
 
 import java.util.*;
@@ -31,8 +34,8 @@ public abstract class FeaturePlacementRitual extends AbstractRitual {
     public abstract void addFeatures(List<IPlaceableFeature> features);
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onStart(@Nullable Player player) {
+        super.onStart(player);
         for(ItemStack i : getConsumedItems()){
             if(i.is(ItemTagProvider.SOURCE_GEM_TAG)) {
                 checkRadius += i.getCount();
@@ -113,8 +116,8 @@ public abstract class FeaturePlacementRitual extends AbstractRitual {
     }
 
     @Override
-    public void read(CompoundTag tag) {
-        super.read(tag);
+    public void read(HolderLookup.Provider provider,  CompoundTag tag) {
+        super.read(provider, tag);
         featureIndex = tag.getInt("featureIndex");
         positionIndex = tag.getInt("positionIndex");
         checkRadius = tag.getInt("checkRadius");
@@ -122,8 +125,8 @@ public abstract class FeaturePlacementRitual extends AbstractRitual {
     }
 
     @Override
-    public void write(CompoundTag tag) {
-        super.write(tag);
+    public void write(HolderLookup.Provider provider, CompoundTag tag) {
+        super.write(provider, tag);
         tag.putInt("featureIndex", featureIndex);
         tag.putInt("positionIndex", positionIndex);
         tag.putInt("checkRadius", checkRadius);

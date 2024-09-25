@@ -6,6 +6,9 @@ import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -27,7 +30,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.scores.Team;
+import net.minecraft.world.scores.PlayerTeam;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
@@ -35,6 +38,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
+    public static EntityDataAccessor<Optional<UUID>> OWNER_UNIQUE_ID = SynchedEntityData.defineId(EntityAllyVex.class, EntityDataSerializers.OPTIONAL_UUID);
+
     private LivingEntity owner;
     @Nullable
     private BlockPos boundOrigin;
@@ -60,10 +65,11 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
     }
 
     @Nullable
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType pSpawnType, @org.jetbrains.annotations.Nullable SpawnGroupData pSpawnGroupData) {
         this.populateDefaultEquipmentSlots(worldIn.getRandom(), difficultyIn);
-        this.populateDefaultEquipmentEnchantments(getRandom(), difficultyIn);
-        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        this.populateDefaultEquipmentEnchantments(worldIn, getRandom(), difficultyIn);
+        return super.finalizeSpawn(worldIn, difficultyIn, pSpawnType, pSpawnGroupData);
     }
 
     /**
@@ -187,9 +193,8 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
         }
     }
 
-
     @Override
-    public int getExperienceReward() {
+    protected int getBaseExperienceReward() {
         return 0;
     }
 
@@ -233,7 +238,8 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
         }
     }
 
-    public Team getTeam() {
+    @Override
+    public PlayerTeam getTeam() {
         if (this.getOwnerAlt() != null) {
             LivingEntity livingentity = this.getOwnerAlt();
             if (livingentity != null) {
@@ -253,11 +259,14 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
         return super.isAlliedTo(pEntity);
     }
 
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(OWNER_UNIQUE_ID, Optional.empty());
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(OWNER_UNIQUE_ID, Optional.empty());
     }
 
+    @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         if (this.boundOrigin != null) {

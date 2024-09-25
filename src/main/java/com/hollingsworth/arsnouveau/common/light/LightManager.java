@@ -1,20 +1,19 @@
 package com.hollingsworth.arsnouveau.common.light;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LightLayer;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -123,7 +122,7 @@ public class LightManager {
     }
 
     public static boolean containsEntity(EntityType<? extends Entity> type){
-        return LIGHT_REGISTRY.containsKey(type) || Config.ENTITY_LIGHT_MAP.containsKey(ForgeRegistries.ENTITY_TYPES.getKey(type));
+        return LIGHT_REGISTRY.containsKey(type) || Config.ENTITY_LIGHT_MAP.containsKey(BuiltInRegistries.ENTITY_TYPE.getKey(type));
     }
 
     /**
@@ -189,8 +188,8 @@ public class LightManager {
             it = sourceIterator.next();
             if (it.equals(lightSource)) {
                 sourceIterator.remove();
-                if (Minecraft.getInstance().level != null)
-                    lightSource.lambdynlights$scheduleTrackedChunksRebuild(Minecraft.getInstance().levelRenderer);
+                if (ArsNouveau.proxy.getMinecraft().level != null)
+                    lightSource.lambdynlights$scheduleTrackedChunksRebuild(ArsNouveau.proxy.getMinecraft().levelRenderer);
                 break;
             }
         }
@@ -209,10 +208,10 @@ public class LightManager {
         while (sourceIterator.hasNext()) {
             it = sourceIterator.next();
             sourceIterator.remove();
-            if (Minecraft.getInstance().levelRenderer != null) {
+            if (ArsNouveau.proxy.getMinecraft().levelRenderer != null) {
                 if (it.getLuminance() > 0)
                     it.resetDynamicLight();
-                it.lambdynlights$scheduleTrackedChunksRebuild(Minecraft.getInstance().levelRenderer);
+                it.lambdynlights$scheduleTrackedChunksRebuild(ArsNouveau.proxy.getMinecraft().levelRenderer);
             }
         }
         LightManager.jarHoldingEntityList = new ArrayList<>();
@@ -242,7 +241,7 @@ public class LightManager {
     }
 
     public static void scheduleChunkRebuild(@NotNull LevelRenderer renderer, int x, int y, int z) {
-        if (Minecraft.getInstance().level != null)
+        if (ArsNouveau.proxy.getMinecraft().level != null)
             renderer.setSectionDirty(x, y, z);
     }
 

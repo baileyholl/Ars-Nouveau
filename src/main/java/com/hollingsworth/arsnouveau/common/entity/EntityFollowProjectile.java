@@ -9,16 +9,12 @@ import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.network.PlayMessages;
 
 public class EntityFollowProjectile extends ColoredProjectile {
     public static final EntityDataAccessor<BlockPos> to = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.BLOCK_POS);
@@ -73,12 +69,21 @@ public class EntityFollowProjectile extends ColoredProjectile {
         super(entityAOEProjectileEntityType, world);
     }
 
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(to, new BlockPos(0, 0, 0));
-        this.entityData.define(from, new BlockPos(0, 0, 0));
-        this.entityData.define(SPAWN_TOUCH, defaultsBurst());
-        this.entityData.define(DESPAWN, 10);
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(to, new BlockPos(0, 0, 0));
+        pBuilder.define(from, new BlockPos(0, 0, 0));
+        pBuilder.define(SPAWN_TOUCH, defaultsBurst());
+        pBuilder.define(DESPAWN, 10);
+    }
+
+    @Override
+    public void onRemovedFromLevel() {
+        super.onRemovedFromLevel();
+        if(!this.isRemoved()) {
+            this.remove(RemovalReason.DISCARDED);
+        }
     }
 
     public boolean defaultsBurst() {
@@ -172,15 +177,6 @@ public class EntityFollowProjectile extends ColoredProjectile {
             NBTUtil.storeBlockPos(compound, "from", this.entityData.get(EntityFollowProjectile.from));
         if (to != null)
             NBTUtil.storeBlockPos(compound, "to", this.entityData.get(EntityFollowProjectile.to));
-    }
-
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
-    public EntityFollowProjectile(PlayMessages.SpawnEntity packet, Level world) {
-        super(ModEntities.ENTITY_FOLLOW_PROJ.get(), world);
     }
 
     @Override

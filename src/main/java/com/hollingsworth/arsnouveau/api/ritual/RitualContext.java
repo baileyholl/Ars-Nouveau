@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.ritual;
 
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
@@ -23,20 +24,20 @@ public class RitualContext {
     }
 
 
-    public void write(CompoundTag tag) {
+    public void write(HolderLookup.Provider provider, CompoundTag tag) {
         tag.putInt("progress", progress);
         tag.putBoolean("complete", isDone);
         tag.putBoolean("started", isStarted);
         tag.putBoolean("needsMana", needsSourceToRun);
-        NBTUtil.writeItems(tag, "item_", consumedItems);
+        NBTUtil.writeItems(provider, tag, "item_", consumedItems);
     }
 
-    public static RitualContext read(CompoundTag tag) {
+    public static RitualContext read(HolderLookup.Provider provider, CompoundTag tag) {
         RitualContext context = new RitualContext();
         context.progress = tag.getInt("progress");
         context.isDone = tag.getBoolean("complete");
         context.isStarted = tag.getBoolean("started");
-        context.consumedItems = NBTUtil.readItems(tag, "item_");
+        context.consumedItems = NBTUtil.readItems(provider, tag, "item_");
         context.needsSourceToRun = tag.getBoolean("needsMana");
         return context;
     }

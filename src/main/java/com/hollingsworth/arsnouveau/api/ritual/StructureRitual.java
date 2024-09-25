@@ -2,17 +2,20 @@ package com.hollingsworth.arsnouveau.api.ritual;
 
 import com.hollingsworth.arsnouveau.common.mixin.structure.StructureTemplateAccessor;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +40,8 @@ public abstract class StructureRitual extends AbstractRitual {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onStart(@Nullable Player player) {
+        super.onStart(player);
         if(getWorld().isClientSide)
             return;
         setup();
@@ -94,7 +97,9 @@ public abstract class StructureRitual extends AbstractRitual {
                         blockInfo.nbt().putLong("LootTableSeed", getWorld().random.nextLong());
                     }
 
-                    blockentity1.load(blockInfo.nbt());
+                    if(blockInfo.nbt() != null) {
+                        blockentity1.loadWithComponents(blockInfo.nbt(), getWorld().registryAccess());
+                    }
                 }
                 getWorld().playSound(null, translatedPos, blockInfo.state().getSoundType().getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
                 placeCount++;
@@ -115,16 +120,16 @@ public abstract class StructureRitual extends AbstractRitual {
     }
 
     @Override
-    public void read(CompoundTag tag) {
-        super.read(tag);
+    public void read(HolderLookup.Provider provider, CompoundTag tag) {
+        super.read(provider, tag);
         index = tag.getInt("index");
         hasConsumed = tag.getBoolean("hasConsumed");
         setup();
     }
 
     @Override
-    public void write(CompoundTag tag) {
-        super.write(tag);
+    public void write(HolderLookup.Provider provider, CompoundTag tag) {
+        super.write(provider, tag);
         tag.putInt("index", index);
         tag.putBoolean("hasConsumed", hasConsumed);
     }

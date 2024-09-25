@@ -1,0 +1,26 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": false,
+  "pedestalItems": [
+    {
+      "item": "minecraft:hopper"
+    },
+    {
+      "item": "minecraft:hopper"
+    },
+    {
+      "item": "minecraft:hopper"
+    },
+    {
+      "item": "minecraft:hopper"
+    }
+  ],
+  "reagent": {
+    "item": "ars_nouveau:relay"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:relay_deposit"
+  },
+  "sourceCost": 0
+}

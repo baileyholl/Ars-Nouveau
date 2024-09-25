@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.util.DamageUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 
 public class IceShardEntity extends EnchantedFallingBlock {
     public LivingEntity shooter;
@@ -26,8 +28,8 @@ public class IceShardEntity extends EnchantedFallingBlock {
     }
 
 
-    public IceShardEntity(Level worldIn, double x, double y, double z, BlockState fallingBlockState) {
-        super(ModEntities.ICE_SHARD.get(), worldIn, x, y, z, fallingBlockState);
+    public IceShardEntity(Level worldIn, double x, double y, double z, BlockState fallingBlockState, SpellResolver resolver) {
+        super(ModEntities.ICE_SHARD.get(), worldIn, x, y, z, fallingBlockState, resolver);
     }
 
     @Override
@@ -55,7 +57,7 @@ public class IceShardEntity extends EnchantedFallingBlock {
     }
 
     @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.ICE_SHARD.get();
     }
 }

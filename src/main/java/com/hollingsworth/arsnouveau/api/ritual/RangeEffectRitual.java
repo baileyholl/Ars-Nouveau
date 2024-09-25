@@ -1,13 +1,14 @@
 package com.hollingsworth.arsnouveau.api.ritual;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 
 public abstract class RangeEffectRitual extends RangeRitual {
 
-    abstract public MobEffect getEffect();
+    abstract public Holder<MobEffect> getEffect();
     abstract public int getRange();
     abstract public int getDuration();
 

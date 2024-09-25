@@ -13,8 +13,9 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetScribeRecipe;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.CreativeTabRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -25,13 +26,16 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.joml.Matrix4f;
 
 import java.util.ArrayList;
@@ -41,8 +45,8 @@ import java.util.stream.Collectors;
 public class GlyphUnlockMenu extends BaseBook {
 
 
-    public List<AbstractSpellPart> displayedGlyphs = new ArrayList<>();
-    public List<AbstractSpellPart> allParts = new ArrayList<>();
+    public List<RecipeHolder<GlyphRecipe>> displayedGlyphs = new ArrayList<>();
+    public List<RecipeHolder<GlyphRecipe>> allParts = new ArrayList<>();
     public int page = 0;
     public PageButton nextButton;
     public PageButton previousButton;
@@ -55,8 +59,8 @@ public class GlyphUnlockMenu extends BaseBook {
     int tier3Row = 0;
     BlockPos scribesPos;
     Filter filterSelected = Filter.ALL;
-    public GlyphRecipe hoveredRecipe;
-    public GlyphRecipe selectedRecipe;
+    public RecipeHolder<GlyphRecipe> hoveredRecipe;
+    public RecipeHolder<GlyphRecipe> selectedRecipe;
 
     enum Filter {
         ALL,
@@ -72,7 +76,7 @@ public class GlyphUnlockMenu extends BaseBook {
 
     public GlyphUnlockMenu(BlockPos pos) {
         super();
-        allParts = new ArrayList<>(GlyphRegistry.getSpellpartMap().values().stream().filter(AbstractSpellPart::shouldShowInUnlock).toList());
+        allParts = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.GLYPH_TYPE.get());
         this.displayedGlyphs = new ArrayList<>(allParts);
         this.scribesPos = pos;
     }
@@ -103,7 +107,7 @@ public class GlyphUnlockMenu extends BaseBook {
             searchBar.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.search").getString());
         searchBar.setResponder((val) -> this.onSearchChanged(val));
         addRenderableWidget(searchBar);
-        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 13, 50, 12, new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_icon.png"), this::onSelectClick));
+        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 13, 50, 12, ArsNouveau.prefix( "textures/gui/create_icon.png"), this::onSelectClick));
         this.nextButton = addRenderableWidget(new PageButton(bookRight - 20, bookBottom - 10, true, this::onPageIncrease, true));
         this.previousButton = addRenderableWidget(new PageButton(bookLeft - 5, bookBottom - 10, false, this::onPageDec, true));
         updateNextPageButtons();
@@ -119,16 +123,16 @@ public class GlyphUnlockMenu extends BaseBook {
             itemButtons.add(cell);
         }
 
-        all = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 22, 0, 0, 23, 20, 23, 20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_all.png"),
-                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_all_selected.png"), (b) -> this.setFilter(Filter.ALL, (SelectableButton) b, Component.translatable("ars_nouveau.all_glyphs").getString())).withTooltip(Component.translatable("ars_nouveau.all_glyphs"));
+        all = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 22, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix( "textures/gui/filter_tab_all.png"),
+                ArsNouveau.prefix( "textures/gui/filter_tab_all_selected.png"), (b) -> this.setFilter(Filter.ALL, (SelectableButton) b, Component.translatable("ars_nouveau.all_glyphs").getString())).withTooltip(Component.translatable("ars_nouveau.all_glyphs"));
         all.isSelected = true;
-        tier1 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 46, 0, 0, 23, 20, 23, 20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier1.png"),
-                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier1_selected.png"), (b) -> this.setFilter(Filter.TIER1, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 1).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 1));
+        tier1 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 46, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix( "textures/gui/filter_tab_tier1.png"),
+                ArsNouveau.prefix( "textures/gui/filter_tab_tier1_selected.png"), (b) -> this.setFilter(Filter.TIER1, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 1).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 1));
 
-        tier2 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 70, 0, 0, 23, 20, 23, 20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier2.png"),
-                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier2_selected.png"), (b) -> this.setFilter(Filter.TIER2, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 2).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 2));
-        tier3 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 94, 0, 0, 23, 20, 23, 20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier3.png"),
-                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier3_selected.png"), (b) -> this.setFilter(Filter.TIER3, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 3).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 3));
+        tier2 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 70, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix( "textures/gui/filter_tab_tier2.png"),
+                ArsNouveau.prefix( "textures/gui/filter_tab_tier2_selected.png"), (b) -> this.setFilter(Filter.TIER2, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 2).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 2));
+        tier3 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 94, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix( "textures/gui/filter_tab_tier3.png"),
+                ArsNouveau.prefix( "textures/gui/filter_tab_tier3_selected.png"), (b) -> this.setFilter(Filter.TIER3, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 3).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 3));
         filterButtons.add(all);
         filterButtons.add(tier2);
         filterButtons.add(tier1);
@@ -136,6 +140,20 @@ public class GlyphUnlockMenu extends BaseBook {
         for (SelectableButton button : filterButtons) {
             addRenderableWidget(button);
         }
+    }
+
+    @Override
+    public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
+        SoundManager manager = Minecraft.getInstance().getSoundManager();
+        if (pScrollY < 0 && nextButton.active) {
+            onPageIncrease(nextButton);
+            manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
+        } else if (pScrollY > 0 && previousButton.active) {
+            onPageDec(previousButton);
+            manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
+        }
+
+        return true;
     }
 
     public void setFilter(Filter filter, SelectableButton button, String displayTitle) {
@@ -152,7 +170,7 @@ public class GlyphUnlockMenu extends BaseBook {
 
     private void onSelectClick(Button button) {
         if (selectedRecipe != null) {
-            Networking.INSTANCE.sendToServer(new PacketSetScribeRecipe(scribesPos, selectedRecipe.id));
+            Networking.sendToServer(new PacketSetScribeRecipe(scribesPos, selectedRecipe.id()));
             Minecraft.getInstance().setScreen(null);
         }
     }
@@ -173,8 +191,8 @@ public class GlyphUnlockMenu extends BaseBook {
             searchBar.setSuggestion("");
             displayedGlyphs = new ArrayList<>();
 
-            for (AbstractSpellPart spellPart : allParts) {
-                if (spellPart.getLocaleName().toLowerCase().contains(searchBar.value.toLowerCase())) {
+            for (RecipeHolder<GlyphRecipe> spellPart : allParts) {
+                if (spellPart.value().getSpellPart().getLocaleName().toLowerCase().contains(searchBar.value.toLowerCase())) {
                     displayedGlyphs.add(spellPart);
                 }
             }
@@ -224,15 +242,15 @@ public class GlyphUnlockMenu extends BaseBook {
         int xStart = nextPage ? bookLeft + 154 : bookLeft + 20;
         int adjustedRowsPlaced = 0;
         int yStart = bookTop + 20;
-        List<AbstractSpellPart> sorted = new ArrayList<>(displayedGlyphs);
+        List<RecipeHolder<GlyphRecipe>> sorted = new ArrayList<>(displayedGlyphs);
         sorted.sort(CreativeTabRegistry.COMPARE_TIER_THEN_NAME);
         sorted = sorted.subList(maxPerPage * page, Math.min(sorted.size(), maxPerPage * (page + 1)));
         int adjustedXPlaced = 0;
         tier1Row = 0;
         adjustedRowsPlaced++;
         for (int i = 0; i < sorted.size(); i++) {
-            AbstractSpellPart part = sorted.get(i);
-
+            var holder = sorted.get(i);
+            var spellPart = holder.value().getSpellPart();
             if (adjustedXPlaced >= PER_ROW) {
                 adjustedRowsPlaced++;
 
@@ -249,10 +267,10 @@ public class GlyphUnlockMenu extends BaseBook {
             }
             int xOffset = 20 * ((adjustedXPlaced) % PER_ROW) + (nextPage ? 134 : 0);
             int yPlace = adjustedRowsPlaced * 18 + yStart;
-            UnlockGlyphButton cell = new UnlockGlyphButton(xStart + xOffset, yPlace, false, part, this::onGlyphClick);
-            IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player).orElse(null);
+            UnlockGlyphButton cell = new UnlockGlyphButton(xStart + xOffset, yPlace, false, holder, this::onGlyphClick);
+            IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player);
             if (cap != null) {
-                if (cap.knowsGlyph(part) || GlyphRegistry.getDefaultStartingSpells().contains(part)) {
+                if (cap.knowsGlyph(spellPart) || GlyphRegistry.getDefaultStartingSpells().contains(spellPart)) {
                     cell.playerKnows = true;
                 }
             }
@@ -262,16 +280,16 @@ public class GlyphUnlockMenu extends BaseBook {
         }
     }
 
-    public List<AbstractSpellPart> applyFilter(List<AbstractSpellPart> spellParts) {
+    public List<RecipeHolder<GlyphRecipe>> applyFilter(List<RecipeHolder<GlyphRecipe>> spellParts) {
         if (filterSelected == Filter.ALL)
             return spellParts;
         if (filterSelected == Filter.TIER1) {
-            return spellParts.stream().filter(a -> a.getConfigTier().value == 1).collect(Collectors.toList());
+            return spellParts.stream().filter(a -> a.value().getSpellPart().getConfigTier().value == 1).collect(Collectors.toList());
         }
         if (filterSelected == Filter.TIER2) {
-            return spellParts.stream().filter(a -> a.getConfigTier().value == 2).collect(Collectors.toList());
+            return spellParts.stream().filter(a -> a.value().getSpellPart().getConfigTier().value == 2).collect(Collectors.toList());
         }
-        return spellParts.stream().filter(a -> a.getConfigTier().value == 3).collect(Collectors.toList());
+        return spellParts.stream().filter(a -> a.value().getSpellPart().getConfigTier().value == 3).collect(Collectors.toList());
     }
 
     public void onGlyphClick(Button button) {
@@ -287,11 +305,11 @@ public class GlyphUnlockMenu extends BaseBook {
             unlockGlyphButton.selected = true;
             if (selectedRecipe == null)
                 return;
-            for (int i = 0; i < selectedRecipe.inputs.size(); i++) {
+            for (int i = 0; i < selectedRecipe.value().inputs.size(); i++) {
                 if (i > itemButtons.size())
                     break;
                 itemButtons.get(i).visible = true;
-                itemButtons.get(i).ingredient = selectedRecipe.inputs.get(i);
+                itemButtons.get(i).ingredient = selectedRecipe.value().inputs.get(i);
 
             }
         }
@@ -337,9 +355,9 @@ public class GlyphUnlockMenu extends BaseBook {
 
         graphics.drawString(font, orderingTitle, tier1Row > 7 ? 154 : 20, 5 + 18 * (tier1Row + (tier1Row == 1 ? 0 : 1)), -8355712, false);
 
-        graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15);
+        graphics.blit(ArsNouveau.prefix( "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15);
 
-        graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15, 72, 15);
+        graphics.blit(ArsNouveau.prefix( "textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15, 72, 15);
         graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.select"), 233, 183, -8355712, false);
     }
 
@@ -347,21 +365,20 @@ public class GlyphUnlockMenu extends BaseBook {
         List<Component> tooltip = new ArrayList<>();
         super.collectTooltips(stack, mouseX, mouseY, tooltip);
         if (hoveredRecipe != null) {
-            MutableComponent component = Component.translatable("ars_nouveau.levels_required", ScribesTile.getLevelsFromExp(hoveredRecipe.exp)).withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN));
+            MutableComponent component = Component.translatable("ars_nouveau.levels_required", ScribesTile.getLevelsFromExp(hoveredRecipe.value().exp)).withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN));
             tooltip.add(component);
         }
-        List<ClientTooltipComponent> components = new ArrayList<>(net.minecraftforge.client.ForgeHooksClient.gatherTooltipComponents(ItemStack.EMPTY, tooltip, mouseX, width, height, this.font));
+        List<ClientTooltipComponent> components = new ArrayList<>(net.neoforged.neoforge.client.ClientHooks.gatherTooltipComponents(ItemStack.EMPTY, tooltip, mouseX, width, height, this.font));
         if (hoveredRecipe != null)
-            components.add(new GlyphRecipeTooltip(hoveredRecipe.inputs));
+            components.add(new GlyphRecipeTooltip(hoveredRecipe.value().inputs));
         renderTooltipInternal(stack, components, mouseX, mouseY);
 
     }
 
     public void renderTooltipInternal(GuiGraphics graphics, List<ClientTooltipComponent> pClientTooltipComponents, int pMouseX, int pMouseY) {
-
         if (!pClientTooltipComponents.isEmpty()) {
             PoseStack pPoseStack = graphics.pose();
-            net.minecraftforge.client.event.RenderTooltipEvent.Pre preEvent = net.minecraftforge.client.ForgeHooksClient.onRenderTooltipPre(ItemStack.EMPTY, graphics, pMouseX, pMouseY, width, height, pClientTooltipComponents, this.font, DefaultTooltipPositioner.INSTANCE);
+            net.neoforged.neoforge.client.event.RenderTooltipEvent.Pre preEvent = net.neoforged.neoforge.client.ClientHooks.onRenderTooltipPre(ItemStack.EMPTY, graphics, pMouseX, pMouseY, width, height, pClientTooltipComponents, this.font, DefaultTooltipPositioner.INSTANCE);
             if (preEvent.isCanceled()) return;
             int i = 0;
             int j = pClientTooltipComponents.size() == 1 ? -2 : 0;
@@ -385,12 +402,10 @@ public class GlyphUnlockMenu extends BaseBook {
                 k2 = this.height - j - 6;
             }
             pPoseStack.pushPose();
-            Tesselator tesselator = Tesselator.getInstance();
-            BufferBuilder bufferbuilder = tesselator.getBuilder();
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
-            bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
             Matrix4f matrix4f = pPoseStack.last().pose();
-            net.minecraftforge.client.event.RenderTooltipEvent.Color colorEvent = net.minecraftforge.client.ForgeHooksClient.onRenderTooltipColor(ItemStack.EMPTY, graphics, j2, k2, preEvent.getFont(), pClientTooltipComponents);
+            net.neoforged.neoforge.client.event.RenderTooltipEvent.Color colorEvent = net.neoforged.neoforge.client.ClientHooks.onRenderTooltipColor(ItemStack.EMPTY, graphics, j2, k2, preEvent.getFont(), pClientTooltipComponents);
+
             graphics.fillGradient( j2 - 3, k2 - 4, j2 + i + 3, k2 - 3, 400, colorEvent.getBackgroundStart(), colorEvent.getBackgroundStart());
             graphics.fillGradient(j2 - 3, k2 + j + 3, j2 + i + 3, k2 + j + 4, 400, colorEvent.getBackgroundEnd(), colorEvent.getBackgroundEnd());
             graphics.fillGradient(j2 - 3, k2 - 3, j2 + i + 3, k2 + j + 3, 400, colorEvent.getBackgroundStart(), colorEvent.getBackgroundEnd());
@@ -400,12 +415,12 @@ public class GlyphUnlockMenu extends BaseBook {
             graphics.fillGradient(j2 + i + 2, k2 - 3 + 1, j2 + i + 3, k2 + j + 3 - 1, 400, colorEvent.getBorderStart(), colorEvent.getBorderEnd());
             graphics.fillGradient(j2 - 3, k2 - 3, j2 + i + 3, k2 - 3 + 1, 400, colorEvent.getBorderStart(), colorEvent.getBorderStart());
             graphics.fillGradient(j2 - 3, k2 + j + 2, j2 + i + 3, k2 + j + 3, 400, colorEvent.getBorderEnd(), colorEvent.getBorderEnd());
+
             RenderSystem.enableDepthTest();
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
-            BufferUploader.drawWithShader(bufferbuilder.end());
             RenderSystem.disableBlend();
-            MultiBufferSource.BufferSource multibuffersource$buffersource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+            MultiBufferSource.BufferSource multibuffersource$buffersource = graphics.bufferSource();
             pPoseStack.translate(0.0D, 0.0D, 400.0D);
             int l1 = k2;
 
@@ -414,8 +429,6 @@ public class GlyphUnlockMenu extends BaseBook {
                 clienttooltipcomponent1.renderText(preEvent.getFont(), j2, l1, matrix4f, multibuffersource$buffersource);
                 l1 += clienttooltipcomponent1.getHeight() + (i2 == 0 ? 2 : 0);
             }
-
-            multibuffersource$buffersource.endBatch();
             l1 = k2;
 
             pPoseStack.translate(0,0,600);

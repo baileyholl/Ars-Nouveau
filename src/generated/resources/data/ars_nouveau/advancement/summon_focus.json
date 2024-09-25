@@ -1,0 +1,32 @@
+{
+  "parent": "ars_nouveau:wilden_tribute",
+  "criteria": {
+    "has_summon_focus": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ars_nouveau:summon_focus"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.summon_focus"
+    },
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:summon_focus"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.summon_focus"
+    }
+  },
+  "requirements": [
+    [
+      "has_summon_focus"
+    ]
+  ]
+}

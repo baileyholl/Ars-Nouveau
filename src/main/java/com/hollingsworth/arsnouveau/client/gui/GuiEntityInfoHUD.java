@@ -1,14 +1,17 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
-import com.hollingsworth.arsnouveau.common.items.ItemScroll;
+import com.hollingsworth.arsnouveau.common.items.data.ItemScrollData;
 import com.hollingsworth.arsnouveau.setup.config.Config;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -22,11 +25,9 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.client.ClientHooks;
+import net.neoforged.neoforge.client.event.RenderTooltipEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
@@ -34,13 +35,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GuiEntityInfoHUD {
-    public static final IGuiOverlay OVERLAY = GuiEntityInfoHUD::renderOverlay;
+    public static MultiBufferSource.BufferSource renderType = MultiBufferSource.immediate(new ByteBufferBuilder(1536));
+    public static final LayeredDraw.Layer OVERLAY = GuiEntityInfoHUD::renderOverlay;
 
     public static int hoverTicks = 0;
     public static Object lastHovered = null;
 
-    public static void renderOverlay(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width,
-                                     int height) {
+    public static void renderOverlay(GuiGraphics graphics, DeltaTracker tracker) {
         PoseStack poseStack = graphics.pose();
         Minecraft mc = Minecraft.getInstance();
         if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
@@ -59,7 +60,7 @@ public class GuiEntityInfoHUD {
                 iTooltipProvider.getTooltip(tooltip);
             }
             if (result.getEntity() instanceof ItemFrame frame) {
-                ItemScroll.ItemScrollData data = new ItemScroll.ItemScrollData(frame.getItem());
+                ItemScrollData data = frame.getItem().getOrDefault(DataComponentRegistry.ITEM_SCROLL_DATA, new ItemScrollData(List.of()));
                 for(ItemStack i : data.getItems()){
                     tooltip.add(i.getHoverName());
                 }
@@ -97,13 +98,15 @@ public class GuiEntityInfoHUD {
             tooltipHeight += (tooltip.size() - 1) * 10;
         }
         int xOffset = Config.TOOLTIP_X_OFFSET.get();
+        int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+        int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
         int posX = width / 2 + xOffset;
         int posY = height / 2 + Config.TOOLTIP_Y_OFFSET.get();
 
         posX = Math.min(posX, width - tooltipTextWidth - 20);
         posY = Math.min(posY, height - tooltipHeight - 20);
 
-        float fade = Mth.clamp((hoverTicks + partialTicks) / 12f, 0, 1);
+        float fade = Mth.clamp((hoverTicks + tracker.getGameTimeDeltaTicks()) / 12f, 0, 1);
         Color colorBackground = VANILLA_TOOLTIP_BACKGROUND.scaleAlpha(.75f);
         Color colorBorderTop = VANILLA_TOOLTIP_BORDER_1;
         Color colorBorderBot = VANILLA_TOOLTIP_BORDER_2;
@@ -114,7 +117,6 @@ public class GuiEntityInfoHUD {
             colorBorderTop.scaleAlpha(fade);
             colorBorderBot.scaleAlpha(fade);
         }
-
         drawHoveringText(ItemStack.EMPTY, graphics, tooltip,  posX, posY, width, height, -1, colorBackground.getRGB(),
                 colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
         poseStack.popPose();
@@ -129,11 +131,13 @@ public class GuiEntityInfoHUD {
                                         int maxTextWidth, int backgroundColor, int borderColorStart, int borderColorEnd, Font font) {
         if (textLines.isEmpty())
             return;
+
         PoseStack pStack = graphics.pose();
-        List<ClientTooltipComponent> list = ForgeHooksClient.gatherTooltipComponents(stack, textLines, stack.getTooltipImage(), mouseX, screenWidth, screenHeight, font);
+        List<ClientTooltipComponent> list = ClientHooks.gatherTooltipComponents(stack, textLines, stack.getTooltipImage(), mouseX, screenWidth, screenHeight, font);
         RenderTooltipEvent.Pre event =
                 new RenderTooltipEvent.Pre(stack, graphics, mouseX, mouseY, screenWidth, screenHeight, font, list, DefaultTooltipPositioner.INSTANCE);
-        if (MinecraftForge.EVENT_BUS.post(event))
+        NeoForge.EVENT_BUS.post(event);
+        if (event.isCanceled())
             return;
 
         mouseX = event.getX();
@@ -216,7 +220,7 @@ public class GuiEntityInfoHUD {
         final int zLevel = 400;
         RenderTooltipEvent.Color colorEvent = new RenderTooltipEvent.Color(stack, graphics, tooltipX, tooltipY,
                 font, backgroundColor, borderColorStart, borderColorEnd, list);
-        MinecraftForge.EVENT_BUS.post(colorEvent);
+        NeoForge.EVENT_BUS.post(colorEvent);
         backgroundColor = colorEvent.getBackgroundStart();
         borderColorStart = colorEvent.getBorderStart();
         borderColorEnd = colorEvent.getBorderEnd();
@@ -242,11 +246,7 @@ public class GuiEntityInfoHUD {
                 tooltipY - 3 + 1, borderColorStart, borderColorStart);
         graphics.fillGradient(tooltipX - 3, tooltipY + tooltipHeight + 2,
                 tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, borderColorEnd, borderColorEnd);
-
-        MultiBufferSource.BufferSource renderType = MultiBufferSource.immediate(Tesselator.getInstance()
-                .getBuilder());
         pStack.translate(0.0D, 0.0D, zLevel);
-
         for (int lineNumber = 0; lineNumber < list.size(); ++lineNumber) {
             ClientTooltipComponent line = list.get(lineNumber);
 
@@ -258,7 +258,6 @@ public class GuiEntityInfoHUD {
 
             tooltipY += 10;
         }
-
         renderType.endBatch();
         pStack.popPose();
 

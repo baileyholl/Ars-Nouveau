@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "x": {
+      "tag": "c:logs/archwood"
+    },
+    "y": {
+      "tag": "c:nuggets/gold"
+    }
+  },
+  "pattern": [
+    "yxy",
+    "x x",
+    "yxy"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:repository"
+  }
+}

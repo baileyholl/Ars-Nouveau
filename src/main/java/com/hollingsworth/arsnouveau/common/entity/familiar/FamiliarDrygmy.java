@@ -14,11 +14,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.event.entity.living.LootingLevelEvent;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import net.neoforged.neoforge.common.Tags;
+import org.jetbrains.annotations.NotNull;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.Arrays;
 
@@ -29,7 +29,7 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
     }
 
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+    protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (level.isClientSide || hand != InteractionHand.MAIN_HAND)
             return InteractionResult.SUCCESS;
 
@@ -51,14 +51,14 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
             event.builder.addDamageModifier(2.0f);
         }
     }
-
-    public void onLootingEvent(LootingLevelEvent event) {
-        if (event.getDamageSource() != null && isAlive() && getOwner() != null && event.getDamageSource().getEntity() != null && getOwner().equals(event.getDamageSource().getEntity())) {
-            if (level.random.nextFloat() > 0.4) {
-                event.setLootingLevel(event.getLootingLevel() + 1 + random.nextInt(3));
-            }
-        }
-    }
+// TODO: restore looting event
+//    public void onLootingEvent(LootingLevelEvent event) {
+//        if (event.getDamageSource() != null && isAlive() && getOwner() != null && event.getDamageSource().getEntity() != null && getOwner().equals(event.getDamageSource().getEntity())) {
+//            if (level.random.nextFloat() > 0.4) {
+//                event.setLootingLevel(event.getLootingLevel() + 1 + random.nextInt(3));
+//            }
+//        }
+//    }
 
     @Override
     public PlayState walkPredicate(AnimationState event) {
@@ -70,7 +70,7 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
     }
 
     @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.ENTITY_FAMILIAR_DRYGMY.get();
     }
 
@@ -78,6 +78,6 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
     public ResourceLocation getTexture(FamiliarEntity entity) {
         String color = getColor().toLowerCase();
         if (color.isEmpty()) color = "brown";
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/drygmy_" + color + ".png");
+        return ArsNouveau.prefix("textures/entity/drygmy_" + color + ".png");
     }
 }

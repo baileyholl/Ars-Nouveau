@@ -1,0 +1,37 @@
+{
+  "type": "ars_nouveau:book_upgrade",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:apprentice_spell_book"
+    },
+    {
+      "tag": "c:ender_pearls"
+    },
+    {
+      "tag": "c:ender_pearls"
+    },
+    {
+      "tag": "c:ender_pearls"
+    },
+    {
+      "tag": "c:gems/emerald"
+    },
+    {
+      "tag": "c:gems/emerald"
+    },
+    {
+      "item": "minecraft:totem_of_undying"
+    },
+    {
+      "item": "minecraft:nether_star"
+    },
+    {
+      "item": "ars_nouveau:wilden_tribute"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:archmage_spell_book"
+  }
+}

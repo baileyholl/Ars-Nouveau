@@ -1,13 +1,13 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import com.hollingsworth.arsnouveau.common.items.data.StarbuncleCharmData;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -19,20 +19,18 @@ public class StarbuncleShard extends ModItem{
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
-        if(stack.hasTag()){
-            Starbuncle.StarbuncleData data = new Starbuncle.StarbuncleData(stack.getOrCreateTag());
-            if (data.name != null) {
-                tooltip2.add(data.name);
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
+        StarbuncleCharmData data = stack.get(DataComponentRegistry.STARBUNCLE_DATA);
+        if(data != null){
+            data.getName().ifPresent(tooltip2::add);
+            if(data.getAdopter() != null && !data.getAdopter().isEmpty()){
+                tooltip2.add(Component.translatable("ars_nouveau.adopter", data.getAdopter()).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
             }
-            if(data.adopter != null){
-                tooltip2.add(Component.translatable("ars_nouveau.adopter", data.adopter).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
-            }
-            if(data.bio != null){
-                tooltip2.add(Component.literal(data.bio).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE)));
+            if(data.getBio() != null && !data.getBio().isEmpty()){
+                tooltip2.add(Component.literal(data.getBio()).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE)));
             }
         }else{
-            super.appendHoverText(stack, worldIn, tooltip2, flagIn);
+            super.appendHoverText(stack, context, tooltip2, flagIn);
         }
     }
 }

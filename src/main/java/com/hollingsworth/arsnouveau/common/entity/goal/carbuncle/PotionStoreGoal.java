@@ -1,18 +1,17 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
-import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.alchemy.PotionContents;
 import org.jetbrains.annotations.Nullable;
 
 public class PotionStoreGoal extends GoToPosGoal<StarbyPotionBehavior> {
     public PotionStoreGoal(Starbuncle starbuncle, StarbyPotionBehavior behavior) {
         super(starbuncle, behavior, () -> {
-            return behavior.getHeldPotion().getPotion() != Potions.EMPTY;
+            return behavior.getHeldPotion() != PotionContents.EMPTY;
         });
     }
 
@@ -39,7 +38,7 @@ public class PotionStoreGoal extends GoToPosGoal<StarbyPotionBehavior> {
             int room = jarTile.getMaxFill() - jarTile.getAmount();
             int diff = Math.min(room, behavior.getAmount());
             jarTile.add(behavior.getHeldPotion(), diff);
-            behavior.setHeldPotion(new PotionData());
+            behavior.setHeldPotion(PotionContents.EMPTY);
             starbuncle.level.playSound(null, targetPos, SoundEvents.BUCKET_EMPTY, SoundSource.NEUTRAL, 0.5f, 1.3f);
             behavior.setAmount(behavior.getAmount() - diff);
         }

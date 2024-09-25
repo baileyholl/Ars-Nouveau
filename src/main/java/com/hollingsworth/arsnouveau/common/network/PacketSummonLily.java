@@ -1,13 +1,16 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.Lily;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
 
-import java.util.function.Supplier;
-
-public class PacketSummonLily {
+public class PacketSummonLily extends AbstractPacket{
+    public static final Type<PacketSummonLily> TYPE = new Type<>(ArsNouveau.prefix("summon_lily"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketSummonLily> CODEC = StreamCodec.ofMember(PacketSummonLily::toBytes, PacketSummonLily::new);
 
 
     public PacketSummonLily() {
@@ -15,27 +18,26 @@ public class PacketSummonLily {
     }
 
     //Decoder
-    public PacketSummonLily(FriendlyByteBuf buf) {
+    public PacketSummonLily(RegistryFriendlyByteBuf buf) {
 
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(RegistryFriendlyByteBuf buf) {
 
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            if (ctx.get().getSender() != null) {
-                ServerPlayer player = ctx.get().getSender();
-                Lily lily = new Lily(player.level);
-                lily.setPos(player.getX(), player.getY(), player.getZ());
-                lily.setOwnerUUID(player.getUUID());
-                player.level.addFreshEntity(lily);
-                Lily.ownerLilyMap.put(player.getUUID(), lily.getUUID());
-            }
-        });
-        ctx.get().setPacketHandled(true);
+    @Override
+    public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
+        Lily lily = new Lily(player.level);
+        lily.setPos(player.getX(), player.getY(), player.getZ());
+        lily.setOwnerUUID(player.getUUID());
+        player.level.addFreshEntity(lily);
+        Lily.ownerLilyMap.put(player.getUUID(), lily.getUUID());
+    }
 
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

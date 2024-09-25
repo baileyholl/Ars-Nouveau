@@ -14,10 +14,12 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RuneBlock;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -27,8 +29,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
@@ -61,7 +63,7 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
     public void castSpell(Entity entity) {
         if (entity == null)
             return;
-        if (!this.isCharged || spell.isEmpty() || !(level instanceof ServerLevel) || !(spell.recipe.get(0) instanceof MethodTouch))
+        if (!this.isCharged || spell.isEmpty() || !(level instanceof ServerLevel) || !(spell.get(0) instanceof MethodTouch))
             return;
         if (!this.isTemporary && this.disabled) return;
         try {
@@ -87,9 +89,9 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        tag.put("spell", spell.serialize());
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
+        tag.put("spell", ANCodecs.encode(Spell.CODEC.codec(), spell));
         tag.putBoolean("charged", isCharged);
         tag.putBoolean("redstone", disabled);
         tag.putBoolean("temp", isTemporary);
@@ -100,8 +102,9 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        this.spell = Spell.fromTag(tag.getCompound("spell"));
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(tag, pRegistries);
+        this.spell = ANCodecs.decode(Spell.CODEC.codec(), tag.getCompound("spell"));
         this.isCharged = tag.getBoolean("charged");
         this.disabled = tag.getBoolean("redstone");
         this.isTemporary = tag.getBoolean("temp");
@@ -109,7 +112,6 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
         if (tag.contains("uuid"))
             this.uuid = tag.getUUID("uuid");
         this.isSensitive = tag.getBoolean("sensitive");
-        super.load(tag);
     }
 
     @Override
@@ -153,19 +155,19 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if (ArsNouveau.proxy.getPlayer().hasEffect(ModPotions.MAGIC_FIND_EFFECT.get())) {
+        if (ArsNouveau.proxy.getPlayer().hasEffect(ModPotions.MAGIC_FIND_EFFECT)) {
             tooltip.add(Component.literal(spell.getDisplayString()));
         }
     }
 
     @Override
     public void setColor(ParticleColor color) {
-        spell.withColor(color);
+        this.spell = spell.withColor(color);
         updateBlock();
     }
 
     @Override
     public ParticleColor getColor() {
-        return spell.color;
+        return spell.color();
     }
 }

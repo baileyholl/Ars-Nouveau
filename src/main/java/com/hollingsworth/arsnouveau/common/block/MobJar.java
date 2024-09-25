@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.registry.JarBehaviorRegistry;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import com.hollingsworth.arsnouveau.common.items.MobJarItem;
@@ -9,7 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PlayerRideable;
@@ -59,33 +60,32 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
     }
 
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         MobJarTile tile = (MobJarTile) pLevel.getBlockEntity(pPos);
         if (tile == null) {
-            return InteractionResult.PASS;
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         if (!pLevel.isClientSide) {
             ItemStack held = pPlayer.getItemInHand(pHand);
             if (held.is(ItemTagProvider.JAR_ITEM_BLACKLIST)) {
-                return InteractionResult.PASS;
+                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
             }
         }
         if (tile.getEntity() == null && !pLevel.isClientSide) {
-            ItemStack stack = pPlayer.getItemInHand(pHand);
             if (stack.getItem() instanceof SpawnEggItem spawnEggItem) {
-                EntityType<?> type = spawnEggItem.getType(null);
+                EntityType<?> type = spawnEggItem.getType(stack);
                 Entity entity = type.create(pLevel);
                 if (entity != null) {
                     tile.setEntityData(entity);
                     stack.shrink(1);
-                    return InteractionResult.CONSUME;
+                    return ItemInteractionResult.CONSUME;
                 }
-            } else if (!stack.isEmpty() && !(stack.getItem() instanceof MobJarItem)) {
+            } else if (!stack.isEmpty() && !(stack.getItem() instanceof MobJarItem) && !(pPlayer instanceof ANFakePlayer)) {
                 ItemEntity entity = new ItemEntity(EntityType.ITEM, pLevel);
                 entity.setItem(stack.copy());
                 tile.setEntityData(entity);
                 stack.setCount(0);
-                return InteractionResult.CONSUME;
+                return ItemInteractionResult.CONSUME;
             }
         }
         if (tile.getEntity() != null
@@ -102,7 +102,7 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
             behavior.use(pState, pLevel, pPos, pPlayer, pHand, pHit, tile);
         });
         tile.updateBlock();
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Override
@@ -211,7 +211,7 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
     }
 
     @Override
-    public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+    public boolean isPathfindable(BlockState pState, PathComputationType pType) {
         return false;
     }
 }

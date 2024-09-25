@@ -1,57 +1,56 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
-import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Supplier;
-
-public class PacketSetSound {
-
+public class PacketSetSound extends AbstractPacket{
+    public static final Type<PacketSetSound> TYPE = new Type<>(ArsNouveau.prefix("set_sound"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketSetSound> CODEC = StreamCodec.ofMember(PacketSetSound::toBytes, PacketSetSound::new);
     int castSlot;
     ConfiguredSpellSound sound;
     boolean mainHand;
-    public PacketSetSound(int castSlot, ConfiguredSpellSound sound, boolean mainHand) {
+    public PacketSetSound(int castSlot, @NotNull ConfiguredSpellSound sound, boolean mainHand) {
         this.castSlot = castSlot;
         this.sound = sound;
         this.mainHand = mainHand;
     }
 
     //Decoder
-    public PacketSetSound(FriendlyByteBuf buf) {
+    public PacketSetSound(RegistryFriendlyByteBuf buf) {
         castSlot = buf.readInt();
-        CompoundTag tag = buf.readNbt();
-        sound = tag == null ? ConfiguredSpellSound.DEFAULT : ConfiguredSpellSound.fromTag(tag);
+        sound = ConfiguredSpellSound.STREAM.decode(buf);
         mainHand = buf.readBoolean();
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeInt(castSlot);
-        buf.writeNbt(sound.serialize());
+        ConfiguredSpellSound.STREAM.encode(buf, sound);
         buf.writeBoolean(mainHand);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            if (ctx.get().getSender() != null) {
-                ItemStack stack = ctx.get().getSender().getItemInHand(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND);
-                if (stack.getItem() instanceof SpellBook) {
-                    ISpellCaster caster = CasterUtil.getCaster(stack);
-                    caster.setSound(sound, castSlot);
-                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> ctx.get().getSender()), new PacketUpdateBookGUI(stack));
-                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> ctx.get().getSender()),
-                            new PacketOpenSpellBook(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND));
-                }
-            }
-        });
-        ctx.get().setPacketHandled(true);
+    @Override
+    public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
+        ItemStack stack = player.getItemInHand(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND);
+        if (stack.getItem() instanceof SpellBook) {
+            SpellCasterRegistry.from(stack).setSound(sound, castSlot).saveToStack(stack);
+            Networking.sendToPlayerClient(new PacketUpdateBookGUI(stack), player);
+            Networking.sendToPlayerClient(new PacketOpenSpellBook(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND), player);
+        }
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

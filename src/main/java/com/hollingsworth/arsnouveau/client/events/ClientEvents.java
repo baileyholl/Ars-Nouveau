@@ -1,41 +1,44 @@
 package com.hollingsworth.arsnouveau.client.events;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.spell.Spell;
-import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.api.registry.DynamicTooltipRegistry;
 import com.hollingsworth.arsnouveau.client.gui.PatchouliTooltipEvent;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.renderer.world.PantomimeRenderer;
+import com.hollingsworth.arsnouveau.common.block.tile.ArchwoodChestTile;
 import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
 import com.hollingsworth.arsnouveau.common.block.tile.SkyBlockTile;
-import com.hollingsworth.arsnouveau.common.spell.casters.ReactiveCaster;
-import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
+@EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class ClientEvents {
 
-    @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-    static class ClientModEvents {
-        @SubscribeEvent
-        public static void registerTooltipFactory(RegisterClientTooltipComponentFactoriesEvent event) {
-            event.register(SpellTooltip.class, SpellTooltip.SpellTooltipRenderer::new);
-        }
+    @SubscribeEvent
+    public static void registerTooltipFactory(RegisterClientTooltipComponentFactoriesEvent event) {
+        event.register(SpellTooltip.class, SpellTooltip.SpellTooltipRenderer::new);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -44,6 +47,27 @@ public class ClientEvents {
             PantomimeRenderer.renderOutline(event.getPoseStack());
         }
     }
+
+    @SubscribeEvent
+    public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
+        event.registerItem(new IClientItemExtensions() {
+            @Override
+            public @NotNull BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                Minecraft mc = Minecraft.getInstance();
+
+                return new BlockEntityWithoutLevelRenderer(mc.getBlockEntityRenderDispatcher(), mc.getEntityModels()) {
+                    private final BlockEntity tile = new ArchwoodChestTile(BlockPos.ZERO, BlockRegistry.ARCHWOOD_CHEST.get().defaultBlockState());
+
+                    @Override
+                    public void renderByItem(@NotNull ItemStack stack, @NotNull ItemDisplayContext transformType, @NotNull PoseStack pose, @NotNull MultiBufferSource buffer, int x, int y) {
+                        mc.getBlockEntityRenderDispatcher().renderItem(tile, pose, buffer, x, y);
+                    }
+
+                };
+            }
+        }, BlockRegistry.ARCHWOOD_CHEST.get().asItem());
+    }
+
 
     @SubscribeEvent
     public static void TooltipEvent(RenderTooltipEvent.Pre e) {
@@ -70,8 +94,8 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void overlayEvent(RenderGuiOverlayEvent.Pre event) {
-        if (Minecraft.getInstance().screen instanceof GuiRadialMenu && event.getOverlay() == VanillaGuiOverlay.CROSSHAIR.type()) {
+    public static void overlayEvent(RenderGuiLayerEvent.Pre event) {
+        if (Minecraft.getInstance().screen instanceof GuiRadialMenu && event.getName().equals(VanillaGuiLayers.CROSSHAIR)) {
             event.setCanceled(true);
         }
     }
@@ -80,13 +104,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onTooltip(final ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
-        int level = stack.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get());
-        if (level > 0 && new ReactiveCaster(stack).getSpell().isValid()) {
-            Spell spell = new ReactiveCaster(stack).getSpell();
-            event.getToolTip().add(Component.literal(spell.getDisplayString()));
-        }
-
-        Collections.addAll(event.getToolTip(), ClientInfo.storageTooltip);
+        DynamicTooltipRegistry.appendTooltips(stack, event.getContext(), event.getToolTip()::add, event.getFlags());
     }
 
     public static Component localize(String key, Object... params) {
@@ -97,6 +115,5 @@ public class ClientEvents {
         }
         return Component.translatable(key, params);
     }
-
 
 }

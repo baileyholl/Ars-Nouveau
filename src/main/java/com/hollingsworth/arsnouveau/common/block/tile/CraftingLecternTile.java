@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.client.container.CraftingTerminalMenu;
 import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.Container;
@@ -20,15 +20,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.*;
@@ -68,8 +67,8 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag compound) {
-		super.saveAdditional(compound);
+	public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+		super.saveAdditional(tag, pRegistries);
 
 		ListTag listnbt = new ListTag();
 
@@ -78,18 +77,18 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 			if (!itemstack.isEmpty()) {
 				CompoundTag compoundnbt = new CompoundTag();
 				compoundnbt.putInt("Slot", i);
-				itemstack.save(compoundnbt);
+				compoundnbt.put("item", itemstack.save(pRegistries));
 				listnbt.add(compoundnbt);
 			}
 		}
 
-		compound.put("CraftingTable", listnbt);
+		tag.put("CraftingTable", listnbt);
 	}
 
 	private boolean reading;
 	@Override
-	public void load(CompoundTag compound) {
-		super.load(compound);
+	protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+		super.loadAdditional(compound, pRegistries);
 		reading = true;
 		ListTag listnbt = compound.getList("CraftingTable", 10);
 
@@ -97,7 +96,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 			CompoundTag compoundnbt = listnbt.getCompound(i);
 			int j = compoundnbt.getInt("Slot");
 			if (j >= 0 && j < craftMatrix.getContainerSize()) {
-				craftMatrix.setItem(j, ItemStack.of(compoundnbt));
+				craftMatrix.setItem(j, ItemStack.parseOptional(pRegistries, compoundnbt.getCompound("item")));
 			}
 		}
 		reading = false;
@@ -131,19 +130,20 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 		}
 
 		crafted.onCraftedBy(player.level, player, amountCrafted);
-		ForgeEventFactory.firePlayerCraftingEvent(player, ItemHandlerHelper.copyStackWithSize(crafted, amountCrafted), craftMatrix);
+		var copyStack = crafted.copy();
+		copyStack.setCount(amountCrafted);
+		EventHooks.firePlayerCraftingEvent(player, copyStack, craftMatrix);
 	}
 
 	public void craft(Player thePlayer, @Nullable String tab) {
 		if(currentRecipe == null) {
 			return;
 		}
-		NonNullList<ItemStack> remainder = currentRecipe.getRemainingItems(craftMatrix);
 		boolean playerInvUpdate = false;
-		for (int i = 0; i < remainder.size(); ++i) {
+		for (int i = 0; i < 9; ++i) {
 			ItemStack currentStack = craftMatrix.getItem(i);
 			ItemStack oldItem = currentStack.copy();
-			ItemStack rem = remainder.get(i);
+			ItemStack rem = currentStack.getCraftingRemainingItem();
 			if (!currentStack.isEmpty()) {
 				craftMatrix.removeItemNoUpdate(i, 1);
 				currentStack = craftMatrix.getItem(i);
@@ -201,14 +201,16 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 	}
 
 	protected void onCraftingMatrixChanged() {
-		if (currentRecipe == null || !currentRecipe.matches(craftMatrix, level)) {
-			currentRecipe = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftMatrix, level).orElse(null);
+		if (currentRecipe == null || !currentRecipe.matches(craftMatrix.asCraftInput(), level)) {
+			var holder = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftMatrix.asCraftInput(), level).orElse(null);
+			currentRecipe = holder == null ? null : holder.value();
+
 		}
 
 		if (currentRecipe == null) {
 			craftResult.setItem(0, ItemStack.EMPTY);
 		} else {
-			craftResult.setItem(0, currentRecipe.assemble(craftMatrix, level.registryAccess()));
+			craftResult.setItem(0, currentRecipe.assemble(craftMatrix.asCraftInput(), level.registryAccess()));
 		}
 
 		craftingListeners.forEach(CraftingTerminalMenu::onCraftMatrixChanged);

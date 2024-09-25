@@ -22,29 +22,29 @@ public class ArmorRenderer extends GeoArmorRenderer<AnimatedMagicArmor> {
     }
 
     @Override
-    public void renderRecursively(PoseStack poseStack, AnimatedMagicArmor animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderRecursively(PoseStack poseStack, AnimatedMagicArmor animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
         if(bone.getName().equalsIgnoreCase("armorRightArmSlim") || bone.getName().equalsIgnoreCase("armorLeftArmSlim")){
             bone.setHidden(true);
         }
-        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
     }
 
     @Override
-    public void actuallyRender(PoseStack poseStack, AnimatedMagicArmor animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void actuallyRender(PoseStack poseStack, AnimatedMagicArmor animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
         Optional<GeoBone> slimRight = model.getBone("armorRightArmSlim");
         Optional<GeoBone> slimLeft = model.getBone("armorLeftArmSlim");
         slimRight.ifPresent(geoBone -> geoBone.setHidden(true));
         slimLeft.ifPresent(geoBone -> geoBone.setHidden(true));
         model.getBone("armorRightArmSlim").ifPresent(geoBone -> geoBone.setHidden(true));
         model.getBone("armorLeftArmSlim").ifPresent(geoBone -> geoBone.setHidden(true));
-        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
     }
 
 
     @Override
     public ResourceLocation getTextureLocation(AnimatedMagicArmor instance) {
-        if(model instanceof GenericModel<AnimatedMagicArmor> genericModel){
-            return new ResourceLocation(ArsNouveau.MODID, "textures/" + genericModel.textPathRoot + "/" + genericModel.name + "_" + instance.getColor(getCurrentStack()) + ".png");
+        if(instance != null && model instanceof GenericModel<AnimatedMagicArmor> genericModel){
+            return ArsNouveau.prefix( "textures/" + genericModel.textPathRoot + "/" + genericModel.name + "_" + instance.getColor(getCurrentStack()) + ".png");
         }
 
         return super.getTextureLocation(instance);

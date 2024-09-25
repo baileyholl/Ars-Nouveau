@@ -20,7 +20,7 @@ public class StartFlightGoal extends Goal {
         stalker.setLeapCooldown(400);
         stalker.push(0, 0.5, 0);
         stalker.setFlying(true);
-        Networking.sendToNearby(stalker.level, stalker, new PacketAnimEntity(stalker.getId(), WildenStalker.Animations.FLY.ordinal()));
+        Networking.sendToNearbyClient(stalker.level, stalker, new PacketAnimEntity(stalker.getId(), WildenStalker.Animations.FLY.ordinal()));
     }
 
     @Override

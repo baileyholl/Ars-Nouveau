@@ -1,0 +1,27 @@
+{
+  "values": [
+    "ars_nouveau:sourcestone_stairs",
+    "ars_nouveau:sourcestone_mosaic_stairs",
+    "ars_nouveau:sourcestone_basketweave_stairs",
+    "ars_nouveau:sourcestone_alternating_stairs",
+    "ars_nouveau:sourcestone_large_bricks_stairs",
+    "ars_nouveau:sourcestone_small_bricks_stairs",
+    "ars_nouveau:smooth_sourcestone_basketweave_stairs",
+    "ars_nouveau:smooth_sourcestone_mosaic_stairs",
+    "ars_nouveau:smooth_sourcestone_alternating_stairs",
+    "ars_nouveau:smooth_sourcestone_large_bricks_stairs",
+    "ars_nouveau:smooth_sourcestone_stairs",
+    "ars_nouveau:smooth_sourcestone_small_bricks_stairs",
+    "ars_nouveau:gilded_sourcestone_mosaic_stairs",
+    "ars_nouveau:gilded_sourcestone_basketweave_stairs",
+    "ars_nouveau:gilded_sourcestone_alternating_stairs",
+    "ars_nouveau:gilded_sourcestone_large_bricks_stairs",
+    "ars_nouveau:gilded_sourcestone_small_bricks_stairs",
+    "ars_nouveau:smooth_gilded_sourcestone_mosaic_stairs",
+    "ars_nouveau:smooth_gilded_sourcestone_basketweave_stairs",
+    "ars_nouveau:smooth_gilded_sourcestone_alternating_stairs",
+    "ars_nouveau:smooth_gilded_sourcestone_large_bricks_stairs",
+    "ars_nouveau:smooth_gilded_sourcestone_small_bricks_stairs",
+    "ars_nouveau:archwood_stairs"
+  ]
+}

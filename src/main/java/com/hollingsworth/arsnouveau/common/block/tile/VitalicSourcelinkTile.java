@@ -11,13 +11,13 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.BabyEntitySpawnEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 
-@Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
+@EventBusSubscriber(modid = ArsNouveau.MODID)
 public class VitalicSourcelinkTile extends SourcelinkTile {
     public VitalicSourcelinkTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
@@ -27,7 +27,7 @@ public class VitalicSourcelinkTile extends SourcelinkTile {
     private static final String TAG_POISONED = "quark:poison_potato_applied";
 
     public VitalicSourcelinkTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.VITALIC_TILE, pos, state);
+        super(BlockRegistry.VITALIC_TILE.get(), pos, state);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class VitalicSourcelinkTile extends SourcelinkTile {
                         }
                         entity.setAge(Math.min(0, entity.getAge() + 500));
                         this.addSource(10);
-                        ParticleUtil.spawnFollowProjectile(level, entity.blockPosition(), this.worldPosition);
+                        ParticleUtil.spawnFollowProjectile(level, entity.blockPosition(), this.worldPosition, this.getColor());
                     }
                 }
 

@@ -1,25 +1,21 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
-import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
-import com.hollingsworth.arsnouveau.api.util.CasterUtil;
-import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.BasicSpellTurretTile;
 import com.hollingsworth.arsnouveau.common.block.tile.RotatingTurretTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import net.minecraft.core.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -42,7 +38,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.util.FakePlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -50,7 +45,6 @@ import java.util.List;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-@SuppressWarnings("deprecation")
 public class BasicSpellTurret extends TickableModBlock implements SimpleWaterloggedBlock {
 
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
@@ -69,8 +63,10 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource rand) {
-        this.shootSpell(worldIn, pos);
+    public void tick(@NotNull BlockState state, ServerLevel worldIn, @NotNull BlockPos pos, @NotNull RandomSource rand) {
+        if (worldIn.getBlockEntity(pos) instanceof BasicSpellTurretTile tile) {
+            tile.shootSpell();
+        }
     }
 
     static {
@@ -81,11 +77,13 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
                 EntityProjectileSpell spell = new EntityProjectileSpell(world, resolver);
                 spell.setOwner(fakePlayer);
                 spell.setPos(iposition.x(), iposition.y(), iposition.z());
+                SpellStats stats = resolver.getCastStats();
+                float velocity = Math.max(0.1f, 0.75f + stats.getAccMultiplier() / 2);
                 if (world.getBlockEntity(pos) instanceof RotatingTurretTile rotatingTurretTile) {
                     Vec3 vec3d = rotatingTurretTile.getShootAngle().normalize();
-                    spell.shoot(vec3d.x(), vec3d.y(), vec3d.z(), 0.5f, 0);
+                    spell.shoot(vec3d.x(), vec3d.y(), vec3d.z(), velocity, 0);
                 } else {
-                    spell.shoot(direction.getStepX(), ((float) direction.getStepY()), direction.getStepZ(), 0.5f, 0);
+                    spell.shoot(direction.getStepX(), ((float) direction.getStepY()), direction.getStepZ(), velocity, 0);
                 }
                 world.addFreshEntity(spell);
             }
@@ -107,28 +105,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
         });
     }
 
-    public void shootSpell(ServerLevel world, BlockPos pos) {
-        if (!(world.getBlockEntity(pos) instanceof BasicSpellTurretTile tile)) return;
-        ISpellCaster caster = tile.getSpellCaster();
-        if (caster.getSpell().isEmpty())
-            return;
-        int manaCost = tile.getManaCost();
-        if (manaCost > 0 && SourceUtil.takeSourceWithParticles(pos, world, 10, manaCost) == null)
-            return;
-        Networking.sendToNearby(world, pos, new PacketOneShotAnimation(pos));
-        Position iposition = getDispensePosition(new BlockSourceImpl(world, pos));
-        Direction direction = world.getBlockState(pos).getValue(FACING);
-        FakePlayer fakePlayer = ANFakePlayer.getPlayer(world);
-        fakePlayer.setPos(pos.getX(), pos.getY(), pos.getZ());
-        EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(world, caster.getSpell(), fakePlayer, new TileCaster(tile, SpellContext.CasterType.TURRET)));
-        if (resolver.castType != null && TURRET_BEHAVIOR_MAP.containsKey(resolver.castType)) {
-            TURRET_BEHAVIOR_MAP.get(resolver.castType).onCast(resolver, world, pos, fakePlayer, iposition, direction);
-            caster.playSound(pos, world, null, caster.getCurrentSound(), SoundSource.BLOCKS);
-        }
-    }
-
-
-    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+    public void neighborChanged(BlockState state, Level worldIn, @NotNull BlockPos pos, @NotNull Block blockIn, @NotNull BlockPos fromPos, boolean isMoving) {
         boolean neighborSignal = worldIn.hasNeighborSignal(pos) || worldIn.hasNeighborSignal(pos.above());
         boolean isTriggered = state.getValue(TRIGGERED);
         if (neighborSignal && !isTriggered) {
@@ -143,21 +120,20 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
     /**
      * Get the position where the dispenser at the given Coordinates should dispense to.
      */
-    public static Position getDispensePosition(BlockSource coords) {
-        Direction direction = coords.getBlockState().getValue(FACING);
-        double d0 = coords.x() + 0.5D * (double) direction.getStepX();
-        double d1 = coords.y() + 0.5D * (double) direction.getStepY();
-        double d2 = coords.z() + 0.5D * (double) direction.getStepZ();
-        return new PositionImpl(d0, d1, d2);
+    public static Position getDispensePosition(BlockPos pos, Direction direction) {
+        double d0 = pos.getX() + 0.5 + 0.5D * (double) direction.getStepX();
+        double d1 = pos.getY() + 0.5 + 0.5D * (double) direction.getStepY();
+        double d2 = pos.getZ() + 0.5 + 0.5D * (double) direction.getStepZ();
+        return new Vec3(d0, d1, d2);
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState p_149645_1_) {
+    public @NotNull RenderShape getRenderShape(@NotNull BlockState p_149645_1_) {
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
     @Override
-    public FluidState getFluidState(BlockState state) {
+    public @NotNull FluidState getFluidState(BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
     }
 
@@ -169,7 +145,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction side, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public @NotNull BlockState updateShape(BlockState stateIn, @NotNull Direction side, @NotNull BlockState facingState, @NotNull LevelAccessor worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
         if (stateIn.getValue(WATERLOGGED)) {
             worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
@@ -177,32 +153,33 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    protected @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack pStack, @NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult pHitResult) {
         if (handIn != InteractionHand.MAIN_HAND) {
-            return InteractionResult.PASS;
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         if (worldIn.isClientSide)
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(handIn);
-        Spell spell = CasterUtil.getCaster(stack).getSpell();
-        if (!spell.isEmpty()) {
-            if(spell.getCastMethod() == null){
-                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.turret_needs_form"));
-                return InteractionResult.SUCCESS;
-            }
-            if (!(TURRET_BEHAVIOR_MAP.containsKey(spell.getCastMethod()))) {
-                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.turret_type"));
-                return InteractionResult.SUCCESS;
-            }
-            if (worldIn.getBlockEntity(pos) instanceof BasicSpellTurretTile tile) {
-                tile.spellCaster.copyFromCaster(CasterUtil.getCaster(stack));
-                tile.spellCaster.setSpell(spell.clone());
-                tile.updateBlock();
-                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.spell_set"));
-                worldIn.sendBlockUpdated(pos, state, state, 2);
+        if (SpellCasterRegistry.from(stack) != null) {
+            Spell spell = SpellCasterRegistry.from(stack).getSpell();
+            if (!spell.isEmpty()) {
+                if (spell.getCastMethod() == null) {
+                    PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.turret_needs_form"));
+                    return ItemInteractionResult.SUCCESS;
+                }
+                if (!(TURRET_BEHAVIOR_MAP.containsKey(spell.getCastMethod()))) {
+                    PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.turret_type"));
+                    return ItemInteractionResult.SUCCESS;
+                }
+                if (worldIn.getBlockEntity(pos) instanceof BasicSpellTurretTile tile) {
+                    tile.setSpell(spell);
+                    tile.updateBlock();
+                    PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.spell_set"));
+                    worldIn.sendBlockUpdated(pos, state, state, 2);
+                }
             }
         }
-        return super.use(state, worldIn, pos, player, handIn, hit);
+        return super.useItemOn(pStack, state, worldIn, pos, player, handIn, pHitResult);
     }
 
     @Override
@@ -210,30 +187,29 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
         builder.add(FACING, TRIGGERED, WATERLOGGED);
     }
 
-    public BlockState rotate(BlockState state, Rotation rot) {
+    public @NotNull BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
-    public BlockState mirror(BlockState state, Mirror mirrorIn) {
+    public @NotNull BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         return new BasicSpellTurretTile(pos, state);
     }
 
     @Override
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+    public @NotNull VoxelShape getShape(@NotNull BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos, @NotNull CollisionContext pContext) {
         return shape;
     }
 
     //kept is as simple as possible for compat. with other turrets, needed for waterlogged. Does not keep track of turret direction
     static final VoxelShape shape = Block.box(4.6, 4.6, 4.6, 11.6, 11.6, 11.6);
 
-
     @Override
-    public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+    protected boolean isPathfindable(@NotNull BlockState pState, @NotNull PathComputationType pPathComputationType) {
         return false;
     }
 }

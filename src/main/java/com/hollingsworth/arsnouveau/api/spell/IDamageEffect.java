@@ -8,7 +8,6 @@ import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
 import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -19,7 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -45,15 +44,15 @@ public interface IDamageEffect {
         if (!canDamage(shooter, stats, spellContext, resolver, entity))
             return false;
         ServerLevel server = (ServerLevel) world;
-        float totalDamage = (float) (baseDamage + stats.getDamageModifier() + (shooter.getAttributes().hasAttribute(PerkAttributes.SPELL_DAMAGE_BONUS.get()) ?
-                shooter.getAttributeValue(PerkAttributes.SPELL_DAMAGE_BONUS.get()) : 0));
+        float totalDamage = (float) (baseDamage + stats.getDamageModifier() + (shooter.getAttributes().hasAttribute(PerkAttributes.SPELL_DAMAGE_BONUS) ?
+                shooter.getAttributeValue(PerkAttributes.SPELL_DAMAGE_BONUS) : 0));
 
         //randomize damage buff or debuff
         if (stats.isRandomized())
             totalDamage += randomRolls(stats, server);
 
         SpellDamageEvent.Pre preDamage = new SpellDamageEvent.Pre(source, shooter, entity, totalDamage, spellContext);
-        MinecraftForge.EVENT_BUS.post(preDamage);
+        NeoForge.EVENT_BUS.post(preDamage);
 
         source = preDamage.damageSource;
         totalDamage = preDamage.damage;
@@ -67,15 +66,14 @@ public interface IDamageEffect {
         shooter.setLastHurtMob(entity);
 
         SpellDamageEvent.Post postDamage = new SpellDamageEvent.Post(source, shooter, entity, totalDamage, spellContext);
-        MinecraftForge.EVENT_BUS.post(postDamage);
+        NeoForge.EVENT_BUS.post(postDamage);
 
         if (entity instanceof
                     LivingEntity mob && mob.getHealth() <= 0 && !mob.isRemoved() && stats.hasBuff(AugmentFortune.INSTANCE)) {
             Player playerContext = shooter instanceof Player player ? player : ANFakePlayer.getPlayer(server);
             int looting = stats.getBuffCount(AugmentFortune.INSTANCE);
             LootParams lootContext = LootUtil.getLootingContext(server, shooter, mob, looting, world.damageSources().playerAttack(playerContext)).create(LootContextParamSets.ENTITY);
-            ResourceLocation lootTable = mob.getLootTable();
-            LootTable loottable = server.getServer().getLootData().getLootTable(lootTable);
+            LootTable loottable = server.getServer().reloadableRegistries().getLootTable( mob.getLootTable());
             List<ItemStack> items = loottable.getRandomItems(lootContext);
             items.forEach(mob::spawnAtLocation);
         }

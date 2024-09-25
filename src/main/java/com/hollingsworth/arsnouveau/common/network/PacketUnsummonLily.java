@@ -1,16 +1,18 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.Lily;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
-public class PacketUnsummonLily {
+public class PacketUnsummonLily extends AbstractPacket {
 
 
     public PacketUnsummonLily() {
@@ -18,30 +20,32 @@ public class PacketUnsummonLily {
     }
 
     //Decoder
-    public PacketUnsummonLily(FriendlyByteBuf buf) {
+    public PacketUnsummonLily(RegistryFriendlyByteBuf buf) {
 
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(RegistryFriendlyByteBuf buf) {
 
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            if (ctx.get().getSender() != null) {
-                ServerPlayer serverPlayer = ctx.get().getSender();
-                ServerLevel level = (ServerLevel) serverPlayer.level();
-                UUID lilyUuid = Lily.ownerLilyMap.get(ctx.get().getSender().getUUID());
-                if (lilyUuid != null) {
-                    Lily lily = (Lily) level.getEntity(lilyUuid);
-                    if (lily != null) {
-                        lily.remove(Entity.RemovalReason.DISCARDED);
-                    }
-                }
+    @Override
+    public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
+        ServerLevel level = (ServerLevel) player.level();
+        UUID lilyUuid = Lily.ownerLilyMap.get(player.getUUID());
+        if (lilyUuid != null) {
+            Lily lily = (Lily) level.getEntity(lilyUuid);
+            if (lily != null) {
+                lily.remove(Entity.RemovalReason.DISCARDED);
             }
-        });
-        ctx.get().setPacketHandled(true);
+        }
+    }
 
+    public static final Type<PacketUnsummonLily> TYPE = new Type<>(ArsNouveau.prefix("unsummon_lily"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketUnsummonLily> CODEC = StreamCodec.ofMember(PacketUnsummonLily::toBytes, PacketUnsummonLily::new);
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

@@ -6,7 +6,8 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.PortalBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.PortalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.TemporaryTile;
-import com.hollingsworth.arsnouveau.common.items.WarpScroll;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
+import com.hollingsworth.arsnouveau.common.items.data.WarpScrollData;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
@@ -17,6 +18,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,9 +33,9 @@ public class BuildPortalEvent implements ITimedEvent {
     List<BlockPos> portalPos = new ArrayList<>();
     int ticks;
     List<BlockPos> placedBlocks = new ArrayList<>();
-    WarpScroll.WarpScrollData warpScrollData;
+    WarpScrollData warpScrollData;
 
-    public BuildPortalEvent(Level level, BlockPos targetPos, Direction direction, WarpScroll.WarpScrollData warpScrollData) {
+    public BuildPortalEvent(Level level, BlockPos targetPos, Direction direction, WarpScrollData warpScrollData) {
         this.level = level;
         this.targetPos = targetPos;
         this.direction = direction;
@@ -82,14 +84,26 @@ public class BuildPortalEvent implements ITimedEvent {
         if(placingFrame){
             BlockPos pos = framePos.get(0);
             framePos.remove(pos);
-            if(level.getBlockState(pos).canBeReplaced()) {
+            BlockState bs = level.getBlockState(pos);
+            if (bs.is(BlockTagProvider.DECORATIVE_AN) || level.getBlockEntity(pos) instanceof TemporaryTile tile && tile.mimicState.is(BlockTagProvider.DECORATIVE_AN)) {
+                tick(true);
+                if(level.getBlockEntity(pos) instanceof TemporaryTile tile){
+                    tile.mimicState = BlockRegistry.getBlock(LibBlockNames.SOURCESTONE).defaultBlockState();
+                    tile.tickDuration = 20 * 60;
+                    tile.gameTime = level.getGameTime();
+                    tile.updateBlock();
+                }
+                return;
+            }
+            if(bs.canBeReplaced() || level.getBlockEntity(pos) instanceof TemporaryTile tile && tile.mimicState.is(BlockTagProvider.DECORATIVE_AN)) {
                 level.setBlock(pos, BlockRegistry.TEMPORARY_BLOCK.get().defaultBlockState(), 3);
                 if(level.getBlockEntity(pos) instanceof TemporaryTile tile){
                     tile.mimicState = BlockRegistry.getBlock(LibBlockNames.SOURCESTONE).defaultBlockState();
                     tile.tickDuration = 20 * 60;
+                    tile.gameTime = level.getGameTime();
                     tile.updateBlock();
                 }
-                level.playSound(null, pos, BlockRegistry.getBlock(LibBlockNames.SOURCESTONE).getSoundType(level.getBlockState(pos)).getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.playSound(null, pos, BlockRegistry.getBlock(LibBlockNames.SOURCESTONE).defaultBlockState().getSoundType().getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
                 ParticleUtil.spawnTouchPacket(level, pos, ParticleColor.makeRandomColor(255, 255, 255, level.random));
                 placedBlocks.add(pos);
                 return;
@@ -104,7 +118,7 @@ public class BuildPortalEvent implements ITimedEvent {
             for(BlockPos pos : portalPos) {
                 if (level.getBlockState(pos).canBeReplaced()) {
                     level.setBlock(pos, BlockRegistry.PORTAL_BLOCK.defaultBlockState().setValue(PortalBlock.AXIS, direction.getAxis()), 2);
-                    level.playSound(null, pos, BlockRegistry.PORTAL_BLOCK.get().getSoundType(level.getBlockState(pos)).getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                    level.playSound(null, pos, BlockRegistry.PORTAL_BLOCK.get().defaultBlockState().getSoundType().getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
                     placedBlocks.add(pos);
                 } else {
                     destroyPortal = true;
@@ -119,13 +133,13 @@ public class BuildPortalEvent implements ITimedEvent {
             for(BlockPos pos : placedBlocks){
                 level.destroyBlock(pos, false);
             }
-            level.playSound(null, targetPos, SoundRegistry.GAIA_SPELL_SOUND.getSoundEvent(), SoundSource.BLOCKS, 1.0F, 1.0F);
+            level.playSound(null, targetPos, SoundRegistry.GAIA_SPELL_SOUND.getSoundEvent().value(), SoundSource.BLOCKS, 1.0F, 1.0F);
             portalPos.clear();
             framePos.clear();
             return;
         }
         if(portalPos.isEmpty()){
-            level.playSound(null, targetPos.above(2), SoundRegistry.TEMPESTRY_SPELL_SOUND.getSoundEvent(), SoundSource.BLOCKS, 1.0F, 1.0F);
+            level.playSound(null, targetPos.above(2), SoundRegistry.TEMPESTRY_SPELL_SOUND.getSoundEvent().value(), SoundSource.BLOCKS, 1.0F, 1.0F);
             for(BlockPos pos : placedBlocks){
                 if(level.getBlockEntity(pos) instanceof PortalTile portalTile){
                     portalTile.setFromScroll(warpScrollData);

@@ -52,7 +52,7 @@ public class EffectConjureWater extends AbstractEffect {
             if(!world.isInWorldBounds(pos1))
                 continue;
             BlockState hitState = world.getBlockState(pos1);
-            if (hitState.getBlock() instanceof LiquidBlockContainer liquidBlockContainer && liquidBlockContainer.canPlaceLiquid(world, pos1, world.getBlockState(pos1), Fluids.WATER)) {
+            if (hitState.getBlock() instanceof LiquidBlockContainer liquidBlockContainer && liquidBlockContainer.canPlaceLiquid(getPlayer(shooter, (ServerLevel) world), world, pos1, world.getBlockState(pos1), Fluids.WATER)) {
                 liquidBlockContainer.placeLiquid(world, pos1, hitState, Fluids.WATER.getSource(true));
                 ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
                         new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false

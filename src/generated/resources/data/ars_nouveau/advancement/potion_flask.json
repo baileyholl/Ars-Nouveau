@@ -1,0 +1,32 @@
+{
+  "parent": "ars_nouveau:potion_jar",
+  "criteria": {
+    "has_potion_flask": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ars_nouveau:potion_flask"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.potion_flask"
+    },
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:potion_flask"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.potion_flask"
+    }
+  },
+  "requirements": [
+    [
+      "has_potion_flask"
+    ]
+  ]
+}

@@ -13,8 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -22,8 +21,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.network.PlayMessages;
 
 public class EntityFlyingItem extends ColoredProjectile {
     public static final EntityDataAccessor<Vec3> to = SynchedEntityData.defineId(EntityFlyingItem.class, DataSerializers.VEC.get());
@@ -186,9 +183,7 @@ public class EntityFlyingItem extends ColoredProjectile {
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        if (compound.contains("item")) {
-            this.entityData.set(HELD_ITEM, ItemStack.of(compound.getCompound("item")));
-        }
+        this.entityData.set(HELD_ITEM, ItemStack.parseOptional(level.registryAccess(), compound.getCompound("item")));
         this.age = compound.getInt("age");
         this.entityData.set(DIDOFFSET, compound.getBoolean("didoffset"));
         this.entityData.set(OFFSET, compound.getFloat("offset"));
@@ -200,8 +195,7 @@ public class EntityFlyingItem extends ColoredProjectile {
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         if (getStack() != null) {
-            CompoundTag tag = new CompoundTag();
-            getStack().save(tag);
+            Tag tag = getStack().save(level.registryAccess());
             compound.put("item", tag);
         }
         compound.putInt("age", age);
@@ -218,28 +212,18 @@ public class EntityFlyingItem extends ColoredProjectile {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(HELD_ITEM, ItemStack.EMPTY);
-        this.entityData.define(OFFSET, 0.0f);
-        this.entityData.define(DIDOFFSET, false);
-        this.entityData.define(to, new Vec3(0, 0, 0));
-        this.entityData.define(from, new Vec3(0, 0, 0));
-        this.entityData.define(SPAWN_TOUCH, true);
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(HELD_ITEM, ItemStack.EMPTY);
+        pBuilder.define(OFFSET, 0.0f);
+        pBuilder.define(DIDOFFSET, false);
+        pBuilder.define(to, new Vec3(0, 0, 0));
+        pBuilder.define(from, new Vec3(0, 0, 0));
+        pBuilder.define(SPAWN_TOUCH, true);
     }
-
 
     @Override
     public EntityType<?> getType() {
         return ModEntities.ENTITY_FLYING_ITEM.get();
-    }
-
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
-    public EntityFlyingItem(PlayMessages.SpawnEntity packet, Level world) {
-        super(ModEntities.ENTITY_FLYING_ITEM.get(), world);
     }
 }

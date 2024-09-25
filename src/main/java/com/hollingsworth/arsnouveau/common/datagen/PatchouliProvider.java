@@ -23,6 +23,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
@@ -30,7 +31,6 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.RegistryObject;
 import org.apache.commons.io.FilenameUtils;
 
 import java.nio.file.Path;
@@ -40,24 +40,25 @@ import java.util.List;
 
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
+
 //
 public class PatchouliProvider extends SimpleDataProvider{
 
-    public static ResourceLocation AUTOMATION = new ResourceLocation(ArsNouveau.MODID, "automation");
-    public static ResourceLocation ENCHANTMENTS = new ResourceLocation(ArsNouveau.MODID, "enchantments");
-    public static ResourceLocation EQUIPMENT = new ResourceLocation(ArsNouveau.MODID, "equipment");
-    public static ResourceLocation FAMILIARS = new ResourceLocation(ArsNouveau.MODID, "familiars");
-    public static ResourceLocation GETTING_STARTED = new ResourceLocation(ArsNouveau.MODID, "getting_started");
-    public static ResourceLocation MOD_NEWS = new ResourceLocation(ArsNouveau.MODID, "mod_news");
+    public static ResourceLocation AUTOMATION = ArsNouveau.prefix( "automation");
+    public static ResourceLocation ENCHANTMENTS = ArsNouveau.prefix( "enchantments");
+    public static ResourceLocation EQUIPMENT = ArsNouveau.prefix( "equipment");
+    public static ResourceLocation FAMILIARS = ArsNouveau.prefix( "familiars");
+    public static ResourceLocation GETTING_STARTED = ArsNouveau.prefix( "getting_started");
+    public static ResourceLocation MOD_NEWS = ArsNouveau.prefix( "mod_news");
 
-    public static ResourceLocation MACHINES = new ResourceLocation(ArsNouveau.MODID, "machines");
-    public static ResourceLocation RESOURCES = new ResourceLocation(ArsNouveau.MODID, "resources");
-    public static ResourceLocation RITUALS = new ResourceLocation(ArsNouveau.MODID, "rituals");
-    public static ResourceLocation SOURCE = new ResourceLocation(ArsNouveau.MODID, "source");
-    public static ResourceLocation GLYPHS_1 = new ResourceLocation(ArsNouveau.MODID, "glyphs_1");
-    public static ResourceLocation GLYPHS_2 = new ResourceLocation(ArsNouveau.MODID, "glyphs_2");
-    public static ResourceLocation GLYPHS_3 = new ResourceLocation(ArsNouveau.MODID, "glyphs_3");
-    public static ResourceLocation ARMOR = new ResourceLocation(ArsNouveau.MODID, "armor");
+    public static ResourceLocation MACHINES = ArsNouveau.prefix( "machines");
+    public static ResourceLocation RESOURCES = ArsNouveau.prefix( "resources");
+    public static ResourceLocation RITUALS = ArsNouveau.prefix( "rituals");
+    public static ResourceLocation SOURCE = ArsNouveau.prefix( "source");
+    public static ResourceLocation GLYPHS_1 = ArsNouveau.prefix( "glyphs_1");
+    public static ResourceLocation GLYPHS_2 = ArsNouveau.prefix( "glyphs_2");
+    public static ResourceLocation GLYPHS_3 = ArsNouveau.prefix( "glyphs_3");
+    public static ResourceLocation ARMOR = ArsNouveau.prefix( "armor");
 
     public List<PatchouliPage> pages = new ArrayList<>();
 
@@ -67,7 +68,7 @@ public class PatchouliProvider extends SimpleDataProvider{
 
     public void addEntries() {
         Block SOURCESTONE = BlockRegistry.getBlock(LibBlockNames.SOURCESTONE);
-        for (Enchantment g : enchants) {
+        for (ResourceKey<Enchantment> g : enchants) {
             addEnchantmentPage(g);
         }
         for (AbstractRitual r : RitualRegistry.getRitualMap().values()) {
@@ -179,7 +180,8 @@ public class PatchouliProvider extends SimpleDataProvider{
                 .withPage(new TextPage(getLangPath("starbuncle_charm", 4)).withTitle("ars_nouveau.item_transport"))
                 .withPage(new TextPage(getLangPath("starbuncle_charm", 5)).withTitle("ars_nouveau.filtering"))
                 .withPage(new TextPage(getLangPath("starbuncle_charm", 6)).withTitle("ars_nouveau.pathing"))
-                .withPage(new TextPage(getLangPath("starbuncle_charm", 7)).withTitle("ars_nouveau.starbuncle_bed")), getPath(AUTOMATION, "starbuncle_charm"));
+                .withPage(new TextPage(getLangPath("starbuncle_charm", 7)).withTitle("ars_nouveau.starbuncle_bed"))
+                .withPage(new TextPage(getLangPath("starbuncle_charm", 8)).withTitle("ars_nouveau.starbuncle_stacking")), getPath(AUTOMATION, "starbuncle_charm"));
 
         addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.DRYGMY_CHARM)
                 .withLocalizedText()
@@ -211,11 +213,11 @@ public class PatchouliProvider extends SimpleDataProvider{
         addPage(new PatchouliBuilder(EQUIPMENT, "reactive_enchantment")
                 .withIcon(Items.ENCHANTED_BOOK)
                 .withLocalizedText()
-                .withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get()).getPath() + "_" + 1))
+                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 1))
                 .withLocalizedText()
-                .withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get()).getPath() + "_" + 2))
-                .withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get()).getPath() + "_" + 3))
-                .withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get()).getPath() + "_" + 4))
+                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 2))
+                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 3))
+                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 4))
                 .withLocalizedText()
                 .withPage(new ApparatusTextPage("ars_nouveau:spell_write")), getPath(EQUIPMENT, "reactive_enchantment"));
 
@@ -280,7 +282,7 @@ public class PatchouliProvider extends SimpleDataProvider{
                 .withPage(new CraftingPage(ItemsRegistry.SOURCE_BERRY_PIE).withRecipe2(ItemsRegistry.SOURCE_BERRY_ROLL)), getPath(RESOURCES, "sourceberry"));
 
         addPage(new PatchouliBuilder(RESOURCES, "weald_walker")
-                .withIcon(RitualRegistry.getRitualItemMap().get(new ResourceLocation(ArsNouveau.MODID, RitualLib.AWAKENING)))
+                .withIcon(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix( RitualLib.AWAKENING)))
                 .withLocalizedText()
                 .withPage(new EntityPage(getRegistryName(ModEntities.ENTITY_BLAZING_WEALD.get()).toString()).withText(getLangPath("weald_walker", 2)))
                 .withPage(new EntityPage(getRegistryName(ModEntities.ENTITY_CASCADING_WEALD.get()).toString()).withText(getLangPath("weald_walker", 3)))
@@ -429,14 +431,14 @@ public class PatchouliProvider extends SimpleDataProvider{
                 .withIcon(BlockRegistry.RITUAL_BLOCK)
                 .withLocalizedText()
                 .withLocalizedText()
-                .withPage(new CraftingPage(RitualRegistry.getRitualItemMap().get(new ResourceLocation(ArsNouveau.MODID, RitualLib.SUNRISE))))
+                .withPage(new CraftingPage(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix( RitualLib.SUNRISE))))
                 .withPage(new RelationsPage().withEntry(MACHINES, "ritual_brazier")), getPath(RITUALS, "performing_rituals"));
         addPage(new PatchouliBuilder(FAMILIARS, "summoning_familiars")
                 .withSortNum(-1)
-                .withIcon(RitualRegistry.getRitualItemMap().get(new ResourceLocation(ArsNouveau.MODID, RitualLib.BINDING)))
+                .withIcon(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix( RitualLib.BINDING)))
                 .withLocalizedText()
                 .withLocalizedText()
-                .withPage(new CraftingPage(RitualRegistry.getRitualItemMap().get(new ResourceLocation(ArsNouveau.MODID, RitualLib.BINDING))))
+                .withPage(new CraftingPage(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix( RitualLib.BINDING))))
                 .withPage(new RelationsPage().withEntry(MACHINES, "ritual_brazier").withEntry(RITUALS, "ritual_binding")), getPath(FAMILIARS, "summoning_familiars"));
 
         addPage(new PatchouliBuilder(MOD_NEWS, "mod_news")
@@ -498,9 +500,9 @@ public class PatchouliProvider extends SimpleDataProvider{
                 .withLocalizedText()
                 .withPage(new CraftingPage(ItemsRegistry.MAGE_FIBER))
                 .withPage(new TextPage("ars_nouveau.page.threads").withTitle("ars_nouveau.threads"))
-                .withPage(new ImagePage().withEntry(new ResourceLocation(ArsNouveau.MODID, "textures/gui/entries/sorcerer_diagram.png"))
-                        .withEntry(new ResourceLocation(ArsNouveau.MODID, "textures/gui/entries/arcanist_thread_diagram.png"))
-                        .withEntry(new ResourceLocation(ArsNouveau.MODID, "textures/gui/entries/battlemage_diagram.png"))
+                .withPage(new ImagePage().withEntry(ArsNouveau.prefix( "textures/gui/entries/sorcerer_diagram.png"))
+                        .withEntry(ArsNouveau.prefix( "textures/gui/entries/arcanist_thread_diagram.png"))
+                        .withEntry(ArsNouveau.prefix( "textures/gui/entries/battlemage_diagram.png"))
                         .withBorder().withTitle("ars_nouveau.thread_layout")
                         .withText("ars_nouveau.page.layout_desc"))
                 .withPage(new ApparatusPage(ItemsRegistry.SORCERER_HOOD))
@@ -644,6 +646,11 @@ public class PatchouliProvider extends SimpleDataProvider{
         addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.SPELL_SENSOR).withLocalizedText().withPage(new ApparatusPage(BlockRegistry.SPELL_SENSOR)), getPath(AUTOMATION, "spell_sensor"));
         addPage(new PatchouliBuilder(EQUIPMENT, ItemsRegistry.JUMP_RING).withLocalizedText().withPage(new ApparatusPage(ItemsRegistry.JUMP_RING)), getPath(EQUIPMENT, "jump_ring"));
         addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.REDSTONE_RELAY).withLocalizedText().withPage(new CraftingPage(BlockRegistry.REDSTONE_RELAY)), getPath(AUTOMATION, "redstone_relay"));
+
+        addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.ARCHWOOD_GRATE).withLocalizedText()
+                .withPage(new CraftingPage(BlockRegistry.ARCHWOOD_GRATE).withRecipe2(BlockRegistry.GOLD_GRATE))
+                .withPage(new CraftingPage(BlockRegistry.SMOOTH_SOURCESTONE_GRATE).withRecipe2(BlockRegistry.SOURCESTONE_GRATE)), getPath(AUTOMATION, "grates"));
+        addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.SOURCE_LAMP).withLocalizedText().withPage(new CraftingPage(BlockRegistry.SOURCE_LAMP)), getPath(AUTOMATION, "source_lamp"));
     }
 
     public String getLangPath(String name, int count) {
@@ -676,10 +683,6 @@ public class PatchouliProvider extends SimpleDataProvider{
     public PatchouliPage addBasicItem(ItemLike item, ResourceLocation category, IPatchouliPage recipePage) {
         PatchouliBuilder builder = buildBasicItem(item, category, recipePage);
         return addPage(new PatchouliPage(builder, getPath(category, getRegistryName(item.asItem()))));
-    }
-
-    public void addBasicItem(RegistryObject<? extends ItemLike> item, ResourceLocation category, IPatchouliPage recipePage) {
-        addBasicItem(item.get(), category, recipePage);
     }
 
     public Path getPath(ResourceLocation category, ResourceLocation fileName) {
@@ -748,13 +751,13 @@ public class PatchouliProvider extends SimpleDataProvider{
         this.pages.add(new PatchouliPage(builder, this.output.resolve("assets/" + ritual.getRegistryName().getNamespace() + "/patchouli_books/worn_notebook/en_us/entries/rituals/" + ritual.getRegistryName().getPath() + ".json")));
     }
 
-    public void addEnchantmentPage(Enchantment enchantment) {
-        PatchouliBuilder builder = new PatchouliBuilder(ENCHANTMENTS, enchantment.getDescriptionId())
-                .withIcon(getRegistryName(Items.ENCHANTED_BOOK).toString());
-        for (int i = enchantment.getMinLevel(); i <= enchantment.getMaxLevel(); i++) {
-            builder.withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(enchantment).getPath() + "_" + i));
-        }
-        this.pages.add(new PatchouliPage(builder, this.output.resolve("assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/" + getRegistryName(enchantment).getPath() + ".json")));
+    public void addEnchantmentPage(ResourceKey<Enchantment> enchantment) {
+//        PatchouliBuilder builder = new PatchouliBuilder(ENCHANTMENTS, enchantment.getDescriptionId())
+//                .withIcon(getRegistryName(Items.ENCHANTED_BOOK).toString());
+//        for (int i = enchantment.getMinLevel(); i <= enchantment.getMaxLevel(); i++) {
+//            builder.withPage(new EnchantingPage("ars_nouveau:" + enchantment.location().getPath() + "_" + i));
+//        }
+//        this.pages.add(new PatchouliPage(builder, this.output.resolve("assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/" + enchantment.location().getPath() + ".json")));
     }
 
     public void addPerkPage(IPerk perk){
@@ -766,26 +769,26 @@ public class PatchouliProvider extends SimpleDataProvider{
         this.pages.add(new PatchouliPage(builder, this.output.resolve("assets/" + perk.getRegistryName().getNamespace() + "/patchouli_books/worn_notebook/en_us/entries/armor/" + perk.getRegistryName().getPath() + ".json")));
     }
 
-    List<Enchantment> enchants = Arrays.asList(
+    List<ResourceKey<Enchantment>> enchants = Arrays.asList(
             Enchantments.AQUA_AFFINITY,
             Enchantments.BANE_OF_ARTHROPODS,
             Enchantments.BLAST_PROTECTION,
             Enchantments.DEPTH_STRIDER,
-            Enchantments.BLOCK_EFFICIENCY,
-            Enchantments.FALL_PROTECTION,
+            Enchantments.EFFICIENCY,
+            Enchantments.FEATHER_FALLING,
             Enchantments.FIRE_ASPECT,
             Enchantments.FIRE_PROTECTION,
-            Enchantments.FLAMING_ARROWS,
-            Enchantments.BLOCK_FORTUNE,
-            Enchantments.INFINITY_ARROWS,
+            Enchantments.FLAME,
+            Enchantments.FORTUNE,
+            Enchantments.INFINITY,
             Enchantments.KNOCKBACK,
-            Enchantments.MOB_LOOTING,
+            Enchantments.LOOTING,
             Enchantments.MULTISHOT,
             Enchantments.PIERCING,
-            Enchantments.POWER_ARROWS,
+            Enchantments.POWER,
             Enchantments.PROJECTILE_PROTECTION,
-            Enchantments.ALL_DAMAGE_PROTECTION,
-            Enchantments.PUNCH_ARROWS,
+            Enchantments.PROTECTION,
+            Enchantments.PUNCH,
             Enchantments.QUICK_CHARGE,
             Enchantments.RESPIRATION,
             Enchantments.SHARPNESS,
@@ -794,8 +797,8 @@ public class PatchouliProvider extends SimpleDataProvider{
             Enchantments.SWEEPING_EDGE,
             Enchantments.THORNS,
             Enchantments.UNBREAKING,
-            EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.get(),
-            EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.get()
+            EnchantmentRegistry.MANA_BOOST_ENCHANTMENT,
+            EnchantmentRegistry.MANA_REGEN_ENCHANTMENT
     );
 
     @Override

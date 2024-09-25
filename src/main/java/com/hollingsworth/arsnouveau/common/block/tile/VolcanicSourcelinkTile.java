@@ -10,13 +10,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.Tags;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import net.neoforged.neoforge.common.Tags;
+import software.bernie.geckolib.animatable.GeoAnimatable;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class VolcanicSourcelinkTile extends SourcelinkTile implements GeoAnimatable {
 
     public VolcanicSourcelinkTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.VOLCANIC_TILE, pos, state);
+        super(BlockRegistry.VOLCANIC_TILE.get(), pos, state);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements GeoAnimata
                     if (!containerItem.isEmpty()) {
                         level.addFreshEntity(new ItemEntity(level, i.getX(), i.getY(), i.getZ(), containerItem));
                     }
-                    Networking.sendToNearby(level, getBlockPos(),
+                    Networking.sendToNearbyClient(level, getBlockPos(),
                             new PacketANEffect(PacketANEffect.EffectType.BURST, i.blockPosition(), new ParticleColor(255, 0, 0)));
                     return;
                 }
@@ -59,7 +59,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements GeoAnimata
                     ItemStack containerItem = i.getItem(0).getCraftingRemainingItem();
                     i.removeItem(0, 1);
                     i.setItem(0, containerItem);
-                    Networking.sendToNearby(level, getBlockPos(),
+                    Networking.sendToNearbyClient(level, getBlockPos(),
                             new PacketANEffect(PacketANEffect.EffectType.BURST, i.getBlockPos().above(), new ParticleColor(255, 0, 0)));
                 }
             }
@@ -74,7 +74,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements GeoAnimata
     public int getSourceValue(ItemStack i) {
         int source = 0;
         int progress = 0;
-        int burnTime = ForgeHooks.getBurnTime(i, null);
+        int burnTime = i.getBurnTime(RecipeType.SMELTING);
         if (burnTime > 0) {
             source = burnTime / 12;
             progress = 1;
@@ -113,7 +113,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements GeoAnimata
             return;
         }
 
-        stonePos = getTagInArea(Tags.Blocks.STONE, 1);
+        stonePos = getTagInArea(Tags.Blocks.STONES, 1);
         if (stonePos != null && progress >= 150) {
             level.setBlockAndUpdate(stonePos, Blocks.MAGMA_BLOCK.defaultBlockState());
             progress -= 150;

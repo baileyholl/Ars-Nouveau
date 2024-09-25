@@ -1,48 +1,22 @@
 package com.hollingsworth.arsnouveau.api.recipe;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 
-import javax.annotation.Nullable;
-import java.util.stream.Stream;
-/**
- * @deprecated Use PartialNBTIngredient instead
- * TODO: Remove in 1.20
- */
-@Deprecated
-public class PotionIngredient extends Ingredient {
-    private final ItemStack stack;
-
-    public PotionIngredient(ItemStack stack) {
-        super(Stream.of(new ItemValue(stack)));
-        this.stack = stack;
-    }
-
-    public static PotionIngredient fromPotion(Potion potion) {
+public class PotionIngredient {
+    public static Ingredient fromPotion(Holder<Potion> potion) {
         ItemStack stack = new ItemStack(Items.POTION);
-        PotionUtils.setPotion(stack, potion);
-        return new PotionIngredient(stack);
+        stack.set(DataComponents.POTION_CONTENTS, new PotionContents(potion));
+        return PotionIngredient.getIngredient(stack);
     }
 
-    public ItemStack getStack() {
-        return stack;
+    public static Ingredient getIngredient(ItemStack input) {
+        return DataComponentIngredient.of(false, input);
     }
-
-    @Override
-    public boolean test(@Nullable ItemStack input) {
-        if (input == null) {
-            return false;
-        } else {
-            return this.stack.getItem() == input.getItem() && PotionUtils.getPotion(input).equals(PotionUtils.getPotion(stack)) && PotionUtils.getCustomEffects(input).equals(PotionUtils.getCustomEffects(stack));
-        }
-    }
-
-    @Override
-    public boolean isSimple() {
-        return false;
-    }
-
 }

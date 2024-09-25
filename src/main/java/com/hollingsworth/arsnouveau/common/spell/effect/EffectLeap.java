@@ -1,26 +1,30 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.block.tile.BasicSpellTurretTile;
+import com.hollingsworth.arsnouveau.common.block.tile.RotatingTurretTile;
+import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
 import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Set;
+
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
 public class EffectLeap extends AbstractEffect {
     public static EffectLeap INSTANCE = new EffectLeap();
@@ -34,19 +38,31 @@ public class EffectLeap extends AbstractEffect {
         Entity entity = rayTraceResult.getEntity();
         double bonus;
         Vec3 vector;
-        if (NERF.get() && entity == shooter && !shooter.onGround()) {
-            return;
-        }
+        if (NERF.get() && entity == shooter && !shooter.onGround()) return;
         if (entity instanceof LivingEntity) {
             vector = entity.getLookAngle();
             bonus = Math.max(0, GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
         } else {
-            vector = shooter.getLookAngle();
+            vector = getLookVector(shooter, spellContext);
             bonus = GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
         }
         entity.setDeltaMovement(vector.x * bonus, vector.y * bonus, vector.z * bonus);
         entity.fallDistance = 0.0f;
         entity.hurtMarked = true;
+    }
+
+    public static Vec3 getLookVector(@NotNull LivingEntity shooter, SpellContext spellContext) {
+        Vec3 vector;
+        vector = shooter.getLookAngle();
+        if (spellContext.getCaster() instanceof TileCaster tc) {
+            BlockEntity tile = tc.getTile();
+            if (tile instanceof RotatingTurretTile rotatingTurretTile) {
+                vector = rotatingTurretTile.getShootAngle();
+            } else if (tile instanceof BasicSpellTurretTile || tile instanceof RuneTile) {
+                vector = new Vec3(tile.getBlockState().getValue(FACING).step());
+            }
+        }
+        return vector;
     }
 
     @Override
@@ -55,7 +71,7 @@ public class EffectLeap extends AbstractEffect {
         for (BlockPos pos1 : posList) {
             EnchantedFallingBlock entity = EnchantedFallingBlock.fall(world, pos1, shooter, spellContext, resolver, spellStats);
             if (entity != null) {
-                Vec3 vector = shooter.getLookAngle();
+                Vec3 vector = getLookVector(shooter, spellContext);
                 double bonus = GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
                 entity.setDeltaMovement(vector.x * bonus, vector.y * bonus, vector.z * bonus);
                 entity.hurtMarked = true;
@@ -65,10 +81,10 @@ public class EffectLeap extends AbstractEffect {
         }
     }
 
-    ForgeConfigSpec.BooleanValue NERF;
+    ModConfigSpec.BooleanValue NERF;
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         NERF = builder.comment("If true, will not launch the caster if they are not on the ground.").define("force_ground", false);
         addGenericDouble(builder, 1.5, "Base knockup amount", "knock_up");

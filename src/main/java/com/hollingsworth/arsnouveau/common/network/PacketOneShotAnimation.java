@@ -1,15 +1,20 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
 
-import java.util.function.Supplier;
+public class PacketOneShotAnimation extends AbstractPacket{
+    public static final Type<PacketOneShotAnimation> TYPE = new Type<>(ArsNouveau.prefix("one_shot_animation"));
 
-public class PacketOneShotAnimation {
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketOneShotAnimation> CODEC = StreamCodec.ofMember(PacketOneShotAnimation::encode, PacketOneShotAnimation::decode);
+
     final int x;
     final int y;
     final int z;
@@ -36,37 +41,33 @@ public class PacketOneShotAnimation {
         this.arg = 0;
     }
 
-    public static PacketOneShotAnimation decode(FriendlyByteBuf buf) {
+    public static PacketOneShotAnimation decode(RegistryFriendlyByteBuf buf) {
         return new PacketOneShotAnimation(buf.readInt(), buf.readInt(), buf.readInt(), buf.readInt());
     }
 
-    public static void encode(PacketOneShotAnimation msg, FriendlyByteBuf buf) {
+    public static void encode(PacketOneShotAnimation msg, RegistryFriendlyByteBuf buf) {
         buf.writeInt(msg.x);
         buf.writeInt(msg.y);
         buf.writeInt(msg.z);
         buf.writeInt(msg.arg);
     }
 
-    public static class Handler {
-        public static void handle(final PacketOneShotAnimation m, final Supplier<NetworkEvent.Context> ctx) {
-            if (ctx.get().getDirection().getReceptionSide().isServer()) {
-                ctx.get().setPacketHandled(true);
-                return;
-            }
 
-            ctx.get().enqueueWork(new Runnable() {
-                // Use anon - lambda causes classloading issues
-                @Override
-                public void run() {
-                    Minecraft mc = Minecraft.getInstance();
-                    ClientLevel world = mc.level;
-                    if (world.getBlockEntity(new BlockPos(m.x, m.y, m.z)) instanceof IAnimationListener) {
-                        ((IAnimationListener) world.getBlockEntity(new BlockPos(m.x, m.y, m.z))).startAnimation(m.arg);
-                    }
-                }
-            });
-            ctx.get().setPacketHandled(true);
+    @Override
+    public void toBytes(RegistryFriendlyByteBuf buf) {
 
+    }
+
+    @Override
+    public void onClientReceived(Minecraft minecraft, Player player) {
+        ClientLevel world = minecraft.level;
+        if (world.getBlockEntity(new BlockPos(x, y, z)) instanceof IAnimationListener) {
+            ((IAnimationListener) world.getBlockEntity(new BlockPos(x, y, z))).startAnimation(arg);
         }
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

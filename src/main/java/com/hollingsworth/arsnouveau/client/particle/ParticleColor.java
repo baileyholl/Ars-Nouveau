@@ -2,17 +2,48 @@ package com.hollingsworth.arsnouveau.client.particle;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.particle.IParticleColor;
+import com.hollingsworth.arsnouveau.api.registry.ParticleColorRegistry;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 
+import java.util.Objects;
 import java.util.Random;
 
 /**
  * Modified class of ElementType: https://github.com/Sirttas/ElementalCraft/blob/b91ca42b3d139904d9754d882a595406bad1bd18/src/main/java/sirttas/elementalcraft/ElementType.java
  */
 public class ParticleColor implements IParticleColor, Cloneable {
-    public static final ResourceLocation ID = new ResourceLocation(ArsNouveau.MODID, "constant");
+
+    public static final MapCodec<ParticleColor> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            ResourceLocation.CODEC.fieldOf("id").forGetter(ParticleColor::getRegistryName),
+            Codec.INT.fieldOf("r").forGetter(ParticleColor::getRedInt),
+            Codec.INT.fieldOf("g").forGetter(ParticleColor::getGreenInt),
+            Codec.INT.fieldOf("b").forGetter(ParticleColor::getBlueInt)
+    ).apply(instance, ParticleColorRegistry::from));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, ParticleColor> STREAM = StreamCodec.of(
+            (buf, val) -> {
+                buf.writeResourceLocation(val.getRegistryName());
+                buf.writeInt(val.getRedInt());
+                buf.writeInt(val.getGreenInt());
+                buf.writeInt(val.getBlueInt());
+            },
+            buf -> {
+                ResourceLocation id = buf.readResourceLocation();
+                int r = buf.readInt();
+                int g = buf.readInt();
+                int b = buf.readInt();
+                return ParticleColorRegistry.from(id, r, g, b);
+            }
+    );
+
+    public static final ResourceLocation ID = ArsNouveau.prefix( "constant");
 
     public static final ParticleColor DEFAULT = new ParticleColor(255, 25, 180);
     public static final ParticleColor WHITE = new ParticleColor(255, 255, 255);
@@ -81,12 +112,24 @@ public class ParticleColor implements IParticleColor, Cloneable {
         return r;
     }
 
+    public int getRedInt() {
+        return (int) (r * 255.0);
+    }
+
     public float getGreen() {
         return g;
     }
 
+    public int getGreenInt() {
+        return (int) (g * 255.0);
+    }
+
     public float getBlue() {
         return b;
+    }
+
+    public int getBlueInt() {
+        return (int) (b * 255.0);
     }
 
     public int getColor() {
@@ -131,14 +174,6 @@ public class ParticleColor implements IParticleColor, Cloneable {
         return new ParticleColor(random.nextInt(wrapper.r), random.nextInt(wrapper.g), random.nextInt(wrapper.b));
     }
 
-    // Needed because particles can be created over commands
-    public static ParticleColor fromString(String string) {
-        if (string == null || string.isEmpty())
-            return defaultParticleColor();
-        String[] arr = string.split(",");
-        return new ParticleColor(Integer.parseInt(arr[0].trim()), Integer.parseInt(arr[1].trim()), Integer.parseInt(arr[2].trim()));
-    }
-
     public double euclideanDistance(ParticleColor color) {
         return Math.sqrt(Math.pow(this.r - color.getRed(), 2) + Math.pow(this.g - color.getGreen(), 2) + Math.pow(this.b - color.getBlue(), 2));
     }
@@ -147,10 +182,24 @@ public class ParticleColor implements IParticleColor, Cloneable {
     public ParticleColor clone() {
         try {
             ParticleColor clone = (ParticleColor) super.clone();
+
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ParticleColor that = (ParticleColor) o;
+        return Objects.equals(getRegistryName(), that.getRegistryName()) && Float.compare(r, that.r) == 0 && Float.compare(g, that.g) == 0 && Float.compare(b, that.b) == 0 && color == that.color;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getRegistryName(), r, g, b, color);
     }
 
     @Deprecated(forRemoval = true)

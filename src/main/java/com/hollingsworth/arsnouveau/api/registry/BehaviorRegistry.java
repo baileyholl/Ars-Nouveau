@@ -12,14 +12,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BehaviorRegistry {
+
     private static final Map<ResourceLocation, CreateFromTag> REGISTRY = new HashMap<>();
 
     public static void register(ResourceLocation name, CreateFromTag creator){
         REGISTRY.put(name, creator);
     }
 
-    public static ChangeableBehavior create(Entity entity, CompoundTag tag){
-        CreateFromTag create = REGISTRY.get(new ResourceLocation(tag.getString("id")));
+    public static ChangeableBehavior create(ResourceLocation id, Entity entity, CompoundTag tag){
+        CreateFromTag create = REGISTRY.get(id);
         return create == null ? null : create.create(entity, tag);
     }
 

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "x": {
+      "item": "ars_nouveau:sourcestone"
+    },
+    "y": {
+      "tag": "c:nuggets/gold"
+    },
+    "z": {
+      "tag": "c:gems/source"
+    }
+  },
+  "pattern": [
+    "xzx",
+    "yxy",
+    "yxy"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:arcane_pedestal"
+  }
+}

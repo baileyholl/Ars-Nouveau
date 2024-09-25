@@ -2,87 +2,64 @@ package com.hollingsworth.arsnouveau.common.mixin.camera;
 
 
 import com.hollingsworth.arsnouveau.common.entity.ScryerCamera;
-import com.hollingsworth.arsnouveau.common.util.CameraUtil;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
-import net.minecraft.core.SectionPos;
-import net.minecraft.network.protocol.game.ClientboundLevelChunkWithLightPacket;
-import net.minecraft.server.level.ChunkHolder;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.server.level.ChunkMap;
+import net.minecraft.server.level.ChunkTrackingView;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
-import org.apache.commons.lang3.mutable.MutableObject;
+import net.minecraft.world.level.chunk.LevelChunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.List;
-
-// https://github.com/Geforce132/SecurityCraft/blob/1.18.2/src/main/java/net/geforcemods/securitycraft/mixin/camera/ChunkMapMixin.java
+// https://github.com/Geforce132/an/blob/1.18.2/src/main/java/net/geforcemods/an/mixin/camera/ChunkMapMixin.java
 @Mixin(
         value = {ChunkMap.class},
         priority = 1100
 )
 public abstract class ChunkMapMixin {
-    @Shadow
-    int viewDistance;
-
-    public ChunkMapMixin() {
-    }
 
     @Shadow
-    protected abstract void updateChunkTracking(ServerPlayer var1, ChunkPos var2, MutableObject<ClientboundLevelChunkWithLightPacket> var3, boolean var4, boolean var5);
+    protected abstract void markChunkPendingToSend(ServerPlayer player, ChunkPos pos);
 
     @Shadow
-    public abstract List<ServerPlayer> getPlayers(ChunkPos var1, boolean var2);
+    private static void markChunkPendingToSend(ServerPlayer player, LevelChunk chunk) {}
 
-    @Inject(
-            method = {"setViewDistance"},
-            at = {@At(
-                    value = "NEW",
-                    target = "org/apache/commons/lang3/mutable/MutableObject",
-                    shift = At.Shift.AFTER
-            )},
-            locals = LocalCapture.CAPTURE_FAILSOFT,
-            cancellable = true,
-            remap = false
-    )
-    private void updateAccordingToCamera(int viewDistance, CallbackInfo callback, int i, int j, ObjectIterator<?> objectIterator, ChunkHolder chunkHolder, ChunkPos chunkPos) {
-        MutableObject<ClientboundLevelChunkWithLightPacket> mutableObject = new MutableObject();
-        this.getPlayers(chunkPos, false).forEach((player) -> {
-            SectionPos sectionPos;
-            if (CameraUtil.isPlayerMountedOnCamera(player)) {
-                sectionPos = SectionPos.of(player.getCamera());
-            } else {
-                sectionPos = player.getLastSectionPos();
+    /**
+     * Sends chunks loaded by cameras to the client, and re-sends chunks around the player when they stop viewing a camera to
+     * preemptively prevent missing chunks when exiting the camera
+     */
+    @Inject(method = "updateChunkTracking", at = @At(value = "HEAD"))
+    private void an$onUpdateChunkTracking(ServerPlayer player, CallbackInfo callback) {
+        if (player.getCamera() instanceof ScryerCamera camera) {
+            if (!camera.hasSentChunks()) {
+                ChunkTrackingView.difference(player.getChunkTrackingView(), camera.getCameraChunks(), chunkPos -> markChunkPendingToSend(player, chunkPos), chunkPos -> {});
+                camera.setHasSentChunks(true);
             }
-
-            boolean flag = ChunkMap.isChunkInRange(chunkPos.x, chunkPos.z, sectionPos.x(), sectionPos.z(), j);
-            boolean flag1 = ChunkMap.isChunkInRange(chunkPos.x, chunkPos.z, sectionPos.x(), sectionPos.z(), viewDistance);
-            this.updateChunkTracking(player, chunkPos, mutableObject, flag, flag1);
-        });
-        callback.cancel();
-    }
-
-    @Inject(
-            method = {"move"},
-            at = {@At("TAIL")}
-    )
-    private void trackCameraLoadedChunks(ServerPlayer player, CallbackInfo callback) {
-        if (CameraUtil.isPlayerMountedOnCamera(player)) {
-            SectionPos pos = SectionPos.of(player.getCamera());
-            ScryerCamera camera = (ScryerCamera) player.getCamera();
-
-            for (int i = pos.x() - this.viewDistance; i <= pos.x() + this.viewDistance; ++i) {
-                for (int j = pos.z() - this.viewDistance; j <= pos.z() + this.viewDistance; ++j) {
-                    this.updateChunkTracking(player, new ChunkPos(i, j), new MutableObject(), camera.hasLoadedChunks(), true);
-                }
-            }
-
-            camera.setHasLoadedChunks(this.viewDistance);
         }
+        else if (ScryerCamera.hasRecentlyDismounted(player))
+            player.getChunkTrackingView().forEach(chunkPos -> markChunkPendingToSend(player, chunkPos));
+    }
 
+    /**
+     * Allows chunks that are loaded near a currently active camera (for example by ForcedChunkManager) to be sent to the player
+     * viewing the camera
+     */
+    @Inject(method = "onChunkReadyToSend", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;getChunkTrackingView()Lnet/minecraft/server/level/ChunkTrackingView;"))
+    private void an$sendChunksToCameras(LevelChunk chunk, CallbackInfo callback, @Local ServerPlayer player) {
+        if (player.getCamera() instanceof ScryerCamera camera && camera.getCameraChunks().contains(chunk.getPos()))
+            markChunkPendingToSend(player, chunk);
+    }
+
+    /**
+     * Fixes block updates not getting sent to chunks around cameras by marking all nearby chunks as tracked
+     */
+    @Inject(method = "isChunkTracked", at = @At("HEAD"), cancellable = true)
+    private void an$onIsChunkTracked(ServerPlayer player, int x, int z, CallbackInfoReturnable<Boolean> callback) {
+        if (player.getCamera() instanceof ScryerCamera camera && camera.getCameraChunks().contains(x, z) && !player.connection.chunkSender.isPending(ChunkPos.asLong(x, z)))
+            callback.setReturnValue(true);
     }
 }

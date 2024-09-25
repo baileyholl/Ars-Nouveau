@@ -12,7 +12,7 @@ import java.util.List;
 public class RelayCollectorTile extends RelayTile {
 
     public RelayCollectorTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.RELAY_COLLECTOR_TILE, pos, state);
+        super(BlockRegistry.RELAY_COLLECTOR_TILE.get(), pos, state);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class RelayCollectorTile extends RelayTile {
 
                 int transferred = transferSource(provider.getSource(), this);
                 if (transferred > 0) {
-                    ParticleUtil.spawnFollowProjectile(level, provider.getCurrentPos(), this.worldPosition);
+                    ParticleUtil.spawnFollowProjectile(level, provider.getCurrentPos(), this.worldPosition, this.getColor());
                 }
             }
 

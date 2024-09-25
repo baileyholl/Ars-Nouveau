@@ -35,7 +35,8 @@ public abstract class TableBlock extends TickableModBlock{
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
     public TableBlock() {
-        super(Block.Properties.of().ignitedByLava().mapColor(MapColor.WOOD).sound(SoundType.WOOD).strength(2.0f, 3.0f).noOcclusion().pushReaction(PushReaction.BLOCK));
+        super(Block.Properties.of().ignitedByLava().mapColor(MapColor.WOOD).sound(SoundType.WOOD)
+                .strength(2.0f, 3.0f).noOcclusion().pushReaction(PushReaction.BLOCK));
         this.registerDefaultState(this.stateDefinition.any().setValue(PART, ThreePartBlock.FOOT));
 
     }

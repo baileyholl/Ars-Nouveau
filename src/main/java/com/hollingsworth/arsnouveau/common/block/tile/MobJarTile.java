@@ -3,12 +3,16 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
-import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
+import com.hollingsworth.arsnouveau.api.registry.JarBehaviorRegistry;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.MobJar;
+import com.hollingsworth.arsnouveau.common.items.data.MobJarData;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
@@ -33,7 +37,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
 
     private CompoundTag entityTag;
 
-    private CompoundTag extraDataTag;
+    private CompoundTag extraDataTag ;
 
     public MobJarTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.MOB_JAR_TILE, pos, state);
@@ -83,7 +87,9 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     public void writeSimple(Entity e){
         CompoundTag tag = new CompoundTag();
         tag.putString("id", EntityType.getKey(e.getType()).toString());
+        if (level == null) return;
         this.cachedEntity = e.getType().create(level);
+        assert cachedEntity != null;
         this.cachedEntity.setBoundingBox(new AABB(0,0,0,0,0,0));
         this.cachedEntity.setPos(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5);
         this.extraDataTag = null;
@@ -125,7 +131,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
 
     @Override
     public boolean onDispel(@NotNull LivingEntity caster) {
-        if(entityTag == null)
+        if (entityTag == null || level == null)
             return false;
         Entity entity = loadEntityFromTag(level, entityTag);
         if(entity == null || entity.getType().is(EntityTags.JAR_RELEASE_BLACKLIST))
@@ -153,8 +159,8 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
 
         // Check both conditions because the entity may have never been loaded on the server side.
         if(entityTag != null || cachedEntity != null){
@@ -172,8 +178,8 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
+    protected void loadAdditional(@NotNull CompoundTag pTag, HolderLookup.@NotNull Provider pRegistries) {
+        super.loadAdditional(pTag, pRegistries);
         if(pTag.contains("entityTag")){
             this.entityTag = pTag.getCompound("entityTag");
             this.cachedEntity = null;
@@ -182,10 +188,10 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+    public void onDataPacket(@NotNull Connection net, @NotNull ClientboundBlockEntityDataPacket pkt, HolderLookup.@NotNull Provider lookupProvider) {
         this.cachedEntity = null;
         this.entityTag = null;
-        super.onDataPacket(net, pkt);
+        super.onDataPacket(net, pkt, lookupProvider);
     }
 
     public void dispatchBehavior(Consumer<JarBehavior<? extends Entity>> consumer){
@@ -227,5 +233,20 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
                 behavior.getTooltip(this, tooltip);
             });
         }
+    }
+
+
+    @Override
+    protected void applyImplicitComponents(@NotNull DataComponentInput pComponentInput) {
+        super.applyImplicitComponents(pComponentInput);
+        var jar = pComponentInput.getOrDefault(DataComponentRegistry.MOB_JAR, new MobJarData(Optional.empty(), Optional.empty()));
+        this.entityTag = jar.entityTag().orElse(null);
+        this.extraDataTag = jar.extraDataTag().orElse(null);
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.@NotNull Builder pComponents) {
+        super.collectImplicitComponents(pComponents);
+        pComponents.set(DataComponentRegistry.MOB_JAR, new MobJarData(this.entityTag, this.extraDataTag));
     }
 }

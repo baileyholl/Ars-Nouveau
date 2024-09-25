@@ -46,6 +46,13 @@ public class ParticleUtil {
         return new Vec3(x, y, z);
     }
 
+    public static void spawnFollowProjectile(Level world, BlockPos from, BlockPos to, ParticleColor color) {
+        if (world.isLoaded(to) && world.isLoaded(from)) {
+            EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, from, to, color.toWrapper());
+            world.addFreshEntity(aoeProjectile);
+        }
+    }
+
     public static void spawnFollowProjectile(Level world, BlockPos from, BlockPos to) {
         if (world.isLoaded(to) && world.isLoaded(from)) {
             EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, from, to);
@@ -105,7 +112,7 @@ public class ParticleUtil {
     }
 
     public static void spawnTouchPacket(Level world, BlockPos pos, ParticleColor color) {
-        Networking.sendToNearby(world, pos,
+        Networking.sendToNearbyClient(world, pos,
                 new PacketANEffect(PacketANEffect.EffectType.BURST, pos, color));
     }
 

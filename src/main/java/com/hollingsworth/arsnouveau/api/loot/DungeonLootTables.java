@@ -1,14 +1,20 @@
 package com.hollingsworth.arsnouveau.api.loot;
 
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
-import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
-import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.config.Config;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
+
+import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
+
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,19 +39,19 @@ public class DungeonLootTables {
         BASIC_LOOT.add(() -> new ItemStack(BlockRegistry.SOURCEBERRY_BUSH, 1 + r.nextInt(3)));
         BASIC_LOOT.add(() -> {
             ItemStack stack = new ItemStack(Items.POTION);
-            PotionUtils.setPotion(stack, ModPotions.LONG_MANA_REGEN_POTION.get());
+            stack.set(DataComponents.POTION_CONTENTS, new PotionContents(ModPotions.LONG_MANA_REGEN_POTION));
             return stack;
         });
 
         BASIC_LOOT.add(() -> {
             ItemStack stack = new ItemStack(Items.POTION);
-            PotionUtils.setPotion(stack, ModPotions.STRONG_MANA_REGEN_POTION.get());
+            stack.set(DataComponents.POTION_CONTENTS, new PotionContents(ModPotions.STRONG_MANA_REGEN_POTION));
             return stack;
         });
 
         BASIC_LOOT.add(() -> {
             ItemStack stack = new ItemStack(Items.POTION);
-            PotionUtils.setPotion(stack, ModPotions.MANA_REGEN_POTION.get());
+            stack.set(DataComponents.POTION_CONTENTS, new PotionContents(ModPotions.MANA_REGEN_POTION));
             return stack;
         });
 
@@ -60,14 +66,16 @@ public class DungeonLootTables {
         UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.PIERCE_ARROW.get(), 16 + r.nextInt(16)));
 
         UNCOMMON_LOOT.add(() -> {
-            List<RitualTablet> tablets = new ArrayList<>(RitualRegistry.getRitualItemMap().values());
+            List<RitualTablet> tablets = RitualRegistry.getRitualItemMap().values().stream().filter(tablet -> !(new ItemStack(tablet).is(ItemTagProvider.RITUAL_LOOT_BLACKLIST))).toList();
+            if(tablets.isEmpty()){
+                return ItemStack.EMPTY;
+            }
             return new ItemStack(tablets.get(r.nextInt(tablets.size())));
         });
 
         RARE_LOOT.add(() -> new ItemStack(ItemsRegistry.FIREL_DISC.get()));
         RARE_LOOT.add(() -> new ItemStack(ItemsRegistry.SOUND_OF_GLASS.get()));
         RARE_LOOT.add(() -> new ItemStack(ItemsRegistry.WILD_HUNT.get()));
-
     }
 
     public static ItemStack getRandomItem(List<Supplier<ItemStack>> pool) {

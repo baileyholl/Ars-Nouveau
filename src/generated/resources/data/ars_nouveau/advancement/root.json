@@ -1,0 +1,34 @@
+{
+  "criteria": {
+    "ars_nouveau:worn_notebook": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ars_nouveau:worn_notebook"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "ars_nouveau:textures/gui/advancements/backgrounds/sourcestone.png",
+    "description": {
+      "translate": "ars_nouveau.advancement.desc.root"
+    },
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:worn_notebook"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "ars_nouveau.advancement.title.root"
+    }
+  },
+  "requirements": [
+    [
+      "ars_nouveau:worn_notebook"
+    ]
+  ]
+}

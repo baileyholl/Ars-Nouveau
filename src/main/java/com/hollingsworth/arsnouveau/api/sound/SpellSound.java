@@ -1,72 +1,56 @@
 package com.hollingsworth.arsnouveau.api.sound;
 
 import com.hollingsworth.arsnouveau.api.registry.SpellSoundRegistry;
-import net.minecraft.nbt.CompoundTag;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
-import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class SpellSound {
 
-    private ResourceLocation id;
+    public static MapCodec<SpellSound> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            ResourceLocation.CODEC.fieldOf("id").forGetter(SpellSound::getId)
+    ).apply(instance, SpellSoundRegistry::get));
 
-    private SoundEvent soundEvent;
+    public static StreamCodec<RegistryFriendlyByteBuf, SpellSound> STREAM = StreamCodec.composite(
+            ResourceLocation.STREAM_CODEC,
+            SpellSound::getId,
+            SpellSoundRegistry::get
+    );
+
+
+    private Holder<SoundEvent> soundEvent;
 
     private Component soundName;
+    private ResourceLocation id;
 
-    public SpellSound(ResourceLocation id, SoundEvent soundEvent, Component soundName) {
-        this.id = id;
+    public SpellSound(Holder<SoundEvent> soundEvent, Component soundName, ResourceLocation id) {
         this.soundEvent = soundEvent;
         this.soundName = soundName;
-    }
-
-    public SpellSound(SoundEvent soundEvent, Component soundName) {
-        this(soundEvent.getLocation(), soundEvent, soundName);
+        this.id = id;
     }
 
     public ResourceLocation getId() {
         return id;
     }
 
-    public void setId(ResourceLocation id) {
-        this.id = id;
-    }
 
-    public SoundEvent getSoundEvent() {
+    public Holder<SoundEvent> getSoundEvent() {
         return soundEvent;
-    }
-
-    public void setSoundEvent(SoundEvent soundEvent) {
-        this.soundEvent = soundEvent;
     }
 
     public Component getSoundName() {
         return soundName;
     }
 
-    public void setSoundName(Component soundName) {
-        this.soundName = soundName;
-    }
-
-    public CompoundTag serialize() {
-        CompoundTag tag = new CompoundTag();
-        tag.putString("id", id.toString());
-        return tag;
-    }
-
-    public static @Nullable SpellSound fromTag(CompoundTag tag) {
-        if (!tag.contains("id"))
-            return null;
-
-        ResourceLocation id = new ResourceLocation(tag.getString("id"));
-        return SpellSoundRegistry.getSpellSoundsRegistry().get(id);
-    }
-
     public ResourceLocation getTexturePath() {
-        return new ResourceLocation(this.id.getNamespace(), "textures/sounds/" + this.id.getPath() + ".png");
+        return ResourceLocation.fromNamespaceAndPath(this.getId().getNamespace(), "textures/sounds/" + this.getId().getPath() + ".png");
     }
 
     @Override
@@ -74,19 +58,18 @@ public class SpellSound {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SpellSound that = (SpellSound) o;
-        return Objects.equals(id, that.id) && Objects.equals(soundEvent, that.soundEvent) && Objects.equals(soundName, that.soundName);
+        return Objects.equals(id, that.id) ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, soundEvent, soundName);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "SpellSound{" +
-                "id=" + id +
-                ", soundEvent=" + soundEvent +
+                "soundEvent=" + soundEvent +
                 ", soundName=" + soundName +
                 '}';
     }

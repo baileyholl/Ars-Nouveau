@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "lit=true": { "model": "ars_nouveau:block/source_lamp_on" },
+    "lit=false": { "model": "ars_nouveau:block/source_lamp" }
+  }
+}

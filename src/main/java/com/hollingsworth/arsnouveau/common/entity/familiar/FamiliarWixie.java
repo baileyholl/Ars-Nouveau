@@ -2,14 +2,16 @@ package com.hollingsworth.arsnouveau.common.entity.familiar;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
-import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.common.util.PotionUtil;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -26,15 +28,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.brewing.BrewingRecipe;
-import net.minecraftforge.event.entity.living.MobEffectEvent;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.brewing.BrewingRecipe;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
+import org.jetbrains.annotations.NotNull;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,8 +51,8 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
 
 
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if (level.isClientSide || hand != InteractionHand.MAIN_HAND)
+    protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
+        if (level().isClientSide || hand != InteractionHand.MAIN_HAND)
             return InteractionResult.SUCCESS;
 
         ItemStack stack = player.getItemInHand(hand);
@@ -61,19 +63,21 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
                 return InteractionResult.SUCCESS;
             setColor(color);
             return InteractionResult.SUCCESS;
-        }else{
-            for (BrewingRecipe r : ArsNouveauAPI.getInstance().getAllPotionRecipes()) {
-                ItemStack water = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
-                ItemStack awkard = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.AWKWARD);
+        } else {
+            for (BrewingRecipe r : ArsNouveauAPI.getInstance().getAllPotionRecipes(level())) {
+                ItemStack water = PotionUtil.getPotion(Potions.WATER);
+                ItemStack awkward = PotionUtil.getPotion(Potions.AWKWARD);
 
-                if(r.isIngredient(stack) && (r.getInput().test(awkard) || r.getInput().test(water))){
-                    PotionData data = new PotionData(r.getOutput().copy());
+                if (r.isIngredient(stack) && (r.getInput().test(awkward) || r.getInput().test(water))) {
+                    PotionContents contents = PotionUtil.getContents(r.getOutput());
 
-                    if(!data.isEmpty()){
-                        data.applyEffects(player, player, player);
-                        PortUtil.sendMessage(player, Component.translatable("ars_nouveau.wixie_familiar.applied",data.asPotionStack().getHoverName().getString()));
-                        Networking.sendToNearby(level, this, new PacketAnimEntity(this.getId(), EntityWixie.Animations.CAST.ordinal()));
-                        ParticleUtil.spawnPoof((ServerLevel) level, player.blockPosition().above());
+                    if (!PotionUtil.isEmpty(contents)) {
+                        PotionUtil.applyContents(contents, player, player, player);
+                        ItemStack potionStack = new ItemStack(Items.POTION);
+                        potionStack.set(DataComponents.POTION_CONTENTS, contents);
+                        PortUtil.sendMessage(player, Component.translatable("ars_nouveau.wixie_familiar.applied", potionStack.getHoverName().getString()));
+                        Networking.sendToNearbyClient(level(), this, new PacketAnimEntity(this.getId(), EntityWixie.Animations.CAST.ordinal()));
+                        ParticleUtil.spawnPoof((ServerLevel) level(), player.blockPosition().above());
                         stack.shrink(1);
                         return InteractionResult.SUCCESS;
                     }
@@ -84,15 +88,16 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
     }
 
     public void potionEvent(MobEffectEvent.Added event) {
-        if (!isAlive())
+        if (!isAlive() || event.getEffectInstance() == null)
             return;
         Entity target = event.getEntity();
         Entity applier = event.getEffectSource();
 
-        boolean isBeneficialOwner = target.equals(getOwner()) && event.getEffectInstance().getEffect().isBeneficial();
+        boolean isBeneficialOwner = target.equals(getOwner()) && event.getEffectInstance().getEffect().value().isBeneficial();
         boolean isApplierOwner = applier != null && applier.equals(this.getOwner());
-        if(isBeneficialOwner || isApplierOwner){
-            event.getEffectInstance().duration += event.getEffectInstance().duration * .2;
+        if (isBeneficialOwner || isApplierOwner) {
+            //event.getEffectInstance().getCures(); why is this here Jarva
+            event.getEffectInstance().mapDuration(duration -> duration + duration * 2);
         }
     }
 
@@ -110,18 +115,13 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
     }
 
     @Override
-    public PlayState walkPredicate(AnimationState event) {
-        return PlayState.CONTINUE;
-    }
-
-    @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.ENTITY_FAMILIAR_WIXIE.get();
     }
 
     @Override
     public void startAnimation(int arg) {
-        if(controller == null)
+        if (controller == null)
             return;
         if (arg == EntityWixie.Animations.CAST.ordinal()) {
             controller.forceAnimationReset();
@@ -134,13 +134,18 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
         String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "blue";
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/wixie_" + color + ".png");
+        return ArsNouveau.prefix("textures/entity/wixie_" + color + ".png");
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+
     }
 
     public static class DebuffTargetGoal extends Goal {
         FamiliarWixie wixie;
 
-        public static ArrayList<MobEffect> effectTable = new ArrayList<>(Arrays.asList(
+        public static ArrayList<Holder<MobEffect>> effectTable = new ArrayList<>(Arrays.asList(
                 MobEffects.MOVEMENT_SLOWDOWN, MobEffects.WEAKNESS, MobEffects.LEVITATION, MobEffects.POISON
         ));
 
@@ -153,12 +158,12 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
             super.tick();
             if (wixie.getTarget() == null)
                 return;
-            MobEffect effect = effectTable.get(new Random().nextInt(effectTable.size()));
+            Holder<MobEffect> effect = effectTable.get(new Random().nextInt(effectTable.size()));
             if (effect == MobEffects.POISON) {
                 if (wixie.getTarget().isInvertedHealAndHarm())
                     effect = MobEffects.REGENERATION;
             }
-            Networking.sendToNearby(wixie.level, wixie, new PacketAnimEntity(wixie.getId(), EntityWixie.Animations.CAST.ordinal()));
+            Networking.sendToNearbyClient(wixie.level, wixie, new PacketAnimEntity(wixie.getId(), EntityWixie.Animations.CAST.ordinal()));
             wixie.getTarget().addEffect(new MobEffectInstance(effect, 7 * 20, new Random().nextInt(2)));
             wixie.debuffCooldown = 150;
         }

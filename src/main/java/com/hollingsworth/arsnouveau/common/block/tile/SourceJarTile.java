@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.SourceJar;
-import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -16,15 +15,11 @@ import java.util.List;
 public class SourceJarTile extends AbstractSourceMachine implements ITooltipProvider, ITickable {
 
     public SourceJarTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.SOURCE_JAR_TILE, pos, state);
+        super(BlockRegistry.SOURCE_JAR_TILE.get(), pos, state);
     }
 
     public SourceJarTile(BlockEntityType<? extends SourceJarTile> tileTileEntityType, BlockPos pos, BlockState state) {
         super(tileTileEntityType, pos, state);
-    }
-
-    public SourceJarTile(RegistryWrapper<? extends BlockEntityType<?>> type, BlockPos pos, BlockState state) {
-        super(type.get(), pos, state);
     }
 
     @Override

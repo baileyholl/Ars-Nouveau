@@ -1,52 +1,48 @@
 package com.hollingsworth.arsnouveau.common.capability;
 
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketUpdateMana;
+import com.hollingsworth.arsnouveau.setup.registry.AttachmentsRegistry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
-
-import javax.annotation.Nullable;
 
 public class ManaCap implements IManaCap {
 
-    private final LivingEntity livingEntity;
-
-    private double mana;
-
-    private int maxMana;
-
-    private int glyphBonus;
-
-    private int bookTier;
-
-
-    public ManaCap(@Nullable final LivingEntity entity) {
-        this.livingEntity = entity;
+    private ManaData manaData;
+    LivingEntity entity;
+    public ManaCap(LivingEntity livingEntity) {
+        manaData = livingEntity.getData(AttachmentsRegistry.MANA_ATTACHMENT);
+        entity = livingEntity;
     }
 
     @Override
     public double getCurrentMana() {
-        return mana;
+        return manaData.getMana();
     }
 
     @Override
     public int getMaxMana() {
-        return maxMana;
+        return manaData.getMaxMana();
     }
 
     @Override
     public void setMaxMana(int maxMana) {
-        this.maxMana = maxMana;
+        manaData.setMaxMana(maxMana);
+        entity.setData(AttachmentsRegistry.MANA_ATTACHMENT, manaData);
     }
 
     @Override
     public double setMana(double mana) {
         if (mana > getMaxMana()) {
-            this.mana = getMaxMana();
+            this.manaData.setMana(getMaxMana());
         } else if (mana < 0) {
-            this.mana = 0;
+            this.manaData.setMana(0);
         } else {
-            this.mana = mana;
+            this.manaData.setMana(mana);
         }
+        entity.setData(AttachmentsRegistry.MANA_ATTACHMENT, manaData);
         return this.getCurrentMana();
     }
 
@@ -66,39 +62,41 @@ public class ManaCap implements IManaCap {
 
     @Override
     public int getGlyphBonus() {
-        return glyphBonus;
+        return manaData.getGlyphBonus();
     }
 
     @Override
     public void setGlyphBonus(int glyphBonus) {
-        this.glyphBonus = glyphBonus;
+        manaData.setGlyphBonus(glyphBonus);
+        entity.setData(AttachmentsRegistry.MANA_ATTACHMENT, manaData);
     }
 
     @Override
     public int getBookTier() {
-        return bookTier;
+        return manaData.getBookTier();
     }
 
     @Override
     public void setBookTier(int bookTier) {
-        this.bookTier = bookTier;
+        manaData.setBookTier(bookTier);
+        entity.setData(AttachmentsRegistry.MANA_ATTACHMENT, manaData);
     }
 
-    @Override
-    public CompoundTag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
-        tag.putDouble("current", getCurrentMana());
-        tag.putInt("max", getMaxMana());
-        tag.putInt("glyph", getGlyphBonus());
-        tag.putInt("book_tier", getBookTier());
-        return tag;
+    public float getReserve(){
+        return manaData.getReservedMana();
     }
 
-    @Override
-    public void deserializeNBT(CompoundTag tag) {
-        setMaxMana(tag.getInt("max"));
-        setMana(tag.getDouble("current"));
-        setBookTier(tag.getInt("book_tier"));
-        setGlyphBonus(tag.getInt("glyph"));
+    public void setReserve(float reserve){
+        manaData.setReservedMana(reserve);
+        entity.setData(AttachmentsRegistry.MANA_ATTACHMENT, manaData);
+    }
+
+    public void setManaData(ManaData manaData) {
+        this.manaData = manaData;
+    }
+
+    public void syncToClient(ServerPlayer player) {
+        CompoundTag tag = manaData.serializeNBT(player.registryAccess());
+        Networking.sendToPlayerClient(new PacketUpdateMana(tag), player);
     }
 }

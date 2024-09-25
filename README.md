@@ -16,11 +16,18 @@ repositories {
 }
 
 dependencies {
-    implementation fg.deobf("com.hollingsworth.ars_nouveau:ars_nouveau-[MC_VERSION]:[VERSION]")
+
+    // Ars Nouveau
+    implementation "com.hollingsworth.ars_nouveau:ars_nouveau-[MC_VERSION]:[ARS_VERSION]"
+
+    // Ars dependencies
+    implementation "software.bernie.geckolib:geckolib-neoforge-[MC_VERSION]:[GECKOLIB_VERSION]"
+    implementation 'top.theillusivec4.curios:curios-neoforge:[CURIO_VERSION]'
+
 }
 ```
 
-Current version (1.20.1):
-[![Maven](https://img.shields.io/maven-metadata/v?label=&color=C71A36&metadataUrl=https%3A%2F%2Fmaven.blamejared.com%2Fcom%2Fhollingsworth%2Fars_nouveau%2Fars_nouveau-1.20.1%2Fmaven-metadata.xml&style=flat-square)](https://maven.blamejared.com/com/hollingsworth/ars_nouveau/ars_nouveau-1.19.2/)
+Current version (1.21):
+[![Maven](https://img.shields.io/maven-metadata/v?label=&color=C71A36&metadataUrl=https%3A%2F%2Fmaven.blamejared.com%2Fcom%2Fhollingsworth%2Fars_nouveau%2Fars_nouveau-1.21.0%2Fmaven-metadata.xml&style=flat-square)](https://maven.blamejared.com/com/hollingsworth/ars_nouveau/ars_nouveau-1.21.0/)
 
 (remove the v)

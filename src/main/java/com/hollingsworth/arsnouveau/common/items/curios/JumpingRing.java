@@ -10,7 +10,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeHooks;
+import net.neoforged.neoforge.common.CommonHooks;
 import top.theillusivec4.curios.api.SlotContext;
 
 public class JumpingRing extends ArsNouveauCurio {
@@ -23,8 +23,11 @@ public class JumpingRing extends ArsNouveauCurio {
 
     public static void doJump(Player player){
         if(CuriosUtil.hasItem(player, ItemsRegistry.JUMP_RING.get())){
-            IManaCap manaCap = CapabilityRegistry.getMana(player).orElse(null);
+            IManaCap manaCap = CapabilityRegistry.getMana(player);
             if(manaCap == null || (manaCap.getCurrentMana() < Config.JUMP_RING_COST.get() && !player.isCreative())){
+                return;
+            }
+            if(player.isSpectator() || player.abilities.flying || player.isSwimming()){
                 return;
             }
             manaCap.removeMana(Config.JUMP_RING_COST.get());
@@ -36,7 +39,7 @@ public class JumpingRing extends ArsNouveauCurio {
             player.hasImpulse = true;
             player.hurtMarked = true;
             player.fallDistance = 0;
-            ForgeHooks.onLivingJump(player);
+            CommonHooks.onLivingJump(player);
         }
     }
 }

@@ -1,16 +1,13 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
-import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.network.FriendlyByteBuf;
-
-import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 
 
 /**
@@ -20,7 +17,7 @@ import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegi
 public class ColorParticleTypeData implements ParticleOptions {
 
     protected ParticleType<? extends ColorParticleTypeData> type;
-    public static final Codec<ColorParticleTypeData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final MapCodec<ColorParticleTypeData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                     Codec.FLOAT.fieldOf("r").forGetter(d -> d.color.getRed()),
                     Codec.FLOAT.fieldOf("g").forGetter(d -> d.color.getGreen()),
                     Codec.FLOAT.fieldOf("b").forGetter(d -> d.color.getBlue()),
@@ -31,24 +28,36 @@ public class ColorParticleTypeData implements ParticleOptions {
             )
             .apply(instance, ColorParticleTypeData::new));
 
+    public static final StreamCodec<RegistryFriendlyByteBuf, ColorParticleTypeData> STREAM_CODEC = StreamCodec.of(
+            ColorParticleTypeData::toNetwork, ColorParticleTypeData::fromNetwork
+    );
+
+    public static void toNetwork(RegistryFriendlyByteBuf buf, ColorParticleTypeData data) {
+        buf.writeFloat(data.color.getRed());
+        buf.writeFloat(data.color.getGreen());
+        buf.writeFloat(data.color.getBlue());
+        buf.writeBoolean(data.disableDepthTest);
+        buf.writeFloat(data.size);
+        buf.writeFloat(data.alpha);
+        buf.writeInt(data.age);
+    }
+
+    public static ColorParticleTypeData fromNetwork(RegistryFriendlyByteBuf buffer) {
+        float r = buffer.readFloat();
+        float g = buffer.readFloat();
+        float b = buffer.readFloat();
+        boolean disableDepthTest = buffer.readBoolean();
+        float size = buffer.readFloat();
+        float alpha = buffer.readFloat();
+        int age = buffer.readInt();
+        return new ColorParticleTypeData(r, g, b, disableDepthTest, size, alpha, age);
+    }
+
     public ParticleColor color;
     public boolean disableDepthTest;
     public float size = .25f;
     public float alpha = 1.0f;
     public int age = 36;
-
-    static final ParticleOptions.Deserializer<ColorParticleTypeData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
-        @Override
-        public ColorParticleTypeData fromCommand(ParticleType<ColorParticleTypeData> type, StringReader reader) throws CommandSyntaxException {
-            reader.expect(' ');
-            return new ColorParticleTypeData(type, ParticleColor.fromString(reader.readString()), reader.readBoolean());
-        }
-
-        @Override
-        public ColorParticleTypeData fromNetwork(ParticleType<ColorParticleTypeData> type, FriendlyByteBuf buffer) {
-            return new ColorParticleTypeData(type, ParticleColorRegistry.from(buffer.readNbt()), buffer.readBoolean());
-        }
-    };
 
     public ColorParticleTypeData(float r, float g, float b, boolean disableDepthTest, float size, float alpha, int age) {
         this(ModParticles.GLOW_TYPE.get(), new ParticleColor(r, g, b), disableDepthTest, size, alpha, age);
@@ -75,15 +84,5 @@ public class ColorParticleTypeData implements ParticleOptions {
     @Override
     public ParticleType<? extends ColorParticleTypeData> getType() {
         return type;
-    }
-
-    @Override
-    public void writeToNetwork(FriendlyByteBuf packetBuffer) {
-        packetBuffer.writeNbt(color.serialize());
-    }
-
-    @Override
-    public String writeToString() {
-        return getRegistryName(type).toString() + " " + color.serialize();
     }
 }

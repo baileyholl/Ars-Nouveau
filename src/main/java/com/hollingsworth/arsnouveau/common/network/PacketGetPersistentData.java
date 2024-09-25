@@ -1,23 +1,26 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
 
-import java.util.function.Supplier;
-
-public class PacketGetPersistentData {
-
+public class PacketGetPersistentData extends AbstractPacket{
+    public static final Type<PacketGetPersistentData> TYPE = new Type<>(ArsNouveau.prefix("get_persistent_data"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketGetPersistentData> CODEC = StreamCodec.ofMember(PacketGetPersistentData::toBytes, PacketGetPersistentData::new);
     public CompoundTag tag;
 
     //Decoder
-    public PacketGetPersistentData(FriendlyByteBuf buf) {
+    public PacketGetPersistentData(RegistryFriendlyByteBuf buf) {
         tag = buf.readNbt();
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeNbt(tag);
     }
 
@@ -25,10 +28,13 @@ public class PacketGetPersistentData {
         this.tag = tag;
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            ClientInfo.persistentData = tag;
-        });
-        ctx.get().setPacketHandled(true);
+    @Override
+    public void onClientReceived(Minecraft minecraft, Player player) {
+        ClientInfo.persistentData = tag;
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

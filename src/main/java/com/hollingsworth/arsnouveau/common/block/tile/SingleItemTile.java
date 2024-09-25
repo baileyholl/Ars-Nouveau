@@ -1,26 +1,18 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 
 public class SingleItemTile extends ModdedTile implements Container{
-    private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     protected ItemStack stack = ItemStack.EMPTY;
     public ItemEntity renderEntity;
 
@@ -28,9 +20,6 @@ public class SingleItemTile extends ModdedTile implements Container{
         super(tileEntityTypeIn, pos, state);
     }
 
-    public SingleItemTile(RegistryWrapper<? extends BlockEntityType<?>> tileEntityTypeIn, BlockPos pos, BlockState state) {
-        this(tileEntityTypeIn.get(), pos, state);
-    }
 
     @Override
     public int getContainerSize() {
@@ -99,34 +88,22 @@ public class SingleItemTile extends ModdedTile implements Container{
         updateBlock();
     }
 
-   @NotNull
     @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, final @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return itemHandler.cast();
-        }
-        return super.getCapability(cap, side);
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(compound, pRegistries);
+        this.stack = ItemStack.parseOptional(pRegistries, compound.getCompound("itemStack"));
     }
 
     @Override
-    public void invalidateCaps() {
-        itemHandler.invalidate();
-        super.invalidateCaps();
-    }
-
-    @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-        stack = ItemStack.of((CompoundTag) compound.get("itemStack"));
-    }
-
-    @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        if (stack != null) {
-            CompoundTag stackTag = new CompoundTag();
-            stack.save(stackTag);
-            tag.put("itemStack", stackTag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
+        if (!stack.isEmpty()) {
+            try {
+                Tag stackTag = stack.save(pRegistries);
+                tag.put("itemStack", stackTag);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 }

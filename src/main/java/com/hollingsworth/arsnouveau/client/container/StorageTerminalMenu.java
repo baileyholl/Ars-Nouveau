@@ -1,40 +1,41 @@
 package com.hollingsworth.arsnouveau.client.container;
 
 import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
-import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
-import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.ServerToClientStoragePacket;
+import com.hollingsworth.arsnouveau.common.network.SetTerminalSettingsPacket;
+import com.hollingsworth.arsnouveau.common.network.UpdateStorageItemsPacket;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
+import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
+import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.RecipeBookMenu;
+import net.minecraft.world.inventory.RecipeBookType;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
+public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingRecipe> {
 	protected StorageLecternTile te;
 	protected int playerSlotsStart;
 	protected List<SlotStorage> storageSlotList = new ArrayList<>();
 	public List<StoredItemStack> itemList = new ArrayList<>();
-	public List<StoredItemStack> itemListClient = new ArrayList<>();
-	public List<StoredItemStack> itemListClientSorted = new ArrayList<>();
-	public TerminalSyncManager sync = new TerminalSyncManager();
-	private int lines;
-	protected Inventory pinv;
-	public Runnable onPacket;
-	public SortSettings terminalData = null;
+    protected Inventory pinv;
 	public String search;
-	public boolean noSort;
-	public List<String> tabNames = new ArrayList<>();
 	public String selectedTab = null;
+	public Map<StoredItemStack, StoredItemStack> itemMap = new HashMap<>();
 
 	public StorageTerminalMenu(int id, Inventory inv, StorageLecternTile te) {
 		this(MenuRegistry.STORAGE.get(), id, inv, te);
@@ -45,15 +46,11 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 		super(type, id);
 		this.te = te;
 		this.pinv = inv;
-		addStorageSlots();
+		addStorageSlots(false);
 	}
 
 	public StorageTerminalMenu(MenuType<?> type, int id, Inventory inv) {
 		this(type, id, inv, null);
-	}
-
-	protected void addStorageSlots() {
-		addStorageSlots(8, 18);
 	}
 
 	protected void addPlayerSlots(Inventory playerInventory, int x, int y) {
@@ -69,45 +66,19 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 		}
 	}
 
-	public void addStorageSlots(int x, int y) {
+	public void addStorageSlots(boolean expanded) {
 		storageSlotList.clear();
-		lines = this.terminalData == null || !terminalData.expanded ? 3 : 7;
-		for (int i = 0;i < lines;++i) {
+        int lines = !expanded ? 3 : 7;
+		for (int i = 0; i < lines; ++i) {
 			for (int j = 0;j < 9;++j) {
-				this.addSlotToContainer(new SlotStorage(this.te, i * 9 + j, x + j * 18, y + i * 18));
+				storageSlotList.add(new SlotStorage(this.te, i * 9 + j, 13 + j * 18, 21 + i * 18));
 			}
 		}
-		scrollTo(0.0F);
-	}
-
-	protected final void addSlotToContainer(SlotStorage slotStorage) {
-		storageSlotList.add(slotStorage);
 	}
 
 	@Override
 	public boolean stillValid(Player playerIn) {
 		return te != null && te.canInteractWith(playerIn);
-	}
-
-	public final void scrollTo(float p_148329_1_) {
-		int i = (this.itemListClientSorted.size() + 9 - 1) / 9 - lines;
-		int j = (int) (p_148329_1_ * i + 0.5D);
-
-		if (j < 0) {
-			j = 0;
-		}
-
-		for (int k = 0;k < lines;++k) {
-			for (int l = 0;l < 9;++l) {
-				int i1 = l + (k + j) * 9;
-
-				if (i1 >= 0 && i1 < this.itemListClientSorted.size()) {
-					setSlotContents(l + k * 9, this.itemListClientSorted.get(i1));
-				} else {
-					setSlotContents(l + k * 9, null);
-				}
-			}
-		}
 	}
 
 	public final void setSlotContents(int id, StoredItemStack stack) {
@@ -121,27 +92,43 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 	public enum SlotAction {
 		PULL_OR_PUSH_STACK, PULL_ONE, SPACE_CLICK, SHIFT_PULL, GET_HALF, GET_QUARTER //CRAFT
 	}
-
+	private Object2LongMap<StoredItemStack> itemLongMap = new Object2LongOpenHashMap<>();
 	@Override
 	public void broadcastChanges() {
 		if(te == null){
 			return;
 		}
 		Map<StoredItemStack, Long> itemsCount = te.getStacks(selectedTab);
-		sync.update(itemsCount, (ServerPlayer) pinv.player, tag -> {
-			if(!te.getLastSearch().equals(search)) {
-				search = te.getLastSearch();
-				tag.putString("search", search);
+		List<StoredItemStack> toWrite = new ArrayList<>();
+		Set<StoredItemStack> found = new HashSet<>();
+		itemsCount.forEach((s, c) -> {
+			long pc = this.itemLongMap.getLong(s);
+			if(pc != 0L)found.add(s);
+			if(pc != c) {
+				toWrite.add(new StoredItemStack(s.getStack(), c));
 			}
-			ListTag tabs = new ListTag();
-			for(String s : te.getTabNames()){
-				CompoundTag nameTag = new CompoundTag();
-				nameTag.putString("name", s);
-				tabs.add(nameTag);
-			}
-			tag.put("tabs", tabs);
-			tag.put("sortSettings", te.sortSettings.toTag());
 		});
+		this.itemLongMap.forEach((s, c) -> {
+			if(!found.contains(s))
+				toWrite.add(new StoredItemStack(s.getStack(), 0L));
+		});
+		this.itemLongMap.clear();
+		this.itemLongMap.putAll(itemsCount);
+		Networking.sendToPlayerClient(new UpdateStorageItemsPacket(toWrite),  (ServerPlayer) pinv.player);
+		CompoundTag tag = new CompoundTag();
+		if(!te.getLastSearch().equals(search)) {
+			search = te.getLastSearch();
+			tag.putString("search", search);
+		}
+		ListTag tabs = new ListTag();
+		for(String s : te.getTabNames()){
+			CompoundTag nameTag = new CompoundTag();
+			nameTag.putString("name", s);
+			tabs.add(nameTag);
+		}
+		tag.put("tabs", tabs);
+		Networking.sendToPlayerClient(new SetTerminalSettingsPacket(te.sortSettings, null), (ServerPlayer) pinv.player);
+		Networking.sendToPlayerClient(new ServerToClientStoragePacket(tag), (ServerPlayer) pinv.player);
 		super.broadcastChanges();
 	}
 
@@ -180,7 +167,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 	}
 
 	@Override
-	public boolean recipeMatches(Recipe<? super CraftingContainer> recipeIn) {
+	public boolean recipeMatches(RecipeHolder pRecipe) {
 		return false;
 	}
 
@@ -204,54 +191,50 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 		return 0;
 	}
 
-	public void sendMessage(CompoundTag compound) {
-		Networking.sendToServer(new ClientToServerStoragePacket(compound));
+	public void updateItems(List<StoredItemStack> stacks){
+		stacks.forEach(s -> {
+			if(s.getQuantity() == 0) {
+				this.itemMap.remove(s);
+			} else {
+				this.itemMap.put(s, s);
+			}
+
+		});
+		itemList = new ArrayList<>(itemMap.values());
+		pinv.setChanged();
 	}
 
 	public final void receiveClientNBTPacket(CompoundTag message) {
-		if(sync.receiveUpdate(message)) {
-			itemList = sync.getAsList();
-			if(noSort) {
-				itemListClient.forEach(s -> s.setCount(sync.getAmount(s)));
-			} else {
-				itemListClient = new ArrayList<>(itemList);
-			}
-			pinv.setChanged();
-		}
 		if(message.contains("search"))
 			search = message.getString("search");
-		if(message.contains("sortSettings")) {
-			boolean isExpanded = terminalData != null && terminalData.expanded;
-			terminalData = SortSettings.fromTag(message.getCompound("sortSettings"));
-			if(isExpanded != terminalData.expanded) {
-				addStorageSlots();
-			}
-		}
-		if(message.contains("tabs")){
-			ListTag tabs = message.getList("tabs", 10);
-			tabNames = new ArrayList<>();
-			for(int i = 0;i < tabs.size();i++){
-				tabNames.add(tabs.getCompound(i).getString("name"));
-			}
-			Collections.sort(tabNames);
-		}
-		if(onPacket != null)onPacket.run();
 	}
 
-	public void receive(CompoundTag message) {
+
+	public void receive(HolderLookup.Provider reg, CompoundTag message) {
 		if(pinv.player.isSpectator())return;
 		if(message.contains("search")) {
 			te.setLastSearch(message.getString("search"));
 		}
-		sync.receiveInteract(message, this);
-		if(message.contains("termData")) {
-			CompoundTag d = message.getCompound("termData");
-			te.setSorting(SortSettings.fromTag(d.getCompound("sortSettings")));
-			selectedTab = null;
-			if(d.contains("selectedTab")){
-				selectedTab = d.getString("selectedTab");
-			}
+		this.receiveInteract(reg, message);
+	}
+
+	public void receiveSettings(SortSettings settings, String selectedTab) {
+		this.selectedTab = selectedTab;
+		te.setSorting(settings);
+	}
+
+	public void receiveInteract(HolderLookup.Provider provider, CompoundTag tag) {
+		if(!tag.contains("interaction"))
+			return;
+
+		CompoundTag interactTag = tag.getCompound("interaction");
+		boolean pullOne = interactTag.getBoolean("pullOne");
+		StoredItemStack stack = null;
+		if(interactTag.contains("stack")){
+			stack = ANCodecs.decode(provider, StoredItemStack.CODEC, interactTag.get("stack"));
 		}
+		StorageTerminalMenu.SlotAction action = StorageTerminalMenu.SlotAction.values()[interactTag.getInt("action")];
+		onInteract(stack, action, pullOne);
 	}
 
 	@Override
@@ -299,7 +282,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 					}
 				} else {
 					if (!stack.isEmpty()) {
-						if (ItemStack.isSameItemSameTags(stack, clicked.getStack()) && stack.getCount() + 1 <= stack.getMaxStackSize()) {
+						if (ItemStack.isSameItemSameComponents(stack, clicked.getStack()) && stack.getCount() + 1 <= stack.getMaxStackSize()) {
 							StoredItemStack pulled = te.pullStack(clicked, 1, selectedTab);
 							if (pulled != null) {
 								stack.grow(1);

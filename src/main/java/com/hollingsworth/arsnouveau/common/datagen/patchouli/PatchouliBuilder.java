@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.registries.RegistryObject;
 
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
@@ -31,10 +30,6 @@ public class PatchouliBuilder {
         this.withCategory(category);
     }
 
-    public PatchouliBuilder(ResourceLocation category, RegistryObject<? extends ItemLike> itemLike) {
-        this(category, itemLike.get());
-    }
-
     public PatchouliBuilder withName(String path) {
         object.addProperty("name", path);
         this.name = path;
@@ -58,11 +53,6 @@ public class PatchouliBuilder {
 
     public PatchouliBuilder withIcon(ItemLike item) {
         object.addProperty("icon", getRegistryName(item.asItem()).toString());
-        return this;
-    }
-
-    public PatchouliBuilder withIcon(RegistryObject item) {
-        object.addProperty("icon", getRegistryName(((ItemLike) item.get()).asItem()).toString());
         return this;
     }
 

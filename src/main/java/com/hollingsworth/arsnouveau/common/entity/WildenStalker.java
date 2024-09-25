@@ -24,15 +24,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
-import software.bernie.geckolib.core.animation.AnimationState;
 
 public class WildenStalker extends Monster implements GeoEntity {
     int leapCooldown;
@@ -109,7 +106,7 @@ public class WildenStalker extends Monster implements GeoEntity {
     }
 
     @Override
-    public int getExperienceReward() {
+    public int getBaseExperienceReward() {
         return 8;
     }
 
@@ -120,7 +117,7 @@ public class WildenStalker extends Monster implements GeoEntity {
         return 0.4F;
     }
 
-    private PlayState flyPredicate(software.bernie.geckolib.core.animation.AnimationState event) {
+    private PlayState flyPredicate(software.bernie.geckolib.animation.AnimationState event) {
         if(isFlying()) {
             event.getController().setAnimation(RawAnimation.begin().thenPlay("fly"));
             return PlayState.CONTINUE;
@@ -128,7 +125,7 @@ public class WildenStalker extends Monster implements GeoEntity {
         return PlayState.STOP;
     }
 
-    private PlayState groundPredicate(software.bernie.geckolib.core.animation.AnimationState e) {
+    private PlayState groundPredicate(software.bernie.geckolib.animation.AnimationState e) {
         if(isFlying()){
             return PlayState.STOP;
         }else if(e.isMoving()){
@@ -217,11 +214,10 @@ public class WildenStalker extends Monster implements GeoEntity {
                 .add(Attributes.ATTACK_DAMAGE, 2.5D);
     }
 
-
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(isFlying, false);
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(isFlying, false);
     }
 
     public boolean isFlying() {

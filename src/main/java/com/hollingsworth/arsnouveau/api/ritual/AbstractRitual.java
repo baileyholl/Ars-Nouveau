@@ -5,10 +5,12 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
@@ -49,8 +51,13 @@ public abstract class AbstractRitual {
         return tile != null ? tile.getLevel() : null;
     }
 
-    public boolean canStart() {
+    public boolean canStart(@Nullable Player player) {
         return true;
+    }
+
+    @Deprecated(since = "4.10.1", forRemoval = true)
+    public boolean canStart() {
+        return canStart(null);
     }
 
     public List<ItemStack> getConsumedItems() {
@@ -112,8 +119,13 @@ public abstract class AbstractRitual {
         return getContext().progress;
     }
 
-    public void onStart() {
+    public void onStart(@Nullable Player player) {
         getContext().isStarted = true;
+    }
+
+    @Deprecated(since = "4.10.1", forRemoval = true)
+    public void onStart() {
+        onStart(null);
     }
 
     public boolean isRunning() {
@@ -168,18 +180,18 @@ public abstract class AbstractRitual {
         return tile.takeSource();
     }
 
-    public void write(CompoundTag tag) {
+    public void write(HolderLookup.Provider provider, CompoundTag tag) {
         CompoundTag contextTag = new CompoundTag();
-        getContext().write(contextTag);
+        getContext().write(provider, contextTag);
         tag.put("context", contextTag);
     }
 
     // Called once the ritual tile has created a new instance of this ritual
-    public void read(CompoundTag tag) {
-        this.setContext(RitualContext.read(tag.getCompound("context")));
+    public void read(HolderLookup.Provider provider, CompoundTag tag) {
+        this.setContext(RitualContext.read(provider, tag.getCompound("context")));
     }
 
-    public@NotNull RitualContext getContext() {
+    public @NotNull RitualContext getContext() {
         if (context == null)
             context = new RitualContext();
         return context;
@@ -218,6 +230,7 @@ public abstract class AbstractRitual {
     /**
      * If this ritual can appear in villager trades
      */
+    @Deprecated(since = "4.11.0", forRemoval = true)
     public boolean canBeTraded(){
         return true;
     }

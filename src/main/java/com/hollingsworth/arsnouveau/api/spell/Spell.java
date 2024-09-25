@@ -1,71 +1,140 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
-import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
-import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
+import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import net.minecraft.nbt.CompoundTag;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.Util;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
-public class Spell implements Cloneable {
+public class Spell {
 
-    public List<AbstractSpellPart> recipe = new ArrayList<>();
-    public String name = "";
-    public ParticleColor color = ParticleColor.defaultParticleColor();
-    public ConfiguredSpellSound sound = ConfiguredSpellSound.DEFAULT;
+    public static final MapCodec<Spell> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Codec.STRING.fieldOf("name").forGetter(s -> s.name),
+            ParticleColor.CODEC.fieldOf("color").forGetter(s -> s.color),
+            ConfiguredSpellSound.CODEC.fieldOf("sound").forGetter(s -> s.sound),
+            Codec.list(AbstractSpellPart.CODEC).fieldOf("recipe").forGetter(s -> s.recipe)
+    ).apply(instance, Spell::new));
 
-    public Spell(List<AbstractSpellPart> recipe) {
-        this.recipe = recipe == null ? new ArrayList<>() : new ArrayList<>(recipe); // Safe check for tiles initializing a null
-    }
+    public static final StreamCodec<RegistryFriendlyByteBuf, Spell> STREAM = StreamCodec.of(
+            (buf, val) -> {
+                buf.writeUtf(val.name);
+                ParticleColor.STREAM.encode(buf, val.color);
+                ConfiguredSpellSound.STREAM.encode(buf, val.sound);
+                AbstractSpellPart.STREAM_LIST.encode(buf, val.recipe);
+            },
+            buf -> {
+                String name = buf.readUtf();
+                ParticleColor color = ParticleColor.STREAM.decode(buf);
+                ConfiguredSpellSound sound = ConfiguredSpellSound.STREAM.decode(buf);
+                List<AbstractSpellPart> recipe = AbstractSpellPart.STREAM_LIST.decode(buf);
+                return new Spell(name, color, sound, recipe);
+            }
+    );
+
+
+    private final List<AbstractSpellPart> recipe;
+    private final String name;
+    private final ParticleColor color;
+    private final ConfiguredSpellSound sound;
+
 
     public Spell() {
+        this("", ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, ImmutableList.of());
     }
 
     public Spell(AbstractSpellPart... spellParts) {
-        super();
-        add(spellParts);
+        this(Arrays.asList(spellParts));
+    }
+
+    public Spell(List<AbstractSpellPart> recipe) {
+        this("", ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, recipe);
+    }
+
+    public Spell(String name, ParticleColor color, ConfiguredSpellSound configuredSpellSound, List<AbstractSpellPart> abstractSpellParts) {
+        this.name = name;
+        this.color = color;
+        this.sound = configuredSpellSound;
+        this.recipe = ImmutableList.copyOf(abstractSpellParts);
+    }
+
+    public ConfiguredSpellSound sound(){
+        return sound;
+    }
+
+    public Iterable<AbstractSpellPart> recipe(){
+        return recipe;
+    }
+
+    /**
+     * DO NOT MUTATE.
+     * See {@link Spell#mutable()} for a mutable version.
+     */
+    public List<AbstractSpellPart> unsafeList(){
+        return recipe;
+    }
+
+    public AbstractSpellPart get(int index){
+        return recipe.get(index);
+    }
+
+    public int size(){
+        return recipe.size();
+    }
+
+    public int indexOf(AbstractSpellPart part){
+        return recipe.indexOf(part);
     }
 
     public Spell add(AbstractSpellPart spellPart) {
-        recipe.add(spellPart);
-        return this;
+        return new Spell(name, color, sound, Util.copyAndAdd(recipe, spellPart));
     }
 
     public Spell add(AbstractSpellPart... spellParts) {
+        var spell = this;
         for (AbstractSpellPart part : spellParts)
-            add(part);
-        return this;
+            spell = spell.add(part);
+        return spell;
     }
 
     public Spell add(AbstractSpellPart spellPart, int count) {
-        for (int i = 0; i < count; i++)
-            recipe.add(spellPart);
-        return this;
+        var spell = this;
+        for (int i = 0; i < count; i++) {
+            spell = spell.add(spellPart);
+        }
+        return spell;
     }
 
     public Spell setRecipe(@NotNull List<AbstractSpellPart> recipe) {
-        this.recipe = recipe;
-        return this;
+        return new Spell(name, color, sound, ImmutableList.copyOf(recipe));
     }
 
     public Spell withColor(@NotNull ParticleColor color) {
-        this.color = color;
-        return this;
+        return new Spell(name, color, sound, recipe);
     }
 
     public Spell withSound(@NotNull ConfiguredSpellSound sound){
-        this.sound = sound;
-        return this;
+        return new Spell(name, color, sound, recipe);
     }
 
-    public int getSpellSize() {
-        return recipe.size();
+    public ParticleColor color(){
+        return color;
+    }
+
+    public String name(){
+        return name;
     }
 
     public @Nullable AbstractCastMethod getCastMethod() {
@@ -125,39 +194,6 @@ public class Spell implements Cloneable {
         return recipe == null || recipe.isEmpty();
     }
 
-    public CompoundTag serialize() {
-        CompoundTag tag = new CompoundTag();
-        tag.putString("name", name);
-        tag.put("spellColor", color.serialize());
-        tag.put("sound", sound.serialize());
-        CompoundTag recipeTag = new CompoundTag();
-        for (int i = 0; i < recipe.size(); i++) {
-            AbstractSpellPart part = recipe.get(i);
-            recipeTag.putString("part" + i, part.getRegistryName().toString());
-        }
-        recipeTag.putInt("size", recipe.size());
-        tag.put("recipe", recipeTag);
-        return tag;
-    }
-
-    public static Spell fromTag(@Nullable CompoundTag tag) {
-        if (tag == null)
-            return new Spell();
-        Spell spell = new Spell();
-        spell.name = tag.getString("name");
-        spell.color = ParticleColorRegistry.from(tag.getCompound("spellColor"));
-        spell.sound = ConfiguredSpellSound.fromTag(tag.getCompound("sound"));
-        CompoundTag recipeTag = tag.getCompound("recipe");
-        int size = recipeTag.getInt("size");
-        for (int i = 0; i < size; i++) {
-            ResourceLocation registryName = new ResourceLocation(recipeTag.getString("part" + i));
-            AbstractSpellPart part = GlyphRegistry.getSpellpartMap().get(registryName);
-            if (part != null)
-                spell.recipe.add(part);
-        }
-        return spell;
-    }
-
     public String getDisplayString() {
         StringBuilder str = new StringBuilder();
 
@@ -197,17 +233,58 @@ public class Spell implements Cloneable {
         return this.recipe.stream().map(AbstractSpellPart::getRegistryName).toList();
     }
 
+    public Mutable mutable(){
+        return new Mutable(new ArrayList<>(recipe), name, color, sound);
+    }
+
     @Override
-    public Spell clone() {
-        try {
-            // TODO: Make above cloneable
-            Spell clone = (Spell) super.clone();
-            clone.recipe = new ArrayList<>(this.recipe);
-            clone.color = this.color.clone();
-            clone.sound = this.sound;
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Spell spell = (Spell) o;
+        return Objects.equals(recipe, spell.recipe) && Objects.equals(name, spell.name) && Objects.equals(color, spell.color) && Objects.equals(sound, spell.sound);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(recipe, name, color, sound);
+    }
+
+    public static class Mutable{
+        public List<AbstractSpellPart> recipe;
+        public String name;
+        public ParticleColor color;
+        public ConfiguredSpellSound sound;
+
+        public Mutable(List<AbstractSpellPart> recipe, String name, ParticleColor color, ConfiguredSpellSound spellSound) {
+            this.recipe = recipe;
+            this.name = name;
+            this.color = color;
+            this.sound = spellSound;
+        }
+
+        public Mutable add(AbstractSpellPart spellPart) {
+            recipe.add(spellPart);
+            return this;
+        }
+
+        public Mutable add(AbstractSpellPart... spellParts) {
+            recipe.addAll(Arrays.asList(spellParts));
+            return this;
+        }
+
+        public Mutable add(int index, AbstractSpellPart spellPart) {
+            recipe.add(index, spellPart);
+            return this;
+        }
+
+        public Mutable setRecipe(@NotNull List<AbstractSpellPart> recipe) {
+            this.recipe = recipe;
+            return this;
+        }
+
+        public Spell immutable(){
+            return new Spell(name, color, sound, recipe);
         }
     }
 }

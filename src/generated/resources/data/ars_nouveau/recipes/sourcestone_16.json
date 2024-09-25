@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "count": 1,
-  "ingredient": {
-    "item": "ars_nouveau:sourcestone"
-  },
-  "result": "ars_nouveau:gilded_sourcestone_small_bricks"
-}

@@ -11,8 +11,8 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Matrix4f;
 
 import java.util.List;
@@ -57,16 +57,16 @@ public class PortalTileRenderer<T extends PortalTile> implements BlockEntityRend
 
     private void renderFace(PortalTile tileEntityIn, Matrix4f matrix, VertexConsumer iBuilder, float p_228884_4_, float p_228884_5_, float p_228884_6_, float p_228884_7_, float p_228884_8_, float p_228884_9_, float p_228884_10_, float p_228884_11_, float p_228884_12_, float p_228884_13_, float p_228884_14_, Direction direction) {
         if (!tileEntityIn.isHorizontal && (direction == Direction.EAST || direction == Direction.WEST || direction == Direction.SOUTH || direction == Direction.NORTH)) {
-            iBuilder.vertex(matrix, p_228884_4_, p_228884_6_, p_228884_8_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
-            iBuilder.vertex(matrix, p_228884_5_, p_228884_6_, p_228884_9_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
-            iBuilder.vertex(matrix, p_228884_5_, p_228884_7_, p_228884_10_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
-            iBuilder.vertex(matrix, p_228884_4_, p_228884_7_, p_228884_11_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
+            iBuilder.addVertex(matrix, p_228884_4_, p_228884_6_, p_228884_8_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);
+            iBuilder.addVertex(matrix, p_228884_5_, p_228884_6_, p_228884_9_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);
+            iBuilder.addVertex(matrix, p_228884_5_, p_228884_7_, p_228884_10_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);
+            iBuilder.addVertex(matrix, p_228884_4_, p_228884_7_, p_228884_11_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);
 
         } else if (tileEntityIn.isHorizontal && (direction == Direction.UP || direction == Direction.DOWN)) {
-            iBuilder.vertex(matrix, p_228884_4_, p_228884_6_, p_228884_8_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
-            iBuilder.vertex(matrix, p_228884_5_, p_228884_6_, p_228884_9_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
-            iBuilder.vertex(matrix, p_228884_5_, p_228884_7_, p_228884_10_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
-            iBuilder.vertex(matrix, p_228884_4_, p_228884_7_, p_228884_11_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
+            iBuilder.addVertex(matrix, p_228884_4_, p_228884_6_, p_228884_8_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);
+            iBuilder.addVertex(matrix, p_228884_5_, p_228884_6_, p_228884_9_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);
+            iBuilder.addVertex(matrix, p_228884_5_, p_228884_7_, p_228884_10_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);
+            iBuilder.addVertex(matrix, p_228884_4_, p_228884_7_, p_228884_11_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);
         }
     }
 

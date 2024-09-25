@@ -2,52 +2,48 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.item.IRadialProvider;
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
-import com.hollingsworth.arsnouveau.client.gui.book.InfinityGuiSpellBook;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenuSlot;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.client.registry.ModKeyBindings;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellBookRenderer;
-import com.hollingsworth.arsnouveau.common.capability.ANPlayerDataCap;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
 import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketSetBookMode;
-import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
+import com.hollingsworth.arsnouveau.common.network.PacketSetCasterSlot;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.client.GeoRenderProvider;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -58,8 +54,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     public SpellBook(SpellTier tier) {
-        super(new Item.Properties().stacksTo(1));
-        this.tier = tier;
+        this(new Item.Properties().stacksTo(1).component(DataComponentRegistry.SPELL_CASTER, new SpellCaster(10)), tier);
     }
 
     public SpellBook(Properties properties, SpellTier tier) {
@@ -68,51 +63,39 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     }
 
     @Override
-    public boolean canBeDepleted() {
-        return false;
-    }
-
-    @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (this != ItemsRegistry.CREATIVE_SPELLBOOK.get()) {
-            CapabilityRegistry.getMana(playerIn).ifPresent(iMana -> {
+            var iMana = CapabilityRegistry.getMana(playerIn);
+            if(iMana != null){
+                boolean shouldSync = false;
                 if (iMana.getBookTier() < this.tier.value) {
                     iMana.setBookTier(this.tier.value);
+                    shouldSync = true;
                 }
-                IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(new ANPlayerDataCap());
+                IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerIn);
                 if (iMana.getGlyphBonus() < cap.getKnownGlyphs().size()) {
                     iMana.setGlyphBonus(cap.getKnownGlyphs().size());
+                    shouldSync = true;
                 }
-            });
+                if(shouldSync && playerIn instanceof ServerPlayer player) {
+                    iMana.syncToClient(player);
+                }
+            }
         }
-        ISpellCaster caster = getSpellCaster(stack);
+        AbstractCaster<?> caster = getSpellCaster(stack);
 
-        return caster.castSpell(worldIn, (LivingEntity) playerIn, handIn, Component.translatable("ars_nouveau.invalid_spell"));
-    }
-
-    /**
-     * How long it takes to use or consume an item
-     */
-    public int getUseDuration(ItemStack stack) {
-        return 72000;
-    }
-
-    /**
-     * returns the action that specifies what animation to play when the items is being used
-     */
-    public UseAnim getUseAnimation(ItemStack stack) {
-        return UseAnim.BOW;
+        return caster.castSpell(worldIn, playerIn, handIn, Component.translatable("ars_nouveau.invalid_spell"));
     }
 
     @Override
-    public boolean doesSneakBypassUse(ItemStack stack, LevelReader world, BlockPos pos, Player player) {
+    public boolean doesSneakBypassUse(@NotNull ItemStack stack, @NotNull LevelReader world, @NotNull BlockPos pos, @NotNull Player player) {
         return true;
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(final ItemStack stack, @Nullable final Level world, final List<Component> tooltip, final TooltipFlag flag) {
+    public void appendHoverText(final @NotNull ItemStack stack, final @NotNull TooltipContext world, final @NotNull List<Component> tooltip, final @NotNull TooltipFlag flag) {
         super.appendHoverText(stack, world, tooltip, flag);
         tooltip.add(Component.translatable("ars_nouveau.spell_book.select", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_RADIAL_HUD.getName()).get()));
         tooltip.add(Component.translatable("ars_nouveau.spell_book.craft", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_BOOK.getName()).get()));
@@ -132,30 +115,13 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
         return factory;
     }
 
-    @NotNull
     @Override
-    public ISpellCaster getSpellCaster(ItemStack stack) {
-        return new BookCaster(stack);
-    }
-
-    @Override
-    public ISpellCaster getSpellCaster() {
-        return new BookCaster(new CompoundTag());
-    }
-
-    @Override
-    public ISpellCaster getSpellCaster(CompoundTag tag) {
-        return new BookCaster(tag);
-    }
-
-    @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        super.initializeClient(consumer);
-        consumer.accept(new IClientItemExtensions() {
+    public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
+        consumer.accept(new GeoRenderProvider() {
             private final BlockEntityWithoutLevelRenderer renderer = new SpellBookRenderer();
 
             @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
                 return renderer;
             }
         });
@@ -168,7 +134,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
         if (hand == null) {
             return;
         }
-        Minecraft.getInstance().setScreen(ServerConfig.INFINITE_SPELLS.get() ? new InfinityGuiSpellBook(hand) : new GuiSpellBook(hand));
+        Minecraft.getInstance().setScreen(new GuiSpellBook(hand));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -179,9 +145,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
 
     public RadialMenu<AbstractSpellPart> getRadialMenuProviderForSpellpart(ItemStack itemStack) {
         return new RadialMenu<>((int slot) -> {
-            BookCaster caster = new BookCaster(itemStack);
-            caster.setCurrentSlot(slot);
-            Networking.INSTANCE.sendToServer(new PacketSetBookMode(itemStack.getTag()));
+            Networking.sendToServer(new PacketSetCasterSlot(slot));
         },
                 getRadialMenuSlotsForSpellpart(itemStack),
                 RenderUtils::drawSpellPart,
@@ -189,13 +153,13 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     }
 
     public List<RadialMenuSlot<AbstractSpellPart>> getRadialMenuSlotsForSpellpart(ItemStack itemStack) {
-        BookCaster spellCaster = new BookCaster(itemStack);
+        AbstractCaster<?> spellCaster = SpellCasterRegistry.from(itemStack);
         List<RadialMenuSlot<AbstractSpellPart>> radialMenuSlots = new ArrayList<>();
         for (int i = 0; i < spellCaster.getMaxSlots(); i++) {
             Spell spell = spellCaster.getSpell(i);
             AbstractSpellPart primaryIcon = null;
             List<AbstractSpellPart> secondaryIcons = new ArrayList<>();
-            for (AbstractSpellPart p : spell.recipe) {
+            for (AbstractSpellPart p : spell.recipe()) {
                 if (p instanceof AbstractCastMethod) {
                     secondaryIcons.add(p);
                 }
@@ -213,21 +177,5 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     @Override
     public boolean canQuickCast() {
         return true;
-    }
-
-    public static class BookCaster extends SpellCaster {
-
-        public BookCaster(ItemStack stack) {
-            super(stack);
-        }
-
-        public BookCaster(CompoundTag tag) {
-            super(tag);
-        }
-
-        @Override
-        public int getMaxSlots() {
-            return 10;
-        }
     }
 }

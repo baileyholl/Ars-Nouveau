@@ -16,12 +16,13 @@ import java.util.List;
 public class CraftingButton extends GuiImageButton {
     private AbstractSpellPart abstractSpellPart;
     public List<SpellValidationError> validationErrors;
+    public int slotNum;
 
-    public CraftingButton(int x, int y, Button.OnPress onPress) {
+    public CraftingButton(int x, int y, Button.OnPress onPress, int slotNum) {
         super(x, y, 0, 0, 22, 20, 22, 20, "textures/gui/spell_glyph_slot.png", onPress);
         this.validationErrors = new LinkedList<>();
         abstractSpellPart = null;
-
+        this.slotNum = slotNum;
     }
 
     public void clear() {
@@ -38,18 +39,16 @@ public class CraftingButton extends GuiImageButton {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int parX, int parY, float partialTicks) {
-        if (visible) {
-            if (validationErrors.isEmpty()) {
-                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            } else {
-                RenderSystem.setShaderColor(1.0F, 0.7F, 0.7F, 1.0F);
-            }
-            if (this.abstractSpellPart != null) {
-                RenderUtils.drawSpellPart(this.abstractSpellPart, graphics, x + 3, y + 2, 16, !validationErrors.isEmpty(), 0);
-            }
+    protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        if (validationErrors.isEmpty()) {
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        } else {
+            RenderSystem.setShaderColor(1.0F, 0.7F, 0.7F, 1.0F);
         }
-        super.render(graphics, parX, parY, partialTicks);
+        if (this.abstractSpellPart != null) {
+            RenderUtils.drawSpellPart(this.abstractSpellPart, graphics, x + 3, y + 2, 16, !validationErrors.isEmpty(), 0);
+        }
+        super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
     }
 
     @Override

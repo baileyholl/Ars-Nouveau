@@ -16,8 +16,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -37,15 +35,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.entity.IEntityAdditionalSpawnData;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.common.NeoForge;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class EntityProjectileSpell extends ColoredProjectile implements IEntityAdditionalSpawnData {
+public class EntityProjectileSpell extends ColoredProjectile {
 
     public int age;
     public SpellResolver spellResolver;
@@ -131,9 +127,9 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(OWNER_ID, -1);
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(OWNER_ID, -1);
     }
 
     /**
@@ -152,7 +148,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
             raytraceresult = entityraytraceresult;
         }
 
-        if (raytraceresult != null && raytraceresult.getType() != HitResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
+        if (raytraceresult != null && raytraceresult.getType() != HitResult.Type.MISS && !net.neoforged.neoforge.event.EventHooks.onProjectileImpact(this, raytraceresult)) {
             this.onHit(raytraceresult);
             this.hasImpulse = true;
         }
@@ -309,7 +305,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
         if (!level.isClientSide) {
 
             SpellProjectileHitEvent event = new SpellProjectileHitEvent(this, result);
-            MinecraftForge.EVENT_BUS.post(event);
+            NeoForge.EVENT_BUS.post(event);
             if (event.isCanceled()) {
                 return;
             }
@@ -318,7 +314,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
                 if (entityHitResult.getEntity().equals(this.getOwner())) return;
                 if (this.spellResolver != null) {
                     this.spellResolver.onResolveEffect(level, result);
-                    Networking.sendToNearby(level, BlockPos.containing(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
+                    Networking.sendToNearbyClient(level, BlockPos.containing(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
                             BlockPos.containing(result.getLocation()), getParticleColor()));
                     attemptRemoval();
                 }
@@ -334,7 +330,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
                 }
 
                 if (state.is(BlockTags.PORTALS)) {
-                    state.getBlock().entityInside(state, level, blockraytraceresult.getBlockPos(), this);
+                    state.entityInside(level, blockraytraceresult.getBlockPos(), this);
                     return;
                 }
 
@@ -354,7 +350,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
                     this.hitList.add(blockraytraceresult.getBlockPos());
                     this.spellResolver.onResolveEffect(this.level, blockraytraceresult);
                 }
-                Networking.sendToNearby(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
+                Networking.sendToNearbyClient(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
                         BlockPos.containing(result.getLocation()).below(), getParticleColor()));
                 attemptRemoval();
             }
@@ -364,11 +360,6 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
     @Override
     protected boolean canHitEntity(Entity entity) {
         return super.canHitEntity(entity) || entity.getType().is(EntityTags.SPELL_CAN_HIT);
-    }
-
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     public void writeSpawnData(FriendlyByteBuf buffer) {

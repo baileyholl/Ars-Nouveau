@@ -16,6 +16,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.animal.allay.Allay;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -31,7 +32,6 @@ public class AllayBehavior extends JarBehavior<Allay> {
     @Override
     public void use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit, MobJarTile tile) {
         super.use(state, world, pos, player, handIn, hit, tile);
-        Allay allay = entityFromJar(tile);
     }
 
     @Override
@@ -109,7 +109,7 @@ public class AllayBehavior extends JarBehavior<Allay> {
         super.getTooltip(tile, tooltips);
         Allay allay = entityFromJar(tile);
         if(allay.getMainHandItem().getItem() instanceof ItemScroll scroll){
-            scroll.appendHoverText(allay.getMainHandItem(), tile.getLevel(), tooltips, TooltipFlag.Default.NORMAL);
+            scroll.appendHoverText(allay.getMainHandItem(), Item.TooltipContext.of(tile.getLevel()), tooltips, TooltipFlag.Default.NORMAL);
         }
     }
 }

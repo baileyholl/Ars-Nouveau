@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.common.items.Glyph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import vazkii.patchouli.api.IComponentProcessor;
@@ -15,23 +16,23 @@ import vazkii.patchouli.api.IVariableProvider;
 
 public class GlyphProcessor implements IComponentProcessor {
 
-    GlyphRecipe recipe;
+    RecipeHolder<? extends GlyphRecipe> holder;
 
     @Override
     public void setup(Level level, IVariableProvider variables) {
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
-        String recipeID = variables.get("recipe").asString();
+        String recipeID = variables.get("recipe", level.registryAccess()).asString();
         try {
-            recipe = (GlyphRecipe) manager.byKey(new ResourceLocation(recipeID)).orElse(null);
+            holder = (RecipeHolder<? extends GlyphRecipe>) manager.byKey(ResourceLocation.tryParse(recipeID)).orElse(null);
         } catch (Exception ignored) {
         }
     }
 
     @Override
     public IVariable process(Level level,  String s) {
-        if (recipe == null)
+        if (holder == null)
             return null;
-
+        var recipe = holder.value();
         if (s.equals("tier"))
             return IVariable.wrap(Component.translatable("ars_nouveau.tier").getString() + ": " + Component.translatable("ars_nouveau.spell_tier." + recipe.getSpellPart().getConfigTier().value).getString());
         if (s.equals("schools")) {

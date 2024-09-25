@@ -1,0 +1,32 @@
+{
+  "parent": "ars_nouveau:starby_charm",
+  "criteria": {
+    "has_starbuncle_shades": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ars_nouveau:starbuncle_shades"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.starbuncle_shades"
+    },
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:starbuncle_shades"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.starbuncle_shades"
+    }
+  },
+  "requirements": [
+    [
+      "has_starbuncle_shades"
+    ]
+  ]
+}

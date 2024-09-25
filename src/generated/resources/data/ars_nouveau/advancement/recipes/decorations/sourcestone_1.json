@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_journal": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ars_nouveau:worn_notebook"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "ars_nouveau:sourcestone_1"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_journal"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ars_nouveau:sourcestone_1"
+    ]
+  }
+}

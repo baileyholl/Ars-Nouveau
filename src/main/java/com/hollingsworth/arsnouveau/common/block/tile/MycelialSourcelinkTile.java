@@ -8,7 +8,6 @@ import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -25,7 +24,7 @@ public class MycelialSourcelinkTile extends SourcelinkTile {
     }
 
     public MycelialSourcelinkTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.MYCELIAL_TILE, pos, state);
+        super(BlockRegistry.MYCELIAL_TILE.get(), pos, state);
     }
 
 
@@ -36,7 +35,7 @@ public class MycelialSourcelinkTile extends SourcelinkTile {
             return;
         if (level.getGameTime() % 40 == 0 && this.canAcceptSource()) {
             for (ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AABB(worldPosition).inflate(1.0))) {
-                if (i.getItem().getItem().isEdible()) {
+                if (i.getItem().getItem().getFoodProperties(i.getItem(), null) != null) {
                     int source = getSourceValue(i.getItem());
                     this.addSource(source);
                     ItemStack containerItem = i.getItem().getCraftingRemainingItem();
@@ -44,7 +43,7 @@ public class MycelialSourcelinkTile extends SourcelinkTile {
                     if (!containerItem.isEmpty()) {
                         level.addFreshEntity(new ItemEntity(level, i.getX(), i.getY(), i.getZ(), containerItem));
                     }
-                    Networking.sendToNearby(level, getBlockPos(),
+                    Networking.sendToNearbyClient(level, getBlockPos(),
                             new PacketANEffect(PacketANEffect.EffectType.BURST, i.blockPosition(), new ParticleColor(255, 255, 255)));
                 }
             }
@@ -55,7 +54,7 @@ public class MycelialSourcelinkTile extends SourcelinkTile {
                     ItemStack containerItem = i.getItem(0).getCraftingRemainingItem();
                     i.removeItem(0, 1);
                     i.setItem(0, containerItem);
-                    Networking.sendToNearby(level, getBlockPos(),
+                    Networking.sendToNearbyClient(level, getBlockPos(),
                             new PacketANEffect(PacketANEffect.EffectType.BURST, i.getBlockPos().above(), new ParticleColor(255, 255, 255)));
                 }
             }
@@ -63,23 +62,23 @@ public class MycelialSourcelinkTile extends SourcelinkTile {
     }
 
     public int getSourceValue(ItemStack i) {
-        if (i.getItem().isEdible()) {
-            int mana = 0;
-            FoodProperties food = i.getItem().getFoodProperties(i, null);
-            if(food == null)
-                return 0;
-            mana += 11 * food.getNutrition();
-            mana += 30 * food.getSaturationModifier();
-            progress += 1;
-
-            if (i.is(ItemTagProvider.MAGIC_FOOD) || (i.getItem() instanceof BlockItem blockItem && blockItem.getBlock().defaultBlockState().is(BlockTagProvider.MAGIC_PLANTS))) {
-                progress += 4;
-                mana += 10;
-                mana *= 2;
-            }
-            return mana;
+        var food = i.getItem().getFoodProperties(i, null);
+        if(food == null){
+            return 0;
         }
-        return 0;
+
+        int mana = 0;
+        mana += 11 * food.nutrition();
+        mana += 30 * food.saturation();
+        progress += 1;
+
+        if (i.is(ItemTagProvider.MAGIC_FOOD) || (i.getItem() instanceof BlockItem blockItem && blockItem.getBlock().defaultBlockState().is(BlockTagProvider.MAGIC_PLANTS))) {
+            progress += 4;
+            mana += 10;
+            mana *= 2;
+        }
+        return mana;
+
     }
 
     @Override

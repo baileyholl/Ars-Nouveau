@@ -26,7 +26,7 @@ public class MethodSelf extends AbstractCastMethod {
     @Override
     public CastResolveType onCast(ItemStack stack, LivingEntity caster, Level world, SpellStats spellStats, SpellContext context, SpellResolver resolver) {
         resolver.onResolveEffect(caster.getCommandSenderWorld(), new EntityHitResult(caster));
-        Networking.sendToNearby(caster.level, caster, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, caster.blockPosition(), context.getColors()));
+        Networking.sendToNearbyClient(caster.level, caster, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, caster.blockPosition(), context.getColors()));
         return CastResolveType.SUCCESS;
     }
 
@@ -34,7 +34,7 @@ public class MethodSelf extends AbstractCastMethod {
     public CastResolveType onCastOnBlock(UseOnContext context, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Level world = context.getLevel();
         resolver.onResolveEffect(world, new EntityHitResult(context.getPlayer()));
-        Networking.sendToNearby(context.getLevel(), context.getPlayer(), new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, context.getPlayer().blockPosition(), spellContext.getColors()));
+        Networking.sendToNearbyClient(context.getLevel(), context.getPlayer(), new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, context.getPlayer().blockPosition(), spellContext.getColors()));
         return CastResolveType.SUCCESS;
     }
 
@@ -42,7 +42,7 @@ public class MethodSelf extends AbstractCastMethod {
     public CastResolveType onCastOnBlock(BlockHitResult blockRayTraceResult, LivingEntity caster, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Level world = caster.level;
         resolver.onResolveEffect(world, new EntityHitResult(caster));
-        Networking.sendToNearby(caster.level, caster, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, caster.blockPosition(), spellContext.getColors()));
+        Networking.sendToNearbyClient(caster.level, caster, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, caster.blockPosition(), spellContext.getColors()));
         return CastResolveType.SUCCESS;
     }
 
@@ -50,7 +50,7 @@ public class MethodSelf extends AbstractCastMethod {
     public CastResolveType onCastOnEntity(ItemStack stack, LivingEntity playerIn, Entity target, InteractionHand hand, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Level world = playerIn.level;
         resolver.onResolveEffect(world, new EntityHitResult(playerIn));
-        Networking.sendToNearby(playerIn.level, playerIn, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, playerIn.blockPosition(), spellContext.getColors()));
+        Networking.sendToNearbyClient(playerIn.level, playerIn, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, playerIn.blockPosition(), spellContext.getColors()));
         return CastResolveType.SUCCESS;
     }
 

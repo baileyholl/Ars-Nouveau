@@ -1,7 +1,7 @@
-// 1.20.1	2023-10-08T20:36:02.303844	Tags for minecraft:worldgen/biome mod id ars_nouveau
+// 1.21.1	2024-08-17T10:54:39.1707777	Tags for minecraft:worldgen/biome mod id ars_nouveau
 92c4e65802ffcb7533e9259f0b0356510154d662 data/ars_nouveau/tags/worldgen/biome/archwood_biome.json
 60daaef808d1b0ed031d9007b5ad3007d1fdb695 data/ars_nouveau/tags/worldgen/biome/berry_spawn.json
-dd6a4096577ce192ee015c7a197377dd46613544 data/ars_nouveau/tags/worldgen/biome/no_mob_spawn.json
+e65d864a8148e6a6c372dcc989f9c68e0ae6110c data/ars_nouveau/tags/worldgen/biome/no_mob_spawn.json
 b020f6cdcd2d955793278b2f89a178a1d31e599a data/ars_nouveau/tags/worldgen/biome/summon_spawn.json
 c35a28e912b4aa05b77d622c24298f022d3bcb17 data/minecraft/tags/worldgen/biome/has_structure/village_plains.json
 c35a28e912b4aa05b77d622c24298f022d3bcb17 data/minecraft/tags/worldgen/biome/is_forest.json

@@ -42,9 +42,10 @@ public class RitualWildenSummoning extends AbstractRitual {
                     WildenChimera chimera = new WildenChimera(getWorld());
                     summon(chimera, getPos().above());
                     for(BlockPos b : BlockPos.betweenClosed(getPos().east(5).north(5).above(), getPos().west(5).south(5).above(5))){
-                        if (!net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.getWorld(), chimera)) {
+                        if (!net.neoforged.neoforge.event.EventHooks.canEntityGrief(this.getWorld(), chimera)) {
                             continue;
                         }
+                        if (getWorld().getBlockState(b).getDestroySpeed(getWorld(), b) < 0) continue;
                         if (SpellUtil.isCorrectHarvestLevel(4, this.getWorld().getBlockState(b))) {
                             BlockUtil.destroyBlockSafelyWithoutSound(getWorld(), b, true);
                         }
@@ -81,6 +82,6 @@ public class RitualWildenSummoning extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, RitualLib.WILDEN_SUMMON);
+        return ArsNouveau.prefix( RitualLib.WILDEN_SUMMON);
     }
 }

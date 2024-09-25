@@ -44,9 +44,10 @@ public class EffectRune extends AbstractEffect {
                     runeTile.uuid = shooter.getUUID();
                 }
                 runeTile.isTemporary = true;
-                Spell newSpell = newContext.getSpell().clone();
-                newSpell.recipe.add(0, MethodTouch.INSTANCE);
-                runeTile.spell = newSpell;
+                Spell newSpell = newContext.getSpell();
+                var mutable = newSpell.mutable();
+                mutable.recipe.add(0, MethodTouch.INSTANCE);
+                runeTile.spell = mutable.immutable();
                 runeTile.isSensitive = spellStats.isSensitive();
             }
         }

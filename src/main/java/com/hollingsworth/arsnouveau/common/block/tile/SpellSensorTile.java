@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
@@ -15,10 +16,12 @@ import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ClipBlockStateContext;
@@ -91,16 +94,16 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
         if(!this.parchment.isEmpty()){
             // Compare spell to parchment
             if(this.parchment.getItem() instanceof SpellParchment spellParchment){
-                Spell listeningSpell = spellParchment.getSpellCaster(parchment.getOrCreateTag()).getSpell();
-                List<AbstractSpellPart> spellParts = listeningSpell.recipe.stream().filter(Objects::nonNull).toList();
-                List<AbstractSpellPart> spellParts1 = spell.recipe.stream().filter(Objects::nonNull).toList();
+                Spell listeningSpell = SpellCasterRegistry.from(parchment).getSpell();
+                List<AbstractSpellPart> spellParts = listeningSpell.unsafeList().stream().filter(Objects::nonNull).toList();
+                List<AbstractSpellPart> spellParts1 = spell.unsafeList().stream().filter(Objects::nonNull).toList();
                 if(!spellParts.equals(spellParts1)){
                     return;
                 }
             }
             str = 15;
         }else{
-            str = spell.recipe.size();
+            str = spell.size();
         }
         outputDuration = 40;
         this.outputStrength = str;
@@ -148,21 +151,23 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         tag.putInt("outputDuration", outputDuration);
         tag.putInt("outputStrength", outputStrength);
         tag.putBoolean("isOnResolve", isOnResolve);
-        tag.put("parchment", parchment.save(new CompoundTag()));
+        if(!this.parchment.isEmpty()) {
+            tag.put("parchment", parchment.save(pRegistries));
+        }
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(pTag, pRegistries);
         this.outputDuration = pTag.getInt("outputDuration");
         this.outputStrength = pTag.getInt("outputStrength");
         this.isOnResolve = pTag.getBoolean("isOnResolve");
-        this.parchment = ItemStack.of(pTag.getCompound("parchment"));
+        this.parchment = ItemStack.parseOptional(pRegistries, pTag.getCompound("parchment"));
     }
 
     @Override
@@ -173,7 +178,7 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
             tooltip.add(Component.translatable("ars_nouveau.sensor.on_cast"));
         }
         if(!this.parchment.isEmpty() && parchment.getItem() instanceof SpellParchment spellParchment){
-            spellParchment.getInformation(parchment, level, tooltip, TooltipFlag.Default.NORMAL);
+            spellParchment.getInformation(parchment, Item.TooltipContext.of(level), tooltip, TooltipFlag.Default.NORMAL);
         }
     }
 }

@@ -10,13 +10,15 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodUnderfoot;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -55,7 +57,7 @@ public class GlyphRecipeProvider extends SimpleDataProvider {
         add(get(MethodUnderfoot.INSTANCE).withItem(Items.IRON_BOOTS).withIngredient(Ingredient.of(ItemTags.WOODEN_PRESSURE_PLATES)));
 
         add(get(EffectBlink.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withIngredient(Ingredient.of(Tags.Items.ENDER_PEARLS), 4));
-        add(get(EffectBounce.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withIngredient(Ingredient.of(Tags.Items.SLIMEBALLS), 3));
+        add(get(EffectBounce.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withIngredient(Ingredient.of(Tags.Items.SLIME_BALLS), 3));
         add(get(EffectBreak.INSTANCE).withItem(Items.IRON_PICKAXE));
         add(get(EffectColdSnap.INSTANCE).withItem(ItemsRegistry.WATER_ESSENCE).withItem(Items.POWDER_SNOW_BUCKET).withItem(Items.ICE));
         add(get(EffectConjureWater.INSTANCE).withItem(ItemsRegistry.WATER_ESSENCE).withItem(Items.WATER_BUCKET));
@@ -94,7 +96,7 @@ public class GlyphRecipeProvider extends SimpleDataProvider {
         add(get(EffectLinger.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.DRAGON_BREATH)
                 .withIngredient(Ingredient.of(Tags.Items.STORAGE_BLOCKS_DIAMOND))
                 .withIngredient(Ingredient.of(Tags.Items.RODS_BLAZE), 2));
-        add(get(EffectPhantomBlock.INSTANCE).withIngredient(Tags.Items.GLASS, 8));
+        add(get(EffectPhantomBlock.INSTANCE).withIngredient(Tags.Items.GLASS_BLOCKS, 8));
         add(get(EffectPickup.INSTANCE).withItem(Items.HOPPER, 2));
         add(get(EffectPull.INSTANCE).withItem(Items.FISHING_ROD, 1));
         add(get(EffectRedstone.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withIngredient(Tags.Items.STORAGE_BLOCKS_REDSTONE, 3));
@@ -119,14 +121,15 @@ public class GlyphRecipeProvider extends SimpleDataProvider {
                 .withIngredient(Ingredient.of(Tags.Items.STORAGE_BLOCKS_DIAMOND))
                 .withIngredient(Ingredient.of(Tags.Items.RODS_BLAZE), 2));
         add(get(EffectRotate.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE));
-        add(get(EffectAnimate.INSTANCE).withItem(ItemsRegistry.CONJURATION_ESSENCE).withIngredient(Tags.Items.OBSIDIAN, 3));
+        add(get(EffectAnimate.INSTANCE).withItem(ItemsRegistry.CONJURATION_ESSENCE).withIngredient(Tags.Items.OBSIDIANS, 3));
         add(get(EffectBurst.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.TNT, 5).withItem(Items.FIREWORK_STAR));
         add(get(AugmentRandomize.INSTANCE).withItem(Items.PINK_CARPET, 2));
         add(get(EffectReset.INSTANCE).withItem(Items.TARGET, 1));
         add(get(EffectWololo.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withIngredient(Ingredient.of(Tags.Items.DYES), 3));
+        add(get(EffectRewind.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.CLOCK, 3));
         for (GlyphRecipe recipe : recipes) {
             Path path = getScribeGlyphPath(output, recipe.output.getItem());
-            saveStable(pOutput, recipe.asRecipe(), path);
+            saveStable(pOutput, GlyphRecipe.CODEC.encodeStart(JsonOps.INSTANCE, recipe).getOrThrow(), path);
         }
     }
 
@@ -135,7 +138,7 @@ public class GlyphRecipeProvider extends SimpleDataProvider {
     }
 
     public GlyphRecipe get(AbstractSpellPart spellPart) {
-        return new GlyphRecipe(spellPart.getRegistryName(), spellPart.glyphItem.getDefaultInstance(), new ArrayList<>(), getExpFromTier(spellPart));
+        return new GlyphRecipe(spellPart.glyphItem.getDefaultInstance(), new ArrayList<>(), getExpFromTier(spellPart));
     }
 
     public int getExpFromTier(AbstractSpellPart spellPart) {
@@ -153,12 +156,12 @@ public class GlyphRecipeProvider extends SimpleDataProvider {
     }
 
     protected static Path getScribeGlyphPath(Path pathIn, Item glyph) {
-        return pathIn.resolve("data/ars_nouveau/recipes/" + getRegistryName(glyph).getPath() + ".json");
+        return pathIn.resolve("data/ars_nouveau/recipe/" + getRegistryName(glyph).getPath() + ".json");
 
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "Glyph Recipes";
     }
 }

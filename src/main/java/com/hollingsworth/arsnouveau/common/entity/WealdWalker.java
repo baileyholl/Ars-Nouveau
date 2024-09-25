@@ -40,12 +40,9 @@ import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -114,8 +111,8 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
     }
 
     @Override
-    public EntityDimensions getDimensions(Pose p_213305_1_) {
-        return isBaby() ? new EntityDimensions(1, 1, true) : super.getDimensions(p_213305_1_);
+    protected EntityDimensions getDefaultDimensions(Pose pPose) {
+        return isBaby() ? EntityDimensions.fixed(1.0f, 1.0f) : super.getDefaultDimensions(pPose);
     }
 
     @Nullable
@@ -205,12 +202,12 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(SMASHING, false);
-        this.entityData.define(CASTING, false);
-        this.entityData.define(BABY, false);
-        this.entityData.define(HOME, Optional.empty());
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(SMASHING, false);
+        pBuilder.define(CASTING, false);
+        pBuilder.define(BABY, false);
+        pBuilder.define(HOME, Optional.empty());
     }
 
     @Override
@@ -249,7 +246,7 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
         data.add(attackController);
     }
 
-    private PlayState attackController(software.bernie.geckolib.core.animation.AnimationState<?> AnimationState) {
+    private PlayState attackController(software.bernie.geckolib.animation.AnimationState<?> AnimationState) {
         return PlayState.CONTINUE;
     }
 
@@ -310,7 +307,7 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
     }
 
     @Override
-    public int getExperienceReward() {
+    public int getBaseExperienceReward() {
         return 0;
     }
 

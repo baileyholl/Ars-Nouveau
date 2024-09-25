@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.gui.radial_menu;
 
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -14,14 +15,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.MovementInputUpdateEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
 
 import java.util.List;
 
-@Mod.EventBusSubscriber(Dist.CLIENT)
+@EventBusSubscriber(Dist.CLIENT)
 public class GuiRadialMenu<T> extends Screen {
     private static final float PRECISION = 5.0f;
     private static final int MAX_SLOTS = 20;
@@ -84,7 +85,8 @@ public class GuiRadialMenu<T> extends Screen {
         super.render(graphics, mouseX, mouseY, partialTicks);
         PoseStack ms = graphics.pose();
         float openAnimation = closing ? 1.0f - totalTime / OPEN_ANIMATION_LENGTH : totalTime / OPEN_ANIMATION_LENGTH;
-        float currTick = minecraft.getFrameTime();
+
+        float currTick = ClientInfo.partialTicks;
         totalTime += (currTick + extraTick - prevTick)/20f;
         extraTick = 0;
         prevTick = currTick;
@@ -114,9 +116,7 @@ public class GuiRadialMenu<T> extends Screen {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
 
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder buffer = tessellator.getBuilder();
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder tessellator = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         boolean hasMouseOver = false;
         int mousedOverSlot = -1;
 
@@ -137,14 +137,14 @@ public class GuiRadialMenu<T> extends Screen {
             float sliceBorderLeft = (((i - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
             float sliceBorderRight = (((i + 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
             if (selectedItem == i) {
-                drawSlice(buffer, centerOfScreenX, centerOfScreenY, 10, radiusIn, radiusOut, sliceBorderLeft, sliceBorderRight, 63, 161, 191, 60);
+                drawSlice(tessellator, centerOfScreenX, centerOfScreenY, 10, radiusIn, radiusOut, sliceBorderLeft, sliceBorderRight, 63, 161, 191, 60);
                 hasMouseOver = true;
                 mousedOverSlot = selectedItem;
             } else
-                drawSlice(buffer, centerOfScreenX, centerOfScreenY, 10, radiusIn, radiusOut, sliceBorderLeft, sliceBorderRight, 0, 0, 0, 64);
+                drawSlice(tessellator, centerOfScreenX, centerOfScreenY, 10, radiusIn, radiusOut, sliceBorderLeft, sliceBorderRight, 0, 0, 0, 64);
         }
 
-        tessellator.end();
+        BufferUploader.drawWithShader(tessellator.buildOrThrow());
         RenderSystem.disableBlend();
         if (hasMouseOver && mousedOverSlot != -1) {
             int adjusted = ((mousedOverSlot + (numberOfSlices / 2 + 1)) % numberOfSlices) - 1;
@@ -262,10 +262,10 @@ public class GuiRadialMenu<T> extends Screen {
             float pos2InX = x + radiusIn * (float) Math.cos(angle2);
             float pos2InY = y + radiusIn * (float) Math.sin(angle2);
 
-            buffer.vertex(pos1OutX, pos1OutY, z).color(r, g, b, a).endVertex();
-            buffer.vertex(pos1InX, pos1InY, z).color(r, g, b, a).endVertex();
-            buffer.vertex(pos2InX, pos2InY, z).color(r, g, b, a).endVertex();
-            buffer.vertex(pos2OutX, pos2OutY, z).color(r, g, b, a).endVertex();
+            buffer.addVertex(pos1OutX, pos1OutY, z).setColor(r, g, b, a);
+            buffer.addVertex(pos1InX, pos1InY, z).setColor(r, g, b, a);
+            buffer.addVertex(pos2InX, pos2InY, z).setColor(r, g, b, a);
+            buffer.addVertex(pos2OutX, pos2OutY, z).setColor(r, g, b, a);
         }
     }
 

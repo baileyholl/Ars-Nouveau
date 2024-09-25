@@ -1,0 +1,29 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": {
+    "b": 203,
+    "g": 119,
+    "id": "ars_nouveau:constant",
+    "r": 255
+  },
+  "flavour_text": "The bite from this storm is worse than its bark.",
+  "name": "Aurellia's Bite Storm",
+  "sound": {
+    "sound": {
+      "id": "ars_nouveau:tempestry_family"
+    }
+  },
+  "spell": [
+    "ars_nouveau:glyph_projectile",
+    "ars_nouveau:glyph_linger",
+    "ars_nouveau:glyph_sensitive",
+    "ars_nouveau:glyph_fangs",
+    "ars_nouveau:glyph_lightning",
+    "ars_nouveau:glyph_amplify",
+    "ars_nouveau:glyph_amplify",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_extend_time"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

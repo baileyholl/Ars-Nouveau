@@ -19,7 +19,7 @@ import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -50,7 +50,7 @@ public class EffectExplosion extends AbstractEffect implements IDamageEffect {
         ANExplosion explosion = new ANExplosion(world, e, source, context, x, y, z, radius, p_230546_11_, p_230546_12_, amp);
         explosion.baseDamage = DAMAGE.get();
         explosion.ampDamageScalar = AMP_DAMAGE.get();
-        if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(world, explosion)) return explosion;
+        if (net.neoforged.neoforge.event.EventHooks.onExplosionStart(world, explosion)) return explosion;
         explosion.explode();
         explosion.finalizeExplosion(false);
         if (p_230546_12_ == Explosion.BlockInteraction.KEEP) {
@@ -59,19 +59,24 @@ public class EffectExplosion extends AbstractEffect implements IDamageEffect {
 
         for (Player serverplayerentity : world.players()) {
             if (serverplayerentity.distanceToSqr(x, y, z) < 4096.0D) {
-                ((ServerPlayer) serverplayerentity).connection.send(new ClientboundExplodePacket(x, y, z, radius, explosion.getToBlow(), explosion.getHitPlayers().get(serverplayerentity)));
+                ((ServerPlayer) serverplayerentity).connection.send(new ClientboundExplodePacket(x, y, z, radius, explosion.getToBlow(),
+                        explosion.getHitPlayers().get(serverplayerentity),
+                        explosion.blockInteraction,
+                        explosion.smallExplosionParticles,
+                        explosion.largeExplosionParticles,
+                        explosion.explosionSound));
             }
         }
 
         return explosion;
     }
 
-    public ForgeConfigSpec.DoubleValue BASE;
-    public ForgeConfigSpec.DoubleValue AOE_BONUS;
-    public ForgeConfigSpec.DoubleValue AMP_DAMAGE;
+    public ModConfigSpec.DoubleValue BASE;
+    public ModConfigSpec.DoubleValue AOE_BONUS;
+    public ModConfigSpec.DoubleValue AMP_DAMAGE;
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addAmpConfig(builder, 0.5);
         BASE = builder.comment("Explosion base intensity").defineInRange("base", 0.75, 0.0, 100);

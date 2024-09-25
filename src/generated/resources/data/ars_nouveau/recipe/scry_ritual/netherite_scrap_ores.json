@@ -1,0 +1,5 @@
+{
+  "type": "ars_nouveau:scry_ritual",
+  "augment": "neoforge:ores/netherite_scrap",
+  "highlight": "neoforge:ores/netherite_scrap"
+}

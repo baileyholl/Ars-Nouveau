@@ -17,6 +17,6 @@ public class ImbuementPage extends AbstractPage {
 
     @Override
     public ResourceLocation getType() {
-        return new ResourceLocation("ars_nouveau:imbuement_recipe");
+        return ResourceLocation.tryParse("ars_nouveau:imbuement_recipe");
     }
 }

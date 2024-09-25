@@ -1,0 +1,26 @@
+{
+  "parent": "ars_nouveau:ritual_brazier",
+  "criteria": {
+    "familiar": {
+      "trigger": "ars_nouveau:familiar"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.familiar"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:ritual_binding"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.familiar"
+    }
+  },
+  "requirements": [
+    [
+      "familiar"
+    ]
+  ]
+}

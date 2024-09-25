@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.setup.registry.StructureRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,7 +26,7 @@ public class StructureTemplateMixin {
 
         if(structurePlaceSettings.getProcessors().stream().anyMatch(processor ->
                 ((StructureProcessorAccessor)processor).callGetType() == StructureRegistry.WATERLOGGING_FIX_PROCESSOR.get())) {
-            structurePlaceSettings.setKeepLiquids(false);
+            structurePlaceSettings.setLiquidSettings(LiquidSettings.IGNORE_WATERLOGGING);
         }
     }
 

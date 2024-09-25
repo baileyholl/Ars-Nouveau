@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
@@ -10,10 +11,11 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
-import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.config.Config;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -39,16 +41,15 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class DrygmyTile extends SummoningTile implements ITooltipProvider {
-
-
+public class DrygmyTile extends SummoningTile implements ITooltipProvider, IWandable {
     public int progress;
     public int bonus;
     public boolean needsMana;
     private List<LivingEntity> nearbyEntities;
+    public boolean includeEntities = true;
 
     public DrygmyTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.DRYGMY_TILE, pos, state);
+        super(BlockRegistry.DRYGMY_TILE.get(), pos, state);
     }
 
     @Override
@@ -130,7 +131,11 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
 
     public void refreshEntitiesAndBonus() {
         Set<ResourceLocation> uniqueEntities;
-        this.nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, new AABB(getBlockPos().north(10).west(10).below(6), getBlockPos().south(10).east(10).above(6)));
+        this.nearbyEntities = new ArrayList<>();
+        if (this.includeEntities) {
+            this.nearbyEntities.addAll(level.getEntitiesOfClass(LivingEntity.class, new AABB(getBlockPos().north(10).west(10).below(6).getBottomCenter(), getBlockPos().south(10).east(10).above(6).getBottomCenter())));
+        }
+        this.nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, new AABB(getBlockPos().north(10).west(10).below(6).getBottomCenter(), getBlockPos().south(10).east(10).above(6).getBottomCenter()));
         for(BlockPos b : BlockPos.withinManhattan(getBlockPos(), 10, 10, 10)){
             if(level.getBlockEntity(b) instanceof MobJarTile mobJarTile && mobJarTile.getEntity() instanceof LivingEntity livingEntity){
                 nearbyEntities.add(livingEntity);
@@ -149,18 +154,23 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
         DamageSource damageSource = level.damageSources().playerAttack(fakePlayer);
         int numberItems = Config.DRYGMY_BASE_ITEM.get() + this.bonus;
         int exp = 0;
+        if(!(this.level instanceof ServerLevel serverLevel)){
+            return;
+        }
         // Create the loot table and exp count
         for (LivingEntity entity : getNearbyEntities()) {
             if (entity.getType().is(EntityTags.DRYGMY_BLACKLIST)) {
                 continue;
             }
 
-            LootTable loottable = this.level.getServer().getLootData().getLootTable(entity.getLootTable());
+            var key = entity.getLootTable();
+            LootTable loottable = serverLevel.getServer().reloadableRegistries().getLootTable(key);
+
             LootParams.Builder lootcontext$builder = (new LootParams.Builder((ServerLevel) this.level))
                     .withParameter(LootContextParams.THIS_ENTITY, entity).withParameter(LootContextParams.ORIGIN, entity.position())
                     .withParameter(LootContextParams.DAMAGE_SOURCE, damageSource)
-                    .withOptionalParameter(LootContextParams.KILLER_ENTITY, fakePlayer)
-                    .withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, damageSource.getDirectEntity());
+                    .withOptionalParameter(LootContextParams.ATTACKING_ENTITY, fakePlayer)
+                    .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, damageSource.getDirectEntity());
             lootcontext$builder = lootcontext$builder.withParameter(LootContextParams.LAST_DAMAGE_PLAYER, fakePlayer)
                     .withLuck(fakePlayer.getLuck());
 
@@ -169,7 +179,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
             if (entity instanceof Mob mob) {
                 oldExp = mob.xpReward;
             }
-            exp += entity.getExperienceReward();
+            exp += entity.getExperienceReward((ServerLevel) level, fakePlayer);
 
             if (entity instanceof Mob mob) {
                 // EVERY TIME GET EXPERIENCE REWARD IS CALLED IN ZOMBIE ENTITY IT MULTIPLIES BY 2.5X.
@@ -206,21 +216,28 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
         updateBlock();
     }
 
-
     @Override
-    public void load(CompoundTag compound) {
-        this.progress = compound.getInt("progress");
-        this.bonus = compound.getInt("bonus");
-        this.needsMana = compound.getBoolean("needsMana");
-        super.load(compound);
+    public void onWanded(Player playerEntity) {
+        includeEntities = !includeEntities;
+        updateBlock();
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(compound, pRegistries);
+        this.progress = compound.getInt("progress");
+        this.bonus = compound.getInt("bonus");
+        this.needsMana = compound.getBoolean("needsMana");
+        this.includeEntities = !compound.contains("includeEntities") || compound.getBoolean("includeEntities");
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         tag.putInt("progress", progress);
         tag.putInt("bonus", bonus);
         tag.putBoolean("needsMana", needsMana);
+        tag.putBoolean("includeEntities", includeEntities);
     }
 
     @Override
@@ -230,6 +247,9 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
         }
         if (this.needsMana) {
             tooltip.add(Component.translatable("ars_nouveau.wixie.need_mana"));
+        }
+        if (!this.includeEntities) {
+            tooltip.add(Component.translatable("ars_nouveau.drygmy.only_use_jars"));
         }
     }
 }

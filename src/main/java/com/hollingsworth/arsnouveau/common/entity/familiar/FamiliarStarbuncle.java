@@ -3,9 +3,10 @@ package com.hollingsworth.arsnouveau.common.entity.familiar;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.scrying.CompoundScryer;
 import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
-import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.ritual.RitualScrying;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
@@ -19,10 +20,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.Tags;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import net.neoforged.neoforge.common.Tags;
+import org.jetbrains.annotations.NotNull;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.Arrays;
 
@@ -30,6 +32,7 @@ public class FamiliarStarbuncle extends FamiliarEntity {
 
     public FamiliarStarbuncle(EntityType<? extends PathfinderMob> ent, Level world) {
         super(ent, world);
+        this.entityData.set(COLOR, DyeColor.ORANGE.getName());
     }
 
     @Override
@@ -42,7 +45,7 @@ public class FamiliarStarbuncle extends FamiliarEntity {
     }
 
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+    protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (!player.level.isClientSide && player.equals(getOwner())) {
             ItemStack stack = player.getItemInHand(hand);
             if (stack.is(Tags.Items.NUGGETS_GOLD)) {
@@ -71,9 +74,8 @@ public class FamiliarStarbuncle extends FamiliarEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.set(COLOR, DyeColor.ORANGE.getName());
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
     }
 
     @Override
@@ -81,11 +83,11 @@ public class FamiliarStarbuncle extends FamiliarEntity {
         String color = getColor();
         if (color.isEmpty()) color = DyeColor.ORANGE.getName();
 
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/starbuncle_" + color.toLowerCase() + ".png");
+        return ArsNouveau.prefix( "textures/entity/starbuncle_" + color.toLowerCase() + ".png");
     }
 
     @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get();
     }
 

@@ -15,10 +15,11 @@ import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.BonemealGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.FollowMobGoalBackoff;
 import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.FollowPlayerGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.InspectPlantGoal;
-import com.hollingsworth.arsnouveau.common.items.ItemScroll;
+import com.hollingsworth.arsnouveau.common.items.data.ItemScrollData;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
@@ -54,15 +55,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -107,7 +104,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     }
 
     @Override
-    public int getExperienceReward() {
+    public int getBaseExperienceReward() {
         return 0;
     }
 
@@ -117,8 +114,8 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
             return super.mobInteract(player, hand);
         ItemStack stack = player.getItemInHand(hand);
         if (stack.getItem() == ItemsRegistry.DENY_ITEM_SCROLL.asItem() && getTile() != null) {
-            ItemScroll.ItemScrollData scrollData = new ItemScroll.ItemScrollData(stack);
-            getTile().ignoreItems.addAll(scrollData.getItems());
+            ItemScrollData scrollData = stack.getOrDefault(DataComponentRegistry.ITEM_SCROLL_DATA, new ItemScrollData());
+            getTile().ignoreItems.addAll(scrollData.mutable().getItems());
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.whirlisprig.ignore"));
         }
         return super.mobInteract(player, hand);
@@ -266,7 +263,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
         if (this.droppingShards) {
             tamingTime++;
             if (tamingTime % 20 == 0 && !level.isClientSide())
-                Networking.sendToNearby(level, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, blockPosition(), ParticleColor.GREEN));
+                Networking.sendToNearbyClient(level, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, blockPosition(), ParticleColor.GREEN));
 
             if (tamingTime > 60 && !level.isClientSide) {
                 ItemStack stack = new ItemStack(ItemsRegistry.WHIRLISPRIG_SHARDS, 1 + level.random.nextInt(1));
@@ -372,7 +369,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     }
 
     public static AttributeSupplier.Builder attributes() {
-        return Mob.createMobAttributes().add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue())
+        return Mob.createMobAttributes().add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.value().getDefaultValue())
                 .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.2D);
     }
@@ -425,11 +422,11 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(MOOD_SCORE, 0);
-        this.entityData.define(TAMED, false);
-        this.entityData.define(COLOR, "summer");
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(MOOD_SCORE, 0);
+        pBuilder.define(TAMED, false);
+        pBuilder.define(COLOR, "summer");
     }
 
     @Override
@@ -448,6 +445,6 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
 
     @Override
     public ResourceLocation getTexture(Whirlisprig entity) {
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/whirlisprig_" + (getColor(entity).isEmpty() ? "summer" : getColor(entity)) + ".png");
+        return ArsNouveau.prefix( "textures/entity/whirlisprig_" + (getColor(entity).isEmpty() ? "summer" : getColor(entity)) + ".png");
     }
 }

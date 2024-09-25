@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
+import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -11,16 +11,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import org.joml.Matrix4f;
 
-import java.util.List;
+public record SpellTooltip(AbstractCaster<?> spellcaster, boolean showName) implements TooltipComponent {
 
-public record SpellTooltip(ISpellCaster spellcaster, boolean showName) implements TooltipComponent {
-
-    public SpellTooltip(ISpellCaster spellcaster) {
+    public SpellTooltip(AbstractCaster<?> spellcaster) {
         this(spellcaster, false);
     }
 
     public static class SpellTooltipRenderer implements ClientTooltipComponent {
-        private final ISpellCaster spellCaster;
+        private final AbstractCaster<?> spellCaster;
         private final boolean showName;
 
         public SpellTooltipRenderer(SpellTooltip pSpellTooltip) {
@@ -35,7 +33,7 @@ public record SpellTooltip(ISpellCaster spellcaster, boolean showName) implement
 
         @Override
         public int getWidth(Font pFont) {
-            return 4 + spellCaster.getSpell().recipe.size() * 16;
+            return 4 + spellCaster.getSpell().size() * 16;
         }
 
         @Override
@@ -49,9 +47,9 @@ public record SpellTooltip(ISpellCaster spellcaster, boolean showName) implement
 
         @Override
         public void renderImage(Font pFont, int pX, int pY, GuiGraphics pGuiGraphics) {
-            List<AbstractSpellPart> recipe = spellCaster.getSpell().recipe;
-            for (int i = 0, recipeSize = recipe.size(); i < recipeSize; i++) {
-                AbstractSpellPart part = recipe.get(i);
+            var spell = spellCaster.getSpell();
+            for (int i = 0, recipeSize = spell.size(); i < recipeSize; i++) {
+                AbstractSpellPart part = spell.get(i);
                 RenderUtils.drawSpellPart(part, pGuiGraphics, pX + i * 16, pY + (showName ? 10 : 0), 16, false);
             }
         }

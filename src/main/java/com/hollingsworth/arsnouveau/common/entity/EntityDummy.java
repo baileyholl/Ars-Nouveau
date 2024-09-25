@@ -8,6 +8,7 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -29,8 +30,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.PlayerTeam;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -63,9 +64,9 @@ public class EntityDummy extends PathfinderMob implements ISummon {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(OWNER_UUID, Optional.of(Util.NIL_UUID));
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(OWNER_UUID, Optional.of(Util.NIL_UUID));
     }
 
     @Override
@@ -124,7 +125,7 @@ public class EntityDummy extends PathfinderMob implements ISummon {
 
     public ResourceLocation getSkinTextureLocation() {
         PlayerInfo networkplayerinfo = this.getPlayerInfo();
-        return networkplayerinfo == null ? DefaultPlayerSkin.getDefaultSkin(getOwnerUUID()) : networkplayerinfo.getSkinLocation();
+        return networkplayerinfo == null ? DefaultPlayerSkin.getDefaultTexture() : networkplayerinfo.getSkin().texture();
     }
 
     @Nullable
@@ -192,7 +193,7 @@ public class EntityDummy extends PathfinderMob implements ISummon {
     @OnlyIn(Dist.CLIENT)
     public boolean isSlim() {
         if (this.playerInfo != null) {
-            return playerInfo.getModelName().equals("slim");
+            return playerInfo.getSkin().model() == PlayerSkin.Model.SLIM;
         }else return false;
     }
 

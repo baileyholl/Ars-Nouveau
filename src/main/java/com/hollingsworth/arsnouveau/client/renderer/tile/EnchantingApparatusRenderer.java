@@ -11,8 +11,8 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import software.bernie.geckolib.util.RenderUtils;
+import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.util.RenderUtil;
 
 
 public class EnchantingApparatusRenderer extends ArsGeoBlockRenderer<EnchantingApparatusTile> {
@@ -22,9 +22,9 @@ public class EnchantingApparatusRenderer extends ArsGeoBlockRenderer<EnchantingA
     }
 
     @Override
-    public void renderFinal(PoseStack stack, EnchantingApparatusTile tile, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        super.renderFinal(stack, tile, model, bufferSource, buffer, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-        CoreGeoBone frame = model.getBone("frame_all").orElse(null);
+    public void renderFinal(PoseStack stack, EnchantingApparatusTile tile, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay, int color) {
+        super.renderFinal(stack, tile, model, bufferSource, buffer, partialTick, packedLight, packedOverlay, color);
+        GeoBone frame = model.getBone("frame_all").orElse(null);
         if (frame != null && tile.getStack() != null) {
             double x = tile.getBlockPos().getX();
             double y = tile.getBlockPos().getY();
@@ -33,8 +33,8 @@ public class EnchantingApparatusRenderer extends ArsGeoBlockRenderer<EnchantingA
                 tile.renderEntity = new ItemEntity(tile.getLevel(), x, y, z, tile.getStack());
             }
             stack.pushPose();
-            RenderUtils.translateMatrixToBone(stack, frame);
-            stack.translate(0.5, +0.5, 0.5);
+            RenderUtil.translateMatrixToBone(stack, frame);
+            stack.translate(0.5, 0.4, 0.5);
             stack.scale(0.75f, 0.75f, 0.75f);
             ItemStack itemstack = tile.renderEntity.getItem();
             Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.GROUND, packedLight, OverlayTexture.NO_OVERLAY, stack, bufferSource, tile.getLevel(), (int) tile.getBlockPos().asLong());

@@ -11,6 +11,6 @@ public class GlyphScribePage extends AbstractPage {
 
     @Override
     public ResourceLocation getType() {
-        return new ResourceLocation("ars_nouveau:glyph_recipe");
+        return ResourceLocation.tryParse("ars_nouveau:glyph_recipe");
     }
 }

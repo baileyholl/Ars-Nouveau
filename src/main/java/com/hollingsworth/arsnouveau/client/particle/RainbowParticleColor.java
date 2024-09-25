@@ -8,25 +8,18 @@ import net.minecraft.resources.ResourceLocation;
 
 public class RainbowParticleColor extends ParticleColor{
 
-    public static final ResourceLocation ID = new ResourceLocation(ArsNouveau.MODID, "rainbow");
+    public static final ResourceLocation ID = ArsNouveau.prefix( "rainbow");
 
     public final int tickOffset;
-    public int transitionSpeed;
 
     public RainbowParticleColor(int r, int g, int b){
         super(r, g, b);
         this.tickOffset = random.nextInt(1536);
     }
 
-    public RainbowParticleColor(int r, int g, int b, int transitionSpeed){
-        this(r, g, b);
-        this.transitionSpeed = transitionSpeed;
-    }
-
     public RainbowParticleColor(CompoundTag compoundTag){
         super(compoundTag);
         tickOffset = compoundTag.getInt("tickOffset");
-        transitionSpeed = compoundTag.getInt("transitionSpeed");
     }
 
     @Override

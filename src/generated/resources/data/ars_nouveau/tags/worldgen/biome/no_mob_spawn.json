@@ -1,6 +1,6 @@
 {
   "values": [
-    "#forge:is_mushroom",
+    "#c:is_mushroom",
     "minecraft:deep_dark"
   ]
 }

@@ -1,0 +1,32 @@
+{
+  "parent": "ars_nouveau:magebloom_crop",
+  "criteria": {
+    "has_alteration_table": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ars_nouveau:alteration_table"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.alteration_table"
+    },
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:alteration_table"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.alteration_table"
+    }
+  },
+  "requirements": [
+    [
+      "has_alteration_table"
+    ]
+  ]
+}

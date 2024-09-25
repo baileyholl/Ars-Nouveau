@@ -1,0 +1,23 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": false,
+  "pedestalItems": [
+    {
+      "tag": "c:gems/source"
+    },
+    {
+      "tag": "c:gems/source"
+    },
+    {
+      "tag": "c:ingots/gold"
+    }
+  ],
+  "reagent": {
+    "item": "minecraft:stick"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:dominion_wand"
+  },
+  "sourceCost": 0
+}

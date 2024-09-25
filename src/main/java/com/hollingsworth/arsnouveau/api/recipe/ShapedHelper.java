@@ -14,8 +14,8 @@ public class ShapedHelper {
     public List<List<Ingredient>> possibleRecipes;
 
     public ShapedHelper(ShapedRecipe recipe) {
-        recipeHeight = recipe.getRecipeHeight();
-        recipeWidth = recipe.getRecipeWidth();
+        recipeHeight = recipe.getHeight();
+        recipeWidth = recipe.getWidth();
         recipeItems = recipe.getIngredients();
         possibleRecipes = getPossibleRecipes();
     }
