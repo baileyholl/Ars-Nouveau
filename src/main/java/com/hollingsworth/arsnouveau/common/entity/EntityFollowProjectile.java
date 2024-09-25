@@ -81,7 +81,9 @@ public class EntityFollowProjectile extends ColoredProjectile {
     @Override
     public void onRemovedFromLevel() {
         super.onRemovedFromLevel();
-        this.remove(RemovalReason.DISCARDED);
+        if(!this.isRemoved()) {
+            this.remove(RemovalReason.DISCARDED);
+        }
     }
 
     public boolean defaultsBurst() {
