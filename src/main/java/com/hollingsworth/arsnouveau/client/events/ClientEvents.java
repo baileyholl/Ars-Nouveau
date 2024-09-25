@@ -33,12 +33,36 @@ import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import org.jetbrains.annotations.NotNull;
 
 
-@EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
 public class ClientEvents {
 
-    @SubscribeEvent
-    public static void registerTooltipFactory(RegisterClientTooltipComponentFactoriesEvent event) {
-        event.register(SpellTooltip.class, SpellTooltip.SpellTooltipRenderer::new);
+    @EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID, bus = EventBusSubscriber.Bus.MOD)
+    static class ClientModEvents {
+        @SubscribeEvent
+        public static void registerTooltipFactory(RegisterClientTooltipComponentFactoriesEvent event) {
+            event.register(SpellTooltip.class, SpellTooltip.SpellTooltipRenderer::new);
+        }
+
+
+        @SubscribeEvent
+        public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
+            event.registerItem(new IClientItemExtensions() {
+                @Override
+                public @NotNull BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                    Minecraft mc = Minecraft.getInstance();
+
+                    return new BlockEntityWithoutLevelRenderer(mc.getBlockEntityRenderDispatcher(), mc.getEntityModels()) {
+                        private final BlockEntity tile = new ArchwoodChestTile(BlockPos.ZERO, BlockRegistry.ARCHWOOD_CHEST.get().defaultBlockState());
+
+                        @Override
+                        public void renderByItem(@NotNull ItemStack stack, @NotNull ItemDisplayContext transformType, @NotNull PoseStack pose, @NotNull MultiBufferSource buffer, int x, int y) {
+                            mc.getBlockEntityRenderDispatcher().renderItem(tile, pose, buffer, x, y);
+                        }
+
+                    };
+                }
+            }, BlockRegistry.ARCHWOOD_CHEST.get().asItem());
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -47,27 +71,6 @@ public class ClientEvents {
             PantomimeRenderer.renderOutline(event.getPoseStack());
         }
     }
-
-    @SubscribeEvent
-    public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
-        event.registerItem(new IClientItemExtensions() {
-            @Override
-            public @NotNull BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                Minecraft mc = Minecraft.getInstance();
-
-                return new BlockEntityWithoutLevelRenderer(mc.getBlockEntityRenderDispatcher(), mc.getEntityModels()) {
-                    private final BlockEntity tile = new ArchwoodChestTile(BlockPos.ZERO, BlockRegistry.ARCHWOOD_CHEST.get().defaultBlockState());
-
-                    @Override
-                    public void renderByItem(@NotNull ItemStack stack, @NotNull ItemDisplayContext transformType, @NotNull PoseStack pose, @NotNull MultiBufferSource buffer, int x, int y) {
-                        mc.getBlockEntityRenderDispatcher().renderItem(tile, pose, buffer, x, y);
-                    }
-
-                };
-            }
-        }, BlockRegistry.ARCHWOOD_CHEST.get().asItem());
-    }
-
 
     @SubscribeEvent
     public static void TooltipEvent(RenderTooltipEvent.Pre e) {
