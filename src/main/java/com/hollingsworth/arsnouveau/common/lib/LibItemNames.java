@@ -129,4 +129,5 @@ public class LibItemNames {
     public static final String SOUND_OF_GLASS = "music_disc_thistle_the_sound_of_glass";
     public static final String FIREL_WILD_HUNT = "music_disc_firel_the_wild_hunt";
     public static final String JUMP_RING = "jump_ring";
+    public static final String TIME_FOCUS = "time_focus";
 }
