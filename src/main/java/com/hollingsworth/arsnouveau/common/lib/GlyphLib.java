@@ -4,6 +4,7 @@ public class GlyphLib {
     public static final String MethodProjectileID = prependGlyph("projectile");
     public static final String MethodTouchID = prependGlyph("touch");
     public static final String MethodSelfID = prependGlyph("self");
+    public static final String MethodPantomimeID = prependGlyph("pantomime");
     public static final String EffectRuneID = prependGlyph("rune");
 
     public static final String EffectBreakID = prependGlyph("break");
