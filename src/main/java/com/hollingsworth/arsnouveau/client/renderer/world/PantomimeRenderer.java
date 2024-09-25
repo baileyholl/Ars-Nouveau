@@ -2,8 +2,9 @@ package com.hollingsworth.arsnouveau.client.renderer.world;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
-import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodPantomime;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -26,12 +27,20 @@ public class PantomimeRenderer {
 
         if (!(player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof ICasterTool)) return;
 
-        AbstractCaster caster = SpellCasterRegistry.from(heldItem);
+        var caster = SpellCasterRegistry.from(heldItem);
+        if(caster == null)
+            return;
         Spell selectedSpell = caster.getSpell();
 
         if (!(selectedSpell.getCastMethod() instanceof MethodPantomime pantomime)) return;
-
-        BlockPos pos = pantomime.findPosition(player).getBlockPos();
+        SpellStats stats = new SpellStats.Builder()
+                .setAugments(selectedSpell.getAugments(0, player))
+                .addItemsFromEntity(player)
+                .build(MethodPantomime.INSTANCE, null, player.level, player, SpellContext.fromEntity(selectedSpell, player, heldItem));
+        if(!stats.isSensitive()){
+            return;
+        }
+        BlockPos pos = pantomime.findPosition(player, stats).getBlockPos();
         poseStack.pushPose();
         Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
         poseStack.translate(-projectedView.x, -projectedView.y, -projectedView.z);
