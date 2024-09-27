@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.gui.radial_menu;
 
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -85,7 +86,7 @@ public class GuiRadialMenu<T> extends Screen {
         PoseStack ms = graphics.pose();
         float openAnimation = closing ? 1.0f - totalTime / OPEN_ANIMATION_LENGTH : totalTime / OPEN_ANIMATION_LENGTH;
 
-        float currTick = minecraft.getFrameTimeNs();
+        float currTick = ClientInfo.partialTicks;
         totalTime += (currTick + extraTick - prevTick)/20f;
         extraTick = 0;
         prevTick = currTick;

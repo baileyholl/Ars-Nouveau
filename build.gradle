@@ -118,6 +118,8 @@ dependencies {
     implementation 'com.github.glitchfiend:TerraBlender-neoforge:1.21-4.0.0.0'
     implementation "curse.maven:jade-324717:5444008"
     implementation 'top.theillusivec4.curios:curios-neoforge:9.0.4+1.21'
+
+    implementation "curse.maven:ars-additions-974408:5698511"
 }
 
 jar {

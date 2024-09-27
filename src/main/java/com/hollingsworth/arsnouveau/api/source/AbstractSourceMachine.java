@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.source;
 import com.hollingsworth.arsnouveau.api.util.IWololoable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.ModdedTile;
+import com.hollingsworth.arsnouveau.common.capability.SourceStorage;
 import com.hollingsworth.arsnouveau.common.items.data.BlockFillContents;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.BlockPos;
@@ -11,6 +12,8 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractSourceMachine extends ModdedTile implements ISourceTile, IWololoable {
 
@@ -25,8 +28,27 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
         super(manaTile, pos, state);
     }
 
+    public @Nullable SourceStorage sourceStorage;
+
+    public @NotNull SourceStorage getSourceStorage() {
+        if (sourceStorage == null) {
+            sourceStorage = new SourceStorage(getMaxSource(), getTransferRate(), getTransferRate(), source) {
+                public void onContentsChanged() {
+                    /*
+                     * This is called when the source changes in the capability, and is used to update the tile's value.
+                     * Opposite of the setSource method called in updateBlock.
+                     */
+                    AbstractSourceMachine.this.source = this.source;
+                    AbstractSourceMachine.this.updateBlock();
+                }
+            };
+            if (level != null) level.invalidateCapabilities(worldPosition);
+        }
+        return sourceStorage;
+    }
+
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+    protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
         super.loadAdditional(tag, pRegistries);
         source = tag.getInt(SOURCE_TAG);
         maxSource = tag.getInt(MAX_SOURCE_TAG);
@@ -34,7 +56,7 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
         tag.putInt(SOURCE_TAG, getSource());
         tag.putInt(MAX_SOURCE_TAG, getMaxSource());
@@ -45,13 +67,26 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
     public int setSource(int source) {
         if (this.source == source)
             return this.source;
-        this.source = source;
-        if (this.source > this.getMaxSource())
-            this.source = this.getMaxSource();
-        if (this.source < 0)
-            this.source = 0;
+        this.source = Math.clamp(source, 0, this.getMaxSource());
         updateBlock();
         return this.source;
+    }
+
+    public boolean updateBlock() {
+        if (level != null) {
+            // force update the capability
+            getSourceStorage().setSource(this.source);
+            BlockState state = level.getBlockState(worldPosition);
+            level.sendBlockUpdated(worldPosition, state, state, 3);
+            setChanged();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int addSource(int source, boolean simulate) {
+        return getSourceStorage().receiveSource(source, simulate);
     }
 
     @Override
@@ -61,7 +96,14 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
 
     @Override
     public int getSource() {
-        return this.source;
+        if (this.sourceStorage == null)
+            return this.source;
+        return this.getSourceStorage().getSource();
+    }
+
+    @Override
+    public int removeSource(int source, boolean simulate) {
+        return getSourceStorage().extractSource(source, simulate);
     }
 
     @Override
@@ -69,7 +111,7 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
         if (source == 0)
             return this.getSource();
         this.setSource(this.getSource() - source);
-        updateBlock();
+        //updateBlock(); updateBlock is called in setSource
         return this.getSource();
     }
 
@@ -81,15 +123,21 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
 
     @Override
     public int getMaxSource() {
-        return maxSource;
+        if (this.sourceStorage == null)
+            return this.maxSource;
+        return this.getSourceStorage().getSourceCapacity();
     }
 
     public boolean canAcceptSource() {
         return this.getSource() < this.getMaxSource();
     }
 
+    public boolean canProvideSource() {
+        return this.getSource() > 0;
+    }
+
     public boolean canAcceptSource(int source) {
-        return this.getSource() + source <= this.getMaxSource();
+        return this.getSourceStorage().canAcceptSource(source);
     }
 
     /**
@@ -105,11 +153,28 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
         return transferRate;
     }
 
+    /*
+     * Transfers the maximum possible amount of source from one SourceStorage to another,
+     * checking the transfer rate of the source and destination via simulation.
+     */
+    public int transferSource(ISourceCap from, ISourceCap to) {
+        int transfer = to.receiveSource(from.extractSource(from.getMaxExtract(), true), true);
+        if (transfer == 0)
+            return 0;
+        from.extractSource(transfer, false);
+        to.receiveSource(transfer, false);
+        return transfer;
+    }
+
     /**
      * Gets the maximum amount of source that can be transferred from one tile to another.
      */
     public int getTransferRate(ISourceTile from, ISourceTile to) {
-        return Math.min(Math.min(from.getTransferRate(), from.getSource()), to.getMaxSource() - to.getSource());
+        return getTransferRate(from, to, from.getTransferRate());
+    }
+
+    public int getTransferRate(ISourceTile from, ISourceTile to, int fromTransferRate) {
+        return Math.min(Math.min(fromTransferRate, from.getSource()), to.getMaxSource() - to.getSource());
     }
 
     public int transferSource(ISourceTile from, ISourceTile to, int fromTransferRate) {
@@ -119,10 +184,6 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
         from.removeSource(transferRate);
         to.addSource(transferRate);
         return transferRate;
-    }
-
-    public int getTransferRate(ISourceTile from, ISourceTile to, int fromTransferRate) {
-        return Math.min(Math.min(fromTransferRate, from.getSource()), to.getMaxSource() - to.getSource());
     }
 
     @Override
@@ -136,16 +197,17 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput pComponentInput) {
+    protected void applyImplicitComponents(@NotNull DataComponentInput pComponentInput) {
         super.applyImplicitComponents(pComponentInput);
         var fill = pComponentInput.getOrDefault(DataComponentRegistry.BLOCK_FILL_CONTENTS, new BlockFillContents(0));
         this.source = fill.amount();
     }
 
     @Override
-    protected void collectImplicitComponents(DataComponentMap.Builder pComponents) {
+    protected void collectImplicitComponents(DataComponentMap.@NotNull Builder pComponents) {
         super.collectImplicitComponents(pComponents);
         pComponents.set(DataComponentRegistry.BLOCK_FILL_CONTENTS, new BlockFillContents(this.source));
     }
+
 }
 

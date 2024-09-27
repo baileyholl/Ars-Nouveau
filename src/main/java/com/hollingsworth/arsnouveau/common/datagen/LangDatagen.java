@@ -336,6 +336,9 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.color_gui.black", "Black");
         add("ars_nouveau.color_gui.save", "Save");
         add("ars_nouveau.color_gui.save_all", "Save All");
+        add("ars_nouveau.dominion_wand.clear", "Clear");
+        add("ars_nouveau.dominion_wand.normal", "Normal Mode");
+        add("ars_nouveau.dominion_wand.strict", "Strict Mode");
         add("ars_nouveau.dominion_wand.stored_entity", "Stored entity");
         add("ars_nouveau.dominion_wand.position_set", "Position set.");
         add("ars_nouveau.dominion_wand.no_entity", "No entity set");
@@ -646,7 +649,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page4.basic_spell_turret", "Turrets can provide compact and efficient automation. Examples include: configurable redstone clocks, one block tree or crop farms, rapid smelting with fortune, or mob farms with looting.");
         add("ars_nouveau.page1.bookwyrm_charm", "Bookwyrm Charms can be used on a Storage Lectern to increase the number of accessible inventories. Augment a Ritual of Awakening with Book and Quills in order to obtain charms. Bookwyrms can be dyed using white, black, blue, green, red, or purple dye.");
         add("ars_nouveau.page2.bookwyrm_charm", "In the event that they die or are dispelled, they will drop their charm.");
-        add("ars_nouveau.page.dominion_wand", "A tool for configuring Source Relays and automation entities. To set a transfer path, use the wand on the object that you would like to take source from, and then use it on the block you would like to send source to. For example: Source Jar to Source Relay, Source Relay to Source Relay, or Source Relay to Source Jar. To clear connections, sneak and use this wand on a relay. If you sneak-use it on the air it will switch to Strict mode, allowing to specify the side of the blocks to use.");
+        add("ars_nouveau.page.dominion_wand", "A tool for configuring Source Relays and automation entities. To set a transfer path, use the wand on the object that you would like to take source from, and then use it on the block you would like to send source to. For example: Source Jar to Source Relay, Source Relay to Source Relay, or Source Relay to Source Jar. To clear connections, sneak and use this wand on a relay. You can switch into Strict mode using the radial menu, allowing to specify the side of the blocks to use.");
         add("ars_nouveau.page1.drygmy_charm", "Drygmys are often found following and tending to animals around it. They can be found anywhere, though somewhat rarely. Drygmys can be given a home in the world, and will produce items from nearby monsters and animals as if they were slain, without harming them. A wild drygmy may be befriended by throwing a Wilden Horn near it! You may dye a Drygmy Cyan, Orange, or Brown.");
         add("ars_nouveau.page2.drygmy_charm", "A Drygmy can also produce experience gems!");
         add("ars_nouveau.page3.drygmy_charm", "To summon a Drygmy, use a Drymy Charm on a block of Mossy Cobblestone. After a short time, the cobblestone will transform into a Drygmy Henge and summon your Drgymy! To summon additional drygmys, use more charms on the henge. Casting dispel or killing the Drygmy will return your charm.");
