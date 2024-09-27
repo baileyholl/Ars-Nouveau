@@ -57,7 +57,7 @@ public class ConvertBlockState extends CrabState {
         if (!spawnedFlyingItem) {
             spawnedFlyingItem = true;
             alakarkinos.setBlowingBubbles(false);
-            EntityFlyingItem flyingItem = new EntityFlyingItem(alakarkinos.level, target, hatPos);
+            EntityFlyingItem flyingItem = new EntityFlyingItem(alakarkinos.level, target, hatPos.above());
             flyingItem.getEntityData().set(EntityFlyingItem.IS_BUBBLE, true);
             alakarkinos.level.addFreshEntity(flyingItem);
             var wasGravel = alakarkinos.level.getBlockState(target).is(BlockTagProvider.ALAKARKINOS_GRAVEL);

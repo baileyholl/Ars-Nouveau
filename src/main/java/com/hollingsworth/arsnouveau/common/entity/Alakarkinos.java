@@ -292,20 +292,32 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         }
     }
 
+    public enum Animations {
+        PLACE_HAT,
+        BUBBLE_BLOW,
+        PICKUP_HAT
+    }
+
     @Override
     public void startAnimation(int arg) {
-        if (arg == 0) {
+        if (arg == Animations.PLACE_HAT.ordinal()) {
             if (placeHat == null) {
                 return;
             }
             placeHat.forceAnimationReset();
             placeHat.setAnimation(RawAnimation.begin().thenPlay("place_hat"));
-        } else if (arg == 1) {
+        } else if (arg == Animations.BUBBLE_BLOW.ordinal()) {
             if (placeHat == null) {
                 return;
             }
             placeHat.forceAnimationReset();
             placeHat.setAnimation(RawAnimation.begin().thenPlay("bubble_blow"));
+        }else if(arg == Animations.PICKUP_HAT.ordinal()){
+            if (placeHat == null) {
+                return;
+            }
+            placeHat.forceAnimationReset();
+            placeHat.setAnimation(RawAnimation.begin().thenPlay("pickup_hat"));
         }
     }
 
