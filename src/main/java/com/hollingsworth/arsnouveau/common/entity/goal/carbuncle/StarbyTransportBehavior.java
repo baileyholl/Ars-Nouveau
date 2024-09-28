@@ -248,7 +248,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         if (cap != null) {
             if (remove) {
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.stop_store"));
-                removeToPos(storedPos, side);
+                removeToPos(storedPos);
             } else {
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.store"));
                 addToPos(storedPos, side);

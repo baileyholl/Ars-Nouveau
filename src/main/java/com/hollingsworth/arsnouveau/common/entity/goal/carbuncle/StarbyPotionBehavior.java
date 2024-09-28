@@ -43,7 +43,7 @@ public class StarbyPotionBehavior extends StarbyListBehavior {
         super.onFinishedConnectionFirst(storedPos, face, storedEntity, playerEntity, remove);
         if (storedPos != null && level.getBlockEntity(storedPos) instanceof PotionJarTile) {
             if (remove) {
-                removeToPos(storedPos, face);
+                removeToPos(storedPos);
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.potion_to_remove"));
             } else {
                 addToPos(storedPos);
