@@ -31,14 +31,14 @@ public class ConvertBlockState extends CrabState {
 
     @Override
     public @Nullable CrabState tick() {
-
+        super.tick();
         if (waitTicks > 0) {
             waitTicks--;
             return null;
         }
 
-        if (BlockUtil.distanceFrom(alakarkinos.blockPosition(), target) > 3) {
-            alakarkinos.getNavigation().moveTo(target.getX() + 0.5, target.getY() + 0.5, target.getZ() + 0.5, 1.0);
+        if (BlockUtil.distanceFrom(alakarkinos.blockPosition(), target) > 2 && ticksRunning < 200) {
+            alakarkinos.getNavigation().moveTo(target.getX() + 0.5, target.getY() + 0.5, target.getZ() + 0.5, 2, 1.0);
             return null;
         }
         if (!didBubbles) {

@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 public class CrabState implements IState<CrabState> {
 
     public Alakarkinos alakarkinos;
-
+    public int ticksRunning;
     public CrabState(Alakarkinos alakarkinos) {
         this.alakarkinos = alakarkinos;
     }
@@ -26,6 +26,7 @@ public class CrabState implements IState<CrabState> {
     @Nullable
     @Override
     public CrabState tick() {
+        ticksRunning++;
         return null;
     }
 

@@ -18,7 +18,7 @@ public class FindBlockState extends CrabState{
             return new DecideCrabActionState(alakarkinos);
         }
 
-        var radius = 8;
+        var radius = 5;
         for(BlockPos pos1 : BlockPos.withinManhattan(pos, radius, 3, radius)){
             var state = alakarkinos.level.getBlockState(pos1);
             var consumable = state.is(BlockTagProvider.ALAKARKINOS_GRAVEL) || state.is(BlockTagProvider.ALAKARKINOS_SAND);

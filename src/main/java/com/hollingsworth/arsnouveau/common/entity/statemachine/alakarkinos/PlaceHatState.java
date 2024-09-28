@@ -27,7 +27,7 @@ public class PlaceHatState extends CrabState{
     public static BlockPos findHatPos(Alakarkinos alakarkinos){
 
         for(BlockPos b : BlockPos.withinManhattan(alakarkinos.getHome(), 3, 1, 3)) {
-            if(alakarkinos.level.getBlockState(b).canBeReplaced()){
+            if(alakarkinos.level.getBlockState(b).canBeReplaced() && !alakarkinos.isColliding(b, BlockRegistry.CRAB_HAT.defaultBlockState())){
                 return b.immutable();
             }
         }
@@ -41,6 +41,7 @@ public class PlaceHatState extends CrabState{
 
     @Override
     public @Nullable CrabState tick() {
+        super.tick();
         if(placeHatPos == null){
             if(placeTries > 4){
                 return new DecideCrabActionState(alakarkinos);
@@ -51,7 +52,7 @@ public class PlaceHatState extends CrabState{
         alakarkinos.lookAt = Vec3.atCenterOf(placeHatPos);
         if(!didHatAnimate){
             alakarkinos.getNavigation().moveTo(placeHatPos.getX() + 0.5, placeHatPos.getY() + 0.5, placeHatPos.getZ(), 1.0);
-            if(BlockUtil.distanceFrom(alakarkinos.blockPosition(), placeHatPos) <= 2){
+            if(BlockUtil.distanceFrom(alakarkinos.blockPosition(), placeHatPos) <= 2 || ticksRunning > 200){
                 didHatAnimate = true;
                 alakarkinos.getNavigation().stop();
                 waitTicks = 20;
