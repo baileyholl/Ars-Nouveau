@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.common.entity.statemachine.alakarkinos;
 
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.entity.Alakarkinos;
+import com.hollingsworth.arsnouveau.setup.config.Config;
 import org.jetbrains.annotations.Nullable;
 
 public class DecideCrabActionState extends CrabState {
@@ -18,7 +20,15 @@ public class DecideCrabActionState extends CrabState {
             return new GetHatState(alakarkinos);
         }
 
-        if(alakarkinos.findBlockCooldown <= 0){
+        if(alakarkinos.needSource() && alakarkinos.level.getGameTime() % 20 == 0){
+            var result = SourceUtil.takeSourceWithParticles(alakarkinos.getHome(), alakarkinos.blockPosition().above(), alakarkinos.level, 5, Config.ALAKARKINOS_SOURCE_COST.get());
+
+            if(result != null ){
+                alakarkinos.setNeedSource(false);
+            }
+        }
+
+        if(!alakarkinos.needSource() && alakarkinos.findBlockCooldown <= 0){
             return new FindBlockState(alakarkinos);
         }
 

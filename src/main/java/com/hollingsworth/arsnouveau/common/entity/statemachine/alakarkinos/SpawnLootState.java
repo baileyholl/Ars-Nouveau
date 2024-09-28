@@ -2,12 +2,12 @@ package com.hollingsworth.arsnouveau.common.entity.statemachine.alakarkinos;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.AlakarkinosRecipe;
 import com.hollingsworth.arsnouveau.common.entity.Alakarkinos;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -23,8 +23,11 @@ import java.util.Optional;
 public class SpawnLootState extends CrabState{
     boolean backToHat;
     int waitTicks;
-    public SpawnLootState(Alakarkinos alakarkinos) {
+    AlakarkinosRecipe recipe;
+
+    public SpawnLootState(Alakarkinos alakarkinos, AlakarkinosRecipe recipe) {
         super(alakarkinos);
+        this.recipe = recipe;
     }
 
     @Override
@@ -71,7 +74,7 @@ public class SpawnLootState extends CrabState{
 
     public ItemStack getLoot() {
         var level = this.alakarkinos.level;
-        LootTable loottable = alakarkinos.level.getServer().reloadableRegistries().getLootTable(BuiltInLootTables.DESERT_PYRAMID_ARCHAEOLOGY);
+        LootTable loottable = alakarkinos.level.getServer().reloadableRegistries().getLootTable(this.recipe.table());
         var player = ANFakePlayer.getPlayer((ServerLevel) level);
         LootParams lootparams = new LootParams.Builder((ServerLevel) level)
                 .withParameter(LootContextParams.ORIGIN, alakarkinos.position())

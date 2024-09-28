@@ -1,9 +1,12 @@
 package com.hollingsworth.arsnouveau.common.entity.statemachine.alakarkinos;
 
+import com.hollingsworth.arsnouveau.api.registry.AlakarkinosConversionRegistry;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.AlakarkinosRecipe;
 import com.hollingsworth.arsnouveau.common.entity.Alakarkinos;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -16,7 +19,7 @@ public class ConvertBlockState extends CrabState {
     boolean didBubbles;
 
     boolean spawnedFlyingItem;
-
+    AlakarkinosRecipe recipe;
     public ConvertBlockState(Alakarkinos alakarkinos, BlockPos target) {
         super(alakarkinos);
         this.target = target;
@@ -41,6 +44,7 @@ public class ConvertBlockState extends CrabState {
             return null;
         }
         if (!didBubbles) {
+
             alakarkinos.getNavigation().stop();
             alakarkinos.lookAt = Vec3.atCenterOf(target);
             didBubbles = true;
@@ -54,6 +58,12 @@ public class ConvertBlockState extends CrabState {
             return new DecideCrabActionState(alakarkinos);
         }
         if (!spawnedFlyingItem) {
+            Block lootBlock = alakarkinos.level.getBlockState(target).getBlock();
+            var res = AlakarkinosConversionRegistry.getConversionResult(lootBlock, alakarkinos.level.random);
+            if(res == null){
+                return new DecideCrabActionState(alakarkinos);
+            }
+            this.recipe = res;
             spawnedFlyingItem = true;
             alakarkinos.setBlowingBubbles(false);
             EntityFlyingItem flyingItem = new EntityFlyingItem(alakarkinos.level, target, hatPos.above());
@@ -62,8 +72,9 @@ public class ConvertBlockState extends CrabState {
             flyingItem.setStack(alakarkinos.level.getBlockState(target).getBlock().asItem().getDefaultInstance());
             alakarkinos.level.setBlockAndUpdate(target, Blocks.AIR.defaultBlockState());
             waitTicks = 60;
+            alakarkinos.setNeedSource(true);
             return null;
         }
-        return new SpawnLootState(alakarkinos);
+        return new SpawnLootState(alakarkinos, recipe);
     }
 }

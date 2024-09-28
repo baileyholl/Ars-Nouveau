@@ -63,6 +63,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     public BlockPos jukeboxPos = null;
     public BlockPos hatPos = null;
     public Vec3 lookAt = null;
+    public static final EntityDataAccessor<Boolean> NEED_SOURCE = SynchedEntityData.defineId(Alakarkinos.class, EntityDataSerializers.BOOLEAN);
 
     public SimpleStateMachine stateMachine = new SimpleStateMachine(new DecideCrabActionState(this));
     int ticksBlowingAnim;
@@ -166,6 +167,15 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         pBuilder.define(HAS_HAT, true);
         pBuilder.define(BLOWING_BUBBLES, false);
         pBuilder.define(BLOWING_AT, Optional.empty());
+        pBuilder.define(NEED_SOURCE, false);
+    }
+
+    public void setNeedSource(boolean needSource) {
+        this.entityData.set(NEED_SOURCE, needSource);
+    }
+
+    public boolean needSource() {
+        return this.entityData.get(NEED_SOURCE);
     }
 
     public boolean hasHat() {
@@ -190,7 +200,9 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-
+        if(this.tamed && this.needSource()){
+            tooltip.add(Component.translatable("ars_nouveau.wixie.need_mana"));
+        }
     }
 
     @Override
@@ -277,6 +289,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         if (this.hatPos != null) {
             pCompound.putLong("hatPos", this.hatPos.asLong());
         }
+        pCompound.putBoolean("needSource", this.needSource());
         return super.save(pCompound);
     }
 
@@ -290,6 +303,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         if (pCompound.contains("hatPos")) {
             this.hatPos = BlockPos.of(pCompound.getLong("hatPos"));
         }
+        this.setNeedSource(pCompound.getBoolean("needSource"));
     }
 
     public enum Animations {
