@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.statemachine.alakarkinos;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.Alakarkinos;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import net.minecraft.core.BlockPos;
@@ -60,14 +59,8 @@ public class ConvertBlockState extends CrabState {
             EntityFlyingItem flyingItem = new EntityFlyingItem(alakarkinos.level, target, hatPos.above());
             flyingItem.getEntityData().set(EntityFlyingItem.IS_BUBBLE, true);
             alakarkinos.level.addFreshEntity(flyingItem);
-            var wasGravel = alakarkinos.level.getBlockState(target).is(BlockTagProvider.ALAKARKINOS_GRAVEL);
             flyingItem.setStack(alakarkinos.level.getBlockState(target).getBlock().asItem().getDefaultInstance());
             alakarkinos.level.setBlockAndUpdate(target, Blocks.AIR.defaultBlockState());
-//            alakarkinos.level.setBlock(target, wasGravel ? Blocks.SUSPICIOUS_GRAVEL.defaultBlockState() : Blocks.SUSPICIOUS_SAND.defaultBlockState(), 3);
-//            if(alakarkinos.level.getBlockEntity(target) instanceof BrushableBlockEntityAccessor brushableBlock){
-//                brushableBlock.setLootTable(BuiltInLootTables.DESERT_PYRAMID_ARCHAEOLOGY);
-//                brushableBlock.setLootTableSeed(alakarkinos.getRandom().nextLong());
-//            }
             waitTicks = 60;
             return null;
         }

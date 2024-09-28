@@ -29,6 +29,7 @@ public class RecipeRegistry {
     public static final String TOME_DATAPACK = "caster_tome";
     public static final String SUMMON_RITUAL_DATAPACK = "summon_ritual";
     public static final String BUDDING_CONVERSION_RECIPE_ID = "budding_conversion";
+    public static final String ALAKARKINOS_RECIPE_ID = "alakarkinos_conversion";
     public static final String DISPEL_ENTITY_RECIPE_ID = "dispel_entity";
     public static final String SCRY_RITUAL_RECIPE_ID = "scry_ritual";
     public static final String BOOK_UPGRADE_RECIPE_ID = "book_upgrade";
@@ -80,6 +81,8 @@ public class RecipeRegistry {
 
     public static final DeferredHolder<RecipeType<?>, ModRecipeType<BuddingConversionRecipe>> BUDDING_CONVERSION_TYPE = RECIPE_TYPES.register(BUDDING_CONVERSION_RECIPE_ID, () -> new ModRecipeType<>());
     public static final DeferredHolder<RecipeSerializer<?>, BuddingConversionRecipe.Serializer> BUDDING_CONVERSION_SERIALIZER = RECIPE_SERIALIZERS.register(BUDDING_CONVERSION_RECIPE_ID, () -> new BuddingConversionRecipe.Serializer());
+    public static final DeferredHolder<RecipeType<?>, ModRecipeType<AlakarkinosRecipe>> ALAKARKINOS_RECIPE_TYPE = RECIPE_TYPES.register(ALAKARKINOS_RECIPE_ID, () -> new ModRecipeType<>());
+    public static final DeferredHolder<RecipeSerializer<?>, AlakarkinosRecipe.Serializer> ALAKARKINOS_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register(ALAKARKINOS_RECIPE_ID, () -> new AlakarkinosRecipe.Serializer());
     public static final DeferredHolder<RecipeType<?>, ModRecipeType<DispelEntityRecipe>> DISPEL_ENTITY_TYPE = RECIPE_TYPES.register(DISPEL_ENTITY_RECIPE_ID, () -> new ModRecipeType<>());
     public static final DeferredHolder<RecipeSerializer<?>, DispelEntityRecipe.Serializer> DISPEL_ENTITY_SERIALIZER = RECIPE_SERIALIZERS.register(DISPEL_ENTITY_RECIPE_ID, () -> new DispelEntityRecipe.Serializer());
     public static final DeferredHolder<RecipeType<?>, ModRecipeType<ScryRitualRecipe>> SCRY_RITUAL_TYPE = RECIPE_TYPES.register(SCRY_RITUAL_RECIPE_ID, () -> new ModRecipeType<>());

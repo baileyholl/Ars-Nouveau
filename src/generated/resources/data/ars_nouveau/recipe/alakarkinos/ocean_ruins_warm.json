@@ -1,0 +1,6 @@
+{
+  "type": "ars_nouveau:alakarkinos_conversion",
+  "input": "minecraft:sand",
+  "table": "minecraft:archaeology/ocean_ruin_warm",
+  "weight": 25
+}

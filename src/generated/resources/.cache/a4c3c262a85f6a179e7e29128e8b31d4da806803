@@ -1,4 +1,4 @@
-// 1.21.1	2024-09-28T11:08:47.5942319	Ars Nouveau Item Models
+// 1.21.1	2024-09-28T13:27:18.715855	Ars Nouveau Item Models
 11ee554b11a3a830e89b742762e5b754c2ecb5ee assets/ars_nouveau/models/item/agronomic_sourcelink.json
 533b61aabca43719a266cddda3b7ec426135e5e6 assets/ars_nouveau/models/item/alakarkinos_hat.json
 339a05323ebef7efc5c70db708a2e7a24708e9bc assets/ars_nouveau/models/item/alchemical_sourcelink.json
@@ -9,7 +9,7 @@ f9eb0905e283cab647712716770a244a1bdb25f0 assets/ars_nouveau/models/item/bastion_
 84bdd95fc8506c6d9054e5ffb87c24c20b2ae628 assets/ars_nouveau/models/item/blank_thread.json
 a81ea25c1312389ff436100c29d1ae20d35b0a40 assets/ars_nouveau/models/item/blue_sbed.json
 3b7dc3023a667efe5ff64cb937ee25047a853697 assets/ars_nouveau/models/item/bombegranate_pod.json
-a163c9ce1e63e428f3fa804b66e491b455f18540 assets/ars_nouveau/models/item/bubble.json
+86e2436793db61ff59fd3404138dc41d98dd94f3 assets/ars_nouveau/models/item/bubble.json
 23781f068b9b788d0077a478b0470af583d759f5 assets/ars_nouveau/models/item/experience_gem.json
 70d392c53a05ad554f3f3b1d3faa5fd1445e2a77 assets/ars_nouveau/models/item/falseweave.json
 5f620c31cc6d4f1a569dbd943e5a45e75217303a assets/ars_nouveau/models/item/familiar_amethyst_golem.json

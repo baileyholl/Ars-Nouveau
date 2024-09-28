@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.statemachine.alakarkinos;
 
-import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
+import com.hollingsworth.arsnouveau.api.registry.AlakarkinosConversionRegistry;
 import com.hollingsworth.arsnouveau.common.entity.Alakarkinos;
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +21,7 @@ public class FindBlockState extends CrabState{
         var radius = 5;
         for(BlockPos pos1 : BlockPos.withinManhattan(pos, radius, 3, radius)){
             var state = alakarkinos.level.getBlockState(pos1);
-            var consumable = state.is(BlockTagProvider.ALAKARKINOS_GRAVEL) || state.is(BlockTagProvider.ALAKARKINOS_SAND);
+            var consumable = AlakarkinosConversionRegistry.isConvertable(state.getBlock());
             if(!consumable)
                 continue;
             var path = alakarkinos.getNavigation().createPath(pos1, 2);
