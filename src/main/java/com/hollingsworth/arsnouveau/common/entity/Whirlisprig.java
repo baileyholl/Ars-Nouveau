@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
-import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.util.LevelEntityMap;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
@@ -16,6 +15,7 @@ import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.FollowMobGoal
 import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.FollowPlayerGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.InspectPlantGoal;
 import com.hollingsworth.arsnouveau.common.items.data.ItemScrollData;
+import com.hollingsworth.arsnouveau.common.items.data.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -67,7 +67,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, ITooltipProvider, IDispellable, IVariantColorProvider<Whirlisprig> {
+public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, ITooltipProvider, IDispellable {
     AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
 
     public static LevelEntityMap WHIRLI_MAP = new LevelEntityMap();
@@ -121,11 +121,11 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
         return super.mobInteract(player, hand);
     }
 
-    public String getColor(Whirlisprig entity) {
+    public String getColor() {
         return this.entityData.get(COLOR);
     }
 
-    public void setColor(String color, Whirlisprig entity) {
+    public void setColor(String color) {
         this.entityData.set(COLOR, color);
     }
 
@@ -151,7 +151,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
 
         ItemStack stack = player.getItemInHand(hand);
         String color = getColorFromStack(stack);
-        if (color != null && !getColor(this).equals(color)) {
+        if (color != null && !getColor().equals(color)) {
             this.entityData.set(COLOR, color);
             stack.shrink(1);
             return InteractionResult.SUCCESS;
@@ -308,6 +308,8 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     public void die(DamageSource source) {
         if (!level.isClientSide && isTamed()) {
             ItemStack stack = new ItemStack(ItemsRegistry.WHIRLISPRIG_CHARM);
+            PersistentFamiliarData familiarData = new PersistentFamiliarData().setName(this.getCustomName()).setColor(getColor());
+            stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, familiarData);
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
         }
         super.die(source);
@@ -443,8 +445,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
         return this.isTamed();
     }
 
-    @Override
-    public ResourceLocation getTexture(Whirlisprig entity) {
-        return ArsNouveau.prefix( "textures/entity/whirlisprig_" + (getColor(entity).isEmpty() ? "summer" : getColor(entity)) + ".png");
+    public ResourceLocation getTexture() {
+        return ArsNouveau.prefix( "textures/entity/whirlisprig_" + (getColor().isEmpty() ? "summer" : getColor()) + ".png");
     }
 }

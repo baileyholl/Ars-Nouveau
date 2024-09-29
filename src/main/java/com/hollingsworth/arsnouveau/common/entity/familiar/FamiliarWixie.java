@@ -129,8 +129,7 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
         }
     }
 
-    @Override
-    public ResourceLocation getTexture(FamiliarEntity entity) {
+    public ResourceLocation getTexture() {
         String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "blue";

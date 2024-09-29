@@ -112,11 +112,11 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(3, new ConvertBuddingGoal(this, () -> convertCooldown <= 0 && getHome() != null && getHeldStack().isEmpty()));
-        this.goalSelector.addGoal(4, new GrowClusterGoal(this, () -> growCooldown <= 0 && getHome() != null && getHeldStack().isEmpty()));
-        this.goalSelector.addGoal(5, new HarvestClusterGoal(this, () -> harvestCooldown <= 0 && getHome() != null && !isImbueing() && getHeldStack().isEmpty()));
+        this.goalSelector.addGoal(3, new ConvertBuddingGoal(this, () -> convertCooldown <= 0 && getHome() != null && getMainHandItem().isEmpty()));
+        this.goalSelector.addGoal(4, new GrowClusterGoal(this, () -> growCooldown <= 0 && getHome() != null && getMainHandItem().isEmpty()));
+        this.goalSelector.addGoal(5, new HarvestClusterGoal(this, () -> harvestCooldown <= 0 && getHome() != null && !isImbueing() && getMainHandItem().isEmpty()));
         this.goalSelector.addGoal(2, new PickupAmethystGoal(this, () -> getHome() != null && pickupCooldown <= 0));
-        this.goalSelector.addGoal(2, new DepositAmethystGoal(this, () -> getHome() != null && !getHeldStack().isEmpty()));
+        this.goalSelector.addGoal(2, new DepositAmethystGoal(this, () -> getHome() != null && !getMainHandItem().isEmpty()));
     }
 
     @Override
@@ -151,10 +151,6 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
 
     public void setHeldStack(ItemStack stack) {
         this.setItemSlot(EquipmentSlot.MAINHAND, stack);
-    }
-
-    public ItemStack getHeldStack() {
-        return this.getMainHandItem();
     }
 
     public boolean isStomping() {
@@ -229,8 +225,8 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
         if (!level.isClientSide) {
             ItemStack stack = new ItemStack(ItemsRegistry.AMETHYST_GOLEM_CHARM.get());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
-            if (this.getHeldStack() != null)
-                level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getHeldStack()));
+            if (this.getMainHandItem() != null)
+                level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getMainHandItem()));
         }
         super.die(source);
     }
@@ -248,7 +244,7 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
         if (!level.isClientSide) {
             ItemStack stack = new ItemStack(ItemsRegistry.AMETHYST_GOLEM_CHARM.get());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack.copy()));
-            stack = getHeldStack();
+            stack = getMainHandItem();
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             this.remove(RemovalReason.DISCARDED);
@@ -265,8 +261,8 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
         tag.putInt("harvest", harvestCooldown);
         tag.putInt("pickup", pickupCooldown);
 
-        if (getHeldStack() != null && !getHeldStack().isEmpty()) {
-            Tag itemTag = getHeldStack().save(level.registryAccess());
+        if (getMainHandItem() != null && !getMainHandItem().isEmpty()) {
+            Tag itemTag = getMainHandItem().save(level.registryAccess());
             tag.put("held", itemTag);
         }
     }
@@ -299,12 +295,12 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
                 return PlayState.CONTINUE;
             }
             if (e.isMoving()) {
-                String anim = getHeldStack().isEmpty() ? "run" : "run_carry";
+                String anim = getMainHandItem().isEmpty() ? "run" : "run_carry";
                 controller.setAnimation(RawAnimation.begin().thenPlay(anim));
                 return PlayState.CONTINUE;
             }
 
-            if (!getHeldStack().isEmpty()) {
+            if (!getMainHandItem().isEmpty()) {
                 controller.setAnimation(RawAnimation.begin().thenPlay("carry_idle"));
                 return PlayState.CONTINUE;
             }

@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
-import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -47,7 +46,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
-public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IAnimationListener, IDispellable, IVariantColorProvider<EntityWixie> {
+public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IAnimationListener, IDispellable {
     AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
     public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(EntityWixie.class, EntityDataSerializers.STRING);
 
@@ -227,21 +226,19 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
         return true;
     }
 
-    @Override
-    public ResourceLocation getTexture(EntityWixie entity) {
-        String color = getColor(entity).toLowerCase();
+    public ResourceLocation getTexture() {
+        String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "blue";
         return ArsNouveau.prefix( "textures/entity/wixie_" + color + ".png");
     }
 
-    @Override
-    public String getColor(EntityWixie entityWixie) {
+    public String getColor() {
         return this.getEntityData().get(COLOR);
     }
 
-    @Override
-    public void setColor(String color, EntityWixie entityWixie) {
+
+    public void setColor(String color) {
         this.getEntityData().set(COLOR, color);
     }
 

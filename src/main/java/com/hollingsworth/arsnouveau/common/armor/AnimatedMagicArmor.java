@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.armor;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.perk.ITickablePerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.perk.PerkInstance;
@@ -43,7 +42,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem, IVariantColorProvider<ItemStack> {
+public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem {
     public GeoModel<AnimatedMagicArmor> model;
 
     public AnimatedMagicArmor(Holder<ArmorMaterial> materialIn, ArmorItem.Type slot, Properties builder, GeoModel<AnimatedMagicArmor> model) {
@@ -183,12 +182,7 @@ public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem, 
         return ArsNouveau.prefix( "textures/" + genericModel.textPathRoot + "/" + genericModel.name + "_" + this.getColor(stack) + ".png");
     }
 
-    @Override
-    public void setColor(String color, ItemStack armor) {
 
-    }
-
-    @Override
     public String getColor(ItemStack object) {
         var perkHolder = PerkUtil.getPerkHolder(object);
         if(!(perkHolder instanceof ArmorPerkHolder data)){

@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
-import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
@@ -59,7 +58,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipProvider, IWandable, GeoEntity, IVariantColorProvider<EntityBookwyrm> {
+public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipProvider, IWandable, GeoEntity {
 
     public static final EntityDataAccessor<ItemStack> HELD_ITEM = SynchedEntityData.defineId(EntityBookwyrm.class, EntityDataSerializers.ITEM_STACK);
     public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(EntityBookwyrm.class, EntityDataSerializers.STRING);
@@ -93,7 +92,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
             DyeColor color = DyeColor.getColor(stack);
             if (color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(COLORS).contains(color.getName()))
                 return InteractionResult.SUCCESS;
-            setColor(color.getName(), this);
+            setColor(color.getName());
             player.getMainHandItem().shrink(1);
             return InteractionResult.SUCCESS;
         }
@@ -220,7 +219,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
 
     public ItemStack toCharm(){
         ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM.get());
-        PersistentFamiliarData data = new PersistentFamiliarData(getCustomName(), getColor(this), getHeldStack());
+        PersistentFamiliarData data = new PersistentFamiliarData(getCustomName(), getColor(), getHeldStack());
         stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, data);
         return stack;
     }
@@ -229,7 +228,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
         PersistentFamiliarData data = stack.get(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA);
         if(data == null)
             return;
-        setColor(data.color(), this);
+        setColor(data.color());
         setCustomName(data.name());
     }
 
@@ -324,21 +323,18 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
 
     public static String[] COLORS = {"purple", "green", "blue", "black", "red", "white"};
 
-    @Override
-    public ResourceLocation getTexture(EntityBookwyrm entity) {
-        String color = getColor(entity).toLowerCase();
+    public ResourceLocation getTexture() {
+        String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "blue";
         return ArsNouveau.prefix( "textures/entity/book_wyrm_" + color + ".png");
     }
 
-    @Override
-    public String getColor(EntityBookwyrm entityBookwyrm) {
+    public String getColor() {
         return getEntityData().get(EntityBookwyrm.COLOR);
     }
 
-    @Override
-    public void setColor(String color, EntityBookwyrm entityBookwyrm) {
+    public void setColor(String color) {
         getEntityData().set(EntityBookwyrm.COLOR, color);
     }
 }

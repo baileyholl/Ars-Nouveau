@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
-import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.ChangeableBehavior;
 import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
@@ -86,7 +85,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.*;
 
-public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, ITagSyncable, IVariantColorProvider<Starbuncle> {
+public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, ITagSyncable {
 
 
     @Deprecated
@@ -678,21 +677,10 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         this.entityData.set(COLOR, data.color);
     }
 
-    @Override
-    public void setColor(String color, Starbuncle object) {
-        setColor(color);
-    }
-
-    @Override
-    public String getColor(Starbuncle object) {
-        return this.entityData.get(COLOR);
-    }
-
     public String getColor() {
         return this.entityData.get(COLOR);
     }
 
-    @Override
     public ResourceLocation getTexture(Starbuncle entity) {
         if (entity.getName().getString().equals("Gootastic")) {
             return ArsNouveau.prefix("textures/entity/starbuncle_goo.png");
@@ -701,7 +689,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         if(customTexture != null){
             return ArsNouveau.prefix("textures/entity/" + customTexture + ".png");
         }
-        String color = getColor(entity);
+        String color = getColor();
         if (color.isEmpty()) color = DyeColor.ORANGE.getName();
 
         return ArsNouveau.prefix("textures/entity/starbuncle_" + color.toLowerCase() + ".png");
