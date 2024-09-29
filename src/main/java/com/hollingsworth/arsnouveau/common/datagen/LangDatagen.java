@@ -1304,6 +1304,8 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.alakarkinos_hat", "Alakarkinos Hat");
         add("entity.ars_nouveau.bubble", "Bubble");
         add("entity.ars_nouveau.alakarkinos", "Alakarkinos");
+        add("item.ars_nouveau.alakarkinos_charm", "Alakarkinos Charm");
+        add("item.ars_nouveau.alakarkinos_token", "Alakarkinos Token");
     }
 
     @Override

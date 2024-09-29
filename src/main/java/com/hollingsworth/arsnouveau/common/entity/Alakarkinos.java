@@ -13,9 +13,13 @@ import com.hollingsworth.arsnouveau.common.entity.debug.IDebugger;
 import com.hollingsworth.arsnouveau.common.entity.debug.IDebuggerProvider;
 import com.hollingsworth.arsnouveau.common.entity.goal.ConditionalLookAtMob;
 import com.hollingsworth.arsnouveau.common.entity.goal.LookAtTarget;
+import com.hollingsworth.arsnouveau.common.entity.goal.UntamedFindItemGoal;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.SimpleStateMachine;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.alakarkinos.DecideCrabActionState;
+import com.hollingsworth.arsnouveau.common.items.data.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -31,8 +35,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -71,7 +79,13 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     public Alakarkinos(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         reloadGoals();
-        this.tamed = true;
+    }
+
+    public Alakarkinos(Level pLevel, BlockPos pos, boolean tamed) {
+        this(ModEntities.ALAKARKINOS_TYPE.get(), pLevel);
+        this.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+        this.tamed = tamed;
+        reloadGoals();
     }
 
     @Override
@@ -132,6 +146,22 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     }
 
 
+    @Override
+    public void die(DamageSource source) {
+        if (!level.isClientSide && tamed) {
+            ItemStack stack = new ItemStack(ItemsRegistry.ALAKARKINOS_CHARM);
+            PersistentFamiliarData familiarData = new PersistentFamiliarData().setName(this.getName()).setColor(getColor());
+            stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, familiarData);
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
+        }
+        super.die(source);
+    }
+
+    public String getColor(){
+        return "red";
+    }
+
+
     // Cannot add conditional goals in RegisterGoals as it is final and called during the MobEntity super.
     protected void reloadGoals() {
         if (this.level.isClientSide())
@@ -145,12 +175,18 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     public List<WrappedGoal> getGoals() {
         List<WrappedGoal> list = new ArrayList<>();
         list.add(new WrappedGoal(0, new FloatGoal(this)));
-        if (!tamed) {
+        if (tamed) {
             list.add(new WrappedGoal(4, new ConditionalLookAtMob(this, Player.class, 3.0F, 0.02F, () -> this.lookAt != null)));
             list.add(new WrappedGoal(4, new ConditionalLookAtMob(this, Mob.class, 8.0F,  () -> this.lookAt != null)));
 //            list.add(new WrappedGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.2D)));
             list.add(new WrappedGoal(0, new FloatGoal(this)));
             list.add(new WrappedGoal(4, new LookAtTarget(this, 8.0f, () -> this.lookAt)));
+        }else{
+            list.add(new WrappedGoal(1, new UntamedFindItemGoal(this, () -> !this.getMainHandItem().isEmpty(), (e) -> true)));
+            list.add(new WrappedGoal(4, new LookAtPlayerGoal(this, Player.class, 3.0F, 0.02F)));
+            list.add(new WrappedGoal(4, new LookAtPlayerGoal(this, Mob.class, 8.0F)));
+            list.add(new WrappedGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.2D)));
+            list.add(new WrappedGoal(0, new FloatGoal(this)));
         }
         return list;
     }
@@ -215,6 +251,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
 
     @Override
     public boolean onDispel(@NotNull LivingEntity caster) {
+
         return false;
     }
 
@@ -290,6 +327,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
             pCompound.putLong("hatPos", this.hatPos.asLong());
         }
         pCompound.putBoolean("needSource", this.needSource());
+        pCompound.putBoolean("tamed", this.tamed);
         return super.save(pCompound);
     }
 
@@ -303,6 +341,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         if (pCompound.contains("hatPos")) {
             this.hatPos = BlockPos.of(pCompound.getLong("hatPos"));
         }
+        this.tamed = pCompound.getBoolean("tamed");
         this.setNeedSource(pCompound.getBoolean("needSource"));
     }
 
