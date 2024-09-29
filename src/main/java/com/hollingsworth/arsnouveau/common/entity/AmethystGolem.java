@@ -16,7 +16,9 @@ import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem.*;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.MinecoloniesAdvancedPathNavigate;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingStuckHandler;
+import com.hollingsworth.arsnouveau.common.items.data.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -228,6 +230,8 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
     public void die(DamageSource source) {
         if (!level.isClientSide) {
             ItemStack stack = new ItemStack(ItemsRegistry.AMETHYST_GOLEM_CHARM.get());
+            PersistentFamiliarData familiarData = new PersistentFamiliarData().setName(this.getName());
+            stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, familiarData);
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             if (this.getHeldStack() != null)
                 level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getHeldStack()));

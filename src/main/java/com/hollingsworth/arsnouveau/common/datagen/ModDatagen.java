@@ -45,6 +45,7 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new CasterTomeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new SummonRitualProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new BuddingConversionProvider(event.getGenerator()));
+        event.getGenerator().addProvider(event.includeServer(), new AlakarkinosRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new ScryRitualProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new OneOffRecipesProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new DispelEntityProvider(event.getGenerator()));

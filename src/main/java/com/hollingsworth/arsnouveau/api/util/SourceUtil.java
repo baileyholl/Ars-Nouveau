@@ -53,13 +53,18 @@ public class SourceUtil {
     }
 
     public static @Nullable ISpecialSourceProvider takeSourceWithParticles(BlockPos pos, Level level, int range, int source){
+        return takeSourceWithParticles(pos, pos, level, range, source);
+    }
+
+    public static @Nullable ISpecialSourceProvider takeSourceWithParticles(BlockPos pos, BlockPos particlesTo, Level level, int range, int source){
         ISpecialSourceProvider result = takeSource(pos, level, range, source);
         if(result != null){
-            EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(level, result.getCurrentPos(), pos);
+            EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(level, result.getCurrentPos(), particlesTo);
             level.addFreshEntity(aoeProjectile);
         }
         return result;
     }
+
 
     /**
      * Searches for nearby mana jars that have enough mana.
