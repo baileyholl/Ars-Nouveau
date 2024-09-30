@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.event.SpellDamageEvent;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.util.DamageUtil;
-import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
 import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
@@ -13,15 +12,9 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 public interface IDamageEffect {
 
@@ -68,14 +61,10 @@ public interface IDamageEffect {
         SpellDamageEvent.Post postDamage = new SpellDamageEvent.Post(source, shooter, entity, totalDamage, spellContext);
         NeoForge.EVENT_BUS.post(postDamage);
 
-        if (entity instanceof
-                    LivingEntity mob && mob.getHealth() <= 0 && !mob.isRemoved() && stats.hasBuff(AugmentFortune.INSTANCE)) {
-            Player playerContext = shooter instanceof Player player ? player : ANFakePlayer.getPlayer(server);
-            int looting = stats.getBuffCount(AugmentFortune.INSTANCE);
-            LootParams lootContext = LootUtil.getLootingContext(server, shooter, mob, looting, world.damageSources().playerAttack(playerContext)).create(LootContextParamSets.ENTITY);
-            LootTable loottable = server.getServer().reloadableRegistries().getLootTable( mob.getLootTable());
-            List<ItemStack> items = loottable.getRandomItems(lootContext);
-            items.forEach(mob::spawnAtLocation);
+        // Make sure your DamageSource is an instance of SpellDamageSource,
+        // made with DamageUtil.source or manually, to let us apply the luck augment during loot generation
+        if (source instanceof DamageUtil.SpellDamageSource spellSource) {
+            spellSource.setLuckLevel(stats.getBuffCount(AugmentFortune.INSTANCE));
         }
 
         return true;
