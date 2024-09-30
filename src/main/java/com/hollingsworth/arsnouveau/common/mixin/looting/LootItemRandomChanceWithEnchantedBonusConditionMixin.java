@@ -1,8 +1,7 @@
 package com.hollingsworth.arsnouveau.common.mixin.looting;
 
+import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.util.DamageUtil;
-import com.hollingsworth.arsnouveau.api.util.PerkUtil;
-import com.hollingsworth.arsnouveau.common.perk.LootingPerk;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -26,7 +25,7 @@ public class LootItemRandomChanceWithEnchantedBonusConditionMixin {
             )
     )
     private int ars_nouveau$adjustLooting(Holder<Enchantment> enchantment, LivingEntity attacker, Operation<Integer> original, @Local(argsOnly = true) LootContext context) {
-        int add = PerkUtil.countForPerk(LootingPerk.INSTANCE, attacker);
+        int add = (int) attacker.getAttributeValue(PerkAttributes.DRYGMY);
         int spellLuck = context.getParam(LootContextParams.DAMAGE_SOURCE) instanceof DamageUtil.SpellDamageSource spellDamageSource ? spellDamageSource.getLuckLevel() : 0;
 
         // TODO: add FamilarEntity check
