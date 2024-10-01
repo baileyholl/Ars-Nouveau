@@ -24,10 +24,9 @@ public class EnchantedCountIncreaseFunctionMixin {
                     target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getEnchantmentLevel(Lnet/minecraft/core/Holder;Lnet/minecraft/world/entity/LivingEntity;)I"
             )
     )
-    private int ars_nouveau$lootingPerk(Holder<Enchantment> enchantment, LivingEntity attacker, Operation<Integer> original, @Local(argsOnly = true) LootContext context) {
-        int add = (int) attacker.getAttributeValue(PerkAttributes.DRYGMY);
+    private int ars_nouveau$adjustLooting(Holder<Enchantment> enchantment, LivingEntity attacker, Operation<Integer> original, @Local(argsOnly = true) LootContext context) {
+        int perkLooting = (int) attacker.getAttributeValue(PerkAttributes.DRYGMY);
         int spellLuck = context.getParamOrNull(LootContextParams.DAMAGE_SOURCE) instanceof DamageUtil.SpellDamageSource spellDamageSource ? spellDamageSource.getLuckLevel() : 0;
-        // TODO: add FamilarEntity check
-        return Math.max(spellLuck, original.call(enchantment, attacker)) + add;
+        return Math.max(spellLuck, original.call(enchantment, attacker)) + perkLooting;
     }
 }

@@ -4,15 +4,18 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.event.SpellDamageEvent;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.util.DamageUtil;
+import com.hollingsworth.arsnouveau.common.mixin.looting.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
 import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,6 +47,12 @@ public interface IDamageEffect {
         if (stats.isRandomized())
             totalDamage += randomRolls(stats, server);
 
+        ///Make sure your DamageSource is an instance of SpellDamageSource,made with [#source(LevelAccessor,ResourceKey)] or manually,
+        ///The luck augment will be used during loot generation [LootItemRandomChanceWithEnchantedBonusConditionMixin] and [EnchantedCountIncreaseFunctionMixin]
+        if (source instanceof DamageUtil.SpellDamageSource spellSource) {
+            spellSource.setLuckLevel(stats.getBuffCount(AugmentFortune.INSTANCE));
+        }
+
         SpellDamageEvent.Pre preDamage = new SpellDamageEvent.Pre(source, shooter, entity, totalDamage, spellContext);
         NeoForge.EVENT_BUS.post(preDamage);
 
@@ -60,12 +69,6 @@ public interface IDamageEffect {
 
         SpellDamageEvent.Post postDamage = new SpellDamageEvent.Post(source, shooter, entity, totalDamage, spellContext);
         NeoForge.EVENT_BUS.post(postDamage);
-
-        // Make sure your DamageSource is an instance of SpellDamageSource,
-        // made with DamageUtil.source or manually, to let us apply the luck augment during loot generation
-        if (source instanceof DamageUtil.SpellDamageSource spellSource) {
-            spellSource.setLuckLevel(stats.getBuffCount(AugmentFortune.INSTANCE));
-        }
 
         return true;
     }
