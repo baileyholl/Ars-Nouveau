@@ -30,6 +30,7 @@ public class DrygmyCharm extends AbstractSummonCharm {
     public InteractionResult useOnSummonTile(UseOnContext context, Level world, SummoningTile tile, BlockPos pos) {
         if (tile instanceof DrygmyTile) {
             EntityDrygmy drygmy = new EntityDrygmy(world, true);
+            drygmy.readCharm(context.getItemInHand());
             drygmy.setPos(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
             world.addFreshEntity(drygmy);
             drygmy.homePos = new BlockPos(pos);

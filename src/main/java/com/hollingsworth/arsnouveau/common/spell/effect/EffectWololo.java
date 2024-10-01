@@ -131,7 +131,7 @@ public class EffectWololo extends AbstractEffect {
                     if (result.isEmpty() || !(result.getItem() instanceof BlockItem)) return;
                 }
                 blockItem = (BlockItem) result.getItem();
-                world.setBlockAndUpdate(blockPos, blockItem.getBlock().defaultBlockState());
+                world.setBlockAndUpdate(blockPos, blockItem.getBlock().withPropertiesOf(world.getBlockState(blockPos)));
             }
         }
     }
