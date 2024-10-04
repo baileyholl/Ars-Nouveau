@@ -151,6 +151,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider, IWand
     public void generateItems() {
         List<ItemStack> stacks = new ArrayList<>();
         ANFakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) level);
+        fakePlayer.setCustomName(Component.literal("Drygmy"));
         DamageSource damageSource = level.damageSources().playerAttack(fakePlayer);
         int numberItems = Config.DRYGMY_BASE_ITEM.get() + this.bonus;
         int exp = 0;
