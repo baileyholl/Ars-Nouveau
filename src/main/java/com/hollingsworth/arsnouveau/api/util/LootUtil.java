@@ -49,7 +49,7 @@ public class LootUtil {
         return new LootParams.Builder(world)
                 .withParameter(LootContextParams.THIS_ENTITY, slainEntity)
                 .withParameter(LootContextParams.ORIGIN, new Vec3(slainEntity.getX(), slainEntity.getY(), slainEntity.getZ()))
-                .withParameter(LootContextParams.LAST_DAMAGE_PLAYER, ANFakePlayer.getPlayer(world))
+                .withParameter(LootContextParams.LAST_DAMAGE_PLAYER, ANFakePlayer.getOrFakePlayer(world, player))
                 .withParameter(LootContextParams.DAMAGE_SOURCE, source).withOptionalParameter(LootContextParams.ATTACKING_ENTITY, source.getEntity())
                 .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, source.getDirectEntity())
                 .withParameter(LootContextParams.ATTACKING_ENTITY, player).withLuck(player instanceof Player ? ((Player) player).getLuck() : 1.0f)
