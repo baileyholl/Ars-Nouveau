@@ -29,7 +29,7 @@
     "9eff9013-f8a6-4a1a-9142-32d94d60d8c1", "671ffc64-8b5b-4ac2-87b1-138951be701e","aac7171c-9bac-42a8-b094-2363599dae59",
     "47f9c9d2-89b2-4987-af6b-31e7b1f74da2", "ec77d204-6e8b-4dac-8b66-71b2a03c5e65", "98e72ae4-10c9-4696-970b-804eb9b176ae",
     "0421ad40-0881-47d4-b086-38c90c1ab62f", "a8875ecb-6e84-4c6d-ac68-3251b945d963", "cf1f7109-266d-4e5a-8a8a-d93684cf60b9",
-  "e7976ce2-3344-4499-8b15-91adddc5ed0f", "d29025d7-cf5d-4976-8a65-fc3bdcc991b5"],
+  "e7976ce2-3344-4499-8b15-91adddc5ed0f", "d29025d7-cf5d-4976-8a65-fc3bdcc991b5", "8ced638c-eac7-433e-b794-54c0f23807a4"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -456,6 +456,11 @@
       "adopter": "zeroregard",
       "bio": "A timid yet playful starbuncle, soft as clouds to the touch, with a lingering, soothing fragrance of old books and vanilla. Though shy at first, its eyes eventually widen as it bursts to life in play, darting about with boundless energy and joy.",
       "color": "yellow"
+    },{
+      "name": "Brandy",
+      "adopter": "mluosed",
+      "color": "brown",
+      "bio": "This Starbuncle likes to walk in the cool forest in the fall,staying at home in the winter and watching others stew meat"
     }
   ]
 }
