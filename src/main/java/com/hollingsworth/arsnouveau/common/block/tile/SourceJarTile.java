@@ -32,11 +32,8 @@ public class SourceJarTile extends AbstractSourceMachine implements ITooltipProv
         super.updateBlock();
         BlockState state = level.getBlockState(worldPosition);
         int fillState = 0;
-        if (this.getSource() > 0 && this.getSource() < 1000)
-            fillState = 1;
-        else if (this.getSource() != 0) {
-            fillState = (this.getSource() / 1000) + 1;
-        }
+        if (this.getSource() > 0 && getMaxSource() != 0)
+            fillState = 1 + 10 * (int) Math.clamp((float) this.getSource() / getMaxSource(), 0, 1);
         if (state.hasProperty(SourceJar.fill))
             level.setBlock(worldPosition, state.setValue(SourceJar.fill, fillState), 3);
         return true;

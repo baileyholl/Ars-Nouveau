@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
-import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.ChangeableBehavior;
 import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
@@ -86,7 +85,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.*;
 
-public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, ITagSyncable, IVariantColorProvider<Starbuncle> {
+public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, ITagSyncable {
 
 
     @Deprecated
@@ -678,49 +677,45 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         this.entityData.set(COLOR, data.color);
     }
 
-    @Override
-    public void setColor(String color, Starbuncle object) {
-        setColor(color);
-    }
-
-    @Override
-    public String getColor(Starbuncle object) {
-        return this.entityData.get(COLOR);
-    }
-
     public String getColor() {
         return this.entityData.get(COLOR);
     }
 
-    @Override
-    public ResourceLocation getTexture(Starbuncle entity) {
-        if (entity.getName().getString().equals("Gootastic")) {
-            return ArsNouveau.prefix("textures/entity/starbuncle_goo.png");
+    public static Map<String, ResourceLocation> TEXTURES = new HashMap<>(){
+        {
+            put("Gootastic", ArsNouveau.prefix("textures/entity/starbuncle_goo.png"));
+            put("Sir Squirrely", ArsNouveau.prefix("textures/entity/sir_squirrely.png"));
+            put("Zieg", ArsNouveau.prefix("textures/entity/zieg.png"));
+            put("Xacris", ArsNouveau.prefix("textures/entity/xacris.png"));
+            for(DyeColor color : DyeColor.values()) {
+                put(color.getName(), ArsNouveau.prefix("textures/entity/starbuncle_" + color.getName().toLowerCase() + ".png"));
+            }
         }
-        var customTexture = getCustomBuncle();
-        if(customTexture != null){
-            return ArsNouveau.prefix("textures/entity/" + customTexture + ".png");
-        }
-        String color = getColor(entity);
-        if (color.isEmpty()) color = DyeColor.ORANGE.getName();
+    };
 
-        return ArsNouveau.prefix("textures/entity/starbuncle_" + color.toLowerCase() + ".png");
+    public static Map<String, ResourceLocation> MODELS = new HashMap<>(){
+        {
+            put("Gootastic", ArsNouveau.prefix("geo/goobuncle.geo.json"));
+            put("Sir Squirrely", ArsNouveau.prefix("geo/sir_squirrely.geo.json"));
+            put("Zieg", ArsNouveau.prefix("geo/zieg.geo.json"));
+            put("Xacris", ArsNouveau.prefix("geo/xacris.geo.json"));
+            put("starbuncle", ArsNouveau.prefix("geo/starbuncle.geo.json"));
+        }
+    };
+
+    public ResourceLocation getTexture(Starbuncle entity) {
+        var nameTexture = TEXTURES.get(entity.getName().getString());
+        if(nameTexture != null){
+            return nameTexture;
+        }
+        String color = getColor();
+        if (color.isEmpty()) color = DyeColor.ORANGE.getName();
+        return TEXTURES.get(color);
     }
 
     public ResourceLocation getModel(){
-        var modelName = getCustomBuncle();
-        return ArsNouveau.prefix( "geo/" + (modelName == null ? "starbuncle" : modelName) + ".geo.json");
-    }
-
-    public @Nullable String getCustomBuncle(){
-        var nameString = getName().getString();
-        return switch (nameString) {
-            case "Gootastic" -> "goobuncle";
-            case "Sir Squirrely" -> "sir_squirrely";
-            case "Zieg" -> "zieg";
-            case "Xacris" -> "xacris";
-            default -> null;
-        };
+        String key = getName().getString();
+        return MODELS.getOrDefault(key, MODELS.get("starbuncle"));
     }
 
     @SuppressWarnings("all")

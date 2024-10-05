@@ -78,8 +78,7 @@ public class FamiliarStarbuncle extends FamiliarEntity {
         super.defineSynchedData(pBuilder);
     }
 
-    @Override
-    public ResourceLocation getTexture(FamiliarEntity entity) {
+    public ResourceLocation getTexture() {
         String color = getColor();
         if (color.isEmpty()) color = DyeColor.ORANGE.getName();
 

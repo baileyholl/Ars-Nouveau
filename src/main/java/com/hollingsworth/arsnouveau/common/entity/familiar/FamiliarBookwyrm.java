@@ -101,8 +101,7 @@ public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCast
         return ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get();
     }
 
-    @Override
-    public ResourceLocation getTexture(FamiliarEntity entity) {
+    public ResourceLocation getTexture() {
         String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "blue";

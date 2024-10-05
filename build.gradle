@@ -119,6 +119,8 @@ dependencies {
     implementation "curse.maven:jade-324717:5444008"
     implementation 'top.theillusivec4.curios:curios-neoforge:9.0.4+1.21'
 
+    implementation "curse.maven:ars-additions-974408:5698511"
+
     runtimeOnly 'curse.maven:ftb-teams-forge-404468:5631446'
     runtimeOnly 'curse.maven:ftb-chunks-forge-314906:5710609'
     runtimeOnly 'curse.maven:ftb-library-forge-404465:5754910'

@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
-import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.event.FamiliarSummonEvent;
@@ -48,7 +47,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamiliar, IDispellable, IDecoratable, IVariantTextureProvider<FamiliarEntity> {
+public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamiliar, IDispellable, IDecoratable {
 
     public double manaReserveModifier = 0.15;
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(FamiliarEntity.class, EntityDataSerializers.OPTIONAL_UUID);

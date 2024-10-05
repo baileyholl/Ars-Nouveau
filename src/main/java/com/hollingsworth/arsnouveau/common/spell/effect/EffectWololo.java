@@ -36,9 +36,9 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
@@ -135,17 +135,18 @@ public class EffectWololo extends AbstractEffect {
                 dye.tryApplyToSign(world, sign, sign.isFacingFrontText(player), player);
             } else {
                 // Try block + dye
-                Block hitBlock = world.getBlockState(blockPos).getBlock();
-                if (hitBlock == Blocks.AIR) return;
-                ItemStack result = getDyedResult((ServerLevel) world, makeContainer(dye, hitBlock));
+                BlockState hitBlock = world.getBlockState(blockPos);
+                if (hitBlock.isAir()) return;
+                ItemStack result = getDyedResult((ServerLevel) world, makeContainer(dye, hitBlock.getBlock()));
                 BlockItem blockItem;
                 if (result.isEmpty() || !(result.getItem() instanceof BlockItem)) {
                     // Try blocks surrounding the dye
-                    result = getDyedResult((ServerLevel) world, makeContainer8(dye, hitBlock));
+                    result = getDyedResult((ServerLevel) world, makeContainer8(dye, hitBlock.getBlock()));
                     if (result.isEmpty() || !(result.getItem() instanceof BlockItem)) return;
                 }
                 blockItem = (BlockItem) result.getItem();
-                world.setBlockAndUpdate(blockPos, blockItem.getBlock().defaultBlockState());
+                BlockState newState = blockItem.getBlock().withPropertiesOf(hitBlock);
+                world.setBlockAndUpdate(blockPos, newState);
             }
         }
     }
