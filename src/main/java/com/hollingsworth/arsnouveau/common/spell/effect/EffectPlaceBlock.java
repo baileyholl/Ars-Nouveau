@@ -41,7 +41,7 @@ public class EffectPlaceBlock extends AbstractEffect {
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
-        FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
+        FakePlayer fakePlayer = ANFakePlayer.getOrFakePlayer((ServerLevel) world, shooter);
         for (BlockPos pos1 : posList) {
             if (!world.isInWorldBounds(pos1))
                 continue;
