@@ -5,10 +5,8 @@ import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarBookwyrm;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class FamiliarBookwyrmRenderer extends GeoEntityRenderer<FamiliarBookwyrm> {
+public class FamiliarBookwyrmRenderer extends GenericFamiliarRenderer<FamiliarBookwyrm> {
     public FamiliarBookwyrmRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new BookwyrmModel<>());
     }
@@ -21,8 +19,4 @@ public class FamiliarBookwyrmRenderer extends GeoEntityRenderer<FamiliarBookwyrm
         stack.popPose();
     }
 
-    @Override
-    public ResourceLocation getTextureLocation(FamiliarBookwyrm entity) {
-        return entity.getTexture();
-    }
 }
