@@ -9,15 +9,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 import java.util.Random;
 
-public class FamiliarWhirlisprigRenderer extends GeoEntityRenderer<FamiliarWhirlisprig> {
+public class FamiliarWhirlisprigRenderer extends GenericFamiliarRenderer<FamiliarWhirlisprig> {
 
     public FamiliarWhirlisprigRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new WhirlisprigModel<>());
@@ -48,8 +46,4 @@ public class FamiliarWhirlisprigRenderer extends GeoEntityRenderer<FamiliarWhirl
         }
     }
 
-    @Override
-    public ResourceLocation getTextureLocation(FamiliarWhirlisprig animatable) {
-        return animatable.getTexture();
-    }
 }

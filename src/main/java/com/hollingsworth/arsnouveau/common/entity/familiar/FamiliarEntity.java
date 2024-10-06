@@ -36,6 +36,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -44,10 +45,9 @@ import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
-public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamiliar, IDispellable, IDecoratable {
+public abstract class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamiliar, IDispellable, IDecoratable {
 
     public double manaReserveModifier = 0.15;
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(FamiliarEntity.class, EntityDataSerializers.OPTIONAL_UUID);
@@ -328,4 +328,10 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
             setCosmeticItem(persistentData.cosmetic(), false);
         }
     }
+
+    /**
+     * Use this to return custom texture, return null for default model.
+     */
+    public abstract @Nullable ResourceLocation getTexture();
+
 }

@@ -7,15 +7,16 @@ import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
-public class FlyingFamiliarEntity extends FamiliarEntity {
+public abstract class FlyingFamiliarEntity extends FamiliarEntity {
     public FlyingFamiliarEntity(EntityType<? extends PathfinderMob> p_i48575_1_, Level p_i48575_2_) {
         super(p_i48575_1_, p_i48575_2_);
         this.moveControl = new FlyingMoveControl(this, 10, true);
     }
 
     @Override
-    protected PathNavigation createNavigation(Level world) {
+    protected @NotNull PathNavigation createNavigation(@NotNull Level world) {
         FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, world);
         flyingpathnavigator.setCanOpenDoors(false);
         flyingpathnavigator.setCanFloat(true);
@@ -34,7 +35,7 @@ public class FlyingFamiliarEntity extends FamiliarEntity {
     }
 
     @Override
-    public boolean causeFallDamage(float p_147187_, float p_147188_, DamageSource p_147189_) {
+    public boolean causeFallDamage(float p_147187_, float p_147188_, @NotNull DamageSource p_147189_) {
         return false;
     }
 }
