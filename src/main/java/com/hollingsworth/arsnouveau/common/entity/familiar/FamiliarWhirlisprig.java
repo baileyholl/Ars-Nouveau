@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
@@ -31,7 +32,7 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
 
 
     @Override
-    public InteractionResult interactAt(Player pPlayer, Vec3 pVec, InteractionHand hand) {
+    public @NotNull InteractionResult interactAt(@NotNull Player pPlayer, @NotNull Vec3 pVec, @NotNull InteractionHand hand) {
         if (hand != InteractionHand.MAIN_HAND || pPlayer.getCommandSenderWorld().isClientSide)
             return InteractionResult.PASS;
 
@@ -55,7 +56,7 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
             Spell spell = event.context.getSpell();
             for (AbstractSpellPart part : spell.recipe()) {
                 if (SpellSchools.ELEMENTAL_EARTH.isPartOfSchool(part)) {
-                    discount += part.getCastingCost() * .5;
+                    discount += (int) (part.getCastingCost() * .5);
                 }
             }
             event.currentCost -= discount;
@@ -81,7 +82,7 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
     }
 
     @Override
-    public PlayState walkPredicate(AnimationState event) {
+    public PlayState walkPredicate(AnimationState<? extends FamiliarEntity> event) {
         if (event.isMoving()) {
             event.getController().setAnimation(RawAnimation.begin().thenPlay("fly"));
         } else {
@@ -91,11 +92,12 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
     }
 
     @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.ENTITY_FAMILIAR_SYLPH.get();
     }
 
     public ResourceLocation getTexture() {
         return ArsNouveau.prefix( "textures/entity/whirlisprig_" + (getColor().isEmpty() ? "summer" : getColor().toLowerCase()) + ".png");
     }
+
 }

@@ -23,12 +23,12 @@ public class FamiliarStarbyModel<T extends FamiliarStarbuncle> extends GeoModel<
     }
 
     @Override
-    public ResourceLocation getModelResource(FamiliarStarbuncle carbuncle) {
-        return ArsNouveau.prefix( "geo/starbuncle.geo.json");
+    public ResourceLocation getModelResource(T carbuncle) {
+        return carbuncle.getModel();
     }
 
     @Override
-    public ResourceLocation getTextureResource(FamiliarStarbuncle carbuncle) {
+    public ResourceLocation getTextureResource(T carbuncle) {
         return carbuncle.getTexture();
     }
 

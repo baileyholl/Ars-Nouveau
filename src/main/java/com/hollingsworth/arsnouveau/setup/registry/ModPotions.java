@@ -38,6 +38,7 @@ public class ModPotions {
     public static final DeferredHolder<MobEffect, MobEffect> HEX_EFFECT = EFFECTS.register(HEX, () -> new PublicEffect(MobEffectCategory.HARMFUL, 8080895)
             .addAttributeModifier(PerkAttributes.MANA_REGEN_BONUS, ArsNouveau.prefix("hex_regen_penalty"), -0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
 
+    public static final DeferredHolder<MobEffect, MobEffect> LOOTING_EFFECT = EFFECTS.register(LOOTING, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, 7158556).addAttributeModifier(PerkAttributes.DRYGMY, ArsNouveau.prefix("looting_bonus"), 1.0, AttributeModifier.Operation.ADD_VALUE));
     public static final DeferredHolder<MobEffect, PublicEffect> SCRYING_EFFECT = EFFECTS.register(SCRYING, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, 2039587));
     public static final DeferredHolder<MobEffect, PublicEffect> GLIDE_EFFECT = EFFECTS.register(GLIDE, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, 8080895));
     public static final DeferredHolder<MobEffect, SnareEffect> SNARE_EFFECT = EFFECTS.register(SNARE, SnareEffect::new);

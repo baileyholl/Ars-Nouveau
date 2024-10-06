@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.scrying.CompoundScryer;
 import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
@@ -27,6 +26,9 @@ import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.Arrays;
+
+import static com.hollingsworth.arsnouveau.common.entity.Starbuncle.MODELS;
+import static com.hollingsworth.arsnouveau.common.entity.Starbuncle.TEXTURES;
 
 public class FamiliarStarbuncle extends FamiliarEntity {
 
@@ -65,7 +67,7 @@ public class FamiliarStarbuncle extends FamiliarEntity {
     }
 
     @Override
-    public PlayState walkPredicate(AnimationState event) {
+    public PlayState walkPredicate(AnimationState<? extends FamiliarEntity> event) {
         if (event.isMoving()) {
             event.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
             return PlayState.CONTINUE;
@@ -79,10 +81,18 @@ public class FamiliarStarbuncle extends FamiliarEntity {
     }
 
     public ResourceLocation getTexture() {
+        var nameTexture = TEXTURES.get(this.getName().getString());
+        if (nameTexture != null) {
+            return nameTexture;
+        }
         String color = getColor();
         if (color.isEmpty()) color = DyeColor.ORANGE.getName();
+        return TEXTURES.get(color);
+    }
 
-        return ArsNouveau.prefix( "textures/entity/starbuncle_" + color.toLowerCase() + ".png");
+    public ResourceLocation getModel() {
+        String key = getName().getString();
+        return MODELS.getOrDefault(key, MODELS.get("starbuncle"));
     }
 
     @Override

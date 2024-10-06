@@ -703,8 +703,8 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         }
     };
 
-    public ResourceLocation getTexture(Starbuncle entity) {
-        var nameTexture = TEXTURES.get(entity.getName().getString());
+    public ResourceLocation getTexture() {
+        var nameTexture = TEXTURES.get(this.getName().getString());
         if(nameTexture != null){
             return nameTexture;
         }
