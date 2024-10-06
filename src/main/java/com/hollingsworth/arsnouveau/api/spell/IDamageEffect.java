@@ -70,9 +70,9 @@ public interface IDamageEffect {
 
         if (entity instanceof
                     LivingEntity mob && mob.getHealth() <= 0 && !mob.isRemoved() && stats.hasBuff(AugmentFortune.INSTANCE)) {
-            Player playerContext = shooter instanceof Player player ? player : ANFakePlayer.getPlayer(server);
+            Player playerContext = ANFakePlayer.getOrFakePlayer(server, shooter);
             int looting = stats.getBuffCount(AugmentFortune.INSTANCE);
-            LootParams lootContext = LootUtil.getLootingContext(server, shooter, mob, looting, world.damageSources().playerAttack(playerContext)).create(LootContextParamSets.ENTITY);
+            LootParams lootContext = LootUtil.getLootingContext(server, playerContext, mob, looting, world.damageSources().playerAttack(playerContext)).create(LootContextParamSets.ENTITY);
             LootTable loottable = server.getServer().reloadableRegistries().getLootTable( mob.getLootTable());
             List<ItemStack> items = loottable.getRandomItems(lootContext);
             items.forEach(mob::spawnAtLocation);
@@ -91,7 +91,6 @@ public interface IDamageEffect {
      * @return Player-Based Damage Source, will use Ars FakePlayer if the source is not a Player
      */
     default DamageSource buildDamageSource(Level world, LivingEntity shooter) {
-        return DamageUtil.source(world, DamageTypesRegistry.GENERIC_SPELL_DAMAGE, !(shooter instanceof Player player) ? ANFakePlayer.getPlayer((ServerLevel) world) : player);
+        return DamageUtil.source(world, DamageTypesRegistry.GENERIC_SPELL_DAMAGE, ANFakePlayer.getOrFakePlayer((ServerLevel) world, shooter));
     }
-
 }

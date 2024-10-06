@@ -43,14 +43,14 @@ public class EffectFell extends AbstractEffect {
                     return;
                 if (spellStats.hasBuff(AugmentExtract.INSTANCE)) {
                     world.getBlockState(listPos).getDrops(LootUtil.getSilkContext((ServerLevel) world, listPos, shooter)).forEach(i -> world.addFreshEntity(new ItemEntity(world, listPos.getX(), listPos.getY(), listPos.getZ(), i)));
-                    BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, false);
+                    BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, false, shooter);
                 } else if (spellStats.hasBuff(AugmentFortune.INSTANCE)) {
                     world.getBlockState(listPos)
                             .getDrops(LootUtil.getFortuneContext((ServerLevel) world, listPos, shooter, spellStats.getBuffCount(AugmentFortune.INSTANCE)))
                             .forEach(i -> world.addFreshEntity(new ItemEntity(world, listPos.getX(), listPos.getY(), listPos.getZ(), i)));
-                    BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, false);
+                    BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, false, shooter);
                 } else {
-                    BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, true);
+                    BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, true, shooter);
                 }
             });
         }

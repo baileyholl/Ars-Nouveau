@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -81,6 +82,10 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
     }
 
     private boolean tryLoadProjectiles(LivingEntity pShooter, ItemStack pCrossbowStack) {
+        if(pShooter.level().isClientSide){
+            return true;
+        }
+
         int multishotLevel = EnchantmentHelper.getTagEnchantmentLevel(pShooter.level.holderOrThrow(Enchantments.MULTISHOT), pCrossbowStack);
         int numProjectiles = multishotLevel == 0 ? 1 : 3;
         boolean isCreative = pShooter instanceof Player && ((Player)pShooter).getAbilities().instabuild;
@@ -88,7 +93,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
         ItemStack ammoCopy = ammoStack.copy();
 
         AbstractCaster<?> caster = getSpellCaster(pCrossbowStack);
-        SpellResolver resolver = new SpellResolver(new SpellContext(pShooter.level, caster.modifySpellBeforeCasting(pShooter.level, pShooter, InteractionHand.MAIN_HAND, caster.getSpell()), pShooter, LivingCaster.from(pShooter), pCrossbowStack));
+        SpellResolver resolver = new SpellResolver(new SpellContext(pShooter.level, caster.modifySpellBeforeCasting((ServerLevel) pShooter.level, pShooter, InteractionHand.MAIN_HAND, caster.getSpell()), pShooter, LivingCaster.from(pShooter), pCrossbowStack));
         boolean consumedMana = false;
 
         if(!(pShooter instanceof Player) || resolver.withSilent(true).canCast(pShooter)){
@@ -139,7 +144,8 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
             }
             LivingCaster livingCaster = pShooter instanceof Player ? new PlayerCaster((Player)pShooter) : new LivingCaster(pShooter);
             AbstractCaster<?> caster = getSpellCaster(pCrossbowStack);
-            SpellResolver resolver = new SpellResolver(new SpellContext(worldIn, caster.modifySpellBeforeCasting(worldIn, pShooter, InteractionHand.MAIN_HAND, caster.getSpell()), pShooter, livingCaster, pCrossbowStack));
+            SpellResolver resolver = new SpellResolver(new SpellContext(worldIn, caster.modifySpellBeforeCasting((ServerLevel) worldIn, pShooter,
+                    InteractionHand.MAIN_HAND, caster.getSpell()), pShooter, livingCaster, pCrossbowStack));
             if (isSpell) {
                 projectile = buildSpellArrow(worldIn, pShooter, caster, pCrossbowStack, pAmmoStack);
                 ((EntitySpellArrow) projectile).pierceLeft += EnchantmentHelper.getTagEnchantmentLevel(worldIn.holderOrThrow(Enchantments.PIERCING), pCrossbowStack);

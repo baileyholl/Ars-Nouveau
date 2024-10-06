@@ -40,8 +40,13 @@ public interface IWrappedCaster{
         return null;
     }
 
-
     default Vec3 getPosition(){
         return Vec3.ZERO;
     }
+
+    default boolean enoughMana(int totalCost) {
+        return false;
+    }
+
+    void expendMana(int totalCost);
 }

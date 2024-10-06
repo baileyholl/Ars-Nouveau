@@ -1,7 +1,10 @@
 package com.hollingsworth.arsnouveau.api.spell.wrapped_caster;
 
 import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
+import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.common.capability.ManaCap;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -50,5 +53,20 @@ public class LivingCaster implements IWrappedCaster {
     @Override
     public Vec3 getPosition() {
         return livingEntity.position();
+    }
+
+    @Override
+    public boolean enoughMana(int totalCost) {
+        IManaCap mana = CapabilityRegistry.getMana(livingEntity);
+        if (mana == null) return false;
+        return totalCost <= mana.getCurrentMana();
+    }
+
+    @Override
+    public void expendMana(int totalCost) {
+        IManaCap mana = CapabilityRegistry.getMana(livingEntity);
+        if (mana != null) {
+            mana.removeMana(totalCost);
+        }
     }
 }

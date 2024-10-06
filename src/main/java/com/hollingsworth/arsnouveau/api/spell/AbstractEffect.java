@@ -89,7 +89,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public Player getPlayer(LivingEntity entity, ServerLevel world) {
-        return entity instanceof Player player ? player : ANFakePlayer.getPlayer(world);
+        return entity instanceof Player player ? player : ANFakePlayer.getPlayer(world, entity.getUUID());
     }
 
     public int getBaseHarvestLevel(SpellStats stats) {

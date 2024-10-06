@@ -73,14 +73,12 @@ public class SpellResolver implements Cloneable {
 
     protected boolean enoughMana(LivingEntity entity) {
         int totalCost = getResolveCost();
-        IManaCap manaCap = CapabilityRegistry.getMana(entity);
-        if (manaCap == null)
-            return false;
-        boolean canCast = totalCost <= manaCap.getCurrentMana() || (entity instanceof Player player && player.isCreative());
-        if (!canCast && !entity.getCommandSenderWorld().isClientSide && !silent) {
-            PortUtil.sendMessageNoSpam(entity, Component.translatable("ars_nouveau.spell.no_mana"));
-            if (entity instanceof ServerPlayer serverPlayer)
-                Networking.sendToPlayerClient(new NotEnoughManaPacket(totalCost), serverPlayer);
+        boolean enoughMana = spellContext.getCaster().enoughMana(totalCost);
+
+        boolean canCast = enoughMana || (entity instanceof Player player && player.isCreative());
+        if (!canCast && entity instanceof ServerPlayer serverPlayer && !silent) {
+            PortUtil.sendMessageNoSpam(serverPlayer, Component.translatable("ars_nouveau.spell.no_mana"));
+            Networking.sendToPlayerClient(new NotEnoughManaPacket(totalCost), serverPlayer);
         }
         return canCast;
     }
@@ -200,10 +198,7 @@ public class SpellResolver implements Cloneable {
 
     public void expendMana() {
         int totalCost = getResolveCost();
-        var mana = CapabilityRegistry.getMana(spellContext.getUnwrappedCaster());
-        if(mana != null){
-            mana.removeMana(totalCost);
-        }
+        spellContext.getCaster().expendMana(totalCost);
     }
 
     /**
