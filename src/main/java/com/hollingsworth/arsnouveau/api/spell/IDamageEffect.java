@@ -4,24 +4,20 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.event.SpellDamageEvent;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.util.DamageUtil;
-import com.hollingsworth.arsnouveau.api.util.LootUtil;
+import com.hollingsworth.arsnouveau.common.mixin.looting.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
 import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.LevelAccessor;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 public interface IDamageEffect {
 
@@ -51,6 +47,12 @@ public interface IDamageEffect {
         if (stats.isRandomized())
             totalDamage += randomRolls(stats, server);
 
+        ///Make sure your DamageSource is an instance of SpellDamageSource,made with [#source(LevelAccessor,ResourceKey)] or manually,
+        ///The luck augment will be used during loot generation [LootItemRandomChanceWithEnchantedBonusConditionMixin] and [EnchantedCountIncreaseFunctionMixin]
+        if (source instanceof DamageUtil.SpellDamageSource spellSource) {
+            spellSource.setLuckLevel(stats.getBuffCount(AugmentFortune.INSTANCE));
+        }
+
         SpellDamageEvent.Pre preDamage = new SpellDamageEvent.Pre(source, shooter, entity, totalDamage, spellContext);
         NeoForge.EVENT_BUS.post(preDamage);
 
@@ -67,15 +69,6 @@ public interface IDamageEffect {
 
         SpellDamageEvent.Post postDamage = new SpellDamageEvent.Post(source, shooter, entity, totalDamage, spellContext);
         NeoForge.EVENT_BUS.post(postDamage);
-
-        if (entity instanceof
-                    LivingEntity mob && mob.getHealth() <= 0 && !mob.isRemoved() && stats.hasBuff(AugmentFortune.INSTANCE)) {
-            int looting = stats.getBuffCount(AugmentFortune.INSTANCE);
-            LootParams lootContext = LootUtil.getLootingContext(server, shooter, mob, looting, source).create(LootContextParamSets.ENTITY);
-            LootTable loottable = server.getServer().reloadableRegistries().getLootTable(mob.getLootTable());
-            List<ItemStack> items = loottable.getRandomItems(lootContext);
-            items.forEach(mob::spawnAtLocation);
-        }
 
         return true;
     }

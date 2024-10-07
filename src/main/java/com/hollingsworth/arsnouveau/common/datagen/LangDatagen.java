@@ -213,6 +213,8 @@ public class LangDatagen extends LanguageProvider {
         add("item.minecraft.tipped_arrow.effect.mana_regen_potion_long", "Arrow of Mana Regeneration");
         add("effect.ars_nouveau.mana_regen", "Mana Regeneration");
         add("effect.ars_nouveau.mana_regen.desc", "Improves mana regeneration");
+        add("effect.ars_nouveau.looting", "Drygmy's Blessing");
+        add("effect.ars_nouveau.looting.desc", "Increases the amount of loot dropped by mobs");
         add("ars_nouveau.on", "Active: Yes");
         add("ars_nouveau.off", "Active: No");
         add("item.ars_nouveau.void_jar", "Jar of Voiding");
@@ -1040,6 +1042,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.perk.saturation.desc", "Increases the saturation of the food");
         add("ars_nouveau.perk.wixie", "Potion Duration");
         add("ars_nouveau.perk.wixie.desc", "Increases the duration of potion effects.");
+        add("ars_nouveau.perk.drygmy", "Extra Looting");
+        add("ars_nouveau.perk.drygmy.desc", "Increases the amount of loot dropped by mobs.");
         add("ars_nouveau.perk.jump_height", "Jump Power");
         add("ars_nouveau.perk.jump_height.desc", "Increases the height of your jumps.");
         add("ars_nouveau.perk.feather", "Fall Damage Reduction");

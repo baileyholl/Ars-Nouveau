@@ -57,9 +57,8 @@ public class FamiliarAmethystGolem extends FamiliarEntity {
         Variants.put("default", ArsNouveau.prefix( "textures/entity/amethyst_golem.png"));
     }
 
-    @Override
-    public ResourceLocation getTexture(FamiliarEntity entity) {
-        return Variants.getOrDefault(entity.getColor(), Variants.get("default"));
+    public ResourceLocation getTexture() {
+        return Variants.getOrDefault(getColor(), Variants.get("default"));
     }
 
 }

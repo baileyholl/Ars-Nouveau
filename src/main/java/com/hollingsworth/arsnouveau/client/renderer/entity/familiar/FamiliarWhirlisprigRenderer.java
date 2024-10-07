@@ -15,14 +15,14 @@ import software.bernie.geckolib.cache.object.GeoBone;
 
 import java.util.Random;
 
-public class FamiliarWhirlisprigRenderer<T extends FamiliarWhirlisprig> extends GenericFamiliarRenderer<T> {
+public class FamiliarWhirlisprigRenderer extends GenericFamiliarRenderer<FamiliarWhirlisprig> {
 
     public FamiliarWhirlisprigRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new WhirlisprigModel<>());
     }
 
     @Override
-    public void render(T entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
+    public void render(FamiliarWhirlisprig entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
         if (Minecraft.getInstance().isPaused())
             return;
