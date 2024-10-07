@@ -45,6 +45,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.items.IItemHandler;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -92,12 +93,12 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     }
 
     @Override
-    public AbstractContainerMenu createMenu(int id, Inventory plInv, Player arg2) {
+    public AbstractContainerMenu createMenu(int id, @NotNull Inventory plInv, @NotNull Player arg2) {
         return new StorageTerminalMenu(id, plInv, this);
     }
 
     @Override
-    public Component getDisplayName() {
+    public @NotNull Component getDisplayName() {
         return Component.translatable("ars_nouveau.storage_lectern");
     }
 
@@ -141,10 +142,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             return;
         }
         for (ExtractedStack extractedStack : multiSlotReference.getSlots()) {
-            BlockPos pos = handlerPosList.stream().filter(handlerPos -> handlerPos.handler().equals(extractedStack.getHandler())).findFirst().map(HandlerPos::pos).orElse(null);
-            if (pos != null) {
-                addTransferTask(new TransferTask(pos.above(), getBlockPos().above(), extractedStack.stack, level.getGameTime()));
-            }
+            handlerPosList.stream().filter(handlerPos -> handlerPos.handler().equals(extractedStack.getHandler())).findFirst().map(HandlerPos::pos).ifPresent(pos -> addTransferTask(new TransferTask(pos.above(), getBlockPos().above(), extractedStack.stack, level.getGameTime())));
         }
     }
 
@@ -153,10 +151,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             return;
         }
         for (SlotReference extractedStack : reference.getSlots()) {
-            BlockPos pos = handlerPosList.stream().filter(handlerPos -> handlerPos.handler().equals(extractedStack.getHandler())).findFirst().map(HandlerPos::pos).orElse(null);
-            if (pos != null) {
-                addTransferTask(new TransferTask(getBlockPos().above(), pos.above(), stack, level.getGameTime()));
-            }
+            handlerPosList.stream().filter(handlerPos -> handlerPos.handler().equals(extractedStack.getHandler())).findFirst().map(HandlerPos::pos).ifPresent(pos -> addTransferTask(new TransferTask(getBlockPos().above(), pos.above(), stack, level.getGameTime())));
         }
     }
 
@@ -225,12 +220,12 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     }
 
     @Override
-    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity) {
+    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity, boolean remove) {
         if (storedPos == null || level == null) {
             return;
         }
         BlockEntity tile = level.getBlockEntity(storedPos);
-        if(tile instanceof StorageLecternTile newMasterLectern){
+        if (tile instanceof StorageLecternTile newMasterLectern) {
             return;
         }
 
@@ -243,14 +238,14 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.inv_too_far"));
             return;
         }
-        if(this.getBlockPos().equals(storedPos)){
+        if (this.getBlockPos().equals(storedPos)) {
             return;
         }
 
-        if (this.connectedInventories.contains(storedPos)) {
+        if (this.connectedInventories.contains(storedPos) && remove) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.removed"));
             this.connectedInventories.remove(storedPos);
-        } else {
+        } else if (!remove) {
             if (this.connectedInventories.size() >= this.getMaxConnectedInventories()) {
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.too_many"));
                 return;
@@ -264,7 +259,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     }
 
     @Override
-    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity) {
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity, boolean remove) {
         if (storedPos == null || storedPos.equals(worldPosition) || level == null) {
             return;
         }
@@ -273,9 +268,14 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.lectern_too_far"));
             return;
         }
-        this.mainLecternPos = storedPos.immutable();
         this.connectedInventories = new ArrayList<>();
-        PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.lectern_chained", storedPos.getX(), storedPos.getY(), storedPos.getZ()));
+        if (remove) {
+            this.mainLecternPos = null;
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.lectern_unchained", storedPos.getX(), storedPos.getY(), storedPos.getZ()));
+        } else {
+            this.mainLecternPos = storedPos.immutable();
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.lectern_chained", storedPos.getX(), storedPos.getY(), storedPos.getZ()));
+        }
         updateBlock();
     }
 
@@ -294,36 +294,36 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         return list;
     }
 
-	@Override
-	public void tick() {
-		if(level.isClientSide)
-			return;
-		if(backoffTicks > 0){
-			backoffTicks--;
-		}
-		if(backoffTicks <= 0 && level.getGameTime() % 20 == 0){
-			insertNearbyItems();
-		}
-		if(checkPlayerRangeTicks > 0){
-			checkPlayerRangeTicks--;
-		}
-		if(checkPlayerRangeTicks <= 0){
-			// Turn off bookwyrm tasks if no player is nearby
-			checkPlayerRangeTicks = 60 + level.random.nextInt(5);
-			canCreateTasks = false;
-			ServerLevel serverLevel = (ServerLevel) level;
-			for(ServerPlayer serverPlayer : serverLevel.players()){
-				if(BlockUtil.distanceFrom(serverPlayer.position(), this.getBlockPos()) < 40){
-					canCreateTasks = true;
-					break;
-				}
-			}
-		}
-		if(updateItems) {
-			updateItems();
-			updateItems = false;
-		}
-	}
+    @Override
+    public void tick() {
+        if (level.isClientSide)
+            return;
+        if (backoffTicks > 0) {
+            backoffTicks--;
+        }
+        if (backoffTicks <= 0 && level.getGameTime() % 20 == 0) {
+            insertNearbyItems();
+        }
+        if (checkPlayerRangeTicks > 0) {
+            checkPlayerRangeTicks--;
+        }
+        if (checkPlayerRangeTicks <= 0) {
+            // Turn off bookwyrm tasks if no player is nearby
+            checkPlayerRangeTicks = 60 + level.random.nextInt(5);
+            canCreateTasks = false;
+            ServerLevel serverLevel = (ServerLevel) level;
+            for (ServerPlayer serverPlayer : serverLevel.players()) {
+                if (BlockUtil.distanceFrom(serverPlayer.position(), this.getBlockPos()) < 40) {
+                    canCreateTasks = true;
+                    break;
+                }
+            }
+        }
+        if (updateItems) {
+            updateItems();
+            updateItems = false;
+        }
+    }
 
     public void updateItems() {
         itemsByTab.clear();
@@ -386,39 +386,39 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         return bookwyrmEntities;
     }
 
-	public void insertNearbyItems(){
-		// Get adjacent inventories
-		StorageLecternTile mainLectern = getMainLectern();
-		if(mainLectern == null)
-			return;
-		for(Direction dir : Direction.values()){
-			BlockPos pos = this.worldPosition.relative(dir);
-			if(level.getBlockState(pos).is(BlockTagProvider.AUTOPULL_DISABLED)){
-				continue;
-			}
-			BlockEntity tile = this.level.getBlockEntity(pos);
-			if(tile == null || mainLectern.connectedInventories.contains(pos))
-				continue;
-			IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
-			if(handler == null)
-				continue;
-			for(int i = 0; i < handler.getSlots(); i++){
-				ItemStack stack = handler.getStackInSlot(i);
-				if(stack.isEmpty())
-					continue;
-				ItemStack extractedStack = handler.extractItem(i, stack.getMaxStackSize(), false);
-				ItemStack remaining = mainLectern.pushStack(extractedStack, null);
-				if(!remaining.isEmpty()){
-					ItemStack remainder = handler.insertItem(i, remaining, false);
-					if(!remainder.isEmpty()){
-						Containers.dropItemStack(level, worldPosition.getX() + .5f, worldPosition.getY() + .5f, worldPosition.getZ() + .5f, remainder);
-					}
-				}
-				return;
-			}
-		}
-		backoffTicks = 100 + level.random.nextInt(20);
-	}
+    public void insertNearbyItems() {
+        // Get adjacent inventories
+        StorageLecternTile mainLectern = getMainLectern();
+        if (mainLectern == null)
+            return;
+        for (Direction dir : Direction.values()) {
+            BlockPos pos = this.worldPosition.relative(dir);
+            if (level.getBlockState(pos).is(BlockTagProvider.AUTOPULL_DISABLED)) {
+                continue;
+            }
+            BlockEntity tile = this.level.getBlockEntity(pos);
+            if (tile == null || mainLectern.connectedInventories.contains(pos))
+                continue;
+            IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
+            if (handler == null)
+                continue;
+            for (int i = 0; i < handler.getSlots(); i++) {
+                ItemStack stack = handler.getStackInSlot(i);
+                if (stack.isEmpty())
+                    continue;
+                ItemStack extractedStack = handler.extractItem(i, stack.getMaxStackSize(), false);
+                ItemStack remaining = mainLectern.pushStack(extractedStack, null);
+                if (!remaining.isEmpty()) {
+                    ItemStack remainder = handler.insertItem(i, remaining, false);
+                    if (!remainder.isEmpty()) {
+                        Containers.dropItemStack(level, worldPosition.getX() + .5f, worldPosition.getY() + .5f, worldPosition.getZ() + .5f, remainder);
+                    }
+                }
+                return;
+            }
+        }
+        backoffTicks = 100 + level.random.nextInt(20);
+    }
 
     public void removeBookwyrm(EntityBookwyrm bookwyrm) {
         bookwyrmUUIDs.remove(bookwyrm.getUUID());
@@ -476,7 +476,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider pRegistries) {
         super.saveAdditional(compound, pRegistries);
         compound.put("settings", ANCodecs.encode(SortSettings.CODEC, sortSettings));
         ListTag list = new ListTag();
@@ -499,7 +499,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+    protected void loadAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider pRegistries) {
         super.loadAdditional(compound, pRegistries);
         if (compound.contains("settings")) {
             sortSettings = ANCodecs.decode(SortSettings.CODEC, compound.getCompound("settings"));

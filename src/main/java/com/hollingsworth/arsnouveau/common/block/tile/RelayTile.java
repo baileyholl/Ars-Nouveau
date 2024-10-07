@@ -62,6 +62,24 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
     private BlockPos fromPos;
     public boolean disabled;
 
+    public boolean removeTakeFrom(BlockPos pos) {
+        if (fromPos != null) {
+            fromPos = null;
+            updateBlock();
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeSendTo(BlockPos pos) {
+        if (toPos != null) {
+            toPos = null;
+            updateBlock();
+            return true;
+        }
+        return false;
+    }
+
     public boolean setTakeFrom(BlockPos pos) {
         if (BlockUtil.distanceFrom(pos, this.worldPosition) > getMaxDistance() || pos.equals(getBlockPos())) {
             return false;
@@ -108,30 +126,41 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
     }
 
     @Override
-    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity, boolean remove) {
         if (storedPos == null || level.isClientSide || storedPos.equals(getBlockPos())) {
             return;
         }
         if (!(level.getBlockEntity(storedPos) instanceof AbstractSourceMachine) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, storedPos, null) == null) {
             return;
         }
-        // Let relays take from us, no action needed.
-        if (this.setSendTo(storedPos.immutable())) {
-            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.send", DominionWand.getPosString(storedPos)));
-            ParticleUtil.beam(storedPos, worldPosition, level);
-        } else {
-            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.fail"));
-        }
+        // remove link on both sides to update the tooltip
+        if (remove && removeSendTo(storedPos)) {
+            if (level.getBlockEntity(storedPos) instanceof RelayTile relayTile) {
+                relayTile.removeTakeFrom(getBlockPos());
+            }
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.remove", DominionWand.getPosString(storedPos)));
+        } else // Let relays take from us, no action needed.
+            if (!remove && this.setSendTo(storedPos.immutable())) {
+                PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.send", DominionWand.getPosString(storedPos)));
+                ParticleUtil.beam(storedPos, worldPosition, level);
+            } else {
+                PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.fail"));
+            }
     }
 
     @Override
-    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity, boolean remove) {
         if (storedPos == null || storedPos.equals(getBlockPos()) || level.getBlockEntity(storedPos) instanceof RelayTile)
             return;
         if (!(level.getBlockEntity(storedPos) instanceof AbstractSourceMachine) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, storedPos, null) == null) {
             return;
         }
-        if (this.setTakeFrom(storedPos.immutable())) {
+        if (remove && this.removeTakeFrom(storedPos)) {
+            if (level.getBlockEntity(storedPos) instanceof RelayTile relayTile) {
+                relayTile.removeSendTo(getBlockPos());
+            }
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.remove", DominionWand.getPosString(storedPos)));
+        } else if (!remove && this.setTakeFrom(storedPos.immutable())) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.take", DominionWand.getPosString(storedPos)));
         } else {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.fail"));
@@ -149,7 +178,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         if (toPos != null) {
             list.add(ColorPos.centered(toPos, ParticleColor.TO_HIGHLIGHT));
         }
-        if(fromPos != null){
+        if (fromPos != null) {
             list.add(ColorPos.centered(fromPos, ParticleColor.FROM_HIGHLIGHT));
         }
         return list;
@@ -212,7 +241,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         super.loadAdditional(tag, pRegistries);
         this.toPos = null;
         this.fromPos = null;
-        
+
         if (NBTUtil.hasBlockPos(tag, TO)) {
             this.toPos = NBTUtil.getBlockPos(tag, TO);
         }

@@ -21,6 +21,7 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.event.EventHooks;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -35,19 +36,19 @@ import java.util.*;
 public class CraftingLecternTile extends StorageLecternTile implements GeoBlockEntity {
 	private AbstractContainerMenu craftingContainer = new AbstractContainerMenu(MenuType.CRAFTING, 0) {
 		@Override
-		public boolean stillValid(Player player) {
+        public boolean stillValid(@NotNull Player player) {
 			return false;
 		}
 
 		@Override
-		public void slotsChanged(Container inventory) {
+        public void slotsChanged(@NotNull Container inventory) {
 			if (level != null && !level.isClientSide) {
 				onCraftingMatrixChanged();
 			}
 		}
 
 		@Override
-		public ItemStack quickMoveStack(Player p_38941_, int p_38942_) {
+        public @NotNull ItemStack quickMoveStack(@NotNull Player p_38941_, int p_38942_) {
 			return ItemStack.EMPTY;
 		}
 	};
@@ -62,12 +63,12 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 	}
 
 	@Override
-	public AbstractContainerMenu createMenu(int id, Inventory plInv, Player arg2) {
+    public AbstractContainerMenu createMenu(int id, @NotNull Inventory plInv, @NotNull Player arg2) {
 		return new CraftingTerminalMenu(id, plInv, this);
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+    public void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
 		super.saveAdditional(tag, pRegistries);
 
 		ListTag listnbt = new ListTag();
@@ -87,7 +88,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 
 	private boolean reading;
 	@Override
-	protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+    protected void loadAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider pRegistries) {
 		super.loadAdditional(compound, pRegistries);
 		reading = true;
 		ListTag listnbt = compound.getList("CraftingTable", 10);
