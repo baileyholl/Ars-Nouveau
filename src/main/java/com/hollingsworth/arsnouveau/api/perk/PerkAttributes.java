@@ -28,6 +28,7 @@ public class PerkAttributes {
     public static final DeferredHolder<Attribute, Attribute> SPELL_DAMAGE_BONUS = registerAttribute("ars_nouveau.perk.spell_damage", (id) -> new RangedAttribute(id, 0.0D, 0.0D, 10000.0D).setSyncable(true), "50b50137-9c92-4e64-b350-6044e9e609de");
     public static final DeferredHolder<Attribute, Attribute> WHIRLIESPRIG = registerAttribute("ars_nouveau.perk.saturation", (id) -> new RangedAttribute(id, 1.0, 0.0D, 10000.0D).setSyncable(true), "152810f7-0d01-484e-a512-73fe70af3db7");
     public static final DeferredHolder<Attribute, Attribute> WIXIE = registerAttribute("ars_nouveau.perk.wixie", (id) -> new RangedAttribute(id, 1.0D, 0.0D, 1024.0D).setSyncable(true), "bae5d566-c9f6-4abf-9fe0-6ac140a34db1");
+    public static final DeferredHolder<Attribute, Attribute> DRYGMY = registerAttribute("ars_nouveau.perk.drygmy", (id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true), "bae5d566-9fe0-c9f6-4abf-6ac140a34db1");
 
     public static final DeferredHolder<Attribute, Attribute> FEATHER = registerAttribute("ars_nouveau.perk.feather", (id) -> new RangedAttribute(id, 0.0D, 0.0D, 1.0D).setSyncable(true), "ee3a4090-c5f5-4a26-a9c2-69837237b35f");
     //public static final DeferredHolder<Attribute, Attribute> TOUGHNESS = registerAttribute("ars_nouveau.perk.toughness", (id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true), "eb1ccdaf-38e3-4a1a-a5fb-b0dc698157ff");

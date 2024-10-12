@@ -9,14 +9,14 @@ import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 import java.util.function.Supplier;
 
-public class GenericRenderer<T extends BlockEntity & GeoAnimatable> extends GeoBlockRenderer<T> {
+public class GenericTileRenderer<T extends BlockEntity & GeoAnimatable> extends GeoBlockRenderer<T> {
 
 
-    public GenericRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn, String loc) {
-        super(new GenericModel(loc));
+    public GenericTileRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn, String loc) {
+        super(new GenericModel<>(loc));
     }
 
     public static Supplier<BlockEntityWithoutLevelRenderer> getISTER(String loc) {
-        return () -> new GenericItemBlockRenderer(new GenericModel(loc));
+        return () -> new GenericItemBlockRenderer(new GenericModel<>(loc));
     }
 }

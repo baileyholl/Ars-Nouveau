@@ -16,12 +16,26 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.util.RenderUtil;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+
 public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
     public static MultiBufferSource.BufferSource cosmeticBuffer = MultiBufferSource.immediate(new ByteBufferBuilder(1536));
+    public static Map<String, Function<ResourceLocation, RenderType>> specialShaders = new HashMap<>();
+
+    static {
+        // Jared's special shader, because adopter details aren't synced.
+        specialShaders.put("Splonk", (texture) -> ShaderRegistry.blamed(texture, true));
+        specialShaders.put("Bailey", (texture) -> ShaderRegistry.rainbowEntity(texture, ArsNouveau.prefix("textures/entity/starbuncle_mask.png"), true));
+        specialShaders.put("Gootastic", RenderType::entityTranslucent);
+    }
 
     public StarbuncleRenderer(EntityRendererProvider.Context manager) {
         super(manager, new StarbuncleModel());
@@ -39,34 +53,24 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
             if (animatable.dynamicBehavior != null) {
                 itemstack = animatable.dynamicBehavior.getStackForRender();
             }
-            if(!itemstack.isEmpty()) {
+            if (!itemstack.isEmpty()) {
                 Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.GROUND, packedLight, OverlayTexture.NO_OVERLAY, stack, bufferSource, animatable.level, (int) animatable.getOnPos().asLong());
             }
             stack.popPose();
         }
-        if (animatable.getCosmeticItem().getItem() instanceof ICosmeticItem cosmetic && cosmetic.getBone().equals(bone.getName())) {
+        if (animatable.getCosmeticItem().getItem() instanceof ICosmeticItem cosmetic && cosmetic.getBone(animatable).equals(bone.getName())) {
             CosmeticRenderUtil.renderCosmetic(bone, stack, cosmeticBuffer, animatable, packedLight);
             cosmeticBuffer.endBatch();
         }
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Starbuncle entity) {
-        return entity.getTexture(entity);
+    public @NotNull ResourceLocation getTextureLocation(Starbuncle entity) {
+        return entity.getTexture();
     }
 
     @Override
-    public RenderType getRenderType(Starbuncle animatable, ResourceLocation textureLocation, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, float partialTick) {
-        // Jared's special shader, because adopter details aren't synced.
-        if(animatable.getName().getString().equals("Splonk")) {
-            return ShaderRegistry.blamed(textureLocation, true);
-        }else if(animatable.getName().getString().equals("Bailey")){
-            return ShaderRegistry.rainbowEntity(textureLocation, ArsNouveau.prefix( "textures/entity/starbuncle_mask.png"),true);
-        }
-
-        if(animatable.getName().getString().equals("Gootastic")){
-            return RenderType.entityTranslucent(textureLocation);
-        }
-        return RenderType.entityCutoutNoCull(textureLocation);
+    public RenderType getRenderType(Starbuncle animatable, ResourceLocation textureLocation, @Nullable MultiBufferSource bufferSource, float partialTick) {
+        return specialShaders.getOrDefault(animatable.getName().getString(), RenderType::entityCutoutNoCull).apply(textureLocation);
     }
 }

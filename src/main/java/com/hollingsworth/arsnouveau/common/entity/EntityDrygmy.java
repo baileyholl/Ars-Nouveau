@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
-import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
@@ -18,8 +17,11 @@ import com.hollingsworth.arsnouveau.common.entity.goal.UntamedFindItemGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.drygmy.CollectEssenceGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.FollowMobGoalBackoff;
 import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.FollowPlayerGoal;
+import com.hollingsworth.arsnouveau.common.items.data.ICharmSerializable;
+import com.hollingsworth.arsnouveau.common.items.data.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
@@ -56,12 +58,9 @@ import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 
-public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipProvider, IDispellable, IVariantColorProvider<EntityDrygmy> {
+public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipProvider, IDispellable, ICharmSerializable {
 
     public static final EntityDataAccessor<Boolean> CHANNELING = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.BOOLEAN);
@@ -107,6 +106,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     public void die(DamageSource source) {
         if (!level.isClientSide && isTamed()) {
             ItemStack stack = new ItemStack(ItemsRegistry.DRYGMY_CHARM);
+            stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
         }
         super.die(source);
@@ -214,10 +214,6 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
         pBuilder.define(COLOR, "brown");
     }
 
-    public boolean holdingEssence() {
-        return this.entityData.get(HOLDING_ESSENCE);
-    }
-
     public void setHoldingEssence(boolean holdingEssence) {
         this.entityData.set(HOLDING_ESSENCE, holdingEssence);
     }
@@ -297,6 +293,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
 
         if (!level.isClientSide && isTamed()) {
             ItemStack stack = new ItemStack(ItemsRegistry.DRYGMY_CHARM);
+            stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             this.remove(RemovalReason.DISCARDED);
@@ -349,21 +346,23 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
         this.addGoalsAfterConstructor();
     }
 
-    @Override
-    public ResourceLocation getTexture(EntityDrygmy entity) {
-        String color = getColor(entity).toLowerCase();
+    public static Map<String, ResourceLocation> TEXTURES = new HashMap<>();
+
+    public ResourceLocation getTexture() {
+        String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "brown";
-        return ArsNouveau.prefix( "textures/entity/drygmy_" + color + ".png");
+        return TEXTURES.computeIfAbsent(color, c -> ArsNouveau.prefix("textures/entity/drygmy_" + c + ".png"));
     }
 
     @Override
-    public String getColor(EntityDrygmy entity) {
+    public void fromCharmData(PersistentFamiliarData data) {
+        getEntityData().set(COLOR, data.color());
+        this.setCustomName(data.name());
+    }
+
+    @Override
+    public String getColor() {
         return getEntityData().get(COLOR);
-    }
-
-    @Override
-    public void setColor(String color, EntityDrygmy entity) {
-        getEntityData().set(COLOR, color);
     }
 }

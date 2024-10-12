@@ -49,9 +49,9 @@ public class DepositAmethystGoal extends Goal {
     public void deposit() {
         IItemHandler iItemHandler = golem.level.getCapability(Capabilities.ItemHandler.BLOCK, golem.getHome(), null);
         if (iItemHandler != null) {
-            ItemStack oldStack = new ItemStack(golem.getHeldStack().getItem(), golem.getHeldStack().getCount());
+            ItemStack oldStack = new ItemStack(golem.getMainHandItem().getItem(), golem.getMainHandItem().getCount());
 
-            ItemStack left = ItemHandlerHelper.insertItemStacked(iItemHandler, golem.getHeldStack(), false);
+            ItemStack left = ItemHandlerHelper.insertItemStacked(iItemHandler, golem.getMainHandItem(), false);
             if (left.equals(oldStack)) {
                 return;
             }
@@ -79,7 +79,7 @@ public class DepositAmethystGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (golem.getHome() == null || golem.getHeldStack().isEmpty())
+        if (golem.getHome() == null || golem.getMainHandItem().isEmpty())
             return false;
         return canUse.get() &&  golem.level.getCapability(Capabilities.ItemHandler.BLOCK, golem.getHome(), null) != null;
     }
