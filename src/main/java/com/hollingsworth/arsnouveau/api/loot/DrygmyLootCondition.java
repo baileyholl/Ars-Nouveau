@@ -19,14 +19,9 @@ public class DrygmyLootCondition implements LootItemCondition {
 
     @Override
     public boolean test(LootContext context) {
-            Entity entity = context.getParamOrNull(LootContextParams.ATTACKING_ENTITY);
-        if (!(entity instanceof ANFakePlayer fakePlayer)) return false;
-        if (!fakePlayer.hasCustomName()) return false;
+        Entity entity = context.getParamOrNull(LootContextParams.ATTACKING_ENTITY);
 
-        Component name = fakePlayer.getCustomName();
-        if (name == null) return false;
-
-        return name.getString().equals("Drygmy");
+        return entity instanceof ANFakePlayer;
     }
 
     @Override
