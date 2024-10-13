@@ -32,6 +32,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -76,9 +77,11 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     public Vec3 lookAt = null;
     public static final EntityDataAccessor<Boolean> NEED_SOURCE = SynchedEntityData.defineId(Alakarkinos.class, EntityDataSerializers.BOOLEAN);
 
+    boolean beingTamed = false;
+
     public SimpleStateMachine stateMachine = new SimpleStateMachine(new DecideCrabActionState(this));
     int ticksBlowingAnim;
-
+    int tamedTicks;
     public Alakarkinos(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         reloadGoals();
@@ -101,6 +104,20 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     @Override
     public void tick() {
         super.tick();
+        if (!tamed && !beingTamed && level.getGameTime() % 40 == 0) {
+            for (ItemEntity itementity : this.level.getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(1))) {
+                pickUpItem(itementity);
+            }
+        }
+        if (!tamed && this.getMainHandItem().is(ItemTags.DECORATED_POT_SHERDS)) {
+            tamedTicks++;
+        }
+        if(tamedTicks > 60 && !level.isClientSide && !isRemoved() && !isDeadOrDying()){
+            ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
+            ItemStack stack = new ItemStack(ItemsRegistry.ALAKARKINOS_SHARD);
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
+            this.remove(RemovalReason.DISCARDED);
+        }
         if (!level.isClientSide) {
             stateMachine.tick();
             SummonUtil.healOverTime(this);
@@ -147,6 +164,17 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
             }
         }
     }
+    @Override
+    protected void pickUpItem(ItemEntity itemEntity) {
+        if (!tamed && !beingTamed && itemEntity.getItem().is(ItemTags.DECORATED_POT_SHERDS)) {
+            beingTamed = true;
+            ItemStack stack = itemEntity.getItem().copy();
+            stack.setCount(1);
+            this.setItemInHand(InteractionHand.MAIN_HAND, stack);
+            itemEntity.getItem().shrink(1);
+            this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ITEM_PICKUP, this.getSoundSource(), 1.0F, 1.0F);
+        }
+    }
 
 
     @Override
@@ -189,7 +217,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
             list.add(new WrappedGoal(0, new FloatGoal(this)));
             list.add(new WrappedGoal(4, new LookAtTarget(this, 8.0f, () -> this.lookAt)));
         }else{
-            list.add(new WrappedGoal(1, new UntamedFindItemGoal(this, () -> !this.getMainHandItem().isEmpty(), (e) -> e.getItem().is(ItemTags.DECORATED_POT_SHERDS))));
+            list.add(new WrappedGoal(1, new UntamedFindItemGoal(this, () -> this.getMainHandItem().isEmpty(), (e) -> e.getItem().is(ItemTags.DECORATED_POT_SHERDS))));
             list.add(new WrappedGoal(4, new LookAtPlayerGoal(this, Player.class, 3.0F, 0.02F)));
             list.add(new WrappedGoal(4, new LookAtPlayerGoal(this, Mob.class, 8.0F)));
             list.add(new WrappedGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.2D)));
@@ -343,6 +371,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         }
         pCompound.putBoolean("needSource", this.needSource());
         pCompound.putBoolean("tamed", this.tamed);
+        pCompound.putBoolean("beingTamed", this.beingTamed);
         return super.save(pCompound);
     }
 
@@ -358,6 +387,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         }
         this.tamed = pCompound.getBoolean("tamed");
         this.setNeedSource(pCompound.getBoolean("needSource"));
+        this.beingTamed = pCompound.getBoolean("beingTamed");
     }
 
     public enum Animations {
