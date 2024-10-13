@@ -31,6 +31,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -188,7 +189,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
             list.add(new WrappedGoal(0, new FloatGoal(this)));
             list.add(new WrappedGoal(4, new LookAtTarget(this, 8.0f, () -> this.lookAt)));
         }else{
-            list.add(new WrappedGoal(1, new UntamedFindItemGoal(this, () -> !this.getMainHandItem().isEmpty(), (e) -> true)));
+            list.add(new WrappedGoal(1, new UntamedFindItemGoal(this, () -> !this.getMainHandItem().isEmpty(), (e) -> e.getItem().is(ItemTags.DECORATED_POT_SHERDS))));
             list.add(new WrappedGoal(4, new LookAtPlayerGoal(this, Player.class, 3.0F, 0.02F)));
             list.add(new WrappedGoal(4, new LookAtPlayerGoal(this, Mob.class, 8.0F)));
             list.add(new WrappedGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.2D)));
@@ -304,7 +305,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
             if (blowingBubbles()) {
                 return PlayState.STOP;
             }
-            if ((this.partyCrab && this.jukeboxPos != null && BlockUtil.distanceFrom(position, jukeboxPos) <= 8)) {
+            if (this.getMainHandItem().is(ItemTags.DECORATED_POT_SHERDS) || (this.partyCrab && this.jukeboxPos != null && BlockUtil.distanceFrom(position, jukeboxPos) <= 8)) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("dance"));
                 return PlayState.CONTINUE;
             }
@@ -386,6 +387,11 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
             placeHat.forceAnimationReset();
             placeHat.setAnimation(RawAnimation.begin().thenPlay("pickup_hat"));
         }
+    }
+
+    @Override
+    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
+        return false;
     }
 
     @Override
