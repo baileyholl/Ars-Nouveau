@@ -255,6 +255,7 @@ public class CasterTomeProvider extends SimpleDataProvider {
 
         tomes.add(buildTome("uni","Uni's Windshield", new Spell(MethodSelf.INSTANCE, EffectOrbit.INSTANCE, EffectKnockback.INSTANCE).add(AugmentAmplify.INSTANCE, 8), "Stay away!"));
 
+        tomes.add(buildTome("crowdrone", "Crow's Gluttonous Gaze", new Spell(MethodSelf.INSTANCE, EffectSenseMagic.INSTANCE, AugmentExtendTime.INSTANCE, EffectLight.INSTANCE).add(AugmentExtendTime.INSTANCE, 6), "Crows are known to collect shiny things, even in the darkest of places.", new ParticleColor(0,0,0)));
         for (CasterRecipeWrapper g : tomes) {
             Path path = getRecipePath(output, g.id().getPath());
             saveStable(pOutput, CasterTomeData.CODEC.encodeStart(JsonOps.INSTANCE, g.toData()).getOrThrow(), path);
