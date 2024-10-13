@@ -16,6 +16,7 @@ import com.hollingsworth.arsnouveau.common.entity.goal.LookAtTarget;
 import com.hollingsworth.arsnouveau.common.entity.goal.UntamedFindItemGoal;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.SimpleStateMachine;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.alakarkinos.DecideCrabActionState;
+import com.hollingsworth.arsnouveau.common.items.data.ICharmSerializable;
 import com.hollingsworth.arsnouveau.common.items.data.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
@@ -58,7 +59,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, IAnimationListener {
+public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, IAnimationListener, ICharmSerializable {
 
     public boolean tamed;
     public static final EntityDataAccessor<Optional<BlockPos>> HOME = SynchedEntityData.defineId(Alakarkinos.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
@@ -155,6 +156,11 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
         }
         super.die(source);
+    }
+
+    @Override
+    public void fromCharmData(PersistentFamiliarData data) {
+        setCustomName(data.name());
     }
 
     public String getColor(){

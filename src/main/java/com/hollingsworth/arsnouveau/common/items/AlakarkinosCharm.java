@@ -29,8 +29,9 @@ public class AlakarkinosCharm extends ModItem {
         Alakarkinos alakarkinos = new Alakarkinos(world, pos, true);
         PersistentFamiliarData data = pContext.getItemInHand().get(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA);
         if(data != null) {
-            alakarkinos.setCustomName(data.name());
+            alakarkinos.fromCharmData(data);
         }
+        world.addFreshEntity(alakarkinos);
         return super.useOn(pContext);
     }
 

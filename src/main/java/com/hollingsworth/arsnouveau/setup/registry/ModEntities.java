@@ -311,7 +311,7 @@ public class ModEntities {
         event.register(ENTITY_CASCADING_WEALD.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn, RegisterSpawnPlacementsEvent.Operation.AND);
         event.register(ENTITY_FLOURISHING_WEALD.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn, RegisterSpawnPlacementsEvent.Operation.AND);
         event.register(ENTITY_VEXING_WEALD.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn, RegisterSpawnPlacementsEvent.Operation.AND);
-
+        event.register(ALAKARKINOS_TYPE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::beachSpawn, RegisterSpawnPlacementsEvent.Operation.AND);
         LightManager.init();
     }
 
@@ -363,6 +363,10 @@ public class ModEntities {
 
     public static boolean genericGroundSpawn(EntityType<? extends Entity> animal, LevelAccessor worldIn, MobSpawnType reason, BlockPos pos, RandomSource random) {
         return worldIn.getBlockState(pos.below()).is(Blocks.GRASS_BLOCK) && worldIn.getRawBrightness(pos, 0) > 8;
+    }
+
+    public static boolean beachSpawn(EntityType<? extends Entity> animal, LevelAccessor worldIn, MobSpawnType reason, BlockPos pos, RandomSource random) {
+        return (worldIn.getBlockState(pos.below()).is(Blocks.GRASS_BLOCK) || worldIn.getBlockState(pos.below()).is(Blocks.SAND) || worldIn.getBlockState(pos.below()).is(Blocks.SANDSTONE)) && worldIn.getRawBrightness(pos, 0) > 8;
     }
 
 }
