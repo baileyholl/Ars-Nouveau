@@ -28,6 +28,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -151,8 +152,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     public void die(DamageSource source) {
         if (!level.isClientSide && tamed) {
             ItemStack stack = new ItemStack(ItemsRegistry.ALAKARKINOS_CHARM);
-            PersistentFamiliarData familiarData = new PersistentFamiliarData().setName(this.getName()).setColor(getColor());
-            stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, familiarData);
+            stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
         }
         super.die(source);
@@ -257,8 +257,16 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
 
     @Override
     public boolean onDispel(@NotNull LivingEntity caster) {
-
-        return false;
+        if (this.isRemoved())
+            return false;
+        if(!level.isClientSide && tamed){
+            ItemStack stack = new ItemStack(ItemsRegistry.ALAKARKINOS_CHARM);
+            stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
+            ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
+            this.remove(RemovalReason.DISCARDED);
+        }
+        return true;
     }
 
     @Override

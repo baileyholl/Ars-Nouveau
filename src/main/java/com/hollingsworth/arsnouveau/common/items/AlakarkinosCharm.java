@@ -26,6 +26,7 @@ public class AlakarkinosCharm extends ModItem {
         Level world = pContext.getLevel();
         BlockPos pos = pContext.getClickedPos();
         if (world.isClientSide) return InteractionResult.SUCCESS;
+        pos = pos.relative(pContext.getClickedFace());
         Alakarkinos alakarkinos = new Alakarkinos(world, pos, true);
         PersistentFamiliarData data = pContext.getItemInHand().get(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA);
         if(data != null) {
@@ -39,6 +40,5 @@ public class AlakarkinosCharm extends ModItem {
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
         stack.addToTooltip(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, context, tooltip2::add, flagIn);
-        tooltip2.add(Component.translatable("ars_nouveau.tooltip.bookwyrm"));
     }
 }
