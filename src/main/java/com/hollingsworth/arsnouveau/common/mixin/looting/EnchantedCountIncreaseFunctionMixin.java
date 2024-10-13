@@ -25,7 +25,7 @@ public class EnchantedCountIncreaseFunctionMixin {
             )
     )
     private int ars_nouveau$adjustLooting(Holder<Enchantment> enchantment, LivingEntity attacker, Operation<Integer> original, @Local(argsOnly = true) LootContext context) {
-        if (!attacker.getAttributes().hasAttribute(PerkAttributes.DRYGMY)) {
+        if (attacker.getAttribute(PerkAttributes.DRYGMY) == null) {
             return original.call(enchantment, attacker);
         }
         int perkLooting = (int) attacker.getAttributeValue(PerkAttributes.DRYGMY);
