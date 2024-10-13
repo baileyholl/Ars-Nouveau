@@ -30,7 +30,7 @@
     "47f9c9d2-89b2-4987-af6b-31e7b1f74da2", "ec77d204-6e8b-4dac-8b66-71b2a03c5e65", "98e72ae4-10c9-4696-970b-804eb9b176ae",
     "0421ad40-0881-47d4-b086-38c90c1ab62f", "a8875ecb-6e84-4c6d-ac68-3251b945d963", "cf1f7109-266d-4e5a-8a8a-d93684cf60b9",
   "e7976ce2-3344-4499-8b15-91adddc5ed0f", "d29025d7-cf5d-4976-8a65-fc3bdcc991b5", "8ced638c-eac7-433e-b794-54c0f23807a4",
-  "db489a87-6509-4d75-917d-9c426b519c64"],
+  "db489a87-6509-4d75-917d-9c426b519c64", "eb079f27-e266-4b3c-beba-b34d34bef268"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -467,6 +467,11 @@
       "color": "black",
       "adopter": "Vicorus",
       "bio": "A hard working fellow. Very sweet and happy all around. They are eager to work for you."
+    },{
+      "name": "Corone",
+      "color": "black",
+      "adopter": "CrowDrone",
+      "bio": "A vain little creature, known for her beautiful voice. Aesop warned her about foxes and flattery. "
     }
   ]
 }
