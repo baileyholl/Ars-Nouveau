@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -12,7 +13,7 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.Optional;
 
-public record DominionWandData(Optional<BlockPos> storedPos, Optional<Direction> face, boolean strict, int storedEntityId) {
+public record DominionWandData(Optional<GlobalPos> storedPos, Optional<Direction> face, boolean strict, int storedEntityId) {
 
     public DominionWandData(){
         this(Optional.empty(), Optional.empty(), false, NULL_ENTITY);
@@ -21,14 +22,14 @@ public record DominionWandData(Optional<BlockPos> storedPos, Optional<Direction>
     public static final int NULL_ENTITY = -1;
 
     public static Codec<DominionWandData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            BlockPos.CODEC.optionalFieldOf("pos").forGetter(DominionWandData::storedPos),
+            GlobalPos.CODEC.optionalFieldOf("pos").forGetter(DominionWandData::storedPos),
             Direction.CODEC.optionalFieldOf("face").forGetter(DominionWandData::face),
             Codec.BOOL.fieldOf("strict").forGetter(DominionWandData::strict),
             Codec.INT.fieldOf("entityId").forGetter(DominionWandData::storedEntityId)
     ).apply(instance, DominionWandData::new));
 
     public static StreamCodec<RegistryFriendlyByteBuf, DominionWandData> STREAM = StreamCodec.composite(
-            BlockPos.STREAM_CODEC.apply(ByteBufCodecs::optional),
+            GlobalPos.STREAM_CODEC.apply(ByteBufCodecs::optional),
             DominionWandData::storedPos,
             Direction.STREAM_CODEC.apply(ByteBufCodecs::optional),
             DominionWandData::face,
@@ -43,7 +44,7 @@ public record DominionWandData(Optional<BlockPos> storedPos, Optional<Direction>
         return storedPos.isPresent() || storedEntityId != -1;
     }
 
-    public @Nullable BlockPos getValidPos(){
+    public @Nullable GlobalPos getValidPos(){
         return storedPos.orElse(null);
     }
 
@@ -51,8 +52,8 @@ public record DominionWandData(Optional<BlockPos> storedPos, Optional<Direction>
         return storedEntityId == 0 || storedEntityId == NULL_ENTITY ? NULL_ENTITY : storedEntityId;
     }
 
-    public DominionWandData storePos(@Nullable BlockPos pos){
-        return new DominionWandData(pos == null ? Optional.empty() : Optional.of(pos.immutable()), face, strict, storedEntityId);
+    public DominionWandData storePos(@Nullable GlobalPos pos){
+        return new DominionWandData(pos == null ? Optional.empty() : Optional.of(new GlobalPos(pos.dimension(), pos.pos().immutable())), face, strict, storedEntityId);
     }
 
     public DominionWandData storeEntity(int entityId){
