@@ -10,7 +10,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
 import java.util.List;
 
 public interface IWandable {
@@ -19,12 +18,8 @@ public interface IWandable {
      * The FIRST IWandable in the chain is called.
      */
     default void onFinishedConnectionFirst(@Nullable GlobalPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        ResourceKey<Level> dim;
-        if (storedPos != null) {
-            dim = storedPos.dimension();
-        } else if (storedEntity != null) {
-            dim = storedEntity.level.dimension();
-        } else {
+        ResourceKey<Level> dim = getStoredDimension(storedPos, storedEntity);
+        if (dim == null) {
             return;
         }
 
@@ -38,12 +33,8 @@ public interface IWandable {
      * The LAST IWandable in the chain is called.
      */
     default void onFinishedConnectionLast(@Nullable GlobalPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        ResourceKey<Level> dim;
-        if (storedPos != null) {
-            dim = storedPos.dimension();
-        } else if (storedEntity != null) {
-            dim = storedEntity.level.dimension();
-        } else {
+        ResourceKey<Level> dim = getStoredDimension(storedPos, storedEntity);
+        if (dim == null) {
             return;
         }
 
@@ -72,12 +63,8 @@ public interface IWandable {
     //Face-Sensitive versions
 
     default void onFinishedConnectionFirst(@Nullable GlobalPos storedPos, @Nullable Direction face, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        ResourceKey<Level> dim;
-        if (storedPos != null) {
-            dim = storedPos.dimension();
-        } else if (storedEntity != null) {
-            dim = storedEntity.level.dimension();
-        } else {
+        ResourceKey<Level> dim = getStoredDimension(storedPos, storedEntity);
+        if (dim == null) {
             return;
         }
 
@@ -87,12 +74,8 @@ public interface IWandable {
     }
 
     default void onFinishedConnectionLast(@Nullable GlobalPos storedPos, @Nullable Direction face, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        ResourceKey<Level> dim;
-        if (storedPos != null) {
-            dim = storedPos.dimension();
-        } else if (storedEntity != null) {
-            dim = storedEntity.level.dimension();
-        } else {
+        ResourceKey<Level> dim = getStoredDimension(storedPos, storedEntity);
+        if (dim == null) {
             return;
         }
 
@@ -122,5 +105,17 @@ public interface IWandable {
      */
     default List<ColorPos> getWandHighlight(List<ColorPos> list) {
         return list;
+    }
+
+    private ResourceKey<Level> getStoredDimension(@Nullable GlobalPos storedPos, @Nullable LivingEntity storedEntity) {
+        if (storedPos != null) {
+            return storedPos.dimension();
+        }
+
+        if (storedEntity != null) {
+            return storedEntity.level.dimension();
+        }
+
+        return null;
     }
 }
