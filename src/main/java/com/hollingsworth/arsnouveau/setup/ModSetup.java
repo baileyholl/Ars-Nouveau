@@ -36,7 +36,6 @@ public class ModSetup {
         TRUNK_PLACER_TYPE_DEFERRED_REGISTER.register(modEventBus);
         WorldgenRegistry.FEAT_REG.register(modEventBus);
         LootRegistry.GLM.register(modEventBus);
-        LootRegistry.LOOT_CONDITION_TYPES.register(modEventBus);
         SoundRegistry.SOUND_REG.register(modEventBus);
         StructureRegistry.STRUCTURES.register(modEventBus);
         StructureRegistry.STRUCTURE_PROCESSOR.register(modEventBus);
