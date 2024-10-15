@@ -60,7 +60,7 @@ public class SpawnLootState extends CrabState{
             return null;
         }
         alakarkinos.setBlowingBubbles(false);
-        alakarkinos.findBlockCooldown = 60;
+        alakarkinos.findBlockCooldown = 60 * 20;
         ItemStack loot = getLoot();
         EntityFlyingItem flyingItem = new EntityFlyingItem(alakarkinos.level, hatPos, alakarkinos.getHome().above());
         flyingItem.getEntityData().set(EntityFlyingItem.IS_BUBBLE, true);

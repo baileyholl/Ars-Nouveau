@@ -2,10 +2,15 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.BubbleEntity;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -15,7 +20,7 @@ public class EffectBubble extends AbstractEffect {
     public static final EffectBubble INSTANCE = new EffectBubble();
 
     public EffectBubble() {
-        super("bubble", "");
+        super("bubble", "Captures mobs and entities it touches, causing them to float upwards. Hitting the bubble with a projectile will pop it, dealing additional damage to the target inside.");
     }
 
     @Override
@@ -26,18 +31,26 @@ public class EffectBubble extends AbstractEffect {
     @Override
     public void onResolve(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         super.onResolve(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
-        var bubble = new BubbleEntity(world, 100, 1.0f);
+        var bubble = new BubbleEntity(world, (int) (100 + spellStats.getDurationMultiplier() * EXTEND_TIME.getAsInt()), (float) (DAMAGE.getAsDouble() + spellStats.getAmpMultiplier() * AMP_VALUE.getAsDouble()));
         bubble.setPos(rayTraceResult.getLocation().x, rayTraceResult.getLocation().y, rayTraceResult.getLocation().z);
         world.addFreshEntity(bubble);
     }
 
     @Override
     protected int getDefaultManaCost() {
-        return 0;
+        return 20;
+    }
+
+    @Override
+    public void buildConfig(ModConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addDamageConfig(builder, 5.0);
+        addAmpConfig(builder, 2.0);
+        addExtendTimeConfig(builder, 3);
     }
 
     @Override
     protected @NotNull Set<AbstractAugment> getCompatibleAugments() {
-        return Set.of();
+        return Set.of(AugmentExtendTime.INSTANCE, AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE, AugmentDurationDown.INSTANCE);
     }
 }
