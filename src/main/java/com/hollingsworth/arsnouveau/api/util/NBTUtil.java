@@ -93,6 +93,7 @@ public class NBTUtil {
 
     public static void writeItems(HolderLookup.Provider pRegistries, CompoundTag tag, String prefix, List<ItemStack> items) {
         CompoundTag allItemsTag = new CompoundTag();
+        items = items.stream().filter(stack -> !stack.isEmpty()).collect(Collectors.toList());
         for (int i = 0; i < items.size(); i++) {
             ItemStack stack = items.get(i);
             Tag itemTag = stack.save(pRegistries);

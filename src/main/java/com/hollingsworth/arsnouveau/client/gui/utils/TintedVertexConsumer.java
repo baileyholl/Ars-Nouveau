@@ -58,15 +58,4 @@ public final class TintedVertexConsumer implements VertexConsumer {
         return wrapped.setNormal(x, y, z);
     }
 
-
-//    @Override
-//    public void defaultColor(int r, int g, int b, int a) {
-//        wrapped.defaultColor(r, g, b, a);
-//    }
-//
-//    @Override
-//    public void unsetDefaultColor() {
-//        wrapped.unsetDefaultColor();
-//    }
-
 }

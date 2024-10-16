@@ -13,15 +13,19 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.CommonHooks;
@@ -102,8 +106,8 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
         }
     }
 
-    public EntitySpellArrow buildSpellArrow(Level worldIn, Player playerentity, AbstractCaster<?> caster, boolean isSpellArrow, ItemStack bowStack) {
-        EntitySpellArrow spellArrow = new EntitySpellArrow(worldIn, playerentity, ItemStack.EMPTY, bowStack);
+    public EntitySpellArrow buildSpellArrow(Level worldIn, Player playerentity, AbstractCaster<?> caster, boolean isSpellArrow, ItemStack bowStack, ItemStack arrowStack) {
+        EntitySpellArrow spellArrow = new EntitySpellArrow(worldIn, playerentity, arrowStack, bowStack);
         spellArrow.spellResolver = new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerentity, new PlayerCaster(playerentity), bowStack)).withSilent(true);
         spellArrow.setColors(caster.getColor());
         if (isSpellArrow)
@@ -142,25 +146,27 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
         float f = getPowerForTime(useTime);
         boolean didCastSpell = false;
         if (f >= 0.1D) {
+
             boolean isArrowInfinite = playerentity.abilities.instabuild || (arrowStack.getItem() instanceof ArrowItem arrowItem && arrowItem.isInfinite(arrowStack, bowStack, playerentity));
             if (!worldIn.isClientSide) {
+                int use = EnchantmentHelper.processAmmoUse((ServerLevel) worldIn, bowStack, arrowStack, 1);
                 ArrowItem arrowitem = (ArrowItem) (arrowStack.getItem() instanceof ArrowItem ? arrowStack.getItem() : Items.ARROW);
                 AbstractArrow abstractarrowentity = arrowitem.createArrow(worldIn, arrowStack, playerentity, bowStack);
                 abstractarrowentity = customArrow(abstractarrowentity, arrowStack, bowStack);
 
                 List<AbstractArrow> arrows = new ArrayList<>();
                 SpellResolver resolver = new SpellResolver(new SpellContext(worldIn, caster.modifySpellBeforeCasting(worldIn, entityLiving, InteractionHand.MAIN_HAND, caster.getSpell()), playerentity, new PlayerCaster(playerentity), bowStack));
-                if (arrowitem == Items.ARROW && resolver.withSilent(true).canCast(playerentity)) {
-                    abstractarrowentity = buildSpellArrow(worldIn, playerentity, caster, isSpellArrow, bowStack);
-                    resolver.expendMana();
-                    didCastSpell = true;
-                } else if (arrowitem instanceof SpellArrow) {
+                if (arrowitem instanceof SpellArrow) {
                     if (!(resolver.canCast(playerentity))) {
                         return;
                     } else if (resolver.canCast(playerentity)) {
                         resolver.expendMana();
                         didCastSpell = true;
                     }
+                }else if (resolver.withSilent(true).canCast(playerentity)) {
+                    abstractarrowentity = buildSpellArrow(worldIn, playerentity, caster, isSpellArrow, bowStack, arrowStack);
+                    resolver.expendMana();
+                    didCastSpell = true;
                 }
                 arrows.add(abstractarrowentity);
                 if (caster.getSpell().isValid() && didCastSpell) {
@@ -170,7 +176,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
                     }
 
                     for (int i = 0; i < numSplits; i++) {
-                        EntitySpellArrow spellArrow = buildSpellArrow(worldIn, playerentity, caster, isSpellArrow, bowStack);
+                        EntitySpellArrow spellArrow = buildSpellArrow(worldIn, playerentity, caster, isSpellArrow, bowStack, arrowStack);
                         arrows.add(spellArrow);
                     }
                 }
@@ -183,16 +189,20 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
                     if (f >= 1.0F) {
                         arr.setCritArrow(true);
                     }
+                    if(isArrowInfinite && use == 0){
+                        arrowStack = arrowStack.copyWithCount(1);
+                        arrowStack.set(DataComponents.INTANGIBLE_PROJECTILE, Unit.INSTANCE);
+                    }
                     addArrow(arr, bowStack, arrowStack, isArrowInfinite, playerentity);
+                }
+                if (!isArrowInfinite && !playerentity.abilities.instabuild) {
+                    arrowStack.shrink(use);
                 }
             }
 
             worldIn.playSound(null, playerentity.getX(), playerentity.getY(), playerentity.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (worldIn.random.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
             if (didCastSpell)
                 caster.playSound(playerentity.getOnPos(), playerentity.level, playerentity, caster.getCurrentSound(), SoundSource.PLAYERS);
-            if (!isArrowInfinite && !playerentity.abilities.instabuild) {
-                arrowStack.shrink(1);
-            }
         }
     }
 

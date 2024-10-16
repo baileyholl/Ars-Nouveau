@@ -1,4 +1,4 @@
-// 1.21	2024-08-02T11:37:31.2380448	Tags for minecraft:damage_type mod id ars_nouveau
+// 1.21.1	2024-08-17T10:54:39.172785	Tags for minecraft:damage_type mod id ars_nouveau
 8641b05da5b216be05123e3ed96b606930b31f26 data/minecraft/tags/damage_type/always_hurts_ender_dragons.json
 c07768ed08384f5d693ed8bed719a825a531b78e data/minecraft/tags/damage_type/bypasses_armor.json
 4eb8deadc24e4e017387ef06cfa6543373cea902 data/minecraft/tags/damage_type/is_fall.json

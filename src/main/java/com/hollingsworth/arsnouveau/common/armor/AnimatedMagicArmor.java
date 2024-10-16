@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.armor;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.perk.ITickablePerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.perk.PerkInstance;
@@ -43,7 +42,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem, IVariantColorProvider<ItemStack> {
+public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem {
     public GeoModel<AnimatedMagicArmor> model;
 
     public AnimatedMagicArmor(Holder<ArmorMaterial> materialIn, ArmorItem.Type slot, Properties builder, GeoModel<AnimatedMagicArmor> model) {
@@ -56,15 +55,30 @@ public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem, 
     }
 
     public static AnimatedMagicArmor light(ArmorItem.Type slot) {
-        return new AnimatedMagicArmor(MaterialRegistry.LIGHT, slot, new GenericModel<AnimatedMagicArmor>("light_armor", "item/light_armor").withEmptyAnim());
+        return new AnimatedMagicArmor(MaterialRegistry.LIGHT, slot,
+                ItemsRegistry.defaultItemProperties()
+                        .stacksTo(1)
+                        .component(DataComponentRegistry.ARMOR_PERKS, new ArmorPerkHolder())
+                        .durability(slot.getDurability(20)), new GenericModel<AnimatedMagicArmor>("light_armor", "item/light_armor").withEmptyAnim());
     }
 
     public static AnimatedMagicArmor medium(ArmorItem.Type slot) {
-        return new AnimatedMagicArmor(MaterialRegistry.MEDIUM, slot, new GenericModel<AnimatedMagicArmor>("medium_armor", "item/medium_armor").withEmptyAnim());
+        return new AnimatedMagicArmor(MaterialRegistry.MEDIUM, slot,ItemsRegistry.defaultItemProperties()
+                .stacksTo(1)
+                .component(DataComponentRegistry.ARMOR_PERKS, new ArmorPerkHolder())
+                .durability(slot.getDurability(25)), new GenericModel<AnimatedMagicArmor>("medium_armor", "item/medium_armor").withEmptyAnim());
     }
 
     public static AnimatedMagicArmor heavy(ArmorItem.Type slot) {
-        return new AnimatedMagicArmor(MaterialRegistry.HEAVY, slot, new GenericModel<AnimatedMagicArmor>("heavy_armor", "item/heavy_armor").withEmptyAnim());
+        return new AnimatedMagicArmor(MaterialRegistry.HEAVY, slot,ItemsRegistry.defaultItemProperties()
+                .stacksTo(1)
+                .component(DataComponentRegistry.ARMOR_PERKS, new ArmorPerkHolder())
+                .durability(slot.getDurability(35)), new GenericModel<AnimatedMagicArmor>("heavy_armor", "item/heavy_armor").withEmptyAnim());
+    }
+
+    @Override
+    public boolean isEnchantable(ItemStack pStack) {
+        return true;
     }
 
     @Override
@@ -101,8 +115,8 @@ public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem, 
                 modifiers = instance.getPerk().applyAttributeModifiers(modifiers, stack, instance.getSlot().value(), EquipmentSlotGroup.bySlot(this.type.getSlot()));
             }
 
-            modifiers = modifiers.withModifierAdded(PerkAttributes.MAX_MANA, new AttributeModifier(ArsNouveau.prefix("max_mana_armor"), 30 * (perkHolder.getTier() + 1), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.bySlot(this.type.getSlot()));
-            modifiers = modifiers.withModifierAdded(PerkAttributes.MANA_REGEN_BONUS, new AttributeModifier(ArsNouveau.prefix("mana_regen_armor"), perkHolder.getTier() + 1, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.bySlot(this.type.getSlot()));
+            modifiers = modifiers.withModifierAdded(PerkAttributes.MAX_MANA, new AttributeModifier(ArsNouveau.prefix("max_mana_armor_" + this.type.getName()), 30 * (perkHolder.getTier() + 1), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.bySlot(this.type.getSlot()));
+            modifiers = modifiers.withModifierAdded(PerkAttributes.MANA_REGEN_BONUS, new AttributeModifier(ArsNouveau.prefix("mana_regen_armor_" + this.type.getName()), perkHolder.getTier() + 1, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.bySlot(this.type.getSlot()));
         }
         return modifiers;
     }
@@ -168,12 +182,7 @@ public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem, 
         return ArsNouveau.prefix( "textures/" + genericModel.textPathRoot + "/" + genericModel.name + "_" + this.getColor(stack) + ".png");
     }
 
-    @Override
-    public void setColor(String color, ItemStack armor) {
 
-    }
-
-    @Override
     public String getColor(ItemStack object) {
         var perkHolder = PerkUtil.getPerkHolder(object);
         if(!(perkHolder instanceof ArmorPerkHolder data)){

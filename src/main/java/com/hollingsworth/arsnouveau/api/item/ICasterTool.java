@@ -17,7 +17,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -32,22 +32,14 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
         AbstractCaster<?> tableCaster = SpellCasterRegistry.from(tableStack);
         if (!((heldStack.getItem() instanceof SpellBook) || (heldStack.getItem() instanceof SpellParchment) || (heldStack.getItem() == ItemsRegistry.MANIPULATION_ESSENCE.asItem())))
             return false;
-        if(tableCaster == null){
+        if (tableCaster == null) {
             return false;
         }
-        boolean success;
 
         AbstractCaster<?> heldCaster = SpellCasterRegistry.from(heldStack);
         Spell spell = new Spell();
-        if (heldCaster != null) {
-            spell = heldCaster.getSpell();
-            tableCaster.setColor(heldCaster.getColor())
-                    .setFlavorText(heldCaster.getFlavorText())
-                    .setSpellName(heldCaster.getSpellName())
-                    .setSound(heldCaster.getCurrentSound())
-                    .saveToStack(tableStack);
-
-        } else if (heldStack.getItem() == ItemsRegistry.MANIPULATION_ESSENCE.asItem()) {
+        // If the held item is a manipulation essence, set the spell to a random hidden spell
+        if (heldStack.getItem() == ItemsRegistry.MANIPULATION_ESSENCE.asItem()) {
             // Thanks mojang
             String[] words = new String[]{"the", "elder", "scrolls", "klaatu", "berata", "niktu", "xyzzy", "bless", "curse", "light", "darkness", "fire", "air", "earth", "water", "hot", "dry", "cold", "wet", "ignite", "snuff", "embiggen", "twist", "shorten", "stretch", "fiddle", "destroy", "imbue", "galvanize", "enchant", "free", "limited", "range", "of", "towards", "inside", "sphere", "cube", "self", "other", "ball", "mental", "physical", "grow", "shrink", "demon", "elemental", "spirit", "animal", "creature", "beast", "humanoid", "undead", "fresh", "stale", "phnglui", "mglwnafh", "cthulhu", "rlyeh", "wgahnagl", "fhtagn", "baguette"};
             // Pick between 3 and 5 words
@@ -62,14 +54,25 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
             PortUtil.sendMessageNoSpam(player, Component.translatable("ars_nouveau.spell_hidden"));
             return true;
         }
+        // If the held caster is not null, set the spell to the held caster's spell
+        if (heldCaster != null) {
+            spell = heldCaster.getSpell();
+            tableCaster.setColor(heldCaster.getColor())
+                    .setFlavorText(heldCaster.getFlavorText())
+                    .setSpellName(heldCaster.getSpellName())
+                    .setSound(heldCaster.getCurrentSound())
+                    .saveToStack(tableStack);
+
+        }
+        // modify the spell (ex. add Amplify with Enchanter Sword) if valid and then send the appropriate message
         if (isScribedSpellValid(tableCaster, player, handIn, tableStack, spell)) {
             var mutableSpell = spell.mutable();
             scribeModifiedSpell(tableCaster, player, handIn, tableStack, mutableSpell);
             tableCaster.setSpell(mutableSpell.immutable()).saveToStack(tableStack);
             sendSetMessage(player);
-        } else {
-            sendInvalidMessage(player);
+            return true;
         }
+        sendInvalidMessage(player);
         return false;
     }
 
@@ -82,23 +85,20 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
     }
 
     @Override
-    default @NotNull AbstractCaster<?> getSpellCaster(ItemStack stack) {
+    default @Nullable AbstractCaster<?> getSpellCaster(ItemStack stack) {
         return SpellCasterRegistry.from(stack);
     }
 
-    default void scribeModifiedSpell(AbstractCaster<?> caster, Player player, InteractionHand hand, ItemStack stack, Spell.Mutable spell){}
+    default void scribeModifiedSpell(AbstractCaster<?> caster, Player player, InteractionHand hand, ItemStack stack, Spell.Mutable spell) {
+    }
 
     default boolean isScribedSpellValid(AbstractCaster<?> caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
         return spell.isValid();
     }
 
-    @Override
-    default boolean shouldDisplay(ItemStack stack) {
-        return true;
-    }
-
     default void getInformation(ItemStack stack, Item.TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
         AbstractCaster<?> caster = getSpellCaster(stack);
+        if (caster == null) return;
         stack.addToTooltip(caster.getComponentType(), context, tooltip2::add, flagIn);
     }
 }

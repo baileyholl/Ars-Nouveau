@@ -19,7 +19,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -57,12 +56,6 @@ public class RuneBlock extends TickableModBlock {
         super(properties);
     }
 
-    @Override
-    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        super.setPlacedBy(worldIn, pos, state, placer, stack);
-    }
-
-
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
@@ -98,10 +91,12 @@ public class RuneBlock extends TickableModBlock {
     }
 
 
+    @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(BlockStateProperties.FACING, rot.rotate(state.getValue(BlockStateProperties.FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(BlockStateProperties.FACING)));
     }
@@ -163,6 +158,11 @@ public class RuneBlock extends TickableModBlock {
     }
 
     @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(POWERED).add(FACING).add(FLOOR);
+    }
+
+    @Override
     public RenderShape getRenderShape(BlockState p_149645_1_) {
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }
@@ -175,7 +175,4 @@ public class RuneBlock extends TickableModBlock {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty FLOOR = BooleanProperty.create("floor");
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(POWERED).add(FACING).add(FLOOR);
-    }
 }

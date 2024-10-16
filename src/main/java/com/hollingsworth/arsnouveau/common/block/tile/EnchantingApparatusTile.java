@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.*;
+import com.hollingsworth.arsnouveau.common.block.ArcanePlatform;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ApparatusRecipeInput;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IEnchantingRecipe;
@@ -59,21 +60,23 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
         if (level.isClientSide) {
             if (this.isCrafting) {
                 Level world = getLevel();
-                BlockPos pos = getBlockPos().offset(0, 1, 0);
+                BlockPos pos = getBlockPos().offset(0, 0, 0);
                 RandomSource rand = world.getRandom();
 
                 Vec3 particlePos = new Vec3(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0, 0.5);
                 particlePos = particlePos.add(ParticleUtil.pointInSphere());
                 world.addParticle(ParticleLineData.createData(new ParticleColor(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255))),
-                        particlePos.x(), particlePos.y(), particlePos.z(),
-                        pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
+                        particlePos.x(), particlePos.y() + 1, particlePos.z(),
+                        pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 
                 for (BlockPos p : pedestalList()) {
-                    if (level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile && pedestalTile.getStack() != null && !pedestalTile.getStack().isEmpty())
+                    if (level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile && pedestalTile.getStack() != null && !pedestalTile.getStack().isEmpty()) {
+                        var yOffset = level.getBlockState(p).getBlock() instanceof ArcanePlatform ? 0.6 : 1.3;
                         getLevel().addParticle(
                                 GlowParticleData.createData(new ParticleColor(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255))),
-                                p.getX() + 0.5 + ParticleUtil.inRange(-0.2, 0.2), p.getY() + 1.5 + ParticleUtil.inRange(-0.3, 0.3), p.getZ() + 0.5 + ParticleUtil.inRange(-0.2, 0.2),
+                                p.getX() + 0.5 + ParticleUtil.inRange(-0.2, 0.2), p.getY() + yOffset + ParticleUtil.inRange(-0.3, 0.3), p.getZ() + 0.5 + ParticleUtil.inRange(-0.2, 0.2),
                                 0, 0, 0);
+                    }
                 }
 
             }

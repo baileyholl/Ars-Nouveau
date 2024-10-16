@@ -5,9 +5,11 @@ import com.hollingsworth.arsnouveau.api.event.SpellModifierEvent;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchools;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
+import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
@@ -51,6 +53,15 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
             event.builder.addDamageModifier(2.0f);
         }
     }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (!level.isClientSide && level.getGameTime() % 60 == 0 && getOwner() != null) {
+            getOwner().addEffect(new MobEffectInstance(ModPotions.LOOTING_EFFECT, 600, 0, false, false, true));
+        }
+    }
+
 // TODO: restore looting event
 //    public void onLootingEvent(LootingLevelEvent event) {
 //        if (event.getDamageSource() != null && isAlive() && getOwner() != null && event.getDamageSource().getEntity() != null && getOwner().equals(event.getDamageSource().getEntity())) {
@@ -74,8 +85,7 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
         return ModEntities.ENTITY_FAMILIAR_DRYGMY.get();
     }
 
-    @Override
-    public ResourceLocation getTexture(FamiliarEntity entity) {
+    public ResourceLocation getTexture() {
         String color = getColor().toLowerCase();
         if (color.isEmpty()) color = "brown";
         return ArsNouveau.prefix("textures/entity/drygmy_" + color + ".png");

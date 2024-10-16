@@ -153,7 +153,7 @@ public class PortalBlock extends TickableModBlock {
             BlockPos.betweenClosed(helper.lowerCorner, helper.lowerCorner.relative(Direction.Axis.X, helper.xSize - 1).relative(Direction.Axis.Z, helper.zSize - 1)).forEach((blockPos) -> {
                 worldIn.setBlock(blockPos, BlockRegistry.PORTAL_BLOCK.defaultBlockState().setValue(PortalBlock.AXIS, Direction.Axis.Y), 18);
                 if (worldIn.getBlockEntity(blockPos) instanceof PortalTile tile) {
-                    tile.warpPos = data.pos();
+                    tile.warpPos = data.pos().orElse(null);
                     tile.dimID = data.dimension();
                     tile.rotationVec = data.rotation();
                     tile.displayName = displayName;

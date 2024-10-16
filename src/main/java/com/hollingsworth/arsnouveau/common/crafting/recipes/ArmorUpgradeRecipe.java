@@ -18,6 +18,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -58,12 +59,12 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider pRegistries) {
+    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider pRegistries) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public ItemStack assemble(ApparatusRecipeInput input, HolderLookup.Provider p_346030_) {
+    public @NotNull ItemStack assemble(ApparatusRecipeInput input, HolderLookup.@NotNull Provider p_346030_) {
         ItemStack reagent = input.catalyst();
         ArmorPerkHolder perkHolder = PerkUtil.getPerkHolder(reagent);
         if(!(perkHolder instanceof ArmorPerkHolder armorPerkHolder)){
@@ -74,7 +75,7 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public @NotNull RecipeType<?> getType() {
         return RecipeRegistry.ARMOR_UPGRADE_TYPE.get();
     }
 
@@ -84,7 +85,7 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public @NotNull RecipeSerializer<?> getSerializer() {
         return RecipeRegistry.ARMOR_SERIALIZER.get();
     }
 
@@ -98,12 +99,12 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
         public static StreamCodec<RegistryFriendlyByteBuf, ArmorUpgradeRecipe> STREAM_CODEC = CheatSerializer.create(CODEC);
 
         @Override
-        public MapCodec<ArmorUpgradeRecipe> codec() {
+        public @NotNull MapCodec<ArmorUpgradeRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public StreamCodec<RegistryFriendlyByteBuf, ArmorUpgradeRecipe> streamCodec() {
+        public @NotNull StreamCodec<RegistryFriendlyByteBuf, ArmorUpgradeRecipe> streamCodec() {
             return STREAM_CODEC;
         }
     }

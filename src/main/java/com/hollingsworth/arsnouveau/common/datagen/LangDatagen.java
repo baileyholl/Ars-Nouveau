@@ -211,6 +211,8 @@ public class LangDatagen extends LanguageProvider {
         add("item.minecraft.tipped_arrow.effect.mana_regen_potion_long", "Arrow of Mana Regeneration");
         add("effect.ars_nouveau.mana_regen", "Mana Regeneration");
         add("effect.ars_nouveau.mana_regen.desc", "Improves mana regeneration");
+        add("effect.ars_nouveau.looting", "Drygmy's Blessing");
+        add("effect.ars_nouveau.looting.desc", "Increases the amount of loot dropped by mobs");
         add("ars_nouveau.on", "Active: Yes");
         add("ars_nouveau.off", "Active: No");
         add("item.ars_nouveau.void_jar", "Jar of Voiding");
@@ -337,6 +339,9 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.color_gui.black", "Black");
         add("ars_nouveau.color_gui.save", "Save");
         add("ars_nouveau.color_gui.save_all", "Save All");
+        add("ars_nouveau.dominion_wand.clear", "Clear");
+        add("ars_nouveau.dominion_wand.normal", "Normal Mode");
+        add("ars_nouveau.dominion_wand.strict", "Strict Mode");
         add("ars_nouveau.dominion_wand.stored_entity", "Stored entity");
         add("ars_nouveau.dominion_wand.position_set", "Position set.");
         add("ars_nouveau.dominion_wand.no_entity", "No entity set");
@@ -577,6 +582,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page1.weald_waddler", "If a Weald Walker dies, it will be turned into a Weald Waddler. Weald Waddlers will slowly grow back into Weald Walkers, and can be sped up by giving them bonemeal. A Weald Waddler cannot fight or protect itself until it has grown back to a Walker.");
         add("ars_nouveau.source", "Source: %s");
         add("ars_nouveau.crush_recipe", "Crush Glyph");
+        add("ars_nouveau.budding_conversion_recipe", "Amethyst Golem Conversion");
+        add("ars_nouveau.scry_ritual_recipe", "Scry Ritual");
         add("ars_nouveau.enchanting_apparatus", "Enchanting Apparatus");
         add("ars_nouveau.armor_upgrade", "Magic Armor Upgrade");
         add("ars_nouveau.page.apparatus_crafting", "Apparatus Crafting");
@@ -645,7 +652,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page4.basic_spell_turret", "Turrets can provide compact and efficient automation. Examples include: configurable redstone clocks, one block tree or crop farms, rapid smelting with fortune, or mob farms with looting.");
         add("ars_nouveau.page1.bookwyrm_charm", "Bookwyrm Charms can be used on a Storage Lectern to increase the number of accessible inventories. Augment a Ritual of Awakening with Book and Quills in order to obtain charms. Bookwyrms can be dyed using white, black, blue, green, red, or purple dye.");
         add("ars_nouveau.page2.bookwyrm_charm", "In the event that they die or are dispelled, they will drop their charm.");
-        add("ars_nouveau.page.dominion_wand", "A tool for configuring Source Relays and automation entities. To set a transfer path, use the wand on the object that you would like to take source from, and then use it on the block you would like to send source to. For example: Source Jar to Source Relay, Source Relay to Source Relay, or Source Relay to Source Jar. To clear connections, sneak and use this wand on a relay. If you sneak-use it on the air it will switch to Strict mode, allowing to specify the side of the blocks to use.");
+        add("ars_nouveau.page.dominion_wand", "A tool for configuring Source Relays and automation entities. To set a transfer path, use the wand on the object that you would like to take source from, and then use it on the block you would like to send source to. For example: Source Jar to Source Relay, Source Relay to Source Relay, or Source Relay to Source Jar. To clear connections, sneak and use this wand on a relay. You can switch into Strict mode using the radial menu, allowing to specify the side of the blocks to use.");
         add("ars_nouveau.page1.drygmy_charm", "Drygmys are often found following and tending to animals around it. They can be found anywhere, though somewhat rarely. Drygmys can be given a home in the world, and will produce items from nearby monsters and animals as if they were slain, without harming them. A wild drygmy may be befriended by throwing a Wilden Horn near it! You may dye a Drygmy Cyan, Orange, or Brown.");
         add("ars_nouveau.page2.drygmy_charm", "A Drygmy can also produce experience gems!");
         add("ars_nouveau.page3.drygmy_charm", "To summon a Drygmy, use a Drymy Charm on a block of Mossy Cobblestone. After a short time, the cobblestone will transform into a Drygmy Henge and summon your Drgymy! To summon additional drygmys, use more charms on the henge. Casting dispel or killing the Drygmy will return your charm.");
@@ -1028,6 +1035,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.perk.saturation.desc", "Increases the saturation of the food");
         add("ars_nouveau.perk.wixie", "Potion Duration");
         add("ars_nouveau.perk.wixie.desc", "Increases the duration of potion effects.");
+        add("ars_nouveau.perk.drygmy", "Extra Looting");
+        add("ars_nouveau.perk.drygmy.desc", "Increases the amount of loot dropped by mobs.");
         add("ars_nouveau.perk.jump_height", "Jump Power");
         add("ars_nouveau.perk.jump_height.desc", "Increases the height of your jumps.");
         add("ars_nouveau.perk.feather", "Fall Damage Reduction");
@@ -1135,7 +1144,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.void_prism", "Void Prism");
         add("ars_nouveau.page.void_prism", "Destroys any spell projectiles that pass through it.");
         add("item.ars_nouveau.music_disc_aria_biblio", "Music Disc");
-        add("item.ars_nouveau.music_disc_aria_biblio.desc", "Firel - Aria Biblio");
+        add("jukebox_song.ars_nouveau.aria_biblio", "Firel - Aria Biblio");
         add("item.ars_nouveau.starby_gift", "Starbuncle Gift");
         add("ars_nouveau.present.give", "Give this to a friend and they will get bonus items, or open it for yourself!");
         add("ars_nouveau.present.from", "A gift from %s");
@@ -1259,11 +1268,12 @@ public class LangDatagen extends LanguageProvider {
         add("mob_jar.dummy", "A player dummy in a jar will attract nearby mobs.");
         add("ars_nouveau.turret.tooltip", "Can be rotated to face any direction. Use a dominion wand on the turret, and then on the target block.");
         add("ars_nouveau.scribes_table.auto_take_disabled", "Auto Take Disabled");
+        add("item.ars_nouveau.debug", "Ars Nouveau Debugger");
         add("ars_nouveau.alert.turret_needs_form", "Spell must have a form.");
         add("item.ars_nouveau.music_disc_thistle_the_sound_of_glass", "Music Disc");
-        add("item.ars_nouveau.music_disc_thistle_the_sound_of_glass.desc", "Thistle - The Sound of Glass");
+        add("jukebox_song.ars_nouveau.thistle_the_sound_of_glass", "Thistle - The Sound of Glass");
         add("item.ars_nouveau.music_disc_firel_the_wild_hunt", "Music Disc");
-        add("item.ars_nouveau.music_disc_firel_the_wild_hunt.desc", "Firel - The Wild Hunt");
+        add("jukebox_song.ars_nouveau.firel_the_wild_hunt", "Firel - The Wild Hunt");
         add("ars_nouveau.sensor.set_spell", "Sensor will now trigger on this spell only.");
         add("ars_nouveau.sensor.on_resolve", "Mode: On Resolve");
         add("ars_nouveau.sensor.on_cast", "Mode: On Cast");
@@ -1285,12 +1295,19 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.empty","Empty");
         add("ars_nouveau.melder.output_not_unique", "Output potion is not a unique mix.");
         add("ars_nouveau.melder.output_duplicate_effect", "Cannot mix potions with the same effect but different levels.");
+        add("ars_nouveau.page1.archwood_grate", "Liquids placed on top of them will be transported below, waterlogging the below block if possible. Interacting with the grate will also act as if you are interacting with the block below it, allowing you to bucket liquids below. Additionally, items and projectiles will pass through it. Can be placed in any direction.");
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             String key = "block.ars_nouveau." + s;
             String val = data.get(key);
             add(key + "_slab", val + " Slab");
             add(key + "_stairs", val + " Stairs");
         }
+        add("block.ars_nouveau.sourcestone_grate","Sourcestone Grate");
+        add("block.ars_nouveau.gold_grate","Gold Grate");
+        add("block.ars_nouveau.archwood_grate","Archwood Grate");
+        add("block.ars_nouveau.smooth_sourcestone_grate","Smooth Sourcestone Grate");
+        add("block.ars_nouveau.source_lamp", "Source Gem Lamp");
+        add("ars_nouveau.page1.source_lamp", "Behaves like a copper bulb, but the light and comparator values can be adjusted by casting Light with dampen.");
     }
 
     @Override

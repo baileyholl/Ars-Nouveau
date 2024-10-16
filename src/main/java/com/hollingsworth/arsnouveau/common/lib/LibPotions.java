@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.lib;
 
 public class LibPotions {
 
+    public static final String LOOTING = "looting";
     public static final String SHOCKED = "shocked";
     public static final String HEX = "hex";
     public static final String MAGIC_FIND = "magic_find";

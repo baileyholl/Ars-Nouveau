@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.lib;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 
@@ -23,4 +22,7 @@ public class EntityTags {
     public static final TagKey<EntityType<?>> JAR_RELEASE_BLACKLIST = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix( "jar_release_blacklist"));
     public static final TagKey<EntityType<?>> ANIMAL_SUMMON_BLACKLIST = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix( "animal_summon_blacklist"));
     public static final TagKey<EntityType<?>> REWIND_BLACKLIST = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix( "rewind_blacklist"));
+
+    public static final TagKey<EntityType<?>> ITEM_GRATE_PASSABLE = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix( "item_grate_passable"));
+    public static final TagKey<EntityType<?>> ITEM_GRATE_COLLIDE = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix( "item_grate_collide"));
 }

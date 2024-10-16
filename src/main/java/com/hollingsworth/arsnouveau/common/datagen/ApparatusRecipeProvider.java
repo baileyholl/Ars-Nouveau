@@ -333,17 +333,17 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
 
         addRecipe(builder()
                 .withPedestalItem(1, ItemsRegistry.AIR_ESSENCE)
-                .withPedestalItem(1, Ingredient.of(Tags.Items.SLIMEBALLS))
+                .withPedestalItem(1, Ingredient.of(Tags.Items.SLIME_BALLS))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.FEATHER_FALLING, 1, 2000));
         addRecipe(builder()
                 .withPedestalItem(2, ItemsRegistry.AIR_ESSENCE)
-                .withPedestalItem(1, Ingredient.of(Tags.Items.SLIMEBALLS))
+                .withPedestalItem(1, Ingredient.of(Tags.Items.SLIME_BALLS))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.FEATHER_FALLING, 2, 3500));
         addRecipe(builder()
                 .withPedestalItem(3, ItemsRegistry.AIR_ESSENCE)
-                .withPedestalItem(1, Ingredient.of(Tags.Items.SLIMEBALLS))
+                .withPedestalItem(1, Ingredient.of(Tags.Items.SLIME_BALLS))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.FEATHER_FALLING, 3, 5000));

@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.PortalBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.PortalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.TemporaryTile;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.items.data.WarpScrollData;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -17,6 +18,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,7 +84,18 @@ public class BuildPortalEvent implements ITimedEvent {
         if(placingFrame){
             BlockPos pos = framePos.get(0);
             framePos.remove(pos);
-            if(level.getBlockState(pos).canBeReplaced()) {
+            BlockState bs = level.getBlockState(pos);
+            if (bs.is(BlockTagProvider.DECORATIVE_AN) || level.getBlockEntity(pos) instanceof TemporaryTile tile && tile.mimicState.is(BlockTagProvider.DECORATIVE_AN)) {
+                tick(true);
+                if(level.getBlockEntity(pos) instanceof TemporaryTile tile){
+                    tile.mimicState = BlockRegistry.getBlock(LibBlockNames.SOURCESTONE).defaultBlockState();
+                    tile.tickDuration = 20 * 60;
+                    tile.gameTime = level.getGameTime();
+                    tile.updateBlock();
+                }
+                return;
+            }
+            if(bs.canBeReplaced() || level.getBlockEntity(pos) instanceof TemporaryTile tile && tile.mimicState.is(BlockTagProvider.DECORATIVE_AN)) {
                 level.setBlock(pos, BlockRegistry.TEMPORARY_BLOCK.get().defaultBlockState(), 3);
                 if(level.getBlockEntity(pos) instanceof TemporaryTile tile){
                     tile.mimicState = BlockRegistry.getBlock(LibBlockNames.SOURCESTONE).defaultBlockState();

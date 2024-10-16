@@ -1,0 +1,16 @@
+{
+  "type": "ars_nouveau:dye",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "c:dyes"
+    },
+    {
+      "item": "ars_nouveau:sorcerer_robes"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:sorcerer_robes"
+  }
+}

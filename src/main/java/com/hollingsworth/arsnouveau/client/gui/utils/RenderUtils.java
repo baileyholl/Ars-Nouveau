@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
@@ -29,14 +30,14 @@ public class RenderUtils {
     }
 
     public static void drawSpellPart(AbstractSpellPart objectToBeDrawn, GuiGraphics graphics, int positionX, int positionY, int size, boolean renderTransparent) {
-        renderFakeItemTransparent(graphics.pose(), objectToBeDrawn.glyphItem.getDefaultInstance(), positionX, positionY, size, 0, renderTransparent,150);
+        renderFakeItemTransparent(graphics.pose(), objectToBeDrawn.glyphItem.getDefaultInstance(), positionX, positionY, size, 0, renderTransparent, 150);
     }
 
     public static void drawItemAsIcon(ItemStack itemStack, GuiGraphics graphics, int positionX, int positionY, int size, boolean renderTransparent) {
-        renderFakeItemTransparent(graphics.pose(), itemStack, positionX, positionY, size, 0, renderTransparent,150);
+        renderFakeItemTransparent(graphics.pose(), itemStack, positionX, positionY, size, 0, renderTransparent, 150);
     }
 
-    public static void renderFakeItemTransparent(PoseStack poseStack, ItemStack stack, int x, int y,int scale, int alpha, boolean transparent, int zIndex) {
+    public static void renderFakeItemTransparent(PoseStack poseStack, ItemStack stack, int x, int y, int scale, int alpha, boolean transparent, int zIndex) {
         if (stack.isEmpty()) {
             return;
         }
@@ -106,6 +107,10 @@ public class RenderUtils {
         bufferbuilder.addVertex(matrix, (float) x, (float) y, 0).setUv(minU, minV).setColor(r, g, b, alpha);
         BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
         RenderSystem.disableBlend();
+    }
+
+    public static void drawString(String string, GuiGraphics guiGraphics, int positionX, int positionY, int size, boolean renderTransparent) {
+        guiGraphics.drawString(Minecraft.getInstance().font, Component.translatable(string), positionX, positionY, Color.WHITE.getRGB());
     }
 
 }

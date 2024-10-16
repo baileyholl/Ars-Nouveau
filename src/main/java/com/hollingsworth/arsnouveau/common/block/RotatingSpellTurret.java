@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.ITurretBehavior;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.common.block.tile.RotatingTurretTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
@@ -84,7 +85,9 @@ public class RotatingSpellTurret extends BasicSpellTurret {
                     spell.setOwner(fakePlayer);
                     spell.setPos(iposition.x(), iposition.y(), iposition.z());
                     Vec3 vec3d = rotatingTurretTile.getShootAngle().normalize();
-                    spell.shoot(vec3d.x(), vec3d.y(), vec3d.z(), 0.5f, 0);
+                    SpellStats stats = resolver.getCastStats();
+                    float velocity = Math.max(0.1f, 0.75f + stats.getAccMultiplier() / 2);
+                    spell.shoot(vec3d.x(), vec3d.y(), vec3d.z(), velocity, 0);
                     world.addFreshEntity(spell);
                 }
             }

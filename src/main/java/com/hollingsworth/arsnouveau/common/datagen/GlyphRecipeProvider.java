@@ -4,10 +4,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodUnderfoot;
+import com.hollingsworth.arsnouveau.common.spell.method.*;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.mojang.serialization.JsonOps;
@@ -18,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.Tags;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -56,7 +54,7 @@ public class GlyphRecipeProvider extends SimpleDataProvider {
         add(get(MethodUnderfoot.INSTANCE).withItem(Items.IRON_BOOTS).withIngredient(Ingredient.of(ItemTags.WOODEN_PRESSURE_PLATES)));
 
         add(get(EffectBlink.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withIngredient(Ingredient.of(Tags.Items.ENDER_PEARLS), 4));
-        add(get(EffectBounce.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withIngredient(Ingredient.of(Tags.Items.SLIMEBALLS), 3));
+        add(get(EffectBounce.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withIngredient(Ingredient.of(Tags.Items.SLIME_BALLS), 3));
         add(get(EffectBreak.INSTANCE).withItem(Items.IRON_PICKAXE));
         add(get(EffectColdSnap.INSTANCE).withItem(ItemsRegistry.WATER_ESSENCE).withItem(Items.POWDER_SNOW_BUCKET).withItem(Items.ICE));
         add(get(EffectConjureWater.INSTANCE).withItem(ItemsRegistry.WATER_ESSENCE).withItem(Items.WATER_BUCKET));
@@ -126,6 +124,7 @@ public class GlyphRecipeProvider extends SimpleDataProvider {
         add(get(EffectReset.INSTANCE).withItem(Items.TARGET, 1));
         add(get(EffectWololo.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withIngredient(Ingredient.of(Tags.Items.DYES), 3));
         add(get(EffectRewind.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.CLOCK, 3));
+        add(get(MethodPantomime.INSTANCE).withIngredient(Tags.Items.GLASS_BLOCKS, 8));
         for (GlyphRecipe recipe : recipes) {
             Path path = getScribeGlyphPath(output, recipe.output.getItem());
             saveStable(pOutput, GlyphRecipe.CODEC.encodeStart(JsonOps.INSTANCE, recipe).getOrThrow(), path);
@@ -160,7 +159,7 @@ public class GlyphRecipeProvider extends SimpleDataProvider {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "Glyph Recipes";
     }
 }

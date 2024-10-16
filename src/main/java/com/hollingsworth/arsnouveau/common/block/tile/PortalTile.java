@@ -66,7 +66,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
     }
 
     public void setFromScroll(WarpScrollData scrollData){
-        this.warpPos = scrollData.pos();
+        this.warpPos = scrollData.pos().orElse(null);
         this.dimID = scrollData.dimension();
         this.rotationVec = scrollData.rotation();
     }

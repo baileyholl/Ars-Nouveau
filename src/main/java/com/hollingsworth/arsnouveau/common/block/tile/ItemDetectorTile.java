@@ -121,7 +121,7 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
     @Override
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         if(storedPos != null){
-            if(level.getBlockEntity(storedPos) == null || level.getCapability(Capabilities.ItemHandler.BLOCK, connectedPos, null) == null){
+            if(level.getBlockEntity(storedPos) == null || level.getCapability(Capabilities.ItemHandler.BLOCK, storedPos, null) == null){
                 return;
             }
             if(BlockUtil.distanceFrom(storedPos, worldPosition) > 30){

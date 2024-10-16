@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.145'
+    id 'net.neoforged.gradle.userdev' version '7.0.+'
 }
 
 version = mod_version
@@ -24,7 +24,7 @@ java.withSourcesJar()
 
 subsystems {
     parchment {
-        minecraftVersion = "1.20.6"
+        minecraftVersion = "1.21"
         mappingsVersion = project.parchment_version
     }
 }
@@ -43,7 +43,7 @@ runs {
     }
 
     data {
-        programArguments.addAll '--mod', mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        getArguments().addAll '--mod', mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
     }
 }
 
@@ -104,10 +104,12 @@ dependencies {
 //    jarJar(group: 'software.bernie.geckolib', name: "geckolib-neoforge-${minecraft_version}", version: "[4.5,)") {
 //        jarJar.pin(it, "${geckolib_version}")
 //    }
-    implementation "software.bernie.geckolib:geckolib-neoforge-1.21:${geckolib_version}"
+    implementation "software.bernie.geckolib:geckolib-neoforge-1.21.1:${geckolib_version}"
 //
-//    implementation "vazkii.patchouli:Patchouli:1.20.4-${patchouli_version}"
-//
+    implementation(jarJar(group: 'vazkii.patchouli', name: 'Patchouli', version: '[1.21,)') {
+        jarJar.pin(it, patchouli_version)
+    })
+
     runtimeOnly "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}"
     compileOnly "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}:api"
 
@@ -115,7 +117,9 @@ dependencies {
     implementation "mezz.jei:jei-1.21-neoforge:${jei_version}"
     implementation 'com.github.glitchfiend:TerraBlender-neoforge:1.21-4.0.0.0'
     implementation "curse.maven:jade-324717:5444008"
-    implementation 'top.theillusivec4.curios:curios-neoforge:9.0.4+1.21'
+    implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}+1.21"
+
+    implementation "curse.maven:ars-additions-974408:5698511"
 }
 
 jar {

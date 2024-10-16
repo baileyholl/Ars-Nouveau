@@ -3,9 +3,9 @@ package com.hollingsworth.arsnouveau.client.renderer.entity.familiar;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
 import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
@@ -23,13 +23,13 @@ public class FamiliarStarbyModel<T extends FamiliarStarbuncle> extends GeoModel<
     }
 
     @Override
-    public ResourceLocation getModelResource(FamiliarStarbuncle carbuncle) {
-        return ArsNouveau.prefix( "geo/starbuncle.geo.json");
+    public ResourceLocation getModelResource(T carbuncle) {
+        return carbuncle.getModel();
     }
 
     @Override
-    public ResourceLocation getTextureResource(FamiliarStarbuncle carbuncle) {
-        return carbuncle.getTexture(carbuncle);
+    public ResourceLocation getTextureResource(T carbuncle) {
+        return carbuncle.getTexture();
     }
 
     @Override

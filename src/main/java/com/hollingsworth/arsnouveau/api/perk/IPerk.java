@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.perk;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 /**
@@ -62,6 +64,13 @@ public interface IPerk {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Return the initial perk data when this Perk is added to an item for the first time.
+     */
+    default @Nullable CompoundTag getInitTag(){
+        return null;
     }
 
     ResourceLocation getRegistryName();

@@ -23,6 +23,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public @NotNull RecipeType<?> getType() {
         return RecipeRegistry.ENCHANTMENT_TYPE.get();
     }
 
@@ -96,7 +97,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
     }
 
     @Override
-    public ItemStack assemble(ApparatusRecipeInput input, HolderLookup.Provider lookup) {
+    public @NotNull ItemStack assemble(ApparatusRecipeInput input, HolderLookup.@NotNull Provider lookup) {
         ItemStack inStack = input.catalyst();
         ItemStack stack = inStack.getItem() == Items.BOOK ? new ItemStack(Items.ENCHANTED_BOOK) : inStack.copy();
         ItemEnchantments enchantments = EnchantmentHelper.getEnchantmentsForCrafting(stack);
@@ -108,12 +109,12 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider pRegistries) {
+    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider pRegistries) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public @NotNull RecipeSerializer<?> getSerializer() {
         return RecipeRegistry.ENCHANTMENT_SERIALIZER.get();
     }
 
@@ -147,12 +148,12 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
                 );
 
         @Override
-        public MapCodec<EnchantmentRecipe> codec() {
+        public @NotNull MapCodec<EnchantmentRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public StreamCodec<RegistryFriendlyByteBuf, EnchantmentRecipe> streamCodec() {
+        public @NotNull StreamCodec<RegistryFriendlyByteBuf, EnchantmentRecipe> streamCodec() {
             return STREAM_CODEC;
         }
     }

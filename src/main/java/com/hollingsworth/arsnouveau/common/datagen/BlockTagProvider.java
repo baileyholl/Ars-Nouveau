@@ -96,7 +96,8 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.MOB_JAR.get(),
                 BlockRegistry.VOID_PRISM.get(),
                 BlockRegistry.BRAZIER_RELAY.get(),
-                BlockRegistry.REDSTONE_RELAY.get()
+                BlockRegistry.REDSTONE_RELAY.get(),
+                BlockRegistry.AGRONOMIC_SOURCELINK.get()
         );
 
         this.tag(BlockTags.MINEABLE_WITH_AXE).add(
@@ -217,31 +218,18 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(Tags.Blocks.FENCE_GATES).add(BlockRegistry.ARCHWOOD_FENCE_GATE.get());
         this.tag(Tags.Blocks.FENCE_GATES_WOODEN).add(BlockRegistry.ARCHWOOD_FENCE_GATE.get());
 
-        this.tag(BlockTags.LOGS).add(
-                BlockRegistry.VEXING_LOG.get(),
-                BlockRegistry.CASCADING_LOG.get(),
-                BlockRegistry.FLOURISHING_LOG.get(),
-                BlockRegistry.BLAZING_LOG.get(),
-                BlockRegistry.STRIPPED_AWLOG_BLUE.get(),
-                BlockRegistry.STRIPPED_AWWOOD_BLUE.get(),
-                BlockRegistry.STRIPPED_AWLOG_GREEN.get(),
-                BlockRegistry.STRIPPED_AWWOOD_GREEN.get(),
-                BlockRegistry.STRIPPED_AWLOG_RED.get(),
-                BlockRegistry.STRIPPED_AWWOOD_RED.get(),
-                BlockRegistry.STRIPPED_AWLOG_PURPLE.get(),
-                BlockRegistry.STRIPPED_AWWOOD_PURPLE.get());
-        this.tag(BlockTags.LOGS_THAT_BURN).add(BlockRegistry.VEXING_LOG.get(),
-                BlockRegistry.CASCADING_LOG.get(),
-                BlockRegistry.FLOURISHING_LOG.get(),
-                BlockRegistry.BLAZING_LOG.get(),
-                BlockRegistry.STRIPPED_AWLOG_BLUE.get(),
-                BlockRegistry.STRIPPED_AWWOOD_BLUE.get(),
-                BlockRegistry.STRIPPED_AWLOG_GREEN.get(),
-                BlockRegistry.STRIPPED_AWWOOD_GREEN.get(),
-                BlockRegistry.STRIPPED_AWLOG_RED.get(),
-                BlockRegistry.STRIPPED_AWWOOD_RED.get(),
-                BlockRegistry.STRIPPED_AWLOG_PURPLE.get(),
-                BlockRegistry.STRIPPED_AWWOOD_PURPLE.get());
+        this.tag(BlockTags.LOGS)
+                .addTag(VEXING_LOGS)
+                .addTag(CASCADING_LOGS)
+                .addTag(FLOURISHING_LOGS)
+                .addTag(BLAZING_LOGS);
+
+        this.tag(BlockTags.LOGS_THAT_BURN)
+                .addTag(VEXING_LOGS)
+                .addTag(CASCADING_LOGS)
+                .addTag(FLOURISHING_LOGS)
+                .addTag(BLAZING_LOGS);
+
         this.tag(BlockTags.PLANKS).add(BlockRegistry.ARCHWOOD_PLANK.get());
         this.tag(BlockTags.FENCE_GATES).add(BlockRegistry.ARCHWOOD_FENCE_GATE.get());
         this.tag(BlockTags.FENCES).add(BlockRegistry.ARCHWOOD_FENCE.get());

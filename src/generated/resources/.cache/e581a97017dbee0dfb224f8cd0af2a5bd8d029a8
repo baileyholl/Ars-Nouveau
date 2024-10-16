@@ -1,4 +1,4 @@
-// 1.21	2024-08-01T23:52:13.9403714	Apparatus
+// 1.21.1	2024-08-17T10:54:39.185609	Apparatus
 adc3e3b582ab4d1fd6f29537bddaaecb9eaa0c2d data/ars_nouveau/recipe/alchemists_crown.json
 9a7fefa487b159935c1f620dc9516a6600fb0d4b data/ars_nouveau/recipe/amulet_of_mana_boost.json
 a653f866167b0fd7d0f7ded2166d45a2ff104d0d data/ars_nouveau/recipe/amulet_of_mana_regen.json
@@ -37,9 +37,9 @@ ffd676653c81de14822f5859347f245b4cc0ce25 data/ars_nouveau/recipe/efficiency_5.js
 67be8410e6968e09ed0eb852bda93a0932a77d11 data/ars_nouveau/recipe/enchanters_mirror.json
 321f4d386c03038ff92a9233c1c6898123bdd80d data/ars_nouveau/recipe/enchanters_shield.json
 f2c4f98facacbc8b2e4e322e99af3eaa56c16c07 data/ars_nouveau/recipe/enchanters_sword.json
-af0b42edc8e28ea0ea99f83f696c67f5de5069db data/ars_nouveau/recipe/feather_falling_1.json
-131481c03deb344ede5f794a3c63d564b6e41d3f data/ars_nouveau/recipe/feather_falling_2.json
-d098fe9475b98f80f7b8308aa5a2cb88dd034a63 data/ars_nouveau/recipe/feather_falling_3.json
+b94d896ec37f1f50ed5b6b1d71a03779261cbd6f data/ars_nouveau/recipe/feather_falling_1.json
+501853d55ff7e69cab7826f9160a4dfcdceb0355 data/ars_nouveau/recipe/feather_falling_2.json
+adee2bfa7bf7e244bc68a8b764038fa7d06a3e67 data/ars_nouveau/recipe/feather_falling_3.json
 4d06aa8e39bfdd88040ab6c3cb5c917fa2d5e08d data/ars_nouveau/recipe/feather_falling_4.json
 3a7bf4296a6eefee537d6fcb0b9c39f637ec8faf data/ars_nouveau/recipe/fire_aspect_1.json
 89e9d058e692de7cab497404006842e1ec2d60e7 data/ars_nouveau/recipe/fire_aspect_2.json

@@ -24,6 +24,9 @@ public class GuiManaHUD {
     private static final Minecraft minecraft = Minecraft.getInstance();
 
     public static boolean shouldDisplayBar() {
+        if (Minecraft.getInstance().options.hideGui) {
+            return false;
+        }
         ItemStack mainHand = minecraft.player.getMainHandItem();
         ItemStack offHand = minecraft.player.getOffhandItem();
         var isMainDisplayable = mainHand.getItem() instanceof IDisplayMana iDisplayMana && iDisplayMana.shouldDisplay(mainHand);

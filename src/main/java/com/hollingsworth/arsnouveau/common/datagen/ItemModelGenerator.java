@@ -121,6 +121,11 @@ public class ItemModelGenerator extends ItemModelProvider {
         itemUnchecked(ItemsRegistry.JUMP_RING);
         getBuilder(LibBlockNames.SPELL_SENSOR).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.SPELL_SENSOR));
         getBuilder(LibBlockNames.SOURCEBERRY_SACK).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.SOURCEBERRY_SACK));
+        getBuilder(LibBlockNames.SOURCESTONE_GRATE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.SOURCESTONE_GRATE));
+        getBuilder(LibBlockNames.ARCHWOOD_GRATE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.ARCHWOOD_GRATE));
+        getBuilder(LibBlockNames.SMOOTH_SOURCESTONE_GRATE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.SMOOTH_SOURCESTONE_GRATE));
+        getBuilder(LibBlockNames.GOLD_GRATE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.GOLD_GRATE));
+        getBuilder(LibBlockNames.SOURCE_LAMP).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.SOURCE_LAMP));
 
     }
 

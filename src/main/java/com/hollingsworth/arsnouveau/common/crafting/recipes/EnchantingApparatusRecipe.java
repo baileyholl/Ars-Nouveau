@@ -15,6 +15,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -29,7 +30,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
     private final boolean keepNbtOfReagent;
 
 
-    public EnchantingApparatusRecipe(Ingredient reagent, ItemStack result, List<Ingredient> pedestalItems, int sourceCost, boolean keepNbtOfReagent){
+    public EnchantingApparatusRecipe(Ingredient reagent, ItemStack result, List<Ingredient> pedestalItems, int sourceCost, boolean keepNbtOfReagent) {
         this.reagent = reagent;
         this.result = result;
         this.pedestalItems = pedestalItems;
@@ -38,7 +39,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
 
     }
 
-    public boolean excludeJei(){
+    public boolean excludeJei() {
         return false;
     }
 
@@ -62,11 +63,11 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
     }
 
     @Override
-    public ItemStack assemble(ApparatusRecipeInput input, HolderLookup.Provider p_346030_) {
+    public @NotNull ItemStack assemble(ApparatusRecipeInput input, HolderLookup.@NotNull Provider p_346030_) {
         ItemStack result = this.result.copy();
         ItemStack reagent = input.catalyst();
         if (keepNbtOfReagent) {
-            result.applyComponents(reagent.getComponents());
+            result.applyComponents(reagent.getComponentsPatch());
             result.setDamageValue(0);
         }
         return result.copy();
@@ -83,17 +84,17 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider pRegistries) {
+    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider pRegistries) {
         return this.result.copy();
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public @NotNull RecipeSerializer<?> getSerializer() {
         return RecipeRegistry.APPARATUS_SERIALIZER.get();
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public @NotNull RecipeType<?> getType() {
         return RecipeRegistry.APPARATUS_TYPE.get();
     }
 
@@ -138,12 +139,12 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
         );
 
         @Override
-        public MapCodec<EnchantingApparatusRecipe> codec() {
+        public @NotNull MapCodec<EnchantingApparatusRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public StreamCodec<RegistryFriendlyByteBuf, EnchantingApparatusRecipe> streamCodec() {
+        public @NotNull StreamCodec<RegistryFriendlyByteBuf, EnchantingApparatusRecipe> streamCodec() {
             return STREAM_CODEC;
         }
     }

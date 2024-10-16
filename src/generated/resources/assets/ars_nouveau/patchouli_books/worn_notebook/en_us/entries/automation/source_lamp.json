@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:automation",
+  "icon": "ars_nouveau:source_lamp",
+  "name": "block.ars_nouveau.source_lamp",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.source_lamp"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:source_lamp"
+    }
+  ]
+}

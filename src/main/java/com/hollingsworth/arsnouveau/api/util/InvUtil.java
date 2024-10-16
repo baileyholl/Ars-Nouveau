@@ -29,7 +29,7 @@ public class InvUtil {
             if (adjacentInvTile == null || adjacentInvTile.isRemoved())
                 continue;
 
-            IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, relativePos, d);
+            IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, relativePos, level.getBlockState(relativePos), adjacentInvTile, d);
             if(handler == null)
                 continue;
             inventories.add(new FilterableItemHandler(handler, filtersOnTile(adjacentInvTile)));

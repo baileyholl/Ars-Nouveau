@@ -44,7 +44,7 @@ public class RitualWarp extends AbstractRitual {
 
                 ItemStack i = getConsumedItems().get(0);
                 WarpScrollData data = i.get(DataComponentRegistry.WARP_SCROLL);
-                BlockPos b = data.pos();
+                BlockPos b = data.pos().orElse(null);
                 for (Entity a : entities) {
                     if (b != null)
                         a.teleportTo(b.getX(), b.getY(), b.getZ());

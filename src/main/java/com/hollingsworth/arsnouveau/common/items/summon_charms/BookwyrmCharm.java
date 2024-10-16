@@ -30,7 +30,7 @@ public class BookwyrmCharm extends ModItem {
         if (world.getBlockEntity(pos) instanceof StorageLecternTile tile) {
             EntityBookwyrm bookwyrm = tile.addBookwyrm();
             if(bookwyrm != null){
-                bookwyrm.readCharm(pContext.getItemInHand());
+                bookwyrm.fromCharmData(pContext.getItemInHand().getOrDefault(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, new PersistentFamiliarData()));
                 pContext.getItemInHand().shrink(1);
                 return InteractionResult.SUCCESS;
             }

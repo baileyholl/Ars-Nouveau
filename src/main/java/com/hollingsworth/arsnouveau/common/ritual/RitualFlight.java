@@ -53,8 +53,6 @@ public class RitualFlight extends RangeEffectRitual {
         boolean wasFlying = player.abilities.flying;
         boolean applied = super.applyEffect(player);
         if (applied) {
-            player.abilities.mayfly = true;
-            player.abilities.flying = wasFlying;
             Networking.sendToPlayerClient(new PacketUpdateFlight(true, wasFlying), player);
         }
         return applied;

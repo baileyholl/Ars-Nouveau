@@ -27,6 +27,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import org.jetbrains.annotations.NotNull;
@@ -43,6 +44,9 @@ public class EffectBlink extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Vec3 vec = safelyGetHitPos(rayTraceResult);
+        if(rayTraceResult.getEntity().getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED)){
+            return;
+        }
         double distance = GENERIC_INT.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
 
         if (spellContext.getCaster() instanceof TileCaster) {
@@ -77,15 +81,16 @@ public class EffectBlink extends AbstractEffect {
 
     public static void warpEntity(Entity entity, WarpScrollData warpScrollData){
         if (entity == null) return;
-
+        var pos = warpScrollData.pos().get();
         if (entity instanceof LivingEntity living){
-            EntityTeleportEvent. EnderEntity event = EventHooks.onEnderTeleport(living, warpScrollData.pos().getX(),  warpScrollData.pos().getY(),  warpScrollData.pos().getZ());
+
+            EntityTeleportEvent. EnderEntity event = EventHooks.onEnderTeleport(living, pos.getX(),  pos.getY(),  pos.getZ());
             if (event.isCanceled()) return;
         }
         ServerLevel dimension = PortalTile.getServerLevel(warpScrollData.dimension(), (ServerLevel) entity.level);
         if(dimension == null)
             return;
-        PortalTile.teleportEntityTo(entity, dimension, warpScrollData.pos(), warpScrollData.rotation());
+        PortalTile.teleportEntityTo(entity, dimension, pos, warpScrollData.rotation());
 
     }
 

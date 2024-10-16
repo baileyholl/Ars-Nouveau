@@ -87,7 +87,9 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     public void writeSimple(Entity e){
         CompoundTag tag = new CompoundTag();
         tag.putString("id", EntityType.getKey(e.getType()).toString());
+        if (level == null) return;
         this.cachedEntity = e.getType().create(level);
+        assert cachedEntity != null;
         this.cachedEntity.setBoundingBox(new AABB(0,0,0,0,0,0));
         this.cachedEntity.setPos(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5);
         this.extraDataTag = null;
@@ -129,7 +131,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
 
     @Override
     public boolean onDispel(@NotNull LivingEntity caster) {
-        if(entityTag == null)
+        if (entityTag == null || level == null)
             return false;
         Entity entity = loadEntityFromTag(level, entityTag);
         if(entity == null || entity.getType().is(EntityTags.JAR_RELEASE_BLACKLIST))
@@ -157,7 +159,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+    public void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
 
         // Check both conditions because the entity may have never been loaded on the server side.
@@ -176,7 +178,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     }
 
     @Override
-    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
+    protected void loadAdditional(@NotNull CompoundTag pTag, HolderLookup.@NotNull Provider pRegistries) {
         super.loadAdditional(pTag, pRegistries);
         if(pTag.contains("entityTag")){
             this.entityTag = pTag.getCompound("entityTag");
@@ -186,7 +188,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
+    public void onDataPacket(@NotNull Connection net, @NotNull ClientboundBlockEntityDataPacket pkt, HolderLookup.@NotNull Provider lookupProvider) {
         this.cachedEntity = null;
         this.entityTag = null;
         super.onDataPacket(net, pkt, lookupProvider);
@@ -235,7 +237,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
 
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput pComponentInput) {
+    protected void applyImplicitComponents(@NotNull DataComponentInput pComponentInput) {
         super.applyImplicitComponents(pComponentInput);
         var jar = pComponentInput.getOrDefault(DataComponentRegistry.MOB_JAR, new MobJarData(Optional.empty(), Optional.empty()));
         this.entityTag = jar.entityTag().orElse(null);
@@ -243,7 +245,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     }
 
     @Override
-    protected void collectImplicitComponents(DataComponentMap.Builder pComponents) {
+    protected void collectImplicitComponents(DataComponentMap.@NotNull Builder pComponents) {
         super.collectImplicitComponents(pComponents);
         pComponents.set(DataComponentRegistry.MOB_JAR, new MobJarData(this.entityTag, this.extraDataTag));
     }

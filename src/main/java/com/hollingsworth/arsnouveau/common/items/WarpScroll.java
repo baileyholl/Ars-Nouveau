@@ -28,10 +28,11 @@ import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Optional;
 
 public class WarpScroll extends ModItem {
     public WarpScroll() {
-        super(ItemsRegistry.defaultItemProperties().component(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(null, null, null, false)));
+        super(ItemsRegistry.defaultItemProperties().component(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(false)));
     }
 
     @Override
@@ -40,7 +41,7 @@ public class WarpScroll extends ModItem {
             return false;
 
         String displayName = stack.get(DataComponents.CUSTOM_NAME) != null ? stack.getHoverName().getString() : "";
-        WarpScrollData data = stack.getOrDefault(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(null, null, null, false));
+        WarpScrollData data = stack.get(DataComponentRegistry.WARP_SCROLL);
         if (data.isValid()
             && data.canTeleportWithDim(entity.getCommandSenderWorld().dimension().location().toString())
             && SourceUtil.hasSourceNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
@@ -61,7 +62,7 @@ public class WarpScroll extends ModItem {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        WarpScrollData data = stack.getOrDefault(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(null, null, null, false));
+        WarpScrollData data = stack.get(DataComponentRegistry.WARP_SCROLL);
         if (hand == InteractionHand.OFF_HAND)
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
 
@@ -73,7 +74,7 @@ public class WarpScroll extends ModItem {
                 player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.wrong_dim"));
                 return InteractionResultHolder.fail(stack);
             }
-            BlockPos pos = data.pos();
+            BlockPos pos = data.pos().get();
             player.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
             Vec2 rotation = data.rotation();
             player.setXRot(rotation.x);
@@ -87,7 +88,7 @@ public class WarpScroll extends ModItem {
         }
         if (player.isShiftKeyDown()) {
             ItemStack newWarpStack = new ItemStack(ItemsRegistry.WARP_SCROLL.get());
-            newWarpStack.set(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(player.blockPosition(), player.getCommandSenderWorld().dimension().location().toString(), player.getRotationVector(), false));
+            newWarpStack.set(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(Optional.of(player.blockPosition()), player.getCommandSenderWorld().dimension().location().toString(), player.getRotationVector(), false));
             boolean didAdd;
             if (stack.getCount() == 1) {
                 stack = newWarpStack;

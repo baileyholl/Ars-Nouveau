@@ -12,4 +12,5 @@ public abstract class Perk implements IPerk{
     public ResourceLocation getRegistryName() {
         return id;
     }
+
 }

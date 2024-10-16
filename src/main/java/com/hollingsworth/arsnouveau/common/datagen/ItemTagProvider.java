@@ -41,6 +41,7 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
 
     @Override
     protected void addTags(HolderLookup.@NotNull Provider pProvider) {
+        this.tag(STORAGE_BLOCKS_QUARTZ).add(Items.QUARTZ_BLOCK);
         this.tag(SUMMON_SHARDS_TAG)
                 .add(ItemsRegistry.DRYGMY_SHARD.get(),
                         ItemsRegistry.STARBUNCLE_SHARD.get(),
@@ -53,8 +54,16 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
         this.tag(MAGIC_FOOD)
                 .add(ItemsRegistry.SOURCE_BERRY_PIE.get(),
                         ItemsRegistry.SOURCE_BERRY_ROLL.get());
+        this.tag(Tags.Items.FOODS).addTag(MAGIC_FOOD);
+        this.tag(Tags.Items.FOODS_BERRY).add(BlockRegistry.SOURCEBERRY_BUSH.asItem());
+        this.tag(Tags.Items.FOODS_FRUIT).add(BlockRegistry.FROSTAYA_POD.asItem(),
+                BlockRegistry.BOMBEGRANTE_POD.asItem(),
+                BlockRegistry.MENDOSTEEN_POD.asItem(),
+                BlockRegistry.BASTION_POD.asItem());
         this.tag(ItemTags.create(ArsNouveau.prefix( "whirlisprig/denied_drop")))
                 .add(Items.DIRT).addTag(Tags.Items.SEEDS);
+
+        this.tag(Tags.Items.RANGED_WEAPON_TOOLS).add(ItemsRegistry.SPELL_BOW.get(), ItemsRegistry.SPELL_CROSSBOW.get());
 
         this.tag(Tags.Items.FENCES).add(BlockRegistry.ARCHWOOD_FENCE.asItem());
         this.tag(Tags.Items.FENCES_WOODEN).add(BlockRegistry.ARCHWOOD_FENCE.asItem());
@@ -218,5 +227,11 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
                 BlockRegistry.FROSTAYA_POD.asItem(),
                 BlockRegistry.MENDOSTEEN_POD.asItem()
         );
+
+        this.tag(Tags.Items.TOOLS_BOW).add(ItemsRegistry.SPELL_BOW.get());
+        this.tag(Tags.Items.TOOLS_CROSSBOW).add(ItemsRegistry.SPELL_CROSSBOW.get());
+        this.tag(ItemTags.BOW_ENCHANTABLE).add(ItemsRegistry.SPELL_BOW.get());
+        this.tag(ItemTags.CROSSBOW_ENCHANTABLE).add(ItemsRegistry.SPELL_CROSSBOW.get());
+        this.tag(ItemTags.DURABILITY_ENCHANTABLE).add(ItemsRegistry.ENCHANTERS_SHIELD.get());
     }
 }

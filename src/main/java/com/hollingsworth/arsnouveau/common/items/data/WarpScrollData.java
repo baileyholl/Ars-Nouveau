@@ -19,20 +19,25 @@ import net.minecraft.world.phys.Vec2;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 
-public record WarpScrollData(BlockPos pos, String dimension, Vec2 rotation, boolean crossDim) implements TooltipProvider {
+public record WarpScrollData(Optional<BlockPos> pos, String dimension, Vec2 rotation, boolean crossDim) implements TooltipProvider {
     public static final Codec<WarpScrollData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            BlockPos.CODEC.fieldOf("pos").forGetter(WarpScrollData::pos),
-            Codec.STRING.optionalFieldOf("dimension", null).forGetter(WarpScrollData::dimension),
+            BlockPos.CODEC.optionalFieldOf("pos").forGetter(WarpScrollData::pos),
+            Codec.STRING.optionalFieldOf("dimension", "").forGetter(WarpScrollData::dimension),
             ANCodecs.VEC2.fieldOf("rotation").forGetter(WarpScrollData::rotation),
             Codec.BOOL.optionalFieldOf("crossDim", false).forGetter(WarpScrollData::crossDim)
     ).apply(instance, WarpScrollData::new));
 
+    public WarpScrollData(boolean crossDim){
+        this(Optional.empty(), "", new Vec2(0, 0), crossDim);
+    }
+
     public static final StreamCodec<RegistryFriendlyByteBuf, WarpScrollData> STREAM_CODEC = CheatSerializer.create(WarpScrollData.CODEC);
 
     public WarpScrollData setPos(@Nullable BlockPos pos, @Nullable String dimension) {
-        return new WarpScrollData(pos, dimension, rotation, crossDim);
+        return new WarpScrollData(Optional.ofNullable(pos), dimension, rotation, crossDim);
     }
 
     public WarpScrollData setRotation(Vec2 rotation) {
@@ -48,7 +53,7 @@ public record WarpScrollData(BlockPos pos, String dimension, Vec2 rotation, bool
     }
 
     public boolean isValid() {
-        return pos != null && dimension != null && rotation != null;
+        return pos != null && pos.isPresent() && dimension != null && !dimension.isEmpty() && rotation != null;
     }
 
     @Override
@@ -57,6 +62,7 @@ public record WarpScrollData(BlockPos pos, String dimension, Vec2 rotation, bool
             pTooltipAdder.accept(Component.translatable("ars_nouveau.warp_scroll.no_location"));
             return;
         }
+        var pos = this.pos.get();
         pTooltipAdder.accept(Component.translatable("ars_nouveau.position", pos.getX(), pos.getY(), pos.getZ()));
         if(crossDim) {
             String dimId = dimension();

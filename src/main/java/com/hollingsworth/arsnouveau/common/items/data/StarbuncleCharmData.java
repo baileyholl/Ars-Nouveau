@@ -38,7 +38,7 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
             Codec.STRING.optionalFieldOf("color", DyeColor.ORANGE.getName()).forGetter(StarbuncleCharmData::getColor),
 //            Block.CODEC.fieldOf("path").forGetter(data -> data.pathBlock),
             BlockPos.CODEC.optionalFieldOf("bed").forGetter(StarbuncleCharmData::getBedPos),
-            ItemStack.CODEC.optionalFieldOf("cosmetic").forGetter(StarbuncleCharmData::getCosmetic),
+            ItemStack.OPTIONAL_CODEC.optionalFieldOf("cosmetic").forGetter(StarbuncleCharmData::getCosmetic),
             ResourceLocation.CODEC.optionalFieldOf("behavior", StarbyTransportBehavior.TRANSPORT_ID).forGetter(StarbuncleCharmData::getBehavior),
             CompoundTag.CODEC.optionalFieldOf("behaviorTag", new CompoundTag()).forGetter(StarbuncleCharmData::getBehaviorTag),
             Codec.STRING.optionalFieldOf("adopter", "").forGetter(StarbuncleCharmData::getAdopter),

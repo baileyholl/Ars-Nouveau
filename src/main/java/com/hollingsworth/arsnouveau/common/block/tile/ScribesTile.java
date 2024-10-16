@@ -37,6 +37,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -263,7 +264,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+    protected void loadAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider pRegistries) {
         super.loadAdditional(compound, pRegistries);
         stack = ItemStack.parseOptional(pRegistries, compound.getCompound("itemStack"));
         if (compound.contains("recipe")) {
@@ -278,7 +279,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider pRegistries) {
         super.saveAdditional(compound, pRegistries);
         if (!stack.isEmpty()) {
             Tag reagentTag = stack.save(pRegistries);
@@ -334,7 +335,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
     }
 
     @Override
-    public ItemStack getItem(int pIndex) {
+    public @NotNull ItemStack getItem(int pIndex) {
         return stack;
     }
 
@@ -344,7 +345,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
     }
 
     @Override
-    public ItemStack removeItem(int pIndex, int pCount) {
+    public @NotNull ItemStack removeItem(int pIndex, int pCount) {
         ItemStack removed = stack.copy().split(pCount);
         stack.shrink(pCount);
         updateBlock();
@@ -352,7 +353,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
     }
 
     @Override
-    public ItemStack removeItemNoUpdate(int pIndex) {
+    public @NotNull ItemStack removeItemNoUpdate(int pIndex) {
         ItemStack stack = this.stack.copy();
         this.stack = ItemStack.EMPTY;
         updateBlock();
@@ -360,13 +361,13 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
     }
 
     @Override
-    public void setItem(int pIndex, ItemStack pStack) {
+    public void setItem(int pIndex, @NotNull ItemStack pStack) {
         this.stack = pStack;
         setChanged();
     }
 
     @Override
-    public boolean stillValid(Player pPlayer) {
+    public boolean stillValid(@NotNull Player pPlayer) {
         return true;
     }
 

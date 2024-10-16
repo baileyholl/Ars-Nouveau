@@ -13,10 +13,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.util.RenderUtil;
 
 
-public class BookwyrmRenderer extends TextureVariantRenderer<EntityBookwyrm> {
+public class BookwyrmRenderer extends GeoEntityRenderer<EntityBookwyrm> {
 
     public static ResourceLocation BLUE = ArsNouveau.prefix( "textures/entity/book_wyrm_blue.png");
 
@@ -35,7 +36,6 @@ public class BookwyrmRenderer extends TextureVariantRenderer<EntityBookwyrm> {
             ItemStack itemstack = animatable.getHeldStack();
             Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.GROUND, packedLight, OverlayTexture.NO_OVERLAY, stack, bufferIn,  animatable.level, (int) animatable.getOnPos().asLong());
             stack.popPose();
-//            buffer = bufferIn.getBuffer(RenderType.entityCutoutNoCull(text));
         }
         super.renderRecursively(stack, animatable, bone, renderType, bufferIn, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
     }
@@ -48,4 +48,8 @@ public class BookwyrmRenderer extends TextureVariantRenderer<EntityBookwyrm> {
         stack.popPose();
     }
 
+    @Override
+    public ResourceLocation getTextureLocation(EntityBookwyrm animatable) {
+        return animatable.getTexture();
+    }
 }

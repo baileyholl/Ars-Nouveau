@@ -9,16 +9,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class RedstoneUtil {
 
     public static void getArsSignal(ServerLevel serverLevel, BlockPos pPos, Direction pFacing, CallbackInfoReturnable<Integer> cir) {
-        BlockPos facing = pPos.relative(pFacing);
-        BlockPos requestingPos = pPos.relative(pFacing.getOpposite());
         var map = RedstoneSavedData.from(serverLevel).SIGNAL_MAP;
+        if(map.isEmpty()){
+            return;
+        }
+
         var entry = map.get(pPos);
         if(entry != null){
             cir.setReturnValue(Math.max(entry.power, cir.getReturnValue()));
-        }else if(map.containsKey(facing)){
-            cir.setReturnValue(Math.max(map.get(facing).power, cir.getReturnValue()));
-        }else if(map.containsKey(requestingPos)){
-            cir.setReturnValue(Math.max(map.get(requestingPos).power, cir.getReturnValue()));
+        }else if(map.containsKey(pPos.relative(pFacing))){
+            cir.setReturnValue(Math.max(map.get(pPos.relative(pFacing)).power, cir.getReturnValue()));
+        }else if(map.containsKey(pPos.relative(pFacing.getOpposite()))){
+            cir.setReturnValue(Math.max(map.get(pPos.relative(pFacing.getOpposite())).power, cir.getReturnValue()));
         }
     }
 }
