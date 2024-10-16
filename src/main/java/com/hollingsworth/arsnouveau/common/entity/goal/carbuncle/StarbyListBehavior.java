@@ -91,9 +91,25 @@ public abstract class StarbyListBehavior extends StarbyBehavior {
         }
     }
 
+    public void removeFromPos(BlockPos fromPos) {
+        if (FROM_LIST.contains(fromPos)) {
+            FROM_LIST.remove(fromPos);
+            FROM_DIRECTION_MAP.remove(fromPos.hashCode());
+            syncTag();
+        }
+    }
+
     public void addToPos(BlockPos toPos) {
         if (!TO_LIST.contains(toPos)) {
             TO_LIST.add(toPos.immutable());
+            syncTag();
+        }
+    }
+
+    public void removeToPos(BlockPos toPos) {
+        if (TO_LIST.contains(toPos)) {
+            TO_LIST.remove(toPos);
+            TO_DIRECTION_MAP.remove(toPos.hashCode());
             syncTag();
         }
     }

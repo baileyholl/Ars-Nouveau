@@ -47,33 +47,39 @@ public class StarbyBehavior extends ChangeableBehavior {
         return state.hasProperty(BlockStateProperties.POWERED) && state.getValue(BlockStateProperties.POWERED);
     }
 
-    public @Nullable BlockPos getBedPos(){
-        if(starbuncle.data.bedPos == null || !starbuncle.level.isLoaded(starbuncle.data.bedPos)){
+    public @Nullable BlockPos getBedPos() {
+        if (starbuncle.data.bedPos == null || !starbuncle.level.isLoaded(starbuncle.data.bedPos)) {
             return null;
         }
         return starbuncle.data.bedPos;
     }
 
-    public boolean isBedValid(BlockPos bedPos){
+    public boolean isBedValid(BlockPos bedPos) {
         return starbuncle.level.isLoaded(bedPos) && starbuncle.level.getBlockState(new BlockPos(bedPos)).is(BlockTagProvider.SUMMON_SLEEPABLE);
     }
 
-    public boolean isOnBed(){
+    public boolean isOnBed() {
         return starbuncle.level.getBlockState(BlockPos.containing(starbuncle.position)).is(BlockTagProvider.SUMMON_SLEEPABLE);
     }
 
     @Override
-    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        super.onFinishedConnectionFirst(storedPos, side, storedEntity, playerEntity);
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity, boolean linkRemoval) {
+        super.onFinishedConnectionFirst(storedPos, side, storedEntity, playerEntity, linkRemoval);
+
         if (storedPos != null && playerEntity.level.getBlockState(storedPos).is(BlockTagProvider.SUMMON_SLEEPABLE)) {
-            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.set_bed"));
-            starbuncle.data.bedPos = storedPos.immutable();
+            if (linkRemoval) {
+                PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.remove_bed"));
+                starbuncle.data.bedPos = null;
+            } else {
+                PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.set_bed"));
+                starbuncle.data.bedPos = storedPos.immutable();
+            }
         }
     }
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( "starby");
+        return ArsNouveau.prefix("starby");
     }
 
     public void syncTag() {

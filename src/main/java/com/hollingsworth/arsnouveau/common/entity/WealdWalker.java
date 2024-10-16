@@ -39,6 +39,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimationState;
@@ -77,7 +78,7 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
         }
     }
 
-    public InteractionResult mobInteract(Player p_230254_1_, InteractionHand p_230254_2_) {
+    public @NotNull InteractionResult mobInteract(Player p_230254_1_, @NotNull InteractionHand p_230254_2_) {
         ItemStack itemstack = p_230254_1_.getItemInHand(p_230254_2_);
         if (itemstack.getItem() instanceof BoneMealItem && isBaby()) {
             int i = this.getAge();
@@ -103,7 +104,7 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
     }
 
     @Override
-    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity, boolean remove) {
         if (storedPos != null) {
             setHome(storedPos);
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.home_set"));
@@ -111,18 +112,18 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
     }
 
     @Override
-    protected EntityDimensions getDefaultDimensions(Pose pPose) {
+    protected @NotNull EntityDimensions getDefaultDimensions(@NotNull Pose pPose) {
         return isBaby() ? EntityDimensions.fixed(1.0f, 1.0f) : super.getDefaultDimensions(pPose);
     }
 
     @Nullable
     @Override
-    public AgeableMob getBreedOffspring(ServerLevel p_241840_1_, AgeableMob p_241840_2_) {
+    public AgeableMob getBreedOffspring(@NotNull ServerLevel p_241840_1_, @NotNull AgeableMob p_241840_2_) {
         return null;
     }
 
     @Override
-    public void die(DamageSource source) {
+    public void die(@NotNull DamageSource source) {
         if (!isBaby() && !level.isClientSide) {
 
             setBaby(true);
@@ -170,7 +171,7 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
         return this.entityData.get(BABY);
     }
 
-    public void onSyncedDataUpdated(EntityDataAccessor<?> p_184206_1_) {
+    public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> p_184206_1_) {
         if (BABY.equals(p_184206_1_)) {
             this.refreshDimensions();
         }
@@ -197,12 +198,12 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
     }
 
     @Override
-    public boolean isAlliedTo(Entity pEntity) {
+    public boolean isAlliedTo(@NotNull Entity pEntity) {
         return !(pEntity instanceof Enemy) || (pEntity instanceof TamableAnimal tamableAnimal && tamableAnimal.isTame()) || super.isAlliedTo(pEntity) ;
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
         super.defineSynchedData(pBuilder);
         pBuilder.define(SMASHING, false);
         pBuilder.define(CASTING, false);
@@ -211,7 +212,7 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("isBaby", entityData.get(BABY));
         NBTUtil.storeBlockPos(tag, "home", getHome());
@@ -227,7 +228,7 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         entityData.set(BABY, tag.getBoolean("isBaby"));
         if (NBTUtil.hasBlockPos(tag, "home")) {
@@ -237,7 +238,7 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
         this.castCooldown = tag.getInt("cast");
     }
 
-    AnimationController attackController;
+    AnimationController<?> attackController;
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
@@ -250,7 +251,7 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
         return PlayState.CONTINUE;
     }
 
-    private PlayState runController(AnimationState AnimationState) {
+    private PlayState runController(AnimationState<?> AnimationState) {
         if (entityData.get(SMASHING) || entityData.get(CASTING))
             return PlayState.STOP;
         if (AnimationState.getController().getCurrentAnimation() != null && !(AnimationState.getController().getCurrentAnimation().animation().name().equals("run_master"))) {
@@ -312,7 +313,7 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
     }
 
     @Override
-    public void performRangedAttack(LivingEntity entity, float p_82196_2_) {
+    public void performRangedAttack(@NotNull LivingEntity entity, float p_82196_2_) {
         EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(level, spell, this, new LivingCaster(this)).withColors(color));
         EntityProjectileSpell projectileSpell = new EntityProjectileSpell(level, resolver);
         projectileSpell.setColor(color);

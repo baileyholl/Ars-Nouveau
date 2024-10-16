@@ -14,6 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -21,10 +22,10 @@ import java.util.List;
 
 import static com.hollingsworth.arsnouveau.common.block.RitualBrazierBlock.LIT;
 
-public class BrazierRelayTile extends RitualBrazierTile{
+public class BrazierRelayTile extends RitualBrazierTile {
 
     int ticksToLightOff = 0;
-    public BlockPos brazierPos;
+    public @Nullable BlockPos brazierPos;
 
     private static List<BlockPos> relayingTraversed = new ArrayList<>();
 
@@ -42,15 +43,15 @@ public class BrazierRelayTile extends RitualBrazierTile{
             makeParticle(color.transition((int) level.getGameTime() * 10), color.transition((int) level.getGameTime() * 10), 5);
         }
 
-        if(!level.isClientSide){
+        if (!level.isClientSide) {
             ticksToLightOff--;
-            if(ticksToLightOff <= 0){
+            if (ticksToLightOff <= 0) {
                 ticksToLightOff = 0;
-                if(!this.isDecorative && level.getBlockState(worldPosition).getValue(LIT)) {
+                if (!this.isDecorative && level.getBlockState(worldPosition).getValue(LIT)) {
                     level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(LIT, false));
                 }
             }
-            if( !level.getBlockState(worldPosition).getValue(LIT) && ticksToLightOff > 0){
+            if (!level.getBlockState(worldPosition).getValue(LIT) && ticksToLightOff > 0) {
                 level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(LIT, true));
             }
         }
@@ -76,17 +77,17 @@ public class BrazierRelayTile extends RitualBrazierTile{
     }
 
     @Override
-    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity, boolean remove) {
 
     }
 
     @Override
-    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity, boolean remove) {
         if (storedPos != null && level != null && level.getBlockEntity(storedPos) instanceof RitualBrazierTile brazierTile) {
             if (BlockUtil.distanceFrom(getBlockPos(), storedPos) > 16) {
                 return;
             }
-            brazierPos = storedPos;
+            brazierPos = remove ? null : storedPos;
             updateBlock();
         }
     }
@@ -98,7 +99,7 @@ public class BrazierRelayTile extends RitualBrazierTile{
 
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
         tag.putInt("ticksToLightOff", ticksToLightOff);
         if (this.brazierPos != null) {
@@ -107,7 +108,7 @@ public class BrazierRelayTile extends RitualBrazierTile{
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+    protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
         super.loadAdditional(tag, pRegistries);
         this.ticksToLightOff = tag.getInt("ticksToLightOff");
         if (tag.contains("brazierPos")) {

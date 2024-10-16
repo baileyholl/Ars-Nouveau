@@ -142,7 +142,7 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
     }
 
     @Override
-    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity, boolean remove) {
         if (storedPos != null) this.aim(storedPos, playerEntity);
     }
 
