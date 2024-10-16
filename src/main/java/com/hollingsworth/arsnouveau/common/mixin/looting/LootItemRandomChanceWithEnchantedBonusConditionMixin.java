@@ -25,6 +25,9 @@ public class LootItemRandomChanceWithEnchantedBonusConditionMixin {
             )
     )
     private int ars_nouveau$adjustLooting(Holder<Enchantment> enchantment, LivingEntity attacker, Operation<Integer> original, @Local(argsOnly = true) LootContext context) {
+        if (attacker.getAttribute(PerkAttributes.DRYGMY) == null) {
+            return original.call(enchantment, attacker);
+        }
         int perkLooting = (int) attacker.getAttributeValue(PerkAttributes.DRYGMY);
         int spellLuck = context.getParam(LootContextParams.DAMAGE_SOURCE) instanceof DamageUtil.SpellDamageSource spellDamageSource ? spellDamageSource.getLuckLevel() : 0;
         return Math.max(spellLuck, original.call(enchantment, attacker)) + perkLooting;
