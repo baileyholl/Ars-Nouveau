@@ -17,7 +17,10 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -50,7 +53,7 @@ public class DominionWand extends ModItem implements IRadialProvider {
         DominionWandData data = pStack.getOrDefault(DataComponentRegistry.DOMINION_WAND, new DominionWandData());
 
         if (data.storedPos().isPresent()) {
-            if (pLevel.getBlockEntity(data.storedPos().get()) instanceof IWandable wandable) {
+            if (pLevel.getBlockEntity(data.storedPos().get().pos()) instanceof IWandable wandable) {
                 Networking.sendToPlayerClient(new HighlightAreaPacket(wandable.getWandHighlight(new ArrayList<>()), 10), (ServerPlayer) pEntity);
             }
             return;
@@ -79,9 +82,9 @@ public class DominionWand extends ModItem implements IRadialProvider {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.dominion_wand.stored_entity"));
             return InteractionResult.SUCCESS;
         }
-        Level world = playerEntity.getCommandSenderWorld();
+        Level world = data.storedPos().isPresent() ? playerEntity.getServer().getLevel(data.storedPos().get().dimension()) : playerEntity.getCommandSenderWorld();
 
-        if (data.storedPos().isPresent() && world.getBlockEntity(data.storedPos().get()) instanceof IWandable wandable) {
+        if (data.storedPos().isPresent() && world.getBlockEntity(data.storedPos().get().pos()) instanceof IWandable wandable) {
             wandable.onFinishedConnectionFirst(data.storedPos().orElse(null), data.face().orElse(null), target, playerEntity);
         }
 
@@ -115,10 +118,10 @@ public class DominionWand extends ModItem implements IRadialProvider {
             return super.useOn(context);
         BlockPos pos = context.getClickedPos();
         Direction face = context.getClickedFace();
-        Level world = context.getLevel();
         Player playerEntity = context.getPlayer();
         ItemStack stack = context.getItemInHand();
         DominionWandData data = stack.getOrDefault(DataComponentRegistry.DOMINION_WAND, new DominionWandData());
+        Level world = data.storedPos().isPresent() ? playerEntity.getServer().getLevel(data.storedPos().get().dimension()) : context.getLevel();
 
         if (playerEntity.isShiftKeyDown() && world.getBlockEntity(pos) instanceof IWandable wandable && !data.hasStoredData()) {
             wandable.onWanded(playerEntity);
@@ -127,23 +130,23 @@ public class DominionWand extends ModItem implements IRadialProvider {
         }
 
         if (!data.hasStoredData()) {
-            data = data.storePos(pos.immutable());
+            data = data.storePos(new GlobalPos(context.getLevel().dimension(), pos));
             if (data.strict()) data = data.setFace(face);
             stack.set(DataComponentRegistry.DOMINION_WAND, data);
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.dominion_wand.position_set"));
             return InteractionResult.SUCCESS;
         }
 
-        BlockPos storedPos = data.storedPos().orElse(null);
+        GlobalPos storedPos = data.storedPos().orElse(null);
         Direction storedDirection = data.face().orElse(null);
-        if (storedPos != null && world.getBlockEntity(storedPos) instanceof IWandable wandable) {
-            wandable.onFinishedConnectionFirst(pos, storedDirection, (LivingEntity) world.getEntity(data.storedEntityId()), playerEntity);
+        if (storedPos != null && world.getBlockEntity(storedPos.pos()) instanceof IWandable wandable) {
+            wandable.onFinishedConnectionFirst(new GlobalPos(world.dimension(), pos), storedDirection, (LivingEntity) world.getEntity(data.storedEntityId()), playerEntity);
         }
         if (world.getBlockEntity(pos) instanceof IWandable wandable) {
             wandable.onFinishedConnectionLast(storedPos, storedDirection, (LivingEntity) world.getEntity(data.storedEntityId()), playerEntity);
         }
         if (data.storedEntityId() != DominionWandData.NULL_ENTITY && world.getEntity(data.storedEntityId()) instanceof IWandable wandable) {
-            wandable.onFinishedConnectionFirst(pos, data.strict() ? face : null, null, playerEntity);
+            wandable.onFinishedConnectionFirst(new GlobalPos(world.dimension(), pos), data.strict() ? face : null, null, playerEntity);
         }
 
         clear(stack, playerEntity);
@@ -169,7 +172,7 @@ public class DominionWand extends ModItem implements IRadialProvider {
         if (data.storedPos().isEmpty()) {
             tooltip.add(Component.translatable("ars_nouveau.dominion_wand.no_location"));
         } else {
-            tooltip.add(Component.translatable("ars_nouveau.dominion_wand.position_stored", getPosString(data.getValidPos())));
+            tooltip.add(Component.translatable("ars_nouveau.dominion_wand.position_stored", getGlobalPosString(data.getValidPos())));
         }
 
         if (data.strict()) tooltip.add(Component.literal("Side-Sensitive"));
@@ -177,6 +180,14 @@ public class DominionWand extends ModItem implements IRadialProvider {
 
     public static String getPosString(BlockPos pos) {
         return Component.translatable("ars_nouveau.position", pos.getX(), pos.getY(), pos.getZ()).getString();
+    }
+
+    public static String getGlobalPosString(GlobalPos globalPos) {
+        BlockPos pos = globalPos.pos();
+        ResourceLocation dimLoc = globalPos.dimension().location();
+        String translationKey = dimLoc.getPath() + "." + dimLoc.getNamespace() + ".name";
+        String translation = Component.translatable(translationKey).getString();
+        return Component.translatable("ars_nouveau.global_position", pos.getX(), pos.getY(), pos.getZ(), translation.equals(translationKey) ? dimLoc.toString() : translation).getString();
     }
 
     @OnlyIn(Dist.CLIENT)
