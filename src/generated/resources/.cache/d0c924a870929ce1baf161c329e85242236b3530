@@ -1,4 +1,4 @@
-// 1.21.1	2024-08-24T11:55:28.4351257	Tags for minecraft:entity_type mod id ars_nouveau
+// 1.21.1	2024-10-13T12:06:56.1303326	Tags for minecraft:entity_type mod id ars_nouveau
 4d0235b95823f5d315aae7e9f9e484cbde8294a0 data/ars_nouveau/tags/entity_type/animal_summon_blacklist.json
 a958530eef4b0d5ac2f1c7bd552b60e23cb66d9a data/ars_nouveau/tags/entity_type/an_hostile.json
 290c285b1e334d322b8d070b2c6a071114b1d70c data/ars_nouveau/tags/entity_type/berry_blacklist.json
@@ -10,7 +10,7 @@ a958530eef4b0d5ac2f1c7bd552b60e23cb66d9a data/ars_nouveau/tags/entity_type/an_ho
 e00f2931577049b9a4400a87ed9c249373be376c data/ars_nouveau/tags/entity_type/jar_release_blacklist.json
 81129e21b3ae9fc2579ae17d4c228b76271a2b4d data/ars_nouveau/tags/entity_type/jar_whitelist.json
 6ea663c420f871864a11d18e9448d602520eeff9 data/ars_nouveau/tags/entity_type/lingering_blacklist.json
-84573a969de7731afa84f6a69831eb283c565ba5 data/ars_nouveau/tags/entity_type/magic_find.json
+a8425355e51f2ea7ed823f1214e5f785f5f4ebc4 data/ars_nouveau/tags/entity_type/magic_find.json
 86a469d8e9ee317a1ca5b93bfed0be34ff5b0d89 data/ars_nouveau/tags/entity_type/rewind_blacklist.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/entity_type/spell_can_hit.json
 ac003d93bbb50df3d9d0d7bf1561a9b274c4e65b data/c/tags/entity_type/bosses.json

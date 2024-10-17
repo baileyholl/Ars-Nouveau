@@ -38,7 +38,8 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
                         ModEntities.WILDEN_GUARDIAN.get(),
                         ModEntities.WILDEN_BOSS.get(),
                         ModEntities.WILDEN_STALKER.get(),
-                        ModEntities.WILDEN_HUNTER.get()
+                        ModEntities.WILDEN_HUNTER.get(),
+                        ModEntities.ALAKARKINOS_TYPE.get()
                 );
         this.tag(EntityTags.SPELL_CAN_HIT);
         this.tag(EntityTags.HOSTILE_MOBS)

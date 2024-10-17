@@ -43,12 +43,14 @@ public class WorldgenProvider extends DatapackBuiltinEntriesProvider {
         public static final ResourceKey<BiomeModifier> STARBUNCLE_SPAWN = ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, prefix("starbuncle_spawn"));
         public static final ResourceKey<BiomeModifier> GIFT_STARBUNCLE_SPAWN = ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, prefix("gift_starbuncle_spawn"));
         public static final ResourceKey<BiomeModifier> DRYGMY_SPAWN = ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, prefix("drygmy_spawn"));
+        public static final ResourceKey<BiomeModifier> ALARKINOS_SPAWN = ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, prefix("alakarkinos_spawn"));
         public static final ResourceKey<BiomeModifier> WHIRLISPRIG_SPAWN = ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, prefix("whirlisprig_spawn"));
         public static final ResourceKey<BiomeModifier> ARCHWOOD_MIX_RARE = ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, prefix("rare_archwood_mix"));
         public static final ResourceKey<BiomeModifier> BERRY_COMMON = ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, prefix("common_source_berry"));
 
         public static void bootstrap(BootstrapContext<BiomeModifier> context) {
             HolderSet<Biome> OVERWORLD_TAG = context.lookup(Registries.BIOME).getOrThrow(BiomeTags.IS_OVERWORLD);
+            HolderSet<Biome> BEACH_TAG = context.lookup(Registries.BIOME).getOrThrow(BiomeTags.IS_BEACH);
             HolderSet.Named<Biome> BERRY_BIOMES = context.lookup(Registries.BIOME).getOrThrow(BiomeTagProvider.BERRY_SPAWN);
             Holder.Reference<PlacedFeature> BERRY_SET = context.lookup(Registries.PLACED_FEATURE).get(WorldgenRegistry.PLACED_BERRY_BUSH).get();
             Holder.Reference<PlacedFeature> TREE_SET = context.lookup(Registries.PLACED_FEATURE).get(WorldgenRegistry.PLACED_MIX_ARCHWOODS).get();
@@ -64,6 +66,8 @@ public class WorldgenProvider extends DatapackBuiltinEntriesProvider {
 
             context.register(BERRY_COMMON, new BiomeModifiers.AddFeaturesBiomeModifier(BERRY_BIOMES, HolderSet.direct(BERRY_SET), GenerationStep.Decoration.VEGETAL_DECORATION));
             context.register(ARCHWOOD_MIX_RARE, new BiomeModifiers.AddFeaturesBiomeModifier(OVERWORLD_TAG, HolderSet.direct(TREE_SET), GenerationStep.Decoration.VEGETAL_DECORATION));
+            context.register(ALARKINOS_SPAWN, BiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(BEACH_TAG, new MobSpawnSettings.SpawnerData(ModEntities.ALAKARKINOS_TYPE.get(),
+                    5, 1, 1)));
         }
 
         @NotNull

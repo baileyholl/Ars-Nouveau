@@ -1095,6 +1095,8 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .withPedestalItem(3, Ingredient.of(Tags.Items.OBSIDIANS))
                 .build());
 
+        addRecipe(builder().withResult(ItemsRegistry.ALAKARKINOS_CHARM).withReagent(ItemsRegistry.ALAKARKINOS_SHARD).withPedestalItem(Items.BRUSH).withPedestalItem(3, Ingredient.of(ItemTags.DECORATED_POT_SHERDS)).build());
+
     }
 
     public void makeArmor(ItemLike outputItem, ItemLike armorItem) {
