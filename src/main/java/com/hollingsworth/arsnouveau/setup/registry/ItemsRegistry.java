@@ -46,6 +46,8 @@ import java.util.function.Supplier;
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
 public class ItemsRegistry {
+
+    public static Style LORE_STYLE = Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(true);
     public static PerkItem BLANK_THREAD;
 
     public static FoodProperties SOURCE_BERRY_FOOD = new FoodProperties.Builder().nutrition(2).saturationModifier(0.1F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).alwaysEdible().build();
@@ -110,7 +112,7 @@ public class ItemsRegistry {
     public static final ItemRegistryWrapper<StarbuncleShard> STARBUNCLE_SHARD = register(LibItemNames.STARBUNCLE_SHARDS, StarbuncleShard::new);
     public static final ItemRegistryWrapper<StarbuncleShades> STARBUNCLE_SHADES = register(LibItemNames.STARBUNCLE_SHADES, StarbuncleShades::new);
     public static final ItemRegistryWrapper<WhirlisprigCharm> WHIRLISPRIG_CHARM = register(LibItemNames.WHIRLISPRIG_CHARM, WhirlisprigCharm::new);
-    public static final ItemRegistryWrapper<ModItem> WHIRLISPRIG_SHARDS = register(LibItemNames.WHIRLISPRIG_SHARDS, () -> new ModItem().withTooltip(Component.translatable("tooltip.whirlisprig_shard")));
+    public static final ItemRegistryWrapper<ModItem> WHIRLISPRIG_SHARDS = register(LibItemNames.WHIRLISPRIG_SHARDS, () -> new ModItem().withTooltip("tooltip.whirlisprig_shard").withTooltip(Component.translatable("tooltip.whirlisprig_shard2").withStyle(LORE_STYLE)));
     public static final ItemRegistryWrapper<ModItem> SOURCE_GEM = register(LibItemNames.SOURCE_GEM, () -> new ModItem().withTooltip(Component.translatable("tooltip.source_gem")));
     public static final ItemRegistryWrapper<AllowItemScroll> ALLOW_ITEM_SCROLL = register(LibItemNames.ALLOW_ITEM_SCROLL, AllowItemScroll::new);
     public static final ItemRegistryWrapper<DenyItemScroll> DENY_ITEM_SCROLL = register(LibItemNames.DENY_ITEM_SCROLL, DenyItemScroll::new);
@@ -119,7 +121,7 @@ public class ItemsRegistry {
     public static final ItemRegistryWrapper<Wand> WAND = register(LibItemNames.WAND, Wand::new);
     public static final ItemRegistryWrapper<VoidJar> VOID_JAR = register(LibItemNames.VOID_JAR, VoidJar::new);
     public static final ItemRegistryWrapper<WixieCharm> WIXIE_CHARM = register(LibItemNames.WIXIE_CHARM, WixieCharm::new);
-    public static final ItemRegistryWrapper<ModItem> WIXIE_SHARD = register(LibItemNames.WIXIE_SHARD, () -> new ModItem().withTooltip(Component.translatable("tooltip.wixie_shard")));
+    public static final ItemRegistryWrapper<ModItem> WIXIE_SHARD = register(LibItemNames.WIXIE_SHARD, () -> new ModItem().withTooltip(Component.translatable("tooltip.wixie_shard")).withTooltip(Component.translatable("tooltip.wixie_shard2").withStyle(ItemsRegistry.LORE_STYLE)));
     public static final ItemRegistryWrapper<SpellBow> SPELL_BOW = register(LibItemNames.SPELL_BOW, SpellBow::new);
     public static final ItemRegistryWrapper<SpellArrow> AMPLIFY_ARROW = register(LibItemNames.AMPLIFY_ARROW, () -> new SpellArrow(AugmentAmplify.INSTANCE, 2));
     public static final ItemRegistryWrapper<FormSpellArrow> SPLIT_ARROW = register(LibItemNames.SPLIT_ARROW, () -> new FormSpellArrow(AugmentSplit.INSTANCE, 2));
@@ -182,7 +184,7 @@ public class ItemsRegistry {
     public static final ItemRegistryWrapper<EnchantersShield> ENCHANTERS_SHIELD = register(LibItemNames.ENCHANTERS_SHIELD, EnchantersShield::new);
     public static final ItemRegistryWrapper<CasterTome> CASTER_TOME = register(LibItemNames.CASTER_TOME, CasterTome::new);
     public static final ItemRegistryWrapper<DrygmyCharm> DRYGMY_CHARM = register(LibItemNames.DRYGMY_CHARM, DrygmyCharm::new);
-    public static final ItemRegistryWrapper<ModItem> DRYGMY_SHARD = register(LibItemNames.DRYGMY_SHARD, () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.drygmy_shard")));
+    public static final ItemRegistryWrapper<ModItem> DRYGMY_SHARD = register(LibItemNames.DRYGMY_SHARD, () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.drygmy_shard")).    withTooltip(Component.translatable("tooltip.drygmy_shard2").withStyle(ItemsRegistry.LORE_STYLE)));
     public static final ItemRegistryWrapper<ModItem> WILDEN_TRIBUTE = register(LibItemNames.WILDEN_TRIBUTE, () -> new ModItem(defaultItemProperties().fireResistant()).withTooltip(Component.translatable("tooltip.ars_nouveau.wilden_tribute").withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE))).withRarity(Rarity.EPIC));
     public static final ItemRegistryWrapper<SummoningFocus> SUMMONING_FOCUS = register(LibItemNames.SUMMON_FOCUS, SummoningFocus::new);
     public static final ItemRegistryWrapper<ShapersFocus> SHAPERS_FOCUS = register(LibItemNames.SHAPERS_FOCUS, () -> new ShapersFocus(defaultItemProperties().stacksTo(1)));

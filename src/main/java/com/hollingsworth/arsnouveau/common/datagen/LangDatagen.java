@@ -1305,6 +1305,10 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.smooth_sourcestone_grate","Smooth Sourcestone Grate");
         add("block.ars_nouveau.source_lamp", "Source Gem Lamp");
         add("ars_nouveau.page1.source_lamp", "Behaves like a copper bulb, but the light and comparator values can be adjusted by casting Light with dampen.");
+        add("tooltip.starbuncle_shard2", "Made with love.");
+        add("tooltip.whirlisprig_shard2","A natural portrait.");
+        add("tooltip.drygmy_shard2","A tribute to what once was.");
+        add("tooltip.wixie_shard2", "Let me out.");
     }
 
     @Override
