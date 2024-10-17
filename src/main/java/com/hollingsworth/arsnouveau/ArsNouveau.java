@@ -87,7 +87,7 @@ public class ArsNouveau {
             e.register(ticketController);
         });
         NeoForge.EVENT_BUS.addListener(BubbleEntity::onAttacked);
-
+        NeoForge.EVENT_BUS.addListener(BubbleEntity::entityHurt);
         ANCriteriaTriggers.init();
         try {
             Thread thread = new Thread(Rewards::init);

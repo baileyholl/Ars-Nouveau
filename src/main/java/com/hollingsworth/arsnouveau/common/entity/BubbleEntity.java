@@ -15,6 +15,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -78,16 +79,26 @@ public class BubbleEntity extends Projectile implements GeoEntity {
             return;
         level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.BUBBLE_COLUMN_BUBBLE_POP, this.getSoundSource(), 3.0F, 1.0F);
         this.remove(RemovalReason.DISCARDED);
-        if(damage > 0 && this.getFirstPassenger() instanceof LivingEntity living){
-            living.hurt(this.damageSources().magic(), this.damage);
-        }
     }
 
     // The only purpose of this is to prevent the default attack noise that occurs.
     public static void onAttacked(AttackEntityEvent event){
         if(event.getTarget() instanceof BubbleEntity bubble){
+            if(bubble.getPassengers().isEmpty() || bubble.getFirstPassenger() instanceof ItemEntity) {
+                bubble.pop();
+                event.setCanceled(true);
+            }else if(bubble.getFirstPassenger() instanceof LivingEntity passenger){
+                event.getEntity().attack(passenger);
+            }
+        }
+    }
+
+    public static void entityHurt(LivingDamageEvent.Pre e) {
+        if(e.getEntity().getVehicle() instanceof BubbleEntity bubble){
+            if(bubble.age > 1) {
+                e.setNewDamage(e.getNewDamage() + bubble.damage);
+            }
             bubble.pop();
-            event.setCanceled(true);
         }
     }
 
@@ -101,7 +112,9 @@ public class BubbleEntity extends Projectile implements GeoEntity {
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        this.pop();
+        if(this.getPassengers().isEmpty() || this.getFirstPassenger() instanceof ItemEntity){
+            this.pop();
+        }
         return true;
     }
 
@@ -155,7 +168,7 @@ public class BubbleEntity extends Projectile implements GeoEntity {
 
     @Override
     public boolean canBeHitByProjectile() {
-        return this.isAlive() && age > 1;
+        return this.getPassengers().isEmpty() || this.getFirstPassenger() instanceof ItemEntity && (this.isAlive() && age > 1);
     }
 
     @Override

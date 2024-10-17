@@ -295,7 +295,7 @@
   "ars_nouveau.glyph_desc.reset": "Resets the spell chain to the original target if it was changed by a previous effect. For example, Burst -> Place Block -> Reset -> Break will cause Burst to place blocks, but only Break will apply to the original location. As a result, using Reset will allow you to bypass combination and duplicate limits on glyphs.",
   "ars_nouveau.glyph_desc.rewind": "Rewinds an entity back in time to its previous locations and health. Can revert blocks that were moved with spells back into solid blocks. Glyphs that come after Rewind will be cast at the end of the rewind, as if they were Delayed.",
   "ars_nouveau.glyph_desc.wololo": "Changes the color of an entity or compatible block to the color of the spell.",
-  "ars_nouveau.glyph_name.bubble": "Captures mobs and entities it touches, causing them to float upwards. Hitting the bubble with a projectile will pop it, dealing additional damage to the target inside.",
+  "ars_nouveau.glyph_name.bubble": "Captures mobs and entities it touches, causing them to float upwards. Damaging the entity trapped in the bubble will cause it to pop, dealing damage to the entity inside. Extend time and amplify can be used to increase the duration and damage of the bubble.",
   "ars_nouveau.glyph_name.glyph_accelerate": "Accelerate",
   "ars_nouveau.glyph_name.glyph_amplify": "Amplify",
   "ars_nouveau.glyph_name.glyph_animate_block": "Animate Block",

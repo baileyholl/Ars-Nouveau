@@ -20,7 +20,7 @@ public class EffectBubble extends AbstractEffect {
     public static final EffectBubble INSTANCE = new EffectBubble();
 
     public EffectBubble() {
-        super("bubble", "Captures mobs and entities it touches, causing them to float upwards. Hitting the bubble with a projectile will pop it, dealing additional damage to the target inside.");
+        super("bubble", "Captures mobs and entities it touches, causing them to float upwards. Damaging the entity trapped in the bubble will cause it to pop, dealing damage to the entity inside. Extend time and amplify can be used to increase the duration and damage of the bubble.");
     }
 
     @Override
