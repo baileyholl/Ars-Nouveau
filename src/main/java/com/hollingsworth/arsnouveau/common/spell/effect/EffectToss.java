@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.item.inv.ExtractedStack;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
+import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
@@ -63,6 +64,7 @@ public class EffectToss extends AbstractEffect {
             int size = Math.min(amount, 64);
             ExtractedStack casterStack = this.extractItem(inventoryManager, (i) -> {
                 if (i.isEmpty()) return false;
+                if (i.is(ItemTagProvider.TOSS_BLACKLIST)) return false;
                 if (context.getCaster() instanceof TileCaster) {
                     return true;
                 }
