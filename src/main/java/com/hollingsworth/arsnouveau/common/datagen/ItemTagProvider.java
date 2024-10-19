@@ -32,6 +32,7 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
     public static TagKey<Item> RITUAL_LOOT_BLACKLIST = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "ritual_loot_blacklist"));
     public static TagKey<Item> RITUAL_TRADE_BLACKLIST = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "ritual_trade_blacklist"));
     public static TagKey<Item> SHADY_WIZARD_FRUITS = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "shady_wizard_fruits"));
+    public static TagKey<Item> TOSS_BLACKLIST = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "toss_blacklist"));
 
     public ItemTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
         super(output, Registries.ITEM, future, item -> item.builtInRegistryHolder().key(), ArsNouveau.MODID, helper);
@@ -216,5 +217,7 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
                 BlockRegistry.FROSTAYA_POD.asItem(),
                 BlockRegistry.MENDOSTEEN_POD.asItem()
         );
+
+        this.tag(TOSS_BLACKLIST);
     }
 }
