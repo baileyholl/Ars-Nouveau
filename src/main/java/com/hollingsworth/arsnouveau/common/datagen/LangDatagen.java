@@ -1305,6 +1305,10 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.smooth_sourcestone_grate","Smooth Sourcestone Grate");
         add("block.ars_nouveau.source_lamp", "Source Gem Lamp");
         add("ars_nouveau.page1.source_lamp", "Behaves like a copper bulb, but the light and comparator values can be adjusted by casting Light with dampen.");
+        add("tooltip.starbuncle_shard2", "Made with love.");
+        add("tooltip.whirlisprig_shard2","A natural portrait.");
+        add("tooltip.drygmy_shard2","A tribute to what once was.");
+        add("tooltip.wixie_shard2", "Let me out.");
         add("block.ars_nouveau.alakarkinos_hat", "Alakarkinos Hat");
         add("entity.ars_nouveau.bubble", "Bubble");
         add("entity.ars_nouveau.alakarkinos", "Alakarkinos");
@@ -1316,14 +1320,6 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page4.alakarkinos_charm","Alakarkinos will seek out gravel or sand that is placed within 3 blocks horizontal and one block vertical around its bound inventory. In order to convert blocks into items, Source must be provided near its chest. After some time and a few magic tricks, Alakarkinos will destroy the sand or gravel and insert items into the inventory.");
 
         add("ars_nouveau.sifting", "Sifting");
-
-
-
-
-        add("tooltip.starbuncle_shard2", "Made with love.");
-        add("tooltip.whirlisprig_shard2","A natural portrait.");
-        add("tooltip.drygmy_shard2","A tribute to what once was.");
-        add("tooltip.wixie_shard2", "Let me out.");
     }
 
     @Override
