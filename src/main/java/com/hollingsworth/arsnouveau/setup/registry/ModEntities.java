@@ -87,7 +87,7 @@ public class ModEntities {
             .setShouldReceiveVelocityUpdates(true));
 
     public static final DeferredHolder<EntityType<?>, EntityType<Alakarkinos>> ALAKARKINOS_TYPE = registerEntity(LibEntityNames.ALAKARKINOS, EntityType.Builder.<Alakarkinos>of(Alakarkinos::new, MobCategory.CREATURE)
-            .sized(0.6F, 0.63F).setTrackingRange(10)
+            .sized(0.75f, 0.8f).setTrackingRange(10)
             .setShouldReceiveVelocityUpdates(true));
 
     public static final DeferredHolder<EntityType<?>, EntityType<EntityFollowProjectile>> ENTITY_FOLLOW_PROJ = registerEntity(
