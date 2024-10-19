@@ -124,7 +124,7 @@ public class ShaderRegistry extends RenderType {
         }
 
         private static final Function<ResourceLocation, RenderType> WORLD_ENTITY_ICON = Util.memoize((p_173202_) -> {
-            return create("cafetier_entity_icon",
+            return create("ars_nouveau_entity_icon",
                     DefaultVertexFormat.POSITION_TEX,
                     VertexFormat.Mode.QUADS,
                     1024,

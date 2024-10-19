@@ -228,7 +228,7 @@ public class ItemsRegistry {
     public static final ItemRegistryWrapper<ScryCaster> SCRY_CASTER = register(LibItemNames.SCRY_CASTER, () -> new ScryCaster(defaultItemProperties().stacksTo(1).component(DataComponentRegistry.SCRY_CASTER, new ScryCasterData()).component(DataComponentRegistry.SCRY_DATA, new ScryPosData(Optional.empty()))));
     public static final ItemRegistryWrapper<JumpingRing> JUMP_RING = register(LibItemNames.JUMP_RING, JumpingRing::new);
     public static final ItemRegistryWrapper<AlakarkinosCharm> ALAKARKINOS_CHARM = register(LibItemNames.ALAKARKINOS_CHARM, AlakarkinosCharm::new);
-    public static final ItemRegistryWrapper<Item> ALAKARKINOS_SHARD = register(LibItemNames.ALAKARKINOS_SHARD, ModItem::new);
+    public static final ItemRegistryWrapper<Item> ALAKARKINOS_SHARD = register(LibItemNames.ALAKARKINOS_SHARD, () -> new ModItem().withTooltip("tooltip.alakarkinos_shard1").withTooltip(Component.translatable("tooltip.alakarkinos_shard2").withStyle(LORE_STYLE)));
 
     public static <T extends Item> ItemRegistryWrapper<T> register(String name, Supplier<T> item) {
         return new ItemRegistryWrapper<>(ITEMS.register(name, item));
