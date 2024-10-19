@@ -472,6 +472,16 @@
       "color": "black",
       "adopter": "CrowDrone",
       "bio": "A vain little creature, known for her beautiful voice. Aesop warned her about foxes and flattery. "
+    },{
+      "name": "Astrael",
+      "color": "black",
+      "adopter": "Keintcy",
+      "bio": "A mysterious but curious starbuncle, once loved by an archmage who got lost in time. Rumor says she was born among the stars, therefore her name."
+    },{
+      "name": "Xollus",
+      "adopter": "Jarva",
+      "color": "orange",
+      "bio": "This poor Starbuncle was originally a Bookwyrm, polymorphed into a Starbuncle as part of an experiment gone wrong."
     }
   ]
 }

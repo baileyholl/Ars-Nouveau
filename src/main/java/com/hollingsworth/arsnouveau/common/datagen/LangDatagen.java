@@ -1320,6 +1320,10 @@ public class LangDatagen extends LanguageProvider {
 
 
 
+        add("tooltip.starbuncle_shard2", "Made with love.");
+        add("tooltip.whirlisprig_shard2","A natural portrait.");
+        add("tooltip.drygmy_shard2","A tribute to what once was.");
+        add("tooltip.wixie_shard2", "Let me out.");
     }
 
     @Override

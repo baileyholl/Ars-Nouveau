@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.common.items.data.StarbuncleCharmData;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -16,6 +17,7 @@ public class StarbuncleShard extends ModItem{
     public StarbuncleShard(){
         super();
         withTooltip(Component.translatable("tooltip.starbuncle_shard"));
+        withTooltip(Component.translatable("tooltip.starbuncle_shard2").withStyle(ItemsRegistry.LORE_STYLE));
     }
 
     @Override
