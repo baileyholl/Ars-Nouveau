@@ -343,6 +343,7 @@ public class EventHandler {
         AddTomeCommand.register(event.getDispatcher());
         SummonAnimHeadCommand.register(event.getDispatcher());
         LearnGlyphCommand.register(event.getDispatcher());
+        AdoptCommand.register(event.getDispatcher());
     }
 
     @SubscribeEvent
