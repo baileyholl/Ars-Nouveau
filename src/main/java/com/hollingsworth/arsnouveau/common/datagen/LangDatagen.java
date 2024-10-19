@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -1288,6 +1289,8 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.magic_fire", "Mage Fire");
         add("effect.ars_nouveau.immolate", "Immolate");
         add("effect.ars_nouveau.immolate.desc", "Enhances fire spells.");
+        add("effect.ars_nouveau.soaked", "Soaked");
+        add("effect.ars_nouveau.soaked.desc", "Wets the target, protecting from fire and triggering effects as if under the rain.");
         add("block.ars_nouveau.sourceberry_sack", "Sourceberry Sack");
         add("ars_nouveau.empty","Empty");
         add("ars_nouveau.melder.output_not_unique", "Output potion is not a unique mix.");
@@ -1326,12 +1329,12 @@ public class LangDatagen extends LanguageProvider {
     }
 
     @Override
-    public void add(Item key, String name) {
+    public void add(@NotNull Item key, @NotNull String name) {
         super.add(key, name);
     }
 
     @Override
-    public void add(String key, String value) {
+    public void add(@NotNull String key, @NotNull String value) {
         super.add(key, value);
         data.put(key, value);
     }

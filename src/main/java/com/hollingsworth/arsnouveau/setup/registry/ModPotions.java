@@ -48,6 +48,8 @@ public class ModPotions {
     public static final DeferredHolder<MobEffect, ImmolateEffect> IMMOLATE_EFFECT = EFFECTS.register(IMMOLATE, ImmolateEffect::new);
     public static final DeferredHolder<MobEffect, BounceEffect> BOUNCE_EFFECT = EFFECTS.register(BOUNCE, BounceEffect::new);
     public static final DeferredHolder<MobEffect, MagicFindEffect> MAGIC_FIND_EFFECT = EFFECTS.register(MAGIC_FIND, MagicFindEffect::new);
+    public static final DeferredHolder<MobEffect, SoakedEffect> SOAKED_EFFECT = EFFECTS.register(SOAKED, SoakedEffect::new);
+
 
     public static final DeferredHolder<MobEffect, PublicEffect> RECOVERY_EFFECT = EFFECTS.register(RECOVERY, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, new ParticleColor(0, 200, 40).getColor()));
     public static final DeferredHolder<MobEffect, BlastEffect> BLAST_EFFECT = EFFECTS.register(BLAST, BlastEffect::new);

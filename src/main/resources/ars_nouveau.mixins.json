@@ -19,6 +19,7 @@
   "mixins": [
     "BrushableBlockEntityAccessor",
     "DamageSourceMixin",
+    "EntityMixin",
     "LivingAccessor",
     "MobAccessor",
     "PufferfishAccessor",
