@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -26,7 +28,9 @@ public class BubbleEntity extends Projectile implements GeoEntity {
     int maxAge;
     int age;
     float damage;
-
+    public int poppingTicks;
+    public boolean hasPopped;
+    public static final EntityDataAccessor<Boolean> HAS_POPPED = SynchedEntityData.defineId(BubbleEntity.class, EntityDataSerializers.BOOLEAN);
     public BubbleEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
@@ -39,7 +43,7 @@ public class BubbleEntity extends Projectile implements GeoEntity {
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
-
+        pBuilder.define(HAS_POPPED, false);
     }
 
     @Override
@@ -62,6 +66,13 @@ public class BubbleEntity extends Projectile implements GeoEntity {
             }
         }
 
+        if(entityData.get(HAS_POPPED)){
+            poppingTicks++;
+        }
+        if(poppingTicks > 5 && !level.isClientSide){
+            this.remove(RemovalReason.DISCARDED);
+        }
+
         this.xOld = this.getX();
         this.yOld = this.getY();
         this.zOld = this.getZ();
@@ -77,8 +88,11 @@ public class BubbleEntity extends Projectile implements GeoEntity {
     public void pop(){
         if(this.level.isClientSide)
             return;
+        if(this.entityData.get(HAS_POPPED)){
+            return;
+        }
+        this.entityData.set(HAS_POPPED, true);
         level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.BUBBLE_COLUMN_BUBBLE_POP, this.getSoundSource(), 3.0F, 1.0F);
-        this.remove(RemovalReason.DISCARDED);
     }
 
     // The only purpose of this is to prevent the default attack noise that occurs.
@@ -95,7 +109,7 @@ public class BubbleEntity extends Projectile implements GeoEntity {
 
     public static void entityHurt(LivingDamageEvent.Pre e) {
         if(e.getEntity().getVehicle() instanceof BubbleEntity bubble){
-            if(bubble.age > 1) {
+            if(bubble.age > 1 && !bubble.hasPopped) {
                 e.setNewDamage(e.getNewDamage() + bubble.damage);
             }
             bubble.pop();

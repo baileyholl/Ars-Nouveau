@@ -8,7 +8,6 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
@@ -20,12 +19,7 @@ public class EffectBubble extends AbstractEffect {
     public static final EffectBubble INSTANCE = new EffectBubble();
 
     public EffectBubble() {
-        super("bubble", "Captures mobs and entities it touches, causing them to float upwards. Damaging the entity trapped in the bubble will cause it to pop, dealing damage to the entity inside. Extend time and amplify can be used to increase the duration and damage of the bubble.");
-    }
-
-    @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        super.onResolveBlock(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
+        super("bubble", "Captures mobs and entities it touches, causing them to float upwards. If the bubble has been alive for at least one tick, damaging the entity trapped in the bubble will cause it to pop, dealing bonus damage to the entity inside. Extend time and amplify can be used to increase the duration and damage of the bubble.");
     }
 
     @Override

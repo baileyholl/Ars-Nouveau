@@ -14,6 +14,12 @@ import net.minecraft.world.entity.Entity;
 import org.joml.Matrix4f;
 
 public class BubbleRenderer extends EntityRenderer<BubbleEntity> {
+    public static ResourceLocation TEXTURE = ArsNouveau.prefix("textures/entity/bubble.png");
+    public static ResourceLocation POP_1 = ArsNouveau.prefix("textures/entity/bubble_pop1.png");
+    public static ResourceLocation POP_2 = ArsNouveau.prefix("textures/entity/bubble_pop2.png");
+    public static ResourceLocation POP_3 = ArsNouveau.prefix("textures/entity/bubble_pop3.png");
+    public static ResourceLocation POP_4 = ArsNouveau.prefix("textures/entity/bubble_pop4.png");
+    public static ResourceLocation POP_5 = ArsNouveau.prefix("textures/entity/bubble_pop5.png");
 
     public BubbleRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager);
@@ -21,9 +27,8 @@ public class BubbleRenderer extends EntityRenderer<BubbleEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(BubbleEntity pEntity) {
-        return ArsNouveau.prefix("textures/entity/bubble.png");
+        return TEXTURE;
     }
-
 
     @Override
     public void render(BubbleEntity entityIn, float pEntityYaw, float pPartialTick, PoseStack matrixStack, MultiBufferSource buffer, int pPackedLight) {
@@ -46,8 +51,23 @@ public class BubbleRenderer extends EntityRenderer<BubbleEntity> {
         }
         matrixStack.scale(base, base, base);
         final Matrix4f pose = matrixStack.last().pose();
+        ResourceLocation texture = TEXTURE;
 
-        VertexConsumer r = buffer.getBuffer(ShaderRegistry.worldEntityIcon(ArsNouveau.prefix("textures/entity/bubble.png")));
+        if(entityIn instanceof BubbleEntity bubbleEntity && bubbleEntity.poppingTicks > 0){
+            int popTicks = bubbleEntity.poppingTicks;
+            if(popTicks < 2){
+                texture = POP_1;
+            }else if(popTicks < 3) {
+                texture = POP_2;
+            }else if(popTicks < 4) {
+                texture = POP_3;
+            }else if(popTicks < 5) {
+                texture = POP_4;
+            }else{
+                texture = POP_5;
+            }
+        }
+        VertexConsumer r = buffer.getBuffer(ShaderRegistry.worldEntityIcon(texture));
         r.addVertex(pose, -8, -8, 0).setUv(0, 0);
         r.addVertex(pose, -8, 8, 0).setUv(0, 1);
         r.addVertex(pose, 8, 8, 0).setUv(1, 1);
