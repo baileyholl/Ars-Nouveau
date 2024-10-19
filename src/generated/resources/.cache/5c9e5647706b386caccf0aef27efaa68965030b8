@@ -1,8 +1,8 @@
-// 1.21.1	2024-09-07T14:19:18.6385251	Tags for minecraft:item mod id ars_nouveau
+// 1.21.1	2024-10-19T10:39:38.2477422	Tags for minecraft:item mod id ars_nouveau
 bde6ca31173d1f22d5f6fe355dc90c9faa35b239 data/ars_nouveau/tags/item/golem/shard.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/item/interact_jar_blacklist.json
 a0800fbffa0e00aecb2e86a1e991d42904427191 data/ars_nouveau/tags/item/magic_food.json
-1781e2e03328482696e713943d129953a77de05c data/ars_nouveau/tags/item/magic_shards.json
+779589c2173e840c19bb1975f746a3e6a407e968 data/ars_nouveau/tags/item/magic_shards.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/item/ritual_loot_blacklist.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/item/ritual_trade_blacklist.json
 2bea9b95ffd91ffd3ad204aab2644fae06731943 data/ars_nouveau/tags/item/shady_wizard_fruits.json

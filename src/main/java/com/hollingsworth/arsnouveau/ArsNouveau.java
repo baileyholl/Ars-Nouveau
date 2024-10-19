@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
 import com.hollingsworth.arsnouveau.client.registry.ClientHandler;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
+import com.hollingsworth.arsnouveau.common.entity.BubbleEntity;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
@@ -85,7 +86,8 @@ public class ArsNouveau {
         modEventBus.addListener((RegisterTicketControllersEvent e) ->{
             e.register(ticketController);
         });
-
+        NeoForge.EVENT_BUS.addListener(BubbleEntity::onAttacked);
+        NeoForge.EVENT_BUS.addListener(BubbleEntity::entityHurt);
         ANCriteriaTriggers.init();
         try {
             Thread thread = new Thread(Rewards::init);

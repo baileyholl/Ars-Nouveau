@@ -190,7 +190,11 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.CINDER.get(), CinderRenderer::new);
         event.registerEntityRenderer(ModEntities.WALL_SPELL.get(),
                 renderManager -> new RenderBlank(renderManager, ArsNouveau.prefix("textures/entity/spell_proj.png")));
+
         event.registerEntityRenderer(ModEntities.LILY.get(), (v) -> new GeoEntityRenderer<>(v, new LilyModel()));
+        event.registerEntityRenderer(ModEntities.ALAKARKINOS_TYPE.get(), (v) -> new GeoEntityRenderer<>(v, new AlakarkinosModel()));
+        event.registerEntityRenderer(ModEntities.BUBBLE.get(), BubbleRenderer::new);
+
     }
 
     public static LayeredDraw.Layer cameraOverlay = (gui, tracker) -> {

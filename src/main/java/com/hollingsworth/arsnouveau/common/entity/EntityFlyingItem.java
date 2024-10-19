@@ -33,6 +33,7 @@ public class EntityFlyingItem extends ColoredProjectile {
     public static final EntityDataAccessor<ItemStack> HELD_ITEM = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.ITEM_STACK);
     public static final EntityDataAccessor<Float> OFFSET = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Boolean> DIDOFFSET = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> IS_BUBBLE = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.BOOLEAN);
 
     public EntityFlyingItem(Level worldIn, Vec3 from, Vec3 to) {
         this(worldIn, from, to, 255, 25, 180);
@@ -139,7 +140,7 @@ public class EntityFlyingItem extends ColoredProjectile {
             this.setPos(lerpX, lerpY, lerpZ);
         }
 
-        if (level.isClientSide && this.age > 1) {
+        if (level.isClientSide && this.age > 1 && !this.getEntityData().get(IS_BUBBLE)) {
             double deltaX = getX() - xOld;
             double deltaY = getY() - yOld;
             double deltaZ = getZ() - zOld;
@@ -220,6 +221,7 @@ public class EntityFlyingItem extends ColoredProjectile {
         pBuilder.define(to, new Vec3(0, 0, 0));
         pBuilder.define(from, new Vec3(0, 0, 0));
         pBuilder.define(SPAWN_TOUCH, true);
+        pBuilder.define(IS_BUBBLE, false);
     }
 
     @Override

@@ -1308,7 +1308,21 @@ public class LangDatagen extends LanguageProvider {
         add("tooltip.starbuncle_shard2", "Made with love.");
         add("tooltip.whirlisprig_shard2","A natural portrait.");
         add("tooltip.drygmy_shard2","A tribute to what once was.");
-        add("tooltip.wixie_shard2", "Let me out.");
+        add("tooltip.wixie_shard2", "Knowledge for freedom.");
+        add("block.ars_nouveau.alakarkinos_hat", "Alakarkinos Hat");
+        add("entity.ars_nouveau.bubble", "Bubble");
+        add("entity.ars_nouveau.alakarkinos", "Alakarkinos");
+        add("item.ars_nouveau.alakarkinos_charm", "Alakarkinos Charm");
+        add("item.ars_nouveau.alakarkinos_token", "Alakarkinos Token");
+        add("ars_nouveau.page1.alakarkinos_charm","Alakarkinos can sift sand and gravel to find items found in archaeology sites. They can be found on beaches and will give you a token if they receive a Pottery Sherd of any kind.");
+        add("ars_nouveau.page2.alakarkinos_charm","Loves to dance to nearby jukeboxes.");
+        add("ars_nouveau.page3.alakarkinos_charm","Alakarkinos can be summoned anywhere by using a charm on a block. To set its home, use the Dominion Wand to bind Alakarkinos to a chest or inventory.");
+        add("ars_nouveau.page4.alakarkinos_charm","Alakarkinos will seek out gravel or sand that is placed within 3 blocks horizontal and one block vertical around its bound inventory. In order to convert blocks into items, Source must be provided near its chest. After some time and a few magic tricks, Alakarkinos will destroy the sand or gravel and insert items into the inventory.");
+        add("ars_novueau.alakarkinos.set_home", "Home set. Place source and gravel or sand within 3 blocks.");
+        add("ars_nouveau.sifting", "Sifting");
+        add("tooltip.alakarkinos_shard1", "Found by giving an Alakarkinos a Sherd.");
+        add("tooltip.alakarkinos_shard2", "What's that behind your ear?");
+
     }
 
     @Override

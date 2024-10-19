@@ -1,0 +1,6 @@
+{
+  "type": "ars_nouveau:alakarkinos_conversion",
+  "input": "minecraft:sand",
+  "table": "minecraft:archaeology/desert_well",
+  "weight": 100
+}

@@ -126,7 +126,9 @@ public class ItemModelGenerator extends ItemModelProvider {
         getBuilder(LibBlockNames.SMOOTH_SOURCESTONE_GRATE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.SMOOTH_SOURCESTONE_GRATE));
         getBuilder(LibBlockNames.GOLD_GRATE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.GOLD_GRATE));
         getBuilder(LibBlockNames.SOURCE_LAMP).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.SOURCE_LAMP));
-
+        getBuilder(LibBlockNames.CRAB_HAT).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.CRAB_HAT));
+        itemUnchecked(ItemsRegistry.ALAKARKINOS_CHARM);
+        itemUnchecked(ItemsRegistry.ALAKARKINOS_SHARD);
     }
 
     public void blockAsItem(String s){
