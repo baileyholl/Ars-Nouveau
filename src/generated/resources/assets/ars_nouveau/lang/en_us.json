@@ -954,6 +954,7 @@
   "ars_nouveau.wixie_cauldron.cleared": "Bound inventories cleared.",
   "ars_nouveau.wixie_cauldron.removed": "Inventory removed.",
   "ars_nouveau.wixie_familiar.applied": "Wixie applies %s",
+  "ars_novueau.alakarkinos.set_home": "Home set. Place source and gravel or sand within 3 blocks.",
   "arsnouveau.debug.log_created": "Log file created: %s",
   "attribute.name.ars_nouveau.mana_regen": "Mana Regeneration",
   "attribute.name.ars_nouveau.max_mana": "Max Mana",

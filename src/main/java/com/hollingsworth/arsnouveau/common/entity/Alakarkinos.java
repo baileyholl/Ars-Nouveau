@@ -59,6 +59,7 @@ import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -211,8 +212,8 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         List<WrappedGoal> list = new ArrayList<>();
         list.add(new WrappedGoal(0, new FloatGoal(this)));
         if (tamed) {
-            list.add(new WrappedGoal(4, new ConditionalLookAtMob(this, Player.class, 3.0F, 0.02F, () -> this.lookAt != null)));
-            list.add(new WrappedGoal(4, new ConditionalLookAtMob(this, Mob.class, 8.0F,  () -> this.lookAt != null)));
+            list.add(new WrappedGoal(4, new ConditionalLookAtMob(this, Player.class, 3.0F, 0.02F, () -> this.lookAt == null)));
+            list.add(new WrappedGoal(4, new ConditionalLookAtMob(this, Mob.class, 8.0F,  () -> this.lookAt == null)));
 //            list.add(new WrappedGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.2D)));
             list.add(new WrappedGoal(0, new FloatGoal(this)));
             list.add(new WrappedGoal(4, new LookAtTarget(this, 8.0f, () -> this.lookAt)));
@@ -373,6 +374,18 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         pCompound.putBoolean("tamed", this.tamed);
         pCompound.putBoolean("beingTamed", this.beingTamed);
         return super.save(pCompound);
+    }
+
+    boolean setBehaviors = false;
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        if (!setBehaviors) {
+            this.goalSelector.availableGoals = new LinkedHashSet<>();
+            this.reloadGoals();
+            setBehaviors = true;
+        }
     }
 
     @Override
