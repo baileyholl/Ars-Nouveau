@@ -31,9 +31,6 @@ public class ImbuementProcessor implements IComponentProcessor {
         if (key.equals("reagent"))
             return IVariable.wrapList(Arrays.stream(recipe.input.getItems()).map(i -> IVariable.from(i, level.registryAccess())).collect(Collectors.toList()), level.registryAccess());
 
-        if (key.equals("recipe")) {
-            return IVariable.wrap(recipe.id.toString(), level.registryAccess());
-        }
         if (key.equals("output")) {
             return IVariable.from(recipe.output, level.registryAccess());
         }

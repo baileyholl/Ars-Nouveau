@@ -71,7 +71,7 @@ public class BlockRegistry {
     public static BlockRegistryWrapper<EnchantingApparatusBlock> ENCHANTING_APP_BLOCK = registerBlockAndItem(LibBlockNames.ENCHANTING_APPARATUS, EnchantingApparatusBlock::new, (reg) -> new RendererBlockItem(reg.get(), defaultItemProperties()) {
         @Override
         public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-            return GenericRenderer.getISTER("enchanting_apparatus");
+            return GenericTileRenderer.getISTER("enchanting_apparatus");
         }
     });
 
@@ -83,7 +83,7 @@ public class BlockRegistry {
     public static BlockRegistryWrapper<Relay> RELAY = registerBlockAndItem(LibBlockNames.RELAY, Relay::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
         @Override
         public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-            return GenericRenderer.getISTER("source_relay");
+            return GenericTileRenderer.getISTER("source_relay");
         }
     });
     public static BlockEntityTypeRegistryWrapper<RelayTile> ARCANE_RELAY_TILE = registerTile(LibBlockNames.RELAY, RelayTile::new, RELAY);
@@ -109,14 +109,14 @@ public class BlockRegistry {
     public static BlockRegistryWrapper<ImbuementBlock> IMBUEMENT_BLOCK = registerBlockAndItem(LibBlockNames.IMBUEMENT_CHAMBER, ImbuementBlock::new, (reg) -> new RendererBlockItem(BlockRegistry.IMBUEMENT_BLOCK, defaultItemProperties()) {
         @Override
         public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-            return GenericRenderer.getISTER("imbuement_chamber");
+            return GenericTileRenderer.getISTER("imbuement_chamber");
         }
     });
     public static BlockEntityTypeRegistryWrapper<ImbuementTile> IMBUEMENT_TILE = registerTile(LibBlockNames.IMBUEMENT_CHAMBER, ImbuementTile::new, IMBUEMENT_BLOCK);
     public static BlockRegistryWrapper<RelaySplitter> RELAY_SPLITTER = registerBlockAndItem(LibBlockNames.RELAY_SPLITTER, RelaySplitter::new, (reg) -> new RendererBlockItem(BlockRegistry.RELAY_SPLITTER, defaultItemProperties()) {
         @Override
         public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-            return GenericRenderer.getISTER("source_splitter");
+            return GenericTileRenderer.getISTER("source_splitter");
         }
     });
     public static BlockEntityTypeRegistryWrapper<RelaySplitterTile> RELAY_SPLITTER_TILE = registerTile(LibBlockNames.RELAY_SPLITTER, RelaySplitterTile::new, RELAY_SPLITTER);
@@ -210,14 +210,14 @@ public class BlockRegistry {
     public static BlockRegistryWrapper<RelayDepositBlock> RELAY_DEPOSIT = registerBlockAndItem(LibBlockNames.RELAY_DEPOSIT, RelayDepositBlock::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
         @Override
         public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-            return GenericRenderer.getISTER("source_deposit");
+            return GenericTileRenderer.getISTER("source_deposit");
         }
     });
     public static BlockEntityTypeRegistryWrapper<RelayDepositTile> RELAY_DEPOSIT_TILE = registerTile(LibBlockNames.RELAY_DEPOSIT, RelayDepositTile::new, RELAY_DEPOSIT);
     public static BlockRegistryWrapper<RelayWarpBlock> RELAY_WARP = registerBlockAndItem(LibBlockNames.RELAY_WARP, RelayWarpBlock::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
         @Override
         public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-            return GenericRenderer.getISTER("source_warp");
+            return GenericTileRenderer.getISTER("source_warp");
         }
     });
     public static BlockEntityTypeRegistryWrapper<RelayWarpTile> RELAY_WARP_TILE = registerTile(LibBlockNames.RELAY_WARP, RelayWarpTile::new, RELAY_WARP);
@@ -237,7 +237,7 @@ public class BlockRegistry {
         }
     });
     public static BlockEntityTypeRegistryWrapper<TimerSpellTurretTile> TIMER_SPELL_TURRET_TILE = registerTile(LibBlockNames.TIMER_SPELL_TURRET, TimerSpellTurretTile::new, TIMER_SPELL_TURRET);
-    public static BlockRegistryWrapper<ArchwoodChest> ARCHWOOD_CHEST = registerBlockAndItem(LibBlockNames.ARCHWOOD_CHEST, ArchwoodChest::new, (reg) -> new ArchwoodChest.Item(reg.get(), defaultItemProperties()));
+    public static BlockRegistryWrapper<ArchwoodChest> ARCHWOOD_CHEST = registerBlockAndItem(LibBlockNames.ARCHWOOD_CHEST, ArchwoodChest::new);
     public static BlockEntityTypeRegistryWrapper<ArchwoodChestTile> ARCHWOOD_CHEST_TILE = registerTile(LibBlockNames.ARCHWOOD_CHEST, ArchwoodChestTile::new, ARCHWOOD_CHEST);
     public static BlockRegistryWrapper<SpellPrismBlock> SPELL_PRISM = registerBlockAndItem(LibBlockNames.SPELL_PRISM, SpellPrismBlock::new);
     public static BlockRegistryWrapper<WhirlisprigFlower> WHIRLISPRIG_FLOWER = registerBlockAndItem(LibBlockNames.WHIRLISPRIG_BLOCK, WhirlisprigFlower::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
@@ -250,7 +250,7 @@ public class BlockRegistry {
     public static BlockRegistryWrapper<RelayCollectorBlock> RELAY_COLLECTOR = registerBlockAndItem(LibBlockNames.RELAY_COLLECTOR, RelayCollectorBlock::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
         @Override
         public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-            return GenericRenderer.getISTER("source_collector");
+            return GenericTileRenderer.getISTER("source_collector");
         }
     });
     public static BlockEntityTypeRegistryWrapper<RelayCollectorTile> RELAY_COLLECTOR_TILE = registerTile(LibBlockNames.RELAY_COLLECTOR, RelayCollectorTile::new, RELAY_COLLECTOR);
@@ -261,7 +261,7 @@ public class BlockRegistry {
     public static BlockRegistryWrapper<SummonBed> ORANGE_SBED = registerBlockAndItem(LibBlockNames.ORANGE_SBED, SummonBed::new);
     public static BlockRegistryWrapper<SummonBed> YELLOW_SBED = registerBlockAndItem(LibBlockNames.YELLOW_SBED, SummonBed::new);
     public static BlockRegistryWrapper<SummonBed> PURPLE_SBED = registerBlockAndItem(LibBlockNames.PURPLE_SBED, SummonBed::new);
-
+    public static BlockRegistryWrapper<CrabHat> CRAB_HAT = registerBlockAndItem(LibBlockNames.CRAB_HAT, CrabHat::new);
 
     public static BlockRegistryWrapper<ScryersOculus> SCRYERS_OCULUS = registerBlockAndItem(LibBlockNames.SCRYERS_OCULUS, ScryersOculus::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
         @Override

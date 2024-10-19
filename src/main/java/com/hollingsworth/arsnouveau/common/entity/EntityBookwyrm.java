@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
-import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
@@ -13,6 +12,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
 import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.RandomStorageVisitGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.TransferGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.TransferTask;
+import com.hollingsworth.arsnouveau.common.items.data.ICharmSerializable;
 import com.hollingsworth.arsnouveau.common.items.data.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
@@ -55,11 +55,9 @@ import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
-public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipProvider, IWandable, GeoEntity, IVariantColorProvider<EntityBookwyrm> {
+public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipProvider, IWandable, GeoEntity, ICharmSerializable {
 
     public static final EntityDataAccessor<ItemStack> HELD_ITEM = SynchedEntityData.defineId(EntityBookwyrm.class, EntityDataSerializers.ITEM_STACK);
     public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(EntityBookwyrm.class, EntityDataSerializers.STRING);
@@ -93,7 +91,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
             DyeColor color = DyeColor.getColor(stack);
             if (color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(COLORS).contains(color.getName()))
                 return InteractionResult.SUCCESS;
-            setColor(color.getName(), this);
+            setColor(color.getName());
             player.getMainHandItem().shrink(1);
             return InteractionResult.SUCCESS;
         }
@@ -197,7 +195,9 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
             return false;
 
         if (!level.isClientSide) {
-            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), toCharm()));
+            ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM.get());
+            stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             this.remove(RemovalReason.DISCARDED);
         }
@@ -216,21 +216,6 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     @Override
     public EntityType<?> getType() {
         return ModEntities.ENTITY_BOOKWYRM_TYPE.get();
-    }
-
-    public ItemStack toCharm(){
-        ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM.get());
-        PersistentFamiliarData data = new PersistentFamiliarData(getCustomName(), getColor(this), getHeldStack());
-        stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, data);
-        return stack;
-    }
-
-    public void readCharm(ItemStack stack){
-        PersistentFamiliarData data = stack.get(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA);
-        if(data == null)
-            return;
-        setColor(data.color(), this);
-        setCustomName(data.name());
     }
 
     @Override
@@ -303,7 +288,9 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     @Override
     public void die(DamageSource source) {
         if (!level.isClientSide) {
-            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), toCharm()));
+            ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM.get());
+            stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
         }
 
         super.die(source);
@@ -324,21 +311,28 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
 
     public static String[] COLORS = {"purple", "green", "blue", "black", "red", "white"};
 
-    @Override
-    public ResourceLocation getTexture(EntityBookwyrm entity) {
-        String color = getColor(entity).toLowerCase();
+    public static final Map<String, ResourceLocation> TEXTURES = new HashMap<>();
+
+    public ResourceLocation getTexture() {
+        String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "blue";
-        return ArsNouveau.prefix( "textures/entity/book_wyrm_" + color + ".png");
+        String finalColor = color;
+        return TEXTURES.computeIfAbsent(color, (key) -> ArsNouveau.prefix( "textures/entity/book_wyrm_" + finalColor + ".png"));
     }
 
     @Override
-    public String getColor(EntityBookwyrm entityBookwyrm) {
+    public void fromCharmData(PersistentFamiliarData data) {
+        setColor(data.color());
+        setCustomName(data.name());
+    }
+
+    @Override
+    public String getColor() {
         return getEntityData().get(EntityBookwyrm.COLOR);
     }
 
-    @Override
-    public void setColor(String color, EntityBookwyrm entityBookwyrm) {
+    public void setColor(String color) {
         getEntityData().set(EntityBookwyrm.COLOR, color);
     }
 }

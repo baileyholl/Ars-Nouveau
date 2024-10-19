@@ -19,10 +19,7 @@ import com.hollingsworth.arsnouveau.common.perk.*;
 import com.hollingsworth.arsnouveau.common.ritual.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodUnderfoot;
+import com.hollingsworth.arsnouveau.common.spell.method.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
@@ -43,6 +40,7 @@ public class APIRegistry {
         registerSpell(MethodProjectile.INSTANCE);
         registerSpell(MethodTouch.INSTANCE);
         registerSpell(MethodSelf.INSTANCE);
+        registerSpell(MethodPantomime.INSTANCE);
         registerSpell(EffectBreak.INSTANCE);
         registerSpell(EffectHarm.INSTANCE);
         registerSpell(EffectIgnite.INSTANCE);
@@ -121,6 +119,7 @@ public class APIRegistry {
         registerSpell(EffectReset.INSTANCE);
         registerSpell(EffectWololo.INSTANCE);
         registerSpell(EffectRewind.INSTANCE);
+        registerSpell(EffectBubble.INSTANCE);
 
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());

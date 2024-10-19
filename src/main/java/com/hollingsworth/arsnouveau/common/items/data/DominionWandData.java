@@ -63,8 +63,13 @@ public record DominionWandData(Optional<BlockPos> storedPos, Optional<Direction>
         return new DominionWandData(storedPos, Optional.ofNullable(face), strict, storedEntityId);
     }
 
+    @Deprecated(forRemoval = true)
     public DominionWandData toggleMode(){
         return new DominionWandData(storedPos, face, !strict, storedEntityId);
+    }
+
+    public DominionWandData toggleMode(boolean strict) {
+        return new DominionWandData(storedPos, face, strict, storedEntityId);
     }
 
     @Override

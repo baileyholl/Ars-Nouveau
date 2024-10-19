@@ -78,7 +78,7 @@ public class WhirlisprigTile extends SummoningTile implements GeoBlockEntity {
             if (ticksToNextEval <= 0)
                 evaluateGrove();
 
-            if (level.getGameTime() % 60 == 0 && progress >= Config.WHIRLISPRIG_MAX_PROGRESS.get() && SourceUtil.takeSourceWithParticles(worldPosition, level, 5, Config.SYLPH_MANA_COST.get()) != null) {
+            if (level.getGameTime() % 60 == 0 && progress >= Config.WHIRLISPRIG_MAX_PROGRESS.get() && SourceUtil.takeSourceWithParticles(worldPosition, level, 5, Config.WHIRLISPRIG_SOURCE_COST.get()) != null) {
                 this.progress = 0;
                 DropDistribution<BlockState> blockDropDistribution = new DropDistribution<>(genTable);
                 int numDrops = getDropsByDiversity() + 3;

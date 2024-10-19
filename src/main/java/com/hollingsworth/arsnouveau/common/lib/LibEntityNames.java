@@ -21,11 +21,13 @@ public class LibEntityNames {
     public static final String DUMMY = "dummy";
     public static final String AN_LIGHTNING = "an_lightning";
     public static final String LILY = "lily";
+    public static final String BUBBLE = "bubble";
 
     public static final String ORBIT_PROJECTILE = "orbit";
     public static final String CHIMERA_SPIKE = "spike";
 
     public static final String STARBUNCLE = "starbuncle";
+    public static final String ALAKARKINOS = "alakarkinos";
     public static final String WHIRLISPRIG = "whirlisprig";
     public static final String WIXIE = "wixie";
     public static final String DRYGMY = "drygmy";
