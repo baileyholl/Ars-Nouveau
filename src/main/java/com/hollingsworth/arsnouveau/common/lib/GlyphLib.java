@@ -33,7 +33,7 @@ public class GlyphLib {
     public static final String AugmentAccelerateID = prependGlyph("accelerate");
     public static final String AugmentDecelerateID = prependGlyph("decelerate");
     public static final String AugmentExtendTimeID = prependGlyph("extend_time");
-    public static final String AugmentDurationDown = prependGlyph("duration_down");
+    public static final String AugmentReduceTime = prependGlyph("duration_down"); //TODO: 1.22 change key to reduce_time
     public static final String AugmentSensitiveID = prependGlyph("sensitive");
 
     public static final String AugmentRandomizeID = prependGlyph("randomize");
