@@ -1,9 +1,12 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.client.gui.GuiUtils;
 import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -28,15 +31,8 @@ public class WornNotebook extends ModItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-        if (ArsNouveau.patchouliLoaded && playerIn instanceof ServerPlayer player) {
-            PatchouliHandler.openBookGUI(player);
-        }else if(!ArsNouveau.patchouliLoaded && worldIn.isClientSide){
-            try {
-                Util.getPlatform().openUri(new URI("https://www.arsnouveau.wiki/"));
-            } catch (URISyntaxException e) {
-                throw new RuntimeException(e);
-            }
-        }
+
+       GuiUtils.openWiki(ArsNouveau.proxy.getPlayer());
 
         return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
     }
