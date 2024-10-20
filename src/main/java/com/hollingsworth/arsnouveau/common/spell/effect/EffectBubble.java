@@ -20,7 +20,7 @@ public class EffectBubble extends AbstractEffect {
     public static final EffectBubble INSTANCE = new EffectBubble();
 
     public EffectBubble() {
-        super(GlyphLib.EffectBubbleID, "Captures mobs and entities it touches, causing them to float upwards. If the bubble has been alive for at least one tick, damaging the entity trapped in the bubble will cause it to pop, dealing bonus damage to the entity inside. Extend time and amplify can be used to increase the duration and damage of the bubble.");
+        super(GlyphLib.EffectBubbleID, "Bubble");
     }
 
     @Override
@@ -47,5 +47,10 @@ public class EffectBubble extends AbstractEffect {
     @Override
     protected @NotNull Set<AbstractAugment> getCompatibleAugments() {
         return Set.of(AugmentExtendTime.INSTANCE, AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE, AugmentDurationDown.INSTANCE);
+    }
+
+    @Override
+    public String getBookDescription() {
+        return "Captures mobs and entities it touches, causing them to float upwards. If the bubble has been alive for at least one tick, damaging the entity trapped in the bubble will cause it to pop, dealing bonus damage to the entity inside. Extend time and amplify can be used to increase the duration and damage of the bubble.";
     }
 }

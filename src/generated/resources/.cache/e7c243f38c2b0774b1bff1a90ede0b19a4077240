@@ -1,4 +1,4 @@
-// 1.21.1	2024-10-19T19:02:13.8358828	Patchouli
+// 1.21.1	2024-10-20T13:23:57.3547595	Patchouli
 2ec536fea831588201432d61d70af61385882054 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/alteration_table.json
 a82f4fc73946d228b1e3f5e03d0ecef46f33cdfb assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/applying_perks.json
 8ce1d8e886b45066bc5c1d9d8e87bdabbb27ae27 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/armor.json
@@ -191,7 +191,7 @@ eb9ec934fad69de9859f3ea369e0b425e5f49a8e assets/ars_nouveau/patchouli_books/worn
 7be64662ebd5e76cdc477b564d6554127f1f41a0 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/storage_lectern.json
 e797ff6d4a79504b65178376196d5442fed62f42 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/warp_portal.json
 71b1f74e7cc2ad20e3a61b777a7b46ea53f93a02 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/mod_news/mod_news.json
-ef537c19f4d82731675ea19c6b24223bc44f97a1 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/mod_news/support_mod.json
+21aed4a27c6c0ad3be1f054f3fc1d3317aa0a03b assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/mod_news/support_mod.json
 c0133d1f6bc4d504f978862421be5322cce9a8f2 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/resources/archwood.json
 be9750fac4d703ce1091a78ddd1e68afe7d07c57 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/resources/archwood_forest.json
 a8873366db454ebb1a2b3bc4b4a1e231c1149368 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/resources/decorative.json
