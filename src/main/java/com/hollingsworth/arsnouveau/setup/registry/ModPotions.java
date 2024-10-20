@@ -44,7 +44,7 @@ public class ModPotions {
     public static final DeferredHolder<MobEffect, SnareEffect> SNARE_EFFECT = EFFECTS.register(SNARE, SnareEffect::new);
     public static final DeferredHolder<MobEffect, MobEffect> FLIGHT_EFFECT = EFFECTS.register(FLIGHT, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, 2039587).addAttributeModifier(NeoForgeMod.CREATIVE_FLIGHT, ArsNouveau.prefix("flight"), 1.0, AttributeModifier.Operation.ADD_VALUE));
     public static final DeferredHolder<MobEffect, GravityEffect> GRAVITY_EFFECT = EFFECTS.register(GRAVITY, GravityEffect::new);
-    public static final DeferredHolder<MobEffect, PublicEffect> SPELL_DAMAGE_EFFECT = EFFECTS.register(SPELL_DAMAGE, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, new ParticleColor(30, 200, 200).getColor()));
+    public static final DeferredHolder<MobEffect, MobEffect> SPELL_DAMAGE_EFFECT = EFFECTS.register(SPELL_DAMAGE, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, new ParticleColor(30, 200, 200).getColor()).addAttributeModifier(PerkAttributes.SPELL_DAMAGE_BONUS, ArsNouveau.prefix("spell_damage_bonus"), 1.0, AttributeModifier.Operation.ADD_VALUE));
     public static final DeferredHolder<MobEffect, ImmolateEffect> IMMOLATE_EFFECT = EFFECTS.register(IMMOLATE, ImmolateEffect::new);
     public static final DeferredHolder<MobEffect, BounceEffect> BOUNCE_EFFECT = EFFECTS.register(BOUNCE, BounceEffect::new);
     public static final DeferredHolder<MobEffect, MagicFindEffect> MAGIC_FIND_EFFECT = EFFECTS.register(MAGIC_FIND, MagicFindEffect::new);
