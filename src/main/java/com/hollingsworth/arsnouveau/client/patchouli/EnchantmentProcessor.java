@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.patchouli;
 
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantmentRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -22,8 +23,10 @@ public class EnchantmentProcessor implements IComponentProcessor {
     @Override
     public void setup(Level level, IVariableProvider variables) {
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
-        String recipeID = variables.get("recipe", level.registryAccess()).asString();
-        recipe = (RecipeHolder<? extends EnchantmentRecipe>) manager.byKey(ResourceLocation.tryParse(recipeID)).orElse(null);
+        String recipeID = variables.get("enchantment", level.registryAccess()).asString();
+        var resLoc = ResourceLocation.tryParse(recipeID);
+        var enchantLevel = variables.get("level", level.registryAccess()).asNumber();
+        recipe = (RecipeHolder<? extends EnchantmentRecipe>) manager.byKey(ArsNouveau.prefix(resLoc.getPath() + "_" +enchantLevel )).orElse(null);
     }
 
     @Override

@@ -21,6 +21,8 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceKey;
@@ -37,6 +39,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
@@ -62,15 +65,16 @@ public class PatchouliProvider extends SimpleDataProvider{
 
     public List<PatchouliPage> pages = new ArrayList<>();
 
+    public PatchouliProvider(DataGenerator generatorIn, CompletableFuture<HolderLookup.Provider> registries, RegistrySetBuilder setBuilder) {
+        super(generatorIn, registries, setBuilder);
+    }
+
     public PatchouliProvider(DataGenerator generatorIn) {
         super(generatorIn);
     }
 
     public void addEntries() {
         Block SOURCESTONE = BlockRegistry.getBlock(LibBlockNames.SOURCESTONE);
-        for (ResourceKey<Enchantment> g : enchants) {
-            addEnchantmentPage(g);
-        }
         for (AbstractRitual r : RitualRegistry.getRitualMap().values()) {
             if(r.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
                 addRitualPage(r);
@@ -702,10 +706,13 @@ public class PatchouliProvider extends SimpleDataProvider{
     }
 
     @Override
-    public void collectJsons(CachedOutput pOutput) {
+    public void collectJsons(CachedOutput pOutput, HolderLookup.Provider provider) {
         addEntries();
         for (PatchouliPage patchouliPage : pages) {
             saveStable(pOutput, patchouliPage.build(), patchouliPage.path);
+        }
+        for (ResourceKey<Enchantment> g : enchants) {
+            addEnchantmentPage(g, provider);
         }
     }
 
@@ -759,13 +766,15 @@ public class PatchouliProvider extends SimpleDataProvider{
         this.pages.add(new PatchouliPage(builder, this.output.resolve("assets/" + ritual.getRegistryName().getNamespace() + "/patchouli_books/worn_notebook/en_us/entries/rituals/" + ritual.getRegistryName().getPath() + ".json")));
     }
 
-    public void addEnchantmentPage(ResourceKey<Enchantment> enchantment) {
-//        PatchouliBuilder builder = new PatchouliBuilder(ENCHANTMENTS, enchantment.getDescriptionId())
-//                .withIcon(getRegistryName(Items.ENCHANTED_BOOK).toString());
-//        for (int i = enchantment.getMinLevel(); i <= enchantment.getMaxLevel(); i++) {
-//            builder.withPage(new EnchantingPage("ars_nouveau:" + enchantment.location().getPath() + "_" + i));
-//        }
-//        this.pages.add(new PatchouliPage(builder, this.output.resolve("assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/" + enchantment.location().getPath() + ".json")));
+    public void addEnchantmentPage(ResourceKey<Enchantment> enchKey, HolderLookup.Provider provider) {
+        var enchantment = provider.holderOrThrow(enchKey).value();
+        PatchouliBuilder builder = new PatchouliBuilder(ENCHANTMENTS, enchantment.description().getString())
+                .withIcon(getRegistryName(Items.ENCHANTED_BOOK).toString());
+
+        for (int i = enchantment.getMinLevel(); i <= enchantment.getMaxLevel(); i++) {
+            builder.withPage(new EnchantingPage("ars_nouveau:" + enchKey.location().getPath() + "_" + i));
+        }
+        this.pages.add(new PatchouliPage(builder, this.output.resolve("assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/" + enchKey.location().getPath() + ".json")));
     }
 
     public void addPerkPage(IPerk perk){

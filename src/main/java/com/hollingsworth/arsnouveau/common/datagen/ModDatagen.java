@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.setup.registry.APIRegistry;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -23,6 +24,7 @@ public class ModDatagen {
         CompletableFuture<HolderLookup.Provider> provider = event.getLookupProvider();
         ExistingFileHelper fileHelper = event.getExistingFileHelper();
         ModDatagen.registries = provider;
+
         event.getGenerator().addProvider(event.includeClient(), new ItemModelGenerator(output, fileHelper));
         event.getGenerator().addProvider(event.includeServer(), new BlockTagProvider(output, provider, fileHelper));
         event.getGenerator().addProvider(event.includeClient(), new LangDatagen(output, ArsNouveau.MODID, "en_us"));
@@ -31,7 +33,6 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new BlockStatesDatagen(output, ArsNouveau.MODID, fileHelper));
         event.getGenerator().addProvider(event.includeServer(), new GlyphRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new ApparatusRecipeProvider(event.getGenerator()));
-        event.getGenerator().addProvider(event.includeServer(), new PatchouliProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new DefaultTableProvider(output, provider));
         event.getGenerator().addProvider(event.includeServer(), new ImbuementRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new CrushRecipeProvider(event.getGenerator()));
@@ -51,7 +52,7 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new DispelEntityProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new StructureTagProvider(output, provider, fileHelper));
         event.getGenerator().addProvider(event.includeClient(), new AtlasProvider(output, provider, fileHelper));
-        event.getGenerator().addProvider(event.includeServer(), new EnchantmentProvider(output, provider));
+        var enchantProvider = event.getGenerator().addProvider(event.includeServer(), new EnchantmentProvider(output, provider));
         event.getGenerator().addProvider(event.includeServer(), new EnchantmentProvider.EnchantmentTagsProvider(output, provider, fileHelper));
         event.getGenerator().addProvider(event.includeServer(), new MusicProvider(output, provider));
         event.getGenerator().addProvider(event.includeServer(), new DamageTypesProvider(output, provider));
@@ -64,5 +65,7 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), datapackProvider);
         CompletableFuture<HolderLookup.Provider> lookupProvider = datapackProvider.getRegistryProvider();
         event.getGenerator().addProvider(event.includeServer(), new BiomeTagProvider(output, lookupProvider, fileHelper));
+
+        event.getGenerator().addProvider(event.includeServer(), new PatchouliProvider(event.getGenerator(), provider, new RegistrySetBuilder()));
     }
 }
