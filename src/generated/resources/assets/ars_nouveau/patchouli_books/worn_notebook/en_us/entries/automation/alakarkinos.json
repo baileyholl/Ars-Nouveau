@@ -14,7 +14,7 @@
     {
       "type": "patchouli:entity",
       "entity": "ars_nouveau:alakarkinos",
-      "scale": 0.25,
+      "scale": 0.5,
       "text": "ars_nouveau.page2.alakarkinos_charm"
     },
     {

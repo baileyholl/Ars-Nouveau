@@ -656,7 +656,7 @@ public class PatchouliProvider extends SimpleDataProvider{
         addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.ALAKARKINOS_CHARM)
                 .withLocalizedText()
                 .withPage(new ApparatusPage(ItemsRegistry.ALAKARKINOS_CHARM))
-                .withPage(new EntityPage(getRegistryName(ModEntities.ALAKARKINOS_TYPE.get()).toString()).withScale(0.25f)
+                .withPage(new EntityPage(getRegistryName(ModEntities.ALAKARKINOS_TYPE.get()).toString()).withScale(0.5f)
                         .withText(getLangPath("alakarkinos_charm", 2)))
                 .withPage(new TextPage(getLangPath("alakarkinos_charm", 3)).withTitle("ars_nouveau.summoning"))
                 .withPage(new TextPage(getLangPath("alakarkinos_charm", 4)).withTitle("ars_nouveau.sifting")), getPath(AUTOMATION, "alakarkinos"));

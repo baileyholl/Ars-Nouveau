@@ -40,7 +40,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -214,14 +213,11 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         if (tamed) {
             list.add(new WrappedGoal(4, new ConditionalLookAtMob(this, Player.class, 3.0F, 0.02F, () -> this.lookAt == null)));
             list.add(new WrappedGoal(4, new ConditionalLookAtMob(this, Mob.class, 8.0F,  () -> this.lookAt == null)));
-//            list.add(new WrappedGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.2D)));
-            list.add(new WrappedGoal(0, new FloatGoal(this)));
             list.add(new WrappedGoal(4, new LookAtTarget(this, 8.0f, () -> this.lookAt)));
         }else{
             list.add(new WrappedGoal(1, new UntamedFindItemGoal(this, () -> this.getMainHandItem().isEmpty(), (e) -> e.getItem().is(ItemTags.DECORATED_POT_SHERDS))));
             list.add(new WrappedGoal(4, new LookAtPlayerGoal(this, Player.class, 3.0F, 0.02F)));
             list.add(new WrappedGoal(4, new LookAtPlayerGoal(this, Mob.class, 8.0F)));
-            list.add(new WrappedGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.2D)));
             list.add(new WrappedGoal(0, new FloatGoal(this)));
         }
         return list;
@@ -278,7 +274,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     }
 
     @Override
-    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         if (playerEntity.level.getCapability(Capabilities.ItemHandler.BLOCK, storedPos, null) != null) {
             this.entityData.set(HOME, Optional.ofNullable(storedPos));
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.alakarkinos.set_home"));
@@ -379,18 +375,8 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     boolean setBehaviors = false;
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        if (!setBehaviors) {
-            this.goalSelector.availableGoals = new LinkedHashSet<>();
-            this.reloadGoals();
-            setBehaviors = true;
-        }
-    }
-
-    @Override
-    public void load(CompoundTag pCompound) {
-        super.load(pCompound);
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
         if (pCompound.contains("home")) {
             this.entityData.set(HOME, Optional.of(BlockPos.of(pCompound.getLong("home"))));
         }
@@ -401,6 +387,11 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         this.tamed = pCompound.getBoolean("tamed");
         this.setNeedSource(pCompound.getBoolean("needSource"));
         this.beingTamed = pCompound.getBoolean("beingTamed");
+        if (!setBehaviors) {
+            this.goalSelector.availableGoals = new LinkedHashSet<>();
+            this.reloadGoals();
+            setBehaviors = true;
+        }
     }
 
     public enum Animations {
