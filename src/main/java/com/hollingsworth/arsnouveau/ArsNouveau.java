@@ -60,7 +60,7 @@ public class ArsNouveau {
                 ticketHelper.removeAllTickets(uuid);
         }));
     });
-    public static boolean isDebug = !FMLEnvironment.production;
+    public static boolean isDebug = false && !FMLEnvironment.production;
     public ArsNouveau(IEventBus modEventBus, ModContainer modContainer){
         NeoForge.EVENT_BUS.addListener(FMLEventHandler::onServerStopped);
         caelusLoaded = ModList.get().isLoaded("caelus");

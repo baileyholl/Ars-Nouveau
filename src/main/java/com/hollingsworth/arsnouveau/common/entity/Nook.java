@@ -39,20 +39,20 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.UUID;
 
-public class Lily extends TamableAnimal implements GeoEntity, IDispellable, IAdorable {
-    // Owner UUID to Lily UUID
-    public static BiMap<UUID, UUID> ownerLilyMap = HashBiMap.create();
+public class Nook extends TamableAnimal implements GeoEntity, IDispellable, IAdorable {
+    // Owner UUID to Nook UUID
+    public static BiMap<UUID, UUID> ownerNookMap = HashBiMap.create();
 
-    private static final EntityDataAccessor<Boolean> SIT = SynchedEntityData.defineId(Lily.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Boolean> WAG = SynchedEntityData.defineId(Lily.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> SIT = SynchedEntityData.defineId(Nook.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> WAG = SynchedEntityData.defineId(Nook.class, EntityDataSerializers.BOOLEAN);
     public int wagTicks;
 
-    public Lily(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
+    public Nook(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
-    public Lily(Level level){
-        this(ModEntities.LILY.get(), level);
+    public Nook(Level level){
+        this(ModEntities.NOOK.get(), level);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable, IAdo
         super.tick();
         SummonUtil.healOverTime(this);
         if(!level.isClientSide){
-            if(level.getGameTime() % 20 == 0 && !ownerLilyMap.containsValue(this.getUUID())){
+            if(level.getGameTime() % 20 == 0 && !ownerNookMap.containsValue(this.getUUID())){
                 this.remove(RemovalReason.DISCARDED);
             }
             if( wagTicks > 0 && isWagging()){
@@ -205,28 +205,19 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable, IAdo
         }));
         data.add(new AnimationController(this, "idle_wag", 1, (event) -> {
             if(!event.isMoving() && this.isWagging()){
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("idle_wagging"));
+                event.getController().setAnimation(RawAnimation.begin().thenPlay("idle_wag"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
 
         data.add(new AnimationController(this, "rest", 1, (event) -> {
-            if(!event.isMoving() && this.isOrderedToSit() && !this.isWagging()){
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("resting"));
+            if(!event.isMoving() && this.isOrderedToSit()){
+                event.getController().setAnimation(RawAnimation.begin().thenPlay("sit"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-
-        data.add(new AnimationController(this, "rest_wag", 1, (event) -> {
-            if(!event.isMoving() && this.isOrderedToSit() && this.isWagging()){
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("resting_wagging"));
-                return PlayState.CONTINUE;
-            }
-            return PlayState.STOP;
-        }));
-
     }
     AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
     @Override
@@ -246,8 +237,8 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable, IAdo
     @Override
     public void load(CompoundTag pCompound) {
         super.load(pCompound);
-        if(!ownerLilyMap.containsKey(this.getOwnerUUID())) {
-            Lily.ownerLilyMap.put(this.getOwnerUUID(), this.getUUID());
+        if(!ownerNookMap.containsKey(this.getOwnerUUID())) {
+            Nook.ownerNookMap.put(this.getOwnerUUID(), this.getUUID());
         }
     }
 }

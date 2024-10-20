@@ -15,6 +15,11 @@
       "text": "ars_nouveau.lily"
     },
     {
+      "type": "patchouli:entity",
+      "entity": "ars_nouveau:nook",
+      "text": "ars_nouveau.nook"
+    },
+    {
       "type": "patchouli:link",
       "link_text": "ars_nouveau.store_text",
       "text": "ars_nouveau.store",

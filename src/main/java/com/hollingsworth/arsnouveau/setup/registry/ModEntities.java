@@ -289,6 +289,13 @@ public class ModEntities {
                     .sized(0.5F, 0.75F)
                     .setTrackingRange(10));
 
+    public static final DeferredHolder<EntityType<?>, EntityType<Nook>> NOOK = registerEntity(
+            LibEntityNames.NOOK,
+            EntityType.Builder.<Nook>of(Nook::new, MobCategory.MISC)
+                    .sized(0.5F, 0.75F)
+                    .setTrackingRange(10));
+
+
     public static final DeferredHolder<EntityType<?>, EntityType<BubbleEntity>> BUBBLE = registerEntity(
             LibEntityNames.BUBBLE,
             EntityType.Builder.<BubbleEntity>of(BubbleEntity::new, MobCategory.MISC)
@@ -357,6 +364,7 @@ public class ModEntities {
             event.put(ANIMATED_BLOCK.get(), AnimBlockSummon.createAttributes().build());
             event.put(ANIMATED_HEAD.get(), AnimBlockSummon.createAttributes().build());
             event.put(LILY.get(), Lily.createAttributes().build());
+            event.put(NOOK.get(), Nook.createAttributes().build());
             event.put(ALAKARKINOS_TYPE.get(), Starbuncle.attributes().build());
         }
     }
