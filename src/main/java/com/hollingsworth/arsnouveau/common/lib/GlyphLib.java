@@ -20,6 +20,7 @@ public class GlyphLib {
     public static final String EffectLaunchID = prependGlyph("launch");
     public static final String EffectPullID = prependGlyph("pull");
     public static final String EffectBlinkID = prependGlyph("blink");
+    public static final String EffectBubbleID = prependGlyph("bubble");
     public static final String EffectNameID = prependGlyph("name");
 
     public static final String EffectAnimateID = prependGlyph("animate_block");
