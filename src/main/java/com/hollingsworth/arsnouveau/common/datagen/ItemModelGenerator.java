@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.setup.registry.ItemRegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.data.PackOutput;
@@ -129,6 +130,18 @@ public class ItemModelGenerator extends ItemModelProvider {
         getBuilder(LibBlockNames.CRAB_HAT).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.CRAB_HAT));
         itemUnchecked(ItemsRegistry.ALAKARKINOS_CHARM);
         itemUnchecked(ItemsRegistry.ALAKARKINOS_SHARD);
+        spawnEgg(LibItemNames.ALAKARKINOS_SE);
+        spawnEgg(LibItemNames.SYLPH_SE);
+        spawnEgg(LibItemNames.DRYGMY_SE);
+        spawnEgg(LibItemNames.STARBUNCLE_SE);
+        spawnEgg(LibItemNames.WILDEN_GUARDIAN_SE);
+        spawnEgg(LibItemNames.WILDEN_STALKER_SE);
+        spawnEgg(LibItemNames.WILDEN_HUNTER_SE);
+    }
+
+
+    public void spawnEgg(String s){
+        getBuilder("ars_nouveau:" + s).parent(new ModelFile.UncheckedModelFile("item/template_spawn_egg"));
     }
 
     public void blockAsItem(String s){

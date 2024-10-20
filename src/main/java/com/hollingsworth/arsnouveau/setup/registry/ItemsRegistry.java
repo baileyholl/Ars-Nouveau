@@ -273,6 +273,7 @@ public class ItemsRegistry {
         ITEMS.register(LibItemNames.WILDEN_HUNTER_SE, () -> new DeferredSpawnEggItem(ModEntities.WILDEN_HUNTER, 0xFDFDFD, 0xCAA97F, defaultItemProperties()));
         ITEMS.register(LibItemNames.WILDEN_GUARDIAN_SE, () -> new DeferredSpawnEggItem(ModEntities.WILDEN_GUARDIAN, 0xFFFFFF, 0xFF9E00, defaultItemProperties()));
         ITEMS.register(LibItemNames.WILDEN_STALKER_SE, () -> new DeferredSpawnEggItem(ModEntities.WILDEN_STALKER, 0x9B650C, 0xEF1818, defaultItemProperties()));
+        ITEMS.register(LibItemNames.ALAKARKINOS_SE, () -> new DeferredSpawnEggItem(ModEntities.ALAKARKINOS_TYPE, 16724530, 3289855, defaultItemProperties()));
     }
 
 

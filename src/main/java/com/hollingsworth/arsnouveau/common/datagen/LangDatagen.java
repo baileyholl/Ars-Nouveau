@@ -453,6 +453,7 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.wilden_hunter_se", "Wilden Hunter Spawn Egg");
         add("item.ars_nouveau.wilden_guardian_se", "Wilden Guardian Spawn Egg");
         add("item.ars_nouveau.wilden_stalker_se", "Wilden Stalker Spawn Egg");
+        add("item.ars_nouveau.alakarkinos_se", "Alakarkinos Spawn Egg");
         add("tooltip.ars_nouveau.caster_tome", "Casts a spell at half the cost or the users entire mana bar, whichever is smaller.");
         add("item.ars_nouveau.caster_tome", "Caster Tome");
         add("tooltip.ars_nouveau.glyph_disabled", "Disabled. Cannot be used.");
