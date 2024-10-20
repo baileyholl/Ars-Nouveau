@@ -1,4 +1,4 @@
-// 1.21.1	2024-10-15T16:00:11.9296346	Patchouli
+// 1.21.1	2024-10-19T19:02:13.8358828	Patchouli
 2ec536fea831588201432d61d70af61385882054 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/alteration_table.json
 a82f4fc73946d228b1e3f5e03d0ecef46f33cdfb assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/applying_perks.json
 8ce1d8e886b45066bc5c1d9d8e87bdabbb27ae27 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/armor.json
@@ -90,10 +90,10 @@ a09f89d0ec927fce49d1736c39305bcfeac052cf assets/ars_nouveau/patchouli_books/worn
 81fcf49cd2e09ae38f0105066a60dd0c996a8146 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/getting_started/trinkets.json
 877210c24dbbaf4e365c30c8ba571cf2708e7d03 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/getting_started/upgrades.json
 521277fbf32424a30a8be24b137c786dc0b89cdc assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/getting_started/world_generation.json
-32d9a6742c501ca01e1869196a915199b74b153d assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_1/bubble.json
 a80d0aabd3eff91451b0e80fb34514c5ce57eadf assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_1/glyph_amplify.json
 e6a01dcd171d462c0eb988478f64f994c63180f0 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_1/glyph_bounce.json
 7d579e642d5c9a7c5dba516e1eadca7d87f9ad56 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_1/glyph_break.json
+eb15f2f9c76d93709c34b433813730699ed7936b assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_1/glyph_bubble.json
 82768fc93e42445de3bc7bb16615dc28f7f11533 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_1/glyph_craft.json
 399cd02e6fb2950c465d058cdc470ca0082c58e1 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_1/glyph_cut.json
 13799a3efaff17fa0a56d7de80276bd9a43aa278 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_1/glyph_delay.json
