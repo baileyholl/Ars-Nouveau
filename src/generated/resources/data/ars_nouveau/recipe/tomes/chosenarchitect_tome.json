@@ -1,0 +1,31 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": {
+    "b": 32,
+    "g": 114,
+    "id": "ars_nouveau:constant",
+    "r": 255
+  },
+  "flavour_text": "In a flash of magic, the world twists, and what was once here is now there.",
+  "name": "Chosen's Chaotic Shift",
+  "sound": {
+    "pitch": 2.0,
+    "sound": {
+      "id": "ars_nouveau:gaia_family"
+    },
+    "volume": 0.55
+  },
+  "spell": [
+    "ars_nouveau:glyph_projectile",
+    "ars_nouveau:glyph_accelerate",
+    "ars_nouveau:glyph_accelerate",
+    "ars_nouveau:glyph_accelerate",
+    "ars_nouveau:glyph_accelerate",
+    "ars_nouveau:glyph_accelerate",
+    "ars_nouveau:glyph_exchange",
+    "ars_nouveau:glyph_amplify",
+    "ars_nouveau:glyph_randomize",
+    "ars_nouveau:glyph_pickup"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}
