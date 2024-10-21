@@ -344,6 +344,7 @@ public class EventHandler {
         SummonAnimHeadCommand.register(event.getDispatcher());
         LearnGlyphCommand.register(event.getDispatcher());
         AdoptCommand.register(event.getDispatcher());
+        DroplessMobsCommand.register(event.getDispatcher());
     }
 
     @SubscribeEvent
