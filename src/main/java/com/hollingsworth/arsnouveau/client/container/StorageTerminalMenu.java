@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.client.container;
 
 import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
-import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
 import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -14,10 +14,7 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 	protected StorageLecternTile te;
@@ -230,9 +227,11 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 		if(message.contains("tabs")){
 			ListTag tabs = message.getList("tabs", 10);
 			tabNames = new ArrayList<>();
-			for(int i = 0; i < Math.min(tabs.size(), 12); i++){
-				tabNames.add(tabs.getCompound(i).getString("name"));
+			Set<String> nameSet = new HashSet<>();
+			for(int i = 0; i < tabs.size(); i++){
+				nameSet.add(tabs.getCompound(i).getString("name"));
 			}
+			tabNames.addAll(new ArrayList<>(nameSet).subList(0, Math.min(nameSet.size(), 11)));
 			Collections.sort(tabNames);
 		}
 		if(onPacket != null)onPacket.run();

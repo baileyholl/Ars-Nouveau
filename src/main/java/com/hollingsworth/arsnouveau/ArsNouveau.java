@@ -43,7 +43,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 
 @Mod(ArsNouveau.MODID)
@@ -57,6 +57,8 @@ public class ArsNouveau {
     public static boolean optifineLoaded = false;
     public static boolean sodiumLoaded = false;
     public static boolean patchouliLoaded = false;
+
+    public static boolean isDebug = !FMLEnvironment.production;
 
     public ArsNouveau(){
         Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(FMLEventHandler.class);

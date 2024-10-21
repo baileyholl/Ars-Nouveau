@@ -16,7 +16,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
@@ -70,6 +69,10 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
             return ShaderRegistry.blamed(textureLocation, true);
         }else if(animatable.getName().getString().equals("Bailey")){
             return ShaderRegistry.rainbowEntity(textureLocation, new ResourceLocation(ArsNouveau.MODID, "textures/entity/starbuncle_mask.png"),true);
+        }
+
+        if(animatable.getName().getString().equals("Gootastic")){
+            return RenderType.entityTranslucent(textureLocation);
         }
         return RenderType.entityCutoutNoCull(textureLocation);
     }

@@ -89,7 +89,7 @@ public class SpellResolver implements Cloneable {
         return SpellUtil.postEvent(new SpellCastEvent(spell, spellContext));
     }
 
-    private SpellStats getCastStats() {
+    public SpellStats getCastStats() {
         LivingEntity caster = spellContext.getUnwrappedCaster();
         return new SpellStats.Builder()
                 .setAugments(spell.getAugments(0, caster))

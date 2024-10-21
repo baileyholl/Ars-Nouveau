@@ -19,6 +19,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -49,6 +50,23 @@ public class CraftingTerminalTransferHandler<C extends AbstractContainerMenu & I
 		return containerClass;
 	}
 
+	private int findMatchingItem(Inventory inventory, ItemStack stack) {
+		CompoundTag tag = stack.getTag();
+		boolean emptyTag = tag != null && tag.isEmpty();
+		for (int i = 0; i < inventory.items.size(); i++) {
+			ItemStack item = inventory.items.get(i);
+			if (!item.isEmpty()) {
+				if (emptyTag && ItemStack.isSameItem(stack, item)) {
+					return i;
+				}
+				if (!emptyTag && ItemStack.isSameItemSameTags(item, stack)) {
+					return i;
+				}
+			}
+		}
+		return -1;
+	}
+
 	@Override
 	public @Nullable IRecipeTransferError transferRecipe(AbstractContainerMenu container, CraftingRecipe recipe,
 			IRecipeSlotsView recipeSlots, Player player, boolean maxTransfer, boolean doTransfer) {
@@ -70,7 +88,7 @@ public class CraftingTerminalTransferHandler<C extends AbstractContainerMenu & I
 
 					boolean found = false;
 					for (ItemStack stack : possibleStacks) {
-						if (stack != null && player.getInventory().findSlotMatchingItem(stack) != -1) {
+						if (stack != null && findMatchingItem(player.getInventory(), stack) != -1) {
 							found = true;
 							break;
 						}
@@ -104,7 +122,7 @@ public class CraftingTerminalTransferHandler<C extends AbstractContainerMenu & I
 						for (int j = 0;j < stacks[i].length && k < 9;j++) {
 							if (stacks[i][j] != null && !stacks[i][j].isEmpty()) {
 								StoredItemStack s = new StoredItemStack(stacks[i][j]);
-								if(stored.contains(s) || player.getInventory().findSlotMatchingItem(stacks[i][j]) != -1) {
+								if(stored.contains(s) || findMatchingItem(player.getInventory(), stacks[i][j]) != -1) {
 									CompoundTag tag = new CompoundTag();
 									stacks[i][j].save(tag);
 									CompoundNBT.put("i" + (k++), tag);
