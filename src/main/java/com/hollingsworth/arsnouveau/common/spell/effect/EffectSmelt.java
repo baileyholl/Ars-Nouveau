@@ -54,11 +54,13 @@ public class EffectSmelt extends AbstractEffect {
         int maxItemSmelt = (int) Math.round(4 * (1 + aoeBuff + pierceBuff));
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
         List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AABB(rayTraceResult.getBlockPos()).inflate(aoeBuff + 1.0));
+
         smeltItems(world, itemEntities, maxItemSmelt, spellStats);
 
-        for (BlockPos pos : posList) {
-            smeltBlock(world, pos, shooter, rayTraceResult, spellStats, spellContext, resolver);
-        }
+        if (!spellStats.isSensitive())
+            for (BlockPos pos : posList) {
+                smeltBlock(world, pos, shooter, rayTraceResult, spellStats, spellContext, resolver);
+            }
     }
 
 

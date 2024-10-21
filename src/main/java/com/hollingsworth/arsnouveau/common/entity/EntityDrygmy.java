@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
+import com.hollingsworth.arsnouveau.api.familiar.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
@@ -107,11 +108,26 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
         return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
     }
 
+    public void readCharm(ItemStack stack) {
+        if (stack.hasTag()) {
+            PersistentFamiliarData<EntityDrygmy> data = new PersistentFamiliarData<>(stack.getOrCreateTag());
+            setColor(data.color, this);
+            setCustomName(data.name);
+        }
+    }
+
+    public ItemStack toCharm() {
+        ItemStack stack = new ItemStack(ItemsRegistry.DRYGMY_CHARM.get());
+        PersistentFamiliarData<EntityDrygmy> data = new PersistentFamiliarData<>(new CompoundTag());
+        data.color = getColor(this);
+        data.name = getCustomName();
+        stack.setTag(data.toTag(this, new CompoundTag()));
+        return stack;
+    }
     @Override
     public void die(DamageSource source) {
         if (!level.isClientSide && isTamed()) {
-            ItemStack stack = new ItemStack(ItemsRegistry.DRYGMY_CHARM);
-            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), toCharm()));
         }
         super.die(source);
     }
@@ -300,8 +316,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
             return false;
 
         if (!level.isClientSide && isTamed()) {
-            ItemStack stack = new ItemStack(ItemsRegistry.DRYGMY_CHARM);
-            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), toCharm()));
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             this.remove(RemovalReason.DISCARDED);
         }

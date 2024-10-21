@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
+import com.hollingsworth.arsnouveau.api.familiar.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
@@ -82,6 +83,25 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
     public boolean hurt(DamageSource pSource, float pAmount) {
         return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
     }
+
+    public void readCharm(ItemStack stack) {
+        if (stack.hasTag()) {
+            PersistentFamiliarData<EntityWixie> data = new PersistentFamiliarData<>(stack.getOrCreateTag());
+            setColor(data.color, this);
+            setCustomName(data.name);
+        }
+    }
+
+    public ItemStack toCharm() {
+        ItemStack stack = new ItemStack(ItemsRegistry.WIXIE_CHARM.get());
+        PersistentFamiliarData<EntityWixie> data = new PersistentFamiliarData<>(new CompoundTag());
+        data.color = getColor(this);
+        data.name = getCustomName();
+        stack.setTag(data.toTag(this, new CompoundTag()));
+        return stack;
+    }
+
+
 
     AnimationController<?> summonController;
     AnimationController<?> castController;
@@ -210,7 +230,7 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
     @Override
     public void die(DamageSource source) {
         if (!level.isClientSide) {
-            ItemStack stack = new ItemStack(ItemsRegistry.WIXIE_CHARM);
+            ItemStack stack = toCharm();
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
 
         }
@@ -223,8 +243,7 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
             return false;
 
         if (!level.isClientSide) {
-            ItemStack stack = new ItemStack(ItemsRegistry.WIXIE_CHARM);
-            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack.copy()));
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), toCharm().copy()));
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             this.remove(RemovalReason.DISCARDED);
         }

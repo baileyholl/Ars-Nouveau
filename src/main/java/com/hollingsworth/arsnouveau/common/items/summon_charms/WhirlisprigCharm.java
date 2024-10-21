@@ -31,6 +31,7 @@ public class WhirlisprigCharm extends AbstractSummonCharm {
     public InteractionResult useOnSummonTile(UseOnContext context, Level world, SummoningTile tile, BlockPos pos) {
         if (tile instanceof WhirlisprigTile) {
             Whirlisprig whirlisprig = new Whirlisprig(world, true, pos);
+            whirlisprig.readCharm(context.getItemInHand());
             whirlisprig.setPos(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
             world.addFreshEntity(whirlisprig);
             whirlisprig.flowerPos = new BlockPos(pos);

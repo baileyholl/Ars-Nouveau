@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TempLightTile extends LightTile{
@@ -30,9 +31,9 @@ public class TempLightTile extends LightTile{
     }
 
     @Override
-    public void tick() {
-        super.tick();
-        if (level != null && !level.isClientSide) {
+    public void tick(Level level, BlockState state, BlockPos pos) {
+        super.tick(level, state, pos);
+        if (!level.isClientSide) {
             age++;
             //15 seconds
             if (age > (20 * 15 + 20 * 5 * lengthModifier)) {

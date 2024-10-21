@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
+import com.hollingsworth.arsnouveau.api.familiar.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.api.util.LevelEntityMap;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -307,10 +308,27 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
         return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
     }
 
+    public void readCharm(ItemStack stack) {
+        if (stack.hasTag()) {
+            PersistentFamiliarData<Whirlisprig> data = new PersistentFamiliarData<>(stack.getOrCreateTag());
+            setColor(data.color, this);
+            setCustomName(data.name);
+        }
+    }
+
+    public ItemStack toCharm() {
+        ItemStack stack = new ItemStack(ItemsRegistry.WHIRLISPRIG_CHARM.get());
+        PersistentFamiliarData<Whirlisprig> data = new PersistentFamiliarData<>(new CompoundTag());
+        data.color = getColor(this);
+        data.name = getCustomName();
+        stack.setTag(data.toTag(this, new CompoundTag()));
+        return stack;
+    }
+
     @Override
     public void die(DamageSource source) {
         if (!level.isClientSide && isTamed()) {
-            ItemStack stack = new ItemStack(ItemsRegistry.WHIRLISPRIG_CHARM);
+            ItemStack stack = toCharm();
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
         }
         super.die(source);
@@ -438,8 +456,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
             return false;
 
         if (!level.isClientSide && isTamed()) {
-            ItemStack stack = new ItemStack(ItemsRegistry.WHIRLISPRIG_CHARM);
-            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), toCharm()));
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             this.remove(RemovalReason.DISCARDED);
         }

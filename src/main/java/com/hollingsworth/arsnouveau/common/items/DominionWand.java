@@ -116,6 +116,7 @@ public class DominionWand extends ModItem {
         if (context.getLevel().isClientSide || context.getPlayer() == null)
             return super.useOn(context);
         BlockPos pos = context.getClickedPos();
+        Direction face = context.getClickedFace();
         Level world = context.getLevel();
         Player playerEntity = context.getPlayer();
         ItemStack stack = context.getItemInHand();
@@ -129,10 +130,10 @@ public class DominionWand extends ModItem {
 
         if (!data.hasStoredData()) {
             data.setStoredPos(pos.immutable());
+            if (data.strict) data.setFacing(face);
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.dominion_wand.position_set"));
             return InteractionResult.SUCCESS;
         }
-        if (data.facing == null && data.strict) data.setFacing(context.getClickedFace());
 
         if (data.getStoredPos() != null && world.getBlockEntity(data.getStoredPos()) instanceof IWandable wandable) {
             wandable.onFinishedConnectionFirst(pos, data.getFace(), (LivingEntity) world.getEntity(data.getStoredEntityID()), playerEntity);
@@ -141,7 +142,7 @@ public class DominionWand extends ModItem {
             wandable.onFinishedConnectionLast(data.getStoredPos(), data.getFace(), (LivingEntity) world.getEntity(data.getStoredEntityID()), playerEntity);
         }
         if (data.getStoredEntityID() != -1 && world.getEntity(data.getStoredEntityID()) instanceof IWandable wandable) {
-            wandable.onFinishedConnectionFirst(pos, data.getFace(), null, playerEntity);
+            wandable.onFinishedConnectionFirst(pos, data.strict ? face : null, null, playerEntity);
         }
 
         clear(stack, playerEntity);
