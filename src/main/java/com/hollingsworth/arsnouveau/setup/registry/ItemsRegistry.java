@@ -227,6 +227,8 @@ public class ItemsRegistry {
     public static final ItemRegistryWrapper<StableWarpScroll> STABLE_WARP_SCROLL = register(LibItemNames.STABLE_WARP_SCROLL, () -> new StableWarpScroll(defaultItemProperties().stacksTo(1)));
     public static final ItemRegistryWrapper<ScryCaster> SCRY_CASTER = register(LibItemNames.SCRY_CASTER, () -> new ScryCaster(defaultItemProperties().stacksTo(1).component(DataComponentRegistry.SCRY_CASTER, new ScryCasterData()).component(DataComponentRegistry.SCRY_DATA, new ScryPosData(Optional.empty()))));
     public static final ItemRegistryWrapper<JumpingRing> JUMP_RING = register(LibItemNames.JUMP_RING, JumpingRing::new);
+    public static final ItemRegistryWrapper<AlakarkinosCharm> ALAKARKINOS_CHARM = register(LibItemNames.ALAKARKINOS_CHARM, AlakarkinosCharm::new);
+    public static final ItemRegistryWrapper<Item> ALAKARKINOS_SHARD = register(LibItemNames.ALAKARKINOS_SHARD, () -> new ModItem().withTooltip("tooltip.alakarkinos_shard1").withTooltip(Component.translatable("tooltip.alakarkinos_shard2").withStyle(LORE_STYLE)));
 
     public static <T extends Item> ItemRegistryWrapper<T> register(String name, Supplier<T> item) {
         return new ItemRegistryWrapper<>(ITEMS.register(name, item));
@@ -271,6 +273,7 @@ public class ItemsRegistry {
         ITEMS.register(LibItemNames.WILDEN_HUNTER_SE, () -> new DeferredSpawnEggItem(ModEntities.WILDEN_HUNTER, 0xFDFDFD, 0xCAA97F, defaultItemProperties()));
         ITEMS.register(LibItemNames.WILDEN_GUARDIAN_SE, () -> new DeferredSpawnEggItem(ModEntities.WILDEN_GUARDIAN, 0xFFFFFF, 0xFF9E00, defaultItemProperties()));
         ITEMS.register(LibItemNames.WILDEN_STALKER_SE, () -> new DeferredSpawnEggItem(ModEntities.WILDEN_STALKER, 0x9B650C, 0xEF1818, defaultItemProperties()));
+        ITEMS.register(LibItemNames.ALAKARKINOS_SE, () -> new DeferredSpawnEggItem(ModEntities.ALAKARKINOS_TYPE, 16724530, 3289855, defaultItemProperties()));
     }
 
 

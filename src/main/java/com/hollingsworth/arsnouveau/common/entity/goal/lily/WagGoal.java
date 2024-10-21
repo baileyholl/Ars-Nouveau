@@ -1,19 +1,19 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.lily;
 
-import com.hollingsworth.arsnouveau.common.entity.Lily;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.EnumSet;
 
-public class WagGoal extends Goal {
-    Lily lily;
+public class WagGoal<T extends Mob & IAdorable> extends Goal {
+    T lily;
     public LivingEntity target;
     public int wagAtTicks;
 
-    public WagGoal(Lily lily) {
+    public WagGoal(T lily) {
         this.lily = lily;
         setFlags(EnumSet.of(Goal.Flag.LOOK));
     }
@@ -39,7 +39,7 @@ public class WagGoal extends Goal {
                 target = player;
                 wagAtTicks = 100;
                 lily.setWagging(true);
-                lily.wagTicks = 100;
+                lily.setWagTicks(100);
                 return true;
             }
         }

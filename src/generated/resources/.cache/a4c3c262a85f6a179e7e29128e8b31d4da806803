@@ -1,5 +1,9 @@
-// 1.21.1	2024-09-24T20:09:13.9792381	Ars Nouveau Item Models
+// 1.21.1	2024-10-20T14:26:18.8460366	Ars Nouveau Item Models
 11ee554b11a3a830e89b742762e5b754c2ecb5ee assets/ars_nouveau/models/item/agronomic_sourcelink.json
+20a434b964b88bc010c17e0616f2c2601b53479d assets/ars_nouveau/models/item/alakarkinos_charm.json
+533b61aabca43719a266cddda3b7ec426135e5e6 assets/ars_nouveau/models/item/alakarkinos_hat.json
+63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/ars_nouveau/models/item/alakarkinos_se.json
+cf5f914263c22eabc17be749ade10e9d64736851 assets/ars_nouveau/models/item/alakarkinos_token.json
 339a05323ebef7efc5c70db708a2e7a24708e9bc assets/ars_nouveau/models/item/alchemical_sourcelink.json
 a0214090201827dd5f954d0b33e64e4df6e53764 assets/ars_nouveau/models/item/alchemists_crown.json
 8587f05b17902c512f27c3eecf7a1a6319709f51 assets/ars_nouveau/models/item/archwood_grate.json
@@ -8,6 +12,7 @@ f9eb0905e283cab647712716770a244a1bdb25f0 assets/ars_nouveau/models/item/bastion_
 84bdd95fc8506c6d9054e5ffb87c24c20b2ae628 assets/ars_nouveau/models/item/blank_thread.json
 a81ea25c1312389ff436100c29d1ae20d35b0a40 assets/ars_nouveau/models/item/blue_sbed.json
 3b7dc3023a667efe5ff64cb937ee25047a853697 assets/ars_nouveau/models/item/bombegranate_pod.json
+63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/ars_nouveau/models/item/drygmy_se.json
 23781f068b9b788d0077a478b0470af583d759f5 assets/ars_nouveau/models/item/experience_gem.json
 70d392c53a05ad554f3f3b1d3faa5fd1445e2a77 assets/ars_nouveau/models/item/falseweave.json
 5f620c31cc6d4f1a569dbd943e5a45e75217303a assets/ars_nouveau/models/item/familiar_amethyst_golem.json
@@ -40,6 +45,7 @@ e90b0d3b7816c04c63969ee51f69f521d44d5444 assets/ars_nouveau/models/item/glyph_an
 8ad4f1e52ce9f588136032f323a0d76fc4849101 assets/ars_nouveau/models/item/glyph_blink.json
 7441fa49080a68e1d9dfdaeb277d9b17229aac87 assets/ars_nouveau/models/item/glyph_bounce.json
 c3de1abdd00608d7f5b4b71953119d218787f318 assets/ars_nouveau/models/item/glyph_break.json
+86e2436793db61ff59fd3404138dc41d98dd94f3 assets/ars_nouveau/models/item/glyph_bubble.json
 57a68c0d674b3622478b1b83f8543be58f6e3018 assets/ars_nouveau/models/item/glyph_burst.json
 25e3368d3a84c449ff2d6c7ca27f76377fa2b3a7 assets/ars_nouveau/models/item/glyph_cold_snap.json
 715f6e40e53b95cd4c4bd566ab43e226872ed02b assets/ars_nouveau/models/item/glyph_conjure_water.json
@@ -214,6 +220,7 @@ a7b3f41fce153ebc7540a0dfbe855fc724f521b1 assets/ars_nouveau/models/item/sourcest
 f433c503db1699241353f198a0d427f708716930 assets/ars_nouveau/models/item/source_gem_block.json
 456330a19a0028b82be0c6bb1ebe9486b3613a1a assets/ars_nouveau/models/item/source_lamp.json
 9d2205eb9012b0585bff4adaf4c02419b2f01d9a assets/ars_nouveau/models/item/spell_sensor.json
+63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/ars_nouveau/models/item/starbuncle_se.json
 1a921e2809c2a9588e7e8f5fbe4556f5f6729487 assets/ars_nouveau/models/item/stripped_blue_archwood_log.json
 1205608f4c722986291eb4255ad2e405715515cf assets/ars_nouveau/models/item/stripped_blue_archwood_wood.json
 8cf33c617e9b25c0fe978d8e517ff8f7d03f266f assets/ars_nouveau/models/item/stripped_green_archwood_log.json
@@ -244,5 +251,9 @@ b79310281aae70a7aa6af5e3270c5034106dc2a1 assets/ars_nouveau/models/item/thread_w
 51225dd289572d53a0ed0f767380081712411813 assets/ars_nouveau/models/item/vitalic_sourcelink.json
 7137ce0392d01860ba8bd7d15c962d4a44d2b390 assets/ars_nouveau/models/item/void_prism.json
 49086385023fb8590e80567ae57e7104543ceb0c assets/ars_nouveau/models/item/volcanic_sourcelink.json
+63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/ars_nouveau/models/item/whirlisprig_se.json
+63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/ars_nouveau/models/item/wilden_guardian_se.json
+63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/ars_nouveau/models/item/wilden_hunter_se.json
+63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/ars_nouveau/models/item/wilden_stalker_se.json
 15996959ddfb148e5e775a865eddb46d16177866 assets/ars_nouveau/models/item/wololo.json
 1a84ca1f514d9cf90ecf8384a579b0ea43cb71f8 assets/ars_nouveau/models/item/yellow_sbed.json

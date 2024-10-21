@@ -12,7 +12,9 @@ import software.bernie.geckolib.model.data.EntityModelData;
 import javax.annotation.Nullable;
 
 public class LilyModel extends GeoModel<Lily> {
-
+    public static ResourceLocation TEXTURE = ArsNouveau.prefix("textures/entity/lily.png");
+    public static ResourceLocation MODEL = ArsNouveau.prefix("geo/lily.geo.json");
+    public static ResourceLocation ANIMATION = ArsNouveau.prefix("animations/lily_animations.json");
     @Override
     public void setCustomAnimations(Lily entity, long uniqueID, @Nullable AnimationState customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
@@ -24,16 +26,16 @@ public class LilyModel extends GeoModel<Lily> {
 
     @Override
     public ResourceLocation getModelResource(Lily whirlisprig) {
-        return ArsNouveau.prefix( "geo/lily.geo.json");
+        return MODEL;
     }
 
     @Override
     public ResourceLocation getTextureResource(Lily whirlisprig) {
-        return ArsNouveau.prefix( "textures/entity/lily.png");
+        return TEXTURE;
     }
 
     @Override
     public ResourceLocation getAnimationResource(Lily whirlisprig) {
-        return ArsNouveau.prefix( "animations/lily_animations.json");
+        return ANIMATION;
     }
 }

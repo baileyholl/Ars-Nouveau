@@ -1,0 +1,31 @@
+{
+  "category": "ars_nouveau:automation",
+  "icon": "ars_nouveau:alakarkinos_charm",
+  "name": "item.ars_nouveau.alakarkinos_charm",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.alakarkinos_charm"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:alakarkinos_charm"
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "ars_nouveau:alakarkinos",
+      "scale": 0.5,
+      "text": "ars_nouveau.page2.alakarkinos_charm"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page3.alakarkinos_charm",
+      "title": "ars_nouveau.summoning"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page4.alakarkinos_charm",
+      "title": "ars_nouveau.sifting"
+    }
+  ]
+}

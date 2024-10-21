@@ -4,6 +4,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
+import com.hollingsworth.arsnouveau.common.entity.goal.lily.IAdorable;
 import com.hollingsworth.arsnouveau.common.entity.goal.lily.WagGoal;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
@@ -26,7 +27,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -39,7 +39,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.UUID;
 
-public class Lily extends TamableAnimal implements GeoEntity, IDispellable {
+public class Lily extends TamableAnimal implements GeoEntity, IDispellable, IAdorable {
     // Owner UUID to Lily UUID
     public static BiMap<UUID, UUID> ownerLilyMap = HashBiMap.create();
 
@@ -61,7 +61,7 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F));
-        this.goalSelector.addGoal(7, new WagGoal(this));
+        this.goalSelector.addGoal(7, new WagGoal<>(this));
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
@@ -129,6 +129,11 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable {
         this.entityData.set(WAG, pWagging);
     }
 
+    @Override
+    public void setWagTicks(int ticks) {
+        wagTicks = ticks;
+    }
+
     protected void playStepSound(BlockPos pPos, BlockState pBlock) {
         this.playSound(SoundEvents.WOLF_STEP, 0.15F, 1.0F);
     }
@@ -180,15 +185,6 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable {
     @Override
     public AgeableMob getBreedOffspring(ServerLevel pLevel, AgeableMob pOtherParent) {
         return null;
-    }
-
-    public boolean isLookingAtMe(Player pPlayer) {
-        Vec3 vec3 = pPlayer.getViewVector(1.0F).normalize();
-        Vec3 vec31 = new Vec3(this.getX() - pPlayer.getX(), this.getEyeY() - pPlayer.getEyeY(), this.getZ() - pPlayer.getZ());
-        double d0 = vec31.length();
-        vec31 = vec31.normalize();
-        double d1 = vec3.dot(vec31);
-        return d1 > 1.0D - 0.025D / d0 && pPlayer.hasLineOfSight(this);
     }
 
     @Override

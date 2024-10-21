@@ -73,6 +73,7 @@ public class LibItemNames {
     public static final String WILDEN_HUNTER_SE = "wilden_hunter_se";
     public static final String WILDEN_STALKER_SE = "wilden_stalker_se";
     public static final String WILDEN_GUARDIAN_SE = "wilden_guardian_se";
+    public static final String ALAKARKINOS_SE = "alakarkinos_se";
 
     public static final String CASTER_TOME = "caster_tome";
 
@@ -129,4 +130,6 @@ public class LibItemNames {
     public static final String SOUND_OF_GLASS = "music_disc_thistle_the_sound_of_glass";
     public static final String FIREL_WILD_HUNT = "music_disc_firel_the_wild_hunt";
     public static final String JUMP_RING = "jump_ring";
+    public static final String ALAKARKINOS_CHARM = "alakarkinos_charm";
+    public static final String ALAKARKINOS_SHARD = "alakarkinos_token";
 }

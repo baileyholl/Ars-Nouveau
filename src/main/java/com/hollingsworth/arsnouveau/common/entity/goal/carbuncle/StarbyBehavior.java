@@ -28,7 +28,7 @@ public class StarbyBehavior extends ChangeableBehavior {
         super(entity, tag);
         this.starbuncle = entity;
         goals.add(new WrappedGoal(8, new LookAtPlayerGoal(starbuncle, Player.class, 3.0F, 0.01F)));
-        goals.add(new WrappedGoal(8, new NonHoggingLook(starbuncle, Mob.class, 3.0F, 0.01f)));
+        goals.add(new WrappedGoal(8, new LookAtPlayerGoal(starbuncle, Mob.class, 3.0F, 0.01f)));
         goals.add(new WrappedGoal(1, new OpenDoorGoal(starbuncle, true)));
     }
 

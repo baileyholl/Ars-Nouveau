@@ -111,6 +111,7 @@ public class EventHandler {
                         GenericRecipeRegistry.reloadAll(serverTickEvent.getServer().getRecipeManager());
                         CasterTomeRegistry.reloadTomeData(serverTickEvent.getServer().getRecipeManager(), serverTickEvent.getServer().getLevel(Level.OVERWORLD));
                         BuddingConversionRegistry.reloadBuddingConversionRecipes(serverTickEvent.getServer().getRecipeManager());
+                        AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(serverTickEvent.getServer().getRecipeManager());
                         ScryRitualRegistry.reloadScryRitualRecipes(serverTickEvent.getServer().getRecipeManager());
                         expired = true;
                     }
@@ -342,6 +343,7 @@ public class EventHandler {
         AddTomeCommand.register(event.getDispatcher());
         SummonAnimHeadCommand.register(event.getDispatcher());
         LearnGlyphCommand.register(event.getDispatcher());
+        AdoptCommand.register(event.getDispatcher());
     }
 
     @SubscribeEvent

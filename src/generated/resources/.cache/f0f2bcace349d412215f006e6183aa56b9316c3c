@@ -1,4 +1,4 @@
-// 1.21.1	2024-09-24T20:47:30.7198603	Glyph Recipes
+// 1.21.1	2024-10-19T19:02:13.8288799	Glyph Recipes
 231d9f126c606465601e36e83948dda99a508834 data/ars_nouveau/recipe/glyph_accelerate.json
 dbad772acd31382cfcf19c7f276da5f91354dfcf data/ars_nouveau/recipe/glyph_amplify.json
 1a8499b67d1ce8614ef1d420106d32d27567eeb9 data/ars_nouveau/recipe/glyph_animate_block.json
@@ -6,6 +6,7 @@ dbad772acd31382cfcf19c7f276da5f91354dfcf data/ars_nouveau/recipe/glyph_amplify.j
 c827180b8f5111736c1641e4683e63b3f764a80a data/ars_nouveau/recipe/glyph_blink.json
 e7d1836f1f0438e05c86aee27c2de1d32742f217 data/ars_nouveau/recipe/glyph_bounce.json
 6989360984c711d43b4e9175efbec3a23608db8e data/ars_nouveau/recipe/glyph_break.json
+9af644833096edb37284b038a00e101269cd1893 data/ars_nouveau/recipe/glyph_bubble.json
 c5d245630add4160c2ea36ef8df4add7a45f7616 data/ars_nouveau/recipe/glyph_burst.json
 5a951b64a1a102d1e71ee5ba85524cf1877378d5 data/ars_nouveau/recipe/glyph_cold_snap.json
 72ba14e65f67b1d570b69ec9ad7b99e59cd3f4b4 data/ars_nouveau/recipe/glyph_conjure_water.json
