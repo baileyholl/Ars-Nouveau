@@ -23,7 +23,7 @@ public class NookModel extends GeoModel<Nook> {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
         GeoBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraData().get(DataTickets.ENTITY_MODEL_DATA);
-        
+
         if(entity.isOrderedToSit()) {
             head.setRotX(extraData.headPitch() * 0.017453292F - 32.5f * Mth.DEG_TO_RAD);
             head.setRotY(extraData.netHeadYaw() * 0.010453292F);
