@@ -100,6 +100,11 @@ public class Nook extends TamableAnimal implements GeoEntity, IDispellable, IAdo
     }
 
     @Override
+    public double getEyeY() {
+        return super.getEyeY();
+    }
+
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
         super.defineSynchedData(pBuilder);
         pBuilder.define(SIT, false);
@@ -197,7 +202,7 @@ public class Nook extends TamableAnimal implements GeoEntity, IDispellable, IAdo
             return PlayState.STOP;
         }));
         data.add(new AnimationController(this, "idle", 1, (event) -> {
-            if(!event.isMoving() && !this.isWagging()){
+            if(!event.isMoving() && !this.isWagging() && !this.isOrderedToSit()){
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
                 return PlayState.CONTINUE;
             }

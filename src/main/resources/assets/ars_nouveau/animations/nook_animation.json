@@ -56,6 +56,12 @@
 					}
 				},
 				"head": {
+					"relative_to": {
+						"rotation": "entity"
+					},
+					"rotation": {
+						"vector": [0, 0, 0]
+					},
 					"position": {
 						"vector": [0, -0.5373, -0.84339]
 					}
