@@ -34,27 +34,27 @@ public class LangDatagen extends LanguageProvider {
         ArsNouveauAPI arsNouveauAPI = ArsNouveauAPI.getInstance();
         for (Supplier<Glyph> supplier : GlyphRegistry.getGlyphItemMap().values()) {
             Glyph i = supplier.get();
-            if(supplier.get().spellPart.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
+            if (supplier.get().spellPart.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
                 add("ars_nouveau.glyph_desc." + i.spellPart.getRegistryName().getPath(), i.spellPart.getBookDescription());
                 add("ars_nouveau.glyph_name." + i.spellPart.getRegistryName().getPath(), i.spellPart.getName());
             }
         }
         for (FamiliarScript i : FamiliarRegistry.getFamiliarScriptMap().values()) {
-            if (i.familiar.getRegistryName().getNamespace().equals(ArsNouveau.MODID)){
+            if (i.familiar.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
                 add("ars_nouveau.familiar_desc." + i.familiar.getRegistryName().getPath(), i.familiar.getBookDescription());
                 add("ars_nouveau.familiar_name." + i.familiar.getRegistryName().getPath(), i.familiar.getBookName());
                 add("item.ars_nouveau." + i.familiar.getRegistryName().getPath(), i.familiar.getBookName());
             }
         }
         for (RitualTablet i : RitualRegistry.getRitualItemMap().values()) {
-            if(i.ritual.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
+            if (i.ritual.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
                 add("ars_nouveau.ritual_desc." + i.ritual.getRegistryName().getPath(), i.ritual.getLangDescription());
                 add("item.ars_nouveau." + i.ritual.getRegistryName().getPath(), i.ritual.getLangName());
             }
         }
 
         for (PerkItem i : PerkRegistry.getPerkItemMap().values()) {
-            if(i.perk.getRegistryName().getNamespace().equals(ArsNouveau.MODID) && !i.perk.getRegistryName().getPath().equals("blank_thread")) {
+            if (i.perk.getRegistryName().getNamespace().equals(ArsNouveau.MODID) && !i.perk.getRegistryName().getPath().equals("blank_thread")) {
                 add("ars_nouveau.perk_desc." + i.perk.getRegistryName().getPath(), i.perk.getLangDescription());
                 add("item.ars_nouveau." + i.perk.getRegistryName().getPath(), i.perk.getLangName());
             }
@@ -105,6 +105,7 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.amulet_of_mana_regen", "Amulet of Mana Regen");
         add("item.ars_nouveau.dominion_wand", "Dominion Wand");
         add("item.ars_nouveau.dominion_wand.strict", "Dominion Wand (Strict Mode)");
+        add("item.ars_nouveau.dominion_wand.remove", "Dominion Wand (Remove Mode)");
         add("block.ars_nouveau.scribes_table", "Scribe's Table");
         add("block.ars_nouveau.light_block", "Magelight");
         add("block.ars_nouveau.temporary_light_block", "Temporary Magelight");
@@ -175,6 +176,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.alert.duplicate_method", "No duplicate cast methods are allowed.");
         add("ars_nouveau.relay.no_to", "No send location set.");
         add("ars_nouveau.relay.one_to", "Sending to %d location(s).");
+        add("ars_nouveau.relay.remove_to", "Send location removed.");
+        add("ars_nouveau.relay.remove_from", "Take location removed.");
         add("ars_nouveau.relay.no_from", "No take location set.");
         add("ars_nouveau.relay.one_from", "Taking from %d location(s).");
         add("ars_nouveau.rune.touch", "Runes must have Touch as their first glyph.");
@@ -339,8 +342,9 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.color_gui.save", "Save");
         add("ars_nouveau.color_gui.save_all", "Save All");
         add("ars_nouveau.dominion_wand.clear", "Clear");
-        add("ars_nouveau.dominion_wand.normal", "Normal Mode");
-        add("ars_nouveau.dominion_wand.strict", "Strict Mode");
+        add("ars_nouveau.dominion_wand.normal", "Classic");
+        add("ars_nouveau.dominion_wand.strict", "Strict");
+        add("ars_nouveau.dominion_wand.remove", "Remove");
         add("ars_nouveau.dominion_wand.stored_entity", "Stored entity");
         add("ars_nouveau.dominion_wand.position_set", "Position set.");
         add("ars_nouveau.dominion_wand.no_entity", "No entity set");
@@ -358,6 +362,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.wand.spell_invalid", "Invalid Spell.");
         add("ars_nouveau.drygmy.blacklist", "Drygmy Blacklisted");
         add("ars_nouveau.drygmy.only_use_jars", "Only Using Containment Jars");
+        add("ars_nouveau.starbuncle.stop_store", "Starbuncle won't store items here.");
+        add("ars_nouveau.starbuncle.stop_take", "Starbuncle won't store from this inventory.");
         add("ars_nouveau.starbuncle.store", "Starbuncle will store items here.");
         add("ars_nouveau.starbuncle.take", "Starbuncle take from this inventory.");
         add("ars_nouveau.starbuncle.whitelist", "Whitelisted: ");
@@ -903,7 +909,9 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.melder.too_far", "Jars must be within 3 blocks.");
         add("ars_nouveau.starbuncle.storing_potions", "Storing potions at %s locations");
         add("ars_nouveau.starbuncle.taking_potions", "Taking potions from %s locations");
+        add("ars_nouveau.starbuncle.potion_to_remove", "Starbuncle won't send potions to this jar.");
         add("ars_nouveau.starbuncle.potion_to", "Starbuncle will send potions to this jar.");
+        add("ars_nouveau.starbuncle.potion_from_remove", "Starbuncle won't take potions from this jar.");
         add("ars_nouveau.starbuncle.potion_from", "Starbuncle will take potions from this jar.");
         add("ars_nouveau.dominion_wand.cleared", "Dominion wand cleared.");
         add("ars_nouveau.starbuncle.potion_behavior_set", "Starbuncle will now transport potions!");
@@ -1206,6 +1214,7 @@ public class LangDatagen extends LanguageProvider {
         add("tooltip.ars_nouveau.search_1", "Synced Search");
         add("ars_nouveau.invalid_lectern", "Invalid lectern connected.");
         add("ars_nouveau.storage.lectern_chained", "Linked to x: %s y: %s z: %s");
+        add("ars_nouveau.storage.lectern_unchained", "Unlinked from x: %s y: %s z: %s");
         add("ars_nouveau.storage.num_bookwyrms", "%s Bookwyrms");
         add("ars_nouveau.storage.removed", "Inventory removed.");
         add("ars_nouveau.storage.not_lectern", "Connect to another Lectern to connect the views.");
@@ -1234,7 +1243,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page3.storage", "Linked inventories that are named will create a tab in the Storage Lectern, allowing you to view and manipulate all inventories that share that name. Unlike normal chests, Repositories will preserve their name when dropped. The Name Effect can also name inventories placed in the world.");
         add("ars_nouveau.page2.item_detector", "If a Filter Scroll is given to the Display Case, it will count all items that match the filter.");
         add("config.jade.plugin_ars_nouveau.mob_jar", "Mob Jar");
-        add("mob_jar.villager","Can be traded with in a jar, periodically resetting its trades.");
+        add("mob_jar.villager", "Can be traded with in a jar, periodically resetting its trades.");
         add("mob_jar.piglin", "Can be traded with by throwing gold ingots at the jar.");
         add("mob_jar.ender_dragon", "Use a bottle to obtain Dragon's Breath.");
         add("mob_jar.sheep", "Can be sheared. Will eat Grass beneath the jar if available.");
@@ -1294,20 +1303,20 @@ public class LangDatagen extends LanguageProvider {
         add("effect.ars_nouveau.soaked", "Soaked");
         add("effect.ars_nouveau.soaked.desc", "Wets the target, protecting from fire and triggering effects as if under the rain.");
         add("block.ars_nouveau.sourceberry_sack", "Sourceberry Sack");
-        add("ars_nouveau.empty","Empty");
+        add("ars_nouveau.empty", "Empty");
         add("ars_nouveau.melder.output_not_unique", "Output potion is not a unique mix.");
         add("ars_nouveau.melder.output_duplicate_effect", "Cannot mix potions with the same effect but different levels.");
         add("ars_nouveau.page1.archwood_grate", "Liquids placed on top of them will be transported below, waterlogging the below block if possible. Interacting with the grate will also act as if you are interacting with the block below it, allowing you to bucket liquids below. Additionally, items and projectiles will pass through it. Can be placed in any direction.");
-        for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
+        for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
             String key = "block.ars_nouveau." + s;
             String val = data.get(key);
             add(key + "_slab", val + " Slab");
             add(key + "_stairs", val + " Stairs");
         }
-        add("block.ars_nouveau.sourcestone_grate","Sourcestone Grate");
-        add("block.ars_nouveau.gold_grate","Gold Grate");
-        add("block.ars_nouveau.archwood_grate","Archwood Grate");
-        add("block.ars_nouveau.smooth_sourcestone_grate","Smooth Sourcestone Grate");
+        add("block.ars_nouveau.sourcestone_grate", "Sourcestone Grate");
+        add("block.ars_nouveau.gold_grate", "Gold Grate");
+        add("block.ars_nouveau.archwood_grate", "Archwood Grate");
+        add("block.ars_nouveau.smooth_sourcestone_grate", "Smooth Sourcestone Grate");
         add("block.ars_nouveau.source_lamp", "Source Gem Lamp");
         add("ars_nouveau.page1.source_lamp", "Behaves like a copper bulb, but the light and comparator values can be adjusted by casting Light with dampen.");
         add("tooltip.starbuncle_shard2", "Made with love.");

@@ -40,6 +40,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -66,22 +67,27 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
     }
 
     @Override
-    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity, boolean remove) {
         // check if position is a BrazierRelayTile
-        if(storedPos != null && level.getBlockEntity(storedPos) instanceof BrazierRelayTile relayTile){
-            if(BlockUtil.distanceFrom(getBlockPos(), storedPos) > 16){
+        if (storedPos != null && level.getBlockEntity(storedPos) instanceof BrazierRelayTile relayTile) {
+            if (BlockUtil.distanceFrom(getBlockPos(), storedPos) > 16) {
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.fail"));
                 return;
             }
-            relayPos = storedPos.immutable();
-            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.brazier_relay.connected"));
+            if (remove) {
+                relayTile.relayPos = null;
+                PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.cleared"));
+            } else {
+                relayTile.relayPos = storedPos.immutable();
+                PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.brazier_relay.connected"));
+            }
             updateBlock();
         }
     }
 
     @Override
     public void onWanded(Player playerEntity) {
-        if(relayPos != null){
+        if (relayPos != null) {
             relayPos = null;
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.cleared"));
             updateBlock();
@@ -90,7 +96,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
 
     @Override
     public List<ColorPos> getWandHighlight(List<ColorPos> list) {
-        if(relayPos != null){
+        if (relayPos != null) {
             list.add(ColorPos.centered(relayPos, ParticleColor.TO_HIGHLIGHT));
         }
         return list;
@@ -117,7 +123,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
                     pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset), pos.getY() + 1 + ParticleUtil.inRange(0, outerYMax), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset),
                     0, ParticleUtil.inRange(0.0, ySpeed), 0);
         }
-        if(relayPos != null && level.getBlockEntity(relayPos) instanceof BrazierRelayTile relayTile){
+        if (relayPos != null && level.getBlockEntity(relayPos) instanceof BrazierRelayTile relayTile) {
             relayTile.makeParticle(centerColor, outerColor, intensity);
         }
     }
@@ -146,9 +152,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
                 return;
             }
             if (!ritual.isRunning() && !level.isClientSide && level.getGameTime() % 5 == 0) {
-                level.getEntitiesOfClass(ItemEntity.class, new AABB(getBlockPos()).inflate(1)).forEach(i -> {
-                    tryBurnStack(i.getItem());
-                });
+                level.getEntitiesOfClass(ItemEntity.class, new AABB(getBlockPos()).inflate(1)).forEach(i -> tryBurnStack(i.getItem()));
             }
             if (ritual.consumesSource() && ritual.needsSourceNow()) {
                 int cost = ritual.getSourceCost();
@@ -159,17 +163,17 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
                     return;
                 }
             }
-            if(this.relayPos != null && level.isLoaded(this.relayPos) && level.getBlockEntity(this.relayPos) instanceof BrazierRelayTile relayTile){
+            if (this.relayPos != null && level.isLoaded(this.relayPos) && level.getBlockEntity(this.relayPos) instanceof BrazierRelayTile relayTile) {
                 ritual.tryTick(relayTile);
                 relayTile.ticksToLightOff = 2;
                 relayTile.isDecorative = false;
-            }else{
+            } else {
                 ritual.tryTick(this);
             }
         }
     }
 
-    public boolean takeSource(){
+    public boolean takeSource() {
         if (ritual.consumesSource() && ritual.needsSourceNow()) {
             int cost = ritual.getSourceCost();
             if (SourceUtil.takeSourceWithParticles(getBlockPos(), getLevel(), 6, cost) != null) {
@@ -181,8 +185,8 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
         return false;
     }
 
-    public boolean tryBurnStack(ItemStack stack){
-        if(ritual != null && !ritual.isRunning() && !level.isClientSide && ritual.canConsumeItem(stack)) {
+    public boolean tryBurnStack(ItemStack stack) {
+        if (ritual != null && !ritual.isRunning() && !level.isClientSide && ritual.canConsumeItem(stack)) {
             ritual.onItemConsumed(stack);
             ParticleUtil.spawnPoof((ServerLevel) level, getBlockPos());
             level.playSound(null, getBlockPos(), SoundEvents.FIRECHARGE_USE, SoundSource.NEUTRAL, 0.3f, 1.0f);
@@ -213,7 +217,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+    protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
         super.loadAdditional(tag, pRegistries);
         String ritualIDString = tag.getString("ritualID");
         if (!ritualIDString.isEmpty()) {
@@ -230,13 +234,13 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
         isDecorative = tag.getBoolean("decorative");
         isOff = tag.getBoolean("off");
 
-        if(tag.contains("relayPos")){
+        if (tag.contains("relayPos")) {
             this.relayPos = BlockPos.of(tag.getLong("relayPos"));
         }
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
         if (ritual != null) {
             tag.putString("ritualID", ritual.getRegistryName().toString());
@@ -248,7 +252,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
         tag.putBoolean("decorative", isDecorative);
         tag.putBoolean("off", isOff);
         // store the relay position
-        if(this.relayPos != null){
+        if (this.relayPos != null) {
             tag.putLong("relayPos", this.relayPos.asLong());
         }
     }
@@ -290,7 +294,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
             if (!ritual.getConsumedItems().isEmpty()) {
                 tooltips.add(Component.translatable("ars_nouveau.tooltip.consumed"));
                 for (String i : ritual.getFormattedConsumedItems()) {
-                    tooltips.add(Component.literal( i));
+                    tooltips.add(Component.literal(i));
                 }
             }
             if (ritual.needsSourceNow())
@@ -319,7 +323,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
 
     @Override
     public boolean onDispel(@Nullable LivingEntity caster) {
-        if(!isDecorative)
+        if (!isDecorative)
             return false;
         isDecorative = false;
         level.setBlock(getBlockPos(), level.getBlockState(getBlockPos()).setValue(RitualBrazierBlock.LIT, false), 3);

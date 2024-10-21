@@ -341,21 +341,21 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     }
 
     @Override
-    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @org.jetbrains.annotations.Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity) {
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @org.jetbrains.annotations.Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity, boolean remove) {
         if (this.isPassenger() && this.getRootVehicle() instanceof Starbuncle baseStarby) {
-            baseStarby.dynamicBehavior.onFinishedConnectionFirst(storedPos, side, storedEntity, playerEntity);
+            baseStarby.dynamicBehavior.onFinishedConnectionFirst(storedPos, side, storedEntity, playerEntity, remove);
             return;
         }
-        dynamicBehavior.onFinishedConnectionFirst(storedPos, side, storedEntity, playerEntity);
+        dynamicBehavior.onFinishedConnectionFirst(storedPos, side, storedEntity, playerEntity, remove);
     }
 
     @Override
-    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @org.jetbrains.annotations.Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity) {
+    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @org.jetbrains.annotations.Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity, boolean remove) {
         if (this.isPassenger() && this.getRootVehicle() instanceof Starbuncle baseStarby) {
-            baseStarby.dynamicBehavior.onFinishedConnectionLast(storedPos, side, storedEntity, playerEntity);
+            baseStarby.dynamicBehavior.onFinishedConnectionLast(storedPos, side, storedEntity, playerEntity, remove);
             return;
         }
-        dynamicBehavior.onFinishedConnectionLast(storedPos, side, storedEntity, playerEntity);
+        dynamicBehavior.onFinishedConnectionLast(storedPos, side, storedEntity, playerEntity, remove);
     }
 
     public static AttributeSupplier.Builder attributes() {

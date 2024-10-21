@@ -46,6 +46,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -98,7 +99,7 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
     }
 
     @Override
-    public MinecoloniesAdvancedPathNavigate getNavigation() {
+    public @NotNull MinecoloniesAdvancedPathNavigate getNavigation() {
         if (this.pathNavigate == null) {
             this.pathNavigate = new MinecoloniesAdvancedPathNavigate(this, this.level);
             this.minecraftPathNav = this.navigation;
@@ -208,13 +209,13 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
     }
 
     @Override
-    protected void playStepSound(BlockPos pPos, BlockState pBlock) {
+    protected void playStepSound(@NotNull BlockPos pPos, @NotNull BlockState pBlock) {
         SoundEvent soundtype = SoundEvents.AMETHYST_CLUSTER_STEP;
         this.playSound(soundtype, (float) (Math.random() * 0.45F), (float) (Math.random() * 1.0f));
     }
 
     @Override
-    public void onFinishedConnectionFirst(@javax.annotation.Nullable BlockPos storedPos, @javax.annotation.Nullable LivingEntity storedEntity, Player playerEntity) {
+    public void onFinishedConnectionFirst(@javax.annotation.Nullable BlockPos storedPos, @javax.annotation.Nullable LivingEntity storedEntity, Player playerEntity, boolean remove) {
         if (storedPos != null) {
             setHome(storedPos);
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.home_set"));
@@ -229,7 +230,7 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
     }
 
     @Override
-    public void die(DamageSource source) {
+    public void die(@NotNull DamageSource source) {
         if (!level.isClientSide) {
             ItemStack stack = new ItemStack(ItemsRegistry.AMETHYST_GOLEM_CHARM.get());
             stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
@@ -241,7 +242,7 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
     }
 
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
+    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
         return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
     }
 
@@ -263,7 +264,7 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         NBTUtil.storeBlockPos(tag, "home", getHome());
         tag.putInt("grow", growCooldown);
@@ -278,7 +279,7 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if (NBTUtil.hasBlockPos(tag, "home")) {
             setHome(NBTUtil.getBlockPos(tag, "home"));
@@ -294,7 +295,7 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         data.add(new AnimationController<>(this, "run_controller", 1, e ->{
-            AnimationController controller = e.getController();
+            AnimationController<AmethystGolem> controller = e.getController();
             if (isStomping()) {
                 controller.setAnimation(RawAnimation.begin().thenPlay("harvest2"));
                 return PlayState.CONTINUE;
@@ -332,7 +333,7 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
         super.defineSynchedData(pBuilder);
         pBuilder.define(HOME, Optional.empty());
         pBuilder.define(IMBUEING, false);
