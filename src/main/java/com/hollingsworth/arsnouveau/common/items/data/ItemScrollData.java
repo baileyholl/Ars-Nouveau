@@ -86,7 +86,17 @@ public class ItemScrollData implements NBTComponent<ItemScrollData>, TooltipProv
         }
 
         public boolean remove(ItemStack stack) {
-            return list.remove(stack.copy());
+            // ItemStacks do not have a proper "equals" implementation, so List#remove doesn't work
+            // (as it relies on Object#equals being properly implemented)
+            list.removeIf(stored -> ItemStack.isSameItem(stored, stack));
+            for (int i = 0; i < list.size(); i++) {
+                // Use the same check as ItemScrollData#contains
+                if (ItemStack.isSameItem(stack, list.get(i))) {
+                    list.remove(i); // Will always succeed
+                    return true;
+                }
+            }
+            return false;
         }
 
         public List<ItemStack> getItems() {
