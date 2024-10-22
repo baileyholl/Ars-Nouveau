@@ -16,6 +16,7 @@ import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
+import com.hollingsworth.arsnouveau.common.entity.AbstractWilden;
 import com.hollingsworth.arsnouveau.common.familiars.*;
 import com.hollingsworth.arsnouveau.common.mob_jar.*;
 import com.hollingsworth.arsnouveau.common.perk.*;
@@ -304,6 +305,8 @@ public class APIRegistry {
             }
         });
         JarBehaviorRegistry.register(EntityType.WITHER, new WitherBehavior());
+
+        AbstractWilden.WILDEN_TYPES.addAll(List.of(ModEntities.WILDEN_GUARDIAN.get(), ModEntities.WILDEN_HUNTER.get(), ModEntities.WILDEN_STALKER.get()));
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {

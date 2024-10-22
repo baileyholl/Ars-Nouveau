@@ -24,6 +24,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -34,7 +35,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.core.animation.AnimationState;
 
-public class WildenStalker extends Monster implements GeoEntity {
+public class WildenStalker extends AbstractWilden {
     int leapCooldown;
     public Vec3 orbitOffset = Vec3.ZERO;
     public BlockPos orbitPosition = BlockPos.ZERO;
@@ -42,7 +43,7 @@ public class WildenStalker extends Monster implements GeoEntity {
     public static final EntityDataAccessor<Boolean> isFlying = SynchedEntityData.defineId(WildenStalker.class, EntityDataSerializers.BOOLEAN);
     public int timeFlying;
 
-    public WildenStalker(EntityType<? extends Monster> type, Level worldIn) {
+    public WildenStalker(EntityType<? extends AbstractWilden> type, Level worldIn) {
         super(type, worldIn);
         moveControl = new FlyHelper(this);
     }
@@ -57,15 +58,12 @@ public class WildenStalker extends Monster implements GeoEntity {
         super.registerGoals();
         this.goalSelector.addGoal(1, new StartFlightGoal(this));
         this.goalSelector.addGoal(1, new DiveAttackGoal(this));
-        this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
         this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.3f));
 
 //        this.goalSelector.addGoal(5, new WildenMeleeAttack(this, 1.3D, true, WildenStalker.Animations.ATTACK.ordinal(), () -> !isFlying()));
         this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.2f, true));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+
         if (Config.STALKER_ATTACK_ANIMALS.get())
             this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Animal.class, 10, true, false, (entity) -> !(entity instanceof SummonWolf) || !((SummonWolf) entity).isWildenSummon));
 
@@ -108,19 +106,7 @@ public class WildenStalker extends Monster implements GeoEntity {
         this.leapCooldown = leapCooldown;
     }
 
-    @Override
-    public int getExperienceReward() {
-        return 8;
-    }
-
-    /**
-     * Returns the volume for the sounds this mob makes.
-     */
-    protected float getSoundVolume() {
-        return 0.4F;
-    }
-
-    private PlayState flyPredicate(software.bernie.geckolib.core.animation.AnimationState event) {
+    private <T extends GeoAnimatable>PlayState flyPredicate(AnimationState<T> event) {
         if(isFlying()) {
             event.getController().setAnimation(RawAnimation.begin().thenPlay("fly"));
             return PlayState.CONTINUE;
@@ -128,7 +114,7 @@ public class WildenStalker extends Monster implements GeoEntity {
         return PlayState.STOP;
     }
 
-    private PlayState groundPredicate(software.bernie.geckolib.core.animation.AnimationState e) {
+    private <T extends GeoAnimatable>PlayState groundPredicate(AnimationState<T> e) {
         if(isFlying()){
             return PlayState.STOP;
         }else if(e.isMoving()){
@@ -212,7 +198,7 @@ public class WildenStalker extends Monster implements GeoEntity {
     public static AttributeSupplier.Builder getModdedAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 15D)
-                .add(Attributes.MOVEMENT_SPEED, 0.25D)
+                .add(Attributes.MOVEMENT_SPEED, 0.35D)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.7D)
                 .add(Attributes.ATTACK_DAMAGE, 2.5D);
     }
@@ -233,7 +219,7 @@ public class WildenStalker extends Monster implements GeoEntity {
     }
 
     @Override
-    public void load(CompoundTag pCompound) {
+    public void load(@NotNull CompoundTag pCompound) {
         super.load(pCompound);
         setFlying(pCompound.getBoolean("isFlying"));
     }
