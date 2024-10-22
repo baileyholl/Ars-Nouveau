@@ -348,6 +348,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.dominion_wand.no_location", "No location set.");
         add("ars_nouveau.dominion_wand.position_stored", "Stored: %s");
         add("ars_nouveau.position", "X: %1$d Y: %2$d Z: %3$d");
+        add("ars_nouveau.global_position", "X: %1$d Y: %2$d Z: %3$d in %4$s");
         add("ars_nouveau.spell_arrow.desc", "Augments spells when used with an Enchanter's Bow.");
         add("ars_nouveau.spell_parchment.no_spell", "Set your spell book to a spell.");
         add("ars_nouveau.spell_parchment.inscribed", "Spell inscribed.");
