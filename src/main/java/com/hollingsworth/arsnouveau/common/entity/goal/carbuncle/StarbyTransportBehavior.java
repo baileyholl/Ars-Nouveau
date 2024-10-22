@@ -42,7 +42,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
             .expireAfterAccess(20, TimeUnit.SECONDS)
             .build();
 
-    public static final ResourceLocation TRANSPORT_ID = ArsNouveau.prefix( "starby_transport");
+    public static final ResourceLocation TRANSPORT_ID = ArsNouveau.prefix("starby_transport");
 
     public ItemStack itemScroll = ItemStack.EMPTY;
 
@@ -64,14 +64,14 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     @Override
     public void tick() {
         super.tick();
-        if(!level.isClientSide) {
-            if(berryBackoff > 0){
+        if (!level.isClientSide) {
+            if (berryBackoff > 0) {
                 berryBackoff--;
             }
-            if(findItemBackoff > 0){
+            if (findItemBackoff > 0) {
                 findItemBackoff--;
             }
-            if(takeItemBackoff > 0){
+            if (takeItemBackoff > 0) {
                 takeItemBackoff--;
             }
             stateMachine.tick();
@@ -240,27 +240,36 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     }
 
     @Override
-    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        super.onFinishedConnectionFirst(storedPos, side, storedEntity, playerEntity);
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity, boolean remove) {
+        super.onFinishedConnectionFirst(storedPos, side, storedEntity, playerEntity, remove);
         if (storedPos == null)
             return;
         IItemHandler cap = level.getCapability(Capabilities.ItemHandler.BLOCK, storedPos, side);
         if (cap != null) {
-            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.store"));
-            addToPos(storedPos, side);
+            if (remove) {
+                PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.stop_store"));
+                removeToPos(storedPos);
+            } else {
+                PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.store"));
+                addToPos(storedPos, side);
+            }
         }
     }
 
     @Override
-    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        super.onFinishedConnectionLast(storedPos, storedEntity, playerEntity);
+    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity, boolean remove) {
+        super.onFinishedConnectionLast(storedPos, storedEntity, playerEntity, remove);
         if (storedPos == null)
             return;
-
         IItemHandler cap = level.getCapability(Capabilities.ItemHandler.BLOCK, storedPos, side);
         if (cap != null) {
-            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.take"));
-            addFromPos(storedPos, side);
+            if (remove) {
+                PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.stop_take"));
+                removeFromPos(storedPos);
+            } else {
+                PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.take"));
+                addFromPos(storedPos, side);
+            }
         }
     }
 

@@ -82,11 +82,11 @@ public class DominionWand extends ModItem implements IRadialProvider {
         Level world = playerEntity.getCommandSenderWorld();
 
         if (data.storedPos().isPresent() && world.getBlockEntity(data.storedPos().get()) instanceof IWandable wandable) {
-            wandable.onFinishedConnectionFirst(data.storedPos().orElse(null), data.face().orElse(null), target, playerEntity);
+            wandable.onFinishedConnectionFirst(data.storedPos().orElse(null), data.face().orElse(null), target, playerEntity, data.remove());
         }
 
         if (target instanceof IWandable wandable) {
-            wandable.onFinishedConnectionLast(data.storedPos().orElse(null), data.face().orElse(null), target, playerEntity);
+            wandable.onFinishedConnectionLast(data.storedPos().orElse(null), data.face().orElse(null), target, playerEntity, data.remove());
             clear(stack, playerEntity);
         }
 
@@ -109,7 +109,6 @@ public class DominionWand extends ModItem implements IRadialProvider {
         stack.set(DataComponentRegistry.DOMINION_WAND, data);
     }
 
-    @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
         if (context.getLevel().isClientSide || context.getPlayer() == null)
             return super.useOn(context);
@@ -137,13 +136,13 @@ public class DominionWand extends ModItem implements IRadialProvider {
         BlockPos storedPos = data.storedPos().orElse(null);
         Direction storedDirection = data.face().orElse(null);
         if (storedPos != null && world.getBlockEntity(storedPos) instanceof IWandable wandable) {
-            wandable.onFinishedConnectionFirst(pos, storedDirection, (LivingEntity) world.getEntity(data.storedEntityId()), playerEntity);
+            wandable.onFinishedConnectionFirst(pos, storedDirection, (LivingEntity) world.getEntity(data.storedEntityId()), playerEntity, data.remove());
         }
         if (world.getBlockEntity(pos) instanceof IWandable wandable) {
-            wandable.onFinishedConnectionLast(storedPos, storedDirection, (LivingEntity) world.getEntity(data.storedEntityId()), playerEntity);
+            wandable.onFinishedConnectionLast(storedPos, storedDirection, (LivingEntity) world.getEntity(data.storedEntityId()), playerEntity, data.remove());
         }
         if (data.storedEntityId() != DominionWandData.NULL_ENTITY && world.getEntity(data.storedEntityId()) instanceof IWandable wandable) {
-            wandable.onFinishedConnectionFirst(pos, data.strict() ? face : null, null, playerEntity);
+            wandable.onFinishedConnectionFirst(pos, data.strict() ? face : null, null, playerEntity, data.remove());
         }
 
         clear(stack, playerEntity);
@@ -154,6 +153,7 @@ public class DominionWand extends ModItem implements IRadialProvider {
     public @NotNull String getDescriptionId(ItemStack pStack) {
         DominionWandData data = pStack.getOrDefault(DataComponentRegistry.DOMINION_WAND, new DominionWandData());
         if (data.strict()) return super.getDescriptionId(pStack) + ".strict";
+        if (data.remove()) return super.getDescriptionId(pStack) + ".remove";
         return super.getDescriptionId(pStack);
     }
 
@@ -196,8 +196,8 @@ public class DominionWand extends ModItem implements IRadialProvider {
     public enum DominionSlots {
         CLEAR("ars_nouveau.dominion_wand.clear"),
         NORMAL("ars_nouveau.dominion_wand.normal"),
-        STRICT("ars_nouveau.dominion_wand.strict");
-
+        STRICT("ars_nouveau.dominion_wand.strict"),
+        REMOVE("ars_nouveau.dominion_wand.remove");
         public final String key;
 
         DominionSlots(String key) {
@@ -214,6 +214,7 @@ public class DominionWand extends ModItem implements IRadialProvider {
         radialMenuSlots.add(new RadialMenuSlot<>(DominionSlots.CLEAR.translatable().getString(), DominionSlots.CLEAR.key));
         radialMenuSlots.add(new RadialMenuSlot<>(DominionSlots.NORMAL.translatable().getString(), DominionSlots.NORMAL.key));
         radialMenuSlots.add(new RadialMenuSlot<>(DominionSlots.STRICT.translatable().getString(), DominionSlots.STRICT.key));
+        radialMenuSlots.add(new RadialMenuSlot<>(DominionSlots.REMOVE.translatable().getString(), DominionSlots.REMOVE.key));
         return radialMenuSlots;
     }
 
