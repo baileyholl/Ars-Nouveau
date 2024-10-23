@@ -112,11 +112,8 @@ public class Config {
         MANABAR_X_OFFSET = CLIENT_BUILDER.comment("X offset for the Mana Bar").defineInRange("xManaBar", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
         MANABAR_Y_OFFSET = CLIENT_BUILDER.comment("Y offset for the Mana Bar").defineInRange("yManaBar", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
         SHOW_RECIPE_BOOK = CLIENT_BUILDER.comment("If the Storage Lectern should show the recipe book icon").define("showRecipeBook", true);
-<<<<<<< HEAD:src/main/java/com/hollingsworth/arsnouveau/setup/config/Config.java
         INFORM_LIGHTS = CLIENT_BUILDER.comment("Inform the player of Dynamic lights once.").define("informLights", true);
-=======
         TOGGLE_RADIAL_HUD = CLIENT_BUILDER.comment("Whether the Selection HUD is toggled or held").define("toggleSelectionHUD", true);
->>>>>>> f64755dd3 (feat: hold config option for radial selection):src/main/java/com/hollingsworth/arsnouveau/setup/Config.java
         CLIENT_BUILDER.pop();
         CLIENT_BUILDER.comment("Misc").push("misc");
         ALTERNATE_PORTAL_RENDER = CLIENT_BUILDER.comment("Use simplified renderer for Warp Portals").define("no_end_portal_render", false);
