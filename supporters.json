@@ -31,7 +31,7 @@
     "0421ad40-0881-47d4-b086-38c90c1ab62f", "a8875ecb-6e84-4c6d-ac68-3251b945d963", "cf1f7109-266d-4e5a-8a8a-d93684cf60b9",
   "e7976ce2-3344-4499-8b15-91adddc5ed0f", "d29025d7-cf5d-4976-8a65-fc3bdcc991b5", "8ced638c-eac7-433e-b794-54c0f23807a4",
   "db489a87-6509-4d75-917d-9c426b519c64", "eb079f27-e266-4b3c-beba-b34d34bef268", "831086b8-d566-4f25-aa09-ecb505e54885",
-  "e3298bd7-61bf-427f-af89-4e418a20bf57"],
+  "e3298bd7-61bf-427f-af89-4e418a20bf57", "01b53c7e-c7f4-4465-88df-f8b6c645b6b9"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -488,6 +488,11 @@
       "adopter": "ChosenArchitect",
       "color": "blue",
       "bio": "Archi was found tinkering with magical gadgets in an enchanted forest. It's a curious creature, always trying to automate everything around it. With a love for shiny items and complex machinery, it enjoys watching builds come to life and adds a touch of creativity wherever it goes."
+    },{
+      "name": "Floki",
+      "color": "red",
+      "adopter": "Tevaino",
+      "bio": "The mage's favorite little creature."
     }
   ]
 }
