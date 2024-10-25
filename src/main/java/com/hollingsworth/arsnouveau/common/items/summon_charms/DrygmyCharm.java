@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.common.items.data.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
@@ -16,7 +17,7 @@ import net.minecraft.world.level.block.Blocks;
 public class DrygmyCharm extends AbstractSummonCharm {
 
     public DrygmyCharm() {
-        super();
+        super(ItemsRegistry.defaultItemProperties().component(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, new PersistentFamiliarData().setColor("brown")));
     }
 
     @Override
