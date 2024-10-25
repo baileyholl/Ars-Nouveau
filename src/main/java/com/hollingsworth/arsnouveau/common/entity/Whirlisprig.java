@@ -419,7 +419,9 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
         tag.putInt("bonemeal", timeSinceBonemeal);
         tag.putBoolean("tamed", this.entityData.get(TAMED));
         tag.putInt("score", this.entityData.get(Whirlisprig.MOOD_SCORE));
-        tag.putString("color", this.entityData.get(COLOR));
+        if(this.entityData.get(COLOR) != null) {
+            tag.putString("color", this.entityData.get(COLOR));
+        }
         tag.putInt("genTime", timeSinceGen);
 
     }
