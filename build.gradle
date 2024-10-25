@@ -101,9 +101,6 @@ tasks.named('jarJar') {}
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
 
-//    jarJar(group: 'software.bernie.geckolib', name: "geckolib-neoforge-${minecraft_version}", version: "[4.5,)") {
-//        jarJar.pin(it, "${geckolib_version}")
-//    }
     implementation "software.bernie.geckolib:geckolib-neoforge-1.21.1:${geckolib_version}"
 //
     implementation(jarJar(group: 'vazkii.patchouli', name: 'Patchouli', version: '[1.21,)') {
@@ -119,7 +116,6 @@ dependencies {
     implementation "curse.maven:jade-324717:5444008"
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}+1.21"
 
-    implementation "curse.maven:ars-additions-974408:5698511"
 }
 
 jar {
