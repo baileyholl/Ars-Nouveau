@@ -10,10 +10,10 @@ import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.recipe.DispelEntityRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.MultiRecipeWrapper;
 import com.hollingsworth.arsnouveau.api.registry.*;
-import com.hollingsworth.arsnouveau.api.registry.GenericRecipeRegistry;
 import com.hollingsworth.arsnouveau.api.ritual.RitualEventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
+import com.hollingsworth.arsnouveau.api.util.DamageUtil;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -42,7 +42,6 @@ import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.data.worldgen.DimensionTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -55,7 +54,6 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Witch;
@@ -86,6 +84,8 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
+
+import static net.minecraftforge.eventbus.api.EventPriority.HIGHEST;
 
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
@@ -323,7 +323,7 @@ public class EventHandler {
         }
     }
 
-    private static void replaceEntityWithItems(ServerLevel level, Entity entity, ItemStack ...items) {
+    private static void replaceEntityWithItems(ServerLevel level, Entity entity, ItemStack... items) {
         entity.remove(Entity.RemovalReason.KILLED);
         ParticleUtil.spawnPoof(level, entity.blockPosition());
         for (ItemStack item : items) {
@@ -420,8 +420,11 @@ public class EventHandler {
     }
 
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = HIGHEST)
     public static void onLootingEvent(LootingLevelEvent event) {
+        if (event.getDamageSource() instanceof DamageUtil.SpellDamageSource source) {
+            event.setLootingLevel(Math.max(event.getLootingLevel(), source.getLuckLevel()));
+        }
         if (event.getDamageSource() != null && event.getDamageSource().getEntity() instanceof LivingEntity living) {
             event.setLootingLevel(event.getLootingLevel() + Math.round(PerkUtil.countForPerk(LootingPerk.INSTANCE, living)));
         }

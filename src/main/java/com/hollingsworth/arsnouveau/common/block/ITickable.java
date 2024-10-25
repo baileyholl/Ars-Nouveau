@@ -22,8 +22,10 @@ public interface ITickable {
 
     /**
      * Default parameterless ticking implementation.
+     * WARNING:
+     * THIS METHOD WON'T WORK IF {@link ITickable#tick(Level, BlockState, BlockPos)} IS OVERRIDDEN IN THE SUPERCLASS WITHOUT THE SUPER CALL
      */
     default void tick() {
-
     }
+
 }
