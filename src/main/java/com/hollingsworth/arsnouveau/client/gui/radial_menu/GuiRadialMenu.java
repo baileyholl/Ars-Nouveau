@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.client.gui.radial_menu;
 
 import com.hollingsworth.arsnouveau.client.ClientInfo;
-import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
-import com.hollingsworth.arsnouveau.setup.Config;
+import com.hollingsworth.arsnouveau.client.registry.ModKeyBindings;
+import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
