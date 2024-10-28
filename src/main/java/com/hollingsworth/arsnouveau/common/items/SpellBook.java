@@ -49,7 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable, IRadialProvider, IGlyphSlotModifier {
+public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable, IRadialProvider {
 
     public SpellTier tier;
     AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
