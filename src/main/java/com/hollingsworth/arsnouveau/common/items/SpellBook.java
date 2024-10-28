@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
+import com.hollingsworth.arsnouveau.api.item.IGlyphSlotModifier;
 import com.hollingsworth.arsnouveau.api.item.IRadialProvider;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
@@ -48,7 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable, IRadialProvider {
+public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable, IRadialProvider, IGlyphSlotModifier {
 
     public SpellTier tier;
     AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);

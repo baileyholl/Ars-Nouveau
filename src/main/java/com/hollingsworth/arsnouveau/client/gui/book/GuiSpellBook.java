@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.item.IGlyphSlotModifier;
 import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
@@ -93,6 +94,7 @@ public class GuiSpellBook extends BaseBook {
     public PageButton nextGlyphButton;
     public PageButton prevGlyphButton;
     public int spellWindowOffset = 0;
+    public int bonusSlots = 0;
 
     public GuiSpellBook(InteractionHand hand){
         super();
@@ -108,6 +110,9 @@ public class GuiSpellBook extends BaseBook {
         int tier = 1;
         if(heldStack.getItem() instanceof SpellBook book){
             tier = book.getTier().value;
+        }
+        if (heldStack.getItem() instanceof IGlyphSlotModifier modifier) {
+            bonusSlots = modifier.getBonusGlyphSlots();
         }
         this.bookStack = heldStack;
         this.unlockedSpells = parts;
@@ -204,7 +209,7 @@ public class GuiSpellBook extends BaseBook {
         spell = new ArrayList<>(recipe);
 
         //infinite spells
-        if (ServerConfig.INFINITE_SPELLS.get()) {
+        if (getExtraGlyphSlots() > 0) {
             this.nextGlyphButton = addRenderableWidget(new PageButton(bookRight - 25, bookBottom - 30, true, i -> updateWindowOffset(spellWindowOffset + 1), true));
             this.prevGlyphButton = addRenderableWidget(new PageButton(bookLeft, bookBottom - 30, false, i -> updateWindowOffset(spellWindowOffset - 1), true));
             updateWindowOffset(0);
@@ -377,10 +382,14 @@ public class GuiSpellBook extends BaseBook {
         validate();
     }
 
+    public int getExtraGlyphSlots() {
+        return (ServerConfig.INFINITE_SPELLS.get() ? ServerConfig.NOT_SO_INFINITE_SPELLS.get() : 0) + bonusSlots;
+    }
+
     @Override
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
         boolean isShiftDown =  InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), Minecraft.getInstance().options.keyShift.getKey().getValue());
-        if(ServerConfig.INFINITE_SPELLS.get() && isShiftDown){
+        if(getExtraGlyphSlots() > 0 && isShiftDown){
             if (pScrollY < 0 && nextGlyphButton.active) {
                 updateWindowOffset(spellWindowOffset + 1);
             } else if (pScrollY > 0 && prevGlyphButton.active) {
@@ -475,7 +484,7 @@ public class GuiSpellBook extends BaseBook {
 
 
     private void updateNextGlyphArrow() {
-        if (spellWindowOffset >= ServerConfig.NOT_SO_INFINITE_SPELLS.get() || spellWindowOffset >= spell.size() - 1) {
+        if (spellWindowOffset >= getExtraGlyphSlots() || spellWindowOffset >= spell.size() - 1) {
             nextGlyphButton.active = false;
             nextGlyphButton.visible = false;
         } else {
@@ -527,9 +536,10 @@ public class GuiSpellBook extends BaseBook {
 
     public void updateWindowOffset(int offset) {
         //do nothing if the spell is empty and nextGlyphButton is clicked
-        if (ServerConfig.INFINITE_SPELLS.get())
+        int extraSlots = getExtraGlyphSlots();
+        if (extraSlots > 0)
             if (spellWindowOffset != 0 || offset <= 0 || !spell.stream().allMatch(Objects::isNull)) {
-                this.spellWindowOffset = Mth.clamp(offset, 0, ServerConfig.NOT_SO_INFINITE_SPELLS.get());
+                this.spellWindowOffset = Mth.clamp(offset, 0, extraSlots);
                 for (int i = 0; i < 10; i++) {
                     var cell = craftingCells.get(i);
                     cell.slotNum = spellWindowOffset + i;
