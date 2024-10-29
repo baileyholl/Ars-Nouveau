@@ -93,7 +93,7 @@ public class CapabilityRegistry {
         @SubscribeEvent
         public static void playerClone(PlayerEvent.Clone event) {
             Player oldPlayer = event.getOriginal();
-            oldPlayer.revive();
+            oldPlayer.reviveCaps();
             getMana(oldPlayer).ifPresent(oldMaxMana -> getMana(event.getEntity()).ifPresent(newMaxMana -> {
                 newMaxMana.setMaxMana(oldMaxMana.getMaxMana());
                 newMaxMana.setMana(oldMaxMana.getCurrentMana());
