@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.item.IGlyphSlotModifier;
 import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
@@ -111,8 +110,11 @@ public class GuiSpellBook extends BaseBook {
         if(heldStack.getItem() instanceof SpellBook book){
             tier = book.getTier().value;
         }
-        if (heldStack.getItem() instanceof IGlyphSlotModifier modifier) {
-            bonusSlots = modifier.getBonusGlyphSlots();
+        if (SpellCasterRegistry.hasCaster(heldStack)) {
+            AbstractCaster<?> caster = SpellCasterRegistry.from(heldStack);
+            if (caster != null) {
+                bonusSlots = caster.getBonusGlyphSlots();
+            }
         }
         this.bookStack = heldStack;
         this.unlockedSpells = parts;

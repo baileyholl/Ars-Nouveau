@@ -242,6 +242,10 @@ public abstract class AbstractCaster<T extends AbstractCaster<T>> implements Too
         return setSpellName(name, getCurrentSlot());
     }
 
+    public int getBonusGlyphSlots() {
+        return 0;
+    }
+
     @NotNull
     public Spell getSpell(Level world, LivingEntity playerEntity, InteractionHand hand, AbstractCaster caster) {
         return caster.getSpell();
