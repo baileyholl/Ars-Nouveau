@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.entity.BubbleEntity;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
+import com.hollingsworth.arsnouveau.common.event.BreezeEvent;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.world.Terrablender;
@@ -88,6 +89,7 @@ public class ArsNouveau {
         });
         NeoForge.EVENT_BUS.addListener(BubbleEntity::onAttacked);
         NeoForge.EVENT_BUS.addListener(BubbleEntity::entityHurt);
+        NeoForge.EVENT_BUS.addListener(BreezeEvent::onSpellResolve);
         ANCriteriaTriggers.init();
         try {
             Thread thread = new Thread(Rewards::init);
