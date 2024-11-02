@@ -19,7 +19,7 @@ public abstract class LevelRendererMixin {
             at = @At("TAIL"),
             cancellable = true
     )
-    private static void onGetLightmapCoordinates(BlockAndTintGetter world, BlockState state, BlockPos pos, CallbackInfoReturnable<Integer> cir) {
+    private static void ars_nouveau$onGetLightmapCoordinates(BlockAndTintGetter world, BlockState state, BlockPos pos, CallbackInfoReturnable<Integer> cir) {
         if (!LightManager.shouldUpdateDynamicLight())
             return; // Do not touch to the value.
         if (!world.getBlockState(pos).isSolidRender(world, pos))

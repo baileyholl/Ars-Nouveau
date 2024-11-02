@@ -189,7 +189,7 @@ public class LightManager {
             if (it.equals(lightSource)) {
                 sourceIterator.remove();
                 if (ArsNouveau.proxy.getMinecraft().level != null)
-                    lightSource.lambdynlights$scheduleTrackedChunksRebuild(ArsNouveau.proxy.getMinecraft().levelRenderer);
+                    lightSource.ars_nouveau$scheduleTrackedChunksRebuild(ArsNouveau.proxy.getMinecraft().levelRenderer);
                 break;
             }
         }
@@ -211,7 +211,7 @@ public class LightManager {
             if (ArsNouveau.proxy.getMinecraft().levelRenderer != null) {
                 if (it.getLuminance() > 0)
                     it.resetDynamicLight();
-                it.lambdynlights$scheduleTrackedChunksRebuild(ArsNouveau.proxy.getMinecraft().levelRenderer);
+                it.ars_nouveau$scheduleTrackedChunksRebuild(ArsNouveau.proxy.getMinecraft().levelRenderer);
             }
         }
         LightManager.jarHoldingEntityList = new ArrayList<>();
@@ -259,7 +259,7 @@ public class LightManager {
 
         lightSourcesLock.readLock().lock();
         for (var lightSource : dynamicLightSources) {
-            if (lightSource.lambdynlights$updateDynamicLight(renderer)) {
+            if (lightSource.ars_nouveau$updateDynamicLight(renderer)) {
                 lastUpdateCount++;
             }
         }
