@@ -493,6 +493,16 @@
       "color": "red",
       "adopter": "Tevaino",
       "bio": "The mage's favorite little creature."
+    },{
+      "name": "Jaime",
+      "color": "purple",
+      "adopter": "Frantastic",
+      "bio": "His staggering, wobbly gait does nothing to dampen his infectiously rambunctious and carefree spirit. Smells strongly of grapes."
+    },{
+      "name": "Eru",
+      "color": "gray",
+      "adopter": "ImPaw",
+      "bio": "Not to be left unsupervised."
     }
   ]
 }
