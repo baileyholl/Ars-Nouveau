@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Minecraft.class)
 public class ClientMixin {
     @Inject(method = "updateLevelInEngines", at = @At("HEAD"))
-    private void onSetWorld(ClientLevel world, CallbackInfo ci) {
+    private void ars_nouveau$onSetWorld(ClientLevel world, CallbackInfo ci) {
         LightManager.clearLightSources();
     }
 }
