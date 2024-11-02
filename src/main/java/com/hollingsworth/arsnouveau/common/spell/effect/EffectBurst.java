@@ -47,7 +47,6 @@ public class EffectBurst extends AbstractEffect {
 
     public void makeSphere(BlockPos center, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
         if (spellContext.getRemainingSpell().isEmpty()) return;
-        spellContext.setCanceled(true);
 
         int radius = (int) (1 + spellStats.getAoeMultiplier());
         Predicate<Double> Sphere = spellStats.hasBuff(AugmentDampen.INSTANCE) ? (distance) -> distance <= radius + 0.5 && distance >= radius - 0.5 : (distance) -> (distance <= radius + 0.5);
@@ -55,7 +54,7 @@ public class EffectBurst extends AbstractEffect {
             for (BlockPos pos : BlockPos.withinManhattan(center, radius, radius, radius)) {
                 if (Sphere.test(BlockUtil.distanceFromCenter(pos, center))) {
                     pos = pos.immutable();
-                    SpellResolver resolver1 = resolver.getNewResolver(spellContext.makeChildContext());
+                    SpellResolver resolver1 = resolver.getNewResolver(spellContext.clone().makeChildContext());
                     //TODO it needs a direction, UP as a dummy for now
                     resolver1.onResolveEffect(world, new BlockHitResult(new Vec3(pos.getX(), pos.getY(), pos.getZ()), Direction.UP, pos, false));
                 }
@@ -63,11 +62,13 @@ public class EffectBurst extends AbstractEffect {
         } else {
             for (LivingEntity entity : world.getEntitiesOfClass(LivingEntity.class, new AABB(center).inflate(radius, radius, radius))) {
                 if (Sphere.test(BlockUtil.distanceFromCenter(entity.blockPosition(), center))) {
-                    SpellResolver resolver1 = resolver.getNewResolver(spellContext.makeChildContext());
+                    SpellResolver resolver1 = resolver.getNewResolver(spellContext.clone().makeChildContext());
                     resolver1.onResolveEffect(world, new EntityHitResult(entity));
                 }
             }
         }
+
+        spellContext.setCanceled(true);
     }
 
     @Override
