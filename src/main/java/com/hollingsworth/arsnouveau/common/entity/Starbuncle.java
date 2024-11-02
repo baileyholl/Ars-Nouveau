@@ -687,6 +687,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             put("Sir Squirrely", ArsNouveau.prefix("textures/entity/sir_squirrely.png"));
             put("Zieg", ArsNouveau.prefix("textures/entity/zieg.png"));
             put("Xacris", ArsNouveau.prefix("textures/entity/xacris.png"));
+            put("Xollus", ArsNouveau.prefix("textures/entity/starbuncle_jarva.png"));
             for(DyeColor color : DyeColor.values()) {
                 put(color.getName(), ArsNouveau.prefix("textures/entity/starbuncle_" + color.getName().toLowerCase() + ".png"));
             }
@@ -700,6 +701,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             put("Zieg", ArsNouveau.prefix("geo/zieg.geo.json"));
             put("Xacris", ArsNouveau.prefix("geo/xacris.geo.json"));
             put("starbuncle", ArsNouveau.prefix("geo/starbuncle.geo.json"));
+            put("Xollus", ArsNouveau.prefix("geo/starbuncle_jarva.geo.json"));
         }
     };
 
