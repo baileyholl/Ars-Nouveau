@@ -166,14 +166,14 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
                 return;
             }
             if (this.spellResolver != null) {
-                this.spellResolver.onResolveEffect(level, result);
+                this.spellResolver.getNewResolver(this.spellResolver.spellContext.makeChildContext()).onResolveEffect(level, result);
                 Networking.sendToNearbyClient(level, BlockPos.containing(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
                         BlockPos.containing(result.getLocation()), getParticleColor()));
                 attemptRemoval();
             }
         } else if (numSensitive > 0 && result instanceof BlockHitResult blockraytraceresult && !this.isRemoved()) {
             if (this.spellResolver != null) {
-                this.spellResolver.onResolveEffect(this.level, blockraytraceresult);
+                this.spellResolver.getNewResolver(this.spellResolver.spellContext.makeChildContext()).onResolveEffect(this.level, blockraytraceresult);
             }
             Networking.sendToNearbyClient(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
                     BlockPos.containing(result.getLocation()).below(), getParticleColor()));
