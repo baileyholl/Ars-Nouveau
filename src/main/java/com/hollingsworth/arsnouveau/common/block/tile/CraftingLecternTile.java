@@ -140,10 +140,11 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 			return;
 		}
 		boolean playerInvUpdate = false;
+		List<ItemStack> remainingItems = currentRecipe.getRemainingItems(craftMatrix.asCraftInput());
 		for (int i = 0; i < 9; ++i) {
 			ItemStack currentStack = craftMatrix.getItem(i);
 			ItemStack oldItem = currentStack.copy();
-			ItemStack rem = currentStack.getCraftingRemainingItem();
+			ItemStack rem = remainingItems.size() > i ? remainingItems.get(i) : ItemStack.EMPTY;
 			if (!currentStack.isEmpty()) {
 				craftMatrix.removeItemNoUpdate(i, 1);
 				currentStack = craftMatrix.getItem(i);
