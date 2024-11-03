@@ -56,13 +56,16 @@ public class PortalTileRenderer<T extends PortalTile> implements BlockEntityRend
     }
 
     private void renderFace(PortalTile tileEntityIn, Matrix4f matrix, VertexConsumer iBuilder, float p_228884_4_, float p_228884_5_, float p_228884_6_, float p_228884_7_, float p_228884_8_, float p_228884_9_, float p_228884_10_, float p_228884_11_, float p_228884_12_, float p_228884_13_, float p_228884_14_, Direction direction) {
-        if (!tileEntityIn.isHorizontal && (direction == Direction.EAST || direction == Direction.WEST || direction == Direction.SOUTH || direction == Direction.NORTH)) {
+        var beAxis = tileEntityIn.getBlockState().getValue(PortalBlock.AXIS);
+        var directionAxis = direction.getAxis();
+        // what have I done...
+        if (!tileEntityIn.isHorizontal && (beAxis == Direction.Axis.X && directionAxis == Direction.Axis.Z) || (beAxis == Direction.Axis.Z && directionAxis == Direction.Axis.X)) {
             iBuilder.addVertex(matrix, p_228884_4_, p_228884_6_, p_228884_8_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);
             iBuilder.addVertex(matrix, p_228884_5_, p_228884_6_, p_228884_9_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);
             iBuilder.addVertex(matrix, p_228884_5_, p_228884_7_, p_228884_10_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);
             iBuilder.addVertex(matrix, p_228884_4_, p_228884_7_, p_228884_11_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);
 
-        } else if (tileEntityIn.isHorizontal && (direction == Direction.UP || direction == Direction.DOWN)) {
+        } else if (tileEntityIn.isHorizontal && direction.getAxis() == Direction.Axis.Y) {
             iBuilder.addVertex(matrix, p_228884_4_, p_228884_6_, p_228884_8_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);
             iBuilder.addVertex(matrix, p_228884_5_, p_228884_6_, p_228884_9_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);
             iBuilder.addVertex(matrix, p_228884_5_, p_228884_7_, p_228884_10_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);

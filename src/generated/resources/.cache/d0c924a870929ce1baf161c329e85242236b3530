@@ -1,7 +1,8 @@
-// 1.21.1	2024-10-13T12:06:56.1303326	Tags for minecraft:entity_type mod id ars_nouveau
+// 1.21.1	2024-11-03T08:55:51.1524375	Tags for minecraft:entity_type mod id ars_nouveau
 4d0235b95823f5d315aae7e9f9e484cbde8294a0 data/ars_nouveau/tags/entity_type/animal_summon_blacklist.json
 a958530eef4b0d5ac2f1c7bd552b60e23cb66d9a data/ars_nouveau/tags/entity_type/an_hostile.json
 290c285b1e334d322b8d070b2c6a071114b1d70c data/ars_nouveau/tags/entity_type/berry_blacklist.json
+7bddc9acec76a3ed5a2e6c0fb20d3fc69857c7ac data/ars_nouveau/tags/entity_type/burst_whitelist.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/entity_type/disintegration_blacklist.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/entity_type/disintegration_whitelist.json
 29671cfa11d074462c259806e9d60468451e3cdb data/ars_nouveau/tags/entity_type/drygmy_blacklist.json

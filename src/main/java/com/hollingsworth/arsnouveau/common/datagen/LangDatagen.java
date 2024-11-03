@@ -614,7 +614,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.wilden", "Wilden");
         add("ars_nouveau.page.decorative", "Decorative Blocks");
         add("ars_nouveau.page1.magelight_torch", "Decorative lights. To ignite, cast Light on the sconce. The color of the flame corresponds with your spell color. The Magelight Torch on a wall can change the direction of its flames by interacting. Use Touch or Projectile Sensitive to target the sconce.");
-        add("ars_nouveau.page1.source_berry", "A Sourceberry Bush can be found in Taiga and Archwood Forest biomes, and produces Sourceberries. A Sourceberry can be used to craft a Potion of Mana Regeneration or consumed as food. Starbuncles will automatically harvest fully grown Source Berry Bushes, making them useful for early automation of the Agronomic Sourcelink. Sourceberry foods will also grant Mana Regeneration.");
+        add("ars_nouveau.page1.sourceberry_bush", "A Sourceberry Bush can be found in Taiga and Archwood Forest biomes, and produces Sourceberries. A Sourceberry can be used to craft a Potion of Mana Regeneration or consumed as food. Starbuncles will automatically harvest fully grown Source Berry Bushes, making them useful for early automation of the Agronomic Sourcelink. Sourceberry foods will also grant Mana Regeneration.");
         add("ars_nouveau.page.wilden", "Wilden");
         add("ars_nouveau.page.weald_walker", "Weald Walkers");
         add("ars_nouveau.spell_schools", "Spell Schools");

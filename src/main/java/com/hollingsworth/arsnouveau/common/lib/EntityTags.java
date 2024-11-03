@@ -25,4 +25,7 @@ public class EntityTags {
 
     public static final TagKey<EntityType<?>> ITEM_GRATE_PASSABLE = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix( "item_grate_passable"));
     public static final TagKey<EntityType<?>> ITEM_GRATE_COLLIDE = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix( "item_grate_collide"));
+
+    public static final TagKey<EntityType<?>> BURST_WHITELIST = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix( "burst_whitelist"));
+
 }
