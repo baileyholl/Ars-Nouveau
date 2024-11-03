@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
@@ -9,6 +10,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -51,10 +53,10 @@ public class EffectBurst extends AbstractEffect {
         spellContext.setCanceled(true);
 
         int radius = (int) (1 + spellStats.getAoeMultiplier());
-        Predicate<Double> Sphere = spellStats.hasBuff(AugmentDampen.INSTANCE) ? (distance) -> distance <= radius + 0.5 && distance >= radius - 0.5 : (distance) -> (distance <= radius + 0.5);
+        Predicate<Double> sphere = spellStats.hasBuff(AugmentDampen.INSTANCE) ? (distance) -> distance <= radius + 0.5 && distance >= radius - 0.5 : (distance) -> (distance <= radius + 0.5);
         if (spellStats.isSensitive()) {
             for (BlockPos pos : BlockPos.withinManhattan(center, radius, radius, radius)) {
-                if (Sphere.test(BlockUtil.distanceFromCenter(pos, center))) {
+                if (sphere.test(BlockUtil.distanceFromCenter(pos, center))) {
                     pos = pos.immutable();
                     SpellResolver resolver1 = resolver.getNewResolver(newContext);
                     //TODO it needs a direction, UP as a dummy for now
@@ -62,8 +64,8 @@ public class EffectBurst extends AbstractEffect {
                 }
             }
         } else {
-            for (LivingEntity entity : world.getEntitiesOfClass(LivingEntity.class, new AABB(center).inflate(radius, radius, radius))) {
-                if (Sphere.test(BlockUtil.distanceFromCenter(entity.blockPosition(), center))) {
+            for (Entity entity : world.getEntities(null, new AABB(center).inflate(radius, radius, radius))) {
+                if ((entity instanceof LivingEntity || entity.getType().is(EntityTags.BURST_WHITELIST)) && sphere.test(BlockUtil.distanceFromCenter(entity.blockPosition(), center))) {
                     SpellResolver resolver1 = resolver.getNewResolver(newContext);
                     resolver1.onResolveEffect(world, new EntityHitResult(entity));
                 }

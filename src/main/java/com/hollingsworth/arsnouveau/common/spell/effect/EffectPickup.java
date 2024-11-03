@@ -41,8 +41,8 @@ public class EffectPickup extends AbstractEffect {
                 posVec.add(expansion, expansion, expansion), posVec.subtract(expansion, expansion, expansion)));
         InventoryManager manager = spellContext.getCaster().getInvManager().extractSlotMax(-1);
         for (ItemEntity i : entityList) {
-            ItemStack stack = i.getItem();
             var pickupPre = NeoForge.EVENT_BUS.post(new ItemEntityPickupEvent.Pre(getPlayer(shooter, (ServerLevel) world), i));
+            ItemStack stack = i.getItem();
             if (stack.isEmpty() || pickupPre.canPickup().isFalse())
                 continue;
             stack = manager.insertStack(stack);
