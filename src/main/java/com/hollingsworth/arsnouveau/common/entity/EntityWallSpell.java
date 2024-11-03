@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
@@ -97,7 +98,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
                 return;
             for(BlockPos p : BlockPos.betweenClosed(start, end)){
                 p = p.immutable();
-                spellResolver.onResolveEffect(level, new
+                spellResolver.getNewResolver(spellResolver.spellContext.clone().makeChildContext()).onResolveEffect(level, new
                         BlockHitResult(new Vec3(p.getX(), p.getY(), p.getZ()), Direction.UP, p, false));
             }
         }else{
@@ -126,7 +127,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
                 }
                 if(skipEntity)
                     continue;
-                spellResolver.onResolveEffect(level, new EntityHitResult(entity));
+                spellResolver.getNewResolver(spellResolver.spellContext.clone().makeChildContext()).onResolveEffect(level, new EntityHitResult(entity));
                 i++;
                 if(hit.isEmpty()){
                     hitEntities.add(new EntityHit(entity));

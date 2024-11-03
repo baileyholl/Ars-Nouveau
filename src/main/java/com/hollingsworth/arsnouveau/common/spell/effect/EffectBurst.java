@@ -49,8 +49,6 @@ public class EffectBurst extends AbstractEffect {
 
     public void makeSphere(BlockPos center, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
         if (spellContext.getRemainingSpell().isEmpty()) return;
-        SpellContext newContext = spellContext.makeChildContext();
-        spellContext.setCanceled(true);
 
         int radius = (int) (1 + spellStats.getAoeMultiplier());
         Predicate<Double> sphere = spellStats.hasBuff(AugmentDampen.INSTANCE) ? (distance) -> distance <= radius + 0.5 && distance >= radius - 0.5 : (distance) -> (distance <= radius + 0.5);
@@ -58,7 +56,7 @@ public class EffectBurst extends AbstractEffect {
             for (BlockPos pos : BlockPos.withinManhattan(center, radius, radius, radius)) {
                 if (sphere.test(BlockUtil.distanceFromCenter(pos, center))) {
                     pos = pos.immutable();
-                    SpellResolver resolver1 = resolver.getNewResolver(newContext);
+                    SpellResolver resolver1 = resolver.getNewResolver(spellContext.clone().makeChildContext());
                     //TODO it needs a direction, UP as a dummy for now
                     resolver1.onResolveEffect(world, new BlockHitResult(new Vec3(pos.getX(), pos.getY(), pos.getZ()), Direction.UP, pos, false));
                 }
@@ -66,11 +64,13 @@ public class EffectBurst extends AbstractEffect {
         } else {
             for (Entity entity : world.getEntities(null, new AABB(center).inflate(radius, radius, radius))) {
                 if ((entity instanceof LivingEntity || entity.getType().is(EntityTags.BURST_WHITELIST)) && sphere.test(BlockUtil.distanceFromCenter(entity.blockPosition(), center))) {
-                    SpellResolver resolver1 = resolver.getNewResolver(newContext);
+                    SpellResolver resolver1 = resolver.getNewResolver(spellContext.clone().makeChildContext());
                     resolver1.onResolveEffect(world, new EntityHitResult(entity));
                 }
             }
         }
+
+        spellContext.setCanceled(true);
     }
 
     @Override
