@@ -73,7 +73,7 @@ public class CollectEssenceGoal extends Goal {
                 drygmy.setChannelingEntity(-1);
                 this.complete = true;
                 BlockPos homePos = drygmy.getHome().getBlockPos();
-                BlockPos targetPos = target.blockPosition();
+                BlockPos targetPos = target.blockPosition().above(1);
                 if (homePos.getY() >= targetPos.getY() - 2) {
                     targetPos = targetPos.above(homePos.getY() - targetPos.getY());
                 }
