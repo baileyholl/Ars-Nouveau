@@ -125,6 +125,7 @@ public class GlyphRecipeProvider extends SimpleDataProvider {
         add(get(EffectWololo.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withIngredient(Ingredient.of(Tags.Items.DYES), 3));
         add(get(EffectRewind.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.CLOCK, 3));
         add(get(MethodPantomime.INSTANCE).withIngredient(Tags.Items.GLASS_BLOCKS, 8));
+        add(get(EffectBubble.INSTANCE).withIngredient(Tags.Items.FEATHERS, 3).withItem(Items.WATER_BUCKET).withIngredient(ItemTags.BOATS, 1).withItem(ItemsRegistry.WATER_ESSENCE));
         for (GlyphRecipe recipe : recipes) {
             Path path = getScribeGlyphPath(output, recipe.output.getItem());
             saveStable(pOutput, GlyphRecipe.CODEC.encodeStart(JsonOps.INSTANCE, recipe).getOrThrow(), path);

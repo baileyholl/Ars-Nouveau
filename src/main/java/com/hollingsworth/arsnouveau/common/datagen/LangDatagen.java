@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -189,7 +190,6 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.scribe.item_removed", "Item removed.");
         add("ars_nouveau.allow_set", "Starbuncle will only take these items.");
         add("ars_nouveau.ignore_set", "Starbuncle will ignore these items.");
-        add("block.ars_nouveau.lava_lily", "Lava Lily");
         add("block.ars_nouveau.volcanic_sourcelink", "Volcanic Sourcelink");
         add("ars_nouveau.spell.disabled", "This spell has been disabled in the config.");
         add("block.ars_nouveau.sourceberry_bush", "Sourceberry");
@@ -210,6 +210,8 @@ public class LangDatagen extends LanguageProvider {
         add("item.minecraft.tipped_arrow.effect.mana_regen_potion_long", "Arrow of Mana Regeneration");
         add("effect.ars_nouveau.mana_regen", "Mana Regeneration");
         add("effect.ars_nouveau.mana_regen.desc", "Improves mana regeneration");
+        add("effect.ars_nouveau.looting", "Drygmy's Blessing");
+        add("effect.ars_nouveau.looting.desc", "Increases the amount of loot dropped by mobs");
         add("ars_nouveau.on", "Active: Yes");
         add("ars_nouveau.off", "Active: No");
         add("item.ars_nouveau.void_jar", "Jar of Voiding");
@@ -451,6 +453,7 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.wilden_hunter_se", "Wilden Hunter Spawn Egg");
         add("item.ars_nouveau.wilden_guardian_se", "Wilden Guardian Spawn Egg");
         add("item.ars_nouveau.wilden_stalker_se", "Wilden Stalker Spawn Egg");
+        add("item.ars_nouveau.alakarkinos_se", "Alakarkinos Spawn Egg");
         add("tooltip.ars_nouveau.caster_tome", "Casts a spell at half the cost or the users entire mana bar, whichever is smaller.");
         add("item.ars_nouveau.caster_tome", "Caster Tome");
         add("tooltip.ars_nouveau.glyph_disabled", "Disabled. Cannot be used.");
@@ -494,7 +497,6 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.glyph_crafting", "Glyph Crafting");
         add("ars_nouveau.page1.scribes_table", "To craft new glyphs, use a spell book on the table to open the codex. Each glyph requires a set of items and experience points to unlock. Select a glyph by clicking on it in the menu, and hit select. Throw the items onto the table as rendered above, and the table will scribe a new glyph. The table will also pull items from nearby inventories. Using the dominion wand on the table will disable auto-pull.");
         add("ars_nouveau.page2.scribes_table", "You may also inscribe a spell onto Spell Parchment or Enchanters Items. To do this, place a Blank Parchment on the table. Then, with your spell book in hand, change your spell book to your desired spell as if you were going to cast it. Then, use the book on the table while sneaking. Your item will now contain that spell. Using Manipulation Essence will permanently hide the scribed spell.");
-        add("ars_nouveau.page1.lava_lily", "A decorative block that can be placed on any liquid or block. The texture of this block varies if it is placed on Lava, a Magma Block, or any other block.");
         add("ars_nouveau.page1.wilden", "Wilden are hostile creatures that can be commonly found at night around Wilden Dens. While Wilden Defenders may only be found in cold biomes, Stalker and Hunter Dens can be found in any forest biome.");
         add("ars_nouveau.page3.wilden", "An aggressive and fast hunter that can summon allied wolves.");
         add("ars_nouveau.page4.wilden", "Generally spawning in small groups, Stalkers have ground and aerial attacks.");
@@ -612,7 +614,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.wilden", "Wilden");
         add("ars_nouveau.page.decorative", "Decorative Blocks");
         add("ars_nouveau.page1.magelight_torch", "Decorative lights. To ignite, cast Light on the sconce. The color of the flame corresponds with your spell color. The Magelight Torch on a wall can change the direction of its flames by interacting. Use Touch or Projectile Sensitive to target the sconce.");
-        add("ars_nouveau.page1.source_berry", "A Sourceberry Bush can be found in Taiga and Archwood Forest biomes, and produces Sourceberries. A Sourceberry can be used to craft a Potion of Mana Regeneration or consumed as food. Starbuncles will automatically harvest fully grown Source Berry Bushes, making them useful for early automation of the Agronomic Sourcelink. Sourceberry foods will also grant Mana Regeneration.");
+        add("ars_nouveau.page1.sourceberry_bush", "A Sourceberry Bush can be found in Taiga and Archwood Forest biomes, and produces Sourceberries. A Sourceberry can be used to craft a Potion of Mana Regeneration or consumed as food. Starbuncles will automatically harvest fully grown Source Berry Bushes, making them useful for early automation of the Agronomic Sourcelink. Sourceberry foods will also grant Mana Regeneration.");
         add("ars_nouveau.page.wilden", "Wilden");
         add("ars_nouveau.page.weald_walker", "Weald Walkers");
         add("ars_nouveau.spell_schools", "Spell Schools");
@@ -622,8 +624,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page.source_jar", "Source Jars store source gathered from nearby Sourcelinks. Source is used in glyphs and rituals by powering devices like the Imbuement Chamber and Enchanting Apparatus. Source may be moved using a Source Relay or by breaking and moving it. To use Source in a jar, simply place the jar near your desired device. Source Jars will provide a signal to Redstone Comparators based on their fill level.");
         add("ars_nouveau.page1.volcanic_sourcelink", "The Volcanic Sourcelink generates Source by consuming burnable items. Archwood logs will generate bonus Source, with Blazing Archwood generating the most. As the Volcanic Sourcelink produces Source, it also produces $(item)heat$(), used for spawning Lava Lilies and converting stone into lava. The Volcanic Sourcelink automatically outputs to nearby jars, starting with the one closest to it.");
         add("ars_nouveau.page2.volcanic_sourcelink", "Nearby Blazing Archwood items will be burned up in exchange for a chunk of Source and a moderate amount of $(item)heat$(). The Volcanic Sourcelink will also take items from surrounding pedestals.");
-        add("ars_nouveau.page3.volcanic_sourcelink", "The Volcanic Sourcelink will occasionally convert Stone into Magma Blocks, and Magma Blocks into Lava, given that these blocks exist beneath it in its 3x3 area. This conversion is dependent on the amount of $(item)heat$() it has produced over time. The Volcanic Sourcelink will also spawn a Lava Lily adjacent to it given that there is nothing covering the lava. Lava Lilys may be harvested and used for decoration.");
-        add("ars_nouveau.page4.volcanic_sourcelink", "The color of a Lava Lily changes if it is placed above lava, magma, or other blocks.");
+        add("ars_nouveau.page3.volcanic_sourcelink", "The Volcanic Sourcelink will occasionally convert Stone into Magma Blocks, and Magma Blocks into Lava, given that these blocks exist beneath it in its 3x3 area. This conversion is dependent on the amount of $(item)heat$() it has produced over time.");
         add("ars_nouveau.active_generation", "Active Generation");
         add("ars_nouveau.heat", "Heat");
         add("ars_nouveau.page.alchemical_sourcelink", "Generates source by consuming potions from adjacent potion jars. The amount of source varies per potion and is dependent on the complexity of the potion. Bonus source is given for the length and level of the potion with multipliers for each effect a potion contains. Utilizing Wixies and Potion Melders is recommended for creating highly complex potions.");
@@ -833,7 +834,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.scryers_eye.no_scrolls", "Place a Scryer's Scroll on a nearby pedestal.");
         add("ars_nouveau.camera.not_loaded", "The block has been removed or is not chunk loaded.");
         add("ars_nouveau.page.support_mod", "Support Ars Nouveau!");
-        add("ars_nouveau.patreon", "Join the Ars Nouveau patreon and get a special Discord role, contribute a custom Tome, receive merchandise, summon a Lily dog, and more!");
+        add("ars_nouveau.patreon", "Join the Ars Nouveau patreon and get a special Discord role, contribute a custom Tome, receive merchandise, summon a Lily and Nook dog, and more!");
         add("ars_nouveau.patreon_text", "Patreon");
         add("entity.ars_nouveau.summon_skeleton", "Summoned Skeleton");
         add("item.ars_nouveau.shapers_focus", "Focus of Block Shaping");
@@ -1032,6 +1033,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.perk.saturation.desc", "Increases the saturation of the food");
         add("ars_nouveau.perk.wixie", "Potion Duration");
         add("ars_nouveau.perk.wixie.desc", "Increases the duration of potion effects.");
+        add("ars_nouveau.perk.drygmy", "Extra Looting");
+        add("ars_nouveau.perk.drygmy.desc", "Increases the amount of loot dropped by mobs.");
         add("ars_nouveau.perk.jump_height", "Jump Power");
         add("ars_nouveau.perk.jump_height.desc", "Increases the height of your jumps.");
         add("ars_nouveau.perk.feather", "Fall Damage Reduction");
@@ -1257,8 +1260,12 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.adopter", "Adopted by %s");
         add("entity.ars_nouveau.lily", "Lily");
         add("ars_nouveau.lily", "Patrons may summon Lily, a faithful tail wagging companion.");
+        add("ars_nouveau.nook", "Patrons may summon Nook, a faithfulish tail wagging companion.");
         add("ars_nouveau.settings.summon_lily", "Summon Lily");
         add("ars_nouveau.settings.unsummon_lily", "Unsummon Lily");
+        add("entity.ars_nouveau.nook", "Nook");
+        add("ars_nouveau.settings.summon_nook", "Summon Nook");
+        add("ars_nouveau.settings.unsummon_nook", "Unsummon Nook");
         add("ars_nouveau.rewards.enabled", "Ars Nouveau supporter rewards enabled, thank you! Rewards can be accessed in the Settings page of the spell book.");
         add("mob_jar.dummy", "A player dummy in a jar will attract nearby mobs.");
         add("ars_nouveau.turret.tooltip", "Can be rotated to face any direction. Use a dominion wand on the turret, and then on the target block.");
@@ -1284,6 +1291,8 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.magic_fire", "Mage Fire");
         add("effect.ars_nouveau.immolate", "Immolate");
         add("effect.ars_nouveau.immolate.desc", "Enhances fire spells.");
+        add("effect.ars_nouveau.soaked", "Soaked");
+        add("effect.ars_nouveau.soaked.desc", "Wets the target, protecting from fire and triggering effects as if under the rain.");
         add("block.ars_nouveau.sourceberry_sack", "Sourceberry Sack");
         add("ars_nouveau.empty","Empty");
         add("ars_nouveau.melder.output_not_unique", "Output potion is not a unique mix.");
@@ -1301,15 +1310,33 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.smooth_sourcestone_grate","Smooth Sourcestone Grate");
         add("block.ars_nouveau.source_lamp", "Source Gem Lamp");
         add("ars_nouveau.page1.source_lamp", "Behaves like a copper bulb, but the light and comparator values can be adjusted by casting Light with dampen.");
+        add("tooltip.starbuncle_shard2", "Made with love.");
+        add("tooltip.whirlisprig_shard2","A natural portrait.");
+        add("tooltip.drygmy_shard2","A tribute to what once was.");
+        add("tooltip.wixie_shard2", "Knowledge for freedom.");
+        add("block.ars_nouveau.alakarkinos_hat", "Alakarkinos Hat");
+        add("entity.ars_nouveau.bubble", "Bubble");
+        add("entity.ars_nouveau.alakarkinos", "Alakarkinos");
+        add("item.ars_nouveau.alakarkinos_charm", "Alakarkinos Charm");
+        add("item.ars_nouveau.alakarkinos_token", "Alakarkinos Token");
+        add("ars_nouveau.page1.alakarkinos_charm","Alakarkinos can sift sand and gravel to find items found in archaeology sites. They can be found on beaches and will give you a token if they receive a Pottery Sherd of any kind.");
+        add("ars_nouveau.page2.alakarkinos_charm","Loves to dance to nearby jukeboxes.");
+        add("ars_nouveau.page3.alakarkinos_charm","Alakarkinos can be summoned anywhere by using a charm on a block. To set its home, use the Dominion Wand to bind Alakarkinos to a chest or inventory.");
+        add("ars_nouveau.page4.alakarkinos_charm","Alakarkinos will seek out gravel or sand that is placed within 3 blocks horizontal and one block vertical around its bound inventory. In order to convert blocks into items, Source must be provided near its chest. After some time and a few magic tricks, Alakarkinos will destroy the sand or gravel and insert items into the inventory.");
+        add("ars_nouveau.alakarkinos.set_home", "Home set. Place source and gravel or sand within 3 blocks.");
+        add("ars_nouveau.sifting", "Sifting");
+        add("tooltip.alakarkinos_shard1", "Found by giving an Alakarkinos a Sherd.");
+        add("tooltip.alakarkinos_shard2", "What's that behind your ear?");
+
     }
 
     @Override
-    public void add(Item key, String name) {
+    public void add(@NotNull Item key, @NotNull String name) {
         super.add(key, name);
     }
 
     @Override
-    public void add(String key, String value) {
+    public void add(@NotNull String key, @NotNull String value) {
         super.add(key, value);
         data.put(key, value);
     }

@@ -67,25 +67,24 @@ public abstract class LightEntityMixin implements LambDynamicLight {
     public abstract Vec3 position();
 
     @Unique
-    protected int lambdynlights$luminance = 0;
+    protected int ars_nouveau$luminance = 0;
     @Unique
-    private int lambdynlights$lastLuminance = 0;
+    private int ars_nouveau$lastLuminance = 0;
+
     @Unique
-    private long lambdynlights$lastUpdate = 0;
+    private double ars_nouveau$prevX;
     @Unique
-    private double lambdynlights$prevX;
+    private double ars_nouveau$prevY;
     @Unique
-    private double lambdynlights$prevY;
+    private double ars_nouveau$prevZ;
     @Unique
-    private double lambdynlights$prevZ;
-    @Unique
-    private LongOpenHashSet lambdynlights$trackedLitChunkPos = new LongOpenHashSet();
+    private LongOpenHashSet ars_nouveau$trackedLitChunkPos = new LongOpenHashSet();
 
     @Inject(method = "tick", at = @At("TAIL"))
     public void onTick(CallbackInfo ci) {
         // We do not want to update the entity on the server.
         if (level.isClientSide && !LightManager.shouldUpdateDynamicLight()) {
-            lambdynlights$luminance = 0;
+            ars_nouveau$luminance = 0;
         }
         if (this.level.isClientSide() && LightManager.shouldUpdateDynamicLight()) {
             if (this.isRemoved()) {
@@ -108,8 +107,8 @@ public abstract class LightEntityMixin implements LambDynamicLight {
     public void removed(CallbackInfo ci) {
         if (this.level.isClientSide()) {
             this.setDynamicLightEnabled(false);
-            if (lambdynlights$luminance > 0)
-                EventQueue.getClientQueue().addEvent(new FadeLightTimedEvent(this.level(), this.position(), 8, lambdynlights$luminance));
+            if (ars_nouveau$luminance > 0)
+                EventQueue.getClientQueue().addEvent(new FadeLightTimedEvent(this.level(), this.position(), 8, ars_nouveau$luminance));
         }
     }
 
@@ -135,42 +134,42 @@ public abstract class LightEntityMixin implements LambDynamicLight {
 
     @Override
     public void resetDynamicLight() {
-        this.lambdynlights$lastLuminance = 0;
+        this.ars_nouveau$lastLuminance = 0;
     }
 
     @Override
-    public boolean shouldUpdateDynamicLight() {
+    public boolean ars_nouveau$shouldUpdateDynamicLight() {
         return LightManager.shouldUpdateDynamicLight() && DynamLightUtil.couldGiveLight((Entity) (Object) this);
     }
 
     @Override
     public void dynamicLightTick() {
-        lambdynlights$luminance = 0;
+        ars_nouveau$luminance = 0;
         int luminance = DynamLightUtil.lightForEntity((Entity) (Object) this);
-        if (luminance > this.lambdynlights$luminance)
-            this.lambdynlights$luminance = luminance;
+        if (luminance > this.ars_nouveau$luminance)
+            this.ars_nouveau$luminance = luminance;
     }
 
     @Override
     public int getLuminance() {
-        return this.lambdynlights$luminance;
+        return this.ars_nouveau$luminance;
     }
 
     @Override
-    public boolean lambdynlights$updateDynamicLight(LevelRenderer renderer) {
-        if (!this.shouldUpdateDynamicLight())
+    public boolean ars_nouveau$updateDynamicLight(LevelRenderer renderer) {
+        if (!this.ars_nouveau$shouldUpdateDynamicLight())
             return false;
-        double deltaX = this.getX() - this.lambdynlights$prevX;
-        double deltaY = this.getY() - this.lambdynlights$prevY;
-        double deltaZ = this.getZ() - this.lambdynlights$prevZ;
+        double deltaX = this.getX() - this.ars_nouveau$prevX;
+        double deltaY = this.getY() - this.ars_nouveau$prevY;
+        double deltaZ = this.getZ() - this.ars_nouveau$prevZ;
 
         int luminance = this.getLuminance();
 
-        if (Math.abs(deltaX) > 0.1D || Math.abs(deltaY) > 0.1D || Math.abs(deltaZ) > 0.1D || luminance != this.lambdynlights$lastLuminance) {
-            this.lambdynlights$prevX = this.getX();
-            this.lambdynlights$prevY = this.getY();
-            this.lambdynlights$prevZ = this.getZ();
-            this.lambdynlights$lastLuminance = luminance;
+        if (Math.abs(deltaX) > 0.1D || Math.abs(deltaY) > 0.1D || Math.abs(deltaZ) > 0.1D || luminance != this.ars_nouveau$lastLuminance) {
+            this.ars_nouveau$prevX = this.getX();
+            this.ars_nouveau$prevY = this.getY();
+            this.ars_nouveau$prevZ = this.getZ();
+            this.ars_nouveau$lastLuminance = luminance;
 
             var newPos = new LongOpenHashSet();
 
@@ -179,7 +178,7 @@ public abstract class LightEntityMixin implements LambDynamicLight {
                 var chunkPos = new BlockPos.MutableBlockPos(entityChunkPos.x, DynamLightUtil.getSectionCoord(this.getEyeY()), entityChunkPos.z);
 
                 LightManager.scheduleChunkRebuild(renderer, chunkPos);
-                LightManager.updateTrackedChunks(chunkPos, this.lambdynlights$trackedLitChunkPos, newPos);
+                LightManager.updateTrackedChunks(chunkPos, this.ars_nouveau$trackedLitChunkPos, newPos);
 
                 var directionX = (this.blockPosition().getX() & 15) >= 8 ? Direction.EAST : Direction.WEST;
                 var directionY = (Mth.floor(this.getEyeY()) & 15) >= 8 ? Direction.UP : Direction.DOWN;
@@ -197,22 +196,22 @@ public abstract class LightEntityMixin implements LambDynamicLight {
                         chunkPos.move(directionY); // Y
                     }
                     LightManager.scheduleChunkRebuild(renderer, chunkPos);
-                    LightManager.updateTrackedChunks(chunkPos, this.lambdynlights$trackedLitChunkPos, newPos);
+                    LightManager.updateTrackedChunks(chunkPos, this.ars_nouveau$trackedLitChunkPos, newPos);
                 }
             }
             // Schedules the rebuild of removed chunks.
-            this.lambdynlights$scheduleTrackedChunksRebuild(renderer);
+            this.ars_nouveau$scheduleTrackedChunksRebuild(renderer);
             // Update tracked lit chunks.
-            this.lambdynlights$trackedLitChunkPos = newPos;
+            this.ars_nouveau$trackedLitChunkPos = newPos;
             return true;
         }
         return false;
     }
 
     @Override
-    public void lambdynlights$scheduleTrackedChunksRebuild(LevelRenderer renderer) {
+    public void ars_nouveau$scheduleTrackedChunksRebuild(LevelRenderer renderer) {
         if (Minecraft.getInstance().level == this.level)
-            for (long pos : this.lambdynlights$trackedLitChunkPos) {
+            for (long pos : this.ars_nouveau$trackedLitChunkPos) {
                 LightManager.scheduleChunkRebuild(renderer, pos);
             }
     }

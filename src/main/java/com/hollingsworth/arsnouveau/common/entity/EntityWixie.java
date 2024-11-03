@@ -193,7 +193,9 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
             tag.putInt("summoner_y", cauldronPos.getY());
             tag.putInt("summoner_z", cauldronPos.getZ());
         }
-        tag.putString("color", this.entityData.get(COLOR));
+        if(this.entityData.get(COLOR) != null) {
+            tag.putString("color", this.entityData.get(COLOR));
+        }
     }
 
     @Override

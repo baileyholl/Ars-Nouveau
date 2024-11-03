@@ -43,10 +43,10 @@ public class ConfiguredSpellSound implements Cloneable{
         this(sound, 1, 1);
     }
 
-    public ConfiguredSpellSound(@Nullable SpellSound spellSound, float aFloat, float aFloat1) {
+    public ConfiguredSpellSound(@Nullable SpellSound spellSound, float volume, float pitch) {
         this.sound = spellSound ;
-        this.volume = aFloat;
-        this.pitch = aFloat1;
+        this.volume = volume;
+        this.pitch = pitch;
     }
 
     @Override

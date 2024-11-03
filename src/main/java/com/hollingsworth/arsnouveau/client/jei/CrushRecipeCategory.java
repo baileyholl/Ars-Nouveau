@@ -1,14 +1,10 @@
 package com.hollingsworth.arsnouveau.client.jei;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.CrushRecipe;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectCrush;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -25,20 +21,12 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
 
     public IDrawable background;
     public IDrawable icon;
-    private final LoadingCache<Integer, IDrawableAnimated> cachedArrows;
+    private final IDrawable cachedArrows;
 
     public CrushRecipeCategory(IGuiHelper helper) {
-        background = helper.createBlankDrawable(120, 8 + 16 * 3);
+        background = helper.createBlankDrawable(getWidth(), getHeight());
         icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, EffectCrush.INSTANCE.glyphItem.getDefaultInstance());
-        this.cachedArrows = CacheBuilder.newBuilder()
-                .maximumSize(25)
-                .build(new CacheLoader<>() {
-                    @Override
-                    public IDrawableAnimated load(Integer cookTime) {
-                        return helper.drawableBuilder(JEIConstants.RECIPE_GUI_VANILLA, 82, 128, 24, 17)
-                                .buildAnimated(cookTime, IDrawableAnimated.StartDirection.LEFT, false);
-                    }
-                });
+        this.cachedArrows = helper.createAnimatedRecipeArrow(40);
     }
 
     @Override
@@ -52,8 +40,13 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
     }
 
     @Override
-    public IDrawable getBackground() {
-        return background;
+    public int getWidth() {
+        return 120;
+    }
+
+    @Override
+    public int getHeight() {
+        return 56;
     }
 
     @Override
@@ -63,8 +56,7 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
 
     @Override
     public void draw(CrushRecipe recipe, @NotNull IRecipeSlotsView slotsView, @NotNull GuiGraphics matrixStack, double mouseX, double mouseY) {
-        IDrawableAnimated arrow = this.cachedArrows.getUnchecked(40);
-        arrow.draw(matrixStack, 22, 6);
+        cachedArrows.draw(matrixStack, 22, 6);
         Font renderer = Minecraft.getInstance().font;
         for (int i = 0; i < recipe.outputs().size(); i++) {
             CrushRecipe.CrushOutput output = recipe.outputs().get(i);

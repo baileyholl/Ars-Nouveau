@@ -11,10 +11,7 @@ import com.hollingsworth.arsnouveau.client.gui.GuiManaHUD;
 import com.hollingsworth.arsnouveau.client.gui.GuiSpellHUD;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.renderer.entity.*;
-import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.AnimSkullRenderer;
-import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarBookwyrmRenderer;
-import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarStarbyModel;
-import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarWhirlisprigRenderer;
+import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.*;
 import com.hollingsworth.arsnouveau.client.renderer.tile.*;
 import com.hollingsworth.arsnouveau.common.block.tile.MageBlockTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
@@ -22,9 +19,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.PotionMelderTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
-import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarDrygmy;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
-import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarWixie;
 import com.hollingsworth.arsnouveau.common.items.data.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.common.items.data.BlockFillContents;
 import com.hollingsworth.arsnouveau.common.items.data.PotionJarData;
@@ -37,6 +32,8 @@ import net.minecraft.client.Options;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -122,13 +119,13 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ALLY_VEX.get(), VexRenderer::new);
 
         event.registerEntityRenderer(ModEntities.STARBUNCLE_TYPE.get(), StarbuncleRenderer::new);
-        event.registerEntityRenderer(ModEntities.WHIRLISPRIG_TYPE.get(), (t) -> new GeoEntityRenderer<>(t, new WhirlisprigModel<>()){
+        event.registerEntityRenderer(ModEntities.WHIRLISPRIG_TYPE.get(), (t) -> new GeoEntityRenderer<>(t, new WhirlisprigModel<>()) {
             @Override
             public @NotNull ResourceLocation getTextureLocation(@NotNull Whirlisprig animatable) {
                 return animatable.getTexture();
             }
         });
-        event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE.get(), (t) -> new GeoEntityRenderer<>(t, new WixieModel<>()){
+        event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE.get(), (t) -> new GeoEntityRenderer<>(t, new WixieModel<>()) {
             @Override
             public @NotNull ResourceLocation getTextureLocation(@NotNull EntityWixie animatable) {
                 return animatable.getTexture();
@@ -146,14 +143,14 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ENTITY_RITUAL.get(),
                 renderManager -> new RenderBlank(renderManager, ArsNouveau.prefix("textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.ENTITY_SPELL_ARROW.get(), TippableArrowRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE.get(), (t) -> new GeoEntityRenderer<>(t, new WixieModel<>()){
+        event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE.get(), (t) -> new GeoEntityRenderer<>(t, new WixieModel<>()) {
             @Override
             public @NotNull ResourceLocation getTextureLocation(@NotNull EntityWixie animatable) {
                 return animatable.getTexture();
             }
         });
         event.registerEntityRenderer(ModEntities.ENTITY_DUMMY.get(), DummyRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_DRYGMY.get(), (t) -> new GeoEntityRenderer<>(t, new DrygmyModel<>()){
+        event.registerEntityRenderer(ModEntities.ENTITY_DRYGMY.get(), (t) -> new GeoEntityRenderer<>(t, new DrygmyModel<>()) {
             @Override
             public @NotNull ResourceLocation getTextureLocation(@NotNull EntityDrygmy animatable) {
                 return animatable.getTexture();
@@ -162,34 +159,24 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ORBIT_SPELL.get(), renderManager -> new RenderBlank(renderManager, ArsNouveau.prefix("textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.WILDEN_BOSS.get(), rendermanager -> new GeoEntityRenderer<>(rendermanager, new WildenChimeraModel()));
         event.registerEntityRenderer(ModEntities.ENTITY_CHIMERA_SPIKE.get(), ChimeraProjectileRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get(), (t) -> new GeoEntityRenderer<>(t, new FamiliarStarbyModel<>()){
+        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get(), (t) -> new GenericFamiliarRenderer<>(t, new FamiliarStarbyModel<>()) {
             @Override
-            public @NotNull ResourceLocation getTextureLocation(@NotNull FamiliarStarbuncle animatable) {
-                return animatable.getTexture();
+            public @Nullable RenderType getRenderType(FamiliarStarbuncle animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+                return StarbuncleRenderer.specialShaders.getOrDefault(animatable.getName().getString(), RenderType::entityCutoutNoCull).apply(texture);
             }
         });
-        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_DRYGMY.get(), (t) -> new GeoEntityRenderer<>(t, new DrygmyModel<>()){
-            @Override
-            public @NotNull ResourceLocation getTextureLocation(@NotNull FamiliarDrygmy animatable) {
-                return animatable.getTexture();
-            }
-        });
+        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_DRYGMY.get(), (t) -> new GenericFamiliarRenderer<>(t, new DrygmyModel<>()));
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_SYLPH.get(), FamiliarWhirlisprigRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_WIXIE.get(), (t) -> new GeoEntityRenderer<>(t, new WixieModel<>()){
-            @Override
-            public ResourceLocation getTextureLocation(FamiliarWixie animatable) {
-                return animatable.getTexture();
-            }
-        });
+        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_WIXIE.get(), (t) -> new GenericFamiliarRenderer<>(t, new WixieModel<>()));
         event.registerEntityRenderer(ModEntities.ENTITY_BOOKWYRM_TYPE.get(), BookwyrmRenderer::new);
         event.registerEntityRenderer(ModEntities.FAMILIAR_AMETHYST_GOLEM.get(), AmethystGolemRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get(), FamiliarBookwyrmRenderer::new);
         event.registerEntityRenderer(ModEntities.LINGER_SPELL.get(),
                 renderManager -> new RenderBlank(renderManager, ArsNouveau.prefix("textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.ENTITY_CASCADING_WEALD.get(), (v) -> new GeoEntityRenderer<>(v, new WealdWalkerModel<>("cascading_weald")));
-        event.registerEntityRenderer(ModEntities.ENTITY_BLAZING_WEALD.get(), (v) -> new GeoEntityRenderer<>(v,  new WealdWalkerModel<>("blazing_weald")));
-        event.registerEntityRenderer(ModEntities.ENTITY_FLOURISHING_WEALD.get(), (v) -> new GeoEntityRenderer<>(v,  new WealdWalkerModel<>("flourishing_weald")));
-        event.registerEntityRenderer(ModEntities.ENTITY_VEXING_WEALD.get(), (v) -> new GeoEntityRenderer<>(v,  new WealdWalkerModel<>("vexing_weald")));
+        event.registerEntityRenderer(ModEntities.ENTITY_BLAZING_WEALD.get(), (v) -> new GeoEntityRenderer<>(v, new WealdWalkerModel<>("blazing_weald")));
+        event.registerEntityRenderer(ModEntities.ENTITY_FLOURISHING_WEALD.get(), (v) -> new GeoEntityRenderer<>(v, new WealdWalkerModel<>("flourishing_weald")));
+        event.registerEntityRenderer(ModEntities.ENTITY_VEXING_WEALD.get(), (v) -> new GeoEntityRenderer<>(v, new WealdWalkerModel<>("vexing_weald")));
 
         event.registerEntityRenderer(ModEntities.AMETHYST_GOLEM.get(), AmethystGolemRenderer::new);
         event.registerEntityRenderer(ModEntities.SCRYER_CAMERA.get(), renderManager -> new RenderBlank(renderManager, ArsNouveau.prefix("textures/entity/spell_proj.png")));
@@ -197,13 +184,18 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ICE_SHARD.get(), EnchantedFallingBlockRenderer::new);
         event.registerEntityRenderer(ModEntities.ENCHANTED_MAGE_BLOCK.get(), MageBlockRenderer::new);
         event.registerEntityRenderer(ModEntities.ENCHANTED_HEAD_BLOCK.get(), EnchantedSkullRenderer::new);
-        event.registerEntityRenderer(ModEntities.GIFT_STARBY.get(),(renderer) -> new GeoEntityRenderer<>(renderer, new GiftStarbyModel()));
+        event.registerEntityRenderer(ModEntities.GIFT_STARBY.get(), (renderer) -> new GeoEntityRenderer<>(renderer, new GiftStarbyModel()));
         event.registerEntityRenderer(ModEntities.ANIMATED_BLOCK.get(), AnimBlockRenderer::new);
         event.registerEntityRenderer(ModEntities.ANIMATED_HEAD.get(), AnimSkullRenderer::new);
         event.registerEntityRenderer(ModEntities.CINDER.get(), CinderRenderer::new);
         event.registerEntityRenderer(ModEntities.WALL_SPELL.get(),
                 renderManager -> new RenderBlank(renderManager, ArsNouveau.prefix("textures/entity/spell_proj.png")));
-        event.registerEntityRenderer(ModEntities.LILY.get(),  (v) -> new GeoEntityRenderer<>(v, new LilyModel()));
+
+        event.registerEntityRenderer(ModEntities.LILY.get(), (v) -> new GeoEntityRenderer<>(v, new LilyModel()));
+        event.registerEntityRenderer(ModEntities.NOOK.get(), (v) -> new GeoEntityRenderer<>(v, new NookModel()));
+        event.registerEntityRenderer(ModEntities.ALAKARKINOS_TYPE.get(), (v) -> new GeoEntityRenderer<>(v, new AlakarkinosModel()));
+        event.registerEntityRenderer(ModEntities.BUBBLE.get(), BubbleRenderer::new);
+
     }
 
     public static LayeredDraw.Layer cameraOverlay = (gui, tracker) -> {
@@ -249,7 +241,7 @@ public class ClientHandler {
             });
             ItemProperties.register(ItemsRegistry.DOWSING_ROD.get(), ArsNouveau.prefix("uses"), new ClampedItemPropertyFunction() {
                 @Override
-                public float unclampedCall(ItemStack pStack, @Nullable ClientLevel pLevel, @Nullable LivingEntity pEntity, int pSeed) {
+                public float unclampedCall(@NotNull ItemStack pStack, @Nullable ClientLevel pLevel, @Nullable LivingEntity pEntity, int pSeed) {
                     return switch (pStack.getDamageValue()) {
                         case 1 -> 0.75f;
                         case 2 -> 0.50f;
@@ -379,7 +371,7 @@ public class ClientHandler {
     public static int colorFromFlask(ItemStack stack) {
         PotionContents contents = PotionUtil.getContents(stack);
         var provider = PotionProviderRegistry.from(stack);
-        if(provider != null){
+        if (provider != null) {
             return provider.usesRemaining(stack) <= 0 ? 0 : provider.getPotionData(stack).getColor();
         }
         return contents == PotionContents.EMPTY ? -1 : contents.getColor();

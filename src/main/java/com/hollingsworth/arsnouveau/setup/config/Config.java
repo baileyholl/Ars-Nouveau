@@ -7,9 +7,9 @@ import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +31,8 @@ public class Config {
 
 
     public static ModConfigSpec.IntValue DRYGMY_MANA_COST;
-    public static ModConfigSpec.IntValue SYLPH_MANA_COST;
+    public static ModConfigSpec.IntValue WHIRLISPRIG_SOURCE_COST;
+    public static ModConfigSpec.IntValue ALAKARKINOS_SOURCE_COST;
     public static ModConfigSpec.IntValue WHIRLISPRIG_MAX_PROGRESS;
     public static ModConfigSpec.IntValue DRYGMY_MAX_PROGRESS;
     public static ModConfigSpec.IntValue DRYGMY_BASE_ITEM;
@@ -67,6 +68,7 @@ public class Config {
     public static ModConfigSpec.IntValue TOOLTIP_Y_OFFSET;
     public static ModConfigSpec.IntValue MANABAR_X_OFFSET;
     public static ModConfigSpec.IntValue MANABAR_Y_OFFSET;
+    public static ModConfigSpec.BooleanValue TOGGLE_RADIAL_HUD;
     public static ModConfigSpec.IntValue BOOKWYRM_LIMIT;
     public static ModConfigSpec.BooleanValue GUI_TRANSPARENCY;
     public static ModConfigSpec.BooleanValue GLYPH_TOOLTIPS;
@@ -112,6 +114,7 @@ public class Config {
         MANABAR_Y_OFFSET = CLIENT_BUILDER.comment("Y offset for the Mana Bar").defineInRange("yManaBar", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
         SHOW_RECIPE_BOOK = CLIENT_BUILDER.comment("If the Storage Lectern should show the recipe book icon").define("showRecipeBook", true);
         INFORM_LIGHTS = CLIENT_BUILDER.comment("Inform the player of Dynamic lights once.").define("informLights", true);
+        TOGGLE_RADIAL_HUD = CLIENT_BUILDER.comment("Whether the Selection HUD is toggled or held").define("toggleSelectionHUD", true);
         CLIENT_BUILDER.pop();
         CLIENT_BUILDER.comment("Misc").push("misc");
         ALTERNATE_PORTAL_RENDER = CLIENT_BUILDER.comment("Use simplified renderer for Warp Portals").define("no_end_portal_render", false);
@@ -122,7 +125,7 @@ public class Config {
         SERVER_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
         DIMENSION_BLACKLIST = SERVER_BUILDER.comment("Dimensions where hostile mobs will not spawn. Ex: [\"minecraft:overworld\", \"undergarden:undergarden\"]. . Run /forge dimensions for a list.").defineList("dimensionBlacklist", new ArrayList<>(), (o) -> true);
         SPAWN_BOOK = SERVER_BUILDER.comment("Spawn a book in the players inventory on login").define("spawnBook", true);
-        SYLPH_MANA_COST = SERVER_BUILDER.comment("How much mana whirlisprigs consume per generation").defineInRange("sylphManaCost", 250, 0, 10000);
+        WHIRLISPRIG_SOURCE_COST = SERVER_BUILDER.comment("How much mana whirlisprigs consume per generation").defineInRange("sylphManaCost", 250, 0, 10000);
         WHIRLISPRIG_MAX_PROGRESS = SERVER_BUILDER.comment("How much progress whirlisprigs must accumulate before creating resources")
                 .defineInRange("whirlisprigProgress", 250, 0, 10000);
         HUNTER_ATTACK_ANIMALS = SERVER_BUILDER.comment("Should the Wilden Hunter attack animals?").define("hunterHuntsAnimals", false);
@@ -139,6 +142,10 @@ public class Config {
         DRYGMY_UNIQUE_BONUS = SERVER_BUILDER.comment("Bonus number of items a drygmy produces per unique mob").defineInRange("drygmyUniqueBonus", 2, 0, 300);
         DRYGMY_BASE_ITEM = SERVER_BUILDER.comment("Base number of items a drygmy produces per cycle before bonuses.").defineInRange("drygmyBaseItems", 1, Integer.MIN_VALUE, Integer.MAX_VALUE);
         DRYGMY_QUANTITY_CAP = SERVER_BUILDER.comment("Max Bonus number of items a drygmy produces from nearby entities. Each entity equals 1 item.").defineInRange("drygmyQuantityCap", 5, 0, 300);
+        SERVER_BUILDER.pop();
+
+        SERVER_BUILDER.push("alakarkinos");
+        ALAKARKINOS_SOURCE_COST = SERVER_BUILDER.comment("How much mana alakarkinos consume per generation").defineInRange("alakarkinosSourceCost", 1000, 0, 10000);
         SERVER_BUILDER.pop();
 
         SERVER_BUILDER.comment("Items").push("item");

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:wixie_charm"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:wixie_charm"
+  }
+}

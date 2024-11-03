@@ -46,7 +46,8 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
                 .add(ItemsRegistry.DRYGMY_SHARD.get(),
                         ItemsRegistry.STARBUNCLE_SHARD.get(),
                         ItemsRegistry.WIXIE_SHARD.get(),
-                        ItemsRegistry.WHIRLISPRIG_SHARDS.get());
+                        ItemsRegistry.WHIRLISPRIG_SHARDS.get(),
+                        ItemsRegistry.ALAKARKINOS_SHARD.get());
 
         this.tag(BERRY_TAG).add(BlockRegistry.SOURCEBERRY_BUSH.asItem());
 

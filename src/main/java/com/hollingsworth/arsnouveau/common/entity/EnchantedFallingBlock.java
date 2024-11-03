@@ -338,14 +338,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         Entity owner = this.getOwner();
         DamageSource damagesource;
         // TODO: check falling block sources
-        if (owner == null) {
-            damagesource = level.damageSources().thrown(this, owner);
-        } else {
-            damagesource = level.damageSources().thrown(this, owner);
-            if (owner instanceof LivingEntity livingOwner) {
-                livingOwner.setLastHurtMob(entity);
-            }
-        }
+        damagesource = getDamageSource(owner, entity);
 
         boolean isEnderman = entity.getType() == EntityType.ENDERMAN;
         int k = entity.getRemainingFireTicks();
@@ -375,6 +368,19 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         } else {
             entity.setRemainingFireTicks(k);
         }
+    }
+
+    public @NotNull DamageSource getDamageSource(Entity owner, Entity entity) {
+        DamageSource damagesource;
+        if (owner == null) {
+            damagesource = level.damageSources().thrown(this, owner);
+        } else {
+            damagesource = level.damageSources().thrown(this, owner);
+            if (owner instanceof LivingEntity livingOwner) {
+                livingOwner.setLastHurtMob(entity);
+            }
+        }
+        return damagesource;
     }
 
     public void doPostHurtEffects(LivingEntity livingentity) {

@@ -6,14 +6,13 @@ import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.SelectableButton;
 import com.hollingsworth.arsnouveau.common.light.LightManager;
 import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketSummonLily;
-import com.hollingsworth.arsnouveau.common.network.PacketUnsummonLily;
+import com.hollingsworth.arsnouveau.common.network.PacketSummonDog;
+import com.hollingsworth.arsnouveau.common.network.PacketUnsummonDog;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 
@@ -45,19 +44,32 @@ public class GuiSettingsScreen extends BaseBook {
         addRenderableWidget(dynamicButton);
         if(ClientInfo.isSupporter) {
             GuiImageButton lilyButton = new GuiImageButton(bookLeft + 40, bookTop + 34, 0, 0, 16, 16, 16, 16, ArsNouveau.prefix( "textures/gui/settings_summon_lily.png"), (b) -> {
-                Networking.sendToServer(new PacketSummonLily());
+                Networking.sendToServer(new PacketSummonDog(PacketSummonDog.DogType.LILY));
 
             });
             lilyButton.withTooltip(Component.translatable("ars_nouveau.settings.summon_lily"));
 
             GuiImageButton unsummonLily = new GuiImageButton(bookLeft + 60, bookTop + 34, 0, 0, 16, 16, 16, 16, ArsNouveau.prefix( "textures/gui/settings_unsummon_lily.png"), (b) -> {
-                Networking.sendToServer(new PacketUnsummonLily());
-
+                Networking.sendToServer(new PacketUnsummonDog(PacketSummonDog.DogType.LILY));
             });
             unsummonLily.withTooltip(Component.translatable("ars_nouveau.settings.unsummon_lily"));
 
             addRenderableWidget(lilyButton);
             addRenderableWidget(unsummonLily);
+
+            GuiImageButton nookButton = new GuiImageButton(bookLeft + 80, bookTop + 34, 0, 0, 16, 16, 16, 16, ArsNouveau.prefix( "textures/gui/settings_summon_nook.png"), (b) -> {
+                Networking.sendToServer(new PacketSummonDog(PacketSummonDog.DogType.NOOK));
+            });
+            nookButton.withTooltip(Component.translatable("ars_nouveau.settings.summon_nook"));
+
+            GuiImageButton unsummonNook = new GuiImageButton(bookLeft + 100, bookTop + 34, 0, 0, 16, 16, 16, 16, ArsNouveau.prefix( "textures/gui/settings_unsummon_nook.png"), (b) -> {
+                Networking.sendToServer(new PacketUnsummonDog(PacketSummonDog.DogType.NOOK));
+            });
+            unsummonNook.withTooltip(Component.translatable("ars_nouveau.settings.unsummon_nook"));
+
+            addRenderableWidget(nookButton);
+            addRenderableWidget(unsummonNook);
+
         }
     }
 

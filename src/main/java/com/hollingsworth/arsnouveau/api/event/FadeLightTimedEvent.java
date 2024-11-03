@@ -95,12 +95,12 @@ public class FadeLightTimedEvent implements ITimedEvent, LambDynamicLight {
     }
 
     @Override
-    public boolean shouldUpdateDynamicLight() {
+    public boolean ars_nouveau$shouldUpdateDynamicLight() {
         return LightManager.shouldUpdateDynamicLight();
     }
 
     @Override
-    public boolean lambdynlights$updateDynamicLight(LevelRenderer renderer) {
+    public boolean ars_nouveau$updateDynamicLight(LevelRenderer renderer) {
         int luminance = this.getLuminance();
 
         if (luminance != this.lambdynlights$lastLuminance) {
@@ -135,7 +135,7 @@ public class FadeLightTimedEvent implements ITimedEvent, LambDynamicLight {
                 }
             }
             // Schedules the rebuild of removed chunks.
-            this.lambdynlights$scheduleTrackedChunksRebuild(renderer);
+            this.ars_nouveau$scheduleTrackedChunksRebuild(renderer);
             // Update tracked lit chunks.
             this.lambdynlights$trackedLitChunkPos = newPos;
             return true;
@@ -144,7 +144,7 @@ public class FadeLightTimedEvent implements ITimedEvent, LambDynamicLight {
     }
 
     @Override
-    public void lambdynlights$scheduleTrackedChunksRebuild(LevelRenderer renderer) {
+    public void ars_nouveau$scheduleTrackedChunksRebuild(LevelRenderer renderer) {
         if (Minecraft.getInstance().level == this.level)
             for (long pos : this.lambdynlights$trackedLitChunkPos) {
                 LightManager.scheduleChunkRebuild(renderer, pos);

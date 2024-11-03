@@ -323,4 +323,8 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
             }
         }
     }
+
+    public ItemStack getStack() {
+        return stack;
+    }
 }

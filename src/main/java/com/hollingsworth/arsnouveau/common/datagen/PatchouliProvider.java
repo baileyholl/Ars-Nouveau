@@ -478,6 +478,7 @@ public class PatchouliProvider extends SimpleDataProvider{
                         .withIcon(ItemsRegistry.STARBUNCLE_CHARM)
                         .withPage(new LinkPage("https://www.patreon.com/arsnouveau", "ars_nouveau.patreon_text", "ars_nouveau.patreon"))
                         .withPage(new EntityPage(ModEntities.LILY.get()).withText("ars_nouveau.lily"))
+                        .withPage(new EntityPage(ModEntities.NOOK.get()).withText("ars_nouveau.nook"))
                         .withPage(new LinkPage("https://www.redbubble.com/people/Gootastic/explore?page=1&sortOrder=recent", "ars_nouveau.store_text", "ars_nouveau.store")),
                 getPath(MOD_NEWS, "support_mod"));
 
@@ -651,6 +652,14 @@ public class PatchouliProvider extends SimpleDataProvider{
                 .withPage(new CraftingPage(BlockRegistry.ARCHWOOD_GRATE).withRecipe2(BlockRegistry.GOLD_GRATE))
                 .withPage(new CraftingPage(BlockRegistry.SMOOTH_SOURCESTONE_GRATE).withRecipe2(BlockRegistry.SOURCESTONE_GRATE)), getPath(AUTOMATION, "grates"));
         addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.SOURCE_LAMP).withLocalizedText().withPage(new CraftingPage(BlockRegistry.SOURCE_LAMP)), getPath(AUTOMATION, "source_lamp"));
+
+        addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.ALAKARKINOS_CHARM)
+                .withLocalizedText()
+                .withPage(new ApparatusPage(ItemsRegistry.ALAKARKINOS_CHARM))
+                .withPage(new EntityPage(getRegistryName(ModEntities.ALAKARKINOS_TYPE.get()).toString()).withScale(0.5f)
+                        .withText(getLangPath("alakarkinos_charm", 2)))
+                .withPage(new TextPage(getLangPath("alakarkinos_charm", 3)).withTitle("ars_nouveau.summoning"))
+                .withPage(new TextPage(getLangPath("alakarkinos_charm", 4)).withTitle("ars_nouveau.sifting")), getPath(AUTOMATION, "alakarkinos"));
     }
 
     public String getLangPath(String name, int count) {

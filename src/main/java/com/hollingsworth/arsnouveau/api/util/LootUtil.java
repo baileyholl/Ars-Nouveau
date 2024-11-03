@@ -4,16 +4,17 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.common.util.HolderHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.util.FakePlayer;
 
 public class LootUtil {
 
@@ -43,18 +44,21 @@ public class LootUtil {
         return getDefaultContext(world, pos, shooter).withParameter(LootContextParams.TOOL, stack);
     }
 
-    public static LootParams.Builder getLootingContext(ServerLevel world, LivingEntity player, LivingEntity slainEntity, int looting, DamageSource source) {
+    public static LootParams.Builder getLootingContext(ServerLevel world, LivingEntity attacker, LivingEntity slainEntity, int looting, DamageSource source) {
         ItemStack stack = getDefaultFakeWeapon();
+        FakePlayer player = attacker instanceof Player p ? new FakePlayer(world, p.getGameProfile()) : ANFakePlayer.getPlayer(world);
         stack.enchant(HolderHelper.unwrap(world, Enchantments.LOOTING), looting);
+        player.setItemInHand(InteractionHand.MAIN_HAND, stack);
         return new LootParams.Builder(world)
                 .withParameter(LootContextParams.THIS_ENTITY, slainEntity)
                 .withParameter(LootContextParams.ORIGIN, new Vec3(slainEntity.getX(), slainEntity.getY(), slainEntity.getZ()))
                 .withParameter(LootContextParams.LAST_DAMAGE_PLAYER, ANFakePlayer.getOrFakePlayer(world, player))
-                .withParameter(LootContextParams.DAMAGE_SOURCE, source).withOptionalParameter(LootContextParams.ATTACKING_ENTITY, source.getEntity())
-                .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, source.getDirectEntity())
-                .withParameter(LootContextParams.ATTACKING_ENTITY, player).withLuck(player instanceof Player ? ((Player) player).getLuck() : 1.0f)
-                .withParameter(LootContextParams.TOOL, stack).withParameter(LootContextParams.EXPLOSION_RADIUS, 0.0f)
-                .withParameter(LootContextParams.BLOCK_STATE, Blocks.AIR.defaultBlockState())
-                .withOptionalParameter(LootContextParams.BLOCK_ENTITY, null);
+                .withParameter(LootContextParams.DAMAGE_SOURCE, source)
+                .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, player)
+                .withParameter(LootContextParams.ATTACKING_ENTITY, player)
+                .withLuck(player.getLuck())
+                .withParameter(LootContextParams.TOOL, stack)
+                .withParameter(LootContextParams.ENCHANTMENT_ACTIVE, looting > 0)
+                .withParameter(LootContextParams.ENCHANTMENT_LEVEL, looting);
     }
 }

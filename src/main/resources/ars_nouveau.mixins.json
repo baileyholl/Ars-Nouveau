@@ -17,7 +17,9 @@
     "light.LightEntityMixin"
   ],
   "mixins": [
+    "BrushableBlockEntityAccessor",
     "DamageSourceMixin",
+    "EntityMixin",
     "LivingAccessor",
     "MobAccessor",
     "PufferfishAccessor",
