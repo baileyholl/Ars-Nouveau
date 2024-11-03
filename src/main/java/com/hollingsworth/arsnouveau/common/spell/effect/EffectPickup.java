@@ -41,6 +41,7 @@ public class EffectPickup extends AbstractEffect {
                 posVec.add(expansion, expansion, expansion), posVec.subtract(expansion, expansion, expansion)));
         InventoryManager manager = spellContext.getCaster().getInvManager().extractSlotMax(-1);
         for (ItemEntity i : entityList) {
+            i.setPickUpDelay(0); // Fixes backpack mods respecting pickup delay
             var pickupPre = NeoForge.EVENT_BUS.post(new ItemEntityPickupEvent.Pre(getPlayer(shooter, (ServerLevel) world), i));
             ItemStack stack = i.getItem();
             if (stack.isEmpty() || pickupPre.canPickup().isFalse())
