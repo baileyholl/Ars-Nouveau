@@ -337,7 +337,9 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     }
 
     public void syncBehavior() {
-        Networking.sendToNearbyClient(level, this, new PacketSyncTag(dynamicBehavior.toTag(new CompoundTag()), getId()));
+        CompoundTag behaviorTag = dynamicBehavior.toTag(new CompoundTag());
+        this.data.behaviorTag = behaviorTag;
+        Networking.sendToNearbyClient(level, this, new PacketSyncTag(behaviorTag, getId()));
     }
 
     @Override
