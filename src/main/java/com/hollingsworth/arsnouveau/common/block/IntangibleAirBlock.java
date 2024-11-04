@@ -29,7 +29,18 @@ public class IntangibleAirBlock extends TickableModBlock implements LiquidBlockC
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    @Override
+    protected VoxelShape getBlockSupportShape(BlockState state, BlockGetter level, BlockPos pos) {
+        return Shapes.block();
+    }
+
+    @Override
+    protected VoxelShape getInteractionShape(BlockState state, BlockGetter level, BlockPos pos) {
+        return Shapes.empty();
+    }
+
+    @Override
+    protected VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return Shapes.empty();
     }
 
