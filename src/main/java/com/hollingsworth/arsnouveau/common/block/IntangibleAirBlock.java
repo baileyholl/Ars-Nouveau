@@ -34,6 +34,12 @@ public class IntangibleAirBlock extends TickableModBlock implements LiquidBlockC
         return Shapes.block();
     }
 
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return Shapes.empty();
+    }
+
     @Override
     protected VoxelShape getInteractionShape(BlockState state, BlockGetter level, BlockPos pos) {
         return Shapes.empty();
@@ -41,6 +47,11 @@ public class IntangibleAirBlock extends TickableModBlock implements LiquidBlockC
 
     @Override
     protected VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return Shapes.empty();
+    }
+
+    @Override
+    protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
         return Shapes.empty();
     }
 
