@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.common.entity.EntityOrbitProjectile;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.breeze.Breeze;
 import net.minecraft.world.item.ItemStack;
@@ -56,7 +57,8 @@ public class BreezeEvent implements ITimedEvent {
         }
         if(hitResult instanceof EntityHitResult entityHitResult
                 && !(pre.shooter instanceof FakePlayer fakePlayer)
-                && entityHitResult.getEntity() instanceof Breeze breeze){
+                && entityHitResult.getEntity() instanceof Breeze breeze
+        && pre.resolver.spell.getCastMethod() instanceof MethodProjectile){
             pre.setCanceled(true);
             EntityOrbitProjectile orbitProjectile = new EntityOrbitProjectile(breeze.level, new SpellResolver(SpellContext.fromEntity(pre.spell, breeze, ItemStack.EMPTY)), entityHitResult.getEntity());
             breeze.level.addFreshEntity(orbitProjectile);
