@@ -13,14 +13,16 @@ import javax.annotation.Nullable;
 
 public class StarbuncleModel extends GeoModel<Starbuncle> {
 
+    public static ResourceLocation ANIMATION = ArsNouveau.prefix("animations/starbuncle_animations.json");
     @Override
-    public void setCustomAnimations(Starbuncle entity, long uniqueID, @Nullable AnimationState customPredicate) {
+    public void setCustomAnimations(Starbuncle entity, long uniqueID, @Nullable AnimationState<Starbuncle> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
         if (entity.partyCarby)
             return;
         if (customPredicate == null)
             return;
-        this.getBone("basket").get().setHidden(!entity.isTamed());
+        if (this.getBone("basket").isPresent())
+            this.getBone("basket").get().setHidden(!entity.isTamed());
 
         GeoBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraData().get(DataTickets.ENTITY_MODEL_DATA);
@@ -35,11 +37,11 @@ public class StarbuncleModel extends GeoModel<Starbuncle> {
 
     @Override
     public ResourceLocation getTextureResource(Starbuncle carbuncle) {
-        return carbuncle.getTexture(carbuncle);
+        return carbuncle.getTexture();
     }
 
     @Override
     public ResourceLocation getAnimationResource(Starbuncle carbuncle) {
-        return ArsNouveau.prefix( "animations/starbuncle_animations.json");
+        return ANIMATION;
     }
 }

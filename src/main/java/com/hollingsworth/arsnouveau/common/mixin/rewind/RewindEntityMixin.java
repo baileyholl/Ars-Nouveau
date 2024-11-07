@@ -23,26 +23,26 @@ public abstract class RewindEntityMixin implements IRewindable {
     @Shadow
     public abstract Vec3 getDeltaMovement();
 
-
     @Shadow
     public abstract Level level();
 
-
     @Shadow public abstract void remove(Entity.RemovalReason pReason);
-
-    @Shadow public abstract boolean removeTag(String pTag);
 
     @Shadow public abstract Vec3 position();
 
     @Shadow public Level level;
     @Unique
-    public Stack<RewindEntityData> ars_Nouveau$motions = new FixedStack<>(EffectRewind.INSTANCE.getEntityMaxTrackingTicks());
+    public Stack<RewindEntityData> ars_Nouveau$motions = null;
 
     @Unique
     public boolean an_isRewinding = false;
 
     @Inject(method = "baseTick", at = @At("TAIL"))
     public void onTick(CallbackInfo ci) {
+        // Prevent other mods from early loading Entity and causing the config to throw
+        if(ars_Nouveau$motions == null){
+            ars_Nouveau$motions = new FixedStack<>(EffectRewind.INSTANCE.getEntityMaxTrackingTicks());
+        }
         Entity entity = (Entity) (Object) this;
         if(!EffectRewind.shouldRecordData(entity, this) || level == null) {
             return;
@@ -54,7 +54,6 @@ public abstract class RewindEntityMixin implements IRewindable {
         RewindEntityData data = new RewindEntityData(level.getGameTime(), getDeltaMovement(), this.position(), health);
         ars_Nouveau$motions.push(data);
     }
-
 
     @Inject(method = "setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V", at = @At("HEAD"), cancellable = true)
     protected void anSetDeltaMovement(Vec3 pDeltaMovement, CallbackInfo ci) {
@@ -72,7 +71,7 @@ public abstract class RewindEntityMixin implements IRewindable {
 
     @Override
     public Stack<RewindEntityData> getMotions() {
-        return ars_Nouveau$motions;
+        return ars_Nouveau$motions == null ? new FixedStack<>(0) : ars_Nouveau$motions;
     }
 
     @Override

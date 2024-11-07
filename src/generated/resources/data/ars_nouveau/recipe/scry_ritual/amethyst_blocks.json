@@ -1,5 +1,5 @@
 {
   "type": "ars_nouveau:scry_ritual",
-  "augment": "neoforge:storage_blocks/amethyst",
-  "highlight": "neoforge:storage_blocks/amethyst"
+  "augment": "c:storage_blocks/amethyst",
+  "highlight": "c:storage_blocks/amethyst"
 }

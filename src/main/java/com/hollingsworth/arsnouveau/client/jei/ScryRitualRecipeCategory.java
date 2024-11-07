@@ -36,8 +36,7 @@ public class ScryRitualRecipeCategory implements IRecipeCategory<ScryRitualRecip
     public ScryRitualRecipeCategory(IGuiHelper helper) {
         background = helper.createBlankDrawable(120, 24);
         icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, RitualRegistry.getRitualItemMap().get(SCRY_RITUAL).asItem().getDefaultInstance());
-        arrow = helper.drawableBuilder(JEIConstants.RECIPE_GUI_VANILLA, 82, 128, 24, 17)
-                .buildAnimated(40, IDrawableAnimated.StartDirection.LEFT, false);
+        arrow = helper.createAnimatedRecipeArrow(40);
     }
 
     @Override
@@ -62,7 +61,8 @@ public class ScryRitualRecipeCategory implements IRecipeCategory<ScryRitualRecip
 
     @Override
     public void draw(ScryRitualRecipe recipe, @NotNull IRecipeSlotsView slotsView, @NotNull GuiGraphics matrixStack, double mouseX, double mouseY) {
-        arrow.draw(matrixStack, 48, 5   );
+        background.draw(matrixStack, 0, 0);
+        arrow.draw(matrixStack, 48, 5);
     }
 
     @Override

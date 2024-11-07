@@ -10,7 +10,7 @@ public class AugmentDurationDown extends AbstractAugment {
     public static AugmentDurationDown INSTANCE = new AugmentDurationDown();
 
     private AugmentDurationDown() {
-        super(GlyphLib.AugmentDurationDown, "Duration Down");
+        super(GlyphLib.AugmentReduceTime, "Reduce Time");
     }
 
     @Override

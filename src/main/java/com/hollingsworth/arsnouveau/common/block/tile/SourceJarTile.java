@@ -38,7 +38,7 @@ public class SourceJarTile extends AbstractSourceMachine implements ITooltipProv
             fillState = (this.getSource() / 1000) + 1;
         }
         if (state.hasProperty(SourceJar.fill))
-            level.setBlock(worldPosition, state.setValue(SourceJar.fill, fillState), 3);
+            level.setBlock(worldPosition, state.setValue(SourceJar.fill, Math.min(fillState, 11)), 3);
         return true;
     }
 

@@ -51,14 +51,14 @@ public class Networking {
         reg.playToServer(PacketSetScribeRecipe.TYPE, PacketSetScribeRecipe.CODEC, Networking::handle);
         reg.playToServer(PacketSetSound.TYPE, PacketSetSound.CODEC, Networking::handle);
         reg.playToServer(PacketSummonFamiliar.TYPE, PacketSummonFamiliar.CODEC, Networking::handle);
-        reg.playToServer(PacketSummonLily.TYPE, PacketSummonLily.CODEC, Networking::handle);
+        reg.playToServer(PacketSummonDog.TYPE, PacketSummonDog.CODEC, Networking::handle);
         reg.playToClient(PacketSyncLitEntities.TYPE, PacketSyncLitEntities.CODEC, Networking::handle);
         reg.playToClient(PacketSyncPlayerCap.TYPE, PacketSyncPlayerCap.CODEC, Networking::handle);
         reg.playToClient(PacketSyncTag.TYPE , PacketSyncTag.CODEC, Networking::handle);
         reg.playToClient(PacketTimedEvent.TYPE, PacketTimedEvent.CODEC, Networking::handle);
         reg.playToServer(PacketToggleFamiliar.TYPE, PacketToggleFamiliar.CODEC, Networking::handle);
         reg.playToClient(PacketToggleLight.TYPE, PacketToggleLight.CODEC, Networking::handle);
-        reg.playToServer(PacketUnsummonLily.TYPE, PacketUnsummonLily.CODEC, Networking::handle);
+        reg.playToServer(PacketUnsummonDog.TYPE, PacketUnsummonDog.CODEC, Networking::handle);
         reg.playToClient(PacketUpdateBookGUI.TYPE, PacketUpdateBookGUI.CODEC, Networking::handle);
         reg.playToServer(PacketUpdateCaster.TYPE, PacketUpdateCaster.CODEC, Networking::handle);
         reg.playToClient(PacketUpdateFlight.TYPE, PacketUpdateFlight.CODEC, Networking::handle);
@@ -71,6 +71,7 @@ public class Networking {
         reg.playToClient(ServerToClientStoragePacket.TYPE, ServerToClientStoragePacket.CODEC, Networking::handle);
         reg.playToClient(UpdateStorageItemsPacket.TYPE, UpdateStorageItemsPacket.CODEC, Networking::handle);
         reg.playToClient(PacketUpdateGlowColor.TYPE, PacketUpdateGlowColor.CODEC, Networking::handle);
+        reg.playToServer(PacketUpdateDominionWand.TYPE, PacketUpdateDominionWand.CODEC, Networking::handle);
     }
 
     private static <T extends AbstractPacket> void handle(T message, IPayloadContext ctx) {

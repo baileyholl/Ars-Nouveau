@@ -12,7 +12,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
@@ -21,6 +24,13 @@ import java.util.UUID;
 
 // https://github.com/Creators-of-Create/Create/blob/mc1.15/dev/src/main/java/com/simibubi/create/content/contraptions/components/deployer/DeployerFakePlayer.java#L57
 public class ANFakePlayer extends FakePlayer {
+    public static FakePlayer getOrFakePlayer(ServerLevel level, @Nullable LivingEntity player) {
+        return getPlayer(level, player instanceof Player ? player.getUUID() : null);
+    }
+
+    public static FakePlayer getPlayer(ServerLevel level, @Nullable UUID uuid) {
+        return uuid != null ? FakePlayerFactory.get(level, new GameProfile(uuid, "")) : ANFakePlayer.getPlayer(level);
+    }
 
     private static final Connection NETWORK_MANAGER = new Connection(PacketFlow.CLIENTBOUND);
 

@@ -2,15 +2,18 @@ package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
+import com.hollingsworth.arsnouveau.api.source.ISourceCap;
 import com.hollingsworth.arsnouveau.common.capability.ANPlayerDataCap;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.capability.ManaCap;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.EntityCapability;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
@@ -23,6 +26,7 @@ public class CapabilityRegistry {
 
     public static final EntityCapability<ManaCap, Void> MANA_CAPABILITY = EntityCapability.createVoid(ArsNouveau.prefix("mana"), ManaCap.class);
     public static final EntityCapability<ANPlayerDataCap, Void> PLAYER_DATA_CAP = EntityCapability.createVoid(ArsNouveau.prefix("player_data"), ANPlayerDataCap.class);
+    public static final BlockCapability<ISourceCap, Direction> SOURCE_CAPABILITY = BlockCapability.createSided(ArsNouveau.prefix("source"), ISourceCap.class);
 
     /**
      * Get the {@link IManaCap} from the specified entity.
@@ -57,11 +61,20 @@ public class CapabilityRegistry {
                 BlockRegistry.ARCANE_PEDESTAL_TILE,
                 BlockRegistry.ARCHWOOD_CHEST_TILE,
                 BlockRegistry.REPOSITORY_TILE);
-        for(var container : containers){
+        for (var container : containers) {
             event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, container.get(), (c, side) -> new InvWrapper(c));
         }
 
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BlockRegistry.CRAFTING_LECTERN_TILE.get(), (c, side) -> c.getCapability(c, side));
+
+        var sourceContainers = List.of(BlockRegistry.SOURCE_JAR_TILE, BlockRegistry.CREATIVE_SOURCE_JAR_TILE,
+                BlockRegistry.AGRONOMIC_SOURCELINK_TILE, BlockRegistry.ALCHEMICAL_TILE, BlockRegistry.VITALIC_TILE, BlockRegistry.MYCELIAL_TILE, BlockRegistry.VOLCANIC_TILE,
+                BlockRegistry.RELAY_COLLECTOR_TILE, BlockRegistry.RELAY_DEPOSIT_TILE, BlockRegistry.RELAY_WARP_TILE, BlockRegistry.ARCANE_RELAY_TILE,
+                BlockRegistry.IMBUEMENT_TILE);
+
+        for (var container : sourceContainers) {
+            event.registerBlockEntity(SOURCE_CAPABILITY, container.get(), (sourceJar, side) -> sourceJar.getSourceStorage());
+        }
     }
 
 
@@ -99,9 +112,9 @@ public class CapabilityRegistry {
         }
 
         public static void syncPlayerCap(Player player) {
-            if(player instanceof ServerPlayer serverPlayer){
+            if (player instanceof ServerPlayer serverPlayer) {
                 ANPlayerDataCap playerData = getPlayerDataCap(serverPlayer);
-                if(playerData != null){
+                if (playerData != null) {
                     playerData.syncToClient(serverPlayer);
                 }
             }

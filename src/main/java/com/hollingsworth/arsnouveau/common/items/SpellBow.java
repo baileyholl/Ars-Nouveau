@@ -155,7 +155,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
                 abstractarrowentity = customArrow(abstractarrowentity, arrowStack, bowStack);
 
                 List<AbstractArrow> arrows = new ArrayList<>();
-                SpellResolver resolver = new SpellResolver(new SpellContext(worldIn, caster.modifySpellBeforeCasting(worldIn, entityLiving, InteractionHand.MAIN_HAND, caster.getSpell()), playerentity, new PlayerCaster(playerentity), bowStack));
+                SpellResolver resolver = new SpellResolver(new SpellContext(worldIn, caster.modifySpellBeforeCasting((ServerLevel) worldIn, entityLiving, InteractionHand.MAIN_HAND, caster.getSpell()), playerentity, new PlayerCaster(playerentity), bowStack));
                 if (arrowitem instanceof SpellArrow) {
                     if (!(resolver.canCast(playerentity))) {
                         return;

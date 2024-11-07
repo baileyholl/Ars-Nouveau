@@ -92,7 +92,7 @@ public class ImbuementRecipeProvider extends SimpleDataProvider{
     }
 
     private static Path getRecipePath(Path pathIn, String str) {
-        return pathIn.resolve("data/ars_nouveau/recipe/" + str + ".json");
+        return pathIn.resolve("data/ars_nouveau/recipe/imbuement_" + str + ".json");
     }
 
     @Override

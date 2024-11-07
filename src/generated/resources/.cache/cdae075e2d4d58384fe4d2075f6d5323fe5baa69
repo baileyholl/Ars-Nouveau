@@ -1,9 +1,11 @@
-// 1.21.1	2024-08-17T10:54:39.1697774	Ars Nouveau Caster Tomes Datagen
+// 1.21.1	2024-10-21T11:24:04.7862855	Ars Nouveau Caster Tomes Datagen
 ab9cf50e4958592dcee6f5dae6d6bad2e7fe08ab data/ars_nouveau/recipe/tomes/alex_tome.json
 dae41a867bde9258624fe4676128e8140f2e7fe4 data/ars_nouveau/recipe/tomes/arachne_tome.json
 71e004bfa5837d293c6ee00dd9fd99493b9b9aba data/ars_nouveau/recipe/tomes/aurellia_tome.json
 2027d79f560de6a1a7829a478f64ccd8f1723bc2 data/ars_nouveau/recipe/tomes/bailey_tome.json
 0be05276a18b4cac328dc05898e560b28f7e3a31 data/ars_nouveau/recipe/tomes/chems_tome.json
+d975f667f8c7de86a8fc5dcc4cc2d07e4ff38096 data/ars_nouveau/recipe/tomes/chosenarchitect_tome.json
+19564f80b5f660f4e472b2fab542e98a71c9b108 data/ars_nouveau/recipe/tomes/crowdrone_tome.json
 e9b37b1592c51345f27cd0571a12a373a469be73 data/ars_nouveau/recipe/tomes/darkfira_tome.json
 3c4d9ad61832042e38046f7763047126dbc320a0 data/ars_nouveau/recipe/tomes/farfalla_tome.json
 f64772fb96f68b7865f64ee40a8718e1a2412fce data/ars_nouveau/recipe/tomes/fireball_tome.json

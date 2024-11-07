@@ -1,5 +1,5 @@
 {
   "type": "ars_nouveau:scry_ritual",
-  "augment": "neoforge:ores/coal",
-  "highlight": "neoforge:ores/coal"
+  "augment": "c:ores/coal",
+  "highlight": "c:ores/coal"
 }

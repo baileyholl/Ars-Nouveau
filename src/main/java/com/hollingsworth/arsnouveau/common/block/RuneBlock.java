@@ -85,6 +85,7 @@ public class RuneBlock extends TickableModBlock {
                 return ItemInteractionResult.SUCCESS;
             }
             runeTile.setSpell(spell);
+            runeTile.setPlayer(player.getUUID());
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.spell_set"));
         }
         return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);

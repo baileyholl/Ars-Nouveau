@@ -89,18 +89,20 @@ public class BlockUtil {
     }
 
     public static boolean destroyBlockSafely(Level world, BlockPos pos, boolean dropBlock, LivingEntity caster) {
-        if (!(world instanceof ServerLevel))
+        if (!(world instanceof ServerLevel serverLevel))
             return false;
-        Player playerEntity = caster instanceof Player ? (Player) caster : ANFakePlayer.getPlayer((ServerLevel) world);
+        Player playerEntity = ANFakePlayer.getOrFakePlayer(serverLevel, caster);
         if (ANEventBus.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), playerEntity)))
             return false;
         world.getBlockState(pos).getBlock().playerWillDestroy(world, pos, world.getBlockState(pos), playerEntity);
         return world.destroyBlock(pos, dropBlock);
-
     }
 
-    public static boolean destroyRespectsClaim(Entity caster, Level world, BlockPos pos) {
-        Player playerEntity = caster instanceof Player ? (Player) caster : ANFakePlayer.getPlayer((ServerLevel) world);
+    public static boolean destroyRespectsClaim(LivingEntity caster, Level world, BlockPos pos) {
+        if (!(world instanceof ServerLevel serverLevel))
+            return false;
+
+        Player playerEntity = ANFakePlayer.getOrFakePlayer(serverLevel, caster);
         return !ANEventBus.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), playerEntity));
     }
 
@@ -113,26 +115,28 @@ public class BlockUtil {
         safelyUpdateState(world, pos, world.getBlockState(pos));
     }
 
+    @Deprecated
     public static boolean destroyBlockSafelyWithoutSound(Level world, BlockPos pos, boolean dropBlock) {
         return destroyBlockWithoutSound(world, pos, dropBlock, null);
     }
 
-    public static boolean destroyBlockSafelyWithoutSound(Level world, BlockPos pos, boolean dropBlock, @Nullable LivingEntity caster) {
-        if (!(world instanceof ServerLevel))
+    public static boolean destroyBlockSafelyWithoutSound(Level world, BlockPos pos, boolean dropBlock, LivingEntity caster) {
+        if (!(world instanceof ServerLevel serverLevel))
             return false;
 
-        Player playerEntity = caster instanceof Player ? (Player) caster : ANFakePlayer.getPlayer((ServerLevel) world);
+        Player playerEntity = ANFakePlayer.getOrFakePlayer(serverLevel, caster);
         if (ANEventBus.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), playerEntity)))
             return false;
 
-        return destroyBlockWithoutSound(world, pos, dropBlock);
+        return destroyBlockWithoutSound(world, pos, dropBlock, playerEntity);
     }
 
+    @Deprecated
     private static boolean destroyBlockWithoutSound(Level world, BlockPos pos, boolean dropBlock) {
         return destroyBlockWithoutSound(world, pos, dropBlock, null);
     }
 
-    private static boolean destroyBlockWithoutSound(Level world, BlockPos pos, boolean isMoving, @Nullable Entity entityIn) {
+    private static boolean destroyBlockWithoutSound(Level world, BlockPos pos, boolean isMoving, LivingEntity entityIn) {
         BlockState blockstate = world.getBlockState(pos);
         if (blockstate.isAir()) {
             return false;

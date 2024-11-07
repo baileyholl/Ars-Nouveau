@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RuneCaster extends TileCaster{
+public class RuneCaster extends TileCaster {
 
     public RuneCaster(RuneTile tile, SpellContext.CasterType casterType) {
         super(tile, casterType);

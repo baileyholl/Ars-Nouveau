@@ -5,8 +5,10 @@ import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
 import com.hollingsworth.arsnouveau.client.registry.ClientHandler;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
+import com.hollingsworth.arsnouveau.common.entity.BubbleEntity;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
+import com.hollingsworth.arsnouveau.common.event.BreezeEvent;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.world.Terrablender;
@@ -59,7 +61,7 @@ public class ArsNouveau {
                 ticketHelper.removeAllTickets(uuid);
         }));
     });
-    public static boolean isDebug = !FMLEnvironment.production;
+    public static boolean isDebug = false && !FMLEnvironment.production;
     public ArsNouveau(IEventBus modEventBus, ModContainer modContainer){
         NeoForge.EVENT_BUS.addListener(FMLEventHandler::onServerStopped);
         caelusLoaded = ModList.get().isLoaded("caelus");
@@ -85,7 +87,9 @@ public class ArsNouveau {
         modEventBus.addListener((RegisterTicketControllersEvent e) ->{
             e.register(ticketController);
         });
-
+        NeoForge.EVENT_BUS.addListener(BubbleEntity::onAttacked);
+        NeoForge.EVENT_BUS.addListener(BubbleEntity::entityHurt);
+        NeoForge.EVENT_BUS.addListener(BreezeEvent::onSpellResolve);
         ANCriteriaTriggers.init();
         try {
             Thread thread = new Thread(Rewards::init);

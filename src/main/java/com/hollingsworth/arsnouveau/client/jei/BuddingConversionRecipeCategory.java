@@ -24,8 +24,7 @@ public class BuddingConversionRecipeCategory implements IRecipeCategory<BuddingC
     public BuddingConversionRecipeCategory(IGuiHelper helper) {
         background = helper.createBlankDrawable(120, 24);
         icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, ItemsRegistry.AMETHYST_GOLEM_CHARM.asItem().getDefaultInstance());
-        arrow = helper.drawableBuilder(JEIConstants.RECIPE_GUI_VANILLA, 82, 128, 24, 17)
-                .buildAnimated(40, IDrawableAnimated.StartDirection.LEFT, false);
+        arrow = helper.createAnimatedRecipeArrow(40);
     }
 
     @Override

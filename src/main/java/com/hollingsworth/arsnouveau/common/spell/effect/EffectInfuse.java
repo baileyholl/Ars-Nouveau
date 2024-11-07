@@ -68,7 +68,7 @@ public class EffectInfuse extends AbstractEffect {
         if(potionData == null){
             return;
         }
-        PotionUtil.applyContents(potionData, shooter, shooter, livingEntity);
+        PotionUtil.applyContents(potionData, livingEntity, shooter, shooter);
     }
 
     public @Nullable PotionContents getPotionData(Level world, @NotNull LivingEntity shooter, SpellContext spellContext){
