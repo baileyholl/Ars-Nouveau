@@ -1,4 +1,4 @@
-// 1.21.1	2024-11-03T08:55:51.1524375	Tags for minecraft:entity_type mod id ars_nouveau
+// 1.21.1	2024-11-06T20:55:11.216698	Tags for minecraft:entity_type mod id ars_nouveau
 4d0235b95823f5d315aae7e9f9e484cbde8294a0 data/ars_nouveau/tags/entity_type/animal_summon_blacklist.json
 a958530eef4b0d5ac2f1c7bd552b60e23cb66d9a data/ars_nouveau/tags/entity_type/an_hostile.json
 290c285b1e334d322b8d070b2c6a071114b1d70c data/ars_nouveau/tags/entity_type/berry_blacklist.json
@@ -6,7 +6,7 @@ a958530eef4b0d5ac2f1c7bd552b60e23cb66d9a data/ars_nouveau/tags/entity_type/an_ho
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/entity_type/disintegration_blacklist.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/entity_type/disintegration_whitelist.json
 29671cfa11d074462c259806e9d60468451e3cdb data/ars_nouveau/tags/entity_type/drygmy_blacklist.json
-37c0c70962a460e0c2d62b6dafe0ee563c8773d4 data/ars_nouveau/tags/entity_type/familiar.json
+d7241e9bb8f594e377c93623dbf68fe446f1b65f data/ars_nouveau/tags/entity_type/familiar.json
 626ec463a66bcda15fd17dfe131322f296b2ff38 data/ars_nouveau/tags/entity_type/jar_blacklist.json
 e00f2931577049b9a4400a87ed9c249373be376c data/ars_nouveau/tags/entity_type/jar_release_blacklist.json
 81129e21b3ae9fc2579ae17d4c228b76271a2b4d data/ars_nouveau/tags/entity_type/jar_whitelist.json

@@ -103,7 +103,7 @@ dependencies {
 
     implementation "software.bernie.geckolib:geckolib-neoforge-1.21.1:${geckolib_version}"
 //
-    implementation(jarJar(group: 'vazkii.patchouli', name: 'Patchouli', version: '[1.21,)') {
+    compileOnly(jarJar(group: 'vazkii.patchouli', name: 'Patchouli', version: '[1.21,)') {
         jarJar.pin(it, patchouli_version)
     })
 
@@ -116,7 +116,7 @@ dependencies {
     implementation "curse.maven:jade-324717:5444008"
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}+1.21"
 
-    implementation "curse.maven:ars-additions-974408:5698511"
+//    implementation "curse.maven:ars-additions-974408:5698511"
 
     runtimeOnly 'curse.maven:ftb-teams-forge-404468:5631446'
     runtimeOnly 'curse.maven:ftb-chunks-forge-314906:5710609'

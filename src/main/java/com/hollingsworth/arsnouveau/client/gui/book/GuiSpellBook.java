@@ -412,15 +412,7 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void onDocumentationClick(Button button) {
-        if(ArsNouveau.patchouliLoaded){
-            PatchouliHandler.openBookClient();
-        }else{
-            try {
-                Util.getPlatform().openUri(new URI("https://www.arsnouveau.wiki/"));
-            } catch (URISyntaxException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        GuiUtils.openWiki(ArsNouveau.proxy.getPlayer());
     }
 
     public void onColorClick(Button button) {

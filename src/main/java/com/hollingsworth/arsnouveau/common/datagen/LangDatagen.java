@@ -1310,6 +1310,8 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.smooth_sourcestone_grate","Smooth Sourcestone Grate");
         add("block.ars_nouveau.source_lamp", "Source Gem Lamp");
         add("ars_nouveau.page1.source_lamp", "Behaves like a copper bulb, but the light and comparator values can be adjusted by casting Light with dampen.");
+        add("ars_nouveau.patchouli.missing", "Patchouli missing: opening online wiki");
+        add("ars_nouveau.dependency.install", "Open mod page");
         add("tooltip.starbuncle_shard2", "Made with love.");
         add("tooltip.whirlisprig_shard2","A natural portrait.");
         add("tooltip.drygmy_shard2","A tribute to what once was.");
@@ -1327,7 +1329,6 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.sifting", "Sifting");
         add("tooltip.alakarkinos_shard1", "Found by giving an Alakarkinos a Sherd.");
         add("tooltip.alakarkinos_shard2", "What's that behind your ear?");
-
     }
 
     @Override
