@@ -4,18 +4,14 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.event.SpellDamageEvent;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.util.DamageUtil;
-import com.hollingsworth.arsnouveau.common.mixin.looting.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
 import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 
@@ -83,7 +79,6 @@ public interface IDamageEffect {
      * @return Player-Based Damage Source, will use Ars FakePlayer if the source is not a Player
      */
     default DamageSource buildDamageSource(Level world, LivingEntity shooter) {
-        return DamageUtil.source(world, DamageTypesRegistry.GENERIC_SPELL_DAMAGE, !(shooter instanceof Player player) ? ANFakePlayer.getPlayer((ServerLevel) world) : player);
+        return DamageUtil.source(world, DamageTypesRegistry.GENERIC_SPELL_DAMAGE, ANFakePlayer.getOrFakePlayer((ServerLevel) world, shooter));
     }
-
 }

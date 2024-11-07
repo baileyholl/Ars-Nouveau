@@ -116,10 +116,13 @@ dependencies {
     implementation "curse.maven:jade-324717:5444008"
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}+1.21"
 
-    // use localRuntime for adding mods to env that won't be listed as dependencies in the manifest
+    implementation "curse.maven:ars-additions-974408:5698511"
 
-    // localRuntime "com.alexthw.ars_elemental:ars_elemental-${minecraft_version}:0.7.0.8.9"
-    // localRuntime "curse.maven:ars-additions-974408:5852361"
+    runtimeOnly 'curse.maven:ftb-teams-forge-404468:5631446'
+    runtimeOnly 'curse.maven:ftb-chunks-forge-314906:5710609'
+    runtimeOnly 'curse.maven:ftb-library-forge-404465:5754910'
+    runtimeOnly 'curse.maven:architectury-api-419699:5553800'
+
 }
 
 jar {

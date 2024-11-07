@@ -41,7 +41,7 @@ public class EffectRedstone extends AbstractEffect {
         int timeBonus = (int) spellStats.getDurationMultiplier();
         int delay = Math.max(GENERIC_INT.get() + timeBonus * BONUS_TIME.get(), 2);
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
-        FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
+        FakePlayer fakePlayer = ANFakePlayer.getOrFakePlayer((ServerLevel) world, shooter);
         for (BlockPos pos1 : posList) {
             if (spellStats.isSensitive()) {
                 if (!world.isInWorldBounds(pos1))

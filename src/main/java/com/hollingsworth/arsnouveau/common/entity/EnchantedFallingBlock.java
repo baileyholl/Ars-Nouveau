@@ -132,7 +132,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
                 || level.getBlockEntity(pos) instanceof SkullBlockEntity))) {
             return false;
         }
-        return BlockUtil.canBlockBeHarvested(spellStats, level, pos) && BlockUtil.destroyRespectsClaim(owner, level, pos);
+        return BlockUtil.canBlockBeHarvested(spellStats, level, pos) && BlockUtil.destroyRespectsClaim((LivingEntity) owner, level, pos);
     }
 
     public static @Nullable EnchantedFallingBlock fall(Level level, BlockPos pos, Entity owner, SpellContext context, SpellResolver resolver, SpellStats spellStats) {
