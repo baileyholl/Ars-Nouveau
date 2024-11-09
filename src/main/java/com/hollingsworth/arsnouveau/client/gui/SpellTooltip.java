@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 public record SpellTooltip(AbstractCaster<?> spellcaster, boolean showName) implements TooltipComponent {
@@ -32,12 +33,12 @@ public record SpellTooltip(AbstractCaster<?> spellcaster, boolean showName) impl
         }
 
         @Override
-        public int getWidth(Font pFont) {
+        public int getWidth(@NotNull Font pFont) {
             return 4 + spellCaster.getSpell().size() * 16;
         }
 
         @Override
-        public void renderText(Font pFont, int pX, int pY, Matrix4f pMatrix, MultiBufferSource.BufferSource pBufferSource) {
+        public void renderText(@NotNull Font pFont, int pX, int pY, @NotNull Matrix4f pMatrix, MultiBufferSource.@NotNull BufferSource pBufferSource) {
 
             if (showName) {
                 pFont.drawInBatch(Component.literal(spellCaster.getSpellName()), (float) (pX + 4), (float) pY, -1, true, pMatrix, pBufferSource, Font.DisplayMode.NORMAL, 0, 15728880);
@@ -46,7 +47,7 @@ public record SpellTooltip(AbstractCaster<?> spellcaster, boolean showName) impl
         }
 
         @Override
-        public void renderImage(Font pFont, int pX, int pY, GuiGraphics pGuiGraphics) {
+        public void renderImage(@NotNull Font pFont, int pX, int pY, @NotNull GuiGraphics pGuiGraphics) {
             var spell = spellCaster.getSpell();
             for (int i = 0, recipeSize = spell.size(); i < recipeSize; i++) {
                 AbstractSpellPart part = spell.get(i);

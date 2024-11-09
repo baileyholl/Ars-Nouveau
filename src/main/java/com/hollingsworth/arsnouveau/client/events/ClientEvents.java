@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.events;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.DynamicTooltipRegistry;
 import com.hollingsworth.arsnouveau.client.gui.PatchouliTooltipEvent;
+import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.renderer.world.PantomimeRenderer;
@@ -41,6 +42,7 @@ public class ClientEvents {
         @SubscribeEvent
         public static void registerTooltipFactory(RegisterClientTooltipComponentFactoriesEvent event) {
             event.register(SpellTooltip.class, SpellTooltip.SpellTooltipRenderer::new);
+            event.register(SchoolTooltip.class, SchoolTooltip.SchoolTooltipRenderer::new);
         }
 
 

@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractSummonCharm extends ModItem {
 
@@ -21,7 +22,7 @@ public abstract class AbstractSummonCharm extends ModItem {
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext context) {
+    public @NotNull InteractionResult useOn(UseOnContext context) {
         Level world = context.getLevel();
         if (world.isClientSide) return InteractionResult.SUCCESS;
         BlockPos pos = context.getClickedPos();

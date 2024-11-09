@@ -51,9 +51,9 @@ license="GNU GENERAL PUBLIC LICENSE"
 [[mixins]]
     config="ars_nouveau.mixins.json"
 
-[[dependencies.ars_nouveau]]
-    modId="jei"
-    mandatory=true
-    versionRange="[1.19-5.0.7.1,)"
-    ordering="AFTER"
-    side="BOTH"
+#[[dependencies.ars_nouveau]]
+#    modId="jei"
+#    mandatory=true
+#    versionRange="[1.19-5.0.7.1,)"
+#    ordering="AFTER"
+#    side="BOTH"
