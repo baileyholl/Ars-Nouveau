@@ -50,6 +50,11 @@ public class EffectBubble extends AbstractEffect {
     }
 
     @Override
+    protected @NotNull Set<SpellSchool> getSchools() {
+        return Set.of(SpellSchools.ELEMENTAL_WATER);
+    }
+
+    @Override
     public String getBookDescription() {
         return "Captures mobs and entities it touches, causing them to float upwards. If the bubble has been alive for at least one tick, damaging the entity trapped in the bubble will cause it to pop, dealing bonus damage to the entity inside. Extend time and amplify can be used to increase the duration and damage of the bubble.";
     }

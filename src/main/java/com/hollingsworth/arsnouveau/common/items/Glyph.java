@@ -74,7 +74,7 @@ public class Glyph extends ModItem {
             tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_disabled"));
         } else if (spellPart != null) {
             tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getConfigTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
-            if (!Screen.hasShiftDown()) {
+            if (Screen.hasShiftDown()) {
                 tooltip2.add(Component.translatable("ars_nouveau.schools"));
                 for (SpellSchool s : spellPart.spellSchools) {
                     tooltip2.add(s.getTextComponent());
@@ -102,8 +102,8 @@ public class Glyph extends ModItem {
 
     @Override
     public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
-        if (!Screen.hasShiftDown()) {
-            return Optional.of(new SchoolTooltip(spellPart.spellSchools));
+        if (!Screen.hasShiftDown() && spellPart != null && !spellPart.spellSchools.isEmpty()) {
+            return Optional.of(new SchoolTooltip(spellPart));
         }
         return Optional.empty();
     }
