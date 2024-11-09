@@ -33,6 +33,7 @@ public class AlakarkinosCharm extends ModItem {
             alakarkinos.fromCharmData(data);
         }
         world.addFreshEntity(alakarkinos);
+        pContext.getItemInHand().shrink(1);
         return super.useOn(pContext);
     }
 
