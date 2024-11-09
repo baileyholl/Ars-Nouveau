@@ -12,11 +12,11 @@ import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.Color;
 import com.hollingsworth.arsnouveau.client.gui.GuiUtils;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
+import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
 import com.hollingsworth.arsnouveau.client.gui.buttons.*;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
-import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateCaster;
@@ -46,6 +46,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 
 import java.net.URI;
@@ -95,7 +96,7 @@ public class GuiSpellBook extends BaseBook {
     public int spellWindowOffset = 0;
     public int bonusSlots = 0;
 
-    public GuiSpellBook(InteractionHand hand){
+    public GuiSpellBook(InteractionHand hand) {
         super();
         this.hand = hand;
         IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player);
@@ -107,7 +108,7 @@ public class GuiSpellBook extends BaseBook {
             parts = new ArrayList<>(GlyphRegistry.getSpellpartMap().values().stream().filter(AbstractSpellPart::shouldShowInSpellBook).toList());
         }
         int tier = 1;
-        if(heldStack.getItem() instanceof SpellBook book){
+        if (heldStack.getItem() instanceof SpellBook book) {
             tier = book.getTier().value;
         }
         if (SpellCasterRegistry.hasCaster(heldStack)) {
@@ -352,7 +353,7 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void onPageIncrease(Button button) {
-        if(page + 1 >= getNumPages())
+        if (page + 1 >= getNumPages())
             return;
         page++;
         if (displayedGlyphs.size() < glyphsPerPage * (page + 1)) {
@@ -366,7 +367,7 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void onPageDec(Button button) {
-        if(page <= 0){
+        if (page <= 0) {
             page = 0;
             return;
         }
@@ -390,8 +391,8 @@ public class GuiSpellBook extends BaseBook {
 
     @Override
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
-        boolean isShiftDown =  InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), Minecraft.getInstance().options.keyShift.getKey().getValue());
-        if(getExtraGlyphSlots() > 0 && isShiftDown){
+        boolean isShiftDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), Minecraft.getInstance().options.keyShift.getKey().getValue());
+        if (getExtraGlyphSlots() > 0 && isShiftDown) {
             if (pScrollY < 0 && nextGlyphButton.active) {
                 updateWindowOffset(spellWindowOffset + 1);
             } else if (pScrollY > 0 && prevGlyphButton.active) {
@@ -436,7 +437,7 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void onCraftingSlotClick(Button button) {
-        if(button instanceof CraftingButton craftingButton) {
+        if (button instanceof CraftingButton craftingButton) {
             craftingButton.clear();
             if (craftingButton.slotNum < spell.size()) {
                 spell.set(((CraftingButton) button).slotNum, null);
@@ -500,11 +501,11 @@ public class GuiSpellBook extends BaseBook {
 
     @Override
     public boolean charTyped(char pCodePoint, int pModifiers) {
-        if(hoveredWidget instanceof GlyphButton glyphButton && glyphButton.validationErrors.isEmpty()){
+        if (hoveredWidget instanceof GlyphButton glyphButton && glyphButton.validationErrors.isEmpty()) {
             // check if char is a number
-            if(pCodePoint >= '0' && pCodePoint <= '9'){
+            if (pCodePoint >= '0' && pCodePoint <= '9') {
                 int num = Integer.parseInt(String.valueOf(pCodePoint));
-                if(num == 0){
+                if (num == 0) {
                     num = 10;
                 }
                 num -= 1;
@@ -600,10 +601,10 @@ public class GuiSpellBook extends BaseBook {
         if (augmentTextRow >= 1) {
             graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.augment").getString(), augmentTextRow > 6 ? 154 : 20, 5 + 18 * (augmentTextRow + 1), -8355712, false);
         }
-        graphics.blit(ArsNouveau.prefix( "textures/gui/spell_name_paper.png"), 16, 179, 0, 0, 109, 15, 109, 15);
-        graphics.blit(ArsNouveau.prefix( "textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15, 72, 15);
-        graphics.blit(ArsNouveau.prefix( "textures/gui/clear_paper.png"), 161, 179, 0, 0, 47, 15, 47, 15);
-        graphics.blit(ArsNouveau.prefix( "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15);
+        graphics.blit(ArsNouveau.prefix("textures/gui/spell_name_paper.png"), 16, 179, 0, 0, 109, 15, 109, 15);
+        graphics.blit(ArsNouveau.prefix("textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15, 72, 15);
+        graphics.blit(ArsNouveau.prefix("textures/gui/clear_paper.png"), 161, 179, 0, 0, 47, 15, 47, 15);
+        graphics.blit(ArsNouveau.prefix("textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15);
         if (validationErrors.isEmpty()) {
             graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.create"), 233, 183, -8355712, false);
         } else {
@@ -630,16 +631,16 @@ public class GuiSpellBook extends BaseBook {
         poseStack.pushPose();
         poseStack.scale(1.2F, 1.2F, 1.2F);
         poseStack.translate(-25, -30, 0);
-        graphics.blit(ArsNouveau.prefix( "textures/gui/manabar_gui_border.png"), offsetLeft, yOffset - 18, 0, 0, 108, 18, 256, 256);
+        graphics.blit(ArsNouveau.prefix("textures/gui/manabar_gui_border.png"), offsetLeft, yOffset - 18, 0, 0, 108, 18, 256, 256);
         int manaOffset = (int) (((ClientInfo.ticksInGame + partialTicks) / 3 % (33))) * 6;
 
         // default length is 96
         // rainbow effect for perfect match is currently disabled by the >=
         if (manaLength >= 0) {
-            graphics.blit( ArsNouveau.prefix( "textures/gui/manabar_gui_mana.png"), offsetLeft + 9, yOffset - 9, 0, manaOffset, manaLength, 6, 256, 256);
+            graphics.blit(ArsNouveau.prefix("textures/gui/manabar_gui_mana.png"), offsetLeft + 9, yOffset - 9, 0, manaOffset, manaLength, 6, 256, 256);
         } else {
             //color rainbow if mana cost = max mana, red if mana cost > max mana
-            RenderSystem.setShaderTexture(0, ArsNouveau.prefix( "textures/gui/manabar_gui_grayscale.png"));
+            RenderSystem.setShaderTexture(0, ArsNouveau.prefix("textures/gui/manabar_gui_grayscale.png"));
             RenderUtils.colorBlit(graphics.pose(), offsetLeft + 8, yOffset - 10, 0, manaOffset, 100, 8, 256, 256, manaLength < 0 ? Color.RED : Color.rainbowColor(ClientInfo.ticksInGame));
         }
         if (ArsNouveauAPI.ENABLE_DEBUG_NUMBERS && minecraft != null) {
@@ -647,10 +648,10 @@ public class GuiSpellBook extends BaseBook {
             int maxWidth = minecraft.font.width(maxManaCache + "  /  " + maxManaCache);
             int offset = offsetLeft - maxWidth / 2 + (maxWidth - minecraft.font.width(text));
 
-            graphics.drawString(minecraft.font, text,  offset + 55, yOffset - 10, 0xFFFFFF, false);
+            graphics.drawString(minecraft.font, text, offset + 55, yOffset - 10, 0xFFFFFF, false);
         }
 
-        graphics.blit(ArsNouveau.prefix( "textures/gui/manabar_gui_border.png"), offsetLeft, yOffset - 17, 0, 18, 108, 20, 256, 256);
+        graphics.blit(ArsNouveau.prefix("textures/gui/manabar_gui_border.png"), offsetLeft, yOffset - 17, 0, 18, 108, 20, 256, 256);
         poseStack.popPose();
     }
 
@@ -734,13 +735,13 @@ public class GuiSpellBook extends BaseBook {
     @Override
     public void render(GuiGraphics ms, int mouseX, int mouseY, float partialTicks) {
         super.render(ms, mouseX, mouseY, partialTicks);
-        if(this.setFocusOnLoad){
+        if (this.setFocusOnLoad) {
             this.setFocusOnLoad = false;
             this.setInitialFocus(searchBar);
         }
         hoveredWidget = null;
-        for(Renderable widget : renderables){
-            if(widget instanceof AbstractWidget abstractWidget && GuiUtils.isMouseInRelativeRange(mouseX, mouseY, abstractWidget)){
+        for (Renderable widget : renderables) {
+            if (widget instanceof AbstractWidget abstractWidget && GuiUtils.isMouseInRelativeRange(mouseX, mouseY, abstractWidget)) {
                 hoveredWidget = widget;
                 break;
             }
@@ -750,7 +751,7 @@ public class GuiSpellBook extends BaseBook {
 
     @Override
     public void collectTooltips(GuiGraphics stack, int mouseX, int mouseY, List<Component> tooltip) {
-        if(GuiUtils.isMouseInRelativeRange(mouseX, mouseY, createSpellButton)){
+        if (GuiUtils.isMouseInRelativeRange(mouseX, mouseY, createSpellButton)) {
             if (!validationErrors.isEmpty()) {
                 boolean foundGlyphErrors = false;
                 tooltip.add(Component.translatable("ars_nouveau.spell.validation.crafting.invalid").withStyle(ChatFormatting.RED));
@@ -763,14 +764,32 @@ public class GuiSpellBook extends BaseBook {
                         foundGlyphErrors = true;
                     }
                 }
-
                 // Show a single placeholder for all the per-glyph errors
                 if (foundGlyphErrors) {
                     tooltip.add(Component.translatable("ars_nouveau.spell.validation.crafting.invalid_glyphs"));
                 }
             }
-        }else {
+        } else {
             super.collectTooltips(stack, mouseX, mouseY, tooltip);
         }
+    }
+
+    public void drawTooltip(GuiGraphics stack, int mouseX, int mouseY) {
+        List<Component> tooltip = new ArrayList<>();
+        collectTooltips(stack, mouseX, mouseY, tooltip);
+        if (!tooltip.isEmpty()) {
+            stack.renderTooltip(font, tooltip, Optional.ofNullable(collectComponent(mouseX, mouseY)), mouseX, mouseY);
+        }
+    }
+
+    protected TooltipComponent collectComponent(int mouseX, int mouseY) {
+        for (Renderable renderable : renderables) {
+            if (renderable instanceof GlyphButton widget) {
+                if (GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)) {
+                    return widget.abstractSpellPart.spellSchools.isEmpty() ? null : new SchoolTooltip(widget.abstractSpellPart);
+                }
+            }
+        }
+        return null;
     }
 }

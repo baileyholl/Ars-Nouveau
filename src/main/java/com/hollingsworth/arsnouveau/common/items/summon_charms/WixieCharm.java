@@ -15,6 +15,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CauldronBlock;
+import org.jetbrains.annotations.NotNull;
 
 public class WixieCharm extends AbstractSummonCharm {
     public WixieCharm() {
@@ -24,7 +25,7 @@ public class WixieCharm extends AbstractSummonCharm {
     /**
      * Called when this item is used when targetting a Block
      */
-    public InteractionResult useOn(UseOnContext context) {
+    public @NotNull InteractionResult useOn(UseOnContext context) {
         return super.useOn(context);
     }
 

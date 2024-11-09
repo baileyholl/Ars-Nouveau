@@ -14,6 +14,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforgespi.language.IModInfo;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class UnlockGlyphButton extends ANButton {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    protected void renderWidget(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         if (this.spellPart != null) {
             RenderUtils.drawSpellPart(this.spellPart, pGuiGraphics, x, y, width, !playerKnows, 0);
             if (selected)

@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.enchantment.LevelBasedValue;
 import net.minecraft.world.item.enchantment.effects.EnchantmentAttributeEffect;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.registries.holdersets.AnyHolderSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,7 +69,7 @@ public class EnchantmentProvider extends DatapackBuiltinEntriesProvider {
                 )));
 
         register(ctx, EnchantmentRegistry.REACTIVE_ENCHANTMENT, Enchantment.enchantment(Enchantment.definition(
-                holdergetter2.getOrThrow(ItemTags.ARMOR_ENCHANTABLE),
+                new AnyHolderSet<>(BuiltInRegistries.ITEM.asLookup()),
                 1,
                 4,
                 Enchantment.dynamicCost(1, 11),
@@ -99,7 +101,7 @@ public class EnchantmentProvider extends DatapackBuiltinEntriesProvider {
         }
 
         @Override
-        protected void addTags(HolderLookup.Provider pProvider) {
+        protected void addTags(HolderLookup.@NotNull Provider pProvider) {
 
             this.tag(EnchantmentTags.NON_TREASURE).addOptional(
                     EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.location())

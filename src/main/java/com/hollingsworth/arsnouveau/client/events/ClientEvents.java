@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.events;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.DynamicTooltipRegistry;
 import com.hollingsworth.arsnouveau.client.gui.PatchouliTooltipEvent;
+import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.renderer.world.PantomimeRenderer;
@@ -10,8 +11,11 @@ import com.hollingsworth.arsnouveau.common.block.tile.ArchwoodChestTile;
 import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
 import com.hollingsworth.arsnouveau.common.block.tile.SkyBlockTile;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.datafixers.util.Either;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
@@ -41,6 +45,7 @@ public class ClientEvents {
         @SubscribeEvent
         public static void registerTooltipFactory(RegisterClientTooltipComponentFactoriesEvent event) {
             event.register(SpellTooltip.class, SpellTooltip.SpellTooltipRenderer::new);
+            event.register(SchoolTooltip.class, SchoolTooltip.SchoolTooltipRenderer::new);
         }
 
 
@@ -79,6 +84,16 @@ public class ClientEvents {
             PatchouliTooltipEvent.onTooltip(e.getGraphics().pose(), e.getItemStack(), e.getX(), e.getY());
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    @SubscribeEvent
+    public static void addComponents(RenderTooltipEvent.GatherComponents event) {
+        if (!Screen.hasShiftDown() && event.getItemStack().isEnchanted() && event.getItemStack().has(DataComponentRegistry.REACTIVE_CASTER)) {
+            var caster = event.getItemStack().get(DataComponentRegistry.REACTIVE_CASTER);
+            if (caster != null && caster.getSpell().isValid()) {
+                event.getTooltipElements().add(Either.right(new SpellTooltip(caster)));
+            }
         }
     }
 
