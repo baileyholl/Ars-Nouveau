@@ -23,7 +23,7 @@ public record SchoolTooltip(AbstractSpellPart part) implements TooltipComponent 
 
     public static class SchoolTooltipRenderer implements ClientTooltipComponent {
 
-        static final int offset = 64;
+        static final int offset = 16;
         private final List<SpellSchool> schools;
         private final String name;
 
