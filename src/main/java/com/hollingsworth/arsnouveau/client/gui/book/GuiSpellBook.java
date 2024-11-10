@@ -207,7 +207,6 @@ public class GuiSpellBook extends BaseBook {
         previousButton.active = false;
         previousButton.visible = false;
 
-        validate();
         List<AbstractSpellPart> recipe = SpellCasterRegistry.from(bookStack).getSpell(selectedSlot).mutable().recipe;
         spell = new ArrayList<>(recipe);
 
@@ -217,6 +216,7 @@ public class GuiSpellBook extends BaseBook {
             this.prevGlyphButton = addRenderableWidget(new PageButton(bookLeft, bookBottom - 30, false, i -> updateWindowOffset(spellWindowOffset - 1), true));
             updateWindowOffset(0);
         }
+        validate();
     }
 
     public int getNumPages() {
