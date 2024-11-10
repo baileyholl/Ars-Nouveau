@@ -15,15 +15,12 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Matrix4f;
 
-import java.util.List;
 import java.util.Random;
-import java.util.stream.IntStream;
 
 @OnlyIn(Dist.CLIENT)
 public class PortalTileRenderer<T extends PortalTile> implements BlockEntityRenderer<T> {
 
     private static final Random RANDOM = new Random(31100L);
-    private static final List<RenderType> RENDER_TYPES = IntStream.range(0, 16).mapToObj((p_228882_0_) -> RenderType.endPortal()).toList();
 
     public PortalTileRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
 
@@ -35,12 +32,11 @@ public class PortalTileRenderer<T extends PortalTile> implements BlockEntityRend
         int i = this.getPasses(d0);
         float f = this.getOffset();
         Matrix4f matrix4f = matrixStackIn.last().pose();
-        this.renderCube(tileEntityIn, f, 0.10F, matrix4f, bufferIn.getBuffer(RENDER_TYPES.get(0)));
+        this.renderCube(tileEntityIn, f, 0.10F, matrix4f, bufferIn.getBuffer(RenderType.endPortal()));
 
         for (int j = 1; j < i; ++j) {
-            this.renderCube(tileEntityIn, f, 2.0F / (float) (35 - j), matrix4f, bufferIn.getBuffer(RENDER_TYPES.get(j)));
+            this.renderCube(tileEntityIn, f, 2.0F / (float) (35 - j), matrix4f, bufferIn.getBuffer( RenderType.endPortal()));
         }
-
     }
 
     private void renderCube(PortalTile tileEntityIn, float p_228883_2_, float p_228883_3_, Matrix4f p_228883_4_, VertexConsumer p_228883_5_) {
