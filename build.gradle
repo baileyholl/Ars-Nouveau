@@ -103,7 +103,7 @@ dependencies {
 
     implementation "software.bernie.geckolib:geckolib-neoforge-1.21.1:${geckolib_version}"
 //
-    compileOnly(jarJar(group: 'vazkii.patchouli', name: 'Patchouli', version: '[1.21,)') {
+    implementation(jarJar(group: 'vazkii.patchouli', name: 'Patchouli', version: '[1.21,)') {
         jarJar.pin(it, patchouli_version)
     })
 

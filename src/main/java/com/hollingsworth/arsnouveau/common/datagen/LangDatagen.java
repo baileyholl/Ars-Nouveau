@@ -619,7 +619,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page.weald_walker", "Weald Walkers");
         add("ars_nouveau.spell_schools", "Spell Schools");
         add("ars_nouveau.casting_cost", "Casting Cost");
-        add("ars_nouveau.tier", "Tier %s");
+        add("ars_nouveau.tier", "Tier");
         add("ars_nouveau.page.agronomic_sourcelink", "The Agronomic Sourcelink generates source from crop and tree growth within 15 blocks. Bonus source is generated for magical plants such as Mageblooms, Source Berry Bushes, and Archwood Saplings. Source will be output from the Sourcelink to nearby jars within 5 blocks. Note: Bonemealing crops will not grant Source.");
         add("ars_nouveau.page.source_jar", "Source Jars store source gathered from nearby Sourcelinks. Source is used in glyphs and rituals by powering devices like the Imbuement Chamber and Enchanting Apparatus. Source may be moved using a Source Relay or by breaking and moving it. To use Source in a jar, simply place the jar near your desired device. Source Jars will provide a signal to Redstone Comparators based on their fill level.");
         add("ars_nouveau.page1.volcanic_sourcelink", "The Volcanic Sourcelink generates Source by consuming burnable items. Archwood logs will generate bonus Source, with Blazing Archwood generating the most. As the Volcanic Sourcelink produces Source, it also produces $(item)heat$(), used for spawning Lava Lilies and converting stone into lava. The Volcanic Sourcelink automatically outputs to nearby jars, starting with the one closest to it.");
