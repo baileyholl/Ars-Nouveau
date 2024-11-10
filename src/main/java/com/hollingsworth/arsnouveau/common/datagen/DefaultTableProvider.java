@@ -189,6 +189,7 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.SKY_WEAVE);
             registerDropSelf(BlockRegistry.ROTATING_TURRET);
             registerDropSelf(BlockRegistry.SPELL_SENSOR);
+            registerDropSelf(BlockRegistry.CREATIVE_SOURCE_JAR);
 
             add(BlockRegistry.SOURCE_JAR.get(), createManaManchineTable(BlockRegistry.SOURCE_JAR.get()));
 

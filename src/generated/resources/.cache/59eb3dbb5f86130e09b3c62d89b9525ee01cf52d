@@ -1,4 +1,4 @@
-// 1.21.1	2024-09-11T20:19:28.537053	Loot Tables
+// 1.21.1	2024-11-10T11:47:56.4656631	Loot Tables
 4f70eae621815da8d08d3ea0b9fd479b48bad2d3 data/ars_nouveau/loot_table/blocks/agronomic_sourcelink.json
 8a6d60f2b39de0408c7e4537b53e866a04236d22 data/ars_nouveau/loot_table/blocks/alchemical_sourcelink.json
 8bdff8a0a49a9f3f21a822eb1d1d01a950d6ad1a data/ars_nouveau/loot_table/blocks/alteration_table.json
@@ -26,6 +26,7 @@ ecc018a81786cc6a6e28d361245f41ac11dbe254 data/ars_nouveau/loot_table/blocks/blue
 d74fd91465aa6474895a69ce39c3c63e96cd61af data/ars_nouveau/loot_table/blocks/blue_sbed.json
 fe4e42346e3f3b02b067ec99d988953be10780f3 data/ars_nouveau/loot_table/blocks/bombegranate_pod.json
 25879b59f556935200d2f9d63e9fe18c0f8b6375 data/ars_nouveau/loot_table/blocks/brazier_relay.json
+d55a3d256fd7d71a17fc46cb1373ddf4581ebaab data/ars_nouveau/loot_table/blocks/creative_source_jar.json
 cf0a6f8a23b9a04aac70bae40c63d8e57b1006a6 data/ars_nouveau/loot_table/blocks/drygmy_stone.json
 50fb5a022df6f6d156c90ee3121ccfe82943beb7 data/ars_nouveau/loot_table/blocks/enchanting_apparatus.json
 7a2afda0f26e560c401265332ba8466e324c2b90 data/ars_nouveau/loot_table/blocks/falseweave.json
