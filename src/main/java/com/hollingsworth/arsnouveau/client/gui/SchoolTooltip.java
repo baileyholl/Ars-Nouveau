@@ -11,14 +11,18 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record SchoolTooltip(AbstractSpellPart part) implements TooltipComponent {
+public record SchoolTooltip(AbstractSpellPart part, boolean glyphItem) implements TooltipComponent {
+
+    public SchoolTooltip(AbstractSpellPart part) {
+        this(part, false);
+    }
 
     public List<SpellSchool> schools() {
         return part.spellSchools;
     }
 
     public String name() {
-        return Component.translatable("ars_nouveau.glyph_of", part.getLocaleName()).getString();
+        return glyphItem ? Component.translatable("ars_nouveau.glyph_of", part.getLocaleName()).getString() : part.getLocaleName();
     }
 
     public static class SchoolTooltipRenderer implements ClientTooltipComponent {

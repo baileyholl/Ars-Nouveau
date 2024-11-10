@@ -103,7 +103,7 @@ public class Glyph extends ModItem {
     @Override
     public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
         if (!Screen.hasShiftDown() && spellPart != null && !spellPart.spellSchools.isEmpty()) {
-            return Optional.of(new SchoolTooltip(spellPart));
+            return Optional.of(new SchoolTooltip(spellPart, true));
         }
         return Optional.empty();
     }
