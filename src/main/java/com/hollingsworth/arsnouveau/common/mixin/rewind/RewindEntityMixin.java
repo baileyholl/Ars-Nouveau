@@ -36,13 +36,17 @@ public abstract class RewindEntityMixin implements IRewindable {
 
     @Shadow public Level level;
     @Unique
-    public Stack<RewindEntityData> ars_Nouveau$motions = new FixedStack<>(EffectRewind.INSTANCE.getEntityMaxTrackingTicks());
+    public Stack<RewindEntityData> ars_Nouveau$motions = null;
 
     @Unique
     public boolean an_isRewinding = false;
 
     @Inject(method = "baseTick", at = @At("TAIL"))
     public void onTick(CallbackInfo ci) {
+        // Prevent other mods from early loading Entity and causing the config to throw
+        if(ars_Nouveau$motions == null){
+            ars_Nouveau$motions = new FixedStack<>(EffectRewind.INSTANCE.getEntityMaxTrackingTicks());
+        }
         Entity entity = (Entity) (Object) this;
         if(!EffectRewind.shouldRecordData(entity, this) || level == null) {
             return;
@@ -72,7 +76,7 @@ public abstract class RewindEntityMixin implements IRewindable {
 
     @Override
     public Stack<RewindEntityData> getMotions() {
-        return ars_Nouveau$motions;
+        return  return ars_Nouveau$motions == null ? new FixedStack<>(0) : ars_Nouveau$motions;
     }
 
     @Override
