@@ -108,7 +108,7 @@ public class SpellContext implements Cloneable {
      * or by cloning this context and setting the spell to the remainder of the spell and canceling the current one.
      * The new context will have its previous context set to this context.
      */
-    public @NotNull SpellContext makeChildContext(){
+    public @NotNull SpellContext makeChildContext() {
         Spell remainder = getRemainingSpell();
         for(AbstractSpellPart spellPart : remainder.recipe){
             if(spellPart instanceof IContextManipulator manipulator){

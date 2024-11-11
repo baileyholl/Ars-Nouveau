@@ -1,10 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.event.EffectResolveEvent;
-import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
-import com.hollingsworth.arsnouveau.api.event.SpellCostCalcEvent;
-import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
+import com.hollingsworth.arsnouveau.api.event.*;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
