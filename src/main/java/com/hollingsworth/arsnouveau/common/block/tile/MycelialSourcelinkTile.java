@@ -69,13 +69,13 @@ public class MycelialSourcelinkTile extends SourcelinkTile {
                 return 0;
             int mana = 0;
             mana += 11 * food.getNutrition();
-            mana += (int) (30.0 * ((food.getSaturationModifier() * 2.0)));
+            mana += (int) (30.0 * (food.getNutrition() * food.getSaturationModifier() * 2.0f));
             progress += 1;
 
             if (i.is(ItemTagProvider.MAGIC_FOOD) || (i.getItem() instanceof BlockItem blockItem && blockItem.getBlock().defaultBlockState().is(BlockTagProvider.MAGIC_PLANTS))) {
                 progress += 4;
                 mana += 10;
-                mana += (int) ((float) mana * 1.5f);
+                mana += (int) ((float) mana * 2.0f);
             }
             return mana;
         }
