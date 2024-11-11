@@ -15,15 +15,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.joml.Matrix4f;
 
-import java.util.List;
 import java.util.Random;
-import java.util.stream.IntStream;
 
 @OnlyIn(Dist.CLIENT)
 public class PortalTileRenderer<T extends PortalTile> implements BlockEntityRenderer<T> {
 
     private static final Random RANDOM = new Random(31100L);
-    private static final List<RenderType> RENDER_TYPES = IntStream.range(0, 16).mapToObj((p_228882_0_) -> RenderType.endPortal()).toList();
 
     public PortalTileRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
 
@@ -35,10 +32,10 @@ public class PortalTileRenderer<T extends PortalTile> implements BlockEntityRend
         int i = this.getPasses(d0);
         float f = this.getOffset();
         Matrix4f matrix4f = matrixStackIn.last().pose();
-        this.renderCube(tileEntityIn, f, 0.10F, matrix4f, bufferIn.getBuffer(RENDER_TYPES.get(0)));
+        this.renderCube(tileEntityIn, f, 0.10F, matrix4f, bufferIn.getBuffer(RenderType.endPortal()));
 
         for (int j = 1; j < i; ++j) {
-            this.renderCube(tileEntityIn, f, 2.0F / (float) (35 - j), matrix4f, bufferIn.getBuffer(RENDER_TYPES.get(j)));
+            this.renderCube(tileEntityIn, f, 2.0F / (float) (35 - j), matrix4f, bufferIn.getBuffer(RenderType.endPortal()));
         }
 
     }
@@ -56,13 +53,16 @@ public class PortalTileRenderer<T extends PortalTile> implements BlockEntityRend
     }
 
     private void renderFace(PortalTile tileEntityIn, Matrix4f matrix, VertexConsumer iBuilder, float p_228884_4_, float p_228884_5_, float p_228884_6_, float p_228884_7_, float p_228884_8_, float p_228884_9_, float p_228884_10_, float p_228884_11_, float p_228884_12_, float p_228884_13_, float p_228884_14_, Direction direction) {
-        if (!tileEntityIn.isHorizontal && (direction == Direction.EAST || direction == Direction.WEST || direction == Direction.SOUTH || direction == Direction.NORTH)) {
+        var beAxis = tileEntityIn.getBlockState().getValue(PortalBlock.AXIS);
+        var directionAxis = direction.getAxis();
+        // what have I done...
+        if (!tileEntityIn.isHorizontal && (beAxis == Direction.Axis.X && directionAxis == Direction.Axis.Z) || (beAxis == Direction.Axis.Z && directionAxis == Direction.Axis.X)) {
             iBuilder.vertex(matrix, p_228884_4_, p_228884_6_, p_228884_8_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
             iBuilder.vertex(matrix, p_228884_5_, p_228884_6_, p_228884_9_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
             iBuilder.vertex(matrix, p_228884_5_, p_228884_7_, p_228884_10_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
             iBuilder.vertex(matrix, p_228884_4_, p_228884_7_, p_228884_11_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
 
-        } else if (tileEntityIn.isHorizontal && (direction == Direction.UP || direction == Direction.DOWN)) {
+        } else if (tileEntityIn.isHorizontal && direction.getAxis() == Direction.Axis.Y) {
             iBuilder.vertex(matrix, p_228884_4_, p_228884_6_, p_228884_8_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
             iBuilder.vertex(matrix, p_228884_5_, p_228884_6_, p_228884_9_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
             iBuilder.vertex(matrix, p_228884_5_, p_228884_7_, p_228884_10_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
