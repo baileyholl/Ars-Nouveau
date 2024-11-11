@@ -23,4 +23,5 @@ public class EntityTags {
     public static final TagKey<EntityType<?>> JAR_RELEASE_BLACKLIST = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(ArsNouveau.MODID, "jar_release_blacklist"));
     public static final TagKey<EntityType<?>> ANIMAL_SUMMON_BLACKLIST = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(ArsNouveau.MODID, "animal_summon_blacklist"));
     public static final TagKey<EntityType<?>> REWIND_BLACKLIST = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(ArsNouveau.MODID, "rewind_blacklist"));
+    public static final TagKey<EntityType<?>> BURST_WHITELIST = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(ArsNouveau.MODID, "burst_whitelist"));
 }

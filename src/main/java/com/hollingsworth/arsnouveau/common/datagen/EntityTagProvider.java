@@ -73,5 +73,6 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
         this.tag(EntityTags.JAR_RELEASE_BLACKLIST).add(EntityType.ENDER_DRAGON);
 
         this.tag(EntityTags.ANIMAL_SUMMON_BLACKLIST).add(ModEntities.GIFT_STARBY.get());
+        this.tag(EntityTags.BURST_WHITELIST).add(EntityType.ARROW);
     }
 }

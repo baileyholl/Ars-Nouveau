@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
@@ -61,7 +62,7 @@ public class EffectBurst extends AbstractEffect {
             }
         } else {
             for (Entity entity : world.getEntities(null, new AABB(center).inflate(radius, radius, radius))) {
-                if ((entity instanceof LivingEntity || entity.getType().is(EntityTags.BURST_WHITELIST)) && sphere.test(BlockUtil.distanceFromCenter(entity.blockPosition(), center))) {
+                if ((entity instanceof LivingEntity || entity.getType().is(EntityTags.BURST_WHITELIST)) && Sphere.test(BlockUtil.distanceFromCenter(entity.blockPosition(), center))) {
                     SpellResolver resolver1 = resolver.getNewResolver(spellContext.clone().makeChildContext());
                     resolver1.onResolveEffect(world, new EntityHitResult(entity));
                 }
