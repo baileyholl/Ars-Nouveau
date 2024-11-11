@@ -14,6 +14,7 @@ import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -73,39 +74,46 @@ public class ItemGrate extends ModBlock implements BucketPickup{
         BlockPos below = pPos.below();
         BlockState stateAbove = pLevel.getBlockState(pPos.above());
         BlockState stateBelow = pLevel.getBlockState(below);
-        if(stateAbove.getFluidState().isSource()) {
-            if (stateBelow.getBlock() instanceof LiquidBlockContainer blockContainer
-                    && blockContainer.canPlaceLiquid(null, pLevel, pPos.below(), stateBelow, stateAbove.getFluidState().getType())) {
-                if(blockContainer.placeLiquid(pLevel, pPos.below(), stateBelow, stateAbove.getFluidState())){
-                    if(stateAbove.getBlock() instanceof BucketPickup bucketPickup){
-                        bucketPickup.pickupBlock(null, pLevel, pPos.above(), stateAbove);
-                    }
-                    if(pLevel.getBlockState(pPos.above()).getFluidState().isSource()){
-                        pLevel.setBlockAndUpdate(pPos.above(), Blocks.AIR.defaultBlockState());
-                    }
-                }
-            } else if (stateBelow.canBeReplaced()) {
-                pLevel.setBlockAndUpdate(pPos.below(), stateAbove);
-                pLevel.setBlockAndUpdate(pPos.above(), Blocks.AIR.defaultBlockState());
-            }else if (stateBelow.getBlock() instanceof CauldronBlock cauldronBlock
-                    && !cauldronBlock.isFull(stateBelow)) {
-                if(stateAbove.getBlock() instanceof BucketPickup bucketPickup){
+        if(!stateAbove.getFluidState().isSource()){
+            return;
+        }
 
-                    ItemStack stack = bucketPickup.pickupBlock(null, pLevel, pPos.above(), stateAbove);
-                    if(!stack.isEmpty()){
-                        var accessor = (BlockBehaviourAccessor) cauldronBlock;
-                        ANFakePlayer fakePlayer = ANFakePlayer.getPlayer(pLevel);
-                        fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack.copy());
-                        ItemInteractionResult result = accessor.callUseItemOn(stack, stateBelow, pLevel, pPos.below(), fakePlayer, InteractionHand.MAIN_HAND, new BlockHitResult(new Vec3(below.getX(), below.getY(), below.getZ()), Direction.UP, pPos.below(), false));
-                        if(!ItemStack.isSameItem(fakePlayer.getItemInHand(InteractionHand.MAIN_HAND), stack)){
-                            if(pLevel.getBlockState(pPos.above()).getFluidState().isSource()){
-                                pLevel.setBlockAndUpdate(pPos.above(), Blocks.AIR.defaultBlockState());
-                            }
+        if (stateBelow.getBlock() instanceof LiquidBlockContainer blockContainer
+                && blockContainer.canPlaceLiquid(null, pLevel, pPos.below(), stateBelow, stateAbove.getFluidState().getType())) {
+            if(blockContainer.placeLiquid(pLevel, pPos.below(), stateBelow, stateAbove.getFluidState())){
+                if(stateAbove.getBlock() instanceof BucketPickup bucketPickup){
+                    bucketPickup.pickupBlock(null, pLevel, pPos.above(), stateAbove);
+                }
+                if(pLevel.getBlockState(pPos.above()).getFluidState().isSource()){
+                    pLevel.setBlockAndUpdate(pPos.above(), Blocks.AIR.defaultBlockState());
+                }
+            }
+        } else if (stateBelow.canBeReplaced()) {
+            if(stateAbove.getBlock() instanceof BucketPickup bucketPickup){
+                ItemStack bucket = bucketPickup.pickupBlock(null, pLevel, pPos.above(), stateAbove);
+                if(bucket.getItem() instanceof BucketItem bucketItem){
+                    pLevel.setBlockAndUpdate(below, stateAbove.getFluidState().createLegacyBlock());
+                }
+            }
+        }else if (stateBelow.getBlock() instanceof CauldronBlock cauldronBlock
+                && !cauldronBlock.isFull(stateBelow)) {
+            if(stateAbove.getBlock() instanceof BucketPickup bucketPickup){
+
+                ItemStack stack = bucketPickup.pickupBlock(null, pLevel, pPos.above(), stateAbove);
+                if(!stack.isEmpty()){
+                    var accessor = (BlockBehaviourAccessor) cauldronBlock;
+                    ANFakePlayer fakePlayer = ANFakePlayer.getPlayer(pLevel);
+                    fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack.copy());
+                    ItemInteractionResult result = accessor.callUseItemOn(stack, stateBelow, pLevel, pPos.below(), fakePlayer, InteractionHand.MAIN_HAND, new BlockHitResult(new Vec3(below.getX(), below.getY(), below.getZ()), Direction.UP, pPos.below(), false));
+                    if(!ItemStack.isSameItem(fakePlayer.getItemInHand(InteractionHand.MAIN_HAND), stack)){
+                        if(pLevel.getBlockState(pPos.above()).getFluidState().isSource()){
+                            pLevel.setBlockAndUpdate(pPos.above(), Blocks.AIR.defaultBlockState());
                         }
                     }
                 }
             }
         }
+
     }
 
     @Override
