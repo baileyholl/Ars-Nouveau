@@ -24,8 +24,9 @@ import java.util.UUID;
 
 // https://github.com/Creators-of-Create/Create/blob/mc1.15/dev/src/main/java/com/simibubi/create/content/contraptions/components/deployer/DeployerFakePlayer.java#L57
 public class ANFakePlayer extends FakePlayer {
-    public static FakePlayer getOrFakePlayer(ServerLevel level, @Nullable LivingEntity player) {
-        return getPlayer(level, player instanceof Player ? player.getUUID() : null);
+
+    public static Player getOrFakePlayer(ServerLevel level, @Nullable LivingEntity player) {
+        return player instanceof Player player1 ? player1 : getPlayer(level);
     }
 
     public static FakePlayer getPlayer(ServerLevel level, @Nullable UUID uuid) {

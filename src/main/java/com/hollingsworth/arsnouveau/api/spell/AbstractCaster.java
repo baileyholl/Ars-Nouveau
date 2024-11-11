@@ -306,15 +306,6 @@ public abstract class AbstractCaster<T extends AbstractCaster<T>> implements Too
         return castSpell(worldIn, playerIn, handIn, invalidMessage, getSpell(worldIn, playerIn, handIn, this));
     }
 
-    public T copyFromCaster(AbstractCaster<?> other) {
-        T self = (T) this;
-        for (int i = 0; i < getMaxSlots() && i < other.getMaxSlots(); i++) {
-            self = self.setSpell(other.getSpell(i), i);
-            self = self.setFlavorText(other.getFlavorText());
-        }
-        return self;
-    }
-
     @SuppressWarnings("unchecked")
     public void saveToStack(ItemStack stack) {
         stack.set(this.getComponentType(), this);
