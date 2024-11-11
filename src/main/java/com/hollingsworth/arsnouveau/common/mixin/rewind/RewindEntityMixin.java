@@ -76,7 +76,7 @@ public abstract class RewindEntityMixin implements IRewindable {
 
     @Override
     public Stack<RewindEntityData> getMotions() {
-        return  return ars_Nouveau$motions == null ? new FixedStack<>(0) : ars_Nouveau$motions;
+        return ars_Nouveau$motions == null ? new FixedStack<>(0) : ars_Nouveau$motions;
     }
 
     @Override

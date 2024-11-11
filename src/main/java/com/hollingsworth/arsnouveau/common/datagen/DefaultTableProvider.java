@@ -80,6 +80,7 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.CASCADING_SAPLING);
             registerDropSelf(BlockRegistry.FLOURISHING_SAPLING);
             registerDropSelf(BlockRegistry.ARCHWOOD_PLANK);
+            registerDropSelf(BlockRegistry.CREATIVE_SOURCE_JAR);
 
             registerDrop(BlockRegistry.WIXIE_CAULDRON.get(), Items.CAULDRON);
             for (FlowerPotBlock pot : BlockRegistry.flowerPots.values()) {

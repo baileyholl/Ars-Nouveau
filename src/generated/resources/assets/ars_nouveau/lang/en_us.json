@@ -878,7 +878,7 @@
   "ars_nouveau.thread_layout": "Thread Tiers",
   "ars_nouveau.thread_of": "Thread of %s",
   "ars_nouveau.threads": "Thread Slots",
-  "ars_nouveau.tier": "Tier %s",
+  "ars_nouveau.tier": "Tier",
   "ars_nouveau.tier_1_spells": "Tier 1 Glyphs",
   "ars_nouveau.tier_1_spells_desc": "Glyphs that may be cast using a Novice Spellbook.",
   "ars_nouveau.tier_2_spells": "Tier 2 Glyphs",
