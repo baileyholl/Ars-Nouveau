@@ -11,29 +11,16 @@ import com.hollingsworth.arsnouveau.common.entity.WildenHunter;
 import com.hollingsworth.arsnouveau.common.entity.WildenStalker;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
-import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.common.util.FakePlayerFactory;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.UUID;
 
 import static com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider.WILDEN_DROP_TAG;
 
 public class RitualWildenSummoning extends AbstractRitual {
-
-    private UUID uuid;
-
-    @Override
-    public void onStart(@Nullable Player player) {
-        if (player != null) this.uuid = player.getUUID();
-    }
 
     @Override
     protected void tick() {
@@ -41,7 +28,7 @@ public class RitualWildenSummoning extends AbstractRitual {
         if (getWorld().getGameTime() % 20 == 0)
             incrementProgress();
         if (getWorld().getGameTime() % 60 == 0 && (getWorld() instanceof  ServerLevel serverLevel)) {
-            FakePlayer fakePlayer = ANFakePlayer.getPlayer(serverLevel, uuid);
+            FakePlayer fakePlayer = ANFakePlayer.getPlayer(serverLevel, this.playerUUID);
             if (!isBossSpawn()) {
                 int wild = rand.nextInt(3);
                 BlockPos summonPos = getPos().above().east(rand.nextInt(3) - rand.nextInt(6)).north(rand.nextInt(3) - rand.nextInt(6));

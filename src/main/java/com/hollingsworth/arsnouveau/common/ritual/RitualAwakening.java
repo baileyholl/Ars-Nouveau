@@ -8,10 +8,10 @@ import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -20,31 +20,22 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.WritableBookItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
-import java.util.UUID;
 
 public class RitualAwakening extends AbstractRitual {
 
     EntityType<? extends LivingEntity> entity = null;
     BlockPos foundPos;
-    UUID uuid;
-
-    @Override
-    public void onStart(@Nullable Player player) {
-        if (player != null) uuid = player.getUUID();
-    }
 
     public void destroyTree(ServerLevel world, Set<BlockPos> set) {
-        FakePlayer fakePlayer = ANFakePlayer.getPlayer(world, uuid);
+        FakePlayer fakePlayer = ANFakePlayer.getPlayer(world, playerUUID);
         for (BlockPos p : set) {
             BlockUtil.destroyBlockSafelyWithoutSound(world, p, false, fakePlayer);
         }

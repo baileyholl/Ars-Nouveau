@@ -17,10 +17,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 
 public abstract class AbstractRitual {
@@ -31,6 +28,7 @@ public abstract class AbstractRitual {
 
     public RandomSource rand = RandomSource.create();
 
+    public UUID playerUUID;
 
     public AbstractRitual() {
     }
@@ -53,11 +51,6 @@ public abstract class AbstractRitual {
 
     public boolean canStart(@Nullable Player player) {
         return true;
-    }
-
-    @Deprecated(since = "4.10.1", forRemoval = true)
-    public boolean canStart() {
-        return canStart(null);
     }
 
     public List<ItemStack> getConsumedItems() {
@@ -121,11 +114,7 @@ public abstract class AbstractRitual {
 
     public void onStart(@Nullable Player player) {
         getContext().isStarted = true;
-    }
-
-    @Deprecated(since = "4.10.1", forRemoval = true)
-    public void onStart() {
-        onStart(null);
+        if (player != null) this.playerUUID = player.getUUID();
     }
 
     public boolean isRunning() {
