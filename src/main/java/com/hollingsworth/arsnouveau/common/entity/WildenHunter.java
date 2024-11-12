@@ -21,6 +21,7 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -32,12 +33,12 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 
-public class WildenHunter extends Monster implements GeoEntity, IAnimationListener {
+public class WildenHunter extends AbstractWilden implements IAnimationListener {
 
     public static final EntityDataAccessor<String> ANIM_STATE = SynchedEntityData.defineId(WildenHunter.class, EntityDataSerializers.STRING);
     AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
 
-    public WildenHunter(EntityType<? extends Monster> type, Level worldIn) {
+    public WildenHunter(EntityType<? extends AbstractWilden> type, Level worldIn) {
         super(type, worldIn);
     }
 
@@ -51,14 +52,10 @@ public class WildenHunter extends Monster implements GeoEntity, IAnimationListen
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
         this.goalSelector.addGoal(3, new WildenSummon(this));
         this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.3f));
-        this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 2D, true));
+        this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.25D, true));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         if (Config.HUNTER_ATTACK_ANIMALS.get())
             this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Animal.class, 10, true, false, (entity) -> !(entity instanceof SummonWolf) || !((SummonWolf) entity).isWildenSummon));
 
@@ -70,7 +67,7 @@ public class WildenHunter extends Monster implements GeoEntity, IAnimationListen
         this.entityData.define(ANIM_STATE, Animations.IDLE.name());
     }
 
-    protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+    protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
         return SoundEvents.WOLF_HURT;
     }
 
@@ -78,20 +75,9 @@ public class WildenHunter extends Monster implements GeoEntity, IAnimationListen
         return SoundEvents.WOLF_DEATH;
     }
 
-    @Override
-    public int getExperienceReward() {
-        return 5;
-    }
-
-    /**
-     * Returns the volume for the sounds this mob makes.
-     */
-    protected float getSoundVolume() {
-        return 0.4F;
-    }
 
     @Override
-    public void playSound(SoundEvent soundIn, float volume, float pitch) {
+    public void playSound(@NotNull SoundEvent soundIn, float volume, float pitch) {
         super.playSound(soundIn, volume, pitch - 0.5f);
     }
 
@@ -103,7 +89,7 @@ public class WildenHunter extends Monster implements GeoEntity, IAnimationListen
     public static AttributeSupplier.Builder getModdedAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 20.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.25D)
+                .add(Attributes.MOVEMENT_SPEED, 0.35D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.6F)
                 .add(Attributes.ATTACK_KNOCKBACK, 1.5D)
                 .add(Attributes.ATTACK_DAMAGE, 4.5D)
@@ -156,10 +142,10 @@ public class WildenHunter extends Monster implements GeoEntity, IAnimationListen
     }
 
     private <T extends GeoAnimatable> PlayState runPredicate(AnimationState<T> tAnimationState) {
-        if(this.getEntityData().get(ANIM_STATE).equals(Animations.HOWL.name())){
+        if (this.getEntityData().get(ANIM_STATE).equals(Animations.HOWL.name())) {
             return PlayState.STOP;
         }
-        if(tAnimationState.isMoving()){
+        if (tAnimationState.isMoving()) {
             tAnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
             return PlayState.CONTINUE;
         }
@@ -167,15 +153,16 @@ public class WildenHunter extends Monster implements GeoEntity, IAnimationListen
     }
 
     private <T extends GeoAnimatable> PlayState idlePredicate(AnimationState<T> tAnimationState) {
-        if(this.getEntityData().get(ANIM_STATE).equals(Animations.HOWL.name())){
+        if (this.getEntityData().get(ANIM_STATE).equals(Animations.HOWL.name())) {
             return PlayState.STOP;
         }
-        if(tAnimationState.isMoving()){
+        if (tAnimationState.isMoving()) {
             return PlayState.STOP;
         }
         tAnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
         return PlayState.CONTINUE;
     }
+
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return manager;
@@ -195,7 +182,7 @@ public class WildenHunter extends Monster implements GeoEntity, IAnimationListen
     }
 
     @Override
-    public void load(CompoundTag pCompound) {
+    public void load(@NotNull CompoundTag pCompound) {
         super.load(pCompound);
         summonCooldown = pCompound.getInt("summonCooldown");
     }
