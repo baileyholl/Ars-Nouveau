@@ -122,9 +122,7 @@ dependencies {
     localRuntime 'curse.maven:ftb-chunks-forge-314906:5710609'
     localRuntime 'curse.maven:ftb-library-forge-404465:5754910'
     localRuntime 'curse.maven:architectury-api-419699:5553800'
-
-    // localRuntime ("com.alexthw.ars_elemental:ars_elemental-${minecraft_version}:0.7.0.9.3.17") {transitive = false}
-    // localRuntime "curse.maven:ars-additions-974408:5852361"
+    implementation 'com.hollingsworth.nuggets:nuggets-neoforge-1.21:1.0.1'
 }
 
 jar {
