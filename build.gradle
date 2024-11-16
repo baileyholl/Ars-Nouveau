@@ -122,8 +122,8 @@ dependencies {
     localRuntime 'curse.maven:ftb-chunks-forge-314906:5710609'
     localRuntime 'curse.maven:ftb-library-forge-404465:5754910'
     localRuntime 'curse.maven:architectury-api-419699:5553800'
-    implementation(jarJar(group: 'com.hollingsworth.nuggets', name: 'nuggets-neoforge-1.21', version:'[1.0.2,)'){
-        jarJar.pin(it, '1.0.2.23')
+    implementation(jarJar(group: 'com.hollingsworth.nuggets', name: 'nuggets-neoforge-1.21', version:'[1.0.2.24,)'){
+        jarJar.pin(it, '1.0.2.24')
     })
 }
 

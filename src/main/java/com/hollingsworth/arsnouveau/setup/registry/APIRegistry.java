@@ -295,6 +295,8 @@ public class APIRegistry {
         });
         JarBehaviorRegistry.register(EntityType.WITHER, new WitherBehavior());
         DynamicTooltipRegistry.register(DataComponentRegistry.REACTIVE_CASTER.get());
+
+        DocumentationRegistry.registerCategory(DocumentationRegistry.GETTING_STARTED);
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {
