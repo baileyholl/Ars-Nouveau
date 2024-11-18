@@ -1329,6 +1329,19 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.sifting", "Sifting");
         add("tooltip.alakarkinos_shard1", "Found by giving an Alakarkinos a Sherd.");
         add("tooltip.alakarkinos_shard2", "What's that behind your ear?");
+
+        addCategory("getting_started", "Getting Started");
+        addCategory("crafting","Crafting");
+        addCategory("glyph_index","Glyph Index");
+        addCategory("ritual_index","Ritual Index");
+        addCategory("source", "Source");
+        addCategory("magical_systems", "Magical Systems");
+        addCategory("creature_compendium", "Creature Compendium");
+        addCategory("items", "Items and Blocks");
+    }
+
+    public void addCategory(String key, String value){
+        add("ars_nouveau.section." + key, value);
     }
 
     @Override
