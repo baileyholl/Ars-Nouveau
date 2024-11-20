@@ -1,9 +1,6 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.documentation.DocEntry;
-import com.hollingsworth.arsnouveau.api.documentation.TextEntry;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
@@ -24,7 +21,6 @@ import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -299,11 +295,6 @@ public class APIRegistry {
         });
         JarBehaviorRegistry.register(EntityType.WITHER, new WitherBehavior());
         DynamicTooltipRegistry.register(DataComponentRegistry.REACTIVE_CASTER.get());
-        var testEntry = new DocEntry(ArsNouveau.prefix("testone"), ItemsRegistry.AIR_ESSENCE.get().getDefaultInstance(), Component.literal("Test One"));
-        testEntry.addPage(TextEntry::new);
-        testEntry.addPage(TextEntry::new);
-        testEntry.addPage(TextEntry::new);
-        DocumentationRegistry.registerEntry(DocumentationRegistry.GLYPH_TIER_ONE, testEntry);
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {

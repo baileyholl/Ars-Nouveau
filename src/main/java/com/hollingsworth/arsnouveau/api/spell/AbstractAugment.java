@@ -22,7 +22,7 @@ public abstract class AbstractAugment extends AbstractSpellPart implements ISpel
 
     @Override
     public Integer getTypeIndex() {
-        return 5;
+        return 10;
     }
 
    @NotNull

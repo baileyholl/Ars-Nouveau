@@ -12,9 +12,6 @@ public class EntriesScreen extends BaseDocScreen{
     public EntriesScreen(List<DocEntry> entries) {
         super();
         this.entries = new ArrayList<>(entries);
-        for(int i = 0; i < 32; i++){
-            this.entries.add(this.entries.get(0));
-        }
         this.maxArrowIndex = (this.entries.size() - 1) / 18;
     }
 

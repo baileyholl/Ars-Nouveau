@@ -47,7 +47,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
 
     @Override
     public Integer getTypeIndex() {
-        return 10;
+        return 5;
     }
 
     public void onResolve(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {

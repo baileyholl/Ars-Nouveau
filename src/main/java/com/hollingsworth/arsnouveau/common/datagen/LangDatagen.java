@@ -1338,6 +1338,9 @@ public class LangDatagen extends LanguageProvider {
         addCategory("magical_systems", "Magical Systems");
         addCategory("creature_compendium", "Creature Compendium");
         addCategory("items", "Items and Blocks");
+        addCategory("glyphs_tier_one", "Tier One Glyphs");
+        addCategory("glyphs_tier_two", "Tier Two Glyphs");
+        addCategory("glyphs_tier_three", "Tier Three Glyphs");
     }
 
     public void addCategory(String key, String value){

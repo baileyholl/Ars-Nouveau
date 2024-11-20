@@ -1,8 +1,10 @@
 package com.hollingsworth.arsnouveau.client.gui.documentation;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.nuggets.client.gui.BaseScreen;
 import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -10,6 +12,9 @@ import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class BaseDocScreen extends BaseScreen {
 
@@ -46,6 +51,13 @@ public class BaseDocScreen extends BaseScreen {
         if(!showRightArrow()){
             rightArrow.visible = false;
         }
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 142, 0, 0, 23, 20, 23, 20, "textures/gui/discord_tab.png", (b) -> {
+            try {
+                Util.getPlatform().openUri(new URI("https://discord.com/invite/y7TMXZu"));
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        }).withTooltip(Component.translatable("ars_nouveau.gui.discord")));
     }
 
     @Override
