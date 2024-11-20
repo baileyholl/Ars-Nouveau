@@ -23,13 +23,13 @@ public class TextEntry extends SinglePageWidget {
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().scale(0.5f, 0.5f, 0.5f);
-        poseStack.translate(x, y, 1000);
-        NuggetMultilLineLabel label = NuggetMultilLineLabel.create(Minecraft.getInstance().font, Component.literal(text), width * 2 - 20);
-        label.renderLeftAlignedNoShadow(guiGraphics, x, y, 12, 0);
-//        guiGraphics.drawString(Minecraft.getInstance().font, text, x, y, 0, false);
-        guiGraphics.pose().popPose();
+        poseStack.pushPose();
+        float scale = 0.75f;
+        poseStack.translate(x + 3, y, 1000);
+        poseStack.scale(scale, scale, scale);
+        NuggetMultilLineLabel label = NuggetMultilLineLabel.create(Minecraft.getInstance().font, Component.literal(text), (int) (width * 1.185));
+        label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, 12, 0);
+        poseStack.popPose();
     }
 
     @Override

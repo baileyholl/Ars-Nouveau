@@ -25,7 +25,7 @@ public class PageHolderScreen extends BaseDocScreen{
         super.init();
         for(int i = 0; i < pages.size(); i++){
             SinglePageCtor page = pages.get(i);
-            SinglePageWidget widget = page.create(this,  (i + 1) % 2 == 0 ? bookLeft + 154 : bookLeft + 16, bookTop + 24, 135, 180);
+            SinglePageWidget widget = page.create(this,  (i + 1) % 2 == 0 ? bookLeft + 150 : bookLeft + 16, bookTop + 24, 135, 180);
             allWidgets.add(widget);
         }
         initPages();
