@@ -2,20 +2,22 @@ package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.api.documentation.DocCategory;
 import com.hollingsworth.arsnouveau.api.documentation.DocEntry;
-import com.hollingsworth.arsnouveau.api.documentation.TextEntry;
+import com.hollingsworth.arsnouveau.api.documentation.GlyphEntry;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 
 public class Documentation {
 
     public static void initOnWorldReload(){
 
         for(AbstractSpellPart spellPart : GlyphRegistry.getSpellpartMap().values()){
-            var entry = new DocEntry(spellPart.getRegistryName(), spellPart.glyphItem.getDefaultInstance(), Component.literal(spellPart.getLocaleName()));
-            entry.addPage(TextEntry.create(spellPart.getBookDescLang().getString()));
+            ItemStack renderStack = spellPart.glyphItem.getDefaultInstance();
+            var entry = new DocEntry(spellPart.getRegistryName(), renderStack, Component.literal(spellPart.getLocaleName()));
+            entry.addPage(GlyphEntry.create(spellPart));
             DocumentationRegistry.registerEntry(glyphCategory(spellPart.getConfigTier()), entry);
         }
     }

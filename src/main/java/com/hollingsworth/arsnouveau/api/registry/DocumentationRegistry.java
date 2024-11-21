@@ -9,10 +9,9 @@ import com.hollingsworth.arsnouveau.setup.registry.CreativeTabRegistry;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class DocumentationRegistry {
     public static final Comparator<DocEntry> GLYPH_PAGE_COMPARATOR = (o1, o2) -> {
@@ -38,7 +37,7 @@ public class DocumentationRegistry {
     private static final Map<ResourceLocation, DocCategory> mainCategoryMap = new ConcurrentHashMap<>();
 
     private static final Map<ResourceLocation, DocEntry> entryMap = new ConcurrentHashMap<>();
-    private static final Map<DocCategory, List<DocEntry>> entryCategoryMap = new ConcurrentHashMap<>();
+    private static final Map<DocCategory, Set<DocEntry>> entryCategoryMap = new ConcurrentHashMap<>();
 
 
     static {
@@ -66,12 +65,14 @@ public class DocumentationRegistry {
             throw new IllegalArgumentException("Cannot register an entry to a category with subcategories");
         }
         entryMap.put(entry.id(), entry);
-        entryCategoryMap.computeIfAbsent(category, k -> new CopyOnWriteArrayList<>()).add(entry);
+        var entries = entryCategoryMap.computeIfAbsent(category, k -> ConcurrentHashMap.newKeySet());
+        entries.remove(entry); // Remove and overwrite in the case of world reloads
+        entries.add(entry);
     }
 
-    public static List<DocEntry> getEntries(DocCategory category){
-        List<DocEntry> entries = entryCategoryMap.get(category);
-        return entries == null ? new CopyOnWriteArrayList<>() : entries;
+    public static Set<DocEntry> getEntries(DocCategory category){
+        Set<DocEntry> entries = entryCategoryMap.get(category);
+        return entries == null ? ConcurrentHashMap.newKeySet() : entries;
     }
 
     public static DocCategory getCategory(ResourceLocation id){

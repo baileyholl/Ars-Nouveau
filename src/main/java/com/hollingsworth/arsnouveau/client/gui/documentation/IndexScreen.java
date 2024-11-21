@@ -44,7 +44,7 @@ public class IndexScreen extends BaseDocScreen {
                 if(!category.subCategories().isEmpty()){
                     transition(new IndexScreen(category.subCategories()));
                 }else{
-                    var entries = DocumentationRegistry.getEntries(category);
+                    var entries = new ArrayList<>(DocumentationRegistry.getEntries(category));
                     entries.sort(category.entryComparator());
                     transition(new EntriesScreen(entries));
                 }
