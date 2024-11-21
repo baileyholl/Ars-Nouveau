@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
@@ -25,9 +26,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -53,7 +52,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
     //to use if you want the bounce augment indipendent from the pierce augment
     //public int bouncesLeft;
     public int numSensitive;
-
+    public float size = 1;
     public boolean isNoGravity = true;
     public boolean canTraversePortals = true;
     public int prismRedirect;
@@ -86,7 +85,9 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
         this.spellResolver = resolver;
         this.pierceLeft = resolver.spell.getBuffsAtIndex(0, resolver.spellContext.getUnwrappedCaster(), AugmentPierce.INSTANCE);
         this.numSensitive = resolver.spell.getBuffsAtIndex(0, resolver.spellContext.getUnwrappedCaster(), AugmentSensitive.INSTANCE);
+        this.size = 1 + resolver.spell.getBuffsAtIndex(0, resolver.spellContext.getUnwrappedCaster(), AugmentAOE.INSTANCE);
         setColor(resolver.spellContext.getColors());
+        refreshDimensions();
     }
 
     public EntityProjectileSpell(Level world, SpellResolver resolver) {
@@ -206,10 +207,13 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
         double deltaX = getX() - xOld;
         double deltaY = getY() - yOld;
         double deltaZ = getZ() - zOld;
+        deltaX *= size;
+        deltaY *= size;
+        deltaZ *= size;
         double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 6);
         for (double j = 0; j < dist; j++) {
             double coeff = j / dist;
-            level.addParticle(GlowParticleData.createData(getParticleColor()),
+            level.addParticle(GlowParticleData.createData(getParticleColor(), 0.25f + size, 1.0f, 36),
                     (float) (xo + deltaX * coeff),
                     (float) (yo + deltaY * coeff) + 0.1, (float)
                             (zo + deltaZ * coeff),
@@ -374,11 +378,13 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
     public void writeSpawnData(FriendlyByteBuf buffer) {
         buffer.writeBoolean(isNoGravity);
         buffer.writeInt(numSensitive);
+        buffer.writeFloat(size);
     }
 
     public void readSpawnData(FriendlyByteBuf additionalData) {
         isNoGravity = additionalData.readBoolean();
         numSensitive = additionalData.readInt();
+        size = additionalData.readFloat();
     }
 
     public void recreateFromPacket(ClientboundAddEntityPacket pPacket) {
@@ -392,9 +398,9 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
     @Override
     public void setOwner(@org.jetbrains.annotations.Nullable Entity pOwner) {
         super.setOwner(pOwner);
-        if(pOwner != null) {
+        if (pOwner != null) {
             this.entityData.set(OWNER_ID, pOwner.getId());
-        }else{
+        } else {
             this.entityData.set(OWNER_ID, -1);
         }
     }
@@ -415,5 +421,10 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
         tag.putInt("pierce", this.pierceLeft);
         tag.putBoolean("gravity", isNoGravity);
         tag.putInt("ownerId", this.entityData.get(OWNER_ID));
+    }
+
+    @Override
+    public EntityDimensions getDimensions(Pose pPose) {
+        return super.getDimensions(pPose).scale(1 + size);
     }
 }
