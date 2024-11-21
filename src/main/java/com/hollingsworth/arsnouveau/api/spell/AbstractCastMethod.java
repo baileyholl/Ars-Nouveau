@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -9,6 +10,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.common.ModConfigSpec;
+
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
@@ -59,5 +61,10 @@ public abstract class AbstractCastMethod extends AbstractSpellPart {
         Map<ResourceLocation, Integer> defaultAugmentCosts = new HashMap<>();
         addAugmentCostOverrides(defaultAugmentCosts);
         buildAugmentCostOverrideConfig(builder, defaultAugmentCosts);
+    }
+
+    @Override
+    public DocAssets.BlitInfo getTypeIcon() {
+        return DocAssets.FORM_ICON;
     }
 }

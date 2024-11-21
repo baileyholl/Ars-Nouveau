@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.item.ISpellModifier;
 import com.hollingsworth.arsnouveau.common.util.SpellPartConfigUtil;
 import net.minecraft.resources.ResourceLocation;
@@ -55,5 +56,10 @@ public abstract class AbstractAugment extends AbstractSpellPart implements ISpel
     @Deprecated
     public SpellStats.Builder applyModifiers(SpellStats.Builder builder, AbstractSpellPart spellPart){
         return builder;
+    }
+
+    @Override
+    public DocAssets.BlitInfo getTypeIcon() {
+        return DocAssets.AUGMENT_ICON;
     }
 }

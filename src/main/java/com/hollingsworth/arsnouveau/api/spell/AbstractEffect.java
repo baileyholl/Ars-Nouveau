@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.api.event.SummonEvent;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
@@ -190,5 +191,10 @@ public abstract class AbstractEffect extends AbstractSpellPart {
 
     protected Set<AbstractAugment> getSummonAugments() {
         return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
+    }
+
+    @Override
+    public DocAssets.BlitInfo getTypeIcon() {
+        return DocAssets.EFFECT_ICON;
     }
 }
