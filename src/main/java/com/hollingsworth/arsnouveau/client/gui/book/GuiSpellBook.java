@@ -132,7 +132,7 @@ public class GuiSpellBook extends BaseBook {
         super.init();
         AbstractCaster<?> caster = SpellCasterRegistry.from(bookStack);
         int selectedSlot = caster.getCurrentSlot();
-        
+
         craftingCells = new ArrayList<>();
         for (int i = 0; i < numLinks; i++) {
             int offset = i >= 5 ? 14 : 0;
