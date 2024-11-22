@@ -198,7 +198,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
             onHitEntity(hitEntity);
         }
         this.move(MoverType.SELF, this.getDeltaMovement());
-        if (!this.level.isClientSide) {
+        if (!this.level.isClientSide && !this.isRemoved()) {
             BlockPos blockpos = this.blockPosition();
             boolean isConcrete = this.blockState.getBlock() instanceof ConcretePowderBlock;
             boolean isConcreteInWater = isConcrete && this.level.getFluidState(blockpos).is(FluidTags.WATER);
