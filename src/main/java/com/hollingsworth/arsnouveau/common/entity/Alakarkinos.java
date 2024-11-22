@@ -369,6 +369,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         pCompound.putBoolean("needSource", this.needSource());
         pCompound.putBoolean("tamed", this.tamed);
         pCompound.putBoolean("beingTamed", this.beingTamed);
+        pCompound.putBoolean("hasHat", this.hasHat());
         return super.save(pCompound);
     }
 
@@ -391,6 +392,9 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
             this.goalSelector.availableGoals = new LinkedHashSet<>();
             this.reloadGoals();
             setBehaviors = true;
+        }
+        if(pCompound.contains("hasHat")){
+            this.setHat(pCompound.getBoolean("hasHat"));
         }
     }
 

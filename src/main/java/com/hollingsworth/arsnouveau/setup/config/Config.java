@@ -68,6 +68,9 @@ public class Config {
     public static ModConfigSpec.IntValue TOOLTIP_Y_OFFSET;
     public static ModConfigSpec.IntValue MANABAR_X_OFFSET;
     public static ModConfigSpec.IntValue MANABAR_Y_OFFSET;
+    public static ModConfigSpec.IntValue SPELLNAME_X_OFFSET;
+    public static ModConfigSpec.IntValue SPELLNAME_Y_OFFSET;
+    public static ModConfigSpec.BooleanValue TOGGLE_RADIAL_HUD;
     public static ModConfigSpec.IntValue BOOKWYRM_LIMIT;
     public static ModConfigSpec.BooleanValue GUI_TRANSPARENCY;
     public static ModConfigSpec.BooleanValue GLYPH_TOOLTIPS;
@@ -111,8 +114,12 @@ public class Config {
         TOOLTIP_Y_OFFSET = CLIENT_BUILDER.comment("Y offset for the tooltip").defineInRange("yTooltip", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
         MANABAR_X_OFFSET = CLIENT_BUILDER.comment("X offset for the Mana Bar").defineInRange("xManaBar", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
         MANABAR_Y_OFFSET = CLIENT_BUILDER.comment("Y offset for the Mana Bar").defineInRange("yManaBar", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        SPELLNAME_X_OFFSET = CLIENT_BUILDER.comment("X offset for the Spell Name").defineInRange("xSpellName", 10, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        SPELLNAME_Y_OFFSET = CLIENT_BUILDER.comment("Y offset for the Spell Name").defineInRange("ySpellName", 30, Integer.MIN_VALUE, Integer.MAX_VALUE);
+
         SHOW_RECIPE_BOOK = CLIENT_BUILDER.comment("If the Storage Lectern should show the recipe book icon").define("showRecipeBook", true);
         INFORM_LIGHTS = CLIENT_BUILDER.comment("Inform the player of Dynamic lights once.").define("informLights", true);
+        TOGGLE_RADIAL_HUD = CLIENT_BUILDER.comment("Whether the Selection HUD is toggled or held").define("toggleSelectionHUD", true);
         CLIENT_BUILDER.pop();
         CLIENT_BUILDER.comment("Misc").push("misc");
         ALTERNATE_PORTAL_RENDER = CLIENT_BUILDER.comment("Use simplified renderer for Warp Portals").define("no_end_portal_render", false);

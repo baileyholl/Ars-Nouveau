@@ -13,7 +13,6 @@ public class EntitySpellResolver extends SpellResolver {
         super(context);
     }
 
-
     public void onCastOnEntity(LivingEntity target) {
         super.onCastOnEntity(ItemStack.EMPTY, target, InteractionHand.MAIN_HAND);
     }

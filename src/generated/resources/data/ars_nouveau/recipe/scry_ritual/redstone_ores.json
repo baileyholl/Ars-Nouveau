@@ -1,5 +1,5 @@
 {
   "type": "ars_nouveau:scry_ritual",
-  "augment": "neoforge:ores/redstone",
-  "highlight": "neoforge:ores/redstone"
+  "augment": "c:ores/redstone",
+  "highlight": "c:ores/redstone"
 }

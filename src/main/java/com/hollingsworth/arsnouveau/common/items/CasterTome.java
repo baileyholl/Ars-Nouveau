@@ -54,18 +54,22 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         AbstractCaster<?> caster = getSpellCaster(stack);
 
-        if (Config.GLYPH_TOOLTIPS.get() || Screen.hasShiftDown()) {
+        if (caster != null) {
+
+            // If the caster is hidden, show the hidden recipe
+
             if (caster.isSpellHidden()) {
                 tooltip2.add(Component.literal(caster.getHiddenRecipe()).withStyle(Style.EMPTY.withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "alt")).withColor(ChatFormatting.GOLD)));
+            } else if (Screen.hasShiftDown() || !Config.GLYPH_TOOLTIPS.get()) {
+                getInformation(stack, context, tooltip2, flagIn);
             }
+
             if (!caster.getFlavorText().isEmpty())
                 tooltip2.add(Component.literal(caster.getFlavorText()).withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE)));
-        } else{
-            getInformation(stack, context, tooltip2, flagIn);
+
+            tooltip2.add(Component.translatable("tooltip.ars_nouveau.caster_tome"));
+
         }
-
-        tooltip2.add(Component.translatable("tooltip.ars_nouveau.caster_tome"));
-
         super.appendHoverText(stack, context, tooltip2, flagIn);
     }
 
@@ -77,7 +81,7 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
     @Override
     public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
         AbstractCaster<?> caster = getSpellCaster(pStack);
-        if (!Screen.hasShiftDown() && Config.GLYPH_TOOLTIPS.get() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
+        if (caster != null && !Screen.hasShiftDown() && Config.GLYPH_TOOLTIPS.get() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
             return Optional.of(new SpellTooltip(caster));
         return Optional.empty();
     }

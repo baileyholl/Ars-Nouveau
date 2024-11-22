@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -59,5 +60,9 @@ public class SpellSchool {
 
     public void setSpellParts(Set<AbstractSpellPart> spellParts) {
         this.spellParts = spellParts;
+    }
+
+    public ResourceLocation getTexturePath() {
+        return ResourceLocation.fromNamespaceAndPath("ars_nouveau", "textures/gui/schools/" + getId() + "_tooltip.png");
     }
 }

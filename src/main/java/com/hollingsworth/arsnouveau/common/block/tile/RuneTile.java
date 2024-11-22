@@ -18,6 +18,7 @@ import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -28,6 +29,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -44,7 +46,7 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
     public boolean isCharged;
     public boolean isSensitive;
     public int ticksUntilCharge;
-    public UUID uuid;
+    public UUID uuid = null;
     public Entity touchedEntity;
 
     public RuneTile(BlockPos pos, BlockState state) {
@@ -63,13 +65,14 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
     public void castSpell(Entity entity) {
         if (entity == null)
             return;
-        if (!this.isCharged || spell.isEmpty() || !(level instanceof ServerLevel) || !(spell.get(0) instanceof MethodTouch))
+        if (!this.isCharged || spell.isEmpty() || !(level instanceof ServerLevel serverLevel) || !(spell.get(0) instanceof MethodTouch))
             return;
         if (!this.isTemporary && this.disabled) return;
         try {
-
-            Player playerEntity = uuid != null ? level.getPlayerByUUID(uuid) : ANFakePlayer.getPlayer((ServerLevel) level);
-            playerEntity = !this.isSensitive || playerEntity == null ? ANFakePlayer.getPlayer((ServerLevel) level) : playerEntity;
+            Player playerEntity = uuid != null ? FakePlayerFactory.get(serverLevel, new GameProfile(uuid, "")) : ANFakePlayer.getPlayer(serverLevel);
+            if (this.isSensitive) {
+                playerEntity = serverLevel.getPlayerByUUID(uuid);
+            }
             EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(entity.level, spell, playerEntity, new RuneCaster(this, SpellContext.CasterType.RUNE)));
             resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);
             if (this.isTemporary) {
@@ -86,6 +89,10 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
             e.printStackTrace();
             level.destroyBlock(worldPosition, false);
         }
+    }
+
+    public void setPlayer(UUID uuid) {
+        this.uuid = uuid;
     }
 
     @Override

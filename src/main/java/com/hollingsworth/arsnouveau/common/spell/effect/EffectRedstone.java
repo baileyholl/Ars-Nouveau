@@ -13,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,7 +21,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.BlockSnapshot;
-import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,7 +41,7 @@ public class EffectRedstone extends AbstractEffect {
         int timeBonus = (int) spellStats.getDurationMultiplier();
         int delay = Math.max(GENERIC_INT.get() + timeBonus * BONUS_TIME.get(), 2);
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
-        FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
+        Player fakePlayer = ANFakePlayer.getOrFakePlayer((ServerLevel) world, shooter);
         for (BlockPos pos1 : posList) {
             if (spellStats.isSensitive()) {
                 if (!world.isInWorldBounds(pos1))

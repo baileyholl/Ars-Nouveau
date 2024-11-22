@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
+import com.hollingsworth.arsnouveau.common.mixin.BlockBehaviourAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -12,6 +14,7 @@ import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -22,6 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -67,18 +71,49 @@ public class ItemGrate extends ModBlock implements BucketPickup{
     @Override
     protected void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         super.tick(pState, pLevel, pPos, pRandom);
+        BlockPos below = pPos.below();
         BlockState stateAbove = pLevel.getBlockState(pPos.above());
-        BlockState stateBelow = pLevel.getBlockState(pPos.below());
-        if( stateAbove.getFluidState().isSource()) {
-            if (stateBelow.getBlock() instanceof LiquidBlockContainer blockContainer && blockContainer.canPlaceLiquid(null, pLevel, pPos.below(), stateBelow, stateAbove.getFluidState().getType())) {
-                if(blockContainer.placeLiquid(pLevel, pPos.below(), stateBelow, stateAbove.getFluidState())){
+        BlockState stateBelow = pLevel.getBlockState(below);
+        if(!stateAbove.getFluidState().isSource()){
+            return;
+        }
+
+        if (stateBelow.getBlock() instanceof LiquidBlockContainer blockContainer
+                && blockContainer.canPlaceLiquid(null, pLevel, pPos.below(), stateBelow, stateAbove.getFluidState().getType())) {
+            if(blockContainer.placeLiquid(pLevel, pPos.below(), stateBelow, stateAbove.getFluidState())){
+                if(stateAbove.getBlock() instanceof BucketPickup bucketPickup){
+                    bucketPickup.pickupBlock(null, pLevel, pPos.above(), stateAbove);
+                }
+                if(pLevel.getBlockState(pPos.above()).getFluidState().isSource()){
                     pLevel.setBlockAndUpdate(pPos.above(), Blocks.AIR.defaultBlockState());
                 }
-            } else if (stateBelow.canBeReplaced()) {
-                pLevel.setBlockAndUpdate(pPos.below(), stateAbove);
-                pLevel.setBlockAndUpdate(pPos.above(), Blocks.AIR.defaultBlockState());
+            }
+        } else if (stateBelow.canBeReplaced()) {
+            if(stateAbove.getBlock() instanceof BucketPickup bucketPickup){
+                ItemStack bucket = bucketPickup.pickupBlock(null, pLevel, pPos.above(), stateAbove);
+                if(bucket.getItem() instanceof BucketItem bucketItem){
+                    pLevel.setBlockAndUpdate(below, stateAbove.getFluidState().createLegacyBlock());
+                }
+            }
+        }else if (stateBelow.getBlock() instanceof CauldronBlock cauldronBlock
+                && !cauldronBlock.isFull(stateBelow)) {
+            if(stateAbove.getBlock() instanceof BucketPickup bucketPickup){
+
+                ItemStack stack = bucketPickup.pickupBlock(null, pLevel, pPos.above(), stateAbove);
+                if(!stack.isEmpty()){
+                    var accessor = (BlockBehaviourAccessor) cauldronBlock;
+                    ANFakePlayer fakePlayer = ANFakePlayer.getPlayer(pLevel);
+                    fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack.copy());
+                    ItemInteractionResult result = accessor.callUseItemOn(stack, stateBelow, pLevel, pPos.below(), fakePlayer, InteractionHand.MAIN_HAND, new BlockHitResult(new Vec3(below.getX(), below.getY(), below.getZ()), Direction.UP, pPos.below(), false));
+                    if(!ItemStack.isSameItem(fakePlayer.getItemInHand(InteractionHand.MAIN_HAND), stack)){
+                        if(pLevel.getBlockState(pPos.above()).getFluidState().isSource()){
+                            pLevel.setBlockAndUpdate(pPos.above(), Blocks.AIR.defaultBlockState());
+                        }
+                    }
+                }
             }
         }
+
     }
 
     @Override

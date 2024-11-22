@@ -1,7 +1,10 @@
 package com.hollingsworth.arsnouveau.client.jei;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
+import com.hollingsworth.arsnouveau.api.spell.SpellSchools;
 import com.hollingsworth.arsnouveau.client.container.IAutoFillTerminal;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectCrush;
@@ -10,18 +13,22 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.*;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static com.hollingsworth.arsnouveau.client.jei.ScryRitualRecipeCategory.SCRY_RITUAL;
 
@@ -38,8 +45,8 @@ public class JEIArsNouveauPlugin implements IModPlugin {
     public static final RecipeType<ScryRitualRecipe> SCRY_RITUAL_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "scry_ritual", ScryRitualRecipe.class);
 
     @Override
-    public ResourceLocation getPluginUid() {
-        return ArsNouveau.prefix( "main");
+    public @NotNull ResourceLocation getPluginUid() {
+        return ArsNouveau.prefix("main");
     }
 
     @Override
@@ -57,7 +64,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
     }
 
     @Override
-    public void registerRecipes(IRecipeRegistration registry) {
+    public void registerRecipes(@NotNull IRecipeRegistration registry) {
         List<GlyphRecipe> recipeList = new ArrayList<>();
         List<EnchantingApparatusRecipe> apparatus = new ArrayList<>();
         List<EnchantmentRecipe> enchantments = new ArrayList<>();
@@ -114,12 +121,12 @@ public class JEIArsNouveauPlugin implements IModPlugin {
     }
 
     @Override
-    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+    public void registerGuiHandlers(@NotNull IGuiHandlerRegistration registration) {
 //        registration.addRecipeClickArea(CraftingTerminalScreen.class, 100, 125, 28, 23, new RecipeType[] { RecipeTypes.CRAFTING });
     }
 
     @Override
-    public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+    public void registerRecipeTransferHandlers(@NotNull IRecipeTransferRegistration registration) {
         CraftingTerminalTransferHandler.registerTransferHandlers(registration);
     }
 
@@ -128,10 +135,28 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         registration.getCraftingCategory().addExtension(DyeRecipe.class, new DyeRecipeCategory());
     }
 
+    @Override
+    public void registerIngredientAliases(@NotNull IIngredientAliasRegistration registration) {
+
+        // for each school, add an alias for the glyph
+        List<SpellSchool> schools = List.of(SpellSchools.ELEMENTAL, SpellSchools.ABJURATION, SpellSchools.CONJURATION, SpellSchools.NECROMANCY, SpellSchools.MANIPULATION, SpellSchools.ELEMENTAL_AIR, SpellSchools.ELEMENTAL_EARTH, SpellSchools.ELEMENTAL_FIRE, SpellSchools.ELEMENTAL_WATER);
+
+        for (SpellSchool school : schools) {
+            registration.addAliases(VanillaTypes.ITEM_STACK, GlyphRegistry.getGlyphItemMap().values()
+                            .stream()
+                            .map(Supplier::get)
+                            .filter(glyph -> school.isPartOfSchool(glyph.spellPart))
+                            .map(Item::getDefaultInstance)
+                            .toList(),
+                    school.getTextComponent().getString());
+        }
+
+    }
+
     private static IJeiRuntime jeiRuntime;
 
     @Override
-    public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
+    public void onRuntimeAvailable(@NotNull IJeiRuntime jeiRuntime) {
         JEIArsNouveauPlugin.jeiRuntime = jeiRuntime;
     }
 

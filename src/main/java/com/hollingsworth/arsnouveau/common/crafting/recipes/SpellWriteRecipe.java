@@ -47,6 +47,9 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe implements IText
     @Override
     public boolean matches(ApparatusRecipeInput input, Level level, @org.jetbrains.annotations.Nullable Player player) {
         ItemEnchantments enchantments = input.catalyst().get(DataComponents.ENCHANTMENTS);
+        if(enchantments == null){
+            return false;
+        }
         int level1 = enchantments.getLevel(HolderHelper.unwrap(level, EnchantmentRegistry.REACTIVE_ENCHANTMENT));
         ItemStack parchment = getParchment(input.pedestals());
         return !parchment.isEmpty() && !SpellCasterRegistry.from(parchment).getSpell().isEmpty() && level1 > 0 && super.matches(input, level, player);

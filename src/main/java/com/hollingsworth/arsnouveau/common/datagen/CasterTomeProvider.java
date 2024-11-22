@@ -256,6 +256,24 @@ public class CasterTomeProvider extends SimpleDataProvider {
         tomes.add(buildTome("uni","Uni's Windshield", new Spell(MethodSelf.INSTANCE, EffectOrbit.INSTANCE, EffectKnockback.INSTANCE).add(AugmentAmplify.INSTANCE, 8), "Stay away!"));
 
         tomes.add(buildTome("crowdrone", "Crow's Gluttonous Gaze", new Spell(MethodSelf.INSTANCE, EffectSenseMagic.INSTANCE, AugmentExtendTime.INSTANCE, EffectLight.INSTANCE).add(AugmentExtendTime.INSTANCE, 6), "Crows are known to collect shiny things, even in the darkest of places.", new ParticleColor(0,0,0)));
+
+        tomes.add(buildTome("chosenarchitect","Chosen's Chaotic Shift", new Spell(MethodProjectile.INSTANCE)
+                .add(AugmentAccelerate.INSTANCE, 5)
+                .add(EffectExchange.INSTANCE)
+                .add(AugmentAmplify.INSTANCE)
+                .add(AugmentRandomize.INSTANCE)
+                .add(EffectPickup.INSTANCE)
+                .withSound(new ConfiguredSpellSound(SoundRegistry.GAIA_SPELL_SOUND, 0.55f, 2.0f)), "In a flash of magic, the world twists, and what was once here is now there.", new ParticleColor(255, 114, 32)));
+
+        tomes.add(buildTome("lufia", "Lufia's Bwomp", new Spell(MethodProjectile.INSTANCE)
+                .add(AugmentSensitive.INSTANCE)
+                .add(AugmentPierce.INSTANCE, 3)
+                .add(EffectIntangible.INSTANCE)
+                .add(AugmentAOE.INSTANCE, 4)
+                .withSound(new ConfiguredSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND, 1.0f, 0.5f)),
+                "Your enemies will try to kill you. Use this, to kill them back. Cast under a targets feet to bury them. Results may vary.",
+                new ParticleColor(255, 128, 1)));
+
         for (CasterRecipeWrapper g : tomes) {
             Path path = getRecipePath(output, g.id().getPath());
             saveStable(pOutput, CasterTomeData.CODEC.encodeStart(JsonOps.INSTANCE, g.toData()).getOrThrow(), path);

@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.item.AbstractSummonCharm;
+import com.hollingsworth.arsnouveau.common.block.tile.SummoningTile;
 import com.hollingsworth.arsnouveau.common.entity.Alakarkinos;
 import com.hollingsworth.arsnouveau.common.items.data.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
@@ -14,26 +16,37 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class AlakarkinosCharm extends ModItem {
+public class AlakarkinosCharm extends AbstractSummonCharm {
 
     public AlakarkinosCharm() {
         super(defaultProps().component(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, new PersistentFamiliarData().setColor("red")));
     }
 
-
+    /**
+     * @param context useContext
+     * @param world   level
+     * @param pos     position of the block
+     * @return SUCCESS to consume item, PASS to ignore
+     */
     @Override
-    public InteractionResult useOn(UseOnContext pContext) {
-        Level world = pContext.getLevel();
-        BlockPos pos = pContext.getClickedPos();
-        if (world.isClientSide) return InteractionResult.SUCCESS;
-        pos = pos.relative(pContext.getClickedFace());
+    public InteractionResult useOnBlock(UseOnContext context, Level world, BlockPos pos) {
         Alakarkinos alakarkinos = new Alakarkinos(world, pos, true);
-        PersistentFamiliarData data = pContext.getItemInHand().get(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA);
-        if(data != null) {
-            alakarkinos.fromCharmData(data);
-        }
+        alakarkinos.fromCharmData(context.getItemInHand().getOrDefault(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, new PersistentFamiliarData()));
+        alakarkinos.setPos(pos.getX(), pos.above().getY(), pos.getZ());
         world.addFreshEntity(alakarkinos);
-        return super.useOn(pContext);
+        return InteractionResult.SUCCESS;
+    }
+
+    /**
+     * @param context useContext
+     * @param world   level
+     * @param tile    summoning tile
+     * @param pos     position of the block
+     * @return SUCCESS to consume item, PASS to ignore
+     */
+    @Override
+    public InteractionResult useOnSummonTile(UseOnContext context, Level world, SummoningTile tile, BlockPos pos) {
+        return useOnBlock(context, world, pos);
     }
 
     @Override
@@ -41,4 +54,5 @@ public class AlakarkinosCharm extends ModItem {
         super.appendHoverText(stack, context, tooltip2, flagIn);
         stack.addToTooltip(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, context, tooltip2::add, flagIn);
     }
+
 }

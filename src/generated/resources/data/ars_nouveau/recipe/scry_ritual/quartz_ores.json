@@ -1,5 +1,5 @@
 {
   "type": "ars_nouveau:scry_ritual",
-  "augment": "neoforge:ores/quartz",
-  "highlight": "neoforge:ores/quartz"
+  "augment": "c:ores/quartz",
+  "highlight": "c:ores/quartz"
 }

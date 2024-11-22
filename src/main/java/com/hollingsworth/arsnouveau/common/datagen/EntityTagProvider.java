@@ -48,7 +48,7 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
                 );
         this.tag(EntityTags.FAMILIAR).add(ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get(), ModEntities.ENTITY_FAMILIAR_SYLPH.get(),
                 ModEntities.ENTITY_FAMILIAR_WIXIE.get(), ModEntities.ENTITY_FAMILIAR_DRYGMY.get(),
-                ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get());
+                ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get(), ModEntities.LILY.get());
         this.tag(EntityTags.JAR_BLACKLIST).addTag(EntityTags.FAMILIAR).addTag(Tags.EntityTypes.CAPTURING_NOT_SUPPORTED);
 
         this.tag(EntityTags.JAR_WHITELIST)
@@ -74,5 +74,6 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
         this.tag(EntityTags.JAR_RELEASE_BLACKLIST).add(EntityType.ENDER_DRAGON);
 
         this.tag(EntityTags.ANIMAL_SUMMON_BLACKLIST).add(ModEntities.GIFT_STARBY.get());
+        this.tag(EntityTags.BURST_WHITELIST).add(ModEntities.BUBBLE.get(), EntityType.ARROW);
     }
 }

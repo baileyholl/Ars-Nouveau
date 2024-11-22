@@ -242,26 +242,30 @@ public abstract class AbstractCaster<T extends AbstractCaster<T>> implements Too
         return setSpellName(name, getCurrentSlot());
     }
 
+    public int getBonusGlyphSlots() {
+        return 0;
+    }
+
     @NotNull
     public Spell getSpell(Level world, LivingEntity playerEntity, InteractionHand hand, AbstractCaster caster) {
         return caster.getSpell();
     }
 
-    public Spell modifySpellBeforeCasting(Level worldIn, @Nullable Entity playerIn, @Nullable InteractionHand handIn, Spell spell) {
+    public Spell modifySpellBeforeCasting(ServerLevel worldIn, @Nullable Entity playerIn, @Nullable InteractionHand handIn, Spell spell) {
         return spell;
     }
 
     public InteractionResultHolder<ItemStack> castSpell(Level worldIn, LivingEntity entity, InteractionHand handIn, @Nullable Component invalidMessage, @NotNull Spell spell) {
         ItemStack stack = entity.getItemInHand(handIn);
 
-        if (worldIn.isClientSide)
+        if (!(worldIn instanceof ServerLevel serverLevel))
             return InteractionResultHolder.pass(entity.getItemInHand(handIn));
-        spell = modifySpellBeforeCasting(worldIn, entity, handIn, spell);
+        spell = modifySpellBeforeCasting(serverLevel, entity, handIn, spell);
         if (!spell.isValid() && invalidMessage != null) {
             PortUtil.sendMessageNoSpam(entity, invalidMessage);
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
         }
-        Player player = entity instanceof Player thisPlayer ? thisPlayer : ANFakePlayer.getPlayer((ServerLevel) worldIn);
+        Player player = ANFakePlayer.getOrFakePlayer(serverLevel, entity);
         IWrappedCaster wrappedCaster = entity instanceof Player pCaster ? new PlayerCaster(pCaster) : new LivingCaster(entity);
         SpellResolver resolver = getSpellResolver(new SpellContext(worldIn, spell, entity, wrappedCaster, stack), worldIn, player, handIn);
         boolean isSensitive = resolver.spell.getBuffsAtIndex(0, entity, AugmentSensitive.INSTANCE) > 0;
@@ -300,15 +304,6 @@ public abstract class AbstractCaster<T extends AbstractCaster<T>> implements Too
 
     public InteractionResultHolder<ItemStack> castSpell(Level worldIn, LivingEntity playerIn, InteractionHand handIn, Component invalidMessage) {
         return castSpell(worldIn, playerIn, handIn, invalidMessage, getSpell(worldIn, playerIn, handIn, this));
-    }
-
-    public T copyFromCaster(AbstractCaster<?> other) {
-        T self = (T) this;
-        for (int i = 0; i < getMaxSlots() && i < other.getMaxSlots(); i++) {
-            self = self.setSpell(other.getSpell(i), i);
-            self = self.setFlavorText(other.getFlavorText());
-        }
-        return self;
     }
 
     @SuppressWarnings("unchecked")

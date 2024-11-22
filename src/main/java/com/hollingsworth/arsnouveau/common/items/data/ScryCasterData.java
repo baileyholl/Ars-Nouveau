@@ -64,7 +64,7 @@ public class ScryCasterData extends AbstractCaster<ScryCasterData> {
 
         if (worldIn.isClientSide)
             return InteractionResultHolder.pass(entity.getItemInHand(handIn));
-        spell = modifySpellBeforeCasting(worldIn, entity, handIn, spell);
+        spell = modifySpellBeforeCasting((ServerLevel) worldIn, entity, handIn, spell);
         if (!spell.isValid() && invalidMessage != null) {
             PortUtil.sendMessageNoSpam(entity, invalidMessage);
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);

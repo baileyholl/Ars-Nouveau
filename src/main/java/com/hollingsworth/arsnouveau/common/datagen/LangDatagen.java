@@ -615,12 +615,12 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.wilden", "Wilden");
         add("ars_nouveau.page.decorative", "Decorative Blocks");
         add("ars_nouveau.page1.magelight_torch", "Decorative lights. To ignite, cast Light on the sconce. The color of the flame corresponds with your spell color. The Magelight Torch on a wall can change the direction of its flames by interacting. Use Touch or Projectile Sensitive to target the sconce.");
-        add("ars_nouveau.page1.source_berry", "A Sourceberry Bush can be found in Taiga and Archwood Forest biomes, and produces Sourceberries. A Sourceberry can be used to craft a Potion of Mana Regeneration or consumed as food. Starbuncles will automatically harvest fully grown Source Berry Bushes, making them useful for early automation of the Agronomic Sourcelink. Sourceberry foods will also grant Mana Regeneration.");
+        add("ars_nouveau.page1.sourceberry_bush", "A Sourceberry Bush can be found in Taiga and Archwood Forest biomes, and produces Sourceberries. A Sourceberry can be used to craft a Potion of Mana Regeneration or consumed as food. Starbuncles will automatically harvest fully grown Source Berry Bushes, making them useful for early automation of the Agronomic Sourcelink. Sourceberry foods will also grant Mana Regeneration.");
         add("ars_nouveau.page.wilden", "Wilden");
         add("ars_nouveau.page.weald_walker", "Weald Walkers");
         add("ars_nouveau.spell_schools", "Spell Schools");
         add("ars_nouveau.casting_cost", "Casting Cost");
-        add("ars_nouveau.tier", "Tier %s");
+        add("ars_nouveau.tier", "Tier");
         add("ars_nouveau.page.agronomic_sourcelink", "The Agronomic Sourcelink generates source from crop and tree growth within 15 blocks. Bonus source is generated for magical plants such as Mageblooms, Source Berry Bushes, and Archwood Saplings. Source will be output from the Sourcelink to nearby jars within 5 blocks. Note: Bonemealing crops will not grant Source.");
         add("ars_nouveau.page.source_jar", "Source Jars store source gathered from nearby Sourcelinks. Source is used in glyphs and rituals by powering devices like the Imbuement Chamber and Enchanting Apparatus. Source may be moved using a Source Relay or by breaking and moving it. To use Source in a jar, simply place the jar near your desired device. Source Jars will provide a signal to Redstone Comparators based on their fill level.");
         add("ars_nouveau.page1.volcanic_sourcelink", "The Volcanic Sourcelink generates Source by consuming burnable items. Archwood logs will generate bonus Source, with Blazing Archwood generating the most. As the Volcanic Sourcelink produces Source, it also produces $(item)heat$(), used for spawning Lava Lilies and converting stone into lava. The Volcanic Sourcelink automatically outputs to nearby jars, starting with the one closest to it.");
@@ -1311,6 +1311,8 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.smooth_sourcestone_grate","Smooth Sourcestone Grate");
         add("block.ars_nouveau.source_lamp", "Source Gem Lamp");
         add("ars_nouveau.page1.source_lamp", "Behaves like a copper bulb, but the light and comparator values can be adjusted by casting Light with dampen.");
+        add("ars_nouveau.patchouli.missing", "Patchouli missing: opening online wiki");
+        add("ars_nouveau.dependency.install", "Open mod page");
         add("tooltip.starbuncle_shard2", "Made with love.");
         add("tooltip.whirlisprig_shard2","A natural portrait.");
         add("tooltip.drygmy_shard2","A tribute to what once was.");
@@ -1328,7 +1330,6 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.sifting", "Sifting");
         add("tooltip.alakarkinos_shard1", "Found by giving an Alakarkinos a Sherd.");
         add("tooltip.alakarkinos_shard2", "What's that behind your ear?");
-
     }
 
     @Override

@@ -5,16 +5,20 @@ import com.hollingsworth.arsnouveau.api.mana.IManaDiscountEquipment;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.PlayerCaster;
+import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellCrossbowRenderer;
 import com.hollingsworth.arsnouveau.common.entity.EntitySpellArrow;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.config.Config;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -25,6 +29,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.component.CustomData;
@@ -81,6 +86,10 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
     }
 
     private boolean tryLoadProjectiles(LivingEntity pShooter, ItemStack pCrossbowStack) {
+        if(pShooter.level().isClientSide){
+            return true;
+        }
+
         int multishotLevel = EnchantmentHelper.getTagEnchantmentLevel(pShooter.level.holderOrThrow(Enchantments.MULTISHOT), pCrossbowStack);
         int numProjectiles = multishotLevel == 0 ? 1 : 3;
         boolean isCreative = pShooter instanceof Player && ((Player)pShooter).getAbilities().instabuild;
@@ -88,7 +97,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
         ItemStack ammoCopy = ammoStack.copy();
 
         AbstractCaster<?> caster = getSpellCaster(pCrossbowStack);
-        SpellResolver resolver = new SpellResolver(new SpellContext(pShooter.level, caster.modifySpellBeforeCasting(pShooter.level, pShooter, InteractionHand.MAIN_HAND, caster.getSpell()), pShooter, LivingCaster.from(pShooter), pCrossbowStack));
+        SpellResolver resolver = new SpellResolver(new SpellContext(pShooter.level, caster.modifySpellBeforeCasting((ServerLevel) pShooter.level, pShooter, InteractionHand.MAIN_HAND, caster.getSpell()), pShooter, LivingCaster.from(pShooter), pCrossbowStack));
         boolean consumedMana = false;
 
         if(!(pShooter instanceof Player) || resolver.withSilent(true).canCast(pShooter)){
@@ -139,7 +148,8 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
             }
             LivingCaster livingCaster = pShooter instanceof Player ? new PlayerCaster((Player)pShooter) : new LivingCaster(pShooter);
             AbstractCaster<?> caster = getSpellCaster(pCrossbowStack);
-            SpellResolver resolver = new SpellResolver(new SpellContext(worldIn, caster.modifySpellBeforeCasting(worldIn, pShooter, InteractionHand.MAIN_HAND, caster.getSpell()), pShooter, livingCaster, pCrossbowStack));
+            SpellResolver resolver = new SpellResolver(new SpellContext(worldIn, caster.modifySpellBeforeCasting((ServerLevel) worldIn, pShooter,
+                    InteractionHand.MAIN_HAND, caster.getSpell()), pShooter, livingCaster, pCrossbowStack));
             if (isSpell) {
                 projectile = buildSpellArrow(worldIn, pShooter, caster, pCrossbowStack, pAmmoStack);
                 ((EntitySpellArrow) projectile).pierceLeft += EnchantmentHelper.getTagEnchantmentLevel(worldIn.holderOrThrow(Enchantments.PIERCING), pCrossbowStack);
@@ -215,8 +225,17 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
-        getInformation(stack, context, tooltip2, flagIn);
+        if (Screen.hasShiftDown() || !Config.GLYPH_TOOLTIPS.get())
+            getInformation(stack, context, tooltip2, flagIn);
         super.appendHoverText(stack, context, tooltip2, flagIn);
+    }
+
+    @Override
+    public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
+        AbstractCaster<?> caster = getSpellCaster(pStack);
+        if (caster != null && Config.GLYPH_TOOLTIPS.get() && !Screen.hasShiftDown() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
+            return Optional.of(new SpellTooltip(caster));
+        return Optional.empty();
     }
 
     @Override

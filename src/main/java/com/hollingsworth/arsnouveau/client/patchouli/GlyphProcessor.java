@@ -33,8 +33,9 @@ public class GlyphProcessor implements IComponentProcessor {
         if (holder == null)
             return null;
         var recipe = holder.value();
-        if (s.equals("tier"))
+        if (s.equals("tier")) {
             return IVariable.wrap(Component.translatable("ars_nouveau.tier").getString() + ": " + Component.translatable("ars_nouveau.spell_tier." + recipe.getSpellPart().getConfigTier().value).getString());
+        }
         if (s.equals("schools")) {
             AbstractSpellPart part = ((Glyph) recipe.output.getItem()).spellPart;
             StringBuilder str = new StringBuilder(Component.translatable("ars_nouveau.spell_schools").getString() + ": ");

@@ -320,7 +320,9 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
         tag.putInt("cooldown", channelCooldown);
         tag.putInt("taming", tamingTime);
         tag.putBoolean("beingTamed", this.entityData.get(BEING_TAMED));
-        tag.putString("color", this.entityData.get(COLOR));
+        if(this.entityData.get(COLOR) != null) {
+            tag.putString("color", this.entityData.get(COLOR));
+        }
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.client.gui.GlyphRecipeTooltip;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
+import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
 import com.hollingsworth.arsnouveau.client.gui.buttons.*;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
@@ -107,7 +108,7 @@ public class GlyphUnlockMenu extends BaseBook {
             searchBar.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.search").getString());
         searchBar.setResponder((val) -> this.onSearchChanged(val));
         addRenderableWidget(searchBar);
-        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 13, 50, 12, ArsNouveau.prefix( "textures/gui/create_icon.png"), this::onSelectClick));
+        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 13, 50, 12, ArsNouveau.prefix("textures/gui/create_icon.png"), this::onSelectClick));
         this.nextButton = addRenderableWidget(new PageButton(bookRight - 20, bookBottom - 10, true, this::onPageIncrease, true));
         this.previousButton = addRenderableWidget(new PageButton(bookLeft - 5, bookBottom - 10, false, this::onPageDec, true));
         updateNextPageButtons();
@@ -116,23 +117,28 @@ public class GlyphUnlockMenu extends BaseBook {
         layoutAllGlyphs(0);
 
         //Crafting slots
+        for(ItemButton button : itemButtons){
+            removeWidget(button);
+        }
+        itemButtons = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             int offset = i >= 5 ? 14 : 0;
-            ItemButton cell = new ItemButton(this, bookLeft + 19 + 24 * i + offset, bookTop + FULL_HEIGHT - 47);
+            ItemButton cell = new ItemButton(this, bookLeft + 19 + 24 * i + offset, bookBottom - 47);
             addRenderableWidget(cell);
             itemButtons.add(cell);
         }
 
-        all = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 22, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix( "textures/gui/filter_tab_all.png"),
-                ArsNouveau.prefix( "textures/gui/filter_tab_all_selected.png"), (b) -> this.setFilter(Filter.ALL, (SelectableButton) b, Component.translatable("ars_nouveau.all_glyphs").getString())).withTooltip(Component.translatable("ars_nouveau.all_glyphs"));
+        all = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 22, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix("textures/gui/filter_tab_all.png"),
+                ArsNouveau.prefix("textures/gui/filter_tab_all_selected.png"), (b) -> this.setFilter(Filter.ALL, (SelectableButton) b, Component.translatable("ars_nouveau.all_glyphs").getString())).withTooltip(Component.translatable("ars_nouveau.all_glyphs"));
         all.isSelected = true;
-        tier1 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 46, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix( "textures/gui/filter_tab_tier1.png"),
-                ArsNouveau.prefix( "textures/gui/filter_tab_tier1_selected.png"), (b) -> this.setFilter(Filter.TIER1, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 1).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 1));
+        tier1 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 46, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix("textures/gui/filter_tab_tier1.png"),
+                ArsNouveau.prefix("textures/gui/filter_tab_tier1_selected.png"), (b) -> this.setFilter(Filter.TIER1, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 1).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 1));
 
-        tier2 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 70, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix( "textures/gui/filter_tab_tier2.png"),
-                ArsNouveau.prefix( "textures/gui/filter_tab_tier2_selected.png"), (b) -> this.setFilter(Filter.TIER2, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 2).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 2));
-        tier3 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 94, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix( "textures/gui/filter_tab_tier3.png"),
-                ArsNouveau.prefix( "textures/gui/filter_tab_tier3_selected.png"), (b) -> this.setFilter(Filter.TIER3, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 3).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 3));
+        tier2 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 70, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix("textures/gui/filter_tab_tier2.png"),
+                ArsNouveau.prefix("textures/gui/filter_tab_tier2_selected.png"), (b) -> this.setFilter(Filter.TIER2, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 2).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 2));
+        tier3 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 94, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix("textures/gui/filter_tab_tier3.png"),
+                ArsNouveau.prefix("textures/gui/filter_tab_tier3_selected.png"), (b) -> this.setFilter(Filter.TIER3, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 3).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 3));
+        filterButtons = new ArrayList<>();
         filterButtons.add(all);
         filterButtons.add(tier2);
         filterButtons.add(tier1);
@@ -140,6 +146,7 @@ public class GlyphUnlockMenu extends BaseBook {
         for (SelectableButton button : filterButtons) {
             addRenderableWidget(button);
         }
+        updateRecipeButtons();
     }
 
     @Override
@@ -293,25 +300,29 @@ public class GlyphUnlockMenu extends BaseBook {
     }
 
     public void onGlyphClick(Button button) {
-        for (ItemButton itemButton : itemButtons) {
-            itemButton.visible = false;
-            itemButton.ingredient = Ingredient.EMPTY;
-        }
         for (UnlockGlyphButton button1 : glyphButtons) {
             button1.selected = false;
         }
         if (button instanceof UnlockGlyphButton unlockGlyphButton) {
             this.selectedRecipe = unlockGlyphButton.recipe;
             unlockGlyphButton.selected = true;
-            if (selectedRecipe == null)
-                return;
-            for (int i = 0; i < selectedRecipe.value().inputs.size(); i++) {
-                if (i > itemButtons.size())
-                    break;
-                itemButtons.get(i).visible = true;
-                itemButtons.get(i).ingredient = selectedRecipe.value().inputs.get(i);
+            updateRecipeButtons();
+        }
+    }
 
-            }
+    public void updateRecipeButtons(){
+        if (selectedRecipe == null)
+            return;
+        for (ItemButton itemButton : itemButtons) {
+            itemButton.visible = false;
+            itemButton.ingredient = Ingredient.EMPTY;
+        }
+
+        for (int i = 0; i < selectedRecipe.value().inputs.size(); i++) {
+            if (i > itemButtons.size())
+                break;
+            itemButtons.get(i).visible = true;
+            itemButtons.get(i).ingredient = selectedRecipe.value().inputs.get(i);
         }
     }
 
@@ -343,7 +354,7 @@ public class GlyphUnlockMenu extends BaseBook {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         this.hoveredRecipe = null;
-        if(getHoveredRenderable(mouseX, mouseY) instanceof UnlockGlyphButton button){
+        if (getHoveredRenderable(mouseX, mouseY) instanceof UnlockGlyphButton button) {
             this.hoveredRecipe = button.recipe;
         }
         super.render(graphics, mouseX, mouseY, partialTicks);
@@ -355,9 +366,9 @@ public class GlyphUnlockMenu extends BaseBook {
 
         graphics.drawString(font, orderingTitle, tier1Row > 7 ? 154 : 20, 5 + 18 * (tier1Row + (tier1Row == 1 ? 0 : 1)), -8355712, false);
 
-        graphics.blit(ArsNouveau.prefix( "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15);
+        graphics.blit(ArsNouveau.prefix("textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15);
 
-        graphics.blit(ArsNouveau.prefix( "textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15, 72, 15);
+        graphics.blit(ArsNouveau.prefix("textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15, 72, 15);
         graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.select"), 233, 183, -8355712, false);
     }
 
@@ -371,8 +382,10 @@ public class GlyphUnlockMenu extends BaseBook {
         List<ClientTooltipComponent> components = new ArrayList<>(net.neoforged.neoforge.client.ClientHooks.gatherTooltipComponents(ItemStack.EMPTY, tooltip, mouseX, width, height, this.font));
         if (hoveredRecipe != null)
             components.add(new GlyphRecipeTooltip(hoveredRecipe.value().inputs));
-        renderTooltipInternal(stack, components, mouseX, mouseY);
+        if (getHoveredRenderable(mouseX, mouseY) instanceof UnlockGlyphButton button && !button.spellPart.spellSchools.isEmpty())
+            components.add(1, new SchoolTooltip.SchoolTooltipRenderer(button.spellPart));
 
+        renderTooltipInternal(stack, components, mouseX, mouseY);
     }
 
     public void renderTooltipInternal(GuiGraphics graphics, List<ClientTooltipComponent> pClientTooltipComponents, int pMouseX, int pMouseY) {
@@ -406,7 +419,7 @@ public class GlyphUnlockMenu extends BaseBook {
             Matrix4f matrix4f = pPoseStack.last().pose();
             net.neoforged.neoforge.client.event.RenderTooltipEvent.Color colorEvent = net.neoforged.neoforge.client.ClientHooks.onRenderTooltipColor(ItemStack.EMPTY, graphics, j2, k2, preEvent.getFont(), pClientTooltipComponents);
 
-            graphics.fillGradient( j2 - 3, k2 - 4, j2 + i + 3, k2 - 3, 400, colorEvent.getBackgroundStart(), colorEvent.getBackgroundStart());
+            graphics.fillGradient(j2 - 3, k2 - 4, j2 + i + 3, k2 - 3, 400, colorEvent.getBackgroundStart(), colorEvent.getBackgroundStart());
             graphics.fillGradient(j2 - 3, k2 + j + 3, j2 + i + 3, k2 + j + 4, 400, colorEvent.getBackgroundEnd(), colorEvent.getBackgroundEnd());
             graphics.fillGradient(j2 - 3, k2 - 3, j2 + i + 3, k2 + j + 3, 400, colorEvent.getBackgroundStart(), colorEvent.getBackgroundEnd());
             graphics.fillGradient(j2 - 4, k2 - 3, j2 - 3, k2 + j + 3, 400, colorEvent.getBackgroundStart(), colorEvent.getBackgroundEnd());
@@ -431,7 +444,7 @@ public class GlyphUnlockMenu extends BaseBook {
             }
             l1 = k2;
 
-            pPoseStack.translate(0,0,600);
+            pPoseStack.translate(0, 0, 600);
             for (int l2 = 0; l2 < pClientTooltipComponents.size(); ++l2) {
                 ClientTooltipComponent clienttooltipcomponent2 = pClientTooltipComponents.get(l2);
                 clienttooltipcomponent2.renderImage(preEvent.getFont(), j2, l1, graphics);

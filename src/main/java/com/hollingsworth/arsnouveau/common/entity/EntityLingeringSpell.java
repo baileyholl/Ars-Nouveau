@@ -79,7 +79,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
             if (isSensitive()) {
                 for (BlockPos p : BlockPos.betweenClosed(blockPosition().east(flatAoe).north(flatAoe), blockPosition().west(flatAoe).south(flatAoe))) {
                     p = p.immutable();
-                    spellResolver.onResolveEffect(level, new
+                    spellResolver.getNewResolver(spellResolver.spellContext.clone().makeChildContext()).onResolveEffect(level, new
                             BlockHitResult(new Vec3(p.getX(), p.getY(), p.getZ()), Direction.UP, p, false));
                 }
             } else {
@@ -87,7 +87,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
                 for (Entity entity : level.getEntities(null, new AABB(this.blockPosition()).inflate(getAoe()))) {
                     if (entity.equals(this) || entity.getType().is(EntityTags.LINGERING_BLACKLIST))
                         continue;
-                    spellResolver.onResolveEffect(level, new EntityHitResult(entity));
+                    spellResolver.getNewResolver(spellResolver.spellContext.clone().makeChildContext()).onResolveEffect(level, new EntityHitResult(entity));
                     i++;
                     if (i > 5)
                         break;

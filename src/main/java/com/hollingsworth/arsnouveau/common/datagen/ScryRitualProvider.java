@@ -56,7 +56,7 @@ public class ScryRitualProvider extends SimpleDataProvider{
     }
 
     private ResourceLocation forgeTag(String path) {
-        return ResourceLocation.fromNamespaceAndPath("neoforge", path);
+        return ResourceLocation.fromNamespaceAndPath("c", path);
     }
 
     protected static Path getRecipePath(Path path, String id) {

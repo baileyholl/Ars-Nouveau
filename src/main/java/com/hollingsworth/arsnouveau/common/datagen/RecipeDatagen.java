@@ -775,8 +775,19 @@ public class RecipeDatagen extends RecipeProvider {
                     .define('r', Tags.Items.DUSTS_REDSTONE)
                     .save(consumer);
 
-
+            clearBuilder(ItemsRegistry.STARBUNCLE_CHARM).save(consumer, "clear_starbuncle_charm");
+            clearBuilder(ItemsRegistry.STARBUNCLE_SHARD).save(consumer, "clear_starbuncle_shard");
+            clearBuilder(ItemsRegistry.DRYGMY_CHARM).save(consumer, "clear_drygmy_charm");
+            clearBuilder(ItemsRegistry.WIXIE_CHARM).save(consumer, "clear_wixie_charm");
+            clearBuilder(ItemsRegistry.BOOKWYRM_CHARM).save(consumer, "clear_bookwyrm_charm");
+            clearBuilder(ItemsRegistry.WHIRLISPRIG_CHARM).save(consumer, "clear_whirlisprig_charm");
+            clearBuilder(ItemsRegistry.AMETHYST_GOLEM_CHARM).save(consumer, "clear_amethyst_golem_charm");
+            clearBuilder(ItemsRegistry.ALAKARKINOS_CHARM).save(consumer, "clear_alakarkinos_charm");
         }
+    }
+
+    public ShapelessRecipeBuilder clearBuilder(ItemLike item) {
+        return shapelessBuilder(item).requires(item);
     }
 
     public static RitualTablet getRitualItem(String name) {
