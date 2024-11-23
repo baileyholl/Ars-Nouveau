@@ -4,6 +4,15 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.resources.ResourceLocation;
 
 public class DocAssets {
+
+    public static final BlitInfo ARROW_LEFT = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_next_page_left.png"), 11, 14);
+    public static final BlitInfo ARROW_LEFT_HOVER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_next_page_left_hover.png"), 11, 14);
+    public static final BlitInfo ARROW_RIGHT = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_next_page_right.png"), 11, 11);
+    public static final BlitInfo ARROW_RIGHT_HOVER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_next_page_right_hover.png"), 11, 14);
+
+    public static final BlitInfo ARROW_BACK = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_back.png"), 14, 8);
+    public static final BlitInfo ARROW_BACK_HOVER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_back_hover.png"), 14, 8);
+
     public static final BlitInfo HEADER_WITH_ITEM = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_chapter_header.png"), 118, 22);
     public static final BlitInfo UNDERLINE = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_underline.png"), 118, 6);
     public static final BlitInfo ITEM_FRAME = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_frame_item.png"), 22, 22);

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui.documentation;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.nuggets.client.gui.BaseScreen;
 import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
@@ -20,12 +21,10 @@ public class BaseDocScreen extends BaseScreen {
 
     public static ResourceLocation background = ArsNouveau.prefix("textures/gui/spell_book_template.png");
 
-    public static ResourceLocation PAGE_LEFT = ArsNouveau.prefix("textures/gui/documentation/doc_button_next_page_left.png");
-    public static ResourceLocation PAGE_RIGHT = ArsNouveau.prefix("textures/gui/documentation/doc_button_next_page_right.png");
-
     public NuggetImageButton leftArrow;
 
     public NuggetImageButton rightArrow;
+    public NuggetImageButton backButton;
 
     public int arrowIndex;
     public int maxArrowIndex;
@@ -39,8 +38,14 @@ public class BaseDocScreen extends BaseScreen {
     @Override
     public void init() {
         super.init();
-        rightArrow = new NuggetImageButton(bookRight - 13, bookTop + 88, 11, 14, PAGE_RIGHT, this::onRightArrowClick);
-        leftArrow = new NuggetImageButton(bookLeft + 1, bookTop + 88, 11, 14, PAGE_LEFT, this::onLeftArrowClick);
+        backButton = new NuggetImageButton(bookLeft + 6, bookTop + 10, 14, 8, DocAssets.ARROW_BACK.location(), DocAssets.ARROW_BACK_HOVER.location(), (b) -> {
+            if (previousScreen != null) {
+                Minecraft.getInstance().setScreen(previousScreen);
+            }
+        });
+        addRenderableWidget(backButton);
+        rightArrow = new NuggetImageButton(bookRight - 13, bookTop + 88, 11, 14, DocAssets.ARROW_RIGHT.location(), DocAssets.ARROW_RIGHT_HOVER.location(), this::onRightArrowClick);
+        leftArrow = new NuggetImageButton(bookLeft + 1, bookTop + 88, 11, 14, DocAssets.ARROW_LEFT.location(), DocAssets.ARROW_LEFT_HOVER.location(), this::onLeftArrowClick);
         addRenderableWidget(leftArrow);
         addRenderableWidget(rightArrow);
 
@@ -58,6 +63,7 @@ public class BaseDocScreen extends BaseScreen {
                 throw new RuntimeException(e);
             }
         }).withTooltip(Component.translatable("ars_nouveau.gui.discord")));
+        backButton.visible = previousScreen != null;
     }
 
     @Override

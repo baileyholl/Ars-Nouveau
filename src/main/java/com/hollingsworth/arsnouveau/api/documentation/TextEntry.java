@@ -59,7 +59,7 @@ public class TextEntry extends SinglePageWidget {
         PoseStack poseStack = guiGraphics.pose();
         poseStack.pushPose();
         float scale = 0.75f;
-        poseStack.translate(x + 3, y + yOffset, 1000);
+        poseStack.translate(x + 3, y + yOffset, 0);
         poseStack.scale(scale, scale, 1);
         NuggetMultilLineLabel label = NuggetMultilLineLabel.create(Minecraft.getInstance().font, body, (int) (width * 1.185));
         label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, 12, 0);

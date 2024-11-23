@@ -5,6 +5,7 @@ import com.hollingsworth.nuggets.client.gui.NestedWidgets;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -30,6 +31,11 @@ public class SinglePageWidget extends AbstractWidget implements NestedWidgets {
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+
+    }
+
+    @Override
+    public void playDownSound(SoundManager handler) {
 
     }
 }

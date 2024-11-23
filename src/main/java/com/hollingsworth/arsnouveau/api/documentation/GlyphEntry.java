@@ -5,9 +5,11 @@ import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.nuggets.client.gui.GuiHelpers;
+import com.hollingsworth.nuggets.client.gui.ItemButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
@@ -45,12 +47,18 @@ public class GlyphEntry extends TextEntry {
             default -> DocAssets.TIER_ONE;
         };
         DocClientUtils.blit(guiGraphics, tier, x + 26, y + 25);
+        return 39;
+    }
 
+    @Override
+    public List<AbstractWidget> getExtras() {
+        List<AbstractWidget> extras = super.getExtras();
         int augmentCount = 0;
         for(AbstractSpellPart spellPart1 : spellPart.compatibleAugments){
-            RenderUtils.drawItemAsIcon(spellPart1.glyphItem.getDefaultInstance(), guiGraphics, x + 33 + (augmentCount * 11), y + 22, 10, false);
+            extras.add(new ItemButton(x + 33 + (augmentCount * 11), y + 22, 10, 10, Component.empty(), (b) -> {},  spellPart1.glyphItem.getDefaultInstance(), parent)
+                    .withScale(10).setPlaySound(false));
             augmentCount++;
         }
-        return 39;
+        return extras;
     }
 }

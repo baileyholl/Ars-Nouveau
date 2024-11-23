@@ -12,6 +12,7 @@ public class PageHolderScreen extends BaseDocScreen{
     List<SinglePageWidget> allWidgets = new ArrayList<>();
 
     public SinglePageWidget leftPage = null;
+
     public SinglePageWidget rightPage = null;
     List<SinglePageCtor> pages;
     public PageHolderScreen(List<SinglePageCtor> pages) {
@@ -23,6 +24,7 @@ public class PageHolderScreen extends BaseDocScreen{
     @Override
     public void init() {
         super.init();
+        allWidgets = new ArrayList<>();
         for(int i = 0; i < pages.size(); i++){
             SinglePageCtor page = pages.get(i);
             SinglePageWidget widget = page.create(this,  (i + 1) % 2 == 0 ? bookLeft + 150 : bookLeft + 16, bookTop + 24, 135, 180);
