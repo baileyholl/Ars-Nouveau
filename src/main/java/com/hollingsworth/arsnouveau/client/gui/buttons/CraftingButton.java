@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.gui.buttons;
 
+import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
@@ -14,7 +15,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class CraftingButton extends GuiImageButton {
-    private AbstractSpellPart abstractSpellPart;
+    protected AbstractSpellPart abstractSpellPart;
+    protected AbstractSpellPart augmentedParent;
     public List<SpellValidationError> validationErrors;
     public int slotNum;
 
@@ -22,12 +24,14 @@ public class CraftingButton extends GuiImageButton {
         super(x, y, 0, 0, 22, 20, 22, 20, "textures/gui/spell_glyph_slot.png", onPress);
         this.validationErrors = new LinkedList<>();
         abstractSpellPart = null;
+        augmentedParent = null;
         this.slotNum = slotNum;
     }
 
     public void clear() {
         this.validationErrors.clear();
         this.abstractSpellPart = null;
+        this.augmentedParent = null;
     }
 
     public @Nullable AbstractSpellPart getAbstractSpellPart() {
@@ -36,6 +40,10 @@ public class CraftingButton extends GuiImageButton {
 
     public void setAbstractSpellPart(AbstractSpellPart abstractSpellPart) {
         this.abstractSpellPart = abstractSpellPart;
+    }
+
+    public void setAugmenting(@Nullable AbstractSpellPart parent) {
+        this.augmentedParent = parent;
     }
 
     @Override
@@ -57,6 +65,12 @@ public class CraftingButton extends GuiImageButton {
             tooltip.add(Component.translatable(abstractSpellPart.getLocalizationKey()));
             for (SpellValidationError ve : validationErrors) {
                 tooltip.add(ve.makeTextComponentExisting().withStyle(ChatFormatting.RED));
+            }
+            if(abstractSpellPart instanceof AbstractAugment augment && augmentedParent != null) {
+                Component augmentDescription = augmentedParent.augmentDescriptions.get(augment);
+                if (augmentDescription != null) {
+                    tooltip.add(augmentDescription);
+                }
             }
         }
     }

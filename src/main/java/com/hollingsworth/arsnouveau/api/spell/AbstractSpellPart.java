@@ -69,6 +69,8 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
      */
     public Set<AbstractAugment> compatibleAugments = ConcurrentHashMap.newKeySet();
 
+    public Map<AbstractAugment, Component> augmentDescriptions = new ConcurrentHashMap<>();
+
     /**
      * A wrapper for the list of glyphs that cannot be used with this glyph. Parsed from configs.
      */
@@ -86,6 +88,11 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
             spellSchools.add(spellSchool);
         }
         compatibleAugments.addAll(getCompatibleAugments());
+        Map<AbstractAugment, String> map = new ConcurrentHashMap<>();
+        this.addAugmentDescriptions(map);
+        for(AbstractAugment augment :  map.keySet()){
+            augmentDescriptions.put(augment, Component.translatable(map.get(augment)));
+        }
     }
 
     public void onContextCanceled(SpellContext context) {
@@ -145,7 +152,18 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
      * @see AbstractSpellPart#augmentSetOf(AbstractAugment...) for easy syntax to make the Set.
      * This should not be accessed directly, but can be overridden.
      */
-    protected abstract@NotNull Set<AbstractAugment> getCompatibleAugments();
+    protected abstract @NotNull Set<AbstractAugment> getCompatibleAugments();
+
+    /**
+     * Return the Augment -> string mappings used for datagen.
+     */
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map){
+
+    }
+
+    public Component getAugmentLangKey(AbstractAugment augment){
+        return Component.translatable("ars_nouveau.augment_desc." + registryName.getPath() + "_" + augment.getRegistryName().getPath());
+    }
 
     /**
      * Syntax support to easily make a set for {@link AbstractSpellPart#getCompatibleAugments()}

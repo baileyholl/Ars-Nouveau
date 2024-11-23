@@ -7,16 +7,20 @@ import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
+import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Supplier;
@@ -33,10 +37,19 @@ public class LangDatagen extends LanguageProvider {
     protected void addTranslations() {
         ArsNouveauAPI arsNouveauAPI = ArsNouveauAPI.getInstance();
         for (Supplier<Glyph> supplier : GlyphRegistry.getGlyphItemMap().values()) {
-            Glyph i = supplier.get();
-            if(supplier.get().spellPart.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
-                add("ars_nouveau.glyph_desc." + i.spellPart.getRegistryName().getPath(), i.spellPart.getBookDescription());
-                add("ars_nouveau.glyph_name." + i.spellPart.getRegistryName().getPath(), i.spellPart.getName());
+            Glyph glyph = supplier.get();
+            AbstractSpellPart spellPart = glyph.spellPart;
+            ResourceLocation registryName = glyph.spellPart.getRegistryName();
+            if(registryName.getNamespace().equals(ArsNouveau.MODID)) {
+                add("ars_nouveau.glyph_desc." + registryName.getPath(), spellPart.getBookDescription());
+                add("ars_nouveau.glyph_name." + registryName.getPath(), spellPart.getName());
+
+                Map<AbstractAugment, String> augmentDescriptions = new HashMap<>();
+                spellPart.addAugmentDescriptions(augmentDescriptions);
+
+                for(AbstractAugment augment : augmentDescriptions.keySet()){
+                    add("ars_nouveau.augment_desc." + registryName.getPath() + "_" + augment.getRegistryName().getPath(), augmentDescriptions.get(augment));
+                }
             }
         }
         for (FamiliarScript i : FamiliarRegistry.getFamiliarScriptMap().values()) {
