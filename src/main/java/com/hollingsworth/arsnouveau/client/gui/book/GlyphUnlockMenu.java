@@ -117,9 +117,13 @@ public class GlyphUnlockMenu extends BaseBook {
         layoutAllGlyphs(0);
 
         //Crafting slots
+        for(ItemButton button : itemButtons){
+            removeWidget(button);
+        }
+        itemButtons = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             int offset = i >= 5 ? 14 : 0;
-            ItemButton cell = new ItemButton(this, bookLeft + 19 + 24 * i + offset, bookTop + FULL_HEIGHT - 47);
+            ItemButton cell = new ItemButton(this, bookLeft + 19 + 24 * i + offset, bookBottom - 47);
             addRenderableWidget(cell);
             itemButtons.add(cell);
         }
@@ -134,6 +138,7 @@ public class GlyphUnlockMenu extends BaseBook {
                 ArsNouveau.prefix("textures/gui/filter_tab_tier2_selected.png"), (b) -> this.setFilter(Filter.TIER2, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 2).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 2));
         tier3 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 94, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix("textures/gui/filter_tab_tier3.png"),
                 ArsNouveau.prefix("textures/gui/filter_tab_tier3_selected.png"), (b) -> this.setFilter(Filter.TIER3, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 3).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 3));
+        filterButtons = new ArrayList<>();
         filterButtons.add(all);
         filterButtons.add(tier2);
         filterButtons.add(tier1);
@@ -141,6 +146,7 @@ public class GlyphUnlockMenu extends BaseBook {
         for (SelectableButton button : filterButtons) {
             addRenderableWidget(button);
         }
+        updateRecipeButtons();
     }
 
     @Override
@@ -294,25 +300,29 @@ public class GlyphUnlockMenu extends BaseBook {
     }
 
     public void onGlyphClick(Button button) {
-        for (ItemButton itemButton : itemButtons) {
-            itemButton.visible = false;
-            itemButton.ingredient = Ingredient.EMPTY;
-        }
         for (UnlockGlyphButton button1 : glyphButtons) {
             button1.selected = false;
         }
         if (button instanceof UnlockGlyphButton unlockGlyphButton) {
             this.selectedRecipe = unlockGlyphButton.recipe;
             unlockGlyphButton.selected = true;
-            if (selectedRecipe == null)
-                return;
-            for (int i = 0; i < selectedRecipe.value().inputs.size(); i++) {
-                if (i > itemButtons.size())
-                    break;
-                itemButtons.get(i).visible = true;
-                itemButtons.get(i).ingredient = selectedRecipe.value().inputs.get(i);
+            updateRecipeButtons();
+        }
+    }
 
-            }
+    public void updateRecipeButtons(){
+        if (selectedRecipe == null)
+            return;
+        for (ItemButton itemButton : itemButtons) {
+            itemButton.visible = false;
+            itemButton.ingredient = Ingredient.EMPTY;
+        }
+
+        for (int i = 0; i < selectedRecipe.value().inputs.size(); i++) {
+            if (i > itemButtons.size())
+                break;
+            itemButtons.get(i).visible = true;
+            itemButtons.get(i).ingredient = selectedRecipe.value().inputs.get(i);
         }
     }
 

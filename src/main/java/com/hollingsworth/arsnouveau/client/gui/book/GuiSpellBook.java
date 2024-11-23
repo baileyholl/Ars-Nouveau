@@ -132,10 +132,11 @@ public class GuiSpellBook extends BaseBook {
         super.init();
         AbstractCaster<?> caster = SpellCasterRegistry.from(bookStack);
         int selectedSlot = caster.getCurrentSlot();
-        //Crafting slots
+
+        craftingCells = new ArrayList<>();
         for (int i = 0; i < numLinks; i++) {
             int offset = i >= 5 ? 14 : 0;
-            CraftingButton cell = new CraftingButton(bookLeft + 19 + 24 * i + offset, bookTop + FULL_HEIGHT - 47, this::onCraftingSlotClick, i);
+            CraftingButton cell = new CraftingButton(bookLeft + 19 + 24 * i + offset, bookBottom - 47, this::onCraftingSlotClick, i);
             addRenderableWidget(cell);
             craftingCells.add(cell);
         }
@@ -145,7 +146,7 @@ public class GuiSpellBook extends BaseBook {
         createSpellButton = addRenderableWidget(new CreateSpellButton(bookRight - 71, bookBottom - 13, this::onCreateClick, () -> !this.validationErrors.isEmpty()));
         addRenderableWidget(new GuiImageButton(bookRight - 126, bookBottom - 13, 0, 0, 41, 12, 41, 12, "textures/gui/clear_icon.png", this::clear));
 
-        spell_name = new NoShadowTextField(minecraft.font, bookLeft + 32, bookTop + FULL_HEIGHT - 11,
+        spell_name = new NoShadowTextField(minecraft.font, bookLeft + 32, bookBottom - 11,
                 88, 12, null, Component.translatable("ars_nouveau.spell_book_gui.spell_name"));
         spell_name.setBordered(false);
         spell_name.setTextColor(12694931);

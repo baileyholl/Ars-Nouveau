@@ -22,11 +22,9 @@ public class WornNotebook extends ModItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-
         if(worldIn.isClientSide){
             IndexScreen.open();
         }
-
         return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
     }
 }
