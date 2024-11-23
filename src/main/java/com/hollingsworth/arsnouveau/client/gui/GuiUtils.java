@@ -26,9 +26,6 @@ public class GuiUtils {
 
     public static void openWiki(Player player) {
         if (player instanceof ServerPlayer serverPlayer) {
-            if (ArsNouveau.patchouliLoaded) {
-                PatchouliHandler.openBookGUI(serverPlayer);
-            }
             return;
         }
 
