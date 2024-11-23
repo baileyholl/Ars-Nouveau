@@ -213,6 +213,7 @@
   "ars_nouveau.gathering_at": "Gathering at: %s",
   "ars_nouveau.getting_started": "Getting Started",
   "ars_nouveau.getting_started_desc": "An introduction to Ars Nouveau. It is recommended to follow each section in order.",
+  "ars_nouveau.global_position": "X: %1$d Y: %2$d Z: %3$d in %4$s",
   "ars_nouveau.glyph_crafting": "Glyph Crafting",
   "ars_nouveau.glyph_desc.glyph_accelerate": "Increases the speed of projectile spells.",
   "ars_nouveau.glyph_desc.glyph_amplify": "Additively increases the power of most spell effects. Can increase the harvest level of Break and increases the damage of spells.",
