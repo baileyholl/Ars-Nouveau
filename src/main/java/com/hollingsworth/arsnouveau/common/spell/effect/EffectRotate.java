@@ -128,4 +128,12 @@ public class EffectRotate extends AbstractEffect {
         return augmentSetOf(AugmentAmplify.INSTANCE, AugmentSensitive.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentDampen.INSTANCE);
     }
 
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentSensitive.INSTANCE, "Rotates the block on a different axis or forces an entity to rotate their head.");
+        map.put(AugmentDampen.INSTANCE, "Increases rotations counter-clockwise.");
+        map.put(AugmentAmplify.INSTANCE, "Increases rotations clockwise.");
+    }
 }

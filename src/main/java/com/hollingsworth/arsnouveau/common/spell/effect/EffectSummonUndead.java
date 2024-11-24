@@ -21,6 +21,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.Set;
 
 public class EffectSummonUndead extends AbstractEffect {
@@ -88,6 +89,12 @@ public class EffectSummonUndead extends AbstractEffect {
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return setOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentAmplify.INSTANCE, AugmentSplit.INSTANCE, AugmentPierce.INSTANCE);
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addSummonAugmentDescriptions(map);
     }
 
     @Override

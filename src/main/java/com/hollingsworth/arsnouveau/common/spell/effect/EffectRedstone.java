@@ -99,6 +99,17 @@ public class EffectRedstone extends AbstractEffect {
     }
 
     @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentAmplify.INSTANCE, "Increases the power of the redstone signal.");
+        map.put(AugmentDampen.INSTANCE, "Decreases the power of the redstone signal.");
+        map.put(AugmentSensitive.INSTANCE, "Sets the target block to a redstone power source, powering itself and its neighbors.");
+        map.put(AugmentExtendTime.INSTANCE, "Increases the duration of the redstone signal.");
+        map.put(AugmentDurationDown.INSTANCE, "Decreases the duration of the redstone signal.");
+    }
+
+    @Override
     public String getBookDescription() {
         return "Places a temporary block of redstone with configurable power and duration. Augment with Sensitive to set the target block as a power source for itself and surrounding blocks. Dampen and Amplify will adjust the power from the base value of 10.";
     }

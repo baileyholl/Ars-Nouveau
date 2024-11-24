@@ -118,6 +118,16 @@ public class EffectLight extends AbstractEffect implements IPotionEffect {
     }
 
     @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentExtendTime.INSTANCE, "The light will instead be temporary, lasting longer. Affects the duration of Glowing and Night Vision.");
+        map.put(AugmentDurationDown.INSTANCE, "The light will last for a shorter duration. Affects the duration of Glowing and Night Vision.");
+        map.put(AugmentAmplify.INSTANCE, "Increases the light level.");
+        map.put(AugmentDampen.INSTANCE, "Decreases the light level.");
+        map.put(AugmentSensitive.INSTANCE, "Allows Glowing to be applied to the caster and applies the spell color to the Glowing effect.");
+    }
+
+    @Override
     public String getBookDescription() {
         return "If cast on a block, a permanent light source is created. May be amplified up to Glowstone brightness, or Dampened for a lower light level. When cast on yourself, you will receive night vision. When cast on other entities or with Sensitive, they will receive Night Vision and Glowing. If Sensitive, Glowing will use the spell color.";
     }

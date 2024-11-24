@@ -72,7 +72,13 @@ public class EffectRune extends AbstractEffect {
                 "and cannot be recharged. When using Item Pickup, items are deposited into adjacent inventories. Sensitive will cause the rune to use the Owner's inventory for pickup and usage instead. Players with Magic Find will be able to read spells inscribed on runes.";
     }
 
-   @NotNull
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentSensitive.INSTANCE, "The rune will use the owner's inventory for pickup and usage.");
+    }
+
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);

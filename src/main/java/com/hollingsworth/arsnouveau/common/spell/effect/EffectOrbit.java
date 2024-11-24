@@ -11,6 +11,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Set;
 
 public class EffectOrbit extends AbstractEffect {
@@ -79,5 +80,18 @@ public class EffectOrbit extends AbstractEffect {
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAccelerate.INSTANCE, AugmentDecelerate.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentSplit.INSTANCE, AugmentExtendTime.INSTANCE,
                 AugmentDurationDown.INSTANCE, AugmentSensitive.INSTANCE);
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentAccelerate.INSTANCE, "Increases the speed of the orbiting projectiles.");
+        map.put(AugmentDecelerate.INSTANCE, "Decreases the speed of the orbiting projectiles.");
+        map.put(AugmentAOE.INSTANCE, "Increases the radius of the orbiting projectiles.");
+        map.put(AugmentPierce.INSTANCE, "Allows the orbiting projectiles to pierce through enemies.");
+        map.put(AugmentSplit.INSTANCE, "Increases the number of orbiting projectiles.");
+        map.put(AugmentExtendTime.INSTANCE, "Increases the duration of the orbiting projectiles.");
+        map.put(AugmentDurationDown.INSTANCE, "Decreases the duration of the orbiting projectiles.");
+        map.put(AugmentSensitive.INSTANCE, "Allows the orbiting projectiles to hit blocks.");
     }
 }

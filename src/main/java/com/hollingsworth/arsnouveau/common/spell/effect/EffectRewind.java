@@ -105,6 +105,13 @@ public class EffectRewind extends AbstractEffect {
         defaults.put(AugmentDurationDown.INSTANCE.getRegistryName(), 5);
     }
 
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentExtendTime.INSTANCE, "Increases the duration to rewind.");
+        map.put(AugmentDurationDown.INSTANCE, "Decreases the duration to rewind.");
+    }
+
     public int getEntityMaxTrackingTicks(){
         return GENERIC_INT.get();
     }
@@ -129,6 +136,8 @@ public class EffectRewind extends AbstractEffect {
     protected @NotNull Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
     }
+
+
 
     @Override
     protected @NotNull Set<SpellSchool> getSchools() {

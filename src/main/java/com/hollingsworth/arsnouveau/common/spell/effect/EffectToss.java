@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtract;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
-import com.hollingsworth.arsnouveau.common.util.ItemUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -23,9 +22,9 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class EffectToss extends AbstractEffect {
@@ -120,5 +119,14 @@ public class EffectToss extends AbstractEffect {
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentExtract.INSTANCE, AugmentRandomize.INSTANCE, AugmentDampen.INSTANCE, AugmentAmplify.INSTANCE);
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentExtract.INSTANCE, "Extracts the item from the caster's inventory.");
+        map.put(AugmentRandomize.INSTANCE, "Randomizes the stack selection.");
+        map.put(AugmentDampen.INSTANCE, "Halves the stack size.");
+        map.put(AugmentAmplify.INSTANCE, "Doubles the stack size.");
     }
 }

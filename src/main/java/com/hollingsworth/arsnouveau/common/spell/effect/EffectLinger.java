@@ -68,6 +68,18 @@ public class EffectLinger extends AbstractEffect {
     }
 
     @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentAOE.INSTANCE, "Increases the target area.");
+        map.put(AugmentAccelerate.INSTANCE, "Casts spells faster.");
+        map.put(AugmentDecelerate.INSTANCE, "Casts spells slower.");
+        map.put(AugmentExtendTime.INSTANCE, "Increases the duration of the effect.");
+        map.put(AugmentDurationDown.INSTANCE, "Decreases the duration of the effect.");
+        map.put(AugmentDampen.INSTANCE, "Ignores gravity.");
+        map.put(AugmentSensitive.INSTANCE, "Targets blocks instead of entities.");
+    }
+
+    @Override
     protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
         super.addDefaultAugmentLimits(defaults);
         defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);

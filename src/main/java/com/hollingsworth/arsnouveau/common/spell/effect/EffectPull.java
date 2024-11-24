@@ -88,6 +88,15 @@ public class EffectPull extends AbstractEffect {
     }
 
     @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentAmplify.INSTANCE, "Increases the velocity.");
+        map.put(AugmentDampen.INSTANCE, "Decreases the velocity.");
+        map.put(AugmentSensitive.INSTANCE, "Prevents blocks from being pulled.");
+    }
+
+    @Override
     public String getBookDescription() {
         return "Pulls the target closer to the caster. When used on blocks, they become falling blocks with motion towards the side of the block that was hit. Sensitive will stop this spell from pulling blocks.";
     }

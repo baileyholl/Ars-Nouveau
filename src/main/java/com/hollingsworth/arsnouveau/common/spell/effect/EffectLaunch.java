@@ -79,6 +79,13 @@ public class EffectLaunch extends AbstractEffect {
         defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
     }
 
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentSensitive.INSTANCE, "Prevents blocks from being moved.");
+    }
+
     @NotNull
     @Override
     public Set<SpellSchool> getSchools() {

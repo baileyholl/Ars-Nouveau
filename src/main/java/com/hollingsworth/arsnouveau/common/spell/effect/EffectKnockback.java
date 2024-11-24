@@ -112,6 +112,14 @@ public class EffectKnockback extends AbstractEffect {
     }
 
     @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentSensitive.INSTANCE, "Prevents blocks from being moved.");
+
+    }
+
+    @Override
     public String getBookDescription() {
         return "Knocks a target or block away a short distance from the caster. Sensitive will stop this spell from launching blocks.";
     }

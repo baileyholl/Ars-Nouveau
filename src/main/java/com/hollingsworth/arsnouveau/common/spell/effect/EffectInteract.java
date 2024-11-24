@@ -210,6 +210,12 @@ public class EffectInteract extends AbstractEffect {
     }
 
     @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentSensitive.INSTANCE, "Will interact with your off-hand item.");
+    }
+
+    @Override
     public String getBookDescription() {
         return "Interacts with blocks or entities as it were a player. Useful for reaching levers, chests, or animals. Sensitive will use your off-hand item on the block or entity.";
     }

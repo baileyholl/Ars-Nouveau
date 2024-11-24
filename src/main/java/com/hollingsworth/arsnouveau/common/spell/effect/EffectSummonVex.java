@@ -16,6 +16,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.Set;
 
 public class EffectSummonVex extends AbstractEffect {
@@ -69,6 +70,12 @@ public class EffectSummonVex extends AbstractEffect {
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return getSummonAugments();
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addSummonAugmentDescriptions(map);
     }
 
     @Override

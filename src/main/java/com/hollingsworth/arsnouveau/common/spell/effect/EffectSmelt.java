@@ -130,6 +130,15 @@ public class EffectSmelt extends AbstractEffect {
     }
 
     @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentSensitive.INSTANCE, "Only smelts items, not blocks.");
+        map.put(AugmentDampen.INSTANCE, "Uses smoking recipes instead of smelting recipes.");
+        map.put(AugmentAmplify.INSTANCE, "Allows smelting of blocks with higher hardness, or blasting recipes when targeting items.");
+    }
+
+    @Override
     public String getBookDescription() {
         return "Smelts blocks and items in the world. AOE will increase the number of items and radius of blocks that can be smelted at once, while Amplify will allow Smelt to work on blocks of higher hardness, Sensitive will make it only smelt items and not blocks. Dampen will cause Smelt to use smoking recipes.";
     }
