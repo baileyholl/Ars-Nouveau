@@ -68,6 +68,9 @@ public class CraftingButton extends GuiImageButton {
             }
 
             if(abstractSpellPart instanceof AbstractAugment augment && augmentedParent != null) {
+                if(validationErrors != null && !validationErrors.isEmpty()){
+                    return;
+                }
                 Component augmentDescription = augmentedParent.augmentDescriptions.get(augment);
                 if (augmentDescription != null) {
                     tooltip.add(Component.translatable("ars_nouveau.augmenting", augmentedParent.getLocaleName()));

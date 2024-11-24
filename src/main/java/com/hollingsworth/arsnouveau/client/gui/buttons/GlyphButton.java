@@ -69,6 +69,9 @@ public class GlyphButton extends ANButton {
             tip.add(Component.literal(modName).withStyle(ChatFormatting.BLUE));
         }
         if(this.abstractSpellPart instanceof AbstractAugment augment && this.augmentingParent != null){
+            if(validationErrors != null && !validationErrors.isEmpty()){
+                return;
+            }
             Component augmentDescription = augmentingParent.augmentDescriptions.get(augment);
             if (augmentDescription != null) {
                 tip.add(augmentDescription.copy().withStyle(ChatFormatting.GOLD));
