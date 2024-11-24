@@ -664,14 +664,13 @@ public class GuiSpellBook extends BaseBook {
     private void validate() {
         resetCraftingCells();
 
-        List<AbstractSpellPart> recipe = spell;
         // Reset the crafting slots and build the recipe to validate
         for (CraftingButton b : craftingCells) {
             b.validationErrors.clear();
         }
 
         // Validate the crafting slots
-        List<SpellValidationError> errors = spellValidator.validate(recipe);
+        List<SpellValidationError> errors = spellValidator.validate(spell);
         for (SpellValidationError ve : errors) {
             CraftingButton b = craftingCells.get(ve.getPosition());
             b.validationErrors.add(ve);
@@ -682,8 +681,8 @@ public class GuiSpellBook extends BaseBook {
             craftingButton.setAugmenting(null);
         }
         AbstractSpellPart parent = null;
-        for(int i = 0; i < Math.max(recipe.size(), craftingCells.size()); i++){
-            AbstractSpellPart part = i < recipe.size() ? recipe.get(i) : null;
+        for(int i = 0; i < Math.max(spell.size(), craftingCells.size()); i++){
+            AbstractSpellPart part = i < spell.size() ? spell.get(i) : null;
             if(!(part instanceof AbstractAugment)) {
                 parent = part;
             }
@@ -695,31 +694,34 @@ public class GuiSpellBook extends BaseBook {
         }
         // Find the last effect before an empty space
         AbstractSpellPart lastEffect = null;
-        for(AbstractSpellPart effect : recipe){
+        int lastGlyphNoGap = 0;
+        for(int i = 0; i < spell.size(); i++){
+            AbstractSpellPart effect = spell.get(i);
             if(effect == null){
                 break;
             }
             if(!(effect instanceof AbstractAugment)){
                 lastEffect = effect;
             }
+            lastGlyphNoGap = i;
         }
 
+        List<AbstractSpellPart> slicedSpell = spell.subList(0, lastGlyphNoGap + 1);
         // Set validation errors on all of the glyph buttons
         for (GlyphButton glyphButton : glyphButtons) {
             glyphButton.validationErrors.clear();
             glyphButton.augmentingParent = lastEffect;
             // Simulate adding the glyph to the current spell
-            recipe.add(GlyphRegistry.getSpellpartMap().get(glyphButton.abstractSpellPart.getRegistryName()));
+            slicedSpell.add(GlyphRegistry.getSpellpartMap().get(glyphButton.abstractSpellPart.getRegistryName()));
 
             // Filter the errors to ones referring to the simulated glyph
-            List<AbstractSpellPart> finalRecipe = recipe;
             glyphButton.validationErrors.addAll(
-                    spellValidator.validate(recipe).stream()
-                            .filter(ve -> ve.getPosition() >= finalRecipe.size() - 1).toList()
+                    spellValidator.validate(slicedSpell).stream()
+                            .filter(ve -> ve.getPosition() >= slicedSpell.size() - 1).toList()
             );
 
             // Remove the simulated glyph to make room for the next one
-            recipe.removeLast();
+            slicedSpell.removeLast();
         }
 
         //update mana cache
