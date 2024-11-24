@@ -75,6 +75,15 @@ public class EffectPhantomBlock extends AbstractEffect {
     }
 
     @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentExtendTime.INSTANCE, "Increases the duration of the temporary block.");
+        map.put(AugmentAmplify.INSTANCE, "Makes the block permanent.");
+        map.put(AugmentDurationDown.INSTANCE, "Decreases the duration of the temporary block.");
+    }
+
+    @Override
     public String getBookDescription() {
         return "Creates a temporary block that will disappear after a short time. Amplify will cause the block to be permanent. Dispelling this block will destroy it instantly.";
     }

@@ -157,8 +157,19 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addDamageAugmentDescriptions(map);
+        addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentAmplify.INSTANCE, "Increases damage dealt and the harvest level.");
+        map.put(AugmentDampen.INSTANCE, "Decreases damage dealt and the harvest level.");
+        map.put(AugmentSensitive.INSTANCE, "Crush will also target items nearby.");
+    }
+
+    @Override
     protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
         defaults.put(AugmentAmplify.INSTANCE.getRegistryName(), 2);
+        defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
     }
 
     @Override

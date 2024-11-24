@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -222,16 +223,22 @@ public class EffectWololo extends AbstractEffect {
         return 30;
     }
 
-    /**
-     * Returns the set of augments that this spell part can be enhanced by.
-     * Mods should use {@link AbstractSpellPart#compatibleAugments} for addon-supported augments.
-     *
-     * @see AbstractSpellPart#augmentSetOf(AbstractAugment...) for easy syntax to make the Set.
-     * This should not be accessed directly, but can be overridden.
-     */
     @Override
     protected @NotNull Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentRandomize.INSTANCE, AugmentSensitive.INSTANCE);
+    }
+
+    @Override
+    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        super.addDefaultAugmentLimits(defaults);
+        defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentRandomize.INSTANCE, "Randomizes the color of the dye used.");
+        map.put(AugmentSensitive.INSTANCE, "Dyes the targets armor.");
     }
 
     public static Map<ParticleColor, Item> vanillaColors = new HashMap<>();

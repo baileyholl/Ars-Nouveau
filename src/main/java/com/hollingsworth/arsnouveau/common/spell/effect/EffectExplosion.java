@@ -39,9 +39,8 @@ public class EffectExplosion extends AbstractEffect implements IDamageEffect {
         double intensity = BASE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier() + AOE_BONUS.get() * spellStats.getAoeMultiplier();
         int dampen = spellStats.getBuffCount(AugmentDampen.INSTANCE);
         intensity -= 0.5 * dampen;
-        //TODO: check explosion augment functionality
-        Explosion.BlockInteraction mode = dampen > 0 ? Explosion.BlockInteraction.KEEP : Explosion.BlockInteraction.DESTROY;
-        mode = spellStats.hasBuff(AugmentExtract.INSTANCE) ? Explosion.BlockInteraction.DESTROY_WITH_DECAY : mode;
+
+        Explosion.BlockInteraction mode = spellStats.hasBuff(AugmentExtract.INSTANCE) ? Explosion.BlockInteraction.KEEP : Explosion.BlockInteraction.DESTROY;
         explode(world, shooter, null, null, vec.x, vec.y, vec.z, (float) intensity, false, mode, spellStats.getAmpMultiplier());
     }
 
@@ -108,6 +107,14 @@ public class EffectExplosion extends AbstractEffect implements IDamageEffect {
     @Override
     protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
         defaults.put(AugmentAmplify.INSTANCE.getRegistryName(), 2);
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentAOE.INSTANCE, "Increases the size of the explosion.");
+        map.put(AugmentExtract.INSTANCE, "Drops all blocks instead of destroying them.");
+        map.put(AugmentDampen.INSTANCE, "Reduces the size of the explosion and damage.");
     }
 
     @Override

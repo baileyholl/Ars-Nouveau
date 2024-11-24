@@ -178,6 +178,17 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         GENERIC_DOUBLE = builder.comment(comment).defineInRange(path, val, 0.0, Double.MAX_VALUE);
     }
 
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        if(this instanceof IPotionEffect){
+            addPotionAugmentDescriptions(map);
+        }
+        if(this instanceof IDamageEffect){
+            addDamageAugmentDescriptions(map);
+        }
+    }
+
     public void addDefaultPotionConfig(ModConfigSpec.Builder builder) {
         addPotionConfig(builder, 30);
         addExtendTimeConfig(builder, 8);
@@ -188,7 +199,33 @@ public abstract class AbstractEffect extends AbstractSpellPart {
                 AugmentAmplify.INSTANCE);
     }
 
+    protected void addBlockAoeAugmentDescriptions(Map<AbstractAugment, String> map){
+        map.put(AugmentAOE.INSTANCE, "Increases the radius of targeted blocks.");
+        map.put(AugmentPierce.INSTANCE, "Increases the depth of targeted blocks.");
+        map.put(AugmentRandomize.INSTANCE, "Adds a chance to not target a block.");
+        map.put(AugmentFortune.INSTANCE, "Applies fortune when breaking a block.");
+        map.put(AugmentExtract.INSTANCE, "Applies silk touch when breaking a block.");
+    }
+
+    protected void addDamageAugmentDescriptions(Map<AbstractAugment, String> map){
+        map.put(AugmentAmplify.INSTANCE, "Increases damage dealt.");
+        map.put(AugmentDampen.INSTANCE, "Reduces damage dealt.");
+        map.put(AugmentFortune.INSTANCE, "Applies looting when killing a mob.");
+        map.put(AugmentRandomize.INSTANCE, "Randomizes the damage dealt.");
+    }
+
+    protected void addPotionAugmentDescriptions(Map<AbstractAugment, String> map){
+        map.put(AugmentExtendTime.INSTANCE, "Extends the duration of the effect.");
+        map.put(AugmentDurationDown.INSTANCE, "Reduces the duration of the effect.");
+        map.put(AugmentAmplify.INSTANCE, "Increases the level of the effect.");
+    }
+
     protected Set<AbstractAugment> getSummonAugments() {
         return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
+    }
+
+    protected void addSummonAugmentDescriptions(Map<AbstractAugment, String> map){
+        map.put(AugmentExtendTime.INSTANCE, "Extends the duration of the summon.");
+        map.put(AugmentDurationDown.INSTANCE, "Reduces the duration of the summon.");
     }
 }

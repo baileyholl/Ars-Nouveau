@@ -161,6 +161,14 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentAOE.INSTANCE, "Increases the number of ice shards.");
+        map.put(AugmentDurationDown.INSTANCE, "Decreases the freezing duration.");
+        map.put(AugmentExtendTime.INSTANCE, "Increases the freezing duration.");
+    }
+
+    @Override
     public int getDefaultManaCost() {
         return 30;
     }
@@ -171,8 +179,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
         return augmentSetOf(
                 AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE,
                 AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE,
-                AugmentAOE.INSTANCE,
-                AugmentFortune.INSTANCE, AugmentRandomize.INSTANCE
+                AugmentAOE.INSTANCE, AugmentFortune.INSTANCE, AugmentRandomize.INSTANCE
         );
     }
 

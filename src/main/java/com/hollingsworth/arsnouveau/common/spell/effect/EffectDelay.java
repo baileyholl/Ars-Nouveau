@@ -20,6 +20,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.Set;
 
 public class EffectDelay extends AbstractEffect {
@@ -80,6 +81,14 @@ public class EffectDelay extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "Delays the resolution of effects placed to the right of this spell for a few moments. The delay may be increased with the Extend Time augment, or decreased with Duration Down.";
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentExtendTime.INSTANCE, "Increases the duration of the delay.");
+        map.put(AugmentDurationDown.INSTANCE, "Decreases the duration of the delay.");
+        map.put(AugmentRandomize.INSTANCE, "Randomizes the duration of the delay, increasing or decreasing it by 25% of the base duration.");
     }
 
     @Override

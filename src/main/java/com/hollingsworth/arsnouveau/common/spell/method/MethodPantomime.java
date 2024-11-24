@@ -87,6 +87,14 @@ public class MethodPantomime extends AbstractCastMethod {
     }
 
     @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentDampen.INSTANCE, "Reduces the target distance.");
+        map.put(AugmentAmplify.INSTANCE, "Increases the target distance.");
+        map.put(AugmentSensitive.INSTANCE, "Highlights the selected block.");
+    }
+
+    @Override
     public String getBookDescription() {
         return "Applies spells to the nearest block in your line of sight. Dampen will reduce the distance, Amplify will increase it. Sensitive will highlight the selected block.";
     }

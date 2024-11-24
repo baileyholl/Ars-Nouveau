@@ -29,12 +29,13 @@ public record SpellTooltip(AbstractCaster<?> spellcaster, boolean showName) impl
 
         @Override
         public int getHeight() {
-            return showName ? 28 : 20;
+
+            return (showName ? 28 : 20) +  (spellCaster.getSpell().size() / 10) * 16;
         }
 
         @Override
         public int getWidth(@NotNull Font pFont) {
-            return 4 + spellCaster.getSpell().size() * 16;
+            return 4 + Math.min(spellCaster.getSpell().size(), 10) * 16;
         }
 
         @Override
@@ -49,9 +50,10 @@ public record SpellTooltip(AbstractCaster<?> spellcaster, boolean showName) impl
         @Override
         public void renderImage(@NotNull Font pFont, int pX, int pY, @NotNull GuiGraphics pGuiGraphics) {
             var spell = spellCaster.getSpell();
-            for (int i = 0, recipeSize = spell.size(); i < recipeSize; i++) {
+            for (int i = 0; i <  spell.size(); i++) {
+                int yOffset = i / 10;
                 AbstractSpellPart part = spell.get(i);
-                RenderUtils.drawSpellPart(part, pGuiGraphics, pX + i * 16, pY + (showName ? 10 : 0), 16, false);
+                RenderUtils.drawSpellPart(part, pGuiGraphics, pX + (i % 10) * 16, pY + (showName ? 10 : 0) + yOffset * 16, 16, false);
             }
         }
 

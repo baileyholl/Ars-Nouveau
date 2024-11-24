@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -21,6 +22,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Set;
 
 public class EffectIgnite extends AbstractEffect {
@@ -69,6 +71,21 @@ public class EffectIgnite extends AbstractEffect {
         super.buildConfig(builder);
         addExtendTimeConfig(builder, 2);
         addPotionConfig(builder, 3);
+    }
+
+    @Override
+    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        super.addDefaultAugmentLimits(defaults);
+        defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentExtendTime.INSTANCE, "Increases the fire duration.");
+        map.put(AugmentDurationDown.INSTANCE, "Decreases the fire duration.");
+        map.put(AugmentSensitive.INSTANCE, "Creates a short-lived magic fire that will not spread or destroy blocks instead of normal fire.");
     }
 
     @Override

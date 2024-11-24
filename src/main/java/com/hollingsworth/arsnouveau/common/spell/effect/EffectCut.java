@@ -112,13 +112,21 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
         addAmpConfig(builder, 1.0);
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
                 AugmentExtract.INSTANCE, AugmentFortune.INSTANCE,
                 AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE
         );
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        map.put(AugmentAmplify.INSTANCE, "Simulates using an Axe instead of Shears.");
+        map.put(AugmentDampen.INSTANCE, "Reduces the damage dealt.");
+        map.put(AugmentExtract.INSTANCE, "Applies Silk Touch when breaking blocks.");
+        map.put(AugmentFortune.INSTANCE, "Applies Fortune when breaking blocks or killing mobs.");
     }
 
     @Override

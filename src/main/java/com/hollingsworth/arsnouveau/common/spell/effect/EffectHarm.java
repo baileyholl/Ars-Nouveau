@@ -45,7 +45,6 @@ public class EffectHarm extends AbstractEffect implements IDamageEffect, IPotion
         addExtendTimeConfig(builder, 5);
     }
 
-
     @Override
     public boolean defaultedStarterGlyph() {
         return true;
@@ -64,6 +63,14 @@ public class EffectHarm extends AbstractEffect implements IDamageEffect, IPotion
                 AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE,
                 AugmentFortune.INSTANCE, AugmentRandomize.INSTANCE
         );
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentExtendTime.INSTANCE, "Applies Poison instead of dealing damage, increases the duration.");
+        map.put(AugmentDurationDown.INSTANCE, "Decreases the duration of Poison applied.");
+        map.put(AugmentAmplify.INSTANCE, "Increases damage dealt, or the level of Poison applied.");
     }
 
     @Override
