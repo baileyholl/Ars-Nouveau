@@ -137,6 +137,8 @@ public class EffectExchange extends AbstractEffect {
     public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
         super.addAugmentDescriptions(map);
         addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentAmplify.INSTANCE, "Increases the hardness of blocks that can be harvested.");
+        map.put(AugmentDampen.INSTANCE, "Decreases the hardness of blocks that can be harvested.");
     }
 
     @Override

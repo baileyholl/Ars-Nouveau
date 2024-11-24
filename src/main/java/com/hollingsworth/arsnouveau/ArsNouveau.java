@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
 import com.hollingsworth.arsnouveau.common.event.BreezeEvent;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.util.Log;
 import com.hollingsworth.arsnouveau.common.world.Terrablender;
 import com.hollingsworth.arsnouveau.setup.ModSetup;
 import com.hollingsworth.arsnouveau.setup.config.Config;
@@ -42,6 +43,8 @@ import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
 import net.neoforged.neoforge.common.world.chunk.TicketController;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 @Mod(ArsNouveau.MODID)
@@ -54,6 +57,8 @@ public class ArsNouveau {
     public static boolean optifineLoaded = false;
     public static boolean sodiumLoaded = false;
     public static boolean patchouliLoaded = false;
+
+    public static List<String> postLoadWarnings = new ArrayList<>();
 
     public static TicketController ticketController = new TicketController(ArsNouveau.prefix("ticket_controller"),  (level, ticketHelper) -> {
         ticketHelper.getEntityTickets().forEach(((uuid, chunk) -> {
@@ -153,6 +158,9 @@ public class ArsNouveau {
             }
 
         });
+        for(String warning : postLoadWarnings){
+            Log.getLogger().error(warning);
+        }
     }
 
     public void clientSetup(final FMLClientSetupEvent event) {

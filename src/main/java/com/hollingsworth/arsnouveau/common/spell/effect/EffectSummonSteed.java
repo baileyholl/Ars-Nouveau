@@ -82,6 +82,7 @@ public class EffectSummonSteed extends AbstractEffect {
     public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
         super.addAugmentDescriptions(map);
         addSummonAugmentDescriptions(map);
+        map.put(AugmentAOE.INSTANCE, "Increases the number of horses summoned.");
     }
 
     @Override

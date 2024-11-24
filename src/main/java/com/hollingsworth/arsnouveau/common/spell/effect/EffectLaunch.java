@@ -83,6 +83,8 @@ public class EffectLaunch extends AbstractEffect {
     public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
         super.addAugmentDescriptions(map);
         addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentAmplify.INSTANCE, "Increases the knockup amount.");
+        map.put(AugmentDampen.INSTANCE, "Decreases the knockup amount.");
         map.put(AugmentSensitive.INSTANCE, "Prevents blocks from being moved.");
     }
 

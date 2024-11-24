@@ -9,6 +9,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
@@ -92,6 +93,13 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         this.addAugmentDescriptions(map);
         for(AbstractAugment augment :  map.keySet()){
             augmentDescriptions.put(augment, Component.translatable(map.get(augment)));
+        }
+        if(!FMLEnvironment.production){
+            for(AbstractAugment augment : compatibleAugments){
+                if(!augmentDescriptions.containsKey(augment)){
+                    ArsNouveau.postLoadWarnings.add("Glyph " + registryName + " is missing a description for augment " + augment.getRegistryName());
+                }
+            }
         }
     }
 

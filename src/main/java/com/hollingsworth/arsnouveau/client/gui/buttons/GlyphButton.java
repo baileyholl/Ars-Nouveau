@@ -74,6 +74,7 @@ public class GlyphButton extends ANButton {
             }
             Component augmentDescription = augmentingParent.augmentDescriptions.get(augment);
             if (augmentDescription != null) {
+                tip.add(Component.translatable("ars_nouveau.augmenting", augmentingParent.getLocaleName()));
                 tip.add(augmentDescription.copy().withStyle(ChatFormatting.GOLD));
             }
         }

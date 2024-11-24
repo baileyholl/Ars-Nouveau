@@ -90,6 +90,8 @@ public class EffectGravity extends AbstractEffect implements IPotionEffect {
     public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
         super.addAugmentDescriptions(map);
         addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentDampen.INSTANCE, "Reduces the falling speed of blocks and entities, or decreases the effect of the potion.");
+        map.put(AugmentAmplify.INSTANCE, "Increases the falling speed of blocks and entities, or increases the effect of the potion.");
     }
 
     @NotNull

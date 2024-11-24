@@ -6,10 +6,7 @@ import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtract;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
+import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -40,7 +37,7 @@ public class EffectFell extends AbstractEffect {
             Set<BlockPos> list = getTree(world, blockPos, (int) (GENERIC_INT.get() + Math.round(AOE_BONUS.get() * spellStats.getAoeMultiplier())));
             world.levelEvent(2001, blockPos, Block.getId(state));
             list.forEach(listPos -> {
-                if (!BlockUtil.destroyRespectsClaim(shooter, world, listPos))
+                if (!BlockUtil.destroyRespectsClaim(shooter, world, listPos) || !BlockUtil.canBlockBeHarvested(spellStats, world, listPos))
                     return;
                 if (spellStats.hasBuff(AugmentExtract.INSTANCE)) {
                     world.getBlockState(listPos).getDrops(LootUtil.getSilkContext((ServerLevel) world, listPos, shooter)).forEach(i -> world.addFreshEntity(new ItemEntity(world, listPos.getX(), listPos.getY(), listPos.getZ(), i)));
@@ -74,7 +71,6 @@ public class EffectFell extends AbstractEffect {
         return SpellUtil.DFSBlockstates(world, start, maxBlocks, this::isTree);
     }
 
-
     @Override
     public int getDefaultManaCost() {
         return 150;
@@ -92,7 +88,8 @@ public class EffectFell extends AbstractEffect {
                 AugmentAOE.INSTANCE,
                 AugmentExtract.INSTANCE,
                 AugmentFortune.INSTANCE,
-                AugmentAmplify.INSTANCE
+                AugmentAmplify.INSTANCE,
+                AugmentDampen.INSTANCE
         );
     }
 
@@ -100,6 +97,8 @@ public class EffectFell extends AbstractEffect {
     public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
         super.addAugmentDescriptions(map);
         addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentAmplify.INSTANCE, "Increases the hardness of blocks that can be harvested.");
+        map.put(AugmentDampen.INSTANCE, "Decreases the hardness of blocks that can be harvested.");
     }
 
     @Override

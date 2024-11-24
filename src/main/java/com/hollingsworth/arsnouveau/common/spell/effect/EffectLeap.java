@@ -111,6 +111,8 @@ public class EffectLeap extends AbstractEffect {
     public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
         super.addAugmentDescriptions(map);
         addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentAmplify.INSTANCE, "Increases the velocity.");
+        map.put(AugmentDampen.INSTANCE, "Decreases the velocity.");
         map.put(AugmentSensitive.INSTANCE, "Prevents blocks from being moved.");
     }
 

@@ -82,6 +82,7 @@ public class EffectIgnite extends AbstractEffect {
     @Override
     public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
         super.addAugmentDescriptions(map);
+        addBlockAoeAugmentDescriptions(map);
         map.put(AugmentExtendTime.INSTANCE, "Increases the fire duration.");
         map.put(AugmentDurationDown.INSTANCE, "Decreases the fire duration.");
         map.put(AugmentSensitive.INSTANCE, "Creates a short-lived magic fire that will not spread or destroy blocks instead of normal fire.");
