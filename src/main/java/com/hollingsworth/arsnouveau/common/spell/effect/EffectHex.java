@@ -27,7 +27,7 @@ public class EffectHex extends AbstractEffect implements IPotionEffect {
         Entity entity = rayTraceResult.getEntity();
         if (!(entity instanceof LivingEntity living))
             return;
-        ((IPotionEffect)this).applyConfigPotion(living, ModPotions.HEX_EFFECT, spellStats);
+        this.applyConfigPotion(living, ModPotions.HEX_EFFECT, spellStats);
     }
 
     @Override

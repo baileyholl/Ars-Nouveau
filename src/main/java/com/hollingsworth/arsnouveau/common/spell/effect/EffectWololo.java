@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -232,6 +233,12 @@ public class EffectWololo extends AbstractEffect {
     @Override
     protected @NotNull Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentRandomize.INSTANCE, AugmentSensitive.INSTANCE);
+    }
+
+    @Override
+    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        super.addDefaultAugmentLimits(defaults);
+        defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
     }
 
     public static Map<ParticleColor, Item> vanillaColors = new HashMap<>();

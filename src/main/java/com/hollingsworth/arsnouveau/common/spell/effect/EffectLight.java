@@ -103,6 +103,7 @@ public class EffectLight extends AbstractEffect implements IPotionEffect {
     @Override
     protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
         defaults.put(AugmentAmplify.INSTANCE.getRegistryName(), 1);
+        defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
     }
 
     @Override

@@ -1343,6 +1343,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.sifting", "Sifting");
         add("tooltip.alakarkinos_shard1", "Found by giving an Alakarkinos a Sherd.");
         add("tooltip.alakarkinos_shard2", "What's that behind your ear?");
+        add("ars_nouveau.augmenting", "Augmenting %s:");
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
+import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
@@ -26,6 +27,7 @@ public class GlyphButton extends ANButton {
 
     public AbstractSpellPart abstractSpellPart;
     public List<SpellValidationError> validationErrors;
+    public AbstractSpellPart augmentingParent;
 
     public GlyphButton(int x, int y, AbstractSpellPart abstractSpellPart, OnPress onPress) {
         super(x, y, 16, 16, onPress);
@@ -65,6 +67,12 @@ public class GlyphButton extends ANButton {
                     .map(ModContainer::getModInfo)
                     .map(IModInfo::getDisplayName).orElse(spellPart.getRegistryName().getNamespace());
             tip.add(Component.literal(modName).withStyle(ChatFormatting.BLUE));
+        }
+        if(this.abstractSpellPart instanceof AbstractAugment augment && this.augmentingParent != null){
+            Component augmentDescription = augmentingParent.augmentDescriptions.get(augment);
+            if (augmentDescription != null) {
+                tip.add(augmentDescription.copy().withStyle(ChatFormatting.GOLD));
+            }
         }
     }
 }

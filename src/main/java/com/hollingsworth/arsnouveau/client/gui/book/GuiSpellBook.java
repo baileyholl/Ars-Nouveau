@@ -693,11 +693,21 @@ public class GuiSpellBook extends BaseBook {
                 }
             }
         }
+        // Find the last effect before an empty space
+        AbstractSpellPart lastEffect = null;
+        for(AbstractSpellPart effect : recipe){
+            if(effect == null){
+                break;
+            }
+            if(!(effect instanceof AbstractAugment)){
+                lastEffect = effect;
+            }
+        }
 
         // Set validation errors on all of the glyph buttons
         for (GlyphButton glyphButton : glyphButtons) {
             glyphButton.validationErrors.clear();
-
+            glyphButton.augmentingParent = lastEffect;
             // Simulate adding the glyph to the current spell
             recipe.add(GlyphRegistry.getSpellpartMap().get(glyphButton.abstractSpellPart.getRegistryName()));
 

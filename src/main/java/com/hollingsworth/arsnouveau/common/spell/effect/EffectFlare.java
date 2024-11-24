@@ -17,7 +17,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
@@ -43,11 +42,10 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
             return;
         Vec3 vec = safelyGetHitPos(rayTraceResult);
         float damage = (float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
-        int snareSec = 0;//(int) (POTION_TIME.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier());
 
         if (!canDamage(livingEntity))
             return;
-        this.damage(vec, level, shooter, livingEntity, spellStats, spellContext, resolver, snareSec, damage);
+        this.damage(vec, level, shooter, livingEntity, spellStats, spellContext, resolver, damage);
         spawnCinders(shooter, level,rayTraceResult.getLocation().add(0, (rayTraceResult.getEntity().onGround() ? 1 : 0),0), spellStats, spellContext, resolver);
 
         if(rayTraceResult.getEntity() instanceof LivingEntity living && living.hasEffect(ModPotions.BLAST_EFFECT)){
@@ -105,12 +103,10 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
 
 
 
-    public void damage(Vec3 vec, ServerLevel world, LivingEntity shooter, LivingEntity livingEntity, SpellStats stats, SpellContext context, SpellResolver resolver, int snareTime, float damage) {
+    public void damage(Vec3 vec, ServerLevel world, LivingEntity shooter, LivingEntity livingEntity, SpellStats stats, SpellContext context, SpellResolver resolver, float damage) {
         if (attemptDamage(world, shooter, stats, context, resolver, livingEntity, buildDamageSource(world, shooter), damage)) {
             world.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, vec.x, vec.y + 0.5, vec.z, 50,
                     ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), 0.3);
-
-            livingEntity.addEffect(new MobEffectInstance(ModPotions.SNARE_EFFECT, 20 * snareTime));
         }
     }
 
@@ -143,10 +139,15 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
                 AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE,
-                AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE,
                 AugmentAOE.INSTANCE,
                 AugmentFortune.INSTANCE, AugmentRandomize.INSTANCE
         );
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentAOE.INSTANCE, "Increases the number of cinders spawned.");
     }
 
     @Override

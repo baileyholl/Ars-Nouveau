@@ -18,6 +18,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Set;
 
 public class EffectHeal extends AbstractEffect implements IDamageEffect {
@@ -64,6 +65,13 @@ public class EffectHeal extends AbstractEffect implements IDamageEffect {
         super.buildConfig(builder);
         addGenericDouble(builder, 3.0, "Base heal amount", "base_heal");
         addAmpConfig(builder, 3.0);
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentAmplify.INSTANCE, "Increases the amount of healing done or damage dealt to undead.");
+        map.put(AugmentDampen.INSTANCE, "Decreases the amount of healing done or damage dealt to undead.");
     }
 
     @Override

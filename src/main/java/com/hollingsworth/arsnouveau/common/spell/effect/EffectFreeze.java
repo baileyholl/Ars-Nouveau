@@ -130,6 +130,13 @@ public class EffectFreeze extends AbstractEffect implements IPotionEffect {
     }
 
     @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentSensitive.INSTANCE, "Turns water into Frosted Ice and will vanish after a short time.");
+    }
+
+    @Override
     public String getBookDescription() {
         return "Freezes water or lava in a small area or slows a target for a short time. Freeze on Ice will turn it into Packed Ice, and Packed Ice into Blue Ice. Sensitive will turn water into Frosted Ice and will vanish after a short time.";
     }

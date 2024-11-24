@@ -13,6 +13,7 @@ import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Set;
 
 public class EffectBubble extends AbstractEffect {
@@ -26,7 +27,7 @@ public class EffectBubble extends AbstractEffect {
     @Override
     public void onResolve(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         super.onResolve(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
-        var bubble = new BubbleEntity(world, (int) (100 + spellStats.getDurationMultiplier() * EXTEND_TIME.getAsInt()), (float) (DAMAGE.getAsDouble() + spellStats.getAmpMultiplier() * AMP_VALUE.getAsDouble()));
+        var bubble = new BubbleEntity(world, (int) (100 + spellStats.getDurationMultiplier() * EXTEND_TIME.getAsInt()), (float) (DAMAGE.getAsDouble() + spellStats.getAmpMultiplier() * AMP_VALUE.getAsDouble() + spellStats.getDamageModifier()));
         bubble.setPos(rayTraceResult.getLocation().x, rayTraceResult.getLocation().y, rayTraceResult.getLocation().z);
         world.addFreshEntity(bubble);
     }
@@ -47,6 +48,15 @@ public class EffectBubble extends AbstractEffect {
     @Override
     protected @NotNull Set<AbstractAugment> getCompatibleAugments() {
         return Set.of(AugmentExtendTime.INSTANCE, AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE, AugmentDurationDown.INSTANCE);
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentExtendTime.INSTANCE, "Increases the duration of the bubble.");
+        map.put(AugmentAmplify.INSTANCE, "Increases the damage of the bubble when popped.");
+        map.put(AugmentDampen.INSTANCE, "Decreases the damage of the bubble when popped.");
+        map.put(AugmentDurationDown.INSTANCE, "Decreases the duration of the bubble.");
     }
 
     @Override

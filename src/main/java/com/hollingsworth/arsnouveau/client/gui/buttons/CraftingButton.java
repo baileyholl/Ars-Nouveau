@@ -66,10 +66,12 @@ public class CraftingButton extends GuiImageButton {
             for (SpellValidationError ve : validationErrors) {
                 tooltip.add(ve.makeTextComponentExisting().withStyle(ChatFormatting.RED));
             }
+
             if(abstractSpellPart instanceof AbstractAugment augment && augmentedParent != null) {
                 Component augmentDescription = augmentedParent.augmentDescriptions.get(augment);
                 if (augmentDescription != null) {
-                    tooltip.add(augmentDescription);
+                    tooltip.add(Component.translatable("ars_nouveau.augmenting", augmentedParent.getLocaleName()));
+                    tooltip.add(augmentDescription.copy().withStyle(ChatFormatting.GOLD));
                 }
             }
         }

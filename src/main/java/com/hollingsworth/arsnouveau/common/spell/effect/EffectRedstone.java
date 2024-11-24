@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.world.saved_data.RedstoneSavedData;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,7 +28,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class EffectRedstone extends AbstractEffect {
     public static EffectRedstone INSTANCE = new EffectRedstone();
@@ -86,6 +86,12 @@ public class EffectRedstone extends AbstractEffect {
         BONUS_TIME = builder.comment("Extend time bonus, in ticks").defineInRange("extend_time", 10, 0, Integer.MAX_VALUE);
     }
 
+    @Override
+    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        super.addDefaultAugmentLimits(defaults);
+        defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
+    }
+
     @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
@@ -107,7 +113,4 @@ public class EffectRedstone extends AbstractEffect {
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);
     }
-
-    public static final Map<String, Map<BlockPos, Integer>> signalMap = new ConcurrentHashMap<>();
-
 }
