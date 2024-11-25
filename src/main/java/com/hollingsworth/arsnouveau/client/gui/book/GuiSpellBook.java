@@ -134,6 +134,14 @@ public class GuiSpellBook extends BaseBook {
         spell = new ArrayList<>(recipe);
     }
 
+    public void onBookstackUpdated(ItemStack stack){
+        this.bookStack = stack;
+        this.caster = SpellCasterRegistry.from(stack);
+        if(caster == null){
+            Minecraft.getInstance().setScreen(null);
+        }
+    }
+
     @Override
     public void init() {
         super.init();
@@ -663,6 +671,9 @@ public class GuiSpellBook extends BaseBook {
      */
     private void validate() {
         resetCraftingCells();
+        //update mana cache
+        currentCostCache = getCurrentManaCost();
+        maxManaCache = ManaUtil.getMaxMana(Minecraft.getInstance().player);
 
         // Reset the crafting slots and build the recipe to validate
         for (CraftingButton b : craftingCells) {
@@ -706,7 +717,8 @@ public class GuiSpellBook extends BaseBook {
             lastGlyphNoGap = i;
         }
 
-        List<AbstractSpellPart> slicedSpell = spell.subList(0, lastGlyphNoGap + 1);
+
+        List<AbstractSpellPart> slicedSpell = spell.subList(0, spell.isEmpty() ? 0 : (lastGlyphNoGap + 1));
         // Set validation errors on all of the glyph buttons
         for (GlyphButton glyphButton : glyphButtons) {
             glyphButton.validationErrors.clear();
@@ -723,10 +735,6 @@ public class GuiSpellBook extends BaseBook {
             // Remove the simulated glyph to make room for the next one
             slicedSpell.removeLast();
         }
-
-        //update mana cache
-        currentCostCache = getCurrentManaCost();
-        maxManaCache = ManaUtil.getMaxMana(Minecraft.getInstance().player);
     }
 
     @Override

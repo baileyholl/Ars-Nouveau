@@ -30,8 +30,9 @@ public class PacketUpdateBookGUI extends AbstractPacket{
 
     @Override
     public void onClientReceived(Minecraft minecraft, Player player) {
-        if (ArsNouveau.proxy.getMinecraft().screen instanceof GuiSpellBook)
-            ((GuiSpellBook) ArsNouveau.proxy.getMinecraft().screen).bookStack = bookStack;
+        if (minecraft.screen instanceof GuiSpellBook guiSpellBook) {
+            guiSpellBook.onBookstackUpdated(bookStack);
+        }
     }
 
     @Override
