@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -66,5 +67,10 @@ public abstract class AbstractCastMethod extends AbstractSpellPart {
     @Override
     public DocAssets.BlitInfo getTypeIcon() {
         return DocAssets.FORM_ICON;
+    }
+
+    @Override
+    public Component getTypeName() {
+        return Component.translatable("ars_nouveau.spell_book_gui.form");
     }
 }

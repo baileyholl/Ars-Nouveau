@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.spell;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.item.ISpellModifier;
 import com.hollingsworth.arsnouveau.common.util.SpellPartConfigUtil;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -56,6 +57,11 @@ public abstract class AbstractAugment extends AbstractSpellPart implements ISpel
     @Deprecated
     public SpellStats.Builder applyModifiers(SpellStats.Builder builder, AbstractSpellPart spellPart){
         return builder;
+    }
+
+    @Override
+    public Component getTypeName() {
+        return Component.translatable("ars_nouveau.spell_book_gui.augment");
     }
 
     @Override

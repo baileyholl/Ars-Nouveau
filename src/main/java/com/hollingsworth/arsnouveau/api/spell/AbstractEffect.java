@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.util.HolderHelper;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -233,5 +234,10 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     @Override
     public DocAssets.BlitInfo getTypeIcon() {
         return DocAssets.EFFECT_ICON;
+    }
+
+    @Override
+    public Component getTypeName() {
+        return Component.translatable("ars_nouveau.spell_book_gui.effect");
     }
 }

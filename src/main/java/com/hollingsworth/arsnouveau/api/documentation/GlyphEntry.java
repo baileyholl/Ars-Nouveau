@@ -2,10 +2,12 @@ package com.hollingsworth.arsnouveau.api.documentation;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
+import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
+import com.hollingsworth.nuggets.client.gui.BaseButton;
 import com.hollingsworth.nuggets.client.gui.GuiHelpers;
-import com.hollingsworth.nuggets.client.gui.ItemButton;
+import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -34,28 +36,33 @@ public class GlyphEntry extends TextEntry {
         GuiHelpers.drawCenteredStringNoShadow(font, guiGraphics, title, x + 70, y + 7, 0);
         DocClientUtils.blit(guiGraphics, DocAssets.GLYPH_DETAILS, x, y + 23);
 
-        List<SpellSchool> schoolList = spellPart.spellSchools;
-        SpellSchool firstSchool = schoolList.isEmpty() ? null : schoolList.getFirst();
-        DocClientUtils.blit(guiGraphics, firstSchool == null ? DocAssets.NA_ICON : firstSchool.getIcon(), x + 2, y + 25);
-
-        DocClientUtils.blit(guiGraphics, spellPart.getTypeIcon(), x + 15, y + 25);
-
-        DocAssets.BlitInfo tier = switch (spellPart.getConfigTier().value){
-            case 1 -> DocAssets.TIER_ONE;
-            case 2 -> DocAssets.TIER_TWO;
-            case 3 -> DocAssets.TIER_THREE;
-            default -> DocAssets.TIER_ONE;
-        };
-        DocClientUtils.blit(guiGraphics, tier, x + 26, y + 25);
         return 39;
     }
 
     @Override
     public List<AbstractWidget> getExtras() {
         List<AbstractWidget> extras = super.getExtras();
+        List<SpellSchool> schoolList = spellPart.spellSchools;
+        SpellSchool firstSchool = schoolList.isEmpty() ? null : schoolList.getFirst();
+        DocAssets.BlitInfo schoolImage =  firstSchool == null ? DocAssets.NA_ICON : firstSchool.getIcon();
+        BaseButton schoolButton = new NuggetImageButton(x + 2, y + 25, schoolImage.width(), schoolImage.height(), schoolImage.location(), (b) -> {}).setPlaySound(false);
+        if(firstSchool != null) {
+            schoolButton.withTooltip(firstSchool.getTextComponent());
+        }
+        extras.add(schoolButton);
+
+        DocAssets.BlitInfo type = spellPart.getTypeIcon();
+        extras.add(new NuggetImageButton(x + 15, y + 25, type.width(), type.height(), type.location(), (b) -> {}).setPlaySound(false).withTooltip(spellPart.getTypeName()));
+
+        SpellTier tier = spellPart.getConfigTier();
+        DocAssets.BlitInfo tierAsset = tier.docInfo.get();
+        extras.add(new NuggetImageButton(x + 26, y + 25, tierAsset.width(), tierAsset.height(), tierAsset.location(), (b) -> {})
+                .setPlaySound(false)
+                .withTooltip(Component.translatable(tier.id.getNamespace() + ".tier." + tier.id.getPath())));
+
         int augmentCount = 0;
         for(AbstractSpellPart spellPart1 : spellPart.compatibleAugments){
-            extras.add(new ItemButton(x + 33 + (augmentCount * 11), y + 22, 10, 10, Component.empty(), (b) -> {},  spellPart1.glyphItem.getDefaultInstance(), parent)
+            extras.add(new AugmentIcon(spellPart, x + 33 + (augmentCount * 11), y + 22, 10, 10, Component.empty(), (b) -> {},  spellPart1.glyphItem.getDefaultInstance(), parent)
                     .withScale(10).setPlaySound(false));
             augmentCount++;
         }

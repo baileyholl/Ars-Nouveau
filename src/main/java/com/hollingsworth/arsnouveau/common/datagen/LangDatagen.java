@@ -1355,6 +1355,10 @@ public class LangDatagen extends LanguageProvider {
         addCategory("glyphs_tier_two", "Tier Two Glyphs");
         addCategory("glyphs_tier_three", "Tier Three Glyphs");
         add("ars_nouveau.augmenting", "Augmenting %s:");
+        add("ars_nouveau.tier.one", "Tier One");
+        add("ars_nouveau.tier.two", "Tier Two");
+        add("ars_nouveau.tier.three", "Tier Three");
+
     }
 
     public void addCategory(String key, String value){

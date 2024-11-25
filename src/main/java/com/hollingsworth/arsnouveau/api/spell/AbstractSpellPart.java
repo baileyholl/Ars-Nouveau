@@ -313,6 +313,8 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         return DocAssets.NA_ICON;
     }
 
+    public abstract Component getTypeName();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
