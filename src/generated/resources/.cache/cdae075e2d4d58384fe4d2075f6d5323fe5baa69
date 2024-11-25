@@ -1,4 +1,4 @@
-// 1.21.1	2024-11-24T19:09:29.1829951	Ars Nouveau Caster Tomes Datagen
+// 1.21.1	2024-11-24T22:12:56.6409296	Ars Nouveau Caster Tomes Datagen
 ab9cf50e4958592dcee6f5dae6d6bad2e7fe08ab data/ars_nouveau/recipe/tomes/alex_tome.json
 dae41a867bde9258624fe4676128e8140f2e7fe4 data/ars_nouveau/recipe/tomes/arachne_tome.json
 71e004bfa5837d293c6ee00dd9fd99493b9b9aba data/ars_nouveau/recipe/tomes/aurellia_tome.json
@@ -17,6 +17,7 @@ fa2eefd9631a78bf8c31e4c9aad34a2517bb9736 data/ars_nouveau/recipe/tomes/ivy_tome.
 9836505724bc647ab6d1f92f212ad618456c878c data/ars_nouveau/recipe/tomes/lyrellion_tome.json
 9cdb7fe0028ff63dddcb16992aad8233a111da3c data/ars_nouveau/recipe/tomes/mystifi_tome.json
 d7ff05ccece42ac8ee440c7ef0d707e7c3f7e78b data/ars_nouveau/recipe/tomes/othy_tome.json
+119ae572bc9a0f96c350bc53454d0919f0de75d3 data/ars_nouveau/recipe/tomes/plauged757_tome.json
 b7b6cc3145b830c0e936f67d3aec459142c85a2c data/ars_nouveau/recipe/tomes/poseidon_tome.json
 2a0f47cc40a8be0d2cd08db1a457463b10ed3cf9 data/ars_nouveau/recipe/tomes/renew_rune_tome.json
 f50e62b11676774b3822a8cbd7acf1b0efe8df85 data/ars_nouveau/recipe/tomes/shadow_tome.json
