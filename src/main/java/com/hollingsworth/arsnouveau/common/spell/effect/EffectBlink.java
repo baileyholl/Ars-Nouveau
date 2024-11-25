@@ -32,6 +32,7 @@ import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Set;
 
 public class EffectBlink extends AbstractEffect {
@@ -180,6 +181,13 @@ public class EffectBlink extends AbstractEffect {
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE);
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentAmplify.INSTANCE, "Increases the distance of the teleport.");
+        map.put(AugmentDampen.INSTANCE, "Decreases the distance of the teleport.");
     }
 
     @Override

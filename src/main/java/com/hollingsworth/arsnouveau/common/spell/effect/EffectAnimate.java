@@ -20,6 +20,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Set;
 
 public class EffectAnimate extends AbstractEffect {
@@ -71,6 +72,12 @@ public class EffectAnimate extends AbstractEffect {
         super.buildConfig(builder);
         addGenericInt(builder, 60, "Base duration in seconds", "duration");
         addExtendTimeConfig(builder, 60);
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addSummonAugmentDescriptions(map);
     }
 
     @Override

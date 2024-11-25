@@ -121,6 +121,13 @@ public class EffectFirework extends AbstractEffect implements IDamageEffect {
         return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentAmplify.INSTANCE, AugmentSplit.INSTANCE);
     }
 
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentSplit.INSTANCE, "Summons multiple fireworks.");
+        map.put(AugmentAmplify.INSTANCE, "Adds more Firework Stars.");
+        map.put(AugmentExtendTime.INSTANCE, "Increases flight time.");
+    }
 
     public static FireworkExplosion.Shape[] shapes = FireworkExplosion.Shape.values();
     private static List<DyeColor> dyes;

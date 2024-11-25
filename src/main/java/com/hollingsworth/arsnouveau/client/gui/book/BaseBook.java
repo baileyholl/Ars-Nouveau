@@ -5,14 +5,12 @@ import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.BookSlider;
 import com.hollingsworth.arsnouveau.client.gui.ModdedScreen;
 import com.hollingsworth.arsnouveau.client.gui.buttons.ANButton;
-import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import vazkii.patchouli.client.base.PersistentData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,24 +33,6 @@ public class BaseBook extends ModdedScreen {
     @Override
     public void init() {
         super.init();
-        Window res = minecraft.getWindow();
-        double oldGuiScale = res.calculateScale(minecraft.options.guiScale().get(), minecraft.isEnforceUnicode());
-
-        maxScale = this.minecraft.getWindow().calculateScale(0, this.minecraft.isEnforceUnicode());
-        int persistentScale = Math.min(PersistentData.data.bookGuiScale, maxScale);
-        double newGuiScale = res.calculateScale(persistentScale, minecraft.isEnforceUnicode());
-
-        if (persistentScale > 0 && newGuiScale != oldGuiScale) {
-            scaleFactor = (float) newGuiScale / (float) res.getGuiScale();
-
-            res.setGuiScale(newGuiScale);
-            width = res.getGuiScaledWidth();
-            height = res.getGuiScaledHeight();
-            res.setGuiScale(oldGuiScale);
-        } else {
-            scaleFactor = 1;
-        }
-
         bookLeft = width / 2 - FULL_WIDTH / 2;
         bookTop = height / 2 - FULL_HEIGHT / 2;
         bookRight = width / 2 + FULL_WIDTH / 2;

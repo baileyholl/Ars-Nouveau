@@ -33,6 +33,7 @@ import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class EffectExchange extends AbstractEffect {
@@ -130,6 +131,14 @@ public class EffectExchange extends AbstractEffect {
                 AugmentPierce.INSTANCE,
                 AugmentAOE.INSTANCE, AugmentRandomize.INSTANCE
         );
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentAmplify.INSTANCE, "Increases the hardness of blocks that can be harvested.");
+        map.put(AugmentDampen.INSTANCE, "Decreases the hardness of blocks that can be harvested.");
     }
 
     @Override

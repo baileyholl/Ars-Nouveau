@@ -103,6 +103,7 @@ public class EffectLight extends AbstractEffect implements IPotionEffect {
     @Override
     protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
         defaults.put(AugmentAmplify.INSTANCE.getRegistryName(), 1);
+        defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
     }
 
     @Override
@@ -114,6 +115,16 @@ public class EffectLight extends AbstractEffect implements IPotionEffect {
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDurationDown.INSTANCE, AugmentDampen.INSTANCE, AugmentExtendTime.INSTANCE, AugmentSensitive.INSTANCE);
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentExtendTime.INSTANCE, "The light will instead be temporary, lasting longer. Affects the duration of Glowing and Night Vision.");
+        map.put(AugmentDurationDown.INSTANCE, "The light will last for a shorter duration. Affects the duration of Glowing and Night Vision.");
+        map.put(AugmentAmplify.INSTANCE, "Increases the light level.");
+        map.put(AugmentDampen.INSTANCE, "Decreases the light level.");
+        map.put(AugmentSensitive.INSTANCE, "Allows Glowing to be applied to the caster and applies the spell color to the Glowing effect.");
     }
 
     @Override

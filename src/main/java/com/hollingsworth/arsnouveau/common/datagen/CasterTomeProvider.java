@@ -274,6 +274,20 @@ public class CasterTomeProvider extends SimpleDataProvider {
                 "Your enemies will try to kill you. Use this, to kill them back. Cast under a targets feet to bury them. Results may vary.",
                 new ParticleColor(255, 128, 1)));
 
+        tomes.add(buildTome("mystifi","Mysti's Gravely Dig", new Spell(MethodUnderfoot.INSTANCE)
+                .add(EffectLinger.INSTANCE, AugmentSensitive.INSTANCE)
+                .add(AugmentExtendTime.INSTANCE, 2)
+                .add(EffectIntangible.INSTANCE)
+                .add(AugmentPierce.INSTANCE, 2)
+                .add(AugmentExtendTime.INSTANCE, 2)
+                .withSound(new ConfiguredSpellSound(SoundRegistry.FIRE_SPELL_SOUND, 0.27f, 1)),
+                "Be careful About digging straight down, People say its like digging your own grave",
+                new ParticleColor(255, 128, 1)));
+
+        tomes.add(buildTome("plauged757", "Self Atomic", new Spell(MethodSelf.INSTANCE, EffectExplosion.INSTANCE, AugmentAmplify.INSTANCE, AugmentAmplify.INSTANCE)
+                .add(AugmentAOE.INSTANCE, 6)
+                .withSound(new ConfiguredSpellSound(SoundRegistry.GAIA_SPELL_SOUND)), "WARNING: ONLY TO BE USED AS A LAST RESORT!!", new ParticleColor(255, 1, 1)));
+
         for (CasterRecipeWrapper g : tomes) {
             Path path = getRecipePath(output, g.id().getPath());
             saveStable(pOutput, CasterTomeData.CODEC.encodeStart(JsonOps.INSTANCE, g.toData()).getOrThrow(), path);

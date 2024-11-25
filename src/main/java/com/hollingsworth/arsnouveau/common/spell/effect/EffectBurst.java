@@ -20,6 +20,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -87,6 +88,20 @@ public class EffectBurst extends AbstractEffect {
     @Override
     public SpellTier defaultTier() {
         return SpellTier.THREE;
+    }
+
+    @Override
+    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        super.addDefaultAugmentLimits(defaults);
+        defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentAOE.INSTANCE, "Increases the target radius.");
+        map.put(AugmentSensitive.INSTANCE, "Targets blocks instead of entities.");
+        map.put(AugmentDampen.INSTANCE, "Targets an empty sphere.");
     }
 
     @Override

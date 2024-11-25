@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class MethodProjectile extends AbstractCastMethod {
@@ -121,10 +122,20 @@ public class MethodProjectile extends AbstractCastMethod {
         return CastResolveType.SUCCESS;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentPierce.INSTANCE, AugmentSplit.INSTANCE, AugmentAccelerate.INSTANCE, AugmentDecelerate.INSTANCE, AugmentSensitive.INSTANCE);
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentPierce.INSTANCE, "Projectiles will pierce through enemies and blocks an additional time.");
+        map.put(AugmentSplit.INSTANCE, "Creates multiple projectiles.");
+        map.put(AugmentAccelerate.INSTANCE, "Projectiles will move faster.");
+        map.put(AugmentDecelerate.INSTANCE, "Projectiles will move slower.");
+        map.put(AugmentSensitive.INSTANCE, "Projectiles will hit plants and other materials that do not block motion.");
     }
 
     @Override

@@ -107,13 +107,23 @@ public class EffectBreak extends AbstractEffect {
     }
 
     @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentSensitive.INSTANCE, "Breaks blocks with Shears instead of a pickaxe.");
+        map.put(AugmentDampen.INSTANCE, "Decreases the harvest level.");
+        map.put(AugmentAmplify.INSTANCE, "Increases the harvest level.");
+    }
+
+    @Override
     public String getBookDescription() {
-        return "A spell you start with. Breaks blocks of an average hardness. Can be amplified to increase the harvest level. Sensitive will simulate breaking blocks with Shears instead of a pickaxe.";
+        return "Breaks blocks of an average hardness. Can be amplified to increase the harvest level. Sensitive will simulate breaking blocks with Shears instead of a pickaxe.";
     }
 
     @Override
     protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
         defaults.put(AugmentFortune.INSTANCE.getRegistryName(), 4);
+        defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
     }
 
     @NotNull

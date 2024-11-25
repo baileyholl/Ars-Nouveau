@@ -141,6 +141,14 @@ public class EffectFangs extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentExtendTime.INSTANCE, "Increases the duration of the fangs.");
+        map.put(AugmentDurationDown.INSTANCE, "Decreases the duration of the fangs.");
+        map.put(AugmentAccelerate.INSTANCE, "Increases the travel speed of the fangs.");
+    }
+
+    @Override
     public String getBookDescription() {
         return "Summons Evoker Fangs in the direction where the spell was targeted. Using fangs on your self will spawn them in an area around you.";
     }

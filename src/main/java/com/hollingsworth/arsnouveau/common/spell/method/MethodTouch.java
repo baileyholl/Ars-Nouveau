@@ -17,6 +17,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Set;
 
 public class MethodTouch extends AbstractCastMethod {
@@ -67,7 +68,13 @@ public class MethodTouch extends AbstractCastMethod {
         Networking.sendToNearbyClient(level, BlockPos.containing(x, y, z), new PacketAddFadingLight(x, y, z));
     }
 
-   @NotNull
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentSensitive.INSTANCE, "Can target air and fluids.");
+    }
+
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentSensitive.INSTANCE);

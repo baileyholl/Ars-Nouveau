@@ -116,6 +116,13 @@ public class EffectInfuse extends AbstractEffect {
     }
 
     @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentAOE.INSTANCE, "Spawns a splash potion at the location.");
+        map.put(AugmentExtendTime.INSTANCE, "Spawns a lingering potion at the location.");
+    }
+
+    @Override
     protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
         defaults.put(AugmentAOE.INSTANCE.getRegistryName(), 1);
         defaults.put(AugmentExtendTime.INSTANCE.getRegistryName(), 1);
