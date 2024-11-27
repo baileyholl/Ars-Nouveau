@@ -19,6 +19,7 @@ public class DocAssets {
     public static final BlitInfo PEDESTAL_FRAME = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_frame_pedestal.png"), 22, 22);
     public static final BlitInfo RING = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_ring.png"), 64, 64);
 
+    public static final BlitInfo SCRIBES_RECIPE = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_scribes_table.png"), 64, 112);
     public static final BlitInfo GLYPH_DETAILS = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_frame_glyph_attributes.png"), 118, 14);
     public static final BlitInfo FIRE_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_fire.png"), 10, 10);
     public static final BlitInfo WATER_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_water.png"), 10, 10);
