@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * An entry in a chapter of the documentation.
+ */
 public record DocEntry(ResourceLocation id, CopyOnWriteArrayList<SinglePageCtor> pages, ItemStack renderStack, Component entryTitle, int order) implements Comparable<DocEntry> {
 
     public DocEntry(ResourceLocation id, ItemStack renderStack, Component component) {

@@ -60,6 +60,10 @@ public class DocumentationRegistry {
         mainCategoryMap.put(section.id(), section);
     }
 
+    /**
+     * Entries are backed by a map, evaluated by the ID of the entry. You may call this
+     * as many times as you like to overwrite the entry.
+     */
     public static void registerEntry(DocCategory category, DocEntry entry){
         if(!category.subCategories().isEmpty()){
             throw new IllegalArgumentException("Cannot register an entry to a category with subcategories");

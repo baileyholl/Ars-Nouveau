@@ -20,6 +20,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,6 +85,8 @@ public class Documentation {
         }
 
 
+        NeoForge.EVENT_BUS.post(new ReloadDocumentationEvent.AddEntries());
+        NeoForge.EVENT_BUS.post(new ReloadDocumentationEvent.Post());
     }
 
     public static List<SinglePageCtor> getRecipePages(ItemStack stack, ResourceLocation recipeId){
