@@ -21,6 +21,6 @@ public class DocEntryButton extends NuggetImageButton {
     protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
         RenderHelpers.drawItemAsIcon(docEntry.renderStack(),graphics, x - 1, y - 1 , 10, false);
-        graphics.drawString(Minecraft.getInstance().font, docEntry.component(), x + 20, y + 3, 0, false);
+        graphics.drawString(Minecraft.getInstance().font, docEntry.entryTitle(), x + 20, y + 3, 0, false);
     }
 }

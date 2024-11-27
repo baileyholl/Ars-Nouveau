@@ -5,10 +5,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public record DocEntry(ResourceLocation id, CopyOnWriteArrayList<SinglePageCtor> pages, ItemStack renderStack, Component component, int order) implements Comparable<DocEntry> {
+public record DocEntry(ResourceLocation id, CopyOnWriteArrayList<SinglePageCtor> pages, ItemStack renderStack, Component entryTitle, int order) implements Comparable<DocEntry> {
 
     public DocEntry(ResourceLocation id, ItemStack renderStack, Component component) {
         this(id, new CopyOnWriteArrayList<>(), renderStack, component, 1);
@@ -20,6 +21,10 @@ public record DocEntry(ResourceLocation id, CopyOnWriteArrayList<SinglePageCtor>
 
     public void addPage(SinglePageCtor page){
         pages.add(page);
+    }
+
+    public void addPages(List<SinglePageCtor> pages){
+        this.pages.addAll(pages);
     }
 
     @Override
