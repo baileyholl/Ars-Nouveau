@@ -1,14 +1,29 @@
 package com.hollingsworth.arsnouveau.api.documentation;
 
 import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.nuggets.client.gui.NuggetMultilLineLabel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
 public class DocClientUtils {
+
+    public static void drawStringScaled(GuiGraphics graphics, Component component, int x, int y, int color, float scale, boolean shadow){
+        PoseStack poseStack = graphics.pose();
+        poseStack.pushPose();
+        poseStack.translate(x + 3, y, 0);
+        poseStack.scale(scale, scale, 1);
+        graphics.drawString(Minecraft.getInstance().font, component, 0, 0, color, shadow);
+        poseStack.popPose();
+    }
+
+    public static void drawHeader(NuggetMultilLineLabel title, GuiGraphics graphics, int x, int y){
+        title.renderCenteredNoShadow(graphics, x, y + (title.getLineCount() > 1 ? 3 : 7), 8, 0);
+    }
 
     public static void blit(GuiGraphics graphics, DocAssets.BlitInfo info, int x, int y){
         graphics.blit(info.location(), x, y, info.u(), info.v(), info.width(), info.height(), info.width(), info.height());

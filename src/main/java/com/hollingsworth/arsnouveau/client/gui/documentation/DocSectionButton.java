@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui.documentation;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
 import com.hollingsworth.nuggets.client.gui.NuggetMultilLineLabel;
 import net.minecraft.client.Minecraft;
@@ -26,6 +27,6 @@ public class DocSectionButton extends NuggetImageButton {
     protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
         graphics.renderItem(renderItem, x + 3, y + 3);
-        message.renderCenteredNoShadow(graphics, x + 68, y + (message.getLineCount() > 1 ? 3 : 7), 8, 0);
+        DocClientUtils.drawHeader(message, graphics, x + 68, y);
     }
 }

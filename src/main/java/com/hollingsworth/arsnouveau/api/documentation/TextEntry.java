@@ -18,11 +18,15 @@ public class TextEntry extends SinglePageWidget {
     Component body;
     @Nullable Component title;
     @Nullable ItemStack renderStack;
+    NuggetMultilLineLabel titleLabel;
     public TextEntry(Component body, Component title, ItemStack renderStack, BaseDocScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
         this.body = body;
         this.title = title;
         this.renderStack = renderStack;
+        if(renderStack != null){
+            this.titleLabel = NuggetMultilLineLabel.create(Minecraft.getInstance().font, title, 100);
+        }
     }
 
     public static SinglePageCtor create(Component body, Component title, ItemStack renderStack){
@@ -38,7 +42,7 @@ public class TextEntry extends SinglePageWidget {
         if(renderStack != null){
             DocClientUtils.blit(guiGraphics, DocAssets.HEADER_WITH_ITEM, x, y);
             RenderUtils.drawItemAsIcon(renderStack, guiGraphics, x + 3, y + 3, 16, false);
-            GuiHelpers.drawCenteredStringNoShadow(font, guiGraphics, title, x + 70, y + 7, 0);
+            DocClientUtils.drawHeader(titleLabel, guiGraphics, x + 68, y);
             return 24;
         }else{
             DocClientUtils.blit(guiGraphics, DocAssets.UNDERLINE, x + 2, y + 10);

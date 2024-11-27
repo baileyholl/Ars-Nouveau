@@ -30,6 +30,7 @@ public class BaseDocScreen extends BaseScreen {
     public int maxArrowIndex;
 
     public BaseDocScreen previousScreen = null;
+    SoundManager manager = Minecraft.getInstance().getSoundManager();
 
     public BaseDocScreen() {
         super(Component.empty(), 290, 194, background);
@@ -39,9 +40,7 @@ public class BaseDocScreen extends BaseScreen {
     public void init() {
         super.init();
         backButton = new NuggetImageButton(bookLeft + 6, bookTop + 10, 14, 8, DocAssets.ARROW_BACK.location(), DocAssets.ARROW_BACK_HOVER.location(), (b) -> {
-            if (previousScreen != null) {
-                Minecraft.getInstance().setScreen(previousScreen);
-            }
+            goBack();
         });
         addRenderableWidget(backButton);
         rightArrow = new NuggetImageButton(bookRight - 13, bookTop + 88, 11, 14, DocAssets.ARROW_RIGHT.location(), DocAssets.ARROW_RIGHT_HOVER.location(), this::onRightArrowClick);
@@ -68,7 +67,6 @@ public class BaseDocScreen extends BaseScreen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        SoundManager manager = Minecraft.getInstance().getSoundManager();
         if (scrollY < 0 && rightArrow.visible) {
             onRightArrowClick(rightArrow);
             manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
@@ -81,15 +79,24 @@ public class BaseDocScreen extends BaseScreen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if(button == 1 && previousScreen != null){
-            Minecraft.getInstance().setScreen(previousScreen);
+        if(button == 1){
+            goBack();
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
     public void transition(BaseDocScreen screen){
+        SoundManager manager = Minecraft.getInstance().getSoundManager();
         screen.previousScreen = this;
+        manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
         Minecraft.getInstance().setScreen(screen);
+    }
+
+    public void goBack(){
+        if(previousScreen != null){
+            Minecraft.getInstance().setScreen(previousScreen);
+            manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
+        }
     }
 
     public boolean showLeftArrow(){
