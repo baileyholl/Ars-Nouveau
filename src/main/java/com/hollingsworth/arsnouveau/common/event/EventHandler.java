@@ -114,6 +114,9 @@ public class EventHandler {
                         BuddingConversionRegistry.reloadBuddingConversionRecipes(serverTickEvent.getServer().getRecipeManager());
                         AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(serverTickEvent.getServer().getRecipeManager());
                         ScryRitualRegistry.reloadScryRitualRecipes(serverTickEvent.getServer().getRecipeManager());
+                        for(ServerPlayer player : serverTickEvent.getServer().getPlayerList().getPlayers()) {
+                            Networking.sendToPlayerClient(new PacketInitDocs(), player);
+                        }
                         expired = true;
                     }
 

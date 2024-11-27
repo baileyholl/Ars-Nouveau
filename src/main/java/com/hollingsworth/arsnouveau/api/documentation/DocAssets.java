@@ -37,7 +37,7 @@ public class DocAssets {
     public static final BlitInfo MANIPULATION_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_manipulation.png"), 10, 10);
     public static final BlitInfo FORM_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_form.png"), 8, 10);
     public static final BlitInfo EFFECT_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_effect.png"), 8, 10);
-    public static final BlitInfo AUGMENT_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_augment.png"), 8, 10);
+    public static final BlitInfo AUGMENT_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_augment_available.png"), 8, 10);
     public static final BlitInfo AUGMENT_UNAVAILABLE_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_augment_unavailable.png"), 8, 10);
     public static final BlitInfo NA_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_not_applicable.png"), 10, 10);
 

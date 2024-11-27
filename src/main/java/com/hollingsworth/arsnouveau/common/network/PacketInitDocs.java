@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.arsnouveau.setup.registry.Documentation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -24,6 +25,9 @@ public class PacketInitDocs extends AbstractPacket{
 
     @Override
     public void onClientReceived(Minecraft minecraft, Player player) {
+        if(minecraft.screen instanceof BaseDocScreen){
+            minecraft.setScreen(null);
+        }
         Documentation.initOnWorldReload();
     }
 

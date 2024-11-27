@@ -2,15 +2,16 @@ package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.*;
-import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
-import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
-import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
+import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
+import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
+import com.hollingsworth.arsnouveau.common.perk.EmptyPerk;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -56,6 +57,32 @@ public class Documentation {
 
             DocumentationRegistry.registerEntry(DocumentationRegistry.RITUAL_INDEX, entry);
         }
+
+        for (PerkItem perk : PerkRegistry.getPerkItemMap().values()) {
+            if(perk.perk instanceof EmptyPerk)
+                continue;
+
+            ItemStack renderStack = perk.getDefaultInstance();
+            var entry = new DocEntry(perk.perk.getRegistryName(), renderStack, perk.perk.getPerkName());
+
+            entry.addPage(TextEntry.create(Component.translatable(perk.perk.getDescriptionKey()),Component.literal(perk.perk.getName()), renderStack));
+
+            entry.addPages(getRecipePages(renderStack, RegistryHelper.getRegistryName(perk)));
+
+
+            DocumentationRegistry.registerEntry(DocumentationRegistry.ITEMS_BLOCKS_EQUIPMENT, entry);
+
+        }
+
+        for (AbstractFamiliarHolder r : FamiliarRegistry.getFamiliarHolderMap().values()) {
+            ItemStack renderstack = r.getOutputItem();
+            var entry = new DocEntry(r.getRegistryName(), renderstack, Component.translatable("entity.ars_nouveau." + r.getRegistryName().getPath()));
+
+            entry.addPage(TextEntry.create(r.getLangDescription(), renderstack.getHoverName(), renderstack));
+
+            DocumentationRegistry.registerEntry(DocumentationRegistry.ITEMS_BLOCKS_EQUIPMENT, entry);
+        }
+
 
     }
 

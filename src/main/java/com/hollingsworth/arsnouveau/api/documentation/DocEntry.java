@@ -19,12 +19,14 @@ public record DocEntry(ResourceLocation id, CopyOnWriteArrayList<SinglePageCtor>
         this(id, new CopyOnWriteArrayList<>(), renderStack, component, order);
     }
 
-    public void addPage(SinglePageCtor page){
+    public DocEntry addPage(SinglePageCtor page){
         pages.add(page);
+        return this;
     }
 
-    public void addPages(List<SinglePageCtor> pages){
+    public DocEntry addPages(List<SinglePageCtor> pages){
         this.pages.addAll(pages);
+        return this;
     }
 
     @Override
