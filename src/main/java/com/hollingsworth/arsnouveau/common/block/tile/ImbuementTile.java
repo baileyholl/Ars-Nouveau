@@ -54,24 +54,18 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         super(BlockRegistry.IMBUEMENT_TILE.get(), pos, state);
     }
 
-    public SourceStorage jarStorage;
-
     @Override
-    public @NotNull SourceStorage getSourceStorage() {
-        if (jarStorage == null) {
-            jarStorage = new SourceStorage(this.getMaxSource(), this.getMaxSource(), 0, getSource());
-        }
-        return jarStorage;
-    }
+    protected @NotNull SourceStorage createDefaultStorage() {
+        return new SourceStorage(10000000, 10000000, 0, 0){
+            @Override
+            public boolean canProvideSource(int source) {
+                return false;
+            }
 
-    @Override
-    public int getTransferRate() {
-        return 0;
-    }
-
-    @Override
-    public boolean canProvideSource() {
-        return false;
+            public void onContentsChanged() {
+                ImbuementTile.this.updateBlock();
+            }
+        };
     }
 
     @Override
@@ -194,11 +188,6 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         tag.putBoolean("draining", draining);
         tag.putBoolean("hasRecipe", hasRecipe);
         tag.putInt("craftTicks", craftTicks);
-    }
-
-    @Override
-    public int getMaxSource() {
-        return 10000000;
     }
 
     @Override

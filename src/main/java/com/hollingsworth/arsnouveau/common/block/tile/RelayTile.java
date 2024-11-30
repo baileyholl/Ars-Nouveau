@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.capability.SourceStorage;
 import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -94,13 +95,8 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
     }
 
     @Override
-    public int getTransferRate() {
-        return 1000;
-    }
-
-    @Override
-    public int getMaxSource() {
-        return 1000;
+    protected @NotNull SourceStorage createDefaultStorage() {
+        return new SourceStorage(1000, 1000);
     }
 
     public boolean closeEnough(BlockPos pos) {

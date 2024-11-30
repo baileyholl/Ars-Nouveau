@@ -17,8 +17,6 @@ public interface ISourceTile {
 
     int getMaxSource();
 
-    void setMaxSource(int max);
-
     int setSource(final int source);
 
     /**

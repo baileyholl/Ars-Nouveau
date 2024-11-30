@@ -37,29 +37,6 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
     }
 
     @Override
-    public @NotNull SourceStorage getSourceStorage() {
-        if (sourceStorage == null) {
-            sourceStorage = new SourceStorage(getMaxSource(), getTransferRate(), getTransferRate(), getSource()) {
-                @Override
-                public boolean canReceive() {
-                    return false;
-                }
-            };
-        }
-        return sourceStorage;
-    }
-
-    @Override
-    public int getTransferRate() {
-        return 1000;
-    }
-
-    @Override
-    public int getMaxSource() {
-        return 1000;
-    }
-
-    @Override
     public void tick() {
         if (level.isClientSide)
             return;
@@ -120,6 +97,16 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
         super.loadAdditional(tag, pRegistries);
         progress = tag.getInt("progress");
         isDisabled = tag.getBoolean("disabled");
+    }
+
+    @Override
+    protected @NotNull SourceStorage createDefaultStorage() {
+        return new SourceStorage(20000, 10000, 10000, 0) {
+            @Override
+            public boolean canReceive() {
+                return false;
+            }
+        };
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.capability.SourceStorage;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
@@ -138,13 +139,8 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
     }
 
     @Override
-    public int getTransferRate() {
-        return 2500;
-    }
-
-    @Override
-    public int getMaxSource() {
-        return 2500;
+    protected @NotNull SourceStorage createDefaultStorage() {
+        return new SourceStorage(2500, 2500);
     }
 
     @Override

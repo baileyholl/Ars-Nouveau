@@ -18,18 +18,10 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.Tags;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
-
 public class VolcanicSourcelinkTile extends SourcelinkTile implements GeoAnimatable {
 
     public VolcanicSourcelinkTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.VOLCANIC_TILE.get(), pos, state);
-    }
-
-    @Override
-    public int getTransferRate() {
-        return 1000;
     }
 
     @Override
@@ -97,7 +89,6 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements GeoAnimata
     public void doRandomAction() {
         if (level.isClientSide)
             return;
-        AtomicBoolean set = new AtomicBoolean(false);
 
         BlockPos magmaPos = getBlockInArea(Blocks.MAGMA_BLOCK, 1);
         if (magmaPos != null && progress >= 200) {
@@ -121,32 +112,20 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements GeoAnimata
     }
 
     public BlockPos getTagInArea(TagKey<Block> block, int range) {
-        AtomicReference<BlockPos> posFound = new AtomicReference<>();
-        BlockPos.betweenClosedStream(worldPosition.offset(range, -1, range), worldPosition.offset(-range, -1, -range)).forEach(blockPos -> {
+        for(BlockPos blockPos : BlockPos.betweenClosed(worldPosition.offset(range, -1, range), worldPosition.offset(-range, -1, -range))){
             blockPos = blockPos.immutable();
-            if (posFound.get() == null && level.getBlockState(blockPos).is(block))
-                posFound.set(blockPos);
-        });
-
-        return posFound.get();
-
+            if (level.getBlockState(blockPos).is(block))
+               return blockPos;
+        }
+        return null;
     }
 
     public BlockPos getBlockInArea(Block block, int range) {
-        AtomicReference<BlockPos> posFound = new AtomicReference<>();
-        BlockPos.betweenClosedStream(worldPosition.offset(range, -1, range), worldPosition.offset(-range, -1, -range)).forEach(blockPos -> {
-            blockPos = blockPos.immutable();
-            if (posFound.get() == null && level.getBlockState(blockPos).getBlock() == block)
-                posFound.set(blockPos);
-        });
-
-        return posFound.get();
+        for(BlockPos blockPos : BlockPos.betweenClosed(worldPosition.offset(range, -1, range), worldPosition.offset(-range, -1, -range))){
+            if (level.getBlockState(blockPos).getBlock() == block)
+                return blockPos.immutable();
+        }
+        return null;
 
     }
-
-    @Override
-    public int getMaxSource() {
-        return 5000;
-    }
-
 }

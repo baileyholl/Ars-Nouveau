@@ -31,11 +31,6 @@ public class VitalicSourcelinkTile extends SourcelinkTile {
     }
 
     @Override
-    public int getMaxSource() {
-        return 2500;
-    }
-
-    @Override
     public void tick() {
         super.tick();
         if (!level.isClientSide && level.getGameTime() % 60 == 0) {

@@ -4,11 +4,13 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.SourceJar;
+import com.hollingsworth.arsnouveau.common.capability.SourceStorage;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -23,8 +25,13 @@ public class SourceJarTile extends AbstractSourceMachine implements ITooltipProv
     }
 
     @Override
-    public int getMaxSource() {
-        return 10000;
+    protected @NotNull SourceStorage createDefaultStorage() {
+        return new SourceStorage(20000, 10000){
+            @Override
+            public void onContentsChanged() {
+                SourceJarTile.this.updateBlock();
+            }
+        };
     }
 
     @Override
@@ -40,11 +47,6 @@ public class SourceJarTile extends AbstractSourceMachine implements ITooltipProv
         if (state.hasProperty(SourceJar.fill))
             level.setBlock(worldPosition, state.setValue(SourceJar.fill, Math.min(fillState, 11)), 3);
         return true;
-    }
-
-    @Override
-    public int getTransferRate() {
-        return getMaxSource();
     }
 
     @Override
