@@ -73,7 +73,9 @@ public class PotionUtil {
         for(MobEffectInstance effect : contents2.getAllEffects()){
             set.add(new MobEffectInstance(effect));
         }
-        contents1.potion().get().value().getEffects().forEach(set::remove);
+        if(contents1.potion().isPresent()) {
+            contents1.potion().get().value().getEffects().forEach(set::remove);
+        }
         return new PotionContents(contents1.potion(), contents1.customColor(), new ArrayList<>(set));
     }
 }
