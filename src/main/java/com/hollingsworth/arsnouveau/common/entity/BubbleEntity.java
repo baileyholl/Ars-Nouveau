@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
@@ -84,7 +85,14 @@ public class BubbleEntity extends Projectile implements GeoEntity {
         this.zOld = this.getZ();
         this.setDeltaMovement(ParticleUtil.inRange(-0.01, 0.01), 0.1, ParticleUtil.inRange(-0.01, 0.01));
         this.setPos(getNextHitPosition());
+    }
 
+    public boolean tryCapturing(Entity target){
+        if(this.getPassengers().isEmpty() && this.canHitEntity(target)){
+            target.startRiding(this);
+            return !this.getPassengers().isEmpty();
+        }
+        return false;
     }
 
     public Vec3 getNextHitPosition() {
@@ -128,7 +136,13 @@ public class BubbleEntity extends Projectile implements GeoEntity {
             if(bubble.age > 1
                     && !bubble.hasPopped
                     && bubble.getFirstPassenger() != bubble.getOwner()) {
-                e.setNewDamage(e.getNewDamage() + bubble.damage);
+                float damage = bubble.damage;
+                Entity owner = bubble.getOwner();
+                if(owner instanceof LivingEntity shooter){
+                    damage += shooter.getAttributes().hasAttribute(PerkAttributes.SPELL_DAMAGE_BONUS) ?
+                            (float) shooter.getAttributeValue(PerkAttributes.SPELL_DAMAGE_BONUS) : 0;
+                }
+                e.setNewDamage(e.getNewDamage() + damage);
             }
             bubble.pop();
         }
@@ -137,9 +151,7 @@ public class BubbleEntity extends Projectile implements GeoEntity {
     @Override
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
-        if(this.getPassengers().isEmpty() && this.canHitEntity(pResult.getEntity())){
-            pResult.getEntity().startRiding(this);
-        }
+        tryCapturing(pResult.getEntity());
     }
 
     @Override
@@ -172,7 +184,7 @@ public class BubbleEntity extends Projectile implements GeoEntity {
 
     @Override
     public Vec3 getPassengerRidingPosition(Entity pEntity) {
-        return pEntity instanceof ItemEntity ? this.position.add(0, 0.5, 0) : this.position;
+        return pEntity instanceof ItemEntity ? this.position.add(0, 0.25f, 0) : this.position;
     }
 
     @Override

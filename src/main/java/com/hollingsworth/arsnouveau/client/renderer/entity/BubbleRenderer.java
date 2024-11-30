@@ -36,7 +36,7 @@ public class BubbleRenderer extends EntityRenderer<BubbleEntity> {
     }
 
     public static void renderBubble(Entity entityIn, EntityRenderDispatcher entityRenderDispatcher, PoseStack matrixStack, MultiBufferSource buffer){
-        double y = entityIn.getBbHeight();
+        double y = entityIn.getPassengers().isEmpty() ? 0.25f : entityIn.getBbHeight();
         matrixStack.pushPose();
         matrixStack.translate(0, y, 0);
         matrixStack.mulPose(entityRenderDispatcher.cameraOrientation());

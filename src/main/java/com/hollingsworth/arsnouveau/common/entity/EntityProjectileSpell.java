@@ -94,6 +94,11 @@ public class EntityProjectileSpell extends ColoredProjectile {
     }
 
     @Override
+    protected boolean canRide(Entity vehicle) {
+        return false;
+    }
+
+    @Override
     public void tick() {
         super.tick();
         age++;
