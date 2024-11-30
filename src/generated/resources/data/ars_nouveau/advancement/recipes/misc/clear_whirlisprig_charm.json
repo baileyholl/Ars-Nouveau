@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:clear_drygmy_charm"
+        "recipe": "ars_nouveau:clear_whirlisprig_charm"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:clear_drygmy_charm"
+      "ars_nouveau:clear_whirlisprig_charm"
     ]
   }
 }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:clear_starbuncle_charm"
+        "recipe": "ars_nouveau:clear_drygmy_charm"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:clear_starbuncle_charm"
+      "ars_nouveau:clear_drygmy_charm"
     ]
   }
 }
