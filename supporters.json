@@ -33,7 +33,7 @@
   "db489a87-6509-4d75-917d-9c426b519c64", "eb079f27-e266-4b3c-beba-b34d34bef268", "831086b8-d566-4f25-aa09-ecb505e54885",
   "e3298bd7-61bf-427f-af89-4e418a20bf57", "01b53c7e-c7f4-4465-88df-f8b6c645b6b9", "a29ffabb-ac40-4754-8df8-94b9f394045c",
   "aef9c054-e96e-4332-944b-9393105b6ac6", "1f62ed4b-91f9-42fa-b331-b7e3e3c0637f", "eb14192a-c53f-44c0-bb13-7f7ff1a0e662",
-  "758ca96e-100a-4611-a849-5d76229b6c83"],
+  "758ca96e-100a-4611-a849-5d76229b6c83", "1cf6b68a-a396-4ac1-8146-21fc314f6455"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -530,6 +530,11 @@
       "adopter": "Sophie",
       "color": "pink",
       "bio": "A little engineer turned into a curious creature, she's sure to help in any way she can."
+    },{
+      "name": "Lerya",
+      "color": "magenta",
+      "adopter": "Keyla the Witch",
+      "bio": "Lerya is a curious little Starbuncle, and with the token of friendship she gave to you she shows her appreciation for your kindness. After her human parent ended her game with a deadly growth spell on lots of Sourceberries, Lerya feels very sad and lonely nowadays."
     }
   ]
 }

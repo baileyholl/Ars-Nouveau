@@ -30,6 +30,10 @@ public record WarpScrollData(Optional<BlockPos> pos, String dimension, Vec2 rota
         this(Optional.empty(), "", new Vec2(0, 0), crossDim);
     }
 
+    public WarpScrollData withCrossDim(boolean crossDim){
+        return new WarpScrollData(pos, dimension, rotation, crossDim);
+    }
+
     public boolean canTeleportWithDim(String dimension) {
         return this.dimension.equals(dimension) || crossDim;
     }
