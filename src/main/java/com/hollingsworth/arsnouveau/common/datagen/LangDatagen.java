@@ -1223,8 +1223,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.storage.num_bookwyrms", "%s Bookwyrms");
         add("ars_nouveau.storage.removed", "Inventory removed.");
         add("ars_nouveau.storage.not_lectern", "Connect to another Lectern to connect the views.");
-        add("ars_nouveau.storage.lectern_too_far", "Lectern must be within 30 blocks.");
-        add("ars_nouveau.storage.inv_too_far", "Inventory must be within 30 blocks.");
+        add("ars_nouveau.storage.lectern_too_far", "Lectern must be within %s blocks.");
+        add("ars_nouveau.storage.inv_too_far", "Inventory must be within %s blocks.");
         add("ars_nouveau.storage.no_tile", "Not a valid inventory.");
         add("block.ars_nouveau.storage_lectern", "Storage Lectern");
         add("ars_nouveau.page1.storage_lectern", "The Storage Lectern can used to view, manage, and craft from multiple connected inventories. The number of inventories that may be connected is determined by the number of Bookwyrms bound to the lectern. You can add more Bookwyrms to the lectern by using a Bookwyrm Charm. Use the Dominion Wand from an inventory to the lectern in order to bind or remove access. Inventories can be connected 30 blocks away.");

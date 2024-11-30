@@ -21,10 +21,14 @@ public class ServerConfig {
 
     public static ModConfigSpec.BooleanValue INFINITE_SPELLS;
     public static ModConfigSpec.IntValue NOT_SO_INFINITE_SPELLS;
-
+    public static ModConfigSpec.IntValue LECTERN_LINK_RANGE;
 
     static {
         ModConfigSpec.Builder SERVER_BUILDER = new ModConfigSpec.Builder();
+        SERVER_BUILDER.comment("Blocks").push("blocks");
+        LECTERN_LINK_RANGE = SERVER_BUILDER.comment("Maximum storage lectern linking range").defineInRange("lecternLinkRange", 30, 1, Integer.MAX_VALUE);
+        SERVER_BUILDER.pop();
+
         SERVER_BUILDER.comment("Mana").push("mana");
         INIT_MANA_REGEN = SERVER_BUILDER.comment("Base mana regen in seconds").defineInRange("baseRegen", 5, 0, Integer.MAX_VALUE);
         INIT_MAX_MANA = SERVER_BUILDER.comment("Base max mana").defineInRange("baseMax", 100, 0, Integer.MAX_VALUE);
