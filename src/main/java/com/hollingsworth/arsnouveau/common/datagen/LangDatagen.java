@@ -454,7 +454,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.sword.invalid", "Invalid spell. Swords accept Effects and Augments only, such as Freeze -> Extend Time.");
         add("item.ars_nouveau.enchanters_sword", "Enchanter's Sword");
         add("item.ars_nouveau.enchanters_shield", "Enchanter's Shield");
-        add("ars_nouveau.page.enchanters_sword", "Applies a Touch spell before damaging an entity. Additionally, all spells gain one additional Amplify augment on the last effect in the spell. Apply a spell at the Scribes Table that does NOT contain a form, such as Ignite -> Extend Time.");
+        add("ars_nouveau.page.enchanters_sword", "Applies a Touch spell before damaging an entity. Additionally, all spells gain Spell Damage. Apply a spell at the Scribes Table that does NOT contain a form, such as Ignite -> Extend Time.");
         add("ars_nouveau.page.enchanters_shield", "Upon blocking damage, the user will gain a short duration of Mana Regeneration and Spell Damage. Additionally, this shield will repair over time using the wearers mana.");
         add("ars_nouveau.tooltip.can_inscribe", "Can be inscribed with a spell at the Scribes Table.");
         add("biome.ars_nouveau.archwood_forest", "Archwood Forest");

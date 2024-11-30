@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.mana.IManaDiscountEquipment;
+import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
@@ -9,7 +11,6 @@ import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.PlayerCaster;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.client.renderer.item.SwordRenderer;
 import com.hollingsworth.arsnouveau.common.perk.RepairingPerk;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.config.Config;
@@ -21,13 +22,17 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
@@ -51,7 +56,23 @@ public class EnchantersSword extends SwordItem implements ICasterTool, GeoItem, 
     }
 
     public EnchantersSword(Tier iItemTier, int baseDamage, float baseAttackSpeed, Properties properties) {
-        super(iItemTier, properties.component(DataComponents.TOOL, createToolProperties()).attributes(SwordItem.createAttributes(iItemTier, baseDamage, baseAttackSpeed)).component(DataComponentRegistry.SPELL_CASTER, new SpellCaster()));
+        super(iItemTier, properties.component(DataComponents.TOOL, createToolProperties())
+                .attributes(ItemAttributeModifiers.builder()
+                        .add(
+                                Attributes.ATTACK_DAMAGE,
+                                new AttributeModifier(
+                                        BASE_ATTACK_DAMAGE_ID, (double)((float)baseDamage + iItemTier.getAttackDamageBonus()), AttributeModifier.Operation.ADD_VALUE
+                                ),
+                                EquipmentSlotGroup.MAINHAND
+                        )
+                        .add(
+                                Attributes.ATTACK_SPEED,
+                                new AttributeModifier(BASE_ATTACK_SPEED_ID, (double)baseAttackSpeed, AttributeModifier.Operation.ADD_VALUE),
+                                EquipmentSlotGroup.MAINHAND
+                        )
+                        .add(PerkAttributes.SPELL_DAMAGE_BONUS, new AttributeModifier(ArsNouveau.prefix("sword_spell_bonus"), 4.0f, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+                        .build())
+                .component(DataComponentRegistry.SPELL_CASTER, new SpellCaster()));
     }
 
     @Override
@@ -76,7 +97,6 @@ public class EnchantersSword extends SwordItem implements ICasterTool, GeoItem, 
         ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
         recipe.add(MethodTouch.INSTANCE);
         recipe.addAll(spell.recipe);
-        recipe.add(AugmentAmplify.INSTANCE);
         spell.recipe = recipe;
     }
 
@@ -127,10 +147,5 @@ public class EnchantersSword extends SwordItem implements ICasterTool, GeoItem, 
                 return renderer;
             }
         });
-    }
-
-    @Override
-    public int getManaDiscount(ItemStack i, Spell spell) {
-        return AugmentAmplify.INSTANCE.getCastingCost();
     }
 }
