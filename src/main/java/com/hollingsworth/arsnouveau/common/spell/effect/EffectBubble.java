@@ -29,6 +29,9 @@ public class EffectBubble extends AbstractEffect {
         super.onResolve(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
         var bubble = new BubbleEntity(world, (int) (100 + spellStats.getDurationMultiplier() * EXTEND_TIME.getAsInt()), (float) (DAMAGE.getAsDouble() + spellStats.getAmpMultiplier() * AMP_VALUE.getAsDouble() + spellStats.getDamageModifier()));
         bubble.setPos(rayTraceResult.getLocation().x, rayTraceResult.getLocation().y, rayTraceResult.getLocation().z);
+        if(isRealPlayer(shooter)){
+            bubble.setOwner(shooter);
+        }
         world.addFreshEntity(bubble);
     }
 

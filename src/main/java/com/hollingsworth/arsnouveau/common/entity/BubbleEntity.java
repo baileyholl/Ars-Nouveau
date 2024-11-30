@@ -24,12 +24,18 @@ import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 public class BubbleEntity extends Projectile implements GeoEntity {
     int maxAge;
     int age;
     float damage;
     public int poppingTicks;
     public boolean hasPopped;
+    List<UUID> hasDismounted = new ArrayList<>();
+
     public static final EntityDataAccessor<Boolean> HAS_POPPED = SynchedEntityData.defineId(BubbleEntity.class, EntityDataSerializers.BOOLEAN);
     public BubbleEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -85,6 +91,14 @@ public class BubbleEntity extends Projectile implements GeoEntity {
         return this.position().add(this.getDeltaMovement());
     }
 
+    @Override
+    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
+        if(passenger != null && passenger.getUUID() != null){
+            this.hasDismounted.add(passenger.getUUID());
+        }
+        return super.getDismountLocationForPassenger(passenger);
+    }
+
     public void pop(){
         if(this.level.isClientSide)
             return;
@@ -98,7 +112,9 @@ public class BubbleEntity extends Projectile implements GeoEntity {
     // The only purpose of this is to prevent the default attack noise that occurs.
     public static void onAttacked(AttackEntityEvent event){
         if(event.getTarget() instanceof BubbleEntity bubble){
-            if(bubble.getPassengers().isEmpty() || bubble.getFirstPassenger() instanceof ItemEntity) {
+            if(bubble.getPassengers().isEmpty()
+                    || bubble.getFirstPassenger() instanceof ItemEntity
+                    || bubble.getFirstPassenger() == event.getEntity()) {
                 bubble.pop();
                 event.setCanceled(true);
             }else if(bubble.getFirstPassenger() instanceof LivingEntity passenger){
@@ -109,7 +125,9 @@ public class BubbleEntity extends Projectile implements GeoEntity {
 
     public static void entityHurt(LivingDamageEvent.Pre e) {
         if(e.getEntity().getVehicle() instanceof BubbleEntity bubble){
-            if(bubble.age > 1 && !bubble.hasPopped) {
+            if(bubble.age > 1
+                    && !bubble.hasPopped
+                    && bubble.getFirstPassenger() != bubble.getOwner()) {
                 e.setNewDamage(e.getNewDamage() + bubble.damage);
             }
             bubble.pop();
@@ -144,7 +162,12 @@ public class BubbleEntity extends Projectile implements GeoEntity {
 
     @Override
     protected boolean canHitEntity(Entity pTarget) {
-        return !(pTarget instanceof BubbleEntity);
+        if(pTarget != null && pTarget.getUUID() != null){
+            if(this.hasDismounted.contains(pTarget.getUUID())){
+                return false;
+            }
+        }
+        return !(pTarget instanceof BubbleEntity) && !(pTarget.getVehicle() instanceof BubbleEntity);
     }
 
     @Override
