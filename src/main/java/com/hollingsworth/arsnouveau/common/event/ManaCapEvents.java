@@ -90,15 +90,15 @@ public class ManaCapEvents {
             }
         }
     }
-
+    private static final long[] UNLOADED = new long[] { 0 };
     @SubscribeEvent
     public static void onTick(PlayerTickEvent.Post e) {
         var player = e.getEntity();
         if (player.level.isClientSide)
             return;
         if (player.level.getGameTime() % 600 == 0 && player.getServer() != null) {
-
-            double meanTickTime = mean(player.getServer().getTickTime(player.level.dimension())) * 1.0E-6D;
+            long[] tickTimes = player.getServer().getTickTime(player.level.dimension());
+            double meanTickTime = mean(tickTimes == null ? UNLOADED : tickTimes) * 1.0E-6D;
             double meanTPS = Math.min(1000.0 / meanTickTime, 20);
             ManaCapEvents.MEAN_TPS = Math.max(1, meanTPS);
         }
