@@ -46,6 +46,12 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     public static TagKey<Block> DOWSING_ROD = BlockTags.create(ArsNouveau.prefix( "dowsing_rod"));
     public static TagKey<Block> BUSHES = BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", "bushes"));
 
+    public static TagKey<Block> SPRING_CROPS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sereneseasons", "spring_crops"));
+    public static TagKey<Block> SUMMER_CROPS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sereneseasons", "summer_crops"));
+    public static TagKey<Block> AUTUMN_CROPS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sereneseasons", "autumn_crops"));
+    public static TagKey<Block> WINTER_CROPS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sereneseasons", "winter_crops"));
+
+
     public BlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
         super(output, Registries.BLOCK, future, block -> block.builtInRegistryHolder().key(), ArsNouveau.MODID, helper);
     }
@@ -300,6 +306,20 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(BlockTags.SNOW_LAYER_CANNOT_SURVIVE_ON).add(BlockRegistry.ALTERATION_TABLE.get(), BlockRegistry.WIXIE_CAULDRON.get(), BlockRegistry.POTION_MELDER.get(),
                 BlockRegistry.SCRIBES_BLOCK.get(), BlockRegistry.IMBUEMENT_BLOCK.get(), BlockRegistry.SCRYERS_OCULUS.get(), BlockRegistry.ARCANE_PEDESTAL.get(),
                 BlockRegistry.CRAFTING_LECTERN.get(), BlockRegistry.ENCHANTING_APP_BLOCK.get());
+
+        this.tag(SPRING_CROPS).add(BlockRegistry.MAGE_BLOOM_CROP.get(),
+                BlockRegistry.FLOURISHING_SAPLING.get(),
+                BlockRegistry.MENDOSTEEN_POD.get());
+        this.tag(SUMMER_CROPS).add(BlockRegistry.MAGE_BLOOM_CROP.get(),
+                BlockRegistry.BLAZING_SAPLING.get(),
+                BlockRegistry.BOMBEGRANTE_POD.get());
+        this.tag(WINTER_CROPS).add(BlockRegistry.SOURCEBERRY_BUSH.get(),
+                BlockRegistry.CASCADING_SAPLING.get(),
+                BlockRegistry.FROSTAYA_POD.get());
+
+        this.tag(AUTUMN_CROPS).add(BlockRegistry.SOURCEBERRY_BUSH.get(),
+                BlockRegistry.VEXING_SAPLING.get(),
+                BlockRegistry.BASTION_POD.get());
     }
 
     public String getName() {
