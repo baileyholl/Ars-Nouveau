@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.camera;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
-import com.hollingsworth.arsnouveau.common.entity.ScryerCamera;
+import com.hollingsworth.arsnouveau.common.entity.ICameraCallback;
 import com.hollingsworth.arsnouveau.common.util.CameraUtil;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,11 +22,11 @@ public class CameraEvents {
     public static void onPlayerLoggedOut(PlayerLoggedOutEvent event) {
         ServerPlayer player = (ServerPlayer) event.getEntity();
 
-        if (player.getCamera() instanceof ScryerCamera cam) {
-            if (player.level.getBlockEntity(cam.blockPosition()) instanceof ICameraMountable camBe)
+        if (player.getCamera() instanceof ICameraCallback cam) {
+            if (player.level.getBlockEntity(cam.entity().blockPosition()) instanceof ICameraMountable camBe)
                 camBe.stopViewing();
 
-            cam.discard();
+            cam.stopViewing(player);
         }
     }
 
@@ -35,8 +35,8 @@ public class CameraEvents {
         LivingEntity entity = event.getEntity();
         Level level = entity.level;
 
-        if (!level.isClientSide && entity instanceof ServerPlayer player && CameraUtil.isPlayerMountedOnCamera(entity))
-            ((ScryerCamera) player.getCamera()).stopViewing(player);
+        if (!level.isClientSide && entity instanceof ServerPlayer player && player.camera instanceof ICameraCallback camera)
+            camera.stopViewing(player);
     }
 
     @SubscribeEvent

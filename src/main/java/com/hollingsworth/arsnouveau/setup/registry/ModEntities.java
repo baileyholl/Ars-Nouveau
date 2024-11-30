@@ -302,6 +302,12 @@ public class ModEntities {
                     .sized(0.5F, 0.75F)
                     .setTrackingRange(10));
 
+    public static final DeferredHolder<EntityType<?>, EntityType<ScryBot>> SCRY_BOT = registerEntity(
+            LibEntityNames.SCRY_BOT,
+            EntityType.Builder.<ScryBot>of(ScryBot::new, MobCategory.MISC)
+                    .sized(0.5F, 0.75F)
+                    .setTrackingRange(10));
+
 
     @SubscribeEvent
     public static void registerPlacements(RegisterSpawnPlacementsEvent event) {
@@ -366,6 +372,7 @@ public class ModEntities {
             event.put(LILY.get(), Lily.createAttributes().build());
             event.put(NOOK.get(), Nook.createAttributes().build());
             event.put(ALAKARKINOS_TYPE.get(), Starbuncle.attributes().build());
+            event.put(SCRY_BOT.get(), Starbuncle.attributes().build());
         }
     }
 

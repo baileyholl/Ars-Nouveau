@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.entity.ScryerCamera;
+import com.hollingsworth.arsnouveau.common.entity.ICameraCallback;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -22,7 +22,7 @@ public class PacketDismountCamera extends AbstractPacket{
 
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
-        if (player.getCamera() instanceof ScryerCamera cam)
+        if (player.getCamera() instanceof ICameraCallback cam)
             cam.stopViewing(player);
     }
 

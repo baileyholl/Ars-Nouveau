@@ -34,6 +34,9 @@ public class ClientInfo {
     public static boolean isSupporter = false;
 
     public static Component[] storageTooltip = new Component[0];
+
+    public static int scryBotId;
+
     public static void setTooltip(Component... string) {
         storageTooltip = string;
     }

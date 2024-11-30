@@ -195,6 +195,7 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.NOOK.get(), (v) -> new GeoEntityRenderer<>(v, new NookModel()));
         event.registerEntityRenderer(ModEntities.ALAKARKINOS_TYPE.get(), (v) -> new GeoEntityRenderer<>(v, new AlakarkinosModel()));
         event.registerEntityRenderer(ModEntities.BUBBLE.get(), BubbleRenderer::new);
+        event.registerEntityRenderer(ModEntities.SCRY_BOT.get(), renderManager ->  new RenderBlank(renderManager, ArsNouveau.prefix("textures/entity/spell_proj.png")));
 
     }
 

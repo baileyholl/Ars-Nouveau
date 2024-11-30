@@ -19,18 +19,15 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-
-import java.util.ArrayList;
-import java.util.List;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Camera work is taken from SecurityCraft:
  * https://github.com/Geforce132/SecurityCraft/blob/1.18.2/src/main/java/net/geforcemods/securitycraft/entity/camera/SecurityCamera.java
  */
-public class ScryerCamera extends Entity {
+public class ScryerCamera extends Entity implements ICameraCallback {
     public final double cameraSpeed;
     public int screenshotSoundCooldown;
     protected int redstoneCooldown;
@@ -42,7 +39,6 @@ public class ScryerCamera extends Entity {
     private boolean loadedChunks;
     boolean hasSentChunks;
     private ChunkTrackingView cameraChunks = null;
-    private static final List<Player> DISMOUNTED_PLAYERS = new ArrayList<>();
 
     public ScryerCamera(EntityType<ScryerCamera> type, Level level) {
         super(type, level);
@@ -60,7 +56,7 @@ public class ScryerCamera extends Entity {
 
     public ScryerCamera(Level level, BlockPos pos) {
         this(ModEntities.SCRYER_CAMERA.get(), level);
-        if (level.getBlockEntity(pos) instanceof ScryerCrystalTile cam) {
+        if (level.getBlockEntity(pos) instanceof ScryerCrystalTile cam)  {
             double x = pos.getX() + 0.5D;
             double y = pos.getY() + 0.5D;
             double z = pos.getZ() + 0.5D;
@@ -96,18 +92,12 @@ public class ScryerCamera extends Entity {
 
     }
 
-    public static boolean hasRecentlyDismounted(Player player) {
-        return DISMOUNTED_PLAYERS.remove(player);
-    }
-
     protected boolean repositionEntityAfterLoad() {
         return false;
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
-
-    }
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {}
 
     public void tick() {
         if (this.level.isClientSide) {
@@ -132,21 +122,17 @@ public class ScryerCamera extends Entity {
         return cameraChunks;
     }
 
+    @Override
+    public boolean shouldUpdateChunkTracking(ServerPlayer player) {
+        if(!hasSentChunks){
+            hasSentChunks = true;
+            return true;
+        }
+        return false;
+    }
+
     public void setChunkLoadingDistance(int chunkLoadingDistance) {
         cameraChunks = ChunkTrackingView.of(chunkPosition(), chunkLoadingDistance);
-    }
-
-
-    public boolean hasSentChunks() {
-        return hasSentChunks;
-    }
-
-    public void setHasSentChunks(boolean hasSentChunks) {
-        this.hasSentChunks = hasSentChunks;
-    }
-
-    public float getZoomAmount() {
-        return this.zoomAmount;
     }
 
     public boolean isCameraDown() {
@@ -210,5 +196,61 @@ public class ScryerCamera extends Entity {
 
     public boolean isAlwaysTicking() {
         return true;
+    }
+
+    public void panHorizontally(float next){
+        BlockState state = level.getBlockState(blockPosition());
+
+        if (state.hasProperty(ScryerCrystal.FACING)) {
+            float checkNext = next;
+
+            if (checkNext < 0)
+                checkNext += 360;
+
+            boolean shouldSetRotation = switch (state.getValue(ScryerCrystal.FACING)) {
+                case NORTH -> checkNext > 90F && checkNext < 270F;
+                case SOUTH -> checkNext > 270F || checkNext < 90F;
+                case EAST -> checkNext > 180F && checkNext < 360F;
+                case WEST -> checkNext > 0F && checkNext < 180F;
+                case DOWN -> true;
+                default -> false;
+            };
+
+            if (shouldSetRotation)
+                setYRot(next);
+        }
+    }
+
+    @Override
+    public void onLeftPressed() {
+        float next = getYRot() - (float) cameraSpeed * zoomAmount;
+        panHorizontally(next);
+    }
+
+    @Override
+    public void onRightPressed() {
+        float next = getYRot() + (float) cameraSpeed * zoomAmount;
+        panHorizontally(next);
+    }
+
+    @Override
+    public void onUpPressed() {
+        float next = getXRot() - (float) cameraSpeed * zoomAmount;
+
+        if (isCameraDown()) {
+            if (next > 40F)
+                setRotation(getYRot(), next);
+        } else if (next > -25F)
+            setRotation(getYRot(), next);
+    }
+
+    public void onDownPressed() {
+        float next = getXRot() + (float) cameraSpeed * zoomAmount;
+
+        if (isCameraDown()) {
+            if (next < 90F)
+                setRotation(getYRot(), next);
+        } else if (next < 60F)
+            setRotation(getYRot(), next);
     }
 }

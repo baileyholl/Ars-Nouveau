@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.mixin.camera;
 
 
-import com.hollingsworth.arsnouveau.common.entity.ScryerCamera;
+import com.hollingsworth.arsnouveau.common.entity.ICameraCallback;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ChunkTrackingView;
@@ -34,13 +34,12 @@ public abstract class ChunkMapMixin {
      */
     @Inject(method = "updateChunkTracking", at = @At(value = "HEAD"))
     private void an$onUpdateChunkTracking(ServerPlayer player, CallbackInfo callback) {
-        if (player.getCamera() instanceof ScryerCamera camera) {
-            if (!camera.hasSentChunks()) {
+        if (player.getCamera() instanceof ICameraCallback camera) {
+            if (camera.shouldUpdateChunkTracking(player)) {
                 ChunkTrackingView.difference(player.getChunkTrackingView(), camera.getCameraChunks(), chunkPos -> markChunkPendingToSend(player, chunkPos), chunkPos -> {});
-                camera.setHasSentChunks(true);
             }
         }
-        else if (ScryerCamera.hasRecentlyDismounted(player))
+        else if (ICameraCallback.hasRecentlyDismounted(player))
             player.getChunkTrackingView().forEach(chunkPos -> markChunkPendingToSend(player, chunkPos));
     }
 
@@ -50,7 +49,7 @@ public abstract class ChunkMapMixin {
      */
     @Inject(method = "onChunkReadyToSend", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;getChunkTrackingView()Lnet/minecraft/server/level/ChunkTrackingView;"))
     private void an$sendChunksToCameras(LevelChunk chunk, CallbackInfo callback, @Local ServerPlayer player) {
-        if (player.getCamera() instanceof ScryerCamera camera && camera.getCameraChunks().contains(chunk.getPos()))
+        if (player.getCamera() instanceof ICameraCallback camera && camera.getCameraChunks().contains(chunk.getPos()))
             markChunkPendingToSend(player, chunk);
     }
 
@@ -59,7 +58,7 @@ public abstract class ChunkMapMixin {
      */
     @Inject(method = "isChunkTracked", at = @At("HEAD"), cancellable = true)
     private void an$onIsChunkTracked(ServerPlayer player, int x, int z, CallbackInfoReturnable<Boolean> callback) {
-        if (player.getCamera() instanceof ScryerCamera camera && camera.getCameraChunks().contains(x, z) && !player.connection.chunkSender.isPending(ChunkPos.asLong(x, z)))
+        if (player.getCamera() instanceof ICameraCallback camera && camera.getCameraChunks().contains(x, z) && !player.connection.chunkSender.isPending(ChunkPos.asLong(x, z)))
             callback.setReturnValue(true);
     }
 }

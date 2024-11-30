@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.mixin.camera;
 
 
-import com.hollingsworth.arsnouveau.common.entity.ScryerCamera;
+import com.hollingsworth.arsnouveau.common.entity.ICameraCallback;
 import com.hollingsworth.arsnouveau.common.util.CameraUtil;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.server.level.ChunkMap;
@@ -37,6 +37,6 @@ public abstract class TrackedEntityMixin {
                 return true;
         }
 
-        return entity instanceof ScryerCamera || original;
+        return entity instanceof ICameraCallback || original;
     }
 }

@@ -1,9 +1,8 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
+import com.hollingsworth.arsnouveau.common.entity.ScryBot;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
@@ -12,12 +11,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 
-public class PacketMountCamera extends AbstractPacket{
-    public static final Type<PacketMountCamera> TYPE = new Type<>(ArsNouveau.prefix("mount_camera"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, PacketMountCamera> CODEC = StreamCodec.ofMember(PacketMountCamera::encode, PacketMountCamera::decode);
-    private BlockPos pos;
+public class PacketMountScryBot extends AbstractPacket{
+    public static final Type<PacketMountScryBot> TYPE = new Type<>(ArsNouveau.prefix("mount_scrybot"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketMountScryBot> CODEC = StreamCodec.ofMember(PacketMountScryBot::encode, PacketMountScryBot::decode);
+    private int id;
 
-    public PacketMountCamera() {
+    public PacketMountScryBot() {
     }
 
     @Override
@@ -25,24 +24,24 @@ public class PacketMountCamera extends AbstractPacket{
 
     }
 
-    public PacketMountCamera(BlockPos pos) {
-        this.pos = pos;
+    public PacketMountScryBot(int id) {
+        this.id = id;
     }
 
-    public static void encode(PacketMountCamera message, RegistryFriendlyByteBuf buf) {
-        buf.writeBlockPos(message.pos);
+    public static void encode(PacketMountScryBot message, RegistryFriendlyByteBuf buf) {
+        buf.writeInt(message.id);
     }
 
-    public static PacketMountCamera decode(RegistryFriendlyByteBuf buf) {
-        return new PacketMountCamera(buf.readBlockPos());
+    public static PacketMountScryBot decode(RegistryFriendlyByteBuf buf) {
+        return new PacketMountScryBot(buf.readInt());
     }
 
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
         Level level = player.level;
 
-        if (level.getBlockEntity(pos) instanceof ICameraMountable mountable) {
-            mountable.mountCamera(level, pos, player);
+        if (level.getEntity(id) instanceof ScryBot scryBot) {
+            scryBot.playerMounting(player);
             return;
         }
         PortUtil.sendMessage(player, Component.translatable("ars_nouveau.camera.not_loaded"));

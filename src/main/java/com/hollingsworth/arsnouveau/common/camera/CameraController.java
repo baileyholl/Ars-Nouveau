@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.camera;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.block.ScryerCrystal;
+import com.hollingsworth.arsnouveau.common.entity.ICameraCallback;
 import com.hollingsworth.arsnouveau.common.entity.ScryerCamera;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketDismountCamera;
@@ -13,7 +13,6 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.SectionPos;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -68,22 +67,22 @@ public class CameraController {
             //up/down/left/right handling is split to prevent players who are viewing a camera from moving around in a boat or on a horse
             if (event instanceof ClientTickEvent.Post) {
                 if (wasUpPressed) {
-                    moveViewUp(cam);
+                    cam.onUpPressed();
                     options.keyUp.setDown(true);
                 }
 
                 if (wasDownPressed) {
-                    moveViewDown(cam);
+                    cam.onDownPressed();
                     options.keyDown.setDown(true);
                 }
 
                 if (wasLeftPressed) {
-                    moveViewHorizontally(cam, cam.getYRot(), cam.getYRot() - (float) cam.cameraSpeed * cam.zoomAmount);
+                    cam.onLeftPressed();
                     options.keyLeft.setDown(true);
                 }
 
                 if (wasRightPressed) {
-                    moveViewHorizontally(cam, cam.getYRot(), cam.getYRot() + (float) cam.cameraSpeed * cam.zoomAmount);
+                    cam.onRightPressed();
                     options.keyRight.setDown(true);
                 }
 
@@ -102,48 +101,6 @@ public class CameraController {
         Networking.sendToServer(new PacketDismountCamera());
     }
 
-    public static void moveViewUp(ScryerCamera cam) {
-        float next = cam.getXRot() - (float) cam.cameraSpeed * cam.zoomAmount;
-
-        if (cam.isCameraDown()) {
-            if (next > 40F)
-                cam.setRotation(cam.getYRot(), next);
-        } else if (next > -25F)
-            cam.setRotation(cam.getYRot(), next);
-    }
-
-    public static void moveViewDown(ScryerCamera cam) {
-        float next = cam.getXRot() + (float) cam.cameraSpeed * cam.zoomAmount;
-
-        if (cam.isCameraDown()) {
-            if (next < 90F)
-                cam.setRotation(cam.getYRot(), next);
-        } else if (next < 60F)
-            cam.setRotation(cam.getYRot(), next);
-    }
-
-    public static void moveViewHorizontally(ScryerCamera cam, float yRot, float next) {
-        BlockState state = cam.level.getBlockState(cam.blockPosition());
-
-        if (state.hasProperty(ScryerCrystal.FACING)) {
-            float checkNext = next;
-
-            if (checkNext < 0)
-                checkNext += 360;
-
-            boolean shouldSetRotation = switch (state.getValue(ScryerCrystal.FACING)) {
-                case NORTH -> checkNext > 90F && checkNext < 270F;
-                case SOUTH -> checkNext > 270F || checkNext < 90F;
-                case EAST -> checkNext > 180F && checkNext < 360F;
-                case WEST -> checkNext > 0F && checkNext < 180F;
-                case DOWN -> true;
-                default -> false;
-            };
-
-            if (shouldSetRotation)
-                cam.setYRot(next);
-        }
-    }
 
     public static ClientChunkCache.Storage getCameraStorage() {
         return cameraStorage;
@@ -155,7 +112,7 @@ public class CameraController {
     }
 
     public static void setRenderPosition(Entity entity) {
-        if (entity instanceof ScryerCamera) {
+        if (entity instanceof ICameraCallback) {
             SectionPos cameraPos = SectionPos.of(entity);
 
             cameraStorage.viewCenterX = cameraPos.x();

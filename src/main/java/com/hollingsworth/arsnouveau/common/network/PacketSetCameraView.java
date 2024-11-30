@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.camera.CameraController;
-import com.hollingsworth.arsnouveau.common.entity.ScryerCamera;
+import com.hollingsworth.arsnouveau.common.entity.ICameraCallback;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -36,7 +36,7 @@ public class PacketSetCameraView extends AbstractPacket{
     @Override
     public void onClientReceived(Minecraft mc, Player player) {
         Entity entity = mc.level.getEntity(id);
-        boolean isCamera = entity instanceof ScryerCamera;
+        boolean isCamera = entity instanceof ICameraCallback;
 
         if (isCamera || entity instanceof Player) {
             mc.setCameraEntity(entity);
