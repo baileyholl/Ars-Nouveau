@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
@@ -63,15 +64,14 @@ public class PotionCraftingManager extends CraftingManager {
                 level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
             }
             return;
-        }else if (level.getBlockEntity(jarPos) instanceof PotionJarTile jar) {
+        }else if (level instanceof ServerLevel serverLevel && level.getBlockEntity(jarPos) instanceof PotionJarTile jar) {
             tile.setNeedsPotionStorage(false);
             jar.add(potionOut,300);
             ParticleColor color2 = ParticleColor.fromInt(jar.getColor());
-            EntityFlyingItem flying = new EntityFlyingItem(level, new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ()+ 0.5),
+            EntityFlyingItem.spawn(serverLevel, new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ()+ 0.5),
                     new Vec3(jarPos.getX() + 0.5, jarPos.getY(), jarPos.getZ() + 0.5),
                     Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
                     .withNoTouch();
-            level.addFreshEntity(flying);
         }
         super.completeCraft(tile);
     }

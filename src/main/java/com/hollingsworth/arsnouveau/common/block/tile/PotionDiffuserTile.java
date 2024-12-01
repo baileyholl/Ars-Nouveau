@@ -17,6 +17,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -67,16 +68,14 @@ public class PotionDiffuserTile extends ModdedTile implements ITickable, IWandab
     }
 
     public void obtainPotion(){
-        if(level.isLoaded(boundPos) && level.getBlockEntity(boundPos) instanceof PotionJarTile jar){
+        if(level instanceof ServerLevel serverLevel && level.isLoaded(boundPos) && level.getBlockEntity(boundPos) instanceof PotionJarTile jar){
             if(!PotionUtil.isEmpty(jar.getData()) && jar.getAmount() >= 100){
                 lastConsumedPotion = jar.getData();
                 ticksToConsume = 20 * 60 * 10; // 10 mins
                 jar.remove(100);
                 ParticleColor color2 = ParticleColor.fromInt(jar.getColor());
-                EntityFlyingItem item2 = new EntityFlyingItem(level, jar.getBlockPos().above(), worldPosition, Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
-                        .withNoTouch();
-                item2.setDistanceAdjust(2f);
-                level.addFreshEntity(item2);
+                EntityFlyingItem.spawn(serverLevel, jar.getBlockPos().above(), worldPosition, Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
+                        .withNoTouch().setDistanceAdjust(2f);
                 updateBlock();
             }
         }

@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.api.util.NearbyPlayerCache;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -12,6 +13,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -23,13 +25,7 @@ public class EntityFollowProjectile extends ColoredProjectile {
     public static final EntityDataAccessor<Integer> DESPAWN = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.INT);
 
     private int age;
-    //    int age;
     int maxAge = 500;
-
-    public EntityFollowProjectile(Level world) {
-        super(ModEntities.ENTITY_FOLLOW_PROJ.get(), world, 0, 0, 0);
-    }
-
 
     public void setDespawnDistance(int distance) {
         getEntityData().set(DESPAWN, distance);
@@ -39,7 +35,6 @@ public class EntityFollowProjectile extends ColoredProjectile {
         this(ModEntities.ENTITY_FOLLOW_PROJ.get(), worldIn);
         this.entityData.set(EntityFollowProjectile.to, BlockPos.containing(to));
         this.entityData.set(EntityFollowProjectile.from, BlockPos.containing(from));
-//        this.age = 0;
         setPos(from.x + 0.5, from.y + 0.5, from.z + 0.5);
         this.entityData.set(RED, 255);
         this.entityData.set(GREEN, 25);
@@ -61,12 +56,25 @@ public class EntityFollowProjectile extends ColoredProjectile {
         this(worldIn, from, to, color.r, color.g, color.b);
     }
 
-    public EntityFollowProjectile(Level worldIn, BlockPos from, BlockPos to) {
-        this(worldIn, new Vec3(from.getX(), from.getY(), from.getZ()), new Vec3(to.getX(), to.getY(), to.getZ()));
-    }
-
     public EntityFollowProjectile(EntityType<? extends EntityFollowProjectile> entityAOEProjectileEntityType, Level world) {
         super(entityAOEProjectileEntityType, world);
+    }
+
+    /**
+     * These are preferred for any cases where entities could be spawned without a player nearby.
+     * For instance, rituals don't need to check this, but automated source would.
+     */
+    public static void spawn(ServerLevel level, BlockPos from, BlockPos to, int r, int g, int b){
+        boolean canSpawn = NearbyPlayerCache.isPlayerNearby(from, level, 64);
+        if(!canSpawn){
+            return;
+        }
+        EntityFollowProjectile entity = new EntityFollowProjectile(level, from, to, r, g, b);
+        level.addFreshEntity(entity);
+    }
+
+    public static void spawn(ServerLevel level, BlockPos from, BlockPos to){
+        EntityFollowProjectile.spawn(level, from, to, 255, 25, 180);
     }
 
     @Override
