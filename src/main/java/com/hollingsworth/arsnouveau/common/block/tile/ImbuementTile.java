@@ -143,7 +143,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
             ISpecialSourceProvider takePos = SourceUtil.takeSource(worldPosition, level, 2, Math.min(200, cost));
             if (takePos != null) {
                 this.addSource(transferRate);
-                EntityFlyingItem.spawn(serverLevel, takePos.getCurrentPos().above(), worldPosition)
+                EntityFlyingItem.spawn(worldPosition, serverLevel, takePos.getCurrentPos().above(), worldPosition)
                         .withNoTouch().setDistanceAdjust(2f);
 
                 if (!draining) {

@@ -74,13 +74,11 @@ public class EntityFlyingItem extends ColoredProjectile {
         return entity;
     }
 
-    public static @NotNull EntityFlyingItem spawn(ServerLevel level, Vec3 from, Vec3 to){
-        return spawn(level, from, to, 255, 25, 180);
-    }
-
-
     public static @NotNull EntityFlyingItem spawn(ServerLevel level, BlockPos from, BlockPos to, int r, int g, int b){
-        boolean canSpawn = NearbyPlayerCache.isPlayerNearby(from, level, 64);
+        return spawn(from, level, from, to, r, g, b);
+    }
+    public static @NotNull EntityFlyingItem spawn(BlockPos checkCachePos, ServerLevel level, BlockPos from, BlockPos to, int r, int g, int b){
+        boolean canSpawn = NearbyPlayerCache.isPlayerNearby(checkCachePos, level, 64);
         EntityFlyingItem entity = new EntityFlyingItem(level, from, to, r, g, b);
         if(canSpawn && level.isLoaded(to)) {
             level.addFreshEntity(entity);
@@ -88,8 +86,12 @@ public class EntityFlyingItem extends ColoredProjectile {
         return entity;
     }
 
+    public static @NotNull EntityFlyingItem spawn(BlockPos checkCachePos, ServerLevel level, BlockPos from, BlockPos to){
+        return spawn(checkCachePos, level, from, to, 255, 25, 180);
+    }
+
     public static @NotNull EntityFlyingItem spawn(ServerLevel level, BlockPos from, BlockPos to){
-        return spawn(level, from, to, 255, 25, 180);
+        return spawn(from, level, from, to);
     }
 
     public EntityFlyingItem setStack(ItemStack stack) {

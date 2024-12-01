@@ -78,12 +78,12 @@ public class CollectEssenceGoal extends Goal {
                 if (homePos.getY() >= targetPos.getY() - 2) {
                     targetPos = targetPos.above(homePos.getY() - targetPos.getY());
                 }
+                EntityFlyingItem.spawn(homePos, (ServerLevel) drygmy.level,
+                            targetPos, homePos,
+                            50,
+                            255,
+                            20);
 
-                EntityFlyingItem.spawn((ServerLevel) drygmy.level,
-                        targetPos, homePos,
-                        50,
-                        255,
-                        20);
                 drygmy.channelCooldown = 100;
                 drygmy.getHome().giveProgress();
             }

@@ -67,7 +67,7 @@ public class ConvertBlockState extends CrabState {
             this.recipe = res;
             spawnedFlyingItem = true;
             alakarkinos.setBlowingBubbles(false);
-            EntityFlyingItem.spawn((ServerLevel) alakarkinos.level, target, hatPos.above())
+            EntityFlyingItem.spawn(alakarkinos.getHome(), (ServerLevel) alakarkinos.level, target, hatPos.above())
                     .setStack(alakarkinos.level.getBlockState(target).getBlock().asItem().getDefaultInstance())
                     .getEntityData().set(EntityFlyingItem.IS_BUBBLE, true);
             alakarkinos.level.setBlockAndUpdate(target, Blocks.AIR.defaultBlockState());
