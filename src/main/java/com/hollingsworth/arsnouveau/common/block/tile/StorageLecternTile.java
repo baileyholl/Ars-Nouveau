@@ -138,9 +138,10 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     }
 
     private void addExtractTasks(MultiExtractedReference multiSlotReference) {
-        if (multiSlotReference.getExtracted().isEmpty()) {
+        if (multiSlotReference.getExtracted().isEmpty() || !canCreateTasks) {
             return;
         }
+
         for (ExtractedStack extractedStack : multiSlotReference.getSlots()) {
             BlockPos pos = handlerPosList.stream().filter(handlerPos -> handlerPos.handler().equals(extractedStack.getHandler())).findFirst().map(HandlerPos::pos).orElse(null);
             if (pos != null) {
@@ -150,7 +151,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     }
 
     private void addInsertTasks(ItemStack stack, MultiInsertReference reference) {
-        if (reference.isEmpty() || stack.isEmpty()) {
+        if (reference.isEmpty() || stack.isEmpty() || !canCreateTasks) {
             return;
         }
         for (SlotReference extractedStack : reference.getSlots()) {

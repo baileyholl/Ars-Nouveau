@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.source.SourceProvider;
 import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
@@ -58,9 +59,8 @@ public class SourceUtil {
 
     public static @Nullable ISpecialSourceProvider takeSourceWithParticles(BlockPos pos, BlockPos particlesTo, Level level, int range, int source){
         ISpecialSourceProvider result = takeSource(pos, level, range, source);
-        if(result != null){
-            EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(level, result.getCurrentPos(), particlesTo);
-            level.addFreshEntity(aoeProjectile);
+        if(result != null && level instanceof ServerLevel serverLevel){
+            EntityFollowProjectile.spawn(serverLevel, result.getCurrentPos(), particlesTo);
         }
         return result;
     }

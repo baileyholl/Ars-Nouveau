@@ -62,10 +62,9 @@ public class SpawnLootState extends CrabState{
         alakarkinos.setBlowingBubbles(false);
         alakarkinos.findBlockCooldown = 60 * 20;
         ItemStack loot = getLoot();
-        EntityFlyingItem flyingItem = new EntityFlyingItem(alakarkinos.level, hatPos, alakarkinos.getHome().above());
-        flyingItem.getEntityData().set(EntityFlyingItem.IS_BUBBLE, true);
-        alakarkinos.level.addFreshEntity(flyingItem);
-        flyingItem.setStack(loot);
+        EntityFlyingItem.spawn((ServerLevel) alakarkinos.level, hatPos, alakarkinos.getHome().above())
+                .setStack(loot)
+                .getEntityData().set(EntityFlyingItem.IS_BUBBLE, true);
         IItemHandler handler = alakarkinos.level.getCapability(Capabilities.ItemHandler.BLOCK, alakarkinos.getHome(), null);
         ItemHandlerHelper.insertItemStacked(handler, loot, false);
         return new DecideCrabActionState(alakarkinos);

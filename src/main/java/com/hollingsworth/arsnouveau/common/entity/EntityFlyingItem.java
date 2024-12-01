@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.api.util.NearbyPlayerCache;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -17,10 +18,12 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class EntityFlyingItem extends ColoredProjectile {
     public static final EntityDataAccessor<Vec3> to = SynchedEntityData.defineId(EntityFlyingItem.class, DataSerializers.VEC.get());
@@ -60,6 +63,33 @@ public class EntityFlyingItem extends ColoredProjectile {
 
     public EntityFlyingItem(EntityType<EntityFlyingItem> entityAOEProjectileEntityType, Level world) {
         super(entityAOEProjectileEntityType, world);
+    }
+
+    public static @NotNull EntityFlyingItem spawn(ServerLevel level, Vec3 from, Vec3 to, int r, int g, int b){
+        boolean canSpawn = NearbyPlayerCache.isPlayerNearby(BlockPos.containing(from), level, 64);
+        EntityFlyingItem entity = new EntityFlyingItem(level, from, to, r, g, b);
+        if(canSpawn && level.isLoaded(BlockPos.containing(to))) {
+            level.addFreshEntity(entity);
+        }
+        return entity;
+    }
+
+    public static @NotNull EntityFlyingItem spawn(ServerLevel level, Vec3 from, Vec3 to){
+        return spawn(level, from, to, 255, 25, 180);
+    }
+
+
+    public static @NotNull EntityFlyingItem spawn(ServerLevel level, BlockPos from, BlockPos to, int r, int g, int b){
+        boolean canSpawn = NearbyPlayerCache.isPlayerNearby(from, level, 64);
+        EntityFlyingItem entity = new EntityFlyingItem(level, from, to, r, g, b);
+        if(canSpawn && level.isLoaded(to)) {
+            level.addFreshEntity(entity);
+        }
+        return entity;
+    }
+
+    public static @NotNull EntityFlyingItem spawn(ServerLevel level, BlockPos from, BlockPos to){
+        return spawn(level, from, to, 255, 25, 180);
     }
 
     public EntityFlyingItem setStack(ItemStack stack) {
