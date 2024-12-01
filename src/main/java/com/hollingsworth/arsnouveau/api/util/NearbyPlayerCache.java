@@ -26,18 +26,15 @@ public class NearbyPlayerCache {
 
         long gameTime = level.getGameTime();
         if(nextCheck > gameTime){
-            System.out.println("Cache hit");
             return true;
         }
 
         for(Player player : level.players()){
             if(BlockUtil.distanceFrom(player.blockPosition(), pos) < range){
                 positionCache.put(posLong, (int)gameTime + 500 + level.random.nextInt(20));
-                System.out.println("found player");
                 return true;
             }
         }
-        System.out.println("no player nearby");
         return false;
     }
 
