@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.event.*;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
-import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.NotEnoughManaPacket;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -73,7 +72,7 @@ public class SpellResolver implements Cloneable {
         int totalCost = getResolveCost();
         boolean enoughMana = spellContext.getCaster().enoughMana(totalCost);
 
-        boolean canCast = enoughMana || spellContext.getCasterTool().getItem() instanceof SpellBook spellBook && spellBook.getTier() == SpellTier.CREATIVE;
+        boolean canCast = enoughMana || (entity instanceof Player player && player.isCreative());
         if (!canCast && entity instanceof ServerPlayer serverPlayer && !silent) {
             PortUtil.sendMessageNoSpam(serverPlayer, Component.translatable("ars_nouveau.spell.no_mana"));
             Networking.sendToPlayerClient(new NotEnoughManaPacket(totalCost), serverPlayer);
