@@ -106,12 +106,12 @@ public class GuiSpellBook extends BaseBook {
         List<AbstractSpellPart> parts = cap == null ? new ArrayList<>() : new ArrayList<>(cap.getKnownGlyphs().stream().filter(AbstractSpellPart::shouldShowInSpellBook).toList());
         maxManaCache = ManaUtil.getMaxMana(Minecraft.getInstance().player);
         parts.addAll(GlyphRegistry.getDefaultStartingSpells());
-        if (heldStack.getItem() == ItemsRegistry.CREATIVE_SPELLBOOK.get()) {
-            parts = new ArrayList<>(GlyphRegistry.getSpellpartMap().values().stream().filter(AbstractSpellPart::shouldShowInSpellBook).toList());
-        }
         int tier = 1;
         if (heldStack.getItem() instanceof SpellBook book) {
             tier = book.getTier().value;
+            if (book.getTier() == SpellTier.CREATIVE) {
+                parts = new ArrayList<>(GlyphRegistry.getSpellpartMap().values().stream().filter(AbstractSpellPart::shouldShowInSpellBook).toList());
+            }
         }
         if (SpellCasterRegistry.hasCaster(heldStack)) {
             AbstractCaster<?> caster = SpellCasterRegistry.from(heldStack);
