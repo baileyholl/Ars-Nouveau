@@ -68,13 +68,15 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
         ArrayList<BlockPos> stale = new ArrayList<>();
 
         int ratePer = getTransferRate() / fromList.size();
-        getSourceStorage().setMaxReceive(ratePer);
+        if(ratePer == 0){
+            return;
+        }
         for (BlockPos fromPos : fromList) {
             if (!level.isLoaded(fromPos))
                 continue;
             int transfer;
             if (level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, fromPos, null) instanceof ISourceCap sourceHandler) {
-                transfer = transferSource(sourceHandler, this.getSourceStorage());
+                transfer = transferSource(sourceHandler, this.getSourceStorage(), ratePer);
             } else if (level.getBlockEntity(fromPos) instanceof AbstractSourceMachine fromTile) {
                 int fromRate = Math.min(ratePer, getTransferRate(fromTile, this));
                 transfer = transferSource(fromTile, this, fromRate);
@@ -103,13 +105,15 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
             return;
         ArrayList<BlockPos> stale = new ArrayList<>();
         int ratePer = getSource() / toList.size();
-        getSourceStorage().setMaxExtract(ratePer);
+        if(ratePer == 0){
+            return;
+        }
         for (BlockPos toPos : toList) {
             if (!level.isLoaded(toPos))
                 continue;
             int transfer;
             if (level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, toPos, null) instanceof ISourceCap sourceHandler) {
-                transfer = transferSource(this.getSourceStorage(), sourceHandler);
+                transfer = transferSource(this.getSourceStorage(), sourceHandler, ratePer);
             } else if (level.getBlockEntity(toPos) instanceof AbstractSourceMachine toTile) {
                 transfer = transferSource(this, toTile, ratePer);
             } else {
@@ -121,8 +125,7 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
                 createParticles(worldPosition, toPos);
             }
         }
-        for (
-                BlockPos s : stale) {
+        for (BlockPos s : stale) {
             toList.remove(s);
             updateBlock();
         }
