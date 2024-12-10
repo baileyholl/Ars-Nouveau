@@ -18,17 +18,23 @@ public class DelayedSpellEvent implements ITimedEvent {
     public final SpellResolver resolver;
     public final HitResult result;
     public final Level world;
+    public final boolean showParticles;
 
     @Deprecated(forRemoval = true)
     public DelayedSpellEvent(int delay, Spell spell, HitResult result, Level world, @Nullable LivingEntity shooter, SpellContext resolver) {
-        this(delay, result, world, new SpellResolver(resolver));
+        this(delay, result, world, new SpellResolver(resolver), true);
     }
 
     public DelayedSpellEvent(int delay, HitResult result, Level world, SpellResolver resolver) {
+        this(delay, result, world, resolver, true);
+    }
+
+    public DelayedSpellEvent(int delay, HitResult result, Level world, SpellResolver resolver, boolean showParticles) {
         this.duration = delay;
         this.result = result;
         this.world = world;
         this.resolver = resolver;
+        this.showParticles = showParticles;
     }
 
     @Override
@@ -38,7 +44,9 @@ public class DelayedSpellEvent implements ITimedEvent {
             resolveSpell();
         } else if (!serverSide && result != null) {
             BlockPos hitVec = result instanceof EntityHitResult ? ((EntityHitResult) result).getEntity().blockPosition() : BlockPos.containing(result.getLocation());
-            ParticleUtil.spawnTouch((ClientLevel) world, hitVec, resolver.spellContext.getColors());
+            if(showParticles){
+                ParticleUtil.spawnTouch((ClientLevel) world, hitVec, resolver.spellContext.getColors());
+            }
         }
     }
 
