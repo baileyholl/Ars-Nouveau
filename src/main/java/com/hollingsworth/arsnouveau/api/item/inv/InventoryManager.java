@@ -184,7 +184,7 @@ public class InventoryManager {
             if(stack.isEmpty()){
                 continue;
             }
-            if (!ItemStack.isSameItem(stack, desiredStack) || !ItemStack.isSameItemSameComponents(stack, desiredStack)) {
+            if (!(ItemStack.isSameItem(stack, desiredStack) && ItemStack.isSameItemSameComponents(stack, desiredStack))) {
                 continue;
             }
             int toExtract = Math.min(stack.getCount(), remaining);

@@ -10,11 +10,11 @@
     {
       "type": "patchouli:crafting",
       "recipe": "ars_nouveau:novice_spell_book",
-      "recipe2": "ars_nouveau:apprentice_spell_book_upgrade"
+      "recipe2": "ars_nouveau:apprentice_book_upgrade"
     },
     {
       "type": "patchouli:crafting",
-      "recipe": "ars_nouveau:archmage_spell_book_upgrade"
+      "recipe": "ars_nouveau:archmage_book_upgrade"
     }
   ]
 }

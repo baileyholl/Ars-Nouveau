@@ -19,16 +19,6 @@ public class AlchemicalSourcelinkTile extends SourcelinkTile {
     }
 
     @Override
-    public int getMaxSource() {
-        return 20000;
-    }
-
-    @Override
-    public int getTransferRate() {
-        return 10000;
-    }
-
-    @Override
     public void tick() {
         super.tick();
         if (level instanceof ServerLevel && level.getGameTime() % 20 == 0 && this.canAcceptSource()) {

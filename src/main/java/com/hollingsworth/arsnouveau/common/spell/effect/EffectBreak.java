@@ -71,7 +71,7 @@ public class EffectBreak extends AbstractEffect {
             stack.enchant(HolderHelper.unwrap(world,Enchantments.SILK_TOUCH), numSilkTouch);
         }
         for (BlockPos pos1 : posList) {
-            if (world.random.nextFloat() < spellStats.getBuffCount(AugmentRandomize.INSTANCE) * 0.25F) {
+            if (world.isOutsideBuildHeight(pos1) || world.random.nextFloat() < spellStats.getBuffCount(AugmentRandomize.INSTANCE) * 0.25F) {
                 continue;
             }
             state = world.getBlockState(pos1);

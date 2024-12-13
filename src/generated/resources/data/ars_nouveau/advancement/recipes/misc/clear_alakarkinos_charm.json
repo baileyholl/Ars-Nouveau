@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:clear_whirlisprig_charm"
+        "recipe": "ars_nouveau:clear_alakarkinos_charm"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:clear_whirlisprig_charm"
+      "ars_nouveau:clear_alakarkinos_charm"
     ]
   }
 }

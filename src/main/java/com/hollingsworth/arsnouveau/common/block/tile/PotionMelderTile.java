@@ -22,6 +22,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -122,20 +123,17 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
             return;
         }
 
-        if (timeMixing % 20 == 0 && timeMixing > 0 && timeMixing <= 60) {
-
-            EntityFlyingItem item = new EntityFlyingItem(level, tile1.getBlockPos().above(), worldPosition, Math.round(255 * color1.getRed()), Math.round(255 * color1.getGreen()), Math.round(255 * color1.getBlue()))
-                    .withNoTouch();
-            item.setDistanceAdjust(2f);
-            level.addFreshEntity(item);
-            EntityFlyingItem item2 = new EntityFlyingItem(level, tile2.getBlockPos().above(), worldPosition, Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
-                    .withNoTouch();
-            item2.setDistanceAdjust(2f);
-            level.addFreshEntity(item2);
-        }
-        if (!level.isClientSide && timeMixing >= maxMergeTicks) {
-            timeMixing = 0;
-            mergePotions(combJar, tile1, tile2, data);
+        if(level instanceof ServerLevel serverLevel) {
+            if (timeMixing % 20 == 0 && timeMixing > 0 && timeMixing <= 60) {
+                EntityFlyingItem.spawn(serverLevel, tile1.getBlockPos().above(), worldPosition, Math.round(255 * color1.getRed()), Math.round(255 * color1.getGreen()), Math.round(255 * color1.getBlue()))
+                        .withNoTouch().setDistanceAdjust(2f);
+                EntityFlyingItem.spawn(serverLevel, tile2.getBlockPos().above(), worldPosition, Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
+                        .withNoTouch().setDistanceAdjust(2f);
+            }
+            if (timeMixing >= maxMergeTicks) {
+                timeMixing = 0;
+                mergePotions(combJar, tile1, tile2, data);
+            }
         }
     }
 
@@ -146,12 +144,11 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
         take2.remove(Config.MELDER_INPUT_COST.get());
         hasSource = false;
         ParticleColor color2 = ParticleColor.fromInt(combJar.getColor());
-        EntityFlyingItem item2 = new EntityFlyingItem(level, new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ()+ 0.5),
+        EntityFlyingItem.spawn((ServerLevel) level, new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ()+ 0.5),
                 new Vec3(combJar.getX() + 0.5, combJar.getY(), combJar.getZ() + 0.5),
                 Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
-                .withNoTouch();
-        item2.setDistanceAdjust(2f);
-        level.addFreshEntity(item2);
+                .withNoTouch()
+                .setDistanceAdjust(2f);
         updateBlock();
     }
 

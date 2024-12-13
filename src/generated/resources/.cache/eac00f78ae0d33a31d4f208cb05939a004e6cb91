@@ -1,4 +1,4 @@
-// 1.21.1	2024-11-02T21:24:07.8371802	AN tags
+// 1.21.1	2024-11-30T10:07:18.7027	AN tags
 939cde8f97e4e8d7ea8445415522f703b2b927d4 data/ars_nouveau/tags/block/an_decorative.json
 de95bc21249101b079255a1a00274f60d55e0602 data/ars_nouveau/tags/block/blazing_logs.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/block/break_blacklist.json
@@ -59,3 +59,7 @@ a01909919207615cda1bb44f33db287efa02333b data/minecraft/tags/block/wooden_doors.
 70afef6fe4926a8dbf1205248dc1371974ef3037 data/minecraft/tags/block/wooden_slabs.json
 e5d97b748b59672ba4baec9c3f1093370adf0332 data/minecraft/tags/block/wooden_stairs.json
 23fc13405d4dc43512deb39ee5bbbb73da177166 data/minecraft/tags/block/wooden_trapdoors.json
+336846dc81b26d8bbe0f7a94c56cd769dc47fe1d data/sereneseasons/tags/block/autumn_crops.json
+89c5ef23119c5bce8be294cd59d6c42530dca3a2 data/sereneseasons/tags/block/spring_crops.json
+b71c14024b9d4ee697d0a80dcc6be06be52da98e data/sereneseasons/tags/block/summer_crops.json
+abdb4d3d8f68389efc82016295267c54f9ca7f42 data/sereneseasons/tags/block/winter_crops.json

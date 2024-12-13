@@ -11,6 +11,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -32,6 +33,17 @@ public class StableWarpScroll extends ModItem{
     @Override
     public boolean onEntityItemUpdate(@NotNull ItemStack stack, @NotNull ItemEntity entity) {
         return ItemsRegistry.WARP_SCROLL.get().onEntityItemUpdate(stack, entity);
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        super.inventoryTick(stack, level, entity, slotId, isSelected);
+        // A hack to fix the crossDim flag on existing warp scrolls
+        // TODO: 1.22 - remove this tick and set the flag or check the stack elsewhere
+        WarpScrollData data = stack.get(DataComponentRegistry.WARP_SCROLL);
+        if(data != null && !data.crossDim()){
+            stack.set(DataComponentRegistry.WARP_SCROLL, data.withCrossDim(true));
+        }
     }
 
     @Override

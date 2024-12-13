@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal.wixie;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.event.FlyingItemEvent;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.api.util.NearbyPlayerCache;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
@@ -12,6 +13,7 @@ import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -135,7 +137,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
                             int canExtract = Math.min(size, numNeeded);
                             for(int count = 0; count < canExtract; count++) {
                                 ItemStack stackToGive = itemHandler.extractItem(j, 1, false);
-                                spawnFlyingItem(tile.getLevel(), tile.getBlockPos(), handler.pos(), stackToGive, 1 + 3 * spawnDelay++);
+                                spawnFlyingItem((ServerLevel) tile.getLevel(), tile.getBlockPos(), handler.pos(), stackToGive, 1 + 3 * spawnDelay++);
                                 tile.giveItem(stackToGive);
                                 if (!anyFound) {
                                     Networking.sendToNearbyClient(world, wixie, new PacketAnimEntity(wixie.getId(), EntityWixie.Animations.SUMMON_ITEM.ordinal()));
@@ -156,7 +158,10 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
         }
     }
 
-    public void spawnFlyingItem(Level level, BlockPos worldPosition, BlockPos from, ItemStack stack, int delay) {
+    public void spawnFlyingItem(ServerLevel level, BlockPos worldPosition, BlockPos from, ItemStack stack, int delay) {
+        if(!NearbyPlayerCache.isPlayerNearby(worldPosition, level, 64)){
+            return;
+        }
         BlockPos above = from.above();
         EntityFlyingItem flyingItem = new EntityFlyingItem(level,
                 new Vec3(above.getX() + 0.5, above.getY(), above.getZ() + 0.5).add(ParticleUtil.inRange(-0.25, 0.25), 0, ParticleUtil.inRange(-0.25, 0.25)),

@@ -724,7 +724,6 @@ public class RecipeDatagen extends RecipeProvider {
             shapelessBuilder(getRitualItem(RitualLib.SANCTUARY)).requires(BlockRegistry.CASCADING_LOG).requires(ItemsRegistry.WATER_ESSENCE).requires(Items.SEA_LANTERN).save(consumer);
             shapelessBuilder(BlockRegistry.ROTATING_TURRET).requires(BlockRegistry.BASIC_SPELL_TURRET).save(consumer);
             shapelessBuilder(BlockRegistry.BASIC_SPELL_TURRET).requires(BlockRegistry.ROTATING_TURRET).save(consumer, ArsNouveau.prefix( "rotating_turret_to_basic_spell_turret"));
-            shapelessBuilder(ItemsRegistry.STARBUNCLE_SHARD).requires(ItemsRegistry.STARBUNCLE_SHARD).save(consumer, ArsNouveau.prefix( "wipe_starby_shard"));
             shapedBuilder(BlockRegistry.REDSTONE_RELAY)
                     .pattern("gxg")
                     .pattern("gMg")
@@ -775,14 +774,14 @@ public class RecipeDatagen extends RecipeProvider {
                     .define('r', Tags.Items.DUSTS_REDSTONE)
                     .save(consumer);
 
-            clearBuilder(ItemsRegistry.STARBUNCLE_CHARM).save(consumer, "clear_starbuncle_charm");
-            clearBuilder(ItemsRegistry.STARBUNCLE_SHARD).save(consumer, "clear_starbuncle_shard");
-            clearBuilder(ItemsRegistry.DRYGMY_CHARM).save(consumer, "clear_drygmy_charm");
-            clearBuilder(ItemsRegistry.WIXIE_CHARM).save(consumer, "clear_wixie_charm");
-            clearBuilder(ItemsRegistry.BOOKWYRM_CHARM).save(consumer, "clear_bookwyrm_charm");
-            clearBuilder(ItemsRegistry.WHIRLISPRIG_CHARM).save(consumer, "clear_whirlisprig_charm");
-            clearBuilder(ItemsRegistry.AMETHYST_GOLEM_CHARM).save(consumer, "clear_amethyst_golem_charm");
-            clearBuilder(ItemsRegistry.ALAKARKINOS_CHARM).save(consumer, "clear_alakarkinos_charm");
+            clearBuilder(ItemsRegistry.STARBUNCLE_CHARM).save(consumer, ArsNouveau.prefix("clear_starbuncle_charm"));
+            clearBuilder(ItemsRegistry.STARBUNCLE_SHARD).save(consumer, ArsNouveau.prefix("clear_starbuncle_shard"));
+            clearBuilder(ItemsRegistry.DRYGMY_CHARM).save(consumer, ArsNouveau.prefix("clear_drygmy_charm"));
+            clearBuilder(ItemsRegistry.WIXIE_CHARM).save(consumer, ArsNouveau.prefix("clear_wixie_charm"));
+            clearBuilder(ItemsRegistry.BOOKWYRM_CHARM).save(consumer, ArsNouveau.prefix("clear_bookwyrm_charm"));
+            clearBuilder(ItemsRegistry.WHIRLISPRIG_CHARM).save(consumer, ArsNouveau.prefix("clear_whirlisprig_charm"));
+            clearBuilder(ItemsRegistry.AMETHYST_GOLEM_CHARM).save(consumer, ArsNouveau.prefix("clear_amethyst_golem_charm"));
+            clearBuilder(ItemsRegistry.ALAKARKINOS_CHARM).save(consumer, ArsNouveau.prefix("clear_alakarkinos_charm"));
         }
     }
 

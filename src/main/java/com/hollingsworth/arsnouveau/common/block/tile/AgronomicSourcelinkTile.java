@@ -19,11 +19,6 @@ public class AgronomicSourcelinkTile extends SourcelinkTile {
         super(BlockRegistry.AGRONOMIC_SOURCELINK_TILE.get(), pos, state);
     }
 
-    @Override
-    public int getMaxSource() {
-        return 1000;
-    }
-
     @SubscribeEvent
     public static void cropGrow(CropGrowEvent.Post event) {
         int mana = 20;
@@ -48,10 +43,5 @@ public class AgronomicSourcelinkTile extends SourcelinkTile {
     @Override
     public boolean usesEventQueue() {
         return true;
-    }
-
-    @Override
-    public int getTransferRate() {
-        return 1000;
     }
 }

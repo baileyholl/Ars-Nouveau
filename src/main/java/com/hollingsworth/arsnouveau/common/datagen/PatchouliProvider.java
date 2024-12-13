@@ -323,8 +323,8 @@ public class PatchouliProvider extends SimpleDataProvider{
         addPage(new PatchouliBuilder(EQUIPMENT, "spell_books")
                 .withIcon(ItemsRegistry.ARCHMAGE_SPELLBOOK)
                 .withLocalizedText()
-                .withPage(new CraftingPage(ItemsRegistry.NOVICE_SPELLBOOK).withRecipe2("ars_nouveau:apprentice_spell_book_upgrade"))
-                .withPage(new CraftingPage("ars_nouveau:archmage_spell_book_upgrade")), getPath(EQUIPMENT, "spell_books"));
+                .withPage(new CraftingPage(ItemsRegistry.NOVICE_SPELLBOOK).withRecipe2("ars_nouveau:apprentice_book_upgrade"))
+                .withPage(new CraftingPage("ars_nouveau:archmage_book_upgrade")), getPath(EQUIPMENT, "spell_books"));
 
         addBasicItem(ItemsRegistry.ENCHANTERS_MIRROR, EQUIPMENT, new ApparatusPage(ItemsRegistry.ENCHANTERS_MIRROR));
         addBasicItem(ItemsRegistry.ENCHANTERS_SHIELD, EQUIPMENT, new ApparatusPage(ItemsRegistry.ENCHANTERS_SHIELD));
@@ -525,8 +525,8 @@ public class PatchouliProvider extends SimpleDataProvider{
                 .withLocalizedText()
                 .withPage(new TextPage(getLangPath("armor_upgrading", 2)).withTitle("ars_nouveau.armor_tiers"))
                 .withIcon(ItemsRegistry.ARCANIST_HOOD)
-                .withPage(new ApparatusTextPage("ars_nouveau:upgrade_1"))
-                .withPage(new ApparatusTextPage("ars_nouveau:upgrade_2"))
+                .withPage(new ApparatusTextPage("ars_nouveau:first_armor_upgrade"))
+                .withPage(new ApparatusTextPage("ars_nouveau:second_armor_upgrade"))
                 .withPage(new RelationsPage().withEntry(ARMOR, "armor").withEntry(ARMOR, "alteration_table"))
 
                 .withSortNum(1), getPath(ARMOR, "armor_upgrade"));

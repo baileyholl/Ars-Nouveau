@@ -29,7 +29,7 @@ public class DataComponentRegistry {
 
     public static final DeferredHolder<DataComponentType<?> , DataComponentType<ScryPosData>> SCRY_DATA = DATA.register("scry_data", () -> DataComponentType.<ScryPosData>builder().persistent(ScryPosData.CODEC).build());
 
-    public static final DeferredHolder<DataComponentType<?> , DataComponentType<WarpScrollData>> WARP_SCROLL = DATA.register("warp_scroll", () -> DataComponentType.<WarpScrollData>builder().persistent(WarpScrollData.CODEC).networkSynchronized(WarpScrollData.STREAM_CODEC).build());
+    public static final DeferredHolder<DataComponentType<?> , DataComponentType<WarpScrollData>> WARP_SCROLL = DATA.register("warp_scroll", () -> DataComponentType.<WarpScrollData>builder().persistent(WarpScrollData.CODEC).build());
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<MultiPotionContents>> MULTI_POTION = DATA.register("multi_potion", () -> DataComponentType.<MultiPotionContents>builder().persistent(MultiPotionContents.CODEC).networkSynchronized(MultiPotionContents.STREAM_CODEC).build());
 

@@ -93,7 +93,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         Map<AbstractAugment, String> map = new ConcurrentHashMap<>();
         this.addAugmentDescriptions(map);
         for(AbstractAugment augment :  map.keySet()){
-            augmentDescriptions.put(augment, Component.translatable(map.get(augment)));
+            augmentDescriptions.put(augment, Component.translatable("ars_nouveau.augment_desc." + registryName.getPath() + "_" + augment.getRegistryName().getPath()));
         }
         if(!FMLEnvironment.production){
             for(AbstractAugment augment : compatibleAugments){

@@ -20,6 +20,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -54,24 +55,18 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         super(BlockRegistry.IMBUEMENT_TILE.get(), pos, state);
     }
 
-    public SourceStorage jarStorage;
-
     @Override
-    public @NotNull SourceStorage getSourceStorage() {
-        if (jarStorage == null) {
-            jarStorage = new SourceStorage(this.getMaxSource(), this.getMaxSource(), 0, getSource());
-        }
-        return jarStorage;
-    }
+    protected @NotNull SourceStorage createDefaultStorage() {
+        return new SourceStorage(10000000, 10000000, 0, 0){
+            @Override
+            public boolean canProvideSource(int source) {
+                return false;
+            }
 
-    @Override
-    public int getTransferRate() {
-        return 0;
-    }
-
-    @Override
-    public boolean canProvideSource() {
-        return false;
+            public void onContentsChanged() {
+                ImbuementTile.this.updateBlock();
+            }
+        };
     }
 
     @Override
@@ -141,17 +136,16 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
         int cost = recipe.getSourceCost(this);
 
-        if (this.level.getGameTime() % 20 == 0 && this.getSource() < cost) {
+        if (level instanceof ServerLevel serverLevel && this.level.getGameTime() % 20 == 0 && this.getSource() < cost) {
             if (!canAcceptSource(Math.min(200, cost)))
                 return;
 
             ISpecialSourceProvider takePos = SourceUtil.takeSource(worldPosition, level, 2, Math.min(200, cost));
             if (takePos != null) {
                 this.addSource(transferRate);
-                EntityFlyingItem item = new EntityFlyingItem(level, takePos.getCurrentPos().above(), worldPosition, 255, 50, 80)
-                        .withNoTouch();
-                item.setDistanceAdjust(2f);
-                level.addFreshEntity(item);
+                EntityFlyingItem.spawn(worldPosition, serverLevel, takePos.getCurrentPos().above(), worldPosition)
+                        .withNoTouch().setDistanceAdjust(2f);
+
                 if (!draining) {
                     draining = true;
                     updateBlock();
@@ -194,11 +188,6 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         tag.putBoolean("draining", draining);
         tag.putBoolean("hasRecipe", hasRecipe);
         tag.putInt("craftTicks", craftTicks);
-    }
-
-    @Override
-    public int getMaxSource() {
-        return 10000000;
     }
 
     @Override

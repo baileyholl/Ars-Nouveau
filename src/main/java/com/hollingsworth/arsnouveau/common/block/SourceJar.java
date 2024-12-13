@@ -127,7 +127,7 @@ public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
     public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip, flagIn);
         int mana = BlockFillContents.get(stack);
-        tooltip.add(Component.literal((mana * 100) / 10000 + "% full"));
+        tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness",(mana * 100) / 10000));
     }
 
     @Override

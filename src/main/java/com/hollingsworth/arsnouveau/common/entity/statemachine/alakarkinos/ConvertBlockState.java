@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.crafting.recipes.AlakarkinosRecipe;
 import com.hollingsworth.arsnouveau.common.entity.Alakarkinos;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
@@ -66,10 +67,9 @@ public class ConvertBlockState extends CrabState {
             this.recipe = res;
             spawnedFlyingItem = true;
             alakarkinos.setBlowingBubbles(false);
-            EntityFlyingItem flyingItem = new EntityFlyingItem(alakarkinos.level, target, hatPos.above());
-            flyingItem.getEntityData().set(EntityFlyingItem.IS_BUBBLE, true);
-            alakarkinos.level.addFreshEntity(flyingItem);
-            flyingItem.setStack(alakarkinos.level.getBlockState(target).getBlock().asItem().getDefaultInstance());
+            EntityFlyingItem.spawn(alakarkinos.getHome(), (ServerLevel) alakarkinos.level, target, hatPos.above())
+                    .setStack(alakarkinos.level.getBlockState(target).getBlock().asItem().getDefaultInstance())
+                    .getEntityData().set(EntityFlyingItem.IS_BUBBLE, true);
             alakarkinos.level.setBlockAndUpdate(target, Blocks.AIR.defaultBlockState());
             waitTicks = 60;
             alakarkinos.setNeedSource(true);

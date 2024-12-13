@@ -454,7 +454,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.sword.invalid", "Invalid spell. Swords accept Effects and Augments only, such as Freeze -> Extend Time.");
         add("item.ars_nouveau.enchanters_sword", "Enchanter's Sword");
         add("item.ars_nouveau.enchanters_shield", "Enchanter's Shield");
-        add("ars_nouveau.page.enchanters_sword", "Applies a Touch spell before damaging an entity. Additionally, all spells gain one additional Amplify augment on the last effect in the spell. Apply a spell at the Scribes Table that does NOT contain a form, such as Ignite -> Extend Time.");
+        add("ars_nouveau.page.enchanters_sword", "Applies a Touch spell before damaging an entity. Additionally, all spells gain Spell Damage. Apply a spell at the Scribes Table that does NOT contain a form, such as Ignite -> Extend Time.");
         add("ars_nouveau.page.enchanters_shield", "Upon blocking damage, the user will gain a short duration of Mana Regeneration and Spell Damage. Additionally, this shield will repair over time using the wearers mana.");
         add("ars_nouveau.tooltip.can_inscribe", "Can be inscribed with a spell at the Scribes Table.");
         add("biome.ars_nouveau.archwood_forest", "Archwood Forest");
@@ -1223,8 +1223,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.storage.num_bookwyrms", "%s Bookwyrms");
         add("ars_nouveau.storage.removed", "Inventory removed.");
         add("ars_nouveau.storage.not_lectern", "Connect to another Lectern to connect the views.");
-        add("ars_nouveau.storage.lectern_too_far", "Lectern must be within 30 blocks.");
-        add("ars_nouveau.storage.inv_too_far", "Inventory must be within 30 blocks.");
+        add("ars_nouveau.storage.lectern_too_far", "Lectern must be within %s blocks.");
+        add("ars_nouveau.storage.inv_too_far", "Inventory must be within %s blocks.");
         add("ars_nouveau.storage.no_tile", "Not a valid inventory.");
         add("block.ars_nouveau.storage_lectern", "Storage Lectern");
         add("ars_nouveau.page1.storage_lectern", "The Storage Lectern can used to view, manage, and craft from multiple connected inventories. The number of inventories that may be connected is determined by the number of Bookwyrms bound to the lectern. You can add more Bookwyrms to the lectern by using a Bookwyrm Charm. Use the Dominion Wand from an inventory to the lectern in order to bind or remove access. Inventories can be connected 30 blocks away.");

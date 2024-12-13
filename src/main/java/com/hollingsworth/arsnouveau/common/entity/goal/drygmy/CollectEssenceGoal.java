@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.DrygmyTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.pathfinder.Path;
@@ -77,13 +78,12 @@ public class CollectEssenceGoal extends Goal {
                 if (homePos.getY() >= targetPos.getY() - 2) {
                     targetPos = targetPos.above(homePos.getY() - targetPos.getY());
                 }
+                EntityFlyingItem.spawn(homePos, (ServerLevel) drygmy.level,
+                            targetPos, homePos,
+                            50,
+                            255,
+                            20);
 
-                EntityFlyingItem item = new EntityFlyingItem(drygmy.level,
-                        targetPos, homePos,
-                        50,
-                        255,
-                        20);
-                drygmy.level.addFreshEntity(item);
                 drygmy.channelCooldown = 100;
                 drygmy.getHome().giveProgress();
             }

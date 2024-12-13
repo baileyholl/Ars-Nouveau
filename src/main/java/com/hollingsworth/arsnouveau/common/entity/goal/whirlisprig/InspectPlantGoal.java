@@ -87,9 +87,8 @@ public class InspectPlantGoal extends DistanceRestrictedGoal {
         pos = list.get(entity.level.random.nextInt(list.size()));
         this.timeLooking = 120;
         this.timePerforming = 240;
-        EntityFlyingItem flyingItem = new EntityFlyingItem(entity.level, pos, entity.flowerPos, 50, 255, 40);
-        flyingItem.getEntityData().set(EntityFlyingItem.HELD_ITEM, entity.level.getBlockState(pos).getBlock().asItem().getDefaultInstance());
-        entity.level.addFreshEntity(flyingItem);
+        EntityFlyingItem.spawn(entity.flowerPos, (ServerLevel) entity.level, pos, entity.flowerPos, 50, 255, 40)
+                .getEntityData().set(EntityFlyingItem.HELD_ITEM, entity.level.getBlockState(pos).getBlock().asItem().getDefaultInstance());
         entity.timeSinceGen = 0;
         entity.getTile().addProgress();
     }

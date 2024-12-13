@@ -299,7 +299,7 @@ public class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<BubbleEntity>> BUBBLE = registerEntity(
             LibEntityNames.BUBBLE,
             EntityType.Builder.<BubbleEntity>of(BubbleEntity::new, MobCategory.MISC)
-                    .sized(0.5F, 0.75F)
+                    .sized(0.5F, 0.5f)
                     .setTrackingRange(10));
 
 

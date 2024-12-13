@@ -194,6 +194,8 @@ public class PortalBlock extends TickableModBlock {
             frameTester.init((Level) worldIn, currentPos, null, (bs) -> bs.is(BlockTagProvider.DECORATIVE_AN));
             if (!frameTester.isValidFrame()) {
                 return Blocks.AIR.defaultBlockState();
+            }else if(flag && facingState.getBlock() != this){
+                return Blocks.AIR.defaultBlockState();
             }
             return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
         }

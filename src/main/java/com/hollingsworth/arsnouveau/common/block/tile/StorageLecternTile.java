@@ -18,6 +18,7 @@ import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.TransferTask;
 import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.config.Config;
+import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -137,9 +138,10 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     }
 
     private void addExtractTasks(MultiExtractedReference multiSlotReference) {
-        if (multiSlotReference.getExtracted().isEmpty()) {
+        if (multiSlotReference.getExtracted().isEmpty() || !canCreateTasks) {
             return;
         }
+
         for (ExtractedStack extractedStack : multiSlotReference.getSlots()) {
             BlockPos pos = handlerPosList.stream().filter(handlerPos -> handlerPos.handler().equals(extractedStack.getHandler())).findFirst().map(HandlerPos::pos).orElse(null);
             if (pos != null) {
@@ -149,7 +151,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     }
 
     private void addInsertTasks(ItemStack stack, MultiInsertReference reference) {
-        if (reference.isEmpty() || stack.isEmpty()) {
+        if (reference.isEmpty() || stack.isEmpty() || !canCreateTasks) {
             return;
         }
         for (SlotReference extractedStack : reference.getSlots()) {
@@ -239,8 +241,8 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.no_tile"));
             return;
         }
-        if (BlockUtil.distanceFrom(storedPos, worldPosition) > 30) {
-            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.inv_too_far"));
+        if (BlockUtil.distanceFrom(storedPos, worldPosition) > ServerConfig.LECTERN_LINK_RANGE.get()) {
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.inv_too_far", ServerConfig.LECTERN_LINK_RANGE.get()));
             return;
         }
         if(this.getBlockPos().equals(storedPos)){
@@ -268,9 +270,12 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         if (storedPos == null || storedPos.equals(worldPosition) || level == null) {
             return;
         }
-
-        if (BlockUtil.distanceFrom(storedPos, worldPosition) > 30) {
-            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.lectern_too_far"));
+        BlockEntity tile = level.getBlockEntity(storedPos);
+        if (!(tile instanceof StorageLecternTile)) {
+            return;
+        }
+        if (BlockUtil.distanceFrom(storedPos, worldPosition) > ServerConfig.LECTERN_LINK_RANGE.get()) {
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.lectern_too_far", ServerConfig.LECTERN_LINK_RANGE.get()));
             return;
         }
         this.mainLecternPos = storedPos.immutable();
@@ -510,11 +515,12 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             CompoundTag c = list.getCompound(i);
             connectedInventories.add(new BlockPos(c.getInt("x"), c.getInt("y"), c.getInt("z")));
         }
+        mainLecternPos = null;
         if (compound.contains("mainLecternPos")) {
             mainLecternPos = BlockPos.of(compound.getLong("mainLecternPos"));
         }
+        bookwyrmUUIDs.clear();
         if (compound.contains("bookwyrmUUIDs")) {
-            bookwyrmUUIDs.clear();
             ListTag bookwyrmList = compound.getList("bookwyrmUUIDs", 11);
             for (Tag tag : bookwyrmList) {
                 bookwyrmUUIDs.add(NbtUtils.loadUUID(tag));
