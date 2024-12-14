@@ -51,6 +51,9 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
 
     @Override
     public boolean matches(ApparatusRecipeInput input, Level level, @org.jetbrains.annotations.Nullable Player player) {
+        if(this.pedestalItems().size() != input.pedestals().size()){
+            return false;
+        }
         IPerkHolder perkHolder = PerkUtil.getPerkHolder(input.catalyst());
         if(!(perkHolder instanceof ArmorPerkHolder armorPerkHolder)){
             return false;
