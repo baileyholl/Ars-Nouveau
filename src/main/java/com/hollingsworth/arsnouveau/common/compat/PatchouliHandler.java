@@ -8,7 +8,6 @@ import net.minecraft.server.level.ServerPlayer;
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 
-//TODO: reenable patchouli
 public class PatchouliHandler {
 
     public static void openBookGUI(ServerPlayer player) {

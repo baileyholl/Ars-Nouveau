@@ -8,6 +8,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -31,11 +32,15 @@ public class ImbuementRecipe implements IImbuementRecipe {
     public List<Ingredient> pedestalItems;
     public ResourceLocation id;
 
+    private NonNullList<Ingredient> ingredients;
     public ImbuementRecipe(Ingredient input, ItemStack output, int source, List<Ingredient> pedestalItems) {
         this.input = input;
         this.output = output;
         this.source = source;
         this.pedestalItems = pedestalItems;
+        ingredients = NonNullList.createWithCapacity(pedestalItems.size() + 1);
+        ingredients.add(input);
+        ingredients.addAll(pedestalItems);
     }
 
     public ImbuementRecipe(String id, Ingredient ingredient, ItemStack output, int source) {
@@ -80,6 +85,11 @@ public class ImbuementRecipe implements IImbuementRecipe {
 
     public List<Ingredient> getPedestalItems() {
         return pedestalItems;
+    }
+
+    @Override
+    public NonNullList<Ingredient> getIngredients() {
+        return ingredients;
     }
 
     @Override
