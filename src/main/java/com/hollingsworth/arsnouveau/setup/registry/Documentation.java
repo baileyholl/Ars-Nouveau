@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.*;
+import com.hollingsworth.arsnouveau.api.documentation.builder.DocEntryBuilder;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
@@ -9,6 +10,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.perk.EmptyPerk;
@@ -30,7 +32,7 @@ public class Documentation {
     public static void initOnWorldReload(){
         Level level = ArsNouveau.proxy.getClientWorld();
         RecipeManager manager = level.getRecipeManager();
-
+        DocCategory MACHINES = DocumentationRegistry.MAGICAL_SYSTEMS;
         for(AbstractSpellPart spellPart : GlyphRegistry.getSpellpartMap().values()){
             ItemStack renderStack = spellPart.glyphItem.getDefaultInstance();
             var entry = new DocEntry(spellPart.getRegistryName(), renderStack, Component.literal(spellPart.getLocaleName()));
@@ -84,12 +86,33 @@ public class Documentation {
             DocumentationRegistry.registerEntry(DocumentationRegistry.ITEMS_BLOCKS_EQUIPMENT, entry);
         }
 
+        addPage(new DocEntryBuilder(MACHINES, BlockRegistry.IMBUEMENT_BLOCK)
+                        .withIntroPage()
+                .withCraftingPages()
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_lapis"))
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_amethyst"))
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_amethyst_block"))
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.FIRE_ESSENCE.getRegistryName()))
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.EARTH_ESSENCE.getRegistryName()))
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.WATER_ESSENCE.getRegistryName()))
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.AIR_ESSENCE.getRegistryName()))
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.ABJURATION_ESSENCE.getRegistryName()))
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.CONJURATION_ESSENCE.getRegistryName()))
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.MANIPULATION_ESSENCE.getRegistryName())));
 
         NeoForge.EVENT_BUS.post(new ReloadDocumentationEvent.AddEntries());
         NeoForge.EVENT_BUS.post(new ReloadDocumentationEvent.Post());
     }
 
+    private static void addPage(DocEntryBuilder builder){
+        DocumentationRegistry.registerEntry(builder.category, builder.build());
+    }
+
     public static List<SinglePageCtor> getRecipePages(ItemStack stack, ResourceLocation recipeId){
+        return getRecipePages(recipeId);
+    }
+
+    public static List<SinglePageCtor> getRecipePages(ResourceLocation recipeId){
         Level level = ArsNouveau.proxy.getClientWorld();
         RecipeManager manager = level.getRecipeManager();
 
@@ -113,6 +136,12 @@ public class Documentation {
 
         if(apparatusRecipe != null){
             pages.add(ApparatusEntry.create(apparatusRecipe));
+            return pages;
+        }
+
+        RecipeHolder<ImbuementRecipe> imbuementRecipe = manager.byKeyTyped(RecipeRegistry.IMBUEMENT_TYPE.get(), recipeId);
+        if(imbuementRecipe != null){
+            pages.add(ImbuementRecipeEntry.create(imbuementRecipe));
             return pages;
         }
 

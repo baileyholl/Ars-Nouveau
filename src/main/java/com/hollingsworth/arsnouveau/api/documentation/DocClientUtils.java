@@ -35,7 +35,7 @@ public class DocClientUtils {
         }
 
         angle -= 90;
-        int radius = 32;
+        int radius = 41;
         double xPos = x + nextXAngle(angle, radius);
         double yPos = y + nextYAngle(angle, radius);
         PoseStack ms = graphics.pose();

@@ -43,7 +43,7 @@ public class TextEntry extends SinglePageWidget {
             DocClientUtils.blit(guiGraphics, DocAssets.HEADER_WITH_ITEM, x, y);
             RenderUtils.drawItemAsIcon(renderStack, guiGraphics, x + 3, y + 3, 16, false);
             DocClientUtils.drawHeader(titleLabel, guiGraphics, x + 70, y);
-            return 24;
+            return 28;
         }else{
             DocClientUtils.blit(guiGraphics, DocAssets.UNDERLINE, x + 2, y + 10);
             GuiHelpers.drawCenteredStringNoShadow(font, guiGraphics, title, x + 60, y, 0);

@@ -49,7 +49,7 @@ public class SinglePageWidget extends AbstractWidget implements NestedWidgets, I
     }
 
     public void drawHeader(@Nullable Component title, GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        DocClientUtils.blit(guiGraphics, DocAssets.UNDERLINE, x + 6, y + 9);
+        DocClientUtils.blit(guiGraphics, DocAssets.UNDERLINE, x + 11, y + 9);
         if(title != null) {
             GuiHelpers.drawCenteredStringNoShadow(Minecraft.getInstance().font, guiGraphics, title, x + width / 2, y, 0);
         }

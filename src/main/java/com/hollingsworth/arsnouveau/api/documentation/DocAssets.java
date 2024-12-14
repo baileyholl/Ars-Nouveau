@@ -14,17 +14,20 @@ public class DocAssets {
     public static final BlitInfo ARROW_BACK_HOVER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_back_hover.png"), 14, 8);
 
     public static final BlitInfo HEADER_WITH_ITEM = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_chapter_header.png"), 118, 22);
-    public static final BlitInfo UNDERLINE = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_underline.png"), 118, 6);
+    public static final BlitInfo UNDERLINE = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_underline.png"), 108, 6);
     public static final BlitInfo ITEM_FRAME = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_frame_item.png"), 22, 22);
     public static final BlitInfo PEDESTAL_FRAME = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_frame_pedestal.png"), 22, 22);
     public static final BlitInfo RING = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_ring.png"), 64, 64);
 
-    public static final BlitInfo SCRIBES_RECIPE = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_scribes_table.png"), 64, 112);
+    public static final BlitInfo SCRIBES_RECIPE = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_scribes_table.png"), 92, 127);
 
-    public static final BlitInfo APPARATUS_RECIPE = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_enchanting_apparatus.png"), 87, 112);
+    public static final BlitInfo APPARATUS_RECIPE = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_enchanting_apparatus.png"), 92, 127);
+    public static final BlitInfo IMBUEMENT_RECIPE = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_imbuement_chamber.png"), 92, 127);
 
-    public static final BlitInfo CRAFTING_ENTRY_1 = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_crafting_table.png"), 64, 112);
-
+    public static final BlitInfo CRAFTING_ENTRY_1 = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_crafting_table.png"), 105, 64);
+    public static final BlitInfo SMELTING_ENTRY = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_smelting.png"), 64, 46);
+    public static final BlitInfo DOC_ICON_HELP = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_help.png"), 7, 9);
+    public static final BlitInfo DOC_ICON_SHAPELESS = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_shapeless_recipe.png"), 10,11 );
     
     public static final BlitInfo GLYPH_DETAILS = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_frame_glyph_attributes.png"), 118, 14);
 
