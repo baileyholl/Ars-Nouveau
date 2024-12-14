@@ -31,6 +31,8 @@ public class FindBlockState extends CrabState{
             return new PlaceHatState(alakarkinos, PlaceHatState.findHatPos(alakarkinos), pos1);
         }
 
+        alakarkinos.findBlockCooldown = 100 + alakarkinos.level.random.nextInt(100);
+
         return new DecideCrabActionState(alakarkinos);
     }
 }
