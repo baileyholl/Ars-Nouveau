@@ -45,6 +45,8 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     public static TagKey<Block> BLAZING_LOGS = BlockTags.create(ArsNouveau.prefix( "blazing_logs"));
     public static TagKey<Block> DOWSING_ROD = BlockTags.create(ArsNouveau.prefix( "dowsing_rod"));
     public static TagKey<Block> BUSHES = BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", "bushes"));
+    public static TagKey<Block> STORAGE_GEMS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/source_gem"));
+    public static TagKey<Block> STORAGE_MAGEBLOOM = BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/mage_bloom"));
 
     public static TagKey<Block> SPRING_CROPS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sereneseasons", "spring_crops"));
     public static TagKey<Block> SUMMER_CROPS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sereneseasons", "summer_crops"));
@@ -320,6 +322,11 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(AUTUMN_CROPS).add(BlockRegistry.SOURCEBERRY_BUSH.get(),
                 BlockRegistry.VEXING_SAPLING.get(),
                 BlockRegistry.BASTION_POD.get());
+        this.tag(Tags.Blocks.STORAGE_BLOCKS).add(BlockRegistry.SOURCE_GEM_BLOCK.get(),
+                BlockRegistry.MAGEBLOOM_BLOCK.get());
+        this.tag(STORAGE_GEMS).add(BlockRegistry.SOURCE_GEM_BLOCK.get());
+        this.tag(STORAGE_MAGEBLOOM).add(BlockRegistry.MAGEBLOOM_BLOCK.get());
+
     }
 
     public String getName() {
