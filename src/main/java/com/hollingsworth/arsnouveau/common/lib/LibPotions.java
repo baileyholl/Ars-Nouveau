@@ -17,7 +17,6 @@ public class LibPotions {
     public static final String MANA_REGEN = "mana_regen";
     public static final String SPELL_DAMAGE = "spell_damage";
 
-    public static final String FAMILIAR_SICKNESS = "familiar_sickness";
     public static final String SUMMONING_SICKNESS = "summoning_sickness";
     public static final String RECOVERY = "recovery";
     public static final String BLAST = "blasting";
