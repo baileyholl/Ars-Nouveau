@@ -105,7 +105,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 				}
 			}
 		});
-		if(te == null || te.sortSettings == null || !te.sortSettings.expanded()) {
+		if(craftMatrix != null) {
 			for (int i = 0; i < 3; ++i) {
 				for (int j = 0; j < 3; ++j) {
 					SlotCrafting slot = new SlotCrafting(craftMatrix, j + i * 3, x + 36 + j * 18,  89 + i * 18);

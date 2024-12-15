@@ -36,6 +36,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 	public String search;
 	public String selectedTab = null;
 	public Map<StoredItemStack, StoredItemStack> itemMap = new HashMap<>();
+	boolean sentSettings = false;
 
 	public StorageTerminalMenu(int id, Inventory inv, StorageLecternTile te) {
 		this(MenuRegistry.STORAGE.get(), id, inv, te);
@@ -67,11 +68,16 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 	}
 
 	public void addStorageSlots(boolean expanded) {
-		storageSlotList.clear();
-        int lines = !expanded ? 3 : 7;
+        int lines = 7;
+		boolean shouldAdd = storageSlotList.isEmpty();
 		for (int i = 0; i < lines; ++i) {
-			for (int j = 0;j < 9;++j) {
-				storageSlotList.add(new SlotStorage(this.te, i * 9 + j, 13 + j * 18, 21 + i * 18));
+			for (int j = 0; j < 9;++j) {
+				int index = i * 9 + j;
+				if(shouldAdd) {
+					storageSlotList.add(new SlotStorage(this.te, index, 13 + j * 18, 21 + i * 18, expanded || i < 3));
+				}else{
+					storageSlotList.get(index).show = expanded || i < 3;
+				}
 			}
 		}
 	}
@@ -82,7 +88,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 	}
 
 	public final void setSlotContents(int id, StoredItemStack stack) {
-		storageSlotList.get(id).stack = stack;
+		storageSlotList.get(id).setStack(stack);
 	}
 
 	public final SlotStorage getSlotByID(int id) {
@@ -98,6 +104,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 		if(te == null){
 			return;
 		}
+
 		Map<StoredItemStack, Long> itemsCount = te.getStacks(selectedTab);
 		List<StoredItemStack> toWrite = new ArrayList<>();
 		Set<StoredItemStack> found = new HashSet<>();
@@ -127,7 +134,10 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 			tabs.add(nameTag);
 		}
 		tag.put("tabs", tabs);
-		Networking.sendToPlayerClient(new SetTerminalSettingsPacket(te.sortSettings, null), (ServerPlayer) pinv.player);
+		if(!sentSettings) {
+			Networking.sendToPlayerClient(new SetTerminalSettingsPacket(te.sortSettings, null), (ServerPlayer) pinv.player);
+			sentSettings = true;
+		}
 		Networking.sendToPlayerClient(new ServerToClientStoragePacket(tag), (ServerPlayer) pinv.player);
 		super.broadcastChanges();
 	}
