@@ -101,7 +101,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 	private Object2LongMap<StoredItemStack> itemLongMap = new Object2LongOpenHashMap<>();
 	@Override
 	public void broadcastChanges() {
-		if(te == null){
+		if(te == null) {
 			return;
 		}
 
@@ -121,24 +121,28 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 		});
 		this.itemLongMap.clear();
 		this.itemLongMap.putAll(itemsCount);
-		Networking.sendToPlayerClient(new UpdateStorageItemsPacket(toWrite),  (ServerPlayer) pinv.player);
-		CompoundTag tag = new CompoundTag();
-		if(!te.getLastSearch().equals(search)) {
-			search = te.getLastSearch();
-			tag.putString("search", search);
+		if(!toWrite.isEmpty()) {
+			Networking.sendToPlayerClient(new UpdateStorageItemsPacket(toWrite), (ServerPlayer) pinv.player);
 		}
-		ListTag tabs = new ListTag();
-		for(String s : te.getTabNames()){
-			CompoundTag nameTag = new CompoundTag();
-			nameTag.putString("name", s);
-			tabs.add(nameTag);
-		}
-		tag.put("tabs", tabs);
+
 		if(!sentSettings) {
 			Networking.sendToPlayerClient(new SetTerminalSettingsPacket(te.sortSettings, null), (ServerPlayer) pinv.player);
+			CompoundTag tag = new CompoundTag();
+			if(!te.getLastSearch().equals(search)) {
+				search = te.getLastSearch();
+				tag.putString("search", search);
+			}
+			ListTag tabs = new ListTag();
+			for(String s : te.getTabNames()){
+				CompoundTag nameTag = new CompoundTag();
+				nameTag.putString("name", s);
+				tabs.add(nameTag);
+			}
+			tag.put("tabs", tabs);
+			Networking.sendToPlayerClient(new ServerToClientStoragePacket(tag), (ServerPlayer) pinv.player);
 			sentSettings = true;
 		}
-		Networking.sendToPlayerClient(new ServerToClientStoragePacket(tag), (ServerPlayer) pinv.player);
+
 		super.broadcastChanges();
 	}
 
@@ -202,6 +206,9 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 	}
 
 	public void updateItems(List<StoredItemStack> stacks){
+		if(stacks.isEmpty()){
+			return;
+		}
 		stacks.forEach(s -> {
 			if(s.getQuantity() == 0) {
 				this.itemMap.remove(s);
