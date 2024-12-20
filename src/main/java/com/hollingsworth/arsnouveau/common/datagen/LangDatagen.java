@@ -162,7 +162,6 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.spell_parchment", "Spell Parchment");
         add("item.ars_nouveau.ring_of_greater_discount", "Ring of Greater Discount");
         add("item.ars_nouveau.ring_of_lesser_discount", "Ring of Lesser Discount");
-        add("effect.ars_nouveau.shield", "Magic Shield");
         add("alert.core", "An Arcane Core must be placed beneath this block.");
         add("whirlisprig.unhappy", "The Whirlisprig seems very unhappy in her home. Try sprucing it up!");
         add("whirlisprig.content", "The Whirlisprig seems content, but could be better.");
@@ -291,6 +290,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.apparatus.nomana", "Not enough source nearby.");
         add("ars_nouveau.reset.cleared", "Progress cleared.");
         add("effect.ars_nouveau.summoning_sickness", "Summoning Sickness");
+        add("effect.ars_nouveau.summoning_sickness.desc", "Prevents summoning for a short duration.");
         add("entity.ars_nouveau.wilden_guardian", "Wilden Defender");
         add("entity.ars_nouveau.wilden_stalker", "Wilden Stalker");
         add("entity.ars_nouveau.wilden_hunter", "Wilden Hunter");
@@ -303,6 +303,7 @@ public class LangDatagen extends LanguageProvider {
         add("entity.ars_nouveau.summon_wolf", "Summoned Wolf");
         add("tooltip.worn_notebook", "Documentation for Ars Nouveau");
         add("effect.ars_nouveau.shocked", "Shocked");
+        add("effect.ars_nouveau.shocked.desc", "Increases the damage taken from lightning damage.");
         add("ars_nouveau.flask.charges", "Charges: %d");
         add("item.ars_nouveau.potion_flask", "Potion Flask");
         add("ars_nouveau.glyph_of", "Glyph of %s");
@@ -446,9 +447,11 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.experience_gem", "Experience Gem");
         add("item.ars_nouveau.greater_experience_gem", "Greater Experience Gem");
         add("effect.ars_nouveau.hex", "Hex");
+        add("effect.ars_nouveau.hex.desc", "Increases the damage taken potion and non-player damage.");
         add("ars_nouveau.set_spell", "Set spell.");
         add("ars_nouveau.invalid_spell", "Invalid Spell");
         add("effect.ars_nouveau.scrying", "Scrying");
+        add("effect.ars_nouveau.scrying.desc", "Reveals certain blocks around you.");
         add("ars_nouveau.tooltip.magebloom", "Grown from seeds crafted using the Enchanting Apparatus.");
         add("ars_nouveau.tooltip.dull", "A dull trinket, cannot be worn. Used for crafting.");
         add("ars_nouveau.sword.invalid", "Invalid spell. Swords accept Effects and Augments only, such as Freeze -> Extend Time.");
@@ -460,7 +463,9 @@ public class LangDatagen extends LanguageProvider {
         add("biome.ars_nouveau.archwood_forest", "Archwood Forest");
         add("ars_nouveau.tooltip.turned_off", "Turned off");
         add("effect.ars_nouveau.glide", "Glide");
+        add("effect.ars_nouveau.glide.desc", "Allows the player to glide as if wearing an Elytra.");
         add("effect.ars_nouveau.snared", "Snared");
+        add("effect.ars_nouveau.snared.desc", "Prevents the entity from moving.");
         add("item.ars_nouveau.starbuncle_se", "Starbuncle Spawn Egg");
         add("item.ars_nouveau.drygmy_se", "Drygmy Spawn Egg");
         add("item.ars_nouveau.whirlisprig_se", "Whirlisprig Spawn Egg");
@@ -480,7 +485,9 @@ public class LangDatagen extends LanguageProvider {
         add("tooltip.ars_nouveau.drygmy_shard", "Obtained by giving a Drygmy a Wilden Horn.");
         add("entity.ars_nouveau.drygmy", "Drygmy");
         add("effect.ars_nouveau.flight", "Flight");
+        add("effect.ars_nouveau.flight.desc", "Allows the player to fly.");
         add("effect.ars_nouveau.gravity", "Gravity");
+        add("effect.ars_nouveau.gravity.desc", "Causes the entity to rapidly fall.");
         add("tooltip.ars_nouveau.tablet", "A tablet used for rituals. Consumed on use.");
         add("ars_nouveau.enchanting.bad_level", "This item must have the previous level of enchantment.");
         add("ars_nouveau.enchanting.incompatible", "This enchantment is incompatible with this item.");
@@ -541,10 +548,9 @@ public class LangDatagen extends LanguageProvider {
         add("item.minecraft.tipped_arrow.effect.spell_damage_potion", "Arrow of Spell Damage");
         add("item.minecraft.tipped_arrow.effect.spell_damage_potion_long", "Arrow of Spell Damage");
         add("effect.ars_nouveau.spell_damage", "Spell Damage");
+        add("effect.ars_nouveau.spell_damage.desc", "Increases the damage dealt by spells.");
         add("ars_nouveau.spell_book_gui.familiar", "Familiars");
         add("ars_nouveau.spell_book_gui.close", "Close");
-        add("effect.ars_nouveau.familiar_sickness", "Familiar Sickness");
-        add("ars_nouveau.familiar.sickness", "You must wait before summoning another familiar.");
         add("ars_nouveau.gui.notebook", "Documentation");
         add("ars_nouveau.gui.color", "Color Picker");
         add("ars_nouveau.gui.familiar", "Familiars");
@@ -569,6 +575,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.timer_spell_turret", "Timer Spell Turret");
         add("block.ars_nouveau.rotating_spell_turret", "Adjustable Spell Turret");
         add("effect.ars_nouveau.bounce", "Bounce");
+        add("effect.ars_nouveau.bounce.desc", "Causes the entity to bounce off of surfaces.");
         add("ars_nouveau.starbuncle.path", "Starbuncle will prefer to path on this block if it is on their way.");
         add("ars_nouveau.starbuncle.pathing", "Preferring to path on %s");
         add("ars_nouveau.summoning", "Summoning");
@@ -763,6 +770,7 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.fire_essence", "Fire Essence");
         add("item.ars_nouveau.dowsing_rod", "Dowsing Rod");
         add("effect.ars_nouveau.magic_find", "Magic Find");
+        add("effect.ars_nouveau.magic_find.desc", "Causes nearby magical entities to glow.");
         add("tooltip.ars_nouveau.essences", "Magical Essences created in an Imbuement Chamber.");
         add("ars_nouveau.page.dowsing_rod", "A Dowsing Rod provides the user a short duration of Scrying for Budding Amethyst and Magic Find, which will cause magical creatures to glow within 75 blocks of you. The Dowsing Rod has a limited number of uses.");
         add("ars_nouveau.apparatus.norecipe", "No recipe found. Pedestals must be within 3 blocks.");
@@ -980,10 +988,13 @@ public class LangDatagen extends LanguageProvider {
         add("item.minecraft.tipped_arrow.effect.shielding_potion", "Arrow of Shielding");
         add("item.minecraft.tipped_arrow.effect.shielding_potion_long", "Arrow of Shielding");
         add("effect.ars_nouveau.recovery", "Recovery");
+        add("effect.ars_nouveau.recorvery.desc","Increases healing received from all sources.");
         add("effect.ars_nouveau.blasting", "Blasting");
+        add("effect.ars_nouveau.blasting.desc","Causes the target to explode when the duration ends.");
         add("effect.ars_nouveau.freezing", "Freezing");
+        add("effect.ars_nouveau.freezing.desc","Freezes the target over time.");
         add("effect.ars_nouveau.shielding", "Shielding");
-        add("tooltip.ars_nouveau.alchemists_crown", "");
+        add("effect.ars_nouveau.shielding.desc","Reduces the amount of damage taken.");
         add("item.ars_nouveau.wixie_hat", "Wixie Hat");
         add("tooltip.ars_nouveau.wixie_hat", "Give to a Starbuncle to make them transport potions.");
         add("ars_nouveau.starbuncle.default_behavior", "Starbuncle will now transport items!");

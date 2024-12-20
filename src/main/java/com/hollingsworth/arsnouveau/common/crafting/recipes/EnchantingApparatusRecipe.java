@@ -48,8 +48,18 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
 
     @Override
     public boolean matches(ApparatusRecipeInput input, Level level, @Nullable Player player) {
+        if(this.pedestalItems.size() != input.pedestals().size()){
+            return false;
+        }
+        return doesReagentMatch(input, level, player) && doPedestalsMatch(input);
+    }
+
+    public boolean doPedestalsMatch(ApparatusRecipeInput input){
+        if(this.pedestalItems.size() != input.pedestals().size()){
+            return false;
+        }
         var pedestalItems = input.pedestals().stream().filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList());
-        return doesReagentMatch(input, level, player) && this.pedestalItems.size() == pedestalItems.size() && doItemsMatch(pedestalItems, this.pedestalItems);
+        return doItemsMatch(pedestalItems, this.pedestalItems);
     }
 
     public boolean doesReagentMatch(ApparatusRecipeInput input, Level level, @Nullable Player player) {
@@ -58,11 +68,14 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
 
     // Function to check if both arrays are same
     public static boolean doItemsMatch(List<ItemStack> inputs, List<Ingredient> recipeItems) {
+        if(inputs.size() != recipeItems.size()){
+            return false;
+        }
         StackedContents recipeitemhelper = new StackedContents();
         for (ItemStack i : inputs)
             recipeitemhelper.accountStack(i, 1);
 
-        return inputs.size() == recipeItems.size() && (net.neoforged.neoforge.common.util.RecipeMatcher.findMatches(inputs, recipeItems) != null);
+        return (net.neoforged.neoforge.common.util.RecipeMatcher.findMatches(inputs, recipeItems) != null);
     }
 
     @Override

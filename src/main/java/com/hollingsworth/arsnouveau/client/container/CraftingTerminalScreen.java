@@ -113,8 +113,8 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 	}
 
 	@Override
-	public void receiveSettings(SortSettings settings) {
-		super.receiveSettings(settings);
+	protected void onExpandedChanged(boolean expanded) {
+		super.onExpandedChanged(expanded);
 		btnCollapse.visible = this.expanded;
 		btnExpand.visible = !this.expanded;
 		btnClr.visible = !this.expanded;
@@ -124,6 +124,7 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 	public void collapseScreen(){
 		rowCount = 3;
 		this.expanded = false;
+		onExpandedChanged(false);
 		syncSortSettings();
 	}
 
@@ -133,6 +134,7 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 		if(this.recipeBookGui.isVisible()){
 			btnRecipeBook.onPress();
 		}
+		onExpandedChanged(true);
 		syncSortSettings();
 	}
 

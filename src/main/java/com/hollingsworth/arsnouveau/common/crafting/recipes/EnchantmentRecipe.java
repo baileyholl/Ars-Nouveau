@@ -55,7 +55,8 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
 
     @Override
     public boolean matches(ApparatusRecipeInput input, Level level, @org.jetbrains.annotations.Nullable Player player) {
-        return super.matches(input, level, player);
+        // Check pedestal match first as it is less costly than enchantment checks
+        return doPedestalsMatch(input) && doesReagentMatch(input, level, player);
     }
 
     public Holder<Enchantment> holderFor(Level level){

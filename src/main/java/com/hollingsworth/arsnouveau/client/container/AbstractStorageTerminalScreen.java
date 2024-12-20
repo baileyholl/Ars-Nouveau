@@ -102,8 +102,12 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			expanded = settings.expanded();
 		}
 		if(expanded != wasExpanded) {
-			menu.addStorageSlots(expanded);
+			onExpandedChanged(expanded);
 		}
+	}
+
+	protected void onExpandedChanged(boolean expanded){
+		menu.addStorageSlots(expanded);
 	}
 
 	protected void onPacket() {
@@ -361,11 +365,11 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 		if(this.menu.getCarried().isEmpty() && slotIDUnderMouse != -1) {
 			SlotStorage slot = getMenu().storageSlotList.get(slotIDUnderMouse);
-			if(slot.stack != null) {
-				if (slot.stack.getQuantity() > 9999) {
-					ClientInfo.setTooltip(Component.translatable("tooltip.ars_nouveau.amount", slot.stack.getQuantity()));
+			if(slot.stack() != null) {
+				if (slot.stack().getQuantity() > 9999) {
+					ClientInfo.setTooltip(Component.translatable("tooltip.ars_nouveau.amount", slot.stack().getQuantity()));
 				}
-				graphics.renderTooltip(font, slot.stack.getActualStack(), mouseX, mouseY);
+				graphics.renderTooltip(font, slot.stack().getActualStack(), mouseX, mouseY);
 				ClientInfo.setTooltip();
 			}
 		} else
@@ -394,7 +398,6 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		PoseStack st = p_281635_.pose();
 		st.pushPose();
 		slotIDUnderMouse = drawSlots(p_281635_, mouseX, mouseY);
-//		System.out.println(slotIDUnderMouse);
 		st.popPose();
 	}
 
@@ -410,19 +413,22 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	}
 
 	protected boolean drawSlot(GuiGraphics st, SlotStorage slot, int mouseX, int mouseY) {
-		if (slot.stack != null) {
-			ItemStack stack = slot.stack.getStack().copy().split(1);
-			int i = slot.xDisplayPosition, j = slot.yDisplayPosition;
+		if(!slot.show){
+			return false;
+		}
+		if (slot.stack() != null) {
+			ItemStack stack = slot.stack().getStack().copy().split(1);
+			int i = slot.xPosition(), j = slot.yPosition();
 
 			st.renderItem(stack, i, j);
 			st.renderItemDecorations(this.font, stack, i, j, null);
 
-			drawStackSize(st, getFont(), slot.stack.getQuantity(), i, j);
+			drawStackSize(st, getFont(), slot.stack().getQuantity(), i, j);
 		}
 
-		if (mouseX >= getGuiLeft() + slot.xDisplayPosition - 1 && mouseY >= getGuiTop() + slot.yDisplayPosition - 1 && mouseX < getGuiLeft() + slot.xDisplayPosition + 17 && mouseY < getGuiTop() + slot.yDisplayPosition + 17) {
-			int l = slot.xDisplayPosition;
-			int t = slot.yDisplayPosition;
+		if (mouseX >= getGuiLeft() + slot.xPosition() - 1 && mouseY >= getGuiTop() + slot.yPosition() - 1 && mouseX < getGuiLeft() + slot.xPosition() + 17 && mouseY < getGuiTop() + slot.yPosition() + 17) {
+			int l = slot.xPosition();
+			int t = slot.yPosition();
 
 			renderSlotHighlight(st, l, t, 0);
 			return true;
@@ -455,9 +461,10 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
 		this.searchField.mouseClicked(mouseX, mouseY, mouseButton);
 		if (slotIDUnderMouse > -1) {
+			SlotStorage slot = getMenu().getSlotByID(slotIDUnderMouse);
 			if (isPullOne(mouseButton)) {
-				if (getMenu().getSlotByID(slotIDUnderMouse).stack != null && getMenu().getSlotByID(slotIDUnderMouse).stack.getQuantity() > 0) {
-					storageSlotClick(getMenu().getSlotByID(slotIDUnderMouse).stack, PULL_ONE, isTransferOne(mouseButton));
+				if (slot.stack() != null && slot.stack().getQuantity() > 0) {
+					storageSlotClick(slot.stack(), PULL_ONE, isTransferOne(mouseButton));
 					return true;
 				}
 				return true;
@@ -465,8 +472,8 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 				if (!menu.getCarried().isEmpty()) {
 					storageSlotClick(null, hasControlDown() ? GET_QUARTER : GET_HALF, false);
 				} else {
-					if (getMenu().getSlotByID(slotIDUnderMouse).stack != null && getMenu().getSlotByID(slotIDUnderMouse).stack.getQuantity() > 0) {
-						storageSlotClick(getMenu().getSlotByID(slotIDUnderMouse).stack, hasControlDown() ? GET_QUARTER : GET_HALF, false);
+					if (slot.stack() != null && slot.stack().getQuantity() > 0) {
+						storageSlotClick(slot.stack(), hasControlDown() ? GET_QUARTER : GET_HALF, false);
 						return true;
 					}
 				}
@@ -474,9 +481,9 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 				if (!menu.getCarried().isEmpty()) {
 					storageSlotClick(null, PULL_OR_PUSH_STACK, false);
 				} else {
-					if (getMenu().getSlotByID(slotIDUnderMouse).stack != null) {
-						if (getMenu().getSlotByID(slotIDUnderMouse).stack.getQuantity() > 0) {
-							storageSlotClick(getMenu().getSlotByID(slotIDUnderMouse).stack, hasShiftDown() ? SHIFT_PULL : StorageTerminalMenu.SlotAction.PULL_OR_PUSH_STACK, false);
+					if (slot.stack() != null) {
+						if (slot.stack().getQuantity() > 0) {
+							storageSlotClick(slot.stack(), hasShiftDown() ? SHIFT_PULL : StorageTerminalMenu.SlotAction.PULL_OR_PUSH_STACK, false);
 							return true;
 						}
 					}
@@ -597,8 +604,12 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	public Slot getSlotUnderMouse() {
 		Slot s = super.getSlotUnderMouse();
 		if(s != null)return s;
-		if(slotIDUnderMouse > -1 && getMenu().getSlotByID(slotIDUnderMouse).stack != null) {
-			fakeSlotUnderMouse.container.setItem(0, getMenu().getSlotByID(slotIDUnderMouse).stack.getStack());
+		if(slotIDUnderMouse > -1) {
+			SlotStorage slot = getMenu().getSlotByID(slotIDUnderMouse);
+			if(slot.stack == null){
+				return null;
+			}
+			fakeSlotUnderMouse.container.setItem(0, slot.stack.getStack());
 			return fakeSlotUnderMouse;
 		}
 		return null;
