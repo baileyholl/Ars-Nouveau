@@ -64,7 +64,7 @@ public class DocumentationRegistry {
      * Entries are backed by a map, evaluated by the ID of the entry. You may call this
      * as many times as you like to overwrite the entry.
      */
-    public static void registerEntry(DocCategory category, DocEntry entry){
+    public static DocEntry registerEntry(DocCategory category, DocEntry entry){
         if(!category.subCategories().isEmpty()){
             throw new IllegalArgumentException("Cannot register an entry to a category with subcategories");
         }
@@ -72,6 +72,7 @@ public class DocumentationRegistry {
         var entries = entryCategoryMap.computeIfAbsent(category, k -> ConcurrentHashMap.newKeySet());
         entries.remove(entry); // Remove and overwrite in the case of world reloads
         entries.add(entry);
+        return entry;
     }
 
     public static Set<DocEntry> getEntries(DocCategory category){

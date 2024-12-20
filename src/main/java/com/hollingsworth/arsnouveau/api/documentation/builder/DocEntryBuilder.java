@@ -95,13 +95,16 @@ public class DocEntryBuilder {
         return withLocalizedText(this.textKey);
     }
 
+    public DocEntryBuilder withCraftingPages(String resourceLocation){
+        return withCraftingPages(ResourceLocation.tryParse(resourceLocation));
+    }
     public DocEntryBuilder withCraftingPages(ResourceLocation resourceLocation){
         this.withPage(Documentation.getRecipePages(resourceLocation));
         return this;
     }
 
     public DocEntryBuilder withCraftingPages(ItemLike itemLike){
-        this.withPage(Documentation.getRecipePages(RegistryHelper.getRegistryName(displayItem.getItem())));
+        this.withPage(Documentation.getRecipePages(RegistryHelper.getRegistryName(itemLike.asItem())));
         return this;
     }
 

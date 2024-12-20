@@ -1,13 +1,15 @@
 package com.hollingsworth.arsnouveau.api.documentation;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
+import com.hollingsworth.arsnouveau.setup.registry.RegistryHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 
@@ -32,6 +34,14 @@ public class CraftingEntry extends SinglePageWidget{
     }
 
     public static SinglePageCtor create(RecipeHolder<CraftingRecipe> recipe1, RecipeHolder<CraftingRecipe> recipe2){
+        return (parent, x, y, width, height) -> new CraftingEntry(recipe1, recipe2, parent, x, y, width, height);
+    }
+
+    public static SinglePageCtor create(ItemLike item1, ItemLike item2){
+        Level level = ArsNouveau.proxy.getClientWorld();
+        RecipeManager manager = level.getRecipeManager();
+        RecipeHolder<CraftingRecipe> recipe1 = manager.byKeyTyped(RecipeType.CRAFTING,  RegistryHelper.getRegistryName(item1.asItem()));
+        RecipeHolder<CraftingRecipe> recipe2 = manager.byKeyTyped(RecipeType.CRAFTING,  RegistryHelper.getRegistryName(item2.asItem()));
         return (parent, x, y, width, height) -> new CraftingEntry(recipe1, recipe2, parent, x, y, width, height);
     }
 

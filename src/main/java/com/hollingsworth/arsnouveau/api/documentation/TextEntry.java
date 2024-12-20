@@ -23,13 +23,17 @@ public class TextEntry extends SinglePageWidget {
         this.body = body;
         this.title = title;
         this.renderStack = renderStack;
-        if(renderStack != null){
+        if(title != null){
             this.titleLabel = NuggetMultilLineLabel.create(Minecraft.getInstance().font, title, 100);
         }
     }
 
     public static SinglePageCtor create(Component body, Component title, ItemStack renderStack){
         return (parent, x, y, width, height) -> new TextEntry(body, title, renderStack, parent, x, y, width, height);
+    }
+
+    public static SinglePageCtor create(Component body, Component title){
+        return (parent, x, y, width, height) -> new TextEntry(body, title, null, parent, x, y, width, height);
     }
 
     public static SinglePageCtor create(Component body){
