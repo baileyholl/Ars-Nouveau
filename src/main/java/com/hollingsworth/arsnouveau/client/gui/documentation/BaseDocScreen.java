@@ -13,6 +13,8 @@ import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.level.Level;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -120,5 +122,10 @@ public class BaseDocScreen extends BaseScreen {
     public void onArrowIndexChange(){
         leftArrow.visible = showLeftArrow();
         rightArrow.visible = showRightArrow();
+    }
+
+    public RecipeManager recipeManager(){
+        Level level = ArsNouveau.proxy.getClientWorld();
+        return level.getRecipeManager();
     }
 }

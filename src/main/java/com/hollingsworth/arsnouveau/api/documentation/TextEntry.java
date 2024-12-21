@@ -10,6 +10,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 
 import javax.annotation.Nullable;
 
@@ -30,6 +31,10 @@ public class TextEntry extends SinglePageWidget {
 
     public static SinglePageCtor create(Component body, Component title, ItemStack renderStack){
         return (parent, x, y, width, height) -> new TextEntry(body, title, renderStack, parent, x, y, width, height);
+    }
+
+    public static SinglePageCtor create(Component body, Component title, ItemLike renderStack){
+        return (parent, x, y, width, height) -> new TextEntry(body, title, renderStack.asItem().getDefaultInstance(), parent, x, y, width, height);
     }
 
     public static SinglePageCtor create(Component body, Component title){

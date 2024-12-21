@@ -49,6 +49,11 @@ public class RelationEntry extends SinglePageWidget {
             return this;
         }
 
+        public BuilderImpl withEntries(List<DocEntry> entries){
+            this.entries.addAll(entries);
+            return this;
+        }
+
         public SinglePageCtor build(){
             return (parent, x, y, width, height) -> {
                 RelationEntry entry = new RelationEntry(parent, x, y, width, height);
