@@ -15,6 +15,10 @@ public class EntityEntry extends SinglePageWidget{
         this.scale = scale;
     }
 
+    public static SinglePageCtor create(EntityType<?> entityType){
+        return (parent, x, y, width, height) -> new EntityEntry(entityType, Component.empty(), 1.0f, parent, x, y, width, height);
+    }
+
     public static SinglePageCtor create(EntityType<?> entityType, Component description){
         return (parent, x, y, width, height) -> new EntityEntry(entityType, description, 1.0f, parent, x, y, width, height);
     }

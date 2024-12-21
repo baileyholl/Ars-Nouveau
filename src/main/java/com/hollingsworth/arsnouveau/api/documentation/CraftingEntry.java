@@ -17,24 +17,29 @@ public class CraftingEntry extends SinglePageWidget{
 
     public RecipeHolder<CraftingRecipe> recipe1;
     public RecipeHolder<CraftingRecipe> recipe2;
+    public Component description;
 
-    public CraftingEntry(RecipeHolder<CraftingRecipe> recipe1, RecipeHolder<CraftingRecipe> recipe2, BaseDocScreen parent, int x, int y, int width, int height) {
+    public CraftingEntry(RecipeHolder<CraftingRecipe> recipe1, RecipeHolder<CraftingRecipe> recipe2, Component description, BaseDocScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
         this.recipe1 = recipe1;
         this.recipe2 = recipe2;
+        this.description = description;
     }
 
     public CraftingEntry(RecipeHolder<CraftingRecipe> recipe1, BaseDocScreen parent, int x, int y, int width, int height) {
-        this(recipe1, null, parent, x, y, width, height);
+        this(recipe1, null, null, parent, x, y, width, height);
     }
 
+    public static SinglePageCtor create(RecipeHolder<CraftingRecipe> recipe1, Component description) {
+        return (parent, x, y, width, height) -> new CraftingEntry(recipe1, null, description, parent, x, y, width, height);
+    }
 
     public static SinglePageCtor create(RecipeHolder<CraftingRecipe> recipe1){
         return (parent, x, y, width, height) -> new CraftingEntry(recipe1, parent, x, y, width, height);
     }
 
     public static SinglePageCtor create(RecipeHolder<CraftingRecipe> recipe1, RecipeHolder<CraftingRecipe> recipe2){
-        return (parent, x, y, width, height) -> new CraftingEntry(recipe1, recipe2, parent, x, y, width, height);
+        return (parent, x, y, width, height) -> new CraftingEntry(recipe1, recipe2, null, parent, x, y, width, height);
     }
 
     public static SinglePageCtor create(ItemLike item1, ItemLike item2){
@@ -42,7 +47,7 @@ public class CraftingEntry extends SinglePageWidget{
         RecipeManager manager = level.getRecipeManager();
         RecipeHolder<CraftingRecipe> recipe1 = manager.byKeyTyped(RecipeType.CRAFTING,  RegistryHelper.getRegistryName(item1.asItem()));
         RecipeHolder<CraftingRecipe> recipe2 = manager.byKeyTyped(RecipeType.CRAFTING,  RegistryHelper.getRegistryName(item2.asItem()));
-        return (parent, x, y, width, height) -> new CraftingEntry(recipe1, recipe2, parent, x, y, width, height);
+        return (parent, x, y, width, height) -> new CraftingEntry(recipe1, recipe2, null, parent, x, y, width, height);
     }
 
     @Override

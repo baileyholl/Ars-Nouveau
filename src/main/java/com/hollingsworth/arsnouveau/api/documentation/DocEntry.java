@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -29,6 +30,46 @@ public record DocEntry(ResourceLocation id, CopyOnWriteArrayList<SinglePageCtor>
 
     public DocEntry addPages(List<SinglePageCtor> pages){
         this.pages.addAll(pages);
+        return this;
+    }
+
+    public DocEntry withEntryRelations(List<DocEntry> entries){
+        return withRelations(entries.stream().map(DocEntry::id).toList());
+    }
+
+    public DocEntry withRelations(DocEntry... entries){
+        return withRelations(Arrays.stream(entries).map(DocEntry::id).toList());
+    }
+
+    public DocEntry withRelations(List<ResourceLocation> ids){
+        if(this.pages.isEmpty()){
+            return this;
+        }
+        if(this.pages.getLast() instanceof RelationEntry.RelationBuilder relationBuilder){
+            relationBuilder.entries.addAll(ids);
+        }else{
+            var builder = new RelationEntry.RelationBuilder();
+            builder.entries.addAll(ids);
+            this.pages.add(builder);
+        }
+        return this;
+    }
+
+    public DocEntry withRelation(DocEntry entry){
+        return withRelation(entry.id);
+    }
+
+    public DocEntry withRelation(ResourceLocation id){
+        if(this.pages.isEmpty()){
+            return this;
+        }
+        if(this.pages.getLast() instanceof RelationEntry.RelationBuilder relationBuilder){
+            relationBuilder.entries.add(id);
+        }else{
+            var builder = new RelationEntry.RelationBuilder();
+            builder.entries.add(id);
+            this.pages.add(builder);
+        }
         return this;
     }
 

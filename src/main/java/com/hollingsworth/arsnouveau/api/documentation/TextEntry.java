@@ -45,6 +45,14 @@ public class TextEntry extends SinglePageWidget {
         return (parent, x, y, width, height) -> new TextEntry(body, null, null, parent, x, y, width, height);
     }
 
+    public static SinglePageCtor create(String body){
+        return (parent, x, y, width, height) -> new TextEntry(Component.translatable(body), null, null, parent, x, y, width, height);
+    }
+
+    public static SinglePageCtor create(String body, String title){
+        return (parent, x, y, width, height) -> new TextEntry(Component.translatable(body), Component.translatable(title), null, parent, x, y, width, height);
+    }
+
     public int drawTitle(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks){
         Font font = Minecraft.getInstance().font;
         if(renderStack != null){

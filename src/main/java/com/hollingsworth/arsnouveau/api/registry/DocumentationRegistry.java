@@ -80,6 +80,10 @@ public class DocumentationRegistry {
         return entries == null ? ConcurrentHashMap.newKeySet() : entries;
     }
 
+    public static DocEntry getEntry(ResourceLocation id){
+        return entryMap.get(id);
+    }
+
     public static DocCategory getCategory(ResourceLocation id){
         return mainCategoryMap.get(id);
     }
