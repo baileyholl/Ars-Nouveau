@@ -122,8 +122,8 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
         double distance = pos.getCenter().distanceToSqr(this.getHome().getCenter());
 
         // Encourage amethyst golem to stay within 10 blocks of its home.
-        // See 1/max(10, x) on a graphing calculator.
-        return (float) (1.0D / Math.max(10, distance));
+        // See 1/max(100, x^2) on a graphing calculator.
+        return (float) (1.0D / Math.max(100, distance));
     }
 
     @Override
