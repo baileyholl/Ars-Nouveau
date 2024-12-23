@@ -1,21 +1,32 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem;
 
-import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.common.entity.AmethystGolem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.Unbreakable;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 
-import static com.hollingsworth.arsnouveau.api.util.BlockUtil.destroyBlockSafely;
 import static com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider.CLUSTER_BLOCKS;
 
 public class HarvestClusterGoal extends Goal {
@@ -49,28 +60,102 @@ public class HarvestClusterGoal extends Goal {
     }
 
     public void tryDropAmethyst() {
-        List<BlockPos> harvested = new ArrayList<>();
+        BlockPos harvested = null;
         for (BlockPos p : harvestableList) {
-            if (hasCluster(p)) {
-                harvested.add(p);
-                harvest(p);
+            if (harvest(p)) {
+                harvested = p;
                 break;
             }
         }
-        for (BlockPos p : harvested)
-            harvestableList.remove(p);
+
+        if (harvested != null) {
+            harvestableList.remove(harvested);
+        }
     }
 
-    public void harvest(BlockPos p) {
-        if (!(golem.level instanceof ServerLevel level)) return;
-        for (Direction d : Direction.values()) {
-            BlockState state = level.getBlockState(p.relative(d));
+    // The tool we use to simulate breaking the clusters with.
+    public static final ItemStack TOOL = new ItemStack(Items.DIAMOND_PICKAXE);
+    static {
+        TOOL.set(DataComponents.UNBREAKABLE, new Unbreakable(false));
+    }
+
+    // Reusable list to store drops so that we don't have to keep allocating one for every face or budding block.
+    private final List<ItemStack> drops = new ArrayList<>();
+
+    public boolean harvest(BlockPos p) {
+        if (!(golem.level instanceof ServerLevel level)) return false;
+
+        LootParams.Builder lootBuilder = new LootParams.Builder(level)
+                .withParameter(LootContextParams.TOOL, TOOL);
+
+        boolean harvestedAny = false;
+        nextFace: for (Direction d : Direction.values()) {
+            BlockPos pos = p.relative(d);
+            BlockState state = level.getBlockState(pos);
             if (state.is(CLUSTER_BLOCKS)) {
-                ItemStack stack = new ItemStack(Items.DIAMOND_PICKAXE);
-                state.getBlock().playerDestroy(level, ANFakePlayer.getPlayer(level), p.relative(d), state, level.getBlockEntity(p), stack);
-                destroyBlockSafely(level, p.relative(d), false, ANFakePlayer.getPlayer(level));
+                Vec3 center = Vec3.atCenterOf(pos);
+                Block block = state.getBlock();
+
+                // Clear our reusable list to store new drops.
+                drops.clear();
+
+                // Get the loot table of the block
+                ResourceKey<LootTable> tableKey = block.getLootTable();
+                if (tableKey != BuiltInLootTables.EMPTY) {
+                    LootParams params = lootBuilder
+                            .withParameter(LootContextParams.ORIGIN, center)
+                            .withParameter(LootContextParams.BLOCK_STATE, state)
+                            .create(LootContextParamSets.BLOCK);
+
+                    LootTable table = level.getServer().reloadableRegistries().getLootTable(tableKey);
+                    drops.addAll(table.getRandomItems(params));
+                }
+
+                // Handle drops
+                if (golem.getHome() == null) {
+                    // If the golem has no home, just drop them as item entities.
+                    for (ItemStack drop : drops) {
+                        level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), drop));
+                    }
+                } else {
+                    IItemHandler iItemHandler = golem.level.getCapability(Capabilities.ItemHandler.BLOCK, golem.getHome(), null);
+                    if (iItemHandler == null) {
+                        // If the golem's home is not available as an ItemHandler, just drop them as item entities.
+                        for (ItemStack drop : drops) {
+                            level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), drop));
+                        }
+                    } else {
+                        // Otherwise, try to insert directly.
+                        for (ItemStack drop : drops) {
+                            // Simulate insertion to ensure we have sufficient space for the drops.
+                            ItemStack simLeft = ItemHandlerHelper.insertItemStacked(iItemHandler, drop.copy(), true);
+                            if (!simLeft.isEmpty()) {
+                                // No space left in inventory, don't harvest for this face.
+                                // Other faces may have different clusters or drop a different
+                                // amount of items that can fit, so we continue.
+                                continue nextFace;
+                            }
+
+                            // Attempt real insertion.
+                            ItemStack left = ItemHandlerHelper.insertItemStacked(iItemHandler, drop.copy(), false);
+                            if (!left.isEmpty()) {
+                                // Since we already simulated, this should not be possible; however, we still want to preserve any drops if it does occur.
+                                level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), left));
+                            }
+                        }
+                    }
+                }
+
+                // Destroy the cluster without spawning its drops as items as we already handled those.
+                // setBlock should always return true once we reach here.
+                if (level.setBlock(pos, state.getFluidState().createLegacyBlock(), 3, 512)) {
+                    level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(null, state));
+                }
+                harvestedAny = true;
             }
         }
+
+        return harvestedAny;
     }
 
 
