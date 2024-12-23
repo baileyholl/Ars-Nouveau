@@ -47,13 +47,15 @@ public class EffectExchange extends AbstractEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
         Vec3 origLoc = shooter.position;
+
+        Level shooterLevel = shooter.level;
         if (!EventHooks.onEnderTeleport(shooter, entity.getX(), entity.getY(), entity.getZ()).isCanceled())
             if (entity.level instanceof ServerLevel serverLevel) {
                 shooter.teleportTo(serverLevel, entity.getX(), entity.getY(), entity.getZ(), Set.of(), entity.getYRot(), entity.getXRot());
             }
         if (!(entity instanceof LivingEntity living) || !EventHooks.onEnderTeleport(living, origLoc.x(), origLoc.y(), origLoc.z()).isCanceled()) {
-            if (shooter.level instanceof ServerLevel serverLevel) {
-                entity.teleportTo(serverLevel, origLoc.x(), origLoc.y(), origLoc.z(), Set.of(), entity.getYRot(), entity.getXRot());
+            if (shooterLevel instanceof ServerLevel serverLevel) {
+                entity.teleportTo(serverLevel, origLoc.x(), origLoc.y(), origLoc.z(), Set.of(), shooter.getYRot(), shooter.getXRot());
             }
         }
     }
