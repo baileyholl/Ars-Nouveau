@@ -31,11 +31,13 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.TargetBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.portal.DimensionTransition;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
@@ -411,5 +413,23 @@ public class EntityProjectileSpell extends ColoredProjectile {
         tag.putInt("pierce", this.pierceLeft);
         tag.putBoolean("gravity", isNoGravity);
         tag.putInt("ownerId", this.entityData.get(OWNER_ID));
+    }
+
+    @Override
+    public Entity changeDimension(@NotNull DimensionTransition transition) {
+        Entity changed = super.changeDimension(transition);
+        if (!(changed instanceof EntityProjectileSpell spell)) {
+            return changed;
+        }
+
+        spell.spellResolver = this.spellResolver;
+        spell.spellResolver.spellContext.level = transition.newLevel();
+        spell.prismRedirect = this.prismRedirect;
+        spell.age = this.age;
+        spell.pierceLeft = this.pierceLeft;
+        spell.numSensitive = this.numSensitive;
+        spell.setDeltaMovement(this.getDeltaMovement());
+
+        return changed;
     }
 }
