@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.documentation.entry;
 
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageWidget;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -60,7 +61,8 @@ public class EntityEntry extends SinglePageWidget {
         if(this.description != null){
             drawParagraph(description, guiGraphics, x, y + 100, mouseX, mouseY, partialTick);
         }
-        renderEntity(guiGraphics, entity, x + width - 10, y + height - 60, 0, this.scale * 75, -0.3f);
+
+        renderEntity(guiGraphics, entity, x + width / 2.0f, y + height - 65, (float) ClientInfo.ticksInGame + partialTick, this.scale * 75, -0.3f);
     }
 
     @Override
@@ -172,6 +174,7 @@ public class EntityEntry extends SinglePageWidget {
         ms.translate(0, offset, 0);
         ms.mulPose(Axis.ZP.rotationDegrees(180));
         ms.mulPose(Axis.YP.rotationDegrees(rotation));
+        Lighting.setupForEntityInInventory();
         EntityRenderDispatcher erd = Minecraft.getInstance().getEntityRenderDispatcher();
         MultiBufferSource.BufferSource immediate = Minecraft.getInstance().renderBuffers().bufferSource();
         erd.setRenderShadow(false);
@@ -179,5 +182,6 @@ public class EntityEntry extends SinglePageWidget {
         erd.setRenderShadow(true);
         immediate.endBatch();
         ms.popPose();
+        Lighting.setupFor3DItems();
     }
 }

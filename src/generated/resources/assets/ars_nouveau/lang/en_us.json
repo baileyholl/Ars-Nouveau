@@ -1,6 +1,7 @@
 {
   "alert.core": "An Arcane Core must be placed beneath this block.",
   "ars_nouveau.active_generation": "Active Generation",
+  "ars_nouveau.add_bookmark": "Add Bookmark",
   "ars_nouveau.adopter": "Adopted by %s",
   "ars_nouveau.adv.desc.alteration_table": "Acquire an Alteration Table",
   "ars_nouveau.adv.desc.amethyst_golem_charm": "Acquire an Amethyst Golem Charm",
@@ -1121,6 +1122,7 @@
   "ars_nouveau.shapers_focus.entities": "Entity Targeting",
   "ars_nouveau.shapers_focus.examples": "Spell Examples",
   "ars_nouveau.shapers_focus.tooltip": "Can be used to create a block.",
+  "ars_nouveau.shift_delete": "Shift-Click to remove",
   "ars_nouveau.sifting": "Sifting",
   "ars_nouveau.sound.default_family": "Default",
   "ars_nouveau.sound.empty": "No Sound",

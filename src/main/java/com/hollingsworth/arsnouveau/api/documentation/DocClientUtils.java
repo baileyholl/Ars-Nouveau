@@ -27,15 +27,15 @@ public class DocClientUtils {
     }
 
     public static void openToEntry(ResourceLocation resourceLocation, int pageIndex){
-        if(DocPlayerData.lastOpenedEntry != null) {
-            DocEntry entry = DocumentationRegistry.getEntry(resourceLocation);
-            if(entry != null){
-                PageHolderScreen pageHolderScreen = new PageHolderScreen(entry);
-                pageHolderScreen.arrowIndex = pageIndex < entry.pages().size() ? pageIndex : 0;
-                Minecraft.getInstance().setScreen(pageHolderScreen);
-                return;
-            }
+
+        DocEntry entry = DocumentationRegistry.getEntry(resourceLocation);
+        if(entry != null){
+            PageHolderScreen pageHolderScreen = new PageHolderScreen(entry);
+            pageHolderScreen.arrowIndex = pageIndex < entry.pages().size() ? pageIndex : 0;
+            Minecraft.getInstance().setScreen(pageHolderScreen);
+            return;
         }
+
         IndexScreen.open();
     }
 

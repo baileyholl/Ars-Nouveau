@@ -49,6 +49,7 @@ public class DocAssets {
     public static final BlitInfo TIER_TWO = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_tier2.png"), 7, 10);
     public static final BlitInfo TIER_THREE = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_tier3.png"), 7, 10);
 
+    public static final BlitInfo BOOKMARK = new BlitInfo(ArsNouveau.prefix("textures/gui/spell_tab.png"), 18, 13);
 
     public record BlitInfo(ResourceLocation location, int u, int v, int width, int height) {
         public BlitInfo(ResourceLocation location, int width, int height){

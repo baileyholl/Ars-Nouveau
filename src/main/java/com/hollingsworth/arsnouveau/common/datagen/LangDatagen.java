@@ -1369,7 +1369,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.tier.one", "Tier One");
         add("ars_nouveau.tier.two", "Tier Two");
         add("ars_nouveau.tier.three", "Tier Three");
-
+        add("ars_nouveau.shift_delete", "Shift-Click to remove");
+        add("ars_nouveau.add_bookmark", "Add Bookmark");
     }
 
     public void addCategory(String key, String value){

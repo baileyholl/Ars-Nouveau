@@ -95,6 +95,12 @@ public class DocEntryBuilder {
         return withLocalizedText(this.textKey);
     }
 
+    public DocEntryBuilder withLocalizedText(ItemLike itemLike){
+        textCounter++;
+        pages.add(TextEntry.create(Component.translatable("ars_nouveau.page" + textCounter + "." + this.textKey), itemLike.asItem().getDescription(), itemLike.asItem().getDefaultInstance()));
+        return this;
+    }
+
     public DocEntryBuilder withCraftingPages(String resourceLocation){
         return withCraftingPages(ResourceLocation.tryParse(resourceLocation));
     }
