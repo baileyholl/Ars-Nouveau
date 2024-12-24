@@ -426,9 +426,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
         spell.spellResolver.spellContext.level = transition.newLevel();
         spell.prismRedirect = this.prismRedirect;
         spell.age = this.age;
-        spell.pierceLeft = this.pierceLeft;
         spell.numSensitive = this.numSensitive;
-        spell.setDeltaMovement(this.getDeltaMovement());
 
         return changed;
     }
