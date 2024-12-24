@@ -71,7 +71,10 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
         try {
             Player playerEntity = uuid != null ? FakePlayerFactory.get(serverLevel, new GameProfile(uuid, "")) : ANFakePlayer.getPlayer(serverLevel);
             if (this.isSensitive) {
-                playerEntity = serverLevel.getPlayerByUUID(uuid);
+                Player onlinePlayer = serverLevel.getServer().getPlayerList().getPlayer(uuid);
+                if (onlinePlayer != null) {
+                    playerEntity = onlinePlayer;
+                }
             }
             EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(entity.level, spell, playerEntity, new RuneCaster(this, SpellContext.CasterType.RUNE)));
             resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);

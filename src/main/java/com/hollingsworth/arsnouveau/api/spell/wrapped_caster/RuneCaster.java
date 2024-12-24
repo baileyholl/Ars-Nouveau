@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.util.InvUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,8 +20,8 @@ public class RuneCaster extends TileCaster {
     @Override
     public @NotNull List<FilterableItemHandler> getInventory() {
         RuneTile tile1 = (RuneTile) tile;
-        if(tile1.isSensitive){
-            Player player = tile1.getLevel().getPlayerByUUID(tile1.uuid);
+        if (tile1.isSensitive && tile1.getLevel() instanceof ServerLevel serverLevel) {
+            Player player = serverLevel.getServer().getPlayerList().getPlayer(tile1.uuid);
             if (player != null) {
                 return InvUtil.fromPlayer(player);
             }

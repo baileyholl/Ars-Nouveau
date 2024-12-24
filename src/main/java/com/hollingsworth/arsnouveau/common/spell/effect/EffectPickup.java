@@ -33,11 +33,12 @@ public class EffectPickup extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolve(HitResult rayTraceResult, Level casterWorld, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = BlockPos.containing(rayTraceResult.getLocation());
         double expansion = 2 + spellStats.getAoeMultiplier();
         Vec3 posVec = new Vec3(pos.getX(), pos.getY(), pos.getZ());
 
+        Level world = spellContext.level;
         List<ItemEntity> entityList = world.getEntitiesOfClass(ItemEntity.class, new AABB(
                 posVec.add(expansion, expansion, expansion), posVec.subtract(expansion, expansion, expansion)));
         InventoryManager manager = spellContext.getCaster().getInvManager().extractSlotMax(-1);
@@ -49,7 +50,7 @@ public class EffectPickup extends AbstractEffect {
                 continue;
             stack = manager.insertStack(stack);
             i.setItem(stack);
-            NeoForge.EVENT_BUS.post(new ItemEntityPickupEvent.Post(getPlayer(shooter, (ServerLevel) world), i, stack));
+            NeoForge.EVENT_BUS.post(new ItemEntityPickupEvent.Post(getPlayer(shooter, (ServerLevel) casterWorld), i, stack));
         }
         List<ExperienceOrb> orbList = world.getEntitiesOfClass(ExperienceOrb.class, new AABB(
                 posVec.add(expansion, expansion, expansion), posVec.subtract(expansion, expansion, expansion)));
