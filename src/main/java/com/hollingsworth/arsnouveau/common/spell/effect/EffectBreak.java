@@ -46,7 +46,7 @@ public class EffectBreak extends AbstractEffect {
         return 10;
     }
 
-    public ItemStack getStack(LivingEntity shooter, InventoryManager inventory, BlockHitResult blockHitResult) {
+    public ItemStack getStack(double ampMultiplier, LivingEntity shooter, InventoryManager inventory, BlockHitResult blockHitResult) {
         ItemStack stack = shooter.getMainHandItem().copy();
         BlockState state = shooter.level.getBlockState(blockHitResult.getBlockPos());
 
@@ -57,7 +57,17 @@ public class EffectBreak extends AbstractEffect {
             }
         }
 
-        return new ItemStack(Items.DIAMOND_PICKAXE);
+        return getDefaultTool(ampMultiplier);
+    }
+
+    public ItemStack getDefaultTool(double ampMultiplier) {
+        if (ampMultiplier < 1.0) {
+            return new ItemStack(Items.IRON_PICKAXE);
+        } else if (ampMultiplier < 2.0) {
+            return new ItemStack(Items.DIAMOND_PICKAXE);
+        } else {
+            return new ItemStack(Items.NETHERITE_PICKAXE);
+        }
     }
 
     @Override
@@ -82,7 +92,7 @@ public class EffectBreak extends AbstractEffect {
         InventoryManager manager = spellContext.getCaster().getInvManager();
 
         Function<BlockState, ItemStack> compute = s -> {
-            ItemStack stack = getStack(shooter, manager, rayTraceResult);
+            ItemStack stack = getStack(spellStats.getAmpMultiplier(), shooter, manager, rayTraceResult);
             stack.set(DataComponents.UNBREAKABLE, new Unbreakable(true));
 
             if (numFortune > 0 && stack.getEnchantmentLevel(fortune) < numFortune) {
