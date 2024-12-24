@@ -1,9 +1,12 @@
-package com.hollingsworth.arsnouveau.api.documentation;
+package com.hollingsworth.arsnouveau.api.documentation.entry;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
+import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
+import com.hollingsworth.arsnouveau.api.documentation.SinglePageWidget;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.nuggets.client.gui.GuiHelpers;
 import com.hollingsworth.nuggets.client.gui.NuggetMultilLineLabel;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -76,28 +79,7 @@ public class TextEntry extends SinglePageWidget {
         if(hasTitle){
            yOffset = drawTitle(guiGraphics, mouseX, mouseY, partialTick);
         }
-
-        PoseStack poseStack = guiGraphics.pose();
-        poseStack.pushPose();
-        float scale = 0.75f;
-        poseStack.translate(x + 3, y + yOffset, 0);
-        poseStack.scale(scale, scale, 1);
-        NuggetMultilLineLabel label = NuggetMultilLineLabel.create(Minecraft.getInstance().font, body, (int) (width * 1.185));
-        label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, 12, 0);
-
-//        float dist = 0.08F;
-//        for(int cycle = 0; cycle < 2; cycle++){
-//            poseStack.translate(-dist, 0F, 0F);
-//            label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, 12, 0);
-//            poseStack.translate(dist, -dist, 0F);
-//            label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, 12, 0);
-//            poseStack.translate(dist, 0F, 0F);
-//            label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, 12, 0);
-//            poseStack.translate(-dist, dist, 0F);
-//
-//            dist = -dist;
-//        }
-        poseStack.popPose();
+        drawParagraph(body, guiGraphics, x, y + yOffset, mouseX, mouseY, partialTick);
     }
 
     @Override

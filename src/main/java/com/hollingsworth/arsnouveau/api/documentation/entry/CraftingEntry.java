@@ -1,6 +1,10 @@
-package com.hollingsworth.arsnouveau.api.documentation;
+package com.hollingsworth.arsnouveau.api.documentation.entry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
+import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
+import com.hollingsworth.arsnouveau.api.documentation.SinglePageWidget;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.arsnouveau.setup.registry.RegistryHelper;
 import net.minecraft.client.Minecraft;
@@ -13,7 +17,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class CraftingEntry extends SinglePageWidget{
+public class CraftingEntry extends SinglePageWidget {
 
     public RecipeHolder<CraftingRecipe> recipe1;
     public RecipeHolder<CraftingRecipe> recipe2;

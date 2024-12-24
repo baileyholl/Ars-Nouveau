@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.client.gui.documentation.IndexScreen;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -23,7 +23,8 @@ public class WornNotebook extends ModItem {
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         if(worldIn.isClientSide){
-            IndexScreen.open();
+            DocClientUtils.openBook();
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
         }
         return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
     }

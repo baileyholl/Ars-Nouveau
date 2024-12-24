@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.api.documentation;
+package com.hollingsworth.arsnouveau.client.gui.documentation;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.items.Glyph;

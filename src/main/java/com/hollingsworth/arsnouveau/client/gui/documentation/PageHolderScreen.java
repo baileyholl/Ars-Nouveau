@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.gui.documentation;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocPlayerData;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageWidget;
 import net.minecraft.client.gui.GuiGraphics;
@@ -39,9 +40,21 @@ public class PageHolderScreen extends BaseDocScreen{
     }
 
     @Override
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        if(leftPage != null){
+            leftPage.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        }
+        if(rightPage != null){
+            rightPage.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        }
+    }
+
+    @Override
     public void onArrowIndexChange() {
         super.onArrowIndexChange();
-        initPages();
+        DocPlayerData.lastOpenedPage = arrowIndex;
+        this.rebuildWidgets();
     }
 
     public void initPages(){

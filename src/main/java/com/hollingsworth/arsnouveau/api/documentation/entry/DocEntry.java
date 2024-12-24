@@ -1,5 +1,6 @@
-package com.hollingsworth.arsnouveau.api.documentation;
+package com.hollingsworth.arsnouveau.api.documentation.entry;
 
+import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;

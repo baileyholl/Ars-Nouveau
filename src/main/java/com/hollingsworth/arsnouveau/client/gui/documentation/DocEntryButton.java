@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui.documentation;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
-import com.hollingsworth.arsnouveau.api.documentation.DocEntry;
+import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
 import com.hollingsworth.nuggets.client.rendering.RenderHelpers;
 import net.minecraft.client.gui.GuiGraphics;

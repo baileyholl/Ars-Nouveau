@@ -2,9 +2,9 @@ package com.hollingsworth.arsnouveau.api.documentation.builder;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.DocCategory;
-import com.hollingsworth.arsnouveau.api.documentation.DocEntry;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
-import com.hollingsworth.arsnouveau.api.documentation.TextEntry;
+import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
+import com.hollingsworth.arsnouveau.api.documentation.entry.TextEntry;
 import com.hollingsworth.arsnouveau.setup.registry.Documentation;
 import com.hollingsworth.arsnouveau.setup.registry.RegistryHelper;
 import net.minecraft.network.chat.Component;

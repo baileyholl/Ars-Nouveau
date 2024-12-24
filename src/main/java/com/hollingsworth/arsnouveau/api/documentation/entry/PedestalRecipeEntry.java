@@ -1,5 +1,8 @@
-package com.hollingsworth.arsnouveau.api.documentation;
+package com.hollingsworth.arsnouveau.api.documentation.entry;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
+import com.hollingsworth.arsnouveau.api.documentation.SinglePageWidget;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -11,7 +14,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PedestalRecipeEntry extends SinglePageWidget{
+public class PedestalRecipeEntry extends SinglePageWidget {
     public List<Ingredient> ingredients;
     public ItemStack outputStack;
     public Ingredient reagentStack = Ingredient.EMPTY;

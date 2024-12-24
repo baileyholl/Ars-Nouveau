@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.api.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.DocCategory;
-import com.hollingsworth.arsnouveau.api.documentation.DocEntry;
+import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.setup.registry.CreativeTabRegistry;

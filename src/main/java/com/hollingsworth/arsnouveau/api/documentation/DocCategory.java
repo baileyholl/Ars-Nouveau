@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.documentation;
 
+import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -13,7 +14,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public record DocCategory(ResourceLocation id, ItemStack renderIcon, int order, List<DocCategory> subCategories, Comparator<DocEntry> entryComparator) implements Comparable<DocCategory>{
 
     public DocCategory(ResourceLocation id, ItemStack renderIcon, int order) {
-        this(id, renderIcon, order, new CopyOnWriteArrayList<>(), Comparator.comparing(DocEntry::order));
+        this(id, renderIcon, order, new CopyOnWriteArrayList<>(), Comparator.comparing(DocEntry::order).thenComparing((entry -> entry.entryTitle().getString())));
     }
 
     public DocCategory withComparator(Comparator<DocEntry> comparator){

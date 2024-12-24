@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui.documentation;
 
-import com.hollingsworth.arsnouveau.api.documentation.DocEntry;
+import com.hollingsworth.arsnouveau.api.documentation.DocPlayerData;
+import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ public class EntriesScreen extends BaseDocScreen{
         super();
         this.entries = new ArrayList<>(entries);
         this.maxArrowIndex = (this.entries.size() - 1) / 18;
+        DocPlayerData.lastOpenedEntry = null;
     }
 
     @Override
@@ -36,6 +38,8 @@ public class EntriesScreen extends BaseDocScreen{
         for(int i = 0; i < sliced.size(); i++){
             DocEntry entry = sliced.get(i);
             var button = new DocEntryButton(bookLeft + 18 + (i > 8 ? 135 : 0), bookTop + 24 + 16 * (i > 8 ? i - 9 : i), entry, (b) -> {
+                DocPlayerData.lastOpenedEntry = entry.id();
+                DocPlayerData.lastOpenedPage = 0;
                 transition(new PageHolderScreen(entry.pages()));
             });
             addRenderableWidget(button);

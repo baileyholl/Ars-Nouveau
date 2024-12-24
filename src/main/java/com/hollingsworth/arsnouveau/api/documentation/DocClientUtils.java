@@ -1,17 +1,43 @@
 package com.hollingsworth.arsnouveau.api.documentation;
 
+import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
+import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.GuiUtils;
+import com.hollingsworth.arsnouveau.client.gui.documentation.IndexScreen;
+import com.hollingsworth.arsnouveau.client.gui.documentation.PageHolderScreen;
 import com.hollingsworth.nuggets.client.gui.NuggetMultilLineLabel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
 public class DocClientUtils {
+
+    public static void openBook(){
+        if(DocPlayerData.lastOpenedEntry != null) {
+            openToEntry(DocPlayerData.lastOpenedEntry, DocPlayerData.lastOpenedPage);
+            return;
+        }
+        IndexScreen.open();
+    }
+
+    public static void openToEntry(ResourceLocation resourceLocation, int pageIndex){
+        if(DocPlayerData.lastOpenedEntry != null) {
+            DocEntry entry = DocumentationRegistry.getEntry(resourceLocation);
+            if(entry != null){
+                PageHolderScreen pageHolderScreen = new PageHolderScreen(entry.pages());
+                pageHolderScreen.arrowIndex = pageIndex < entry.pages().size() ? pageIndex : 0;
+                Minecraft.getInstance().setScreen(pageHolderScreen);
+                return;
+            }
+        }
+        IndexScreen.open();
+    }
 
     public static void drawStringScaled(GuiGraphics graphics, Component component, int x, int y, int color, float scale, boolean shadow){
         PoseStack poseStack = graphics.pose();

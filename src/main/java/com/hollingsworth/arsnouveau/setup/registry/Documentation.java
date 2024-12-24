@@ -1,8 +1,11 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.documentation.*;
+import com.hollingsworth.arsnouveau.api.documentation.DocCategory;
+import com.hollingsworth.arsnouveau.api.documentation.ReloadDocumentationEvent;
+import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
 import com.hollingsworth.arsnouveau.api.documentation.builder.DocEntryBuilder;
+import com.hollingsworth.arsnouveau.api.documentation.entry.*;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
@@ -234,7 +237,7 @@ public class Documentation {
         var wixie = addPage(new DocEntryBuilder(AUTOMATION, ItemsRegistry.WIXIE_CHARM)
                 .withLocalizedText()
                 .withCraftingPages(ItemsRegistry.WIXIE_CHARM)
-                .withPage(EntityEntry.create(ModEntities.ENTITY_WIXIE_TYPE.get(), getLangPath("wixie_charm", 2)))
+                .withPage(EntityEntry.create(ModEntities.ENTITY_WIXIE_TYPE.get(), getLangPath("wixie_charm", 2), 1.0f, 50))
                 .withPage(TextEntry.create(getLangPath("wixie_charm", 3), Component.translatable(("ars_nouveau.item_crafting"))))
                 .withPage(TextEntry.create(getLangPath("wixie_charm", 4), Component.translatable(("ars_nouveau.item_crafting_setting"))))
                 .withPage(TextEntry.create(getLangPath("wixie_charm", 7), Component.translatable(("ars_nouveau.binding_inventories"))))
@@ -247,7 +250,7 @@ public class Documentation {
                         .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.bombegrante"), Component.translatable("block.ars_nouveau.bombegranate_pod"), BlockRegistry.BOMBEGRANTE_POD))
                         .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.mendosteen"), Component.translatable("block.ars_nouveau.mendosteen_pod"),BlockRegistry.MENDOSTEEN_POD))
                         .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.frostaya"), Component.translatable("block.ars_nouveau.frostaya_pod"),BlockRegistry.FROSTAYA_POD))
-                        .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.bastion_fruit"), Component.translatable("block.ars_nouveau.bastion_fruit_pod"),BlockRegistry.BASTION_POD)));
+                        .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.bastion_fruit"), Component.translatable("block.ars_nouveau.bastion_pod"),BlockRegistry.BASTION_POD)));
 
         var forest = addPage(new DocEntryBuilder(RESOURCES, "archwood_forest")
                 .withIcon(BlockRegistry.BLAZING_SAPLING)
@@ -642,8 +645,8 @@ public class Documentation {
         addPage(new DocEntryBuilder(GETTING_STARTED, "obtaining_gems")
                 .withIcon(BlockRegistry.IMBUEMENT_BLOCK)
                 .withSortNum(3)
-                .withLocalizedText()
-                .withPage(RelationEntry.builder().withEntry(dowsingRod).build()));
+                .withLocalizedText())
+                .withRelation(dowsingRod);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "new_glyphs")
                 .withIcon(ItemsRegistry.BLANK_GLYPH)

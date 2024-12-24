@@ -1,5 +1,7 @@
-package com.hollingsworth.arsnouveau.api.documentation;
+package com.hollingsworth.arsnouveau.api.documentation.entry;
 
+import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
+import com.hollingsworth.arsnouveau.api.documentation.SinglePageWidget;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.arsnouveau.client.gui.documentation.DocEntryButton;
@@ -19,6 +21,7 @@ public class RelationEntry extends SinglePageWidget {
 
     public RelationEntry(List<ResourceLocation> relatedEntries, BaseDocScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
+        this.relatedEntries = relatedEntries;
     }
 
     public static SinglePageCtor create(){
@@ -44,10 +47,6 @@ public class RelationEntry extends SinglePageWidget {
         return entryButtons;
     }
 
-    public static BuilderImpl builder(){
-        return new BuilderImpl();
-    }
-
     public static class RelationBuilder implements SinglePageCtor{
 
         public List<ResourceLocation> entries = new ArrayList<>();
@@ -65,23 +64,6 @@ public class RelationEntry extends SinglePageWidget {
         @Override
         public SinglePageWidget create(BaseDocScreen parent, int x, int y, int width, int height) {
             return new RelationEntry(entries, parent, x, y, width, height);
-        }
-    }
-    public static class BuilderImpl{
-        public List<ResourceLocation> entries = new ArrayList<>();
-
-        public BuilderImpl withEntry(DocEntry entry){
-            entries.add(entry.id());
-            return this;
-        }
-
-        public BuilderImpl withEntries(List<DocEntry> entries){
-            this.entries.addAll(entries.stream().map(DocEntry::id).toList());
-            return this;
-        }
-
-        public SinglePageCtor build(){
-            return (parent, x, y, width, height) -> new RelationEntry(entries, parent, x, y, width, height);
         }
     }
 }

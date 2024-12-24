@@ -1,5 +1,6 @@
-package com.hollingsworth.arsnouveau.api.documentation;
+package com.hollingsworth.arsnouveau.api.documentation.entry;
 
+import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.SpellWriteRecipe;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
