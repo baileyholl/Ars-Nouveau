@@ -19,8 +19,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 public class DocClientUtils {
 
     public static void openBook(){
-        if(DocPlayerData.lastOpenedEntry != null) {
-            openToEntry(DocPlayerData.lastOpenedEntry, DocPlayerData.lastOpenedPage);
+        if(DocPlayerData.previousScreen != null){
+            Minecraft.getInstance().setScreen(DocPlayerData.previousScreen);
             return;
         }
         IndexScreen.open();
@@ -30,7 +30,7 @@ public class DocClientUtils {
         if(DocPlayerData.lastOpenedEntry != null) {
             DocEntry entry = DocumentationRegistry.getEntry(resourceLocation);
             if(entry != null){
-                PageHolderScreen pageHolderScreen = new PageHolderScreen(entry.pages());
+                PageHolderScreen pageHolderScreen = new PageHolderScreen(entry);
                 pageHolderScreen.arrowIndex = pageIndex < entry.pages().size() ? pageIndex : 0;
                 Minecraft.getInstance().setScreen(pageHolderScreen);
                 return;

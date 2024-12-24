@@ -9,20 +9,23 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public record DocCategory(ResourceLocation id, ItemStack renderIcon, int order, List<DocCategory> subCategories, Comparator<DocEntry> entryComparator) implements Comparable<DocCategory>{
+public record DocCategory(ResourceLocation id, ItemStack renderIcon, int order, List<DocCategory> subCategories, Comparator<DocEntry> entryComparator, Set<DocCategory> parents) implements Comparable<DocCategory>{
 
     public DocCategory(ResourceLocation id, ItemStack renderIcon, int order) {
-        this(id, renderIcon, order, new CopyOnWriteArrayList<>(), Comparator.comparing(DocEntry::order).thenComparing((entry -> entry.entryTitle().getString())));
+        this(id, renderIcon, order, new CopyOnWriteArrayList<>(), Comparator.comparing(DocEntry::order).thenComparing((entry -> entry.entryTitle().getString())), ConcurrentHashMap.newKeySet());
     }
 
     public DocCategory withComparator(Comparator<DocEntry> comparator){
-        return new DocCategory(id, renderIcon, order, subCategories, comparator);
+        return new DocCategory(id, renderIcon, order, subCategories, comparator, ConcurrentHashMap.newKeySet());
     }
 
     public void addSubCategory(DocCategory category){
         subCategories.add(category);
+        category.parents.add(this);
     }
 
     public Component getTitle(){

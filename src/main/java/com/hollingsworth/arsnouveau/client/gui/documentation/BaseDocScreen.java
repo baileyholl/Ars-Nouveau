@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui.documentation;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
+import com.hollingsworth.arsnouveau.api.documentation.DocPlayerData;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.nuggets.client.gui.BaseScreen;
 import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
@@ -99,6 +100,12 @@ public class BaseDocScreen extends BaseScreen {
             Minecraft.getInstance().setScreen(previousScreen);
             manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
         }
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        DocPlayerData.previousScreen = this;
     }
 
     public boolean showLeftArrow(){

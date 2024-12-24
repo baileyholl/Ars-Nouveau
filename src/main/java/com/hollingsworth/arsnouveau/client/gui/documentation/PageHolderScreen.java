@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.client.gui.documentation;
 
-import com.hollingsworth.arsnouveau.api.documentation.DocPlayerData;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageWidget;
+import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import net.minecraft.client.gui.GuiGraphics;
 
 import java.util.ArrayList;
@@ -16,9 +16,10 @@ public class PageHolderScreen extends BaseDocScreen{
 
     public SinglePageWidget rightPage = null;
     List<SinglePageCtor> pages;
-    public PageHolderScreen(List<SinglePageCtor> pages) {
+
+    public PageHolderScreen(DocEntry entry) {
         super();
-        this.pages = new ArrayList<>(pages);
+        this.pages = new ArrayList<>(entry.pages());
         this.maxArrowIndex = (pages.size() - 1) / 2;
     }
 
@@ -53,7 +54,6 @@ public class PageHolderScreen extends BaseDocScreen{
     @Override
     public void onArrowIndexChange() {
         super.onArrowIndexChange();
-        DocPlayerData.lastOpenedPage = arrowIndex;
         this.rebuildWidgets();
     }
 

@@ -72,6 +72,7 @@ public class DocumentationRegistry {
         var entries = entryCategoryMap.computeIfAbsent(category, k -> ConcurrentHashMap.newKeySet());
         entries.remove(entry); // Remove and overwrite in the case of world reloads
         entries.add(entry);
+        entry.categories().add(category);
         return entry;
     }
 

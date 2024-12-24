@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.documentation.entry;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocCategory;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -9,19 +10,21 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * An entry in a chapter of the documentation.
  */
-public record DocEntry(ResourceLocation id, CopyOnWriteArrayList<SinglePageCtor> pages, ItemStack renderStack, Component entryTitle, int order) implements Comparable<DocEntry> {
+public record DocEntry(ResourceLocation id, CopyOnWriteArrayList<SinglePageCtor> pages, ItemStack renderStack, Component entryTitle, int order, Set<DocCategory> categories) implements Comparable<DocEntry> {
 
     public DocEntry(ResourceLocation id, ItemStack renderStack, Component component) {
-        this(id, new CopyOnWriteArrayList<>(), renderStack, component, 1);
+        this(id, new CopyOnWriteArrayList<>(), renderStack, component, 1, ConcurrentHashMap.newKeySet());
     }
 
     public DocEntry(ResourceLocation id, ItemStack renderStack, Component component, int order) {
-        this(id, new CopyOnWriteArrayList<>(), renderStack, component, order);
+        this(id, new CopyOnWriteArrayList<>(), renderStack, component, order, ConcurrentHashMap.newKeySet());
     }
 
     public DocEntry addPage(SinglePageCtor page){

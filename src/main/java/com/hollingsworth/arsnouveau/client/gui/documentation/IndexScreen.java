@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class IndexScreen extends BaseDocScreen {
@@ -12,7 +13,7 @@ public class IndexScreen extends BaseDocScreen {
     List<DocCategory> categoryList;
     List<DocSectionButton> sections = new ArrayList<>();
 
-    public IndexScreen(List<DocCategory> categories) {
+    public IndexScreen(Collection<DocCategory> categories) {
         super();
         categoryList = new ArrayList<>(categories);
         this.maxArrowIndex = (categoryList.size() - 1) / 10;
@@ -44,9 +45,7 @@ public class IndexScreen extends BaseDocScreen {
                 if(!category.subCategories().isEmpty()){
                     transition(new IndexScreen(category.subCategories()));
                 }else{
-                    var entries = new ArrayList<>(DocumentationRegistry.getEntries(category));
-                    entries.sort(category.entryComparator());
-                    transition(new EntriesScreen(entries));
+                    transition(new EntriesScreen(category));
                 }
             });
             addRenderableWidget(button);
