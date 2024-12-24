@@ -500,11 +500,9 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void endDupePatch(EntityTravelToDimensionEvent event) {
-        if (event.getDimension() == Level.END) {
-            if (event.getEntity() instanceof EnchantedFallingBlock) {
-                event.setCanceled(true);
-            }
+    public static void dupePatch(EntityTravelToDimensionEvent event) {
+        if (event.getEntity() instanceof EnchantedFallingBlock) {
+            event.setCanceled(true);
         }
     }
 
