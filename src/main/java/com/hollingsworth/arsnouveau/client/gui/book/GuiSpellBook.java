@@ -236,7 +236,7 @@ public class GuiSpellBook extends BaseBook {
         boolean nextPage = false;
         int xStart = nextPage ? bookLeft + 154 : bookLeft + 20;
         int adjustedRowsPlaced = 0;
-        int yStart = bookTop + 16;
+        int yStart = bookTop + 19;
         boolean foundForms = false;
         boolean foundAugments = false;
         boolean foundEffects = false;
@@ -593,13 +593,13 @@ public class GuiSpellBook extends BaseBook {
     public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
         if (formTextRow >= 1) {
-            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.form").getString(), formTextRow > 6 ? 154 : 20, 1 + 18 * (formTextRow + (formTextRow == 1 ? 0 : 1)), -8355712, false);
+            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.form").getString(), formTextRow > 6 ? 154 : 20, 3 + 18 * (formTextRow + (formTextRow == 1 ? 0 : 1)), -8355712, false);
         }
         if (effectTextRow >= 1) {
-            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.effect").getString(), effectTextRow > 6 ? 154 : 20, 1 + 18 * (effectTextRow + 1), -8355712, false);
+            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.effect").getString(), effectTextRow > 6 ? 154 : 20, 3 + 18 * (effectTextRow + 1), -8355712, false);
         }
         if (augmentTextRow >= 1) {
-            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.augment").getString(), augmentTextRow > 6 ? 154 : 20, 1 + 18 * (augmentTextRow + 1), -8355712, false);
+            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.augment").getString(), augmentTextRow > 6 ? 154 : 20, 3 + 18 * (augmentTextRow + 1), -8355712, false);
         }
         graphics.blit(ArsNouveau.prefix("textures/gui/spell_name_paper.png"), 16, 175, 0, 0, 109, 15, 109, 15);
         graphics.blit(ArsNouveau.prefix("textures/gui/search_paper.png"), 203, -3, 0, 0, 72, 15, 72, 15);
