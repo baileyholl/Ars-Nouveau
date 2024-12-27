@@ -58,7 +58,7 @@ public class CraftingEntry extends SinglePageWidget {
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
 
-        drawHeader(Component.translatable("block.minecraft.crafting_table"), guiGraphics, mouseX, mouseY, partialTick);
+        DocClientUtils.drawHeader(Component.translatable("block.minecraft.crafting_table"), guiGraphics, x, y, width, mouseX, mouseY, partialTick);
         if(recipe1 == null && recipe2 == null){
             return;
         }

@@ -75,8 +75,12 @@ public class DocEntryBuilder {
     }
 
     public DocEntryBuilder withIntroPage() {
+        return withIntroPage(this.textKey);
+    }
+
+    public DocEntryBuilder withIntroPage(String id) {
         textCounter++;
-        pages.add(TextEntry.create(Component.translatable("ars_nouveau.page" + textCounter + "." + this.textKey), Component.translatable(titleKey), displayItem));
+        pages.add(TextEntry.create(Component.translatable("ars_nouveau.page" + textCounter + "." + id), Component.translatable(titleKey), displayItem));
         return this;
     }
 
@@ -120,7 +124,7 @@ public class DocEntryBuilder {
     }
 
     public DocEntry build(){
-        return new DocEntry(entryId, this.displayItem, Component.translatable(titleKey)).addPages(pages);
+        return new DocEntry(entryId, this.displayItem, Component.translatable(titleKey), sortNum).addPages(pages);
     }
 
 }

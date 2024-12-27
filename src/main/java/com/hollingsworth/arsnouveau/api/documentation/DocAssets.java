@@ -14,7 +14,7 @@ public class DocAssets {
     public static final BlitInfo ARROW_BACK_HOVER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_back_hover.png"), 14, 8);
 
     public static final BlitInfo HEADER_WITH_ITEM = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_chapter_header.png"), 118, 22);
-    public static final BlitInfo UNDERLINE = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_underline.png"), 108, 6);
+    public static final BlitInfo UNDERLINE = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_underline.png"), 118, 6);
     public static final BlitInfo ITEM_FRAME = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_frame_item.png"), 22, 22);
     public static final BlitInfo PEDESTAL_FRAME = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_frame_pedestal.png"), 22, 22);
     public static final BlitInfo RING = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_ring.png"), 64, 64);
@@ -49,7 +49,11 @@ public class DocAssets {
     public static final BlitInfo TIER_TWO = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_tier2.png"), 7, 10);
     public static final BlitInfo TIER_THREE = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_tier3.png"), 7, 10);
 
+
     public static final BlitInfo BOOKMARK = new BlitInfo(ArsNouveau.prefix("textures/gui/spell_tab.png"), 18, 13);
+
+    public static final BlitInfo IMAGE_FRAME = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_frame_image.png"), 108, 81);
+    public static final BlitInfo SPLASH_FRAME = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_frame_splash_page.png"), 124, 162);
 
     public record BlitInfo(ResourceLocation location, int u, int v, int width, int height) {
         public BlitInfo(ResourceLocation location, int width, int height){

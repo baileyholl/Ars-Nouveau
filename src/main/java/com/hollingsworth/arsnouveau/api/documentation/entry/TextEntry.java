@@ -79,7 +79,7 @@ public class TextEntry extends SinglePageWidget {
         if(hasTitle){
            yOffset = drawTitle(guiGraphics, mouseX, mouseY, partialTick);
         }
-        drawParagraph(body, guiGraphics, x, y + yOffset, mouseX, mouseY, partialTick);
+        DocClientUtils.drawParagraph(body, guiGraphics, x, y + yOffset, width, mouseX, mouseY, partialTick);
     }
 
     @Override

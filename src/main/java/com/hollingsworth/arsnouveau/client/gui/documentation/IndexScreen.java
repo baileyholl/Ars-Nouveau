@@ -1,8 +1,11 @@
 package com.hollingsworth.arsnouveau.client.gui.documentation;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocCategory;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,7 +19,7 @@ public class IndexScreen extends BaseDocScreen {
     public IndexScreen(Collection<DocCategory> categories) {
         super();
         categoryList = new ArrayList<>(categories);
-        this.maxArrowIndex = (categoryList.size() - 1) / 10;
+        this.maxArrowIndex = (categoryList.size() - 1) / 5;
     }
 
     public IndexScreen() {
@@ -33,15 +36,23 @@ public class IndexScreen extends BaseDocScreen {
         Minecraft.getInstance().setScreen(new IndexScreen());
     }
 
+
+    @Override
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphics, mouseX, mouseY, partialTicks);
+        DocClientUtils.blit(graphics, DocAssets.SPLASH_FRAME, bookLeft + LEFT_PAGE_OFFSET , bookTop + PAGE_TOP_OFFSET -12);
+
+    }
+
     public void initSections(){
         for(DocSectionButton section : sections){
             removeWidget(section);
         }
         sections.clear();
-        List<DocCategory> sliced = categoryList.subList(arrowIndex * 10, Math.min((arrowIndex + 1) * 10, categoryList.size()));
+        List<DocCategory> sliced = categoryList.subList(arrowIndex * 5, Math.min((arrowIndex + 1) * 5, categoryList.size()));
         for(int i = 0; i < sliced.size(); i++){
             DocCategory category = sliced.get(i);
-            var button = new DocSectionButton(bookLeft + 18 + (i > 4 ? 135 : 0), bookTop + 24 + 29 * (i > 4 ? i - 5 : i), category.getTitle(), category.renderIcon(), (b) -> {
+            var button = new DocSectionButton(bookLeft + 18 + 135, bookTop + 24 + 29 * (i > 4 ? i - 5 : i), category.getTitle(), category.renderIcon(), (b) -> {
                 if(!category.subCategories().isEmpty()){
                     transition(new IndexScreen(category.subCategories()));
                 }else{

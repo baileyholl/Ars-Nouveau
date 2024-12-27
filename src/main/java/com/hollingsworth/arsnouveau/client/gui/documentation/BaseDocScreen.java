@@ -5,12 +5,15 @@ import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocPlayerData;
 import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
+import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
+import com.hollingsworth.nuggets.client.gui.BaseButton;
 import com.hollingsworth.nuggets.client.gui.BaseScreen;
 import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -33,26 +36,49 @@ public class BaseDocScreen extends BaseScreen {
     public NuggetImageButton leftArrow;
 
     public NuggetImageButton rightArrow;
-    public NuggetImageButton backButton;
+    public BaseButton backButton;
 
     public int arrowIndex;
     public int maxArrowIndex;
-
+    public NoShadowTextField searchBar;
+    public String previousString = "";
     public BaseDocScreen previousScreen = null;
     SoundManager manager = Minecraft.getInstance().getSoundManager();
 
     List<AbstractWidget> bookmarkButtons = new ArrayList<>();
+    public static final int LEFT_PAGE_OFFSET = 16;
+    public static final int RIGHT_PAGE_OFFSET = 150;
+    public static final int PAGE_TOP_OFFSET = 24;
 
     public BaseDocScreen() {
-        super(Component.empty(), 290, 194, background);
+        super(Component.empty(), 290, 188, background);
     }
 
     @Override
     public void init() {
         super.init();
+        searchBar = new NoShadowTextField(minecraft.font, bookRight - 73, bookTop + 2,
+                54, 12, null, Component.translatable("ars_nouveau.spell_book_gui.search"));
+        searchBar.setBordered(false);
+        searchBar.setTextColor(12694931);
+        searchBar.onClear = (val) -> {
+            this.onSearchChanged("");
+            return null;
+        };
+        if (searchBar.getValue().isEmpty())
+            searchBar.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.search").getString());
+        searchBar.setResponder(this::onSearchChanged);
+        addRenderableWidget(searchBar);
         backButton = new NuggetImageButton(bookLeft + 6, bookTop + 10, 14, 8, DocAssets.ARROW_BACK.location(), DocAssets.ARROW_BACK_HOVER.location(), (b) -> {
-            goBack();
-        });
+            if(isShiftDown()){
+                var home = new IndexScreen();
+                transition(home);
+                home.previousScreen = null;
+                home.backButton.visible = false;
+            }else {
+                goBack();
+            }
+        }).withTooltip(Component.translatable("ars_nouveau.shift_back"));
         addRenderableWidget(backButton);
         rightArrow = new NuggetImageButton(bookRight - 13, bookTop + 88, 11, 14, DocAssets.ARROW_RIGHT.location(), DocAssets.ARROW_RIGHT_HOVER.location(), this::onRightArrowClick);
         leftArrow = new NuggetImageButton(bookLeft + 1, bookTop + 88, 11, 14, DocAssets.ARROW_LEFT.location(), DocAssets.ARROW_LEFT_HOVER.location(), this::onLeftArrowClick);
@@ -82,6 +108,23 @@ public class BaseDocScreen extends BaseScreen {
         }).withTooltip(Component.translatable("ars_nouveau.gui.discord")));
         backButton.visible = previousScreen != null;
         initBookmarks();
+    }
+
+
+    @Override
+    public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
+        graphics.blit(ArsNouveau.prefix("textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15, 72, 15);
+    }
+
+    public void onSearchChanged(String str) {
+        if (str.equals(previousString))
+            return;
+        previousString = str;
+    }
+
+    public boolean isShiftDown(){
+        return InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), Minecraft.getInstance().options.keyShift.getKey().getValue());
     }
 
     public void initBookmarks(){

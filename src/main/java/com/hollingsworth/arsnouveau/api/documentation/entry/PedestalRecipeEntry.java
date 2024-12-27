@@ -42,7 +42,7 @@ public class PedestalRecipeEntry extends SinglePageWidget {
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
-        drawHeader(title, guiGraphics, mouseX,mouseY, partialTick);
+        DocClientUtils.drawHeader(title, guiGraphics, x, y, width, mouseX,mouseY, partialTick);
         DocClientUtils.blit(guiGraphics, image,x + 20, y + 22);
 
         int degreePerInput = (int) (360F / ingredients.size());

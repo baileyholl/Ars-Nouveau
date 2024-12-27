@@ -210,7 +210,7 @@ public class Documentation {
 
         addPage(new DocEntryBuilder(EQUIPMENT, "reactive_enchantment")
                 .withIcon(Items.ENCHANTED_BOOK)
-                .withLocalizedText()
+                .withIntroPage()
                 .withPage(EnchantmentEntry.create(ArsNouveau.prefix(EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 1)))
                 .withLocalizedText()
                 .withPage(EnchantmentEntry.create(ArsNouveau.prefix(EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 2)))
@@ -255,7 +255,7 @@ public class Documentation {
 
         var archwood = addPage(new DocEntryBuilder(RESOURCES, "archwood")
                         .withIcon(BlockRegistry.BOMBEGRANTE_POD)
-                        .withLocalizedText()
+                        .withIntroPage()
                         .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.bombegrante"), Component.translatable("block.ars_nouveau.bombegranate_pod"), BlockRegistry.BOMBEGRANTE_POD))
                         .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.mendosteen"), Component.translatable("block.ars_nouveau.mendosteen_pod"),BlockRegistry.MENDOSTEEN_POD))
                         .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.frostaya"), Component.translatable("block.ars_nouveau.frostaya_pod"),BlockRegistry.FROSTAYA_POD))
@@ -263,13 +263,13 @@ public class Documentation {
 
         var forest = addPage(new DocEntryBuilder(RESOURCES, "archwood_forest")
                 .withIcon(BlockRegistry.BLAZING_SAPLING)
-                .withLocalizedText());
+                .withIntroPage());
 
 
         addPage(new DocEntryBuilder(RESOURCES, "decorative")
                 .withIcon(SOURCESTONE)
                 .withCraftingPages(SOURCESTONE)
-                .withLocalizedText());
+                .withIntroPage());
 
 
         var sourceberry = addPage(new DocEntryBuilder(RESOURCES, BlockRegistry.SOURCEBERRY_BUSH)
@@ -278,7 +278,7 @@ public class Documentation {
 
         addPage(new DocEntryBuilder(RESOURCES, "weald_walker")
                 .withIcon(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix( RitualLib.AWAKENING)))
-                .withLocalizedText()
+                .withIntroPage()
                 .withPage(EntityEntry.create(ModEntities.ENTITY_BLAZING_WEALD.get(), getLangPath("weald_walker", 2)))
                 .withPage(EntityEntry.create(ModEntities.ENTITY_CASCADING_WEALD.get(), getLangPath("weald_walker", 3)))
                 .withPage(EntityEntry.create(ModEntities.ENTITY_FLOURISHING_WEALD.get(),getLangPath("weald_walker", 4)))
@@ -286,7 +286,7 @@ public class Documentation {
 
         addPage(new DocEntryBuilder(RESOURCES, "wilden")
                 .withIcon(ItemsRegistry.WILDEN_SPIKE)
-                .withLocalizedText()
+                .withIntroPage()
                 .withPage(EntityEntry.create(ModEntities.WILDEN_HUNTER.get(), getLangPath("wilden", 3), 0.55f))
                 .withPage(EntityEntry.create(ModEntities.WILDEN_STALKER.get(), getLangPath("wilden", 4), 0.55f))
                 .withPage(EntityEntry.create(ModEntities.WILDEN_GUARDIAN.get(), getLangPath("wilden", 5), 0.55f))
@@ -357,7 +357,7 @@ public class Documentation {
 
         var portal = addPage(new DocEntryBuilder(MACHINES, "warp_portal")
                 .withIcon(ItemsRegistry.WARP_SCROLL)
-                .withLocalizedText()
+                .withIntroPage()
                 .withLocalizedText()
 //                .withPage(new MultiblockPage(getLangPath("warp_portal", 3), new String[][]{
 //                        new String[]{" BB "},
@@ -398,20 +398,20 @@ public class Documentation {
         addPage(new DocEntryBuilder(ENCHANTMENTS, "how_to_enchant")
                 .withIcon(BlockRegistry.ENCHANTING_APP_BLOCK)
                 .withSortNum(-1)
-                .withLocalizedText()
+                .withIntroPage()
                 .withLocalizedText()
         ).withRelation(enchantingApparatus);
         addPage(new DocEntryBuilder(RITUALS, "performing_rituals")
                 .withSortNum(-1)
                 .withIcon(BlockRegistry.RITUAL_BLOCK)
-                .withLocalizedText()
+                .withIntroPage()
                 .withLocalizedText()
                 .withCraftingPages(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix( RitualLib.SUNRISE))))
                 .withRelation(ritualBrazier);
         addPage(new DocEntryBuilder(FAMILIARS, "summoning_familiars")
                 .withSortNum(-1)
                 .withIcon(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix( RitualLib.BINDING)))
-                .withLocalizedText()
+                .withIntroPage()
                 .withLocalizedText()
                 .withCraftingPages(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix( RitualLib.BINDING))))
                 .withRelations(ritualBrazier)
@@ -431,7 +431,7 @@ public class Documentation {
         addBasicItem(ItemsRegistry.ANNOTATED_CODEX, EQUIPMENT);
         var starbyBed = addPage(new DocEntryBuilder(AUTOMATION, BlockRegistry.ORANGE_SBED)
                 .withName("ars_nouveau.summon_bed")
-                .withLocalizedText("summon_bed")
+                .withIntroPage("summon_bed")
                         .withPage(getRecipePages(BlockRegistry.ORANGE_SBED, BlockRegistry.BLUE_SBED))
                         .withPage(getRecipePages(BlockRegistry.GREEN_SBED, BlockRegistry.YELLOW_SBED))
                         .withPage(getRecipePages(BlockRegistry.RED_SBED, BlockRegistry.PURPLE_SBED)));
@@ -470,7 +470,7 @@ public class Documentation {
 
         DocEntryBuilder ARMOR_ENTRY = new DocEntryBuilder(EQUIPMENT, "armor")
                 .withIcon(ItemsRegistry.SORCERER_ROBES)
-                .withLocalizedText()
+                .withIntroPage()
                 .withCraftingPages(ItemsRegistry.MAGE_FIBER)
                 .withPage(TextEntry.create("ars_nouveau.page.threads", "ars_nouveau.threads"))
 //                .withPage(new ImagePage().withEntry(ArsNouveau.prefix( "textures/gui/entries/sorcerer_diagram.png"))
@@ -501,7 +501,7 @@ public class Documentation {
                 .withRelation(armorEntry);
 
         var armorUpgrade = addPage(new DocEntryBuilder(ARMOR, "armor_upgrading")
-                .withLocalizedText()
+                .withIntroPage()
                 .withPage(TextEntry.create(getLangPath("armor_upgrading", 2), Component.translatable("ars_nouveau.armor_tiers")))
                 .withIcon(ItemsRegistry.ARCANIST_HOOD)
                 .withCraftingPages("ars_nouveau:first_armor_upgrade")
@@ -514,7 +514,7 @@ public class Documentation {
         alteraitonTable.withRelation(armorUpgrade);
 
         addPage(new DocEntryBuilder(ARMOR, "applying_perks")
-                .withLocalizedText()
+                .withIntroPage()
                 .withLocalizedText()
                 .withIcon(ItemsRegistry.BLANK_THREAD)
                 .withSortNum(2))
@@ -615,7 +615,7 @@ public class Documentation {
         addBasicItem(BlockRegistry.REDSTONE_RELAY, AUTOMATION);
 
         addPage(new DocEntryBuilder(AUTOMATION, BlockRegistry.ARCHWOOD_GRATE)
-                .withLocalizedText()
+                .withIntroPage()
                 .withPage(CraftingEntry.create(BlockRegistry.ARCHWOOD_GRATE, BlockRegistry.GOLD_GRATE))
                 .withPage(CraftingEntry.create(BlockRegistry.SMOOTH_SOURCESTONE_GRATE, BlockRegistry.SOURCESTONE_GRATE)));
         addBasicItem(BlockRegistry.SOURCE_LAMP, AUTOMATION);
@@ -631,68 +631,68 @@ public class Documentation {
         addPage(new DocEntryBuilder(GETTING_STARTED, "spell_casting")
                 .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
                 .withSortNum(1)
-                .withLocalizedText()
+                .withIntroPage()
                 .withLocalizedText()
                 .withLocalizedText()
                 .withCraftingPages(ItemsRegistry.NOVICE_SPELLBOOK));
         addPage(new DocEntryBuilder(GETTING_STARTED, "spell_mana")
                 .withSortNum(2)
                 .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
-                .withLocalizedText()
+                .withIntroPage()
                 .withLocalizedText());
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "obtaining_gems")
                 .withIcon(BlockRegistry.IMBUEMENT_BLOCK)
                 .withSortNum(3)
-                .withLocalizedText())
+                .withIntroPage())
                 .withRelation(dowsingRod);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "new_glyphs")
                 .withIcon(ItemsRegistry.BLANK_GLYPH)
                 .withSortNum(4)
-                .withLocalizedText())
+                .withIntroPage())
                 .withRelations(scribesTable);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "source")
                 .withSortNum(5)
                 .withIcon(BlockRegistry.SOURCE_JAR)
-                .withLocalizedText())
+                .withIntroPage())
                 .withRelations(sourceJar, agronomic);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "apparatus_crafting")
                 .withSortNum(6)
                 .withIcon(BlockRegistry.ENCHANTING_APP_BLOCK)
-                .withLocalizedText())
+                .withIntroPage())
                 .withRelations(enchantingApparatus);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "better_casting")
                 .withSortNum(7)
                 .withIcon(ItemsRegistry.SORCERER_ROBES)
-                .withLocalizedText())
+                .withIntroPage())
                 .withRelations(enchantingApparatus);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "world_generation")
                 .withSortNum(8)
                 .withIcon(ItemsRegistry.SOURCE_GEM)
-                .withLocalizedText())
+                .withIntroPage())
                 .withRelations(imbuementChamber, archwood, sourceberry);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "upgrades")
                 .withSortNum(9)
                 .withIcon(ItemsRegistry.ARCHMAGE_SPELLBOOK)
-                .withLocalizedText())
+                .withIntroPage())
                 .withRelations(spellBooks, armorEntry);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "starting_automation")
                 .withSortNum(10)
                 .withIcon(BlockRegistry.BASIC_SPELL_TURRET)
-                .withLocalizedText())
+                .withIntroPage())
                 .withRelations(turrets, prisms, starby, wixie);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "trinkets")
                 .withIcon(ItemsRegistry.WARP_SCROLL)
                 .withSortNum(11)
-                .withLocalizedText())
+                .withIntroPage())
                 .withRelations(jarOfLight, amuletOfRegen, discountRing);
 
         for(DocEntryBuilder builder : pendingBuilders){

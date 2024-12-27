@@ -149,15 +149,15 @@ public class GuiSpellBook extends BaseBook {
         resetCraftingCells();
 
         layoutAllGlyphs(page);
-        createSpellButton = addRenderableWidget(new CreateSpellButton(bookRight - 71, bookBottom - 13, this::onCreateClick, () -> !this.validationErrors.isEmpty()));
-        addRenderableWidget(new GuiImageButton(bookRight - 126, bookBottom - 13, 0, 0, 41, 12, 41, 12, "textures/gui/clear_icon.png", this::clear));
+        createSpellButton = addRenderableWidget(new CreateSpellButton(bookRight - 71, bookBottom - 11, this::onCreateClick, () -> !this.validationErrors.isEmpty()));
+        addRenderableWidget(new GuiImageButton(bookRight - 126, bookBottom - 11, 0, 0, 41, 12, 41, 12, "textures/gui/clear_icon.png", this::clear));
 
-        spell_name = new NoShadowTextField(minecraft.font, bookLeft + 32, bookBottom - 11,
+        spell_name = new NoShadowTextField(minecraft.font, bookLeft + 32, bookBottom - 9,
                 88, 12, null, Component.translatable("ars_nouveau.spell_book_gui.spell_name"));
         spell_name.setBordered(false);
         spell_name.setTextColor(12694931);
 
-        searchBar = new NoShadowTextField(minecraft.font, bookRight - 73, bookTop + 2,
+        searchBar = new NoShadowTextField(minecraft.font, bookRight - 73, bookTop,
                 54, 12, null, Component.translatable("ars_nouveau.spell_book_gui.search"));
         searchBar.setBordered(false);
         searchBar.setTextColor(12694931);
@@ -178,7 +178,7 @@ public class GuiSpellBook extends BaseBook {
         // Add spell slots
         for (int i = 0; i < 10; i++) {
             String name = caster.getSpellName(i);
-            GuiSpellSlot slot = new GuiSpellSlot(bookLeft + 281, bookTop + 1 + 15 * (i + 1), i, name, this::onSlotChange);
+            GuiSpellSlot slot = new GuiSpellSlot(bookLeft + 281, bookTop - 1 + 15 * (i + 1), i, name, this::onSlotChange);
             if (i == selectedSpellSlot) {
                 selected_slot = slot;
                 slot.isSelected = true;
@@ -188,17 +188,17 @@ public class GuiSpellBook extends BaseBook {
 
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 22, 0, 0, 23, 20, 23, 20, "textures/gui/worn_book_bookmark.png", this::onDocumentationClick)
                 .withTooltip(Component.translatable("ars_nouveau.gui.notebook")));
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 46, 0, 0, 23, 20, 23, 20, "textures/gui/color_wheel_bookmark.png", this::onColorClick)
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 44, 0, 0, 23, 20, 23, 20, "textures/gui/color_wheel_bookmark.png", this::onColorClick)
                 .withTooltip(Component.translatable("ars_nouveau.gui.color")));
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 70, 0, 0, 23, 20, 23, 20, "textures/gui/summon_circle_bookmark.png", this::onFamiliarClick)
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 68, 0, 0, 23, 20, 23, 20, "textures/gui/summon_circle_bookmark.png", this::onFamiliarClick)
                 .withTooltip(Component.translatable("ars_nouveau.gui.familiar")));
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 94, 0, 0, 23, 20, 23, 20, "textures/gui/sounds_tab.png", this::onSoundsClick)
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 92, 0, 0, 23, 20, 23, 20, "textures/gui/sounds_tab.png", this::onSoundsClick)
                 .withTooltip(Component.translatable("ars_nouveau.gui.sounds")));
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 118, 0, 0, 23, 20, 23, 20, "textures/gui/settings_tab.png", (b) -> {
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 116, 0, 0, 23, 20, 23, 20, "textures/gui/settings_tab.png", (b) -> {
             Minecraft.getInstance().setScreen(new GuiSettingsScreen(this));
         }).withTooltip(Component.translatable("ars_nouveau.gui.settings")));
 
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 142, 0, 0, 23, 20, 23, 20, "textures/gui/discord_tab.png", (b) -> {
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 140, 0, 0, 23, 20, 23, 20, "textures/gui/discord_tab.png", (b) -> {
             try {
                 Util.getPlatform().openUri(new URI("https://discord.com/invite/y7TMXZu"));
             } catch (URISyntaxException e) {
@@ -206,8 +206,8 @@ public class GuiSpellBook extends BaseBook {
             }
         }).withTooltip(Component.translatable("ars_nouveau.gui.discord")));
 
-        this.nextButton = addRenderableWidget(new PageButton(bookRight - 20, bookBottom - 10, true, this::onPageIncrease, true));
-        this.previousButton = addRenderableWidget(new PageButton(bookLeft - 5, bookBottom - 10, false, this::onPageDec, true));
+        this.nextButton = addRenderableWidget(new PageButton(bookRight - 20, bookBottom - 6, true, this::onPageIncrease, true));
+        this.previousButton = addRenderableWidget(new PageButton(bookLeft - 5, bookBottom - 6, false, this::onPageDec, true));
 
         updateNextPageButtons();
         previousButton.active = false;
@@ -215,8 +215,8 @@ public class GuiSpellBook extends BaseBook {
 
         //infinite spells
         if (getExtraGlyphSlots() > 0) {
-            this.nextGlyphButton = addRenderableWidget(new PageButton(bookRight - 25, bookBottom - 30, true, i -> updateWindowOffset(spellWindowOffset + 1), true));
-            this.prevGlyphButton = addRenderableWidget(new PageButton(bookLeft, bookBottom - 30, false, i -> updateWindowOffset(spellWindowOffset - 1), true));
+            this.nextGlyphButton = addRenderableWidget(new PageButton(bookRight - 25, bookBottom - 26, true, i -> updateWindowOffset(spellWindowOffset + 1), true));
+            this.prevGlyphButton = addRenderableWidget(new PageButton(bookLeft, bookBottom - 26, false, i -> updateWindowOffset(spellWindowOffset - 1), true));
             updateWindowOffset(0);
         }
         validate();
@@ -236,7 +236,7 @@ public class GuiSpellBook extends BaseBook {
         boolean nextPage = false;
         int xStart = nextPage ? bookLeft + 154 : bookLeft + 20;
         int adjustedRowsPlaced = 0;
-        int yStart = bookTop + 20;
+        int yStart = bookTop + 16;
         boolean foundForms = false;
         boolean foundAugments = false;
         boolean foundEffects = false;
@@ -539,7 +539,7 @@ public class GuiSpellBook extends BaseBook {
             }
             var cell = craftingCells.get(spellWindowOffset + i);
             cell.setX(bookLeft + 19 + 24 * placementOffset + offset);
-            cell.setY(bookBottom - 47);
+            cell.setY(bookBottom - 43);
             cell.visible = true;
         }
     }
@@ -593,20 +593,20 @@ public class GuiSpellBook extends BaseBook {
     public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
         if (formTextRow >= 1) {
-            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.form").getString(), formTextRow > 6 ? 154 : 20, 5 + 18 * (formTextRow + (formTextRow == 1 ? 0 : 1)), -8355712, false);
+            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.form").getString(), formTextRow > 6 ? 154 : 20, 1 + 18 * (formTextRow + (formTextRow == 1 ? 0 : 1)), -8355712, false);
         }
         if (effectTextRow >= 1) {
-            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.effect").getString(), effectTextRow > 6 ? 154 : 20, 5 + 18 * (effectTextRow + 1), -8355712, false);
+            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.effect").getString(), effectTextRow > 6 ? 154 : 20, 1 + 18 * (effectTextRow + 1), -8355712, false);
         }
         if (augmentTextRow >= 1) {
-            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.augment").getString(), augmentTextRow > 6 ? 154 : 20, 5 + 18 * (augmentTextRow + 1), -8355712, false);
+            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.augment").getString(), augmentTextRow > 6 ? 154 : 20, 1 + 18 * (augmentTextRow + 1), -8355712, false);
         }
-        graphics.blit(ArsNouveau.prefix("textures/gui/spell_name_paper.png"), 16, 179, 0, 0, 109, 15, 109, 15);
-        graphics.blit(ArsNouveau.prefix("textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15, 72, 15);
-        graphics.blit(ArsNouveau.prefix("textures/gui/clear_paper.png"), 161, 179, 0, 0, 47, 15, 47, 15);
-        graphics.blit(ArsNouveau.prefix("textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15);
+        graphics.blit(ArsNouveau.prefix("textures/gui/spell_name_paper.png"), 16, 175, 0, 0, 109, 15, 109, 15);
+        graphics.blit(ArsNouveau.prefix("textures/gui/search_paper.png"), 203, -3, 0, 0, 72, 15, 72, 15);
+        graphics.blit(ArsNouveau.prefix("textures/gui/clear_paper.png"), 161, 175, 0, 0, 47, 15, 47, 15);
+        graphics.blit(ArsNouveau.prefix("textures/gui/create_paper.png"), 216, 175, 0, 0, 56, 15, 56, 15);
         if (validationErrors.isEmpty()) {
-            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.create"), 233, 183, -8355712, false);
+            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.create"), 233, 179, -8355712, false);
         } else {
             // Color code chosen to match GL11.glColor4f(1.0F, 0.7F, 0.7F, 1.0F);
             Component textComponent = Component.translatable("ars_nouveau.spell_book_gui.create")
@@ -614,7 +614,7 @@ public class GuiSpellBook extends BaseBook {
             // The final argument to draw desaturates the above color from the text component
             graphics.drawString(font, textComponent, 233, 183, -8355712, false);
         }
-        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.clear").getString(), 177, 183, -8355712, false);
+        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.clear").getString(), 177, 179, -8355712, false);
 
         //manabar
         int manaLength = 96;

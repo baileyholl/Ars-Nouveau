@@ -37,7 +37,7 @@ public class PageHolderScreen extends BaseDocScreen{
         allWidgets = new ArrayList<>();
         for(int i = 0; i < pages.size(); i++){
             SinglePageCtor page = pages.get(i);
-            SinglePageWidget widget = page.create(this,  (i + 1) % 2 == 0 ? bookLeft + 150 : bookLeft + 16, bookTop + 24, 135, 180);
+            SinglePageWidget widget = page.create(this,  (i + 1) % 2 == 0 ? bookLeft + RIGHT_PAGE_OFFSET : bookLeft + LEFT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, 135, 180);
             allWidgets.add(widget);
         }
         initPages();
@@ -57,8 +57,12 @@ public class PageHolderScreen extends BaseDocScreen{
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(graphics, mouseX, mouseY, partialTicks);
+    public void transition(BaseDocScreen screen) {
+        // Prevent bookmarks from transitioning to the same screen
+        if(screen instanceof PageHolderScreen newPageHolder && newPageHolder.entry == this.entry){
+            return;
+        }
+        super.transition(screen);
     }
 
     @Override

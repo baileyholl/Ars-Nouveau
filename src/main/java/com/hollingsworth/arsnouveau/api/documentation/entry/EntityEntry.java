@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.api.documentation.entry;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageWidget;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
@@ -56,10 +58,10 @@ public class EntityEntry extends SinglePageWidget {
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
-
-        drawHeader(entityType.getDescription(), guiGraphics, mouseX, mouseY, partialTick);
+        DocClientUtils.blit(guiGraphics, DocAssets.IMAGE_FRAME, x, y);
+        DocClientUtils.drawHeader(entityType.getDescription(), guiGraphics, x, y, width, mouseX, mouseY, partialTick);
         if(this.description != null){
-            drawParagraph(description, guiGraphics, x, y + 100, mouseX, mouseY, partialTick);
+            DocClientUtils.drawParagraph(description, guiGraphics, x, y + 100, width, mouseX, mouseY, partialTick);
         }
 
         renderEntity(guiGraphics, entity, x + width / 2.0f, y + height - 65, (float) ClientInfo.ticksInGame + partialTick, this.scale * 75, -0.3f);
@@ -68,10 +70,6 @@ public class EntityEntry extends SinglePageWidget {
     @Override
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-//
-//        renderEntityInInventoryFollowsMouse(guiGraphics, x, y, x + width - 10,  y + height - 60, (int) (this.scale * 75), -0.3f, mouseX, mouseY, entity);
-
-//        renderEntity(guiGraphics, entity, x + width - 10, y + height - 60, 0, this.scale * 75, -0.3f);
     }
 
     public static void renderEntityInInventoryFollowsMouse(
