@@ -41,7 +41,7 @@ public class IndexScreen extends BaseDocScreen {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
-        DocClientUtils.blit(graphics, DocAssets.SPLASH_FRAME, bookLeft + LEFT_PAGE_OFFSET , bookTop + PAGE_TOP_OFFSET - 8);
+        DocClientUtils.blit(graphics, DocAssets.SPLASH_FRAME, bookLeft + LEFT_PAGE_OFFSET - 3, bookTop + PAGE_TOP_OFFSET - 5);
         DocClientUtils.drawHeader(Component.translatable("ars_nouveau.doc.categories"), graphics, bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, 135, mouseX, mouseY, partialTicks);
     }
 
@@ -53,7 +53,7 @@ public class IndexScreen extends BaseDocScreen {
         List<DocCategory> sliced = categoryList.subList(arrowIndex * 5, Math.min((arrowIndex + 1) * 5, categoryList.size()));
         for(int i = 0; i < sliced.size(); i++){
             DocCategory category = sliced.get(i);
-            var button = new DocSectionButton(bookLeft + 18 + 135, bookTop + 34 + 27 * (i), category.getTitle(), category.renderIcon(), (b) -> {
+            var button = new DocSectionButton(bookLeft + 18 + 135, bookTop + 34 + 28 * (i), category.getTitle(), category.renderIcon(), (b) -> {
                 if(!category.subCategories().isEmpty()){
                     transition(new IndexScreen(category.subCategories()));
                 }else{

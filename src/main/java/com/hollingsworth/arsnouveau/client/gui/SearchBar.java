@@ -17,12 +17,12 @@ public class SearchBar extends NoShadowTextField {
 
     @Override
     public int getXTextOffset() {
-        return super.getXTextOffset() + 8;
+        return super.getXTextOffset() + 9;
     }
 
     @Override
     public int getYTextOffset() {
-        return super.getYTextOffset() + 1;
+        return super.getYTextOffset();
     }
 
     @Override

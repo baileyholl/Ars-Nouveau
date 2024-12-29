@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageWidget;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
-import com.hollingsworth.nuggets.client.gui.GuiHelpers;
 import com.hollingsworth.nuggets.client.gui.NuggetMultilLineLabel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -59,13 +58,14 @@ public class TextEntry extends SinglePageWidget {
     public int drawTitle(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks){
         Font font = Minecraft.getInstance().font;
         if(renderStack != null){
-            DocClientUtils.blit(guiGraphics, DocAssets.HEADER_WITH_ITEM, x, y);
-            setTooltipIfHovered(DocClientUtils.renderItemStack(guiGraphics, x + 3, y + 3, mouseX, mouseY, renderStack));
-            DocClientUtils.drawHeader(titleLabel, guiGraphics, x + 70, y);
+            DocClientUtils.blit(guiGraphics, DocAssets.HEADER_WITH_ITEM, x , y - 1);
+            setTooltipIfHovered(DocClientUtils.renderItemStack(guiGraphics, x + 3, y + 2, mouseX, mouseY, renderStack));
+            DocClientUtils.drawHeader(titleLabel, guiGraphics, x + 70, y - 1);
             return 28;
         }else{
-            DocClientUtils.blit(guiGraphics, DocAssets.UNDERLINE, x + 2, y + 10);
-            GuiHelpers.drawCenteredStringNoShadow(font, guiGraphics, title, x + 60, y, 0);
+//            DocClientUtils.blit(guiGraphics, DocAssets.UNDERLINE, x + 4, y + 10);
+//            GuiHelpers.drawCenteredStringNoShadow(font, guiGraphics, title, x + 60, y, 0);
+            DocClientUtils.drawHeader(title, guiGraphics, x, y, width, mouseX, mouseY, partialTicks);
         }
         return 20;
     }

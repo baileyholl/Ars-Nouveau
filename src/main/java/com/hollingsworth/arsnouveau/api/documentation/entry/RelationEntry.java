@@ -1,12 +1,15 @@
 package com.hollingsworth.arsnouveau.api.documentation.entry;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageWidget;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.arsnouveau.client.gui.documentation.DocEntryButton;
 import com.hollingsworth.arsnouveau.client.gui.documentation.PageHolderScreen;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
@@ -33,12 +36,18 @@ public class RelationEntry extends SinglePageWidget {
     }
 
     @Override
+    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+        DocClientUtils.drawHeader(Component.translatable("ars_nouveau.doc.related_entries"), guiGraphics, x, y, width, mouseX, mouseY, partialTick);
+    }
+
+    @Override
     public List<AbstractWidget> getExtras() {
         List<AbstractWidget> entryButtons = super.getExtras();
         int i = 0;
         for(ResourceLocation id : relatedEntries){
             DocEntry entry = DocumentationRegistry.getEntry(id);
-            var button = new DocEntryButton(x+ 5, y + 16 * i, entry, (b) -> {
+            var button = new DocEntryButton(x+ 3, y + 16 + 16 * i, entry, (b) -> {
                 parent.transition(new PageHolderScreen(entry));
             });
             entryButtons.add(button);

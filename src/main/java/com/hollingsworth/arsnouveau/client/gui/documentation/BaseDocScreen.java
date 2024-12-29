@@ -44,9 +44,11 @@ public class BaseDocScreen extends BaseScreen {
     SoundManager manager = Minecraft.getInstance().getSoundManager();
 
     List<AbstractWidget> bookmarkButtons = new ArrayList<>();
-    public static final int LEFT_PAGE_OFFSET = 16;
-    public static final int RIGHT_PAGE_OFFSET = 150;
-    public static final int PAGE_TOP_OFFSET = 20;
+    public static final int LEFT_PAGE_OFFSET = 19;
+    public static final int RIGHT_PAGE_OFFSET = 153;
+    public static final int PAGE_TOP_OFFSET = 17;
+    public static final int ONE_PAGE_WIDTH = 118;
+    public static final int ONE_PAGE_HEIGHT = 146;
 
     public BaseDocScreen() {
         super(Component.empty(), DocAssets.BACKGROUND.width(), DocAssets.BACKGROUND.height(), DocAssets.BACKGROUND.location());

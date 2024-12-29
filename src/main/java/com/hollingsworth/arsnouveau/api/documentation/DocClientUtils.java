@@ -110,19 +110,25 @@ public class DocClientUtils {
     }
 
     public static void drawHeader(@Nullable Component title, GuiGraphics guiGraphics, int x, int y, int width, int mouseX, int mouseY, float partialTick) {
-        DocClientUtils.blit(guiGraphics, DocAssets.UNDERLINE, x + 6, y + 7);
+        DocClientUtils.blit(guiGraphics, DocAssets.UNDERLINE, x, y + 9);
         if(title != null) {
-            GuiHelpers.drawCenteredStringNoShadow(Minecraft.getInstance().font, guiGraphics, title, x + width / 2, y - 2, 0);
+            GuiHelpers.drawCenteredStringNoShadow(Minecraft.getInstance().font, guiGraphics, title, x + width / 2, y, 0);
+        }
+    }
+
+    public static void drawHeaderNoUnderline(@Nullable Component title, GuiGraphics guiGraphics, int x, int y, int width, int mouseX, int mouseY, float partialTick){
+        if(title != null) {
+            GuiHelpers.drawCenteredStringNoShadow(Minecraft.getInstance().font, guiGraphics, title, x + width / 2, y, 0);
         }
     }
 
     public static void drawParagraph(Component text, GuiGraphics guiGraphics, int x, int y, int width, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
         poseStack.pushPose();
-        float scale = 0.70f;
-        poseStack.translate(x + 5, y, 0);
+        float scale = 0.63f;
+        poseStack.translate(x + 2, y, 0);
         poseStack.scale(scale, scale, 1);
-        NuggetMultilLineLabel label = NuggetMultilLineLabel.create(Minecraft.getInstance().font, text, (int) (width * 1.155));
+        NuggetMultilLineLabel label = NuggetMultilLineLabel.create(Minecraft.getInstance().font, text, (int) (width * 1.58) - 4);
         label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, 12, 0);
 
 //        float dist = 0.08F;

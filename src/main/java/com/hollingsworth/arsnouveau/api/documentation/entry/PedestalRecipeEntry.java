@@ -64,12 +64,12 @@ public class PedestalRecipeEntry extends SinglePageWidget {
         }
 
         if(!reagentStack.isEmpty()){
-            int itemX = x + width / 2 + 6;
+            int itemX = x + width / 2 + 14;
             int itemY = y + 55;
             setTooltipIfHovered(DocClientUtils.renderIngredient(guiGraphics, itemX, itemY, mouseX, mouseY, reagentStack));
         }
 
-        int itemX = x + width / 2 - 9;
+        int itemX = x + width / 2 - 1;
         int itemY = y + 130;
         setTooltipIfHovered(DocClientUtils.renderItemStack(guiGraphics, itemX, itemY, mouseX, mouseY, outputStack));
     }

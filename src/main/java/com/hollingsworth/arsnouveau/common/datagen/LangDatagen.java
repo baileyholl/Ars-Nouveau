@@ -1373,6 +1373,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.add_bookmark", "Add Bookmark");
         add("ars_nouveau.shift_back", "Shift-Click to go to home");
         add("ars_nouveau.doc.categories", "Categories");
+        add("ars_nouveau.doc.related_entries", "Related Entries");
     }
 
     public void addCategory(String key, String value){
