@@ -91,7 +91,7 @@ public class EffectSmelt extends AbstractEffect {
     public void smeltItems(Level world, List<ItemEntity> itemEntities, int maxItemSmelt, SpellStats spellStats) {
         int numSmelted = 0;
         for (ItemEntity itemEntity : itemEntities) {
-            if (numSmelted > maxItemSmelt) break;
+            if (numSmelted >= maxItemSmelt) break;
             Optional optional;
 
             if (spellStats.hasBuff(AugmentDampen.INSTANCE)) {
