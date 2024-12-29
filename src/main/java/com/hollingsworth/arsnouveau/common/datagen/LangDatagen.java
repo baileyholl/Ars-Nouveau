@@ -1372,6 +1372,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.shift_delete", "Shift-Click to remove");
         add("ars_nouveau.add_bookmark", "Add Bookmark");
         add("ars_nouveau.shift_back", "Shift-Click to go to home");
+        add("ars_nouveau.doc.categories", "Categories");
     }
 
     public void addCategory(String key, String value){

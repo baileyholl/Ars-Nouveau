@@ -37,7 +37,7 @@ public class PageHolderScreen extends BaseDocScreen{
         allWidgets = new ArrayList<>();
         for(int i = 0; i < pages.size(); i++){
             SinglePageCtor page = pages.get(i);
-            SinglePageWidget widget = page.create(this,  (i + 1) % 2 == 0 ? bookLeft + RIGHT_PAGE_OFFSET : bookLeft + LEFT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, 135, 180);
+            SinglePageWidget widget = page.create(this,  (i + 1) % 2 == 0 ? bookLeft + RIGHT_PAGE_OFFSET : bookLeft + LEFT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, 135, 176);
             allWidgets.add(widget);
         }
         initPages();

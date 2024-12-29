@@ -125,7 +125,7 @@ dependencies {
 //    implementation(jarJar(group: 'com.hollingsworth.nuggets', name: 'nuggets-neoforge-1.21', version:'[1.0.2.33,)'){
 //        jarJar.pin(it, '1.0.2.33')
 //    })
-    implementation 'com.hollingsworth.nuggets:nuggets-neoforge-1.21:1.0.3'
+    implementation 'com.hollingsworth.nuggets:nuggets-neoforge-1.21:1.0.4'
 }
 
 jar {

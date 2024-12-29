@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocPlayerData;
 import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
-import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
+import com.hollingsworth.arsnouveau.client.gui.SearchBar;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.nuggets.client.gui.BaseButton;
 import com.hollingsworth.nuggets.client.gui.BaseScreen;
@@ -31,8 +31,6 @@ import java.util.List;
 
 public class BaseDocScreen extends BaseScreen {
 
-    public static ResourceLocation background = ArsNouveau.prefix("textures/gui/spell_book_template.png");
-
     public NuggetImageButton leftArrow;
 
     public NuggetImageButton rightArrow;
@@ -40,7 +38,7 @@ public class BaseDocScreen extends BaseScreen {
 
     public int arrowIndex;
     public int maxArrowIndex;
-    public NoShadowTextField searchBar;
+    public SearchBar searchBar;
     public String previousString = "";
     public BaseDocScreen previousScreen = null;
     SoundManager manager = Minecraft.getInstance().getSoundManager();
@@ -48,28 +46,19 @@ public class BaseDocScreen extends BaseScreen {
     List<AbstractWidget> bookmarkButtons = new ArrayList<>();
     public static final int LEFT_PAGE_OFFSET = 16;
     public static final int RIGHT_PAGE_OFFSET = 150;
-    public static final int PAGE_TOP_OFFSET = 24;
+    public static final int PAGE_TOP_OFFSET = 20;
 
     public BaseDocScreen() {
-        super(Component.empty(), 290, 188, background);
+        super(Component.empty(), DocAssets.BACKGROUND.width(), DocAssets.BACKGROUND.height(), DocAssets.BACKGROUND.location());
     }
 
     @Override
     public void init() {
         super.init();
-        searchBar = new NoShadowTextField(minecraft.font, bookRight - 73, bookTop + 2,
-                54, 12, null, Component.translatable("ars_nouveau.spell_book_gui.search"));
-        searchBar.setBordered(false);
-        searchBar.setTextColor(12694931);
-        searchBar.onClear = (val) -> {
-            this.onSearchChanged("");
-            return null;
-        };
-        if (searchBar.getValue().isEmpty())
-            searchBar.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.search").getString());
+        searchBar = new SearchBar(minecraft.font, bookRight - 150, bookTop - 3);
         searchBar.setResponder(this::onSearchChanged);
         addRenderableWidget(searchBar);
-        backButton = new NuggetImageButton(bookLeft + 6, bookTop + 10, 14, 8, DocAssets.ARROW_BACK.location(), DocAssets.ARROW_BACK_HOVER.location(), (b) -> {
+        backButton = new NuggetImageButton(bookLeft + 6, bookTop + 6, 14, 8, DocAssets.ARROW_BACK.location(), DocAssets.ARROW_BACK_HOVER.location(), (b) -> {
             if(isShiftDown()){
                 var home = new IndexScreen();
                 transition(home);
@@ -92,14 +81,7 @@ public class BaseDocScreen extends BaseScreen {
         if(!showRightArrow()){
             rightArrow.visible = false;
         }
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 142, 0, 0, 23, 20, 23, 20, "textures/gui/discord_tab.png", (b) -> {
-            try {
-                Util.getPlatform().openUri(new URI("https://discord.com/invite/y7TMXZu"));
-            } catch (URISyntaxException e) {
-                throw new RuntimeException(e);
-            }
-        }).withTooltip(Component.translatable("ars_nouveau.gui.discord")));
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 142, 0, 0, 23, 20, 23, 20, "textures/gui/discord_tab.png", (b) -> {
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 138, 0, 0, 23, 20, 23, 20, "textures/gui/discord_tab.png", (b) -> {
             try {
                 Util.getPlatform().openUri(new URI("https://discord.com/invite/y7TMXZu"));
             } catch (URISyntaxException e) {
@@ -114,7 +96,6 @@ public class BaseDocScreen extends BaseScreen {
     @Override
     public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
-        graphics.blit(ArsNouveau.prefix("textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15, 72, 15);
     }
 
     public void onSearchChanged(String str) {
@@ -167,8 +148,10 @@ public class BaseDocScreen extends BaseScreen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if(button == 1){
-            goBack();
+        if(!searchBar.isHovered()){
+            if(button == 1){
+                goBack();
+            }
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
