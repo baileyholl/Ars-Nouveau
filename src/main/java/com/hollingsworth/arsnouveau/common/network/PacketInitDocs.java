@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.documentation.DocPlayerData;
+import com.hollingsworth.arsnouveau.client.documentation.DocDataLoader;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.arsnouveau.setup.registry.Documentation;
 import net.minecraft.client.Minecraft;
@@ -29,6 +31,7 @@ public class PacketInitDocs extends AbstractPacket{
             minecraft.setScreen(null);
         }
         Documentation.initOnWorldReload();
+        DocPlayerData.bookmarks = DocDataLoader.loadBookmarks();
     }
 
     @Override

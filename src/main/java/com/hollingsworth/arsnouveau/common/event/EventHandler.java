@@ -181,7 +181,6 @@ public class EventHandler {
         }
     }
 
-
     @SubscribeEvent
     public static void playerLogin(PlayerEvent.PlayerLoggedInEvent e) {
         if (e.getEntity().getCommandSenderWorld().isClientSide)
