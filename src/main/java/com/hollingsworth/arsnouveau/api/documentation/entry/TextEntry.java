@@ -27,7 +27,7 @@ public class TextEntry extends SinglePageWidget {
         this.title = title;
         this.renderStack = renderStack;
         if(title != null){
-            this.titleLabel = NuggetMultilLineLabel.create(Minecraft.getInstance().font, title, 100);
+            this.titleLabel = NuggetMultilLineLabel.create(Minecraft.getInstance().font, title, 95);
         }
     }
 

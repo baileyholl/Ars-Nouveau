@@ -125,10 +125,10 @@ public class DocClientUtils {
     public static void drawParagraph(Component text, GuiGraphics guiGraphics, int x, int y, int width, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
         poseStack.pushPose();
-        float scale = 0.63f;
+        float scale = 0.7f;
         poseStack.translate(x + 2, y, 0);
         poseStack.scale(scale, scale, 1);
-        NuggetMultilLineLabel label = NuggetMultilLineLabel.create(Minecraft.getInstance().font, text, (int) (width * 1.58) - 4);
+        NuggetMultilLineLabel label = NuggetMultilLineLabel.create(Minecraft.getInstance().font, text, (int) (width * 1.48) - 6);
         label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, 12, 0);
 
 //        float dist = 0.08F;

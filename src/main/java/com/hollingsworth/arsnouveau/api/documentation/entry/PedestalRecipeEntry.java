@@ -43,13 +43,14 @@ public class PedestalRecipeEntry extends SinglePageWidget {
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
         DocClientUtils.drawHeader(title, guiGraphics, x, y, width, mouseX,mouseY, partialTick);
-        DocClientUtils.blit(guiGraphics, image,x + 20, y + 22);
+        int yOffset = 24;
+        DocClientUtils.blit(guiGraphics, image,x + 20, y + yOffset);
 
         int degreePerInput = (int) (360F / ingredients.size());
         float currentDegree = spinning ? ClientInfo.ticksInGame + partialTick : 0;
         for (Ingredient input : ingredients) {
             int renderX = x + 26;
-            int renderY = y + 24;
+            int renderY = y + yOffset + 2;
             setTooltipIfHovered(DocClientUtils.renderIngredientAtAngle(guiGraphics, renderX, renderY, mouseX, mouseY, currentDegree, input));
             double itemX =  (renderX + DocClientUtils.nextXAngle(currentDegree - 90, 41));
             double itemY =  (renderY + DocClientUtils.nextYAngle(currentDegree - 90, 41));
@@ -65,12 +66,12 @@ public class PedestalRecipeEntry extends SinglePageWidget {
 
         if(!reagentStack.isEmpty()){
             int itemX = x + width / 2 + 14;
-            int itemY = y + 55;
+            int itemY = y + yOffset + 33;
             setTooltipIfHovered(DocClientUtils.renderIngredient(guiGraphics, itemX, itemY, mouseX, mouseY, reagentStack));
         }
 
         int itemX = x + width / 2 - 1;
-        int itemY = y + 130;
+        int itemY = y + yOffset + 108;
         setTooltipIfHovered(DocClientUtils.renderItemStack(guiGraphics, itemX, itemY, mouseX, mouseY, outputStack));
     }
 }

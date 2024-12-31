@@ -630,7 +630,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page.world_generation", "World Generation");
         add("ars_nouveau.page1.world_generation", "Several resources can spawn in the world, each with their own magical properties. Archwood trees come in several decorative variants and may be used to craft Casting Wands. Source Berries, found in Taigas, are essential for crafting Mana Regeneration potions.");
         add("ars_nouveau.page.archwood", "Archwood Trees");
-        add("ars_nouveau.page1.archwood", "Archwood Trees have a small chance to spawn in any biome, and come in four types. Rarely, you may stumble upon an Archwood Forest, a biome full of magical creatures, naturally spawning lights, and Archwood trees. Can be used as decoration, rituals, or for crafting wands.");
+        add("ars_nouveau.page1.archwood", "Archwood Trees have a small chance to spawn in any biome, and come in four types. Rarely, you may stumble upon an Archwood Forest, a biome full of magical creatures, naturally spawning lights, and Archwood trees. Can be used as decoration, rituals, or for crafting wands. Archwood Trees also have a chance to spawn magical fruits that can be consumed or brewed into potions.");
         add("ars_nouveau.page1.decorative", "Purely decorative blocks. To see the full list, place Arcane Stone in a Stonecutter.");
         add("ars_nouveau.wilden", "Wilden");
         add("ars_nouveau.page.decorative", "Decorative Blocks");
@@ -920,8 +920,6 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.melder.needs_potion", "Linked jars need potion");
         add("ars_nouveau.melder.destination_invalid", "Destination cannot accept the mixed potion.");
         add("arsnouveau.debug.log_created", "Log file created: %s");
-        add("ars_nouveau.page.archwood_forest", "Archwood Forest");
-        add("ars_nouveau.page1.archwood_forest", "The Archwood Forest is a somewhat rare biome filled with magical lights and archwood trees. It contains an increased amount of gold. Additionally, magical creatures such as Starbuncles, Whirlisprigs, Archwood Treants, and Drygmys have a much higher chance of spawning. Terrablender is required to be installed to generate this biome.");
         add("ars_nouveau.melder.too_far", "Jars must be within 3 blocks.");
         add("ars_nouveau.starbuncle.storing_potions", "Storing potions at %s locations");
         add("ars_nouveau.starbuncle.taking_potions", "Taking potions from %s locations");
@@ -1355,16 +1353,22 @@ public class LangDatagen extends LanguageProvider {
         add("tooltip.alakarkinos_shard1", "Found by giving an Alakarkinos a Sherd.");
         add("tooltip.alakarkinos_shard2", "What's that behind your ear?");
         addCategory("getting_started", "Getting Started");
-        addCategory("crafting","Crafting");
+        addCategory("crafting","Crafting and Automation");
         addCategory("glyph_index","Glyph Index");
         addCategory("ritual_index","Ritual Index");
         addCategory("source", "Source");
-        addCategory("magical_systems", "Magical Systems");
         addCategory("creature_compendium", "Creature Compendium");
-        addCategory("items", "Items and Blocks");
+        addCategory("items_equipment", "Items and Equipment");
+        addCategory("spell_casting", "Spell Casting");
+        addCategory("items", "Items");
         addCategory("glyphs_tier_one", "Tier One Glyphs");
         addCategory("glyphs_tier_two", "Tier Two Glyphs");
         addCategory("glyphs_tier_three", "Tier Three Glyphs");
+        addCategory("armor", "Armor");
+        addCategory("familiars", "Familiars");
+        addCategory("equipment", "Items");
+        addCategory("field_guide", "Field Guide");
+        addCategory("enchanting", "Apparatus Enchanting");
         add("ars_nouveau.augmenting", "Augmenting %s:");
         add("ars_nouveau.tier.one", "Tier One");
         add("ars_nouveau.tier.two", "Tier Two");
@@ -1375,6 +1379,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.doc.categories", "Categories");
         add("ars_nouveau.doc.related_entries", "Related Entries");
         add("ars_nouveau.doc.search_results", "Search Results");
+        add("ars_nouveau.documentation.intro1", "");
     }
 
     public void addCategory(String key, String value){

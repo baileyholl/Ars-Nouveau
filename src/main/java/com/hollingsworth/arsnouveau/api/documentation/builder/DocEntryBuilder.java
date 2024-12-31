@@ -21,7 +21,7 @@ public class DocEntryBuilder {
     List<SinglePageCtor> pages = new ArrayList<>();
     int textCounter;
     String textKey;
-    int sortNum;
+    int sortNum = 100;
     public DocCategory category;
     ItemStack displayItem;
     String titleKey;

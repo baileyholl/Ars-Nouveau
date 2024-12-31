@@ -20,7 +20,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public record DocEntry(ResourceLocation id, CopyOnWriteArrayList<SinglePageCtor> pages, ItemStack renderStack, Component entryTitle, int order, Set<DocCategory> categories) implements Comparable<DocEntry> {
 
     public DocEntry(ResourceLocation id, ItemStack renderStack, Component component) {
-        this(id, new CopyOnWriteArrayList<>(), renderStack, component, 1, ConcurrentHashMap.newKeySet());
+        this(id, new CopyOnWriteArrayList<>(), renderStack, component, 100, ConcurrentHashMap.newKeySet());
     }
 
     public DocEntry(ResourceLocation id, ItemStack renderStack, Component component, int order) {

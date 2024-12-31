@@ -19,7 +19,9 @@ public class EntriesScreen extends BaseDocScreen{
         var entries = new ArrayList<>(DocumentationRegistry.getEntries(category));
         entries.sort(category.entryComparator());
         this.entries = new ArrayList<>(entries);
-        this.maxArrowIndex = (this.entries.size() - 1) / 16;
+        if(this.entries.size() > 17){
+            maxArrowIndex = 1 + (this.entries.size() - 17) / 18;
+        }
     }
 
     @Override
@@ -54,7 +56,7 @@ public class EntriesScreen extends BaseDocScreen{
         }else{
             int offsetIndex = arrowIndex * 18 - 1;
             getLeftPageButtons(offsetIndex, offsetIndex + 9);
-            getRightPageButtons(offsetIndex + 9, offsetIndex + 17);
+            getRightPageButtons(offsetIndex + 9, offsetIndex + 18);
         }
     }
 
@@ -63,7 +65,7 @@ public class EntriesScreen extends BaseDocScreen{
         boolean offset = to - from == 8;
         for(int i = 0; i < sliced.size(); i++){
             DocEntry entry = sliced.get(i);
-            var button = new DocEntryButton(bookLeft + LEFT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET  +  (16 * i) + (offset ? 16 : 0), entry, (b) -> {
+            var button = new DocEntryButton(bookLeft + LEFT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET + 3  +  (16 * i) + (offset ? 16 : 0), entry, (b) -> {
                 transition(new PageHolderScreen(entry));
             });
             addRenderableWidget(button);
@@ -78,7 +80,7 @@ public class EntriesScreen extends BaseDocScreen{
         List<DocEntry> sliced = entries.subList(from, Math.min(to, entries.size()));
         for(int i = 0; i < sliced.size(); i++){
             DocEntry entry = sliced.get(i);
-            var button = new DocEntryButton(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET + 16 * i, entry, (b) -> {
+            var button = new DocEntryButton(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET + 3 + 16 * i, entry, (b) -> {
                 transition(new PageHolderScreen(entry));
             });
             addRenderableWidget(button);

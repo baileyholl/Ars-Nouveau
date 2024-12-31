@@ -20,7 +20,7 @@ public class DocSectionButton extends NuggetImageButton {
         super(x, y, 118, 27, image, onPress);
         this.renderItem = renderItem;
         this.title = title;
-        this.message = NuggetMultilLineLabel.create(Minecraft.getInstance().font, title, 100);
+        this.message = NuggetMultilLineLabel.create(Minecraft.getInstance().font, title, 98);
     }
 
     @Override
