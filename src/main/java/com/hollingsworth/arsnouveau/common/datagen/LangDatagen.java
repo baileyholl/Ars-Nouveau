@@ -1374,6 +1374,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.shift_back", "Shift-Click to go to home");
         add("ars_nouveau.doc.categories", "Categories");
         add("ars_nouveau.doc.related_entries", "Related Entries");
+        add("ars_nouveau.doc.search_results", "Search Results");
     }
 
     public void addCategory(String key, String value){

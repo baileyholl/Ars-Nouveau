@@ -37,6 +37,7 @@ public class DocumentationRegistry {
     private static final Map<ResourceLocation, DocCategory> mainCategoryMap = new ConcurrentHashMap<>();
 
     private static final Map<ResourceLocation, DocEntry> entryMap = new ConcurrentHashMap<>();
+    private static final Set<DocEntry> allEntries = ConcurrentHashMap.newKeySet();
     private static final Map<DocCategory, Set<DocEntry>> entryCategoryMap = new ConcurrentHashMap<>();
 
 
@@ -69,11 +70,16 @@ public class DocumentationRegistry {
             throw new IllegalArgumentException("Cannot register an entry to a category with subcategories");
         }
         entryMap.put(entry.id(), entry);
+        allEntries.add(entry);
         var entries = entryCategoryMap.computeIfAbsent(category, k -> ConcurrentHashMap.newKeySet());
         entries.remove(entry); // Remove and overwrite in the case of world reloads
         entries.add(entry);
         entry.categories().add(category);
         return entry;
+    }
+
+    public static Set<DocEntry> getEntries(){
+        return allEntries;
     }
 
     public static Set<DocEntry> getEntries(DocCategory category){

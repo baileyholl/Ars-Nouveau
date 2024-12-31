@@ -57,7 +57,7 @@ public class BaseDocScreen extends BaseScreen {
     @Override
     public void init() {
         super.init();
-        searchBar = new SearchBar(minecraft.font, bookRight - 150, bookTop - 3);
+        searchBar = new SearchBar(minecraft.font, bookRight - 130, bookTop - 3);
         searchBar.setResponder(this::onSearchChanged);
         addRenderableWidget(searchBar);
         backButton = new NuggetImageButton(bookLeft + 6, bookTop + 6, 14, 8, DocAssets.ARROW_BACK.location(), DocAssets.ARROW_BACK_HOVER.location(), (b) -> {
@@ -96,6 +96,11 @@ public class BaseDocScreen extends BaseScreen {
 
 
     @Override
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphics, mouseX, mouseY, partialTicks);
+    }
+
+    @Override
     public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
     }
@@ -104,6 +109,9 @@ public class BaseDocScreen extends BaseScreen {
         if (str.equals(previousString))
             return;
         previousString = str;
+        if(!str.isEmpty()){
+            transition(new SearchScreen(str));
+        }
     }
 
     public boolean isShiftDown(){
@@ -156,6 +164,18 @@ public class BaseDocScreen extends BaseScreen {
             }
         }
         return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean charTyped(char c, int i) {
+        if(!searchBar.isFocused()){
+            searchBar.setFocused(true);
+        }
+        if (searchBar.charTyped(c, i)) {
+            return true;
+        }
+
+        return super.charTyped(c, i);
     }
 
     public void transition(BaseDocScreen screen){

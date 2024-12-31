@@ -56,7 +56,7 @@ public class DocAssets {
     public static final BlitInfo SPLASH_FRAME = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_frame_splash_page.png"), 124, 162);
     public static final BlitInfo BACKGROUND = new BlitInfo(ArsNouveau.prefix("textures/gui/spell_book_template.png"), 290, 188);
 
-    public static final BlitInfo SEARCH_PAPER = new BlitInfo(ArsNouveau.prefix("textures/gui/search_paper.png"), 72, 15);
+    public static final BlitInfo SEARCH_PAPER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_search_bar.png"), 110, 15);
 
     public record BlitInfo(ResourceLocation location, int u, int v, int width, int height) {
         public BlitInfo(ResourceLocation location, int width, int height){
