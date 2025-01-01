@@ -1,9 +1,12 @@
 package com.hollingsworth.arsnouveau.api.util;
 
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.hollingsworth.arsnouveau.api.source.ISourceCap;
 import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.source.SourceManager;
 import com.hollingsworth.arsnouveau.api.source.SourceProvider;
+import com.hollingsworth.arsnouveau.common.block.CreativeSourceJar;
 import com.hollingsworth.arsnouveau.common.capability.SourceStorage;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.util.Log;
@@ -13,9 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class SourceUtil {
 
@@ -62,16 +63,25 @@ public class SourceUtil {
      */
     public static @Nullable List<ISpecialSourceProvider> takeSource(BlockPos pos, Level level, int range, int source) {
         List<ISpecialSourceProvider> providers = canTakeSource(pos, level, range);
+        Multimap<ISpecialSourceProvider, Integer> potentialRefunds = Multimaps.newMultimap(new HashMap<>(), ArrayList::new);
 
         int needed = source;
-        int availableProviders = 0;
         for (ISpecialSourceProvider provider : providers) {
+            if (provider instanceof CreativeSourceJar) {
+                for (Map.Entry<ISpecialSourceProvider, Integer> entry : potentialRefunds.entries()) {
+                    entry.getKey().getCapability().receiveSource(entry.getValue(), false);
+                }
+
+                return List.of(provider);
+            }
+
             ISourceCap cap = provider.getCapability();
 
-            var available = Math.min(needed, cap.getSource());
-            if (needed > 0 && cap.canProvideSource(available)) {
-                needed -= available;
-                availableProviders++;
+            int available = Math.min(needed, cap.getSource());
+            int extracted = cap.extractSource(available, false);
+            if (needed > 0 && extracted > 0) {
+                needed -= extracted;
+                potentialRefunds.put(provider, extracted);
             }
 
             if (needed <= 0) {
@@ -80,29 +90,13 @@ public class SourceUtil {
         }
 
         if (needed > 0) {
+            for (Map.Entry<ISpecialSourceProvider, Integer> entry : potentialRefunds.entries()) {
+                entry.getKey().getCapability().receiveSource(entry.getValue(), false);
+            }
             return null;
         }
 
-        List<ISpecialSourceProvider> provided = new ArrayList<>(availableProviders);
-        needed = source;
-        for (var provider : providers) {
-            ISourceCap cap = provider.getCapability();
-            var available = Math.min(needed, cap.getSource());
-            if (available <= 0) {
-                continue;
-            }
-
-            cap.extractSource(available, false);
-            needed -= available;
-            provided.add(provider);
-
-            if (needed <= 0) {
-                return provided;
-            }
-        }
-
-        Log.getLogger().warn("Expected to be able to extract {} source from {} providers within {} blocks of {}, {}, {} but failed to extract {}", source, availableProviders, range, pos.getX(), pos.getY(), pos.getZ(), needed);
-        return null;
+        return new ArrayList<>(potentialRefunds.keys());
     }
 
     /**
