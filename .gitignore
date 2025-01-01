@@ -27,3 +27,6 @@ server
 forge*changelog.txt
 
 run
+
+# Datagen cache
+/src/generated/resources/.cache/
