@@ -11,27 +11,32 @@ public class CreativeSourceJarTile extends SourceJarTile {
 
     @Override
     protected @NotNull ISourceCap createDefaultSourceCapability() {
-        return new SourceStorage(1000000, 1000000, 1000000, 1000000) {
-
-            // Acts as void or infinite source, overrides method without doing checks or changes
-            @Override
-            public int receiveSource(int toReceive, boolean simulate) {
-                return toReceive;
-            }
-
-            @Override
-            public int extractSource(int toExtract, boolean simulate) {
-                return toExtract;
-            }
-
-            @Override
-            public int getSource() {
-                return 1000000;
-            }
-        };
+        return new InfiniteSourceStorage();
     }
 
     public CreativeSourceJarTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.CREATIVE_SOURCE_JAR_TILE.get(), pos, state);
+    }
+
+    public static class InfiniteSourceStorage extends SourceStorage {
+        public InfiniteSourceStorage() {
+            super(1000000, 1000000, 1000000, 1000000);
+        }
+
+        // Acts as void or infinite source, overrides method without doing checks or changes
+        @Override
+        public int receiveSource(int toReceive, boolean simulate) {
+            return toReceive;
+        }
+
+        @Override
+        public int extractSource(int toExtract, boolean simulate) {
+            return toExtract;
+        }
+
+        @Override
+        public int getSource() {
+            return 1000000;
+        }
     }
 }
