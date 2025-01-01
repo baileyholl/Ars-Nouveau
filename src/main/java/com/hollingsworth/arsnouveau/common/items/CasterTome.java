@@ -64,7 +64,7 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
                 getInformation(stack, context, tooltip2, flagIn);
             }
 
-            if (!caster.getFlavorText().isEmpty())
+            if (!Screen.hasShiftDown() && !caster.getFlavorText().isEmpty())
                 tooltip2.add(Component.literal(caster.getFlavorText()).withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE)));
 
             tooltip2.add(Component.translatable("tooltip.ars_nouveau.caster_tome"));
