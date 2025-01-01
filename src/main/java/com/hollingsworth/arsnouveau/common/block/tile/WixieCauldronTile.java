@@ -80,7 +80,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
             return;
         }
 
-        if (!hasSource && level.getGameTime() % 5 == 0 && SourceUtil.takeSourceWithParticles(worldPosition, level, 6, 50) != null) {
+        if (!hasSource && level.getGameTime() % 5 == 0 && SourceUtil.takeSourceMultipleWithParticles(worldPosition, level, 6, 50) != null) {
             this.hasSource = true;
             level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(WixieCauldron.FILLED, true));
             setChanged();

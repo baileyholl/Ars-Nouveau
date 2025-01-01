@@ -151,7 +151,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
         }
         IEnchantingRecipe recipe = this.getRecipe(catalyst, playerEntity);
         if (recipe.consumesSource())
-            SourceUtil.takeSourceWithParticles(worldPosition, level, 10, recipe.sourceCost());
+            SourceUtil.takeSourceMultipleWithParticles(worldPosition, level, 10, recipe.sourceCost());
         this.isCrafting = true;
         updateBlock();
         Networking.sendToNearbyClient(level, worldPosition, new PacketOneShotAnimation(worldPosition));

@@ -74,7 +74,7 @@ public class TileCaster implements IWrappedCaster{
     public void expendMana(int totalCost) {
         if (tile instanceof BasicSpellTurretTile spellTurretTile) {
             if (spellTurretTile.getManaCost() <= 0) return;
-            SourceUtil.takeSourceWithParticles(tile.getBlockPos(), tile.getLevel(), 10, spellTurretTile.getManaCost());
+            SourceUtil.takeSourceMultipleWithParticles(tile.getBlockPos(), tile.getLevel(), 10, spellTurretTile.getManaCost());
         }
     }
 }

@@ -138,7 +138,7 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
             level.destroyBlock(this.worldPosition, false);
         }
         if (!level.isClientSide) {
-            ISpecialSourceProvider provider = SourceUtil.takeSourceWithParticles(worldPosition, level, 10, 100);
+            List<ISpecialSourceProvider> provider = SourceUtil.takeSourceMultipleWithParticles(worldPosition, level, 10, 100);
             if (provider != null) {
                 this.isCharged = true;
                 level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).cycle(RuneBlock.POWERED));
