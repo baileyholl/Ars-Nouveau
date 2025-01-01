@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -34,7 +35,7 @@ public class RelayCollectorTile extends RelayTile {
                     continue;
                 }
 
-                int transferred = transferSource(provider.getSource(), this);
+                int transferred = transferSource(provider.getCapability(), this.getSourceCapability());
                 if (transferred > 0) {
                     ParticleUtil.spawnFollowProjectile(level, provider.getCurrentPos(), this.worldPosition, this.getColor());
                 }

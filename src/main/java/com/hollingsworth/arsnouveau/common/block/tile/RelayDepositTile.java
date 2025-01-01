@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -33,8 +34,8 @@ public class RelayDepositTile extends RelayTile {
                     continue;
                 }
 
-                if (!(provider.getSource() instanceof RelayTile)) {
-                    transferSource(this, provider.getSource());
+                if (!(level.getBlockEntity(provider.getCurrentPos()) instanceof RelayTile)) {
+                    transferSource(this.getSourceCapability(), provider.getCapability());
                     ParticleUtil.spawnFollowProjectile(level, this.worldPosition, provider.getCurrentPos(), this.getColor());
                 }
             }

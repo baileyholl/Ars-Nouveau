@@ -9,6 +9,8 @@ import com.hollingsworth.arsnouveau.api.source.SourceProvider;
 import com.hollingsworth.arsnouveau.common.block.tile.CreativeSourceJarTile;
 import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
+import com.hollingsworth.arsnouveau.common.util.Log;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -63,7 +65,35 @@ public class SourceUtil {
                 provider.getSource().removeSource(source);
                 return provider;
             }
+
+            if (needed <= 0) {
+                break;
+            }
         }
+
+        if (needed > 0) {
+            return null;
+        }
+
+        List<ISpecialSourceProvider> provided = new ArrayList<>(availableProviders);
+        needed = source;
+        for (var provider : providers) {
+            ISourceCap cap = provider.getCapability();
+            var available = Math.min(needed, cap.getSource());
+            if (available <= 0) {
+                continue;
+            }
+
+            cap.extractSource(available, false);
+            needed -= available;
+            provided.add(provider);
+
+            if (needed <= 0) {
+                return provided;
+            }
+        }
+
+        Log.getLogger().warn("Expected to be able to extract {} source from {} providers within {} blocks of {}, {}, {} but failed to extract {}", source, availableProviders, range, pos.getX(), pos.getY(), pos.getZ(), needed);
         return null;
     }
 
