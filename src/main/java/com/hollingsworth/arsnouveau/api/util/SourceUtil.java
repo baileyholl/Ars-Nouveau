@@ -83,16 +83,20 @@ public class SourceUtil {
                 return List.of(provider);
             }
 
+            if (needed <= 0) {
+                continue;
+            }
+
             int initial = sourceTile.getSource();
             int available = Math.min(needed, initial);
             int after = sourceTile.removeSource(available);
-            if (needed > 0 && initial > after) {
+            if (initial > after) {
                 int extracted = initial - after;
                 needed -= extracted;
                 takenFrom.put(provider, extracted);
             }
 
-            // We can't break even if needed < 0 as there may still be a Creative Source Jar in the list
+            // We can't break even if needed <= 0 as there may still be a Creative Source Jar in the list
         }
 
         if (needed > 0) {
