@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.source.SourceManager;
 import com.hollingsworth.arsnouveau.api.source.SourceProvider;
 import com.hollingsworth.arsnouveau.common.block.CreativeSourceJar;
+import com.hollingsworth.arsnouveau.common.block.tile.CreativeSourceJarTile;
 import com.hollingsworth.arsnouveau.common.capability.SourceStorage;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.util.Log;
@@ -67,15 +68,14 @@ public class SourceUtil {
 
         int needed = source;
         for (ISpecialSourceProvider provider : providers) {
-            if (provider instanceof CreativeSourceJar) {
+            ISourceCap cap = provider.getCapability();
+            if (cap instanceof CreativeSourceJarTile.InfiniteSourceStorage) {
                 for (Map.Entry<ISpecialSourceProvider, Integer> entry : potentialRefunds.entries()) {
                     entry.getKey().getCapability().receiveSource(entry.getValue(), false);
                 }
 
                 return List.of(provider);
             }
-
-            ISourceCap cap = provider.getCapability();
 
             int available = Math.min(needed, cap.getSource());
             int extracted = cap.extractSource(available, false);
