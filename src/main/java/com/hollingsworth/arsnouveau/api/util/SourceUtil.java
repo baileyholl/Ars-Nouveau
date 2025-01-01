@@ -70,13 +70,13 @@ public class SourceUtil {
      */
     public static @Nullable List<ISpecialSourceProvider> takeSourceMultiple(BlockPos pos, Level level, int range, int source) {
         List<ISpecialSourceProvider> providers = canTakeSource(pos, level, range);
-        Multimap<ISpecialSourceProvider, Integer> potentialRefunds = Multimaps.newMultimap(new HashMap<>(), ArrayList::new);
+        Multimap<ISpecialSourceProvider, Integer> takenFrom = Multimaps.newMultimap(new HashMap<>(), ArrayList::new);
 
         int needed = source;
         for (ISpecialSourceProvider provider : providers) {
             ISourceTile sourceTile = provider.getSource();
             if (sourceTile instanceof CreativeSourceJarTile) {
-                for (Map.Entry<ISpecialSourceProvider, Integer> entry : potentialRefunds.entries()) {
+                for (Map.Entry<ISpecialSourceProvider, Integer> entry : takenFrom.entries()) {
                     entry.getKey().getSource().addSource(entry.getValue());
                 }
 
@@ -89,20 +89,20 @@ public class SourceUtil {
             if (needed > 0 && initial > after) {
                 int extracted = initial - after;
                 needed -= extracted;
-                potentialRefunds.put(provider, extracted);
+                takenFrom.put(provider, extracted);
             }
 
             // We can't braek even if needed < 0 as there may still be a Creative Source Jar in the list
         }
 
         if (needed > 0) {
-            for (Map.Entry<ISpecialSourceProvider, Integer> entry : potentialRefunds.entries()) {
+            for (Map.Entry<ISpecialSourceProvider, Integer> entry : takenFrom.entries()) {
                 entry.getKey().getSource().addSource(entry.getValue());
             }
             return null;
         }
 
-        return new ArrayList<>(potentialRefunds.keys());
+        return new ArrayList<>(takenFrom.keys());
     }
     /**
      * @deprecated Use {@link SourceUtil#takeSourceMultipleWithParticles(BlockPos, Level, int, int)}
