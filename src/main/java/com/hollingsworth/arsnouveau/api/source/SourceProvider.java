@@ -1,27 +1,28 @@
 package com.hollingsworth.arsnouveau.api.source;
 
+import com.hollingsworth.arsnouveau.common.capability.SourceStorage;
 import net.minecraft.core.BlockPos;
 
 public class SourceProvider implements ISpecialSourceProvider {
-    private final ISourceTile tile;
+    private final ISourceCap capability;
     private final BlockPos pos;
     private final boolean isValid;
 
-    public SourceProvider(ISourceTile tile, BlockPos pos) {
-        this.tile = tile;
+    public SourceProvider(ISourceCap capability, BlockPos pos) {
+        this.capability = capability;
         this.pos = pos;
-        this.isValid = tile != null;
+        this.isValid = capability != null;
     }
 
     public SourceProvider(ISpecialSourceProvider specialSourceProvider){
-        this.tile = specialSourceProvider.getSource();
+        this.capability = specialSourceProvider.getCapability();
         this.pos = specialSourceProvider.getCurrentPos();
         isValid = specialSourceProvider.isValid();
     }
 
     @Override
-    public ISourceTile getSource() {
-        return tile;
+    public ISourceCap getCapability() {
+        return capability;
     }
 
     @Override

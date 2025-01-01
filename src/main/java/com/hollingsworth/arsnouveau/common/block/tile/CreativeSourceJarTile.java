@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.source.ISourceCap;
 import com.hollingsworth.arsnouveau.common.capability.SourceStorage;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -9,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public class CreativeSourceJarTile extends SourceJarTile {
 
     @Override
-    protected @NotNull SourceStorage createDefaultStorage() {
+    protected @NotNull ISourceCap createDefaultSourceCapability() {
         return new SourceStorage(1000000, 1000000, 1000000, 1000000) {
 
             // Acts as void or infinite source, overrides method without doing checks or changes
