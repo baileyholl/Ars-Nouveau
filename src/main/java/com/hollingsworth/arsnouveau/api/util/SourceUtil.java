@@ -1,8 +1,9 @@
 package com.hollingsworth.arsnouveau.api.util;
 
-import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
-import com.hollingsworth.arsnouveau.api.source.SourceManager;
-import com.hollingsworth.arsnouveau.api.source.SourceProvider;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
+import com.hollingsworth.arsnouveau.api.source.*;
+import com.hollingsworth.arsnouveau.common.block.tile.CreativeSourceJarTile;
 import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import net.minecraft.core.BlockPos;
@@ -10,9 +11,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class SourceUtil {
 
@@ -42,25 +41,76 @@ public class SourceUtil {
         return posList;
     }
 
-    public static @Nullable ISpecialSourceProvider takeSource(BlockPos pos, Level level, int range, int source){
+    /**
+     * @param pos Position around which to find source providers
+     * @param level Level to find source providers in
+     * @param range Range to check around `pos`
+     * @param source How much source to extract
+     * @return List of all the providers extracted from, or null if there was not enough total source.
+     */
+    public static @Nullable List<ISpecialSourceProvider> takeSource(BlockPos pos, Level level, int range, int source) {
         List<ISpecialSourceProvider> providers = canTakeSource(pos, level, range);
-        for(ISpecialSourceProvider provider : providers){
-            if(provider.getSource().getSource() >= source){
-                provider.getSource().removeSource(source);
-                return provider;
+        Multimap<ISpecialSourceProvider, Integer> potentialRefunds = Multimaps.newMultimap(new HashMap<>(), ArrayList::new);
+
+        int needed = source;
+        for (ISpecialSourceProvider provider : providers) {
+            ISourceTile sourceTile = provider.getSource();
+            if (sourceTile instanceof CreativeSourceJarTile) {
+                for (Map.Entry<ISpecialSourceProvider, Integer> entry : potentialRefunds.entries()) {
+                    entry.getKey().getSource().addSource(entry.getValue());
+                }
+
+                return List.of(provider);
+            }
+
+            int initial = sourceTile.getSource();
+            int available = Math.min(needed, initial);
+            int after = sourceTile.removeSource(available);
+            if (needed > 0 && initial > after) {
+                int extracted = initial - after;
+                needed -= extracted;
+                potentialRefunds.put(provider, extracted);
+            }
+
+            if (needed <= 0) {
+                break;
             }
         }
-        return null;
+
+        if (needed > 0) {
+            for (Map.Entry<ISpecialSourceProvider, Integer> entry : potentialRefunds.entries()) {
+                entry.getKey().getSource().addSource(entry.getValue());
+            }
+            return null;
+        }
+
+        return new ArrayList<>(potentialRefunds.keys());
     }
 
-    public static @Nullable ISpecialSourceProvider takeSourceWithParticles(BlockPos pos, Level level, int range, int source){
+    /**
+     * @param pos Position around which to find source providers
+     * @param level Level to find source providers in
+     * @param range Range to check around `pos`
+     * @param source How much source to extract
+     * @return List of all the providers extracted from, or null if there was not enough total source.
+     */
+    public static @Nullable List<ISpecialSourceProvider> takeSourceWithParticles(BlockPos pos, Level level, int range, int source){
         return takeSourceWithParticles(pos, pos, level, range, source);
     }
 
-    public static @Nullable ISpecialSourceProvider takeSourceWithParticles(BlockPos pos, BlockPos particlesTo, Level level, int range, int source){
-        ISpecialSourceProvider result = takeSource(pos, level, range, source);
+    /**
+     * @param pos Position around which to find source providers
+     * @param level Level to find source providers in
+     * @param range Range to check around `pos`
+     * @param source How much source to extract
+     * @return List of all the providers extracted from, or null if there was not enough total source.
+     */
+    public static @Nullable List<ISpecialSourceProvider> takeSourceWithParticles(BlockPos pos, BlockPos particlesTo, Level level, int range, int source){
+        List<ISpecialSourceProvider> result = takeSource(pos, level, range, source);
         if(result != null && level instanceof ServerLevel serverLevel){
-            EntityFollowProjectile.spawn(serverLevel, result.getCurrentPos(), particlesTo);
+            for (ISpecialSourceProvider provider : result) {
+                EntityFollowProjectile.spawn(serverLevel, provider.getCurrentPos(), particlesTo);
+            }
         }
         return result;
     }
