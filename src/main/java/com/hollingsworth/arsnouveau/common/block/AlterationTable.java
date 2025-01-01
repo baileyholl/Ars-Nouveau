@@ -161,18 +161,20 @@ public class AlterationTable extends TableBlock{
         state.updateNeighbourShapes(world, pos, 3);
     }
 
-
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState state2, LevelAccessor world, BlockPos pos, BlockPos pos2) {
         List<Direction> connectedDirs = getConnectedDirections(state);
         if(connectedDirs.contains(direction)){
            for(Direction dir : connectedDirs){
-               if(world.getBlockState(pos.relative(dir)).getBlock() != this){
+               var checkPos = pos.relative(dir);
+               var checkState = world.getBlockState(checkPos);
+               var checkBlock = checkState.getBlock();
+               if(checkBlock != this){
                    return tearDown(state, dir, state2, world, pos, pos2);
                }
            }
         }
-        return super.updateShape(state, direction, state2, world, pos, pos2);
+        return super.superUpdateShape(state, direction, state2, world, pos, pos2);
     }
 
     public List<Direction> getConnectedDirections(BlockState state){
