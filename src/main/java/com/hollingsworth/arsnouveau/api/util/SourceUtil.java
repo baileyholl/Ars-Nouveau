@@ -113,6 +113,14 @@ public class SourceUtil {
         return takeSourceMultipleWithParticles(pos, pos, level, range, source);
     }
 
+    public static @Nullable ISpecialSourceProvider takeSourceWithParticles(BlockPos pos, BlockPos particlesTo, Level level, int range, int source){
+        ISpecialSourceProvider result = takeSource(pos, level, range, source);
+        if(result != null && level instanceof ServerLevel serverLevel){
+            EntityFollowProjectile.spawn(serverLevel, result.getCurrentPos(), particlesTo);
+        }
+        return result;
+    }
+
     /**
      * @param pos Position around which to find source providers
      * @param level Level to find source providers in
@@ -126,14 +134,6 @@ public class SourceUtil {
             for (ISpecialSourceProvider provider : result) {
                 EntityFollowProjectile.spawn(serverLevel, provider.getCurrentPos(), particlesTo);
             }
-        }
-        return result;
-    }
-
-    public static @Nullable ISpecialSourceProvider takeSourceWithParticles(BlockPos pos, BlockPos particlesTo, Level level, int range, int source){
-        ISpecialSourceProvider result = takeSource(pos, level, range, source);
-        if(result != null && level instanceof ServerLevel serverLevel){
-            EntityFollowProjectile.spawn(serverLevel, result.getCurrentPos(), particlesTo);
         }
         return result;
     }
