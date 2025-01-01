@@ -41,6 +41,15 @@ public class SourceUtil {
         return posList;
     }
 
+    /**
+     * @deprecated Use {@link SourceUtil#takeSourceMultiple}
+     * @param pos Position around which to find source providers
+     * @param level Level to find source providers in
+     * @param range Range to check around `pos`
+     * @param source How much source to extract
+     * @return Provider that was extracted from, or null if none had enough source.
+     */
+    @Deprecated(forRemoval = true)
     public static @Nullable ISpecialSourceProvider takeSource(BlockPos pos, Level level, int range, int source){
         List<ISpecialSourceProvider> providers = canTakeSource(pos, level, range);
         for(ISpecialSourceProvider provider : providers){
@@ -95,7 +104,15 @@ public class SourceUtil {
 
         return new ArrayList<>(potentialRefunds.keys());
     }
-
+    /**
+     * @deprecated Use {@link SourceUtil#takeSourceMultipleWithParticles(BlockPos, Level, int, int)}
+     * @param pos Position around which to find source providers
+     * @param level Level to find source providers in
+     * @param range Range to check around `pos`
+     * @param source How much source to extract
+     * @return Provider that was extracted from, or null if none had enough source.
+     */
+    @Deprecated(forRemoval = true)
     public static @Nullable ISpecialSourceProvider takeSourceWithParticles(BlockPos pos, Level level, int range, int source){
         return takeSourceWithParticles(pos, pos, level, range, source);
     }
@@ -111,6 +128,15 @@ public class SourceUtil {
         return takeSourceMultipleWithParticles(pos, pos, level, range, source);
     }
 
+    /**
+     * @deprecated Use {@link SourceUtil#takeSourceMultipleWithParticles(BlockPos, BlockPos, Level, int, int)}
+     * @param pos Position around which to find source providers
+     * @param level Level to find source providers in
+     * @param range Range to check around `pos`
+     * @param source How much source to extract
+     * @return Provider that was extracted from, or null if none had enough source.
+     */
+    @Deprecated(forRemoval = true)
     public static @Nullable ISpecialSourceProvider takeSourceWithParticles(BlockPos pos, BlockPos particlesTo, Level level, int range, int source){
         ISpecialSourceProvider result = takeSource(pos, level, range, source);
         if(result != null && level instanceof ServerLevel serverLevel){
