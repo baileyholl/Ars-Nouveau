@@ -69,7 +69,7 @@ public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider
         if (spellCaster.getSpell().isEmpty() || !(this.level instanceof ServerLevel level))
             return;
         int manaCost = getManaCost();
-        if (manaCost > 0 && SourceUtil.takeSourceWithParticles(pos, level, 10, manaCost) == null)
+        if (manaCost > 0 && SourceUtil.takeSourceMultipleWithParticles(pos, level, 10, manaCost) == null)
             return;
         Networking.sendToNearbyClient(level, pos, new PacketOneShotAnimation(pos));
         Position iposition = BasicSpellTurret.getDispensePosition(pos, level.getBlockState(pos).getValue(BasicSpellTurret.FACING));

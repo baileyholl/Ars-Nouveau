@@ -83,9 +83,7 @@ public class SourceUtil {
                 potentialRefunds.put(provider, extracted);
             }
 
-            if (needed <= 0) {
-                break;
-            }
+            // We can't braek even if needed < 0 as there may still be a Creative Source Jar in the list
         }
 
         if (needed > 0) {

@@ -152,7 +152,7 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
         if (spellCaster.getSpell().isEmpty() || !(level instanceof ServerLevel level))
             return;
         int manaCost = getManaCost();
-        if (manaCost > 0 && SourceUtil.takeSourceWithParticles(pos, level, 10, manaCost) == null)
+        if (manaCost > 0 && SourceUtil.takeSourceMultipleWithParticles(pos, level, 10, manaCost) == null)
             return;
         Networking.sendToNearbyClient(level, pos, new PacketOneShotAnimation(pos));
         Position iposition = RotatingSpellTurret.getDispensePosition(pos, this);
