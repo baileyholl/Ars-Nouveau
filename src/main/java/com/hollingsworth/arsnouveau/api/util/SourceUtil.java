@@ -92,7 +92,7 @@ public class SourceUtil {
                 takenFrom.put(provider, extracted);
             }
 
-            // We can't braek even if needed < 0 as there may still be a Creative Source Jar in the list
+            // We can't break even if needed < 0 as there may still be a Creative Source Jar in the list
         }
 
         if (needed > 0) {
