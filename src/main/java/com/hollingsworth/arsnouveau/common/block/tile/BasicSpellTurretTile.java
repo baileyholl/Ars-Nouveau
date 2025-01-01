@@ -41,7 +41,7 @@ public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider
 
     boolean playRecoil;
     protected SpellCaster spellCaster = new SpellCaster(0, null, false, null, 1);
-    private @Nullable UUID uuid = null;
+    @Nullable UUID uuid = null;
 
     public BasicSpellTurretTile(BlockEntityType<?> p_i48289_1_, BlockPos pos, BlockState state) {
         super(p_i48289_1_, pos, state);

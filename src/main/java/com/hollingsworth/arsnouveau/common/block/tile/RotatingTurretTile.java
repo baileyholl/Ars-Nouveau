@@ -12,6 +12,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -27,6 +28,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.core.Direction.*;
@@ -156,7 +158,9 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
             return;
         Networking.sendToNearbyClient(level, pos, new PacketOneShotAnimation(pos));
         Position iposition = RotatingSpellTurret.getDispensePosition(pos, this);
-        FakePlayer fakePlayer = ANFakePlayer.getPlayer(level);
+        FakePlayer fakePlayer = uuid != null
+                ? FakePlayerFactory.get(level, new GameProfile(uuid, ""))
+                : ANFakePlayer.getPlayer(level);
         fakePlayer.setPos(pos.getX(), pos.getY(), pos.getZ());
         EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(level, spellCaster.getSpell(), fakePlayer, new TileCaster(this, SpellContext.CasterType.TURRET)));
         if (resolver.castType != null && RotatingSpellTurret.ROT_TURRET_BEHAVIOR_MAP.containsKey(resolver.castType)) {
