@@ -31,7 +31,6 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new BlockStatesDatagen(output, ArsNouveau.MODID, fileHelper));
         event.getGenerator().addProvider(event.includeServer(), new GlyphRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new ApparatusRecipeProvider(event.getGenerator()));
-        event.getGenerator().addProvider(event.includeServer(), new PatchouliProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new DefaultTableProvider(output, provider));
         event.getGenerator().addProvider(event.includeServer(), new ImbuementRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new CrushRecipeProvider(event.getGenerator()));
@@ -59,6 +58,8 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new CompostablesProvider(output, provider));
 
         event.getGenerator().addProvider(event.includeServer(), new ANCurioProvider(output, fileHelper, provider));
+
+        event.getGenerator().addProvider(event.includeServer(), new PatchouliProvider(event.getGenerator(), provider));
 
         DatapackBuiltinEntriesProvider datapackProvider = new WorldgenProvider(output, provider);
         event.getGenerator().addProvider(event.includeServer(), datapackProvider);
