@@ -140,7 +140,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
             if (!canAcceptSource(Math.min(200, cost)))
                 return;
 
-            List<ISpecialSourceProvider> takePos = SourceUtil.takeSource(worldPosition, level, 2, Math.min(200, cost));
+            List<ISpecialSourceProvider> takePos = SourceUtil.takeSourceMultiple(worldPosition, level, 2, Math.min(200, cost));
             if (takePos != null) {
                 this.addSource(transferRate);
                 for (ISpecialSourceProvider provider : takePos) {

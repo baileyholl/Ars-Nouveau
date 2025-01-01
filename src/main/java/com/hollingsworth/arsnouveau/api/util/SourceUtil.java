@@ -41,6 +41,17 @@ public class SourceUtil {
         return posList;
     }
 
+    public static @Nullable ISpecialSourceProvider takeSource(BlockPos pos, Level level, int range, int source){
+        List<ISpecialSourceProvider> providers = canTakeSource(pos, level, range);
+        for(ISpecialSourceProvider provider : providers){
+            if(provider.getSource().getSource() >= source){
+                provider.getSource().removeSource(source);
+                return provider;
+            }
+        }
+        return null;
+    }
+
     /**
      * @param pos Position around which to find source providers
      * @param level Level to find source providers in
@@ -48,7 +59,7 @@ public class SourceUtil {
      * @param source How much source to extract
      * @return List of all the providers extracted from, or null if there was not enough total source.
      */
-    public static @Nullable List<ISpecialSourceProvider> takeSource(BlockPos pos, Level level, int range, int source) {
+    public static @Nullable List<ISpecialSourceProvider> takeSourceMultiple(BlockPos pos, Level level, int range, int source) {
         List<ISpecialSourceProvider> providers = canTakeSource(pos, level, range);
         Multimap<ISpecialSourceProvider, Integer> potentialRefunds = Multimaps.newMultimap(new HashMap<>(), ArrayList::new);
 
@@ -87,14 +98,7 @@ public class SourceUtil {
         return new ArrayList<>(potentialRefunds.keys());
     }
 
-    /**
-     * @param pos Position around which to find source providers
-     * @param level Level to find source providers in
-     * @param range Range to check around `pos`
-     * @param source How much source to extract
-     * @return List of all the providers extracted from, or null if there was not enough total source.
-     */
-    public static @Nullable List<ISpecialSourceProvider> takeSourceWithParticles(BlockPos pos, Level level, int range, int source){
+    public static @Nullable ISpecialSourceProvider takeSourceWithParticles(BlockPos pos, Level level, int range, int source){
         return takeSourceWithParticles(pos, pos, level, range, source);
     }
 
@@ -105,8 +109,19 @@ public class SourceUtil {
      * @param source How much source to extract
      * @return List of all the providers extracted from, or null if there was not enough total source.
      */
-    public static @Nullable List<ISpecialSourceProvider> takeSourceWithParticles(BlockPos pos, BlockPos particlesTo, Level level, int range, int source){
-        List<ISpecialSourceProvider> result = takeSource(pos, level, range, source);
+    public static @Nullable List<ISpecialSourceProvider> takeSourceMultipleWithParticles(BlockPos pos, Level level, int range, int source){
+        return takeSourceMultipleWithParticles(pos, pos, level, range, source);
+    }
+
+    /**
+     * @param pos Position around which to find source providers
+     * @param level Level to find source providers in
+     * @param range Range to check around `pos`
+     * @param source How much source to extract
+     * @return List of all the providers extracted from, or null if there was not enough total source.
+     */
+    public static @Nullable List<ISpecialSourceProvider> takeSourceMultipleWithParticles(BlockPos pos, BlockPos particlesTo, Level level, int range, int source){
+        List<ISpecialSourceProvider> result = takeSourceMultiple(pos, level, range, source);
         if(result != null && level instanceof ServerLevel serverLevel){
             for (ISpecialSourceProvider provider : result) {
                 EntityFollowProjectile.spawn(serverLevel, provider.getCurrentPos(), particlesTo);
@@ -115,6 +130,13 @@ public class SourceUtil {
         return result;
     }
 
+    public static @Nullable ISpecialSourceProvider takeSourceWithParticles(BlockPos pos, BlockPos particlesTo, Level level, int range, int source){
+        ISpecialSourceProvider result = takeSource(pos, level, range, source);
+        if(result != null && level instanceof ServerLevel serverLevel){
+            EntityFollowProjectile.spawn(serverLevel, result.getCurrentPos(), particlesTo);
+        }
+        return result;
+    }
 
     /**
      * Searches for nearby mana jars that have enough mana.
