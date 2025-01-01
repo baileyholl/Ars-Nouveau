@@ -37,7 +37,7 @@ public class SpellContext implements Cloneable {
 
     private ParticleColor colors = ParticleColor.defaultParticleColor();
     private CasterType type;
-    private Level level;
+    public Level level;
 
     public CompoundTag tag = new CompoundTag();
     private IWrappedCaster wrappedCaster;
