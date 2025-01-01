@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -27,14 +28,14 @@ public class RelayCollectorTile extends RelayTile {
                 if (this.getSource() >= getMaxSource()) {
                     break;
                 }
-                if(this.getToPos() != null && level.isLoaded(this.getToPos()) && level.getBlockEntity(this.getToPos()) == provider.getSource()){
+                if(this.getToPos() != null && level.isLoaded(this.getToPos()) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, this.getToPos(), null) == provider.getCapability()){
                     continue;
                 }
-                if(this.getFromPos() != null && level.isLoaded(this.getFromPos()) && level.getBlockEntity(this.getFromPos()) == provider.getSource()){
+                if(this.getFromPos() != null && level.isLoaded(this.getFromPos()) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, this.getFromPos(), null) == provider.getCapability()){
                     continue;
                 }
 
-                int transferred = transferSource(provider.getSource(), this);
+                int transferred = transferSource(provider.getCapability(), this.getSourceCapability());
                 if (transferred > 0) {
                     ParticleUtil.spawnFollowProjectile(level, provider.getCurrentPos(), this.worldPosition, this.getColor());
                 }

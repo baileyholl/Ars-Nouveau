@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.source;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.capability.SourceStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -38,8 +39,11 @@ public class SourceManager {
     public ISpecialSourceProvider takeSourceNearby(BlockPos pos, Level world, int range, int amount){
         for(ISpecialSourceProvider sourceInterface : getCopySetForLevel(world)){
             if(sourceInterface.isValid() && sourceInterface.getCurrentPos().closerThan(pos, range)){
-                sourceInterface.getSource().removeSource(amount);
-                return sourceInterface;
+                ISourceCap storage = sourceInterface.getCapability();
+                if (storage.canProvideSource(amount)) {
+                    sourceInterface.getCapability().extractSource(amount, false);
+                    return sourceInterface;
+                }
             }
         }
         return null;
@@ -48,7 +52,7 @@ public class SourceManager {
     @Nullable
     public ISpecialSourceProvider hasSourceNearby(BlockPos pos, Level world, int range, int amount){
         for(ISpecialSourceProvider sourceInterface : getCopySetForLevel(world)){
-            if(sourceInterface.isValid() && sourceInterface.getCurrentPos().closerThan(pos, range) && sourceInterface.getSource().getSource() >= amount){
+            if(sourceInterface.isValid() && sourceInterface.getCurrentPos().closerThan(pos, range) && sourceInterface.getCapability().getSource() >= amount){
                 return sourceInterface;
             }
         }
@@ -58,7 +62,7 @@ public class SourceManager {
     public List<ISpecialSourceProvider> canGiveSourceNearby(BlockPos pos, Level world, int range){
         List<ISpecialSourceProvider> list = new ArrayList<>();
         for(ISpecialSourceProvider sourceInterface : getCopySetForLevel(world)){
-            if(sourceInterface.isValid() && sourceInterface.getCurrentPos().closerThan(pos, range) && sourceInterface.getSource().canAcceptSource()){
+            if(sourceInterface.isValid() && sourceInterface.getCurrentPos().closerThan(pos, range) && sourceInterface.getCapability().canAcceptSource(1)){
                 list.add(sourceInterface);
             }
         }
@@ -68,7 +72,7 @@ public class SourceManager {
     public List<ISpecialSourceProvider> canTakeSourceNearby(BlockPos pos, Level world, int range){
         List<ISpecialSourceProvider> list = new ArrayList<>();
         for(ISpecialSourceProvider sourceInterface : getCopySetForLevel(world)){
-            if(sourceInterface.isValid() && sourceInterface.getCurrentPos().closerThan(pos, range) && sourceInterface.getSource().getSource() >= 0){
+            if(sourceInterface.isValid() && sourceInterface.getCurrentPos().closerThan(pos, range) && sourceInterface.getCapability().getSource() >= 0){
                 list.add(sourceInterface);
             }
         }

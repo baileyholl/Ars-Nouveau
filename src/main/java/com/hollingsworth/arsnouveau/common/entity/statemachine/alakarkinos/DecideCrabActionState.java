@@ -23,7 +23,7 @@ public class DecideCrabActionState extends CrabState {
         if(alakarkinos.needSource() && alakarkinos.level.getGameTime() % 20 == 0){
             var result = SourceUtil.takeSourceWithParticles(alakarkinos.getHome(), alakarkinos.blockPosition().above(), alakarkinos.level, 5, Config.ALAKARKINOS_SOURCE_COST.get());
 
-            if(result != null ){
+            if (result != null) {
                 alakarkinos.setNeedSource(false);
             }
         }

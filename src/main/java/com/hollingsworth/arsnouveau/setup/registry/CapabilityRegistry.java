@@ -73,7 +73,7 @@ public class CapabilityRegistry {
                 BlockRegistry.IMBUEMENT_TILE);
 
         for (var container : sourceContainers) {
-            event.registerBlockEntity(SOURCE_CAPABILITY, container.get(), (sourceJar, side) -> sourceJar.getSourceStorage());
+            event.registerBlockEntity(SOURCE_CAPABILITY, container.get(), (sourceJar, side) -> sourceJar.getSourceCapability());
         }
     }
 

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
+import com.hollingsworth.arsnouveau.api.source.ISourceCap;
 import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.source.SourcelinkEventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
@@ -48,7 +49,7 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
         if (level.getGameTime() % 100 == 0 && getSource() > 0) {
             List<ISpecialSourceProvider> providers = SourceUtil.canGiveSource(worldPosition, level, 5);
             if(!providers.isEmpty()){
-                transferSource(this, providers.getFirst().getSource());
+                transferSource(this.getSourceCapability(), providers.getFirst().getCapability());
                 ParticleUtil.spawnFollowProjectile(level, this.worldPosition, providers.getFirst().getCurrentPos(), this.getColor());
             }
         }
@@ -100,7 +101,7 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
     }
 
     @Override
-    protected @NotNull SourceStorage createDefaultStorage() {
+    protected @NotNull ISourceCap createDefaultSourceCapability() {
         return new SourceStorage(20000, 10000, 10000, 0) {
             @Override
             public boolean canReceive() {
