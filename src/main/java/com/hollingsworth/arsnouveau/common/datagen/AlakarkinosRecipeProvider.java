@@ -36,12 +36,9 @@ public class AlakarkinosRecipeProvider extends SimpleDataProvider{
         recipes.add(new Wrapper(ArsNouveau.prefix( "desert_pyramid"), new AlakarkinosRecipe(Blocks.SAND, BuiltInLootTables.DESERT_PYRAMID_ARCHAEOLOGY, 25)));
 
         recipes.add(new Wrapper(ArsNouveau.prefix( "ocean_ruins_warm"), new AlakarkinosRecipe(Blocks.SAND, BuiltInLootTables.OCEAN_RUIN_WARM_ARCHAEOLOGY, 25)));
-
-
-        recipes.add(new Wrapper(ArsNouveau.prefix( "ocean_ruins_cold"), new AlakarkinosRecipe(Blocks.GRAVEL, BuiltInLootTables.OCEAN_RUIN_WARM_ARCHAEOLOGY, 25)));
+        recipes.add(new Wrapper(ArsNouveau.prefix( "ocean_ruins_cold"), new AlakarkinosRecipe(Blocks.GRAVEL, BuiltInLootTables.OCEAN_RUIN_COLD_ARCHAEOLOGY, 25)));
 
         recipes.add(new Wrapper(ArsNouveau.prefix( "trail_ruins_common"), new AlakarkinosRecipe(Blocks.GRAVEL, BuiltInLootTables.TRAIL_RUINS_ARCHAEOLOGY_COMMON, 100)));
-
         recipes.add(new Wrapper(ArsNouveau.prefix( "trail_ruins_rare"), new AlakarkinosRecipe(Blocks.GRAVEL, BuiltInLootTables.TRAIL_RUINS_ARCHAEOLOGY_RARE, 25)));
     }
 
