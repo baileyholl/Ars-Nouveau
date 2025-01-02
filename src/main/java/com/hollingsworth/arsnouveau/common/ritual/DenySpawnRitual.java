@@ -7,11 +7,14 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.village.VillageSiege;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
+import net.neoforged.neoforge.event.village.VillageSiegeEvent;
 import org.jetbrains.annotations.Nullable;
 
 public class DenySpawnRitual extends RangeRitual {
@@ -24,6 +27,15 @@ public class DenySpawnRitual extends RangeRitual {
                 && checkSpawn.getEntity().distanceToSqr(getPos().getX(), getPos().getY(), getPos().getZ()) <= radius * radius;
         if(shouldDeny){
             checkSpawn.setSpawnCancelled(true);
+            deniedSpawn = true;
+        }
+        return shouldDeny;
+    }
+
+    public boolean denySiege(VillageSiegeEvent checkSpawn) {
+        boolean shouldDeny = checkSpawn.getAttemptedSpawnPos().distanceToSqr(getPos().getX(), getPos().getY(), getPos().getZ()) <= radius * radius;
+        if (shouldDeny) {
+            checkSpawn.setCanceled(true);
             deniedSpawn = true;
         }
         return shouldDeny;
