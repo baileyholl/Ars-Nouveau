@@ -471,13 +471,22 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             return InteractionResult.SUCCESS;
 
         ItemStack stack = player.getItemInHand(hand);
-        if (player.getMainHandItem().getItem() instanceof StarbuncleCharm starbuncleCharm) {
+        if (player.getMainHandItem().getItem() instanceof StarbuncleCharm) {
+            Starbuncle toRide = this;
+            while (toRide.getFirstPassenger() instanceof Starbuncle riding) {
+                toRide = riding;
+            }
+
+            if (toRide.hasPassenger(e -> true)) {
+                return InteractionResult.FAIL;
+            }
 
             Starbuncle carbuncle = new Starbuncle(level, true);
             carbuncle.data = player.getMainHandItem().getOrDefault(DataComponentRegistry.STARBUNCLE_DATA, new StarbuncleCharmData()).mutable();
+            carbuncle.setPos(toRide.position().add(0, toRide.getBoundingBox().getYsize(), 0));
             level.addFreshEntity(carbuncle);
             carbuncle.restoreFromTag();
-            carbuncle.startRiding(this);
+            carbuncle.startRiding(toRide);
             stack.shrink(1);
             return InteractionResult.SUCCESS;
         }
