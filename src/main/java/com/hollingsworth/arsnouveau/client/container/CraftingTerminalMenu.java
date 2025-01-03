@@ -68,8 +68,8 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 
 	public CraftingTerminalMenu(int id, Inventory inv, CraftingLecternTile te) {
 		super(MenuRegistry.STORAGE.get(), id, inv, te);
-		craftMatrix = te.getCraftingInv();
-		craftResult = te.getCraftResult();
+		craftMatrix = te.getCraftingInv(inv.player);
+		craftResult = te.getCraftResult(inv.player);
 		init();
 		this.addPlayerSlots(inv, 13, 157);
 		te.registerCrafting(this);
@@ -101,7 +101,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 					return;
 				this.checkTakeAchievements(stack);
 				if (!pinv.player.getCommandSenderWorld().isClientSide) {
-					((CraftingLecternTile) te).craft(thePlayer, selectedTab);
+					((CraftingLecternTile) te).craft(thePlayer, tabs.get(thePlayer.getUUID()));
 				}
 			}
 		});
@@ -141,13 +141,13 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 			itemstack = itemstack1.copy();
 			if (index == 0) {
 				if(te == null)return ItemStack.EMPTY;
-				((CraftingLecternTile) te).craftShift(playerIn, selectedTab);
+				((CraftingLecternTile) te).craftShift(playerIn, tabs.get(playerIn.getUUID()));
 				if (!playerIn.level.isClientSide)
 					broadcastChanges();
 				return ItemStack.EMPTY;
 			} else if (index > 0 && index < 10) {
 				if(te == null)return ItemStack.EMPTY;
-				ItemStack stack = te.pushStack(itemstack, selectedTab);
+				ItemStack stack = te.pushStack(itemstack, tabs.get(playerIn.getUUID()));
 				slot.set(stack);
 				if (!playerIn.level.isClientSide)
 					broadcastChanges();
@@ -174,7 +174,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 	@Override
 	public boolean clickMenuButton(Player playerIn, int id) {
 		if(te != null && id == 0)
-			((CraftingLecternTile) te).clear(selectedTab);
+			((CraftingLecternTile) te).clear(playerIn, tabs.get(playerIn.getUUID()));
 		else super.clickMenuButton(playerIn, id);
 		return false;
 	}
@@ -291,8 +291,8 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 	}
 
 	@Override
-	public void receive(HolderLookup.Provider reg, CompoundTag message) {
-		super.receive(reg, message);
+	public void receive(ServerPlayer sender, HolderLookup.Provider reg, CompoundTag message) {
+		super.receive(sender, reg, message);
 		if(message.contains("i")) {
 			ItemStack[][] stacks = new ItemStack[9][];
 			ListTag list = message.getList("i", 10);
@@ -306,7 +306,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 					stacks[slot][j] = ItemStack.parseOptional(reg, tag);
 				}
 			}
-			((CraftingLecternTile) te).transferToGrid(pinv.player, stacks, selectedTab);
+			((CraftingLecternTile) te).transferToGrid(pinv.player, stacks, tabs.get(sender.getUUID()));
 		}
 	}
 

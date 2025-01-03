@@ -37,6 +37,12 @@ runs {
         modSource sourceSets.main
     }
 
+    clientAlt {
+        run 'client'
+
+        arguments '--username', 'Dev2'
+    }
+
     server {
         programArgument '--nogui'
         workingDirectory 'server'

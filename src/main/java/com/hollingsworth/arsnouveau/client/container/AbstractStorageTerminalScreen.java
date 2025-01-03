@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.container;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.gson.JsonElement;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
@@ -15,6 +16,7 @@ import com.hollingsworth.arsnouveau.common.network.SetTerminalSettingsPacket;
 import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.Minecraft;
@@ -22,6 +24,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -43,14 +46,26 @@ import java.util.stream.Collectors;
 import static com.hollingsworth.arsnouveau.client.container.StorageTerminalMenu.SlotAction.*;
 
 public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMenu> extends AbstractContainerScreen<T> {
-	private static final LoadingCache<StoredItemStack, List<String>> tooltipCache = CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build(new CacheLoader<>() {
+	private static final LoadingCache<StoredItemStack, List<String>> tooltipCache =
+			CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build(CacheLoader.from(key -> {
+				var mc = Minecraft.getInstance();
+				var flag = mc.options.advancedItemTooltips ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL;
+				return key.getStack().getTooltipLines(Item.TooltipContext.of(mc.level), mc.player, flag).
+						stream().map(Component::getString).collect(Collectors.toList());
+			}));
 
-		@Override
-		public List<String> load(StoredItemStack key) {
-			return key.getStack().getTooltipLines(Item.TooltipContext.EMPTY, Minecraft.getInstance().player, getTooltipFlag()).stream().map(Component::getString).collect(Collectors.toList());
-		}
+	private static final LoadingCache<StoredItemStack, String> componentCache =
+			CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build(CacheLoader.from(key -> {
+				var ctx = Minecraft.getInstance().level.registryAccess().createSerializationContext(JsonOps.COMPRESSED);
+				return DataComponentPatch.CODEC.encodeStart(ctx, key.getStack().getComponentsPatch()).
+						mapOrElse(JsonElement::toString, e -> "");
+			}));
 
-	});
+	private static final LoadingCache<StoredItemStack, List<String>> tagCache =
+			CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build(CacheLoader.from(
+					key -> key.getStack().getTags().map(t -> t.location().toString()).toList()
+			));
+
 	protected Minecraft mc = Minecraft.getInstance();
 
 	/** Amount scrolled in Creative mode inventory (0 = top, 1 = bottom) */
@@ -207,6 +222,25 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		}
 	}
 
+	enum SearchType {
+		ITEM,
+		MOD("@"),
+		TAG("#"),
+		COMPONENT("$");
+
+		private String prefix = null;
+
+		SearchType(String prefix) {
+			this.prefix = prefix;
+		}
+
+		SearchType() {}
+
+		boolean isMatch(String search) {
+			return this.prefix != null && search.startsWith(this.prefix);
+		}
+	}
+
 	protected void updateSearch() {
 		String searchString = searchField.getValue().trim();
 		if(searchField.getValue().isEmpty()){
@@ -217,45 +251,41 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 		if (refreshItemList || !searchLast.equals(searchString)) {
 			this.itemsSorted = new ArrayList<>();
-			boolean searchMod = false;
-			String search = searchString;
-			if (searchString.startsWith("@")) {
-				searchMod = true;
-				search = searchString.substring(1);
-			}
-			Pattern m = null;
-			try {
-				m = Pattern.compile(search.toLowerCase(), Pattern.CASE_INSENSITIVE);
-			} catch (Throwable ignore) {
-				try {
-					m = Pattern.compile(Pattern.quote(search.toLowerCase()), Pattern.CASE_INSENSITIVE);
-				} catch (Throwable __) {
-					return;
+			String search = searchString.toLowerCase();
+
+			SearchType searchFieldType = SearchType.ITEM;
+			for (SearchType value : SearchType.values()) {
+				if (value.isMatch(search)) {
+					searchFieldType = value;
 				}
 			}
-			boolean notDone;
-			try {
-                for (StoredItemStack is : this.itemsUnsorted) {
-                    if (is != null && is.getStack() != null) {
-                        String dspName = searchMod ? BuiltInRegistries.ITEM.getKey(is.getStack().getItem()).getNamespace() : is.getStack().getHoverName().getString();
-                        notDone = true;
-                        if (m.matcher(dspName.toLowerCase()).find()) {
-                            addStackToClientList(is);
-                            notDone = false;
-                        }
-                        if (notDone) {
-                            for (String lp : tooltipCache.get(is)) {
-                                if (m.matcher(lp).find()) {
-                                    addStackToClientList(is);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-			} catch (Exception e) {
-				e.printStackTrace();
+			if (searchFieldType != SearchType.ITEM) {
+				search = searchString.substring(1);
 			}
+			String finalSearch = search;
+
+			for (StoredItemStack stored : this.itemsUnsorted) {
+				if (stored == null || stored.getStack() == null) continue;
+
+				boolean isMatch = switch (searchFieldType) {
+					case ITEM -> {
+						boolean contains = stored.getStack().getHoverName().getString().toLowerCase().contains(finalSearch);
+						if (contains) yield true;
+						yield tooltipCache.getUnchecked(stored).stream().anyMatch(tooltip -> tooltip.toLowerCase().contains(finalSearch));
+					}
+					case MOD -> BuiltInRegistries.ITEM.getKey(stored.getStack().getItem()).getNamespace().contains(finalSearch);
+					case TAG -> tagCache.getUnchecked(stored).stream().anyMatch(tag -> tag.contains(finalSearch));
+					case COMPONENT -> {
+						if (stored.getStack().getComponentsPatch().isEmpty()) yield false;
+						yield componentCache.getUnchecked(stored).contains(finalSearch);
+					}
+				};
+
+				if (isMatch) {
+					addStackToClientList(stored);
+				}
+			}
+
 			Collections.sort(this.itemsSorted, noSort ? sortComp : comparator);
 			if(!searchLast.equals(searchString)) {
 				this.scrollTo(0);
@@ -483,7 +513,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 				} else {
 					if (slot.stack() != null) {
 						if (slot.stack().getQuantity() > 0) {
-							storageSlotClick(slot.stack(), hasShiftDown() ? SHIFT_PULL : StorageTerminalMenu.SlotAction.PULL_OR_PUSH_STACK, false);
+							storageSlotClick(slot.stack(), hasShiftDown() ? SHIFT_PULL : PULL_OR_PUSH_STACK, false);
 							return true;
 						}
 					}
