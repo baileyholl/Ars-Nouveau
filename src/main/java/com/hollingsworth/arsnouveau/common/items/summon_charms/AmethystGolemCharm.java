@@ -23,7 +23,7 @@ public class AmethystGolemCharm extends AbstractSummonCharm {
     public InteractionResult useOnBlock(UseOnContext context, Level world, BlockPos pos) {
         AmethystGolem amy = new AmethystGolem(ModEntities.AMETHYST_GOLEM.get(), world);
         amy.fromCharmData(context.getItemInHand().getOrDefault(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, new PersistentFamiliarData()));
-        amy.setPos(pos.getX(), pos.above().getY(), pos.getZ());
+        amy.setPos(pos.offset(context.getClickedFace().getNormal()).getBottomCenter());
         world.addFreshEntity(amy);
         return InteractionResult.SUCCESS;
     }
