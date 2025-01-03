@@ -88,9 +88,15 @@ public class HarvestClusterGoal extends Goal {
         LootParams.Builder lootBuilder = new LootParams.Builder(level)
                 .withParameter(LootContextParams.TOOL, TOOL);
 
+        boolean shouldDropAsItems = golem.getHome() == null || !golem.canBreak(golem.getHome());
+
         boolean harvestedAny = false;
         nextFace: for (Direction d : Direction.values()) {
             BlockPos pos = p.relative(d);
+            if (!golem.canBreak(pos)) {
+                continue;
+            }
+
             BlockState state = level.getBlockState(pos);
             if (state.is(CLUSTER_BLOCKS)) {
                 Vec3 center = Vec3.atCenterOf(pos);
@@ -112,8 +118,7 @@ public class HarvestClusterGoal extends Goal {
                 }
 
                 // Handle drops
-                if (golem.getHome() == null) {
-                    // If the golem has no home, just drop them as item entities.
+                if (shouldDropAsItems) {
                     for (ItemStack drop : drops) {
                         level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), drop));
                     }
