@@ -14,6 +14,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.model.ArmorStandArmorModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
@@ -28,6 +29,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
@@ -40,6 +42,8 @@ import net.minecraft.world.item.armortrim.ArmorTrim;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.client.ClientHooks;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
@@ -184,6 +188,15 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         p_289663_.renderToBuffer(p_289687_, vertexconsumer, p_289683_, OverlayTexture.NO_OVERLAY);
     }
 
+//    @Override
+//    public void renderFinal(PoseStack poseStack, AlterationTile animatable, BakedGeoModel model, MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay, int colour) {
+//        renderSlate(poseStack, model, animatable, bufferSource, packedLight);
+//    }
+
+    @Override
+    public void postRender(PoseStack poseStack, AlterationTile animatable, BakedGeoModel model, MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
+        renderSlate(poseStack, model, animatable, bufferSource, packedLight);
+    }
 
     private void renderGlint(PoseStack p_289673_, MultiBufferSource p_289654_, int p_289649_, net.minecraft.client.model.Model p_289659_) {
         p_289659_.renderToBuffer(p_289673_, p_289654_.getBuffer(RenderType.armorEntityGlint()), p_289649_, OverlayTexture.NO_OVERLAY);
@@ -219,7 +232,6 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
             stack.translate(0, 0, 1);
 
         }
-        renderSlate(model, animatable);
         super.actuallyRender(stack, tile, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
         stack.popPose();
     }
@@ -274,35 +286,42 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         stack.popPose();
     }
 
-    public void renderSlate(BakedGeoModel model, AlterationTile tile) {
-        String[] rowNames = new String[]{"top", "mid", "bot"};
-        if (tile.armorStack.isEmpty()) {
-            for (String s : rowNames) {
-                setSlateRow(model, s, 0);
-            }
-            return;
-        }
-        if (!(PerkUtil.getPerkHolder(tile.armorStack) instanceof StackPerkHolder armorPerkHolder)) {
-            return;
-        }
-        List<PerkSlot> perks = armorPerkHolder.getSlotsForTier(tile.armorStack);
-
-        for (int i = 0; i < Math.min(perks.size(), rowNames.length); i++) {
-            PerkSlot perkSlot = perks.get(i);
-            setSlateRow(model, rowNames[i], perkSlot.value());
-        }
-        List<String> remainingRows = List.of(rowNames);
-        remainingRows.subList(perks.size(), remainingRows.size()).forEach(s -> setSlateRow(model, s, 0));
+    public void renderSlate(PoseStack stack, BakedGeoModel model, AlterationTile tile, MultiBufferSource bufferSource, int packedLight) {
+        setSlateRow(stack, model, "top", 0, bufferSource, packedLight);
+//        String[] rowNames = new String[]{"top", "mid", "bot"};
+//        for (String s : rowNames) {
+//            setSlateRow(stack, model, s, 0, bufferSource, packedLight);
+//        }
+//
+//        if (!(PerkUtil.getPerkHolder(tile.armorStack) instanceof StackPerkHolder armorPerkHolder)) {
+//            return;
+//        }
+//        List<PerkSlot> perks = armorPerkHolder.getSlotsForTier(tile.armorStack);
+//
+//        for (int i = 0; i < Math.min(perks.size(), rowNames.length); i++) {
+//            PerkSlot perkSlot = perks.get(i);
+//            setSlateRow(stack, model, rowNames[i], perkSlot.value(), bufferSource, packedLight);
+//        }
+//        List<String> remainingRows = List.of(rowNames);
+//        remainingRows.subList(perks.size(), remainingRows.size()).forEach(s -> setSlateRow(stack, model, s, 0, bufferSource, packedLight));
     }
 
-    public void setSlateRow(BakedGeoModel model, String loc, int tier) {
+    public void setSlateRow(PoseStack stack, BakedGeoModel model, String loc, int tier, MultiBufferSource bufferSource, int packedLight) {
         for (int i = 0; i < 4; i++) {
-            if (tier != i) {
-                model.getBone(loc + "_" + i).ifPresent(bone -> bone.setHidden(true));
-            } else {
-                model.getBone(loc + "_" + i).ifPresent(bone -> bone.setHidden(false));
-            }
+            int finalI = i;
+            model.getBone(loc + "_" + i).ifPresent(bone -> bone.setHidden(finalI != 0));
         }
+
+        model.getBone(loc).ifPresent(bone -> {
+            stack.pushPose();
+            stack.mulPose(bone.getLocalSpaceMatrix());
+            Matrix4f matrix4f = stack.last().pose();
+            Font font = Minecraft.getInstance().font;
+            Component display = Component.literal(String.valueOf(tier));
+            int height = font.lineHeight/2;
+            font.drawInBatch(display, 0, height, -1, false, matrix4f, bufferSource, Font.DisplayMode.NORMAL, 0, packedLight);
+            stack.popPose();
+        });
     }
 
 
