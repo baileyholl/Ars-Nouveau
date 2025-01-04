@@ -1,4 +1,4 @@
-// 1.21.1	2024-10-15T18:07:37.2635734	Apparatus
+// 1.21.1	2025-01-01T14:52:29.5969645	Apparatus
 54b2918a0b959ae3e055dae2681322a8800177a2 data/ars_nouveau/recipe/alakarkinos_charm.json
 adc3e3b582ab4d1fd6f29537bddaaecb9eaa0c2d data/ars_nouveau/recipe/alchemists_crown.json
 9a7fefa487b159935c1f620dc9516a6600fb0d4b data/ars_nouveau/recipe/amulet_of_mana_boost.json
@@ -100,7 +100,7 @@ ae2d828cd3cf6afa7f18a367895827e21b70aacb data/ars_nouveau/recipe/protection_5.js
 77816a335f883fb91cfa69abdfcddd57ebc8145e data/ars_nouveau/recipe/quick_charge_1.json
 d8a8ae0d973af9f4983c9ba0cc785327a2d72a17 data/ars_nouveau/recipe/quick_charge_2.json
 353bc9276470a20f0737d0908dd27d99910f74de data/ars_nouveau/recipe/quick_charge_3.json
-291c08ec15ed58c1b8d905c09ec874b5c7024af7 data/ars_nouveau/recipe/reactive.json
+291c08ec15ed58c1b8d905c09ec874b5c7024af7 data/ars_nouveau/recipe/reactive_1.json
 f8d2a48ea7cbb131ffce8dfbeaa54e7c668be22f data/ars_nouveau/recipe/reactive_2.json
 e1a23f3407ed876596ba65d5a38b32ea365db494 data/ars_nouveau/recipe/reactive_3.json
 672d478694316122e6784152221af74d032d336a data/ars_nouveau/recipe/reactive_4.json

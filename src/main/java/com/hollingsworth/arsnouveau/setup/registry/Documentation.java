@@ -12,15 +12,14 @@ import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellTier;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantingApparatusRecipe;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.*;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.perk.EmptyPerk;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -30,15 +29,13 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.NeoForge;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
@@ -122,6 +119,7 @@ public class Documentation {
         var dowsingRod = addBasicItem(ItemsRegistry.DOWSING_ROD, EQUIPMENT);
 
         var imbuementChamber = addPage(new DocEntryBuilder(MACHINES, BlockRegistry.IMBUEMENT_BLOCK)
+                .withSortNum(1)
                 .withIntroPage()
                 .withCraftingPages()
                 .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_lapis"))
@@ -136,6 +134,7 @@ public class Documentation {
                 .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.MANIPULATION_ESSENCE.getRegistryName())));
 
         var enchantingApparatus = addPage(new DocEntryBuilder(MACHINES, BlockRegistry.ENCHANTING_APP_BLOCK)
+                .withSortNum(2)
                 .withIntroPage()
                 .withPage(getRecipePages(BlockRegistry.ARCANE_PEDESTAL, BlockRegistry.ARCANE_PLATFORM))
                 .withPage(getRecipePages(BlockRegistry.ENCHANTING_APP_BLOCK, BlockRegistry.ARCANE_CORE_BLOCK)));
@@ -209,11 +208,14 @@ public class Documentation {
                 .withLocalizedText(ItemsRegistry.POTION_FLASK_AMPLIFY)
                 .withCraftingPages(ItemsRegistry.POTION_FLASK_AMPLIFY));
 
-        addPage(new DocEntryBuilder(EQUIPMENT, "reactive_enchantment")
+
+        RecipeHolder<ReactiveEnchantmentRecipe> enchantmentRecipeRecipeHolder = manager.byKeyTyped(RecipeRegistry.REACTIVE_TYPE.get(), ArsNouveau.prefix(EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 1));
+
+        addPage(new DocEntryBuilder(ENCHANTMENTS, "reactive_enchantment")
                 .withIcon(Items.ENCHANTED_BOOK)
                 .withSortNum(2)
                 .withIntroPage()
-                .withPage(EnchantmentEntry.create(ArsNouveau.prefix(EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 1)))
+                .withPage(EnchantmentEntry.create(enchantmentRecipeRecipeHolder))
                 .withLocalizedText()
                 .withPage(EnchantmentEntry.create(ArsNouveau.prefix(EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 2)))
                 .withPage(EnchantmentEntry.create(ArsNouveau.prefix(EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 3)))
@@ -694,6 +696,34 @@ public class Documentation {
                 .withSortNum(11)
                 .withIntroPage())
                 .withRelations(jarOfLight, amuletOfRegen, discountRing);
+
+        var enchantmentRecipes = new ArrayList<>(manager.getAllRecipesFor(RecipeRegistry.ENCHANTMENT_TYPE.get()));
+        enchantmentRecipes.sort(Comparator.comparingInt(a -> a.value() == null ? -1 : a.value().enchantLevel));
+        Map<ResourceKey<Enchantment>, List<RecipeHolder<EnchantmentRecipe>>> enchantmentMap = new HashMap<>();
+        for(RecipeHolder<EnchantmentRecipe> recipe : enchantmentRecipes) {
+            EnchantmentRecipe recipe1 = recipe.value();
+            if (recipe1 == null) {
+                continue;
+            }
+            var key = recipe1.enchantmentKey;
+            if (!enchantmentMap.containsKey(key)) {
+                enchantmentMap.put(key, new ArrayList<>());
+            }
+            enchantmentMap.get(key).add(recipe);
+        }
+
+        for(var entry : enchantmentMap.entrySet()) {
+            var enchantment = entry.getKey();
+            var minMax = entry.getValue();
+            DocEntryBuilder builder = new DocEntryBuilder(ENCHANTMENTS, enchantment.location().getPath())
+                    .withIcon(Items.ENCHANTED_BOOK);
+            builder.entryId = enchantment.location();
+            builder.title = level.holderOrThrow(enchantment).value().description();
+            for (RecipeHolder<EnchantmentRecipe> max : minMax) {
+                builder.withPage(EnchantmentEntry.create(max));
+            }
+            addPage(builder);
+        }
 
         for(DocEntryBuilder builder : pendingBuilders){
             addPage(builder);

@@ -18,22 +18,30 @@ import java.util.List;
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
 public class DocEntryBuilder {
-    List<SinglePageCtor> pages = new ArrayList<>();
-    int textCounter;
-    String textKey;
-    int sortNum = 100;
+    public List<SinglePageCtor> pages = new ArrayList<>();
+    public int textCounter;
+    public String textKey;
+    public int sortNum = 100;
     public DocCategory category;
-    ItemStack displayItem;
-    String titleKey;
-    ResourceLocation entryId;
+    public ItemStack displayItem;
+    public String titleKey;
+    public ResourceLocation entryId;
+
+    public Component title;
 
     public DocEntryBuilder(DocCategory category, String name) {
+        this(category, name, ArsNouveau.prefix(name));
+    }
+
+    public DocEntryBuilder(DocCategory category, String name, ResourceLocation entryId){
         this.titleKey = name.contains(".") ? name : "ars_nouveau.page." + name;
         this.textKey = name;
+        this.title = Component.translatable(titleKey);
         this.category = category;
         displayItem = ItemStack.EMPTY;
-        this.entryId = ArsNouveau.prefix(name);
+        this.entryId = entryId;
     }
+
 
     public DocEntryBuilder(DocCategory category, ItemLike itemLike) {
         this.category = category;
@@ -41,6 +49,7 @@ public class DocEntryBuilder {
         this.textKey = getRegistryName(itemLike.asItem()).getPath();
         this.displayItem = itemLike.asItem().getDefaultInstance();
         this.entryId = getRegistryName(itemLike.asItem());
+        this.title = Component.translatable(titleKey);
     }
 
     public DocEntryBuilder withName(String path) {
@@ -124,7 +133,7 @@ public class DocEntryBuilder {
     }
 
     public DocEntry build(){
-        return new DocEntry(entryId, this.displayItem, Component.translatable(titleKey), sortNum).addPages(pages);
+        return new DocEntry(entryId, this.displayItem, title, sortNum).addPages(pages);
     }
 
 }

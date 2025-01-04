@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.api.documentation.entry;
 
-import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantingApparatusRecipe;
@@ -13,7 +12,6 @@ public class ApparatusEntry extends PedestalRecipeEntry{
     public ApparatusEntry(RecipeHolder<EnchantingApparatusRecipe> recipe, BaseDocScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
         this.apparatusRecipe = recipe;
-        this.image = DocAssets.APPARATUS_RECIPE;
         this.title = Component.translatable("block.ars_nouveau.enchanting_apparatus");
         if(recipe != null && recipe.value() != null) {
             this.outputStack = recipe.value().result();
