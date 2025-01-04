@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -93,6 +94,10 @@ public class EnchantmentProvider extends DatapackBuiltinEntriesProvider {
         return "Ars Nouveau's Enchantment Data";
     }
 
+    public static HolderLookup.Provider createLookup() {
+        RegistryAccess.Frozen frozen = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
+        return BUILDER.build(frozen);
+    }
 
     public static class EnchantmentTagsProvider extends net.minecraft.data.tags.EnchantmentTagsProvider {
 

@@ -21,8 +21,12 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -37,6 +41,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
@@ -62,8 +67,11 @@ public class PatchouliProvider extends SimpleDataProvider{
 
     public List<PatchouliPage> pages = new ArrayList<>();
 
-    public PatchouliProvider(DataGenerator generatorIn) {
+    public CompletableFuture<HolderLookup.Provider> registries;
+
+    public PatchouliProvider(DataGenerator generatorIn, CompletableFuture<HolderLookup.Provider> registries) {
         super(generatorIn);
+        this.registries = registries;
     }
 
     public void addEntries() {
@@ -213,7 +221,7 @@ public class PatchouliProvider extends SimpleDataProvider{
         addPage(new PatchouliBuilder(EQUIPMENT, "reactive_enchantment")
                 .withIcon(Items.ENCHANTED_BOOK)
                 .withLocalizedText()
-                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 1))
+                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath()))
                 .withLocalizedText()
                 .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 2))
                 .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 3))
@@ -760,13 +768,28 @@ public class PatchouliProvider extends SimpleDataProvider{
         this.pages.add(new PatchouliPage(builder, this.output.resolve("assets/" + ritual.getRegistryName().getNamespace() + "/patchouli_books/worn_notebook/en_us/entries/rituals/" + ritual.getRegistryName().getPath() + ".json")));
     }
 
-    public void addEnchantmentPage(ResourceKey<Enchantment> enchantment) {
-//        PatchouliBuilder builder = new PatchouliBuilder(ENCHANTMENTS, enchantment.getDescriptionId())
-//                .withIcon(getRegistryName(Items.ENCHANTED_BOOK).toString());
-//        for (int i = enchantment.getMinLevel(); i <= enchantment.getMaxLevel(); i++) {
-//            builder.withPage(new EnchantingPage("ars_nouveau:" + enchantment.location().getPath() + "_" + i));
-//        }
-//        this.pages.add(new PatchouliPage(builder, this.output.resolve("assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/" + enchantment.location().getPath() + ".json")));
+    public void addEnchantmentPage(ResourceKey<Enchantment> enchKey) {
+        var provider = this.registries.join();
+        var enchantmentRegistry = provider.lookupOrThrow(Registries.ENCHANTMENT);
+        var maybeEnchant = enchantmentRegistry.get(enchKey);
+        if (maybeEnchant.isEmpty()) {
+            var arsEnchantmentRegistry = EnchantmentProvider.createLookup();
+            maybeEnchant = arsEnchantmentRegistry.lookupOrThrow(Registries.ENCHANTMENT).get(enchKey);
+        }
+        if (maybeEnchant.isEmpty()) {
+            return;
+        }
+        var enchantment = maybeEnchant.get().value();
+
+        var path = enchKey.location().getPath();
+        PatchouliBuilder builder = new PatchouliBuilder(ENCHANTMENTS, path)
+                .withName(((TranslatableContents) enchantment.description().getContents()).getKey())
+                .withIcon(Items.ENCHANTED_BOOK);
+
+        for (int i = enchantment.getMinLevel(); i <= enchantment.getMaxLevel(); i++) {
+            builder.withPage(new EnchantingPage("ars_nouveau:" + path + "_" + i));
+        }
+        addPage(builder, getPath(ENCHANTMENTS, path));
     }
 
     public void addPerkPage(IPerk perk){
