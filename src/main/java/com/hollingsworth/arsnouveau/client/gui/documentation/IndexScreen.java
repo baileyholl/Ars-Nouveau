@@ -44,9 +44,9 @@ public class IndexScreen extends BaseDocScreen {
         DocClientUtils.blit(graphics, DocAssets.SPLASH_FRAME, bookLeft + LEFT_PAGE_OFFSET - 3, bookTop + PAGE_TOP_OFFSET - 5);
         DocClientUtils.drawHeader(Component.translatable("ars_nouveau.doc.categories"), graphics, bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, 135, mouseX, mouseY, partialTicks);
 
-        DocClientUtils.drawParagraph(Component.literal("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris"), graphics, bookLeft + LEFT_PAGE_OFFSET + 6, bookTop + PAGE_TOP_OFFSET + 20, 106, mouseX, mouseY, partialTicks);
+        DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.documentation.intro1"), graphics, bookLeft + LEFT_PAGE_OFFSET + 6, bookTop + PAGE_TOP_OFFSET + 20, 106, mouseX, mouseY, partialTicks);
 
-        DocClientUtils.drawParagraph(Component.literal("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris"), graphics, bookLeft + LEFT_PAGE_OFFSET + 6, bookTop + PAGE_TOP_OFFSET + 85, 106, mouseX, mouseY, partialTicks);
+        DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.documentation.intro2"), graphics, bookLeft + LEFT_PAGE_OFFSET + 6, bookTop + PAGE_TOP_OFFSET + 85, 106, mouseX, mouseY, partialTicks);
     }
 
     public void initSections(){

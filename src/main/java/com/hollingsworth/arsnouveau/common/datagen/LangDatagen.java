@@ -1380,7 +1380,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.doc.categories", "Categories");
         add("ars_nouveau.doc.related_entries", "Related Entries");
         add("ars_nouveau.doc.search_results", "Search Results");
-        add("ars_nouveau.documentation.intro1", "");
+        add("ars_nouveau.documentation.intro1", "Welcome to Ars Nouveau! If you are new, following Getting Started and completing the Advancements is recommended.");
+        add("ars_nouveau.documentation.intro2", "Join the discord to share spells, ask questions, and see what's coming next!");
     }
 
     public void addCategory(String key, String value){
