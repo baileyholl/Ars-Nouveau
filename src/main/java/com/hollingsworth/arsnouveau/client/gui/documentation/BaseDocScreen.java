@@ -6,6 +6,8 @@ import com.hollingsworth.arsnouveau.api.documentation.DocPlayerData;
 import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import com.hollingsworth.arsnouveau.client.gui.SearchBar;
+import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
+import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.nuggets.client.gui.BaseButton;
 import com.hollingsworth.nuggets.client.gui.BaseScreen;
 import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
@@ -56,6 +58,11 @@ public class BaseDocScreen extends BaseScreen {
     @Override
     public void init() {
         super.init();
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 22, 0, 0, 23, 20, 23, 20, "textures/gui/worn_book_bookmark.png", (b) -> {
+            if (ArsNouveau.patchouliLoaded) {
+                PatchouliHandler.openBookClient();
+            }
+        }).withTooltip(Component.translatable("ars_nouveau.gui.notebook")));
         searchBar = new SearchBar(minecraft.font, bookRight - 130, bookTop - 3);
         searchBar.setResponder(this::onSearchChanged);
         addRenderableWidget(searchBar);
