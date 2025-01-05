@@ -29,12 +29,22 @@ subsystems {
     }
 }
 
+configurations {
+    libraries
+    // This will make sure that all dependencies that you add to the libraries configuration will also be added to the implementation configuration
+    // This way, you only need one dependency declaration for both runtime and compile dependencies
+    implementation.extendsFrom libraries
+    runtimeClasspath.extendsFrom localRuntime
+}
 runs {
     configureEach {
         systemProperty 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
         systemProperty 'forge.logging.console.level', 'debug'
 
         modSource sourceSets.main
+        dependencies {
+            runtime project.configurations.libraries
+        }
     }
 
     server {
@@ -48,10 +58,6 @@ runs {
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
-
-configurations {
-    runtimeClasspath.extendsFrom localRuntime
-}
 
 minecraft.accessTransformers.files(
         file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -122,10 +128,20 @@ dependencies {
     localRuntime 'curse.maven:ftb-chunks-forge-314906:5710609'
     localRuntime 'curse.maven:ftb-library-forge-404465:5754910'
     localRuntime 'curse.maven:architectury-api-419699:5553800'
-//    implementation(jarJar(group: 'com.hollingsworth.nuggets', name: 'nuggets-neoforge-1.21', version:'[1.0.2.33,)'){
-//        jarJar.pin(it, '1.0.2.33')
-//    })
-    implementation 'com.hollingsworth.nuggets:nuggets-neoforge-1.21:1.0.4'
+    implementation(jarJar(group: 'com.hollingsworth.nuggets', name: 'nuggets-neoforge-1.21', version:'[1.0.4,)'){
+        jarJar.pin(it, '1.0.4')
+    })
+    libraries(jarJar(group: 'org.apache.lucene', name: 'lucene-core', version: '10.1.0'){
+        jarJar.pin(it, '10.1.0')
+    })
+
+    libraries(jarJar(group: 'org.apache.lucene', name: 'lucene-analysis-common', version: '10.1.0'){
+        jarJar.pin(it, '8.11.4')
+    })
+    libraries(jarJar(group: 'org.apache.lucene', name: 'lucene-queryparser', version: '10.1.0'){
+        jarJar.pin(it, '10.1.0')
+    })
+//    implementation 'com.hollingsworth.nuggets:nuggets-neoforge-1.21:1.0.4'
 }
 
 jar {

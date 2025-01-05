@@ -2,14 +2,14 @@ package com.hollingsworth.arsnouveau.client.gui.documentation;
 
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
+import com.hollingsworth.arsnouveau.api.documentation.search.Search;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import org.apache.commons.lang3.StringUtils;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class SearchScreen extends BaseDocScreen{
     List<DocEntryButton> searchResults = new ArrayList<>();
@@ -38,11 +38,16 @@ public class SearchScreen extends BaseDocScreen{
             removeWidget(button);
         }
         searchResults.clear();
-        List<DocEntry> searchStrings = new ArrayList<>(DocumentationRegistry.getEntries());
-        searchStrings.removeIf(d -> StringUtils.getFuzzyDistance(previousString, d.entryTitle().getString(), Locale.ROOT) <= 0);
-        searchStrings.sort((a, b) ->{
-            return StringUtils.getFuzzyDistance(previousString, b.entryTitle().getString(), Locale.ROOT) - StringUtils.getFuzzyDistance(previousString, a.entryTitle().getString(), Locale.ROOT);
-        });
+        List<ResourceLocation> docs = Search.search(previousString);
+        List<DocEntry> searchStrings = new ArrayList<>();
+        for(ResourceLocation id : docs){
+            searchStrings.add(DocumentationRegistry.getEntry(id));
+        }
+//        List<DocEntry> searchStrings = new ArrayList<>(DocumentationRegistry.getEntries());
+//        searchStrings.removeIf(d -> StringUtils.getFuzzyDistance(previousString, d.entryTitle().getString(), Locale.ROOT) <= 0);
+//        searchStrings.sort((a, b) ->{
+//            return StringUtils.getFuzzyDistance(previousString, b.entryTitle().getString(), Locale.ROOT) - StringUtils.getFuzzyDistance(previousString, a.entryTitle().getString(), Locale.ROOT);
+//        });
 
         for(int i = 0; i < Math.min(searchStrings.size(), 8); i++){
             DocEntry entry = searchStrings.get(i);

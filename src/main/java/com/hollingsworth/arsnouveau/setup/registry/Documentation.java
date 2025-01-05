@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.documentation.ReloadDocumentationEvent;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
 import com.hollingsworth.arsnouveau.api.documentation.builder.DocEntryBuilder;
 import com.hollingsworth.arsnouveau.api.documentation.entry.*;
+import com.hollingsworth.arsnouveau.api.documentation.search.Search;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
@@ -18,6 +19,7 @@ import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.perk.EmptyPerk;
+import com.hollingsworth.arsnouveau.common.util.Log;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -45,6 +47,7 @@ public class Documentation {
     static Set<DocEntry> entries = new HashSet<>();
 
     public static void initOnWorldReload(){
+        long startTime = System.nanoTime();
         entries = new HashSet<>();
         DocPlayerData.previousScreen = null;
         pendingBuilders = new ArrayList<>();
@@ -729,9 +732,12 @@ public class Documentation {
             addPage(builder);
         }
         pendingBuilders = new ArrayList<>();
-
         NeoForge.EVENT_BUS.post(new ReloadDocumentationEvent.AddEntries());
         NeoForge.EVENT_BUS.post(new ReloadDocumentationEvent.Post());
+
+        Search.initSearchIndex();
+        long endTime = System.nanoTime();
+        Log.getLogger().info("Documentation loaded in {}ms", (endTime - startTime) / 1000000);
     }
 
     private static DocEntry addPage(DocEntryBuilder builder){
