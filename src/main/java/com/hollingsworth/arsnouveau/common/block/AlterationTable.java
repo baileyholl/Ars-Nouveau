@@ -172,7 +172,7 @@ public class AlterationTable extends TableBlock{
                }
            }
         }
-        return super.updateShape(state, direction, state2, world, pos, pos2);
+        return state;
     }
 
     public List<Direction> getConnectedDirections(BlockState state){
