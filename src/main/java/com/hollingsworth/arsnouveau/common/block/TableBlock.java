@@ -72,11 +72,6 @@ public abstract class TableBlock extends TickableModBlock{
         }
     }
 
-    public BlockState superUpdateShape(BlockState state, Direction direction, BlockState state2, LevelAccessor world, BlockPos pos, BlockPos pos2) {
-        return super.updateShape(state, direction, state2, world, pos, pos2);
-    }
-
-
     public static Direction getNeighbourDirection(ThreePartBlock p_208070_0_, Direction p_208070_1_) {
         return p_208070_0_ == ThreePartBlock.FOOT ? p_208070_1_ : p_208070_1_.getOpposite();
     }
