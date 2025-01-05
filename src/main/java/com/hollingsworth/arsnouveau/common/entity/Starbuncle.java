@@ -475,7 +475,6 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
 
             Starbuncle carbuncle = new Starbuncle(level, true);
             carbuncle.data = player.getMainHandItem().getOrDefault(DataComponentRegistry.STARBUNCLE_DATA, new StarbuncleCharmData()).mutable();
-            carbuncle.setPos(getX(), getY(), getZ());
             level.addFreshEntity(carbuncle);
             carbuncle.restoreFromTag();
             carbuncle.startRiding(this);
