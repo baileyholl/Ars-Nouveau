@@ -82,6 +82,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.BlockGrowFeatureEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.event.village.VillageSiegeEvent;
 import net.neoforged.neoforge.event.village.VillagerTradesEvent;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
@@ -168,6 +169,13 @@ public class EventHandler {
     public static void livingSpawnEvent(FinalizeSpawnEvent checkSpawn) {
         if (checkSpawn.getLevel() instanceof Level level && !level.isClientSide) {
             RitualEventQueue.getRitual(level, DenySpawnRitual.class, ritu -> ritu.denySpawn(checkSpawn));
+        }
+    }
+
+    @SubscribeEvent
+    public static void villageSiegeEvent(VillageSiegeEvent checkSpawn) {
+        if (checkSpawn.getLevel() instanceof Level level && !level.isClientSide) {
+            RitualEventQueue.getRitual(level, DenySpawnRitual.class, ritu -> ritu.denySiege(checkSpawn));
         }
     }
 

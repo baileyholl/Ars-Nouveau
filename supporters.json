@@ -33,7 +33,8 @@
   "db489a87-6509-4d75-917d-9c426b519c64", "eb079f27-e266-4b3c-beba-b34d34bef268", "831086b8-d566-4f25-aa09-ecb505e54885",
   "e3298bd7-61bf-427f-af89-4e418a20bf57", "01b53c7e-c7f4-4465-88df-f8b6c645b6b9", "a29ffabb-ac40-4754-8df8-94b9f394045c",
   "aef9c054-e96e-4332-944b-9393105b6ac6", "1f62ed4b-91f9-42fa-b331-b7e3e3c0637f", "eb14192a-c53f-44c0-bb13-7f7ff1a0e662",
-  "758ca96e-100a-4611-a849-5d76229b6c83", "1cf6b68a-a396-4ac1-8146-21fc314f6455", "f476db17-6995-44ab-b002-0a326959f01a"],
+  "758ca96e-100a-4611-a849-5d76229b6c83", "1cf6b68a-a396-4ac1-8146-21fc314f6455", "f476db17-6995-44ab-b002-0a326959f01a",
+  "4a405d17-9e7b-4007-b4e3-a1adcd41c489"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -540,6 +541,11 @@
       "color": "green",
       "adopter": "allypandaa",
       "bio": "A rogue little monster that somehow escaped. Contain him! Who knows what he'll do now he's free! Last time he blew up! It was a miracle he lived that..."
+    },{
+      "name": "Lilia",
+      "color": "purple",
+      "adopter": "TheFayeWitch",
+      "bio": "Lilia thrives in the moonlit night. Known to give powerful visions of the future to those who gaze at the moon while holding her."
     }
   ]
 }
