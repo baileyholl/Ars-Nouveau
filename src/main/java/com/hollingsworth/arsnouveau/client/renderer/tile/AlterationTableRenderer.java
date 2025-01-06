@@ -90,7 +90,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
                 matrixStack.translate(0, perkYOffset, 0);
             }
 //            matrixStack.mulPose(Axis.ZP.rotationDegrees(180F));
-            matrixStack.translate(-0.5, yOffset, 0);
+            matrixStack.translate(0, yOffset, 0);
 
 //            this.renderArmorPiece(tile,stack, matrixStack, iRenderTypeBuffer, packedLightIn, getArmorModel(armorItem.getEquipmentSlot()));
 //        } else {
@@ -146,7 +146,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         List<PerkSlot> perks = armorPerkHolder.getSlotsForTier(tile.armorStack);
         for (int i = 0; i < Math.min(3, perks.size()); i++) {
             var tier = perks.get(i);
-            var component = Component.literal(getRoman(tier.value())).withStyle(ChatFormatting.BOLD);
+            var component = Component.translatable("enchantment.level." + tier.value()).withStyle(ChatFormatting.BOLD);
             var height = font.lineHeight/2;
 
             matrixStack.pushPose();
@@ -163,6 +163,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
             if (bone.getRotX() != 0.0F) {
                 matrixStack.mulPose(Axis.XP.rotation(-bone.getRotX()));
             }
+
             GeoBone locBone = model.getBone("top_" + (i + 1)).get();
             RenderUtil.translateToPivotPoint(matrixStack, locBone);
             matrixStack.translate(0.0815, -0.20, 0);
@@ -288,17 +289,17 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
 
         if (direction == Direction.SOUTH) {
             perkQuat = Axis.YP.rotationDegrees(90);
-            perkTranslate = new Vector3d(.5, 0, .5);
+            perkTranslate = new Vector3d(.55, 0, .5);
         }
 
         if (direction == Direction.WEST) {
             perkQuat = Axis.YP.rotationDegrees(0);
-            perkTranslate = new Vector3d(1.5, 0, 0.5);
+            perkTranslate = new Vector3d(1.55, 0, 0.5);
         }
 
         if (direction == Direction.EAST) {
             perkQuat = Axis.YP.rotationDegrees(180);
-            perkTranslate = new Vector3d(.5, 0, -.5);
+            perkTranslate = new Vector3d(.55, 0, -.5);
         }
         double ticks = animatable.getTick(animatable);
         stack.pushPose();
@@ -355,7 +356,6 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         }
     }
 
-
     @Override
     public boolean shouldRenderOffScreen(@NotNull AlterationTile pBlockEntity) {
         return true;
@@ -369,17 +369,5 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
     @Override
     public @NotNull AABB getRenderBoundingBox(@NotNull AlterationTile blockEntity) {
         return AABB.INFINITE;
-    }
-
-    public static String getRoman(int number) {
-        return switch (number) {
-            case 1 -> "I" ;
-            case 2 -> "II" ;
-            case 3 -> "III" ;
-            case 4 -> "IV" ;
-            case 5 -> "V" ;
-            case 6 -> "VI" ;
-            default -> "X";
-        };
     }
 }
