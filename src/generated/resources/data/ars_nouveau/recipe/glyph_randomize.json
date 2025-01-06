@@ -1,0 +1,16 @@
+{
+  "type": "ars_nouveau:glyph",
+  "exp": 27,
+  "inputs": [
+    {
+      "item": "minecraft:pink_carpet"
+    },
+    {
+      "item": "minecraft:pink_carpet"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:glyph_randomize"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "x": {
+      "item": "minecraft:grass_block"
+    },
+    "y": {
+      "item": "ars_nouveau:manipulation_essence"
+    }
+  },
+  "pattern": [
+    "xxx",
+    "xyx",
+    "xxx"
+  ],
+  "result": {
+    "count": 8,
+    "id": "minecraft:mycelium"
+  }
+}

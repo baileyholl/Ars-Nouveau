@@ -11,10 +11,11 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.Tags;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import net.neoforged.neoforge.common.Tags;
+import org.jetbrains.annotations.NotNull;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,12 +26,12 @@ public class FamiliarAmethystGolem extends FamiliarEntity {
     }
 
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+    protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (level.isClientSide || hand != InteractionHand.MAIN_HAND)
             return InteractionResult.SUCCESS;
 
         if (player.getMainHandItem().is(Tags.Items.GEMS_AMETHYST)) {
-            player.addEffect(new MobEffectInstance(ModPotions.DEFENCE_EFFECT.get(), 20 * 60 * 3));
+            player.addEffect(new MobEffectInstance(ModPotions.DEFENCE_EFFECT, 20 * 60 * 3));
             player.getMainHandItem().shrink(1);
             return InteractionResult.SUCCESS;
         }
@@ -47,18 +48,17 @@ public class FamiliarAmethystGolem extends FamiliarEntity {
     }
 
     @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.FAMILIAR_AMETHYST_GOLEM.get();
     }
 
     public static final Map<String,ResourceLocation> Variants = new HashMap<>();
     static {
-        Variants.put("default", new ResourceLocation(ArsNouveau.MODID, "textures/entity/amethyst_golem.png"));
+        Variants.put("default", ArsNouveau.prefix( "textures/entity/amethyst_golem.png"));
     }
 
-    @Override
-    public ResourceLocation getTexture(FamiliarEntity entity) {
-        return Variants.getOrDefault(entity.getColor(), Variants.get("default"));
+    public ResourceLocation getTexture() {
+        return Variants.getOrDefault(getColor(), Variants.get("default"));
     }
 
 }

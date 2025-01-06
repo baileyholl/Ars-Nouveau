@@ -7,12 +7,12 @@ import com.hollingsworth.arsnouveau.setup.config.Config;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 
 /**
  * Used to handle client events.
@@ -27,7 +27,7 @@ public class ClientEventHandler {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void renderWorldLastEvent(final RenderLevelStageEvent event) {
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
-            ClientInfo.partialTicks = event.getPartialTick();
+            ClientInfo.partialTicks = event.getPartialTick().getGameTimeDeltaPartialTick(false);
             LightManager.updateAll(event.getLevelRenderer());
         }
     }

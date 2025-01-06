@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:basic_spell_turret"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:rotating_spell_turret"
+  }
+}

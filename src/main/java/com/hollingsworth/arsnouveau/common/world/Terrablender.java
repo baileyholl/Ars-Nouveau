@@ -10,7 +10,7 @@ import terrablender.api.Regions;
 public class Terrablender {
 
     public static void registerBiomes() {
-        Regions.register(new ArchwoodRegion(new ResourceLocation(ArsNouveau.MODID, "overworld"), Config.ARCHWOOD_FOREST_WEIGHT.get()));
+        Regions.register(new ArchwoodRegion(ArsNouveau.prefix( "overworld"), Config.ARCHWOOD_FOREST_WEIGHT.get()));
     }
 
 }

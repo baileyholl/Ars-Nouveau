@@ -21,7 +21,7 @@ public class StorageTabButton extends StateButton{
     @Override
     public void renderWidget(GuiGraphics p_281670_, int mouseX, int mouseY, float pt) {
         if(this.visible){
-            p_281670_.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/storage_tab2" + (isSelected ? "_selected" : "")  + ".png"), x , y, 0, 0, 18, 13, 18, 13);
+            p_281670_.blit(ArsNouveau.prefix( "textures/gui/storage_tab2" + (isSelected ? "_selected" : "")  + ".png"), x , y, 0, 0, 18, 13, 18, 13);
         }
         super.renderWidget(p_281670_, mouseX, mouseY, pt);
     }

@@ -6,15 +6,16 @@ import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateFlight;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraftforge.event.entity.living.LivingEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
 
 public class RitualFlight extends RangeEffectRitual {
     @Override
-    public MobEffect getEffect() {
-        return ModPotions.FLIGHT_EFFECT.get();
+    public Holder<MobEffect> getEffect() {
+        return ModPotions.FLIGHT_EFFECT;
     }
 
     @Override
@@ -34,7 +35,7 @@ public class RitualFlight extends RangeEffectRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, RitualLib.FLIGHT);
+        return ArsNouveau.prefix( RitualLib.FLIGHT);
     }
 
     @Override
@@ -52,8 +53,6 @@ public class RitualFlight extends RangeEffectRitual {
         boolean wasFlying = player.abilities.flying;
         boolean applied = super.applyEffect(player);
         if (applied) {
-            player.abilities.mayfly = true;
-            player.abilities.flying = wasFlying;
             Networking.sendToPlayerClient(new PacketUpdateFlight(true, wasFlying), player);
         }
         return applied;

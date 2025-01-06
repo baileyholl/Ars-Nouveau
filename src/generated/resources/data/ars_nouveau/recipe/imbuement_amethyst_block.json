@@ -1,0 +1,12 @@
+{
+  "type": "ars_nouveau:imbuement",
+  "input": {
+    "item": "minecraft:amethyst_block"
+  },
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:source_gem_block"
+  },
+  "pedestalItems": [],
+  "source": 2000
+}

@@ -16,10 +16,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.Set;
 
 public class EffectDelay extends AbstractEffect {
@@ -30,7 +31,7 @@ public class EffectDelay extends AbstractEffect {
     }
 
     public void sendPacket(Level world, HitResult rayTraceResult, @Nullable LivingEntity shooter, SpellContext spellContext, SpellStats spellStats, BlockHitResult blockResult, Entity hitEntity, SpellResolver spellResolver) {
-        if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
+        if (spellContext.getCurrentIndex() >= spellContext.getSpell().size())
             return;
         int duration = GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getBuffCount(AugmentExtendTime.INSTANCE) * 20;
         int decreasedTime = EXTEND_TIME.get() * 10 * spellStats.getBuffCount(AugmentDurationDown.INSTANCE);
@@ -43,7 +44,7 @@ public class EffectDelay extends AbstractEffect {
         spellContext.delay(delayEvent);
 
         EventQueue.getServerInstance().addEvent(delayEvent);
-        Networking.sendToNearby(world, BlockPos.containing(safelyGetHitPos(rayTraceResult)),
+        Networking.sendToNearbyClient(world, BlockPos.containing(safelyGetHitPos(rayTraceResult)),
                 new PacketClientDelayEffect(duration, shooter, spellContext.getSpell(), spellContext, blockResult, hitEntity));
     }
 
@@ -59,7 +60,7 @@ public class EffectDelay extends AbstractEffect {
     }
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addExtendTimeConfig(builder, 1);
         addGenericInt(builder, 20, "The base duration of the delay effect in ticks.", "base_duration");
@@ -80,6 +81,14 @@ public class EffectDelay extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "Delays the resolution of effects placed to the right of this spell for a few moments. The delay may be increased with the Extend Time augment, or decreased with Duration Down.";
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentExtendTime.INSTANCE, "Increases the duration of the delay.");
+        map.put(AugmentDurationDown.INSTANCE, "Decreases the duration of the delay.");
+        map.put(AugmentRandomize.INSTANCE, "Randomizes the duration of the delay, increasing or decreasing it by 25% of the base duration.");
     }
 
     @Override

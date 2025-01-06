@@ -1,0 +1,5 @@
+{
+  "type": "ars_nouveau:budding_conversion",
+  "input": "minecraft:amethyst_block",
+  "result": "minecraft:budding_amethyst"
+}

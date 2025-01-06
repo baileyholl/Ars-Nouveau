@@ -6,7 +6,7 @@ import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -74,8 +74,8 @@ public class FollowPlayerGoal extends Goal {
      */
     public void start() {
         this.timeToRecalcPath = 0;
-        this.oldWaterCost = this.entity.getPathfindingMalus(BlockPathTypes.WATER);
-        this.entity.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+        this.oldWaterCost = this.entity.getPathfindingMalus(PathType.WATER);
+        this.entity.setPathfindingMalus(PathType.WATER, 0.0F);
     }
 
     /**
@@ -84,7 +84,7 @@ public class FollowPlayerGoal extends Goal {
     public void stop() {
         this.followingEntity = null;
         this.navigation.stop();
-        this.entity.setPathfindingMalus(BlockPathTypes.WATER, this.oldWaterCost);
+        this.entity.setPathfindingMalus(PathType.WATER, this.oldWaterCost);
     }
 
     /**

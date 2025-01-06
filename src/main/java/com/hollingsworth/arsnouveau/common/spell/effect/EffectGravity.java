@@ -13,10 +13,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class EffectGravity extends AbstractEffect implements IPotionEffect {
@@ -42,7 +43,7 @@ public class EffectGravity extends AbstractEffect implements IPotionEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult.getEntity() instanceof LivingEntity living) {
             if (spellStats.hasBuff(AugmentExtendTime.INSTANCE)) {
-                this.applyConfigPotion(living, ModPotions.GRAVITY_EFFECT.get(), spellStats);
+                this.applyConfigPotion(living, ModPotions.GRAVITY_EFFECT, spellStats);
             } else {
                 Entity entity = rayTraceResult.getEntity();
                 entity.setDeltaMovement(entity.getDeltaMovement().add(0, -1.0 - spellStats.getDurationMultiplier(), 0));
@@ -62,7 +63,7 @@ public class EffectGravity extends AbstractEffect implements IPotionEffect {
     }
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addPotionConfig(builder, 30);
         addExtendTimeConfig(builder, 8);
@@ -85,7 +86,15 @@ public class EffectGravity extends AbstractEffect implements IPotionEffect {
         return "Causes blocks and entities to fall. When augmented with Extend Time, players will have their flight disabled and will obtain the Gravity effect. While afflicted with Gravity, entities will rapidly fall and take double falling damage.";
     }
 
-   @NotNull
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentDampen.INSTANCE, "Reduces the falling speed of blocks and entities, or decreases the effect of the potion.");
+        map.put(AugmentAmplify.INSTANCE, "Increases the falling speed of blocks and entities, or increases the effect of the potion.");
+    }
+
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_AIR);

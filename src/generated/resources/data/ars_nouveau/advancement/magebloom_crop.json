@@ -1,0 +1,32 @@
+{
+  "parent": "ars_nouveau:enchanting_apparatus",
+  "criteria": {
+    "has_magebloom_crop": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ars_nouveau:magebloom_crop"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.magebloom_crop"
+    },
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:magebloom_crop"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.magebloom_crop"
+    }
+  },
+  "requirements": [
+    [
+      "has_magebloom_crop"
+    ]
+  ]
+}

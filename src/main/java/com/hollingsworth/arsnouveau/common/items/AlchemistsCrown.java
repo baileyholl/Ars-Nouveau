@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.IRadialProvider;
-import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenuSlot;
@@ -10,6 +9,7 @@ import com.hollingsworth.arsnouveau.client.registry.ModKeyBindings;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketConsumePotion;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -17,10 +17,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +32,8 @@ public class AlchemistsCrown extends ModItem implements IRadialProvider {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip2, flagIn);
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip2, flagIn);
         tooltip2.add(Component.translatable("ars_nouveau.tooltip.alchemists_crown",  KeyMapping.createNameSupplier(ModKeyBindings.HEAD_CURIO_HOTKEY.getName()).get()));
     }
 
@@ -50,8 +50,8 @@ public class AlchemistsCrown extends ModItem implements IRadialProvider {
             if(slots.size() >= 9)
                 break;
             ItemStack item = player.inventory.getItem(i);
-            PotionData potionData = new PotionData(item);
-            if(potionData.isEmpty() || item.getItem() instanceof ArrowItem)
+            PotionContents contents = PotionUtil.getContents(item);
+            if(contents == PotionContents.EMPTY || item.getItem() instanceof ArrowItem)
                 continue;
             slots.add(new RadialMenuSlot<>(item.getHoverName().getString(), new AlchemistsCrown.SlotData(i, item)));
         }
@@ -60,7 +60,7 @@ public class AlchemistsCrown extends ModItem implements IRadialProvider {
             return;
         }
         Minecraft.getInstance().setScreen(new GuiRadialMenu<>(new RadialMenu<>((int index) -> {
-            Networking.INSTANCE.sendToServer(new PacketConsumePotion(slots.get(index).primarySlotIcon().slot));
+            Networking.sendToServer(new PacketConsumePotion(slots.get(index).primarySlotIcon().slot));
         }, slots, (slotData, posestack, positionx, posy, size, transparent) -> RenderUtils.drawItemAsIcon(slotData.stack, posestack, positionx, posy, size, transparent), 3)));
     }
 

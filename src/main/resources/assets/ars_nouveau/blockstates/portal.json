@@ -10,7 +10,7 @@
             "model": "ars_nouveau:block/warp_portal_ud"
         },
         "alternate=false": {
-            "model": "minecraft:block/air"
+            "model": "ars_nouveau:block/warp_portal"
         }
     }
 }

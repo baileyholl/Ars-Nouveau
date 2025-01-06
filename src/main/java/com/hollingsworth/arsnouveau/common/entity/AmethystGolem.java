@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
-import com.hollingsworth.arsnouveau.api.recipe.BuddingConversionRecipe;
 import com.hollingsworth.arsnouveau.api.registry.BuddingConversionRegistry;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
@@ -12,15 +11,19 @@ import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.BuddingConversionRecipe;
 import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem.*;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.MinecoloniesAdvancedPathNavigate;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingStuckHandler;
+import com.hollingsworth.arsnouveau.common.items.data.ICharmSerializable;
+import com.hollingsworth.arsnouveau.common.items.data.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -41,16 +44,15 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -59,7 +61,7 @@ import java.util.Optional;
 
 import static com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider.BUDDING_BLOCKS;
 
-public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispellable, ITooltipProvider, IWandable {
+public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispellable, ITooltipProvider, IWandable, ICharmSerializable {
     public static final EntityDataAccessor<Optional<BlockPos>> HOME = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
     public static final EntityDataAccessor<Boolean> IMBUEING = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> STOMPING = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.BOOLEAN);
@@ -76,6 +78,11 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
     public MinecoloniesAdvancedPathNavigate pathNavigate;
     public PathNavigation minecraftPathNav;
     public AmethystGolemGoalState goalState;
+
+    @Override
+    public void fromCharmData(PersistentFamiliarData data) {
+        this.setCustomName(data.name());
+    }
 
     public enum AmethystGolemGoalState {
         NONE,
@@ -113,11 +120,11 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(3, new ConvertBuddingGoal(this, () -> convertCooldown <= 0 && getHome() != null && getHeldStack().isEmpty()));
-        this.goalSelector.addGoal(4, new GrowClusterGoal(this, () -> growCooldown <= 0 && getHome() != null && getHeldStack().isEmpty()));
-        this.goalSelector.addGoal(5, new HarvestClusterGoal(this, () -> harvestCooldown <= 0 && getHome() != null && !isImbueing() && getHeldStack().isEmpty()));
+        this.goalSelector.addGoal(3, new ConvertBuddingGoal(this, () -> convertCooldown <= 0 && getHome() != null && getMainHandItem().isEmpty()));
+        this.goalSelector.addGoal(4, new GrowClusterGoal(this, () -> growCooldown <= 0 && getHome() != null && getMainHandItem().isEmpty()));
+        this.goalSelector.addGoal(5, new HarvestClusterGoal(this, () -> harvestCooldown <= 0 && getHome() != null && !isImbueing() && getMainHandItem().isEmpty()));
         this.goalSelector.addGoal(2, new PickupAmethystGoal(this, () -> getHome() != null && pickupCooldown <= 0));
-        this.goalSelector.addGoal(2, new DepositAmethystGoal(this, () -> getHome() != null && !getHeldStack().isEmpty()));
+        this.goalSelector.addGoal(2, new DepositAmethystGoal(this, () -> getHome() != null && !getMainHandItem().isEmpty()));
     }
 
     @Override
@@ -152,10 +159,6 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
 
     public void setHeldStack(ItemStack stack) {
         this.setItemSlot(EquipmentSlot.MAINHAND, stack);
-    }
-
-    public ItemStack getHeldStack() {
-        return this.getMainHandItem();
     }
 
     public boolean isStomping() {
@@ -229,9 +232,10 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
     public void die(DamageSource source) {
         if (!level.isClientSide) {
             ItemStack stack = new ItemStack(ItemsRegistry.AMETHYST_GOLEM_CHARM.get());
+            stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
-            if (this.getHeldStack() != null)
-                level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getHeldStack()));
+            if (this.getMainHandItem() != null)
+                level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getMainHandItem()));
         }
         super.die(source);
     }
@@ -248,8 +252,9 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
 
         if (!level.isClientSide) {
             ItemStack stack = new ItemStack(ItemsRegistry.AMETHYST_GOLEM_CHARM.get());
+            stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack.copy()));
-            stack = getHeldStack();
+            stack = getMainHandItem();
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             this.remove(RemovalReason.DISCARDED);
@@ -266,9 +271,8 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
         tag.putInt("harvest", harvestCooldown);
         tag.putInt("pickup", pickupCooldown);
 
-        if (getHeldStack() != null) {
-            CompoundTag itemTag = new CompoundTag();
-            getHeldStack().save(itemTag);
+        if (getMainHandItem() != null && !getMainHandItem().isEmpty()) {
+            Tag itemTag = getMainHandItem().save(level.registryAccess());
             tag.put("held", itemTag);
         }
     }
@@ -284,8 +288,7 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
         this.harvestCooldown = tag.getInt("harvest");
         this.pickupCooldown = tag.getInt("pickup");
 
-        if (tag.contains("held"))
-            setHeldStack(ItemStack.of((CompoundTag) tag.get("held")));
+        setHeldStack(ItemStack.parseOptional(level.registryAccess(), tag.getCompound("held")));
     }
 
     @Override
@@ -302,12 +305,12 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
                 return PlayState.CONTINUE;
             }
             if (e.isMoving()) {
-                String anim = getHeldStack().isEmpty() ? "run" : "run_carry";
+                String anim = getMainHandItem().isEmpty() ? "run" : "run_carry";
                 controller.setAnimation(RawAnimation.begin().thenPlay(anim));
                 return PlayState.CONTINUE;
             }
 
-            if (!getHeldStack().isEmpty()) {
+            if (!getMainHandItem().isEmpty()) {
                 controller.setAnimation(RawAnimation.begin().thenPlay("carry_idle"));
                 return PlayState.CONTINUE;
             }
@@ -329,12 +332,12 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(HOME, Optional.empty());
-        this.entityData.define(IMBUEING, false);
-        this.entityData.define(IMBUE_POS, BlockPos.ZERO);
-        this.entityData.define(STOMPING, false);
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(HOME, Optional.empty());
+        pBuilder.define(IMBUEING, false);
+        pBuilder.define(IMBUE_POS, BlockPos.ZERO);
+        pBuilder.define(STOMPING, false);
     }
 
     @Override
@@ -343,7 +346,7 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
     }
 
     @Override
-    public int getExperienceReward() {
+    protected int getBaseExperienceReward() {
         return 0;
     }
 

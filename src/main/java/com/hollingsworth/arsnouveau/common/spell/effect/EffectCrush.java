@@ -11,18 +11,18 @@ import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -54,7 +54,7 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level level,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        float damage = (float) ((rayTraceResult.getEntity().isSwimming() ? DAMAGE.get() * 3.0 : DAMAGE.get()) + AMP_VALUE.get() * spellStats.getAmpMultiplier());
+        float damage = (float) ((rayTraceResult.getEntity().isUnderWater() ? DAMAGE.get() * 3.0 : DAMAGE.get()) + AMP_VALUE.get() * spellStats.getAmpMultiplier());
         attemptDamage(level, shooter, spellStats, spellContext, resolver, rayTraceResult.getEntity(), buildDamageSource(level, shooter), damage);
     }
 
@@ -65,16 +65,16 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        List<CrushRecipe> recipes = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.CRUSH_TYPE.get());
+        List<RecipeHolder<CrushRecipe>> recipes = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.CRUSH_TYPE.get());
         CrushRecipe lastHit = null; // Cache this for AOE hits
         for (BlockPos p : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE))) {
             BlockState state = world.getBlockState(p);
             Item item = state.getBlock().asItem();
             if (lastHit == null || !lastHit.matches(item.getDefaultInstance(), world)) {
                 lastHit = null;
-                for (CrushRecipe recipe : recipes) {
-                    if (recipe.matches(item.getDefaultInstance(), world)) {
-                        lastHit = recipe;
+                for (RecipeHolder<CrushRecipe> recipe : recipes) {
+                    if (recipe.value().matches(item.getDefaultInstance(), world)) {
+                        lastHit = recipe.value();
                         break;
                     }
                 }
@@ -109,11 +109,11 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
 
 
     public static void crushItems(Level world, List<ItemEntity> itemEntities, int maxItemCrush) {
-        List<CrushRecipe> recipes = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.CRUSH_TYPE.get());
+        List<RecipeHolder<CrushRecipe>> recipes = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.CRUSH_TYPE.get());
         CrushRecipe lastHit = null; // Cache this for AOE hits
         int itemsCrushed = 0;
         for (ItemEntity IE : itemEntities) {
-            if (itemsCrushed > maxItemCrush) {
+            if (itemsCrushed >= maxItemCrush) {
                 break;
             }
 
@@ -121,12 +121,13 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
             Item item = stack.getItem();
 
             if (lastHit == null || !lastHit.matches(item.getDefaultInstance(), world)) {
-                lastHit = recipes.stream().filter(recipe -> recipe.matches(item.getDefaultInstance(), world)).findFirst().orElse(null);
+                var holder = recipes.stream().filter(recipe -> recipe.value().matches(item.getDefaultInstance(), world)).findFirst().orElse(null);
+                lastHit = holder == null ? null : holder.value();
             }
 
             if (lastHit == null) continue;
 
-            while (!stack.isEmpty() && itemsCrushed <= maxItemCrush) {
+            while (!stack.isEmpty() && itemsCrushed < maxItemCrush) {
                 List<ItemStack> outputs = lastHit.getRolledOutputs(world.random);
                 stack.shrink(1);
                 itemsCrushed++;
@@ -139,7 +140,7 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addDamageConfig(builder, 3.0);
         addAmpConfig(builder, 1.0);
@@ -156,8 +157,19 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addDamageAugmentDescriptions(map);
+        addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentAmplify.INSTANCE, "Increases damage dealt and the harvest level.");
+        map.put(AugmentDampen.INSTANCE, "Decreases damage dealt and the harvest level.");
+        map.put(AugmentSensitive.INSTANCE, "Crush will also target items nearby.");
+    }
+
+    @Override
     protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
         defaults.put(AugmentAmplify.INSTANCE.getRegistryName(), 2);
+        defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
     }
 
     @Override

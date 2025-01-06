@@ -1,18 +1,24 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.light.LightManager;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
-public class PacketSyncLitEntities {
+public class PacketSyncLitEntities extends AbstractPacket {
+    public static final Type<PacketSyncLitEntities> TYPE = new Type<>(ArsNouveau.prefix("sync_lit_entities"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketSyncLitEntities> CODEC = StreamCodec.ofMember(PacketSyncLitEntities::toBytes, PacketSyncLitEntities::new);
+
     List<Integer> entityIDs = new ArrayList<>();
 
     //Decoder
-    public PacketSyncLitEntities(FriendlyByteBuf buf) {
+    public PacketSyncLitEntities(RegistryFriendlyByteBuf buf) {
         int num = buf.readInt();
         for (int i = 0; i < num; i++) {
             entityIDs.add(buf.readInt());
@@ -20,22 +26,25 @@ public class PacketSyncLitEntities {
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeInt(entityIDs.size());
         for (Integer i : entityIDs)
             buf.writeInt(i);
+    }
+
+    @Override
+    public void onClientReceived(Minecraft minecraft, Player player) {
+        if (LightManager.shouldUpdateDynamicLight()) {
+            LightManager.jarHoldingEntityList = entityIDs;
+        }
     }
 
     public PacketSyncLitEntities(List<Integer> entityIDs) {
         this.entityIDs = entityIDs;
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            if (LightManager.shouldUpdateDynamicLight()) {
-                LightManager.jarHoldingEntityList = entityIDs;
-            }
-        });
-        ctx.get().setPacketHandled(true);
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

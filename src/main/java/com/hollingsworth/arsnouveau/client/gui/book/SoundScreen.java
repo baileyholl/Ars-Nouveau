@@ -17,7 +17,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 
@@ -30,9 +29,9 @@ public class SoundScreen extends BaseBook {
 
     public SoundScreen(ConfiguredSpellSound configuredSpellSound, int slot, InteractionHand stackHand) {
         super();
-        volume = configuredSpellSound.volume * 100;
-        pitch = configuredSpellSound.pitch * 100;
-        selectedSound = configuredSpellSound.sound;
+        volume = configuredSpellSound.getVolume() * 100;
+        pitch = configuredSpellSound.getPitch() * 100;
+        selectedSound = configuredSpellSound.getSound();
         casterSlot = slot;
         this.stackHand = stackHand;
     }
@@ -77,7 +76,7 @@ public class SoundScreen extends BaseBook {
         int adjustedRowsPlaced = 0;
         int yStart = bookTop + 22;
         int adjustedXPlaced = 0;
-        List<SpellSound> sounds = SpellSoundRegistry.getSpellSoundsRegistry().values().stream().toList();
+        List<SpellSound> sounds = SpellSoundRegistry.getSpellSounds();
         for (int i = 0; i < sounds.size(); i++) {
             SpellSound part = sounds.get(i);
 
@@ -114,21 +113,21 @@ public class SoundScreen extends BaseBook {
             return;
         LocalPlayer localPlayer = Minecraft.getInstance().player;
         BlockPos pos = localPlayer.getOnPos().above(2);
-        localPlayer.level.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), selectedSound.getSoundEvent(), SoundSource.PLAYERS, (float) volumeSlider.getValue() / 100f, (float) pitchSlider.getValue() / 100f, false);
+        localPlayer.level.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), selectedSound.getSoundEvent().value(), SoundSource.PLAYERS, (float) volumeSlider.getValue() / 100f, (float) pitchSlider.getValue() / 100f, false);
     }
 
     public void onSaveClick(Button button) {
-        Networking.INSTANCE.sendToServer(new PacketSetSound(casterSlot, selectedSound == null ? ConfiguredSpellSound.EMPTY : new ConfiguredSpellSound(selectedSound, (float) volumeSlider.getValue() / 100f, (float) pitchSlider.getValue() / 100f), stackHand == InteractionHand.MAIN_HAND));
+        Networking.sendToServer(new PacketSetSound(casterSlot, selectedSound == null ? ConfiguredSpellSound.EMPTY : new ConfiguredSpellSound(selectedSound, (float) volumeSlider.getValue() / 100f, (float) pitchSlider.getValue() / 100f), stackHand == InteractionHand.MAIN_HAND));
     }
 
     public void onSaveAllClick(Button button) {
-        Networking.INSTANCE.sendToServer(new PacketUpdateSpellSoundAll(casterSlot, selectedSound == null ? ConfiguredSpellSound.EMPTY : new ConfiguredSpellSound(selectedSound, (float) volumeSlider.getValue() / 100f, (float) pitchSlider.getValue() / 100f), stackHand == InteractionHand.MAIN_HAND));
+        Networking.sendToServer(new PacketUpdateSpellSoundAll(casterSlot, selectedSound == null ? ConfiguredSpellSound.EMPTY : new ConfiguredSpellSound(selectedSound, (float) volumeSlider.getValue() / 100f, (float) pitchSlider.getValue() / 100f), stackHand == InteractionHand.MAIN_HAND));
     }
 
     @Override
     public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
-        graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/sound_slider_gilding.png"), 22, 47, 0, 0, 112, 104, 112, 104);
+        graphics.blit(ArsNouveau.prefix( "textures/gui/sound_slider_gilding.png"), 22, 47, 0, 0, 112, 104, 112, 104);
         int color = -8355712;
         graphics.drawString(font, Component.translatable("ars_nouveau.sounds.title").getString(), 51, 24, color, false);
         graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.save").getString(), 37, 160, color, false);

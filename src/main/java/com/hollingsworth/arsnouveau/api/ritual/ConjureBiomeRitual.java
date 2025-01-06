@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.ritual;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundSource;
@@ -87,8 +88,8 @@ public abstract class ConjureBiomeRitual extends AbstractRitual {
     }
 
     @Override
-    public void read(CompoundTag tag) {
-        super.read(tag);
+    public void read(HolderLookup.Provider provider, CompoundTag tag) {
+        super.read(provider, tag);
         if(tag.contains("tracker")){
             tracker = new ManhattenTracker(tag.getCompound("tracker"));
         }
@@ -96,8 +97,8 @@ public abstract class ConjureBiomeRitual extends AbstractRitual {
     }
 
     @Override
-    public void write(CompoundTag tag) {
-        super.write(tag);
+    public void write(HolderLookup.Provider provider, CompoundTag tag) {
+        super.write(provider, tag);
         if(tracker != null){
             tag.put("tracker", tracker.serialize(new CompoundTag()));
         }

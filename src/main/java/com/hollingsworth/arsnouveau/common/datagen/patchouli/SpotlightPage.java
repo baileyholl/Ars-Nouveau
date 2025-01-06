@@ -32,6 +32,6 @@ public class SpotlightPage extends AbstractPage {
 
     @Override
     public ResourceLocation getType() {
-        return new ResourceLocation("patchouli:spotlight");
+        return ResourceLocation.tryParse("patchouli:spotlight");
     }
 }

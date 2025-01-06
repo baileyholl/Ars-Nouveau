@@ -7,8 +7,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -16,6 +15,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.stream.Stream;
+
+import static com.hollingsworth.arsnouveau.common.block.RitualBrazierBlock.LIT;
 
 public class BrazierRelay extends TickableModBlock{
     public static VoxelShape shape = Stream.of(
@@ -27,10 +28,10 @@ public class BrazierRelay extends TickableModBlock{
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     public BrazierRelay() {
-        super(defaultProperties().noOcclusion().lightLevel((b) -> b.getValue(LIT) ? 15 : 0));
+        super(defaultProperties().noOcclusion().pushReaction(PushReaction.BLOCK).lightLevel((b) -> b.getValue(LIT) ? 15 : 0));
+        registerDefaultState(defaultBlockState().setValue(LIT, false));
     }
 
-    public static final Property<Boolean> LIT = BooleanProperty.create("lit");
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
@@ -50,7 +51,7 @@ public class BrazierRelay extends TickableModBlock{
     }
 
     @Override
-    public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+    public boolean isPathfindable(BlockState pState, PathComputationType pType) {
         return false;
     }
 }

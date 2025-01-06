@@ -7,17 +7,14 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.*;
 
 import java.util.List;
 
@@ -33,7 +30,7 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
     }
 
     public TimerSpellTurretTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.TIMER_SPELL_TURRET_TILE, pos, state);
+        super(BlockRegistry.TIMER_SPELL_TURRET_TILE.get(), pos, state);
     }
 
     @Override
@@ -48,7 +45,7 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
     @Override
     public int getManaCost() {
         int cost = super.getManaCost();
-        Spell spell = this.getSpellCaster().getSpell();
+        Spell spell = this.spellCaster.getSpell();
         cost -= spell.getInstanceCount(MethodTouch.INSTANCE) * MethodTouch.INSTANCE.getCastingCost();
         cost -= spell.getInstanceCount(EffectRedstone.INSTANCE) * EffectRedstone.INSTANCE.getCastingCost();
         cost -= spell.getInstanceCount(MethodProjectile.INSTANCE) * MethodProjectile.INSTANCE.getCastingCost();
@@ -94,9 +91,10 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
             tooltip.add(Component.translatable("ars_nouveau.locked"));
     }
 
+
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(tag, pRegistries);
         this.isLocked = tag.getBoolean("locked");
         this.ticksPerSignal = tag.getInt("time");
         this.isOff = tag.getBoolean("off");
@@ -104,8 +102,8 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         tag.putBoolean("locked", isLocked);
         tag.putInt("time", ticksPerSignal);
         tag.putBoolean("off", isOff);

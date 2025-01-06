@@ -14,12 +14,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 
-@Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
+@EventBusSubscriber(modid = ArsNouveau.MODID)
 public class WitherBehavior extends JarBehavior<WitherBoss> {
     public static LevelPosMap WITHER_MAP = new LevelPosMap(
             (level, pos) -> !(level.getBlockEntity(pos) instanceof MobJarTile mobJarTile) || !(mobJarTile.getEntity() instanceof WitherBoss)
@@ -43,11 +43,11 @@ public class WitherBehavior extends JarBehavior<WitherBoss> {
     private void destroyBlocks(MobJarTile tile) {
         BlockPos pos = tile.getBlockPos();
         WitherBoss entity = entityFromJar(tile);
-        if (!ForgeEventFactory.getMobGriefingEvent(tile.getLevel(), entity)) return;
+        if (!EventHooks.canEntityGrief(tile.getLevel(), entity)) return;
         for (BlockPos block : BlockPos.betweenClosed(pos.offset(-1, -1, -1), pos.offset(1, 1, 1))) {
             if (block.equals(pos)) continue;
             BlockState bs = tile.getLevel().getBlockState(block);
-            if (bs.canEntityDestroy(tile.getLevel(), block, entity) && ForgeEventFactory.onEntityDestroyBlock(entity, block, bs)) {
+            if (bs.canEntityDestroy(tile.getLevel(), block, entity) && EventHooks.onEntityDestroyBlock(entity, block, bs)) {
                 tile.getLevel().destroyBlock(block, true, entity);
             }
         }

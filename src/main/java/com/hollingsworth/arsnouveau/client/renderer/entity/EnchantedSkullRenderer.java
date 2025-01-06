@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
-import com.hollingsworth.arsnouveau.client.renderer.tile.EnchantedFallingBlockRenderer;
 import com.hollingsworth.arsnouveau.common.entity.EnchantedSkull;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;

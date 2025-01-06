@@ -50,7 +50,7 @@ public class SpellContext implements Cloneable {
         this.level = level;
         this.spell = spell;
         this.caster = caster;
-        this.colors = spell.color.clone();
+        this.colors = spell.color().clone();
         this.wrappedCaster = wrappedCaster;
     }
 
@@ -60,7 +60,7 @@ public class SpellContext implements Cloneable {
     }
 
     public static SpellContext fromEntity(@NotNull Spell spell, @NotNull LivingEntity caster, ItemStack castingTool){
-        return new SpellContext(caster.level, spell, caster, LivingCaster.from(caster), castingTool);
+        return new SpellContext(caster.level(), spell, caster, LivingCaster.from(caster), castingTool);
     }
 
     public SpellContext withWrappedCaster(IWrappedCaster caster){
@@ -88,7 +88,7 @@ public class SpellContext implements Cloneable {
         this.currentIndex++;
         AbstractSpellPart part = null;
         try {
-            part = getSpell().recipe.get(currentIndex - 1);
+            part = getSpell().get(currentIndex - 1);
         } catch (Throwable e) { // This can happen if a new spell context is created but does not reset the bounds.
             System.out.println("=======");
             System.out.println("Invalid spell cast found! This is a bug and should be reported!");
@@ -108,9 +108,9 @@ public class SpellContext implements Cloneable {
      * or by cloning this context and setting the spell to the remainder of the spell and canceling the current one.
      * The new context will have its previous context set to this context.
      */
-    public @NotNull SpellContext makeChildContext(){
+    public @NotNull SpellContext makeChildContext() {
         Spell remainder = getRemainingSpell();
-        for(AbstractSpellPart spellPart : remainder.recipe){
+        for(AbstractSpellPart spellPart : remainder.recipe()){
             if(spellPart instanceof IContextManipulator manipulator){
                 boolean shouldPush = manipulator.shouldPushContext(this);
                 SpellContext newContext = manipulator.manipulate(this);
@@ -128,7 +128,7 @@ public class SpellContext implements Cloneable {
     }
 
     public boolean hasNextPart() {
-        return spell.isValid() && !isCanceled() && !this.isDelayed() && currentIndex < spell.recipe.size();
+        return spell.isValid() && !isCanceled() && !this.isDelayed() && currentIndex < spell.unsafeList().size();
     }
 
     public SpellContext resetCastCounter() {
@@ -203,7 +203,7 @@ public class SpellContext implements Cloneable {
         this.cancelReason = cancelReason;
         if(isCanceled) {
             Spell remainder = getRemainingSpell();
-            for (AbstractSpellPart spellPart : remainder.recipe) {
+            for (AbstractSpellPart spellPart : remainder.recipe()) {
                 boolean keepChecking = spellPart.contextCanceled(this);
                 if (!keepChecking) {
                     break;
@@ -242,11 +242,12 @@ public class SpellContext implements Cloneable {
      * Returns a new copy of the spell with the recipe set to the remainder of the unresolved spell.
      */
     public @NotNull Spell getRemainingSpell() {
-        Spell remainder = getSpell().clone();
-        if (getCurrentIndex() >= getSpell().recipe.size())
-            return remainder.setRecipe(new ArrayList<>());
+        Spell.Mutable remainder = getSpell().mutable();
+        var spell = getSpell().mutable();
+        if (getCurrentIndex() >= spell.recipe.size())
+            return remainder.setRecipe(new ArrayList<>()).immutable();
 
-        return remainder.setRecipe(new ArrayList<>(getSpell().recipe.subList(getCurrentIndex(), getSpell().recipe.size())));
+        return remainder.setRecipe(new ArrayList<>(spell.recipe.subList(getCurrentIndex(), spell.recipe.size()))).immutable();
     }
 
     public @Nullable SpellContext getPreviousContext(){
@@ -257,7 +258,7 @@ public class SpellContext implements Cloneable {
     public SpellContext clone() {
         try {
             SpellContext clone = (SpellContext) super.clone();
-            clone.spell = this.spell.clone();
+            clone.spell = this.spell;
             clone.colors = this.colors.clone();
             clone.tag = this.tag.copy();
             clone.caster = this.caster;

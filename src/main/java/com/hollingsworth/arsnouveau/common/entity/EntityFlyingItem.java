@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.api.util.NearbyPlayerCache;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -13,17 +14,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.network.PlayMessages;
+import org.jetbrains.annotations.NotNull;
 
 public class EntityFlyingItem extends ColoredProjectile {
     public static final EntityDataAccessor<Vec3> to = SynchedEntityData.defineId(EntityFlyingItem.class, DataSerializers.VEC.get());
@@ -36,6 +36,7 @@ public class EntityFlyingItem extends ColoredProjectile {
     public static final EntityDataAccessor<ItemStack> HELD_ITEM = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.ITEM_STACK);
     public static final EntityDataAccessor<Float> OFFSET = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Boolean> DIDOFFSET = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> IS_BUBBLE = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.BOOLEAN);
 
     public EntityFlyingItem(Level worldIn, Vec3 from, Vec3 to) {
         this(worldIn, from, to, 255, 25, 180);
@@ -62,6 +63,35 @@ public class EntityFlyingItem extends ColoredProjectile {
 
     public EntityFlyingItem(EntityType<EntityFlyingItem> entityAOEProjectileEntityType, Level world) {
         super(entityAOEProjectileEntityType, world);
+    }
+
+    public static @NotNull EntityFlyingItem spawn(ServerLevel level, Vec3 from, Vec3 to, int r, int g, int b){
+        boolean canSpawn = NearbyPlayerCache.isPlayerNearby(BlockPos.containing(from), level, 64);
+        EntityFlyingItem entity = new EntityFlyingItem(level, from, to, r, g, b);
+        if(canSpawn && level.isLoaded(BlockPos.containing(to))) {
+            level.addFreshEntity(entity);
+        }
+        return entity;
+    }
+
+    public static @NotNull EntityFlyingItem spawn(ServerLevel level, BlockPos from, BlockPos to, int r, int g, int b){
+        return spawn(from, level, from, to, r, g, b);
+    }
+    public static @NotNull EntityFlyingItem spawn(BlockPos checkCachePos, ServerLevel level, BlockPos from, BlockPos to, int r, int g, int b){
+        boolean canSpawn = NearbyPlayerCache.isPlayerNearby(checkCachePos, level, 64);
+        EntityFlyingItem entity = new EntityFlyingItem(level, from, to, r, g, b);
+        if(canSpawn && level.isLoaded(to)) {
+            level.addFreshEntity(entity);
+        }
+        return entity;
+    }
+
+    public static @NotNull EntityFlyingItem spawn(BlockPos checkCachePos, ServerLevel level, BlockPos from, BlockPos to){
+        return spawn(checkCachePos, level, from, to, 255, 25, 180);
+    }
+
+    public static @NotNull EntityFlyingItem spawn(ServerLevel level, BlockPos from, BlockPos to){
+        return spawn(from, level, from, to);
     }
 
     public EntityFlyingItem setStack(ItemStack stack) {
@@ -142,7 +172,7 @@ public class EntityFlyingItem extends ColoredProjectile {
             this.setPos(lerpX, lerpY, lerpZ);
         }
 
-        if (level.isClientSide && this.age > 1) {
+        if (level.isClientSide && this.age > 1 && !this.getEntityData().get(IS_BUBBLE)) {
             double deltaX = getX() - xOld;
             double deltaY = getY() - yOld;
             double deltaZ = getZ() - zOld;
@@ -186,9 +216,7 @@ public class EntityFlyingItem extends ColoredProjectile {
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        if (compound.contains("item")) {
-            this.entityData.set(HELD_ITEM, ItemStack.of(compound.getCompound("item")));
-        }
+        this.entityData.set(HELD_ITEM, ItemStack.parseOptional(level.registryAccess(), compound.getCompound("item")));
         this.age = compound.getInt("age");
         this.entityData.set(DIDOFFSET, compound.getBoolean("didoffset"));
         this.entityData.set(OFFSET, compound.getFloat("offset"));
@@ -200,8 +228,7 @@ public class EntityFlyingItem extends ColoredProjectile {
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         if (getStack() != null) {
-            CompoundTag tag = new CompoundTag();
-            getStack().save(tag);
+            Tag tag = getStack().save(level.registryAccess());
             compound.put("item", tag);
         }
         compound.putInt("age", age);
@@ -218,28 +245,19 @@ public class EntityFlyingItem extends ColoredProjectile {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(HELD_ITEM, ItemStack.EMPTY);
-        this.entityData.define(OFFSET, 0.0f);
-        this.entityData.define(DIDOFFSET, false);
-        this.entityData.define(to, new Vec3(0, 0, 0));
-        this.entityData.define(from, new Vec3(0, 0, 0));
-        this.entityData.define(SPAWN_TOUCH, true);
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(HELD_ITEM, ItemStack.EMPTY);
+        pBuilder.define(OFFSET, 0.0f);
+        pBuilder.define(DIDOFFSET, false);
+        pBuilder.define(to, new Vec3(0, 0, 0));
+        pBuilder.define(from, new Vec3(0, 0, 0));
+        pBuilder.define(SPAWN_TOUCH, true);
+        pBuilder.define(IS_BUBBLE, false);
     }
-
 
     @Override
     public EntityType<?> getType() {
         return ModEntities.ENTITY_FLYING_ITEM.get();
-    }
-
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
-    public EntityFlyingItem(PlayMessages.SpawnEntity packet, Level world) {
-        super(ModEntities.ENTITY_FLYING_ITEM.get(), world);
     }
 }

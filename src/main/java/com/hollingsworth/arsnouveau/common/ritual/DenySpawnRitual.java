@@ -3,26 +3,39 @@ package com.hollingsworth.arsnouveau.common.ritual;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ritual.RangeRitual;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.village.VillageSiege;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.event.entity.living.MobSpawnEvent;
+import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
+import net.neoforged.neoforge.event.village.VillageSiegeEvent;
 import org.jetbrains.annotations.Nullable;
 
 public class DenySpawnRitual extends RangeRitual {
     public int radius = 32;
     public boolean deniedSpawn;
 
-    public boolean denySpawn(MobSpawnEvent.FinalizeSpawn checkSpawn){
+    public boolean denySpawn(FinalizeSpawnEvent checkSpawn){
         boolean shouldDeny = checkSpawn.getSpawnType() == MobSpawnType.NATURAL
                 && checkSpawn.getEntity() instanceof Enemy
                 && checkSpawn.getEntity().distanceToSqr(getPos().getX(), getPos().getY(), getPos().getZ()) <= radius * radius;
         if(shouldDeny){
             checkSpawn.setSpawnCancelled(true);
+            deniedSpawn = true;
+        }
+        return shouldDeny;
+    }
+
+    public boolean denySiege(VillageSiegeEvent checkSpawn) {
+        boolean shouldDeny = checkSpawn.getAttemptedSpawnPos().distanceToSqr(getPos().getX(), getPos().getY(), getPos().getZ()) <= radius * radius;
+        if (shouldDeny) {
+            checkSpawn.setCanceled(true);
             deniedSpawn = true;
         }
         return shouldDeny;
@@ -65,7 +78,7 @@ public class DenySpawnRitual extends RangeRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, RitualLib.SANCTUARY);
+        return ArsNouveau.prefix( RitualLib.SANCTUARY);
     }
 
     @Override
@@ -79,15 +92,15 @@ public class DenySpawnRitual extends RangeRitual {
     }
 
     @Override
-    public void read(CompoundTag tag) {
-        super.read(tag);
+    public void read(HolderLookup.Provider provider, CompoundTag tag) {
+        super.read(provider, tag);
         radius = tag.getInt("radius");
         deniedSpawn = tag.getBoolean("deniedSpawn");
     }
 
     @Override
-    public void write(CompoundTag tag) {
-        super.write(tag);
+    public void write(HolderLookup.Provider provider, CompoundTag tag) {
+        super.write(provider, tag);
         tag.putInt("radius", radius);
         tag.putBoolean("deniedSpawn", deniedSpawn);
     }

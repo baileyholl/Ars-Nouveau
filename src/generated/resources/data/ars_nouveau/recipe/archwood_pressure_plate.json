@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "wooden_pressure_plate",
+  "key": {
+    "#": {
+      "item": "ars_nouveau:archwood_planks"
+    }
+  },
+  "pattern": [
+    "##"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:archwood_pressure_plate"
+  }
+}

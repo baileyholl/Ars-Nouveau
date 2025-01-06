@@ -11,15 +11,16 @@ import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
-import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
+import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
+import com.hollingsworth.arsnouveau.setup.registry.ItemRegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.model.generators.ItemModelProvider;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import java.util.function.Supplier;
 
@@ -121,7 +122,26 @@ public class ItemModelGenerator extends ItemModelProvider {
         itemUnchecked(ItemsRegistry.JUMP_RING);
         getBuilder(LibBlockNames.SPELL_SENSOR).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.SPELL_SENSOR));
         getBuilder(LibBlockNames.SOURCEBERRY_SACK).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.SOURCEBERRY_SACK));
+        getBuilder(LibBlockNames.SOURCESTONE_GRATE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.SOURCESTONE_GRATE));
+        getBuilder(LibBlockNames.ARCHWOOD_GRATE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.ARCHWOOD_GRATE));
+        getBuilder(LibBlockNames.SMOOTH_SOURCESTONE_GRATE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.SMOOTH_SOURCESTONE_GRATE));
+        getBuilder(LibBlockNames.GOLD_GRATE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.GOLD_GRATE));
+        getBuilder(LibBlockNames.SOURCE_LAMP).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.SOURCE_LAMP));
+        getBuilder(LibBlockNames.CRAB_HAT).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.CRAB_HAT));
+        itemUnchecked(ItemsRegistry.ALAKARKINOS_CHARM);
+        itemUnchecked(ItemsRegistry.ALAKARKINOS_SHARD);
+        spawnEgg(LibItemNames.ALAKARKINOS_SE);
+        spawnEgg(LibItemNames.SYLPH_SE);
+        spawnEgg(LibItemNames.DRYGMY_SE);
+        spawnEgg(LibItemNames.STARBUNCLE_SE);
+        spawnEgg(LibItemNames.WILDEN_GUARDIAN_SE);
+        spawnEgg(LibItemNames.WILDEN_STALKER_SE);
+        spawnEgg(LibItemNames.WILDEN_HUNTER_SE);
+    }
 
+
+    public void spawnEgg(String s){
+        getBuilder("ars_nouveau:" + s).parent(new ModelFile.UncheckedModelFile("item/template_spawn_egg"));
     }
 
     public void blockAsItem(String s){
@@ -129,12 +149,7 @@ public class ItemModelGenerator extends ItemModelProvider {
                 .texture("layer0", itemTexture(s));
     }
 
-    public void blockAsItem(RegistryWrapper<? extends Block> block){
-        getBuilder(block.getRegistryName()).parent(new ModelFile.UncheckedModelFile("item/generated"))
-                .texture("layer0", itemTexture(block.get()));
-    }
-
-    public void itemUnchecked(RegistryWrapper<? extends Item> item){
+    public void itemUnchecked(ItemRegistryWrapper<? extends Item> item){
         getBuilder(item.getRegistryName()).parent(new ModelFile.UncheckedModelFile("item/generated"))
                 .texture("layer0", itemTexture(item.get()));
 
@@ -159,21 +174,21 @@ public class ItemModelGenerator extends ItemModelProvider {
     }
 
     private ResourceLocation itemTexture(String item) {
-        return new ResourceLocation(ArsNouveau.MODID, "item" + "/" + item);
+        return ArsNouveau.prefix( "item" + "/" + item);
     }
 
     private ResourceLocation itemTexture(final Item item) {
         final ResourceLocation name = registryName(item);
-        return new ResourceLocation(name.getNamespace(), "item" + "/" + name.getPath());
+        return ResourceLocation.fromNamespaceAndPath(name.getNamespace(), "item" + "/" + name.getPath());
     }
 
     private ResourceLocation itemTexture(final Block item) {
         final ResourceLocation name = registryName(item);
-        return new ResourceLocation(name.getNamespace(), "item" + "/" + name.getPath());
+        return ResourceLocation.fromNamespaceAndPath(name.getNamespace(), "item" + "/" + name.getPath());
     }
 
     private ResourceLocation spellTexture(final Item item) {
         final ResourceLocation name = registryName(item);
-        return new ResourceLocation(name.getNamespace(), "item" + "/" + name.getPath().replace("glyph_", ""));
+        return ResourceLocation.fromNamespaceAndPath(name.getNamespace(), "item" + "/" + name.getPath().replace("glyph_", ""));
     }
 }

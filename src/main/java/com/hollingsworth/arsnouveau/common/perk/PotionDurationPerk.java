@@ -1,29 +1,26 @@
 package com.hollingsworth.arsnouveau.common.perk;
 
-import com.google.common.collect.Multimap;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.Perk;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.UUID;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import org.jetbrains.annotations.NotNull;
 
 public class PotionDurationPerk extends Perk {
 
-    public static final PotionDurationPerk INSTANCE = new PotionDurationPerk(new ResourceLocation(ArsNouveau.MODID, "thread_wixie"));
-    public static final UUID PERK_UUID = UUID.fromString("f4c0926e-82a7-44d6-bd6b-a0321a65de2f");
+    public static final PotionDurationPerk INSTANCE = new PotionDurationPerk(ArsNouveau.prefix( "thread_wixie"));
 
     public PotionDurationPerk(ResourceLocation key) {
         super(key);
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int slotValue) {
-        return attributeBuilder().put(PerkAttributes.WIXIE.get(), new AttributeModifier(PERK_UUID, "PotionDurationPerk", 0.15 * slotValue, AttributeModifier.Operation.MULTIPLY_BASE)).build();
+    public @NotNull ItemAttributeModifiers applyAttributeModifiers(ItemAttributeModifiers modifiers, ItemStack stack, int slotValue, EquipmentSlotGroup equipmentSlotGroup) {
+        return modifiers.withModifierAdded(PerkAttributes.WIXIE, new AttributeModifier(INSTANCE.getRegistryName(), 0.15 * slotValue, AttributeModifier.Operation.ADD_MULTIPLIED_BASE), equipmentSlotGroup);
     }
 
     @Override

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:purple_archwood_log"
+    },
+    {
+      "item": "minecraft:spider_eye"
+    },
+    {
+      "item": "minecraft:spider_eye"
+    },
+    {
+      "item": "minecraft:spider_eye"
+    },
+    {
+      "item": "minecraft:glowstone"
+    },
+    {
+      "tag": "c:storage_blocks/source"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:ritual_scrying"
+  }
+}

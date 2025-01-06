@@ -1,7 +1,8 @@
 package com.hollingsworth.arsnouveau.api.registry;
 
-import com.hollingsworth.arsnouveau.api.recipe.BuddingConversionRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.BuddingConversionRecipe;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class BuddingConversionRegistry {
 
     public static void reloadBuddingConversionRecipes(RecipeManager recipeManager){
         RECIPES = new ArrayList<>();
-        List<BuddingConversionRecipe> recipes = recipeManager.getAllRecipesFor(RecipeRegistry.BUDDING_CONVERSION_TYPE.get());
+        List<BuddingConversionRecipe> recipes = recipeManager.getAllRecipesFor(RecipeRegistry.BUDDING_CONVERSION_TYPE.get()).stream().map(RecipeHolder::value).toList();
         RECIPES.addAll(recipes);
     }
 }

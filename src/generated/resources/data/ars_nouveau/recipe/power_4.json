@@ -1,0 +1,32 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:power",
+  "level": 4,
+  "pedestalItems": [
+    {
+      "tag": "c:gems/diamond"
+    },
+    {
+      "tag": "c:gems/diamond"
+    },
+    {
+      "tag": "c:gems/diamond"
+    },
+    {
+      "tag": "c:gems/diamond"
+    },
+    {
+      "item": "ars_nouveau:air_essence"
+    },
+    {
+      "tag": "c:storage_blocks/source"
+    },
+    {
+      "tag": "c:storage_blocks/lapis"
+    },
+    {
+      "tag": "c:storage_blocks/lapis"
+    }
+  ],
+  "sourceCost": 6500
+}

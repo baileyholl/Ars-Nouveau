@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -16,10 +17,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 
 public abstract class AbstractRitual {
@@ -30,6 +28,7 @@ public abstract class AbstractRitual {
 
     public RandomSource rand = RandomSource.create();
 
+    public UUID playerUUID;
 
     public AbstractRitual() {
     }
@@ -52,11 +51,6 @@ public abstract class AbstractRitual {
 
     public boolean canStart(@Nullable Player player) {
         return true;
-    }
-
-    @Deprecated(since = "4.10.1", forRemoval = true)
-    public boolean canStart() {
-        return canStart(null);
     }
 
     public List<ItemStack> getConsumedItems() {
@@ -120,11 +114,7 @@ public abstract class AbstractRitual {
 
     public void onStart(@Nullable Player player) {
         getContext().isStarted = true;
-    }
-
-    @Deprecated(since = "4.10.1", forRemoval = true)
-    public void onStart() {
-        onStart(null);
+        if (player != null) this.playerUUID = player.getUUID();
     }
 
     public boolean isRunning() {
@@ -179,18 +169,18 @@ public abstract class AbstractRitual {
         return tile.takeSource();
     }
 
-    public void write(CompoundTag tag) {
+    public void write(HolderLookup.Provider provider, CompoundTag tag) {
         CompoundTag contextTag = new CompoundTag();
-        getContext().write(contextTag);
+        getContext().write(provider, contextTag);
         tag.put("context", contextTag);
     }
 
     // Called once the ritual tile has created a new instance of this ritual
-    public void read(CompoundTag tag) {
-        this.setContext(RitualContext.read(tag.getCompound("context")));
+    public void read(HolderLookup.Provider provider, CompoundTag tag) {
+        this.setContext(RitualContext.read(provider, tag.getCompound("context")));
     }
 
-    public@NotNull RitualContext getContext() {
+    public @NotNull RitualContext getContext() {
         if (context == null)
             context = new RitualContext();
         return context;

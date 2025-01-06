@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -40,25 +41,24 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (pLevel.isClientSide || pHand != InteractionHand.MAIN_HAND) {
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
 
         MirrorWeaveTile tile = (MirrorWeaveTile) pLevel.getBlockEntity(pPos);
         if(tile != null){
-            ItemStack stack = pPlayer.getItemInHand(pHand);
             if(stack.getItem() instanceof BlockItem blockItem && !(blockItem.getBlock() instanceof EntityBlock)){
                 if(tile.mimicState.is(blockItem.getBlock())){
-                    return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+                    return super.useItemOn(stack, pState, pLevel, pPos, pPlayer, pHand, pHit);
                 }
                 tile.nextState = blockItem.getBlock().getStateForPlacement(new BlockPlaceContext(pLevel, pPlayer, pHand, stack, pHit));
                 this.setMimicState(pLevel, pPos, !pPlayer.isShiftKeyDown());
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
         }
 
-        return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+        return super.useItemOn(stack,pState, pLevel, pPos, pPlayer, pHand, pHit);
     }
 
     public void setMimicState(Level level, BlockPos pos, boolean updateNeighbors) {

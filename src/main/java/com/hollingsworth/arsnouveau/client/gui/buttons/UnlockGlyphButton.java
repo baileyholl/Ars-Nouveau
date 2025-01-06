@@ -10,42 +10,36 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.forgespi.language.IModInfo;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforgespi.language.IModInfo;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@OnlyIn(Dist.CLIENT)
 public class UnlockGlyphButton extends ANButton {
     public boolean isCraftingSlot;
     public AbstractSpellPart spellPart;
 
     public String tooltip = "";
-    public GlyphRecipe recipe;
+    public RecipeHolder<GlyphRecipe> recipe;
     public boolean playerKnows;
     public boolean selected;
 
-    public UnlockGlyphButton(int x, int y, boolean isCraftingSlot, AbstractSpellPart spellPart, OnPress onPress) {
+    public UnlockGlyphButton(int x, int y, boolean isCraftingSlot, RecipeHolder<GlyphRecipe> spellRecipe, OnPress onPress) {
         super(x, y, 16, 16, onPress);
         this.isCraftingSlot = isCraftingSlot;
-        this.spellPart = spellPart;
-        Recipe recipe = Minecraft.getInstance().level.getRecipeManager().byKey(spellPart.getRegistryName()).orElse(null);
-        this.recipe = recipe instanceof GlyphRecipe ? (GlyphRecipe) recipe : null;
+        this.spellPart = spellRecipe.value().getSpellPart();
+        this.recipe = spellRecipe;
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        if (visible) {
-            if (this.spellPart != null) {
-                RenderUtils.drawSpellPart(this.spellPart, graphics, x, y, width, !playerKnows, 0);
-                if (selected)
-                    graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/glyph_selected.png"), x, y, 0, 0, 16, 16, 16, 16);
-            }
+    protected void renderWidget(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        if (this.spellPart != null) {
+            RenderUtils.drawSpellPart(this.spellPart, pGuiGraphics, x, y, width, !playerKnows, 0);
+            if (selected)
+                pGuiGraphics.blit(ArsNouveau.prefix( "textures/gui/glyph_selected.png"), x, y, 0, 0, 16, 16, 16, 16);
         }
     }
 

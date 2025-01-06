@@ -8,16 +8,21 @@ import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.AbstractCandleBlock;
+import net.minecraft.world.level.block.BaseFireBlock;
+import net.minecraft.world.level.block.CampfireBlock;
+import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Set;
 
 public class EffectIgnite extends AbstractEffect {
@@ -30,7 +35,7 @@ public class EffectIgnite extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         int duration = (int) (POTION_TIME.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier());
-        rayTraceResult.getEntity().setSecondsOnFire(duration);
+        rayTraceResult.getEntity().setRemainingFireTicks(duration * 20);
     }
 
     @Override
@@ -62,10 +67,25 @@ public class EffectIgnite extends AbstractEffect {
     }
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addExtendTimeConfig(builder, 2);
         addPotionConfig(builder, 3);
+    }
+
+    @Override
+    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        super.addDefaultAugmentLimits(defaults);
+        defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentExtendTime.INSTANCE, "Increases the fire duration.");
+        map.put(AugmentDurationDown.INSTANCE, "Decreases the fire duration.");
+        map.put(AugmentSensitive.INSTANCE, "Creates a short-lived magic fire that will not spread or destroy blocks instead of normal fire.");
     }
 
     @Override

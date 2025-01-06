@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.api.util;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -15,6 +17,8 @@ import java.util.stream.Collectors;
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
 public class NBTUtil {
+
+    public static int INT_LIST_TAG_TYPE = 11;
 
     public static CompoundTag storeBlockPos(CompoundTag tag, String prefix, BlockPos pos) {
         if (pos == null)
@@ -47,6 +51,10 @@ public class NBTUtil {
         return BlockPos.containing(tag.getDouble(prefix + "_x"), tag.getDouble(prefix + "_y"), tag.getDouble(prefix + "_z"));
     }
 
+    public static BlockPos getPos(int[] arr){
+        return new BlockPos(arr[0], arr[1], arr[2]);
+    }
+
     public static Vec3 getVec(CompoundTag tag, String prefix){
         if(tag == null){
             return null;
@@ -65,7 +73,7 @@ public class NBTUtil {
         return tag.contains(prefix + "_x");
     }
 
-    public static List<ItemStack> readItems(CompoundTag tag, String prefix) {
+    public static List<ItemStack> readItems(HolderLookup.Provider pRegistries, CompoundTag tag, String prefix) {
         List<ItemStack> stacks = new ArrayList<>();
 
         if (tag == null)
@@ -75,7 +83,7 @@ public class NBTUtil {
             int numItems = itemsTag.getInt("itemsSize");
             for (int i = 0; i < numItems; i++) {
                 String key = prefix + "_" + i;
-                stacks.add(ItemStack.of(itemsTag.getCompound(key)));
+                stacks.add(ItemStack.parseOptional(pRegistries, itemsTag.getCompound(key)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,12 +91,12 @@ public class NBTUtil {
         return stacks;
     }
 
-    public static void writeItems(CompoundTag tag, String prefix, List<ItemStack> items) {
+    public static void writeItems(HolderLookup.Provider pRegistries, CompoundTag tag, String prefix, List<ItemStack> items) {
         CompoundTag allItemsTag = new CompoundTag();
+        items = items.stream().filter(stack -> !stack.isEmpty()).collect(Collectors.toList());
         for (int i = 0; i < items.size(); i++) {
             ItemStack stack = items.get(i);
-            CompoundTag itemTag = new CompoundTag();
-            stack.save(itemTag);
+            Tag itemTag = stack.save(pRegistries);
             allItemsTag.put(prefix + "_" + i, itemTag);
         }
         allItemsTag.putInt("itemsSize", items.size());
@@ -122,7 +130,7 @@ public class NBTUtil {
     }
 
     public static List<ResourceLocation> readResourceLocations(CompoundTag tag, String prefix) {
-        return readStrings(tag, prefix).stream().map(ResourceLocation::new).collect(Collectors.toList());
+        return readStrings(tag, prefix).stream().map(ResourceLocation::tryParse).collect(Collectors.toList());
     }
 
     public static String getItemKey(ItemStack stack, String prefix) {

@@ -16,20 +16,20 @@ public enum MobJarComponent implements IBlockComponentProvider {
     public void appendTooltip(ITooltip tooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
         BlockEntity be = blockAccessor.getBlockEntity();
         if (be instanceof MobJarTile tile) {
-            Accessor.ClientHandler<Accessor<?>> handler = WailaClientRegistration.INSTANCE.getAccessorHandler(EntityAccessor.class);
-            EntityAccessor accessor = new EntityAccessorImpl.Builder()
+            var handler = WailaClientRegistration.instance().getAccessorHandler(EntityAccessor.class);
+            var accessor = new EntityAccessorImpl.Builder()
                     .entity(tile.getEntity())
                     .level(blockAccessor.getLevel())
                     .serverConnected(blockAccessor.isServerConnected())
                     .showDetails(blockAccessor.showDetails())
                     .build();
             handler.gatherComponents(accessor, ($) -> tooltip);
-            tooltip.remove(Identifiers.CORE_MOD_NAME);
+            tooltip.remove(JadeIds.CORE_MOD_NAME);
         }
     }
 
     @Override
     public ResourceLocation getUid() {
-        return new ResourceLocation(ArsNouveau.MODID, "mob_jar");
+        return ArsNouveau.prefix( "mob_jar");
     }
 }

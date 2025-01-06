@@ -46,6 +46,6 @@ public class EntityPage extends AbstractPage {
 
     @Override
     public ResourceLocation getType() {
-        return new ResourceLocation("patchouli:entity");
+        return ResourceLocation.tryParse("patchouli:entity");
     }
 }

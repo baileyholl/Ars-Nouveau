@@ -1,6 +1,0 @@
-{
-  "type": "forge:add_features",
-  "biomes": "#ars_nouveau:berry_spawn",
-  "features": "ars_nouveau:placed_berry_bush",
-  "step": "vegetal_decoration"
-}

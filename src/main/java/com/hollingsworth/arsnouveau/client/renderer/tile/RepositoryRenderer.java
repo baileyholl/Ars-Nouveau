@@ -21,7 +21,7 @@ public class RepositoryRenderer extends ArsGeoBlockRenderer<RepositoryTile> {
     public static GenericItemBlockRenderer getISTER() {
             return new GenericItemBlockRenderer(model) {
                 @Override
-                public void actuallyRender(PoseStack poseStack, AnimBlockItem animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+                public void actuallyRender(PoseStack poseStack, AnimBlockItem animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
                     int level = 0;
                     model.getBone("1").get().setHidden(level == 0);
                     model.getBone("2_3").get().setHidden(level < 3);
@@ -33,7 +33,7 @@ public class RepositoryRenderer extends ArsGeoBlockRenderer<RepositoryTile> {
                     model.getBone("19_21").get().setHidden(level < 13);
                     model.getBone("22_24").get().setHidden(level < 14);
                     model.getBone("25_27").get().setHidden(level < 15);
-                    super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+                    super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
                 }
             };
     }

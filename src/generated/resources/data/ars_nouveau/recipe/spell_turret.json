@@ -1,0 +1,23 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": false,
+  "pedestalItems": [
+    {
+      "tag": "c:storage_blocks/source"
+    },
+    {
+      "tag": "c:rods/blaze"
+    },
+    {
+      "tag": "c:rods/blaze"
+    }
+  ],
+  "reagent": {
+    "item": "ars_nouveau:basic_spell_turret"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:spell_turret"
+  },
+  "sourceCost": 0
+}

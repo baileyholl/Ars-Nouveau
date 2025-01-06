@@ -1,30 +1,36 @@
 package com.hollingsworth.arsnouveau.client.jei;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.ArmorUpgradeRecipe;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantmentRecipe;
+import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
+import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
+import com.hollingsworth.arsnouveau.api.spell.SpellSchools;
 import com.hollingsworth.arsnouveau.client.container.IAutoFillTerminal;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.CrushRecipe;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.DyeRecipe;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectCrush;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.*;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
+
+import static com.hollingsworth.arsnouveau.client.jei.ScryRitualRecipeCategory.SCRY_RITUAL;
 
 @JeiPlugin
 public class JEIArsNouveauPlugin implements IModPlugin {
@@ -35,10 +41,12 @@ public class JEIArsNouveauPlugin implements IModPlugin {
 
     public static final RecipeType<ImbuementRecipe> IMBUEMENT_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "imbuement", ImbuementRecipe.class);
     public static final RecipeType<CrushRecipe> CRUSH_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "crush", CrushRecipe.class);
+    public static final RecipeType<BuddingConversionRecipe> BUDDING_CONVERSION_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "budding_conversion", BuddingConversionRecipe.class);
+    public static final RecipeType<ScryRitualRecipe> SCRY_RITUAL_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "scry_ritual", ScryRitualRecipe.class);
 
     @Override
-    public ResourceLocation getPluginUid() {
-        return new ResourceLocation(ArsNouveau.MODID, "main");
+    public @NotNull ResourceLocation getPluginUid() {
+        return ArsNouveau.prefix("main");
     }
 
     @Override
@@ -49,20 +57,27 @@ public class JEIArsNouveauPlugin implements IModPlugin {
                 new ImbuementRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
                 new EnchantingApparatusRecipeCategory<>(registry.getJeiHelpers().getGuiHelper()),
                 new ApparatusEnchantingRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
-                new ArmorUpgradeRecipeCategory(registry.getJeiHelpers().getGuiHelper())
+                new ArmorUpgradeRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
+                new BuddingConversionRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
+                new ScryRitualRecipeCategory(registry.getJeiHelpers().getGuiHelper())
         );
     }
 
     @Override
-    public void registerRecipes(IRecipeRegistration registry) {
+    public void registerRecipes(@NotNull IRecipeRegistration registry) {
         List<GlyphRecipe> recipeList = new ArrayList<>();
         List<EnchantingApparatusRecipe> apparatus = new ArrayList<>();
         List<EnchantmentRecipe> enchantments = new ArrayList<>();
         List<CrushRecipe> crushRecipes = new ArrayList<>();
         List<ArmorUpgradeRecipe> armorUpgrades = new ArrayList<>();
-        List<ImbuementRecipe> imbuementRecipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get());
+
+        List<ImbuementRecipe> imbuementRecipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream().map(RecipeHolder::value).toList();
+
+        List<BuddingConversionRecipe> buddingConversionRecipes = new ArrayList<>();
+        List<ScryRitualRecipe> scryRitualRecipes = new ArrayList<>();
+
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
-        for (Recipe<?> i : manager.getRecipes()) {
+        for (Recipe<?> i : manager.getRecipes().stream().map(RecipeHolder::value).toList()) {
             if (i instanceof GlyphRecipe glyphRecipe) {
                 recipeList.add(glyphRecipe);
             }
@@ -76,6 +91,12 @@ public class JEIArsNouveauPlugin implements IModPlugin {
             if (i instanceof CrushRecipe crushRecipe) {
                 crushRecipes.add(crushRecipe);
             }
+            if (i instanceof BuddingConversionRecipe buddingConversionRecipe) {
+                buddingConversionRecipes.add(buddingConversionRecipe);
+            }
+            if (i instanceof ScryRitualRecipe scryRitualRecipe) {
+                scryRitualRecipes.add(scryRitualRecipe);
+            }
         }
         registry.addRecipes(GLYPH_RECIPE_TYPE, recipeList);
         registry.addRecipes(CRUSH_RECIPE_TYPE, crushRecipes);
@@ -83,6 +104,8 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         registry.addRecipes(ENCHANTING_RECIPE_TYPE, enchantments);
         registry.addRecipes(IMBUEMENT_RECIPE_TYPE, imbuementRecipes);
         registry.addRecipes(ARMOR_RECIPE_TYPE, armorUpgrades);
+        registry.addRecipes(BUDDING_CONVERSION_RECIPE_TYPE, buddingConversionRecipes);
+        registry.addRecipes(SCRY_RITUAL_RECIPE_TYPE, scryRitualRecipes);
     }
 
     @Override
@@ -93,28 +116,47 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK), ENCHANTING_APP_RECIPE_TYPE);
         registry.addRecipeCatalyst(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK), ENCHANTING_RECIPE_TYPE);
         registry.addRecipeCatalyst(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK), ARMOR_RECIPE_TYPE);
-
+        registry.addRecipeCatalyst(new ItemStack(ItemsRegistry.AMETHYST_GOLEM_CHARM), BUDDING_CONVERSION_RECIPE_TYPE);
+        registry.addRecipeCatalyst(RitualRegistry.getRitualItemMap().get(SCRY_RITUAL).asItem().getDefaultInstance(), SCRY_RITUAL_RECIPE_TYPE);
     }
 
     @Override
-    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+    public void registerGuiHandlers(@NotNull IGuiHandlerRegistration registration) {
 //        registration.addRecipeClickArea(CraftingTerminalScreen.class, 100, 125, 28, 23, new RecipeType[] { RecipeTypes.CRAFTING });
     }
 
     @Override
-    public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+    public void registerRecipeTransferHandlers(@NotNull IRecipeTransferRegistration registration) {
         CraftingTerminalTransferHandler.registerTransferHandlers(registration);
     }
 
     @Override
     public void registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration registration) {
-        registration.getCraftingCategory().addCategoryExtension(DyeRecipe.class, DyeRecipeCategory::new);
+        registration.getCraftingCategory().addExtension(DyeRecipe.class, new DyeRecipeCategory());
+    }
+
+    @Override
+    public void registerIngredientAliases(@NotNull IIngredientAliasRegistration registration) {
+
+        // for each school, add an alias for the glyph
+        List<SpellSchool> schools = List.of(SpellSchools.ELEMENTAL, SpellSchools.ABJURATION, SpellSchools.CONJURATION, SpellSchools.NECROMANCY, SpellSchools.MANIPULATION, SpellSchools.ELEMENTAL_AIR, SpellSchools.ELEMENTAL_EARTH, SpellSchools.ELEMENTAL_FIRE, SpellSchools.ELEMENTAL_WATER);
+
+        for (SpellSchool school : schools) {
+            registration.addAliases(VanillaTypes.ITEM_STACK, GlyphRegistry.getGlyphItemMap().values()
+                            .stream()
+                            .map(Supplier::get)
+                            .filter(glyph -> school.isPartOfSchool(glyph.spellPart))
+                            .map(Item::getDefaultInstance)
+                            .toList(),
+                    school.getTextComponent().getString());
+        }
+
     }
 
     private static IJeiRuntime jeiRuntime;
 
     @Override
-    public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
+    public void onRuntimeAvailable(@NotNull IJeiRuntime jeiRuntime) {
         JEIArsNouveauPlugin.jeiRuntime = jeiRuntime;
     }
 

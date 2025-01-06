@@ -4,6 +4,7 @@ public class GlyphLib {
     public static final String MethodProjectileID = prependGlyph("projectile");
     public static final String MethodTouchID = prependGlyph("touch");
     public static final String MethodSelfID = prependGlyph("self");
+    public static final String MethodPantomimeID = prependGlyph("pantomime");
     public static final String EffectRuneID = prependGlyph("rune");
 
     public static final String EffectBreakID = prependGlyph("break");
@@ -19,6 +20,7 @@ public class GlyphLib {
     public static final String EffectLaunchID = prependGlyph("launch");
     public static final String EffectPullID = prependGlyph("pull");
     public static final String EffectBlinkID = prependGlyph("blink");
+    public static final String EffectBubbleID = prependGlyph("bubble");
     public static final String EffectNameID = prependGlyph("name");
 
     public static final String EffectAnimateID = prependGlyph("animate_block");
@@ -32,7 +34,7 @@ public class GlyphLib {
     public static final String AugmentAccelerateID = prependGlyph("accelerate");
     public static final String AugmentDecelerateID = prependGlyph("decelerate");
     public static final String AugmentExtendTimeID = prependGlyph("extend_time");
-    public static final String AugmentDurationDown = prependGlyph("duration_down");
+    public static final String AugmentReduceTime = prependGlyph("duration_down"); //TODO: 1.22 change key to reduce_time
     public static final String AugmentSensitiveID = prependGlyph("sensitive");
 
     public static final String AugmentRandomizeID = prependGlyph("randomize");

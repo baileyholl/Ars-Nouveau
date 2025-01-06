@@ -3,6 +3,8 @@ package com.hollingsworth.arsnouveau.common.items;
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
 import com.hollingsworth.arsnouveau.api.item.IScribeable;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
+import com.hollingsworth.arsnouveau.common.items.data.ScryPosData;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -12,6 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 public class BlankParchmentItem extends ModItem implements IScribeable {
     public BlankParchmentItem(Properties properties) {
@@ -24,13 +27,12 @@ public class BlankParchmentItem extends ModItem implements IScribeable {
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext pContext) {
+    public @NotNull InteractionResult useOn(UseOnContext pContext) {
         if (pContext.getLevel().isClientSide)
             return super.useOn(pContext);
         if (pContext.getLevel().getBlockEntity(pContext.getClickedPos()) instanceof ICameraMountable) {
             ItemStack stack = new ItemStack(ItemsRegistry.SCRYER_SCROLL.get());
-            ScryerScroll.ScryerScrollData data = new ScryerScroll.ScryerScrollData(stack);
-            data.setPos(pContext.getClickedPos(), stack);
+            stack.set(DataComponentRegistry.SCRY_DATA, new ScryPosData(pContext.getClickedPos()));
             if (!pContext.getPlayer().addItem(stack)) {
                 pContext.getLevel().addFreshEntity(new ItemEntity(pContext.getLevel(), pContext.getPlayer().getX(), pContext.getPlayer().getY(), pContext.getPlayer().getZ(), stack));
             }

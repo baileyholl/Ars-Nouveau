@@ -29,7 +29,7 @@ public class EntityDebugger implements IDebugger{
         writer.print("Entity: " + " (" + entity.getClass().getSimpleName() + ")");
         // print current entity goal
         if(entity instanceof Mob mob){
-            for(WrappedGoal goal : mob.goalSelector.getRunningGoals().toList()){
+            for(WrappedGoal goal : mob.goalSelector.availableGoals.stream().filter(WrappedGoal::isRunning).toList()){
                 writer.println("Running Goal: " + goal.getGoal().getClass().getSimpleName());
             }
         }

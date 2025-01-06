@@ -1,18 +1,19 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
-import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.SummonWolf;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.Set;
 
 public class EffectSummonWolves extends AbstractEffect {
@@ -35,7 +36,7 @@ public class EffectSummonWolves extends AbstractEffect {
             wolf.setPos(hit.x(), hit.y(), hit.z());
             wolf.setTarget(shooter.getLastHurtMob());
             wolf.setAggressive(true);
-            wolf.setTame(true);
+            wolf.setTame(true, false);
             wolf.tame((Player) shooter);
             summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, wolf);
         }
@@ -43,7 +44,7 @@ public class EffectSummonWolves extends AbstractEffect {
     }
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addGenericInt(builder, 60, "Base duration in seconds", "duration");
         addExtendTimeConfig(builder, 60);
@@ -59,6 +60,12 @@ public class EffectSummonWolves extends AbstractEffect {
     public Set<AbstractAugment> getCompatibleAugments() {
         // SummonEvent captures augments, but no uses of that field were found
         return getSummonAugments();
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addSummonAugmentDescriptions(map);
     }
 
     @Override

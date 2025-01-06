@@ -7,15 +7,20 @@ import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
+import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.common.data.LanguageProvider;
+import net.neoforged.neoforge.common.data.LanguageProvider;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Supplier;
@@ -32,10 +37,19 @@ public class LangDatagen extends LanguageProvider {
     protected void addTranslations() {
         ArsNouveauAPI arsNouveauAPI = ArsNouveauAPI.getInstance();
         for (Supplier<Glyph> supplier : GlyphRegistry.getGlyphItemMap().values()) {
-            Glyph i = supplier.get();
-            if(supplier.get().spellPart.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
-                add("ars_nouveau.glyph_desc." + i.spellPart.getRegistryName().getPath(), i.spellPart.getBookDescription());
-                add("ars_nouveau.glyph_name." + i.spellPart.getRegistryName().getPath(), i.spellPart.getName());
+            Glyph glyph = supplier.get();
+            AbstractSpellPart spellPart = glyph.spellPart;
+            ResourceLocation registryName = glyph.spellPart.getRegistryName();
+            if(registryName.getNamespace().equals(ArsNouveau.MODID)) {
+                add("ars_nouveau.glyph_desc." + registryName.getPath(), spellPart.getBookDescription());
+                add("ars_nouveau.glyph_name." + registryName.getPath(), spellPart.getName());
+
+                Map<AbstractAugment, String> augmentDescriptions = new HashMap<>();
+                spellPart.addAugmentDescriptions(augmentDescriptions);
+
+                for(AbstractAugment augment : augmentDescriptions.keySet()){
+                    add("ars_nouveau.augment_desc." + registryName.getPath() + "_" + augment.getRegistryName().getPath(), augmentDescriptions.get(augment));
+                }
             }
         }
         for (FamiliarScript i : FamiliarRegistry.getFamiliarScriptMap().values()) {
@@ -148,7 +162,6 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.spell_parchment", "Spell Parchment");
         add("item.ars_nouveau.ring_of_greater_discount", "Ring of Greater Discount");
         add("item.ars_nouveau.ring_of_lesser_discount", "Ring of Lesser Discount");
-        add("effect.ars_nouveau.shield", "Magic Shield");
         add("alert.core", "An Arcane Core must be placed beneath this block.");
         add("whirlisprig.unhappy", "The Whirlisprig seems very unhappy in her home. Try sprucing it up!");
         add("whirlisprig.content", "The Whirlisprig seems content, but could be better.");
@@ -189,7 +202,6 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.scribe.item_removed", "Item removed.");
         add("ars_nouveau.allow_set", "Starbuncle will only take these items.");
         add("ars_nouveau.ignore_set", "Starbuncle will ignore these items.");
-        add("block.ars_nouveau.lava_lily", "Lava Lily");
         add("block.ars_nouveau.volcanic_sourcelink", "Volcanic Sourcelink");
         add("ars_nouveau.spell.disabled", "This spell has been disabled in the config.");
         add("block.ars_nouveau.sourceberry_bush", "Sourceberry");
@@ -210,6 +222,8 @@ public class LangDatagen extends LanguageProvider {
         add("item.minecraft.tipped_arrow.effect.mana_regen_potion_long", "Arrow of Mana Regeneration");
         add("effect.ars_nouveau.mana_regen", "Mana Regeneration");
         add("effect.ars_nouveau.mana_regen.desc", "Improves mana regeneration");
+        add("effect.ars_nouveau.looting", "Drygmy's Blessing");
+        add("effect.ars_nouveau.looting.desc", "Increases the amount of loot dropped by mobs");
         add("ars_nouveau.on", "Active: Yes");
         add("ars_nouveau.off", "Active: No");
         add("item.ars_nouveau.void_jar", "Jar of Voiding");
@@ -220,7 +234,7 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.wand", "Enchanter's Wand");
         add("ars_nouveau.wixie.has_wixie", "This cauldron already has a wixie.");
         add("ars_nouveau.wixie.no_recipe", "No recipes found.");
-        add("ars_nouveau.wixie.recipe_set", "Recipe set.");
+        add("ars_nouveau.wixie.recipe_set", "Place pedestals nearby for recipes to craft.");
         add("tooltip.wixie_shard", "Obtained by using Dispel on a witch while it is less than half health.");
         add("tooltip.starbuncle_shard", "Obtained by giving a wild Starbuncle a Gold Nugget.");
         add("tooltip.whirlisprig_shard", "Obtained by growing a tree near a wild Whirlisprig.");
@@ -276,6 +290,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.apparatus.nomana", "Not enough source nearby.");
         add("ars_nouveau.reset.cleared", "Progress cleared.");
         add("effect.ars_nouveau.summoning_sickness", "Summoning Sickness");
+        add("effect.ars_nouveau.summoning_sickness.desc", "Prevents summoning for a short duration.");
         add("entity.ars_nouveau.wilden_guardian", "Wilden Defender");
         add("entity.ars_nouveau.wilden_stalker", "Wilden Stalker");
         add("entity.ars_nouveau.wilden_hunter", "Wilden Hunter");
@@ -288,12 +303,14 @@ public class LangDatagen extends LanguageProvider {
         add("entity.ars_nouveau.summon_wolf", "Summoned Wolf");
         add("tooltip.worn_notebook", "Documentation for Ars Nouveau");
         add("effect.ars_nouveau.shocked", "Shocked");
+        add("effect.ars_nouveau.shocked.desc", "Increases the damage taken from lightning damage.");
         add("ars_nouveau.flask.charges", "Charges: %d");
         add("item.ars_nouveau.potion_flask", "Potion Flask");
         add("ars_nouveau.glyph_of", "Glyph of %s");
         add("ars_nouveau.thread_of", "Thread of %s");
         add("ars_nouveau.book.name", "Worn Notebook");
         add("ars_nouveau.book.landing_text", "Ars Nouveau provides spell crafting, magical devices, powerful trinkets, and magical entity automation. To help  development or report issues, join the community: https://discord.gg/y7TMXZu Thank you for playing.");
+        add("ars_nouveau.spell_tier", "Tier: %s");
         add("ars_nouveau.spell_tier.1", "ONE");
         add("ars_nouveau.spell_tier.2", "TWO");
         add("ars_nouveau.spell_tier.3", "THREE");
@@ -336,6 +353,9 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.color_gui.black", "Black");
         add("ars_nouveau.color_gui.save", "Save");
         add("ars_nouveau.color_gui.save_all", "Save All");
+        add("ars_nouveau.dominion_wand.clear", "Clear");
+        add("ars_nouveau.dominion_wand.normal", "Normal Mode");
+        add("ars_nouveau.dominion_wand.strict", "Strict Mode");
         add("ars_nouveau.dominion_wand.stored_entity", "Stored entity");
         add("ars_nouveau.dominion_wand.position_set", "Position set.");
         add("ars_nouveau.dominion_wand.no_entity", "No entity set");
@@ -343,6 +363,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.dominion_wand.no_location", "No location set.");
         add("ars_nouveau.dominion_wand.position_stored", "Stored: %s");
         add("ars_nouveau.position", "X: %1$d Y: %2$d Z: %3$d");
+        add("ars_nouveau.global_position", "X: %1$d Y: %2$d Z: %3$d in %4$s");
         add("ars_nouveau.spell_arrow.desc", "Augments spells when used with an Enchanter's Bow.");
         add("ars_nouveau.spell_parchment.no_spell", "Set your spell book to a spell.");
         add("ars_nouveau.spell_parchment.inscribed", "Spell inscribed.");
@@ -427,27 +448,32 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.experience_gem", "Experience Gem");
         add("item.ars_nouveau.greater_experience_gem", "Greater Experience Gem");
         add("effect.ars_nouveau.hex", "Hex");
+        add("effect.ars_nouveau.hex.desc", "Increases the damage taken potion and non-player damage.");
         add("ars_nouveau.set_spell", "Set spell.");
         add("ars_nouveau.invalid_spell", "Invalid Spell");
         add("effect.ars_nouveau.scrying", "Scrying");
+        add("effect.ars_nouveau.scrying.desc", "Reveals certain blocks around you.");
         add("ars_nouveau.tooltip.magebloom", "Grown from seeds crafted using the Enchanting Apparatus.");
         add("ars_nouveau.tooltip.dull", "A dull trinket, cannot be worn. Used for crafting.");
         add("ars_nouveau.sword.invalid", "Invalid spell. Swords accept Effects and Augments only, such as Freeze -> Extend Time.");
         add("item.ars_nouveau.enchanters_sword", "Enchanter's Sword");
         add("item.ars_nouveau.enchanters_shield", "Enchanter's Shield");
-        add("ars_nouveau.page.enchanters_sword", "Applies a Touch spell before damaging an entity. Additionally, all spells gain one additional Amplify augment on the last effect in the spell. Apply a spell at the Scribes Table that does NOT contain a form, such as Ignite -> Extend Time.");
+        add("ars_nouveau.page.enchanters_sword", "Applies a Touch spell before damaging an entity. Additionally, all spells gain Spell Damage. Apply a spell at the Scribes Table that does NOT contain a form, such as Ignite -> Extend Time.");
         add("ars_nouveau.page.enchanters_shield", "Upon blocking damage, the user will gain a short duration of Mana Regeneration and Spell Damage. Additionally, this shield will repair over time using the wearers mana.");
         add("ars_nouveau.tooltip.can_inscribe", "Can be inscribed with a spell at the Scribes Table.");
         add("biome.ars_nouveau.archwood_forest", "Archwood Forest");
         add("ars_nouveau.tooltip.turned_off", "Turned off");
         add("effect.ars_nouveau.glide", "Glide");
+        add("effect.ars_nouveau.glide.desc", "Allows the player to glide as if wearing an Elytra.");
         add("effect.ars_nouveau.snared", "Snared");
+        add("effect.ars_nouveau.snared.desc", "Prevents the entity from moving.");
         add("item.ars_nouveau.starbuncle_se", "Starbuncle Spawn Egg");
         add("item.ars_nouveau.drygmy_se", "Drygmy Spawn Egg");
         add("item.ars_nouveau.whirlisprig_se", "Whirlisprig Spawn Egg");
         add("item.ars_nouveau.wilden_hunter_se", "Wilden Hunter Spawn Egg");
         add("item.ars_nouveau.wilden_guardian_se", "Wilden Guardian Spawn Egg");
         add("item.ars_nouveau.wilden_stalker_se", "Wilden Stalker Spawn Egg");
+        add("item.ars_nouveau.alakarkinos_se", "Alakarkinos Spawn Egg");
         add("tooltip.ars_nouveau.caster_tome", "Casts a spell at half the cost or the users entire mana bar, whichever is smaller.");
         add("item.ars_nouveau.caster_tome", "Caster Tome");
         add("tooltip.ars_nouveau.glyph_disabled", "Disabled. Cannot be used.");
@@ -460,7 +486,9 @@ public class LangDatagen extends LanguageProvider {
         add("tooltip.ars_nouveau.drygmy_shard", "Obtained by giving a Drygmy a Wilden Horn.");
         add("entity.ars_nouveau.drygmy", "Drygmy");
         add("effect.ars_nouveau.flight", "Flight");
+        add("effect.ars_nouveau.flight.desc", "Allows the player to fly.");
         add("effect.ars_nouveau.gravity", "Gravity");
+        add("effect.ars_nouveau.gravity.desc", "Causes the entity to rapidly fall.");
         add("tooltip.ars_nouveau.tablet", "A tablet used for rituals. Consumed on use.");
         add("ars_nouveau.enchanting.bad_level", "This item must have the previous level of enchantment.");
         add("ars_nouveau.enchanting.incompatible", "This enchantment is incompatible with this item.");
@@ -491,7 +519,6 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.glyph_crafting", "Glyph Crafting");
         add("ars_nouveau.page1.scribes_table", "To craft new glyphs, use a spell book on the table to open the codex. Each glyph requires a set of items and experience points to unlock. Select a glyph by clicking on it in the menu, and hit select. Throw the items onto the table as rendered above, and the table will scribe a new glyph. The table will also pull items from nearby inventories. Using the dominion wand on the table will disable auto-pull.");
         add("ars_nouveau.page2.scribes_table", "You may also inscribe a spell onto Spell Parchment or Enchanters Items. To do this, place a Blank Parchment on the table. Then, with your spell book in hand, change your spell book to your desired spell as if you were going to cast it. Then, use the book on the table while sneaking. Your item will now contain that spell. Using Manipulation Essence will permanently hide the scribed spell.");
-        add("ars_nouveau.page1.lava_lily", "A decorative block that can be placed on any liquid or block. The texture of this block varies if it is placed on Lava, a Magma Block, or any other block.");
         add("ars_nouveau.page1.wilden", "Wilden are hostile creatures that can be commonly found at night around Wilden Dens. While Wilden Defenders may only be found in cold biomes, Stalker and Hunter Dens can be found in any forest biome.");
         add("ars_nouveau.page3.wilden", "An aggressive and fast hunter that can summon allied wolves.");
         add("ars_nouveau.page4.wilden", "Generally spawning in small groups, Stalkers have ground and aerial attacks.");
@@ -522,10 +549,9 @@ public class LangDatagen extends LanguageProvider {
         add("item.minecraft.tipped_arrow.effect.spell_damage_potion", "Arrow of Spell Damage");
         add("item.minecraft.tipped_arrow.effect.spell_damage_potion_long", "Arrow of Spell Damage");
         add("effect.ars_nouveau.spell_damage", "Spell Damage");
+        add("effect.ars_nouveau.spell_damage.desc", "Increases the damage dealt by spells.");
         add("ars_nouveau.spell_book_gui.familiar", "Familiars");
         add("ars_nouveau.spell_book_gui.close", "Close");
-        add("effect.ars_nouveau.familiar_sickness", "Familiar Sickness");
-        add("ars_nouveau.familiar.sickness", "You must wait before summoning another familiar.");
         add("ars_nouveau.gui.notebook", "Documentation");
         add("ars_nouveau.gui.color", "Color Picker");
         add("ars_nouveau.gui.familiar", "Familiars");
@@ -550,6 +576,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.timer_spell_turret", "Timer Spell Turret");
         add("block.ars_nouveau.rotating_spell_turret", "Adjustable Spell Turret");
         add("effect.ars_nouveau.bounce", "Bounce");
+        add("effect.ars_nouveau.bounce.desc", "Causes the entity to bounce off of surfaces.");
         add("ars_nouveau.starbuncle.path", "Starbuncle will prefer to path on this block if it is on their way.");
         add("ars_nouveau.starbuncle.pathing", "Preferring to path on %s");
         add("ars_nouveau.summoning", "Summoning");
@@ -576,6 +603,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page1.weald_waddler", "If a Weald Walker dies, it will be turned into a Weald Waddler. Weald Waddlers will slowly grow back into Weald Walkers, and can be sped up by giving them bonemeal. A Weald Waddler cannot fight or protect itself until it has grown back to a Walker.");
         add("ars_nouveau.source", "Source: %s");
         add("ars_nouveau.crush_recipe", "Crush Glyph");
+        add("ars_nouveau.budding_conversion_recipe", "Amethyst Golem Conversion");
+        add("ars_nouveau.scry_ritual_recipe", "Scry Ritual");
         add("ars_nouveau.enchanting_apparatus", "Enchanting Apparatus");
         add("ars_nouveau.armor_upgrade", "Magic Armor Upgrade");
         add("ars_nouveau.page.apparatus_crafting", "Apparatus Crafting");
@@ -607,7 +636,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.wilden", "Wilden");
         add("ars_nouveau.page.decorative", "Decorative Blocks");
         add("ars_nouveau.page1.magelight_torch", "Decorative lights. To ignite, cast Light on the sconce. The color of the flame corresponds with your spell color. The Magelight Torch on a wall can change the direction of its flames by interacting. Use Touch or Projectile Sensitive to target the sconce.");
-        add("ars_nouveau.page1.source_berry", "A Sourceberry Bush can be found in Taiga and Archwood Forest biomes, and produces Sourceberries. A Sourceberry can be used to craft a Potion of Mana Regeneration or consumed as food. Starbuncles will automatically harvest fully grown Source Berry Bushes, making them useful for early automation of the Agronomic Sourcelink. Sourceberry foods will also grant Mana Regeneration.");
+        add("ars_nouveau.page1.sourceberry_bush", "A Sourceberry Bush can be found in Taiga and Archwood Forest biomes, and produces Sourceberries. A Sourceberry can be used to craft a Potion of Mana Regeneration or consumed as food. Starbuncles will automatically harvest fully grown Source Berry Bushes, making them useful for early automation of the Agronomic Sourcelink. Sourceberry foods will also grant Mana Regeneration.");
         add("ars_nouveau.page.wilden", "Wilden");
         add("ars_nouveau.page.weald_walker", "Weald Walkers");
         add("ars_nouveau.spell_schools", "Spell Schools");
@@ -617,8 +646,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page.source_jar", "Source Jars store source gathered from nearby Sourcelinks. Source is used in glyphs and rituals by powering devices like the Imbuement Chamber and Enchanting Apparatus. Source may be moved using a Source Relay or by breaking and moving it. To use Source in a jar, simply place the jar near your desired device. Source Jars will provide a signal to Redstone Comparators based on their fill level.");
         add("ars_nouveau.page1.volcanic_sourcelink", "The Volcanic Sourcelink generates Source by consuming burnable items. Archwood logs will generate bonus Source, with Blazing Archwood generating the most. As the Volcanic Sourcelink produces Source, it also produces $(item)heat$(), used for spawning Lava Lilies and converting stone into lava. The Volcanic Sourcelink automatically outputs to nearby jars, starting with the one closest to it.");
         add("ars_nouveau.page2.volcanic_sourcelink", "Nearby Blazing Archwood items will be burned up in exchange for a chunk of Source and a moderate amount of $(item)heat$(). The Volcanic Sourcelink will also take items from surrounding pedestals.");
-        add("ars_nouveau.page3.volcanic_sourcelink", "The Volcanic Sourcelink will occasionally convert Stone into Magma Blocks, and Magma Blocks into Lava, given that these blocks exist beneath it in its 3x3 area. This conversion is dependent on the amount of $(item)heat$() it has produced over time. The Volcanic Sourcelink will also spawn a Lava Lily adjacent to it given that there is nothing covering the lava. Lava Lilys may be harvested and used for decoration.");
-        add("ars_nouveau.page4.volcanic_sourcelink", "The color of a Lava Lily changes if it is placed above lava, magma, or other blocks.");
+        add("ars_nouveau.page3.volcanic_sourcelink", "The Volcanic Sourcelink will occasionally convert Stone into Magma Blocks, and Magma Blocks into Lava, given that these blocks exist beneath it in its 3x3 area. This conversion is dependent on the amount of $(item)heat$() it has produced over time.");
         add("ars_nouveau.active_generation", "Active Generation");
         add("ars_nouveau.heat", "Heat");
         add("ars_nouveau.page.alchemical_sourcelink", "Generates source by consuming potions from adjacent potion jars. The amount of source varies per potion and is dependent on the complexity of the potion. Bonus source is given for the length and level of the potion with multipliers for each effect a potion contains. Utilizing Wixies and Potion Melders is recommended for creating highly complex potions.");
@@ -644,7 +672,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page4.basic_spell_turret", "Turrets can provide compact and efficient automation. Examples include: configurable redstone clocks, one block tree or crop farms, rapid smelting with fortune, or mob farms with looting.");
         add("ars_nouveau.page1.bookwyrm_charm", "Bookwyrm Charms can be used on a Storage Lectern to increase the number of accessible inventories. Augment a Ritual of Awakening with Book and Quills in order to obtain charms. Bookwyrms can be dyed using white, black, blue, green, red, or purple dye.");
         add("ars_nouveau.page2.bookwyrm_charm", "In the event that they die or are dispelled, they will drop their charm.");
-        add("ars_nouveau.page.dominion_wand", "A tool for configuring Source Relays and automation entities. To set a transfer path, use the wand on the object that you would like to take source from, and then use it on the block you would like to send source to. For example: Source Jar to Source Relay, Source Relay to Source Relay, or Source Relay to Source Jar. To clear connections, sneak and use this wand on a relay. If you sneak-use it on the air it will switch to Strict mode, allowing to specify the side of the blocks to use.");
+        add("ars_nouveau.page.dominion_wand", "A tool for configuring Source Relays and automation entities. To set a transfer path, use the wand on the object that you would like to take source from, and then use it on the block you would like to send source to. For example: Source Jar to Source Relay, Source Relay to Source Relay, or Source Relay to Source Jar. To clear connections, sneak and use this wand on a relay. You can switch into Strict mode using the radial menu, allowing to specify the side of the blocks to use.");
         add("ars_nouveau.page1.drygmy_charm", "Drygmys are often found following and tending to animals around it. They can be found anywhere, though somewhat rarely. Drygmys can be given a home in the world, and will produce items from nearby monsters and animals as if they were slain, without harming them. A wild drygmy may be befriended by throwing a Wilden Horn near it! You may dye a Drygmy Cyan, Orange, or Brown.");
         add("ars_nouveau.page2.drygmy_charm", "A Drygmy can also produce experience gems!");
         add("ars_nouveau.page3.drygmy_charm", "To summon a Drygmy, use a Drymy Charm on a block of Mossy Cobblestone. After a short time, the cobblestone will transform into a Drygmy Henge and summon your Drgymy! To summon additional drygmys, use more charms on the henge. Casting dispel or killing the Drygmy will return your charm.");
@@ -743,6 +771,7 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.fire_essence", "Fire Essence");
         add("item.ars_nouveau.dowsing_rod", "Dowsing Rod");
         add("effect.ars_nouveau.magic_find", "Magic Find");
+        add("effect.ars_nouveau.magic_find.desc", "Causes nearby magical entities to glow.");
         add("tooltip.ars_nouveau.essences", "Magical Essences created in an Imbuement Chamber.");
         add("ars_nouveau.page.dowsing_rod", "A Dowsing Rod provides the user a short duration of Scrying for Budding Amethyst and Magic Find, which will cause magical creatures to glow within 75 blocks of you. The Dowsing Rod has a limited number of uses.");
         add("ars_nouveau.apparatus.norecipe", "No recipe found. Pedestals must be within 3 blocks.");
@@ -828,7 +857,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.scryers_eye.no_scrolls", "Place a Scryer's Scroll on a nearby pedestal.");
         add("ars_nouveau.camera.not_loaded", "The block has been removed or is not chunk loaded.");
         add("ars_nouveau.page.support_mod", "Support Ars Nouveau!");
-        add("ars_nouveau.patreon", "Join the Ars Nouveau patreon and get a special Discord role, contribute a custom Tome, receive merchandise, summon a Lily dog, and more!");
+        add("ars_nouveau.patreon", "Join the Ars Nouveau patreon and get a special Discord role, contribute a custom Tome, receive merchandise, summon a Lily and Nook dog, and more!");
         add("ars_nouveau.patreon_text", "Patreon");
         add("entity.ars_nouveau.summon_skeleton", "Summoned Skeleton");
         add("item.ars_nouveau.shapers_focus", "Focus of Block Shaping");
@@ -960,10 +989,13 @@ public class LangDatagen extends LanguageProvider {
         add("item.minecraft.tipped_arrow.effect.shielding_potion", "Arrow of Shielding");
         add("item.minecraft.tipped_arrow.effect.shielding_potion_long", "Arrow of Shielding");
         add("effect.ars_nouveau.recovery", "Recovery");
+        add("effect.ars_nouveau.recorvery.desc","Increases healing received from all sources.");
         add("effect.ars_nouveau.blasting", "Blasting");
+        add("effect.ars_nouveau.blasting.desc","Causes the target to explode when the duration ends.");
         add("effect.ars_nouveau.freezing", "Freezing");
+        add("effect.ars_nouveau.freezing.desc","Freezes the target over time.");
         add("effect.ars_nouveau.shielding", "Shielding");
-        add("tooltip.ars_nouveau.alchemists_crown", "");
+        add("effect.ars_nouveau.shielding.desc","Reduces the amount of damage taken.");
         add("item.ars_nouveau.wixie_hat", "Wixie Hat");
         add("tooltip.ars_nouveau.wixie_hat", "Give to a Starbuncle to make them transport potions.");
         add("ars_nouveau.starbuncle.default_behavior", "Starbuncle will now transport items!");
@@ -1027,6 +1059,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.perk.saturation.desc", "Increases the saturation of the food");
         add("ars_nouveau.perk.wixie", "Potion Duration");
         add("ars_nouveau.perk.wixie.desc", "Increases the duration of potion effects.");
+        add("ars_nouveau.perk.drygmy", "Extra Looting");
+        add("ars_nouveau.perk.drygmy.desc", "Increases the amount of loot dropped by mobs.");
         add("ars_nouveau.perk.jump_height", "Jump Power");
         add("ars_nouveau.perk.jump_height.desc", "Increases the height of your jumps.");
         add("ars_nouveau.perk.feather", "Fall Damage Reduction");
@@ -1134,7 +1168,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.void_prism", "Void Prism");
         add("ars_nouveau.page.void_prism", "Destroys any spell projectiles that pass through it.");
         add("item.ars_nouveau.music_disc_aria_biblio", "Music Disc");
-        add("item.ars_nouveau.music_disc_aria_biblio.desc", "Firel - Aria Biblio");
+        add("jukebox_song.ars_nouveau.aria_biblio", "Firel - Aria Biblio");
         add("item.ars_nouveau.starby_gift", "Starbuncle Gift");
         add("ars_nouveau.present.give", "Give this to a friend and they will get bonus items, or open it for yourself!");
         add("ars_nouveau.present.from", "A gift from %s");
@@ -1201,8 +1235,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.storage.num_bookwyrms", "%s Bookwyrms");
         add("ars_nouveau.storage.removed", "Inventory removed.");
         add("ars_nouveau.storage.not_lectern", "Connect to another Lectern to connect the views.");
-        add("ars_nouveau.storage.lectern_too_far", "Lectern must be within 30 blocks.");
-        add("ars_nouveau.storage.inv_too_far", "Inventory must be within 30 blocks.");
+        add("ars_nouveau.storage.lectern_too_far", "Lectern must be within %s blocks.");
+        add("ars_nouveau.storage.inv_too_far", "Inventory must be within %s blocks.");
         add("ars_nouveau.storage.no_tile", "Not a valid inventory.");
         add("block.ars_nouveau.storage_lectern", "Storage Lectern");
         add("ars_nouveau.page1.storage_lectern", "The Storage Lectern can used to view, manage, and craft from multiple connected inventories. The number of inventories that may be connected is determined by the number of Bookwyrms bound to the lectern. You can add more Bookwyrms to the lectern by using a Bookwyrm Charm. Use the Dominion Wand from an inventory to the lectern in order to bind or remove access. Inventories can be connected 30 blocks away.");
@@ -1252,17 +1286,22 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.adopter", "Adopted by %s");
         add("entity.ars_nouveau.lily", "Lily");
         add("ars_nouveau.lily", "Patrons may summon Lily, a faithful tail wagging companion.");
+        add("ars_nouveau.nook", "Patrons may summon Nook, a faithfulish tail wagging companion.");
         add("ars_nouveau.settings.summon_lily", "Summon Lily");
         add("ars_nouveau.settings.unsummon_lily", "Unsummon Lily");
+        add("entity.ars_nouveau.nook", "Nook");
+        add("ars_nouveau.settings.summon_nook", "Summon Nook");
+        add("ars_nouveau.settings.unsummon_nook", "Unsummon Nook");
         add("ars_nouveau.rewards.enabled", "Ars Nouveau supporter rewards enabled, thank you! Rewards can be accessed in the Settings page of the spell book.");
         add("mob_jar.dummy", "A player dummy in a jar will attract nearby mobs.");
         add("ars_nouveau.turret.tooltip", "Can be rotated to face any direction. Use a dominion wand on the turret, and then on the target block.");
         add("ars_nouveau.scribes_table.auto_take_disabled", "Auto Take Disabled");
+        add("item.ars_nouveau.debug", "Ars Nouveau Debugger");
         add("ars_nouveau.alert.turret_needs_form", "Spell must have a form.");
         add("item.ars_nouveau.music_disc_thistle_the_sound_of_glass", "Music Disc");
-        add("item.ars_nouveau.music_disc_thistle_the_sound_of_glass.desc", "Thistle - The Sound of Glass");
+        add("jukebox_song.ars_nouveau.thistle_the_sound_of_glass", "Thistle - The Sound of Glass");
         add("item.ars_nouveau.music_disc_firel_the_wild_hunt", "Music Disc");
-        add("item.ars_nouveau.music_disc_firel_the_wild_hunt.desc", "Firel - The Wild Hunt");
+        add("jukebox_song.ars_nouveau.firel_the_wild_hunt", "Firel - The Wild Hunt");
         add("ars_nouveau.sensor.set_spell", "Sensor will now trigger on this spell only.");
         add("ars_nouveau.sensor.on_resolve", "Mode: On Resolve");
         add("ars_nouveau.sensor.on_cast", "Mode: On Cast");
@@ -1278,22 +1317,54 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.magic_fire", "Mage Fire");
         add("effect.ars_nouveau.immolate", "Immolate");
         add("effect.ars_nouveau.immolate.desc", "Enhances fire spells.");
+        add("effect.ars_nouveau.soaked", "Soaked");
+        add("effect.ars_nouveau.soaked.desc", "Wets the target, protecting from fire and triggering effects as if under the rain.");
         add("block.ars_nouveau.sourceberry_sack", "Sourceberry Sack");
+        add("ars_nouveau.empty","Empty");
+        add("ars_nouveau.melder.output_not_unique", "Output potion is not a unique mix.");
+        add("ars_nouveau.melder.output_duplicate_effect", "Cannot mix potions with the same effect but different levels.");
+        add("ars_nouveau.page1.archwood_grate", "Liquids placed on top of them will be transported below, waterlogging the below block if possible. Interacting with the grate will also act as if you are interacting with the block below it, allowing you to bucket liquids below. Additionally, items and projectiles will pass through it. Can be placed in any direction.");
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             String key = "block.ars_nouveau." + s;
             String val = data.get(key);
             add(key + "_slab", val + " Slab");
             add(key + "_stairs", val + " Stairs");
         }
+        add("block.ars_nouveau.sourcestone_grate","Sourcestone Grate");
+        add("block.ars_nouveau.gold_grate","Gold Grate");
+        add("block.ars_nouveau.archwood_grate","Archwood Grate");
+        add("block.ars_nouveau.smooth_sourcestone_grate","Smooth Sourcestone Grate");
+        add("block.ars_nouveau.source_lamp", "Source Gem Lamp");
+        add("ars_nouveau.page1.source_lamp", "Behaves like a copper bulb, but the light and comparator values can be adjusted by casting Light with dampen.");
+        add("ars_nouveau.patchouli.missing", "Patchouli missing: opening online wiki");
+        add("ars_nouveau.dependency.install", "Open mod page");
+        add("tooltip.starbuncle_shard2", "Made with love.");
+        add("tooltip.whirlisprig_shard2","A natural portrait.");
+        add("tooltip.drygmy_shard2","A tribute to what once was.");
+        add("tooltip.wixie_shard2", "Knowledge for freedom.");
+        add("block.ars_nouveau.alakarkinos_hat", "Alakarkinos Hat");
+        add("entity.ars_nouveau.bubble", "Bubble");
+        add("entity.ars_nouveau.alakarkinos", "Alakarkinos");
+        add("item.ars_nouveau.alakarkinos_charm", "Alakarkinos Charm");
+        add("item.ars_nouveau.alakarkinos_token", "Alakarkinos Token");
+        add("ars_nouveau.page1.alakarkinos_charm","Alakarkinos can sift sand and gravel to find items found in archaeology sites. They can be found on beaches and will give you a token if they receive a Pottery Sherd of any kind.");
+        add("ars_nouveau.page2.alakarkinos_charm","Loves to dance to nearby jukeboxes.");
+        add("ars_nouveau.page3.alakarkinos_charm","Alakarkinos can be summoned anywhere by using a charm on a block. To set its home, use the Dominion Wand to bind Alakarkinos to a chest or inventory.");
+        add("ars_nouveau.page4.alakarkinos_charm","Alakarkinos will seek out gravel or sand that is placed within 3 blocks horizontal and one block vertical around its bound inventory. In order to convert blocks into items, Source must be provided near its chest. After some time and a few magic tricks, Alakarkinos will destroy the sand or gravel and insert items into the inventory.");
+        add("ars_nouveau.alakarkinos.set_home", "Home set. Place source and gravel or sand within 3 blocks.");
+        add("ars_nouveau.sifting", "Sifting");
+        add("tooltip.alakarkinos_shard1", "Found by giving an Alakarkinos a Sherd.");
+        add("tooltip.alakarkinos_shard2", "What's that behind your ear?");
+        add("ars_nouveau.augmenting", "Augmenting %s:");
     }
 
     @Override
-    public void add(Item key, String name) {
+    public void add(@NotNull Item key, @NotNull String name) {
         super.add(key, name);
     }
 
     @Override
-    public void add(String key, String value) {
+    public void add(@NotNull String key, @NotNull String value) {
         super.add(key, value);
         data.put(key, value);
     }

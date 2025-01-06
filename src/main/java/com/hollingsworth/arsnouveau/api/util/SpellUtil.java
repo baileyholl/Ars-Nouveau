@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,17 +18,16 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.TierSortingRegistry;
-import net.minecraftforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.util.FakePlayer;
 
 import java.util.*;
 import java.util.function.Predicate;
 
 public class SpellUtil {
 
-    public static boolean postEvent(SpellCastEvent e) {
-        return MinecraftForge.EVENT_BUS.post(e);
+    public static SpellCastEvent postEvent(SpellCastEvent e) {
+        return NeoForge.EVENT_BUS.post(e);
     }
 
     public static List<BlockPos> calcAOEBlocks(LivingEntity caster, BlockPos origin, BlockHitResult mop, int aoeBonus) {
@@ -59,7 +59,7 @@ public class SpellUtil {
         };
         if (strength > 5)
             tier = Tiers.NETHERITE;
-        return TierSortingRegistry.isCorrectTierForDrops(tier, state);
+        return !BuiltInRegistries.BLOCK.getOrCreateTag(tier.getIncorrectBlocksForDrops()).contains(state.getBlockHolder());
     }
 
 

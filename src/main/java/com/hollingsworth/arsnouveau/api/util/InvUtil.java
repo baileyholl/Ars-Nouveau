@@ -10,10 +10,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.wrapper.PlayerMainInvWrapper;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -24,20 +23,18 @@ public class InvUtil {
     public static List<FilterableItemHandler> adjacentInventories(Level level, BlockPos pos){
         List<FilterableItemHandler> inventories = new ArrayList<>();
         for (Direction d : Direction.values()) {
-            BlockEntity adjacentInvTile = level.getBlockEntity(pos.relative(d));
+            BlockPos relativePos = pos.relative(d);
+            // TODO: Disentangle inventory handling from block entities due to new capabilities system
+            BlockEntity adjacentInvTile = level.getBlockEntity(relativePos);
             if (adjacentInvTile == null || adjacentInvTile.isRemoved())
                 continue;
 
-            IItemHandler handler = adjacentInvTile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+            IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, relativePos, level.getBlockState(relativePos), adjacentInvTile, d.getOpposite());
             if(handler == null)
                 continue;
             inventories.add(new FilterableItemHandler(handler, filtersOnTile(adjacentInvTile)));
         }
         return inventories;
-    }
-
-    public static FilterableItemHandler getFilteredHandler(@NotNull BlockEntity tile){
-        return new FilterableItemHandler(tile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null), filtersOnTile(tile));
     }
 
     public static List<Function<ItemStack, ItemScroll.SortPref>> filtersOnTile(@Nullable BlockEntity thisTile){
@@ -47,7 +44,7 @@ public class InvUtil {
         Level level = thisTile.getLevel();
         BlockPos pos = thisTile.getBlockPos();
         List<Function<ItemStack, ItemScroll.SortPref>> filters = new ArrayList<>();
-        IItemHandler inv = thisTile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+        IItemHandler inv = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, level.getBlockState(pos), thisTile, null);
         if(inv == null)
             return filters;
 

@@ -1,0 +1,19 @@
+{
+  "type": "ars_nouveau:glyph",
+  "exp": 55,
+  "inputs": [
+    {
+      "item": "ars_nouveau:abjuration_essence"
+    },
+    {
+      "item": "ars_nouveau:dowsing_rod"
+    },
+    {
+      "item": "ars_nouveau:starbuncle_shards"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:glyph_sense_magic"
+  }
+}

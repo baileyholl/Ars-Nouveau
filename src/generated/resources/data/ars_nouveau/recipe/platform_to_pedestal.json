@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:arcane_platform"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:arcane_pedestal"
+  }
+}

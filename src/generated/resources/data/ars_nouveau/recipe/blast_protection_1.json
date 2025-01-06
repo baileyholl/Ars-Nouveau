@@ -1,0 +1,17 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:blast_protection",
+  "level": 1,
+  "pedestalItems": [
+    {
+      "tag": "c:storage_blocks/iron"
+    },
+    {
+      "tag": "c:storage_blocks/iron"
+    },
+    {
+      "tag": "c:storage_blocks/source"
+    }
+  ],
+  "sourceCost": 2000
+}

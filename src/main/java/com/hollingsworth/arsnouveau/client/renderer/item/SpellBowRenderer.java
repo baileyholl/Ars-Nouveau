@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.item;
 
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
-import com.hollingsworth.arsnouveau.api.util.CasterUtil;
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
+import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -19,29 +19,30 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import software.bernie.geckolib.core.object.Color;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
+import software.bernie.geckolib.util.Color;
 
-public class SpellBowRenderer extends FixedGeoItemRenderer<SpellBow> {
+public class SpellBowRenderer extends GeoItemRenderer<SpellBow> {
     public SpellBowRenderer() {
-        super(new ANGeoModel<SpellBow>("geo/spellbow.geo.json", "textures/item/spellbow.png", "animations/wand_animation.json"));
+        super(new ANGeoModel<>("geo/spellbow.geo.json", "textures/item/spellbow.png", "animations/wand_animation.json"));
     }
 
     @Override
-    public void renderRecursively(PoseStack poseStack, SpellBow animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderRecursively(PoseStack poseStack, SpellBow animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
         if (bone.getName().equals("gem")) {
             //NOTE: if the bone have a parent, the recursion will get here with the neutral color, making the color getter useless
-            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
         } else {
-            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, Color.WHITE.getRed() / 255f, Color.WHITE.getGreen() / 255f, Color.WHITE.getBlue() / 255f, Color.WHITE.getAlpha() / 255f);
+            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, Color.WHITE.argbInt());
         }
     }
 
     @Override
     public Color getRenderColor(SpellBow animatable, float partialTick, int packedLight) {
         ParticleColor color = ParticleColor.defaultParticleColor();
-        if (currentItemStack.hasTag()) {
-            color = animatable.getSpellCaster(currentItemStack).getColor();
+        var caster = SpellCasterRegistry.from(currentItemStack);
+        if (caster != null){
+            color = caster.getColor();
         }
         return Color.ofRGBA(color.getRed(), color.getGreen(), color.getBlue(), 0.75f);
     }
@@ -64,7 +65,7 @@ public class SpellBowRenderer extends FixedGeoItemRenderer<SpellBow> {
             Vec3 laserPos = playerPos.add(right);
             laserPos = laserPos.add(forward);
             laserPos = laserPos.add(down);
-            ISpellCaster tool = CasterUtil.getCaster(itemStack);
+            AbstractCaster<?> tool = SpellCasterRegistry.from(itemStack);
             int timeHeld = 72000 - Minecraft.getInstance().player.getUseItemRemainingTicks();
             if (timeHeld > 0 && timeHeld != 72000) {
                 float scaleAge = (float) ParticleUtil.inRange(0.05, 0.1);
@@ -83,10 +84,10 @@ public class SpellBowRenderer extends FixedGeoItemRenderer<SpellBow> {
     }
 
     @Override
-    public void renderFinal(PoseStack poseStack, SpellBow animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTicks, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        CoreGeoBone top = model.getBone("bow_top").get();
-        CoreGeoBone gem = model.getBone("gem").get();
-        CoreGeoBone bottom = model.getBone("bow_bot").get();
+    public void renderFinal(PoseStack poseStack, SpellBow animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTicks, int packedLight, int packedOverlay, int color) {
+        GeoBone top = model.getBone("bow_top").get();
+        GeoBone gem = model.getBone("gem").get();
+        GeoBone bottom = model.getBone("bow_bot").get();
         double ticks = animatable.getTick(animatable);
         float outerAngle = (float) (((ticks + partialTicks) / 10.0f) % 360);
         top.setRotZ((float) Math.toRadians(-10.0));

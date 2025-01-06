@@ -94,7 +94,7 @@ public class ChimeraLeapRamGoal extends Goal {
     }
 
     public void breakBlocks() {
-        if (!net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.boss.level, this.boss)) {
+        if (!net.neoforged.neoforge.event.EventHooks.canEntityGrief(this.boss.level, this.boss)) {
             return;
         }
         Direction facing = boss.getDirection();

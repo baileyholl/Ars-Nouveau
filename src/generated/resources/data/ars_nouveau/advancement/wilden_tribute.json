@@ -1,0 +1,32 @@
+{
+  "parent": "ars_nouveau:apprentice_spell_book",
+  "criteria": {
+    "has_wilden_tribute": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ars_nouveau:wilden_tribute"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.wilden_tribute"
+    },
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:wilden_tribute"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.wilden_tribute"
+    }
+  },
+  "requirements": [
+    [
+      "has_wilden_tribute"
+    ]
+  ]
+}

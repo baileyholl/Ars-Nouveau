@@ -1,35 +1,36 @@
 package com.hollingsworth.arsnouveau.client.container;
 
-import net.minecraft.nbt.CompoundTag;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
-public class SortSettings {
-    public int controlMode;
-    public boolean reverseSort;
-    public int sortType;
-    public int searchType;
-    public boolean expanded;
+public record SortSettings(int controlMode, boolean reverseSort, int sortType, int searchType, boolean expanded) {
 
-    public SortSettings(int controlMode, boolean reverseSort, int sortType, int searchType, boolean collapse) {
-        this.controlMode = controlMode;
-        this.reverseSort = reverseSort;
-        this.sortType = sortType;
-        this.searchType = searchType;
-        this.expanded = collapse;
-    }
+    public static final Codec<SortSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.INT.fieldOf("controlMode").forGetter(SortSettings::controlMode),
+            Codec.BOOL.fieldOf("reverseSort").forGetter(SortSettings::reverseSort),
+            Codec.INT.fieldOf("sortType").forGetter(SortSettings::sortType),
+            Codec.INT.fieldOf("searchType").forGetter(SortSettings::searchType),
+            Codec.BOOL.fieldOf("expanded").forGetter(SortSettings::expanded)
+    ).apply(instance, SortSettings::new));
 
-    public SortSettings(){}
+    public static final StreamCodec<RegistryFriendlyByteBuf, SortSettings> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.INT,
+            SortSettings::controlMode,
+            ByteBufCodecs.BOOL,
+            SortSettings::reverseSort,
+            ByteBufCodecs.INT,
+            SortSettings::sortType,
+            ByteBufCodecs.INT,
+            SortSettings::searchType,
+            ByteBufCodecs.BOOL,
+            SortSettings::expanded,
+            SortSettings::new
+    );
 
-    public CompoundTag toTag(){
-        CompoundTag updateTag = new CompoundTag();
-        updateTag.putInt("controlMode", controlMode);
-        updateTag.putBoolean("reverse", reverseSort);
-        updateTag.putInt("sortType", sortType);
-        updateTag.putInt("searchType", searchType);
-        updateTag.putBoolean("expanded", expanded);
-        return updateTag;
-    }
-
-    public static SortSettings fromTag(CompoundTag tag){
-        return new SortSettings(tag.getInt("controlMode"), tag.getBoolean("reverse"), tag.getInt("sortType"), tag.getInt("searchType"), tag.getBoolean("expanded"));
+    public SortSettings(){
+        this(0, false, 0, 0, false);
     }
 }

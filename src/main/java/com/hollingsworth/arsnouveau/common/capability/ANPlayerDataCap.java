@@ -1,133 +1,110 @@
 package com.hollingsworth.arsnouveau.common.capability;
 
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
-import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketSyncPlayerCap;
+import com.hollingsworth.arsnouveau.setup.registry.AttachmentsRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class ANPlayerDataCap implements IPlayerCap {
 
-    public Set<AbstractSpellPart> glyphs = new HashSet<>();
-
-    public Set<FamiliarData> familiars = new HashSet<>();
-
-    public ResourceLocation lastSummonedFamiliar;
-
-    public ANPlayerDataCap() {
+    private ANPlayerData playerData;
+    LivingEntity entity;
+    public ANPlayerDataCap(LivingEntity livingEntity){
+        playerData = livingEntity.getData(AttachmentsRegistry.PLAYER_DATA);
+        entity = livingEntity;
     }
 
     @Override
     public Collection<AbstractSpellPart> getKnownGlyphs() {
-        return glyphs;
+        return playerData.glyphs;
     }
 
     @Override
     public void setKnownGlyphs(Collection<AbstractSpellPart> glyphs) {
-        this.glyphs = new HashSet<>(glyphs);
+        playerData.glyphs = new HashSet<>(glyphs);
+        entity.setData(AttachmentsRegistry.PLAYER_DATA, playerData);
     }
 
     @Override
     public boolean unlockGlyph(AbstractSpellPart spellPart) {
-        return glyphs.add(spellPart);
+        var result = playerData.glyphs.add(spellPart);
+        if(result){
+            entity.setData(AttachmentsRegistry.PLAYER_DATA, playerData);
+        }
+        return result;
     }
 
     @Override
     public boolean knowsGlyph(AbstractSpellPart spellPart) {
-        return glyphs.contains(spellPart);
+        return playerData.glyphs.contains(spellPart);
     }
 
     @Override
     public boolean unlockFamiliar(AbstractFamiliarHolder holderID) {
-        return familiars.add(new FamiliarData(holderID.getRegistryName()));
+        var result = playerData.familiars.add(new FamiliarData(holderID.getRegistryName()));
+        if(result){
+            entity.setData(AttachmentsRegistry.PLAYER_DATA, playerData);
+        }
+        return result;
     }
 
     @Override
     public boolean ownsFamiliar(AbstractFamiliarHolder holderID) {
-        return familiars.stream().anyMatch(f -> f.familiarHolder.getRegistryName().equals(holderID.getRegistryName()));
+        return playerData.familiars.stream().anyMatch(f -> f.familiarHolder.getRegistryName().equals(holderID.getRegistryName()));
     }
 
     @Override
     public Collection<FamiliarData> getUnlockedFamiliars() {
-        return familiars;
+        return playerData.familiars;
     }
 
     @Override
     @Nullable
     public FamiliarData getFamiliarData(ResourceLocation id) {
-        return this.familiars.stream().filter(f -> f.familiarHolder.getRegistryName().equals(id)).findFirst().orElse(null);
+        return playerData.familiars.stream().filter(f -> f.familiarHolder.getRegistryName().equals(id)).findFirst().orElse(null);
     }
 
     @Nullable
     @Override
     public FamiliarData getLastSummonedFamiliar() {
-        return lastSummonedFamiliar == null ? null : getFamiliarData(lastSummonedFamiliar);
+        return playerData.lastSummonedFamiliar == null ? null : getFamiliarData(playerData.lastSummonedFamiliar);
     }
 
     public void setLastSummonedFamiliar(ResourceLocation lastSummonedFamiliar) {
-        this.lastSummonedFamiliar = lastSummonedFamiliar;
+        playerData.lastSummonedFamiliar = lastSummonedFamiliar;
+        entity.setData(AttachmentsRegistry.PLAYER_DATA, playerData);
     }
 
     @Override
     public void setUnlockedFamiliars(Collection<FamiliarData> familiars) {
-        this.familiars = new HashSet<>(familiars);
+        playerData.familiars = new HashSet<>(familiars);
+        entity.setData(AttachmentsRegistry.PLAYER_DATA, playerData);
     }
 
     @Override
     public boolean removeFamiliar(AbstractFamiliarHolder holderID) {
-        return this.familiars.removeIf(f -> f.familiarHolder.getRegistryName().equals(holderID.getRegistryName()));
+        var result = playerData.familiars.removeIf(f -> f.familiarHolder.getRegistryName().equals(holderID.getRegistryName()));
+        if(result){
+            entity.setData(AttachmentsRegistry.PLAYER_DATA, playerData);
+        }
+        return result;
     }
 
-    @Override
-    public CompoundTag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
-
-        CompoundTag glyphsTag = new CompoundTag();
-        List<AbstractSpellPart> glyphsList = glyphs.stream().toList();
-        for (int i = 0; i < glyphsList.size(); i++) {
-            glyphsTag.putString("glyph" + i, glyphsList.get(i).getRegistryName().toString());
-        }
-        glyphsTag.putInt("size", glyphsList.size());
-        tag.put("glyphs", glyphsTag);
-
-        CompoundTag familiarsTag = new CompoundTag();
-        List<FamiliarData> familiarsList = familiars.stream().toList();
-        for (int i = 0; i < familiarsList.size(); i++) {
-            familiarsTag.put("familiar" + i, familiarsList.get(i).toTag());
-        }
-        familiarsTag.putInt("size", familiarsList.size());
-        tag.put("familiars", familiarsTag);
-        if(lastSummonedFamiliar != null){
-            tag.putString("lastSummonedFamiliar", lastSummonedFamiliar.toString());
-        }
-        return tag;
+    public void setPlayerData(ANPlayerData data){
+        this.playerData = data;
     }
 
-    @Override
-    public void deserializeNBT(CompoundTag nbt) {
-        glyphs = new HashSet<>();
-        familiars = new HashSet<>();
-
-        CompoundTag glyphsTag = nbt.getCompound("glyphs");
-        for (int i = 0; i < glyphsTag.getInt("size"); i++) {
-            ResourceLocation id = new ResourceLocation(glyphsTag.getString("glyph" + i));
-            AbstractSpellPart part = GlyphRegistry.getSpellPart(id);
-            if (part != null)
-                glyphs.add(part);
-        }
-
-        CompoundTag familiarsTag = nbt.getCompound("familiars");
-        for (int i = 0; i < familiarsTag.getInt("size"); i++) {
-            familiars.add(new FamiliarData(familiarsTag.getCompound("familiar" + i)));
-        }
-        if(nbt.contains("lastSummonedFamiliar")){
-            lastSummonedFamiliar = new ResourceLocation(nbt.getString("lastSummonedFamiliar"));
-        }
+    public void syncToClient(ServerPlayer player){
+        CompoundTag tag = this.playerData.serializeNBT(player.registryAccess());
+        Networking.sendToPlayerClient(new PacketSyncPlayerCap(tag), player);
     }
 }

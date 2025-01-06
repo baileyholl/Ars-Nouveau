@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 public class EnchantedMageblock extends EnchantedFallingBlock {
     public EnchantedMageblock(EntityType<? extends ColoredProjectile> p_31950_, Level p_31951_) {
@@ -15,7 +16,7 @@ public class EnchantedMageblock extends EnchantedFallingBlock {
     }
 
     @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.ENCHANTED_MAGE_BLOCK.get();
     }
 }

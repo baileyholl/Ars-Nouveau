@@ -53,7 +53,7 @@ public class ChimeraRageGoal extends Goal {
         chimera.rageTimer = 200;
         finished = false;
         ticks = 0;
-        Networking.sendToNearby(chimera.level, chimera, new PacketAnimEntity(chimera.getId(), WildenChimera.Animations.HOWL.ordinal()));
+        Networking.sendToNearbyClient(chimera.level, chimera, new PacketAnimEntity(chimera.getId(), WildenChimera.Animations.HOWL.ordinal()));
         chimera.resetCooldowns();
         chimera.removeAllEffects();
         chimera.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100 + 100 * chimera.getPhase(), 3));

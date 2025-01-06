@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -10,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
@@ -18,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StarbyListBehavior extends StarbyBehavior {
+public abstract class StarbyListBehavior extends StarbyBehavior {
 
     public List<BlockPos> FROM_LIST = new ArrayList<>();
 
@@ -135,10 +133,5 @@ public class StarbyListBehavior extends StarbyBehavior {
             if (entry.getValue() != null) tag.putInt("to_direction_" + entry.getKey(), entry.getValue().ordinal());
         }
         return super.toTag(tag);
-    }
-
-    @Override
-    protected ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, "starby_list");
     }
 }

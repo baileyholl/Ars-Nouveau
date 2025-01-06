@@ -2,13 +2,14 @@ package com.hollingsworth.arsnouveau.api.event;
 
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.event.entity.EntityEvent;
+import net.neoforged.bus.api.ICancellableEvent;
+import net.neoforged.neoforge.event.entity.EntityEvent;
 
 /**
  * Event fired when a spell projectile hits something.
  * Provided for addons, not used in the base mod
  */
-public class SpellProjectileHitEvent extends EntityEvent {
+public class SpellProjectileHitEvent extends EntityEvent implements ICancellableEvent {
     public HitResult hit;
     public EntityProjectileSpell projectile;
 
@@ -26,8 +27,4 @@ public class SpellProjectileHitEvent extends EntityEvent {
         return hit;
     }
 
-    @Override
-    public boolean isCancelable() {
-        return true;
-    }
 }

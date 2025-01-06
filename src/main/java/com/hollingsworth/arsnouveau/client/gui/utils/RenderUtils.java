@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
@@ -29,14 +30,14 @@ public class RenderUtils {
     }
 
     public static void drawSpellPart(AbstractSpellPart objectToBeDrawn, GuiGraphics graphics, int positionX, int positionY, int size, boolean renderTransparent) {
-        renderFakeItemTransparent(graphics.pose(), objectToBeDrawn.glyphItem.getDefaultInstance(), positionX, positionY, size, 0, renderTransparent,150);
+        renderFakeItemTransparent(graphics.pose(), objectToBeDrawn.glyphItem.getDefaultInstance(), positionX, positionY, size, 0, renderTransparent, 150);
     }
 
     public static void drawItemAsIcon(ItemStack itemStack, GuiGraphics graphics, int positionX, int positionY, int size, boolean renderTransparent) {
-        renderFakeItemTransparent(graphics.pose(), itemStack, positionX, positionY, size, 0, renderTransparent,150);
+        renderFakeItemTransparent(graphics.pose(), itemStack, positionX, positionY, size, 0, renderTransparent, 150);
     }
 
-    public static void renderFakeItemTransparent(PoseStack poseStack, ItemStack stack, int x, int y,int scale, int alpha, boolean transparent, int zIndex) {
+    public static void renderFakeItemTransparent(PoseStack poseStack, ItemStack stack, int x, int y, int scale, int alpha, boolean transparent, int zIndex) {
         if (stack.isEmpty()) {
             return;
         }
@@ -52,7 +53,7 @@ public class RenderUtils {
     public static void renderItemModel(PoseStack poseStack, ItemStack stack, int x, int y, int scale, int alpha, BakedModel model, ItemRenderer renderer, boolean transparent, int zIndex) {
         poseStack.pushPose();
         poseStack.translate(x + 8F, y + 8F, zIndex);
-        poseStack.mulPoseMatrix(SCALE_INVERT_Y);
+        poseStack.mulPose(SCALE_INVERT_Y);
         poseStack.scale(scale, scale, scale);
 
         boolean flatLight = !model.usesBlockLight();
@@ -99,14 +100,17 @@ public class RenderUtils {
         float minU = (float) uOffset / textureWidth, minV = (float) vOffset / textureHeight;
         float maxU = minU + (float) width / textureWidth, maxV = minV + (float) height / textureHeight;
         int r = color.getRed(), g = color.getGreen(), b = color.getBlue(), alpha = color.getAlpha();
-        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
-        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        bufferbuilder.vertex(matrix, (float) x, (float) maxY, 0).uv(minU, maxV).color(r, g, b, alpha).endVertex();
-        bufferbuilder.vertex(matrix, (float) maxX, (float) maxY, 0).uv(maxU, maxV).color(r, g, b, alpha).endVertex();
-        bufferbuilder.vertex(matrix, (float) maxX, (float) y, 0).uv(maxU, minV).color(r, g, b, alpha).endVertex();
-        bufferbuilder.vertex(matrix, (float) x, (float) y, 0).uv(minU, minV).color(r, g, b, alpha).endVertex();
-        BufferUploader.drawWithShader(bufferbuilder.end());
+        BufferBuilder bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        bufferbuilder.addVertex(matrix, (float) x, (float) maxY, 0).setUv(minU, maxV).setColor(r, g, b, alpha);
+        bufferbuilder.addVertex(matrix, (float) maxX, (float) maxY, 0).setUv(maxU, maxV).setColor(r, g, b, alpha);
+        bufferbuilder.addVertex(matrix, (float) maxX, (float) y, 0).setUv(maxU, minV).setColor(r, g, b, alpha);
+        bufferbuilder.addVertex(matrix, (float) x, (float) y, 0).setUv(minU, minV).setColor(r, g, b, alpha);
+        BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
         RenderSystem.disableBlend();
+    }
+
+    public static void drawString(String string, GuiGraphics guiGraphics, int positionX, int positionY, int size, boolean renderTransparent) {
+        guiGraphics.drawString(Minecraft.getInstance().font, Component.translatable(string), positionX, positionY, Color.WHITE.getRGB());
     }
 
 }

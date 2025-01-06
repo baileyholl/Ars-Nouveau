@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.entity.statemachine.SimpleStateMachin
 import com.hollingsworth.arsnouveau.common.entity.statemachine.starbuncle.DecideStarbyActionState;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.starbuncle.StarbyState;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
+import com.hollingsworth.arsnouveau.common.util.ItemUtil;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
@@ -27,36 +28,37 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class StarbyTransportBehavior extends StarbyListBehavior {
     public static Cache<BlockPos, List<ItemEntity>> frameCache = CacheBuilder.newBuilder()
             .expireAfterAccess(20, TimeUnit.SECONDS)
             .build();
 
-    public static final ResourceLocation TRANSPORT_ID = new ResourceLocation(ArsNouveau.MODID, "starby_transport");
+    public static final ResourceLocation TRANSPORT_ID = ArsNouveau.prefix( "starby_transport");
 
-    public ItemStack itemScroll;
+    public ItemStack itemScroll = ItemStack.EMPTY;
 
     public SimpleStateMachine<StarbyState, IStateEvent> stateMachine;
 
     public int berryBackoff;
     public int findItemBackoff;
     public int takeItemBackoff;
+
     public StarbyTransportBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
         stateMachine = new SimpleStateMachine<>(new DecideStarbyActionState(starbuncle, this));
         if (!entity.isTamed())
             return;
 
-        if (tag.contains("itemScroll"))
-            this.itemScroll = ItemStack.of(tag.getCompound("itemScroll"));
+        this.itemScroll = ItemStack.parseOptional(entity.level.registryAccess(), tag.getCompound("itemScroll"));
     }
 
     @Override
@@ -101,7 +103,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
             if (itemEntity.getItem().getCount() >= itemEntity.getItem().getMaxStackSize())
                 break;
             int maxTake = starbuncleWithRoom.getHeldStack().getMaxStackSize() - starbuncleWithRoom.getHeldStack().getCount();
-            if (ItemStack.isSameItemSameTags(i.getItem(), starbuncleWithRoom.getHeldStack())) {
+            if (ItemStack.isSameItemSameComponents(i.getItem(), starbuncleWithRoom.getHeldStack())) {
                 int toTake = Math.min(i.getItem().getCount(), maxTake);
                 i.getItem().shrink(toTake);
                 starbuncleWithRoom.getHeldStack().grow(toTake);
@@ -132,20 +134,15 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     public ItemScroll.SortPref sortPrefForStack(@Nullable BlockPos b, ItemStack stack) {
         if (stack == null || stack.isEmpty() || b == null || !level.isLoaded(b))
             return ItemScroll.SortPref.INVALID;
-        return canDepositItem(level.getBlockEntity(b), stack);
+        return canDepositItem(b, stack);
     }
 
     public boolean isPickupDisabled() {
         return starbuncle.getCosmeticItem().getItem() == ItemsRegistry.STARBUNCLE_SHADES.get();
     }
 
-    public @Nullable IItemHandler getItemCapFromTile(BlockEntity blockEntity, @Nullable Direction face) {
-        if (blockEntity != null && blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, face).isPresent()) {
-            var lazy = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, face).resolve();
-            if (lazy.isPresent())
-                return lazy.get();
-        }
-        return null;
+    public @Nullable IItemHandler getItemCapFromTile(BlockPos pos, @Nullable Direction face) {
+        return starbuncle.level.getCapability(Capabilities.ItemHandler.BLOCK, pos, face);
     }
 
     public @Nullable BlockPos getValidTakePos() {
@@ -163,7 +160,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
 
         if (p == null || !level.isLoaded(p)) return false;
         Direction face = FROM_DIRECTION_MAP.get(p.hashCode());
-        IItemHandler iItemHandler = getItemCapFromTile(level.getBlockEntity(p), face);
+        IItemHandler iItemHandler = getItemCapFromTile(p, face);
 
         if (iItemHandler == null) return false;
         for (int j = 0; j < iItemHandler.getSlots(); j++) {
@@ -184,7 +181,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         }
         BlockPos validStorePos = getValidStorePos(stack);
         if (validStorePos == null) return -1;
-        IItemHandler handler = getItemCapFromTile(level.getBlockEntity(validStorePos), FROM_DIRECTION_MAP.get(validStorePos.hashCode()));
+        IItemHandler handler = getItemCapFromTile(validStorePos, FROM_DIRECTION_MAP.get(validStorePos.hashCode()));
         if (handler == null)
             return -1;
 
@@ -192,7 +189,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
             ItemStack handlerStack = handler.getStackInSlot(i);
             if (handlerStack.isEmpty()) {
                 return handler.getSlotLimit(i);
-            } else if (ItemHandlerHelper.canItemStacksStack(handler.getStackInSlot(i), stack)) {
+            } else if (ItemUtil.canStack(handler.getStackInSlot(i), stack)) {
                 int originalCount = stack.getCount();
                 ItemStack simStack = handler.insertItem(i, stack, true);
                 int maxRoom = originalCount - simStack.getCount();
@@ -204,18 +201,18 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         return -1;
     }
 
-    private ItemScroll.SortPref canDepositItem(BlockEntity tile, ItemStack stack) {
+    private ItemScroll.SortPref canDepositItem(BlockPos pos, ItemStack stack) {
         ItemScroll.SortPref pref = ItemScroll.SortPref.LOW;
-        if (tile == null || stack == null || stack.isEmpty())
+        if (pos == null || stack == null || stack.isEmpty())
             return ItemScroll.SortPref.INVALID;
 
-        IItemHandler handler = getItemCapFromTile(tile, TO_DIRECTION_MAP.get(tile.getBlockPos().hashCode()));
+        IItemHandler handler = getItemCapFromTile(pos, TO_DIRECTION_MAP.get(pos.hashCode()));
         if (handler == null)
             return ItemScroll.SortPref.INVALID;
-        for (ItemFrame i : level.getEntitiesOfClass(ItemFrame.class, new AABB(tile.getBlockPos()).inflate(1))) {
+        for (ItemFrame i : level.getEntitiesOfClass(ItemFrame.class, new AABB(pos).inflate(1))) {
             // Check if these frames are attached to the tile
             BlockEntity adjTile = level.getBlockEntity(i.blockPosition().relative(i.getDirection().getOpposite()));
-            if (adjTile == null || !adjTile.equals(tile) || i.getItem().isEmpty())
+            if (adjTile == null || !adjTile.equals(level.getBlockEntity(pos)) || i.getItem().isEmpty())
                 continue;
 
 
@@ -247,8 +244,8 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         super.onFinishedConnectionFirst(storedPos, side, storedEntity, playerEntity);
         if (storedPos == null)
             return;
-        BlockEntity blockEntity = level.getBlockEntity(storedPos);
-        if (blockEntity != null && blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, side).isPresent()) {
+        IItemHandler cap = level.getCapability(Capabilities.ItemHandler.BLOCK, storedPos, side);
+        if (cap != null) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.store"));
             addToPos(storedPos, side);
         }
@@ -260,8 +257,8 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         if (storedPos == null)
             return;
 
-        BlockEntity blockEntity = level.getBlockEntity(storedPos);
-        if (blockEntity != null && blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, side).isPresent()) {
+        IItemHandler cap = level.getCapability(Capabilities.ItemHandler.BLOCK, storedPos, side);
+        if (cap != null) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.take"));
             addFromPos(storedPos, side);
         }
@@ -276,24 +273,24 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        if (itemScroll != null) {
-            tag.put("itemScroll", itemScroll.serializeNBT());
+        if (!itemScroll.isEmpty()) {
+            tag.put("itemScroll", itemScroll.save(level.registryAccess()));
         }
         return tag;
     }
 
     @Override
-    public void getTooltip(List<Component> tooltip) {
+    public void getTooltip(Consumer<Component> tooltip) {
         super.getTooltip(tooltip);
-        tooltip.add(Component.translatable("ars_nouveau.starbuncle.storing", TO_LIST.size()));
-        tooltip.add(Component.translatable("ars_nouveau.starbuncle.taking", FROM_LIST.size()));
-        if (itemScroll != null && !itemScroll.isEmpty()) {
-            tooltip.add(Component.translatable("ars_nouveau.filtering_with", itemScroll.getHoverName().getString()));
+        tooltip.accept(Component.translatable("ars_nouveau.starbuncle.storing", TO_LIST.size()));
+        tooltip.accept(Component.translatable("ars_nouveau.starbuncle.taking", FROM_LIST.size()));
+        if (!itemScroll.isEmpty()) {
+            tooltip.accept(Component.translatable("ars_nouveau.filtering_with", itemScroll.getHoverName().getString()));
         }
     }
 
     @Override
-    protected ResourceLocation getRegistryName() {
+    public ResourceLocation getRegistryName() {
         return TRANSPORT_ID;
     }
 }

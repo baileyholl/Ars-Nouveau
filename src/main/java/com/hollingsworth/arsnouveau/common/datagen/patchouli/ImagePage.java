@@ -43,6 +43,6 @@ public class ImagePage extends AbstractPage{
 
     @Override
     public ResourceLocation getType() {
-        return new ResourceLocation("patchouli:image");
+        return ResourceLocation.tryParse("patchouli:image");
     }
 }

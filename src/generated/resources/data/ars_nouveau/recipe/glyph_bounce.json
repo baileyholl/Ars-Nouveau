@@ -1,0 +1,22 @@
+{
+  "type": "ars_nouveau:glyph",
+  "exp": 27,
+  "inputs": [
+    {
+      "item": "ars_nouveau:abjuration_essence"
+    },
+    {
+      "tag": "c:slime_balls"
+    },
+    {
+      "tag": "c:slime_balls"
+    },
+    {
+      "tag": "c:slime_balls"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:glyph_bounce"
+  }
+}

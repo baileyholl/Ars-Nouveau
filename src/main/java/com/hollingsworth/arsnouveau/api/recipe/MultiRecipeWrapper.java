@@ -3,18 +3,15 @@ package com.hollingsworth.arsnouveau.api.recipe;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraft.world.item.crafting.ShapelessRecipe;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.brewing.BrewingRecipe;
+import net.neoforged.neoforge.common.brewing.BrewingRecipe;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -36,10 +33,10 @@ public class MultiRecipeWrapper implements IRecipeWrapper{
     public static MultiRecipeWrapper fromStack(ItemStack stack, Level level){
         MultiRecipeWrapper wrapper = new MultiRecipeWrapper();
         if (stack.getItem() == Items.POTION) {
-            for (BrewingRecipe r : ArsNouveauAPI.getInstance().getAllPotionRecipes()) {
+            for (BrewingRecipe r : ArsNouveauAPI.getInstance().getAllPotionRecipes(level)) {
                 if (ItemStack.matches(stack, r.getOutput())) {
                     List<Ingredient> list = new ArrayList<>();
-                    list.add(new PotionIngredient(r.getInput().getItems()[0]));
+                    list.add(PotionIngredient.getIngredient(r.getInput().getItems()[0]));
                     list.add(r.getIngredient());
                     wrapper.addRecipe(list, r.getOutput(), null);
                 }
@@ -48,7 +45,8 @@ public class MultiRecipeWrapper implements IRecipeWrapper{
             if(RECIPE_CACHE.containsKey(stack.getItem())){
                 return RECIPE_CACHE.get(stack.getItem());
             }
-            for (Recipe r : level.getServer().getRecipeManager().getRecipes()) {
+            for (RecipeHolder<?> rh : level.getServer().getRecipeManager().getRecipes()) {
+                Recipe<?> r = rh.value();
                 if (r.getResultItem(level.registryAccess()) == null || r.getResultItem(level.registryAccess()).getItem() != stack.getItem())
                     continue;
 
@@ -94,8 +92,10 @@ public class MultiRecipeWrapper implements IRecipeWrapper{
             for (ItemStack stack : i.getItems()) {
                 // Return success if we could consume this potion as a liquid from a jar
                 if (stack.getItem() == Items.POTION) {
-                    Potion potion = PotionUtils.getPotion(stack);
-                    if (potion == Potions.WATER || WixieCauldronTile.findNeededPotion(potion, 300, world, pos) != null) {
+                    PotionContents potionContents = stack.get(DataComponents.POTION_CONTENTS);
+                    if (potionContents == null) continue;
+
+                    if (potionContents.is(Potions.WATER) || WixieCauldronTile.findNeededPotion(potionContents, 300, world, pos) != null) {
                         foundStack = true;
                         break;
                     }

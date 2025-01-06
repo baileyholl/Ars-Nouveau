@@ -10,8 +10,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -19,14 +19,14 @@ import java.util.concurrent.CompletableFuture;
 import static net.minecraft.tags.BiomeTags.*;
 
 public class BiomeTagProvider  extends BiomeTagsProvider {
-    public static TagKey<Biome> SUMMON_SPAWN_TAG = TagKey.create(Registries.BIOME, new ResourceLocation(ArsNouveau.MODID, "summon_spawn"));
+    public static TagKey<Biome> SUMMON_SPAWN_TAG = TagKey.create(Registries.BIOME, ArsNouveau.prefix( "summon_spawn"));
     //for common, cluster archwood
-    public static TagKey<Biome> ARCHWOOD_BIOME_TAG = TagKey.create(Registries.BIOME, new ResourceLocation(ArsNouveau.MODID, "archwood_biome"));
+    public static TagKey<Biome> ARCHWOOD_BIOME_TAG = TagKey.create(Registries.BIOME, ArsNouveau.prefix( "archwood_biome"));
 
-    public static TagKey<Biome> NO_MOB_SPAWN = TagKey.create(Registries.BIOME, new ResourceLocation(ArsNouveau.MODID, "no_mob_spawn"));
+    public static TagKey<Biome> NO_MOB_SPAWN = TagKey.create(Registries.BIOME, ArsNouveau.prefix( "no_mob_spawn"));
 
 
-    public static TagKey<Biome> BERRY_SPAWN = TagKey.create(Registries.BIOME, new ResourceLocation(ArsNouveau.MODID, "berry_spawn"));
+    public static TagKey<Biome> BERRY_SPAWN = TagKey.create(Registries.BIOME, ArsNouveau.prefix( "berry_spawn"));
 
     public BiomeTagProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider, @Nullable ExistingFileHelper existingFileHelper) {
         super(pOutput, pProvider, ArsNouveau.MODID, existingFileHelper);

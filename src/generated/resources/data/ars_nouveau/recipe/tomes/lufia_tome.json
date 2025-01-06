@@ -1,0 +1,30 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": {
+    "b": 1,
+    "g": 128,
+    "id": "ars_nouveau:constant",
+    "r": 255
+  },
+  "flavour_text": "Your enemies will try to kill you. Use this, to kill them back. Cast under a targets feet to bury them. Results may vary.",
+  "name": "Lufia's Bwomp",
+  "sound": {
+    "pitch": 0.5,
+    "sound": {
+      "id": "ars_nouveau:tempestry_family"
+    }
+  },
+  "spell": [
+    "ars_nouveau:glyph_projectile",
+    "ars_nouveau:glyph_sensitive",
+    "ars_nouveau:glyph_pierce",
+    "ars_nouveau:glyph_pierce",
+    "ars_nouveau:glyph_pierce",
+    "ars_nouveau:glyph_intangible",
+    "ars_nouveau:glyph_aoe",
+    "ars_nouveau:glyph_aoe",
+    "ars_nouveau:glyph_aoe",
+    "ars_nouveau:glyph_aoe"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

@@ -14,12 +14,12 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
-@Mod.EventBusSubscriber(modid = ArsNouveau.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = ArsNouveau.MODID, value = Dist.CLIENT)
 public class CameraController {
     public static CameraType previousCameraType;
     public static boolean resetOverlaysAfterDismount = false;
@@ -30,14 +30,14 @@ public class CameraController {
     private static boolean wasRightPressed;
 
     @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
+    public static void onClientTick(ClientTickEvent.Pre event) {
         Entity cameraEntity = Minecraft.getInstance().cameraEntity;
 
         if (cameraEntity instanceof ScryerCamera cam) {
             Options options = Minecraft.getInstance().options;
 
             //up/down/left/right handling is split to prevent players who are viewing a camera from moving around in a boat or on a horse
-            if (event.phase == TickEvent.Phase.START) {
+            if (event instanceof ClientTickEvent.Pre) {
                 if (wasUpPressed = options.keyUp.isDown())
                     options.keyUp.setDown(false);
 
@@ -54,7 +54,19 @@ public class CameraController {
                     dismount();
                     options.keyShift.setDown(false);
                 }
-            } else if (event.phase == TickEvent.Phase.END) {
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onClientTick(ClientTickEvent.Post event) {
+        Entity cameraEntity = Minecraft.getInstance().cameraEntity;
+
+        if (cameraEntity instanceof ScryerCamera cam) {
+            Options options = Minecraft.getInstance().options;
+
+            //up/down/left/right handling is split to prevent players who are viewing a camera from moving around in a boat or on a horse
+            if (event instanceof ClientTickEvent.Post) {
                 if (wasUpPressed) {
                     moveViewUp(cam);
                     options.keyUp.setDown(true);
@@ -87,7 +99,7 @@ public class CameraController {
     }
 
     private static void dismount() {
-        Networking.INSTANCE.sendToServer(new PacketDismountCamera());
+        Networking.sendToServer(new PacketDismountCamera());
     }
 
     public static void moveViewUp(ScryerCamera cam) {

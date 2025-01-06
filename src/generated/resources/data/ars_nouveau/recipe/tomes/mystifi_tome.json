@@ -1,0 +1,30 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": {
+    "b": 1,
+    "g": 128,
+    "id": "ars_nouveau:constant",
+    "r": 255
+  },
+  "flavour_text": "Be careful About digging straight down, People say its like digging your own grave",
+  "name": "Mysti's Gravely Dig",
+  "sound": {
+    "sound": {
+      "id": "ars_nouveau:fire_family_2"
+    },
+    "volume": 0.27
+  },
+  "spell": [
+    "ars_nouveau:glyph_underfoot",
+    "ars_nouveau:glyph_linger",
+    "ars_nouveau:glyph_sensitive",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_intangible",
+    "ars_nouveau:glyph_pierce",
+    "ars_nouveau:glyph_pierce",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_extend_time"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

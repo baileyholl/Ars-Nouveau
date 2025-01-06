@@ -1,8 +1,10 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.renderer.item.MobJarItemRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
@@ -14,11 +16,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.client.GeoRenderProvider;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
@@ -29,13 +31,13 @@ public class MobJarItem extends BlockItem implements GeoItem {
         super(pBlock, pProperties);
     }
 
+
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        super.initializeClient(consumer);
-        consumer.accept(new IClientItemExtensions() {
-            MobJarItemRenderer renderer = new MobJarItemRenderer();
+    public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
+        consumer.accept(new GeoRenderProvider() {
+            final MobJarItemRenderer renderer = new MobJarItemRenderer();
             @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
                 return renderer;
             }
         });
@@ -53,11 +55,9 @@ public class MobJarItem extends BlockItem implements GeoItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext pLevel, @NotNull List<Component> pTooltip, @NotNull TooltipFlag pFlag) {
         super.appendHoverText(stack, pLevel, pTooltip, pFlag);
-        if(pLevel == null)
-            return;
-        Entity entity = fromItem(stack, pLevel);
+        Entity entity = fromItem(stack, ArsNouveau.proxy.getClientWorld());
         if(entity == null)
             return;
         pTooltip.add(entity.getDisplayName());
@@ -73,10 +73,10 @@ public class MobJarItem extends BlockItem implements GeoItem {
     }
 
     public static Entity fromItem(ItemStack stack, Level level){
-        if(!stack.hasTag())
+        var jarData = stack.get(DataComponentRegistry.MOB_JAR);
+        if(jarData == null)
             return null;
-        CompoundTag blockTag = stack.getTag().getCompound("BlockEntityTag");
-        CompoundTag entityTag = blockTag.getCompound("entityTag");
+        CompoundTag entityTag = jarData.entityTag().orElse(new CompoundTag());
         if(entityTag.isEmpty())
             return null;
         return MobJarTile.loadEntityFromTag(level, entityTag);

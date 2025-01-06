@@ -8,15 +8,18 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import net.neoforged.neoforge.event.entity.living.LivingKnockBackEvent;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-@Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
+@EventBusSubscriber(modid = ArsNouveau.MODID)
 public class FamiliarEvents {
 
     public static List<FamiliarEntity> getFamiliars(Predicate<FamiliarEntity> predicate) {
@@ -91,14 +94,15 @@ public class FamiliarEvents {
         }
     }
 
-    @SubscribeEvent
-    public static void fortuneEvent(LootingLevelEvent event) {
-        for (FamiliarEntity entity : getFamiliars((familiarEntity -> familiarEntity instanceof FamiliarDrygmy))) {
-            if (entity instanceof FamiliarDrygmy) {
-                ((FamiliarDrygmy) entity).onLootingEvent(event);
-            }
-        }
-    }
+    // TODO: restore drygmy fortune event
+//    @SubscribeEvent
+//    public static void fortuneEvent(LootingLevelEvent event) {
+//        for (FamiliarEntity entity : getFamiliars((familiarEntity -> familiarEntity instanceof FamiliarDrygmy))) {
+//            if (entity instanceof FamiliarDrygmy) {
+//                ((FamiliarDrygmy) entity).onLootingEvent(event);
+//            }
+//        }
+//    }
 
     @SubscribeEvent
     public static void eatEvent(LivingEntityUseItemEvent.Finish event) {
@@ -128,7 +132,7 @@ public class FamiliarEvents {
     }
 
     @SubscribeEvent
-    public static void livingHurtEvent(LivingHurtEvent event){
+    public static void livingHurtEvent(LivingDamageEvent.Post event){
         if(!event.getSource().is(DamageTypeTags.BYPASSES_ARMOR) && event.getEntity() instanceof Player player) {
             List<FamiliarEntity> golems = getFamiliars((familiarEntity -> familiarEntity instanceof FamiliarAmethystGolem golem && golem.getOwner() != null && golem.getOwner().equals(event.getEntity())));
             if (!golems.isEmpty()) {

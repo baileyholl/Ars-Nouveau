@@ -33,7 +33,7 @@ public class CompoundScryer implements IScryer {
         for (int i = 0; i < count; i++) {
             CompoundTag scryerTag = tag.getCompound("scryer_" + i);
             String id = scryerTag.getString("id");
-            IScryer scryer = ArsNouveauAPI.getInstance().getScryer(new ResourceLocation(id));
+            IScryer scryer = ArsNouveauAPI.getInstance().getScryer(ResourceLocation.tryParse(id));
             if (scryer != null) {
                 compoundScryer.scryerList.add(scryer.fromTag(scryerTag));
             }
@@ -52,6 +52,6 @@ public class CompoundScryer implements IScryer {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, "compound_scryer");
+        return ArsNouveau.prefix( "compound_scryer");
     }
 }

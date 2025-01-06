@@ -5,15 +5,14 @@ import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.common.block.MirrorWeave;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
-import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -22,8 +21,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILightable {
@@ -39,10 +38,6 @@ public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILigh
         this(BlockRegistry.MIRROR_WEAVE_TILE.get(), pos, state);
     }
 
-    public MirrorWeaveTile(RegistryWrapper<? extends BlockEntityType> type, BlockPos pos, BlockState state) {
-        this(type.get(), pos, state);
-    }
-
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {}
 
@@ -54,14 +49,14 @@ public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILigh
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         tag.put("mimic_state",  NbtUtils.writeBlockState(mimicState));
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
+    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(pTag, pRegistries);
         if(pTag.contains("mimic_state")) {
             HolderGetter<Block> holdergetter = this.level != null ? this.level.holderLookup(Registries.BLOCK) : BuiltInRegistries.BLOCK.asLookup();
             mimicState = NbtUtils.readBlockState(holdergetter, pTag.getCompound("mimic_state"));

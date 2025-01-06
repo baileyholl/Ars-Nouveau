@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 import com.hollingsworth.arsnouveau.setup.config.Config;
-
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -16,8 +15,9 @@ import net.minecraft.client.renderer.texture.TextureManager;
 
 public class ParticleRenderTypes {
     static final ParticleRenderType EMBER_RENDER = new ParticleRenderType() {
+
         @Override
-        public void begin(BufferBuilder buffer, TextureManager textureManager) {
+        public BufferBuilder begin(Tesselator buffer, TextureManager textureManager) {
             Minecraft.getInstance().gameRenderer.lightTexture().turnOnLightLayer();
             if(Config.DISABLE_TRANSLUCENT_PARTICLES.get()) {
                 RenderSystem.disableBlend();
@@ -32,12 +32,7 @@ public class ParticleRenderTypes {
             RenderSystem.enableCull();
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
             RenderSystem.enableDepthTest();
-            buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
-        }
-
-        @Override
-        public void end(Tesselator tessellator) {
-            tessellator.end();
+            return buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
         }
 
         @Override
@@ -47,8 +42,11 @@ public class ParticleRenderTypes {
     };
 
     static final ParticleRenderType EMBER_RENDER_NO_MASK = new ParticleRenderType() {
+
+
+
         @Override
-        public void begin(BufferBuilder buffer, TextureManager textureManager) {
+        public BufferBuilder begin(Tesselator buffer, TextureManager textureManager) {
             if(Config.DISABLE_TRANSLUCENT_PARTICLES.get()) {
                 RenderSystem.disableBlend();
                 RenderSystem.depthMask(true);
@@ -62,14 +60,16 @@ public class ParticleRenderTypes {
             RenderSystem.enableCull();
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
             RenderSystem.disableDepthTest();
-            buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+            return buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
         }
 
-        @Override
-        public void end(Tesselator tessellator) {
-            tessellator.end();
-            RenderSystem.enableDepthTest();
-        }
+        //TODO: fix scry particles
+
+//        @Override
+//        public void end(Tesselator tessellator) {
+//            tessellator.end();
+//            RenderSystem.enableDepthTest();
+//        }
 
         @Override
         public String toString() {

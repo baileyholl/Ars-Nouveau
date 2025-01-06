@@ -12,7 +12,4 @@ public interface StructureTemplateAccessor {
     @Accessor("entityInfoList")
     List<StructureTemplate.StructureEntityInfo> getEntityInfoList();
 
-    @Accessor
-    List<StructureTemplate.Palette> getPalettes();
-
 }

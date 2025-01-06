@@ -16,9 +16,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.ForgeHooksClient;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.ClientHooks;
 import org.joml.Matrix4f;
 
 @OnlyIn(Dist.CLIENT)
@@ -30,7 +30,7 @@ public class SkyBlockRenderer<T extends SkyBlockTile> implements BlockEntityRend
     }
 
     public void render(SkyBlockTile tileEntityIn, float partialTicks, PoseStack pPoseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
-        if(tileEntityIn.showFacade() || Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasEffect(ModPotions.MAGIC_FIND_EFFECT.get())){
+        if(tileEntityIn.showFacade() || Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasEffect(ModPotions.MAGIC_FIND_EFFECT)){
             BlockState renderState = tileEntityIn.mimicState;
             if (renderState == null)
                 return;
@@ -55,15 +55,15 @@ public class SkyBlockRenderer<T extends SkyBlockTile> implements BlockEntityRend
 
     private void renderFace(SkyBlockTile tileEntityIn, Matrix4f matrix, VertexConsumer buffer, float f, float g, float h, float i, float j, float k, float l, float m, Direction direction) {
       //  if (tileEntityIn.shouldRenderFace(direction)) {
-            buffer.vertex(matrix, f, h, j).endVertex();
-            buffer.vertex(matrix, g, h, k).endVertex();
-            buffer.vertex(matrix, g, i, l).endVertex();
-            buffer.vertex(matrix, f, i, m).endVertex();
+            buffer.addVertex(matrix, f, h, j);
+            buffer.addVertex(matrix, g, h, k);
+            buffer.addVertex(matrix, g, i, l);
+            buffer.addVertex(matrix, f, i, m);
      //   }
     }
 
     private void renderBlock(BlockPos pPos, BlockState pState, PoseStack pPoseStack, MultiBufferSource pBufferSource, Level pLevel, boolean pExtended, int pPackedOverlay) {
-        ForgeHooksClient.renderPistonMovedBlocks(pPos, pState, pPoseStack, pBufferSource, pLevel, pExtended, pPackedOverlay, blockRenderer == null ? blockRenderer = net.minecraft.client.Minecraft.getInstance().getBlockRenderer() : blockRenderer);
+        ClientHooks.renderPistonMovedBlocks(pPos, pState, pPoseStack, pBufferSource, pLevel, pExtended, pPackedOverlay, blockRenderer == null ? blockRenderer = net.minecraft.client.Minecraft.getInstance().getBlockRenderer() : blockRenderer);
     }
 
 

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "g": {
+      "tag": "c:ingots/gold"
+    },
+    "i": {
+      "item": "minecraft:brewing_stand"
+    },
+    "s": {
+      "tag": "c:gems/source"
+    }
+  },
+  "pattern": [
+    " s ",
+    "gig",
+    " s "
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:alchemical_sourcelink"
+  }
+}

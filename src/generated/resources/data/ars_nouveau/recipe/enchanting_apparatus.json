@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "d": {
+      "tag": "c:gems/diamond"
+    },
+    "g": {
+      "tag": "c:ingots/gold"
+    },
+    "n": {
+      "tag": "c:nuggets/gold"
+    },
+    "s": {
+      "item": "ars_nouveau:sourcestone"
+    }
+  },
+  "pattern": [
+    "nsn",
+    "gdg",
+    "nsn"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:enchanting_apparatus"
+  }
+}

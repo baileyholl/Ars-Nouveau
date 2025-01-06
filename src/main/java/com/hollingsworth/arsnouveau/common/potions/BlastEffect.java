@@ -12,8 +12,9 @@ public class BlastEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
+    public boolean applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
         explode(pLivingEntity, pAmplifier);
+        return true;
     }
 
     public static void explode(LivingEntity pLivingEntity, int pAmplifier) {
@@ -21,7 +22,7 @@ public class BlastEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int pDuration, int pAmplifier) {
+    public boolean shouldApplyEffectTickThisTick(int pDuration, int pAmplifier) {
         return pDuration == 1;
     }
 }

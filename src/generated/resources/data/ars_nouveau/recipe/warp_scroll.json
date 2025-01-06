@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "c:gems/lapis"
+    },
+    {
+      "tag": "c:gems/lapis"
+    },
+    {
+      "tag": "c:gems/lapis"
+    },
+    {
+      "tag": "c:gems/lapis"
+    },
+    {
+      "item": "ars_nouveau:blank_parchment"
+    },
+    {
+      "tag": "c:gems/source"
+    },
+    {
+      "tag": "c:gems/source"
+    },
+    {
+      "tag": "c:gems/source"
+    },
+    {
+      "tag": "c:gems/source"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:warp_scroll"
+  }
+}

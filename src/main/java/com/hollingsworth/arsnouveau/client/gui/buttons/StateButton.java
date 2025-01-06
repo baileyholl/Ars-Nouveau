@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class StateButton extends ANButton{
@@ -17,7 +18,7 @@ public class StateButton extends ANButton{
     public int imageWidth;
     public int imageHeight;
     public StateButton(int x, int y, int width, int height, int imageWidth, int imageHeight, int tile, ResourceLocation texture, OnPress pressable) {
-        super(x, y, width, height, null, pressable);
+        super(x, y, width, height, Component.empty(), pressable);
         this.tile = tile;
         this.texture = texture;
         this.imageWidth = imageWidth;
@@ -36,7 +37,6 @@ public class StateButton extends ANButton{
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, texture);
             this.isHovered = mouseX >= x && mouseY >= y && mouseX < x + this.width && mouseY < y + this.height;
-            //int i = this.getYImage(this.isHovered);
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);

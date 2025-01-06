@@ -1,0 +1,27 @@
+{
+  "parent": "ars_nouveau:mob_jar",
+  "criteria": {
+    "shrunk_starbuncle": {
+      "trigger": "ars_nouveau:shrunk_starby"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.shrunk_starbuncle"
+    },
+    "frame": "challenge",
+    "hidden": true,
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:starbuncle_charm"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.shrunk_starbuncle"
+    }
+  },
+  "requirements": [
+    [
+      "shrunk_starbuncle"
+    ]
+  ]
+}

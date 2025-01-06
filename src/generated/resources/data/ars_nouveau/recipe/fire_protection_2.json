@@ -1,0 +1,23 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:fire_protection",
+  "level": 2,
+  "pedestalItems": [
+    {
+      "item": "ars_nouveau:fire_essence"
+    },
+    {
+      "item": "ars_nouveau:fire_essence"
+    },
+    {
+      "item": "ars_nouveau:abjuration_essence"
+    },
+    {
+      "tag": "c:storage_blocks/source"
+    },
+    {
+      "tag": "c:storage_blocks/source"
+    }
+  ],
+  "sourceCost": 3500
+}

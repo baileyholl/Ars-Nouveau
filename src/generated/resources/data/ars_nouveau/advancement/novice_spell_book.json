@@ -1,0 +1,32 @@
+{
+  "parent": "ars_nouveau:root",
+  "criteria": {
+    "has_novice_spell_book": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ars_nouveau:novice_spell_book"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.novice_spell_book"
+    },
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:novice_spell_book"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.novice_spell_book"
+    }
+  },
+  "requirements": [
+    [
+      "has_novice_spell_book"
+    ]
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "category": "ars_nouveau:automation",
+  "icon": "ars_nouveau:archwood_grate",
+  "name": "block.ars_nouveau.archwood_grate",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.archwood_grate"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:archwood_grate",
+      "recipe2": "ars_nouveau:gold_grate"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:smooth_sourcestone_grate",
+      "recipe2": "ars_nouveau:sourcestone_grate"
+    }
+  ]
+}

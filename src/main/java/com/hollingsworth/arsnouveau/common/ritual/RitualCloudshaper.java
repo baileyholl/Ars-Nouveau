@@ -80,6 +80,6 @@ public class RitualCloudshaper extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, RitualLib.CLOUDSHAPER);
+        return ArsNouveau.prefix( RitualLib.CLOUDSHAPER);
     }
 }

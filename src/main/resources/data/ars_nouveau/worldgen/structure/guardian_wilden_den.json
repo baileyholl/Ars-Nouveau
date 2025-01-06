@@ -3,7 +3,7 @@
   "start_pool": "ars_nouveau:wilden_den_top_guardian",
   "size": 3,
   "max_distance_from_center": 80,
-  "biomes": "#forge:is_coniferous",
+  "biomes": "#c:is_taiga",
   "step": "surface_structures",
   "terrain_adaptation": "beard_thin",
   "use_expansion_hack": false,

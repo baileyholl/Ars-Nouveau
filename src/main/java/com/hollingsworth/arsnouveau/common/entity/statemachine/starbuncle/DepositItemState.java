@@ -11,8 +11,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class DepositItemState extends TravelToPosState {
     public DepositItemState(Starbuncle starbuncle, StarbyTransportBehavior behavior, BlockPos target) {
@@ -30,7 +30,7 @@ public class DepositItemState extends TravelToPosState {
             return nextState;
         }
 
-        IItemHandler iItemHandler = behavior.getItemCapFromTile(tileEntity, behavior.TO_DIRECTION_MAP.get(targetPos.hashCode()));
+        IItemHandler iItemHandler = behavior.getItemCapFromTile(targetPos, behavior.TO_DIRECTION_MAP.get(targetPos.hashCode()));
         if (iItemHandler == null) {
             starbuncle.addGoalDebug(this, new DebugEvent("NoItemHandler", "No item handler at " + targetPos.toString()));
             return nextState;

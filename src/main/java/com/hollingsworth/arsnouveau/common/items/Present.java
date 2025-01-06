@@ -1,12 +1,10 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootEnhancerModifier;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
-import com.hollingsworth.arsnouveau.api.nbt.ItemstackData;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
-import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
+import com.hollingsworth.arsnouveau.common.items.data.PresentData;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -17,10 +15,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 public class Present extends ModItem{
 
@@ -29,23 +27,23 @@ public class Present extends ModItem{
     }
 
     @Override
-    public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
+    public void inventoryTick(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull Entity pEntity, int pSlotId, boolean pIsSelected) {
         super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
         if(pLevel.isClientSide)
             return;
-        PresentData data = new PresentData(pStack);
-        if(data.uuid == null && pEntity instanceof Player player){
-            data.setName(player.getName().getString());
-            data.setUUID(player.getUUID());
+        if(pEntity instanceof Player player && !pStack.has(DataComponentRegistry.PRESENT)){
+            pStack.set(DataComponentRegistry.PRESENT, new PresentData(player.getName().getString(), Optional.of(player.getUUID())));
         }
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand) {
         if(pLevel.isClientSide)
             return super.use(pLevel, pPlayer, pUsedHand);
-        PresentData presentData = new PresentData(pPlayer.getItemInHand(pUsedHand));
-        int bonusRolls = presentData.uuid != null && !presentData.uuid.equals(pPlayer.getUUID()) ? 2 : 0;
+        PresentData presentData = pPlayer.getItemInHand(pUsedHand).get(DataComponentRegistry.PRESENT);
+        if(presentData == null)
+            return super.use(pLevel, pPlayer, pUsedHand);
+        int bonusRolls = presentData.uuid().isPresent() && !presentData.uuid().get().equals(pPlayer.getUUID()) ? 2 : 0;
         DungeonLootEnhancerModifier modifier = new DungeonLootEnhancerModifier(new LootItemCondition[]{},
                 0.5, 0.2, 0.1,3 + bonusRolls, 1 + bonusRolls, 1 + bonusRolls);
         List<ItemStack> stacks = DungeonLootTables.getRandomRoll(modifier);
@@ -63,54 +61,9 @@ public class Present extends ModItem{
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip2, flagIn);
-        PresentData data = new PresentData(stack);
-        if(data.uuid != null){
-            if(data.uuid.equals(ArsNouveau.proxy.getPlayer().getUUID())){
-                tooltip2.add(Component.translatable("ars_nouveau.present.give"));
-            }else {
-                tooltip2.add(Component.translatable("ars_nouveau.present.from", data.name).withStyle(ChatFormatting.GOLD));
-            }
-        }
-    }
-
-    public static class PresentData extends ItemstackData{
-        String name;
-        UUID uuid;
-
-        public PresentData(ItemStack stack) {
-            super(stack);
-            CompoundTag tag = getItemTag(stack);
-            if(tag == null)
-                return;
-            this.name = tag.getString("name");
-            if(tag.contains("uuid"))
-                this.uuid = tag.getUUID("uuid");
-        }
-
-        public void setName(String name){
-            this.name = name;
-            writeItem();
-        }
-
-        public void setUUID(UUID uuid){
-            this.uuid = uuid;
-            writeItem();
-        }
-
-
-        @Override
-        public void writeToNBT(CompoundTag tag) {
-            if(name != null)
-                tag.putString("name", name);
-            if(uuid != null)
-                tag.putUUID("uuid", uuid);
-        }
-
-        @Override
-        public String getTagString() {
-            return "an_present_data";
-        }
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip2, flagIn);
+        PresentData data = stack.get(DataComponentRegistry.PRESENT);
+        stack.addToTooltip(DataComponentRegistry.PRESENT, context, tooltip2::add, flagIn);
     }
 }

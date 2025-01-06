@@ -2,16 +2,18 @@ package com.hollingsworth.arsnouveau.common.camera;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.util.ClientCameraUtil;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.neoforged.neoforge.client.event.RenderHandEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
-@Mod.EventBusSubscriber(modid = ArsNouveau.MODID, value = Dist.CLIENT)
+
+@EventBusSubscriber(modid = ArsNouveau.MODID, value = Dist.CLIENT)
 public class ClientCameraEvents {
 
     @SubscribeEvent
@@ -28,13 +30,14 @@ public class ClientCameraEvents {
         }
     }
 
+    public static final  ResourceLocation[] overlays = new ResourceLocation[]{VanillaGuiLayers.JUMP_METER, VanillaGuiLayers.EXPERIENCE_BAR, VanillaGuiLayers.EFFECTS};
+
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
-    public static void onGuiOpen(RenderGuiOverlayEvent.Pre event) {
-        VanillaGuiOverlay[] overlays = new VanillaGuiOverlay[]{VanillaGuiOverlay.JUMP_BAR,VanillaGuiOverlay.EXPERIENCE_BAR, VanillaGuiOverlay.POTION_ICONS};
+    public static void onGuiOpen(RenderGuiLayerEvent.Pre event) {
         if(ClientCameraUtil.isPlayerMountedOnCamera()){
-            for(VanillaGuiOverlay overlay : overlays){
-                if(event.getOverlay() == overlay.type()){
+            for(ResourceLocation overlay : overlays){
+                if(event.getName().equals(overlay)){
                     event.setCanceled(true);
                 }
             }

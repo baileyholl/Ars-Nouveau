@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "x": {
+      "tag": "c:gems/source"
+    },
+    "y": {
+      "tag": "c:ingots/gold"
+    },
+    "z": {
+      "tag": "c:storage_blocks/redstone"
+    }
+  },
+  "pattern": [
+    "xxx",
+    "xzy",
+    "yyy"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:basic_spell_turret"
+  }
+}

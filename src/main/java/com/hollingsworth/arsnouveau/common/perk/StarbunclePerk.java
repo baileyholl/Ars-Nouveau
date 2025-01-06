@@ -1,32 +1,28 @@
 package com.hollingsworth.arsnouveau.common.perk;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.Perk;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
 public class StarbunclePerk extends Perk {
 
-    public static final StarbunclePerk INSTANCE = new StarbunclePerk(new ResourceLocation(ArsNouveau.MODID, "thread_starbuncle"));
+    public static final StarbunclePerk INSTANCE = new StarbunclePerk(ArsNouveau.prefix( "thread_starbuncle"));
     public static final UUID PERK_SPEED_UUID = UUID.fromString("46937d0b-123c-4786-95b5-748afd50f398");
 
     protected StarbunclePerk(ResourceLocation key) {
         super(key);
     }
 
-    @Override
-    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int slotValue) {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> modifiers = new ImmutableMultimap.Builder<>();
-        modifiers.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(PERK_SPEED_UUID, "StarbunclePerk", 0.2 * slotValue, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        return modifiers.build();
+    public @NotNull ItemAttributeModifiers applyAttributeModifiers(ItemAttributeModifiers modifiers, ItemStack stack, int slotValue, EquipmentSlotGroup equipmentSlotGroup) {
+        return modifiers.withModifierAdded(Attributes.MOVEMENT_SPEED, new AttributeModifier(INSTANCE.getRegistryName(), 0.2 * slotValue, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL), equipmentSlotGroup);
     }
 
     @Override

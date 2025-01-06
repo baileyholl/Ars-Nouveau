@@ -1,0 +1,32 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:depth_strider",
+  "level": 3,
+  "pedestalItems": [
+    {
+      "item": "ars_nouveau:water_essence"
+    },
+    {
+      "item": "ars_nouveau:water_essence"
+    },
+    {
+      "item": "ars_nouveau:water_essence"
+    },
+    {
+      "item": "ars_nouveau:water_essence"
+    },
+    {
+      "tag": "c:storage_blocks/source"
+    },
+    {
+      "tag": "c:storage_blocks/source"
+    },
+    {
+      "tag": "c:storage_blocks/source"
+    },
+    {
+      "item": "minecraft:nautilus_shell"
+    }
+  ],
+  "sourceCost": 9000
+}

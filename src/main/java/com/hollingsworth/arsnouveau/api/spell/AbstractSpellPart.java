@@ -1,21 +1,49 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.util.SpellPartConfigUtil;
+import com.mojang.serialization.Codec;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart> {
+    public static final Codec<AbstractSpellPart> CODEC = ResourceLocation.CODEC.xmap(GlyphRegistry::getSpellPart, AbstractSpellPart::getRegistryName);
+    public static final StreamCodec<RegistryFriendlyByteBuf, AbstractSpellPart> STREAM = StreamCodec.of(
+            (buf, val) -> buf.writeResourceLocation(val.getRegistryName()),
+            buf -> GlyphRegistry.getSpellPart(buf.readResourceLocation())
+    );
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, List<AbstractSpellPart>> STREAM_LIST = StreamCodec.of(
+            (buf, val) -> {
+                buf.writeInt(val.size());
+                for (AbstractSpellPart part : val) {
+                    AbstractSpellPart.STREAM.encode(buf, part);
+                }
+            },
+            buf -> {
+                int size = buf.readInt();
+                List<AbstractSpellPart> parts = new CopyOnWriteArrayList<>();
+                for (int i = 0; i < size; i++) {
+                    parts.add(AbstractSpellPart.STREAM.decode(buf));
+                }
+                return parts;
+            }
+    );
 
     private final ResourceLocation registryName;
     public String name;
@@ -42,13 +70,15 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
      */
     public Set<AbstractAugment> compatibleAugments = ConcurrentHashMap.newKeySet();
 
+    public Map<AbstractAugment, Component> augmentDescriptions = new ConcurrentHashMap<>();
+
     /**
      * A wrapper for the list of glyphs that cannot be used with this glyph. Parsed from configs.
      */
     public SpellPartConfigUtil.ComboLimits invalidCombinations = new SpellPartConfigUtil.ComboLimits(null);
 
     public AbstractSpellPart(String registryName, String name) {
-        this(new ResourceLocation(ArsNouveau.MODID, registryName), name);
+        this(ArsNouveau.prefix( registryName), name);
     }
 
     public AbstractSpellPart(ResourceLocation registryName, String name) {
@@ -59,6 +89,18 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
             spellSchools.add(spellSchool);
         }
         compatibleAugments.addAll(getCompatibleAugments());
+        Map<AbstractAugment, String> map = new ConcurrentHashMap<>();
+        this.addAugmentDescriptions(map);
+        for(AbstractAugment augment :  map.keySet()){
+            augmentDescriptions.put(augment, Component.translatable("ars_nouveau.augment_desc." + registryName.getPath() + "_" + augment.getRegistryName().getPath()));
+        }
+        if(!FMLEnvironment.production){
+            for(AbstractAugment augment : compatibleAugments){
+                if(!augmentDescriptions.containsKey(augment)){
+                    ArsNouveau.postLoadWarnings.add("Glyph " + registryName + " is missing a description for augment " + augment.getRegistryName());
+                }
+            }
+        }
     }
 
     public void onContextCanceled(SpellContext context) {
@@ -118,7 +160,18 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
      * @see AbstractSpellPart#augmentSetOf(AbstractAugment...) for easy syntax to make the Set.
      * This should not be accessed directly, but can be overridden.
      */
-    protected abstract@NotNull Set<AbstractAugment> getCompatibleAugments();
+    protected abstract @NotNull Set<AbstractAugment> getCompatibleAugments();
+
+    /**
+     * Return the Augment -> string mappings used for datagen.
+     */
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map){
+
+    }
+
+    public Component getAugmentLangKey(AbstractAugment augment){
+        return Component.translatable("ars_nouveau.augment_desc." + registryName.getPath() + "_" + augment.getRegistryName().getPath());
+    }
 
     /**
      * Syntax support to easily make a set for {@link AbstractSpellPart#getCompatibleAugments()}
@@ -149,15 +202,15 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         return Component.translatable(getRegistryName().getNamespace() + ".glyph_desc." + getRegistryName().getPath());
     }
 
-    public @Nullable ForgeConfigSpec CONFIG;
-    public @Nullable ForgeConfigSpec.IntValue COST;
-    public @Nullable ForgeConfigSpec.BooleanValue ENABLED;
-    public @Nullable ForgeConfigSpec.BooleanValue STARTER_SPELL;
-    public @Nullable ForgeConfigSpec.IntValue PER_SPELL_LIMIT;
-    public @Nullable ForgeConfigSpec.IntValue GLYPH_TIER;
+    public @Nullable ModConfigSpec CONFIG;
+    public @Nullable ModConfigSpec.IntValue COST;
+    public @Nullable ModConfigSpec.BooleanValue ENABLED;
+    public @Nullable ModConfigSpec.BooleanValue STARTER_SPELL;
+    public @Nullable ModConfigSpec.IntValue PER_SPELL_LIMIT;
+    public @Nullable ModConfigSpec.IntValue GLYPH_TIER;
 
 
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         builder.comment("General settings").push("general");
         ENABLED = builder.comment("Is Enabled?").define("enabled", true);
         COST = builder.comment("Cost").defineInRange("cost", getDefaultManaCost(), Integer.MIN_VALUE, Integer.MAX_VALUE);
@@ -198,17 +251,17 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     /**
      * Registers the glyph_limits configuration entry for augmentation limits.
      */
-    protected void buildAugmentLimitsConfig(ForgeConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
+    protected void buildAugmentLimitsConfig(ModConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
         this.augmentLimits = SpellPartConfigUtil.buildAugmentLimitsConfig(builder, defaults);
     }
 
-    protected void buildAugmentCostOverrideConfig(ForgeConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
+    protected void buildAugmentCostOverrideConfig(ModConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
         this.augmentCosts = SpellPartConfigUtil.buildAugmentCosts(builder, defaults);
     }
     /**
      * Registers the glyph_limits configuration entry for combo limits.
      */
-    protected void buildInvalidCombosConfig(ForgeConfigSpec.Builder builder, Set<ResourceLocation> defaults) {
+    protected void buildInvalidCombosConfig(ModConfigSpec.Builder builder, Set<ResourceLocation> defaults) {
         this.invalidCombinations = SpellPartConfigUtil.buildInvalidCombosConfig(builder, defaults);
     }
 
@@ -253,5 +306,18 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
 
     public String getLocaleName() {
         return Component.translatable(getLocalizationKey()).getString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AbstractSpellPart that = (AbstractSpellPart) o;
+        return Objects.equals(registryName, that.registryName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(registryName);
     }
 }

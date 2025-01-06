@@ -13,12 +13,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.util.RenderUtils;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.util.RenderUtil;
 
 
-public class BookwyrmRenderer extends TextureVariantRenderer<EntityBookwyrm> {
+public class BookwyrmRenderer extends GeoEntityRenderer<EntityBookwyrm> {
 
-    public static ResourceLocation BLUE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_blue.png");
+    public static ResourceLocation BLUE = ArsNouveau.prefix( "textures/entity/book_wyrm_blue.png");
 
     public BookwyrmRenderer(EntityRendererProvider.Context manager) {
         super(manager, new BookwyrmModel<>());
@@ -26,18 +27,17 @@ public class BookwyrmRenderer extends TextureVariantRenderer<EntityBookwyrm> {
 
 
     @Override
-    public void renderRecursively(PoseStack stack, EntityBookwyrm animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferIn, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderRecursively(PoseStack stack, EntityBookwyrm animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferIn, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
         if (bone.getName().equals("item")) {
             stack.pushPose();
-            RenderUtils.translateToPivotPoint(stack, bone);
+            RenderUtil.translateToPivotPoint(stack, bone);
             stack.translate(0, -0.10, 0);
             stack.scale(0.75f, 0.75f, 0.75f);
             ItemStack itemstack = animatable.getHeldStack();
             Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.GROUND, packedLight, OverlayTexture.NO_OVERLAY, stack, bufferIn,  animatable.level, (int) animatable.getOnPos().asLong());
             stack.popPose();
-//            buffer = bufferIn.getBuffer(RenderType.entityCutoutNoCull(text));
         }
-        super.renderRecursively(stack, animatable, bone, renderType, bufferIn, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        super.renderRecursively(stack, animatable, bone, renderType, bufferIn, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
     }
 
     @Override
@@ -48,4 +48,8 @@ public class BookwyrmRenderer extends TextureVariantRenderer<EntityBookwyrm> {
         stack.popPose();
     }
 
+    @Override
+    public ResourceLocation getTextureLocation(EntityBookwyrm animatable) {
+        return animatable.getTexture();
+    }
 }

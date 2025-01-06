@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "g": {
+      "tag": "c:ingots/gold"
+    },
+    "n": {
+      "tag": "c:storage_blocks/quartz"
+    },
+    "x": {
+      "item": "ars_nouveau:archwood_planks"
+    }
+  },
+  "pattern": [
+    "gxg",
+    "xnx",
+    "gxg"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:spell_prism"
+  }
+}

@@ -6,12 +6,13 @@ import com.hollingsworth.arsnouveau.api.item.inv.SlotReference;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.common.block.tile.PortalTile;
-import com.hollingsworth.arsnouveau.common.items.WarpScroll;
+import com.hollingsworth.arsnouveau.common.items.data.WarpScrollData;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketWarpPosition;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -25,11 +26,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Set;
 
 public class EffectBlink extends AbstractEffect {
@@ -42,6 +45,9 @@ public class EffectBlink extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Vec3 vec = safelyGetHitPos(rayTraceResult);
+        if(rayTraceResult.getEntity().getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED)){
+            return;
+        }
         double distance = GENERIC_INT.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
 
         if (spellContext.getCaster() instanceof TileCaster) {
@@ -49,8 +55,8 @@ public class EffectBlink extends AbstractEffect {
             SlotReference reference = manager.findItem(i -> (i.getItem() == ItemsRegistry.WARP_SCROLL.asItem() || i.getItem() == ItemsRegistry.STABLE_WARP_SCROLL.asItem()), InteractType.EXTRACT);
             if (!reference.isEmpty()) {
                 ItemStack stack = reference.getHandler().getStackInSlot(reference.getSlot());
-                WarpScroll.WarpScrollData data = WarpScroll.WarpScrollData.get(stack);
-                if (data.isValid() && data.canTeleportWithDim(world)) {
+                WarpScrollData data = stack.get(DataComponentRegistry.WARP_SCROLL);
+                if (data != null && data.isValid() && data.canTeleportWithDim(world)) {
                     warpEntity(rayTraceResult.getEntity(), data);
                     return;
                 }
@@ -63,11 +69,9 @@ public class EffectBlink extends AbstractEffect {
         }
 
         if (isRealPlayer(shooter)) {
-            WarpScroll.WarpScrollData scrollData = WarpScroll.WarpScrollData.get(shooter.getOffhandItem());
-            if (scrollData.isValid()) {
-                if (scrollData.isValid() && scrollData.canTeleportWithDim(world)) {
-                    warpEntity(rayTraceResult.getEntity(), scrollData);
-                }
+            WarpScrollData scrollData = shooter.getOffhandItem().get(DataComponentRegistry.WARP_SCROLL);
+            if (scrollData != null && scrollData.isValid() && scrollData.canTeleportWithDim(world)) {
+                warpEntity(rayTraceResult.getEntity(), scrollData);
             } else {
                 shooter.teleportTo(vec.x(), vec.y(), vec.z());
             }
@@ -76,17 +80,18 @@ public class EffectBlink extends AbstractEffect {
         }
     }
 
-    public static void warpEntity(Entity entity, WarpScroll.WarpScrollData warpScrollData){
+    public static void warpEntity(Entity entity, WarpScrollData warpScrollData){
         if (entity == null) return;
-
+        var pos = warpScrollData.pos().get();
         if (entity instanceof LivingEntity living){
-            Event event = ForgeEventFactory.onEnderTeleport(living, warpScrollData.getPos().getX(),  warpScrollData.getPos().getY(),  warpScrollData.getPos().getZ());
+
+            EntityTeleportEvent. EnderEntity event = EventHooks.onEnderTeleport(living, pos.getX(),  pos.getY(),  pos.getZ());
             if (event.isCanceled()) return;
         }
-        ServerLevel dimension = PortalTile.getServerLevel(warpScrollData.getDimension(), (ServerLevel) entity.level);
+        ServerLevel dimension = PortalTile.getServerLevel(warpScrollData.dimension(), (ServerLevel) entity.level);
         if(dimension == null)
             return;
-        PortalTile.teleportEntityTo(entity, dimension, warpScrollData.getPos(), warpScrollData.getRotation());
+        PortalTile.teleportEntityTo(entity, dimension, pos, warpScrollData.rotation());
 
     }
 
@@ -94,14 +99,14 @@ public class EffectBlink extends AbstractEffect {
         if (entity == null) return;
         Level world = entity.level;
         if (entity instanceof LivingEntity living){
-            Event event = ForgeEventFactory.onEnderTeleport(living, warpPos.getX(), warpPos.getY(), warpPos.getZ());
+            EntityTeleportEvent.EnderEntity event = EventHooks.onEnderTeleport(living, warpPos.getX(), warpPos.getY(), warpPos.getZ());
             if (event.isCanceled()) return;
         }
         ((ServerLevel) entity.level).sendParticles(ParticleTypes.PORTAL, entity.getX(), entity.getY() + 1, entity.getZ(),
                 4, (world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
 
         entity.teleportTo(warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + 0.5);
-        Networking.sendToNearby(world, entity, new PacketWarpPosition(entity.getId(), entity.getX(), entity.getY(), entity.getZ(), entity.getXRot(), entity.getYRot()));
+        Networking.sendToNearbyClient(world, entity, new PacketWarpPosition(entity.getId(), entity.getX(), entity.getY(), entity.getZ(), entity.getXRot(), entity.getYRot()));
         entity.level.playSound(null, entity.blockPosition(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1.0f, 1.0f);
         ((ServerLevel) entity.level).sendParticles(ParticleTypes.PORTAL, entity.blockPosition().getX() + 0.5, entity.blockPosition().getY() + 1.0, entity.blockPosition().getZ() + 0.5,
                 4, (world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
@@ -149,7 +154,7 @@ public class EffectBlink extends AbstractEffect {
     }
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addGenericInt(builder, 8, "Base teleport distance", "distance");
         addAmpConfig(builder, 3.0);
@@ -176,6 +181,13 @@ public class EffectBlink extends AbstractEffect {
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE);
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentAmplify.INSTANCE, "Increases the distance of the teleport.");
+        map.put(AugmentDampen.INSTANCE, "Decreases the distance of the teleport.");
     }
 
     @Override

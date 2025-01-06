@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "com.hollingsworth.arsnouveau.common.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "refmap": "ars_nouveau.refmap.json",
   "plugin": "com.hollingsworth.arsnouveau.common.mixin.MixinPlugin",
   "client": [
@@ -17,8 +17,10 @@
     "light.LightEntityMixin"
   ],
   "mixins": [
-    "CrossbowMixin",
+    "BlockBehaviourAccessor",
+    "BrushableBlockEntityAccessor",
     "DamageSourceMixin",
+    "EntityMixin",
     "LivingAccessor",
     "MobAccessor",
     "PatrolSpawnerMixin",
@@ -32,6 +34,8 @@
     "elytra.MixinLivingEntity",
     "jar.DispenserMixin",
     "jar.MobAccessorMixin",
+    "looting.EnchantedCountIncreaseFunctionMixin",
+    "looting.LootItemRandomChanceWithEnchantedBonusConditionMixin",
     "perks.PerkLivingEntity",
     "redstone.RedstoneLevelMixin",
     "rewind.RewindEntityMixin",

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -7,14 +8,16 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GlyphRecipeTooltip implements ClientTooltipComponent {
-    public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/gui/container/bundle.png");
+
+    public static final ResourceLocation TEXTURE_LOCATION = ArsNouveau.prefix("textures/gui/bundle.png");
     private static final int MARGIN_Y = 4;
     private static final int BORDER_WIDTH = 1;
     private static final int TEX_SIZE = 128;
@@ -31,12 +34,12 @@ public class GlyphRecipeTooltip implements ClientTooltipComponent {
         return this.gridSizeY() * SLOT_SIZE_Y + 2 + MARGIN_Y;
     }
 
-    public int getWidth(Font pFont) {
+    public int getWidth(@NotNull Font pFont) {
         return this.gridSizeX() * SLOT_SIZE_X + 2;
     }
 
 
-    public void renderImage(Font pFont, int pMouseX, int pMouseY, GuiGraphics graphics) {
+    public void renderImage(@NotNull Font pFont, int pMouseX, int pMouseY, @NotNull GuiGraphics graphics) {
         if (this.items.isEmpty())
             return;
         int i = this.gridSizeX();
@@ -90,7 +93,7 @@ public class GlyphRecipeTooltip implements ClientTooltipComponent {
     }
 
     private int gridSizeX() {
-        return this.items.size() == 0 ? 0 : Math.min(3, this.items.size());
+        return this.items.isEmpty() ? 0 : Math.min(3, this.items.size());
     }
 
     private int gridSizeY() {

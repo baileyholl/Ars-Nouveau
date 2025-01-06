@@ -1,0 +1,25 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": {
+    "b": 255,
+    "g": 255,
+    "id": "ars_nouveau:constant",
+    "r": 25
+  },
+  "flavour_text": "Light up the sky",
+  "name": "Xacris's Firework Display",
+  "sound": {},
+  "spell": [
+    "ars_nouveau:glyph_projectile",
+    "ars_nouveau:glyph_wall",
+    "ars_nouveau:glyph_sensitive",
+    "ars_nouveau:glyph_aoe",
+    "ars_nouveau:glyph_firework",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_amplify"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

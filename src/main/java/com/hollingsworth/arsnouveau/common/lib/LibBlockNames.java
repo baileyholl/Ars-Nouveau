@@ -80,6 +80,12 @@ public class LibBlockNames {
     public final static String SOURCESTONE_SCONCE = "sourcestone_sconce";
     public final static String POLISHED_SCONCE = "polished_sconce";
     public final static String ARCHWOOD_SCONCE = "archwood_sconce";
+    public final static String SOURCESTONE_GRATE = "sourcestone_grate";
+    public final static String SMOOTH_SOURCESTONE_GRATE = "smooth_sourcestone_grate";
+    public final static String GOLD_GRATE = "gold_grate";
+    public final static String ARCHWOOD_GRATE = "archwood_grate";
+    public final static String SOURCE_LAMP = "source_lamp";
+
     public static final String SOURCESTONE = "sourcestone";
     public static final String SOURCESTONE_MOSAIC = "sourcestone_mosaic";
     public static final String SOURCESTONE_BASKET = "sourcestone_basketweave";
@@ -165,6 +171,9 @@ public class LibBlockNames {
     public static final String REDSTONE_RELAY = "redstone_relay";
     public static final String MAGIC_FIRE = "magic_fire";
     public static final String SOURCEBERRY_SACK = "sourceberry_sack";
+
+    public static final String CRAB_HAT = "alakarkinos_hat";
+
     public static final String[] DECORATIVE_SOURCESTONE = new String[]{
             SOURCESTONE, SOURCESTONE_MOSAIC, SOURCESTONE_BASKET, SOURCESTONE_ALTERNATING, SOURCESTONE_LARGE_BRICKS, SOURCESTONE_SMALL_BRICKS,
             SMOOTH_SOURCESTONE_BASKET, SMOOTH_SOURCESTONE_MOSAIC, SMOOTH_SOURCESTONE_ALTERNATING, SMOOTH_SOURCESTONE_LARGE_BRICKS, SMOOTH_SOURCESTONE, SMOOTH_SOURCESTONE_SMALL_BRICKS,

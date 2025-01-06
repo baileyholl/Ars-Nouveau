@@ -3,14 +3,17 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ColorPos;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
+import com.hollingsworth.arsnouveau.common.items.data.ItemScrollData;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,9 +22,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.wrapper.CombinedInvWrapper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -52,7 +55,7 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
         if(tile == null){
             return;
         }
-        IItemHandler handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+        IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, connectedPos, null);
         if(handler == null){
             return;
         }
@@ -83,7 +86,7 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
                 return stack.getCount();
             }
         }
-        if (!ItemStack.isSameItemSameTags(stack, filterStack)) {
+        if (!ItemStack.isSameItemSameComponents(stack, filterStack)) {
             return 0;
         }
         return (filterStack.isEmpty() && stack.isEmpty()) ? 1 : stack.getCount();
@@ -118,7 +121,7 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
     @Override
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         if(storedPos != null){
-            if(level.getBlockEntity(storedPos) == null || !level.getBlockEntity(storedPos).getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()){
+            if(level.getBlockEntity(storedPos) == null || level.getCapability(Capabilities.ItemHandler.BLOCK, storedPos, null) == null){
                 return;
             }
             if(BlockUtil.distanceFrom(storedPos, worldPosition) > 30){
@@ -148,29 +151,28 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         if(connectedPos != null){
             tag.putLong("connectedPos", connectedPos.asLong());
         }
         tag.putInt("neededCount", neededCount);
         if(!filterStack.isEmpty()){
-            tag.put("filterStack", filterStack.save(new CompoundTag()));
+            tag.put("filterStack", filterStack.save(pRegistries));
         }
         tag.putBoolean("isPowered", isPowered);
         tag.putBoolean("inverted", inverted);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
+    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(pTag, pRegistries);
         if(pTag.contains("connectedPos")){
             connectedPos = BlockPos.of(pTag.getLong("connectedPos"));
         }
         this.neededCount = pTag.getInt("neededCount");
-        if(pTag.contains("filterStack")){
-            filterStack = ItemStack.of(pTag.getCompound("filterStack"));
-        }
+        filterStack = ItemStack.parseOptional(pRegistries, pTag.getCompound("filterStack"));
+
         isPowered = pTag.getBoolean("isPowered");
         inverted = pTag.getBoolean("inverted");
     }
@@ -178,8 +180,8 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
     @Override
     public void getTooltip(List<Component> tooltip) {
         tooltip.add(Component.translatable("ars_nouveau.item_detector.count", (inverted ? "< " : "> ") + neededCount));
-        if(filterStack.getItem() instanceof ItemScroll && filterStack.hasTag()){
-            ItemScroll.ItemScrollData scrollData = new ItemScroll.ItemScrollData(filterStack);
+        if(filterStack.getItem() instanceof ItemScroll){
+            ItemScrollData scrollData =  filterStack.getOrDefault(DataComponentRegistry.ITEM_SCROLL_DATA, new ItemScrollData(List.of()));
             for (ItemStack s : scrollData.getItems()) {
                 tooltip.add(Component.literal(s.getHoverName().getString()).withStyle(ChatFormatting.GOLD));
             }

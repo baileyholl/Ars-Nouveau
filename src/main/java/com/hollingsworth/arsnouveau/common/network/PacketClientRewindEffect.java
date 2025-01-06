@@ -3,24 +3,28 @@ package com.hollingsworth.arsnouveau.common.network;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.common.event.timed.RewindEvent;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.NetworkEvent;
 
-import java.util.function.Supplier;
+public class PacketClientRewindEffect extends AbstractPacket{
 
-public class PacketClientRewindEffect {
+    public static final Type<PacketClientRewindEffect> TYPE = new Type<>(ArsNouveau.prefix("rewind_effect"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketClientRewindEffect> CODEC = StreamCodec.ofMember(PacketClientRewindEffect::toBytes, PacketClientRewindEffect::new);
 
     public int duration;
     public int hitEntityID;
 
-    public PacketClientRewindEffect(FriendlyByteBuf buf) {
+    public PacketClientRewindEffect(RegistryFriendlyByteBuf buf) {
         duration = buf.readInt();
         hitEntityID = buf.readInt();
     }
 
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeInt(duration);
         buf.writeInt(hitEntityID);
     }
@@ -30,14 +34,17 @@ public class PacketClientRewindEffect {
         this.hitEntityID = hitEntity.getId();
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            Level world = ArsNouveau.proxy.getClientWorld();
-            Entity hitEntity = world.getEntity(hitEntityID);
-            if(hitEntity != null) {
-                EventQueue.getClientQueue().addEvent(new RewindEvent(hitEntity, hitEntity.level.getGameTime(), duration));
-            }
-        });
-        ctx.get().setPacketHandled(true);
+    @Override
+    public void onClientReceived(Minecraft minecraft, Player player) {
+        Level world = player.level;
+        Entity hitEntity = world.getEntity(hitEntityID);
+        if(hitEntity != null) {
+            EventQueue.getClientQueue().addEvent(new RewindEvent(hitEntity, hitEntity.level.getGameTime(), duration));
+        }
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

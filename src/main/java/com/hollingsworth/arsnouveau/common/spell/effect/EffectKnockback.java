@@ -1,25 +1,36 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.block.tile.BasicSpellTurretTile;
+import com.hollingsworth.arsnouveau.common.block.tile.RotatingTurretTile;
+import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
 import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
 public class EffectKnockback extends AbstractEffect {
     public static EffectKnockback INSTANCE = new EffectKnockback();
@@ -32,7 +43,7 @@ public class EffectKnockback extends AbstractEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
 
         float strength = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
-        knockback(rayTraceResult.getEntity(), shooter, strength);
+        knockback(rayTraceResult.getEntity(), spellContext.getCaster(), strength);
         rayTraceResult.getEntity().hurtMarked = true;
 
     }
@@ -46,14 +57,23 @@ public class EffectKnockback extends AbstractEffect {
         for (BlockPos p : posList) {
             EnchantedFallingBlock fallingBlock = EnchantedFallingBlock.fall(world, p, shooter, spellContext, resolver, spellStats);
             if (fallingBlock != null) {
-                knockback(fallingBlock, shooter, strength);
+                knockback(fallingBlock, spellContext.getCaster(), strength);
                 ShapersFocus.tryPropagateEntitySpell(fallingBlock, world, shooter, spellContext, resolver);
             }
         }
     }
 
-    public void knockback(Entity target, LivingEntity shooter, float strength) {
-        knockback(target, strength, Mth.sin(shooter.yRot * ((float) Math.PI / 180F)), -Mth.cos(shooter.yRot * ((float) Math.PI / 180F)));
+    public void knockback(Entity target, @NotNull IWrappedCaster shooter, float strength) {
+        float v = 0;
+        if (shooter instanceof TileCaster tc) {
+            BlockEntity tile = tc.getTile();
+            if (tile instanceof RotatingTurretTile rotatingTurretTile) {
+                v = rotatingTurretTile.getRotationY();
+            } else if (tile instanceof BasicSpellTurretTile || tile instanceof RuneTile) {
+                v = tile.getBlockState().getValue(FACING).toYRot();
+            }
+        } else if (shooter instanceof LivingCaster lc) v = lc.livingEntity.yRot;
+        knockback(target, strength, Mth.sin(v * ((float) Math.PI / 180F)), -Mth.cos(v * ((float) Math.PI / 180F)));
     }
 
     public void knockback(Entity entity, double strength, double xRatio, double zRatio) {
@@ -68,7 +88,7 @@ public class EffectKnockback extends AbstractEffect {
     }
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addGenericDouble(builder, 1.5, "Base knockback value", "base_value");
         addAmpConfig(builder, 1);
@@ -79,10 +99,25 @@ public class EffectKnockback extends AbstractEffect {
         return 15;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentSensitive.INSTANCE);
+    }
+
+    @Override
+    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        super.addDefaultAugmentLimits(defaults);
+        defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentAmplify.INSTANCE, "Increases the knockback strength.");
+        map.put(AugmentDampen.INSTANCE, "Decreases the knockback strength.");
+        map.put(AugmentSensitive.INSTANCE, "Prevents blocks from being moved.");
     }
 
     @Override
@@ -90,7 +125,7 @@ public class EffectKnockback extends AbstractEffect {
         return "Knocks a target or block away a short distance from the caster. Sensitive will stop this spell from launching blocks.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_AIR);

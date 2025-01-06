@@ -22,11 +22,11 @@ public class GuiImageButton extends ANButton {
     }
 
     public GuiImageButton(int x, int y, int u, int v, int w, int h, int image_width, int image_height, String resource_image, Button.OnPress onPress) {
-        this(x, y, u, v, w, h, image_width, image_height, new ResourceLocation(ArsNouveau.MODID, resource_image), onPress);
+        this(x, y, u, v, w, h, image_width, image_height, ArsNouveau.prefix( resource_image), onPress);
     }
 
     public GuiImageButton(int x, int y, int u, int v, int w, int h, int image_width, int image_height, ResourceLocation image, Button.OnPress onPress) {
-        super(x, y, w, h, Component.literal(""), onPress);
+        super(x, y, w, h, Component.empty(), onPress);
         this.x = x;
         this.y = y;
         this.u = u;
@@ -41,11 +41,10 @@ public class GuiImageButton extends ANButton {
         return this;
     }
 
+
     @Override
-    public void render(GuiGraphics graphics,int parX, int parY, float partialTicks) {
-        if (visible) {
-            graphics.blit(image, x, y, u, v, width, height, image_width, image_height);
-        }
+    protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        graphics.blit(image, x, y, u, v, width, height, image_width, image_height);
     }
 
     @Override
@@ -59,10 +58,5 @@ public class GuiImageButton extends ANButton {
         if (soundDisabled)
             return;
         super.playDownSound(pHandler);
-    }
-
-    public void setPosition(int pX, int pY) {
-        this.x = pX;
-        this.y = pY;
     }
 }

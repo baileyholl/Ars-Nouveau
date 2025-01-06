@@ -3,18 +3,20 @@ package com.hollingsworth.arsnouveau.client.patchouli.component;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.SerializedName;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.imbuement_chamber.IImbuementRecipe;
 import com.hollingsworth.arsnouveau.api.registry.ImbuementRecipeRegistry;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import vazkii.patchouli.api.IVariable;
 
@@ -30,8 +32,6 @@ public class RotatingItemListComponent extends RotatingItemListComponentBase {
     @SerializedName("recipe_type")
     public String recipeType;
 
-
-
     @Override
     protected List<Ingredient> makeIngredients() {
         ClientLevel world = Minecraft.getInstance().level;
@@ -39,37 +39,38 @@ public class RotatingItemListComponent extends RotatingItemListComponentBase {
 
         Map<ResourceLocation, ? extends Recipe<?>> map;
         if ("enchanting_apparatus".equals(recipeType)) {
-            EnchantingApparatusRecipe recipe = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.APPARATUS_TYPE.get()).stream().filter(f -> f.id.toString().equals(recipeName)).findFirst().orElse(null);
-            for(RecipeType type : ArsNouveauAPI.getInstance().getEnchantingRecipeTypes()) {
-                RecipeType<IEnchantingRecipe> enchantingRecipeRecipeType = (RecipeType<IEnchantingRecipe>) type;
-                Recipe<?> recipe1 = world.getRecipeManager().getAllRecipesFor(enchantingRecipeRecipeType).stream().filter(f -> f.getId().toString().equals(recipeName)).findFirst().orElse(null);
-                if(recipe1 instanceof EnchantingApparatusRecipe enchantingApparatusRecipe){
+            RecipeHolder<EnchantingApparatusRecipe> holder = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.APPARATUS_TYPE.get()).stream().filter(f -> f.id().toString().equals(recipeName)).findFirst().orElse(null);
+            var recipe =  holder != null ? holder.value() : null;
+            for(RecipeType<? extends IEnchantingRecipe>  type : ArsNouveauAPI.getInstance().getEnchantingRecipeTypes()) {
+                RecipeHolder<? extends IEnchantingRecipe> recipe1 = world.getRecipeManager().getAllRecipesFor(type).stream().filter(f -> f.id().toString().equals(recipeName)).findFirst().orElse(null);
+                if(recipe1 != null && recipe1.value() instanceof EnchantingApparatusRecipe enchantingApparatusRecipe){
                     recipe = enchantingApparatusRecipe;
                     break;
                 }
             }
-            return recipe == null ? ImmutableList.of() : recipe.pedestalItems;
+            return recipe == null ? ImmutableList.of() : recipe.pedestalItems();
         } else if ("imbuement_chamber".equals(recipeType)) {
-            ImbuementRecipe recipe = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream().filter(f -> f.id.toString().equals(recipeName)).findFirst().orElse(null);
+            RecipeHolder<ImbuementRecipe> holder = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream().filter(f -> f.id().toString().equals(recipeName)).findFirst().orElse(null);
+            var recipe = holder != null ? holder.value() : null;
             for (RecipeType<? extends IImbuementRecipe> type : ImbuementRecipeRegistry.INSTANCE.getRecipeTypes()) {
                 RecipeType<IImbuementRecipe> imbuementRecipeType = (RecipeType<IImbuementRecipe>) type;
-                Recipe<?> recipe1 = world.getRecipeManager().getAllRecipesFor(imbuementRecipeType).stream().filter(f -> f.getId().toString().equals(recipeName)).findFirst().orElse(null);
-                if (recipe1 instanceof ImbuementRecipe imbuementRecipe){
+                RecipeHolder<IImbuementRecipe> recipe1 = world.getRecipeManager().getAllRecipesFor(imbuementRecipeType).stream().filter(f -> f.id().toString().equals(recipeName)).findFirst().orElse(null);
+                if (recipe1 != null && recipe1.value() instanceof ImbuementRecipe imbuementRecipe){
                     recipe = imbuementRecipe;
                     break;
                 }
             }
             return recipe == null ? ImmutableList.of() : recipe.pedestalItems;
         } else if ("glyph_recipe".equals(recipeType)) {
-            GlyphRecipe recipe = (GlyphRecipe) world.getRecipeManager().byKey(new ResourceLocation(recipeName)).orElse(null);
-            return recipe == null ? ImmutableList.of() : recipe.inputs;
+            RecipeHolder<? extends GlyphRecipe> recipe = (RecipeHolder<? extends GlyphRecipe>) world.getRecipeManager().byKey(ResourceLocation.tryParse(recipeName)).orElse(null);
+            return recipe == null ? ImmutableList.of() : recipe.value().inputs;
         } else {
             throw new IllegalArgumentException("Type must be 'enchanting_apparatus', 'glyph_recipe', or 'imbuement_chamber'!");
         }
     }
 
     @Override
-    public void onVariablesAvailable(UnaryOperator<IVariable> lookup) {
+    public void onVariablesAvailable(UnaryOperator<IVariable> lookup, HolderLookup.Provider registries) {
         recipeName = lookup.apply(IVariable.wrap(recipeName)).asString();
         recipeType = lookup.apply(IVariable.wrap(recipeType)).asString();
     }

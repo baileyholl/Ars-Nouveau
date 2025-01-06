@@ -14,6 +14,8 @@ import com.hollingsworth.arsnouveau.common.mixin.MobAccessor;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -23,18 +25,21 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
@@ -54,33 +59,43 @@ public class EffectWololo extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
 
-        if (!(rayTraceResult.getEntity() instanceof LivingEntity living)) return;
-
         Player player = ANFakePlayer.getPlayer((ServerLevel) world);
 
         ItemStack dyeStack = getDye(shooter, spellStats, spellContext, player);
         if (dyeStack.isEmpty()) return;
         DyeItem dye = (DyeItem) dyeStack.getItem();
 
-        if (living instanceof Sheep sheep)
-            sheep.setColor(dye.getDyeColor());
-        else if (spellStats.isSensitive() || living instanceof ArmorStand) {
-            for (ItemStack armorStack : living.getArmorSlots()) {
-                if (!armorStack.isEmpty())
-                    if (armorStack.getItem() instanceof DyeableLeatherItem) {
-                        var temp = DyeableLeatherItem.dyeArmor(armorStack, List.of(dye));
-                        //replace the tag with the new tag instead of replacing the stack
-                        armorStack.setTag(temp.getTag());
-                    } else if (armorStack.getItem() instanceof IDyeable iDyeable) {
-                        iDyeable.onDye(armorStack, dye.getDyeColor());
-                    }
+        if (rayTraceResult.getEntity() instanceof ItemEntity itemEntity) {
+            if (itemEntity.getItem().getItem() instanceof IDyeable iDyeable)
+                iDyeable.onDye(itemEntity.getItem(), dye.getDyeColor());
+            else if (itemEntity.getItem().getItem() instanceof BlockItem blockItem) {
+                ItemStack result = getDyedResult((ServerLevel) world, makeContainer(dye, blockItem));
+                result.setCount(itemEntity.getItem().getCount());
+                if (!result.isEmpty() && result.getItem() instanceof BlockItem) {
+                    itemEntity.setItem(result);
+                }
             }
-        } else if (living instanceof Mob mob) {
-            player.setItemInHand(InteractionHand.MAIN_HAND, dyeStack);
-            ((MobAccessor) mob).callMobInteract(player, InteractionHand.MAIN_HAND);
-            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+        } else if (rayTraceResult.getEntity() instanceof LivingEntity living) {
+            if (living instanceof Sheep sheep)
+                sheep.setColor(dye.getDyeColor());
+            else if (spellStats.isSensitive() || living instanceof ArmorStand) {
+                for (ItemStack armorStack : living.getArmorSlots()) {
+                    if (!armorStack.isEmpty()) {
+                        var dyeComponent = armorStack.get(DataComponents.DYED_COLOR);
+                        if (dyeComponent != null) {
+                            armorStack.set(DataComponents.DYED_COLOR, new DyedItemColor(dye.getDyeColor().getTextureDiffuseColor(), false));
+                        } else if (armorStack.getItem() instanceof IDyeable iDyeable) {
+                            iDyeable.onDye(armorStack, dye.getDyeColor());
+                        }
+                    }
+                }
+            } else if (living instanceof Mob mob) {
+                player.setItemInHand(InteractionHand.MAIN_HAND, dyeStack);
+                ((MobAccessor) mob).callMobInteract(player, InteractionHand.MAIN_HAND);
+                player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            }
         }
-        world.playSound(null, living.getX(), living.getY(), living.getZ(), SoundEvents.EVOKER_PREPARE_WOLOLO, SoundSource.PLAYERS, spellContext.getSpell().sound.volume, spellContext.getSpell().sound.pitch);
+        world.playSound(null, rayTraceResult.getEntity().getX(), rayTraceResult.getEntity().getY(), rayTraceResult.getEntity().getZ(), SoundEvents.EVOKER_PREPARE_WOLOLO, SoundSource.PLAYERS, spellContext.getSpell().sound().getVolume(), spellContext.getSpell().sound().getPitch());
     }
 
     @NotNull
@@ -88,7 +103,7 @@ public class EffectWololo extends AbstractEffect {
 
         if (spellContext.getCaster() instanceof TileCaster) {
             InventoryManager manager = spellContext.getCaster().getInvManager();
-            SlotReference reference = manager.findItem(i -> (i.getItem() instanceof DyeItem), InteractType.EXTRACT);
+            SlotReference reference = manager.findItem(i -> i.getItem() instanceof DyeItem, InteractType.EXTRACT);
             if (!reference.isEmpty()) {
                 return reference.getHandler().getStackInSlot(reference.getSlot());
             }
@@ -109,7 +124,7 @@ public class EffectWololo extends AbstractEffect {
         BlockPos blockPos = rayTraceResult.getBlockPos();
         BlockEntity blockEntity = world.getBlockEntity(blockPos);
         if (blockEntity instanceof IWololoable tileToDye) {
-            ParticleColor color = spellStats.isRandomized() ? ParticleColor.makeRandomColor(255, 255, 255, shooter.getRandom()) : spellContext.getSpell().color;
+            ParticleColor color = spellStats.isRandomized() ? ParticleColor.makeRandomColor(255, 255, 255, shooter.getRandom()) : spellContext.getSpell().color();
             tileToDye.setColor(color);
         } else {
             ItemStack dyeStack = getDye(shooter, spellStats, spellContext, ANFakePlayer.getPlayer((ServerLevel) world));
@@ -121,45 +136,46 @@ public class EffectWololo extends AbstractEffect {
                 dye.tryApplyToSign(world, sign, sign.isFacingFrontText(player), player);
             } else {
                 // Try block + dye
-                Block hitBlock = world.getBlockState(blockPos).getBlock();
-                if (hitBlock == Blocks.AIR) return;
-                ItemStack result = getDyedResult((ServerLevel) world, makeContainer(dye, hitBlock));
+                BlockState hitBlock = world.getBlockState(blockPos);
+                if (hitBlock.isAir()) return;
+                ItemStack result = getDyedResult((ServerLevel) world, makeContainer(dye, hitBlock.getBlock()));
                 BlockItem blockItem;
                 if (result.isEmpty() || !(result.getItem() instanceof BlockItem)) {
                     // Try blocks surrounding the dye
-                    result = getDyedResult((ServerLevel) world, makeContainer8(dye, hitBlock));
+                    result = getDyedResult((ServerLevel) world, makeContainer8(dye, hitBlock.getBlock()));
                     if (result.isEmpty() || !(result.getItem() instanceof BlockItem)) return;
                 }
                 blockItem = (BlockItem) result.getItem();
-                world.setBlockAndUpdate(blockPos, blockItem.getBlock().defaultBlockState());
+                BlockState newState = blockItem.getBlock().withPropertiesOf(hitBlock);
+                world.setBlockAndUpdate(blockPos, newState);
             }
         }
     }
 
     @NotNull
     private ItemStack getDyedResult(ServerLevel world, CraftingContainer craftingcontainer) {
-        Optional<CraftingRecipe> recipe = recipeCache.stream().filter(craftingRecipe -> craftingRecipe.matches(craftingcontainer, world)).findFirst();
+        Optional<CraftingRecipe> recipe = recipeCache.stream().filter(craftingRecipe -> craftingRecipe.matches(craftingcontainer.asCraftInput(), world)).findFirst();
         if (recipe.isPresent()) {
             recipeCache.add(recipe.get());
-            return recipe.get().assemble(craftingcontainer, world.registryAccess());
+            return recipe.get().assemble(craftingcontainer.asCraftInput(), world.registryAccess());
         }
-        return world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingcontainer, world).map((craftingRecipe) -> craftingRecipe.assemble(craftingcontainer, world.registryAccess())).orElse(ItemStack.EMPTY);
+        return world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingcontainer.asCraftInput(), world).map(craftingRecipe -> craftingRecipe.value().assemble(craftingcontainer.asCraftInput(), world.registryAccess())).orElse(ItemStack.EMPTY);
     }
 
-    private static CraftingContainer makeContainer(DyeItem targetColor, Block blockToDye) {
+    private static CraftingContainer makeContainer(DyeItem targetColor, ItemLike blockToDye) {
         CraftingContainer craftingcontainer = new TransientCraftingContainer(new AbstractContainerMenu(null, -1) {
             /**
              * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the
              * player inventory and the other inventory(s).
              */
-            public ItemStack quickMoveStack(Player p_218264_, int p_218265_) {
+            public @NotNull ItemStack quickMoveStack(@NotNull Player p_218264_, int p_218265_) {
                 return ItemStack.EMPTY;
             }
 
             /**
              * Determines whether supplied player can use this container
              */
-            public boolean stillValid(Player p_29888_) {
+            public boolean stillValid(@NotNull Player p_29888_) {
                 return false;
             }
         }, 2, 1);
@@ -174,14 +190,14 @@ public class EffectWololo extends AbstractEffect {
              * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the
              * player inventory and the other inventory(s).
              */
-            public ItemStack quickMoveStack(Player p_218264_, int p_218265_) {
+            public @NotNull ItemStack quickMoveStack(@NotNull Player p_218264_, int p_218265_) {
                 return ItemStack.EMPTY;
             }
 
             /**
              * Determines whether supplied player can use this container
              */
-            public boolean stillValid(Player p_29888_) {
+            public boolean stillValid(@NotNull Player p_29888_) {
                 return false;
             }
         }, 3, 3);
@@ -196,7 +212,7 @@ public class EffectWololo extends AbstractEffect {
     }
 
     private static DyeItem getDyeItemFromSpell(SpellContext spellContext) {
-        ParticleColor spellColor = spellContext.getSpell().color;
+        ParticleColor spellColor = spellContext.getSpell().color();
 
         ParticleColor targetColor = vanillaColors.keySet().stream().min(Comparator.comparingDouble(d -> d.euclideanDistance(spellColor))).orElse(ParticleColor.WHITE);
         return (DyeItem) vanillaColors.get(targetColor);
@@ -207,16 +223,22 @@ public class EffectWololo extends AbstractEffect {
         return 30;
     }
 
-    /**
-     * Returns the set of augments that this spell part can be enhanced by.
-     * Mods should use {@link AbstractSpellPart#compatibleAugments} for addon-supported augments.
-     *
-     * @see AbstractSpellPart#augmentSetOf(AbstractAugment...) for easy syntax to make the Set.
-     * This should not be accessed directly, but can be overridden.
-     */
     @Override
     protected @NotNull Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentRandomize.INSTANCE, AugmentSensitive.INSTANCE);
+    }
+
+    @Override
+    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        super.addDefaultAugmentLimits(defaults);
+        defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentRandomize.INSTANCE, "Randomizes the color of the dye used.");
+        map.put(AugmentSensitive.INSTANCE, "Dyes the targets armor.");
     }
 
     public static Map<ParticleColor, Item> vanillaColors = new HashMap<>();

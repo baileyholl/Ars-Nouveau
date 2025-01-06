@@ -8,7 +8,6 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.PacketDistributor;
 
 public class ToggleLightCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -26,7 +25,7 @@ public class ToggleLightCommand {
             e.printStackTrace();
             return 1;
         }
-        Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new PacketToggleLight(enable));
+        Networking.sendToPlayerClient(new PacketToggleLight(enable), player);
         String path = enable ? "ars_nouveau.lights_on" : "ars_nouveau.lights_off";
         player.sendSystemMessage(Component.translatable(path, enable));
         return 1;

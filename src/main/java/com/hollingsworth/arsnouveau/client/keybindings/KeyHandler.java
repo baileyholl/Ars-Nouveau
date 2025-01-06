@@ -15,16 +15,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 import static com.hollingsworth.arsnouveau.api.util.StackUtil.getHeldSpellbook;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
+@EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
 public class KeyHandler {
     private static final Minecraft MINECRAFT = Minecraft.getInstance();
     public static KeyMapping[] CURIO_MAPPINGS = new KeyMapping[]{
@@ -105,17 +104,17 @@ public class KeyHandler {
         }
         int slot = ModKeyBindings.usedQuickSlot(key);
         if (slot != -1) {
-            Networking.INSTANCE.sendToServer(new PacketQuickCast(slot));
+            Networking.sendToServer(new PacketQuickCast(slot));
         }
     }
 
     public static void checkCurioHotkey(int keyMapping) {
         for (KeyMapping mapping : CURIO_MAPPINGS) {
             if (mapping.getKey().getValue() == keyMapping) {
-                LazyOptional<IItemHandlerModifiable> stacks = CuriosUtil.getAllWornItems(MINECRAFT.player);
-                if (!stacks.isPresent())
+                IItemHandlerModifiable handler = CuriosUtil.getAllWornItems(MINECRAFT.player);
+                if (handler == null)
                     return;
-                IItemHandlerModifiable handler = stacks.orElse(null);
+
                 for (int i = 0; i < handler.getSlots(); i++) {
                     ItemStack stack = handler.getStackInSlot(i);
                     if (stack.getItem() instanceof IRadialProvider radialProvider) {
@@ -152,12 +151,12 @@ public class KeyHandler {
                 && !Minecraft.getInstance().player.onGround()
                 && CuriosUtil.hasItem(Minecraft.getInstance().player, ItemsRegistry.JUMP_RING.get())
                 && Minecraft.getInstance().screen == null) {
-                Networking.INSTANCE.sendToServer(new PacketGenericClientMessage(PacketGenericClientMessage.Action.JUMP_RING));
+                Networking.sendToServer(new PacketGenericClientMessage(PacketGenericClientMessage.Action.JUMP_RING));
             }
         }
     }
 
     public static void sendHotkeyPacket(PacketHotkeyPressed.Key key) {
-        Networking.INSTANCE.sendToServer(new PacketHotkeyPressed(key));
+        Networking.sendToServer(new PacketHotkeyPressed(key));
     }
 }

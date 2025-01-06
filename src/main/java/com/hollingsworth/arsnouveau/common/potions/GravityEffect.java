@@ -8,12 +8,12 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
-@Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
+@EventBusSubscriber(modid = ArsNouveau.MODID)
 public class GravityEffect extends MobEffect {
 
     public GravityEffect() {
@@ -21,12 +21,7 @@ public class GravityEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int p_76397_1_, int p_76397_2_) {
-        return true;
-    }
-
-    @Override
-    public void applyEffectTick(LivingEntity livingEntity, int p_76394_2_) {
+    public boolean applyEffectTick(LivingEntity livingEntity, int p_76394_2_) {
         if (!livingEntity.onGround()) {
             boolean isTooHigh = true;
             Level world = livingEntity.level;
@@ -45,20 +40,29 @@ public class GravityEffect extends MobEffect {
 
         }
 
+        return true;
+    }
+
+    @Override
+    public boolean shouldApplyEffectTickThisTick(int pDuration, int pAmplifier) {
+        return true;
     }
 
     // Disable flight here because items tick after our potions
     @SubscribeEvent
-    public static void entityTick(TickEvent.PlayerTickEvent e) {
-        if (e.phase == TickEvent.Phase.END && e.player.hasEffect(ModPotions.GRAVITY_EFFECT.get()) && !e.player.onGround() && !e.player.isCreative()) {
-            e.player.abilities.flying = false;
+    public static void entityTick(PlayerTickEvent.Post e) {
+        if ( e.getEntity().hasEffect(ModPotions.GRAVITY_EFFECT) && !e.getEntity().onGround() && !e.getEntity().isCreative()) {
+            e.getEntity().abilities.flying = false;
         }
     }
 
     @SubscribeEvent
-    public static void entityHurt(LivingHurtEvent e) {
-        if (e.getSource().is(DamageTypes.FALL) && e.getEntity().hasEffect(ModPotions.GRAVITY_EFFECT.get())) {
-            e.setAmount(e.getAmount() * 2.0f);
+    public static void entityHurt(LivingDamageEvent.Pre e) {
+        var container = e.getContainer();
+        var source = container.getSource();
+        var amount = container.getNewDamage();
+        if (source.is(DamageTypes.FALL) && e.getEntity().hasEffect(ModPotions.GRAVITY_EFFECT)) {
+            container.setNewDamage(amount * 2.0f);
         }
     }
 }

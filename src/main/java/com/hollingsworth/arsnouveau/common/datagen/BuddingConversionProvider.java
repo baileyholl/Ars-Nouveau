@@ -2,14 +2,11 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.recipe.BuddingConversionRecipe;
-import com.hollingsworth.arsnouveau.api.recipe.SummonRitualRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.BuddingConversionRecipe;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 
 import java.nio.file.Path;
@@ -18,7 +15,7 @@ import java.util.List;
 
 public class BuddingConversionProvider extends SimpleDataProvider{
 
-    public List<BuddingConversionRecipe> recipes = new ArrayList<>();
+    public List<Wrapper> recipes = new ArrayList<>();
 
     public BuddingConversionProvider(DataGenerator generatorIn) {
         super(generatorIn);
@@ -27,18 +24,22 @@ public class BuddingConversionProvider extends SimpleDataProvider{
     @Override
     public void collectJsons(CachedOutput pOutput) {
         addEntries();
-        for (BuddingConversionRecipe recipe : recipes) {
-            Path path = getRecipePath(output, recipe.getId().getPath());
-            saveStable(pOutput, recipe.asRecipe(), path);
+        for (Wrapper recipe : recipes) {
+            Path path = getRecipePath(output, recipe.location().getPath());
+            saveStable(pOutput, ANCodecs.toJson(BuddingConversionRecipe.CODEC, recipe.recipe), path);
         }
     }
 
     protected void addEntries() {
-        recipes.add(new BuddingConversionRecipe(new ResourceLocation(ArsNouveau.MODID, "budding_amethyst"), Blocks.AMETHYST_BLOCK, Blocks.BUDDING_AMETHYST));
+        recipes.add(new Wrapper(ArsNouveau.prefix( "budding_amethyst"), new BuddingConversionRecipe(Blocks.AMETHYST_BLOCK, Blocks.BUDDING_AMETHYST)));
+    }
+
+    public record Wrapper(ResourceLocation location, BuddingConversionRecipe recipe){
+
     }
 
     protected static Path getRecipePath(Path path, String id) {
-        return path.resolve("data/ars_nouveau/recipes/budding_conversion/" + id + ".json");
+        return path.resolve("data/ars_nouveau/recipe/budding_conversion/" + id + ".json");
     }
 
     /**

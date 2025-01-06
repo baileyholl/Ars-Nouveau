@@ -10,12 +10,12 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 
-@Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
+@EventBusSubscriber(modid = ArsNouveau.MODID)
 public class BounceEffect extends MobEffect {
     public BounceEffect() {
         super(MobEffectCategory.BENEFICIAL, 2039587);
@@ -25,7 +25,7 @@ public class BounceEffect extends MobEffect {
     @SubscribeEvent
     public static void onFall(LivingFallEvent event) {
         LivingEntity entity = event.getEntity();
-        if (entity == null || !entity.hasEffect(ModPotions.BOUNCE_EFFECT.get())) {
+        if (entity == null || !entity.hasEffect(ModPotions.BOUNCE_EFFECT)) {
             return;
         }
         boolean isPlayer = entity instanceof Player;
@@ -40,7 +40,7 @@ public class BounceEffect extends MobEffect {
                 event.setDamageMultiplier(0);
                 entity.fallDistance = 0.0F;
                 if (!isPlayer || isClient) {
-                    double f = 0.95d - .1 * entity.getEffect(ModPotions.BOUNCE_EFFECT.get()).getAmplifier();
+                    double f = 0.95d - .1 * entity.getEffect(ModPotions.BOUNCE_EFFECT).getAmplifier();
                     // only slow down half as much when bouncing
                     entity.setDeltaMovement(entity.getDeltaMovement().x / f, entity.getDeltaMovement().y * (-0.9), entity.getDeltaMovement().z / f);
                     entity.hurtMarked = true;
@@ -57,17 +57,19 @@ public class BounceEffect extends MobEffect {
     }
 
     @SubscribeEvent
-    public static void onFlyWallDamage(LivingHurtEvent event) {
+    public static void onFlyWallDamage(LivingDamageEvent.Pre event) {
+        var container = event.getContainer();
+        var source = container.getSource();
         LivingEntity entity = event.getEntity();
-        if (entity == null || !entity.hasEffect(ModPotions.BOUNCE_EFFECT.get())) {
+        if (entity == null || !entity.hasEffect(ModPotions.BOUNCE_EFFECT)) {
             return;
         }
         boolean isPlayer = entity instanceof Player;
         if (!isPlayer) {
             return;
         }
-        if(event.getSource().is(DamageTypes.FLY_INTO_WALL)){
-            event.setAmount(0);
+        if(source.is(DamageTypes.FLY_INTO_WALL)){
+            container.setNewDamage(0);
             Vec3 lookAngle = entity.getLookAngle();
 
             entity.setDeltaMovement(lookAngle.scale(-2));

@@ -1,0 +1,22 @@
+{
+  "type": "ars_nouveau:glyph",
+  "exp": 27,
+  "inputs": [
+    {
+      "item": "ars_nouveau:manipulation_essence"
+    },
+    {
+      "item": "minecraft:lever"
+    },
+    {
+      "tag": "minecraft:wooden_pressure_plates"
+    },
+    {
+      "tag": "minecraft:buttons"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:glyph_interact"
+  }
+}

@@ -10,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -37,14 +37,13 @@ public class EffectHarm extends AbstractEffect implements IDamageEffect, IPotion
     }
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addDamageConfig(builder, 5.0);
         addAmpConfig(builder, 2.0);
         addPotionConfig(builder, 5);
         addExtendTimeConfig(builder, 5);
     }
-
 
     @Override
     public boolean defaultedStarterGlyph() {
@@ -64,6 +63,14 @@ public class EffectHarm extends AbstractEffect implements IDamageEffect, IPotion
                 AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE,
                 AugmentFortune.INSTANCE, AugmentRandomize.INSTANCE
         );
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentExtendTime.INSTANCE, "Applies Poison instead of dealing damage, increases the duration.");
+        map.put(AugmentDurationDown.INSTANCE, "Decreases the duration of Poison applied.");
+        map.put(AugmentAmplify.INSTANCE, "Increases damage dealt, or the level of Poison applied.");
     }
 
     @Override

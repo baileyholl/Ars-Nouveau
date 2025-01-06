@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
+import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -9,18 +9,17 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
-import java.util.List;
+public record SpellTooltip(AbstractCaster<?> spellcaster, boolean showName) implements TooltipComponent {
 
-public record SpellTooltip(ISpellCaster spellcaster, boolean showName) implements TooltipComponent {
-
-    public SpellTooltip(ISpellCaster spellcaster) {
+    public SpellTooltip(AbstractCaster<?> spellcaster) {
         this(spellcaster, false);
     }
 
     public static class SpellTooltipRenderer implements ClientTooltipComponent {
-        private final ISpellCaster spellCaster;
+        private final AbstractCaster<?> spellCaster;
         private final boolean showName;
 
         public SpellTooltipRenderer(SpellTooltip pSpellTooltip) {
@@ -30,16 +29,17 @@ public record SpellTooltip(ISpellCaster spellcaster, boolean showName) implement
 
         @Override
         public int getHeight() {
-            return showName ? 28 : 20;
+
+            return (showName ? 28 : 20) +  (spellCaster.getSpell().size() / 10) * 16;
         }
 
         @Override
-        public int getWidth(Font pFont) {
-            return 4 + spellCaster.getSpell().recipe.size() * 16;
+        public int getWidth(@NotNull Font pFont) {
+            return 4 + Math.min(spellCaster.getSpell().size(), 10) * 16;
         }
 
         @Override
-        public void renderText(Font pFont, int pX, int pY, Matrix4f pMatrix, MultiBufferSource.BufferSource pBufferSource) {
+        public void renderText(@NotNull Font pFont, int pX, int pY, @NotNull Matrix4f pMatrix, MultiBufferSource.@NotNull BufferSource pBufferSource) {
 
             if (showName) {
                 pFont.drawInBatch(Component.literal(spellCaster.getSpellName()), (float) (pX + 4), (float) pY, -1, true, pMatrix, pBufferSource, Font.DisplayMode.NORMAL, 0, 15728880);
@@ -48,11 +48,12 @@ public record SpellTooltip(ISpellCaster spellcaster, boolean showName) implement
         }
 
         @Override
-        public void renderImage(Font pFont, int pX, int pY, GuiGraphics pGuiGraphics) {
-            List<AbstractSpellPart> recipe = spellCaster.getSpell().recipe;
-            for (int i = 0, recipeSize = recipe.size(); i < recipeSize; i++) {
-                AbstractSpellPart part = recipe.get(i);
-                RenderUtils.drawSpellPart(part, pGuiGraphics, pX + i * 16, pY + (showName ? 10 : 0), 16, false);
+        public void renderImage(@NotNull Font pFont, int pX, int pY, @NotNull GuiGraphics pGuiGraphics) {
+            var spell = spellCaster.getSpell();
+            for (int i = 0; i <  spell.size(); i++) {
+                int yOffset = i / 10;
+                AbstractSpellPart part = spell.get(i);
+                RenderUtils.drawSpellPart(part, pGuiGraphics, pX + (i % 10) * 16, pY + (showName ? 10 : 0) + yOffset * 16, 16, false);
             }
         }
 

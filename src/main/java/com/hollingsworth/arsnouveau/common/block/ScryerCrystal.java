@@ -1,10 +1,13 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.ScryerCrystalTile;
-import net.minecraft.core.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -18,6 +21,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -79,13 +83,13 @@ public class ScryerCrystal extends TickableModBlock {
     /**
      * Get the position where the dispenser at the given Coordinates should dispense to.
      */
-    public static Position getDispensePosition(BlockSource coords, Direction direction) {
+    public static Position getDispensePosition(BlockPos pos, Direction direction) {
         // Offset to get closer to the eye.
         double negOffset = -0.49;
-        double d0 = coords.x() + negOffset * (double) direction.getStepX();
-        double d1 = coords.y() + negOffset * (double) direction.getStepY();
-        double d2 = coords.z() + negOffset * (double) direction.getStepZ();
-        return new PositionImpl(d0, d1, d2);
+        double d0 = pos.getX() + 0.5 + negOffset * (double) direction.getStepX();
+        double d1 = pos.getY() + 0.5 + negOffset * (double) direction.getStepY();
+        double d2 = pos.getZ() + 0.5 + negOffset * (double) direction.getStepZ();
+        return new Vec3(d0, d1, d2);
     }
 
 
@@ -96,11 +100,11 @@ public class ScryerCrystal extends TickableModBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (pLevel.getBlockEntity(pPos) instanceof ScryerCrystalTile scryerCrystalTile && pPlayer.getItemInHand(pHand).isEmpty() & pHand == InteractionHand.MAIN_HAND) {
             scryerCrystalTile.mountCamera(pLevel, pPos, pPlayer);
         }
-        return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+        return super.useItemOn(stack, pState, pLevel, pPos, pPlayer, pHand, pHit);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {

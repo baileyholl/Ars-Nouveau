@@ -1,0 +1,26 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": true,
+  "pedestalItems": [
+    {
+      "item": "ars_nouveau:magebloom_fiber"
+    },
+    {
+      "item": "ars_nouveau:magebloom_fiber"
+    },
+    {
+      "item": "ars_nouveau:magebloom_fiber"
+    },
+    {
+      "item": "ars_nouveau:magebloom_fiber"
+    }
+  ],
+  "reagent": {
+    "item": "minecraft:diamond_helmet"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:battlemage_hood"
+  },
+  "sourceCost": 0
+}

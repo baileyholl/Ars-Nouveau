@@ -25,16 +25,16 @@ public abstract class PortalFrameTester {
     public abstract void lightPortal(Block frameBlock);
 
     protected BlockPos getLowerCorner(BlockPos blockPos, Direction.Axis axis1, Direction.Axis axis2) {
-        if (!validStateInsidePortal(world.getBlockState(blockPos), VALID_FRAME))
+        if (!validStateInsidePortal(world.getBlockState(blockPos)))
             return null;
         int offsetX = 1;
-        while (validStateInsidePortal(world.getBlockState(blockPos.relative(axis1, -offsetX)), VALID_FRAME)) {
+        while (validStateInsidePortal(world.getBlockState(blockPos.relative(axis1, -offsetX)))) {
             offsetX++;
             if (offsetX > 20) return null;
         }
         blockPos = blockPos.relative(axis1, -(offsetX - 1));
         int offsetY = 1;
-        while (blockPos.getY() - offsetY > 0 && validStateInsidePortal(world.getBlockState(blockPos.relative(axis2, -offsetY)), VALID_FRAME)) {
+        while (blockPos.getZ() - offsetY > 0 && validStateInsidePortal(world.getBlockState(blockPos.relative(axis2, -offsetY)))) {
             offsetY++;
             if (offsetY > 20) return null;
         }
@@ -44,7 +44,7 @@ public abstract class PortalFrameTester {
     protected int getSize(Direction.Axis axis, int minSize, int maxSize) {
         for (int i = 1; i <= maxSize; i++) {
             BlockState blockState = this.world.getBlockState(this.lowerCorner.relative(axis, i));
-            if (!validStateInsidePortal(blockState, VALID_FRAME)) {
+            if (!validStateInsidePortal(blockState)) {
                 if (VALID_FRAME.test(blockState)) {
                     return i >= minSize ? i : 0;
 
@@ -78,7 +78,7 @@ public abstract class PortalFrameTester {
                     foundPortalBlocks++;
     }
 
-    public static boolean validStateInsidePortal(BlockState blockState, Predicate<BlockState> foundations) {
+    public static boolean validStateInsidePortal(BlockState blockState) {
         return blockState.isAir() || blockState.canBeReplaced() || blockState.getBlock() instanceof PortalBlock;
     }
 }

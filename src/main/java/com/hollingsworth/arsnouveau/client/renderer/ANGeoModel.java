@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.client.renderer;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.model.GeoModel;
 
 public class ANGeoModel<T extends GeoAnimatable> extends GeoModel<T> {
@@ -16,7 +16,7 @@ public class ANGeoModel<T extends GeoAnimatable> extends GeoModel<T> {
     }
 
     public ANGeoModel(String modelLoc, String textLoc, String animationLoc) {
-        this(new ResourceLocation(ArsNouveau.MODID, modelLoc), new ResourceLocation(ArsNouveau.MODID,textLoc), new ResourceLocation(ArsNouveau.MODID, animationLoc));
+        this(ArsNouveau.prefix( modelLoc), ArsNouveau.prefix(textLoc), ArsNouveau.prefix( animationLoc));
     }
 
     @Override

@@ -4,7 +4,7 @@ public class SpellSchools {
 
     public static SpellSchool ABJURATION = new SpellSchool("abjuration");
     public static SpellSchool CONJURATION = new SpellSchool("conjuration");
-    //    public static SpellSchool NECROMANCY = new SpellSchool("necromancy");
+    public static SpellSchool NECROMANCY = new SpellSchool("necromancy");
     public static SpellSchool MANIPULATION = new SpellSchool("manipulation");
     public static SpellSchool ELEMENTAL_AIR = new SpellSchool("air");
     public static SpellSchool ELEMENTAL_EARTH = new SpellSchool("earth");

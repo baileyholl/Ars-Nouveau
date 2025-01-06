@@ -19,14 +19,16 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 
 import java.util.function.Consumer;
 
 public class WixieHat extends AnimModItem implements ICosmeticItem {
 
     @Override
-    public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
+    public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack pStack, @NotNull Player pPlayer, @NotNull LivingEntity pInteractionTarget, @NotNull InteractionHand pUsedHand) {
         if (pInteractionTarget instanceof Starbuncle starbuncle) {
             starbuncle.setBehavior(new StarbyPotionBehavior(starbuncle, new CompoundTag()));
             PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.starbuncle.potion_behavior_set"));
@@ -39,18 +41,17 @@ public class WixieHat extends AnimModItem implements ICosmeticItem {
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext pContext) {
+    public @NotNull InteractionResult useOn(@NotNull UseOnContext pContext) {
         return super.useOn(pContext);
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        super.initializeClient(consumer);
-        consumer.accept(new IClientItemExtensions() {
+    public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
+        consumer.accept(new GeoRenderProvider() {
             private final BlockEntityWithoutLevelRenderer renderer = new GenericItemRenderer(new GenericModel<>("witch_hat", "item")).withTranslucency();
 
             @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+            public @Nullable BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
                 return renderer;
             }
         });

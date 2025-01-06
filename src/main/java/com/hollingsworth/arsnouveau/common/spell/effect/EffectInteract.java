@@ -10,11 +10,13 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,7 +26,6 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.state.BlockState;
@@ -32,9 +33,10 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Set;
 
 public class EffectInteract extends AbstractEffect {
@@ -65,7 +67,7 @@ public class EffectInteract extends AbstractEffect {
     }
 
     public boolean handleBucket(ItemStack item, BucketItem bucket, Player player, BlockState state, Level world, BlockPos pos, BlockHitResult rayTraceResult, InteractionHand hand) {
-        if (bucket.getFluid() == Fluids.EMPTY) {
+        if (bucket.content == Fluids.EMPTY) {
             boolean isBucketPickup = state.getBlock() instanceof BucketPickup && world.getFluidState(pos) != Fluids.EMPTY.defaultFluidState();
             BlockPos target = isBucketPickup ? pos : pos.relative(rayTraceResult.getDirection());
             if (world.getFluidState(target) == Fluids.EMPTY.defaultFluidState()) {
@@ -75,7 +77,7 @@ public class EffectInteract extends AbstractEffect {
             if (!(targetState.getBlock() instanceof BucketPickup bp)) {
                 return false;
             }
-            ItemStack pickup = bp.pickupBlock(world, target, targetState);
+            ItemStack pickup = bp.pickupBlock(player, world, target, targetState);
             if (!pickup.isEmpty() && !player.getAbilities().instabuild) {
                 bp.getPickupSound(targetState).ifPresent(sound -> player.playSound(sound, 1.0F, 1.0F));
                 world.gameEvent(player, GameEvent.FLUID_PICKUP, target);
@@ -133,19 +135,28 @@ public class EffectInteract extends AbstractEffect {
         }
     }
 
-    public void useOnBlock(Player player, SpellStats spellStats, BlockPos pos, BlockState state, Level world, BlockHitResult rayTraceResult) {
+    public void useOnBlock(Player player, SpellStats spellStats, BlockPos blockpos, BlockState blockstate, Level pLevel, BlockHitResult pHitResult) {
+        var pPlayer = (ServerPlayer) player;
+        InteractionHand pHand = spellStats.isSensitive() ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
+        ItemStack itemstack = pPlayer.getItemInHand(pHand);
+        ItemInteractionResult iteminteractionresult = blockstate.useItemOn(pPlayer.getItemInHand(pHand), pLevel, pPlayer, pHand, pHitResult);
 
-        if (spellStats.isSensitive()) {
-            ItemStack item = player.getItemInHand(getHand(player));
-            if (item.getItem() instanceof BucketItem bucket) {
-                handleBucket(item, bucket, player, state, world, pos, rayTraceResult, getHand(player));
-                return;
-            }
-            UseOnContext context = new UseOnContext(player, getHand(player), rayTraceResult);
-            item.useOn(context);
-        } else {
-            state.use(world, player, InteractionHand.MAIN_HAND, rayTraceResult);
+        if (itemstack.getItem() instanceof BucketItem bucket) {
+            handleBucket(itemstack, bucket, player, blockstate, pLevel, blockpos, pHitResult, getHand(player));
+            return;
         }
+
+        if (iteminteractionresult.consumesAction()) {
+            CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(pPlayer, blockpos, itemstack);
+        }
+
+        if (iteminteractionresult == ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION && pHand == InteractionHand.MAIN_HAND) {
+            InteractionResult interactionresult = blockstate.useWithoutItem(pLevel, pPlayer, pHitResult);
+            if (interactionresult.consumesAction()) {
+                CriteriaTriggers.DEFAULT_BLOCK_USE.trigger(pPlayer, blockpos);
+            }
+        }
+
     }
 
     @Override
@@ -190,6 +201,18 @@ public class EffectInteract extends AbstractEffect {
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentSensitive.INSTANCE);
+    }
+
+    @Override
+    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        super.addDefaultAugmentLimits(defaults);
+        defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentSensitive.INSTANCE, "Will interact with your off-hand item.");
     }
 
     @Override

@@ -1,0 +1,32 @@
+{
+  "parent": "ars_nouveau:starby_charm",
+  "criteria": {
+    "has_wixie_hat": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ars_nouveau:wixie_hat"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.wixie_hat"
+    },
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:wixie_hat"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.wixie_hat"
+    }
+  },
+  "requirements": [
+    [
+      "has_wixie_hat"
+    ]
+  ]
+}

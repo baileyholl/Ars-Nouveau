@@ -16,4 +16,6 @@ public class ANServerPlayerMixin {
     private boolean shouldMove(ServerPlayer player, double x, double y, double z, float yaw, float pitch) {
         return !CameraUtil.isPlayerMountedOnCamera(player);
     }
+
+
 }

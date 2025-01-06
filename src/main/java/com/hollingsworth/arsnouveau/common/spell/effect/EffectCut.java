@@ -21,9 +21,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.IForgeShearable;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.IShearable;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -40,17 +40,18 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
 
     @Override
     public boolean canDamage(LivingEntity shooter, SpellStats stats, SpellContext spellContext, SpellResolver resolver, @NotNull Entity entity) {
-        return IDamageEffect.super.canDamage(shooter, stats, spellContext, resolver, entity) && !(entity instanceof IForgeShearable);
+        return IDamageEffect.super.canDamage(shooter, stats, spellContext, resolver, entity) && !(entity instanceof IShearable);
     }
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
-        if (entity instanceof IForgeShearable shearable) {
+        if (entity instanceof IShearable shearable) {
             ItemStack shears = new ItemStack(Items.SHEARS);
-            applyEnchantments(spellStats, shears);
-            if (shearable.isShearable(shears, world, entity.blockPosition())) {
-                List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, entity.blockPosition(), spellStats.getBuffCount(AugmentFortune.INSTANCE));
+            applyEnchantments(world, spellStats, shears);
+            if (shearable.isShearable(getPlayer(shooter, (ServerLevel) world), shears, world, entity.blockPosition())) {
+                // TODO: restore fortune bonus on augment
+                List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, entity.blockPosition());
                 items.forEach(i -> world.addFreshEntity(new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), i)));
             }
         } else {
@@ -72,26 +73,27 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
 
     private boolean dupeCheck(Level world, BlockPos pos){
         BlockEntity be = world.getBlockEntity(pos);
-        return be != null && (world.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent() || be instanceof Container);
+        return be != null && (world.getCapability(Capabilities.ItemHandler.BLOCK, pos, null) != null || be instanceof Container);
     }
 
     public void doStrip(BlockPos p, BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
         ItemStack axe = new ItemStack(Items.DIAMOND_AXE);
-        applyEnchantments(spellStats, axe);
+        applyEnchantments(world, spellStats, axe);
         Player entity = ANFakePlayer.getPlayer((ServerLevel) world);
         entity.setItemInHand(InteractionHand.MAIN_HAND, axe);
         // TODO Replace with AN shears
         if (dupeCheck(world, p)) return;
         entity.setPos(p.getX(), p.getY(), p.getZ());
-        world.getBlockState(p).use(world, entity, InteractionHand.MAIN_HAND, rayTraceResult);
+        world.getBlockState(p).useItemOn(axe, world, entity, InteractionHand.MAIN_HAND, rayTraceResult);
         axe.useOn(new UseOnContext(entity, InteractionHand.MAIN_HAND, rayTraceResult));
     }
 
     public void doShear(BlockPos p, BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
         ItemStack shears = new ItemStack(Items.SHEARS);
-        applyEnchantments(spellStats, shears);
-        if (world.getBlockState(p).getBlock() instanceof IForgeShearable shearable && shearable.isShearable(shears, world, p)) {
-            List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, p, spellStats.getBuffCount(AugmentFortune.INSTANCE));
+        applyEnchantments(world, spellStats, shears);
+        if (world.getBlockState(p).getBlock() instanceof IShearable shearable && shearable.isShearable(getPlayer(shooter, (ServerLevel) world), shears, world, p)) {
+            // TODO: restore fortune bonus on augment
+            List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, p);
             items.forEach(i -> world.addFreshEntity(new ItemEntity(world, p.getX(), p.getY(), p.getZ(), i)));
         }
         Player entity = ANFakePlayer.getPlayer((ServerLevel) world);
@@ -99,24 +101,32 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
         // TODO Replace with AN shears
         if (dupeCheck(world, p)) return;
         entity.setPos(p.getX(), p.getY(), p.getZ());
-        world.getBlockState(p).use(world, entity, InteractionHand.MAIN_HAND, rayTraceResult);
+        world.getBlockState(p).useItemOn(shears, world, entity, InteractionHand.MAIN_HAND, rayTraceResult);
         shears.useOn(new UseOnContext(entity, InteractionHand.MAIN_HAND, rayTraceResult));
     }
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addDamageConfig(builder, 1.0);
         addAmpConfig(builder, 1.0);
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
                 AugmentExtract.INSTANCE, AugmentFortune.INSTANCE,
                 AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE
         );
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        map.put(AugmentAmplify.INSTANCE, "Simulates using an Axe instead of Shears.");
+        map.put(AugmentDampen.INSTANCE, "Reduces the damage dealt.");
+        map.put(AugmentExtract.INSTANCE, "Applies Silk Touch when breaking blocks.");
+        map.put(AugmentFortune.INSTANCE, "Applies Fortune when breaking blocks or killing mobs.");
     }
 
     @Override

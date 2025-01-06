@@ -12,20 +12,20 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DyeRecipeCategory implements ICraftingCategoryExtension {
-    private final DyeRecipe recipe;
+public class DyeRecipeCategory implements ICraftingCategoryExtension<DyeRecipe> {
 
-    public DyeRecipeCategory(DyeRecipe recipe) {
-        this.recipe = recipe;
-    }
+
+    public DyeRecipeCategory() {}
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, ICraftingGridHelper craftingGridHelper, IFocusGroup focuses) {
+    public void setRecipe(RecipeHolder<DyeRecipe> recipeHolder, IRecipeLayoutBuilder builder, ICraftingGridHelper craftingGridHelper, IFocusGroup focuses) {
+        var recipe = recipeHolder.value();
         List<List<ItemStack>> inputs = recipe.getIngredients().stream()
                 .map(ingredient -> List.of(ingredient.getItems()))
                 .toList();

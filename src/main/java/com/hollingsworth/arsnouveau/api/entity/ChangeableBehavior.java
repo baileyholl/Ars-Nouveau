@@ -15,6 +15,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class ChangeableBehavior implements IWandable {
     public List<WrappedGoal> goals = new ArrayList<>();
@@ -32,10 +33,9 @@ public abstract class ChangeableBehavior implements IWandable {
 
     }
 
-    public void getTooltip(List<Component> tooltip){}
+    public void getTooltip(Consumer<Component> tooltip){}
 
     public CompoundTag toTag(CompoundTag tag) {
-        tag.putString("id", getRegistryName().toString());
         return tag;
     }
 
@@ -53,7 +53,7 @@ public abstract class ChangeableBehavior implements IWandable {
 
     public void pickUpItem(ItemEntity entity) {}
 
-    protected abstract ResourceLocation getRegistryName();
+    public abstract ResourceLocation getRegistryName();
 
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         return InteractionResult.PASS;

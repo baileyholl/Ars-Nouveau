@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.imbuement_chamber.IImbuementRecipe;
@@ -12,36 +11,29 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
+import com.hollingsworth.arsnouveau.common.capability.SourceStorage;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -49,8 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ImbuementTile extends AbstractSourceMachine implements Container, ITickable, GeoBlockEntity, ITooltipProvider, IPedestalMachine {
-    private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
+public class ImbuementTile extends AbstractSourceMachine implements Container, ITickable, GeoBlockEntity, ITooltipProvider, IPedestalMachine, RecipeInput {
     public ItemStack stack = ItemStack.EMPTY;
     public ItemEntity entity;
     public boolean draining;
@@ -61,12 +52,21 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     int craftTicks;
 
     public ImbuementTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.IMBUEMENT_TILE, pos, state);
+        super(BlockRegistry.IMBUEMENT_TILE.get(), pos, state);
     }
 
     @Override
-    public int getTransferRate() {
-        return 0;
+    protected @NotNull SourceStorage createDefaultStorage() {
+        return new SourceStorage(10000000, 10000000, 0, 0){
+            @Override
+            public boolean canProvideSource(int source) {
+                return false;
+            }
+
+            public void onContentsChanged() {
+                ImbuementTile.this.updateBlock();
+            }
+        };
     }
 
     @Override
@@ -96,8 +96,9 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
                             getX() + 0.5, getY() + 0.5, getZ() + 0.5);
                 }
             }
-            if(!stack.isEmpty() && recipe == null){
-                this.recipe = getRecipeNow();
+            if (!stack.isEmpty() && recipe == null) {
+                var holder = getRecipeNow();
+                this.recipe = holder != null ? holder.value() : null;
             }
             return;
         }
@@ -115,13 +116,13 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         // Restore the recipe on world restart
         if (recipe == null) {
             var foundRecipe = getRecipeNow();
-            if(foundRecipe != null){
-                this.recipe = foundRecipe;
+            if (foundRecipe != null) {
+                this.recipe = foundRecipe.value();
                 this.craftTicks = 100;
             }
         }
 
-        if (recipe == null || !recipe.isMatch(this)) {
+        if (recipe == null || !recipe.matches(this, level)) {
             backoff = 20;
             recipe = null;
             if (this.draining) {
@@ -135,17 +136,16 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
         int cost = recipe.getSourceCost(this);
 
-        if (this.level.getGameTime() % 20 == 0 && this.getSource() < cost) {
+        if (level instanceof ServerLevel serverLevel && this.level.getGameTime() % 20 == 0 && this.getSource() < cost) {
             if (!canAcceptSource(Math.min(200, cost)))
                 return;
 
             ISpecialSourceProvider takePos = SourceUtil.takeSource(worldPosition, level, 2, Math.min(200, cost));
             if (takePos != null) {
                 this.addSource(transferRate);
-                EntityFlyingItem item = new EntityFlyingItem(level, takePos.getCurrentPos().above(), worldPosition, 255, 50, 80)
-                        .withNoTouch();
-                item.setDistanceAdjust(2f);
-                level.addFreshEntity(item);
+                EntityFlyingItem.spawn(worldPosition, serverLevel, takePos.getCurrentPos().above(), worldPosition)
+                        .withNoTouch().setDistanceAdjust(2f);
+
                 if (!draining) {
                     draining = true;
                     updateBlock();
@@ -161,7 +161,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         }
 
         if (this.getSource() >= cost && craftTicks <= 0) {
-            this.setItem(0, recipe.getResult(this).copy());
+            this.setItem(0, recipe.assemble(this, this.level.registryAccess()).copy());
             this.addSource(-cost);
             ParticleUtil.spawnTouchPacket(level, worldPosition, ParticleColor.defaultParticleColor());
             updateBlock();
@@ -169,30 +169,25 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        stack = ItemStack.of((CompoundTag) tag.get("itemStack"));
+    protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
+        super.loadAdditional(tag, pRegistries);
+        stack = ItemStack.parseOptional(pRegistries, tag.getCompound("itemStack"));
+
         draining = tag.getBoolean("draining");
         this.hasRecipe = tag.getBoolean("hasRecipe");
         this.craftTicks = tag.getInt("craftTicks");
-        super.load(tag);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        if (stack != null) {
-            CompoundTag reagentTag = new CompoundTag();
-            stack.save(reagentTag);
+    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
+        if (!stack.isEmpty()) {
+            Tag reagentTag = stack.save(pRegistries);
             tag.put("itemStack", reagentTag);
         }
         tag.putBoolean("draining", draining);
         tag.putBoolean("hasRecipe", hasRecipe);
         tag.putInt("craftTicks", craftTicks);
-    }
-
-    @Override
-    public int getMaxSource() {
-        return 10000000;
     }
 
     @Override
@@ -210,7 +205,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         if (stack.isEmpty() || !this.stack.isEmpty())
             return false;
         this.stack = stack.copy();
-        IImbuementRecipe recipe = getRecipeNow();
+        var recipe = getRecipeNow();
         this.stack = ItemStack.EMPTY;
         return recipe != null;
     }
@@ -221,19 +216,24 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     }
 
     @Override
-    public ItemStack getItem(int index) {
+    public @NotNull ItemStack getItem(int index) {
         return stack;
     }
 
     @Override
-    public ItemStack removeItem(int index, int count) {
+    public int size() {
+        return 1;
+    }
+
+    @Override
+    public @NotNull ItemStack removeItem(int index, int count) {
         ItemStack split = stack.split(count);
         updateBlock();
         return split;
     }
 
     @Override
-    public ItemStack removeItemNoUpdate(int index) {
+    public @NotNull ItemStack removeItemNoUpdate(int index) {
         ItemStack stack = this.stack.copy();
         this.stack = ItemStack.EMPTY;
         setChanged();
@@ -241,14 +241,14 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     }
 
     @Override
-    public void setItem(int index, ItemStack stack) {
+    public void setItem(int index, @NotNull ItemStack stack) {
         this.stack = stack;
         this.craftTicks = 100;
         updateBlock();
     }
 
     @Override
-    public boolean stillValid(Player player) {
+    public boolean stillValid(@NotNull Player player) {
         return true;
     }
 
@@ -256,21 +256,6 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     public void clearContent() {
         this.stack = ItemStack.EMPTY;
         updateBlock();
-    }
-
-   @NotNull
-    @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, final @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return itemHandler.cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        itemHandler.invalidate();
-        super.invalidateCaps();
     }
 
     @Override
@@ -310,19 +295,25 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         return pedestalList(getBlockPos(), 1, getLevel());
     }
 
-    public @Nullable IImbuementRecipe getRecipeNow(){
-        return ImbuementRecipeRegistry.INSTANCE.getRecipes().stream().filter(r -> r.isMatch(this)).findFirst().orElse(null);
+    public @Nullable RecipeHolder<? extends IImbuementRecipe> getRecipeNow() {
+        return ImbuementRecipeRegistry.INSTANCE.getRecipes().stream().filter(r -> r.value().matches(this, level)).findFirst().orElse(null);
     }
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        var recipe = getRecipeNow();
-        if(recipe != null && !recipe.getResult(this).isEmpty() && stack != null && !stack.isEmpty()) {
+        var holder = getRecipeNow();
+        var recipe = holder == null ? null : holder.value();
+        if (recipe != null && !recipe.getResultItem(this.level.registryAccess()).isEmpty() && stack != null && !stack.isEmpty()) {
             int cost = recipe.getSourceCost(this);
-            tooltip.add(Component.translatable("ars_nouveau.crafting", recipe.getResult(this).getHoverName()));
-            if(cost > 0) {
-                tooltip.add(Component.translatable("ars_nouveau.crafting_progress", Math.min(100, (getSource() * 100) / cost)).withStyle(ChatFormatting.GOLD));
+            tooltip.add(recipe.getCraftingText(this));
+            if (cost > 0) {
+                int progress = Math.min(100, (getSource() * 100 / cost));
+                tooltip.add(recipe.getCraftingProgressText(this, progress));
             }
         }
+    }
+
+    public ItemStack getStack() {
+        return stack;
     }
 }

@@ -5,74 +5,78 @@ import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = ArsNouveau.MODID)
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, modid = ArsNouveau.MODID)
 public class Config {
     public static final String CATEGORY_GENERAL = "general";
 
     public static final String CATEGORY_SPELLS = "spells";
     public static final String DRYGMY_CATEGORY = "drygmy_production";
 
-    public static ForgeConfigSpec COMMON_CONFIG;
-    public static ForgeConfigSpec CLIENT_CONFIG;
+    public static ModConfigSpec COMMON_CONFIG;
+    public static ModConfigSpec CLIENT_CONFIG;
 
-    public static ForgeConfigSpec.BooleanValue SPAWN_BOOK;
-    public static ForgeConfigSpec.BooleanValue INFORM_LIGHTS;
+    public static ModConfigSpec.BooleanValue SPAWN_BOOK;
+    public static ModConfigSpec.BooleanValue INFORM_LIGHTS;
     public static Integer TREE_SPAWN_RATE = 100;
 
 
-    public static ForgeConfigSpec.IntValue DRYGMY_MANA_COST;
-    public static ForgeConfigSpec.IntValue SYLPH_MANA_COST;
-    public static ForgeConfigSpec.IntValue WHIRLISPRIG_MAX_PROGRESS;
-    public static ForgeConfigSpec.IntValue DRYGMY_MAX_PROGRESS;
-    public static ForgeConfigSpec.IntValue DRYGMY_BASE_ITEM;
-    public static ForgeConfigSpec.IntValue DRYGMY_UNIQUE_BONUS;
-    public static ForgeConfigSpec.IntValue DRYGMY_QUANTITY_CAP;
-    public static ForgeConfigSpec.IntValue JUMP_RING_COST;
+    public static ModConfigSpec.IntValue DRYGMY_MANA_COST;
+    public static ModConfigSpec.IntValue WHIRLISPRIG_SOURCE_COST;
+    public static ModConfigSpec.IntValue ALAKARKINOS_SOURCE_COST;
+    public static ModConfigSpec.IntValue WHIRLISPRIG_MAX_PROGRESS;
+    public static ModConfigSpec.IntValue DRYGMY_MAX_PROGRESS;
+    public static ModConfigSpec.IntValue DRYGMY_BASE_ITEM;
+    public static ModConfigSpec.IntValue DRYGMY_UNIQUE_BONUS;
+    public static ModConfigSpec.IntValue DRYGMY_QUANTITY_CAP;
+    public static ModConfigSpec.IntValue JUMP_RING_COST;
 
-    public static ForgeConfigSpec.IntValue MELDER_OUTPUT;
-    public static ForgeConfigSpec.IntValue MELDER_INPUT_COST;
-    public static ForgeConfigSpec.IntValue MELDER_SOURCE_COST;
-    public static ForgeConfigSpec.IntValue ENCHANTED_FLASK_CAP;
-    public static ForgeConfigSpec.BooleanValue HUNTER_ATTACK_ANIMALS;
-    public static ForgeConfigSpec.BooleanValue STALKER_ATTACK_ANIMALS;
-    public static ForgeConfigSpec.BooleanValue GUARDIAN_ATTACK_ANIMALS;
-    public static ForgeConfigSpec.BooleanValue CHIMERA_DIVE_DESTRUCTIVE;
-    public static ForgeConfigSpec.ConfigValue<List<? extends String>> DIMENSION_BLACKLIST;
+    public static ModConfigSpec.IntValue MELDER_OUTPUT;
+    public static ModConfigSpec.IntValue MELDER_INPUT_COST;
+    public static ModConfigSpec.IntValue MELDER_SOURCE_COST;
+    public static ModConfigSpec.IntValue ENCHANTED_FLASK_CAP;
+    public static ModConfigSpec.BooleanValue HUNTER_ATTACK_ANIMALS;
+    public static ModConfigSpec.BooleanValue STALKER_ATTACK_ANIMALS;
+    public static ModConfigSpec.BooleanValue GUARDIAN_ATTACK_ANIMALS;
+    public static ModConfigSpec.BooleanValue CHIMERA_DIVE_DESTRUCTIVE;
+    public static ModConfigSpec.ConfigValue<List<? extends String>> DIMENSION_BLACKLIST;
 
-    public static ForgeConfigSpec.IntValue ARCHWOOD_FOREST_WEIGHT;
+    public static ModConfigSpec.IntValue ARCHWOOD_FOREST_WEIGHT;
 
-    public static ForgeConfigSpec.BooleanValue DYNAMIC_LIGHTS_ENABLED;
-    public static ForgeConfigSpec.BooleanValue SHOW_SUPPORTER_MESSAGE;
-    public static ForgeConfigSpec.IntValue TOUCH_LIGHT_LUMINANCE;
-    public static ForgeConfigSpec.IntValue TOUCH_LIGHT_DURATION;
+    public static ModConfigSpec.BooleanValue DYNAMIC_LIGHTS_ENABLED;
+    public static ModConfigSpec.BooleanValue SHOW_SUPPORTER_MESSAGE;
+    public static ModConfigSpec.IntValue TOUCH_LIGHT_LUMINANCE;
+    public static ModConfigSpec.IntValue TOUCH_LIGHT_DURATION;
 
-    public static ForgeConfigSpec.BooleanValue SPAWN_TOMES;
-    public static ForgeConfigSpec.BooleanValue ALTERNATE_PORTAL_RENDER;
+    public static ModConfigSpec.BooleanValue SPAWN_TOMES;
+    public static ModConfigSpec.BooleanValue ALTERNATE_PORTAL_RENDER;
 
-    public static ForgeConfigSpec.BooleanValue DISABLE_SKY_SHADER;
-    public static ForgeConfigSpec.BooleanValue DISABLE_TRANSLUCENT_PARTICLES;
-    public static ForgeConfigSpec.BooleanValue SHOW_RECIPE_BOOK;
-    public static ForgeConfigSpec.IntValue MAX_LOG_EVENTS;
-    public static ForgeConfigSpec.IntValue TOOLTIP_X_OFFSET;
-    public static ForgeConfigSpec.IntValue TOOLTIP_Y_OFFSET;
-    public static ForgeConfigSpec.IntValue MANABAR_X_OFFSET;
-    public static ForgeConfigSpec.IntValue MANABAR_Y_OFFSET;
-    public static ForgeConfigSpec.IntValue BOOKWYRM_LIMIT;
-    public static ForgeConfigSpec.BooleanValue GUI_TRANSPARENCY;
-    public static ForgeConfigSpec.BooleanValue GLYPH_TOOLTIPS;
+    public static ModConfigSpec.BooleanValue DISABLE_SKY_SHADER;
+    public static ModConfigSpec.BooleanValue DISABLE_TRANSLUCENT_PARTICLES;
+    public static ModConfigSpec.BooleanValue SHOW_RECIPE_BOOK;
+    public static ModConfigSpec.IntValue MAX_LOG_EVENTS;
+    public static ModConfigSpec.IntValue TOOLTIP_X_OFFSET;
+    public static ModConfigSpec.IntValue TOOLTIP_Y_OFFSET;
+    public static ModConfigSpec.IntValue MANABAR_X_OFFSET;
+    public static ModConfigSpec.IntValue MANABAR_Y_OFFSET;
+    public static ModConfigSpec.IntValue SPELLNAME_X_OFFSET;
+    public static ModConfigSpec.IntValue SPELLNAME_Y_OFFSET;
+    public static ModConfigSpec.BooleanValue TOGGLE_RADIAL_HUD;
+    public static ModConfigSpec.IntValue BOOKWYRM_LIMIT;
+    public static ModConfigSpec.BooleanValue GUI_TRANSPARENCY;
+    public static ModConfigSpec.BooleanValue GLYPH_TOOLTIPS;
 
-    private static ForgeConfigSpec.ConfigValue<List<? extends String>> ENTITY_LIGHT_CONFIG;
-    private static ForgeConfigSpec.ConfigValue<List<? extends String>> ITEM_LIGHT_CONFIG;
+    private static ModConfigSpec.ConfigValue<List<? extends String>> ENTITY_LIGHT_CONFIG;
+    private static ModConfigSpec.ConfigValue<List<? extends String>> ITEM_LIGHT_CONFIG;
 
     public static Map<ResourceLocation, Integer> ENTITY_LIGHT_MAP = new HashMap<>();
     public static Map<ResourceLocation, Integer> ITEM_LIGHTMAP = new HashMap<>();
@@ -92,8 +96,8 @@ public class Config {
     }
 
     static {
-        ForgeConfigSpec.Builder SERVER_BUILDER = new ForgeConfigSpec.Builder();
-        ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
+        ModConfigSpec.Builder SERVER_BUILDER = new ModConfigSpec.Builder();
+        ModConfigSpec.Builder CLIENT_BUILDER = new ModConfigSpec.Builder();
 
         CLIENT_BUILDER.comment("Lighting").push("lights");
         SHOW_SUPPORTER_MESSAGE = CLIENT_BUILDER.comment("Show the supporter message. This is set to false after the first time.").define("showSupporterMessage", true);
@@ -110,8 +114,12 @@ public class Config {
         TOOLTIP_Y_OFFSET = CLIENT_BUILDER.comment("Y offset for the tooltip").defineInRange("yTooltip", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
         MANABAR_X_OFFSET = CLIENT_BUILDER.comment("X offset for the Mana Bar").defineInRange("xManaBar", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
         MANABAR_Y_OFFSET = CLIENT_BUILDER.comment("Y offset for the Mana Bar").defineInRange("yManaBar", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        SPELLNAME_X_OFFSET = CLIENT_BUILDER.comment("X offset for the Spell Name").defineInRange("xSpellName", 10, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        SPELLNAME_Y_OFFSET = CLIENT_BUILDER.comment("Y offset for the Spell Name").defineInRange("ySpellName", 30, Integer.MIN_VALUE, Integer.MAX_VALUE);
+
         SHOW_RECIPE_BOOK = CLIENT_BUILDER.comment("If the Storage Lectern should show the recipe book icon").define("showRecipeBook", true);
         INFORM_LIGHTS = CLIENT_BUILDER.comment("Inform the player of Dynamic lights once.").define("informLights", true);
+        TOGGLE_RADIAL_HUD = CLIENT_BUILDER.comment("Whether the Selection HUD is toggled or held").define("toggleSelectionHUD", true);
         CLIENT_BUILDER.pop();
         CLIENT_BUILDER.comment("Misc").push("misc");
         ALTERNATE_PORTAL_RENDER = CLIENT_BUILDER.comment("Use simplified renderer for Warp Portals").define("no_end_portal_render", false);
@@ -122,7 +130,7 @@ public class Config {
         SERVER_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
         DIMENSION_BLACKLIST = SERVER_BUILDER.comment("Dimensions where hostile mobs will not spawn. Ex: [\"minecraft:overworld\", \"undergarden:undergarden\"]. . Run /forge dimensions for a list.").defineList("dimensionBlacklist", new ArrayList<>(), (o) -> true);
         SPAWN_BOOK = SERVER_BUILDER.comment("Spawn a book in the players inventory on login").define("spawnBook", true);
-        SYLPH_MANA_COST = SERVER_BUILDER.comment("How much mana whirlisprigs consume per generation").defineInRange("sylphManaCost", 250, 0, 10000);
+        WHIRLISPRIG_SOURCE_COST = SERVER_BUILDER.comment("How much mana whirlisprigs consume per generation").defineInRange("sylphManaCost", 250, 0, 10000);
         WHIRLISPRIG_MAX_PROGRESS = SERVER_BUILDER.comment("How much progress whirlisprigs must accumulate before creating resources")
                 .defineInRange("whirlisprigProgress", 250, 0, 10000);
         HUNTER_ATTACK_ANIMALS = SERVER_BUILDER.comment("Should the Wilden Hunter attack animals?").define("hunterHuntsAnimals", false);
@@ -139,6 +147,10 @@ public class Config {
         DRYGMY_UNIQUE_BONUS = SERVER_BUILDER.comment("Bonus number of items a drygmy produces per unique mob").defineInRange("drygmyUniqueBonus", 2, 0, 300);
         DRYGMY_BASE_ITEM = SERVER_BUILDER.comment("Base number of items a drygmy produces per cycle before bonuses.").defineInRange("drygmyBaseItems", 1, Integer.MIN_VALUE, Integer.MAX_VALUE);
         DRYGMY_QUANTITY_CAP = SERVER_BUILDER.comment("Max Bonus number of items a drygmy produces from nearby entities. Each entity equals 1 item.").defineInRange("drygmyQuantityCap", 5, 0, 300);
+        SERVER_BUILDER.pop();
+
+        SERVER_BUILDER.push("alakarkinos");
+        ALAKARKINOS_SOURCE_COST = SERVER_BUILDER.comment("How much mana alakarkinos consume per generation").defineInRange("alakarkinosSourceCost", 1000, 0, 10000);
         SERVER_BUILDER.pop();
 
         SERVER_BUILDER.comment("Items").push("item");
@@ -183,11 +195,11 @@ public class Config {
         ITEM_LIGHTMAP = new HashMap<>();
         // Copy values from ENTITY_LIGHT_CONFIG to ENTITY_LIGHT_MAP
         for(Map.Entry<String, Integer> entry : ConfigUtil.parseMapConfig(ENTITY_LIGHT_CONFIG).entrySet()){
-            ENTITY_LIGHT_MAP.put(new ResourceLocation(entry.getKey()), entry.getValue());
+            ENTITY_LIGHT_MAP.put(ResourceLocation.tryParse(entry.getKey()), entry.getValue());
         }
         // Copy values from ITEM_LIGHT_CONFIG to ITEM_LIGHT_MAP
         for(Map.Entry<String, Integer> entry : ConfigUtil.parseMapConfig(ITEM_LIGHT_CONFIG).entrySet()){
-            ITEM_LIGHTMAP.put(new ResourceLocation(entry.getKey()), entry.getValue());
+            ITEM_LIGHTMAP.put(ResourceLocation.tryParse(entry.getKey()), entry.getValue());
         }
     }
 
@@ -227,6 +239,6 @@ public class Config {
     }
 
     public static String an(String s){
-        return new ResourceLocation(ArsNouveau.MODID, s).toString();
+        return ArsNouveau.prefix( s).toString();
     }
 }

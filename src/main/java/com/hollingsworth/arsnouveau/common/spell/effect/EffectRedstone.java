@@ -10,24 +10,24 @@ import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.world.saved_data.RedstoneSavedData;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.BlockSnapshot;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.event.level.BlockEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.util.BlockSnapshot;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class EffectRedstone extends AbstractEffect {
     public static EffectRedstone INSTANCE = new EffectRedstone();
@@ -41,7 +41,7 @@ public class EffectRedstone extends AbstractEffect {
         int timeBonus = (int) spellStats.getDurationMultiplier();
         int delay = Math.max(GENERIC_INT.get() + timeBonus * BONUS_TIME.get(), 2);
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
-        FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
+        Player fakePlayer = ANFakePlayer.getOrFakePlayer((ServerLevel) world, shooter);
         for (BlockPos pos1 : posList) {
             if (spellStats.isSensitive()) {
                 if (!world.isInWorldBounds(pos1))
@@ -57,8 +57,12 @@ public class EffectRedstone extends AbstractEffect {
                 if (!world.isInWorldBounds(pos1))
                     return;
                 boolean notReplaceable = !world.getBlockState(pos1).canBeReplaced();
-                if (notReplaceable || MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer)))
+                if (notReplaceable)
                     continue;
+                var event = NeoForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer));
+                if(event.isCanceled()){
+                    continue;
+                }
                 BlockState state1 = BlockRegistry.TEMPORARY_BLOCK.get().defaultBlockState().setValue(TemporaryBlock.POWER, signalModifier);
                 world.setBlockAndUpdate(pos1, state1);
                 if(world.getBlockEntity(pos1) instanceof TemporaryTile tile){
@@ -73,19 +77,36 @@ public class EffectRedstone extends AbstractEffect {
 
     }
 
-    public ForgeConfigSpec.IntValue BONUS_TIME;
+    public ModConfigSpec.IntValue BONUS_TIME;
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addGenericInt(builder, 5, "Base time in ticks", "base_duration");
         BONUS_TIME = builder.comment("Extend time bonus, in ticks").defineInRange("extend_time", 10, 0, Integer.MAX_VALUE);
+    }
+
+    @Override
+    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        super.addDefaultAugmentLimits(defaults);
+        defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
     }
 
     @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAmplify.INSTANCE, AugmentAOE.INSTANCE, AugmentDampen.INSTANCE, AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentSensitive.INSTANCE);
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentAmplify.INSTANCE, "Increases the power of the redstone signal.");
+        map.put(AugmentDampen.INSTANCE, "Decreases the power of the redstone signal.");
+        map.put(AugmentSensitive.INSTANCE, "Sets the target block to a redstone power source, powering itself and its neighbors.");
+        map.put(AugmentExtendTime.INSTANCE, "Increases the duration of the redstone signal.");
+        map.put(AugmentDurationDown.INSTANCE, "Decreases the duration of the redstone signal.");
     }
 
     @Override
@@ -103,7 +124,4 @@ public class EffectRedstone extends AbstractEffect {
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);
     }
-
-    public static final Map<String, Map<BlockPos, Integer>> signalMap = new ConcurrentHashMap<>();
-
 }

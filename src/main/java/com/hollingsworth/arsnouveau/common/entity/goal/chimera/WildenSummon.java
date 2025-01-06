@@ -1,10 +1,10 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.chimera;
 
-import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.SummonWolf;
 import com.hollingsworth.arsnouveau.common.entity.WildenHunter;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -35,7 +35,7 @@ public class WildenSummon extends Goal {
     @Override
     public void start() {
         super.start();
-        Networking.sendToNearby(entity.level, entity, new PacketAnimEntity(entity.getId(), WildenHunter.Animations.HOWL.ordinal()));
+        Networking.sendToNearbyClient(entity.level, entity, new PacketAnimEntity(entity.getId(), WildenHunter.Animations.HOWL.ordinal()));
         entity.level.playSound(null, entity.blockPosition(), SoundEvents.WOLF_HOWL, SoundSource.HOSTILE, 1.0f, 0.3f);
         ticksSummoning = 0;
         this.entity.summonCooldown = 400;

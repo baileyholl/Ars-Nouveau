@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import com.hollingsworth.arsnouveau.common.util.HolderHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -63,14 +64,14 @@ public class EffectBreak extends AbstractEffect {
 
         int numFortune = spellStats.getBuffCount(AugmentFortune.INSTANCE);
         int numSilkTouch = spellStats.getBuffCount(AugmentExtract.INSTANCE);
-        if (numFortune > 0 && stack.getEnchantmentLevel(Enchantments.BLOCK_FORTUNE) < numFortune) {
-            stack.enchant(Enchantments.BLOCK_FORTUNE, numFortune);
+        if (numFortune > 0 && stack.getEnchantmentLevel(HolderHelper.unwrap(world,Enchantments.FORTUNE)) < numFortune) {
+            stack.enchant(HolderHelper.unwrap(world,Enchantments.FORTUNE), numFortune);
         }
-        if (numSilkTouch > 0 && stack.getEnchantmentLevel(Enchantments.SILK_TOUCH) < numSilkTouch) {
-            stack.enchant(Enchantments.SILK_TOUCH, numSilkTouch);
+        if (numSilkTouch > 0 && stack.getEnchantmentLevel(HolderHelper.unwrap(world,Enchantments.SILK_TOUCH)) < numSilkTouch) {
+            stack.enchant(HolderHelper.unwrap(world,Enchantments.SILK_TOUCH), numSilkTouch);
         }
         for (BlockPos pos1 : posList) {
-            if (world.random.nextFloat() < spellStats.getBuffCount(AugmentRandomize.INSTANCE) * 0.25F) {
+            if (world.isOutsideBuildHeight(pos1) || world.random.nextFloat() < spellStats.getBuffCount(AugmentRandomize.INSTANCE) * 0.25F) {
                 continue;
             }
             state = world.getBlockState(pos1);
@@ -106,13 +107,23 @@ public class EffectBreak extends AbstractEffect {
     }
 
     @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentSensitive.INSTANCE, "Breaks blocks with Shears instead of a pickaxe.");
+        map.put(AugmentDampen.INSTANCE, "Decreases the harvest level.");
+        map.put(AugmentAmplify.INSTANCE, "Increases the harvest level.");
+    }
+
+    @Override
     public String getBookDescription() {
-        return "A spell you start with. Breaks blocks of an average hardness. Can be amplified to increase the harvest level. Sensitive will simulate breaking blocks with Shears instead of a pickaxe.";
+        return "Breaks blocks of an average hardness. Can be amplified to increase the harvest level. Sensitive will simulate breaking blocks with Shears instead of a pickaxe.";
     }
 
     @Override
     protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
         defaults.put(AugmentFortune.INSTANCE.getRegistryName(), 4);
+        defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
     }
 
     @NotNull

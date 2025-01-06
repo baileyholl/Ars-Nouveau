@@ -12,7 +12,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+
 
 public class TakeItemState extends TravelToPosState{
     public TakeItemState(Starbuncle starbuncle, StarbyTransportBehavior behavior, BlockPos target) {
@@ -27,7 +28,7 @@ public class TakeItemState extends TravelToPosState{
             starbuncle.addGoalDebug(this, new DebugEvent("TakePosBroken", "Take Tile Broken" ));
             return nextState;
         }
-        IItemHandler iItemHandler = behavior.getItemCapFromTile(tileEntity, behavior.FROM_DIRECTION_MAP.get(targetPos.hashCode()));
+        IItemHandler iItemHandler = behavior.getItemCapFromTile(targetPos, behavior.FROM_DIRECTION_MAP.get(targetPos.hashCode()));
         if (iItemHandler == null) {
             starbuncle.addGoalDebug(this, new DebugEvent("NoItemHandler", "No item handler at " + targetPos.toString()));
             return nextState;

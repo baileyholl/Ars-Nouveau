@@ -47,16 +47,8 @@ public class ParticleUtil {
     }
 
     public static void spawnFollowProjectile(Level world, BlockPos from, BlockPos to, ParticleColor color) {
-        if (world.isLoaded(to) && world.isLoaded(from)) {
-            EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, from, to, color.toWrapper());
-            world.addFreshEntity(aoeProjectile);
-        }
-    }
-
-    public static void spawnFollowProjectile(Level world, BlockPos from, BlockPos to) {
-        if (world.isLoaded(to) && world.isLoaded(from)) {
-            EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, from, to);
-            world.addFreshEntity(aoeProjectile);
+        if (world instanceof ServerLevel serverLevel && world.isLoaded(to) && world.isLoaded(from)) {
+            EntityFollowProjectile.spawn(serverLevel, from, to, color.getRedInt(), color.getGreenInt(), color.getBlueInt());
         }
     }
 
@@ -112,7 +104,7 @@ public class ParticleUtil {
     }
 
     public static void spawnTouchPacket(Level world, BlockPos pos, ParticleColor color) {
-        Networking.sendToNearby(world, pos,
+        Networking.sendToNearbyClient(world, pos,
                 new PacketANEffect(PacketANEffect.EffectType.BURST, pos, color));
     }
 
@@ -148,7 +140,7 @@ public class ParticleUtil {
         EntityFollowProjectile proj1 = new EntityFollowProjectile(tileEntity.getLevel(),
                 tileEntity.getBlockPos().above(), toPos,
                 color);
-//                if(getProgress() >= 10)
+
         proj1.getEntityData().set(EntityFollowProjectile.SPAWN_TOUCH, true);
         proj1.getEntityData().set(EntityFollowProjectile.DESPAWN, 15);
 

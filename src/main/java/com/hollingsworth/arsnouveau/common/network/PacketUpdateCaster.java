@@ -1,18 +1,22 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
+import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
-import com.hollingsworth.arsnouveau.api.util.CasterUtil;
-import net.minecraft.network.FriendlyByteBuf;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.PacketDistributor;
 
-import java.util.function.Supplier;
+import java.util.ArrayList;
 
-public class PacketUpdateCaster {
+public class PacketUpdateCaster extends AbstractPacket{
 
     Spell spellRecipe;
     int cast_slot;
@@ -27,40 +31,42 @@ public class PacketUpdateCaster {
     }
 
     //Decoder
-    public PacketUpdateCaster(FriendlyByteBuf buf) {
-        spellRecipe = Spell.fromTag(buf.readNbt());
+    public PacketUpdateCaster(RegistryFriendlyByteBuf buf) {
+        spellRecipe = ANCodecs.decode(Spell.CODEC.codec(), buf.readNbt());
         cast_slot = buf.readInt();
         spellName = buf.readUtf(32767);
         this.mainHand = buf.readBoolean();
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf) {
-        buf.writeNbt(spellRecipe.serialize());
+    public void toBytes(RegistryFriendlyByteBuf buf) {
+        buf.writeNbt(ANCodecs.encode(Spell.CODEC.codec(), spellRecipe));
         buf.writeInt(cast_slot);
         buf.writeUtf(spellName);
         buf.writeBoolean(mainHand);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            if (ctx.get().getSender() != null) {
-                InteractionHand hand = mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
-                ItemStack stack = ctx.get().getSender().getItemInHand(hand);
-                if(!(stack.getItem() instanceof ICasterTool))
-                    return;
-                if (spellRecipe != null) {
-                    ISpellCaster caster = CasterUtil.getCaster(stack);
-                    caster.setCurrentSlot(cast_slot);
-                    // Update just the recipe, don't overwrite the entire spell.
-                    Spell spell = caster.getSpell(cast_slot).setRecipe(spellRecipe.recipe);
-                    caster.setSpell(spell, cast_slot);
-                    caster.setSpellName(spellName, cast_slot);
+    @Override
+    public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
+        InteractionHand hand = mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+        ItemStack stack = player.getItemInHand(hand);
+        if(!(stack.getItem() instanceof ICasterTool))
+            return;
+        if (spellRecipe != null) {
+            AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
+            // Update just the recipe, don't overwrite the entire spell.
+            var spell = caster.getSpell(cast_slot).mutable().setRecipe(new ArrayList<>(spellRecipe.unsafeList()));
+            caster.setCurrentSlot(cast_slot).setSpell(spell.immutable(), cast_slot).setSpellName(spellName, cast_slot).saveToStack(stack);
 
-                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> ctx.get().getSender()), new PacketUpdateBookGUI(stack));
-                }
-            }
-        });
-        ctx.get().setPacketHandled(true);
+            Networking.sendToPlayerClient(new PacketUpdateBookGUI(stack), player);
+        }
+    }
+
+    public static final Type<PacketUpdateCaster> TYPE = new Type<>(ArsNouveau.prefix("update_caster"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketUpdateCaster> CODEC = StreamCodec.ofMember(PacketUpdateCaster::toBytes, PacketUpdateCaster::new);
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

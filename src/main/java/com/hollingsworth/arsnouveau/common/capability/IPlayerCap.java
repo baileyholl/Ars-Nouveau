@@ -2,14 +2,12 @@ package com.hollingsworth.arsnouveau.common.capability;
 
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
 
-public interface IPlayerCap extends INBTSerializable<CompoundTag> {
+public interface IPlayerCap {
     /*Glyph data*/
 
     /**

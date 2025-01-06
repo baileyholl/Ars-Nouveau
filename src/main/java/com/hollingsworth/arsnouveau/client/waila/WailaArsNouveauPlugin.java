@@ -17,7 +17,7 @@ public class WailaArsNouveauPlugin implements IWailaPlugin {
             if (accessor instanceof BlockAccessor target) {
                 Player player = accessor.getPlayer();
 
-                if (player.isCreative() || player.isSpectator() || player.hasEffect(ModPotions.MAGIC_FIND_EFFECT.get()))
+                if (player.isCreative() || player.isSpectator() || player.hasEffect(ModPotions.MAGIC_FIND_EFFECT))
                     return accessor;
 
                 if (target.getBlockEntity() instanceof GhostWeaveTile tile && tile.isInvisible()) {

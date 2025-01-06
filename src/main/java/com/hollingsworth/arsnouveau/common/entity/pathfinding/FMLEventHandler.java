@@ -1,14 +1,16 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
-import net.minecraftforge.event.server.ServerStoppingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import com.hollingsworth.arsnouveau.api.event.EventQueue;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 
 /**
  * Event handler used to catch various forge events.
  */
 public class FMLEventHandler {
-    @SubscribeEvent
+
     public static void onServerStopped(final ServerStoppingEvent event) {
         Pathfinding.shutdown();
+        EventQueue.getServerInstance().clear();
+        EventQueue.getClientQueue().clear();
     }
 }

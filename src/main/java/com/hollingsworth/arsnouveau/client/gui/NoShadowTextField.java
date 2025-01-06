@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
@@ -34,7 +35,7 @@ public class NoShadowTextField extends EditBox {
         int k = this.highlightPos - this.displayPos;
         String s = this.font.plainSubstrByWidth(this.value.substring(this.displayPos), this.getInnerWidth());
         boolean flag = j >= 0 && j <= s.length();
-        boolean flag1 = this.isFocused() && this.frame / 6 % 2 == 0 && flag;
+        boolean flag1 = this.isFocused() && (Util.getMillis() - this.focusedTime) / 300L % 2L == 0L && flag;
         int l = this.bordered ? this.x + 4 : this.x;
         int i1 = this.bordered ? this.y + (this.height - 8) / 2 : this.y;
         int j1 = l;
@@ -92,7 +93,7 @@ public class NoShadowTextField extends EditBox {
                 }
 
                 String s = this.font.plainSubstrByWidth(this.value.substring(this.displayPos), this.getInnerWidth());
-                this.moveCursorTo(this.font.plainSubstrByWidth(s, i).length() + this.displayPos);
+                this.moveCursorTo(this.font.plainSubstrByWidth(s, i).length() + this.displayPos, true);
                 return true;
             } else if (this.isFocused() && mouseButton == 1) {
                 if (this.value.isEmpty())

@@ -12,7 +12,7 @@ public class StorageSettingsButton extends StateButton{
     @Override
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float pt) {
         if(this.visible){
-            graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/storage_tab1.png"), x, y, 0, 0, 22, 13, 22, 13);
+            graphics.blit(ArsNouveau.prefix( "textures/gui/storage_tab1.png"), x, y, 0, 0, 22, 13, 22, 13);
         }
         super.renderWidget(graphics, mouseX, mouseY, pt);
     }

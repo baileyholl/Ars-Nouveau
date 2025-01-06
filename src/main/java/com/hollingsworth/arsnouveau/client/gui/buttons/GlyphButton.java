@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
+import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
@@ -11,11 +12,12 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.forgespi.language.IModInfo;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforgespi.language.IModInfo;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -25,6 +27,7 @@ public class GlyphButton extends ANButton {
 
     public AbstractSpellPart abstractSpellPart;
     public List<SpellValidationError> validationErrors;
+    public AbstractSpellPart augmentingParent;
 
     public GlyphButton(int x, int y, AbstractSpellPart abstractSpellPart, OnPress onPress) {
         super(x, y, 16, 16, onPress);
@@ -33,7 +36,7 @@ public class GlyphButton extends ANButton {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    protected void renderWidget(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         if(!visible){
             return;
         }
@@ -64,6 +67,16 @@ public class GlyphButton extends ANButton {
                     .map(ModContainer::getModInfo)
                     .map(IModInfo::getDisplayName).orElse(spellPart.getRegistryName().getNamespace());
             tip.add(Component.literal(modName).withStyle(ChatFormatting.BLUE));
+        }
+        if(this.abstractSpellPart instanceof AbstractAugment augment && this.augmentingParent != null){
+            if(validationErrors != null && !validationErrors.isEmpty()){
+                return;
+            }
+            Component augmentDescription = augmentingParent.augmentDescriptions.get(augment);
+            if (augmentDescription != null) {
+                tip.add(Component.translatable("ars_nouveau.augmenting", augmentingParent.getLocaleName()));
+                tip.add(augmentDescription.copy().withStyle(ChatFormatting.GOLD));
+            }
         }
     }
 }

@@ -1,18 +1,18 @@
 package com.hollingsworth.arsnouveau.api.event;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.event.TickEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /**
  * A basic timed event for the EventQueue.
  */
 public interface ITimedEvent {
 
-    default void tickEvent(TickEvent event){
-        tick(event.side.isServer());
-    }
-
     void tick(boolean serverSide);
+
+    default void tick(ServerTickEvent serverTickEvent){
+        tick(true);
+    }
 
     /**
      * If this event should be removed from the queue

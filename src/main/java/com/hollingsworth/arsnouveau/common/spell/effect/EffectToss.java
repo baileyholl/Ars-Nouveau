@@ -15,17 +15,16 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class EffectToss extends AbstractEffect {
@@ -88,8 +87,7 @@ public class EffectToss extends AbstractEffect {
             summonStack(shooter, spellContext, spellStats, world, pos, manager);
             return;
         }
-        BlockEntity tileEntity = world.getBlockEntity(rayTraceResult.getBlockPos());
-        IItemHandler targetInv = tileEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+        IItemHandler targetInv = world.getCapability(Capabilities.ItemHandler.BLOCK, rayTraceResult.getBlockPos(), null);
 
         if (targetInv == null) {
             return;
@@ -121,5 +119,14 @@ public class EffectToss extends AbstractEffect {
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentExtract.INSTANCE, AugmentRandomize.INSTANCE, AugmentDampen.INSTANCE, AugmentAmplify.INSTANCE);
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentExtract.INSTANCE, "Extracts the item from the caster's inventory.");
+        map.put(AugmentRandomize.INSTANCE, "Randomizes the stack selection.");
+        map.put(AugmentDampen.INSTANCE, "Halves the stack size.");
+        map.put(AugmentAmplify.INSTANCE, "Doubles the stack size.");
     }
 }

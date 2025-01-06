@@ -28,11 +28,6 @@ public class ShapersFocus extends ArsNouveauCurio implements ISpellModifierItem 
         withTooltip(Component.translatable("tooltip.ars_nouveau.shapers_focus"));
     }
 
-    @Deprecated(forRemoval = true)
-    public static void tryPropagateEntitySpell(EnchantedFallingBlock fallingblockentity, Level level, LivingEntity shooter, SpellContext spellContext, SpellResolver resolver) {
-        tryPropagateEntitySpell(fallingblockentity, level, (Entity) shooter, spellContext, resolver);
-    }
-
 
     public static @Nullable SpellContext tryPropagateEntitySpell(EnchantedFallingBlock fallingblockentity, Level level, Entity shooter, SpellContext spellContext, SpellResolver resolver) {
         if (!resolver.hasFocus(ItemsRegistry.SHAPERS_FOCUS.get()))
@@ -52,11 +47,6 @@ public class ShapersFocus extends ArsNouveauCurio implements ISpellModifierItem 
             newResolver.onResolveEffect(level, new EntityHitResult(fallingblockentity, fallingblockentity.position));
         }
         return context;
-    }
-
-    @Deprecated(forRemoval = true)
-    public static void tryPropagateBlockSpell(BlockHitResult blockHitResult, Level level, LivingEntity shooter, SpellContext spellContext, SpellResolver resolver) {
-        tryPropagateBlockSpell(blockHitResult, level, (Entity) shooter, spellContext, resolver);
     }
 
     /**

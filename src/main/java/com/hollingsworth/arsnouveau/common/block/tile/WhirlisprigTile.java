@@ -8,13 +8,14 @@ import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
-import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.config.Config;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -25,14 +26,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
+import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -44,9 +41,9 @@ import java.util.stream.Collectors;
 
 public class WhirlisprigTile extends SummoningTile implements GeoBlockEntity {
 
-    public static TagKey<Block> KINDA_LIKES = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/kinda_likes"));
-    public static TagKey<Block> GREATLY_LIKES = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/greatly_likes"));
-    public static TagKey<Item> DENIED_DROP = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/denied_drop"));
+    public static TagKey<Block> KINDA_LIKES = BlockTags.create(ArsNouveau.prefix( "whirlisprig/kinda_likes"));
+    public static TagKey<Block> GREATLY_LIKES = BlockTags.create(ArsNouveau.prefix( "whirlisprig/greatly_likes"));
+    public static TagKey<Item> DENIED_DROP = ItemTags.create(ArsNouveau.prefix( "whirlisprig/denied_drop"));
     public List<ItemStack> ignoreItems = new ArrayList<>();
     public int ticksToNextEval;
     public int moodScore;
@@ -54,8 +51,9 @@ public class WhirlisprigTile extends SummoningTile implements GeoBlockEntity {
     public int progress;
     public Map<BlockState, Integer> genTable = new HashMap<>();
     public Map<BlockState, Integer> scoreMap = new HashMap<>();
+
     public WhirlisprigTile(BlockPos pPos, BlockState pState) {
-        super(BlockRegistry.WHIRLISPRIG_TILE, pPos, pState);
+        super(BlockRegistry.WHIRLISPRIG_TILE.get(), pPos, pState);
     }
 
     @Override
@@ -80,7 +78,7 @@ public class WhirlisprigTile extends SummoningTile implements GeoBlockEntity {
             if (ticksToNextEval <= 0)
                 evaluateGrove();
 
-            if (level.getGameTime() % 60 == 0 && progress >= Config.WHIRLISPRIG_MAX_PROGRESS.get() && SourceUtil.takeSourceWithParticles(worldPosition, level, 5, Config.SYLPH_MANA_COST.get()) != null) {
+            if (level.getGameTime() % 60 == 0 && progress >= Config.WHIRLISPRIG_MAX_PROGRESS.get() && SourceUtil.takeSourceWithParticles(worldPosition, level, 5, Config.WHIRLISPRIG_SOURCE_COST.get()) != null) {
                 this.progress = 0;
                 DropDistribution<BlockState> blockDropDistribution = new DropDistribution<>(genTable);
                 int numDrops = getDropsByDiversity() + 3;
@@ -174,7 +172,7 @@ public class WhirlisprigTile extends SummoningTile implements GeoBlockEntity {
             return 2;
 
 
-        if (state.getBlock() instanceof StemGrownBlock)
+        if (state.is(BlockTagProvider.HARVEST_STEMS))
             return 2;
 
         if (state.is(BlockTags.LOGS))
@@ -221,24 +219,24 @@ public class WhirlisprigTile extends SummoningTile implements GeoBlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         tag.putInt("moodScore", moodScore);
         tag.putInt("diversityScore", diversityScore);
         tag.putInt("progress", progress);
         tag.putInt("evalTicks", ticksToNextEval);
         if (ignoreItems != null && !ignoreItems.isEmpty())
-            NBTUtil.writeItems(tag, "ignored_", ignoreItems);
+            NBTUtil.writeItems(pRegistries, tag, "ignored_", ignoreItems);
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(compound, pRegistries);
         moodScore = compound.getInt("moodScore");
         diversityScore = compound.getInt("diversityScore");
         progress = compound.getInt("progress");
         ticksToNextEval = compound.getInt("evalTicks");
-        ignoreItems = NBTUtil.readItems(compound, "ignored_");
+        ignoreItems = NBTUtil.readItems(pRegistries, compound, "ignored_");
     }
 
     @Override

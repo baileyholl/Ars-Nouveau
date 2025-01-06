@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
-import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
@@ -18,8 +17,11 @@ import com.hollingsworth.arsnouveau.common.entity.goal.UntamedFindItemGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.drygmy.CollectEssenceGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.FollowMobGoalBackoff;
 import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.FollowPlayerGoal;
+import com.hollingsworth.arsnouveau.common.items.data.ICharmSerializable;
+import com.hollingsworth.arsnouveau.common.items.data.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
@@ -49,23 +51,16 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 
-public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipProvider, IDispellable, IVariantColorProvider<EntityDrygmy> {
+public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipProvider, IDispellable, ICharmSerializable {
 
     public static final EntityDataAccessor<Boolean> CHANNELING = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.BOOLEAN);
@@ -81,7 +76,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     public static String[] COLORS = {"brown", "cyan", "orange"};
 
     @Override
-    public int getExperienceReward() {
+    protected int getBaseExperienceReward() {
         return 0;
     }
 
@@ -111,6 +106,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     public void die(DamageSource source) {
         if (!level.isClientSide && isTamed()) {
             ItemStack stack = new ItemStack(ItemsRegistry.DRYGMY_CHARM);
+            stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
         }
         super.die(source);
@@ -166,7 +162,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
 
             tamingTime++;
             if (tamingTime % 20 == 0 && !level.isClientSide())
-                Networking.sendToNearby(level, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, blockPosition(), ParticleColor.ORANGE));
+                Networking.sendToNearbyClient(level, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, blockPosition(), ParticleColor.ORANGE));
 
             if (tamingTime > 60 && !level.isClientSide) {
                 ItemStack stack = new ItemStack(ItemsRegistry.DRYGMY_SHARD, 1 + level.random.nextInt(2));
@@ -208,18 +204,14 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(CHANNELING, false);
-        this.entityData.define(TAMED, false);
-        this.entityData.define(HOLDING_ESSENCE, false);
-        this.entityData.define(CHANNELING_ENTITY, -1);
-        this.entityData.define(BEING_TAMED, false);
-        this.entityData.define(COLOR, "brown");
-    }
-
-    public boolean holdingEssence() {
-        return this.entityData.get(HOLDING_ESSENCE);
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(CHANNELING, false);
+        pBuilder.define(TAMED, false);
+        pBuilder.define(HOLDING_ESSENCE, false);
+        pBuilder.define(CHANNELING_ENTITY, -1);
+        pBuilder.define(BEING_TAMED, false);
+        pBuilder.define(COLOR, "brown");
     }
 
     public void setHoldingEssence(boolean holdingEssence) {
@@ -301,6 +293,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
 
         if (!level.isClientSide && isTamed()) {
             ItemStack stack = new ItemStack(ItemsRegistry.DRYGMY_CHARM);
+            stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             this.remove(RemovalReason.DISCARDED);
@@ -327,7 +320,9 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
         tag.putInt("cooldown", channelCooldown);
         tag.putInt("taming", tamingTime);
         tag.putBoolean("beingTamed", this.entityData.get(BEING_TAMED));
-        tag.putString("color", this.entityData.get(COLOR));
+        if(this.entityData.get(COLOR) != null) {
+            tag.putString("color", this.entityData.get(COLOR));
+        }
     }
 
     @Override
@@ -353,21 +348,23 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
         this.addGoalsAfterConstructor();
     }
 
-    @Override
-    public ResourceLocation getTexture(EntityDrygmy entity) {
-        String color = getColor(entity).toLowerCase();
+    public static Map<String, ResourceLocation> TEXTURES = new HashMap<>();
+
+    public ResourceLocation getTexture() {
+        String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "brown";
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/drygmy_" + color + ".png");
+        return TEXTURES.computeIfAbsent(color, c -> ArsNouveau.prefix("textures/entity/drygmy_" + c + ".png"));
     }
 
     @Override
-    public String getColor(EntityDrygmy entity) {
+    public void fromCharmData(PersistentFamiliarData data) {
+        getEntityData().set(COLOR, data.color());
+        this.setCustomName(data.name());
+    }
+
+    @Override
+    public String getColor() {
         return getEntityData().get(COLOR);
-    }
-
-    @Override
-    public void setColor(String color, EntityDrygmy entity) {
-        getEntityData().set(COLOR, color);
     }
 }

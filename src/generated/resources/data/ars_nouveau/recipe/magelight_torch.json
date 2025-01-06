@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "x": {
+      "tag": "c:nuggets/gold"
+    },
+    "y": {
+      "tag": "c:gems/source"
+    }
+  },
+  "pattern": [
+    "   ",
+    "xyx",
+    " x "
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:magelight_torch"
+  }
+}

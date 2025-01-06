@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -27,8 +28,7 @@ public class RunicChalk extends ModItem {
             if (world.getBlockEntity(target) instanceof RuneTile runeTile) {
                 runeTile.uuid = context.getPlayer().getUUID();
             }
-            context.getItemInHand().hurtAndBreak(1, context.getPlayer(), (t) -> {
-            });
+            context.getItemInHand().hurtAndBreak(1, context.getPlayer(), EquipmentSlot.MAINHAND);
         }
         return InteractionResult.SUCCESS;
     }

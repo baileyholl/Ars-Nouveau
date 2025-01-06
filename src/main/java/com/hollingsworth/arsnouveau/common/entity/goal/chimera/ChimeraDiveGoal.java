@@ -46,7 +46,7 @@ public class ChimeraDiveGoal extends Goal {
 
         boss.setFlying(true);
         boss.getNavigation().setCanFloat(true);
-        Networking.sendToNearby(boss.level, boss, new PacketAnimEntity(boss.getId(), WildenChimera.Animations.FLYING.ordinal()));
+        Networking.sendToNearbyClient(boss.level, boss, new PacketAnimEntity(boss.getId(), WildenChimera.Animations.FLYING.ordinal()));
     }
 
     @Override
@@ -110,7 +110,7 @@ public class ChimeraDiveGoal extends Goal {
         boss.diveCooldown = (int) (300 + ParticleUtil.inRange(-100, 100) + boss.getCooldownModifier());
         boss.diving = false;
         finished = true;
-        ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.CHIMERA_EXPLOSION, (ServerLevel) boss.level, BlockPos.containing(boss.position().x, boss.position.y, boss.position.z), 10);
+        ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.CHIMERA_EXPLOSION.get(), (ServerLevel) boss.level, BlockPos.containing(boss.position().x, boss.position.y, boss.position.z), 10);
         for(int i = 0; i < 40; i++){
             if(!boss.level.getBlockState(boss.getOnPos().below(i)).isAir()){
                 boss.setPos(boss.getX(), boss.getY() - i, boss.getZ());

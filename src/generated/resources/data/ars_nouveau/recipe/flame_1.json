@@ -1,0 +1,17 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:flame",
+  "level": 1,
+  "pedestalItems": [
+    {
+      "item": "ars_nouveau:fire_essence"
+    },
+    {
+      "item": "ars_nouveau:air_essence"
+    },
+    {
+      "tag": "c:rods/blaze"
+    }
+  ],
+  "sourceCost": 5000
+}

@@ -1,8 +1,7 @@
 package com.hollingsworth.arsnouveau.setup.config;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.ForgeConfigSpec;
-
+import net.neoforged.neoforge.common.ModConfigSpec;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -16,10 +15,10 @@ public class ConfigUtil {
      * Expected format is "string=int"
      * Example: "fortune=3"
      */
-    public static final Pattern STRING_INT_MAP = Pattern.compile("([^/=]+)=(\\p{Digit}+)");
+    public static final Pattern STRING_INT_MAP = Pattern.compile("(.+?)=(\\d+)");
 
     /** Parse glyph_limits into a Map from augment glyph tags to limits. */
-    public static Map<String, Integer> parseMapConfig(ForgeConfigSpec.ConfigValue<List<? extends String>> configValue) {
+    public static Map<String, Integer> parseMapConfig(ModConfigSpec.ConfigValue<List<? extends String>> configValue) {
         return configValue.get().stream()
                 .map(STRING_INT_MAP::matcher)
                 .filter(Matcher::matches)

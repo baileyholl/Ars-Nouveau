@@ -16,11 +16,12 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class MethodProjectile extends AbstractCastMethod {
@@ -30,10 +31,10 @@ public class MethodProjectile extends AbstractCastMethod {
         super(GlyphLib.MethodProjectileID, "Projectile");
     }
 
-    public ForgeConfigSpec.IntValue PROJECTILE_TTL;
+    public ModConfigSpec.IntValue PROJECTILE_TTL;
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         PROJECTILE_TTL = builder.comment("Max lifespan of the projectile, in seconds.").defineInRange("max_lifespan",60, 0, Integer.MAX_VALUE);
     }
@@ -121,10 +122,20 @@ public class MethodProjectile extends AbstractCastMethod {
         return CastResolveType.SUCCESS;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentPierce.INSTANCE, AugmentSplit.INSTANCE, AugmentAccelerate.INSTANCE, AugmentDecelerate.INSTANCE, AugmentSensitive.INSTANCE);
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentPierce.INSTANCE, "Projectiles will pierce through enemies and blocks an additional time.");
+        map.put(AugmentSplit.INSTANCE, "Creates multiple projectiles.");
+        map.put(AugmentAccelerate.INSTANCE, "Projectiles will move faster.");
+        map.put(AugmentDecelerate.INSTANCE, "Projectiles will move slower.");
+        map.put(AugmentSensitive.INSTANCE, "Projectiles will hit plants and other materials that do not block motion.");
     }
 
     @Override

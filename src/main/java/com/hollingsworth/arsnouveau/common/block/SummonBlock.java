@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,13 +20,14 @@ public abstract class SummonBlock extends TickableModBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
-        CompoundTag tag = context.getItemInHand().getTag();
-        if (tag != null && tag.contains("BlockEntityTag")) {
-            tag = tag.getCompound("BlockEntityTag");
-            if (tag.contains("converted") && tag.getBoolean("converted")) {
-                state = state.setValue(CONVERTED, true);
-            }
-        }
+        //todo: check if needed?
+//        CompoundTag tag = context.getItemInHand().getTag();
+//        if (tag != null && tag.contains("BlockEntityTag")) {
+//            tag = tag.getCompound("BlockEntityTag");
+//            if (tag.contains("converted") && tag.getBoolean("converted")) {
+//                state = state.setValue(CONVERTED, true);
+//            }
+//        }
         return state;
     }
 

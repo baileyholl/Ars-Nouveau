@@ -15,6 +15,6 @@ public class TextPage extends AbstractPage {
 
     @Override
     public ResourceLocation getType() {
-        return new ResourceLocation("patchouli:text");
+        return ResourceLocation.tryParse("patchouli:text");
     }
 }

@@ -7,16 +7,17 @@ import net.minecraft.resources.ResourceLocation;
 public class SelectableButton extends GuiImageButton {
     public ResourceLocation secondImage;
     public boolean isSelected;
+    public ResourceLocation originalImage;
 
     public SelectableButton(int x, int y, int u, int v, int w, int h, int image_width, int image_height, ResourceLocation resource_image, ResourceLocation secondImage, Button.OnPress onPress) {
         super(x, y, u, v, w, h, image_width, image_height, resource_image.getPath(), onPress);
         this.secondImage = secondImage;
+        this.originalImage = resource_image;
     }
 
     @Override
-    public void render(GuiGraphics graphics, int parX, int parY, float partialTicks) {
-        this.image = isSelected ? secondImage : image;
-        super.render(graphics, parX, parY, partialTicks);
+    protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        this.image = isSelected ? secondImage : originalImage;
+        super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
     }
-
 }

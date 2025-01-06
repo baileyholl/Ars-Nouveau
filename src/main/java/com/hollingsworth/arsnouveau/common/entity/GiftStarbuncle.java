@@ -27,14 +27,10 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class GiftStarbuncle extends PathfinderMob implements GeoEntity {
@@ -68,7 +64,7 @@ public class GiftStarbuncle extends PathfinderMob implements GeoEntity {
             level.addFreshEntity(new ItemEntity(level, getX(), getY() + 0.5, getZ(), stack));
 
             level.playSound(null, getX(), getY(), getZ(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1f, 1f);
-            ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.POOF_MOB, (ServerLevel) this.level, this.getOnPos(), 10);
+            ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.POOF_MOB.get(), (ServerLevel) this.level, this.getOnPos(), 10);
             this.remove(RemovalReason.DISCARDED);
         } else if (tamingTime == 60 && level.isClientSide) {
             for (int i = 0; i < 10; i++) {
@@ -115,9 +111,9 @@ public class GiftStarbuncle extends PathfinderMob implements GeoEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(BEING_TAMED, false);
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(BEING_TAMED, false);
     }
 
     @Override

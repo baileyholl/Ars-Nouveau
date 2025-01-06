@@ -77,9 +77,9 @@ public interface LambDynamicLight {
      *
      * @return {@code true} if this dynamic light source should update, else {@code false}
      */
-    boolean shouldUpdateDynamicLight();
+    boolean ars_nouveau$shouldUpdateDynamicLight();
 
-    boolean lambdynlights$updateDynamicLight(LevelRenderer renderer);
+    boolean ars_nouveau$updateDynamicLight(LevelRenderer renderer);
 
-    void lambdynlights$scheduleTrackedChunksRebuild(LevelRenderer renderer);
+    void ars_nouveau$scheduleTrackedChunksRebuild(LevelRenderer renderer);
 }

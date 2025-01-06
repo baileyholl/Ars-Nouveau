@@ -1,0 +1,20 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": {
+    "b": 180,
+    "g": 25,
+    "id": "ars_nouveau:constant",
+    "r": 255
+  },
+  "flavour_text": "Creates a fire that quickly freezes to ice.",
+  "name": "Farfalla's Frosty Flames",
+  "sound": {},
+  "spell": [
+    "ars_nouveau:glyph_projectile",
+    "ars_nouveau:glyph_ignite",
+    "ars_nouveau:glyph_delay",
+    "ars_nouveau:glyph_conjure_water",
+    "ars_nouveau:glyph_freeze"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

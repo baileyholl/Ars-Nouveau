@@ -1,0 +1,32 @@
+{
+  "parent": "ars_nouveau:ritual_brazier",
+  "criteria": {
+    "has_mob_jar": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ars_nouveau:mob_jar"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.mob_jar"
+    },
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:mob_jar"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.mob_jar"
+    }
+  },
+  "requirements": [
+    [
+      "has_mob_jar"
+    ]
+  ]
+}

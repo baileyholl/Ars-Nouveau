@@ -1,0 +1,23 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:fire_aspect",
+  "level": 1,
+  "pedestalItems": [
+    {
+      "item": "ars_nouveau:fire_essence"
+    },
+    {
+      "tag": "c:storage_blocks/source"
+    },
+    {
+      "tag": "c:storage_blocks/source"
+    },
+    {
+      "tag": "c:storage_blocks/lapis"
+    },
+    {
+      "tag": "c:storage_blocks/lapis"
+    }
+  ],
+  "sourceCost": 2000
+}

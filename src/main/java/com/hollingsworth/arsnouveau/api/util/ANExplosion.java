@@ -3,13 +3,15 @@ package com.hollingsworth.arsnouveau.api.util;
 
 import com.google.common.collect.Sets;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.enchantment.ProtectionEnchantment;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
@@ -28,21 +30,12 @@ public class ANExplosion extends Explosion {
     public double baseDamage;
     public double ampDamageScalar;
 
-    public ANExplosion(Level p_i45752_1_, @Nullable Entity p_i45752_2_, double p_i45752_3_, double p_i45752_5_, double p_i45752_7_, float p_i45752_9_, List<BlockPos> p_i45752_10_) {
-        super(p_i45752_1_, p_i45752_2_, p_i45752_3_, p_i45752_5_, p_i45752_7_, p_i45752_9_, p_i45752_10_);
-    }
-
-    public ANExplosion(Level p_i50006_1_, @Nullable Entity p_i50006_2_, double p_i50006_3_, double p_i50006_5_, double p_i50006_7_, float p_i50006_9_, boolean p_i50006_10_, BlockInteraction p_i50006_11_, List<BlockPos> p_i50006_12_) {
-        super(p_i50006_1_, p_i50006_2_, p_i50006_3_, p_i50006_5_, p_i50006_7_, p_i50006_9_, p_i50006_10_, p_i50006_11_, p_i50006_12_);
-    }
-
-    public ANExplosion(Level p_i50007_1_, @Nullable Entity p_i50007_2_, double p_i50007_3_, double p_i50007_5_, double p_i50007_7_, float p_i50007_9_, boolean p_i50007_10_, BlockInteraction p_i50007_11_) {
-        super(p_i50007_1_, p_i50007_2_, p_i50007_3_, p_i50007_5_, p_i50007_7_, p_i50007_9_, p_i50007_10_, p_i50007_11_);
-    }
 
     public ANExplosion(Level p_i231610_1_, @Nullable Entity p_i231610_2_, @Nullable DamageSource p_i231610_3_, @Nullable ExplosionDamageCalculator p_i231610_4_, double p_i231610_5_, double p_i231610_7_, double p_i231610_9_, float p_i231610_11_, boolean p_i231610_12_, BlockInteraction p_i231610_13_,
                        double numAmps) {
-        super(p_i231610_1_, p_i231610_2_, p_i231610_3_, p_i231610_4_, p_i231610_5_, p_i231610_7_, p_i231610_9_, p_i231610_11_, p_i231610_12_, p_i231610_13_);
+        super(p_i231610_1_, p_i231610_2_, p_i231610_3_, p_i231610_4_, p_i231610_5_, p_i231610_7_, p_i231610_9_, p_i231610_11_, p_i231610_12_, p_i231610_13_, ParticleTypes.EXPLOSION,
+                ParticleTypes.EXPLOSION_EMITTER,
+                SoundEvents.GENERIC_EXPLODE);
         amps = numAmps;
     }
 
@@ -98,11 +91,11 @@ public class ANExplosion extends Explosion {
         int j2 = Mth.floor(this.z - (double) f2 - 1.0D);
         int j1 = Mth.floor(this.z + (double) f2 + 1.0D);
         List<Entity> list = this.level.getEntities(this.source, new AABB(k1, i2, j2, l1, i1, j1));
-        net.minecraftforge.event.ForgeEventFactory.onExplosionDetonate(this.level, this, list, f2);
+        net.neoforged.neoforge.event.EventHooks.onExplosionDetonate(this.level, this, list, f2);
         Vec3 vector3d = new Vec3(this.x, this.y, this.z);
 
         for (Entity entity : list) {
-            if (!entity.ignoreExplosion()) {
+            if (!entity.ignoreExplosion(this)) {
                 double d12 = Mth.sqrt((float) entity.distanceToSqr(vector3d)) / f2;
                 if (d12 <= 1.0D) {
                     double d5 = entity.getX() - this.x;
@@ -116,10 +109,10 @@ public class ANExplosion extends Explosion {
                         double d14 = getSeenPercent(vector3d, entity);
                         double d10 = (1.0D - d12) * d14;
                         float damage = (float) Math.min(Math.max(0.0f, (float) ((int) ((d10 * d10 + d10) / 2.0D * 7.0D * (double) f2 + 1.0D))), baseDamage + this.amps * ampDamageScalar);
-                        entity.hurt(this.getDamageSource(), damage);
+                        entity.hurt(this.damageSource, damage);
                         double d11 = d10;
-                        if (entity instanceof LivingEntity) {
-                            d11 = ProtectionEnchantment.getExplosionKnockbackAfterDampener((LivingEntity) entity, d10);
+                        if (entity instanceof LivingEntity livingEntity) {
+                            d11 = d10 * (1.0 - livingEntity.getAttributeValue(Attributes.EXPLOSION_KNOCKBACK_RESISTANCE));
                         }
 
                         entity.setDeltaMovement(entity.getDeltaMovement().add(d5 * d11, d7 * d11, d9 * d11));

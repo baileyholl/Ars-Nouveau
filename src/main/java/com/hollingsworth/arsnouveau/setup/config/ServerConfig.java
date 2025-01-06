@@ -1,31 +1,34 @@
 package com.hollingsworth.arsnouveau.setup.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ServerConfig {
 
-    public static ForgeConfigSpec SERVER_CONFIG;
-    public static ForgeConfigSpec.IntValue INIT_MAX_MANA;
-    public static ForgeConfigSpec.IntValue INIT_MANA_REGEN;
-    public static ForgeConfigSpec.IntValue GLYPH_MAX_BONUS;
-    public static ForgeConfigSpec.IntValue TIER_MAX_BONUS;
-    public static ForgeConfigSpec.IntValue TIER_REGEN_BONUS;
-    public static ForgeConfigSpec.IntValue MANA_BOOST_BONUS;
-    public static ForgeConfigSpec.IntValue MANA_REGEN_ENCHANT_BONUS;
-    public static ForgeConfigSpec.IntValue MANA_REGEN_POTION;
-    public static ForgeConfigSpec.IntValue REGEN_INTERVAL;
-    public static ForgeConfigSpec.DoubleValue GLYPH_REGEN_BONUS;
-    public static ForgeConfigSpec.BooleanValue ENFORCE_AUGMENT_CAP_ON_CAST;
-    public static ForgeConfigSpec.BooleanValue ENFORCE_GLYPH_LIMIT_ON_CAST;
-    public static ForgeConfigSpec.IntValue CODEX_COST_PER_GLYPH;
-    public static ForgeConfigSpec.BooleanValue ENABLE_WARP_PORTALS;
+    public static ModConfigSpec SERVER_CONFIG;
+    public static ModConfigSpec.IntValue INIT_MAX_MANA;
+    public static ModConfigSpec.IntValue INIT_MANA_REGEN;
+    public static ModConfigSpec.IntValue GLYPH_MAX_BONUS;
+    public static ModConfigSpec.IntValue TIER_MAX_BONUS;
+    public static ModConfigSpec.IntValue TIER_REGEN_BONUS;
+    public static ModConfigSpec.IntValue MANA_BOOST_BONUS;
+    public static ModConfigSpec.IntValue MANA_REGEN_ENCHANT_BONUS;
+    public static ModConfigSpec.IntValue REGEN_INTERVAL;
+    public static ModConfigSpec.DoubleValue GLYPH_REGEN_BONUS;
+    public static ModConfigSpec.BooleanValue ENFORCE_AUGMENT_CAP_ON_CAST;
+    public static ModConfigSpec.BooleanValue ENFORCE_GLYPH_LIMIT_ON_CAST;
+    public static ModConfigSpec.IntValue CODEX_COST_PER_GLYPH;
+    public static ModConfigSpec.BooleanValue ENABLE_WARP_PORTALS;
 
-    public static ForgeConfigSpec.BooleanValue INFINITE_SPELLS;
-    public static ForgeConfigSpec.IntValue NOT_SO_INFINITE_SPELLS;
-
+    public static ModConfigSpec.BooleanValue INFINITE_SPELLS;
+    public static ModConfigSpec.IntValue NOT_SO_INFINITE_SPELLS;
+    public static ModConfigSpec.IntValue LECTERN_LINK_RANGE;
 
     static {
-        ForgeConfigSpec.Builder SERVER_BUILDER = new ForgeConfigSpec.Builder();
+        ModConfigSpec.Builder SERVER_BUILDER = new ModConfigSpec.Builder();
+        SERVER_BUILDER.comment("Blocks").push("blocks");
+        LECTERN_LINK_RANGE = SERVER_BUILDER.comment("Maximum storage lectern linking range").defineInRange("lecternLinkRange", 30, 1, Integer.MAX_VALUE);
+        SERVER_BUILDER.pop();
+
         SERVER_BUILDER.comment("Mana").push("mana");
         INIT_MANA_REGEN = SERVER_BUILDER.comment("Base mana regen in seconds").defineInRange("baseRegen", 5, 0, Integer.MAX_VALUE);
         INIT_MAX_MANA = SERVER_BUILDER.comment("Base max mana").defineInRange("baseMax", 100, 0, Integer.MAX_VALUE);
@@ -37,7 +40,6 @@ public class ServerConfig {
         MANA_BOOST_BONUS = SERVER_BUILDER.comment("Mana Boost value per level").defineInRange("manaBoost", 25, 0, Integer.MAX_VALUE);
         MANA_REGEN_ENCHANT_BONUS = SERVER_BUILDER.comment("(enchantment) Mana regen per second per level").defineInRange("manaRegenEnchantment", 2, 0, Integer.MAX_VALUE);
         GLYPH_REGEN_BONUS = SERVER_BUILDER.comment("Regen bonus per glyph").defineInRange("glyphRegen", 0.33, 0.0, Integer.MAX_VALUE);
-        MANA_REGEN_POTION = SERVER_BUILDER.comment("Regen bonus per potion level").defineInRange("potionRegen", 10, 0, Integer.MAX_VALUE);
         SERVER_BUILDER.pop();
         SERVER_BUILDER.push("spell_casting");
         ENFORCE_AUGMENT_CAP_ON_CAST = SERVER_BUILDER.comment("Enforce augment cap on casting? Turn this off if you are a pack maker and want to create more powerful items than players.")

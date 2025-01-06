@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
-import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -11,6 +10,9 @@ import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
 import com.hollingsworth.arsnouveau.common.entity.goal.wixie.CompleteCraftingGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.wixie.FindNextItemGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.wixie.FindPotionGoal;
+import com.hollingsworth.arsnouveau.common.items.data.ICharmSerializable;
+import com.hollingsworth.arsnouveau.common.items.data.PersistentFamiliarData;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
@@ -37,21 +39,19 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
+import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
-public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IAnimationListener, IDispellable, IVariantColorProvider<EntityWixie> {
+public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IAnimationListener, IDispellable, ICharmSerializable {
     AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
     public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(EntityWixie.class, EntityDataSerializers.STRING);
 
@@ -74,7 +74,7 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
     }
 
     @Override
-    public int getExperienceReward() {
+    public int getBaseExperienceReward() {
         return 0;
     }
 
@@ -150,9 +150,9 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(COLOR, "blue");
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(COLOR, "blue");
     }
 
     @Override
@@ -170,7 +170,7 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
     }
 
     public static AttributeSupplier.Builder attributes() {
-        return Mob.createMobAttributes().add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue())
+        return Mob.createMobAttributes().add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.value().getDefaultValue())
                 .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.2D);
     }
@@ -193,7 +193,9 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
             tag.putInt("summoner_y", cauldronPos.getY());
             tag.putInt("summoner_z", cauldronPos.getZ());
         }
-        tag.putString("color", this.entityData.get(COLOR));
+        if(this.entityData.get(COLOR) != null) {
+            tag.putString("color", this.entityData.get(COLOR));
+        }
     }
 
     @Override
@@ -211,8 +213,8 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
     public void die(DamageSource source) {
         if (!level.isClientSide) {
             ItemStack stack = new ItemStack(ItemsRegistry.WIXIE_CHARM);
+            stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
-
         }
         super.die(source);
     }
@@ -224,6 +226,7 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
 
         if (!level.isClientSide) {
             ItemStack stack = new ItemStack(ItemsRegistry.WIXIE_CHARM);
+            stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, this.createCharmData());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack.copy()));
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             this.remove(RemovalReason.DISCARDED);
@@ -231,24 +234,26 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
         return true;
     }
 
-    @Override
-    public ResourceLocation getTexture(EntityWixie entity) {
-        String color = getColor(entity).toLowerCase();
+    public static Map<String, ResourceLocation> TEXTURES = new HashMap<>();
+
+    public ResourceLocation getTexture() {
+        String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "blue";
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/wixie_" + color + ".png");
+        String finalColor = color;
+        return TEXTURES.computeIfAbsent(color, (k) -> ArsNouveau.prefix( "textures/entity/wixie_" + finalColor + ".png"));
     }
 
     @Override
-    public String getColor(EntityWixie entityWixie) {
+    public void fromCharmData(PersistentFamiliarData data) {
+        this.entityData.set(COLOR, data.color());
+        setCustomName(data.name());
+    }
+
+    @Override
+    public String getColor() {
         return this.getEntityData().get(COLOR);
     }
-
-    @Override
-    public void setColor(String color, EntityWixie entityWixie) {
-        this.getEntityData().set(COLOR, color);
-    }
-
 
     public enum Animations {
         CAST,

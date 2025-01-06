@@ -9,8 +9,8 @@ import java.util.List;
 
 @Mixin(ChatComponent.class)
 public interface ChatComponentAccessor {
-    @Accessor
-    List<String> getRecentChat();
+//    @Accessor
+//    List<String> getRecentChat();
 
     @Accessor
     List<GuiMessage> getAllMessages();
