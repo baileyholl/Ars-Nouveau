@@ -69,31 +69,35 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 		return new CraftingTerminalMenu(id, plInv, this);
 	}
 
+	private ListTag getCraftMatrixTag(TransientCustomContainer craftingMatrix, HolderLookup.Provider pRegistries) {
+		ListTag listTag = new ListTag();
+		for(int i = 0; i < craftingMatrix.getContainerSize(); ++i) {
+			ItemStack itemstack = craftingMatrix.getItem(i);
+			if (!itemstack.isEmpty()) {
+				CompoundTag compoundTag = new CompoundTag();
+				compoundTag.putInt("Slot", i);
+				compoundTag.put("item", itemstack.save(pRegistries));
+				listTag.add(compoundTag);
+			}
+		}
+		return listTag;
+	}
+
 	@Override
 	public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
 		super.saveAdditional(tag, pRegistries);
 
+		if (legacyCraftMatrix != null && !legacyCraftMatrix.isEmpty()) {
+			tag.put("CraftingTable", getCraftMatrixTag(legacyCraftMatrix, pRegistries));
+		}
+
 		ListTag matrices = new ListTag();
 		for (Map.Entry<UUID, TransientCustomContainer> entry : craftingMatrices.entrySet()) {
 			UUID uuid = entry.getKey();
-			TransientCustomContainer craftMatrix = entry.getValue();
-
 			CompoundTag matrix = new CompoundTag();
 
 			matrix.putUUID("UUID", uuid);
-
-			ListTag listnbt = new ListTag();
-			for(int i = 0; i < craftMatrix.getContainerSize(); ++i) {
-				ItemStack itemstack = craftMatrix.getItem(i);
-				if (!itemstack.isEmpty()) {
-					CompoundTag compoundnbt = new CompoundTag();
-					compoundnbt.putInt("Slot", i);
-					compoundnbt.put("item", itemstack.save(pRegistries));
-					listnbt.add(compoundnbt);
-				}
-			}
-			matrix.put("CraftingTable", listnbt);
-
+			matrix.put("CraftingTable", getCraftMatrixTag(entry.getValue(), pRegistries));
 			matrices.add(matrix);
 		}
 
@@ -123,13 +127,12 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 			}
 		}
 
-		ListTag listnbt = compound.getList("CraftingTable", 10);
-
-		for(int i = 0; i < listnbt.size(); ++i) {
-			CompoundTag compoundnbt = listnbt.getCompound(i);
-			int j = compoundnbt.getInt("Slot");
+		ListTag listTag = compound.getList("CraftingTable", 10);
+		for(int i = 0; i < listTag.size(); ++i) {
+			CompoundTag compoundTag = listTag.getCompound(i);
+			int j = compoundTag.getInt("Slot");
 			if (j >= 0 && j < legacyCraftMatrix.getContainerSize()) {
-				legacyCraftMatrix.setItem(j, ItemStack.parseOptional(pRegistries, compoundnbt.getCompound("item")));
+				legacyCraftMatrix.setItem(j, ItemStack.parseOptional(pRegistries, compoundTag.getCompound("item")));
 			}
 		}
 
