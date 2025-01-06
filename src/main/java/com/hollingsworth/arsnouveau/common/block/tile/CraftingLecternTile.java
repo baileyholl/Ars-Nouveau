@@ -43,7 +43,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 
 		@Override
 		public void slotsChanged(Container inventory) {
-			if (level != null && !level.isClientSide) {
+			if (level != null && !level.isClientSide && uuid != null) {
 				onCraftingMatrixChanged(uuid);
 			}
 		}
@@ -54,6 +54,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 		}
 	};
 	private CraftingRecipe currentRecipe;
+	private final TransientCustomContainer legacyCraftMatrix = new TransientCustomContainer(craftingContainer.apply(null), 3, 3);
 	public final Map<UUID, TransientCustomContainer> craftingMatrices = new HashMap<>();
 	private final Map<UUID, ResultContainer> craftingResults = new HashMap<>();
 	private HashSet<CraftingTerminalMenu> craftingListeners = new HashSet<>();
@@ -120,9 +121,18 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 					container.setItem(slot, ItemStack.parseOptional(pRegistries, itemSlot.getCompound("item")));
 				}
 			}
-
-
 		}
+
+		ListTag listnbt = compound.getList("CraftingTable", 10);
+
+		for(int i = 0; i < listnbt.size(); ++i) {
+			CompoundTag compoundnbt = listnbt.getCompound(i);
+			int j = compoundnbt.getInt("Slot");
+			if (j >= 0 && j < legacyCraftMatrix.getContainerSize()) {
+				legacyCraftMatrix.setItem(j, ItemStack.parseOptional(pRegistries, compoundnbt.getCompound("item")));
+			}
+		}
+
 		reading = false;
 	}
 
@@ -131,7 +141,17 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 	}
 
 	public TransientCustomContainer getCraftingInv(UUID uuid) {
-		return craftingMatrices.computeIfAbsent(uuid, (key) -> new TransientCustomContainer(craftingContainer.apply(uuid), 3, 3));
+		return craftingMatrices.computeIfAbsent(uuid, (key) -> {
+			TransientCustomContainer matrix = new TransientCustomContainer(craftingContainer.apply(uuid), 3, 3);
+			if (!legacyCraftMatrix.isEmpty()) {
+				for(int i = 0; i < legacyCraftMatrix.getContainerSize(); ++i) {
+					ItemStack itemstack = legacyCraftMatrix.getItem(i);
+					matrix.setItem(i, itemstack);
+					legacyCraftMatrix.setItem(i, ItemStack.EMPTY);
+				}
+			}
+			return matrix;
+		});
 	}
 
 	public ResultContainer getCraftResult(Player player) {
