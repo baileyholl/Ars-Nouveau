@@ -13,6 +13,7 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.model.ArmorStandArmorModel;
@@ -89,7 +90,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
                 matrixStack.translate(0, perkYOffset, 0);
             }
 //            matrixStack.mulPose(Axis.ZP.rotationDegrees(180F));
-            matrixStack.translate(0, yOffset, 0);
+            matrixStack.translate(-0.5, yOffset, 0);
 
 //            this.renderArmorPiece(tile,stack, matrixStack, iRenderTypeBuffer, packedLightIn, getArmorModel(armorItem.getEquipmentSlot()));
 //        } else {
@@ -130,6 +131,14 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
     }
 
     public void renderSlate(AlterationTile tile, PoseStack matrixStack, MultiBufferSource bufferSource, int packedLight) {
+        String[] rowNames = new String[]{"top", "mid", "bot"};
+        for (String s : rowNames) {
+            for (int i = 0; i < 4; i++) {
+                int finalI = i;
+                model.getBone(s + "_" + i).ifPresent(bone -> bone.setHidden(finalI != 0));
+            }
+        }
+
         if (!(PerkUtil.getPerkHolder(tile.armorStack) instanceof StackPerkHolder<?> armorPerkHolder)) {
             return;
         }
@@ -137,7 +146,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         List<PerkSlot> perks = armorPerkHolder.getSlotsForTier(tile.armorStack);
         for (int i = 0; i < Math.min(3, perks.size()); i++) {
             var tier = perks.get(i);
-            var component = Component.literal(getRoman(tier.value()));
+            var component = Component.literal(getRoman(tier.value())).withStyle(ChatFormatting.BOLD);
             var height = font.lineHeight/2;
 
             matrixStack.pushPose();
@@ -156,9 +165,10 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
             }
             GeoBone locBone = model.getBone("top_" + (i + 1)).get();
             RenderUtil.translateToPivotPoint(matrixStack, locBone);
-            matrixStack.translate(0, -0.20, 0 );
+            matrixStack.translate(0.0815, -0.20, 0);
             matrixStack.scale(-0.02f, -0.02f, -0.02f);
-            font.drawInBatch(component, 0, height, -1, false, matrixStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, packedLight);
+            float x = (float) (font.width("WWW") - font.width(component)) / 2;
+            font.drawInBatch(component, x, height, 5987163, false, matrixStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, packedLight);
             matrixStack.popPose();
         }
     }
