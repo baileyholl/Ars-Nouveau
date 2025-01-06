@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
-import com.hollingsworth.arsnouveau.common.datagen.WorldgenProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.EntityType;
@@ -24,10 +22,9 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -36,6 +33,7 @@ public abstract class AbstractWilden extends PatrollingMonster implements GeoEnt
     protected AbstractWilden(EntityType<? extends PatrollingMonster> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
+
     public static List<EntityType<? extends AbstractWilden>> WILDEN_TYPES = new CopyOnWriteArrayList<>();
 
     AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
@@ -61,7 +59,7 @@ public abstract class AbstractWilden extends PatrollingMonster implements GeoEnt
     }
 
     @Override
-    public int getExperienceReward() {
+    protected int getBaseExperienceReward() {
         return 8;
     }
 
@@ -72,10 +70,9 @@ public abstract class AbstractWilden extends PatrollingMonster implements GeoEnt
         return 0.4F;
     }
 
-
-    @Nullable
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor pLevel, @NotNull DifficultyInstance pDifficulty, @NotNull MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
-        SpawnGroupData ret = super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+    @Override
+    public @org.jetbrains.annotations.Nullable SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType spawnType, @org.jetbrains.annotations.Nullable SpawnGroupData spawnGroupData) {
+        SpawnGroupData ret = super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
         if (this.isPatrolLeader()) {
             this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
             this.setDropChance(EquipmentSlot.HEAD, 0F);

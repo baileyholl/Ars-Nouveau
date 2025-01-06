@@ -1,24 +1,21 @@
 package com.hollingsworth.arsnouveau.common.world;
 
 import com.hollingsworth.arsnouveau.common.entity.AbstractWilden;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.SpawnGroupData;
-import net.minecraft.world.entity.monster.PatrollingMonster;
-import net.minecraft.world.level.NaturalSpawner;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.PatrolSpawner;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.monster.PatrollingMonster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
+import net.minecraft.world.level.levelgen.PatrolSpawner;
 import org.jetbrains.annotations.NotNull;
 
 public class WildenPatrolSpawner extends PatrolSpawner {
@@ -113,7 +110,7 @@ public class WildenPatrolSpawner extends PatrolSpawner {
                 }
 
                 pillager.setPos(position.getX(), position.getY(), position.getZ());
-                pillager.finalizeSpawn(level, level.getCurrentDifficultyAt(position), MobSpawnType.PATROL, null, null);
+                pillager.finalizeSpawn(level, level.getCurrentDifficultyAt(position), MobSpawnType.PATROL, null);
                 level.addFreshEntityWithPassengers(pillager);
                 return true;
             } else {

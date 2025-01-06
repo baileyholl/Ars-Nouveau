@@ -24,7 +24,6 @@
     "LivingAccessor",
     "MobAccessor",
     "PatrolSpawnerMixin",
-    "PotionRecipeMixin",
     "PufferfishAccessor",
     "camera.ANServerPlayerMixin",
     "camera.ChunkMapMixin",
