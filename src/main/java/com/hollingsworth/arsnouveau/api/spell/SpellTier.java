@@ -28,6 +28,11 @@ public class SpellTier {
         }
     }
 
+    @Deprecated(forRemoval = true)
+    public static SpellTier createTier(ResourceLocation id, int value){
+        return SpellTier.createTier(id, value, () -> DocAssets.TIER_THREE);
+    }
+
     public static SpellTier createTier(ResourceLocation id, int value, Supplier<DocAssets.BlitInfo> docInfo){
         SpellTier tier = new SpellTier(id, value, docInfo);
         SPELL_TIER_MAP.put(value, tier);
