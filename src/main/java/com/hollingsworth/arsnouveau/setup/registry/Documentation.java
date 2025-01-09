@@ -12,6 +12,7 @@ import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
 import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.*;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
@@ -49,6 +50,7 @@ public class Documentation {
     public static void initOnWorldReload(){
         long startTime = System.nanoTime();
         entries = new HashSet<>();
+        Search.connectedSearches = new ArrayList<>();
         DocPlayerData.previousScreen = null;
         pendingBuilders = new ArrayList<>();
         Level level = ArsNouveau.proxy.getClientWorld();
@@ -70,6 +72,10 @@ public class Documentation {
             ItemStack renderStack = spellPart.glyphItem.getDefaultInstance();
             var entry = new DocEntry(spellPart.getRegistryName(), renderStack, Component.literal(spellPart.getLocaleName()));
             entry.addPage(GlyphEntry.create(spellPart));
+            entry.withSearchTag(Component.translatable("ars_nouveau.keyword.glyph"));
+            for(SpellSchool spellSchool : spellPart.spellSchools){
+                entry.withSearchTag(spellSchool.getTextComponent());
+            }
 
             var pages = getRecipePages(renderStack, spellPart.getRegistryName());
             entry.addPages(pages);
@@ -89,7 +95,8 @@ public class Documentation {
             entry.addPage(TextEntry.create(Component.translatable(ritual.getDescriptionKey()), title, renderStack));
 
             List<SinglePageCtor> pages = getRecipePages(renderStack, ritual.getRegistryName());
-            entry.addPages(pages);
+            entry.addPages(pages)
+                    .withSearchTag(Component.translatable("ars_nouveau.keyword.ritual"));
 
             DocumentationRegistry.registerEntry(DocumentationRegistry.RITUAL_INDEX, entry);
         }
@@ -100,14 +107,10 @@ public class Documentation {
 
             ItemStack renderStack = perk.getDefaultInstance();
             var entry = new DocEntry(perk.perk.getRegistryName(), renderStack, perk.perk.getPerkName());
-
             entry.addPage(TextEntry.create(Component.translatable(perk.perk.getDescriptionKey()),Component.literal(perk.perk.getName()), renderStack));
-
             entry.addPages(getRecipePages(renderStack, RegistryHelper.getRegistryName(perk)));
-
-
+            entry.withSearchTag(Component.translatable("ars_nouveau.keyword.thread"));
             DocumentationRegistry.registerEntry(DocumentationRegistry.ARMOR, entry);
-
         }
 
         for (AbstractFamiliarHolder r : FamiliarRegistry.getFamiliarHolderMap().values()) {
@@ -115,6 +118,7 @@ public class Documentation {
             var entry = new DocEntry(r.getRegistryName(), renderstack, Component.translatable("entity.ars_nouveau." + r.getRegistryName().getPath()));
 
             entry.addPage(TextEntry.create(r.getLangDescription(), renderstack.getHoverName(), renderstack));
+            entry.withSearchTag(Component.translatable("ars_nouveau.keyword.familiar"));
 
             DocumentationRegistry.registerEntry(DocumentationRegistry.FAMILIARS, entry);
         }
@@ -125,16 +129,16 @@ public class Documentation {
                 .withSortNum(1)
                 .withIntroPage()
                 .withCraftingPages()
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_lapis"))
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_amethyst"))
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_amethyst_block"))
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.FIRE_ESSENCE.getRegistryName()))
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.EARTH_ESSENCE.getRegistryName()))
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.WATER_ESSENCE.getRegistryName()))
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.AIR_ESSENCE.getRegistryName()))
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.ABJURATION_ESSENCE.getRegistryName()))
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.CONJURATION_ESSENCE.getRegistryName()))
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.MANIPULATION_ESSENCE.getRegistryName())));
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_lapis"), Items.LAPIS_LAZULI)
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_amethyst"), Items.AMETHYST_SHARD)
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_amethyst_block"), Items.AMETHYST_BLOCK)
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.FIRE_ESSENCE.getRegistryName()), ItemsRegistry.FIRE_ESSENCE)
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.EARTH_ESSENCE.getRegistryName()), ItemsRegistry.EARTH_ESSENCE)
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.WATER_ESSENCE.getRegistryName()), ItemsRegistry.WATER_ESSENCE)
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.AIR_ESSENCE.getRegistryName()), ItemsRegistry.AIR_ESSENCE)
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.ABJURATION_ESSENCE.getRegistryName()), ItemsRegistry.ABJURATION_ESSENCE)
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.CONJURATION_ESSENCE.getRegistryName()), ItemsRegistry.CONJURATION_ESSENCE)
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.MANIPULATION_ESSENCE.getRegistryName()), ItemsRegistry.MANIPULATION_ESSENCE));
 
         var enchantingApparatus = addPage(new DocEntryBuilder(MACHINES, BlockRegistry.ENCHANTING_APP_BLOCK)
                 .withSortNum(2)
@@ -323,7 +327,7 @@ public class Documentation {
                 .withIcon(ItemsRegistry.ARCHMAGE_SPELLBOOK)
                 .withIntroPage()
                 .withPage(getRecipePages(RegistryHelper.getRegistryName(ItemsRegistry.NOVICE_SPELLBOOK.asItem()), ArsNouveau.prefix("apprentice_book_upgrade")))
-                .withCraftingPages(ArsNouveau.prefix("archmage_book_upgrade")));
+                .withCraftingPages(ArsNouveau.prefix("archmage_book_upgrade"), ItemsRegistry.ARCHMAGE_SPELLBOOK));
 
         addBasicItem(ItemsRegistry.ENCHANTERS_MIRROR, SPELL_CASTING);
         addBasicItem(ItemsRegistry.ENCHANTERS_SHIELD, SPELL_CASTING);
@@ -331,15 +335,15 @@ public class Documentation {
         addPage(new DocEntryBuilder(SPELL_CASTING, ItemsRegistry.SPELL_BOW)
                 .withIntroPage()
                 .withCraftingPages(ItemsRegistry.SPELL_BOW)
-                .withCraftingPages("ars_nouveau:imbuement_amplify_arrow")
-                .withCraftingPages("ars_nouveau:imbuement_pierce_arrow")
-                .withCraftingPages("ars_nouveau:imbuement_split_arrow"));
+                .withCraftingPages("ars_nouveau:imbuement_amplify_arrow", ItemsRegistry.AMPLIFY_ARROW)
+                .withCraftingPages("ars_nouveau:imbuement_pierce_arrow", ItemsRegistry.PIERCE_ARROW)
+                .withCraftingPages("ars_nouveau:imbuement_split_arrow", ItemsRegistry.SPLIT_ARROW));
         addPage(new DocEntryBuilder(SPELL_CASTING, ItemsRegistry.SPELL_CROSSBOW)
                 .withIntroPage()
                 .withCraftingPages(ItemsRegistry.SPELL_CROSSBOW)
-                .withCraftingPages("ars_nouveau:imbuement_amplify_arrow")
-                .withCraftingPages("ars_nouveau:imbuement_pierce_arrow")
-                .withCraftingPages("ars_nouveau:imbuement_split_arrow"));
+                .withCraftingPages("ars_nouveau:imbuement_amplify_arrow", ItemsRegistry.AMPLIFY_ARROW)
+                .withCraftingPages("ars_nouveau:imbuement_pierce_arrow", ItemsRegistry.PIERCE_ARROW)
+                .withCraftingPages("ars_nouveau:imbuement_split_arrow", ItemsRegistry.SPLIT_ARROW));
         addBasicItem(ItemsRegistry.RUNIC_CHALK, SPELL_CASTING);
 
 
@@ -509,8 +513,8 @@ public class Documentation {
                 .withIcon(ItemsRegistry.ARCANIST_HOOD)
                 .withIntroPage()
                 .withPage(TextEntry.create(getLangPath("armor_upgrading", 2), Component.translatable("ars_nouveau.armor_tiers")))
-                .withCraftingPages("ars_nouveau:first_armor_upgrade")
-                .withCraftingPages("ars_nouveau:second_armor_upgrade")
+                .withCraftingPages("ars_nouveau:first_armor_upgrade", null)
+                .withCraftingPages("ars_nouveau:second_armor_upgrade", null)
                 .withSortNum(1))
                 .withRelations(alteraitonTable, armorEntry);
 
@@ -732,6 +736,7 @@ public class Documentation {
             addPage(builder);
         }
         pendingBuilders = new ArrayList<>();
+
         NeoForge.EVENT_BUS.post(new ReloadDocumentationEvent.AddEntries());
         NeoForge.EVENT_BUS.post(new ReloadDocumentationEvent.Post());
 

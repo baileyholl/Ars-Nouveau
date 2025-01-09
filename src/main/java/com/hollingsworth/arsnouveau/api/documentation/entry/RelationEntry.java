@@ -47,7 +47,7 @@ public class RelationEntry extends SinglePageWidget {
         int i = 0;
         for(ResourceLocation id : relatedEntries){
             DocEntry entry = DocumentationRegistry.getEntry(id);
-            var button = new DocEntryButton(x+ 3, y + 16 + 16 * i, entry, (b) -> {
+            var button = new DocEntryButton(x, y + 16 + 16 * i, entry, (b) -> {
                 parent.transition(new PageHolderScreen(entry));
             });
             entryButtons.add(button);

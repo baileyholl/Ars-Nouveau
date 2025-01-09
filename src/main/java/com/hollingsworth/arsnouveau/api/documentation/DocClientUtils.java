@@ -129,20 +129,21 @@ public class DocClientUtils {
         poseStack.translate(x + 2, y, 0);
         poseStack.scale(scale, scale, 1);
         NuggetMultilLineLabel label = NuggetMultilLineLabel.create(Minecraft.getInstance().font, text, (int) (width * 1.48) - 6);
+
         label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, 12, 0);
 
-//        float dist = 0.08F;
-//        for(int cycle = 0; cycle < 2; cycle++){
-//            poseStack.translate(-dist, 0F, 0F);
-//            label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, 12, 0);
-//            poseStack.translate(dist, -dist, 0F);
-//            label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, 12, 0);
-//            poseStack.translate(dist, 0F, 0F);
-//            label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, 12, 0);
-//            poseStack.translate(-dist, dist, 0F);
-//
-//            dist = -dist;
-//        }
+        float dist = 0.035F;
+        for(int cycle = 0; cycle < 2; cycle++){
+            poseStack.translate(-dist, 0F, 0F);
+            label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, 12, 0);
+            poseStack.translate(dist, -dist, 0F);
+            label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, 12, 0);
+            poseStack.translate(dist, 0F, 0F);
+            label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, 12, 0);
+            poseStack.translate(-dist, dist, 0F);
+
+            dist = -dist;
+        }
         poseStack.popPose();
     }
 }

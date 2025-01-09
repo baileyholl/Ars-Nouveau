@@ -1,12 +1,9 @@
 package com.hollingsworth.arsnouveau.client.gui.documentation;
 
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
-import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.arsnouveau.api.documentation.search.Search;
-import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,30 +35,26 @@ public class SearchScreen extends BaseDocScreen{
             removeWidget(button);
         }
         searchResults.clear();
-        List<ResourceLocation> docs = Search.search(previousString);
-        List<DocEntry> searchStrings = new ArrayList<>();
-        for(ResourceLocation id : docs){
-            searchStrings.add(DocumentationRegistry.getEntry(id));
-        }
+        List<Search.Result> docs = Search.search(previousString);
 //        List<DocEntry> searchStrings = new ArrayList<>(DocumentationRegistry.getEntries());
 //        searchStrings.removeIf(d -> StringUtils.getFuzzyDistance(previousString, d.entryTitle().getString(), Locale.ROOT) <= 0);
 //        searchStrings.sort((a, b) ->{
 //            return StringUtils.getFuzzyDistance(previousString, b.entryTitle().getString(), Locale.ROOT) - StringUtils.getFuzzyDistance(previousString, a.entryTitle().getString(), Locale.ROOT);
 //        });
 
-        for(int i = 0; i < Math.min(searchStrings.size(), 8); i++){
-            DocEntry entry = searchStrings.get(i);
-            var button = new DocEntryButton(bookLeft + LEFT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET  +  (16 * i) + 16, entry, (b) -> {
-                previousScreen.transition(new PageHolderScreen(entry));
+        for(int i = 0; i < Math.min(docs.size(), 8); i++){
+            var entry = docs.get(i);
+            var button = new DocEntryButton(bookLeft + LEFT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET  +  (16 * i) + 16, entry.entry(), entry.icon(), entry.displayTitle(), (b) -> {
+                previousScreen.transition(new PageHolderScreen(entry.entry()));
             });
             addRenderableWidget(button);
             searchResults.add(button);
         }
 
-        for(int i = 0; i < Math.min(searchStrings.size() - 8, 9); i++){
-            DocEntry entry = searchStrings.get(i + 8);
-            var button = new DocEntryButton(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET  +  (16 * i), entry, (b) -> {
-                previousScreen.transition(new PageHolderScreen(entry));
+        for(int i = 0; i < Math.min(docs.size() - 8, 9); i++){
+            var entry = docs.get(i + 8);
+            var button = new DocEntryButton(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET  +  (16 * i), entry.entry(), entry.icon(), entry.displayTitle(), (b) -> {
+                previousScreen.transition(new PageHolderScreen(entry.entry()));
             });
             addRenderableWidget(button);
             searchResults.add(button);

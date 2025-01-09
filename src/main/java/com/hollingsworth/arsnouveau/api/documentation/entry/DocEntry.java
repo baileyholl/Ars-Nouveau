@@ -17,14 +17,16 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * An entry in a chapter of the documentation.
  */
-public record DocEntry(ResourceLocation id, CopyOnWriteArrayList<SinglePageCtor> pages, ItemStack renderStack, Component entryTitle, int order, Set<DocCategory> categories) implements Comparable<DocEntry> {
+public record DocEntry(ResourceLocation id, CopyOnWriteArrayList<SinglePageCtor> pages,
+                       ItemStack renderStack, Component entryTitle, int order, Set<DocCategory> categories,
+                       List<Component> searchTags) implements Comparable<DocEntry> {
 
     public DocEntry(ResourceLocation id, ItemStack renderStack, Component component) {
-        this(id, new CopyOnWriteArrayList<>(), renderStack, component, 100, ConcurrentHashMap.newKeySet());
+        this(id, new CopyOnWriteArrayList<>(), renderStack, component, 100, ConcurrentHashMap.newKeySet(), new CopyOnWriteArrayList<>());
     }
 
     public DocEntry(ResourceLocation id, ItemStack renderStack, Component component, int order) {
-        this(id, new CopyOnWriteArrayList<>(), renderStack, component, order, ConcurrentHashMap.newKeySet());
+        this(id, new CopyOnWriteArrayList<>(), renderStack, component, order, ConcurrentHashMap.newKeySet(), new CopyOnWriteArrayList<>());
     }
 
     public DocEntry addPage(SinglePageCtor page){
@@ -74,6 +76,11 @@ public record DocEntry(ResourceLocation id, CopyOnWriteArrayList<SinglePageCtor>
             builder.entries.add(id);
             this.pages.add(builder);
         }
+        return this;
+    }
+
+    public DocEntry withSearchTag(Component component){
+        searchTags.add(component);
         return this;
     }
 

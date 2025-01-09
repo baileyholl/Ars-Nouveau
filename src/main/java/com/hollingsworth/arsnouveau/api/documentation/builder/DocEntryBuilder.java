@@ -5,6 +5,8 @@ import com.hollingsworth.arsnouveau.api.documentation.DocCategory;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
 import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.arsnouveau.api.documentation.entry.TextEntry;
+import com.hollingsworth.arsnouveau.api.documentation.search.ConnectedSearch;
+import com.hollingsworth.arsnouveau.api.documentation.search.Search;
 import com.hollingsworth.arsnouveau.setup.registry.Documentation;
 import com.hollingsworth.arsnouveau.setup.registry.RegistryHelper;
 import net.minecraft.network.chat.Component;
@@ -12,6 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +31,7 @@ public class DocEntryBuilder {
     public ResourceLocation entryId;
 
     public Component title;
+    public List<ConnectedSearch> connectedSearches = new ArrayList<>();
 
     public DocEntryBuilder(DocCategory category, String name) {
         this(category, name, ArsNouveau.prefix(name));
@@ -114,26 +118,44 @@ public class DocEntryBuilder {
         return this;
     }
 
-    public DocEntryBuilder withCraftingPages(String resourceLocation){
-        return withCraftingPages(ResourceLocation.tryParse(resourceLocation));
+    public DocEntryBuilder withCraftingPages(String resourceLocation, ItemLike outputStack){
+        return withCraftingPages(ResourceLocation.tryParse(resourceLocation), outputStack);
     }
-    public DocEntryBuilder withCraftingPages(ResourceLocation resourceLocation){
+    public DocEntryBuilder withCraftingPages(ResourceLocation resourceLocation, @Nullable ItemLike outputStack){
+        var craftingPages = Documentation.getRecipePages(resourceLocation);
         this.withPage(Documentation.getRecipePages(resourceLocation));
+        if(!craftingPages.isEmpty() && outputStack != null && !this.displayItem.is(outputStack.asItem())){
+            addConnectedSearch(outputStack.asItem().getDefaultInstance());
+        }
         return this;
     }
 
     public DocEntryBuilder withCraftingPages(ItemLike itemLike){
-        this.withPage(Documentation.getRecipePages(RegistryHelper.getRegistryName(itemLike.asItem())));
+        List<SinglePageCtor> craftingPages = Documentation.getRecipePages(RegistryHelper.getRegistryName(itemLike.asItem()));
+        this.withPage(craftingPages);
+        if(!craftingPages.isEmpty() && !this.displayItem.is(itemLike.asItem())){
+            ItemStack stack = itemLike.asItem().getDefaultInstance();
+            addConnectedSearch(stack);
+        }
+        return this;
+    }
+
+    public DocEntryBuilder addConnectedSearch(ItemStack connectedItem){
+        this.connectedSearches.add(new ConnectedSearch(entryId, connectedItem.getHoverName(), connectedItem));
         return this;
     }
 
     public DocEntryBuilder withCraftingPages(){
-        this.withPage(Documentation.getRecipePages(RegistryHelper.getRegistryName(displayItem.getItem())));
+        List<SinglePageCtor> pages = Documentation.getRecipePages(RegistryHelper.getRegistryName(displayItem.getItem()));
+        this.withPage(pages);
         return this;
     }
 
     public DocEntry build(){
-        return new DocEntry(entryId, this.displayItem, title, sortNum).addPages(pages);
+        DocEntry docEntry = new DocEntry(entryId, displayItem, title, sortNum).addPages(pages);
+        for(ConnectedSearch connectedSearch : connectedSearches){
+            Search.addConnectedSearch(connectedSearch);
+        }
+        return docEntry;
     }
-
 }
