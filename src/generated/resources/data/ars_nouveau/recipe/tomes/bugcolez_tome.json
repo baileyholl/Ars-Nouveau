@@ -1,0 +1,27 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": {
+    "b": 180,
+    "g": 25,
+    "id": "ars_nouveau:constant",
+    "r": 255
+  },
+  "flavour_text": "Their Friends are their power!",
+  "name": "Pixie Pummel",
+  "sound": {
+    "pitch": 1.9
+  },
+  "spell": [
+    "ars_nouveau:glyph_self",
+    "ars_nouveau:glyph_summon_vex",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_extend_time"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

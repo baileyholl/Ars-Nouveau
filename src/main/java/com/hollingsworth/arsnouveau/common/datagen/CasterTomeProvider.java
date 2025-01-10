@@ -288,6 +288,9 @@ public class CasterTomeProvider extends SimpleDataProvider {
                 .add(AugmentAOE.INSTANCE, 6)
                 .withSound(new ConfiguredSpellSound(SoundRegistry.GAIA_SPELL_SOUND)), "WARNING: ONLY TO BE USED AS A LAST RESORT!!", new ParticleColor(255, 1, 1)));
 
+        tomes.add(buildTome("bugcolez", "Pixie Pummel", new Spell(MethodSelf.INSTANCE).add(EffectSummonVex.INSTANCE).add(AugmentExtendTime.INSTANCE, 8)
+                .withSound(new ConfiguredSpellSound(SoundRegistry.DEFAULT_SPELL_SOUND, 1.0f, 1.9f)), "Their Friends are their power!", new ParticleColor(255, 25, 180)));
+
         for (CasterRecipeWrapper g : tomes) {
             Path path = getRecipePath(output, g.id().getPath());
             saveStable(pOutput, CasterTomeData.CODEC.encodeStart(JsonOps.INSTANCE, g.toData()).getOrThrow(), path);
