@@ -34,7 +34,7 @@ public abstract class PortalFrameTester {
         }
         blockPos = blockPos.relative(axis1, -(offsetX - 1));
         int offsetY = 1;
-        while (blockPos.getZ() - offsetY > 0 && validStateInsidePortal(world.getBlockState(blockPos.relative(axis2, -offsetY)))) {
+        while (validStateInsidePortal(world.getBlockState(blockPos.relative(axis2, -offsetY)))) {
             offsetY++;
             if (offsetY > 20) return null;
         }
