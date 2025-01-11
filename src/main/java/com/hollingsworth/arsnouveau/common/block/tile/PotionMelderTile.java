@@ -72,7 +72,7 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
             return;
         }
         if (!level.isClientSide && !hasSource && level.getGameTime() % 20 == 0) {
-            if (SourceUtil.takeSourceWithParticles(worldPosition, level, 5, Config.MELDER_SOURCE_COST.get()) != null) {
+            if (SourceUtil.takeSourceMultipleWithParticles(worldPosition, level, 5, Config.MELDER_SOURCE_COST.get()) != null) {
                 hasSource = true;
                 updateBlock();
             }
