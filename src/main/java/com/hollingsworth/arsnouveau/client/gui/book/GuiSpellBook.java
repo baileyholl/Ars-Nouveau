@@ -24,7 +24,6 @@ import com.hollingsworth.arsnouveau.common.spell.validation.CombinedSpellValidat
 import com.hollingsworth.arsnouveau.common.spell.validation.GlyphMaxTierValidator;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.CreativeTabRegistry;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -252,7 +251,10 @@ public class GuiSpellBook extends BaseBook {
         boolean foundEffects = false;
 
         List<AbstractSpellPart> sorted = new ArrayList<>(displayedGlyphs);
-        sorted.sort(CreativeTabRegistry.COMPARE_SPELL_TYPE_NAME);
+        sorted.sort(Comparator.comparingInt((AbstractSpellPart p) -> switch (p) {
+            case AbstractEffect ignored -> 10;
+            default -> p.getTypeIndex();
+        }).thenComparing(AbstractSpellPart::getLocaleName));
 
         sorted = sorted.subList(glyphsPerPage * page, Math.min(sorted.size(), glyphsPerPage * (page + 1)));
         int adjustedXPlaced = 0;
