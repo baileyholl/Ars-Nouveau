@@ -121,13 +121,13 @@ public class PortalBlock extends TickableModBlock {
         }
     }
 
-    public boolean trySpawnPortal(Level worldIn, BlockPos stackPos, WarpScrollData data, String displayName) {
+    public boolean trySpawnPortal(Level worldIn, BlockPos stackPos, WarpScrollData data, @Nullable String displayName) {
         if (!ENABLE_WARP_PORTALS.get()) return false;
         return trySpawnVerticalPortal(worldIn, stackPos, data, displayName) || trySpawnHorizontalPortal(worldIn, stackPos, data, displayName);
     }
 
 
-    public boolean trySpawnVerticalPortal(LevelAccessor worldIn, BlockPos stackPos, WarpScrollData data, String displayName) {
+    public boolean trySpawnVerticalPortal(LevelAccessor worldIn, BlockPos stackPos, WarpScrollData data, @Nullable String displayName) {
         Size portalblock$size = this.isPortal(worldIn, stackPos);
         if (portalblock$size != null) {
             portalblock$size.placePortalBlocks(data, displayName);
@@ -137,7 +137,7 @@ public class PortalBlock extends TickableModBlock {
         }
     }
 
-    public boolean trySpawnHorizontalPortal(Level worldIn, BlockPos stackPos, WarpScrollData data, String displayName) {
+    public boolean trySpawnHorizontalPortal(Level worldIn, BlockPos stackPos, WarpScrollData data, @Nullable String displayName) {
         FlatPortalAreaHelper helper = new FlatPortalAreaHelper().init(worldIn, stackPos, null, (bs) -> bs.is(BlockTagProvider.DECORATIVE_AN));
         if (helper.isValidFrame()) {
             BlockPos.betweenClosed(helper.lowerCorner, helper.lowerCorner.relative(Direction.Axis.X, helper.xSize - 1).relative(Direction.Axis.Z, helper.zSize - 1)).forEach((blockPos) -> {
@@ -340,7 +340,7 @@ public class PortalBlock extends TickableModBlock {
             return this.bottomLeft != null && this.width >= 1 && this.width <= 21 && this.height >= 1 && this.height <= 21;
         }
 
-        public void placePortalBlocks(WarpScrollData data, String displayName) {
+        public void placePortalBlocks(WarpScrollData data, @Nullable String displayName) {
             for (int i = 0; i < this.width; ++i) {
                 BlockPos blockpos = this.bottomLeft.relative(this.rightDir, i);
 

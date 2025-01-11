@@ -42,7 +42,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
     public BlockPos warpPos;
     public String dimID;
     public Vec2 rotationVec;
-    public String displayName;
+    public @Nullable String displayName;
     public boolean isHorizontal;
     public Set<Entity> entityQueue = new HashSet<>();
 
