@@ -76,7 +76,7 @@ public class ScryersOculus extends TickableModBlock {
         Minecraft.getInstance().setScreen(new GuiRadialMenu<>(new RadialMenu<>((int scroll) -> {
             ScryPosData data = stackList.get(scroll).get(DataComponentRegistry.SCRY_DATA);
             if (data == null || data.pos().isEmpty()) {
-                PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.scryers_eye.no_pos"));
+                PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.scryers_oculus.no_pos"));
                 return;
             }
             Networking.sendToServer(new PacketMountCamera(data.pos().orElse(null)));
