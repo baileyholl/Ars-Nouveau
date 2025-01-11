@@ -29,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class Search {
@@ -52,10 +53,8 @@ public class Search {
                     Document document = new Document();
                     document.add(new StoredField("ID", docEntry.id().toString()));
                     document.add(new TextField("title", docEntry.entryTitle().getString(), Field.Store.YES));
-                    System.out.println(docEntry.entryTitle().getString());
                     document.add(new TextField("titleGrams", docEntry.entryTitle().getString(), Field.Store.YES));
                     for(Component tag : docEntry.searchTags()){
-                        System.out.println(tag.getString());
                         document.add(new TextField("tags", tag.getString(), Field.Store.YES));
                     }
                     writer.addDocument(document);
@@ -84,20 +83,17 @@ public class Search {
         if(query == null || query.isEmpty()){
             return new ArrayList<>();
         }
+        query = query.toLowerCase();
         List<Result> results = new ArrayList<>();
         try{
-//            QueryParser parser = new QueryParser("title", new EnglishAnalyzer());
-//            parser.
-//            Query query1 = new QueryBuilder(nGramAnalyzer).createPhraseQuery("title", query);
             MultiFieldQueryParser parser = new MultiFieldQueryParser(new String[]{"title", "titleGrams", "tags"}, analyzer, Map.of("tags", 2.0f, "title", 4.0f, "titleGrams",  0.5f));
             parser.setDefaultOperator(QueryParser.Operator.OR);
-//            QueryParser parser = new QueryParser("title", analyzer);
             Query nGramQuery = parser.parse(query);
             if(nGramQuery == null){
                 return results;
             }
             BooleanQuery booleanClauses = new BooleanQuery.Builder().setMinimumNumberShouldMatch(1).add(nGramQuery, BooleanClause.Occur.SHOULD).build();
-            System.out.println(searcher.explain(booleanClauses, 1));
+
             TopDocs topDocs = searcher.search(booleanClauses, 100);
             StoredFields storedFields = searcher.storedFields();
             for(ScoreDoc doc : topDocs.scoreDocs){
@@ -114,7 +110,12 @@ public class Search {
                     results.add(new Result(entry, entry.entryTitle(), entry.renderStack()));
                 }
             }
-
+            String finalQuery = query;
+            results.sort((a, b) -> {
+                int aScore = a.entry.entryTitle().getString().toLowerCase(Locale.ROOT).startsWith(finalQuery) ? 1 : 0;
+                int bScore = b.entry.entryTitle().getString().toLowerCase(Locale.ROOT).startsWith(finalQuery) ? 1 : 0;
+                return bScore - aScore;
+            });
         }catch (Exception e) {
             if(e instanceof ParseException){
                 return results;

@@ -129,9 +129,9 @@ public class Documentation {
                 .withSortNum(1)
                 .withIntroPage()
                 .withCraftingPages()
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_lapis"), Items.LAPIS_LAZULI)
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_amethyst"), Items.AMETHYST_SHARD)
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_amethyst_block"), Items.AMETHYST_BLOCK)
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_lapis"), ItemsRegistry.SOURCE_GEM)
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_amethyst"),  ItemsRegistry.SOURCE_GEM)
+                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_amethyst_block"), BlockRegistry.SOURCE_GEM_BLOCK)
                 .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.FIRE_ESSENCE.getRegistryName()), ItemsRegistry.FIRE_ESSENCE)
                 .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.EARTH_ESSENCE.getRegistryName()), ItemsRegistry.EARTH_ESSENCE)
                 .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.WATER_ESSENCE.getRegistryName()), ItemsRegistry.WATER_ESSENCE)
@@ -154,6 +154,10 @@ public class Documentation {
                 .withPage(TextEntry.create(getLangPath("drygmy_charm", 3), Component.translatable("ars_nouveau.summoning")))
                 .withPage(TextEntry.create(getLangPath("drygmy_charm", 4), Component.translatable("ars_nouveau.happiness")))
                 .withPage(TextEntry.create(getLangPath("drygmy_charm", 5), Component.translatable(("ars_nouveau.production"))))
+                .withCraftingPages(ItemsRegistry.GREATER_EXPERIENCE_GEM)
+                .addConnectedSearch(ItemsRegistry.DRYGMY_SHARD)
+                .addConnectedSearch(ItemsRegistry.EXPERIENCE_GEM)
+                .addConnectedSearch(ItemsRegistry.GREATER_EXPERIENCE_GEM)
         );
 
 
@@ -196,16 +200,17 @@ public class Documentation {
                 .withPage(TextEntry.create(getLangPath("starbuncle_charm", 5), Component.translatable("ars_nouveau.filtering")))
                 .withPage(TextEntry.create(getLangPath("starbuncle_charm", 6), Component.translatable("ars_nouveau.pathing")))
                 .withPage(TextEntry.create(getLangPath("starbuncle_charm", 7), Component.translatable("ars_nouveau.starbuncle_bed")))
-                .withPage(TextEntry.create(getLangPath("starbuncle_charm", 8), Component.translatable("ars_nouveau.starbuncle_stacking"))));
+                .withPage(TextEntry.create(getLangPath("starbuncle_charm", 8), Component.translatable("ars_nouveau.starbuncle_stacking")))
+                .addConnectedSearch(ItemsRegistry.STARBUNCLE_SHARD));
 
         addPage(new DocEntryBuilder(EQUIPMENT, ItemsRegistry.DULL_TRINKET)
-                .withPage(CraftingEntry.create(ItemsRegistry.DULL_TRINKET, ItemsRegistry.MUNDANE_BELT))
+                .withCraftingPages(ItemsRegistry.DULL_TRINKET, ItemsRegistry.MUNDANE_BELT)
                 .withCraftingPages(ItemsRegistry.RING_OF_POTENTIAL));
 
         addPage(new DocEntryBuilder(RESOURCES, BlockRegistry.MAGE_BLOOM_CROP)
                 .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.magebloom_crop"), BlockRegistry.MAGE_BLOOM_CROP.asItem().getDescription(), BlockRegistry.MAGE_BLOOM_CROP.asItem().getDefaultInstance()))
                 .withCraftingPages(BlockRegistry.MAGE_BLOOM_CROP)
-                .withPage(CraftingEntry.create(ItemsRegistry.MAGE_FIBER, BlockRegistry.MAGEBLOOM_BLOCK)));
+                .withCraftingPages(ItemsRegistry.MAGE_FIBER, BlockRegistry.MAGEBLOOM_BLOCK));
 
         addPage(new DocEntryBuilder(EQUIPMENT, ItemsRegistry.POTION_FLASK)
                 .withIntroPage()
@@ -235,7 +240,7 @@ public class Documentation {
 
         var turrets = addPage(new DocEntryBuilder(AUTOMATION, BlockRegistry.BASIC_SPELL_TURRET)
                 .withIntroPage()
-                .withPage(CraftingEntry.create(BlockRegistry.BASIC_SPELL_TURRET, BlockRegistry.ROTATING_TURRET))
+                .withCraftingPages(BlockRegistry.BASIC_SPELL_TURRET, BlockRegistry.ROTATING_TURRET)
                 .withLocalizedText(BlockRegistry.ENCHANTED_SPELL_TURRET)
                 .withCraftingPages(BlockRegistry.ENCHANTED_SPELL_TURRET)
                 .withLocalizedText(BlockRegistry.TIMER_SPELL_TURRET)
@@ -252,7 +257,8 @@ public class Documentation {
                 .withPage(TextEntry.create(getLangPath("whirlisprig_charm", 3), Component.translatable(("ars_nouveau.summoning"))))
                 .withPage(TextEntry.create(getLangPath("whirlisprig_charm", 4), Component.translatable(("ars_nouveau.happiness"))))
                 .withPage(TextEntry.create(getLangPath("whirlisprig_charm", 5), Component.translatable(("ars_nouveau.important"))))
-                .withPage(TextEntry.create(getLangPath("whirlisprig_charm", 6), Component.translatable(("ars_nouveau.production")))));
+                .withPage(TextEntry.create(getLangPath("whirlisprig_charm", 6), Component.translatable(("ars_nouveau.production"))))
+                .addConnectedSearch(ItemsRegistry.WHIRLISPRIG_SHARDS));
 
         var wixie = addPage(new DocEntryBuilder(AUTOMATION, ItemsRegistry.WIXIE_CHARM)
                 .withIntroPage()
@@ -262,7 +268,8 @@ public class Documentation {
                 .withPage(TextEntry.create(getLangPath("wixie_charm", 4), Component.translatable(("ars_nouveau.item_crafting_setting"))))
                 .withPage(TextEntry.create(getLangPath("wixie_charm", 7), Component.translatable(("ars_nouveau.binding_inventories"))))
                 .withPage(TextEntry.create(getLangPath("wixie_charm", 5), Component.translatable(("ars_nouveau.potion_crafting"))))
-                .withPage(TextEntry.create(getLangPath("wixie_charm", 6))));
+                .withPage(TextEntry.create(getLangPath("wixie_charm", 6)))
+                .addConnectedSearch(ItemsRegistry.WIXIE_SHARD));
 
         var archwood = addPage(new DocEntryBuilder(RESOURCES, "archwood")
                         .withIcon(BlockRegistry.CASCADING_SAPLING)
@@ -270,7 +277,11 @@ public class Documentation {
                         .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.bombegrante"), Component.translatable("block.ars_nouveau.bombegranate_pod"), BlockRegistry.BOMBEGRANTE_POD))
                         .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.mendosteen"), Component.translatable("block.ars_nouveau.mendosteen_pod"),BlockRegistry.MENDOSTEEN_POD))
                         .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.frostaya"), Component.translatable("block.ars_nouveau.frostaya_pod"),BlockRegistry.FROSTAYA_POD))
-                        .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.bastion_fruit"), Component.translatable("block.ars_nouveau.bastion_pod"),BlockRegistry.BASTION_POD)));
+                        .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.bastion_fruit"), Component.translatable("block.ars_nouveau.bastion_pod"),BlockRegistry.BASTION_POD))
+                .addConnectedSearch(BlockRegistry.BOMBEGRANTE_POD)
+                .addConnectedSearch(BlockRegistry.MENDOSTEEN_POD)
+                .addConnectedSearch(BlockRegistry.FROSTAYA_POD)
+                .addConnectedSearch(BlockRegistry.BASTION_POD));
 
 
         addPage(new DocEntryBuilder(RESOURCES, "decorative")
@@ -281,7 +292,7 @@ public class Documentation {
 
         var sourceberry = addPage(new DocEntryBuilder(RESOURCES, BlockRegistry.SOURCEBERRY_BUSH)
                 .withIntroPage()
-                .withPage(CraftingEntry.create(ItemsRegistry.SOURCE_BERRY_PIE, ItemsRegistry.SOURCE_BERRY_ROLL)));
+                .withCraftingPages(ItemsRegistry.SOURCE_BERRY_PIE, ItemsRegistry.SOURCE_BERRY_ROLL));
 
         addPage(new DocEntryBuilder(RESOURCES, "weald_walker")
                 .withIcon(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix( RitualLib.AWAKENING)))
@@ -298,11 +309,15 @@ public class Documentation {
                 .withPage(EntityEntry.create(ModEntities.WILDEN_STALKER.get(), getLangPath("wilden", 4), 0.55f))
                 .withPage(EntityEntry.create(ModEntities.WILDEN_GUARDIAN.get(), getLangPath("wilden", 5), 0.55f))
                 .withPage(EntityEntry.create(ModEntities.WILDEN_BOSS.get(), getLangPath("wilden", 6), 0.55f))
-                .withPage(TextEntry.create(getLangPath("wilden", 7))));
+                .withPage(TextEntry.create(getLangPath("wilden", 7)))
+                .addConnectedSearch(ItemsRegistry.WILDEN_SPIKE)
+                .addConnectedSearch(ItemsRegistry.WILDEN_WING)
+                .addConnectedSearch(ItemsRegistry.WILDEN_HORN)
+                .addConnectedSearch(ItemsRegistry.WILDEN_TRIBUTE));
 
         var denyScroll = addPage(new DocEntryBuilder(AUTOMATION, ItemsRegistry.DENY_ITEM_SCROLL)
                 .withIntroPage()
-                .withPage(CraftingEntry.create(ItemsRegistry.BLANK_PARCHMENT, ItemsRegistry.DENY_ITEM_SCROLL)));
+                .withCraftingPages(ItemsRegistry.BLANK_PARCHMENT, ItemsRegistry.DENY_ITEM_SCROLL));
 
         var mimicScroll = addPage(new DocEntryBuilder(AUTOMATION, ItemsRegistry.MIMIC_ITEM_SCROLL)
                 .withIntroPage()
@@ -480,7 +495,6 @@ public class Documentation {
                 .withIcon(ItemsRegistry.SORCERER_ROBES)
                 .withSortNum(0)
                 .withIntroPage()
-                .withCraftingPages(ItemsRegistry.MAGE_FIBER)
                 .withPage(TextEntry.create("ars_nouveau.page.threads", "ars_nouveau.threads"))
 //                .withPage(new ImagePage().withEntry(ArsNouveau.prefix( "textures/gui/entries/sorcerer_diagram.png"))
 //                        .withEntry(ArsNouveau.prefix( "textures/gui/entries/arcanist_thread_diagram.png"))
@@ -569,7 +583,7 @@ public class Documentation {
                 .withCraftingPages(BlockRegistry.ITEM_DETECTOR));
         var repository = addPage(new DocEntryBuilder(MACHINES, BlockRegistry.REPOSITORY)
                 .withIntroPage()
-                .withPage(CraftingEntry.create(BlockRegistry.REPOSITORY, BlockRegistry.ARCHWOOD_CHEST)));
+                .withCraftingPages(BlockRegistry.REPOSITORY, BlockRegistry.ARCHWOOD_CHEST));
 
         // add scrolls to arrylist
         var scrollRelations = new ArrayList<DocEntry>(){
@@ -625,8 +639,8 @@ public class Documentation {
 
         addPage(new DocEntryBuilder(AUTOMATION, BlockRegistry.ARCHWOOD_GRATE)
                 .withIntroPage()
-                .withPage(CraftingEntry.create(BlockRegistry.ARCHWOOD_GRATE, BlockRegistry.GOLD_GRATE))
-                .withPage(CraftingEntry.create(BlockRegistry.SMOOTH_SOURCESTONE_GRATE, BlockRegistry.SOURCESTONE_GRATE)));
+                .withCraftingPages(BlockRegistry.ARCHWOOD_GRATE, BlockRegistry.GOLD_GRATE)
+                .withCraftingPages(BlockRegistry.SMOOTH_SOURCESTONE_GRATE, BlockRegistry.SOURCESTONE_GRATE));
         addBasicItem(BlockRegistry.SOURCE_LAMP, AUTOMATION);
 
         addPage(new DocEntryBuilder(AUTOMATION, ItemsRegistry.ALAKARKINOS_CHARM)
@@ -634,7 +648,8 @@ public class Documentation {
                 .withCraftingPages(ItemsRegistry.ALAKARKINOS_CHARM)
                 .withPage(EntityEntry.create(ModEntities.ALAKARKINOS_TYPE.get(), getLangPath("alakarkinos_charm", 2), 0.5f))
                 .withPage(TextEntry.create(getLangPath("alakarkinos_charm", 3), Component.translatable("ars_nouveau.summoning")))
-                .withPage(TextEntry.create(getLangPath("alakarkinos_charm", 4), Component.translatable("ars_nouveau.sifting"))));
+                .withPage(TextEntry.create(getLangPath("alakarkinos_charm", 4), Component.translatable("ars_nouveau.sifting")))
+                .addConnectedSearch(ItemsRegistry.ALAKARKINOS_SHARD));
 
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "spell_casting")

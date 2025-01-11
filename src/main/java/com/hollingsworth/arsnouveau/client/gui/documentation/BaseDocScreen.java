@@ -143,6 +143,10 @@ public class BaseDocScreen extends BaseScreen {
                     initBookmarks();
                 }else {
                     PageHolderScreen pageHolderScreen = new PageHolderScreen(entry);
+                    // Prevent bookmarks from transitioning to the same screen
+                    if(Minecraft.getInstance().screen instanceof PageHolderScreen newPageHolder && newPageHolder.entry == entry){
+                        return;
+                    }
                     transition(pageHolderScreen);
                 }
             }));

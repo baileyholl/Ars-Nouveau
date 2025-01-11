@@ -58,6 +58,8 @@ public class DocEntryBuilder {
 
     public DocEntryBuilder withName(String path) {
         this.textKey = path;
+        this.titleKey = path;
+        this.title = Component.translatable(titleKey);
         return this;
     }
 
@@ -140,9 +142,29 @@ public class DocEntryBuilder {
         return this;
     }
 
+    public DocEntryBuilder withCraftingPages(ItemLike itemLike, ItemLike itemLike2){
+        List<SinglePageCtor> craftingPages = Documentation.getRecipePages(itemLike, itemLike2);
+        this.withPage(craftingPages);
+        if(!craftingPages.isEmpty() && !this.displayItem.is(itemLike.asItem())){
+            ItemStack stack = itemLike.asItem().getDefaultInstance();
+            addConnectedSearch(stack);
+        }
+        if(!craftingPages.isEmpty() && !this.displayItem.is(itemLike2.asItem())){
+            ItemStack stack = itemLike2.asItem().getDefaultInstance();
+            addConnectedSearch(stack);
+        }
+        return this;
+    }
+
     public DocEntryBuilder addConnectedSearch(ItemStack connectedItem){
+        if(this.connectedSearches.stream().anyMatch(cs -> cs.icon().is(connectedItem.getItem())))
+            return this;
         this.connectedSearches.add(new ConnectedSearch(entryId, connectedItem.getHoverName(), connectedItem));
         return this;
+    }
+
+    public DocEntryBuilder addConnectedSearch(ItemLike itemLike){
+        return addConnectedSearch(itemLike.asItem().getDefaultInstance());
     }
 
     public DocEntryBuilder withCraftingPages(){

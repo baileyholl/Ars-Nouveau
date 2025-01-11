@@ -58,10 +58,6 @@ public class PageHolderScreen extends BaseDocScreen{
 
     @Override
     public void transition(BaseDocScreen screen) {
-        // Prevent bookmarks from transitioning to the same screen
-        if(screen instanceof PageHolderScreen newPageHolder && newPageHolder.entry == this.entry){
-            return;
-        }
         super.transition(screen);
     }
 
