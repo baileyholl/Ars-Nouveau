@@ -989,7 +989,7 @@ public class LangDatagen extends LanguageProvider {
         add("item.minecraft.tipped_arrow.effect.shielding_potion", "Arrow of Shielding");
         add("item.minecraft.tipped_arrow.effect.shielding_potion_long", "Arrow of Shielding");
         add("effect.ars_nouveau.recovery", "Recovery");
-        add("effect.ars_nouveau.recorvery.desc","Increases healing received from all sources.");
+        add("effect.ars_nouveau.recovery.desc","Increases healing received from all sources.");
         add("effect.ars_nouveau.blasting", "Blasting");
         add("effect.ars_nouveau.blasting.desc","Causes the target to explode when the duration ends.");
         add("effect.ars_nouveau.freezing", "Freezing");
