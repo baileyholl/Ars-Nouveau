@@ -40,7 +40,7 @@ public class WarpScroll extends ModItem {
         if (entity.getCommandSenderWorld().isClientSide)
             return false;
 
-        String displayName = stack.get(DataComponents.CUSTOM_NAME) != null ? stack.getHoverName().getString() : "";
+        String displayName = stack.get(DataComponents.CUSTOM_NAME) != null ? stack.getHoverName().getString() : null;
         WarpScrollData data = stack.get(DataComponentRegistry.WARP_SCROLL);
         if (data.isValid()
             && data.canTeleportWithDim(entity.getCommandSenderWorld().dimension().location().toString())
