@@ -170,7 +170,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
     }
 
     public boolean takeSource(){
-        if (ritual.consumesSource() && ritual.needsSourceNow()) {
+        if (ritual != null && ritual.consumesSource() && ritual.needsSourceNow()) {
             int cost = ritual.getSourceCost();
             if (SourceUtil.takeSourceMultipleWithParticles(getBlockPos(), getLevel(), 6, cost) != null) {
                 ritual.setNeedsSource(false);
