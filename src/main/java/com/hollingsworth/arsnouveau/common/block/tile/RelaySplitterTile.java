@@ -76,7 +76,7 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
                 continue;
             int transfer;
             if (level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, fromPos, null) instanceof ISourceCap sourceHandler) {
-                transfer = transferSource(sourceHandler, this.getSourceStorage(), ratePer);
+                transfer = transferSource(sourceHandler, this.getSourceCapability(), ratePer);
             } else if (level.getBlockEntity(fromPos) instanceof AbstractSourceMachine fromTile) {
                 int fromRate = Math.min(ratePer, getTransferRate(fromTile, this));
                 transfer = transferSource(fromTile, this, fromRate);
@@ -113,7 +113,7 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
                 continue;
             int transfer;
             if (level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, toPos, null) instanceof ISourceCap sourceHandler) {
-                transfer = transferSource(this.getSourceStorage(), sourceHandler, ratePer);
+                transfer = transferSource(this.getSourceCapability(), sourceHandler, ratePer);
             } else if (level.getBlockEntity(toPos) instanceof AbstractSourceMachine toTile) {
                 transfer = transferSource(this, toTile, ratePer);
             } else {
@@ -142,7 +142,7 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
     }
 
     @Override
-    protected @NotNull SourceStorage createDefaultStorage() {
+    protected @NotNull ISourceCap createDefaultSourceCapability() {
         return new SourceStorage(2500, 2500);
     }
 
