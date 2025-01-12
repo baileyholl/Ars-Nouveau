@@ -129,7 +129,7 @@ public class GuiSettingsScreen extends BaseBook {
     private void addAlly(Button button) {
         String inputBoxValue = uuidInputBox.getValue();
         if (inputBoxValue.isEmpty()) {
-            inputBoxValue = UUID.randomUUID().toString();
+            return;
         }
         // if the input is a valid UUID, add it to the allies list
         try {
