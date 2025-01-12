@@ -12,13 +12,11 @@ import com.hollingsworth.arsnouveau.api.source.ISourceCap;
 import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.source.SourceManager;
 import com.hollingsworth.arsnouveau.api.source.SourceProvider;
-import com.hollingsworth.arsnouveau.common.block.CreativeSourceJar;
 import com.hollingsworth.arsnouveau.common.block.tile.CreativeSourceJarTile;
-import com.hollingsworth.arsnouveau.common.capability.SourceStorage;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
-import com.hollingsworth.arsnouveau.common.util.Log;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 
@@ -37,6 +35,23 @@ public class SourceUtil {
             if (world.isLoaded(b) && world.getBlockEntity(b) instanceof SourceJarTile jar && jar.canAcceptSource())
                 posList.add(new SourceProvider(jar, b.immutable()));
         }
+        BlockPos.withinManhattanStream(pos, range, range, range).forEach(b -> {
+            if (world.isLoaded(b)) {
+                ISourceCap cap = world.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, b, null);
+                if (cap == null || !cap.canAcceptSource(1)) {
+                    for (var dir : Direction.values()) {
+                        cap = world.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, b, dir);
+                        if (cap != null && cap.canAcceptSource(1)) {
+                            break;
+                        }
+                    }
+                }
+
+                if (cap != null && cap.canAcceptSource(1)) {
+                    posList.add(new SourceProvider(cap, b.immutable()));
+                }
+            }
+        });
         List<ISpecialSourceProvider> provider = SourceManager.INSTANCE.canGiveSourceNearby(pos, world, range);
         for (ISpecialSourceProvider p : provider) {
             posList.add(new SourceProvider(p));
@@ -50,6 +65,23 @@ public class SourceUtil {
             if (world.isLoaded(b) && world.getBlockEntity(b) instanceof SourceJarTile jar && jar.getSource() > 0)
                 posList.add(new SourceProvider(jar, b.immutable()));
         }
+        BlockPos.withinManhattanStream(pos, range, range, range).forEach(b -> {
+            if (world.isLoaded(b)) {
+                ISourceCap cap = world.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, b, null);
+                if (cap == null || !cap.canProvideSource(1)) {
+                    for (var dir : Direction.values()) {
+                        cap = world.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, b, dir);
+                        if (cap != null && cap.canProvideSource(1)) {
+                            break;
+                        }
+                    }
+                }
+
+                if (cap != null && cap.canProvideSource(1)) {
+                    posList.add(new SourceProvider(cap, b.immutable()));
+                }
+            }
+        });
         List<ISpecialSourceProvider> provider = SourceManager.INSTANCE.canTakeSourceNearby(pos, world, range);
         for (ISpecialSourceProvider p : provider) {
             posList.add(new SourceProvider(p));
@@ -228,6 +260,21 @@ public class SourceUtil {
             if (source <= 0) {
                 return true;
             }
+        Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) -> {
+            ISourceCap cap = world.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, b, null);
+            if (cap == null || !cap.canProvideSource(source)) {
+                for (var dir : Direction.values()) {
+                    cap = world.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, b, dir);
+                    if (cap != null && cap.canProvideSource(source)) {
+                        break;
+                    }
+                }
+            }
+
+            return cap != null && cap.canProvideSource(source);
+        });
+        if(loc.isPresent()){
+            return true;
         }
 
         return false;
