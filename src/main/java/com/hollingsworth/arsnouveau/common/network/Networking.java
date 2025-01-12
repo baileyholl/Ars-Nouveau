@@ -72,6 +72,7 @@ public class Networking {
         reg.playToClient(UpdateStorageItemsPacket.TYPE, UpdateStorageItemsPacket.CODEC, Networking::handle);
         reg.playToClient(PacketUpdateGlowColor.TYPE, PacketUpdateGlowColor.CODEC, Networking::handle);
         reg.playToServer(PacketUpdateDominionWand.TYPE, PacketUpdateDominionWand.CODEC, Networking::handle);
+        reg.playToServer(PacketSetAllies.TYPE, PacketSetAllies.CODEC, Networking::handle);
     }
 
     private static <T extends AbstractPacket> void handle(T message, IPayloadContext ctx) {

@@ -18,7 +18,6 @@ import java.util.List;
 public class GuiFamiliarScreen extends BaseBook {
 
     public List<AbstractFamiliarHolder> familiars;
-    public Screen parent;
 
     public GuiFamiliarScreen(List<AbstractFamiliarHolder> familiars, Screen parent) {
         this.familiars = familiars;

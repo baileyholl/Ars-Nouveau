@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
@@ -25,7 +24,6 @@ import com.hollingsworth.arsnouveau.common.spell.validation.GlyphMaxTierValidato
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.CreativeTabRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -42,7 +40,6 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -54,7 +51,6 @@ import org.lwjgl.glfw.GLFW;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.hollingsworth.arsnouveau.api.util.ManaUtil.getPlayerDiscounts;
 
@@ -193,17 +189,10 @@ public class GuiSpellBook extends BaseBook {
             addRenderableWidget(slot);
         }
 
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 22, 0, 0, 23, 20, 23, 20, "textures/gui/worn_book_bookmark.png", this::onDocumentationClick)
-                .withTooltip(Component.translatable("ars_nouveau.gui.notebook")));
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 46, 0, 0, 23, 20, 23, 20, "textures/gui/color_wheel_bookmark.png", this::onColorClick)
                 .withTooltip(Component.translatable("ars_nouveau.gui.color")));
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 70, 0, 0, 23, 20, 23, 20, "textures/gui/summon_circle_bookmark.png", this::onFamiliarClick)
-                .withTooltip(Component.translatable("ars_nouveau.gui.familiar")));
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 94, 0, 0, 23, 20, 23, 20, "textures/gui/sounds_tab.png", this::onSoundsClick)
                 .withTooltip(Component.translatable("ars_nouveau.gui.sounds")));
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 118, 0, 0, 23, 20, 23, 20, "textures/gui/settings_tab.png", (b) -> {
-            Minecraft.getInstance().setScreen(new GuiSettingsScreen(this));
-        }).withTooltip(Component.translatable("ars_nouveau.gui.settings")));
 
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 142, 0, 0, 23, 20, 23, 20, "textures/gui/discord_tab.png", (b) -> {
             try {
@@ -418,28 +407,14 @@ public class GuiSpellBook extends BaseBook {
         return true;
     }
 
-    public void onDocumentationClick(Button button) {
-        GuiUtils.openWiki(ArsNouveau.proxy.getPlayer());
-    }
-
     public void onColorClick(Button button) {
         ParticleColor.IntWrapper color = SpellCasterRegistry.from(bookStack).getColor(selectedSpellSlot).toWrapper();
-        Minecraft.getInstance().setScreen(new GuiColorScreen(color.r, color.g, color.b, selectedSpellSlot, this.hand));
+        Minecraft.getInstance().setScreen(new GuiColorScreen(color.r, color.g, color.b, selectedSpellSlot, this.hand, this));
     }
 
     public void onSoundsClick(Button button) {
         ConfiguredSpellSound spellSound = SpellCasterRegistry.from(bookStack).getSound(selectedSpellSlot);
-        Minecraft.getInstance().setScreen(new SoundScreen(spellSound, selectedSpellSlot, this.hand));
-    }
-
-    public void onFamiliarClick(Button button) {
-        Collection<ResourceLocation> familiarHolders = new ArrayList<>();
-        IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(ArsNouveau.proxy.getPlayer());
-        if (cap != null) {
-            familiarHolders = cap.getUnlockedFamiliars().stream().map(s -> s.familiarHolder.getRegistryName()).collect(Collectors.toList());
-        }
-        Collection<ResourceLocation> finalFamiliarHolders = familiarHolders;
-        Minecraft.getInstance().setScreen(new GuiFamiliarScreen(FamiliarRegistry.getFamiliarHolderMap().values().stream().filter(f -> finalFamiliarHolders.contains(f.getRegistryName())).collect(Collectors.toList()), this));
+        Minecraft.getInstance().setScreen(new SoundScreen(spellSound, selectedSpellSlot, this.hand, this));
     }
 
     public void onCraftingSlotClick(Button button) {
@@ -565,7 +540,8 @@ public class GuiSpellBook extends BaseBook {
 
                     return true;
                 }
-                case null, default -> {}
+                case null, default -> {
+                }
             }
         }
 
@@ -737,8 +713,7 @@ public class GuiSpellBook extends BaseBook {
         int manaOffset = (int) (((ClientInfo.ticksInGame + partialTicks) / 3 % (33))) * 6;
 
         // default length is 96
-        // rainbow effect for perfect match is currently disabled by the >=
-        if (manaLength >= 0) {
+        if (manaLength > 0) {
             graphics.blit(ArsNouveau.prefix("textures/gui/manabar_gui_mana.png"), offsetLeft + 9, yOffset - 9, 0, manaOffset, manaLength, 6, 256, 256);
         } else {
             //color rainbow if mana cost = max mana, red if mana cost > max mana

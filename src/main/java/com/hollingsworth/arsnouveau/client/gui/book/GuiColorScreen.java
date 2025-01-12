@@ -9,8 +9,10 @@ import com.hollingsworth.arsnouveau.client.particle.RainbowParticleColor;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellColorAll;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellColors;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.PageButton;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -34,13 +36,14 @@ public class GuiColorScreen extends BaseBook {
     public InteractionHand stackHand;
     public List<ANButton> buttons = new ArrayList<>();
 
-    protected GuiColorScreen(double startRed, double startGreen, double startBlue, int forSpellSlot, InteractionHand stackHand) {
+    protected GuiColorScreen(double startRed, double startGreen, double startBlue, int forSpellSlot, InteractionHand stackHand, Screen guiSpellBook) {
         super();
         this.startRed = startRed;
         this.startGreen = startGreen;
         this.startBlue = startBlue;
         this.slot = forSpellSlot;
         this.stackHand = stackHand;
+        this.parent = guiSpellBook;
     }
 
     @Override
@@ -60,6 +63,10 @@ public class GuiColorScreen extends BaseBook {
         var next = addRenderableWidget(new PageButton(bookRight - 20, bookBottom - 10, true, this::onPageIncrease, true));
         next.visible = true;
         next.active = true;
+
+        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 13, 0, 0, 41, 12, 41, 12, "textures/gui/clear_icon.png", (e) -> {
+            Minecraft.getInstance().setScreen(parent);
+        }));
     }
 
     private void layoutPageOne() {
@@ -172,6 +179,8 @@ public class GuiColorScreen extends BaseBook {
         graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.save").getString(), 37, 160, color, false);
         graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.save_all").getString(), 87, 160, color, false);
 
+        graphics.blit(ArsNouveau.prefix("textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15);
+        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.close"), 238, 183, -8355712, false);
     }
 
     public int getNumPages() {

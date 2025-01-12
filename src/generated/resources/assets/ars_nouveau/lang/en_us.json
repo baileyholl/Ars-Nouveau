@@ -1101,6 +1101,8 @@
   "ars_nouveau.sensor.on_resolve": "Mode: On Resolve",
   "ars_nouveau.sensor.set_spell": "Sensor will now trigger on this spell only.",
   "ars_nouveau.set_spell": "Set spell.",
+  "ars_nouveau.settings.add_ally": "Add Ally",
+  "ars_nouveau.settings.allies": "Allies",
   "ars_nouveau.settings.summon_lily": "Summon Lily",
   "ars_nouveau.settings.summon_nook": "Summon Nook",
   "ars_nouveau.settings.title": "Settings",
