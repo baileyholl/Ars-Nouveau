@@ -5,13 +5,13 @@ import net.minecraft.resources.ResourceLocation;
 
 public class DocAssets {
 
-    public static final BlitInfo ARROW_LEFT = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_next_page_left.png"), 11, 14);
-    public static final BlitInfo ARROW_LEFT_HOVER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_next_page_left_hover.png"), 11, 14);
-    public static final BlitInfo ARROW_RIGHT = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_next_page_right.png"), 11, 11);
-    public static final BlitInfo ARROW_RIGHT_HOVER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_next_page_right_hover.png"), 11, 14);
+    public static final BlitInfo ARROW_LEFT = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_next_page_left.png"), 14, 8);
+    public static final BlitInfo ARROW_LEFT_HOVER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_next_page_left_hover.png"), 14, 8);
+    public static final BlitInfo ARROW_RIGHT = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_next_page_right.png"), 14, 8);
+    public static final BlitInfo ARROW_RIGHT_HOVER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_next_page_right_hover.png"), 14, 8);
 
-    public static final BlitInfo ARROW_BACK = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_back.png"), 14, 8);
-    public static final BlitInfo ARROW_BACK_HOVER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_back_hover.png"), 14, 8);
+    public static final BlitInfo ARROW_BACK = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_back.png"), 12, 9);
+    public static final BlitInfo ARROW_BACK_HOVER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_back_hover.png"), 12, 9);
 
     public static final BlitInfo HEADER_WITH_ITEM = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_chapter_header.png"), 118, 22);
     public static final BlitInfo UNDERLINE = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_underline.png"), 118, 6);
@@ -57,6 +57,14 @@ public class DocAssets {
     public static final BlitInfo BACKGROUND = new BlitInfo(ArsNouveau.prefix("textures/gui/spell_book_template.png"), 290, 188);
 
     public static final BlitInfo SEARCH_PAPER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_search_bar.png"), 110, 15);
+
+    public static final BlitInfo THREAD_FRAME = new BlitInfo(ArsNouveau.prefix( "textures/gui/documentation/doc_frame_threads.png"),98, 130);
+
+    public static final BlitInfo ICON_THREAD_TIER3 = new BlitInfo(ArsNouveau.prefix( "textures/gui/documentation/doc_icon_thread_tier3.png"),7, 7);
+
+    public static final BlitInfo ICON_THREAD_TIER2 = new BlitInfo(ArsNouveau.prefix( "textures/gui/documentation/doc_icon_thread_tier2.png"),7, 7);
+
+    public static final BlitInfo ICON_THREAD_TIER1 = new BlitInfo(ArsNouveau.prefix( "textures/gui/documentation/doc_icon_thread_tier1.png"),7, 7);
 
     public record BlitInfo(ResourceLocation location, int u, int v, int width, int height) {
         public BlitInfo(ResourceLocation location, int width, int height){

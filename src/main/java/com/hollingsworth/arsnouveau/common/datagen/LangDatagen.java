@@ -1387,6 +1387,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.keyword.thread", "Thread");
         add("ars_nouveau.keyword.ritual", "Ritual");
         add("ars_nouveau.keyword.familiar", "Familiar");
+        add("ars_nouveau.slots_armor", "Thread Slots and Tiers");
+        add("ars_nouveau.thread_tier", "Tier %s thred slot");
 
     }
 

@@ -294,13 +294,14 @@ public class Documentation {
                 .withIntroPage()
                 .withCraftingPages(ItemsRegistry.SOURCE_BERRY_PIE, ItemsRegistry.SOURCE_BERRY_ROLL));
 
+        int walkerOffset = -20;
         addPage(new DocEntryBuilder(RESOURCES, "weald_walker")
                 .withIcon(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix( RitualLib.AWAKENING)))
                 .withIntroPage()
-                .withPage(EntityEntry.create(ModEntities.ENTITY_BLAZING_WEALD.get(), getLangPath("weald_walker", 2)))
-                .withPage(EntityEntry.create(ModEntities.ENTITY_CASCADING_WEALD.get(), getLangPath("weald_walker", 3)))
-                .withPage(EntityEntry.create(ModEntities.ENTITY_FLOURISHING_WEALD.get(),getLangPath("weald_walker", 4)))
-                .withPage(EntityEntry.create(ModEntities.ENTITY_VEXING_WEALD.get(), getLangPath("weald_walker", 5))));
+                .withPage(EntityEntry.create(ModEntities.ENTITY_BLAZING_WEALD.get(), getLangPath("weald_walker", 2), 0.25f, walkerOffset))
+                .withPage(EntityEntry.create(ModEntities.ENTITY_CASCADING_WEALD.get(), getLangPath("weald_walker", 3), 0.25f, walkerOffset))
+                .withPage(EntityEntry.create(ModEntities.ENTITY_FLOURISHING_WEALD.get(),getLangPath("weald_walker", 4), 0.25f, walkerOffset))
+                .withPage(EntityEntry.create(ModEntities.ENTITY_VEXING_WEALD.get(), getLangPath("weald_walker", 5), 0.25f, walkerOffset)));
 
         addPage(new DocEntryBuilder(RESOURCES, "wilden")
                 .withIcon(ItemsRegistry.WILDEN_SPIKE)
@@ -496,7 +497,9 @@ public class Documentation {
                 .withSortNum(0)
                 .withIntroPage()
                 .withPage(TextEntry.create("ars_nouveau.page.threads", "ars_nouveau.threads"))
-//                .withPage(new ImagePage().withEntry(ArsNouveau.prefix( "textures/gui/entries/sorcerer_diagram.png"))
+                .withPage(PerkDiagramEntry.create(ItemsRegistry.SORCERER_HOOD, ItemsRegistry.SORCERER_ROBES, ItemsRegistry.SORCERER_LEGGINGS, ItemsRegistry.SORCERER_BOOTS))
+                .withPage(PerkDiagramEntry.create(ItemsRegistry.ARCANIST_HOOD, ItemsRegistry.ARCANIST_ROBES, ItemsRegistry.ARCANIST_LEGGINGS, ItemsRegistry.ARCANIST_BOOTS))
+                .withPage(PerkDiagramEntry.create(ItemsRegistry.BATTLEMAGE_HOOD, ItemsRegistry.BATTLEMAGE_ROBES, ItemsRegistry.BATTLEMAGE_LEGGINGS, ItemsRegistry.BATTLEMAGE_BOOTS))
 //                        .withEntry(ArsNouveau.prefix( "textures/gui/entries/arcanist_thread_diagram.png"))
 //                        .withEntry(ArsNouveau.prefix( "textures/gui/entries/battlemage_diagram.png"))
 //                        .withBorder().withTitle("ars_nouveau.thread_layout")
@@ -533,7 +536,6 @@ public class Documentation {
                 .withRelations(alteraitonTable, armorEntry);
 
         armorEntry.withRelation(armorUpgrade);
-        armorUpgrade.withRelation(armorEntry);
         alteraitonTable.withRelation(armorUpgrade);
 
         addPage(new DocEntryBuilder(ARMOR, "applying_perks")
@@ -646,7 +648,7 @@ public class Documentation {
         addPage(new DocEntryBuilder(AUTOMATION, ItemsRegistry.ALAKARKINOS_CHARM)
                 .withIntroPage()
                 .withCraftingPages(ItemsRegistry.ALAKARKINOS_CHARM)
-                .withPage(EntityEntry.create(ModEntities.ALAKARKINOS_TYPE.get(), getLangPath("alakarkinos_charm", 2), 0.5f))
+                .withPage(EntityEntry.create(ModEntities.ALAKARKINOS_TYPE.get(), getLangPath("alakarkinos_charm", 2), 0.5f, -10))
                 .withPage(TextEntry.create(getLangPath("alakarkinos_charm", 3), Component.translatable("ars_nouveau.summoning")))
                 .withPage(TextEntry.create(getLangPath("alakarkinos_charm", 4), Component.translatable("ars_nouveau.sifting")))
                 .addConnectedSearch(ItemsRegistry.ALAKARKINOS_SHARD));
