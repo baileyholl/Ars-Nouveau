@@ -8,8 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.ForgeConfigSpec;
-
+import net.neoforged.neoforge.common.ModConfigSpec;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +50,7 @@ public abstract class AbstractCastMethod extends AbstractSpellPart {
     public abstract CastResolveType onCastOnEntity(@Nullable ItemStack stack, LivingEntity caster, Entity target, InteractionHand hand, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver);
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         Map<ResourceLocation, Integer> defaultAugmentLimits = new HashMap<>();
         addDefaultAugmentLimits(defaultAugmentLimits);

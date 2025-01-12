@@ -28,7 +28,7 @@ public class MultiblockPage extends AbstractPage {
 
     @Override
     public ResourceLocation getType() {
-        return new ResourceLocation("patchouli:multiblock");
+        return ResourceLocation.tryParse("patchouli:multiblock");
     }
 
     @Override

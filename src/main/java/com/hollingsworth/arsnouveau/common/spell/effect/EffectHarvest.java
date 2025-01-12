@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class EffectHarvest extends AbstractEffect {
@@ -88,7 +89,7 @@ public class EffectHarvest extends AbstractEffect {
                 continue;
             }
 
-            if (state.getBlock() instanceof StemGrownBlock || state.is(BlockTagProvider.HARVEST_STEMS) && state.getBlock() == world.getBlockState(blockpos.below()).getBlock()) {
+            if (state.is(BlockTagProvider.HARVEST_STEMS) && state.getBlock() == world.getBlockState(blockpos.below()).getBlock()) {
                 processAndSpawnDrops(blockpos, state, world, shooter, spellStats, spellContext, false);
                 BlockUtil.destroyBlockSafely(world, blockpos, false, shooter);
                 continue;
@@ -113,6 +114,12 @@ public class EffectHarvest extends AbstractEffect {
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentFortune.INSTANCE);
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addBlockAoeAugmentDescriptions(map);
     }
 
     @Override

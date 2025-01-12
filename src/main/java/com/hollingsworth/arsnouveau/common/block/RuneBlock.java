@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.IFilter;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
-import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
 import com.hollingsworth.arsnouveau.common.items.RunicChalk;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
@@ -16,10 +16,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -57,12 +56,6 @@ public class RuneBlock extends TickableModBlock {
         super(properties);
     }
 
-    @Override
-    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        super.setPlacedBy(worldIn, pos, state, placer, stack);
-    }
-
-
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
@@ -70,8 +63,7 @@ public class RuneBlock extends TickableModBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        ItemStack stack = player.getItemInHand(handIn);
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 
         if (worldIn.getBlockEntity(pos) instanceof RuneTile runeTile) {
 
@@ -79,30 +71,33 @@ public class RuneBlock extends TickableModBlock {
                 if (runeTile.isTemporary) {
                     runeTile.isTemporary = false;
                     PortUtil.sendMessage(player, Component.translatable("ars_nouveau.rune.setperm"));
-                    return InteractionResult.SUCCESS;
+                    return ItemInteractionResult.SUCCESS;
                 }
             }
             if (!(stack.getItem() instanceof SpellParchment) || worldIn.isClientSide)
-                return InteractionResult.SUCCESS;
-            Spell spell = CasterUtil.getCaster(stack).getSpell();
+                return ItemInteractionResult.SUCCESS;
+            Spell spell = SpellCasterRegistry.from(stack).getSpell();
             if (spell.isEmpty())
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
 
-            if (!(spell.recipe.get(0) instanceof MethodTouch)) {
+            if (!(spell.get(0) instanceof MethodTouch)) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.rune.touch"));
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
             runeTile.setSpell(spell);
+            runeTile.setPlayer(player.getUUID());
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.spell_set"));
         }
-        return super.use(state, worldIn, pos, player, handIn, hit);
+        return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
     }
 
 
+    @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(BlockStateProperties.FACING, rot.rotate(state.getValue(BlockStateProperties.FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(BlockStateProperties.FACING)));
     }
@@ -124,7 +119,7 @@ public class RuneBlock extends TickableModBlock {
         }));
         if (!entities.isEmpty() && worldIn.getBlockEntity(pos) instanceof RuneTile rune) {
             if (rune.spell != null) {
-                for (AbstractSpellPart part : rune.spell.recipe) {
+                for (AbstractSpellPart part : rune.spell.recipe()) {
                     if ( part instanceof IFilter filter) {
                         if (!filter.shouldResolveOnEntity(entityIn,worldIn)) {
                             return;
@@ -164,6 +159,11 @@ public class RuneBlock extends TickableModBlock {
     }
 
     @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(POWERED).add(FACING).add(FLOOR);
+    }
+
+    @Override
     public RenderShape getRenderShape(BlockState p_149645_1_) {
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }
@@ -176,7 +176,4 @@ public class RuneBlock extends TickableModBlock {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty FLOOR = BooleanProperty.create("floor");
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(POWERED).add(FACING).add(FLOOR);
-    }
 }

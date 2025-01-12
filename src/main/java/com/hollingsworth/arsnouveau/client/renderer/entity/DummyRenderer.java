@@ -125,21 +125,21 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
         p_225620_2_.scale(0.9375F, 0.9375F, 0.9375F);
     }
 
-    protected void renderNameTag(EntityDummy p_225629_1_, Component p_225629_2_, PoseStack p_225629_3_, MultiBufferSource p_225629_4_, int p_225629_5_) {
-        if(!p_225629_1_.shouldShowName()){
-            return;
-        }
-        p_225629_3_.pushPose();
-        super.renderNameTag(p_225629_1_, p_225629_2_, p_225629_3_, p_225629_4_, p_225629_5_);
-        p_225629_3_.popPose();
-    }
-
     public void renderRightHand(PoseStack p_229144_1_, MultiBufferSource p_229144_2_, int p_229144_3_, EntityDummy p_229144_4_) {
         this.renderHand(p_229144_1_, p_229144_2_, p_229144_3_, p_229144_4_, (this.model).rightArm, (this.model).rightSleeve);
     }
 
     public void renderLeftHand(PoseStack p_229146_1_, MultiBufferSource p_229146_2_, int p_229146_3_, EntityDummy p_229146_4_) {
         this.renderHand(p_229146_1_, p_229146_2_, p_229146_3_, p_229146_4_, (this.model).leftArm, (this.model).leftSleeve);
+    }
+
+
+    @Override
+    protected void renderNameTag(EntityDummy pEntity, Component pDisplayName, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, float pPartialTick) {
+        if(!pEntity.shouldShowName()){
+            return;
+        }
+        super.renderNameTag(pEntity, pDisplayName, pPoseStack, pBuffer, pPackedLight, pPartialTick);
     }
 
     private void renderHand(PoseStack p_229145_1_, MultiBufferSource p_229145_2_, int p_229145_3_, EntityDummy p_229145_4_, ModelPart p_229145_5_, ModelPart p_229145_6_) {
@@ -155,10 +155,12 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
         p_229145_6_.render(p_229145_1_, p_229145_2_.getBuffer(RenderType.entityTranslucent(p_229145_4_.getSkinTextureLocation())), p_229145_3_, OverlayTexture.NO_OVERLAY);
     }
 
-    protected void setupRotations(EntityDummy p_225621_1_, PoseStack p_225621_2_, float p_225621_3_, float p_225621_4_, float p_225621_5_) {
+
+    @Override
+    protected void setupRotations(EntityDummy p_225621_1_, PoseStack p_225621_2_, float p_225621_3_, float p_225621_4_, float p_225621_5_, float pScale) {
         float f = p_225621_1_.getSwimAmount(p_225621_5_);
         if (p_225621_1_.isFallFlying()) {
-            super.setupRotations(p_225621_1_, p_225621_2_, p_225621_3_, p_225621_4_, p_225621_5_);
+            super.setupRotations(p_225621_1_, p_225621_2_, p_225621_3_, p_225621_4_, p_225621_5_, pScale);
             float f1 = (float) p_225621_1_.getFallFlyingTicks() + p_225621_5_;
             float f2 = Mth.clamp(f1 * f1 / 100.0F, 0.0F, 1.0F);
             if (!p_225621_1_.isAutoSpinAttack()) {
@@ -175,7 +177,7 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
                 p_225621_2_.mulPose(Axis.YP.rotation((float) (Math.signum(d3) * Math.acos(d2))));
             }
         } else if (f > 0.0F) {
-            super.setupRotations(p_225621_1_, p_225621_2_, p_225621_3_, p_225621_4_, p_225621_5_);
+            super.setupRotations(p_225621_1_, p_225621_2_, p_225621_3_, p_225621_4_, p_225621_5_, pScale);
             float f3 = p_225621_1_.isInWater() ? -90.0F - p_225621_1_.getXRot() : -90.0F;
             float f4 = Mth.lerp(f, 0.0F, f3);
             p_225621_2_.mulPose(Axis.XP.rotationDegrees(f4));
@@ -183,7 +185,7 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
                 p_225621_2_.translate(0.0D, -1.0D, 0.3F);
             }
         } else {
-            super.setupRotations(p_225621_1_, p_225621_2_, p_225621_3_, p_225621_4_, p_225621_5_);
+            super.setupRotations(p_225621_1_, p_225621_2_, p_225621_3_, p_225621_4_, p_225621_5_, pScale);
         }
 
     }

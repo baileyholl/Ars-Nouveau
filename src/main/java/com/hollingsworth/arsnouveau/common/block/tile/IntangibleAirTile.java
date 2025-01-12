@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,15 +30,16 @@ public class IntangibleAirTile extends ModdedTile implements ITickable {
     }
 
     @Override
-    public void load(CompoundTag nbt) {
-        stateID = nbt.getInt("state_id");
-        duration = nbt.getInt("duration");
-        maxLength = nbt.getInt("max_length");
-        super.load(nbt);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(tag, pRegistries);
+        stateID = tag.getInt("state_id");
+        duration = tag.getInt("duration");
+        maxLength = tag.getInt("max_length");
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         tag.putInt("state_id", stateID);
         tag.putInt("duration", duration);
         tag.putInt("max_length", maxLength);

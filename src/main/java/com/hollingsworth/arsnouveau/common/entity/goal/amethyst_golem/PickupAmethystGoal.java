@@ -4,9 +4,8 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.AmethystGolem;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.capabilities.Capabilities;
 
 import java.util.function.Supplier;
 
@@ -58,10 +57,10 @@ public class PickupAmethystGoal extends Goal {
     public void collectStacks() {
         if (golem.getHome() == null) return;
         for (ItemEntity i : golem.level.getEntitiesOfClass(ItemEntity.class, new AABB(golem.getHome()).inflate(10), i -> i.getItem().is(SHARD_TAG))) {
-            if (!golem.getHeldStack().isEmpty() && i.getItem().getItem() != golem.getHeldStack().getItem())
+            if (!golem.getMainHandItem().isEmpty() && i.getItem().getItem() != golem.getMainHandItem().getItem())
                 continue;
-            int maxTake = golem.getHeldStack().getMaxStackSize() - golem.getHeldStack().getCount();
-            if (golem.getHeldStack().isEmpty()) {
+            int maxTake = golem.getMainHandItem().getMaxStackSize() - golem.getMainHandItem().getCount();
+            if (golem.getMainHandItem().isEmpty()) {
                 golem.setHeldStack(i.getItem().copy());
                 i.getItem().setCount(0);
                 continue;
@@ -69,7 +68,7 @@ public class PickupAmethystGoal extends Goal {
 
             int toTake = Math.min(i.getItem().getCount(), maxTake);
             i.getItem().shrink(toTake);
-            golem.getHeldStack().grow(toTake);
+            golem.getMainHandItem().grow(toTake);
 
         }
     }
@@ -105,7 +104,6 @@ public class PickupAmethystGoal extends Goal {
     public boolean canUse() {
         if (golem.getHome() == null)
             return false;
-        BlockEntity entity = golem.level().getBlockEntity(golem.getHome());
-        return canUse.get() && golem.pickupCooldown <= 0 && entity != null && entity.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent();
+        return canUse.get() && golem.pickupCooldown <= 0 && golem.level.getCapability(Capabilities.ItemHandler.BLOCK, golem.getHome(), null) != null;
     }
 }

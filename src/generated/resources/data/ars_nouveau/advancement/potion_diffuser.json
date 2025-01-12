@@ -1,0 +1,32 @@
+{
+  "parent": "ars_nouveau:potion_jar",
+  "criteria": {
+    "has_potion_diffuser": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ars_nouveau:potion_diffuser"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.potion_diffuser"
+    },
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:potion_diffuser"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.potion_diffuser"
+    }
+  },
+  "requirements": [
+    [
+      "has_potion_diffuser"
+    ]
+  ]
+}

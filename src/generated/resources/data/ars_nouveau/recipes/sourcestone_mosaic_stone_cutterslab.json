@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "count": 2,
-  "ingredient": {
-    "item": "ars_nouveau:sourcestone_mosaic"
-  },
-  "result": "ars_nouveau:sourcestone_mosaic_slab"
-}

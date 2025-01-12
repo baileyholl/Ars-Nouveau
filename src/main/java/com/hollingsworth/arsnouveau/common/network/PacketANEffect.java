@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.network;
 
-import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.registry.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.HelixParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -8,13 +9,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
 
-import java.util.function.Supplier;
-
-public class PacketANEffect {
-
+public class PacketANEffect extends AbstractPacket{
+    public static final Type<PacketANEffect> TYPE = new Type<>(ArsNouveau.prefix("effect"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketANEffect> CODEC = StreamCodec.ofMember(PacketANEffect::toBytes, PacketANEffect::decode);
     private final EffectType type;
     private final double x;
     private final double y;
@@ -52,7 +54,7 @@ public class PacketANEffect {
         this(type, pos.getX(), pos.getY(), pos.getZ(), wrapper, args);
     }
 
-    public static PacketANEffect decode(FriendlyByteBuf buf) {
+    public static PacketANEffect decode(RegistryFriendlyByteBuf buf) {
         EffectType type = EffectType.values()[buf.readByte()];
         double x = buf.readDouble();
         double y = buf.readDouble();
@@ -66,58 +68,48 @@ public class PacketANEffect {
         return new PacketANEffect(type, x, y, z, ParticleColorRegistry.from(nbt), args);
     }
 
-    public static void encode(PacketANEffect msg, FriendlyByteBuf buf) {
-        buf.writeByte(msg.type.ordinal());
-        buf.writeDouble(msg.x);
-        buf.writeDouble(msg.y);
-        buf.writeDouble(msg.z);
-        buf.writeNbt(msg.particleNbt);
-        for (int i = 0; i < msg.type.argCount; i++) {
-            buf.writeVarInt(msg.args[i]);
+    @Override
+    public void toBytes(RegistryFriendlyByteBuf buf) {
+        buf.writeByte(type.ordinal());
+        buf.writeDouble(x);
+        buf.writeDouble(y);
+        buf.writeDouble(z);
+        buf.writeNbt(particleNbt);
+        for (int i = 0; i < type.argCount; i++) {
+            buf.writeVarInt(args[i]);
         }
     }
 
-    public static class Handler {
-        public static void handle(final PacketANEffect message, final Supplier<NetworkEvent.Context> ctx) {
-            if (ctx.get().getDirection().getReceptionSide().isServer()) {
-                ctx.get().setPacketHandled(true);
-                return;
-            }
-            ctx.get().enqueueWork(new Runnable() {
-                // Use anon - lambda causes classloading issues
-                @Override
-                public void run() {
-                    Minecraft mc = Minecraft.getInstance();
-                    ClientLevel world = mc.level;
-                    ParticleColor color = ParticleColorRegistry.from(message.particleNbt);
-                    switch (message.type) {
-                        case BURST -> {
-                            for (int i = 0; i < 10; i++) {
-                                double d0 = message.x + 0.5; //+ world.rand.nextFloat();
-                                double d1 = message.y + 1.2;//+ world.rand.nextFloat() ;
-                                double d2 = message.z + .5; //+ world.rand.nextFloat();
-                                world.addParticle(GlowParticleData.createData(color), d0, d1, d2,
-                                        (world.random.nextFloat() - 0.5) / 3.0,
-                                        (world.random.nextFloat() - 0.5) / 3.0,
-                                        (world.random.nextFloat() - 0.5) / 3.0);
-                            }
-                        }
-                        case TIMED_HELIX -> {
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
 
-                            int numParticles = 8;
-                            for (int i = 0; i < numParticles; i++) {
-                                world.addParticle(HelixParticleData.createData(color, 0.25f, 1.00f, 50, i * 360F / numParticles), message.x + 0.5, message.y + 0.1 * i, message.z + 0.5, 0, 0, 0);
-                            }
-                        }
-                    }
-
+    @Override
+    public void onClientReceived(Minecraft minecraft, Player player) {
+        ClientLevel world = minecraft.level;
+        ParticleColor color = ParticleColorRegistry.from(particleNbt);
+        switch (type) {
+            case BURST -> {
+                for (int i = 0; i < 10; i++) {
+                    double d0 = x + 0.5; //+ world.rand.nextFloat();
+                    double d1 = y + 1.2;//+ world.rand.nextFloat() ;
+                    double d2 = z + .5; //+ world.rand.nextFloat();
+                    world.addParticle(GlowParticleData.createData(color), d0, d1, d2,
+                            (world.random.nextFloat() - 0.5) / 3.0,
+                            (world.random.nextFloat() - 0.5) / 3.0,
+                            (world.random.nextFloat() - 0.5) / 3.0);
                 }
-            });
-            ctx.get().setPacketHandled(true);
+            }
+            case TIMED_HELIX -> {
 
+                int numParticles = 8;
+                for (int i = 0; i < numParticles; i++) {
+                    world.addParticle(HelixParticleData.createData(color, 0.25f, 1.00f, 50, i * 360F / numParticles), x + 0.5, y + 0.1 * i, z + 0.5, 0, 0, 0);
+                }
+            }
         }
     }
-
     public enum EffectType {
         TIMED_GLOW(4), //dest xyz num_particles
         TIMED_HELIX(0),

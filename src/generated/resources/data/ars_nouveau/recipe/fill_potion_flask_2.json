@@ -1,0 +1,16 @@
+{
+  "type": "ars_nouveau:potion_flask",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:potion_flask_amplify"
+    },
+    {
+      "item": "minecraft:potion"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:potion_flask_amplify"
+  }
+}

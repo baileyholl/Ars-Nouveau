@@ -8,8 +8,8 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -181,7 +181,10 @@ public class InventoryManager {
         IItemHandler itemHandler = filterableItemHandler.getHandler();
         for (int i = 0; i < itemHandler.getSlots(); i++) {
             ItemStack stack = itemHandler.extractItem(i, remaining, true);
-            if (!ItemStack.isSameItem(stack, desiredStack) || !ItemStack.isSameItemSameTags(stack, desiredStack)) {
+            if(stack.isEmpty()){
+                continue;
+            }
+            if (!(ItemStack.isSameItem(stack, desiredStack) && ItemStack.isSameItemSameComponents(stack, desiredStack))) {
                 continue;
             }
             int toExtract = Math.min(stack.getCount(), remaining);

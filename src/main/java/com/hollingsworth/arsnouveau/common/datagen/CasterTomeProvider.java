@@ -4,14 +4,20 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.particle.RainbowParticleColor;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.CasterTomeData;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
-import com.hollingsworth.arsnouveau.common.spell.method.*;
-import com.hollingsworth.arsnouveau.common.tomes.CasterTomeData;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodUnderfoot;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 
 import java.nio.file.Path;
@@ -21,7 +27,7 @@ import java.util.List;
 public class CasterTomeProvider extends SimpleDataProvider {
 
 
-    public List<CasterTomeData> tomes = new ArrayList<>();
+    public List<CasterRecipeWrapper> tomes = new ArrayList<>();
 
     public CasterTomeProvider(DataGenerator generatorIn) {
         super(generatorIn);
@@ -177,7 +183,6 @@ public class CasterTomeProvider extends SimpleDataProvider {
                 "The bite from this storm is worse than its bark.",
                 new ParticleColor(255, 119, 203)));
 
-        /* Moved to non-datagen to not screw GitHub
         tomes.add(buildTome("alex", "Alex's Magnificent Mansion", new Spell(MethodSelf.INSTANCE)
                         .add(EffectBurst.INSTANCE)
                         .add(AugmentSensitive.INSTANCE)
@@ -188,9 +193,9 @@ public class CasterTomeProvider extends SimpleDataProvider {
                         .add(AugmentPierce.INSTANCE)
                         .withSound(new ConfiguredSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND)),
                 "For those who can't settle with just a tiny hut.",
-                new RainbowParticleColor(255, 255, 255, 10))
+                new RainbowParticleColor(255, 255, 255))
         );
-         */
+
 
         tomes.add(buildTome("poseidon", "Poseidon's Refuge", new Spell(MethodProjectile.INSTANCE)
                         .add(AugmentSensitive.INSTANCE)
@@ -244,29 +249,74 @@ public class CasterTomeProvider extends SimpleDataProvider {
                 .add(AugmentPierce.INSTANCE)
                 .add(AugmentAmplify.INSTANCE), "You. Shall. Not. Pass."));
 
-        for (CasterTomeData g : tomes) {
-            Path path = getRecipePath(output, g.getId().getPath());
-            saveStable(pOutput, g.toJson(), path);
+        tomes.add(buildTome("silvanus","Emergency Flair", new Spell(MethodTouch.INSTANCE)
+                .add(EffectLight.INSTANCE)
+                .add(AugmentExtendTime.INSTANCE, 3), "When you want to go deeper but just don't have the torches", new ParticleColor(0, 255, 0)));
+
+        tomes.add(buildTome("uni","Uni's Windshield", new Spell(MethodSelf.INSTANCE, EffectOrbit.INSTANCE, EffectKnockback.INSTANCE).add(AugmentAmplify.INSTANCE, 8), "Stay away!"));
+
+        tomes.add(buildTome("crowdrone", "Crow's Gluttonous Gaze", new Spell(MethodSelf.INSTANCE, EffectSenseMagic.INSTANCE, AugmentExtendTime.INSTANCE, EffectLight.INSTANCE).add(AugmentExtendTime.INSTANCE, 6), "Crows are known to collect shiny things, even in the darkest of places.", new ParticleColor(0,0,0)));
+
+        tomes.add(buildTome("chosenarchitect","Chosen's Chaotic Shift", new Spell(MethodProjectile.INSTANCE)
+                .add(AugmentAccelerate.INSTANCE, 5)
+                .add(EffectExchange.INSTANCE)
+                .add(AugmentAmplify.INSTANCE)
+                .add(AugmentRandomize.INSTANCE)
+                .add(EffectPickup.INSTANCE)
+                .withSound(new ConfiguredSpellSound(SoundRegistry.GAIA_SPELL_SOUND, 0.55f, 2.0f)), "In a flash of magic, the world twists, and what was once here is now there.", new ParticleColor(255, 114, 32)));
+
+        tomes.add(buildTome("lufia", "Lufia's Bwomp", new Spell(MethodProjectile.INSTANCE)
+                .add(AugmentSensitive.INSTANCE)
+                .add(AugmentPierce.INSTANCE, 3)
+                .add(EffectIntangible.INSTANCE)
+                .add(AugmentAOE.INSTANCE, 4)
+                .withSound(new ConfiguredSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND, 1.0f, 0.5f)),
+                "Your enemies will try to kill you. Use this, to kill them back. Cast under a targets feet to bury them. Results may vary.",
+                new ParticleColor(255, 128, 1)));
+
+        tomes.add(buildTome("mystifi","Mysti's Gravely Dig", new Spell(MethodUnderfoot.INSTANCE)
+                .add(EffectLinger.INSTANCE, AugmentSensitive.INSTANCE)
+                .add(AugmentExtendTime.INSTANCE, 2)
+                .add(EffectIntangible.INSTANCE)
+                .add(AugmentPierce.INSTANCE, 2)
+                .add(AugmentExtendTime.INSTANCE, 2)
+                .withSound(new ConfiguredSpellSound(SoundRegistry.FIRE_SPELL_SOUND, 0.27f, 1)),
+                "Be careful About digging straight down, People say its like digging your own grave",
+                new ParticleColor(255, 128, 1)));
+
+        tomes.add(buildTome("plauged757", "Self Atomic", new Spell(MethodSelf.INSTANCE, EffectExplosion.INSTANCE, AugmentAmplify.INSTANCE, AugmentAmplify.INSTANCE)
+                .add(AugmentAOE.INSTANCE, 6)
+                .withSound(new ConfiguredSpellSound(SoundRegistry.GAIA_SPELL_SOUND)), "WARNING: ONLY TO BE USED AS A LAST RESORT!!", new ParticleColor(255, 1, 1)));
+
+        tomes.add(buildTome("bugcolez", "Pixie Pummel", new Spell(MethodSelf.INSTANCE).add(EffectSummonVex.INSTANCE).add(AugmentExtendTime.INSTANCE, 8)
+                .withSound(new ConfiguredSpellSound(SoundRegistry.DEFAULT_SPELL_SOUND, 1.0f, 1.9f)), "Their Friends are their power!", new ParticleColor(255, 25, 180)));
+
+        for (CasterRecipeWrapper g : tomes) {
+            Path path = getRecipePath(output, g.id().getPath());
+            saveStable(pOutput, CasterTomeData.CODEC.encodeStart(JsonOps.INSTANCE, g.toData()).getOrThrow(), path);
         }
     }
 
     protected Path getRecipePath(Path pathIn, String str) {
-        return pathIn.resolve("data/ars_nouveau/recipes/tomes/" + str + ".json");
+        return pathIn.resolve("data/ars_nouveau/recipe/tomes/" + str + ".json");
     }
 
-    public CasterTomeData buildTome(String id, String name, Spell spell, String flavorText) {
-        return new CasterTomeData(new ResourceLocation(ArsNouveau.MODID, id + "_tome"),
+    public CasterRecipeWrapper buildTome(String id, String name, Spell spell, String flavorText) {
+        return new CasterRecipeWrapper(ArsNouveau.prefix( id + "_tome"),
                 name,
                 spell.serializeRecipe(),
                 ItemsRegistry.CASTER_TOME.registryObject.getId(),
                 flavorText,
-                spell.color.serialize(), spell.sound);
+                spell.color().serialize(), spell.sound());
     }
 
-    public CasterTomeData buildTome(String id, String name, Spell spell, String flavorText, ParticleColor color) {
-        CasterTomeData data = buildTome(id, name, spell, flavorText);
-        data.particleColor = color;
-        return data;
+    public CasterRecipeWrapper buildTome(String id, String name, Spell spell, String flavorText, ParticleColor color) {
+        return new CasterRecipeWrapper(ArsNouveau.prefix( id + "_tome"),
+                name,
+                spell.serializeRecipe(),
+                ItemsRegistry.CASTER_TOME.registryObject.getId(),
+                flavorText,
+                color.serialize(), spell.sound());
     }
 
     /**
@@ -275,5 +325,11 @@ public class CasterTomeProvider extends SimpleDataProvider {
     @Override
     public String getName() {
         return "Ars Nouveau Caster Tomes Datagen";
+    }
+
+    public record CasterRecipeWrapper(ResourceLocation id, String name, List<ResourceLocation> spell, ResourceLocation tomeType, String flavorText, CompoundTag particleColor, ConfiguredSpellSound sound) {
+        public CasterTomeData toData() {
+            return new CasterTomeData(name, spell, tomeType, flavorText, particleColor, sound);
+        }
     }
 }

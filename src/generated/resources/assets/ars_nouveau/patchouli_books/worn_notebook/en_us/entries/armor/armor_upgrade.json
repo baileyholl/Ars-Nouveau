@@ -14,11 +14,11 @@
     },
     {
       "type": "ars_nouveau:no_output_apparatus_recipe",
-      "recipe": "ars_nouveau:upgrade_1"
+      "recipe": "ars_nouveau:first_armor_upgrade"
     },
     {
       "type": "ars_nouveau:no_output_apparatus_recipe",
-      "recipe": "ars_nouveau:upgrade_2"
+      "recipe": "ars_nouveau:second_armor_upgrade"
     },
     {
       "type": "patchouli:relations",

@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -97,8 +98,8 @@ public class BrazierRelayTile extends RitualBrazierTile{
 
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         tag.putInt("ticksToLightOff", ticksToLightOff);
         if (this.brazierPos != null) {
             tag.putLong("brazierPos", this.brazierPos.asLong());
@@ -106,8 +107,8 @@ public class BrazierRelayTile extends RitualBrazierTile{
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(tag, pRegistries);
         this.ticksToLightOff = tag.getInt("ticksToLightOff");
         if (tag.contains("brazierPos")) {
             this.brazierPos = BlockPos.of(tag.getLong("brazierPos"));

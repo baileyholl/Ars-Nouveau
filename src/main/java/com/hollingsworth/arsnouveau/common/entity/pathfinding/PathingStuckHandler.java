@@ -7,7 +7,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.pathfinder.Node;
@@ -279,7 +278,7 @@ public class PathingStuckHandler implements IStuckHandler {
         if (stuckLevel >= 3 && stuckLevel <= 5) {
             if (canPlaceLadders && rand.nextBoolean()) {
                 delayToNextUnstuckAction = 200;
-                placeLadders(navigator);
+//                placeLadders(navigator);
             } else if (canBuildLeafBridges && rand.nextBoolean()) {
                 delayToNextUnstuckAction = 100;
                 placeLeaves(navigator);
@@ -370,20 +369,20 @@ public class PathingStuckHandler implements IStuckHandler {
      *
      * @param navigator navigator to use
      */
-    private void placeLadders(final AbstractAdvancedPathNavigate navigator) {
-        final Level world = navigator.getOurEntity().level;
-        final Mob entity = navigator.getOurEntity();
-
-        BlockPos entityPos = BlockPos.containing(entity.position());
-
-        while (world.getBlockState(entityPos).getBlock() == Blocks.LADDER) {
-            entityPos = entityPos.above();
-        }
-
-        tryPlaceLadderAt(world, entityPos);
-        tryPlaceLadderAt(world, entityPos.above());
-        tryPlaceLadderAt(world, entityPos.above(2));
-    }
+//    private void placeLadders(final AbstractAdvancedPathNavigate navigator) {
+//        final Level world = navigator.getOurEntity().level;
+//        final Mob entity = navigator.getOurEntity();
+//
+//        BlockPos entityPos = BlockPos.containing(entity.position());
+//
+//        while (world.getBlockState(entityPos).getBlock() == Blocks.LADDER) {
+//            entityPos = entityPos.above();
+//        }
+//
+//        tryPlaceLadderAt(world, entityPos);
+//        tryPlaceLadderAt(world, entityPos.above());
+//        tryPlaceLadderAt(world, entityPos.above(2));
+//    }
 
     /**
      * Tries to place leaves
@@ -438,24 +437,24 @@ public class PathingStuckHandler implements IStuckHandler {
         breakBlocksAhead(world, BlockPos.containing(entity.position()), facing);
     }
 
-    /**
-     * Tries to place a ladder at the given position
-     *
-     * @param world world to use
-     * @param pos   position to set
-     */
-    private void tryPlaceLadderAt(final Level world, final BlockPos pos) {
-        final BlockState state = world.getBlockState(pos);
-        if (state.getBlock() != Blocks.LADDER && !state.canOcclude() && world.getFluidState(pos).isEmpty()) {
-            for (final Direction dir : HORIZONTAL_DIRS) {
-                final BlockState toPlace = Blocks.LADDER.defaultBlockState().setValue(LadderBlock.FACING, dir.getOpposite());
-                if (world.getBlockState(pos.relative(dir)).isSolid() && Blocks.LADDER.canSurvive(toPlace, world, pos)) {
-                    world.setBlockAndUpdate(pos, toPlace);
-                    break;
-                }
-            }
-        }
-    }
+//    /**
+//     * Tries to place a ladder at the given position
+//     *
+//     * @param world world to use
+//     * @param pos   position to set
+//     */
+//    private void tryPlaceLadderAt(final Level world, final BlockPos pos) {
+//        final BlockState state = world.getBlockState(pos);
+//        if (state.getBlock() != Blocks.LADDER && !state.canOcclude() && world.getFluidState(pos).isEmpty()) {
+//            for (final Direction dir : HORIZONTAL_DIRS) {
+//                final BlockState toPlace = Blocks.LADDER.defaultBlockState().setValue(LadderBlock.FACING, dir.getOpposite());
+//                if (world.getBlockState(pos.relative(dir)).isSolid() && Blocks.LADDER.canSurvive(toPlace, world, pos)) {
+//                    world.setBlockAndUpdate(pos, toPlace);
+//                    break;
+//                }
+//            }
+//        }
+//    }
 
     public PathingStuckHandler withBlockBreaks() {
         canBreakBlocks = true;

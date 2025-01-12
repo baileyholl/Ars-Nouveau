@@ -105,12 +105,12 @@ public class ArchwoodChestRenderer<T extends BlockEntity & LidBlockEntity> imple
         String type = "archwood";
         switch (chestType) {
             case LEFT:
-                return new Material(Sheets.CHEST_SHEET, new ResourceLocation(ArsNouveau.MODID, "model/chest/" + type + "/left"));
+                return new Material(Sheets.CHEST_SHEET, ArsNouveau.prefix( "model/chest/" + type + "/left"));
             case RIGHT:
-                return new Material(Sheets.CHEST_SHEET, new ResourceLocation(ArsNouveau.MODID, "model/chest/" + type + "/right"));
+                return new Material(Sheets.CHEST_SHEET, ArsNouveau.prefix( "model/chest/" + type + "/right"));
             case SINGLE:
             default:
-                return new Material(Sheets.CHEST_SHEET,new ResourceLocation(ArsNouveau.MODID, "model/chest/" + type + "/" + type));
+                return new Material(Sheets.CHEST_SHEET,ArsNouveau.prefix( "model/chest/" + type + "/" + type));
         }
     }
 }

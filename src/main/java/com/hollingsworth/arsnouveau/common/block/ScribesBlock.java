@@ -11,11 +11,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
@@ -23,41 +22,39 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 public class ScribesBlock extends TableBlock {
 
     public ScribesBlock() {
         super();
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
     }
 
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public ItemInteractionResult useItemOn(ItemStack heldStack,BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (world.isClientSide || handIn != InteractionHand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof ScribesTile tile)) {
-            return InteractionResult.PASS;
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         if (player.getItemInHand(handIn).getItem() instanceof SpellBook && !player.isShiftKeyDown()) {
-            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-                    new PacketOpenGlyphCraft(pos));
-            return InteractionResult.SUCCESS;
+            Networking.sendToPlayerClient( new PacketOpenGlyphCraft(pos), (ServerPlayer) player);
+            return ItemInteractionResult.SUCCESS;
         }
 
         if (state.getValue(ScribesBlock.PART) != ThreePartBlock.HEAD) {
             BlockEntity tileEntity = world.getBlockEntity(pos.relative(ScribesBlock.getConnectedDirection(state)));
             tile = tileEntity instanceof ScribesTile ? (ScribesTile) tileEntity : null;
             if (tile == null)
-                return InteractionResult.PASS;
+                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
         if (!player.isShiftKeyDown()) {
 
             if (tile.consumeStack(player.getItemInHand(handIn))) {
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
 
             if (!tile.getStack().isEmpty() && player.getItemInHand(handIn).isEmpty()) {
@@ -79,10 +76,10 @@ public class ScribesBlock extends TableBlock {
         if (player.isShiftKeyDown()) {
             ItemStack stack = tile.getStack();
             if(player.getItemInHand(handIn).getItem() instanceof DominionWand){
-                return InteractionResult.PASS;
+                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
             }
             if (stack == null || stack.isEmpty())
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
 
             if (stack.getItem() instanceof IScribeable scribeable) {
                 scribeable.onScribe(world, pos, player, handIn, stack);
@@ -91,17 +88,19 @@ public class ScribesBlock extends TableBlock {
             }
         }
 
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Override
-    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
+    public BlockState playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         super.playerWillDestroy(worldIn, pos, state, player);
         if (worldIn.getBlockEntity(pos) instanceof ScribesTile tile && tile.getStack() != null) {
             worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.getStack()));
             tile.refundConsumed();
         }
+        return state;
     }
+
 
     // If the user breaks the other side of the table, this side needs to drop its item
     public BlockState tearDown(BlockState state, Direction direction, BlockState state2, LevelAccessor world, BlockPos pos, BlockPos pos2) {
@@ -124,10 +123,11 @@ public class ScribesBlock extends TableBlock {
         BlockPos pos = event.getPos();
 
         if (world.getBlockState(pos).getBlock() instanceof ScribesBlock ) {
-            if(event.getEntity().getItemInHand(event.getHand()).getItem() instanceof DominionWand){
+            ItemStack stack = event.getEntity().getItemInHand(event.getHand());
+            if(stack.getItem() instanceof DominionWand){
                 return;
             }
-            BlockRegistry.SCRIBES_BLOCK.get().use(world.getBlockState(pos), world, pos, event.getEntity(), event.getHand(), null);
+            BlockRegistry.SCRIBES_BLOCK.get().useItemOn(stack, world.getBlockState(pos), world, pos, event.getEntity(), event.getHand(), null);
             event.setCanceled(true);
         }
     }
@@ -138,7 +138,7 @@ public class ScribesBlock extends TableBlock {
     }
 
     @Override
-    public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+    public boolean isPathfindable(BlockState pState, PathComputationType pType) {
         return false;
     }
 }

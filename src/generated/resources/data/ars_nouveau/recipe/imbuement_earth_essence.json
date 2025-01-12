@@ -1,0 +1,22 @@
+{
+  "type": "ars_nouveau:imbuement",
+  "input": {
+    "tag": "c:gems/source"
+  },
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:earth_essence"
+  },
+  "pedestalItems": [
+    {
+      "tag": "c:ingots/iron"
+    },
+    {
+      "tag": "c:seeds"
+    },
+    {
+      "tag": "minecraft:dirt"
+    }
+  ],
+  "source": 2000
+}

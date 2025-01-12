@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "count": 2,
-  "ingredient": {
-    "item": "ars_nouveau:sourcestone_small_bricks"
-  },
-  "result": "ars_nouveau:sourcestone_small_bricks_slab"
-}

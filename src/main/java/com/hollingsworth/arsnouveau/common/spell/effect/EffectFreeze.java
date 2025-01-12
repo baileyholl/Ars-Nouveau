@@ -22,7 +22,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -103,7 +103,7 @@ public class EffectFreeze extends AbstractEffect implements IPotionEffect {
     }
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addPotionConfig(builder, 10);
         addExtendTimeConfig(builder, 5);
@@ -127,6 +127,13 @@ public class EffectFreeze extends AbstractEffect implements IPotionEffect {
         augments.add(AugmentPierce.INSTANCE);
         augments.add(AugmentSensitive.INSTANCE);
         return augments;
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentSensitive.INSTANCE, "Turns water into Frosted Ice and will vanish after a short time.");
     }
 
     @Override

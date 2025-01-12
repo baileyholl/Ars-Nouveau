@@ -1,27 +1,27 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
-import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.event.FamiliarSummonEvent;
 import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
-import com.hollingsworth.arsnouveau.api.familiar.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.entity.goal.familiar.FamOwnerHurtByTargetGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.familiar.FamOwnerHurtTargetGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.familiar.FamiliarFollowGoal;
+import com.hollingsworth.arsnouveau.common.items.data.PersistentFamiliarData;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
@@ -35,19 +35,19 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.network.NetworkHooks;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
-public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamiliar, IDispellable, IDecoratable, IVariantTextureProvider<FamiliarEntity> {
+public abstract class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamiliar, IDispellable, IDecoratable {
 
     public double manaReserveModifier = 0.15;
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(FamiliarEntity.class, EntityDataSerializers.OPTIONAL_UUID);
@@ -58,12 +58,16 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
 
     public boolean terminatedFamiliar;
     public ResourceLocation holderID;
-    public PersistentFamiliarData persistentData = new PersistentFamiliarData<>(new CompoundTag());
+    public PersistentFamiliarData persistentData = new PersistentFamiliarData();
 
     public FamiliarEntity(EntityType<? extends PathfinderMob> p_i48575_1_, Level p_i48575_2_) {
         super(p_i48575_1_, p_i48575_2_);
         if (!level.isClientSide)
             FAMILIAR_SET.add(this);
+    }
+
+    protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
+        return super.mobInteract(player, hand);
     }
 
     @Override
@@ -78,7 +82,7 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
     @Override
     public void setCustomName(@Nullable Component pName) {
         super.setCustomName(pName);
-        persistentData.name = pName;
+        persistentData = persistentData.setName(pName);
         syncTag();
     }
 
@@ -125,7 +129,7 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
         this.targetSelector.addGoal(2, new FamOwnerHurtTargetGoal(this));
     }
 
-    public PlayState walkPredicate(AnimationState event) {
+    public PlayState walkPredicate(AnimationState<? extends FamiliarEntity> event) {
         return PlayState.CONTINUE;
     }
 
@@ -157,11 +161,11 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(OWNER_UUID, Optional.empty());
-        this.entityData.define(COLOR, "");
-        this.entityData.define(COSMETIC, ItemStack.EMPTY);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(OWNER_UUID, Optional.empty());
+        pBuilder.define(COLOR, "");
+        pBuilder.define(COSMETIC, ItemStack.EMPTY);
     }
 
     @Override
@@ -182,16 +186,16 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
         this.getEntityData().set(OWNER_UUID, Optional.of(uuid));
     }
 
-    public ItemStack getCosmeticItem() {
+    public @NotNull ItemStack getCosmeticItem() {
         return this.entityData.get(COSMETIC);
     }
 
     //use this for tag reload
     public void setCosmeticItem(ItemStack stack, boolean shouldDrop) {
         if (!this.entityData.get(COSMETIC).isEmpty() && shouldDrop)
-            this.level.addFreshEntity(new ItemEntity(this.level, this.getX(), this.getY(), this.getZ(), this.entityData.get(COSMETIC)));
+            this.level().addFreshEntity(new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), this.entityData.get(COSMETIC)));
         this.entityData.set(COSMETIC, stack);
-        this.persistentData.cosmetic = stack;
+        this.persistentData = persistentData.setCosmetic(stack);
         syncTag();
     }
 
@@ -199,65 +203,59 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
         setCosmeticItem(stack, true);
     }
 
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
     public static AttributeSupplier.Builder attributes() {
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 100d)
-                .add(Attributes.MOVEMENT_SPEED, 0.2d).add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue())
+                .add(Attributes.MOVEMENT_SPEED, 0.2d).add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.value().getDefaultValue())
                 .add(Attributes.FOLLOW_RANGE, 16D);
     }
 
     @Override
-    public boolean canTrample(BlockState state, BlockPos pos, float fallDistance) {
+    public boolean canTrample(@NotNull BlockState state, @NotNull BlockPos pos, float fallDistance) {
         return false;
     }
 
     @Override
-    protected boolean canRide(Entity p_184228_1_) {
+    protected boolean canRide(@NotNull Entity p_184228_1_) {
         return false;
     }
 
     @Override
     public boolean onDispel(@Nullable LivingEntity caster) {
-        if (!level.isClientSide && getOwner() != null && getOwner().equals(caster)) {
+        if (!level().isClientSide && getOwner() != null && getOwner().equals(caster)) {
             this.remove(RemovalReason.DISCARDED);
-            ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
+            ParticleUtil.spawnPoof((ServerLevel) level(), blockPosition());
             return true;
         }
         return false;
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         if (getOwnerID() != null)
             tag.putUUID("ownerID", getOwnerID());
         tag.putBoolean("terminated", terminatedFamiliar);
-        tag.put("familiarData", getPersistentFamiliarData().toTag(this, new CompoundTag()));
-        if(holderID != null) {
+        tag.put("familiarData", getPersistentFamiliarData().toTag(level));
+        if (holderID != null) {
             tag.putString("holderID", holderID.toString());
         }
         tag.putString("color", this.entityData.get(COLOR));
         if (!this.entityData.get(COSMETIC).isEmpty()) {
-            CompoundTag cosmeticTag = new CompoundTag();
-            this.entityData.get(COSMETIC).save(cosmeticTag);
+            Tag cosmeticTag = this.entityData.get(COSMETIC).save(level.registryAccess());
             tag.put("cosmetic", cosmeticTag);
         }
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if (tag.hasUUID("ownerID"))
             setOwnerID(tag.getUUID("ownerID"));
         terminatedFamiliar = tag.getBoolean("terminated");
-        this.holderID = new ResourceLocation(tag.getString("holderID"));
+        this.holderID = ResourceLocation.tryParse(tag.getString("holderID"));
         this.persistentData = deserializePersistentData(tag.getCompound("familiarData"));
         this.entityData.set(COLOR, tag.getString("color"));
-        this.entityData.set(COSMETIC, ItemStack.of(tag.getCompound("cosmetic")));
+        this.entityData.set(COSMETIC, ItemStack.parseOptional(this.level.registryAccess(), tag.getCompound("cosmetic")));
         syncAfterPersistentFamiliarInit();
     }
 
@@ -281,7 +279,7 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
 
     public void setColor(String color) {
         this.entityData.set(COLOR, color);
-        this.getPersistentFamiliarData().color = color;
+        persistentData = persistentData.setColor(color);
         syncTag();
     }
 
@@ -300,9 +298,9 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
      * Get the owner from getOwner
      */
     public void syncTag() {
-        IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(getOwner()).orElse(null);
+        IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(getOwner());
         if (cap != null && persistentData != null) {
-            cap.getFamiliarData(getHolderID()).entityTag.put("familiarData", persistentData.toTag(this, new CompoundTag()));
+            cap.getFamiliarData(getHolderID()).entityTag.put("familiarData", persistentData.toTag(level));
         }
     }
 
@@ -310,7 +308,7 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
      * Override and return your own implementation of PersistentData. See FamiliarStarbuncle for an example.
      */
     public PersistentFamiliarData deserializePersistentData(CompoundTag tag) {
-        return new PersistentFamiliarData<>(tag);
+        return PersistentFamiliarData.fromTag(tag);
     }
 
     public PersistentFamiliarData getPersistentFamiliarData() {
@@ -322,12 +320,18 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
      * Use this to de-duplify your persistent entity data as it relates to your PersistentFamiliarData.
      */
     public void syncAfterPersistentFamiliarInit() {
-        setCustomName(persistentData.name);
-        if (persistentData.color != null) {
-            setColor(persistentData.color);
+        setCustomName(persistentData.name());
+        if (persistentData.color() != null) {
+            setColor(persistentData.color());
         }
-        if (persistentData.cosmetic != null) {
-            setCosmeticItem(persistentData.cosmetic, false);
+        if (persistentData.cosmetic() != null) {
+            setCosmeticItem(persistentData.cosmetic(), false);
         }
     }
+
+    /**
+     * Use this to return custom texture, return null for default model.
+     */
+    public abstract @Nullable ResourceLocation getTexture();
+
 }

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:smooth_gilded_sourcestone_basketweave"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:sourcestone"
+  }
+}

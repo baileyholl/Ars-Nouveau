@@ -1,25 +1,22 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
-import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.mana.IManaDiscountEquipment;
-import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.NotEnoughManaPacket;
-import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.common.items.data.TomeCasterData;
 import com.hollingsworth.arsnouveau.setup.config.Config;
-import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
@@ -27,7 +24,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +34,7 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
     }
 
     public CasterTome() {
-        super();
+        super(ItemsRegistry.defaultItemProperties().component(DataComponentRegistry.TOME_CASTER, new TomeCasterData()));
     }
 
     @Override
@@ -47,35 +43,34 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-        ISpellCaster caster = getSpellCaster(stack);
+        AbstractCaster<?> caster = getSpellCaster(stack);
         Spell spell = caster.getSpell();
         return caster.castSpell(worldIn, playerIn, handIn, Component.empty(), spell);
     }
 
     @Override
-    public @NotNull ISpellCaster getSpellCaster(ItemStack stack) {
-        return new TomeSpellCaster(stack);
-    }
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
+        AbstractCaster<?> caster = getSpellCaster(stack);
 
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
-        if (worldIn == null)
-            return;
-        ISpellCaster caster = getSpellCaster(stack);
+        if (caster != null) {
 
-        if (Config.GLYPH_TOOLTIPS.get() || Screen.hasShiftDown()) {
+            // If the caster is hidden, show the hidden recipe
+
             if (caster.isSpellHidden()) {
-                tooltip2.add(Component.literal(caster.getHiddenRecipe()).withStyle(Style.EMPTY.withFont(new ResourceLocation("minecraft", "alt")).withColor(ChatFormatting.GOLD)));
+                tooltip2.add(Component.literal(caster.getHiddenRecipe()).withStyle(Style.EMPTY.withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "alt")).withColor(ChatFormatting.GOLD)));
+            } else if (Screen.hasShiftDown() || !Config.GLYPH_TOOLTIPS.get()) {
+                getInformation(stack, context, tooltip2, flagIn);
             }
-            if (!caster.getFlavorText().isEmpty())
+
+            if (!Screen.hasShiftDown() && !caster.getFlavorText().isEmpty())
                 tooltip2.add(Component.literal(caster.getFlavorText()).withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE)));
-        } else getInformation(stack, worldIn, tooltip2, flagIn);
 
-        tooltip2.add(Component.translatable("tooltip.ars_nouveau.caster_tome"));
+            tooltip2.add(Component.translatable("tooltip.ars_nouveau.caster_tome"));
 
-        super.appendHoverText(stack, worldIn, tooltip2, flagIn);
+        }
+        super.appendHoverText(stack, context, tooltip2, flagIn);
     }
 
     @Override
@@ -84,41 +79,10 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
     }
 
     @Override
-    public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
-        ISpellCaster caster = getSpellCaster(pStack);
-        if (!Screen.hasShiftDown() && Config.GLYPH_TOOLTIPS.get() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
+    public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
+        AbstractCaster<?> caster = getSpellCaster(pStack);
+        if (caster != null && !Screen.hasShiftDown() && Config.GLYPH_TOOLTIPS.get() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
             return Optional.of(new SpellTooltip(caster));
         return Optional.empty();
     }
-
-    /**
-     * A Spell resolver that ignores mana player limits.
-     */
-    public static class TomeSpellCaster extends SpellCaster {
-        public TomeSpellCaster(ItemStack stack) {
-            super(stack);
-        }
-
-        @Override
-        public SpellResolver getSpellResolver(SpellContext context, Level worldIn, LivingEntity playerIn, InteractionHand handIn) {
-            return new SpellResolver(context) {
-                @Override
-                protected boolean enoughMana(LivingEntity entity) {
-                    int totalCost = getResolveCost();
-                    IManaCap manaCap = CapabilityRegistry.getMana(entity).orElse(null);
-                    if (manaCap == null)
-                        return false;
-                    boolean canCast = totalCost <= manaCap.getCurrentMana() || manaCap.getCurrentMana() == manaCap.getMaxMana() || (entity instanceof Player player && player.isCreative());
-                    if (!canCast && !entity.getCommandSenderWorld().isClientSide && !silent) {
-                        PortUtil.sendMessageNoSpam(entity, Component.translatable("ars_nouveau.spell.no_mana"));
-                        if (entity instanceof ServerPlayer serverPlayer)
-                            Networking.sendToPlayerClient(new NotEnoughManaPacket(totalCost), serverPlayer);
-                    }
-                    return canCast;
-                }
-
-            };
-        }
-    }
-
 }

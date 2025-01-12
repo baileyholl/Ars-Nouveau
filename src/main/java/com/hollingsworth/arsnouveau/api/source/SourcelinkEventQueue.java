@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.SourcelinkTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,12 +28,12 @@ public class SourcelinkEventQueue {
             if (!world.isLoaded(p))
                 continue;
             BlockEntity entity = world.getBlockEntity(p);
-            if (world.getBlockEntity(p) == null || !(entity instanceof SourcelinkTile)) {
+            if (world.getBlockEntity(p) == null || !(entity instanceof SourcelinkTile sourcelinkTile)) {
                 stalePos.add(p);
                 continue;
             }
-            if (entity.getClass().equals(tileType) && ((SourcelinkTile) entity).eventInRange(sourcePos, event) && ((SourcelinkTile) entity).canAcceptSource()) {
-                ((SourcelinkTile) entity).getManaEvent(sourcePos, amount);
+            if (entity.getClass().equals(tileType) &&  sourcelinkTile.eventInRange(sourcePos, event) && sourcelinkTile.canAcceptSource()) {
+                sourcelinkTile.getManaEvent(sourcePos, amount);
                 break;
             }
         }

@@ -110,7 +110,7 @@ public class CastGoal<T extends Mob & RangedAttackMob> extends Goal {
         }
         if (this.seeTime >= 40 && !this.hasAnimated) {
             this.hasAnimated = true;
-            Networking.sendToNearby(mob.level, mob, new PacketAnimEntity(mob.getId(), animId));
+            Networking.sendToNearbyClient(mob.level, mob, new PacketAnimEntity(mob.getId(), animId));
         }
         if (this.hasAnimated) {
             animatedTicks++;

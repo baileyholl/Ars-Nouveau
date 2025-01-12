@@ -1,28 +1,31 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.event.ChimeraSummonEvent;
 import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
 import com.hollingsworth.arsnouveau.common.event.timed.EruptionEvent;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
-public class PacketTimedEvent {
+public class PacketTimedEvent extends AbstractPacket{
 
     CompoundTag tag;
 
     //Decoder
-    public PacketTimedEvent(FriendlyByteBuf buf) {
+    public PacketTimedEvent(RegistryFriendlyByteBuf buf) {
         tag = buf.readNbt();
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeNbt(tag);
     }
 
@@ -35,13 +38,19 @@ public class PacketTimedEvent {
         event.serialize(tag);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            if (!methodMap.containsKey(tag.getString("id")))
-                throw new IllegalStateException("No event found for ID or ID missing");
-            methodMap.get(tag.getString("id")).apply(tag);
-        });
-        ctx.get().setPacketHandled(true);
+    @Override
+    public void onClientReceived(Minecraft minecraft, Player player) {
+        if (!methodMap.containsKey(tag.getString("id")))
+            throw new IllegalStateException("No event found for ID or ID missing");
+        methodMap.get(tag.getString("id")).apply(tag);
+    }
+
+    public static final Type<PacketTimedEvent> TYPE = new Type<>(ArsNouveau.prefix("timed_event"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketTimedEvent> CODEC = StreamCodec.ofMember(PacketTimedEvent::toBytes, PacketTimedEvent::new);
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
     public static Map<String, Function<CompoundTag, Void>> methodMap = new HashMap<>();

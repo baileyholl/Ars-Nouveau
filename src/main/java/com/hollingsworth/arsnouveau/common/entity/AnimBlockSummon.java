@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.common.entity.goal.ConditionalMeleeGoal;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.Util;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -17,6 +18,7 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -36,11 +38,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Optional;
@@ -66,8 +68,8 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     @Override
-    public double getAttributeValue(Attribute pAttribute) {
-        if(pAttribute == Attributes.ATTACK_DAMAGE){
+    public double getAttributeValue(Holder<Attribute> pAttribute) {
+        if(pAttribute.is(Attributes.ATTACK_DAMAGE)){
             return super.getAttributeValue(pAttribute) + getStateDamageBonus();
         }
         return super.getAttributeValue(pAttribute);
@@ -93,7 +95,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(4, new ConditionalLeapGoal(this, 0.4F, () -> entityData.get(CAN_WALK)));
         this.goalSelector.addGoal(5, new ConditionalMeleeGoal(this, 1.0D, true, () -> entityData.get(CAN_WALK)));
-        this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
+        this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
@@ -169,13 +171,14 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(OWNER_UUID, Optional.of(Util.NIL_UUID));
-        this.entityData.define(COLOR, ParticleColor.defaultParticleColor().getColor());
-        this.entityData.define(AGE, 0);
-        this.entityData.define(CAN_WALK, false);
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(OWNER_UUID, Optional.of(Util.NIL_UUID));
+        pBuilder.define(COLOR, ParticleColor.defaultParticleColor().getColor());
+        pBuilder.define(AGE, 0);
+        pBuilder.define(CAN_WALK, false);
     }
+
 
     @Override
     public void die(DamageSource cause) {
@@ -206,7 +209,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     @Override
-    public int getExperienceReward() {
+    protected int getBaseExperienceReward() {
         return 0;
     }
 
@@ -234,11 +237,12 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         String spawnAnim = "spawn";
-        data.add(new AnimationController<>(this, spawnAnim, 0, (e) -> {
+        data.add(new AnimationController<>(this, spawnAnim, 1, (e) -> {
             if (!entityData.get(CAN_WALK)) {
                 e.getController().setAnimation(RawAnimation.begin().thenPlay(spawnAnim));
                 return PlayState.CONTINUE;
             }
+            e.getController().forceAnimationReset();
             return PlayState.STOP;
         }));
 
@@ -258,14 +262,19 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
         return factory;
     }
 
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return new ClientboundAddEntityPacket(this, Block.getId(this.getBlockState()));
-    }
-
     public BlockState getBlockState() {
         return blockState != null ? blockState : BlockRegistry.MAGE_BLOCK.get().defaultBlockState();
     }
+
+    @Override
+    public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity p_352287_) {
+        return new ClientboundAddEntityPacket(this, p_352287_, Block.getId(this.getBlockState()));
+    }
+
+//    @Override
+//    public double getBoneResetTime() {
+//        return 0;
+//    }
 
     @Override
     public void recreateFromPacket(ClientboundAddEntityPacket pPacket) {

@@ -13,10 +13,10 @@ import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterShadersEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 import org.apache.commons.lang3.function.TriFunction;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -24,8 +24,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class ShaderRegistry extends RenderType {
 
     private ShaderRegistry(String name, VertexFormat format, VertexFormat.Mode mode, int bufferSize, boolean affectsCrumbling, boolean sortOnUpload, Runnable setupState, Runnable clearState) {
@@ -76,9 +77,9 @@ public class ShaderRegistry extends RenderType {
 
     @SubscribeEvent
     public static void shaderRegistry(RegisterShadersEvent event) throws IOException {
-        event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(ArsNouveau.MODID, "sky"), DefaultVertexFormat.POSITION), s -> ClientInfo.skyShader = s);
-        event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(ArsNouveau.MODID, "rainbow_entity"), DefaultVertexFormat.NEW_ENTITY), s -> ClientInfo.rainbowShader = s);
-        event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(ArsNouveau.MODID, "blamed_entity"), DefaultVertexFormat.NEW_ENTITY), s -> ClientInfo.blameShader = s);
+        event.registerShader(new ShaderInstance(event.getResourceProvider(), ArsNouveau.prefix( "sky"), DefaultVertexFormat.POSITION), s -> ClientInfo.skyShader = s);
+        event.registerShader(new ShaderInstance(event.getResourceProvider(), ArsNouveau.prefix( "rainbow_entity"), DefaultVertexFormat.NEW_ENTITY), s -> ClientInfo.rainbowShader = s);
+        event.registerShader(new ShaderInstance(event.getResourceProvider(), ArsNouveau.prefix( "blamed_entity"), DefaultVertexFormat.NEW_ENTITY), s -> ClientInfo.blameShader = s);
     }
 
     private static <T, U, V, R> TriFunction<T, U, V, R> memoize(final TriFunction<T, U, V, R> pMemoBiFunction) {
@@ -93,5 +94,48 @@ public class ShaderRegistry extends RenderType {
                 return "memoize/3[function=" + pMemoBiFunction + ", size=" + this.cache.size() + "]";
             }
         };
+    }
+
+    /**
+     * Usable for rendering simple flat textures
+     *
+     * @param  resLoc texture location
+     * @return        render type
+     */
+    public static RenderType worldEntityIcon(final ResourceLocation resLoc)
+    {
+        return InnerRenderTypes.WORLD_ENTITY_ICON.apply(resLoc);
+    }
+
+    public static final class InnerRenderTypes extends RenderType
+    {
+
+        private InnerRenderTypes(final String nameIn,
+                                 final VertexFormat formatIn,
+                                 final VertexFormat.Mode drawModeIn,
+                                 final int bufferSizeIn,
+                                 final boolean useDelegateIn,
+                                 final boolean needsSortingIn,
+                                 final Runnable setupTaskIn,
+                                 final Runnable clearTaskIn)
+        {
+            super(nameIn, formatIn, drawModeIn, bufferSizeIn, useDelegateIn, needsSortingIn, setupTaskIn, clearTaskIn);
+            throw new IllegalStateException();
+        }
+
+        private static final Function<ResourceLocation, RenderType> WORLD_ENTITY_ICON = Util.memoize((p_173202_) -> {
+            return create("ars_nouveau_entity_icon",
+                    DefaultVertexFormat.POSITION_TEX,
+                    VertexFormat.Mode.QUADS,
+                    1024,
+                    false,
+                    true,
+                    CompositeState.builder()
+                            .setShaderState(POSITION_TEX_SHADER)
+                            .setTextureState(new TextureStateShard(p_173202_, false, false))
+                            .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                            .setDepthTestState(RenderStateShard.LEQUAL_DEPTH_TEST)
+                            .createCompositeState(false));
+        });
     }
 }

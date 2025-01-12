@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
-import net.minecraftforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.util.FakePlayer;
 
 public class OpenChestEvent implements ITimedEvent {
     ServerLevel level;
@@ -24,7 +24,7 @@ public class OpenChestEvent implements ITimedEvent {
         try {
             if (level.getBlockEntity(pos) instanceof ChestBlockEntity chestBlockEntity) {
                 fakePlayer.level = level;
-                fakePlayer.nextContainerCounter();
+                fakePlayer.containerCounter = fakePlayer.containerCounter % 100 + 1;
                 fakePlayer.setPos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
                 fakePlayer.containerMenu = chestBlockEntity.createMenu(fakePlayer.containerCounter, fakePlayer.inventory, fakePlayer);
             }

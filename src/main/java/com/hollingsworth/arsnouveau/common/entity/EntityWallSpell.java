@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
@@ -18,7 +19,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
@@ -98,14 +98,14 @@ public class EntityWallSpell extends EntityProjectileSpell {
                 return;
             for(BlockPos p : BlockPos.betweenClosed(start, end)){
                 p = p.immutable();
-                spellResolver.onResolveEffect(level, new
+                spellResolver.getNewResolver(spellResolver.spellContext.clone().makeChildContext()).onResolveEffect(level, new
                         BlockHitResult(new Vec3(p.getX(), p.getY(), p.getZ()), Direction.UP, p, false));
             }
         }else{
             int i = 0;
             // Expand the axis if start and end are equal
 
-            AABB aabb = new AABB(start, end);
+            AABB aabb = AABB.encapsulatingFullBlocks(start, end);
             if(aabb.maxX == aabb.minX){
                 aabb = aabb.inflate(growthFactor, 0, 0);
             }
@@ -127,7 +127,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
                 }
                 if(skipEntity)
                     continue;
-                spellResolver.onResolveEffect(level, new EntityHitResult(entity));
+                spellResolver.getNewResolver(spellResolver.spellContext.clone().makeChildContext()).onResolveEffect(level, new EntityHitResult(entity));
                 i++;
                 if(hit.isEmpty()){
                     hitEntities.add(new EntityHit(entity));
@@ -174,10 +174,6 @@ public class EntityWallSpell extends EntityProjectileSpell {
         ParticleUtil.spawnLight(level, getParticleColor(), position.add(0, 0.5, 0), 10);
     }
 
-    public EntityWallSpell(PlayMessages.SpawnEntity packet, Level world) {
-        super(ModEntities.WALL_SPELL.get(), world);
-    }
-
     @Override
     public EntityType<?> getType() {
         return ModEntities.WALL_SPELL.get();
@@ -188,7 +184,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
         if (!level.isClientSide && result instanceof BlockHitResult && !this.isRemoved()) {
             BlockState state = level.getBlockState(((BlockHitResult) result).getBlockPos());
             if (state.is(BlockTags.PORTALS)) {
-                state.getBlock().entityInside(state, level, ((BlockHitResult) result).getBlockPos(), this);
+                state.entityInside(level, ((BlockHitResult) result).getBlockPos(), this);
                 return;
             }
             this.setLanded(true);
@@ -240,14 +236,14 @@ public class EntityWallSpell extends EntityProjectileSpell {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(ACCELERATES, 0);
-        entityData.define(AOE, 0f);
-        entityData.define(LANDED, false);
-        entityData.define(SENSITIVE, false);
-        entityData.define(DIRECTION, Direction.NORTH);
-        entityData.define(SHOULD_FALL, true);
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(ACCELERATES, 0);
+        pBuilder.define(AOE, 0f);
+        pBuilder.define(LANDED, false);
+        pBuilder.define(SENSITIVE, false);
+        pBuilder.define(DIRECTION, Direction.NORTH);
+        pBuilder.define(SHOULD_FALL, true);
     }
 
     @Override

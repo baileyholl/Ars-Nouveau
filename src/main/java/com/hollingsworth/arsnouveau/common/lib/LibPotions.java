@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.lib;
 
 public class LibPotions {
 
+    public static final String LOOTING = "looting";
     public static final String SHOCKED = "shocked";
     public static final String HEX = "hex";
     public static final String MAGIC_FIND = "magic_find";
@@ -16,12 +17,12 @@ public class LibPotions {
     public static final String MANA_REGEN = "mana_regen";
     public static final String SPELL_DAMAGE = "spell_damage";
 
-    public static final String FAMILIAR_SICKNESS = "familiar_sickness";
     public static final String SUMMONING_SICKNESS = "summoning_sickness";
     public static final String RECOVERY = "recovery";
     public static final String BLAST = "blasting";
     public static final String FREEZING = "freezing";
     public static final String DEFENCE = "shielding";
+    public static final String SOAKED = "soaked";
 
     public static String potion(String base) {
         return base + "_potion";

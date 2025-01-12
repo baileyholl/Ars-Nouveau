@@ -1,0 +1,17 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": true,
+  "pedestalItems": [
+    {
+      "item": "ars_nouveau:warp_scroll"
+    }
+  ],
+  "reagent": {
+    "item": "ars_nouveau:warp_scroll"
+  },
+  "result": {
+    "count": 2,
+    "id": "ars_nouveau:warp_scroll"
+  },
+  "sourceCost": 1000
+}

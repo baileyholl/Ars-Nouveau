@@ -2,38 +2,31 @@ package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
-import com.hollingsworth.arsnouveau.common.capability.ANPlayerCapAttacher;
+import com.hollingsworth.arsnouveau.api.source.ISourceCap;
 import com.hollingsworth.arsnouveau.common.capability.ANPlayerDataCap;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
-import com.hollingsworth.arsnouveau.common.capability.ManaCapAttacher;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketSyncPlayerCap;
+import com.hollingsworth.arsnouveau.common.capability.ManaCap;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.EntityCapability;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
+
+import java.util.List;
 
 public class CapabilityRegistry {
 
-    public static final Capability<IManaCap> MANA_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
-    });
-    public static final Capability<IPlayerCap> PLAYER_DATA_CAP = CapabilityManager.get(new CapabilityToken<>() {
-    });
-
-
-    public static final Direction DEFAULT_FACING = null;
-
+    public static final EntityCapability<ManaCap, Void> MANA_CAPABILITY = EntityCapability.createVoid(ArsNouveau.prefix("mana"), ManaCap.class);
+    public static final EntityCapability<ANPlayerDataCap, Void> PLAYER_DATA_CAP = EntityCapability.createVoid(ArsNouveau.prefix("player_data"), ANPlayerDataCap.class);
+    public static final BlockCapability<ISourceCap, Direction> SOURCE_CAPABILITY = BlockCapability.createSided(ArsNouveau.prefix("source"), ISourceCap.class);
 
     /**
      * Get the {@link IManaCap} from the specified entity.
@@ -41,9 +34,9 @@ public class CapabilityRegistry {
      * @param entity The entity
      * @return A lazy optional containing the IMana, if any
      */
-    public static LazyOptional<IManaCap> getMana(final LivingEntity entity) {
+    public static ManaCap getMana(final LivingEntity entity) {
         if (entity == null)
-            return LazyOptional.empty();
+            return null;
         return entity.getCapability(MANA_CAPABILITY);
     }
 
@@ -53,63 +46,41 @@ public class CapabilityRegistry {
      * @param entity The entity
      * @return A lazy optional containing the IMana, if any
      */
-    public static LazyOptional<IPlayerCap> getPlayerDataCap(final LivingEntity entity) {
+    public static ANPlayerDataCap getPlayerDataCap(final LivingEntity entity) {
         if (entity == null)
-            return LazyOptional.empty();
+            return null;
         return entity.getCapability(PLAYER_DATA_CAP);
     }
 
-    /**
-     * Event handler for the {@link IManaCap} capability.
-     */
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerEntity(MANA_CAPABILITY, EntityType.PLAYER, (player, ctx) -> new ManaCap(player));
+        event.registerEntity(PLAYER_DATA_CAP, EntityType.PLAYER, (player, ctx) -> new ANPlayerDataCap(player));
+        var containers = List.of(BlockRegistry.ENCHANTING_APP_TILE,
+                BlockRegistry.IMBUEMENT_TILE,
+                BlockRegistry.SCRIBES_TABLE_TILE,
+                BlockRegistry.ARCANE_PEDESTAL_TILE,
+                BlockRegistry.ARCHWOOD_CHEST_TILE,
+                BlockRegistry.REPOSITORY_TILE);
+        for (var container : containers) {
+            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, container.get(), (c, side) -> new InvWrapper(c));
+        }
+
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BlockRegistry.CRAFTING_LECTERN_TILE.get(), (c, side) -> c.getCapability(c, side));
+
+        var sourceContainers = List.of(BlockRegistry.SOURCE_JAR_TILE, BlockRegistry.CREATIVE_SOURCE_JAR_TILE,
+                BlockRegistry.AGRONOMIC_SOURCELINK_TILE, BlockRegistry.ALCHEMICAL_TILE, BlockRegistry.VITALIC_TILE, BlockRegistry.MYCELIAL_TILE, BlockRegistry.VOLCANIC_TILE,
+                BlockRegistry.RELAY_COLLECTOR_TILE, BlockRegistry.RELAY_DEPOSIT_TILE, BlockRegistry.RELAY_WARP_TILE, BlockRegistry.ARCANE_RELAY_TILE,
+                BlockRegistry.IMBUEMENT_TILE);
+
+        for (var container : sourceContainers) {
+            event.registerBlockEntity(SOURCE_CAPABILITY, container.get(), (sourceJar, side) -> sourceJar.getSourceStorage());
+        }
+    }
+
+
     @SuppressWarnings("unused")
-    @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
+    @EventBusSubscriber(modid = ArsNouveau.MODID)
     public static class EventHandler {
-
-        /**
-         * Attach the {@link IManaCap} capability to all living entities.
-         *
-         * @param event The event
-         */
-        @SubscribeEvent
-        public static void attachCapabilities(final AttachCapabilitiesEvent<Entity> event) {
-            if (event.getObject() instanceof Player) {
-                ManaCapAttacher.attach(event);
-                ANPlayerCapAttacher.attach(event);
-            }
-        }
-
-        @SubscribeEvent
-        public static void registerCapabilities(final RegisterCapabilitiesEvent event) {
-            event.register(IManaCap.class);
-            event.register(IPlayerCap.class);
-        }
-
-        /**
-         * Copy the player's mana when they respawn after dying or returning from the end.
-         *
-         * @param event The event
-         */
-        @SubscribeEvent
-        public static void playerClone(PlayerEvent.Clone event) {
-            Player oldPlayer = event.getOriginal();
-            oldPlayer.revive();
-            getMana(oldPlayer).ifPresent(oldMaxMana -> getMana(event.getEntity()).ifPresent(newMaxMana -> {
-                newMaxMana.setMaxMana(oldMaxMana.getMaxMana());
-                newMaxMana.setMana(oldMaxMana.getCurrentMana());
-                newMaxMana.setBookTier(oldMaxMana.getBookTier());
-                newMaxMana.setGlyphBonus(oldMaxMana.getGlyphBonus());
-            }));
-
-            getPlayerDataCap(oldPlayer).ifPresent(oldPlayerCap -> {
-                IPlayerCap playerDataCap = getPlayerDataCap(event.getEntity()).orElse(new ANPlayerDataCap());
-                CompoundTag tag = oldPlayerCap.serializeNBT();
-                playerDataCap.deserializeNBT(tag);
-                syncPlayerCap(event.getEntity());
-            });
-            event.getOriginal().invalidateCaps();
-        }
-
 
         @SubscribeEvent
         public static void onPlayerLoginEvent(PlayerEvent.PlayerLoggedInEvent event) {
@@ -141,10 +112,11 @@ public class CapabilityRegistry {
         }
 
         public static void syncPlayerCap(Player player) {
-            IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(player).orElse(new ANPlayerDataCap());
-            CompoundTag tag = cap.serializeNBT();
-            if(player instanceof ServerPlayer serverPlayer){
-                Networking.sendToPlayerClient(new PacketSyncPlayerCap(tag), serverPlayer);
+            if (player instanceof ServerPlayer serverPlayer) {
+                ANPlayerDataCap playerData = getPlayerDataCap(serverPlayer);
+                if (playerData != null) {
+                    playerData.syncToClient(serverPlayer);
+                }
             }
         }
     }

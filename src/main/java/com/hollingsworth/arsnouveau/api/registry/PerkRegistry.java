@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.api.registry;
 
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
-import com.hollingsworth.arsnouveau.api.perk.IPerkProvider;
+import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -21,7 +21,7 @@ public class PerkRegistry {
 
     private static ConcurrentHashMap<ResourceLocation, PerkItem> perkItemMap = new ConcurrentHashMap<>();
 
-    private static ConcurrentHashMap<Item, IPerkProvider<ItemStack>> itemPerkProviderMap = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<Item, List<List<PerkSlot>>> itemPerkProviderMap = new ConcurrentHashMap<>();
 
     public static Map<ResourceLocation, IPerk> getPerkMap() {
         return perkMap;
@@ -36,13 +36,17 @@ public class PerkRegistry {
         return true;
     }
 
-    public static boolean registerPerkProvider(ItemLike item, IPerkProvider<ItemStack> provider){
-        itemPerkProviderMap.put(item.asItem(), provider);
+    public static boolean registerPerkProvider(ItemLike item, List<List<PerkSlot>> tierList){
+        itemPerkProviderMap.put(item.asItem(), tierList);
         return true;
     }
 
-    public static @Nullable IPerkProvider<ItemStack> getPerkProvider(Item item){
+    public static @Nullable List<List<PerkSlot>> getPerkProvider(Item item){
         return itemPerkProviderMap.get(item);
+    }
+
+    public static @Nullable List<List<PerkSlot>> getPerkProvider(ItemStack item){
+        return getPerkProvider(item.getItem());
     }
 
     public static @NotNull List<Item> getPerkProviderItems(){

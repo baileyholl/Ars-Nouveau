@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:archwood_planks"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:archwood_button"
+  }
+}

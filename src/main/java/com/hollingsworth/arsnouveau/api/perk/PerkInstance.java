@@ -13,9 +13,9 @@ public class PerkInstance {
     private IPerk perk;
 
     public PerkInstance(CompoundTag tag){
-        ResourceLocation perkId = new ResourceLocation(tag.getString("perkId"));
+        ResourceLocation perkId = ResourceLocation.tryParse(tag.getString("perkId"));
         perk = PerkRegistry.getPerkMap().getOrDefault(perkId, StarbunclePerk.INSTANCE);
-        slot = PerkSlot.PERK_SLOTS.getOrDefault(new ResourceLocation(tag.getString("slotId")), PerkSlot.ONE);
+        slot = PerkSlot.PERK_SLOTS.getOrDefault(ResourceLocation.tryParse(tag.getString("slotId")), PerkSlot.ONE);
     }
 
     public PerkInstance(PerkSlot slot, IPerk perk){

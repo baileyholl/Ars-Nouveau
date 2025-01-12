@@ -1,0 +1,5 @@
+{
+  "type": "ars_nouveau:scry_ritual",
+  "augment": "c:ores/redstone",
+  "highlight": "c:ores/redstone"
+}

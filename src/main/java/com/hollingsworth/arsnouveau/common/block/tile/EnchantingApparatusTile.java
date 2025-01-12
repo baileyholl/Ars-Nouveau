@@ -2,20 +2,19 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
-import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
-import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
-import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.client.particle.ColorPos;
+import com.hollingsworth.arsnouveau.client.particle.*;
+import com.hollingsworth.arsnouveau.common.block.ArcanePlatform;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.ApparatusRecipeInput;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.common.network.HighlightAreaPacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -27,11 +26,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -44,7 +43,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
     public static final int craftingLength = 210;
 
     public EnchantingApparatusTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.ENCHANTING_APP_TILE, pos, state);
+        super(BlockRegistry.ENCHANTING_APP_TILE.get(), pos, state);
     }
 
     @Override
@@ -61,21 +60,23 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
         if (level.isClientSide) {
             if (this.isCrafting) {
                 Level world = getLevel();
-                BlockPos pos = getBlockPos().offset(0, 1, 0);
+                BlockPos pos = getBlockPos().offset(0, 0, 0);
                 RandomSource rand = world.getRandom();
 
                 Vec3 particlePos = new Vec3(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0, 0.5);
                 particlePos = particlePos.add(ParticleUtil.pointInSphere());
                 world.addParticle(ParticleLineData.createData(new ParticleColor(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255))),
-                        particlePos.x(), particlePos.y(), particlePos.z(),
-                        pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
+                        particlePos.x(), particlePos.y() + 1, particlePos.z(),
+                        pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 
                 for (BlockPos p : pedestalList()) {
-                    if (level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile && pedestalTile.getStack() != null && !pedestalTile.getStack().isEmpty())
+                    if (level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile && pedestalTile.getStack() != null && !pedestalTile.getStack().isEmpty()) {
+                        var yOffset = level.getBlockState(p).getBlock() instanceof ArcanePlatform ? 0.6 : 1.3;
                         getLevel().addParticle(
                                 GlowParticleData.createData(new ParticleColor(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255))),
-                                p.getX() + 0.5 + ParticleUtil.inRange(-0.2, 0.2), p.getY() + 1.5 + ParticleUtil.inRange(-0.3, 0.3), p.getZ() + 0.5 + ParticleUtil.inRange(-0.2, 0.2),
+                                p.getX() + 0.5 + ParticleUtil.inRange(-0.2, 0.2), p.getY() + yOffset + ParticleUtil.inRange(-0.3, 0.3), p.getZ() + 0.5 + ParticleUtil.inRange(-0.2, 0.2),
                                 0, 0, 0);
+                    }
                 }
 
             }
@@ -95,10 +96,8 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
 
             if (this.isCrafting) {
                 IEnchantingRecipe recipe = this.getRecipe(stack, null);
-                List<ItemStack> pedestalItems = getPedestalItems();
                 if (recipe != null) {
-                    pedestalItems.forEach(i -> i = null);
-                    this.stack = recipe.getResult(pedestalItems, this.stack, this);
+                    this.stack = recipe.assemble(new ApparatusRecipeInput(this), level.registryAccess());
                     clearItems();
                     setChanged();
                     ParticleUtil.spawnPoof((ServerLevel) level, worldPosition);
@@ -140,7 +139,8 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
 
     public IEnchantingRecipe getRecipe(ItemStack stack, @Nullable Player playerEntity) {
         List<ItemStack> pedestalItems = getPedestalItems();
-        return ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes(level).stream().filter(r -> r.isMatch(pedestalItems, stack, this, playerEntity)).findFirst().orElse(null);
+        var holder = ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes(level).stream().filter(r -> r.value().matches(new ApparatusRecipeInput(stack, pedestalItems, playerEntity), level)).findFirst().orElse(null);
+        return holder != null ? holder.value() : null;
     }
 
     public boolean attemptCraft(ItemStack catalyst, @Nullable Player playerEntity) {
@@ -151,10 +151,10 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
         }
         IEnchantingRecipe recipe = this.getRecipe(catalyst, playerEntity);
         if (recipe.consumesSource())
-            SourceUtil.takeSourceWithParticles(worldPosition, level, 10, recipe.getSourceCost());
+            SourceUtil.takeSourceMultipleWithParticles(worldPosition, level, 10, recipe.sourceCost());
         this.isCrafting = true;
         updateBlock();
-        Networking.sendToNearby(level, worldPosition, new PacketOneShotAnimation(worldPosition));
+        Networking.sendToNearbyClient(level, worldPosition, new PacketOneShotAnimation(worldPosition));
         level.playSound(null, getBlockPos(), SoundRegistry.APPARATUS_CHANNEL.get(), SoundSource.BLOCKS, 1, 1);
         return true;
     }
@@ -170,22 +170,22 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
                     colorPos.add(ColorPos.centeredAbove(tile.getBlockPos()));
                 }
             }
-            Networking.sendToNearby(level, worldPosition, new HighlightAreaPacket(colorPos, 60));
+            Networking.sendToNearbyClient(level, worldPosition, new HighlightAreaPacket(colorPos, 60));
         }
 
-        return recipe != null && (!recipe.consumesSource() || (recipe.consumesSource() && SourceUtil.hasSourceNearby(worldPosition, level, 10, recipe.getSourceCost())));
+        return recipe != null && (!recipe.consumesSource() || (recipe.consumesSource() && SourceUtil.hasSourceNearby(worldPosition, level, 10, recipe.sourceCost())));
     }
 
     @Override
-    public void load(CompoundTag compound) {
+    public void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(compound, pRegistries);
         isCrafting = compound.getBoolean("is_crafting");
         counter = compound.getInt("counter");
-        super.load(compound);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         tag.putBoolean("is_crafting", isCrafting);
         tag.putInt("counter", counter);
     }

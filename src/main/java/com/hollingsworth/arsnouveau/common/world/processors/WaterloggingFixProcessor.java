@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.world.processors;
 
 import com.hollingsworth.arsnouveau.setup.registry.StructureRegistry;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.ChunkPos;
@@ -15,7 +15,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 
 public class WaterloggingFixProcessor extends StructureProcessor {
 
-    public static final Codec<WaterloggingFixProcessor> CODEC = Codec.unit(WaterloggingFixProcessor::new);
+    public static final MapCodec<WaterloggingFixProcessor> CODEC = MapCodec.unit(WaterloggingFixProcessor::new);
 
     public WaterloggingFixProcessor() { }
 

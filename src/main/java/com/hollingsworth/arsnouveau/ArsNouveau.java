@@ -1,84 +1,100 @@
 package com.hollingsworth.arsnouveau;
 
-import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
-import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+
+import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
-import com.hollingsworth.arsnouveau.client.container.CraftingTerminalScreen;
 import com.hollingsworth.arsnouveau.client.registry.ClientHandler;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
+import com.hollingsworth.arsnouveau.common.entity.BubbleEntity;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
-import com.hollingsworth.arsnouveau.common.entity.pathfinding.Pathfinding;
+import com.hollingsworth.arsnouveau.common.event.BreezeEvent;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.util.Log;
 import com.hollingsworth.arsnouveau.common.world.Terrablender;
 import com.hollingsworth.arsnouveau.setup.ModSetup;
-import com.hollingsworth.arsnouveau.setup.config.ANModConfig;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
+import com.hollingsworth.arsnouveau.setup.config.StartupConfig;
 import com.hollingsworth.arsnouveau.setup.proxy.ClientProxy;
 import com.hollingsworth.arsnouveau.setup.proxy.IProxy;
 import com.hollingsworth.arsnouveau.setup.proxy.ServerProxy;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
-import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.server.ServerStartedEvent;
-import net.minecraftforge.event.server.ServerStoppingEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
+import net.neoforged.neoforge.common.world.chunk.TicketController;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
 
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 
 @Mod(ArsNouveau.MODID)
-@Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class ArsNouveau {
     public static final String MODID = "ars_nouveau";
     @SuppressWarnings("deprecation") // Has to be runForDist, SafeRunForDist will throw a sided crash
-    public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
+    public static IProxy proxy;
     public static boolean caelusLoaded = false;
     public static boolean terrablenderLoaded = false;
     public static boolean optifineLoaded = false;
     public static boolean sodiumLoaded = false;
     public static boolean patchouliLoaded = false;
 
-    public ArsNouveau(){
-        Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(FMLEventHandler.class);
+    public static List<String> postLoadWarnings = new ArrayList<>();
+
+    public static TicketController ticketController = new TicketController(ArsNouveau.prefix("ticket_controller"),  (level, ticketHelper) -> {
+        ticketHelper.getEntityTickets().forEach(((uuid, chunk) -> {
+            if (level.getEntity(uuid) == null)
+                ticketHelper.removeAllTickets(uuid);
+        }));
+    });
+    public static boolean isDebug = false && !FMLEnvironment.production;
+    public ArsNouveau(IEventBus modEventBus, ModContainer modContainer){
+        NeoForge.EVENT_BUS.addListener(FMLEventHandler::onServerStopped);
         caelusLoaded = ModList.get().isLoaded("caelus");
         terrablenderLoaded = ModList.get().isLoaded("terrablender");
         sodiumLoaded = ModList.get().isLoaded("rubidium");
         patchouliLoaded = ModList.get().isLoaded("patchouli");
         APIRegistry.setup();
-        ANModConfig serverConfig = new ANModConfig(ModConfig.Type.SERVER, ServerConfig.SERVER_CONFIG, ModLoadingContext.get().getActiveContainer(),MODID + "-server");
-        ModLoadingContext.get().getActiveContainer().addConfig(serverConfig);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(ClientEventHandler.class));
-
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        modContainer.registerConfig(ModConfig.Type.STARTUP, StartupConfig.STARTUP_CONFIG);
+        modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SERVER_CONFIG);
+        modContainer.registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
+        modContainer.registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
+        if (FMLEnvironment.dist.isClient()) {
+            NeoForge.EVENT_BUS.register(ClientEventHandler.class);
+        }
+        modEventBus.addListener(Networking::register);
         modEventBus.addListener(ModSetup::registerEvents);
+        modEventBus.addListener(CapabilityRegistry::registerCapabilities);
         ModSetup.registers(modEventBus);
+        modEventBus.addListener(ModEntities::registerPlacements);
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::postModLoadEvent);
         modEventBus.addListener(this::clientSetup);
-        modEventBus.addListener(this::sendImc);
-        MinecraftForge.EVENT_BUS.register(this);
+        modEventBus.addListener((RegisterTicketControllersEvent e) ->{
+            e.register(ticketController);
+        });
+        NeoForge.EVENT_BUS.addListener(BubbleEntity::onAttacked);
+        NeoForge.EVENT_BUS.addListener(BubbleEntity::entityHurt);
+        NeoForge.EVENT_BUS.addListener(BreezeEvent::onSpellResolve);
         ANCriteriaTriggers.init();
         try {
             Thread thread = new Thread(Rewards::init);
@@ -87,17 +103,31 @@ public class ArsNouveau {
         }catch (Exception e){
             e.printStackTrace();
         }
+        if(FMLEnvironment.dist.isClient()){
+            ArsNouveau.proxy = new Supplier<IProxy>() {
+                @Override
+                public IProxy get() {
+                    return new ClientProxy();
+                }
+            }.get();
+        }else{
+            ArsNouveau.proxy = new ServerProxy();
+        }
     }
 
     public void setup(final FMLCommonSetupEvent event) {
         APIRegistry.postInit();
-        Networking.registerMessages();
-        event.enqueueWork(ModPotions::addRecipes);
-        event.enqueueWork(ModEntities::registerPlacements);
         if (terrablenderLoaded && Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
             event.enqueueWork(Terrablender::registerBiomes);
         }
-        MinecraftForge.EVENT_BUS.addListener((ServerStartedEvent e) -> CasterTomeRegistry.reloadTomeData(e.getServer().getRecipeManager(), e.getServer().getLevel(Level.OVERWORLD)));
+
+        NeoForge.EVENT_BUS.addListener((ServerStartedEvent e) -> {
+            GenericRecipeRegistry.reloadAll(e.getServer().getRecipeManager());
+            CasterTomeRegistry.reloadTomeData(e.getServer().getRecipeManager(), e.getServer().getLevel(Level.OVERWORLD));
+            BuddingConversionRegistry.reloadBuddingConversionRecipes(e.getServer().getRecipeManager());
+            ScryRitualRegistry.reloadScryRitualRecipes(e.getServer().getRecipeManager());
+        });
+
     }
 
     public void postModLoadEvent(final FMLLoadCompleteEvent event) {
@@ -128,13 +158,13 @@ public class ArsNouveau {
             }
 
         });
+        for(String warning : postLoadWarnings){
+            Log.getLogger().error(warning);
+        }
     }
 
     public void clientSetup(final FMLClientSetupEvent event) {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientHandler::init);
-        event.enqueueWork(() ->{
-            MenuScreens.register(MenuRegistry.STORAGE.get(), CraftingTerminalScreen::new);
-        });
+        ModLoadingContext.get().getActiveContainer().getEventBus().addListener(ClientHandler::init);
         try {
             Class.forName("net.optifine.Config");
             optifineLoaded = true;
@@ -143,12 +173,7 @@ public class ArsNouveau {
         }
     }
 
-    public void sendImc(InterModEnqueueEvent evt) {
-        ModSetup.sendIntercoms();
-    }
-
-    @SubscribeEvent
-    public static void onServerStopped(final ServerStoppingEvent event) {
-        Pathfinding.shutdown();
+    public static ResourceLocation prefix(String str) {
+        return ResourceLocation.fromNamespaceAndPath(MODID, str);
     }
 }

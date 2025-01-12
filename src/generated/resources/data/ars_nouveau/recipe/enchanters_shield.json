@@ -1,0 +1,26 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": true,
+  "pedestalItems": [
+    {
+      "tag": "c:storage_blocks/gold"
+    },
+    {
+      "tag": "c:storage_blocks/gold"
+    },
+    {
+      "tag": "c:storage_blocks/source"
+    },
+    {
+      "tag": "c:storage_blocks/source"
+    }
+  ],
+  "reagent": {
+    "item": "minecraft:shield"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:enchanters_shield"
+  },
+  "sourceCost": 0
+}

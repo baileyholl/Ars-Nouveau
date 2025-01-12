@@ -4,10 +4,10 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.scrying.IScryer;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketGetPersistentData;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
@@ -16,46 +16,45 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
+@EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
 public class ScryEvents {
     @SubscribeEvent
     public static void playerLoginEvent(final PlayerLoggedInEvent event) {
-        if (!event.getEntity().level.isClientSide && event.getEntity().hasEffect(ModPotions.SCRYING_EFFECT.get())) {
+        if (!event.getEntity().level.isClientSide && event.getEntity().hasEffect(ModPotions.SCRYING_EFFECT)) {
             CompoundTag tag = event.getEntity().getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
-            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()), new PacketGetPersistentData(tag));
+            Networking.sendToPlayerClient((CustomPacketPayload) new PacketGetPersistentData(tag), (ServerPlayer) event.getEntity());
         }
     }
 
     @SubscribeEvent
-    public static void playerTickEvent(final TickEvent.PlayerTickEvent event) {
-        if (event.side == LogicalSide.CLIENT && event.phase == TickEvent.Phase.END && event.player.getEffect(ModPotions.SCRYING_EFFECT.get()) != null && ClientInfo.ticksInGame % 30 == 0) {
+    public static void playerTickEvent(final PlayerTickEvent.Post event) {
+        if (event.getEntity().level.isClientSide && event.getEntity().getEffect(ModPotions.SCRYING_EFFECT) != null && ClientInfo.ticksInGame % 30 == 0) {
 
             List<BlockPos> scryingPos = new ArrayList<>();
             CompoundTag tag = ClientInfo.persistentData;
             if (!tag.contains("an_scryer"))
                 return;
-            IScryer scryer = ArsNouveauAPI.getInstance().getScryer(new ResourceLocation(tag.getCompound("an_scryer").getString("id"))).fromTag(tag.getCompound("an_scryer"));
+            IScryer scryer = ArsNouveauAPI.getInstance().getScryer(ResourceLocation.tryParse(tag.getCompound("an_scryer").getString("id"))).fromTag(tag.getCompound("an_scryer"));
             if (scryer == null)
                 return;
-            Player playerEntity = event.player;
+            Player playerEntity = event.getEntity();
             Level world = playerEntity.level;
             Vec3i scrySize = scryer.getScryingSize();
             for (BlockPos p : BlockPos.withinManhattan(playerEntity.blockPosition(), scrySize.getX(), scrySize.getY(), scrySize.getZ())) {
@@ -108,7 +107,7 @@ public class ScryEvents {
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_WEATHER) return;
         ClientLevel world = Minecraft.getInstance().level;
         final Player playerEntity = Minecraft.getInstance().player;
-        if (playerEntity == null || playerEntity.getEffect(ModPotions.SCRYING_EFFECT.get()) == null)
+        if (playerEntity == null || playerEntity.getEffect(ModPotions.SCRYING_EFFECT) == null)
             return;
         Vec3 vector3d = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
 

@@ -29,20 +29,23 @@ public class EffectReset extends AbstractEffect implements IContextManipulator{
 
     @Override
     public SpellContext manipulate(SpellContext context) {
-        Spell remainder = context.getRemainingSpell();
+        var remainder = context.getRemainingSpell().mutable();
         int index = remainder.recipe.indexOf(EffectReset.INSTANCE);
-        SpellContext newContext = context.clone().withSpell(remainder.setRecipe(new ArrayList<>(remainder.recipe.subList(0, index))));
-        context.setCurrentIndex(index + 1);
+        SpellContext newContext = context.clone().withSpell(remainder.setRecipe(new ArrayList<>(remainder.recipe.subList(0, index))).immutable());
+        context.setCurrentIndex(context.getCurrentIndex() + index);
         return newContext;
     }
 
     @Override
-    public void onContextCanceled(SpellContext context) {
-        super.onContextCanceled(context);
+    public boolean contextCanceled(SpellContext context) {
         if(context.getCancelReason() == CancelReason.NEW_CONTEXT) {
             context.setCanceled(false);
-            context.setCurrentIndex(context.getSpell().recipe.indexOf(EffectReset.INSTANCE) + 1);
+            Spell remainder = context.getRemainingSpell();
+            int index = remainder.indexOf(EffectReset.INSTANCE);
+            context.setCurrentIndex(context.getCurrentIndex() + index);
+            return false;
         }
+        return true;
     }
 
     @Override

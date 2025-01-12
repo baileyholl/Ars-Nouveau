@@ -1,16 +1,17 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -24,6 +25,7 @@ import net.minecraft.world.item.WritableBookItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.util.FakePlayer;
 
 import java.util.Set;
 
@@ -32,13 +34,14 @@ public class RitualAwakening extends AbstractRitual {
     EntityType<? extends LivingEntity> entity = null;
     BlockPos foundPos;
 
-    public void destroyTree(Level world, Set<BlockPos> set) {
+    public void destroyTree(ServerLevel world, Set<BlockPos> set) {
+        FakePlayer fakePlayer = ANFakePlayer.getPlayer(world, playerUUID);
         for (BlockPos p : set) {
-            BlockUtil.destroyBlockSafelyWithoutSound(world, p, false);
+            BlockUtil.destroyBlockSafelyWithoutSound(world, p, false, fakePlayer);
         }
     }
 
-    public void findTargets(Level world) {
+    public void findTargets(ServerLevel world) {
         for (BlockPos p : BlockPos.withinManhattan(getPos(), 3, 1, 3)) {
             Set<BlockPos> blazing = SpellUtil.DFSBlockstates(world, p, 350, (b) -> b.getBlock() == BlockRegistry.BLAZING_LOG.get() || b.getBlock() == BlockRegistry.BLAZING_LEAVES.get());
             if (blazing.size() >= 50) {
@@ -93,28 +96,28 @@ public class RitualAwakening extends AbstractRitual {
                         pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
             }
         }
-        if (!world.isClientSide && world.getGameTime() % 20 == 0) {
+        if (world instanceof ServerLevel serverLevel && serverLevel.getGameTime() % 20 == 0) {
             if(isBookwyrms()){
                 int progress = getProgress();
                 int numBookwyrms = getConsumedItems().stream().filter(i -> i.getItem() instanceof WritableBookItem).mapToInt(ItemStack::getCount).sum();
                 if(progress < numBookwyrms){
                     ItemStack charm = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM);
-                    ItemEntity itemEntity = new ItemEntity(world, getPos().getX() + 0.5, getPos().getY() + 1, getPos().getZ() + 0.5, charm);
+                    ItemEntity itemEntity = new ItemEntity(serverLevel, getPos().getX() + 0.5, getPos().getY() + 1, getPos().getZ() + 0.5, charm);
                     float range = 0.1f;
                     itemEntity.setDeltaMovement(ParticleUtil.inRange(-range, range),  ParticleUtil.inRange(0.4, 0.6), ParticleUtil.inRange(-range, range));
-                    getWorld().playSound(null, getPos(), SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    world.addFreshEntity(itemEntity);
+                    serverLevel.playSound(null, getPos(), SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    serverLevel.addFreshEntity(itemEntity);
                 }else{
                     setFinished();
                 }
             }else {
                 if (getProgress() > 5) {
-                    findTargets(world);
+                    findTargets(serverLevel);
                     if (entity != null) {
-                        ParticleUtil.spawnPoof((ServerLevel) world, foundPos);
-                        LivingEntity walker = entity.create(world);
+                        ParticleUtil.spawnPoof(serverLevel, foundPos);
+                        LivingEntity walker = entity.create(serverLevel);
                         walker.setPos(foundPos.getX() + 0.5, foundPos.getY(), foundPos.getZ() + 0.5);
-                        world.addFreshEntity(walker);
+                        serverLevel.addFreshEntity(walker);
                         setFinished();
                     }
                 }
@@ -149,6 +152,6 @@ public class RitualAwakening extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, RitualLib.AWAKENING);
+        return ArsNouveau.prefix( RitualLib.AWAKENING);
     }
 }

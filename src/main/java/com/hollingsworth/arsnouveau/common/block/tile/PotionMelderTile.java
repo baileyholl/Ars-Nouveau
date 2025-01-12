@@ -2,43 +2,43 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
-import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
+import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import com.hollingsworth.arsnouveau.setup.config.Config;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITickable, IWandable, ITooltipProvider {
@@ -72,7 +72,7 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
             return;
         }
         if (!level.isClientSide && !hasSource && level.getGameTime() % 20 == 0) {
-            if (SourceUtil.takeSourceWithParticles(worldPosition, level, 5, Config.MELDER_SOURCE_COST.get()) != null) {
+            if (SourceUtil.takeSourceMultipleWithParticles(worldPosition, level, 5, Config.MELDER_SOURCE_COST.get()) != null) {
                 hasSource = true;
                 updateBlock();
             }
@@ -87,7 +87,10 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
 
         PotionJarTile tile1 = (PotionJarTile) level.getBlockEntity(fromJars.get(0));
         PotionJarTile tile2 = (PotionJarTile) level.getBlockEntity(fromJars.get(1));
-        PotionData data = tile1.getData().mergeEffects(tile2.getData());
+        PotionContents data = getCombinedResult(tile1, tile2);
+        if(!isOutputUnique(data, tile1, tile2) || outputHasDuplicateEffect(data)){
+            return;
+        }
         if (!combJar.canAccept(data, Config.MELDER_OUTPUT.get())) {
             isMixing = false;
             timeMixing = 0;
@@ -107,48 +110,45 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
                     double d1 = worldPosition.getY() + 1 + ParticleUtil.inRange(-0.1, 0.4);
                     double d2 = worldPosition.getZ() + .5 + ParticleUtil.inRange(-0.25, 0.25);
                     level.addParticle(GlowParticleData.createData(
-                                    ParticleColor.fromInt(PotionUtils.getColor(data.fullEffects()))),
+                                    ParticleColor.fromInt(PotionContents.getColor(data.getAllEffects()))),
                             d0, d1, d2,
                             0,
                             0.01f,
                             0);
                 }
-                lastMixedColor = PotionUtils.getColor(data.fullEffects());
+                lastMixedColor = PotionContents.getColor(data.getAllEffects());
             }
             if (timeMixing >= 160)
                 timeMixing = 0;
             return;
         }
 
-        if (timeMixing % 20 == 0 && timeMixing > 0 && timeMixing <= 60) {
-
-            EntityFlyingItem item = new EntityFlyingItem(level, tile1.getBlockPos().above(), worldPosition, Math.round(255 * color1.getRed()), Math.round(255 * color1.getGreen()), Math.round(255 * color1.getBlue()))
-                    .withNoTouch();
-            item.setDistanceAdjust(2f);
-            level.addFreshEntity(item);
-            EntityFlyingItem item2 = new EntityFlyingItem(level, tile2.getBlockPos().above(), worldPosition, Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
-                    .withNoTouch();
-            item2.setDistanceAdjust(2f);
-            level.addFreshEntity(item2);
-        }
-        if (!level.isClientSide && timeMixing >= maxMergeTicks) {
-            timeMixing = 0;
-            mergePotions(combJar, tile1, tile2, data);
+        if(level instanceof ServerLevel serverLevel) {
+            if (timeMixing % 20 == 0 && timeMixing > 0 && timeMixing <= 60) {
+                EntityFlyingItem.spawn(serverLevel, tile1.getBlockPos().above(), worldPosition, Math.round(255 * color1.getRed()), Math.round(255 * color1.getGreen()), Math.round(255 * color1.getBlue()))
+                        .withNoTouch().setDistanceAdjust(2f);
+                EntityFlyingItem.spawn(serverLevel, tile2.getBlockPos().above(), worldPosition, Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
+                        .withNoTouch().setDistanceAdjust(2f);
+            }
+            if (timeMixing >= maxMergeTicks) {
+                timeMixing = 0;
+                mergePotions(combJar, tile1, tile2, data);
+            }
         }
     }
 
-    public void mergePotions(PotionJarTile combJar, PotionJarTile take1, PotionJarTile take2, PotionData data){
-        combJar.add(data, Config.MELDER_OUTPUT.get());
+    public void mergePotions(PotionJarTile combJar, PotionJarTile take1, PotionJarTile take2, PotionContents data){
+        combJar.add(
+                data, Config.MELDER_OUTPUT.get());
         take1.remove(Config.MELDER_INPUT_COST.get());
         take2.remove(Config.MELDER_INPUT_COST.get());
         hasSource = false;
         ParticleColor color2 = ParticleColor.fromInt(combJar.getColor());
-        EntityFlyingItem item2 = new EntityFlyingItem(level, new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ()+ 0.5),
+        EntityFlyingItem.spawn((ServerLevel) level, new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ()+ 0.5),
                 new Vec3(combJar.getX() + 0.5, combJar.getY(), combJar.getZ() + 0.5),
                 Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
-                .withNoTouch();
-        item2.setDistanceAdjust(2f);
-        level.addFreshEntity(item2);
+                .withNoTouch()
+                .setDistanceAdjust(2f);
         updateBlock();
     }
 
@@ -164,8 +164,23 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
         return true;
     }
 
-    public PotionData getCombinedResult(PotionJarTile jar1, PotionJarTile jar2) {
-        return jar1.getData().mergeEffects(jar2.getData());
+    public PotionContents getCombinedResult(PotionJarTile jar1, PotionJarTile jar2) {
+        return PotionUtil.merge(jar1.getData(), jar2.getData());
+    }
+
+    public boolean isOutputUnique(PotionContents mix, PotionJarTile take1, PotionJarTile take2){
+        return !PotionUtil.arePotionContentsEqual(mix, take1.getData()) && !PotionUtil.arePotionContentsEqual(mix, take2.getData());
+    }
+
+    public boolean outputHasDuplicateEffect(PotionContents mix){
+        var effects = mix.getAllEffects();
+        var effectSet = new HashSet<MobEffect>();
+        for(var effect : effects){
+            if(!effectSet.add(effect.getEffect().value())){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -218,7 +233,7 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
     }
 
     public boolean closeEnough(BlockPos pos1, BlockPos pos2){
-        return BlockUtil.distanceFrom(pos1, pos2) <= 3;
+        return BlockUtil.distanceFrom(Vec3.atCenterOf(pos1), Vec3.atCenterOf(pos2)) <= 3.5;
     }
 
     private <E extends BlockEntity & GeoAnimatable> PlayState idlePredicate(AnimationState<E> event) {
@@ -237,8 +252,8 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
     }
 
     @Override
-    public void load(CompoundTag nbt) {
-        super.load(nbt);
+    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(nbt, pRegistries);
         fromJars = new ArrayList<>();
         this.timeMixing = nbt.getInt("mixing");
         this.isMixing = nbt.getBoolean("isMixing");
@@ -258,7 +273,8 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound) {
+    public void saveAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(compound, pRegistries);
         compound.putInt("mixing", timeMixing);
         compound.putBoolean("isMixing", isMixing);
         compound.putBoolean("hasMana", hasSource);
@@ -279,20 +295,29 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
         }
         if(fromJars.size() < 2)
             tooltip.add(Component.translatable("ars_nouveau.melder.from_set", fromJars.size()).setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
-        if(toPos == null){
+        if(toPos == null || !level.isLoaded(toPos) || !(level.getBlockEntity(toPos) instanceof PotionJarTile)){
             tooltip.add(Component.translatable("ars_nouveau.melder.no_to_pos").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
         }
         if(toPos != null && fromJars.size() == 2 && hasSource && !isMixing && !takeJarsValid()){
             tooltip.add(Component.translatable("ars_nouveau.melder.needs_potion").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
         }
         if(fromJars.size() >= 2 && toPos != null && level.getBlockEntity(toPos) instanceof PotionJarTile combJar){
-            PotionJarTile tile1 = (PotionJarTile) level.getBlockEntity(fromJars.get(0));
-            PotionJarTile tile2 = (PotionJarTile) level.getBlockEntity(fromJars.get(1));
+            BlockEntity tile1 = level.getBlockEntity(fromJars.get(0));
+            BlockEntity tile2 =  level.getBlockEntity(fromJars.get(1));
             int inputCost = Config.MELDER_INPUT_COST.get();
-            if(tile1 == null || tile1.getAmount() < inputCost || tile2 == null || tile2.getAmount() < inputCost) {
+            if(!(tile1 instanceof PotionJarTile jar1) || !(tile2 instanceof PotionJarTile jar2) || jar1.getAmount() < inputCost || jar2.getAmount() < inputCost) {
                 return;
             }
-            PotionData data = getCombinedResult(tile1, tile2);
+            PotionContents data = getCombinedResult(jar1, jar2);
+
+            if(!isOutputUnique(data, jar1, jar2)){
+                tooltip.add(Component.translatable("ars_nouveau.melder.output_not_unique").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
+                return;
+            }
+            if(outputHasDuplicateEffect(data)){
+                tooltip.add(Component.translatable("ars_nouveau.melder.output_duplicate_effect").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
+                return;
+            }
             if(!combJar.canAccept(data, Config.MELDER_OUTPUT.get())){
                 tooltip.add(Component.translatable("ars_nouveau.melder.destination_invalid").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
             }

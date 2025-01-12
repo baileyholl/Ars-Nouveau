@@ -2,38 +2,23 @@ package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
+import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.InterModComms;
-import net.minecraftforge.registries.*;
-import top.theillusivec4.curios.Curios;
-import top.theillusivec4.curios.api.SlotTypeMessage;
-import top.theillusivec4.curios.api.SlotTypePreset;
-
-import java.util.Objects;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.RegisterEvent;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
 public class ModSetup {
 
-    public static void sendIntercoms() {
-        InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.HEAD.getMessageBuilder().build());
-        InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.CHARM.getMessageBuilder().build());
-        InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.RING.getMessageBuilder().size(2).build());
-        InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.BELT.getMessageBuilder().build());
-        InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("an_focus").size(1).icon(new ResourceLocation(Curios.MODID, "slot/empty_curio_slot")).build());
-        InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.NECKLACE.getMessageBuilder().build());
-    }
+    public static final DeferredRegister<TrunkPlacerType<?>> TRUNK_PLACER_TYPE_DEFERRED_REGISTER = DeferredRegister.create(Registries.TRUNK_PLACER_TYPE, MODID);
 
-    public static final DeferredRegister<TrunkPlacerType<?>> TRUNK_PLACER_TYPE_DEFERRED_REGISTER = DeferredRegister.createOptional(Registries.TRUNK_PLACER_TYPE, MODID);
-
-    public static RegistryObject<TrunkPlacerType<MagicTrunkPlacer>> MAGIC_TRUNK_PLACER = TRUNK_PLACER_TYPE_DEFERRED_REGISTER.register("magic_trunk_placer", () -> new TrunkPlacerType<>(MagicTrunkPlacer.CODEC));
+    public static DeferredHolder<TrunkPlacerType<?>, TrunkPlacerType<MagicTrunkPlacer>> MAGIC_TRUNK_PLACER = TRUNK_PLACER_TYPE_DEFERRED_REGISTER.register("magic_trunk_placer", () -> new TrunkPlacerType<>(MagicTrunkPlacer.CODEC));
 
     public static void registers(IEventBus modEventBus) {
         ItemsRegistry.ITEMS.register(modEventBus);
@@ -43,7 +28,7 @@ public class ModSetup {
         ModEntities.ENTITIES.register(modEventBus);
         ModPotions.EFFECTS.register(modEventBus);
         ModPotions.POTIONS.register(modEventBus);
-        EnchantmentRegistry.ENCHANTMENTS.register(modEventBus);
+        DataComponentRegistry.DATA.register(modEventBus);
         RecipeRegistry.RECIPE_SERIALIZERS.register(modEventBus);
         RecipeRegistry.RECIPE_TYPES.register(modEventBus);
         ModParticles.PARTICLES.register(modEventBus);
@@ -54,23 +39,23 @@ public class ModSetup {
         SoundRegistry.SOUND_REG.register(modEventBus);
         StructureRegistry.STRUCTURES.register(modEventBus);
         StructureRegistry.STRUCTURE_PROCESSOR.register(modEventBus);
-
+        MaterialRegistry.MATERIALS.register(modEventBus);
+        ANCriteriaTriggers.TRIGGERS.register(modEventBus);
         MenuRegistry.MENU_REG.register(modEventBus);
         VillagerRegistry.POIs.register(modEventBus);
         VillagerRegistry.VILLAGERS.register(modEventBus);
         CreativeTabRegistry.TABS.register(modEventBus);
         DataSerializers.DS.register(modEventBus);
+        AttachmentsRegistry.ATTACHMENT_TYPES.register(modEventBus);
     }
 
     public static void registerEvents(RegisterEvent event) {
-        if (event.getRegistryKey().equals(ForgeRegistries.Keys.BLOCKS)) {
-            IForgeRegistry<Block> registry = Objects.requireNonNull(event.getForgeRegistry());
-            BlockRegistry.onBlocksRegistry(registry);
-        }
-        if (event.getRegistryKey().equals(ForgeRegistries.Keys.ITEMS)) {
-            IForgeRegistry<Item> registry = Objects.requireNonNull(event.getForgeRegistry());
-            BlockRegistry.onBlockItemsRegistry(registry);
-            ItemsRegistry.onItemRegistry(registry);
-        }
+        event.register(Registries.BLOCK, helper ->{
+            BlockRegistry.onBlocksRegistry();
+        });
+        event.register(Registries.ITEM, helper ->{
+            BlockRegistry.onBlockItemsRegistry();
+            ItemsRegistry.onItemRegistry(helper);
+        });
     }
 }

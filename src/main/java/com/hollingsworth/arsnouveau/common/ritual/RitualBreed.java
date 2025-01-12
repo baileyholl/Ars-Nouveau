@@ -56,6 +56,6 @@ public class RitualBreed extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, RitualLib.FERTILITY);
+        return ArsNouveau.prefix( RitualLib.FERTILITY);
     }
 }

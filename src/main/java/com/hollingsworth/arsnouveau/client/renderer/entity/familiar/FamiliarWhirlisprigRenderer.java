@@ -11,19 +11,18 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-
+import software.bernie.geckolib.cache.object.GeoBone;
 
 import java.util.Random;
 
-public class FamiliarWhirlisprigRenderer<T extends FamiliarWhirlisprig> extends GenericFamiliarRenderer<T> {
+public class FamiliarWhirlisprigRenderer extends GenericFamiliarRenderer<FamiliarWhirlisprig> {
 
     public FamiliarWhirlisprigRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new WhirlisprigModel<>());
     }
 
     @Override
-    public void render(T entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
+    public void render(FamiliarWhirlisprig entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
         if (Minecraft.getInstance().isPaused())
             return;
@@ -31,8 +30,8 @@ public class FamiliarWhirlisprigRenderer<T extends FamiliarWhirlisprig> extends 
         Random rand = ParticleUtil.r;
         Vec3 particlePos = entityIn.position();
 
-        CoreGeoBone sylph = getGeoModel().getBone("sylph").get();
-        CoreGeoBone propellers = getGeoModel().getBone("propellers").get();
+        GeoBone sylph = getGeoModel().getBone("sylph").get();
+        GeoBone propellers = getGeoModel().getBone("propellers").get();
 
         float offsetY = sylph.getPosY() / 9f;
         float roteAngle = propellers.getRotY() / 4;

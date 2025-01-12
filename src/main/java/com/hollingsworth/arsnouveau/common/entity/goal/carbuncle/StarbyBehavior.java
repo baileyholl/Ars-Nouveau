@@ -27,9 +27,8 @@ public class StarbyBehavior extends ChangeableBehavior {
     public StarbyBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
         this.starbuncle = entity;
-        goals.add(new WrappedGoal(4, new GoToBedGoal(starbuncle, this)));
         goals.add(new WrappedGoal(8, new LookAtPlayerGoal(starbuncle, Player.class, 3.0F, 0.01F)));
-        goals.add(new WrappedGoal(8, new NonHoggingLook(starbuncle, Mob.class, 3.0F, 0.01f)));
+        goals.add(new WrappedGoal(8, new LookAtPlayerGoal(starbuncle, Mob.class, 3.0F, 0.01f)));
         goals.add(new WrappedGoal(1, new OpenDoorGoal(starbuncle, true)));
     }
 
@@ -48,6 +47,21 @@ public class StarbyBehavior extends ChangeableBehavior {
         return state.hasProperty(BlockStateProperties.POWERED) && state.getValue(BlockStateProperties.POWERED);
     }
 
+    public @Nullable BlockPos getBedPos(){
+        if(starbuncle.data.bedPos == null || !starbuncle.level.isLoaded(starbuncle.data.bedPos)){
+            return null;
+        }
+        return starbuncle.data.bedPos;
+    }
+
+    public boolean isBedValid(BlockPos bedPos){
+        return starbuncle.level.isLoaded(bedPos) && starbuncle.level.getBlockState(new BlockPos(bedPos)).is(BlockTagProvider.SUMMON_SLEEPABLE);
+    }
+
+    public boolean isOnBed(){
+        return starbuncle.level.getBlockState(BlockPos.containing(starbuncle.position)).is(BlockTagProvider.SUMMON_SLEEPABLE);
+    }
+
     @Override
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity) {
         super.onFinishedConnectionFirst(storedPos, side, storedEntity, playerEntity);
@@ -58,8 +72,8 @@ public class StarbyBehavior extends ChangeableBehavior {
     }
 
     @Override
-    protected ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, "starby");
+    public ResourceLocation getRegistryName() {
+        return ArsNouveau.prefix( "starby");
     }
 
     public void syncTag() {

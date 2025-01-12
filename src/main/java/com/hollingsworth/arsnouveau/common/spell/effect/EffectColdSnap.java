@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -51,7 +51,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
             return;
         this.damage(vec, level, shooter, livingEntity, spellStats, spellContext, resolver, snareSec, damage);
         spawnIce(shooter, level, BlockPos.containing(vec.x, vec.y + (rayTraceResult.getEntity().onGround() ? 1 : 0), vec.z), spellStats, spellContext, resolver);
-        if(livingEntity.hasEffect(ModPotions.FREEZING_EFFECT.get())){
+        if(livingEntity.hasEffect(ModPotions.FREEZING_EFFECT)){
             livingEntity.setTicksFrozen(livingEntity.getTicksRequiredToFreeze() + 3);
         }
     }
@@ -104,7 +104,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
 
     public void spawnIce(Level level, BlockPos pos, BlockPos targetPos, Vec3 scaleVec, SpellStats spellStats, SpellContext context, SpellResolver resolver, LivingEntity shooter){
         level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-        IceShardEntity fallingBlock = new IceShardEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, Blocks.ICE.defaultBlockState());
+        IceShardEntity fallingBlock = new IceShardEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, Blocks.ICE.defaultBlockState(), resolver);
         // Send the falling block the opposite direction of the target
         fallingBlock.setDeltaMovement(pos.getX() - targetPos.getX(), pos.getY() - targetPos.getY(), pos.getZ() - targetPos.getZ());
         fallingBlock.setDeltaMovement(fallingBlock.getDeltaMovement().multiply(scaleVec));
@@ -137,7 +137,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
             world.sendParticles(ParticleTypes.SPIT, vec.x, vec.y + 0.5, vec.z, 50,
                     ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), 0.3);
 
-            livingEntity.addEffect(new MobEffectInstance(ModPotions.SNARE_EFFECT.get(), 20 * snareTime));
+            livingEntity.addEffect(new MobEffectInstance(ModPotions.SNARE_EFFECT, 20 * snareTime));
         }
     }
     @Override
@@ -146,7 +146,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addDamageConfig(builder, 6.0);
         addAmpConfig(builder, 2.5);
@@ -161,6 +161,14 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentAOE.INSTANCE, "Increases the number of ice shards.");
+        map.put(AugmentDurationDown.INSTANCE, "Decreases the freezing duration.");
+        map.put(AugmentExtendTime.INSTANCE, "Increases the freezing duration.");
+    }
+
+    @Override
     public int getDefaultManaCost() {
         return 30;
     }
@@ -171,8 +179,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
         return augmentSetOf(
                 AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE,
                 AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE,
-                AugmentAOE.INSTANCE,
-                AugmentFortune.INSTANCE, AugmentRandomize.INSTANCE
+                AugmentAOE.INSTANCE, AugmentFortune.INSTANCE, AugmentRandomize.INSTANCE
         );
     }
 

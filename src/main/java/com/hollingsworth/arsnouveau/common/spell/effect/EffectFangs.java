@@ -17,7 +17,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -76,7 +76,7 @@ public class EffectFangs extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addDamageConfig(builder, 6.0);
         addAmpConfig(builder, 3.0);
@@ -138,6 +138,14 @@ public class EffectFangs extends AbstractEffect implements IDamageEffect {
                 AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE,
                 AugmentAccelerate.INSTANCE
         );
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentExtendTime.INSTANCE, "Increases the duration of the fangs.");
+        map.put(AugmentDurationDown.INSTANCE, "Decreases the duration of the fangs.");
+        map.put(AugmentAccelerate.INSTANCE, "Increases the travel speed of the fangs.");
     }
 
     @Override

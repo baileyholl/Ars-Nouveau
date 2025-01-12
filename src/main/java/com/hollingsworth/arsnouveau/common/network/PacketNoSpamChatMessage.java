@@ -6,19 +6,24 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.GuiMessageTag;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ChatComponent;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.chat.MessageSignature;
 import net.minecraft.network.chat.Style;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.Random;
-import java.util.function.Supplier;
 
 /**
  * A text message sent from player to client
  */
-public class PacketNoSpamChatMessage {
+public class PacketNoSpamChatMessage extends AbstractPacket {
+    public static final Type<PacketNoSpamChatMessage> TYPE = new Type<>(ArsNouveau.prefix("no_spam_chat_message"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketNoSpamChatMessage> CODEC = StreamCodec.ofMember(PacketNoSpamChatMessage::toBytes, PacketNoSpamChatMessage::new);
+
     private final Component message;
     private final int messageChannelId;
     private final boolean overlayMessage;
@@ -55,37 +60,38 @@ public class PacketNoSpamChatMessage {
     }
 
     // Decoder
-    public PacketNoSpamChatMessage(FriendlyByteBuf buf) {
-        this.message = buf.readComponent();
+    public PacketNoSpamChatMessage(RegistryFriendlyByteBuf buf) {
+        this.message = ComponentSerialization.STREAM_CODEC.decode(buf);
         this.messageChannelId = buf.readInt();
         this.overlayMessage = buf.readBoolean();
     }
 
     // Encoder
-    public void toBytes(FriendlyByteBuf buf) {
-        buf.writeComponent(message);
+    public void toBytes(RegistryFriendlyByteBuf buf) {
+        ComponentSerialization.STREAM_CODEC.encode(buf, message);
         buf.writeInt(messageChannelId);
         buf.writeBoolean(overlayMessage);
     }
 
-    // Handler
-    public void handle(Supplier<NetworkEvent.Context> ctxSupplier) {
-        NetworkEvent.Context ctx = ctxSupplier.get();
-        ctx.enqueueWork(() -> {
-            // This packet is only registered to be received on the client
-            if (overlayMessage) {
-                if (Minecraft.getInstance().player != null) {
-                    Minecraft.getInstance().player.displayClientMessage(message, true);
-                }
-            } else {
-                ChatComponent gui = Minecraft.getInstance().gui.getChat();
-                ChatComponentAccessor chatComponentAccessor = (ChatComponentAccessor) gui;
-                chatComponentAccessor.getAllMessages().removeIf(m -> m.signature() != null && m.signature().equals(AN_SIGNATURE));
-                gui.rescaleChat();
-                gui.addMessage(message.plainCopy().setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)), AN_SIGNATURE, GuiMessageTag.system());
-
+    @Override
+    public void onClientReceived(Minecraft minecraft, Player player) {
+        // This packet is only registered to be received on the client
+        if (overlayMessage) {
+            if (Minecraft.getInstance().player != null) {
+                Minecraft.getInstance().player.displayClientMessage(message, true);
             }
-        });
-        ctx.setPacketHandled(true);
+        } else {
+            ChatComponent gui = minecraft.gui.getChat();
+            ChatComponentAccessor chatComponentAccessor = (ChatComponentAccessor) gui;
+            chatComponentAccessor.getAllMessages().removeIf(m -> m.signature() != null && m.signature().equals(AN_SIGNATURE));
+            gui.rescaleChat();
+            gui.addMessage(message.plainCopy().setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)), AN_SIGNATURE, GuiMessageTag.system());
+
+        }
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

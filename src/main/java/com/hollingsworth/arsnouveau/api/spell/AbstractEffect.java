@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.event.SummonEvent;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import com.hollingsworth.arsnouveau.common.util.HolderHelper;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.BlockPos;
@@ -22,9 +23,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,11 +65,11 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public boolean canSummon(LivingEntity playerEntity) {
-        return isRealPlayer(playerEntity) && (playerEntity.getEffect(ModPotions.SUMMONING_SICKNESS_EFFECT.get()) == null || (playerEntity instanceof Player player && player.isCreative()));
+        return isRealPlayer(playerEntity) && (playerEntity.getEffect(ModPotions.SUMMONING_SICKNESS_EFFECT) == null || (playerEntity instanceof Player player && player.isCreative()));
     }
 
     public void applySummoningSickness(LivingEntity playerEntity, int time) {
-        playerEntity.addEffect(new MobEffectInstance(ModPotions.SUMMONING_SICKNESS_EFFECT.get(), time));
+        playerEntity.addEffect(new MobEffectInstance(ModPotions.SUMMONING_SICKNESS_EFFECT, time));
     }
 
     public void summonLivingEntity(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats augments, SpellContext spellContext, @Nullable SpellResolver resolver, ISummon summon) {
@@ -84,11 +85,11 @@ public abstract class AbstractEffect extends AbstractSpellPart {
             }
         }
 
-        MinecraftForge.EVENT_BUS.post(new SummonEvent(rayTraceResult, world, shooter, augments, spellContext, summon));
+        NeoForge.EVENT_BUS.post(new SummonEvent(rayTraceResult, world, shooter, augments, spellContext, summon));
     }
 
     public Player getPlayer(LivingEntity entity, ServerLevel world) {
-        return entity instanceof Player player ? player : ANFakePlayer.getPlayer(world);
+        return entity instanceof Player player ? player : ANFakePlayer.getPlayer(world, entity.getUUID());
     }
 
     public int getBaseHarvestLevel(SpellStats stats) {
@@ -111,27 +112,28 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         return !(entity instanceof FakePlayer);
     }
 
-    public void applyEnchantments(SpellStats stats, ItemStack stack) {
+    public void applyEnchantments(Level level, SpellStats stats, ItemStack stack) {
 
         if (stats.hasBuff(AugmentExtract.INSTANCE)) {
-            stack.enchant(Enchantments.SILK_TOUCH, 1);
+            stack.enchant(HolderHelper.unwrap(level, Enchantments.SILK_TOUCH), 1);
         }
 
         if (stats.hasBuff(AugmentFortune.INSTANCE)) {
-            stack.enchant(Enchantments.BLOCK_FORTUNE, stats.getBuffCount(AugmentFortune.INSTANCE));
+            stack.enchant(HolderHelper.unwrap(level, Enchantments.FORTUNE), stats.getBuffCount(AugmentFortune.INSTANCE));
         }
     }
 
-    public ForgeConfigSpec.DoubleValue DAMAGE;
-    public ForgeConfigSpec.DoubleValue AMP_VALUE;
-    public ForgeConfigSpec.IntValue POTION_TIME;
-    public ForgeConfigSpec.IntValue EXTEND_TIME;
-    public ForgeConfigSpec.IntValue GENERIC_INT;
-    public ForgeConfigSpec.DoubleValue GENERIC_DOUBLE;
-    public ForgeConfigSpec.DoubleValue RANDOMIZE_CHANCE;
+    public ModConfigSpec.DoubleValue DAMAGE;
+    public ModConfigSpec.DoubleValue AMP_VALUE;
+    public ModConfigSpec.IntValue POTION_TIME;
+    public ModConfigSpec.IntValue EXTEND_TIME;
+    public ModConfigSpec.IntValue DURATION_DOWN_TIME;
+    public ModConfigSpec.IntValue GENERIC_INT;
+    public ModConfigSpec.DoubleValue GENERIC_DOUBLE;
+    public ModConfigSpec.DoubleValue RANDOMIZE_CHANCE;
 
     @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         Map<ResourceLocation, Integer> defaultAugmentLimits = new HashMap<>();
         addDefaultAugmentLimits(defaultAugmentLimits);
@@ -144,35 +146,50 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         super.buildInvalidCombosConfig(builder, getDefaultInvalidCombos(new HashSet<>()));
     }
 
-    public void addDamageConfig(ForgeConfigSpec.Builder builder, double defaultValue) {
+    public void addDamageConfig(ModConfigSpec.Builder builder, double defaultValue) {
         DAMAGE = builder.defineInRange("damage", defaultValue, 0, Integer.MAX_VALUE);
     }
 
-    public void addAmpConfig(ForgeConfigSpec.Builder builder, double defaultValue) {
+    public void addAmpConfig(ModConfigSpec.Builder builder, double defaultValue) {
         AMP_VALUE = builder.defineInRange("amplify", defaultValue, 0, Integer.MAX_VALUE);
     }
 
-    public void addPotionConfig(ForgeConfigSpec.Builder builder, int defaultTime) {
+    public void addPotionConfig(ModConfigSpec.Builder builder, int defaultTime) {
         POTION_TIME = builder.comment("Potion duration, in seconds").defineInRange("potion_time", defaultTime, 0, Integer.MAX_VALUE);
     }
-
-    public void addExtendTimeConfig(ForgeConfigSpec.Builder builder, int defaultTime) {
+    public void addExtendTimeConfig(ModConfigSpec.Builder builder, int defaultTime) {
         EXTEND_TIME = builder.comment("Extend time duration, in seconds").defineInRange("extend_time", defaultTime, 0, Integer.MAX_VALUE);
     }
 
-    public void addRandomizeConfig(ForgeConfigSpec.Builder builder, float defaultChance) {
+    public void addRandomizeConfig(ModConfigSpec.Builder builder, float defaultChance) {
         RANDOMIZE_CHANCE = builder.comment("Randomize chance, in percentage (0-1 = 0% - 100%)").defineInRange("extend_time", defaultChance, 0.0f, Integer.MAX_VALUE);
     }
 
-    public void addGenericInt(ForgeConfigSpec.Builder builder, int val, String comment, String path) {
+    public void addDurationDownConfig(ModConfigSpec.Builder builder, int defaultTime) {
+        DURATION_DOWN_TIME = builder.comment("Duration down time, in ticks").defineInRange("duration_down_time", defaultTime, 0, Integer.MAX_VALUE);
+    }
+
+
+    public void addGenericInt(ModConfigSpec.Builder builder, int val, String comment, String path) {
         GENERIC_INT = builder.comment(comment).defineInRange(path, val, 0, Integer.MAX_VALUE);
     }
 
-    public void addGenericDouble(ForgeConfigSpec.Builder builder, double val, String comment, String path) {
+    public void addGenericDouble(ModConfigSpec.Builder builder, double val, String comment, String path) {
         GENERIC_DOUBLE = builder.comment(comment).defineInRange(path, val, 0.0, Double.MAX_VALUE);
     }
 
-    public void addDefaultPotionConfig(ForgeConfigSpec.Builder builder) {
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        if(this instanceof IPotionEffect){
+            addPotionAugmentDescriptions(map);
+        }
+        if(this instanceof IDamageEffect){
+            addDamageAugmentDescriptions(map);
+        }
+    }
+
+    public void addDefaultPotionConfig(ModConfigSpec.Builder builder) {
         addPotionConfig(builder, 30);
         addExtendTimeConfig(builder, 8);
     }
@@ -182,7 +199,33 @@ public abstract class AbstractEffect extends AbstractSpellPart {
                 AugmentAmplify.INSTANCE);
     }
 
+    protected void addBlockAoeAugmentDescriptions(Map<AbstractAugment, String> map){
+        map.put(AugmentAOE.INSTANCE, "Increases the radius of targeted blocks.");
+        map.put(AugmentPierce.INSTANCE, "Increases the depth of targeted blocks.");
+        map.put(AugmentRandomize.INSTANCE, "Adds a chance to not target a block.");
+        map.put(AugmentFortune.INSTANCE, "Applies fortune when breaking a block.");
+        map.put(AugmentExtract.INSTANCE, "Applies silk touch when breaking a block.");
+    }
+
+    protected void addDamageAugmentDescriptions(Map<AbstractAugment, String> map){
+        map.put(AugmentAmplify.INSTANCE, "Increases damage dealt.");
+        map.put(AugmentDampen.INSTANCE, "Reduces damage dealt.");
+        map.put(AugmentFortune.INSTANCE, "Applies looting when killing a mob.");
+        map.put(AugmentRandomize.INSTANCE, "Randomizes the damage dealt.");
+    }
+
+    protected void addPotionAugmentDescriptions(Map<AbstractAugment, String> map){
+        map.put(AugmentExtendTime.INSTANCE, "Extends the duration of the effect.");
+        map.put(AugmentDurationDown.INSTANCE, "Reduces the duration of the effect.");
+        map.put(AugmentAmplify.INSTANCE, "Increases the level of the effect.");
+    }
+
     protected Set<AbstractAugment> getSummonAugments() {
         return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
+    }
+
+    protected void addSummonAugmentDescriptions(Map<AbstractAugment, String> map){
+        map.put(AugmentExtendTime.INSTANCE, "Extends the duration of the summon.");
+        map.put(AugmentDurationDown.INSTANCE, "Reduces the duration of the summon.");
     }
 }

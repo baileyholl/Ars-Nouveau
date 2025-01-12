@@ -15,9 +15,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-
 import net.minecraft.world.phys.*;
-import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.Nullable;
 
 public class EntityLingeringSpell extends EntityProjectileSpell {
@@ -81,7 +79,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
             if (isSensitive()) {
                 for (BlockPos p : BlockPos.betweenClosed(blockPosition().east(flatAoe).north(flatAoe), blockPosition().west(flatAoe).south(flatAoe))) {
                     p = p.immutable();
-                    spellResolver.onResolveEffect(level, new
+                    spellResolver.getNewResolver(spellResolver.spellContext.clone().makeChildContext()).onResolveEffect(level, new
                             BlockHitResult(new Vec3(p.getX(), p.getY(), p.getZ()), Direction.UP, p, false));
                 }
             } else {
@@ -89,7 +87,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
                 for (Entity entity : level.getEntities(null, new AABB(this.blockPosition()).inflate(getAoe()))) {
                     if (entity.equals(this) || entity.getType().is(EntityTags.LINGERING_BLACKLIST))
                         continue;
-                    spellResolver.onResolveEffect(level, new EntityHitResult(entity));
+                    spellResolver.getNewResolver(spellResolver.spellContext.clone().makeChildContext()).onResolveEffect(level, new EntityHitResult(entity));
                     i++;
                     if (i > 5)
                         break;
@@ -118,10 +116,6 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
         ParticleUtil.spawnLight(level, getParticleColor(), position.add(0, 0.5, 0), 10);
     }
 
-    public EntityLingeringSpell(PlayMessages.SpawnEntity packet, Level world) {
-        super(ModEntities.LINGER_SPELL.get(), world);
-    }
-
     @Override
     public EntityType<?> getType() {
         return ModEntities.LINGER_SPELL.get();
@@ -132,7 +126,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
         if (!level.isClientSide && result instanceof BlockHitResult && !this.isRemoved()) {
             BlockState state = level.getBlockState(((BlockHitResult) result).getBlockPos());
             if (state.is(BlockTags.PORTALS)) {
-                state.getBlock().entityInside(state, level, ((BlockHitResult) result).getBlockPos(), this);
+                state.entityInside(level, ((BlockHitResult) result).getBlockPos(), this);
                 return;
             }
             this.setLanded(true);
@@ -177,13 +171,13 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(ACCELERATES, 0);
-        entityData.define(AOE, 0f);
-        entityData.define(LANDED, false);
-        entityData.define(SENSITIVE, false);
-        entityData.define(SHOULD_FALL, true);
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(ACCELERATES, 0);
+        pBuilder.define(AOE, 0f);
+        pBuilder.define(LANDED, false);
+        pBuilder.define(SENSITIVE, false);
+        pBuilder.define(SHOULD_FALL, true);
     }
 
     @Override

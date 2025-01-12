@@ -27,12 +27,16 @@ public class ResetCommand {
         for (Entity e : entities) {
             if (!(e instanceof LivingEntity))
                 continue;
-            CapabilityRegistry.getMana((LivingEntity) e).ifPresent(iMana -> {
+            var iMana = CapabilityRegistry.getMana((LivingEntity) e);
+            if (iMana != null) {
                 iMana.setBookTier(0);
                 iMana.setGlyphBonus(0);
-            });
-            CapabilityRegistry.getPlayerDataCap((LivingEntity) e).ifPresent(iPlayerCap -> iPlayerCap.setKnownGlyphs(new ArrayList<>()));
-            CapabilityRegistry.getPlayerDataCap((LivingEntity) e).ifPresent(ifam -> ifam.setUnlockedFamiliars(new ArrayList<>()));
+            }
+            var playerCap = CapabilityRegistry.getPlayerDataCap((LivingEntity) e);
+            if (playerCap != null) {
+                playerCap.setKnownGlyphs(new ArrayList<>());
+                playerCap.setUnlockedFamiliars(new ArrayList<>());
+            }
         }
         source.sendSuccess(() -> Component.translatable("ars_nouveau.reset.cleared"), true);
         return 1;

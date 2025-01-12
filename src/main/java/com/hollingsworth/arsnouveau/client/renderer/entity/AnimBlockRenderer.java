@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.MageBlock;
 import com.hollingsworth.arsnouveau.common.entity.AnimBlockSummon;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -17,22 +18,22 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.model.data.ModelData;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.object.Color;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib.util.RenderUtils;
+import software.bernie.geckolib.util.Color;
+import software.bernie.geckolib.util.RenderUtil;
+
 
 
 public class AnimBlockRenderer<BOBBY extends AnimBlockSummon> extends GeoEntityRenderer<BOBBY> {
-
-    protected static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/anim_block.png");
-    public static final ResourceLocation BASE_MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/animated_block.geo.json");
-    public static final ResourceLocation ANIMATIONS = new ResourceLocation(ArsNouveau.MODID, "animations/animated_block_animations.json");
+    public static MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(new ByteBufferBuilder(1536));
+    protected static final ResourceLocation TEXTURE = ArsNouveau.prefix( "textures/entity/anim_block.png");
+    public static final ResourceLocation BASE_MODEL = ArsNouveau.prefix( "geo/animated_block.geo.json");
+    public static final ResourceLocation ANIMATIONS = ArsNouveau.prefix( "animations/animated_block_animations.json");
 
     private final BlockRenderDispatcher dispatcher;
     protected MultiBufferSource bufferSource;
@@ -57,7 +58,7 @@ public class AnimBlockRenderer<BOBBY extends AnimBlockSummon> extends GeoEntityR
             @Override
             public void setCustomAnimations(BOBBY animatable, long instanceId, AnimationState<BOBBY> customPredicate) {
                 super.setCustomAnimations(animatable, instanceId, customPredicate);
-                CoreGeoBone head = this.getAnimationProcessor().getBone("block");
+                GeoBone head = this.getAnimationProcessor().getBone("block");
                 head.setHidden(!(animatable.getBlockState().getBlock() instanceof MageBlock));
             }
         });
@@ -73,13 +74,14 @@ public class AnimBlockRenderer<BOBBY extends AnimBlockSummon> extends GeoEntityR
     }
 
     @Override
-    public void preRender(PoseStack poseStack, BOBBY animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack poseStack, BOBBY animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         this.bufferSource = bufferSource;
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 
     @Override
-    public void renderRecursively(PoseStack poseStack, BOBBY animatable, GeoBone bone, RenderType ty, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderRecursively(PoseStack poseStack, BOBBY animatable, GeoBone bone, RenderType ty, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
+        super.renderRecursively(poseStack, animatable, bone, ty, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
         if (bone.getName().equals("block")) {
             AnimBlockSummon animBlock = animatable;
             if (animBlock == null) return;
@@ -89,23 +91,35 @@ public class AnimBlockRenderer<BOBBY extends AnimBlockSummon> extends GeoEntityR
             if (!(blockstate.getBlock() instanceof MageBlock)) {
                 try {
                     Level level = animatable.level();
+
                     if (blockstate != level.getBlockState(animBlock.blockPosition()) && blockstate.getRenderShape() != RenderShape.INVISIBLE) {
                         poseStack.pushPose();
                         BlockPos blockpos = animBlock.blockPosition().above();
-                        RenderUtils.translateToPivotPoint(poseStack, bone);
+                        RenderUtil.translateToPivotPoint(poseStack, bone);
                         poseStack.translate(-0.5D, -0.5, -0.5D);
                         var model = this.dispatcher.getBlockModel(blockstate);
                         for (var renderType : model.getRenderTypes(blockstate, RandomSource.create(blockstate.getSeed(animBlock.blockPosition())), ModelData.EMPTY))
-                            this.dispatcher.getModelRenderer().tesselateBlock(level, model, blockstate, blockpos, poseStack, this.bufferSource.getBuffer(renderType), false, RandomSource.create(), blockstate.getSeed(animBlock.getOnPos()), OverlayTexture.NO_OVERLAY, ModelData.EMPTY, renderType);
+                            this.dispatcher.getModelRenderer().tesselateBlock(level,
+                                    model,
+                                    blockstate,
+                                    blockpos,
+                                    poseStack,
+                                    AnimBlockRenderer.buffer.getBuffer(net.neoforged.neoforge.client.RenderTypeHelper.getMovingBlockRenderType(renderType)),
+                                    false,
+                                    RandomSource.create(),
+                                    blockstate.getSeed(animBlock.getOnPos()),
+                                    OverlayTexture.NO_OVERLAY,
+                                    ModelData.EMPTY,
+                                    renderType);
                         poseStack.popPose();
-                        buffer = this.bufferSource.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
+                        AnimBlockRenderer.buffer.endBatch();
+//                        buffer = this.bufferSource.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
                     }
                 } catch (Exception e) {
                     // We typically don't render non-models like this, so catch our shenanigans.
                 }
             }
         }
-        super.renderRecursively(poseStack, animatable, bone, ty, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @Override

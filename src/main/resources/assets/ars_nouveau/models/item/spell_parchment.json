@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-      "layer0": "ars_nouveau:item/blank_parchment",
+      "layer0": "ars_nouveau:item/scroll_inscribed",
       "layer1": "ars_nouveau:item/scroll_runes"
     }
 }

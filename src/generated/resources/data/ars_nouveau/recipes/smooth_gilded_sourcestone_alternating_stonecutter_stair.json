@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "count": 1,
-  "ingredient": {
-    "item": "ars_nouveau:smooth_gilded_sourcestone_alternating"
-  },
-  "result": "ars_nouveau:smooth_gilded_sourcestone_alternating_stairs"
-}

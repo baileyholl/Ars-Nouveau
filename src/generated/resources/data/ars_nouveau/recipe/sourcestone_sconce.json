@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "c:gems/source"
+    },
+    {
+      "item": "ars_nouveau:sourcestone"
+    },
+    {
+      "item": "ars_nouveau:sourcestone"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:sourcestone_sconce"
+  }
+}

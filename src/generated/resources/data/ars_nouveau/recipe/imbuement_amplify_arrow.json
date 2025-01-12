@@ -1,0 +1,22 @@
+{
+  "type": "ars_nouveau:imbuement",
+  "input": {
+    "tag": "minecraft:arrows"
+  },
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:amplify_arrow"
+  },
+  "pedestalItems": [
+    {
+      "item": "ars_nouveau:source_gem"
+    },
+    {
+      "item": "ars_nouveau:air_essence"
+    },
+    {
+      "tag": "c:gems/diamond"
+    }
+  ],
+  "source": 100
+}

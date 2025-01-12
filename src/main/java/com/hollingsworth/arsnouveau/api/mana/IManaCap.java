@@ -1,9 +1,6 @@
 package com.hollingsworth.arsnouveau.api.mana;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.common.util.INBTSerializable;
-
-public interface IManaCap extends INBTSerializable<CompoundTag> {
+public interface IManaCap {
 
     double getCurrentMana();
 

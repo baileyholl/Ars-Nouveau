@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.minecraft.world.item.DyeColor;
-import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.neoforged.fml.loading.FMLEnvironment;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,7 +27,11 @@ public class Rewards {
             JsonArray supporters = object.getAsJsonArray("uuids");
             for (JsonElement element : supporters) {
                 String uuid = element.getAsString();
-                CONTRIBUTORS.add(UUID.fromString(uuid.trim()));
+                try {
+                    CONTRIBUTORS.add(UUID.fromString(uuid.trim()));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
             JsonArray adoptions = object.getAsJsonArray("starbuncleAdoptions");
             for (JsonElement element : adoptions) {

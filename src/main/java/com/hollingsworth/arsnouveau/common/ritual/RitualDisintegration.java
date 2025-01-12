@@ -53,7 +53,7 @@ public class RitualDisintegration extends AbstractRitual {
 
                     ParticleUtil.spawnPoof((ServerLevel) world, m.blockPosition());
                     if (m.shouldDropExperience()) {
-                        int exp = m.getExperienceReward() * 2;
+                        int exp = m.getExperienceReward((ServerLevel) world, null) * 2;
                         if (exp > 0) {
                             int numGreater = exp / 12;
                             exp -= numGreater * 12;
@@ -96,6 +96,6 @@ public class RitualDisintegration extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, RitualLib.DISINTEGRATION);
+        return ArsNouveau.prefix( RitualLib.DISINTEGRATION);
     }
 }

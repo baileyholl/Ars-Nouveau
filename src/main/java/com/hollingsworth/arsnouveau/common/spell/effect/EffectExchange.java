@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.block.IntangibleAirBlock;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import com.hollingsworth.arsnouveau.common.util.HolderHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -28,10 +29,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.ForgeEventFactory;
+import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class EffectExchange extends AbstractEffect {
@@ -45,9 +47,9 @@ public class EffectExchange extends AbstractEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
         Vec3 origLoc = shooter.position;
-        if (!ForgeEventFactory.onEnderTeleport(shooter, entity.getX(), entity.getY(), entity.getZ()).isCanceled())
+        if (!EventHooks.onEnderTeleport(shooter, entity.getX(), entity.getY(), entity.getZ()).isCanceled())
             shooter.teleportTo(entity.getX(), entity.getY(), entity.getZ());
-        if (!(entity instanceof LivingEntity living) || !ForgeEventFactory.onEnderTeleport(living, origLoc.x(), origLoc.y(), origLoc.z()).isCanceled()) {
+        if (!(entity instanceof LivingEntity living) || !EventHooks.onEnderTeleport(living, origLoc.x(), origLoc.y(), origLoc.z()).isCanceled()) {
             entity.teleportTo(origLoc.x(), origLoc.y(), origLoc.z());
         }
     }
@@ -96,7 +98,7 @@ public class EffectExchange extends AbstractEffect {
     public void attemptPlace(ItemStack stack, Level world, BlockPos pos1, BlockHitResult result, LivingEntity shooter, Player fakePlayer, SpellContext spellContext, SpellResolver resolver) {
         BlockItem item = (BlockItem) stack.getItem();
         ItemStack tool = LootUtil.getDefaultFakeTool();
-        tool.enchant(Enchantments.SILK_TOUCH, 1);
+        tool.enchant(HolderHelper.unwrap(world, Enchantments.SILK_TOUCH), 1);
         fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
         BlockPlaceContext context = BlockPlaceContext.at(new BlockPlaceContext(new UseOnContext(fakePlayer, InteractionHand.MAIN_HAND, result)), pos1.relative(result.getDirection().getOpposite()), result.getDirection());
         BlockState placeState = item.getBlock().getStateForPlacement(context);
@@ -129,6 +131,14 @@ public class EffectExchange extends AbstractEffect {
                 AugmentPierce.INSTANCE,
                 AugmentAOE.INSTANCE, AugmentRandomize.INSTANCE
         );
+    }
+
+    @Override
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentAmplify.INSTANCE, "Increases the hardness of blocks that can be harvested.");
+        map.put(AugmentDampen.INSTANCE, "Decreases the hardness of blocks that can be harvested.");
     }
 
     @Override

@@ -1,0 +1,32 @@
+{
+  "parent": "ars_nouveau:imbuement_chamber",
+  "criteria": {
+    "has_enchanting_apparatus": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ars_nouveau:enchanting_apparatus"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "ars_nouveau.adv.desc.enchanting_apparatus"
+    },
+    "icon": {
+      "count": 1,
+      "id": "ars_nouveau:enchanting_apparatus"
+    },
+    "title": {
+      "translate": "ars_nouveau.adv.title.enchanting_apparatus"
+    }
+  },
+  "requirements": [
+    [
+      "has_enchanting_apparatus"
+    ]
+  ]
+}

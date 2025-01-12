@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": "ars_nouveau:placed_mixed_archwoods",
+  "step": "vegetal_decoration"
+}

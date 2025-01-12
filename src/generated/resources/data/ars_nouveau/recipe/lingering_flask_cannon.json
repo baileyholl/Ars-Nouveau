@@ -1,0 +1,23 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": false,
+  "pedestalItems": [
+    {
+      "item": "minecraft:dragon_breath"
+    },
+    {
+      "item": "ars_nouveau:air_essence"
+    },
+    {
+      "item": "ars_nouveau:air_essence"
+    }
+  ],
+  "reagent": {
+    "item": "ars_nouveau:splash_flask_cannon"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:lingering_flask_cannon"
+  },
+  "sourceCost": 0
+}

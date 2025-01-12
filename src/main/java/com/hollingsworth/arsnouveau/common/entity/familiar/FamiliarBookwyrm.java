@@ -15,13 +15,14 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
+import net.neoforged.neoforge.items.wrapper.PlayerMainInvWrapper;
+import org.jetbrains.annotations.NotNull;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +34,7 @@ public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCast
     }
 
     @Override
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+    public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (level.isClientSide || hand != InteractionHand.MAIN_HAND)
             return InteractionResult.SUCCESS;
 
@@ -52,30 +53,36 @@ public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCast
     @Override
     public void tick() {
         super.tick();
-        if(level.isClientSide || level.getGameTime() % 20 != 0)
+        if (level.isClientSide || level.getGameTime() % 20 != 0)
             return;
         LivingEntity owner = getOwner();
-        if(!(owner instanceof Player player))
+        if (!(owner instanceof Player player))
             return;
         FilterableItemHandler filterableItemHandler = new FilterableItemHandler(new PlayerMainInvWrapper(player.inventory), new ArrayList<>());
-        InventoryManager manager = new InventoryManager(new ArrayList<>(){{
+        InventoryManager manager = new InventoryManager(new ArrayList<>() {{
             add(filterableItemHandler);
         }});
-        for(Entity entity : level.getEntities(owner, new AABB(owner.getOnPos()).inflate(5.0))){
-            if(entity instanceof ItemEntity i){
+        for (Entity entity : level.getEntities(owner, new AABB(owner.getOnPos()).inflate(5.0))) {
+            if (entity instanceof ItemEntity i) {
                 ItemStack stack = i.getItem();
-                if (stack.isEmpty()
-                        || MinecraftForge.EVENT_BUS.post(new EntityItemPickupEvent(player, i))
-                        || getOwnerID().equals(i.getOwner())
-                        || i.hasPickUpDelay()
+                if (stack.isEmpty() || i.hasPickUpDelay()
                         || i.getPersistentData().getBoolean("PreventRemoteMovement")
-                        || !i.isAlive())
+                        || !i.isAlive()) {
+                    continue;
+                }
+                var prePickup = NeoForge.EVENT_BUS.post(new ItemEntityPickupEvent.Pre(player, i));
+                if (prePickup.canPickup().isFalse()
+                        || getOwnerID().equals(i.getOwner()))
                     continue;
                 stack = manager.insertStack(stack);
                 i.setItem(stack);
             }
-            if(entity instanceof ExperienceOrb orb){
-                if (orb.isRemoved() || MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerXpEvent.PickupXp(player, orb)))
+            if (entity instanceof ExperienceOrb orb) {
+                if (orb.isRemoved()) {
+                    continue;
+                }
+                var pickupEvent = NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.entity.player.PlayerXpEvent.PickupXp(player, orb));
+                if (pickupEvent.isCanceled())
                     continue;
                 player.giveExperiencePoints(orb.value);
                 orb.remove(Entity.RemovalReason.DISCARDED);
@@ -90,15 +97,14 @@ public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCast
     }
 
     @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get();
     }
 
-    @Override
-    public ResourceLocation getTexture(FamiliarEntity entity) {
+    public ResourceLocation getTexture() {
         String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "blue";
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_" + color + ".png");
+        return ArsNouveau.prefix("textures/entity/book_wyrm_" + color + ".png");
     }
 }

@@ -1,15 +1,26 @@
 package com.hollingsworth.arsnouveau.client.container;
 
-import net.minecraft.nbt.CompoundTag;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Comparator;
 import java.util.function.Function;
 
 public class StoredItemStack {
+
+	public static final Codec<StoredItemStack> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			ItemStack.CODEC.fieldOf("stack").forGetter(StoredItemStack::getStack),
+			Codec.LONG.fieldOf("count").forGetter(StoredItemStack::getQuantity)
+	).apply(instance, StoredItemStack::new));
+
+	public static final StreamCodec<RegistryFriendlyByteBuf, StoredItemStack> STREAM = StreamCodec.composite(ItemStack.STREAM_CODEC, StoredItemStack::getStack, ByteBufCodecs.VAR_LONG, StoredItemStack:: getQuantity, StoredItemStack::new);
+
 	private ItemStack stack;
 	private long count;
-	private static final String ITEM_COUNT_NAME = "c", ITEMSTACK_NAME = "s";
 	private int hash;
 
 	public StoredItemStack(ItemStack stack, long count) {
@@ -37,26 +48,46 @@ public class StoredItemStack {
 		return s;
 	}
 
-	public CompoundTag writeToNBT(CompoundTag tag) {
-		tag.putLong(ITEM_COUNT_NAME, getQuantity());
-		tag.put(ITEMSTACK_NAME, stack.save(new CompoundTag()));
-		tag.getCompound(ITEMSTACK_NAME).remove("Count");
-		return tag;
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		StoredItemStack other = (StoredItemStack) obj;
+		if (stack == null) {
+			return other.stack == null;
+		} else return ItemStack.isSameItem(stack, other.stack) && ItemStack.matches(stack, other.stack);
 	}
 
-	public CompoundTag writeToNBT(CompoundTag tag, long q) {
-		tag.putLong(ITEM_COUNT_NAME, q);
-		tag.put(ITEMSTACK_NAME, stack.save(new CompoundTag()));
-		tag.getCompound(ITEMSTACK_NAME).remove("Count");
-		return tag;
+	@Override
+	public int hashCode() {
+		if(hash == 0) {
+			hash = ItemStack.hashItemAndComponents(stack);
+		}
+		return hash;
 	}
-
-	public static StoredItemStack readFromNBT(CompoundTag tag) {
-		ItemStack cheat = ItemStack.of(tag);
-		tag.getCompound(ITEMSTACK_NAME).putByte("Count", (byte) 1);
-		StoredItemStack stack = new StoredItemStack(!cheat.isEmpty() ? cheat : ItemStack.of(tag.getCompound(ITEMSTACK_NAME)), !cheat.isEmpty() ? cheat.getCount() : tag.getLong(ITEM_COUNT_NAME));
-		return !stack.stack.isEmpty() ? stack : null;
-	}
+//
+//	public CompoundTag writeToNBT(CompoundTag tag) {
+//		tag.putLong(ITEM_COUNT_NAME, getQuantity());
+//		tag.put(ITEMSTACK_NAME, stack.save(new CompoundTag()));
+//		tag.getCompound(ITEMSTACK_NAME).remove("Count");
+//		return tag;
+//	}
+//
+//	public CompoundTag writeToNBT(CompoundTag tag, long q) {
+//		tag.putLong(ITEM_COUNT_NAME, q);
+//		tag.put(ITEMSTACK_NAME, stack.save(new CompoundTag()));
+//		tag.getCompound(ITEMSTACK_NAME).remove("Count");
+//		return tag;
+//	}
+//
+//	public static StoredItemStack readFromNBT(CompoundTag tag) {
+//		ItemStack cheat = ItemStack.of(tag);
+//		tag.getCompound(ITEMSTACK_NAME).putByte("Count", (byte) 1);
+//		StoredItemStack stack = new StoredItemStack(!cheat.isEmpty() ? cheat : ItemStack.of(tag.getCompound(ITEMSTACK_NAME)), !cheat.isEmpty() ? cheat.getCount() : tag.getLong(ITEM_COUNT_NAME));
+//		return !stack.stack.isEmpty() ? stack : null;
+//	}
 
 	public static class ComparatorAmount implements IStoredItemStackComparator {
 		public boolean reversed;
@@ -137,41 +168,8 @@ public class StoredItemStack {
 		}
 	}
 
-	@Override
-	public int hashCode() {
-		if(hash == 0) {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((stack == null) ? 0 : stack.getItem().hashCode());
-			result = prime * result + ((stack == null || !stack.hasTag()) ? 0 : stack.getTag().hashCode());
-			hash = result;
-			return result;
-		}
-		return hash;
-	}
-
 	public String getDisplayName() {
 		return stack.getHoverName().getString();
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		StoredItemStack other = (StoredItemStack) obj;
-		if (stack == null) {
-			return other.stack == null;
-		} else return ItemStack.isSameItem(stack, other.stack) && ItemStack.matches(stack, other.stack);
-	}
-
-	public boolean equals(StoredItemStack other) {
-		if (this == other) return true;
-		if (other == null) return false;
-		if (count != other.count) return false;
-		if (stack == null) {
-			return other.stack == null;
-		} else return ItemStack.isSameItem(stack, other.stack) && ItemStack.matches(stack, other.stack);
 	}
 
 	public void grow(long c) {

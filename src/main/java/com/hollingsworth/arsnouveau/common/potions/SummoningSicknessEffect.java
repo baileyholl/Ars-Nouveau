@@ -2,10 +2,11 @@ package com.hollingsworth.arsnouveau.common.potions;
 
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.neoforged.neoforge.common.EffectCure;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 public class SummoningSicknessEffect extends MobEffect {
     public SummoningSicknessEffect() {
@@ -13,7 +14,6 @@ public class SummoningSicknessEffect extends MobEffect {
     }
 
     @Override
-    public List<ItemStack> getCurativeItems() {
-        return new ArrayList<>();
+    public void fillEffectCures(@NotNull Set<EffectCure> cures, @NotNull MobEffectInstance effectInstance) {
     }
 }

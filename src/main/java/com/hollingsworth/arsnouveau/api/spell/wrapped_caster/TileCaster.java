@@ -3,6 +3,8 @@ package com.hollingsworth.arsnouveau.api.spell.wrapped_caster;
 import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.util.InvUtil;
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
+import com.hollingsworth.arsnouveau.common.block.tile.BasicSpellTurretTile;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -58,5 +60,21 @@ public class TileCaster implements IWrappedCaster{
     @Override
     public Vec3 getPosition() {
         return new Vec3(tile.getBlockPos().getX(), tile.getBlockPos().getY(), tile.getBlockPos().getZ());
+    }
+
+    @Override
+    public boolean enoughMana(int totalCost) {
+        if (tile instanceof BasicSpellTurretTile spellTurretTile) {
+            return SourceUtil.hasSourceNearby(tile.getBlockPos(), tile.getLevel(), 10, spellTurretTile.getManaCost());
+        }
+        return false;
+    }
+
+    @Override
+    public void expendMana(int totalCost) {
+        if (tile instanceof BasicSpellTurretTile spellTurretTile) {
+            if (spellTurretTile.getManaCost() <= 0) return;
+            SourceUtil.takeSourceMultipleWithParticles(tile.getBlockPos(), tile.getLevel(), 10, spellTurretTile.getManaCost());
+        }
     }
 }

@@ -1,0 +1,29 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "ars_nouveau:block/sourcestone_grate",
+      "x": 90
+    },
+    "facing=east": {
+      "model": "ars_nouveau:block/sourcestone_grate",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west": {
+      "model": "ars_nouveau:block/sourcestone_grate",
+      "x": 90,
+      "y": 270
+    },
+    "facing=south": {
+      "model": "ars_nouveau:block/sourcestone_grate",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up": {
+      "model": "ars_nouveau:block/sourcestone_grate"
+    },"facing=down": {
+      "model": "ars_nouveau:block/sourcestone_grate",
+      "x": 180
+    }
+  }
+}

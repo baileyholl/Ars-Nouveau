@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "x": {
+      "item": "ars_nouveau:archwood_slab"
+    },
+    "y": {
+      "tag": "c:nuggets/gold"
+    },
+    "z": {
+      "tag": "c:logs/archwood"
+    }
+  },
+  "pattern": [
+    "xxx",
+    "y y",
+    "z z"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:scribes_table"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "type": "ars_nouveau:scry_ritual",
+  "augment": "c:gems/amethyst",
+  "highlight": "c:storage_blocks/amethyst"
+}

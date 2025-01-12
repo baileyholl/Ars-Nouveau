@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.common.event.timed.GhostweaveVisibilityEvent
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -13,7 +14,7 @@ public class GhostWeaveTile extends MirrorWeaveTile{
     private boolean invisible;
 
     public GhostWeaveTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.GHOST_WEAVE_TILE, pos, state);
+        super(BlockRegistry.GHOST_WEAVE_TILE.get(), pos, state);
     }
 
 
@@ -41,15 +42,15 @@ public class GhostWeaveTile extends MirrorWeaveTile{
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         tag.putBoolean("invisible", invisible);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
-        invisible = pTag.getBoolean("invisible");
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(compound, pRegistries);
+        invisible = compound.getBoolean("invisible");
     }
 
     @Override

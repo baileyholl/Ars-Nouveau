@@ -49,7 +49,7 @@ public class RitualBinding extends AbstractRitual {
                             ParticleUtil.spawnPoof((ServerLevel) world, entity.blockPosition());
                             world.addFreshEntity(new ItemEntity(world, entity.blockPosition().getX(), entity.blockPosition().getY(), entity.blockPosition().getZ(), familiarHolder.getOutputItem()));
                             world.playSound(null, entity.blockPosition(), SoundEvents.BOOK_PUT, SoundSource.NEUTRAL, 1.0f, 1.0f);
-                            ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.FAMILIAR, (ServerLevel) world, entity.blockPosition(), 8);
+                            ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.FAMILIAR.get(), (ServerLevel) world, entity.blockPosition(), 8);
                         }
                     }
                 }
@@ -70,6 +70,6 @@ public class RitualBinding extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, RitualLib.BINDING);
+        return ArsNouveau.prefix( RitualLib.BINDING);
     }
 }

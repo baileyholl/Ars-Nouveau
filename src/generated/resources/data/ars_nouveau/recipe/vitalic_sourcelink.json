@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "g": {
+      "tag": "c:ingots/gold"
+    },
+    "i": {
+      "item": "minecraft:glistering_melon_slice"
+    },
+    "s": {
+      "tag": "c:gems/source"
+    }
+  },
+  "pattern": [
+    " s ",
+    "gig",
+    " s "
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:vitalic_sourcelink"
+  }
+}

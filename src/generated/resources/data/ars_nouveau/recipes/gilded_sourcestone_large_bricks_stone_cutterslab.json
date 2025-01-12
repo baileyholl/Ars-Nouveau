@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "count": 2,
-  "ingredient": {
-    "item": "ars_nouveau:gilded_sourcestone_large_bricks"
-  },
-  "result": "ars_nouveau:gilded_sourcestone_large_bricks_slab"
-}

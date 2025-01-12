@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.api.event;
 
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 
 public class SpellCostCalcEvent extends Event {
 

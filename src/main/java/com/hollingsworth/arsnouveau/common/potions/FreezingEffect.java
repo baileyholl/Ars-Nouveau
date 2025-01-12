@@ -12,12 +12,13 @@ public class FreezingEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
+    public boolean applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
         pLivingEntity.setTicksFrozen(Math.min(pLivingEntity.getTicksRequiredToFreeze() + 3, pLivingEntity.getTicksFrozen() + 3 + pAmplifier));
+        return true;
     }
 
     @Override
-    public boolean isDurationEffectTick(int pDuration, int pAmplifier) {
+    public boolean shouldApplyEffectTickThisTick(int pDuration, int pAmplifier) {
         return true;
     }
 }

@@ -11,6 +11,6 @@ public class EnchantingPage extends AbstractPage {
 
     @Override
     public ResourceLocation getType() {
-        return new ResourceLocation(ArsNouveau.MODID, "enchanting_recipe");
+        return ArsNouveau.prefix( "enchanting_recipe");
     }
 }

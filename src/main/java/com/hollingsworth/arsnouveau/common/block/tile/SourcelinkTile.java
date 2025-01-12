@@ -7,21 +7,19 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
-import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
+import com.hollingsworth.arsnouveau.common.capability.SourceStorage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
+import org.jetbrains.annotations.NotNull;
+import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -38,20 +36,6 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
         super(sourceLinkTile, pos, state);
     }
 
-    public SourcelinkTile(RegistryWrapper<? extends BlockEntityType<?>> sourceLinkTile, BlockPos pos, BlockState state) {
-        super(sourceLinkTile.get(), pos, state);
-    }
-
-    @Override
-    public int getTransferRate() {
-        return 1000;
-    }
-
-    @Override
-    public int getMaxSource() {
-        return 1000;
-    }
-
     @Override
     public void tick() {
         if (level.isClientSide)
@@ -64,8 +48,8 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
         if (level.getGameTime() % 100 == 0 && getSource() > 0) {
             List<ISpecialSourceProvider> providers = SourceUtil.canGiveSource(worldPosition, level, 5);
             if(!providers.isEmpty()){
-                transferSource(this, providers.get(0).getSource());
-                ParticleUtil.spawnFollowProjectile(level, this.worldPosition, providers.get(0).getCurrentPos(), this.getColor());
+                transferSource(this, providers.getFirst().getSource());
+                ParticleUtil.spawnFollowProjectile(level, this.worldPosition, providers.getFirst().getCurrentPos(), this.getColor());
             }
         }
     }
@@ -109,15 +93,25 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
+        super.loadAdditional(tag, pRegistries);
         progress = tag.getInt("progress");
         isDisabled = tag.getBoolean("disabled");
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected @NotNull SourceStorage createDefaultStorage() {
+        return new SourceStorage(20000, 10000, 10000, 0) {
+            @Override
+            public boolean canReceive() {
+                return false;
+            }
+        };
+    }
+
+    @Override
+    public void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         tag.putInt("progress", progress);
         tag.putBoolean("disabled", isDisabled);
     }

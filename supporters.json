@@ -21,7 +21,20 @@
     "2980a99e-8582-4f63-9b82-f7117bc8be2c", "674b6c55-c4f3-4ef6-9a57-b4a7455f1296","0f4c174e-26f1-43c3-81d0-88507dba6e52",
     "5b1c9f9b-edd0-4632-9ba3-79b6dcc9bfa8", "eb0da540-8487-4ca0-8a5f-ed4acaa0268d", "8bacc3d4-a301-429b-859d-042d47f61e4d",
     "3d8f61f1-7333-4c4f-b9e8-d76a3b453420", "888d2798-4fdf-4e70-89ed-1bb2ff47c6c1", "8b93ffcd-e3e8-41c7-aee9-458b03bd0b34",
-    "1d1b87f0-5243-4b39-926f-f7490d28954a"],
+    "1d1b87f0-5243-4b39-926f-f7490d28954a", "45e4cde5-5c3f-4997-8564-3ae5be9407e1", "d8a9a09f-d6da-495b-8bb8-7d56f9c5b949",
+    "277d0321-7fe7-4ab0-b1bc-4b00ac627231", "8bbf2330-78d1-4ea7-945f-89b7a99298c2", "b4feb5db-e845-4bc1-b72e-b4de8b646288",
+    "0c6a5082-d327-41ec-8722-42d942f30f5a", "728ac916-4aac-439d-af1c-d68e6a51139b", "9c5e5766-0a1c-4563-a8c4-8184994a15a6",
+    "92d6215b-0730-44ce-a8b2-1baf4c2cd0d5", "bfde5990-f846-4dae-90d1-0372ce45f522", "c6ad89fd-6625-4290-83b2-2665e9e39225",
+    "7dc1de80-c04c-4c0f-8f00-6326d770626b", "8bf034ac-313f-435a-bd2b-200a7857021b", "1dafa767-ce2f-47c4-8142-67b0b4854586",
+    "9eff9013-f8a6-4a1a-9142-32d94d60d8c1", "671ffc64-8b5b-4ac2-87b1-138951be701e","aac7171c-9bac-42a8-b094-2363599dae59",
+    "47f9c9d2-89b2-4987-af6b-31e7b1f74da2", "ec77d204-6e8b-4dac-8b66-71b2a03c5e65", "98e72ae4-10c9-4696-970b-804eb9b176ae",
+    "0421ad40-0881-47d4-b086-38c90c1ab62f", "a8875ecb-6e84-4c6d-ac68-3251b945d963", "cf1f7109-266d-4e5a-8a8a-d93684cf60b9",
+  "e7976ce2-3344-4499-8b15-91adddc5ed0f", "d29025d7-cf5d-4976-8a65-fc3bdcc991b5", "8ced638c-eac7-433e-b794-54c0f23807a4",
+  "db489a87-6509-4d75-917d-9c426b519c64", "eb079f27-e266-4b3c-beba-b34d34bef268", "831086b8-d566-4f25-aa09-ecb505e54885",
+  "e3298bd7-61bf-427f-af89-4e418a20bf57", "01b53c7e-c7f4-4465-88df-f8b6c645b6b9", "a29ffabb-ac40-4754-8df8-94b9f394045c",
+  "aef9c054-e96e-4332-944b-9393105b6ac6", "1f62ed4b-91f9-42fa-b331-b7e3e3c0637f", "eb14192a-c53f-44c0-bb13-7f7ff1a0e662",
+  "758ca96e-100a-4611-a849-5d76229b6c83", "1cf6b68a-a396-4ac1-8146-21fc314f6455", "f476db17-6995-44ab-b002-0a326959f01a",
+  "4a405d17-9e7b-4007-b4e3-a1adcd41c489", "f64bd7f1-ae18-4e9e-834e-eb0caf7f37d4", "ee6d035a-600d-40a3-b444-b987766121ee"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -95,7 +108,7 @@
       "bio": "Solstice likes to wander off and explore the unknown, usually leaving the task at hand unfinished. She will usually be found in someone's home relieving them of their gold and other valuables."
     },
     {
-      "name": "Aofie",
+      "name": "Aoife",
       "color": "lime",
       "adopter": "Sarenor",
       "bio": "Sarenor was in desperate need of help automating his  Imbuement Stills when Aoife pranced through his automation basement on the search for adventure and food. After tossing a gold nugget at her, Aoife became Sarenors first and best Still Master. Today she enjoys a good dram, friends, and nice chair."
@@ -338,6 +351,212 @@
       "adopter": "Lyrellion",
       "color": "magenta",
       "bio": "This brightly colored starbuncle seems to have an endless supply of energy…almost like a 6 year old child..."
+    },{
+      "name": "Ophelia",
+      "color": "purple",
+      "adopter": "Rythian",
+      "bio": "A friendly little helper, always on the lookout for a treat."
+    }, {
+      "name": "Hank",
+      "color": "black",
+      "adopter": "LeUnknownNugget",
+      "bio": "From the void and abyss, Nuggets cute little companion Hank"
+    }, {
+      "name": "Hanabi",
+      "color": "white",
+      "adopter": "angelixen",
+      "bio": "From high atop the snowy peaks, this starbuncle descended onto the land in an explosion of color."
+    },{
+      "name": "Rozeta",
+      "adopter": "WayOfTime",
+      "color": "pink",
+      "bio": "A curious Starbuncle that likes to build and experiment with magic."
+    },{
+      "name": "Oreo",
+      "adopter": "AdamTheZenith",
+      "color": "black",
+      "bio": "The lost pet of Adam the Archmagi. Their eyes speak of countless war crimes committed in pursuit of spell perfection."
+    },{
+      "name": "Vivian",
+      "color": "purple",
+      "adopter": "Floofi",
+      "bio": "After having been bullied by her brothers and sisters for so long, she seeks a quiet life of peace. She only asks that you treat her well as she helps you with your adventure."
+    },{
+      "name": "Sprigly",
+      "adopter": "Parsley",
+      "bio": "Always loved to help in the mouse garden",
+      "color": "lime"
+    },{
+      "name": "Inven",
+      "color": "yellow",
+      "adopter": "Uni",
+      "bio": "Curious and mischievous, this little starbuncle loves experimenting and discovering new things."
+    },{
+      "name": "Nugget",
+      "adopter": "Hubnester",
+      "color": "cyan",
+      "bio": "A cute lil guy who does cute lil things."
+    },{
+      "name": "OmegaYun",
+      "color": "pink",
+      "adopter": "Milinen",
+      "bio": "Is angry at a big dummy named Adashi."
+    },{
+      "name": "Honeybun",
+      "adopter": "LunarisDraconis",
+      "bio": "sweet, soft, shy, and loving loves cuddles and snacks",
+      "color": "pink"
+    },{
+      "name": "Socks",
+      "adopter": "GrumpyGhost",
+      "bio": "Sent by a powerful archmage to help you. At least thats what it said on the note she carried...",
+      "color": "red"
+    },{
+      "name": "Stella",
+      "adopter": "Feet Wellden",
+      "bio": "It seems they were sent by a certain alchemist and witch. to help you. ",
+      "color": "orange"
+    },{
+      "color": "cyan",
+      "adopter": "alissabear01",
+      "name": "Yuto",
+      "bio": "Full of RAGE!!...or maybe he just needs a snack"
+    },{
+      "color": "orange",
+      "name": "Patches",
+      "adopter": "Mick0604",
+      "bio": "Friendly and carefree, this Starbuncle loves to harvest pumpkins for some reason"
+    },{
+      "color": "pink",
+      "name": "Alo'ra",
+      "adopter": "Nep",
+      "bio": "This starbuncle is very well loved. She carries a note that reads \"Please take care of her like she took care of me. She'd love to stargaze with you.\" "
+    },{
+      "name": "Gootastic",
+      "color": "red",
+      "adopter": "Gootastic",
+      "bio": " It's unclear why it exists, but here we are. This Goobuncle's slimy demeanor is off-putting, but that's not so bad when you realize how unbelievably squishy its cheeks are."
+    },{
+      "name": "Tav",
+      "color": "white",
+      "adopter": "Ruka_21",
+      "bio": "I wouldn't try to hit it. It might just be a poor starbuncle... or it might be a wildshaped druid.."
+    },{
+      "name": "Buttercup",
+      "color": "orange",
+      "adopter": "Kazyo",
+      "bio": "This tidy starbuncle loves collecting flowers and decorating its tail with them. Yet it has never seen the flower that it is named after..."
+    },{
+      "name": "Cloud",
+      "color": "cyan",
+      "adopter": "cloud8ine",
+      "bio": "This starbuncle is just here for the rest of the ride"
+    },{
+      "name": "Fen",
+      "color": "black",
+      "adopter": "Hayesx369",
+      "bio": "Introducing Fen, your adorable friend who thrives among berry bushes! With a warm personality, Fen is always eager to meet new friends, whether they are human or furry."
+    },{
+      "name": "Cookie",
+      "adopter": "zeroregard",
+      "bio": "A timid yet playful starbuncle, soft as clouds to the touch, with a lingering, soothing fragrance of old books and vanilla. Though shy at first, its eyes eventually widen as it bursts to life in play, darting about with boundless energy and joy.",
+      "color": "yellow"
+    },{
+      "name": "Brandy",
+      "adopter": "mluosed",
+      "color": "brown",
+      "bio": "This Starbuncle likes to walk in the cool forest in the fall,staying at home in the winter and watching others stew meat"
+    },{
+      "name": "Smokey Sugar",
+      "color": "black",
+      "adopter": "Vicorus",
+      "bio": "A hard working fellow. Very sweet and happy all around. They are eager to work for you."
+    },{
+      "name": "Corone",
+      "color": "black",
+      "adopter": "CrowDrone",
+      "bio": "A vain little creature, known for her beautiful voice. Aesop warned her about foxes and flattery. "
+    },{
+      "name": "Astrael",
+      "color": "black",
+      "adopter": "Keintcy",
+      "bio": "A mysterious but curious starbuncle, once loved by an archmage who got lost in time. Rumor says she was born among the stars, therefore her name."
+    },{
+      "name": "Xollus",
+      "adopter": "Jarva",
+      "color": "orange",
+      "bio": "This poor Starbuncle was originally a Bookwyrm, polymorphed into a Starbuncle as part of an experiment gone wrong."
+    },{
+      "name": "Archi",
+      "adopter": "ChosenArchitect",
+      "color": "blue",
+      "bio": "Archi was found tinkering with magical gadgets in an enchanted forest. It's a curious creature, always trying to automate everything around it. With a love for shiny items and complex machinery, it enjoys watching builds come to life and adds a touch of creativity wherever it goes."
+    },{
+      "name": "Floki",
+      "color": "red",
+      "adopter": "Tevaino",
+      "bio": "The mage's favorite little creature."
+    },{
+      "name": "Jaime",
+      "color": "purple",
+      "adopter": "Frantastic",
+      "bio": "His staggering, wobbly gait does nothing to dampen his infectiously rambunctious and carefree spirit. Smells strongly of grapes."
+    },{
+      "name": "Eru",
+      "color": "gray",
+      "adopter": "ImPaw",
+      "bio": "Not to be left unsupervised."
+    },{
+      "name": "Boo",
+      "adopter": "Lufia",
+      "color": "black",
+      "bio": "Eternal Companion to the Spellblade Lufia, reincarnated in this life to help you on your journey. She may eat your snacks when you aren't looking. Real cat-like behavior right there. "
+    },{
+      "name": "Mothball",
+      "adopter": "Mira",
+      "color": "light_gray",
+      "bio": "There has never been a fluffier Starbuncle, nor will there be. While not particularly bright or strong, Mothball is always happy to be your friend!"
+    },{
+      "name": "Will the Starbuncle",
+      "adopter": "Mystifi",
+      "color": "orange",
+      "bio": "Will The Stabuncle do what? What Will he do? Will Will Willfully a thing?"
+    },{
+      "name": "Nooch",
+      "adopter": "Plagued757",
+      "bio": "What an odd name for a mystical creature? Oh well, at least it stands out amongst the rest of its kind, even if its a little.. weird.",
+      "color": "purple"
+    },{
+      "name": "Eclipse",
+      "adopter": "Sophie",
+      "color": "pink",
+      "bio": "A little engineer turned into a curious creature, she's sure to help in any way she can."
+    },{
+      "name": "Lerya",
+      "color": "magenta",
+      "adopter": "Keyla the Witch",
+      "bio": "Lerya is a curious little Starbuncle, and with the token of friendship she gave to you she shows her appreciation for your kindness. After her human parent ended her game with a deadly growth spell on lots of Sourceberries, Lerya feels very sad and lonely nowadays."
+    },{
+      "name": "Muffin",
+      "color": "green",
+      "adopter": "allypandaa",
+      "bio": "A rogue little monster that somehow escaped. Contain him! Who knows what he'll do now he's free! Last time he blew up! It was a miracle he lived that..."
+    },{
+      "name": "Lilia",
+      "color": "purple",
+      "adopter": "TheFayeWitch",
+      "bio": "Lilia thrives in the moonlit night. Known to give powerful visions of the future to those who gaze at the moon while holding her."
+    },{
+      "name": "Ladislaw",
+      "bio": " If you ever see him falling, it probably wasn't him, you better check again.",
+      "color": "cyan",
+      "adopter": "The_Sebuss"
+    },{
+      "adopter": "Bugcolez",
+      "name": "Puff Ball",
+      "color": "magenta",
+      "bio": "A energetic and curious little Starbuncle that grows a bond to strengthen its heart. Many of worlds and friends have been made over the years and will continue to be made through its lifetime."
     }
   ]
 }
+

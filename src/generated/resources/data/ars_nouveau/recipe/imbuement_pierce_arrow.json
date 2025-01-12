@@ -1,0 +1,22 @@
+{
+  "type": "ars_nouveau:imbuement",
+  "input": {
+    "tag": "minecraft:arrows"
+  },
+  "output": {
+    "count": 1,
+    "id": "ars_nouveau:pierce_arrow"
+  },
+  "pedestalItems": [
+    {
+      "item": "ars_nouveau:source_gem"
+    },
+    {
+      "item": "ars_nouveau:air_essence"
+    },
+    {
+      "item": "ars_nouveau:wilden_spike"
+    }
+  ],
+  "source": 100
+}

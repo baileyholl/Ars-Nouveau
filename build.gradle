@@ -1,264 +1,147 @@
-buildscript {
-    repositories {
-        maven { url 'https://files.minecraftforge.net/maven' }
-        maven { url "https://maven.neoforged.net/releases" }
-        mavenCentral()
-        maven { url 'https://modmaven.dev/' }
-        maven {
-            name "Sponge"
-            url "https://repo.spongepowered.org/repository/maven-public/"
-        }
-        maven { url = 'https://maven.parchmentmc.org' }
-    }
-    dependencies {
-        classpath group: 'net.neoforged', name: 'NeoGradle', version: '6.0.+', changing: true
-        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7.+'
-        classpath 'org.parchmentmc:librarian:1.+'
-    }
-
+plugins {
+    id 'java-library'
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.neoforged.gradle.userdev' version '7.0.+'
 }
-//plugins {
-//    id 'com.github.johnrengelman.shadow' version '7.1.2'
-//}
-apply plugin: 'net.neoforged.gradle'
-apply plugin: 'org.spongepowered.mixin'
-apply plugin: 'org.parchmentmc.librarian.forgegradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
 
-version = '4.10.0'
+version = mod_version
+
 
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
-group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'ars_nouveau-1.20.1'
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+
+base {
+    archivesName = mod_id + '-' + minecraft_version
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 java.withSourcesJar()
 
-//// Used to manually add non-mc libraries to the runtime classpaths found in build/classpath
-//// If you have any module issues, check these files to make sure there are no duplicate dependencies
-//minecraft.runs.configureEach {
-//    lazyToken('minecraft_classpath') {
-//        configurations.library.copyRecursive().resolve().collect { it.absolutePath }.join(File.pathSeparator)
-//    }
-//}
-
-minecraft {
-
-
-    // The mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   Snapshot are built nightly.
-    // stable_#            Stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not always work.
-    // Simply re-run your setup task after changing the mappings to update your workspace.
-
-    mappings channel: 'parchment', version: '2023.07.02-1.20.1'
-	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-
-    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-    // Default run configurations.
-    // These can be tweaked, removed, or duplicated as needed.
-    runs {
-        client {
-            workingDirectory project.file('run')
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            arg "-mixin.config="+"ars_nouveau"+".mixins.json"
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                ars_nouveau {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('server')
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            arg "-mixin.config="+"ars_nouveau"+".mixins.json"
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                ars_nouveau {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-
-            args '--mod', 'ars_nouveau', '--all', '--output', file('src/generated/resources/'), "--existing", file('src/main/resources/')
-
-            mods {
-                ars_nouveau {
-                    source sourceSets.main
-                }
-            }
-        }
+subsystems {
+    parchment {
+        minecraftVersion = "1.21"
+        mappingsVersion = project.parchment_version
     }
 }
-// Include resources generated by data generators.
-sourceSets.main.resources { srcDir 'src/generated/resources' }
-repositories {
 
-    maven {
-        url = "https://maven.theillusivec4.top/"
+runs {
+    configureEach {
+        systemProperty 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+        systemProperty 'forge.logging.console.level', 'debug'
+
+        modSource sourceSets.main
     }
-    maven {
-        // location of a maven mirror for JEI files, as a fallback
-        name = "ModMaven"
-        url = "https://modmaven.k-4u.nl"
+
+    server {
+        programArgument '--nogui'
+        workingDirectory 'server'
     }
-    maven {
-        url "https://maven.blamejared.com"
+
+    data {
+        getArguments().addAll '--mod', mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
     }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+}
+
+minecraft.accessTransformers.files(
+        file('src/main/resources/META-INF/accesstransformer.cfg')
+)
+
+repositories {
+    mavenLocal()
     maven {
-        url "https://www.cursemaven.com"
+        name = 'GeckoLib'
+        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
         content {
+            includeGroup("software.bernie.geckolib")
+        }
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
+                url "https://cursemaven.com"
+            }
+        }
+        filter {
             includeGroup "curse.maven"
         }
     }
     maven {
-        name 'LDTTeam - Modding'
-        url 'https://ldtteam.jfrog.io/ldtteam/modding/'
+        name = "Illusive Soulworks maven"
+        url = "https://maven.theillusivec4.top/"
     }
     maven {
-        url "https://maven.tterrag.com/"
-        content {
-            includeGroup "com.simibubi.create"
-            includeGroup "com.jozufozu.flywheel"
-        }
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
     }
-    maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
-    mavenCentral()
-    maven { url 'https://jitpack.io' }
+    maven {
+        name = 'Forge'
+        url = "https://maven.minecraftforge.net"
+    }
+    maven {
+        name = "OctoStudios"
+        url = uri("https://maven.octo-studios.com/releases")
+    }
 }
 
 jarJar.enable()
 
+tasks.named('jarJar') {}
+
 dependencies {
+    implementation "net.neoforged:neoforge:${neo_version}"
 
-    minecraft "net.neoforged:forge:${mc_version}-${forge_version}"
-    implementation 'org.jetbrains:annotations:23.0.0'
+    implementation "software.bernie.geckolib:geckolib-neoforge-1.21.1:${geckolib_version}"
+//
+    implementation(jarJar(group: 'vazkii.patchouli', name: 'Patchouli', version: '[1.21,)') {
+        jarJar.pin(it, patchouli_version)
+    })
 
-    implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:${mixin_extras_version}"))
-    implementation(jarJar("com.github.llamalad7.mixinextras:mixinextras-forge:${mixin_extras_version}")) {
-        jarJar.ranged(it, "[${mixin_extras_version},)")
-    }
+    localRuntime "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}"
+    compileOnly "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}:api"
 
-    jarJar(group: 'software.bernie.geckolib', name: 'geckolib-forge-1.20.1', version: "[4.0,)") {
-        jarJar.pin(it, "${gecko_version}")
-    }
-    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${mc_version}:${gecko_version}")
+    compileOnly "mezz.jei:jei-1.21.1-neoforge-api:${jei_version}"
+    implementation "mezz.jei:jei-1.21.1-neoforge:${jei_version}"
+    implementation 'com.github.glitchfiend:TerraBlender-neoforge:1.21-4.0.0.0'
+    implementation "curse.maven:jade-324717:5444008"
+    implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}+1.21"
 
+// use localRuntime for adding mods to env that won't be listed as dependencies in the manifest
 
-    implementation fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
-
-    compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
-    compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
-    // at runtime, use the full JEI
-    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-common:${jei_version}")
-    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
-
-    implementation fg.deobf("curse.maven:curios-309927:4583413")
-
-    implementation fg.deobf("curse.maven:terrablender-563928:4590487")
-
-    implementation fg.deobf("curse.maven:jade-324717:4573193") // jade
-    implementation fg.deobf("curse.maven:caelus-308989:4581481") // caelus
-    implementation fg.deobf("curse.maven:placebo-283644:4691637")
-    implementation fg.deobf("curse.maven:aphoattr-898963:4688147")
-//    runtimeOnly fg.deobf("curse.maven:byg-247560:4027228") // BYG
-//    runtimeOnly fg.deobf("curse.maven:bop-220318:4034263") // BOP
-//    compileOnly fg.deobf("curse.maven:ars_elemental-561470:4345275") // ars elemental
-//    runtimeOnly fg.deobf("curse.maven:tmg-560595:4001247") // toomanyglyphs
-
-//    implementation fg.deobf("curse.maven:cyanide-541676:3832812") // Cyanide
-//    compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:1.19-3.0.0.3:api")
-//    implementation fg.deobf("curse.maven:jade-324717:4318618")
-//    runtimeOnly fg.deobf("curse.maven:config-457570:4011355")
-//    implementation fg.deobf("com.simibubi.create:create-1.19.2:0.5.0.f-15:slim"){ transitive = false }
-//    implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-1.19.2:0.6.7-9")
-//    implementation fg.deobf("com.tterrag.registrate:Registrate:MC1.19-1.1.5")
-//    runtimeOnly fg.deobf("curse.maven:config-443900:4064952")
-//    runtimeOnly fg.deobf("curse.maven:config-314906:4229131") // ftb chunks
-//    runtimeOnly fg.deobf("curse.maven:config-419699:4147353") // arch
-//    runtimeOnly fg.deobf("curse.maven:config-404465:4210870") // ftb library
-//    runtimeOnly fg.deobf("curse.maven:config-404468:4229140") // ftb teams
-    implementation fg.deobf("curse.maven:functional-storage-556861:4878053") // functional storage
-    implementation fg.deobf("curse.maven:titanium-287342:4943665") // titanium
-//    runtimeOnly fg.deobf("curse.maven:commandstructures-565119:3823785")
-
-    annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
-    annotationProcessor("com.github.LlamaLad7:MixinExtras:${mixin_extras_version}")
-
+    localRuntime 'curse.maven:ftb-teams-forge-404468:5631446'
+    localRuntime 'curse.maven:ftb-chunks-forge-314906:5710609'
+    localRuntime 'curse.maven:ftb-library-forge-404465:5754910'
+    localRuntime 'curse.maven:architectury-api-419699:5553800'
+//    implementation(jarJar(group: 'com.hollingsworth.nuggets', name: 'nuggets-neoforge-1.21', version:'[1.0.2,)'){
+//        jarJar.pin(it, '1.0.2.23')
+//    })
 }
 
-
-// Example for how to get properties into the manifest for reading by the runtime..
 jar {
     manifest {
         attributes([
-            "Specification-Title": "ArsNouveau",
-            "Specification-Vendor": "baileyh",
-            "Specification-Version": "1", // We are version 1 of ourselves
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"baileyh",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-            "MixinConfigs": "ars_nouveau.mixins.json"
+                "Specification-Title": "ArsNouveau",
+                "Specification-Vendor": "baileyh",
+                "Specification-Version": "1", // We are version 1 of ourselves
+                "Implementation-Title": project.name,
+                "Implementation-Version": mod_version,
+                "Implementation-Vendor" :"baileyh",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "MixinConfigs": "ars_nouveau.mixins.json"
         ])
     }
 }
 
-// Example configuration to allow publishing using the maven-publish task
-// we define a custom artifact that is sourced from the reobfJar output task
-// and then declare that to be published
-// Note you'll need to add a repository here
-
-//shadowJar {
-//    configurations = [project.configurations.shade] // <- Tell shadowJar to shade dependencies from 'shade'
-////    exclude 'software/bernie/example/**'
-////    exclude 'assets/geckolib3/**'
-////    exclude '**/*.java'
-////
-////    classifier ''
-////    relocate 'com.llamalad7', 'shadowed.llamalad7'
-////    relocate 'software.bernie.shadowed', 'software.bernie.ars_nouveau.shadowed'
-////    relocate 'software.bernie.geckolib', 'software.bernie.ars_nouveau.geckolib'
-//    finalizedBy 'reobfShadowJar' // <- Finish shading with reobfuscation
-//    mergeServiceFiles()
-//}
-//
-//reobf { // <- Add the output of shadowJar to reobfuscation, so shadowed content is reobfuscated
-//    shadowJar {}
-//}
-
-
-artifacts {
-    archives sourcesJar
-}
 
 publishing {
     publications {
@@ -267,16 +150,6 @@ publishing {
             artifactId project.archivesBaseName
             version project.version
             from components.java
-            // Allows the maven pom file to be modified.
-            pom.withXml {
-
-                // Go through all the dependencies.
-                asNode().dependencies.dependency.each { dep ->
-
-                    println 'Surpressing artifact ' + dep.artifactId.last().value().last() + ' from maven dependencies.'
-                    assert dep.parent().remove(dep)
-                }
-            }
         }
     }
     repositories {
@@ -285,38 +158,15 @@ publishing {
         }
     }
 }
-// Disables Gradle's custom module metadata from being published to maven. The
-// metadata includes mapped dependencies which are not reasonably consumable by
-// other mod developers.
-tasks.withType(GenerateModuleMetadata) {
-    enabled = false
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
 
-mixin {
-    add sourceSets.main, "ars_nouveau.refmap.json"
-}
-
-// Prevent Mixin annotation processor from getting into IDEA's annotation processor settings
-// Copied from Botania
-if (System.getProperty("idea.sync.active") == "true") {
-    afterEvaluate {
-        tasks.withType(JavaCompile).configureEach {
-            it.options.annotationProcessorPath = files()
-        }
+// IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
     }
 }
-tasks.withType(JavaCompile).configureEach({
-    options.encoding = 'UTF-8'
-    options.compilerArgs.addAll(["-Xmaxerrs", "100000"])
-})
-
-tasks.register('jarJarRelease') {
-    doLast {
-        tasks.jarJar {
-            classifier = ''
-        }
-    }
-    finalizedBy tasks.jarJar
-}
-tasks.jarJar.finalizedBy('reobfJarJar')
-

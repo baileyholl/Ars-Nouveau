@@ -1,17 +1,20 @@
 package com.hollingsworth.arsnouveau.common.network;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 
-import java.util.function.Supplier;
-
-public abstract class AbstractPacket {
-
-    public AbstractPacket(FriendlyByteBuf buf) {}
+public abstract class AbstractPacket implements CustomPacketPayload {
 
     public AbstractPacket(){}
 
-    public abstract void toBytes(FriendlyByteBuf buf);
+    void toBytes(RegistryFriendlyByteBuf buf){}
 
-    public abstract void handle(Supplier<NetworkEvent.Context> ctx);
+    public void onClientReceived(Minecraft minecraft, Player player){}
+
+    public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player){}
+
 }

@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -65,9 +65,9 @@ public class RitualBrazierBlock extends TickableModBlock {
     public static final Property<Boolean> LIT = BooleanProperty.create("lit");
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!(worldIn.getBlockEntity(pos) instanceof RitualBrazierTile tile) || handIn != InteractionHand.MAIN_HAND)
-            return super.use(state, worldIn, pos, player, handIn, hit);
+            return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
         ItemStack heldStack = player.getMainHandItem();
         if (heldStack.isEmpty() && tile.ritual != null && !tile.isRitualDone()) {
             tile.startRitual(player);
@@ -75,7 +75,7 @@ public class RitualBrazierBlock extends TickableModBlock {
         if(!heldStack.isEmpty()){
             tile.tryBurnStack(heldStack);
         }
-        return super.use(state, worldIn, pos, player, handIn, hit);
+        return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
     }
 
     @Override
@@ -95,16 +95,20 @@ public class RitualBrazierBlock extends TickableModBlock {
     }
 
     @Override
-    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
+    public BlockState playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         super.playerWillDestroy(worldIn, pos, state, player);
         if (worldIn.getBlockEntity(pos) instanceof RitualBrazierTile tile) {
             if (tile.ritual != null) {
                 tile.ritual.onDestroy();
                 if (!tile.ritual.isRunning() && !tile.ritual.isDone()) {
                     worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(RitualRegistry.getRitualItemMap().get(tile.ritual.getRegistryName()))));
+                    for (ItemStack item : tile.ritual.getConsumedItems()) {
+                        worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), item));
+                    }
                 }
             }
         }
+        return state;
     }
 
     @Override
@@ -123,7 +127,7 @@ public class RitualBrazierBlock extends TickableModBlock {
     }
 
     @Override
-    public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+    public boolean isPathfindable(BlockState pState, PathComputationType pType) {
         return false;
     }
 }

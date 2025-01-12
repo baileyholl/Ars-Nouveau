@@ -4,7 +4,8 @@ import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class SpellDamageEvent extends Event {
@@ -23,34 +24,21 @@ public class SpellDamageEvent extends Event {
         this.context = context;
     }
 
-    @Override
-    public boolean isCancelable() {
-        return true;
-    }
-
     /**
      * Apply effects to the target before the spell damage resolves.
      */
-    public static class Pre extends SpellDamageEvent {
+    public static class Pre extends SpellDamageEvent implements ICancellableEvent {
 
         public Pre(DamageSource source, LivingEntity shooter, Entity entity, float totalDamage, SpellContext context) {
             super(source, shooter, entity, totalDamage, context);
         }
-        @Override
-        public boolean isCancelable() {
-            return true;
-        }
+
     }
 
     public static class Post extends SpellDamageEvent{
 
         public Post(DamageSource source, LivingEntity shooter, Entity entity, float totalDamage, SpellContext context) {
             super(source, shooter, entity, totalDamage, context);
-        }
-
-        @Override
-        public boolean isCancelable() {
-            return false;
         }
     }
 

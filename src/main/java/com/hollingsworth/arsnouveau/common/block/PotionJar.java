@@ -1,23 +1,23 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
+import com.hollingsworth.arsnouveau.common.util.ItemUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -40,7 +40,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -70,43 +69,40 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (worldIn.isClientSide)
-            return super.use(state, worldIn, pos, player, handIn, hit);
+            return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
 
         PotionJarTile tile = (PotionJarTile) worldIn.getBlockEntity(pos);
         if (tile == null)
-            return super.use(state, worldIn, pos, player, handIn, hit);
-        ItemStack stack = player.getItemInHand(handIn);
-        Potion potion = PotionUtils.getPotion(stack);
+            return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
+        PotionContents potion = stack.get(DataComponents.POTION_CONTENTS);
 
-        if (stack.getItem() == Items.POTION && potion != Potions.EMPTY) {
-            if (tile.canAccept(new PotionData(stack),100)) {
-                tile.add(new PotionData(stack), 100);
+        if (stack.getItem() == Items.POTION && potion != null && potion != PotionContents.EMPTY) {
+            if (tile.canAccept(potion,100)) {
+                tile.add(potion, 100);
                 if (!player.isCreative()) {
                     stack.shrink(1);
                     player.addItem(new ItemStack(Items.GLASS_BOTTLE));
                 }
             }
-            return super.use(state, worldIn, pos, player, handIn, hit);
+            return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
         }else if (stack.getItem() == Items.GLASS_BOTTLE && tile.getAmount() >= 100) {
             ItemStack potionStack = new ItemStack(Items.POTION);
-            PotionUtils.setPotion(potionStack, tile.getData().getPotion());
-            PotionUtils.setCustomEffects(potionStack, tile.getData().getCustomEffects());
-            if(player.addItem(potionStack)) {
-                player.getItemInHand(handIn).shrink(1);
+            PotionContents contents = tile.getData();
+            potionStack.set(DataComponents.POTION_CONTENTS, new PotionContents(contents.potion(), contents.customColor(), contents.customEffects()));
+            if(ItemUtil.shrinkHandAndAddStack(potionStack, handIn, player)){
                 tile.remove(100);
             }
         }else if(stack.getItem() == Items.ARROW && tile.getAmount() >= 10){
             ItemStack potionStack = new ItemStack(Items.TIPPED_ARROW);
-            PotionUtils.setPotion(potionStack, tile.getData().getPotion());
-            PotionUtils.setCustomEffects(potionStack, tile.getData().getCustomEffects());
-            if(player.addItem(potionStack)) {
-                player.getItemInHand(handIn).shrink(1);
+            PotionContents contents = tile.getData();
+            potionStack.set(DataComponents.POTION_CONTENTS, new PotionContents(contents.potion(), contents.customColor(), contents.customEffects()));
+            if(ItemUtil.shrinkHandAndAddStack(potionStack, handIn, player)) {
                 tile.remove(10);
             }
         }
-        return super.use(state, worldIn, pos, player, handIn, hit);
+        return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
     }
 
     @Override
@@ -126,17 +122,19 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        if (stack.getTag() == null)
+    public void appendHoverText(ItemStack stack, Item.TooltipContext pContext, List<Component> tooltip, TooltipFlag pTooltipFlag) {
+        var potion = stack.get(DataComponentRegistry.POTION_JAR);
+        if(potion == null)
             return;
-        int fill = stack.getTag().getCompound("BlockEntityTag").getInt("currentFill");
-        tooltip.add(Component.literal((fill * 100) / 10000 + "% full"));
-        CompoundTag blockTag = stack.getTag().getCompound("BlockEntityTag");
-        if(blockTag.contains("potionData")){
-            PotionData data = PotionData.fromTag(blockTag.getCompound("potionData"));
-            data.appendHoverText(tooltip);
+        var fill = potion.fill();
+        var data = potion.contents();
+        if(!data.equals(PotionContents.EMPTY)) {
+            ItemStack potionItem = new ItemStack(Items.POTION);
+            potionItem.set(DataComponents.POTION_CONTENTS, data);
+            tooltip.add(Component.translatable(potionItem.getDescriptionId()));
         }
+        PotionContents.addPotionTooltip(data.getAllEffects(), tooltip::add, 1.0F, 20.0f);
+        tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", (fill * 100) / 10000));
     }
 
     @Override
@@ -181,7 +179,7 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     @Override
-    public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+    public boolean isPathfindable(BlockState pState, PathComputationType pType) {
         return false;
     }
 }

@@ -56,6 +56,6 @@ public class RelationsPage extends AbstractPage {
 
     @Override
     public ResourceLocation getType() {
-        return new ResourceLocation("patchouli:relations");
+        return ResourceLocation.tryParse("patchouli:relations");
     }
 }

@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.api.event;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.event.entity.living.LivingEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
 
 /**
  * An event that fires after Ars Nouveau has calculated the preliminary Max Mana provided by gear, glyphs, and book tiers.

@@ -48,7 +48,7 @@ public class FloweringRitual extends FeaturePlacementRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, RitualLib.FLOWERING);
+        return ArsNouveau.prefix( RitualLib.FLOWERING);
     }
 
     @Override

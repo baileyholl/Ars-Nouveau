@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:spell_parchment"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:blank_parchment"
+  }
+}

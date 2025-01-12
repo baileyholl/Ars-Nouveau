@@ -1,13 +1,14 @@
 package com.hollingsworth.arsnouveau.common.light;
 
 import com.hollingsworth.arsnouveau.setup.config.Config;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.registries.ForgeRegistries;
+
 
 public class DynamLightUtil {
 
@@ -64,11 +65,11 @@ public class DynamLightUtil {
     }
 
     public static ResourceLocation keyFor(Entity entity){
-        return ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+        return BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
     }
 
     public static ResourceLocation keyFor(ItemLike itemLike){
-        return ForgeRegistries.ITEMS.getKey(itemLike.asItem());
+        return BuiltInRegistries.ITEM.getKey(itemLike.asItem());
     }
 
 }

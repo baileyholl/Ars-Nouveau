@@ -3,14 +3,13 @@ package com.hollingsworth.arsnouveau.common.world.tree;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Function;
 
@@ -22,10 +21,6 @@ public abstract class AbstractSupplierBlockStateProvider extends BlockStateProvi
     protected final ResourceLocation key;
     protected BlockState state = null;
 
-    public AbstractSupplierBlockStateProvider(String namespace, String path) {
-        this(new ResourceLocation(namespace, path));
-    }
-
     public AbstractSupplierBlockStateProvider(ResourceLocation key) {
         this.key = key;
     }
@@ -36,12 +31,8 @@ public abstract class AbstractSupplierBlockStateProvider extends BlockStateProvi
     @Override
     public BlockState getState(RandomSource randomIn, BlockPos blockPosIn) {
         if (state == null) {
-            Block block = ForgeRegistries.BLOCKS.getValue(key);
-            if (block == null) {
-                state = Blocks.AIR.defaultBlockState();
-            } else {
-                state = block.defaultBlockState();
-            }
+            Block block = BuiltInRegistries.BLOCK.get(key);
+            state = block.defaultBlockState();
         }
 
         return state;

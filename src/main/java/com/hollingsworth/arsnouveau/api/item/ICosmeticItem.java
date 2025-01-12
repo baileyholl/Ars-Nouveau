@@ -3,23 +3,33 @@ package com.hollingsworth.arsnouveau.api.item;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public interface ICosmeticItem {
 
+    Vec3 defaultScaling = new Vec3(1.0, 1.0, 1.0);
+
     //bone model where the item is renderer, all animations that include the bone will be synced with the item
-    default String getBone() {
+    default String getBone(LivingEntity entity) {
         return "head";
     }
 
-    //translate relative to bone pivot
-    Vec3 getTranslations();
+    /**
+     * translate relative to bone pivot specified by {@link ICosmeticItem#getBone}
+     */
+    default Vec3 getTranslations() {
+        return Vec3.ZERO;
+    }
 
-    Vec3 getScaling();
+    default Vec3 getScaling() {
+        return defaultScaling;
+    }
 
-    //Entity Sensitive
-    //translate relative to bone pivot
+    /**
+     * Entity Sensitive
+     * translate relative to bone pivot specified by {@link ICosmeticItem#getBone}
+     */
     default Vec3 getTranslations(LivingEntity entity) {
         return getTranslations();
     }

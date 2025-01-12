@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "x": {
+      "item": "ars_nouveau:sourcestone"
+    },
+    "y": {
+      "tag": "c:ingots/gold"
+    },
+    "z": {
+      "tag": "c:gems/source"
+    }
+  },
+  "pattern": [
+    "xxx",
+    "yzy",
+    "xxx"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:arcane_core"
+  }
+}

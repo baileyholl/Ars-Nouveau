@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "x": {
+      "item": "minecraft:tinted_glass"
+    },
+    "y": {
+      "item": "ars_nouveau:source_gem"
+    }
+  },
+  "pattern": [
+    "xyx"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:starbuncle_shades"
+  }
+}

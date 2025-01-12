@@ -1,0 +1,31 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": {
+    "b": 255,
+    "g": 255,
+    "id": "ars_nouveau:constant",
+    "r": 25
+  },
+  "flavour_text": "Encases your enemies or friends in a tomb of ice. Guaranteed to leave them shocked and confused.",
+  "name": "Darkfira's Flash Freeze",
+  "sound": {
+    "pitch": 1.9,
+    "sound": {
+      "id": "ars_nouveau:tempestry_family"
+    },
+    "volume": 1.69
+  },
+  "spell": [
+    "ars_nouveau:glyph_projectile",
+    "ars_nouveau:glyph_burst",
+    "ars_nouveau:glyph_sensitive",
+    "ars_nouveau:glyph_aoe",
+    "ars_nouveau:glyph_aoe",
+    "ars_nouveau:glyph_aoe",
+    "ars_nouveau:glyph_conjure_water",
+    "ars_nouveau:glyph_freeze",
+    "ars_nouveau:glyph_lightning",
+    "ars_nouveau:glyph_amplify"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

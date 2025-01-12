@@ -1,0 +1,25 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": {
+    "b": 1,
+    "g": 1,
+    "id": "ars_nouveau:constant",
+    "r": 1
+  },
+  "flavour_text": "Crows are known to collect shiny things, even in the darkest of places.",
+  "name": "Crow's Gluttonous Gaze",
+  "sound": {},
+  "spell": [
+    "ars_nouveau:glyph_self",
+    "ars_nouveau:glyph_sense_magic",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_light",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_extend_time"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

@@ -1,13 +1,16 @@
 package com.hollingsworth.arsnouveau.api.spell.wrapped_caster;
 
 import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
+import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.common.capability.ManaCap;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.FakePlayer;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -35,7 +38,10 @@ public class LivingCaster implements IWrappedCaster {
     @Override
     public @NotNull List<FilterableItemHandler> getInventory() {
         List<FilterableItemHandler> filterableItemHandlers = new ArrayList<>();
-        livingEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(cap -> filterableItemHandlers.add(new FilterableItemHandler(cap)));
+        var cap = livingEntity.getCapability(Capabilities.ItemHandler.ENTITY);
+        if(cap != null){
+            filterableItemHandlers.add(new FilterableItemHandler(cap));
+        }
         return filterableItemHandlers;
     }
 
@@ -47,5 +53,20 @@ public class LivingCaster implements IWrappedCaster {
     @Override
     public Vec3 getPosition() {
         return livingEntity.position();
+    }
+
+    @Override
+    public boolean enoughMana(int totalCost) {
+        IManaCap mana = CapabilityRegistry.getMana(livingEntity);
+        if (mana == null) return false;
+        return totalCost <= mana.getCurrentMana();
+    }
+
+    @Override
+    public void expendMana(int totalCost) {
+        IManaCap mana = CapabilityRegistry.getMana(livingEntity);
+        if (mana != null) {
+            mana.removeMana(totalCost);
+        }
     }
 }

@@ -1,0 +1,20 @@
+{
+  "values": [
+    "minecraft:mushroom_stem",
+    "minecraft:brown_mushroom_block",
+    "minecraft:red_mushroom_block",
+    "minecraft:shroomlight",
+    "minecraft:warped_wart_block",
+    "minecraft:nether_wart_block",
+    "minecraft:cactus",
+    "minecraft:sugar_cane",
+    "minecraft:chorus_flower",
+    "minecraft:chorus_plant",
+    "minecraft:melon",
+    "minecraft:pumpkin",
+    "minecraft:melon_stem",
+    "minecraft:pumpkin_stem",
+    "minecraft:attached_pumpkin_stem",
+    "minecraft:attached_melon_stem"
+  ]
+}

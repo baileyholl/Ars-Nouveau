@@ -1,0 +1,23 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": {
+    "b": 248,
+    "g": 207,
+    "id": "ars_nouveau:constant",
+    "r": 61
+  },
+  "flavour_text": "Smothers an area with runes that launch entities upward. Do NOT get covered in the Repulsion Runes.",
+  "name": "Chem's Scientific Repulsion Runes",
+  "sound": {},
+  "spell": [
+    "ars_nouveau:glyph_projectile",
+    "ars_nouveau:glyph_linger",
+    "ars_nouveau:glyph_sensitive",
+    "ars_nouveau:glyph_rune",
+    "ars_nouveau:glyph_launch",
+    "ars_nouveau:glyph_launch",
+    "ars_nouveau:glyph_launch",
+    "ars_nouveau:glyph_launch"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

@@ -1,36 +1,40 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.event.ReactiveEvents;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent;
 
-import java.util.function.Supplier;
+public class PacketReactiveSpell extends AbstractPacket{
 
-public class PacketReactiveSpell {
+
+    public static final Type<PacketReactiveSpell> TYPE = new Type<>(ArsNouveau.prefix("reactive_spell"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketReactiveSpell> CODEC = StreamCodec.ofMember(PacketReactiveSpell::toBytes, PacketReactiveSpell::new);
 
     public PacketReactiveSpell() {
     }
 
 
     //Decoder
-    public PacketReactiveSpell(FriendlyByteBuf buf) {
+    public PacketReactiveSpell(RegistryFriendlyByteBuf buf) {
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(RegistryFriendlyByteBuf buf) {
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            ServerPlayer serverPlayerEntity = ctx.get().getSender();
-            if (serverPlayerEntity != null) {
-                ItemStack stack = serverPlayerEntity.getMainHandItem();
-                ReactiveEvents.castSpell(ctx.get().getSender(), stack);
-            }
-        });
-        ctx.get().setPacketHandled(true);
+    @Override
+    public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
+        ItemStack stack = player.getMainHandItem();
+        ReactiveEvents.castSpell(player, stack);
+    }
 
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

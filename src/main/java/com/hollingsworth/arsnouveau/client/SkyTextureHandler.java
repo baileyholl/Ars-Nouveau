@@ -14,15 +14,16 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix4f;
+import org.joml.Matrix4fStack;
 
 import static com.hollingsworth.arsnouveau.client.ClientInfo.skyRenderTarget;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
+@EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
 public class SkyTextureHandler {
 
     @SubscribeEvent
@@ -43,7 +44,7 @@ public class SkyTextureHandler {
             Vec3 cameraPosition = camera.getPosition();
             Matrix4f projectionMatrix = event.getProjectionMatrix();
 
-            float partialTick = event.getPartialTick();
+            float partialTick = event.getPartialTick().getGameTimeDeltaTicks();
             boolean isFoggy = minecraft.level.effects().isFoggyAt(Mth.floor(cameraPosition.x), Mth.floor(cameraPosition.y)) || minecraft.gui.getBossOverlay().shouldCreateWorldFog();
 
             //setting the render target to our sky target
@@ -55,19 +56,19 @@ public class SkyTextureHandler {
             FogRenderer.levelFogColor();
             //rendering the actual sky
             RenderSystem.setShader(GameRenderer::getPositionShader);
-            levelRenderer.renderSky(poseStack, projectionMatrix, partialTick, camera, isFoggy, () -> {
+            levelRenderer.renderSky(event.getModelViewMatrix(), projectionMatrix, partialTick, camera, isFoggy, () -> {
                 FogRenderer.setupFog(camera, FogRenderer.FogMode.FOG_SKY, gameRenderer.getRenderDistance(), isFoggy, partialTick);
             });
 
-            PoseStack modelViewStack = RenderSystem.getModelViewStack();
-            modelViewStack.pushPose();
-            modelViewStack.mulPoseMatrix(poseStack.last().pose());
+            Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
+            modelViewStack.pushMatrix();
+            modelViewStack.mul(poseStack.last().pose());
             RenderSystem.applyModelViewMatrix();
 
             //rendering the clouds
             if (minecraft.options.getCloudsType() != CloudStatus.OFF) {
                 RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-                levelRenderer.renderClouds(poseStack, projectionMatrix, partialTick, cameraPosition.x, cameraPosition.y, cameraPosition.z);
+                levelRenderer.renderClouds(poseStack, event.getModelViewMatrix(), projectionMatrix, partialTick, cameraPosition.x, cameraPosition.y, cameraPosition.z);
             }
 
             //the rain!
@@ -75,7 +76,7 @@ public class SkyTextureHandler {
             levelRenderer.renderSnowAndRain(gameRenderer.lightTexture(), partialTick, cameraPosition.x, cameraPosition.y, cameraPosition.z);
             RenderSystem.depthMask(true);
 
-            modelViewStack.popPose();
+            modelViewStack.popMatrix();
             RenderSystem.applyModelViewMatrix();
             minecraft.getMainRenderTarget().bindWrite(true);
         }
