@@ -66,7 +66,7 @@ public class BaseDocScreen extends BaseScreen {
         searchBar = new SearchBar(minecraft.font, bookRight - 130, bookTop - 3);
         searchBar.setResponder(this::onSearchChanged);
         addRenderableWidget(searchBar);
-        backButton = new NuggetImageButton(bookLeft + 6, bookTop + 6, 14, 8, DocAssets.ARROW_BACK.location(), DocAssets.ARROW_BACK_HOVER.location(), (b) -> {
+        backButton = new NuggetImageButton(bookLeft + 6, bookTop + 6, DocAssets.ARROW_BACK_HOVER.width(), DocAssets.ARROW_BACK_HOVER.height(), DocAssets.ARROW_BACK.location(), DocAssets.ARROW_BACK_HOVER.location(), (b) -> {
             if(isShiftDown()){
                 var home = new IndexScreen();
                 transition(home);
@@ -77,8 +77,11 @@ public class BaseDocScreen extends BaseScreen {
             }
         }).withTooltip(Component.translatable("ars_nouveau.shift_back"));
         addRenderableWidget(backButton);
-        rightArrow = new NuggetImageButton(bookRight - 13, bookTop + 88, 11, 14, DocAssets.ARROW_RIGHT.location(), DocAssets.ARROW_RIGHT_HOVER.location(), this::onRightArrowClick);
-        leftArrow = new NuggetImageButton(bookLeft + 1, bookTop + 88, 11, 14, DocAssets.ARROW_LEFT.location(), DocAssets.ARROW_LEFT_HOVER.location(), this::onLeftArrowClick);
+
+        int nextPageYOffset = bookBottom - 20;
+        rightArrow = new NuggetImageButton(bookRight -  DocAssets.ARROW_RIGHT.width() - 1, nextPageYOffset ,  DocAssets.ARROW_RIGHT.width(),  DocAssets.ARROW_RIGHT.height(), DocAssets.ARROW_RIGHT.location(), DocAssets.ARROW_RIGHT_HOVER.location(), this::onRightArrowClick);
+        leftArrow = new NuggetImageButton(bookLeft + 1, nextPageYOffset, DocAssets.ARROW_RIGHT.width(),  DocAssets.ARROW_RIGHT.height(), DocAssets.ARROW_LEFT.location(), DocAssets.ARROW_LEFT_HOVER.location(), this::onLeftArrowClick);
+
         addRenderableWidget(leftArrow);
         addRenderableWidget(rightArrow);
 
