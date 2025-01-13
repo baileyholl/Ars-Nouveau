@@ -33,9 +33,10 @@ public class EffectDelay extends AbstractEffect {
     public void sendPacket(Level world, HitResult rayTraceResult, @Nullable LivingEntity shooter, SpellContext spellContext, SpellStats spellStats, BlockHitResult blockResult, Entity hitEntity, SpellResolver spellResolver) {
         if (spellContext.getCurrentIndex() >= spellContext.getSpell().size())
             return;
-        int duration = GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getBuffCount(AugmentExtendTime.INSTANCE) * 20;
-        int decreasedTime = EXTEND_TIME.get() * 10 * spellStats.getBuffCount(AugmentDurationDown.INSTANCE);
-        duration -= decreasedTime;
+        int duration = GENERIC_INT.get(); // base duration
+        int increasedTime = EXTEND_TIME.get() * 20 * spellStats.getBuffCount(AugmentExtendTime.INSTANCE);
+        int decreasedTime = DURATION_DOWN_TIME.get() * spellStats.getBuffCount(AugmentDurationDown.INSTANCE);
+        duration = duration + increasedTime - decreasedTime;
         if (spellStats.isRandomized()) {
             double randomize = spellStats.getBuffCount(AugmentRandomize.INSTANCE) * RANDOMIZE_CHANCE.get();
             duration = world.random.nextIntBetweenInclusive((int) (duration * (1 - randomize)), (int) (duration * (1 + randomize)));
@@ -63,6 +64,7 @@ public class EffectDelay extends AbstractEffect {
     public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addExtendTimeConfig(builder, 1);
+        addDurationDownConfig(builder, 10);
         addGenericInt(builder, 20, "The base duration of the delay effect in ticks.", "base_duration");
         addRandomizeConfig(builder, 0.25f);
     }
@@ -72,7 +74,7 @@ public class EffectDelay extends AbstractEffect {
         return 0;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentRandomize.INSTANCE);
@@ -96,7 +98,7 @@ public class EffectDelay extends AbstractEffect {
         return SpellTier.ONE;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);
