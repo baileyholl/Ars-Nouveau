@@ -83,7 +83,7 @@ public class Search {
         if(query == null || query.isEmpty()){
             return new ArrayList<>();
         }
-        query = query.toLowerCase();
+        query = query.trim().toLowerCase();
         List<Result> results = new ArrayList<>();
         try{
             MultiFieldQueryParser parser = new MultiFieldQueryParser(new String[]{"title", "titleGrams", "tags"}, analyzer, Map.of("tags", 2.0f, "title", 4.0f, "titleGrams",  0.5f));

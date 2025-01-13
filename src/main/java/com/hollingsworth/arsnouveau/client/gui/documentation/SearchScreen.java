@@ -36,11 +36,6 @@ public class SearchScreen extends BaseDocScreen{
         }
         searchResults.clear();
         List<Search.Result> docs = Search.search(previousString);
-//        List<DocEntry> searchStrings = new ArrayList<>(DocumentationRegistry.getEntries());
-//        searchStrings.removeIf(d -> StringUtils.getFuzzyDistance(previousString, d.entryTitle().getString(), Locale.ROOT) <= 0);
-//        searchStrings.sort((a, b) ->{
-//            return StringUtils.getFuzzyDistance(previousString, b.entryTitle().getString(), Locale.ROOT) - StringUtils.getFuzzyDistance(previousString, a.entryTitle().getString(), Locale.ROOT);
-//        });
 
         for(int i = 0; i < Math.min(docs.size(), 8); i++){
             var entry = docs.get(i);

@@ -61,7 +61,7 @@ public class TextEntry extends SinglePageWidget {
             DocClientUtils.blit(guiGraphics, DocAssets.HEADER_WITH_ITEM, x , y - 1);
             setTooltipIfHovered(DocClientUtils.renderItemStack(guiGraphics, x + 3, y + 2, mouseX, mouseY, renderStack));
             DocClientUtils.drawHeader(titleLabel, guiGraphics, x + 70, y - 1);
-            return 28;
+            return 24;
         }else{
 //            DocClientUtils.blit(guiGraphics, DocAssets.UNDERLINE, x + 4, y + 10);
 //            GuiHelpers.drawCenteredStringNoShadow(font, guiGraphics, title, x + 60, y, 0);

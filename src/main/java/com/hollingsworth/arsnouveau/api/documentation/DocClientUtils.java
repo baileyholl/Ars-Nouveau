@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -46,8 +47,8 @@ public class DocClientUtils {
         PoseStack poseStack = graphics.pose();
         poseStack.pushPose();
         poseStack.translate(x + 3, y, 0);
-        poseStack.scale(scale, scale, 1);
-        graphics.drawString(Minecraft.getInstance().font, component, 0, 0, color, shadow);
+//        poseStack.scale(scale, scale, 1);
+        graphics.drawString(Minecraft.getInstance().font, component.copy().withStyle(component.getStyle().withFont(Minecraft.UNIFORM_FONT)), 0, 0, color, shadow);
         poseStack.popPose();
     }
 
@@ -125,25 +126,25 @@ public class DocClientUtils {
     public static void drawParagraph(Component text, GuiGraphics guiGraphics, int x, int y, int width, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
         poseStack.pushPose();
-        float scale = 0.7f;
-        poseStack.translate(x + 2, y, 0);
-        poseStack.scale(scale, scale, 1);
-        NuggetMultilLineLabel label = NuggetMultilLineLabel.create(Minecraft.getInstance().font, text, (int) (width * 1.48) - 6);
+        float scale = 1f;
+        poseStack.translate(x + 1, y, 0);
+        //poseStack.scale(scale, scale, 1);
+        NuggetMultilLineLabel label = NuggetMultilLineLabel.create(Minecraft.getInstance().font, text.copy().withStyle(Style.EMPTY.withFont(Minecraft.UNIFORM_FONT)), width );
+        int lineHeight = 9;
+        label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, lineHeight, 0);
 
-        label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, 12, 0);
-
-        float dist = 0.035F;
-        for(int cycle = 0; cycle < 2; cycle++){
-            poseStack.translate(-dist, 0F, 0F);
-            label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, 12, 0);
-            poseStack.translate(dist, -dist, 0F);
-            label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, 12, 0);
-            poseStack.translate(dist, 0F, 0F);
-            label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, 12, 0);
-            poseStack.translate(-dist, dist, 0F);
-
-            dist = -dist;
-        }
+//        float dist = 0.124F;
+//        for(int cycle = 0; cycle < 2; cycle++){
+//            poseStack.translate(-dist, 0F, 0F);
+//            label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, lineHeight, 0);
+//            poseStack.translate(dist, -dist, 0F);
+//            label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, lineHeight, 0);
+//            poseStack.translate(dist, 0F, 0F);
+//            label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, lineHeight, 0);
+//            poseStack.translate(-dist, dist, 0F);
+//
+//            dist = -dist;
+//        }
         poseStack.popPose();
     }
 }
