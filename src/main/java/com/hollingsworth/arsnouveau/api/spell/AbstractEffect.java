@@ -164,7 +164,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public void addRandomizeConfig(ModConfigSpec.Builder builder, float defaultChance) {
-        RANDOMIZE_CHANCE = builder.comment("Randomize chance, in percentage (0-1 = 0% - 100%)").defineInRange("extend_time", defaultChance, 0.0f, Integer.MAX_VALUE);
+        RANDOMIZE_CHANCE = builder.comment("Randomize chance, in percentage (0-1 = 0% - 100%)").defineInRange("randomize_chance", defaultChance, 0.0f, Integer.MAX_VALUE);
     }
 
     public void addDurationDownConfig(ModConfigSpec.Builder builder, int defaultTime) {
