@@ -610,17 +610,17 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page.apparatus_crafting", "Apparatus Crafting");
         add("ars_nouveau.page1.apparatus_crafting", "The Enchanting Apparatus is used for crafting special machines, curios, and equipment used to progress in Ars Nouveau. Crafting with the Enchanting Apparatus requires up to eight Arcane Pedestals, an Arcane Core, and the Enchanting Apparatus block. Once you have setup your apparatus, you should craft your first Magebloom Seed.");
         add("ars_nouveau.page.better_casting", "Better Casting");
-        add("ars_nouveau.page1.better_casting", "Your mana pool may be expanded with special mage armors, enchantments, learning new glyphs, or by drinking potions. Once you have acquired a Magebloom Seed, you may craft Novice Robes which will expand your casting abilities significantly. These robes will self-repair using your mana pool, have a high enchantability, and provide decent armor.");
+        add("ars_nouveau.page1.better_casting", "Your mana pool may be expanded with special mage armors, enchantments, learning new glyphs, or by drinking potions. Once you have acquired a Magebloom Seed you may craft a variety of configurable magic armors, altered using Threads.");
         add("ars_nouveau.page.new_glyphs", "New Glyphs");
-        add("ars_nouveau.page1.new_glyphs", "Accessing new spells will require a small amount of setup, resources, and base building. New spells can be learned by obtaining Glyphs. Glyphs are created using the Scribe's Table with Experience and items. Once you have obtained a glyph, simply use it to memorize the glyph. See the section on the Scribes Table for more information.");
+        add("ars_nouveau.page1.new_glyphs", "Accessing new spells will require a small amount of setup, resources, and base building. New spells can be learned by obtaining Glyphs. Glyphs are created using the Scribe's Table with EXP and items. Once you have obtained a glyph, simply use it to memorize the glyph. Glyphs can be shared between players with an Annotated Codex. See the section on the Scribes Table for more information.");
         add("ars_nouveau.page.source", "Source");
         add("ars_nouveau.page1.source", "Source is a special resource that must be gathered using devices in the world. Source is used for powering devices like the Imbuement Chamber and Enchanting Apparatus. To begin gathering Source, you will need a Source Jar and a Sourcelink.");
         add("ars_nouveau.page.spell_casting", "Spell Casting");
-        add("ars_nouveau.page1.spell_casting", "To begin spell casting, you will need to first obtain a Spellbook. A spellbook will allow you to create, store, and cast spells using Mana. A higher tier spell book will provide additional spell slots, allowing you to craft more complex spells. $(br) To craft your first spell, you must first select the $(bold)Form$() that the spell will take on. A $(bold)Form$() glyph must always be the first glyph in a spell recipe.");
-        add("ars_nouveau.page2.spell_casting", "Next, add any number of $(bold)Effects$() to the chain. Effects refer to $(italic)what$() the spell will do and they will resolve in the order they are placed in the book at the target or location the spell hits. An $(bold)Augment$() can be used to modify the way an Effect or Form behaves. $(bold)Augments$() may be placed after an Effect or Form. An Augment will only apply to the glyph to the $(bold)left$() of it. Multiple augments may also be applied on the same Effect or Form by chaining Augments together.");
-        add("ars_nouveau.page3.spell_casting", "If you would like to set a spell to a different tab, select the tab from the right side and repeat the above process. Several keybindings are provided for using the spellbook. $(br)Open Spellbook: $(k:ars_nouveau.open_book) $(br)Quick Select: $(k:ars_nouveau.selection_hud) $(br)Next Spell: $(k:ars_nouveau.next_slot) $(br)Previous Spell: $(k:ars_nouveau.previous_slot)");
+        add("ars_nouveau.page1.spell_casting", "To begin spell casting, you will need to first obtain a spell book. A spell book will allow you to create, store, and cast spells using Mana. To craft your first spell, you must first select the Form that the spell will take on. A Form glyph must always be the first glyph in a spell recipe.");
+        add("ars_nouveau.page2.spell_casting", "Next, add any number of Effects to the chain. Effects refer to what the spell will do and they will resolve in the order they are placed in the book at the target or location the spell hits. An Augment can be used to modify the way an Effect or Form behaves. Augments may be placed after an Effect or Form. An Augment will only apply to the glyph to the left of it. Multiple augments may also be applied on the same Effect or Form by chaining Augments together.");
+        add("ars_nouveau.page3.spell_casting", "If you would like to set a spell to a different tab, select the tab from the right side and repeat the above process. Several keybindings are provided for using the spellbook, check settings for more information.");
         add("ars_nouveau.page.spell_mana", "Spell Mana");
-        add("ars_nouveau.page1.spell_mana", "Spell Mana is used to cast spells with a $(thing)Spellbook$(). The maximum amount of mana, and the speed at which it regenerates, may be increased by wearing special $(item)Mage Armor$() or by applying the $(item)Mana Boost$() or $(item)Mana Regen$() enchantments on your gear. Additionally, you will gain bonus mana and regeneration for each glyph unlocked in your spellbook.");
+        add("ars_nouveau.page1.spell_mana", "Mana is used to cast spells with a Spell Book. Your max mana and regeneration, may be increased by wearing special Mage Armor or by applying the Mana Boost or Mana Regen enchantments on your gear. Additionally, you will gain bonus mana and regeneration for each glyph unlocked in your spell book.");
         add("ars_nouveau.page2.spell_mana", "Adding glyphs to your spell book will also increase your maximum amount of mana and mana regeneration. This bonus also scales with the tier of your spell book.");
         add("ars_nouveau.page.starting_automation", "Starting Automation");
         add("ars_nouveau.page1.starting_automation", "Spells may be used in Automation using Spell Turrets. Use these to create auto harvesters, tree farms, quarries, cake farms, glass factories, and more! For item transport, autocrafting, or resource generation, see the variety of magical entities that may be summoned using Charms.");
@@ -629,9 +629,9 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page.upgrades", "Upgrades");
         add("ars_nouveau.page1.upgrades", "Tier 2 and 3 glyphs will require an Apprentice and Archmage spell book respectively. Higher tier books will allow you to cast higher tier spells, use them in automation, and provide additional mana and mana regeneration as a bonus. Once you are able to upgrade your book, upgrading your armor to the next tier of robes will also grant you another boost in casting.");
         add("ars_nouveau.page.world_generation", "World Generation");
-        add("ars_nouveau.page1.world_generation", "Several resources can spawn in the world, each with their own magical properties. Archwood trees come in several decorative variants and may be used to craft Casting Wands. Source Berries, found in Taigas, are essential for crafting Mana Regeneration potions.");
+        add("ars_nouveau.page1.world_generation", "Archwood trees come in several decorative variants and is needed to craft several important blocks. Archwood fruits may also spawn on these trees, used for potions. Source Berries, found in Taigas, are essential for crafting Mana Regeneration potions or powering a Mycelial Sourcelink. Various mobs will also spawn, but can be revealed by using a Dowsing Rod or Sense Magic with a Tier 2 spell book.");
         add("ars_nouveau.page.archwood", "Archwood Trees");
-        add("ars_nouveau.page1.archwood", "Archwood Trees have a small chance to spawn in any biome, and come in four types. Rarely, you may stumble upon an Archwood Forest, a biome full of magical creatures, naturally spawning lights, and Archwood trees. Can be used as decoration, rituals, or for crafting wands.");
+        add("ars_nouveau.page1.archwood", "Archwood Trees have a small chance to spawn in any biome, and come in four types. Rarely, you may stumble upon an Archwood Forest, a biome full of magical creatures, naturally spawning lights, and Archwood trees. Can be used as decoration, rituals, or for crafting wands. Archwood Trees also have a chance to spawn magical fruits that can be consumed or brewed into potions.");
         add("ars_nouveau.page1.decorative", "Purely decorative blocks. To see the full list, place Arcane Stone in a Stonecutter.");
         add("ars_nouveau.wilden", "Wilden");
         add("ars_nouveau.page.decorative", "Decorative Blocks");
@@ -643,10 +643,9 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.casting_cost", "Casting Cost");
         add("ars_nouveau.tier", "Tier %s");
         add("ars_nouveau.page.agronomic_sourcelink", "The Agronomic Sourcelink generates source from crop and tree growth within 15 blocks. Bonus source is generated for magical plants such as Mageblooms, Source Berry Bushes, and Archwood Saplings. Source will be output from the Sourcelink to nearby jars within 5 blocks. Note: Bonemealing crops will not grant Source.");
-        add("ars_nouveau.page.source_jar", "Source Jars store source gathered from nearby Sourcelinks. Source is used in glyphs and rituals by powering devices like the Imbuement Chamber and Enchanting Apparatus. Source may be moved using a Source Relay or by breaking and moving it. To use Source in a jar, simply place the jar near your desired device. Source Jars will provide a signal to Redstone Comparators based on their fill level.");
-        add("ars_nouveau.page1.volcanic_sourcelink", "The Volcanic Sourcelink generates Source by consuming burnable items. Archwood logs will generate bonus Source, with Blazing Archwood generating the most. As the Volcanic Sourcelink produces Source, it also produces $(item)heat$(), used for spawning Lava Lilies and converting stone into lava. The Volcanic Sourcelink automatically outputs to nearby jars, starting with the one closest to it.");
-        add("ars_nouveau.page2.volcanic_sourcelink", "Nearby Blazing Archwood items will be burned up in exchange for a chunk of Source and a moderate amount of $(item)heat$(). The Volcanic Sourcelink will also take items from surrounding pedestals.");
-        add("ars_nouveau.page3.volcanic_sourcelink", "The Volcanic Sourcelink will occasionally convert Stone into Magma Blocks, and Magma Blocks into Lava, given that these blocks exist beneath it in its 3x3 area. This conversion is dependent on the amount of $(item)heat$() it has produced over time.");
+        add("ars_nouveau.page.source_jar", "Source Jars store source gathered from nearby Sourcelinks. Source is used in rituals and automation by powering devices like the Imbuement Chamber and Enchanting Apparatus. Source may be moved using a Source Relay or by breaking and moving it. Devices will use source from nearby jars. Source Jars will provide a signal to comparators based on their level.");
+        add("ars_nouveau.page1.volcanic_sourcelink", "The Volcanic Sourcelink generates Source by consuming burnable items. Archwood logs will generate bonus Source, with Blazing Archwood generating the most. As the Volcanic Sourcelink produces Source, it also produces heat, converting stone into magma blocks and then lava. The Volcanic Sourcelink automatically outputs to nearby jars, starting with the one closest to it.");
+        add("ars_nouveau.page2.volcanic_sourcelink", "Nearby Blazing Archwood items will be burned up in exchange for a chunk of Source and a moderate amount of heat. The Volcanic Sourcelink will also take items from surrounding pedestals.");
         add("ars_nouveau.active_generation", "Active Generation");
         add("ars_nouveau.heat", "Heat");
         add("ars_nouveau.page.alchemical_sourcelink", "Generates source by consuming potions from adjacent potion jars. The amount of source varies per potion and is dependent on the complexity of the potion. Bonus source is given for the length and level of the potion with multipliers for each effect a potion contains. Utilizing Wixies and Potion Melders is recommended for creating highly complex potions.");
@@ -658,7 +657,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page.relay", "Enables the transport of source between Source Jars and other Source Relays. To pull source from jars, use the Dominion Wand on the jar, and then on the relay. To send between relays or from a relay to a jar, use the wand on the relay and then the target you wish to send source to. Relays may only reach up to 30 blocks away. To clear connections, sneak while using the Dominion Wand on the relay.");
         add("ars_nouveau.page.relay_splitter", "Operates similar to the Source Relay, but will support taking from and transferring to multiple jars at once. The splitter has a much larger through-put than the Source Relay, and will split this throughput amongst all of its jars. See the instructions on the Source Relay for use.");
         add("ars_nouveau.page1.enchanting_apparatus", "The Enchanting Apparatus utilizes pedestals and Source for crafting. To use the Enchanting Apparatus, place any number of Arcane Pedestals within 3 blocks with their items. Once you have filled the pedestals, use the middle item on the Enchanting Apparatus block. The Enchanting Apparatus requires an Arcane Core beneath it in order to work.");
-        add("ars_nouveau.page1.imbuement_chamber", "Imbues certain items with Source to create new items. The primary way to obtain Source Gems, amethyst and lapis may be used to create Source Gems. The Imbuement Chamber will passively accumulate source for recipes, or will draw from Source Jars 2 block away. Some recipes require additional items placed in pedestals within 1 block of the Imbuement Chamber, such as Essences. Items in pedestals will not be consumed.");
+        add("ars_nouveau.page1.imbuement_chamber", "Imbues items with Source to create new items. The primary way to obtain Source Gems, amethyst and lapis may be used to create Source Gems. The Imbuement Chamber will passively accumulate source for recipes, or will draw from Source Jars 2 block away. Some recipes require additional items placed in pedestals within 1 block of the Imbuement Chamber, such as Essences. Items in pedestals will not be consumed.");
         add("ars_nouveau.page.potion_melder", "Converts three doses of a potion from two Potion Jars and outputs a potion with the combined effects. Use the Dominion Wand from a Potion Jar to Melder to link a jar for consumption. Link two input potion jars to the melder. Then, use the wand on the Melder and then to a third jar to set the output. The Potion Melder requires source per mix.");
         add("ars_nouveau.page.warp_portal", "Warp Portals");
         add("ars_nouveau.page1.warp_portal", "Warp portals, like warp scrolls, provide a one-way teleport to any location, provided it is in the same dimension. To construct a Warp Portal, build a frame from Sourcestone or its variants in the shape of a rectangle and provide a full Source Jar nearby. Then, throw a warp scroll with a written location into the frame. Given there is enough source nearby, the portal will be created.");
@@ -868,7 +867,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page3.shapers_focus", "Effects that move blocks will duplicate the rest of the spell onto those moving blocks. To see this in action, try using Conjure Mageblock -> Launch -> Delay -> Knockback to send a block flying in the direction you are looking. This targeting system applies to all moved blocks. Using AOE on block moving effects will let you manipulate many blocks at once.");
         add("ars_nouveau.shapers_focus.entities", "Entity Targeting");
         add("ars_nouveau.shapers_focus.examples", "Spell Examples");
-        add("ars_nouveau.page4.shapers_focus", "$(bold)Throw Ice:$() Conjure Water -> Freeze -> Launch -> Delay -> Knockback. $(bold)Damage and ignite hit targets:$() Conjure Mageblock -> Launch -> Ignite -> Delay -> Knockback. $(bold)Ignite TNT:$() Place Block (TNT) -> Ignite. $(bold)Throw Exploding Terrain:$() Launch -> Delay -> Knockback -> Delay -> Explosion. $(bold)Throw many blocks:$() Launch -> AOE x2 -> Delay -> Knockback. $(bold)Pull blocks:$() Pull -> AOE x2 -> Delay -> Duration Down -> Launch -> Delay -> Knockback. $(bold)Harvest Sand:$() Crush (on stone) -> Aoe -> Break");
+        add("ars_nouveau.page4.shapers_focus", "Throw Ice: Conjure Water -> Freeze -> Launch -> Delay -> Knockback. Damage and ignite hit targets: Conjure Mageblock -> Launch -> Ignite -> Delay -> Knockback. Ignite TNT: Place Block (TNT) -> Ignite. Throw Exploding Terrain: Launch -> Delay -> Knockback -> Delay -> Explosion. Throw many blocks: Launch -> AOE x2 -> Delay -> Knockback. Pull blocks: Pull -> AOE x2 -> Delay -> Duration Down -> Launch -> Delay -> Knockback. Harvest Sand: Crush (on stone) -> Aoe -> Break");
         add("tooltip.ars_nouveau.shapers_focus", "Duplicates spells that modify or move blocks. Can be used to create damaging moving blocks.");
         add("ars_nouveau.tablet_of", "Tablet of %s");
         add("ars_nouveau.bound_script", "Bound Script: %s");
@@ -921,8 +920,6 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.melder.needs_potion", "Linked jars need potion");
         add("ars_nouveau.melder.destination_invalid", "Destination cannot accept the mixed potion.");
         add("arsnouveau.debug.log_created", "Log file created: %s");
-        add("ars_nouveau.page.archwood_forest", "Archwood Forest");
-        add("ars_nouveau.page1.archwood_forest", "The Archwood Forest is a somewhat rare biome filled with magical lights and archwood trees. It contains an increased amount of gold. Additionally, magical creatures such as Starbuncles, Whirlisprigs, Archwood Treants, and Drygmys have a much higher chance of spawning. Terrablender is required to be installed to generate this biome.");
         add("ars_nouveau.melder.too_far", "Jars must be within 3 blocks.");
         add("ars_nouveau.starbuncle.storing_potions", "Storing potions at %s locations");
         add("ars_nouveau.starbuncle.taking_potions", "Taking potions from %s locations");
@@ -1355,7 +1352,47 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.sifting", "Sifting");
         add("tooltip.alakarkinos_shard1", "Found by giving an Alakarkinos a Sherd.");
         add("tooltip.alakarkinos_shard2", "What's that behind your ear?");
+        addCategory("getting_started", "Getting Started");
+        addCategory("crafting","Crafting and Automation");
+        addCategory("glyph_index","Glyph Index");
+        addCategory("ritual_index","Ritual Index");
+        addCategory("source", "Source");
+        addCategory("creature_compendium", "Creature Compendium");
+        addCategory("items_equipment", "Items and Equipment");
+        addCategory("spell_casting", "Spell Casting");
+        addCategory("items", "Items");
+        addCategory("glyphs_tier_one", "Tier One Glyphs");
+        addCategory("glyphs_tier_two", "Tier Two Glyphs");
+        addCategory("glyphs_tier_three", "Tier Three Glyphs");
+        addCategory("armor", "Armor");
+        addCategory("familiars", "Familiars");
+        addCategory("equipment", "Items");
+        addCategory("field_guide", "Field Guide");
+        addCategory("enchanting", "Apparatus Enchanting");
         add("ars_nouveau.augmenting", "Augmenting %s:");
+        add("ars_nouveau.tier.one", "Tier One");
+        add("ars_nouveau.tier.two", "Tier Two");
+        add("ars_nouveau.tier.three", "Tier Three");
+        add("ars_nouveau.shift_delete", "Shift-Click to remove");
+        add("ars_nouveau.add_bookmark", "Add Bookmark");
+        add("ars_nouveau.shift_back", "Shift-Click to go to home");
+        add("ars_nouveau.doc.categories", "Categories");
+        add("ars_nouveau.doc.related_entries", "Related Entries");
+        add("ars_nouveau.doc.search_results", "Search Results");
+        add("ars_nouveau.documentation.intro1", "Welcome to Ars Nouveau! If you are new, following Getting Started and completing the Advancements is recommended.");
+        add("ars_nouveau.documentation.intro2", "Join the discord to share spells, ask questions, and see what's coming next!");
+        add("ars_nouveau.connected_search_result", "%s (%s)");
+        add("ars_nouveau.keyword.glyph", "Glyph");
+        add("ars_nouveau.keyword.thread", "Thread");
+        add("ars_nouveau.keyword.ritual", "Ritual");
+        add("ars_nouveau.keyword.familiar", "Familiar");
+        add("ars_nouveau.slots_armor", "Thread Slots and Tiers");
+        add("ars_nouveau.thread_tier", "Tier %s thread slot");
+        add("ars_nouveau.search_desc", "Search for any entry, item, or concepts such as Glyph, Familiar, Ritual, Spell School, etc.");
+    }
+
+    public void addCategory(String key, String value){
+        add("ars_nouveau.section." + key, value);
     }
 
     @Override

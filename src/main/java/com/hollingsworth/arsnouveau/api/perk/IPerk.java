@@ -80,6 +80,10 @@ public interface IPerk {
         return Component.translatable(getRegistryName().getNamespace() + ".thread_of", Component.translatable("item." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()).getString()).getString();
     }
 
+    default Component getPerkName(){
+        return Component.translatable("item." + getRegistryName().getNamespace() + "." + getRegistryName().getPath());
+    }
+
     default String getLangName() {
         return "";
     }

@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -30,7 +30,7 @@ public class GuiUtils {
         }
 
         if (ArsNouveau.patchouliLoaded) {
-            PatchouliHandler.openBookClient();
+            DocClientUtils.openBook();
             return;
         }
 
