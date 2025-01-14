@@ -40,7 +40,6 @@ public class ScryRitualProvider extends SimpleDataProvider{
             addForgeOreRecipe(ore);
         }
         recipes.add(new ScryRecipeWrapper(ArsNouveau.prefix( "amethyst_gems"), forgeItemTag("gems/amethyst"), forgeBlockTag("storage_blocks/amethyst")));
-        recipes.add(new ScryRecipeWrapper(ArsNouveau.prefix( "amethyst_blocks"), forgeItemTag("storage_blocks/amethyst"), forgeBlockTag("storage_blocks/amethyst")));
     }
 
     private void addForgeOreRecipe(String ore) {

@@ -40,7 +40,7 @@ public class EffectExplosion extends AbstractEffect implements IDamageEffect {
         int dampen = spellStats.getBuffCount(AugmentDampen.INSTANCE);
         intensity -= 0.5 * dampen;
 
-        Explosion.BlockInteraction mode = spellStats.hasBuff(AugmentExtract.INSTANCE) ? Explosion.BlockInteraction.KEEP : Explosion.BlockInteraction.DESTROY;
+        Explosion.BlockInteraction mode = spellStats.hasBuff(AugmentExtract.INSTANCE) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.DESTROY_WITH_DECAY;
         explode(world, shooter, null, null, vec.x, vec.y, vec.z, (float) intensity, false, mode, spellStats.getAmpMultiplier());
     }
 

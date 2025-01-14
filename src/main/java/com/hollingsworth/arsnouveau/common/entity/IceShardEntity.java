@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class IceShardEntity extends EnchantedFallingBlock {
     public LivingEntity shooter;
+
     public IceShardEntity(EntityType<? extends ColoredProjectile> p_31950_, Level p_31951_) {
         super(p_31950_, p_31951_);
     }
@@ -36,9 +37,9 @@ public class IceShardEntity extends EnchantedFallingBlock {
     public void callOnBrokenAfterFall(Block p_149651_, BlockPos p_149652_) {
         super.callOnBrokenAfterFall(p_149651_, p_149652_);
 
-        if(level instanceof ServerLevel world){
-            for(LivingEntity living : world.getEntitiesOfClass(LivingEntity.class, new AABB(BlockPos.containing(position)).inflate(1.25))){
-                if(living == shooter)
+        if (level instanceof ServerLevel world) {
+            for (LivingEntity living : world.getEntitiesOfClass(LivingEntity.class, new AABB(BlockPos.containing(position)).inflate(1.25))) {
+                if (living == shooter || living.isAlliedTo(shooter))
                     continue;
                 living.hurt(DamageUtil.source(world, DamageTypesRegistry.COLD_SNAP, shooter == null ? ANFakePlayer.getPlayer(world) : shooter), baseDamage);
                 living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 3, 1));
@@ -46,7 +47,7 @@ public class IceShardEntity extends EnchantedFallingBlock {
 
             world.sendParticles(ParticleTypes.SPIT, position.x, position.y + 0.5, position.z, 10,
                     ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), 0.3);
-            world.playSound(null, BlockPos.containing(position),  SoundEvents.GLASS_FALL, SoundSource.BLOCKS, 0.8f, 0.8f);
+            world.playSound(null, BlockPos.containing(position), SoundEvents.GLASS_FALL, SoundSource.BLOCKS, 0.8f, 0.8f);
         }
     }
 
