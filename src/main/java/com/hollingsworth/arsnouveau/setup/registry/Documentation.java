@@ -169,14 +169,14 @@ public class Documentation {
                 .withPage(EntityEntry.create(EntityType.PIGLIN, Component.translatable("mob_jar.piglin")))
                 .withPage(TextEntry.create("mob_jar.allay", "mob_jar.allay.title"))
                 .withPage(EntityEntry.create(EntityType.ALLAY))
-                .withPage(EntityEntry.create(EntityType.ENDER_DRAGON, Component.translatable("mob_jar.ender_dragon")))
+                .withPage(EntityEntry.create(EntityType.ENDER_DRAGON, Component.translatable("mob_jar.ender_dragon"), 1.5f, -30))
                 .withPage(EntityEntry.create(EntityType.SHEEP, Component.translatable("mob_jar.sheep")))
                 .withPage(EntityEntry.create(EntityType.CHICKEN, Component.translatable("mob_jar.chicken")))
                 .withPage(EntityEntry.create(EntityType.COW, Component.translatable("mob_jar.cow")))
-                .withPage(EntityEntry.create(EntityType.MOOSHROOM, Component.translatable("mob_jar.mooshroom")))
+                .withPage(EntityEntry.create(EntityType.MOOSHROOM, Component.translatable("mob_jar.mooshroom"), 0.7f))
                 .withPage(EntityEntry.create(EntityType.PUFFERFISH, Component.translatable("mob_jar.pufferfish")))
                 .withPage(EntityEntry.create(EntityType.FROG, Component.translatable("mob_jar.frog")))
-                .withPage(EntityEntry.create(EntityType.PANDA, Component.translatable("mob_jar.panda")))
+                .withPage(EntityEntry.create(EntityType.PANDA, Component.translatable("mob_jar.panda"), 0.7f))
                 .withPage(EntityEntry.create(ModEntities.ENTITY_DUMMY.get(), Component.translatable("mob_jar.dummy")))
                 .withCraftingPages(BlockRegistry.MOB_JAR))
                 .withRelation(ArsNouveau.prefix(RitualLib.CONTAINMENT))
@@ -207,7 +207,7 @@ public class Documentation {
                 .withCraftingPages(ItemsRegistry.DULL_TRINKET, ItemsRegistry.MUNDANE_BELT)
                 .withCraftingPages(ItemsRegistry.RING_OF_POTENTIAL));
 
-        addPage(new DocEntryBuilder(RESOURCES, BlockRegistry.MAGE_BLOOM_CROP)
+        var magebloom = addPage(new DocEntryBuilder(RESOURCES, BlockRegistry.MAGE_BLOOM_CROP)
                 .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.magebloom_crop"), BlockRegistry.MAGE_BLOOM_CROP.asItem().getDescription(), BlockRegistry.MAGE_BLOOM_CROP.asItem().getDefaultInstance()))
                 .withCraftingPages(BlockRegistry.MAGE_BLOOM_CROP)
                 .withCraftingPages(ItemsRegistry.MAGE_FIBER, BlockRegistry.MAGEBLOOM_BLOCK));
@@ -222,7 +222,7 @@ public class Documentation {
 
 
         RecipeHolder<ReactiveEnchantmentRecipe> enchantmentRecipeRecipeHolder = manager.byKeyTyped(RecipeRegistry.REACTIVE_TYPE.get(), ArsNouveau.prefix(EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 1));
-
+        var annotatedCodex = addBasicItem(ItemsRegistry.ANNOTATED_CODEX, SPELL_CASTING);
         addPage(new DocEntryBuilder(ENCHANTMENTS, "reactive_enchantment")
                 .withIcon(Items.ENCHANTED_BOOK)
                 .withSortNum(2)
@@ -402,29 +402,30 @@ public class Documentation {
         portal.withRelation(scroll).withRelation(stableScroll);
 
         var agronomic = addBasicItem(BlockRegistry.AGRONOMIC_SOURCELINK, SOURCE);
-        addBasicItem(BlockRegistry.ALCHEMICAL_BLOCK, SOURCE);
-        addBasicItem(BlockRegistry.MYCELIAL_BLOCK, SOURCE);
-        var sourceJar = addBasicItem(BlockRegistry.SOURCE_JAR, SOURCE, 0);
+        var alchemical = addBasicItem(BlockRegistry.ALCHEMICAL_BLOCK, SOURCE).withRelation(wixie).withRelation(melder);
+        var mycelial = addBasicItem(BlockRegistry.MYCELIAL_BLOCK, SOURCE);
 
-        addBasicItem(BlockRegistry.RELAY, SOURCE, CraftingEntry.create(manager.byKeyTyped(RecipeType.CRAFTING, getRegistryName(BlockRegistry.RELAY.get())), Component.translatable("ars_nouveau.page2.relay")));
+        var relay = addBasicItem(BlockRegistry.RELAY, SOURCE, CraftingEntry.create(manager.byKeyTyped(RecipeType.CRAFTING, getRegistryName(BlockRegistry.RELAY.get())), Component.translatable("ars_nouveau.page2.relay"))).withRelation(dominionWand);
 
         addBasicItem(BlockRegistry.RELAY_DEPOSIT, SOURCE);
         addBasicItem(BlockRegistry.RELAY_SPLITTER, SOURCE);
         addBasicItem(BlockRegistry.RELAY_WARP, SOURCE);
         addBasicItem(BlockRegistry.RELAY_COLLECTOR, SOURCE);
         addBasicItem(BlockRegistry.VITALIC_BLOCK, SOURCE);
-        addPage(new DocEntryBuilder(SOURCE, BlockRegistry.VOLCANIC_BLOCK)
+        var volcanic = addPage(new DocEntryBuilder(SOURCE, BlockRegistry.VOLCANIC_BLOCK)
                 .withIntroPage()
                 .withPage(TextEntry.create(getLangPath("volcanic_sourcelink", 2), Component.translatable("ars_nouveau.active_generation")))
-                .withPage(TextEntry.create(getLangPath("volcanic_sourcelink", 3), Component.translatable("ars_nouveau.heat")))
-                .withCraftingPages(BlockRegistry.VOLCANIC_BLOCK)
-                .withPage(TextEntry.create(getLangPath("volcanic_sourcelink", 4))));
+                .withCraftingPages(BlockRegistry.VOLCANIC_BLOCK));
         addPage(new DocEntryBuilder(ENCHANTMENTS, "how_to_enchant")
                 .withIcon(BlockRegistry.ENCHANTING_APP_BLOCK)
                 .withSortNum(-1)
                 .withIntroPage()
                 .withLocalizedText()
         ).withRelation(enchantingApparatus);
+        var sourceJar = addBasicItem(BlockRegistry.SOURCE_JAR, SOURCE, 0).withRelation(relay)
+                .withRelation(agronomic)
+                .withRelation(volcanic);
+
         addPage(new DocEntryBuilder(RITUALS, "performing_rituals")
                 .withSortNum(-1)
                 .withIcon(BlockRegistry.RITUAL_BLOCK)
@@ -452,7 +453,7 @@ public class Documentation {
                         .withPage(TextEntry.create(getLangPath("amethyst_golem_charm", 3), Component.translatable("ars_nouveau.summoning")))
                         .withPage(TextEntry.create(getLangPath("amethyst_golem_charm", 4), Component.translatable("ars_nouveau.amethyst_farming")))
                         .withPage(TextEntry.create(getLangPath("amethyst_golem_charm", 5), Component.translatable("ars_nouveau.amethyst_storage"))));
-        addBasicItem(ItemsRegistry.ANNOTATED_CODEX, SPELL_CASTING);
+
         var starbyBed = addPage(new DocEntryBuilder(AUTOMATION, BlockRegistry.ORANGE_SBED)
                 .withName("ars_nouveau.summon_bed")
                 .withIntroPage("summon_bed")
@@ -671,37 +672,38 @@ public class Documentation {
                 .withIcon(BlockRegistry.IMBUEMENT_BLOCK)
                 .withSortNum(3)
                 .withIntroPage())
-                .withRelation(dowsingRod);
+                .withRelation(dowsingRod)
+                .withRelation(imbuementChamber);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "new_glyphs")
                 .withIcon(ItemsRegistry.BLANK_GLYPH)
                 .withSortNum(4)
                 .withIntroPage())
-                .withRelations(scribesTable);
+                .withRelations(scribesTable, annotatedCodex);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "source")
                 .withSortNum(5)
                 .withIcon(BlockRegistry.SOURCE_JAR)
                 .withIntroPage())
-                .withRelations(sourceJar, agronomic);
+                .withRelations(sourceJar, agronomic, relay);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "apparatus_crafting")
                 .withSortNum(6)
                 .withIcon(BlockRegistry.ENCHANTING_APP_BLOCK)
                 .withIntroPage())
-                .withRelations(enchantingApparatus);
+                .withRelations(enchantingApparatus, magebloom);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "better_casting")
                 .withSortNum(7)
                 .withIcon(ItemsRegistry.SORCERER_ROBES)
                 .withIntroPage())
-                .withRelations(enchantingApparatus);
+                .withRelations(enchantingApparatus, armorEntry, armorUpgrade);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "world_generation")
                 .withSortNum(8)
                 .withIcon(ItemsRegistry.SOURCE_GEM)
                 .withIntroPage())
-                .withRelations(imbuementChamber, archwood, sourceberry);
+                .withRelations(imbuementChamber, archwood, sourceberry, dowsingRod);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "upgrades")
                 .withSortNum(9)
@@ -713,13 +715,13 @@ public class Documentation {
                 .withSortNum(10)
                 .withIcon(BlockRegistry.BASIC_SPELL_TURRET)
                 .withIntroPage())
-                .withRelations(turrets, prisms, starby, wixie);
+                .withRelations(turrets, prisms, starby, wixie, drygmyCharm);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "trinkets")
                 .withIcon(ItemsRegistry.WARP_SCROLL)
                 .withSortNum(11)
                 .withIntroPage())
-                .withRelations(jarOfLight, amuletOfRegen, discountRing);
+                .withRelations(jarOfLight, amuletOfRegen, discountRing, beltOfLevitation, stableScroll);
 
         var enchantmentRecipes = new ArrayList<>(manager.getAllRecipesFor(RecipeRegistry.ENCHANTMENT_TYPE.get()));
         enchantmentRecipes.sort(Comparator.comparingInt(a -> a.value() == null ? -1 : a.value().enchantLevel));

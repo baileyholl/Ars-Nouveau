@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.api.documentation.SinglePageWidget;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -18,10 +17,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
-
-import javax.annotation.Nullable;
 
 public class EntityEntry extends SinglePageWidget {
     EntityType<?> entityType;
@@ -63,106 +58,20 @@ public class EntityEntry extends SinglePageWidget {
         if(this.description != null){
             DocClientUtils.drawParagraph(description, guiGraphics, x, y + 100, width, mouseX, mouseY, partialTick);
         }
+        float entityWidth = entity.getBbWidth();
+        float entityHeight = entity.getBbHeight();
 
-        renderEntity(guiGraphics, entity, x + width / 2.0f, y + height - 40 + yOffset, (float) ClientInfo.ticksInGame + partialTick, this.scale * 75, -0.3f);
+        float entitySize = Math.max(1F, Math.max(entityWidth, entityHeight));
+
+        float renderScale = 100F / entitySize * 0.6F * scale;
+        float offset = Math.max(entityHeight, entitySize) * 0.5F + yOffset;
+        renderEntity(guiGraphics, entity, x + (float) width /2, y + offset + 80, (float) ClientInfo.ticksInGame + partialTick, renderScale, 0);
     }
 
     @Override
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
     }
-
-    public static void renderEntityInInventoryFollowsMouse(
-            GuiGraphics guiGraphics,
-            int x1,
-            int y1,
-            int x2,
-            int y2,
-            int scale,
-            float yOffset,
-            float mouseX,
-            float mouseY,
-            LivingEntity entity
-    ) {
-        float f = (float)(x1 + x2) / 2.0F;
-        float f1 = (float)(y1 + y2) / 2.0F;
-        float f2 = (float)Math.atan((double)((f - mouseX) / 40.0F));
-        float f3 = (float)Math.atan((double)((f1 - mouseY) / 40.0F));
-        // Forge: Allow passing in direct angle components instead of mouse position
-        renderEntityInInventoryFollowsAngle(guiGraphics, x1, y1, x2, y2, scale, yOffset, f2, f3, entity);
-    }
-
-    public static void renderEntityInInventoryFollowsAngle(
-            GuiGraphics p_282802_,
-            int p_275688_,
-            int p_275245_,
-            int p_275535_,
-            int p_294406_,
-            int p_294663_,
-            float p_275604_,
-            float angleXComponent,
-            float angleYComponent,
-            LivingEntity p_275689_
-    ) {
-        float f = (float)(p_275688_ + p_275535_) / 2.0F;
-        float f1 = (float)(p_275245_ + p_294406_) / 2.0F;
-        p_282802_.enableScissor(p_275688_, p_275245_, p_275535_, p_294406_);
-        float f2 = angleXComponent;
-        float f3 = angleYComponent;
-        Quaternionf quaternionf = new Quaternionf().rotateZ((float) Math.PI);
-        Quaternionf quaternionf1 = new Quaternionf().rotateX(f3 * 20.0F * (float) (Math.PI / 180.0));
-        quaternionf.mul(quaternionf1);
-        float f4 = p_275689_.yBodyRot;
-        float f5 = p_275689_.getYRot();
-        float f6 = p_275689_.getXRot();
-        float f7 = p_275689_.yHeadRotO;
-        float f8 = p_275689_.yHeadRot;
-        p_275689_.yBodyRot = 180.0F + f2 * 20.0F;
-        p_275689_.setYRot(180.0F + f2 * 40.0F);
-        p_275689_.setXRot(-f3 * 20.0F);
-        p_275689_.yHeadRot = p_275689_.getYRot();
-        p_275689_.yHeadRotO = p_275689_.getYRot();
-        float f9 = p_275689_.getScale();
-        Vector3f vector3f = new Vector3f(0.0F, p_275689_.getBbHeight() / 2.0F + p_275604_ * f9, 0.0F);
-        float f10 = (float)p_294663_ / f9;
-        renderEntityInInventory(p_282802_, f, f1, f10, vector3f, quaternionf, quaternionf1, p_275689_);
-        p_275689_.yBodyRot = f4;
-        p_275689_.setYRot(f5);
-        p_275689_.setXRot(f6);
-        p_275689_.yHeadRotO = f7;
-        p_275689_.yHeadRot = f8;
-        p_282802_.disableScissor();
-    }
-
-    public static void renderEntityInInventory(
-            GuiGraphics guiGraphics,
-            float x,
-            float y,
-            float scale,
-            Vector3f translate,
-            Quaternionf pose,
-            @Nullable Quaternionf cameraOrientation,
-            LivingEntity entity
-    ) {
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate((double)x, (double)y, 50.0);
-        guiGraphics.pose().scale(scale, scale, -scale);
-        guiGraphics.pose().translate(translate.x, translate.y, translate.z);
-        guiGraphics.pose().mulPose(pose);
-        Lighting.setupForEntityInInventory();
-        EntityRenderDispatcher entityrenderdispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
-        if (cameraOrientation != null) {
-            entityrenderdispatcher.overrideCameraOrientation(cameraOrientation.conjugate(new Quaternionf()).rotateY((float) Math.PI));
-        }
-
-        entityrenderdispatcher.setRenderShadow(false);
-        RenderSystem.runAsFancy(() -> entityrenderdispatcher.render(entity, 0.0, 0.0, 0.0, 0.0F, 1.0F, guiGraphics.pose(), guiGraphics.bufferSource(), 15728880));
-        guiGraphics.flush();
-        entityrenderdispatcher.setRenderShadow(true);
-        guiGraphics.pose().popPose();
-        Lighting.setupFor3DItems();
-    }
-
 
     public static void renderEntity(GuiGraphics graphics, Entity entity, float x, float y, float rotation, float renderScale, float offset) {
         PoseStack ms = graphics.pose();
