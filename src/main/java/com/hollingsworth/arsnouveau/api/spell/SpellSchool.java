@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -14,9 +15,15 @@ public class SpellSchool {
     private final String id;
     private Set<SpellSchool> subSchools = new HashSet<>();
     private Set<AbstractSpellPart> spellParts = new HashSet<>();
+    private DocAssets.BlitInfo docIcon;
 
     public SpellSchool(String id) {
+        this(id, DocAssets.NA_ICON);
+    }
+
+    public SpellSchool(String id, DocAssets.BlitInfo docIcon) {
         this.id = id;
+        this.docIcon = docIcon;
     }
 
     public boolean isPartOfSchool(AbstractSpellPart part) {
@@ -39,6 +46,10 @@ public class SpellSchool {
 
     public String getId() {
         return id;
+    }
+
+    public DocAssets.BlitInfo getIcon() {
+        return docIcon;
     }
 
     public Set<SpellSchool> getSubSchools() {

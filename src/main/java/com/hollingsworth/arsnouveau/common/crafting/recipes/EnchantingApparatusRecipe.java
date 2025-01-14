@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -29,14 +30,16 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
     private final int sourceCost;
     private final boolean keepNbtOfReagent;
 
-
+    private NonNullList<Ingredient> ingredients;
     public EnchantingApparatusRecipe(Ingredient reagent, ItemStack result, List<Ingredient> pedestalItems, int sourceCost, boolean keepNbtOfReagent) {
         this.reagent = reagent;
         this.result = result;
         this.pedestalItems = pedestalItems;
         this.sourceCost = sourceCost;
         this.keepNbtOfReagent = keepNbtOfReagent;
-
+        ingredients = NonNullList.createWithCapacity(pedestalItems.size() + 1);
+        ingredients.add(reagent);
+        ingredients.addAll(pedestalItems);
     }
 
     public boolean excludeJei() {
@@ -121,6 +124,11 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
 
     public List<Ingredient> pedestalItems() {
         return pedestalItems;
+    }
+
+    @Override
+    public NonNullList<Ingredient> getIngredients() {
+        return ingredients;
     }
 
     public boolean keepNbtOfReagent() {

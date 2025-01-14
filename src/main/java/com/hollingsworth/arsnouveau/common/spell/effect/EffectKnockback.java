@@ -43,7 +43,7 @@ public class EffectKnockback extends AbstractEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
 
         float strength = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
-        knockback(rayTraceResult.getEntity(), spellContext.getCaster(), strength);
+        knockback(rayTraceResult.getEntity(), spellContext.getCaster(), strength, spellStats.hasBuff(AugmentExtract.INSTANCE));
         rayTraceResult.getEntity().hurtMarked = true;
 
     }
@@ -57,13 +57,19 @@ public class EffectKnockback extends AbstractEffect {
         for (BlockPos p : posList) {
             EnchantedFallingBlock fallingBlock = EnchantedFallingBlock.fall(world, p, shooter, spellContext, resolver, spellStats);
             if (fallingBlock != null) {
-                knockback(fallingBlock, spellContext.getCaster(), strength);
+                knockback(fallingBlock, spellContext.getCaster(), strength, spellStats.hasBuff(AugmentExtract.INSTANCE));
                 ShapersFocus.tryPropagateEntitySpell(fallingBlock, world, shooter, spellContext, resolver);
             }
         }
     }
 
-    public void knockback(Entity target, @NotNull IWrappedCaster shooter, float strength) {
+    public void knockback(Entity target, @NotNull IWrappedCaster shooter, float strength, boolean fromCaster) {
+        if (fromCaster) {
+            Vec3 vec3 = shooter.getPosition().subtract(target.position());
+            vec3 = vec3.normalize();
+            knockback(target, strength, vec3.x, vec3.z);
+            return;
+        }
         float v = 0;
         if (shooter instanceof TileCaster tc) {
             BlockEntity tile = tc.getTile();
@@ -102,7 +108,7 @@ public class EffectKnockback extends AbstractEffect {
     @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentSensitive.INSTANCE);
+        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentSensitive.INSTANCE, AugmentExtract.INSTANCE);
     }
 
     @Override
@@ -118,6 +124,7 @@ public class EffectKnockback extends AbstractEffect {
         map.put(AugmentAmplify.INSTANCE, "Increases the knockback strength.");
         map.put(AugmentDampen.INSTANCE, "Decreases the knockback strength.");
         map.put(AugmentSensitive.INSTANCE, "Prevents blocks from being moved.");
+        map.put(AugmentExtract.INSTANCE, "Knockback the target away from the caster instead of towards the caster's look.");
     }
 
     @Override

@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class BaseBook extends ModdedScreen {
 
     public static final int FULL_WIDTH = 290;
-    public static final int FULL_HEIGHT = 194;
+    public static final int FULL_HEIGHT = 188;
     public static ResourceLocation background = ArsNouveau.prefix( "textures/gui/spell_book_template.png");
     public int bookLeft;
     public int bookTop;

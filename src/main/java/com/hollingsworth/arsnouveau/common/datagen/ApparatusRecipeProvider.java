@@ -853,7 +853,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
         reactiveIngredients.add(Ingredient.of(ItemsRegistry.SPELL_PARCHMENT.get()));
         reactiveIngredients.add(Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS));
         reactiveIngredients.add(RecipeDatagen.SOURCE_GEM_BLOCK);
-        addRecipe(new ApparatusRecipeBuilder.RecipeWrapper<>(ArsNouveau.prefix("reactive"),
+        addRecipe(new ApparatusRecipeBuilder.RecipeWrapper<>(ArsNouveau.prefix("reactive_1"),
                 new ReactiveEnchantmentRecipe(reactiveIngredients, 3000),
                 ReactiveEnchantmentRecipe.CODEC));
 

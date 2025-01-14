@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -40,4 +41,9 @@ public abstract class AbstractFilter extends AbstractEffect implements IFilter {
         if (!shouldResolveOnBlock(rayTraceResult, world)) spellContext.setCanceled(true, CancelReason.FILTER_FAILED);
     }
 
+
+    @Override
+    public DocAssets.BlitInfo getTypeIcon() {
+        return DocAssets.NA_ICON;
+    }
 }
