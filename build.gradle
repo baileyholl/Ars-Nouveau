@@ -4,6 +4,7 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'net.neoforged.gradle.userdev' version '7.0.+'
+    id 'io.github.goooler.shadow' version '8.1.7'
 }
 
 version = mod_version
@@ -29,12 +30,28 @@ subsystems {
     }
 }
 
+configurations {
+    libraries
+    // This will make sure that all dependencies that you add to the libraries configuration will also be added to the implementation configuration
+    // This way, you only need one dependency declaration for both runtime and compile dependencies
+    shade
+    implementation.extendsFrom libraries
+    runtimeClasspath.extendsFrom localRuntime
+
+    shade
+    implementation.extendsFrom shade
+
+}
 runs {
     configureEach {
         systemProperty 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
         systemProperty 'forge.logging.console.level', 'debug'
 
         modSource sourceSets.main
+        dependencies {
+            runtime project.configurations.libraries
+            runtime project.configurations.shade
+        }
     }
 
     server {
@@ -48,10 +65,6 @@ runs {
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
-
-configurations {
-    runtimeClasspath.extendsFrom localRuntime
-}
 
 minecraft.accessTransformers.files(
         file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -98,11 +111,11 @@ jarJar.enable()
 
 tasks.named('jarJar') {}
 
+
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
 
     implementation "software.bernie.geckolib:geckolib-neoforge-1.21.1:${geckolib_version}"
-//
     implementation(jarJar(group: 'vazkii.patchouli', name: 'Patchouli', version: '[1.21,)') {
         jarJar.pin(it, patchouli_version)
     })
@@ -116,15 +129,19 @@ dependencies {
     implementation "curse.maven:jade-324717:5444008"
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}+1.21"
 
-// use localRuntime for adding mods to env that won't be listed as dependencies in the manifest
-
     localRuntime 'curse.maven:ftb-teams-forge-404468:5631446'
     localRuntime 'curse.maven:ftb-chunks-forge-314906:5710609'
     localRuntime 'curse.maven:ftb-library-forge-404465:5754910'
     localRuntime 'curse.maven:architectury-api-419699:5553800'
-//    implementation(jarJar(group: 'com.hollingsworth.nuggets', name: 'nuggets-neoforge-1.21', version:'[1.0.2,)'){
-//        jarJar.pin(it, '1.0.2.23')
-//    })
+    implementation(jarJar(group: 'com.hollingsworth.nuggets', name: 'nuggets-neoforge-1.21', version:'[1.0.4,)'){
+        jarJar.pin(it, '1.0.4')
+    })
+
+    shade 'org.apache.lucene:lucene-core:10.1.0'
+    shade 'org.apache.lucene:lucene-analysis-common:10.1.0'
+    shade 'org.apache.lucene:lucene-queryparser:10.1.0'
+
+//    implementation 'com.hollingsworth.nuggets:nuggets-neoforge-1.21:1.0.4'
 }
 
 jar {
@@ -140,6 +157,16 @@ jar {
                 "MixinConfigs": "ars_nouveau.mixins.json"
         ])
     }
+    finalizedBy shadowJar
+}
+shadowJar {
+    from sourceSets.main.output.classesDirs
+    from sourceSets.main.output.resourcesDir
+    configurations = [project.configurations.shade] // <- Tell shadowJar to shade dependencies from 'shade'
+    relocate 'org.apache.lucene', 'org.apache.lucene.ars_nouveau'
+    finalizedBy('jarJar')
+    archiveClassifier = null
+    mergeServiceFiles()
 }
 
 

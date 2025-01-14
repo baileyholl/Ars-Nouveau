@@ -25,36 +25,60 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @EventBusSubscriber(modid = ArsNouveau.MODID)
 public class PerkEvents {
 
     @SubscribeEvent
     public static void equipmentChangedEvent(final LivingEquipmentChangeEvent event) {
-        if (!event.getEntity().level.isClientSide) {
-            if (event.getSlot().getType() != EquipmentSlot.Type.HUMANOID_ARMOR)
-                return;
-            List<PerkInstance> perkInstances = PerkUtil.getPerksFromItem(event.getFrom());
-            List<PerkInstance> toInstances = PerkUtil.getPerksFromItem(event.getTo());
-            if (perkInstances.equals(toInstances))
-                return;
+        if (event.getEntity().level.isClientSide()) return;
 
-            List<IPerk> playerPerks = new ArrayList<>(PerkUtil.getPerksFromLiving(event.getEntity()).stream().map(PerkInstance::getPerk).toList());
-            List<IPerk> itemPerks = PerkUtil.getPerksFromItem(event.getTo()).stream().map(PerkInstance::getPerk).toList();
-            // This event is called after the item is equipped, and the player contains the perks already from the item that was equipped.
-            // Remove them, so we can detect actual duplicate.
-            for (IPerk perk : itemPerks) {
-                playerPerks.remove(perk);
-            }
+        if (event.getSlot().getType() != EquipmentSlot.Type.HUMANOID_ARMOR) return;
 
-            for (IPerk equippedPerks : playerPerks) {
-                if (itemPerks.contains(equippedPerks)) {
-                    PortUtil.sendMessageNoSpam(event.getEntity(), Component.translatable("ars_nouveau.perks.duplicated"));
-                    return;
-                }
+        List<PerkInstance> fromInstances = PerkUtil.getPerksFromItem(event.getFrom());
+        List<PerkInstance> toInstances = PerkUtil.getPerksFromItem(event.getTo());
+
+        if (fromInstances.equals(toInstances)) return;
+
+        LivingEntity entity = event.getEntity();
+
+        ArrayList<IPerk> playerPerks = PerkUtil.getPerksFromLiving(entity).stream().map(PerkInstance::getPerk).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<IPerk> fromPerks = fromInstances.stream().map(PerkInstance::getPerk).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<IPerk> toPerks = toInstances.stream().map(PerkInstance::getPerk).collect(Collectors.toCollection(ArrayList::new));
+
+        for (IPerk toPerk : toPerks) {
+            playerPerks.remove(toPerk);
+        }
+
+        boolean duplicate = false;
+        for (IPerk playerPerk : playerPerks) {
+            if (toPerks.contains(playerPerk)) {
+                duplicate = true;
+                toPerks.remove(playerPerk);
             }
+        }
+
+        if (duplicate) {
+            PortUtil.sendMessageNoSpam(event.getEntity(), Component.translatable("ars_nouveau.perks.duplicated"));
+        }
+
+        Set<IPerk> fromSet = new HashSet<>(fromPerks);
+        Set<IPerk> toSet = new HashSet<>(toPerks);
+
+        Set<IPerk> removedPerks = new HashSet<>(fromSet);
+        removedPerks.removeAll(toSet);
+
+        for (IPerk removedPerk : removedPerks) {
+            removedPerk.onRemoved(entity);
+        }
+
+        Set<IPerk> addedPerks = new HashSet<>(toSet);
+        addedPerks.removeAll(fromSet);
+
+        for (IPerk addedPerk : addedPerks) {
+            addedPerk.onAdded(entity);
         }
     }
 

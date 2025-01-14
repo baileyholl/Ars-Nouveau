@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.api.event.SummonEvent;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
@@ -10,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.util.HolderHelper;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -47,7 +49,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
 
     @Override
     public Integer getTypeIndex() {
-        return 10;
+        return 5;
     }
 
     public void onResolve(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
@@ -162,7 +164,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public void addRandomizeConfig(ModConfigSpec.Builder builder, float defaultChance) {
-        RANDOMIZE_CHANCE = builder.comment("Randomize chance, in percentage (0-1 = 0% - 100%)").defineInRange("extend_time", defaultChance, 0.0f, Integer.MAX_VALUE);
+        RANDOMIZE_CHANCE = builder.comment("Randomize chance, in percentage (0-1 = 0% - 100%)").defineInRange("randomize_chance", defaultChance, 0.0f, Integer.MAX_VALUE);
     }
 
     public void addDurationDownConfig(ModConfigSpec.Builder builder, int defaultTime) {
@@ -227,5 +229,15 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     protected void addSummonAugmentDescriptions(Map<AbstractAugment, String> map){
         map.put(AugmentExtendTime.INSTANCE, "Extends the duration of the summon.");
         map.put(AugmentDurationDown.INSTANCE, "Reduces the duration of the summon.");
+    }
+
+    @Override
+    public DocAssets.BlitInfo getTypeIcon() {
+        return DocAssets.EFFECT_ICON;
+    }
+
+    @Override
+    public Component getTypeName() {
+        return Component.translatable("ars_nouveau.spell_book_gui.effect");
     }
 }

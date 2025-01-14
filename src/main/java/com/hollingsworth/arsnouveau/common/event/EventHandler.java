@@ -27,6 +27,7 @@ import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
 import com.hollingsworth.arsnouveau.common.lib.PotionEffectTags;
 import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketInitDocs;
 import com.hollingsworth.arsnouveau.common.network.PacketJoinedServer;
 import com.hollingsworth.arsnouveau.common.network.PotionSyncPacket;
 import com.hollingsworth.arsnouveau.common.perk.JumpHeightPerk;
@@ -114,6 +115,9 @@ public class EventHandler {
                         BuddingConversionRegistry.reloadBuddingConversionRecipes(serverTickEvent.getServer().getRecipeManager());
                         AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(serverTickEvent.getServer().getRecipeManager());
                         ScryRitualRegistry.reloadScryRitualRecipes(serverTickEvent.getServer().getRecipeManager());
+                        for(ServerPlayer player : serverTickEvent.getServer().getPlayerList().getPlayers()) {
+                            Networking.sendToPlayerClient(new PacketInitDocs(), player);
+                        }
                         expired = true;
                     }
 
@@ -185,15 +189,15 @@ public class EventHandler {
         }
     }
 
-
     @SubscribeEvent
     public static void playerLogin(PlayerEvent.PlayerLoggedInEvent e) {
         if (e.getEntity().getCommandSenderWorld().isClientSide)
             return;
         if (e.getEntity() instanceof ServerPlayer serverPlayer) {
+            Networking.sendToPlayerClient(new PacketInitDocs(), serverPlayer);
             boolean isContributor = Rewards.CONTRIBUTORS.contains(serverPlayer.getUUID());
             if (isContributor) {
-                Networking.sendToPlayerClient(new PacketJoinedServer(true), (ServerPlayer) e.getEntity());
+                Networking.sendToPlayerClient(new PacketJoinedServer(true), serverPlayer);
             }
         }
         CompoundTag tag = e.getEntity().getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);

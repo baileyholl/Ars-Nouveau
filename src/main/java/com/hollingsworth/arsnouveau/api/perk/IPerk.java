@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
@@ -79,6 +80,10 @@ public interface IPerk {
         return Component.translatable(getRegistryName().getNamespace() + ".thread_of", Component.translatable("item." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()).getString()).getString();
     }
 
+    default Component getPerkName(){
+        return Component.translatable("item." + getRegistryName().getNamespace() + "." + getRegistryName().getPath());
+    }
+
     default String getLangName() {
         return "";
     }
@@ -90,4 +95,7 @@ public interface IPerk {
     default String getDescriptionKey() {
         return getRegistryName().getNamespace() + ".perk_desc." + getRegistryName().getPath();
     }
+
+    default void onRemoved(LivingEntity entity) {}
+    default void onAdded(LivingEntity entity) {}
 }

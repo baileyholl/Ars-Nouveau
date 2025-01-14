@@ -13,7 +13,9 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.model.ArmorStandArmorModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
@@ -28,6 +30,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
@@ -40,6 +43,9 @@ import net.minecraft.world.item.armortrim.ArmorTrim;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.client.ClientHooks;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
@@ -124,6 +130,50 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         }
     }
 
+    public void renderSlate(AlterationTile tile, PoseStack matrixStack, MultiBufferSource bufferSource, int packedLight) {
+        String[] rowNames = new String[]{"top", "mid", "bot"};
+        for (String s : rowNames) {
+            for (int i = 0; i < 4; i++) {
+                int finalI = i;
+                model.getBone(s + "_" + i).ifPresent(bone -> bone.setHidden(finalI != 0));
+            }
+        }
+
+        if (!(PerkUtil.getPerkHolder(tile.armorStack) instanceof StackPerkHolder<?> armorPerkHolder)) {
+            return;
+        }
+        Font font = Minecraft.getInstance().font;
+        List<PerkSlot> perks = armorPerkHolder.getSlotsForTier(tile.armorStack);
+        for (int i = 0; i < Math.min(3, perks.size()); i++) {
+            var tier = perks.get(i);
+            var component = Component.translatable("enchantment.level." + tier.value()).withStyle(ChatFormatting.BOLD);
+            var height = font.lineHeight/2;
+
+            matrixStack.pushPose();
+            matrixStack.translate(0.25, 1 - (0.175 * i), -0.05 - (0.175 * i));
+            GeoBone bone = model.getBone("display").get();
+            if (bone.getRotZ() != 0.0F) {
+                matrixStack.mulPose(Axis.ZP.rotation(-bone.getRotZ()));
+            }
+
+            if (bone.getRotY() != 0.0F) {
+                matrixStack.mulPose(Axis.YP.rotation(-bone.getRotY()));
+            }
+
+            if (bone.getRotX() != 0.0F) {
+                matrixStack.mulPose(Axis.XP.rotation(-bone.getRotX()));
+            }
+
+            GeoBone locBone = model.getBone("top_" + (i + 1)).get();
+            RenderUtil.translateToPivotPoint(matrixStack, locBone);
+            matrixStack.translate(0.0815, -0.20, 0);
+            matrixStack.scale(-0.02f, -0.02f, -0.02f);
+            float x = (float) (font.width("WWW") - font.width(component)) / 2;
+            font.drawInBatch(component, x, height, 5987163, false, matrixStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, packedLight);
+            matrixStack.popPose();
+        }
+    }
+
     public float rotForSlot(EquipmentSlot slot) {
         return switch (slot) {
             case HEAD -> 0.3f;
@@ -184,7 +234,6 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         p_289663_.renderToBuffer(p_289687_, vertexconsumer, p_289683_, OverlayTexture.NO_OVERLAY);
     }
 
-
     private void renderGlint(PoseStack p_289673_, MultiBufferSource p_289654_, int p_289649_, net.minecraft.client.model.Model p_289659_) {
         p_289659_.renderToBuffer(p_289673_, p_289654_.getBuffer(RenderType.armorEntityGlint()), p_289649_, OverlayTexture.NO_OVERLAY);
     }
@@ -219,7 +268,6 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
             stack.translate(0, 0, 1);
 
         }
-        renderSlate(model, animatable);
         super.actuallyRender(stack, tile, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
         stack.popPose();
     }
@@ -241,17 +289,17 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
 
         if (direction == Direction.SOUTH) {
             perkQuat = Axis.YP.rotationDegrees(90);
-            perkTranslate = new Vector3d(.5, 0, .5);
+            perkTranslate = new Vector3d(.55, 0, .5);
         }
 
         if (direction == Direction.WEST) {
             perkQuat = Axis.YP.rotationDegrees(0);
-            perkTranslate = new Vector3d(1.5, 0, 0.5);
+            perkTranslate = new Vector3d(1.55, 0, 0.5);
         }
 
         if (direction == Direction.EAST) {
             perkQuat = Axis.YP.rotationDegrees(180);
-            perkTranslate = new Vector3d(.5, 0, -.5);
+            perkTranslate = new Vector3d(.55, 0, -.5);
         }
         double ticks = animatable.getTick(animatable);
         stack.pushPose();
@@ -266,44 +314,14 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         this.renderArmorStack(animatable, stack, (float) ticks, bufferSource, packedLight, packedOverlay);
         stack.popPose();
 
-
         stack.pushPose();
         stack.mulPose(perkQuat);
         stack.translate(perkTranslate.x, perkTranslate.y, perkTranslate.z);
+        this.renderSlate(animatable, stack, bufferSource, packedLight);
         this.renderPerks(animatable, stack, bufferSource, packedLight, packedOverlay);
         stack.popPose();
     }
 
-    public void renderSlate(BakedGeoModel model, AlterationTile tile) {
-        String[] rowNames = new String[]{"top", "mid", "bot"};
-        if (tile.armorStack.isEmpty()) {
-            for (String s : rowNames) {
-                setSlateRow(model, s, 0);
-            }
-            return;
-        }
-        if (!(PerkUtil.getPerkHolder(tile.armorStack) instanceof StackPerkHolder armorPerkHolder)) {
-            return;
-        }
-        List<PerkSlot> perks = armorPerkHolder.getSlotsForTier(tile.armorStack);
-
-        for (int i = 0; i < Math.min(perks.size(), rowNames.length); i++) {
-            PerkSlot perkSlot = perks.get(i);
-            setSlateRow(model, rowNames[i], perkSlot.value());
-        }
-        List<String> remainingRows = List.of(rowNames);
-        remainingRows.subList(perks.size(), remainingRows.size()).forEach(s -> setSlateRow(model, s, 0));
-    }
-
-    public void setSlateRow(BakedGeoModel model, String loc, int tier) {
-        for (int i = 0; i < 4; i++) {
-            if (tier != i) {
-                model.getBone(loc + "_" + i).ifPresent(bone -> bone.setHidden(true));
-            } else {
-                model.getBone(loc + "_" + i).ifPresent(bone -> bone.setHidden(false));
-            }
-        }
-    }
 
 
     public static GenericItemBlockRenderer getISTER() {
@@ -315,7 +333,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         return RenderType.entityTranslucent(texture);
     }
 
-    protected void setPartVisibility(HumanoidModel pModel, EquipmentSlot pSlot) {
+    protected void setPartVisibility(HumanoidModel<?> pModel, EquipmentSlot pSlot) {
         pModel.setAllVisible(false);
         switch (pSlot) {
             case HEAD:
@@ -338,9 +356,8 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         }
     }
 
-
     @Override
-    public boolean shouldRenderOffScreen(AlterationTile pBlockEntity) {
+    public boolean shouldRenderOffScreen(@NotNull AlterationTile pBlockEntity) {
         return true;
     }
 
@@ -350,7 +367,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
     }
 
     @Override
-    public AABB getRenderBoundingBox(AlterationTile blockEntity) {
+    public @NotNull AABB getRenderBoundingBox(@NotNull AlterationTile blockEntity) {
         return AABB.INFINITE;
     }
 }

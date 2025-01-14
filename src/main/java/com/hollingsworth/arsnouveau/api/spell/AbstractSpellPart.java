@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.util.SpellPartConfigUtil;
@@ -184,7 +185,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
      * A helper for mods to add schools.
      * Mods should use {@link AbstractSpellPart#spellSchools} to get the addon-supported list.
      */
-    protected@NotNull Set<SpellSchool> getSchools() {
+    protected @NotNull Set<SpellSchool> getSchools() {
         return setOf();
     }
 
@@ -307,6 +308,12 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     public String getLocaleName() {
         return Component.translatable(getLocalizationKey()).getString();
     }
+
+    public DocAssets.BlitInfo getTypeIcon(){
+        return DocAssets.NA_ICON;
+    }
+
+    public abstract Component getTypeName();
 
     @Override
     public boolean equals(Object o) {

@@ -40,13 +40,13 @@ public class WarpScroll extends ModItem {
         if (entity.getCommandSenderWorld().isClientSide)
             return false;
 
-        String displayName = stack.get(DataComponents.CUSTOM_NAME) != null ? stack.getHoverName().getString() : "";
+        String displayName = stack.get(DataComponents.CUSTOM_NAME) != null ? stack.getHoverName().getString() : null;
         WarpScrollData data = stack.get(DataComponentRegistry.WARP_SCROLL);
         if (data.isValid()
             && data.canTeleportWithDim(entity.getCommandSenderWorld().dimension().location().toString())
             && SourceUtil.hasSourceNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
             && BlockRegistry.PORTAL_BLOCK.get().trySpawnPortal(entity.getCommandSenderWorld(), entity.blockPosition(), data, displayName)
-            && SourceUtil.takeSourceWithParticles(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null) {
+            && SourceUtil.takeSourceMultipleWithParticles(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null) {
             BlockPos pos = entity.blockPosition();
             ServerLevel world = (ServerLevel) entity.getCommandSenderWorld();
             world.sendParticles(ParticleTypes.PORTAL, pos.getX(), pos.getY() + 1.0, pos.getZ(),
