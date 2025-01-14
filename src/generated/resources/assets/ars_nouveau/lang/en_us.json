@@ -227,7 +227,7 @@
   "ars_nouveau.augment_desc.glyph_gust_glyph_amplify": "Increases the knockback strength.",
   "ars_nouveau.augment_desc.glyph_gust_glyph_aoe": "Increases the radius of targeted blocks.",
   "ars_nouveau.augment_desc.glyph_gust_glyph_dampen": "Decreases the knockback strength.",
-  "ars_nouveau.augment_desc.glyph_gust_glyph_extract": "Applies silk touch when breaking a block.",
+  "ars_nouveau.augment_desc.glyph_gust_glyph_extract": "Knockback the target away from the caster instead of towards the caster's look.",
   "ars_nouveau.augment_desc.glyph_gust_glyph_fortune": "Applies fortune when breaking a block.",
   "ars_nouveau.augment_desc.glyph_gust_glyph_pierce": "Increases the depth of targeted blocks.",
   "ars_nouveau.augment_desc.glyph_gust_glyph_randomize": "Adds a chance to not target a block.",

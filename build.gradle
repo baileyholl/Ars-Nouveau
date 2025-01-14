@@ -89,6 +89,17 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
     maven {
         name = "Illusive Soulworks maven"
         url = "https://maven.theillusivec4.top/"
@@ -136,7 +147,8 @@ dependencies {
     implementation(jarJar(group: 'com.hollingsworth.nuggets', name: 'nuggets-neoforge-1.21', version:'[1.0.4,)'){
         jarJar.pin(it, '1.0.4')
     })
-
+    localRuntime "maven.modrinth:cloth-config:15.0.140+neoforge"
+    localRuntime "curse.maven:immersive-portals-for-forge-355440:6013197"
     shade 'org.apache.lucene:lucene-core:10.1.0'
     shade 'org.apache.lucene:lucene-analysis-common:10.1.0'
     shade 'org.apache.lucene:lucene-queryparser:10.1.0'
