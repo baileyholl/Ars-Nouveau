@@ -48,11 +48,14 @@ public class EffectBurst extends AbstractEffect {
         makeSphere(rayTraceResult.getEntity().blockPosition(), world, shooter, spellStats, spellContext, resolver);
     }
 
-    public void makeSphere(BlockPos center, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
+    public void makeSphere(BlockPos center, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (spellContext.getRemainingSpell().isEmpty()) return;
 
-        int radius = (int) (1 + spellStats.getAoeMultiplier());
-        Predicate<Double> sphere = spellStats.hasBuff(AugmentDampen.INSTANCE) ? (distance) -> distance <= radius + 0.5 && distance >= radius - 0.5 : (distance) -> (distance <= radius + 0.5);
+        // like linger, reduce the radius if sensitive
+        int radius = (int) spellStats.getAoeMultiplier() + (spellStats.isSensitive() ? 1 : 3);
+
+        Predicate<Double> sphere = spellStats.hasBuff(AugmentDampen.INSTANCE) ? distance -> distance <= radius + 0.5 && distance >= radius - 0.5 : distance -> distance <= radius + 0.5;
+
         if (spellStats.isSensitive()) {
             for (BlockPos pos : BlockPos.withinManhattan(center, radius, radius, radius)) {
                 if (sphere.test(BlockUtil.distanceFromCenter(pos, center))) {

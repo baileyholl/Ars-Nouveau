@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
@@ -19,6 +18,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
@@ -175,7 +175,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
     }
 
     @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.WALL_SPELL.get();
     }
 
@@ -200,7 +200,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
     }
 
     public float getAoe() {
-        return 3 + entityData.get(AOE);
+        return (this.isSensitive() ? 1 : 3) + entityData.get(AOE);
     }
 
     public void setLanded(boolean landed) {
@@ -223,7 +223,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
         entityData.set(DIRECTION, direction);
     }
 
-    public Direction getDirection() {
+    public @NotNull Direction getDirection() {
         return entityData.get(DIRECTION);
     }
 
