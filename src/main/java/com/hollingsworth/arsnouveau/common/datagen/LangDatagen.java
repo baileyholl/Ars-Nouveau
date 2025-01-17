@@ -774,7 +774,9 @@ public class LangDatagen extends LanguageProvider {
         add("tooltip.ars_nouveau.essences", "Magical Essences created in an Imbuement Chamber.");
         add("ars_nouveau.page.dowsing_rod", "A Dowsing Rod provides the user a short duration of Scrying for Budding Amethyst and Magic Find, which will cause magical creatures to glow within 75 blocks of you. The Dowsing Rod has a limited number of uses.");
         add("ars_nouveau.apparatus.norecipe", "No recipe found. Pedestals must be within 3 blocks.");
+        add("ars_nouveau.apparatus.use_imbuement", "Did you mean to use an Imbuement Chamber for this recipe?");
         add("ars_nouveau.imbuement.norecipe", "No recipe found. If pedestals are required, they must be placed within the 1 block cube around the chamber.");
+        add("ars_nouveau.imbuement.use_apparatus", "Did you mean to use an Enchanting Apparatus for this recipe?");
         add("ars_nouveau.spell_book_gui.select", "Select");
         add("ars_nouveau.levels_required", "Levels required: %s");
         add("ars_nouveau.crafting", "Crafting: %s");
