@@ -246,13 +246,12 @@ public class GuiRadialMenu<T> extends Screen {
         return super.keyPressed(key, scanCode, modifiers);
     }
 
-    @Override
-    public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
+    public void onMouseClick(){
+        java.lang.System.out.println("Mouse Clicked in GUI!");
         if (this.selectedItem != -1) {
             radialMenu.setCurrentSlot(selectedItem);
             minecraft.player.closeContainer();
         }
-        return true;
     }
 
     public void drawSlice(

@@ -135,7 +135,13 @@ public class KeyHandler {
 
         if (MINECRAFT.player == null || event.getAction() != 1)
             return;
-        if (MINECRAFT.screen == null || MINECRAFT.screen instanceof GuiRadialMenu)
+        if (MINECRAFT.screen instanceof GuiRadialMenu<?> screen) {
+            screen.onMouseClick();
+            return;
+        }
+        if (Minecraft.getInstance().screen != null && Minecraft.getInstance().screen.isPauseScreen())
+            return;
+        if (MINECRAFT.screen == null)
             checkKeysPressed(event.getButton());
     }
 
