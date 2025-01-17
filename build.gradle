@@ -136,7 +136,7 @@ dependencies {
     implementation(jarJar(group: 'com.hollingsworth.nuggets', name: 'nuggets-neoforge-1.21', version:'[1.0.4,)'){
         jarJar.pin(it, '1.0.4')
     })
-
+    implementation "curse.maven:ars-elemental-561470:6086122"
     shade 'org.apache.lucene:lucene-core:10.1.0'
     shade 'org.apache.lucene:lucene-analysis-common:10.1.0'
     shade 'org.apache.lucene:lucene-queryparser:10.1.0'

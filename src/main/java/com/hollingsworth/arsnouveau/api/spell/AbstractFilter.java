@@ -30,6 +30,10 @@ public abstract class AbstractFilter extends AbstractEffect implements IFilter {
         return Set.of();
     }
 
+    @Override
+    public Integer getTypeIndex() {
+        return 7;
+    }
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
