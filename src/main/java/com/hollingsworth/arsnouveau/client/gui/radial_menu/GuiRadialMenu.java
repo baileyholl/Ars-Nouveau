@@ -247,7 +247,6 @@ public class GuiRadialMenu<T> extends Screen {
     }
 
     public void onMouseClick(){
-        java.lang.System.out.println("Mouse Clicked in GUI!");
         if (this.selectedItem != -1) {
             radialMenu.setCurrentSlot(selectedItem);
             minecraft.player.closeContainer();

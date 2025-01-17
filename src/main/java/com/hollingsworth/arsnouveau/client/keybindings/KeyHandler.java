@@ -139,8 +139,6 @@ public class KeyHandler {
             screen.onMouseClick();
             return;
         }
-        if (Minecraft.getInstance().screen != null && Minecraft.getInstance().screen.isPauseScreen())
-            return;
         if (MINECRAFT.screen == null)
             checkKeysPressed(event.getButton());
     }
