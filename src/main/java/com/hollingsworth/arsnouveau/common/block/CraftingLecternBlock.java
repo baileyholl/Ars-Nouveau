@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
 import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
+import com.hollingsworth.arsnouveau.common.block.tile.TransientCustomContainer;
 import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.common.items.summon_charms.BookwyrmCharm;
 import net.minecraft.core.BlockPos;
@@ -25,6 +26,8 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class CraftingLecternBlock extends TickableModBlock {
 
@@ -75,7 +78,9 @@ public class CraftingLecternBlock extends TickableModBlock {
 		if (!state.is(state2.getBlock())) {
 			BlockEntity blockentity = world.getBlockEntity(pos);
 			if (blockentity instanceof CraftingLecternTile te) {
-				Containers.dropContents(world, pos, te.getCraftingInv());
+				for (TransientCustomContainer inv : te.craftingMatrices.values()) {
+					Containers.dropContents(world, pos, inv);
+				}
 				world.updateNeighbourForOutputSignal(pos, this);
 			}
 

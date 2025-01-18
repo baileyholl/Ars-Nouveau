@@ -54,6 +54,12 @@ runs {
         }
     }
 
+    clientAlt {
+        run 'client'
+
+        arguments '--username', 'Dev2'
+    }
+
     server {
         programArgument '--nogui'
         workingDirectory 'server'
@@ -149,6 +155,7 @@ dependencies {
     })
     localRuntime "maven.modrinth:cloth-config:15.0.140+neoforge"
     localRuntime "curse.maven:immersive-portals-for-forge-355440:6013197"
+    //implementation "curse.maven:ars-elemental-561470:6086122"
     shade 'org.apache.lucene:lucene-core:10.1.0'
     shade 'org.apache.lucene:lucene-analysis-common:10.1.0'
     shade 'org.apache.lucene:lucene-queryparser:10.1.0'
