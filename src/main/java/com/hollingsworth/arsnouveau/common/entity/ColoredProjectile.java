@@ -22,8 +22,8 @@ public abstract class ColoredProjectile extends Projectile {
     public static final EntityDataAccessor<Integer> GREEN = SynchedEntityData.defineId(ColoredProjectile.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> BLUE = SynchedEntityData.defineId(ColoredProjectile.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<CompoundTag> PARTICLE_TAG = SynchedEntityData.defineId(ColoredProjectile.class, EntityDataSerializers.COMPOUND_TAG);
-    private ParticleColor color;
     public int rainbowStartTick = 0;
+    private ParticleColor color;
 
     public ColoredProjectile(EntityType<? extends ColoredProjectile> type, Level worldIn) {
         super(type, worldIn);
@@ -41,35 +41,35 @@ public abstract class ColoredProjectile extends Projectile {
     }
 
     public ParticleColor getParticleColor() {
-        if (this.color != null) {
-            return this.color;
+        if (this.color == null) {
+            this.color = ParticleColorRegistry.from(entityData.get(PARTICLE_TAG));
         }
-        CompoundTag tag = entityData.get(PARTICLE_TAG);
-        this.color = ParticleColorRegistry.from(tag).transition(tickCount*50);
-        return this.color;
+        return this.color.transition(tickCount*50);
     }
 
+    @Deprecated(forRemoval = true)
     public boolean isRainbow() {
         return getParticleColor() instanceof RainbowParticleColor;
     }
 
+    @Deprecated(forRemoval = true)
     public ParticleColor.IntWrapper getParticleColorWrapper() {
-        return this.getParticleColor().toWrapper();
+        return new ParticleColor.IntWrapper(entityData.get(RED), entityData.get(GREEN), entityData.get(BLUE));
     }
 
     public void setColor(ParticleColor colors) {
-        this.color = colors;
         ParticleColor.IntWrapper wrapper = colors.toWrapper();
         entityData.set(RED, wrapper.r);
         entityData.set(GREEN, wrapper.g);
         entityData.set(BLUE, wrapper.b);
         entityData.set(PARTICLE_TAG, colors.serialize());
+        this.color = colors;
     }
 
     @Override
     public void load(CompoundTag compound) {
-        this.color = null;
         super.load(compound);
+        this.color = null;
         entityData.set(RED, compound.getInt("red"));
         entityData.set(GREEN, compound.getInt("green"));
         entityData.set(BLUE, compound.getInt("blue"));
