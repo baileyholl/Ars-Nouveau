@@ -55,7 +55,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     public Map<String, InventoryManager> tabManagerMap = new HashMap<>();
     public Map<String, Map<StoredItemStack, Long>> itemsByTab = new HashMap<>();
     public Map<Item, Long> itemCounts = new HashMap<>();
-    public String lastSearch = "";
+    public Map<UUID, String> searches = new HashMap<>();
     public boolean updateItems;
     public List<BlockPos> connectedInventories = new ArrayList<>();
     public List<String> tabNames = new ArrayList<>();
@@ -529,12 +529,12 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         updateItems = true;
     }
 
-    public String getLastSearch() {
-        return lastSearch;
+    public String getLastSearch(Player player) {
+        return searches.getOrDefault(player.getUUID(), "");
     }
 
-    public void setLastSearch(String string) {
-        lastSearch = string;
+    public void setLastSearch(Player sender, String string) {
+        searches.put(sender.getUUID(), string);
     }
 
     @Override
