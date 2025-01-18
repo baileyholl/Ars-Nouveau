@@ -252,7 +252,7 @@ public class GuiSpellBook extends BaseBook {
 
         List<AbstractSpellPart> sorted = new ArrayList<>(displayedGlyphs);
         sorted.sort(Comparator.comparingInt((AbstractSpellPart p) -> switch (p) {
-            case AbstractAugment ignored -> 5;
+            case AbstractAugment ignored -> 3;
             default -> p.getTypeIndex();
         }).thenComparing(AbstractSpellPart::getLocaleName));
 
