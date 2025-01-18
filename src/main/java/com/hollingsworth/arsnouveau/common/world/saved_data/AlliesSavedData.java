@@ -90,10 +90,11 @@ public class AlliesSavedData extends SavedData {
 
     @SubscribeEvent
     public static void onSave(LevelEvent.Save event) {
-        if (!(event.getLevel() instanceof ServerLevel serverLevel)) return;
-        System.out.println("Sending allies data to all players");
+        if (!(event.getLevel() instanceof ServerLevel serverLevel) || serverLevel.dimension() != ServerLevel.OVERWORLD || serverLevel.players().isEmpty())
+            return;
+        System.out.println("Sending allies data to " + serverLevel.players().size() + " players");
         // Send the respective allies data to all players
         serverLevel.players().forEach(player -> Networking.sendToPlayerClient(new PacketSetAllies(player.getUUID(), getAllies(serverLevel, player.getUUID())), player));
     }
-    
+
 }
