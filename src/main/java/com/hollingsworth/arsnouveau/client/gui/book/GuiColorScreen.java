@@ -64,7 +64,7 @@ public class GuiColorScreen extends BaseBook {
         next.visible = true;
         next.active = true;
 
-        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 13, 0, 0, 41, 12, 41, 12, "textures/gui/clear_icon.png", (e) -> {
+        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 12, 0, 0, 41, 12, 41, 12, "textures/gui/clear_icon.png", (e) -> {
             Minecraft.getInstance().setScreen(parent);
         }));
     }
@@ -179,8 +179,8 @@ public class GuiColorScreen extends BaseBook {
         graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.save").getString(), 37, 160, color, false);
         graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.save_all").getString(), 87, 160, color, false);
 
-        graphics.blit(ArsNouveau.prefix("textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15);
-        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.close"), 238, 183, -8355712, false);
+        graphics.blit(ArsNouveau.prefix("textures/gui/create_paper.png"), 216, 175, 0, 0, 56, 15, 56, 15);
+        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.close"), 238, 180, -8355712, false);
     }
 
     public int getNumPages() {

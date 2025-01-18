@@ -26,16 +26,14 @@ import com.hollingsworth.arsnouveau.common.items.EnchantersSword;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
 import com.hollingsworth.arsnouveau.common.lib.PotionEffectTags;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketInitDocs;
-import com.hollingsworth.arsnouveau.common.network.PacketJoinedServer;
-import com.hollingsworth.arsnouveau.common.network.PotionSyncPacket;
+import com.hollingsworth.arsnouveau.common.network.*;
 import com.hollingsworth.arsnouveau.common.perk.JumpHeightPerk;
 import com.hollingsworth.arsnouveau.common.ritual.DenySpawnRitual;
 import com.hollingsworth.arsnouveau.common.ritual.RitualFlight;
 import com.hollingsworth.arsnouveau.common.ritual.RitualGravity;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectWololo;
+import com.hollingsworth.arsnouveau.common.world.saved_data.AlliesSavedData;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
@@ -115,7 +113,7 @@ public class EventHandler {
                         BuddingConversionRegistry.reloadBuddingConversionRecipes(serverTickEvent.getServer().getRecipeManager());
                         AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(serverTickEvent.getServer().getRecipeManager());
                         ScryRitualRegistry.reloadScryRitualRecipes(serverTickEvent.getServer().getRecipeManager());
-                        for(ServerPlayer player : serverTickEvent.getServer().getPlayerList().getPlayers()) {
+                        for (ServerPlayer player : serverTickEvent.getServer().getPlayerList().getPlayers()) {
                             Networking.sendToPlayerClient(new PacketInitDocs(), player);
                         }
                         expired = true;
@@ -199,6 +197,11 @@ public class EventHandler {
             if (isContributor) {
                 Networking.sendToPlayerClient(new PacketJoinedServer(true), serverPlayer);
             }
+            if (e.getEntity().getCommandSenderWorld() instanceof ServerLevel level) {
+                Set<UUID> allies = AlliesSavedData.getAllies(level, e.getEntity().getUUID());
+                System.out.println("Sending allies data to " + serverPlayer.getUUID() + " with " + allies.size() + " allies");
+                Networking.sendToPlayerClient(new PacketSetAllies(serverPlayer.getUUID(), allies), serverPlayer);
+            }
         }
         CompoundTag tag = e.getEntity().getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
         String book_tag = "an_book_";
@@ -230,9 +233,9 @@ public class EventHandler {
         }
 
         if (player.hasEffect(ModPotions.FLIGHT_EFFECT)
-                && player.level.getGameTime() % 20 == 0
-                && player.getEffect(ModPotions.FLIGHT_EFFECT).getDuration() <= 30 * 20
-                && player instanceof ServerPlayer serverPlayer) {
+            && player.level.getGameTime() % 20 == 0
+            && player.getEffect(ModPotions.FLIGHT_EFFECT).getDuration() <= 30 * 20
+            && player instanceof ServerPlayer serverPlayer) {
             RitualEventQueue.getRitual(player.level, RitualFlight.class, flight -> flight.attemptRefresh(serverPlayer));
         }
 
@@ -268,7 +271,7 @@ public class EventHandler {
         }
         LivingEntity entity = e.getEntity();
         if (entity.hasEffect(ModPotions.HEX_EFFECT)
-                && (entity.hasEffect(MobEffects.POISON)
+            && (entity.hasEffect(MobEffects.POISON)
                 || entity.hasEffect(MobEffects.WITHER)
                 || entity.isOnFire()
                 || entity.hasEffect(ModPotions.SHOCKED_EFFECT)

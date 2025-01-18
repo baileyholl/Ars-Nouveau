@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.prefix;
 
@@ -21,13 +22,15 @@ public class PlayerAlliesList extends ObjectSelectionList<PlayerAlliesList.Playe
 
     Set<UUID> allies;
 
-    public Map<UUID, Optional<GameProfile>> gameProfiles;
+    public static Map<UUID, Optional<GameProfile>> gameProfileCache = new ConcurrentHashMap<>();
 
-    public PlayerAlliesList(Minecraft minecraft, int width, int height, int y, int itemHeight, Set<UUID> allies, Map<UUID, Optional<GameProfile>> gameProfileCache) {
+
+    public PlayerAlliesList(Minecraft minecraft, int width, int height, int y, int itemHeight, Set<UUID> allies) {
         super(minecraft, width, height, y, itemHeight);
         this.allies = allies;
-        this.gameProfiles = gameProfileCache;
-        updateEntries();
+        for (UUID ally : allies) {
+            addEntry(new PlayerListEntry(ally, this));
+        }
     }
 
     @Override
@@ -39,6 +42,7 @@ public class PlayerAlliesList extends ObjectSelectionList<PlayerAlliesList.Playe
         if (flag) updateEntries();
         return flag;
     }
+
 
     public void updateEntries() {
         clearEntries();
@@ -98,7 +102,7 @@ public class PlayerAlliesList extends ObjectSelectionList<PlayerAlliesList.Playe
         public void render(@NotNull GuiGraphics graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isSelected, float partialTicks) {
             Minecraft instance = Minecraft.getInstance();
             // try to get player's name from server using playerUUID
-            Optional<GameProfile> cachedProfile = playerAlliesList.gameProfiles.getOrDefault(playerUUID, Optional.empty());
+            Optional<GameProfile> cachedProfile = gameProfileCache.getOrDefault(playerUUID, Optional.empty());
             graphics.drawString(instance.font, cachedProfile.isPresent() ? cachedProfile.get().getName() : "Unknown Player", x + 8, y + 5, 0, false);
         }
 

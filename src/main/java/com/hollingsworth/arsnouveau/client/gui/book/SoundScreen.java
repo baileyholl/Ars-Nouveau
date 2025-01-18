@@ -53,7 +53,7 @@ public class SoundScreen extends BaseBook {
     public void init() {
         super.init();
 
-        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 13, 0, 0, 41, 12, 41, 12, "textures/gui/clear_icon.png", (e) -> Minecraft.getInstance().setScreen(parent)));
+        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 12, 0, 0, 41, 12, 41, 12, "textures/gui/clear_icon.png", (e) -> Minecraft.getInstance().setScreen(parent)));
 
         volumeSlider = buildSlider(bookLeft + 28, bookTop + 49, Component.translatable("ars_nouveau.sounds.volume"), Component.empty(), volume);
         pitchSlider = buildSlider(bookLeft + 28, bookTop + 89, Component.translatable("ars_nouveau.sounds.pitch"), Component.empty(), pitch);
@@ -137,7 +137,7 @@ public class SoundScreen extends BaseBook {
         graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.save").getString(), 37, 160, color, false);
         graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.save_all").getString(), 177, 160, color, false);
         graphics.drawString(font, Component.translatable("ars_nouveau.sounds.test").getString(), 102, 160, color, false);
-        graphics.blit(prefix("textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15);
-        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.close"), 238, 183, color, false);
+        graphics.blit(prefix("textures/gui/create_paper.png"), 216, 175, 0, 0, 56, 15, 56, 15);
+        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.close"), 238, 180, color, false);
     }
 }

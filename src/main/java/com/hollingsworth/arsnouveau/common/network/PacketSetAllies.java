@@ -2,11 +2,13 @@ package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.world.saved_data.AlliesSavedData;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -51,6 +53,13 @@ public class PacketSetAllies extends AbstractPacket {
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
         // when received on server, store the allies in the player's data
         AlliesSavedData.setAllies(minecraftServer.overworld(), owner, allies);
+        System.out.println("Received allies data for " + player.getUUID() + " with " + allies.size() + " allies");
+    }
+
+    @Override
+    public void onClientReceived(Minecraft minecraft, Player player) {
+        AlliesSavedData.setLocalAllies(allies);
+        System.out.println("Received allies data for " + player.getUUID() + " with " + allies.size() + " allies");
     }
 
 }

@@ -42,6 +42,25 @@ configurations {
     implementation.extendsFrom shade
 
 }
+
+// Credits to TwilightForest for the idea of using a secrets file to customize the in-dev uuid and username
+def secrets = new Properties()
+def secretsFile = file('secrets.properties')
+if (secretsFile.exists()) {
+    secretsFile.withInputStream {
+        stream -> secrets.load(stream)
+    }
+
+    fileTree("secrets").matching {
+        include "**/*.properties"
+    }.each {
+        File file ->
+            file.withInputStream {
+                stream -> secrets.load(stream)
+            }
+    }
+}
+
 runs {
     configureEach {
         systemProperty 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -54,13 +73,17 @@ runs {
         }
     }
 
+    client {
+        getArguments().addAll '--username', secrets.getProperty("username") ?: 'Dev', secrets.getProperty("uuid") ? '--uuid' : '', secrets.getProperty("uuid") ?: ''
+    }
+
     server {
-        programArgument '--nogui'
+        //programArgument '--nogui'
         workingDirectory 'server'
     }
 
     data {
-        getArguments().addAll '--mod', mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        getArguments().addAll '--mod', mod_id as String, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
     }
 }
 
@@ -133,7 +156,7 @@ dependencies {
     localRuntime 'curse.maven:ftb-chunks-forge-314906:5710609'
     localRuntime 'curse.maven:ftb-library-forge-404465:5754910'
     localRuntime 'curse.maven:architectury-api-419699:5553800'
-    implementation(jarJar(group: 'com.hollingsworth.nuggets', name: 'nuggets-neoforge-1.21', version:'[1.0.4,)'){
+    implementation(jarJar(group: 'com.hollingsworth.nuggets', name: 'nuggets-neoforge-1.21', version: '[1.0.4,)') {
         jarJar.pin(it, '1.0.4')
     })
 
@@ -141,20 +164,19 @@ dependencies {
     shade 'org.apache.lucene:lucene-analysis-common:10.1.0'
     shade 'org.apache.lucene:lucene-queryparser:10.1.0'
 
-//    implementation 'com.hollingsworth.nuggets:nuggets-neoforge-1.21:1.0.4'
 }
 
 jar {
     manifest {
         attributes([
-                "Specification-Title": "ArsNouveau",
-                "Specification-Vendor": "baileyh",
-                "Specification-Version": "1", // We are version 1 of ourselves
-                "Implementation-Title": project.name,
-                "Implementation-Version": mod_version,
-                "Implementation-Vendor" :"baileyh",
+                "Specification-Title"     : "ArsNouveau",
+                "Specification-Vendor"    : "baileyh",
+                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : mod_version,
+                "Implementation-Vendor"   : "baileyh",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs": "ars_nouveau.mixins.json"
+                "MixinConfigs"            : "ars_nouveau.mixins.json"
         ])
     }
     finalizedBy shadowJar

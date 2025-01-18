@@ -11,7 +11,6 @@ import com.hollingsworth.arsnouveau.common.network.PacketSummonDog;
 import com.hollingsworth.arsnouveau.common.network.PacketUnsummonDog;
 import com.hollingsworth.arsnouveau.common.world.saved_data.AlliesSavedData;
 import com.hollingsworth.arsnouveau.setup.config.Config;
-import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -19,16 +18,16 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+
+import static com.hollingsworth.arsnouveau.client.gui.PlayerAlliesList.gameProfileCache;
 
 public class GuiSettingsScreen extends BaseBook {
 
     private PlayerAlliesList playerList;
-    private final Set<UUID> allies = new HashSet<>();
+    private Set<UUID> allies = new HashSet<>();
     private EditBox uuidInputBox;
 
     public GuiSettingsScreen(@Nullable Screen parent) {
@@ -39,7 +38,7 @@ public class GuiSettingsScreen extends BaseBook {
     @Override
     public void init() {
         super.init();
-        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 13, 0, 0, 41, 12, 41, 12, "textures/gui/clear_icon.png", (e) -> Minecraft.getInstance().setScreen(parent)));
+        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 12, 0, 0, 41, 12, 41, 12, "textures/gui/clear_icon.png", (e) -> Minecraft.getInstance().setScreen(parent)));
         SelectableButton dynamicButton = new SelectableButton(bookLeft + 20, bookTop + 34, 0, 0, 16, 16, 16, 16, ArsNouveau.prefix("textures/gui/settings_dynamic_light_off.png"),
                 ArsNouveau.prefix("textures/gui/settings_dynamic_light_on.png"), (b) -> {
             SelectableButton button = (SelectableButton) b;
@@ -89,22 +88,20 @@ public class GuiSettingsScreen extends BaseBook {
         addAllyButton.withTooltip(Component.translatable("ars_nouveau.settings.add_ally"));
         addRenderableWidget(addAllyButton);
 
-        Map<UUID, Optional<GameProfile>> gameProfileCache = new ConcurrentHashMap<>();
 
         // Fetch the allies, we need to load the level data
         try {
-            var server = ServerLifecycleHooks.getCurrentServer();
-            if (server != null && minecraft != null && minecraft.player != null) {
-                var AlliesData = AlliesSavedData.getAllies(server.overworld(), minecraft.player.getUUID());
-                allies.addAll(AlliesData);
-
+            if (minecraft != null && minecraft.player != null) {
+                allies = AlliesSavedData.getLocalAllies();
                 allies.forEach(playerUUID -> {
                     // if not found, fetch the game profile from the server and cache it
                     // to avoid fetching the same profile multiple times, put an empty optional in the map
-                    gameProfileCache.put(playerUUID, Optional.empty());
-                    SkullBlockEntity.fetchGameProfile(playerUUID).whenComplete(
-                            (profile, throwable) -> profile.ifPresent(gameProfile -> gameProfileCache.put(playerUUID, Optional.of(gameProfile)))
-                    );
+                    if (!gameProfileCache.containsKey(playerUUID)) {
+                        gameProfileCache.put(playerUUID, Optional.empty());
+                        SkullBlockEntity.fetchGameProfile(playerUUID).whenComplete(
+                                (profile, throwable) -> profile.ifPresent(gameProfile -> gameProfileCache.put(playerUUID, Optional.of(gameProfile)))
+                        );
+                    }
                 });
             }
         } catch (Exception e) {
@@ -112,7 +109,7 @@ public class GuiSettingsScreen extends BaseBook {
         }
 
         // Initialize the scrollable player list
-        this.playerList = new PlayerAlliesList(minecraft, 108, 108, bookTop + 64, 20, allies, gameProfileCache);
+        this.playerList = new PlayerAlliesList(minecraft, 108, 108, bookTop + 64, 20, allies);
         playerList.setX(bookRight - 132);
         addRenderableWidget(playerList);
     }
@@ -120,9 +117,9 @@ public class GuiSettingsScreen extends BaseBook {
     @Override
     public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
-        graphics.blit(ArsNouveau.prefix("textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15);
+        graphics.blit(ArsNouveau.prefix("textures/gui/create_paper.png"), 216, 175, 0, 0, 56, 15, 56, 15);
         graphics.drawString(font, Component.translatable("ars_nouveau.settings.title").getString(), 51, 24, -8355712, false);
-        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.close"), 238, 183, -8355712, false);
+        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.close"), 238, 180, -8355712, false);
         graphics.drawString(font, Component.translatable("ars_nouveau.settings.allies").getString(), 51 + 128, 24, -8355712, false);
     }
 
@@ -145,7 +142,7 @@ public class GuiSettingsScreen extends BaseBook {
                     (profile, throwable) -> {
                         if (profile.isPresent()) {
                             allies.add(profile.get().getId());
-                            playerList.gameProfiles.put(profile.get().getId(), profile);
+                            gameProfileCache.put(profile.get().getId(), profile);
                             playerList.updateEntries();
                             // Clear the input box
                             uuidInputBox.setValue("");
