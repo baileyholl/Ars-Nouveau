@@ -31,7 +31,7 @@ public class ClientToServerStoragePacket extends AbstractPacket{
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer sender) {
         if (sender.containerMenu instanceof StorageTerminalMenu terminalScreen){
-            terminalScreen.receive(minecraftServer.registryAccess(), tag);
+            terminalScreen.receive(sender, minecraftServer.registryAccess(), tag);
         }
     }
 

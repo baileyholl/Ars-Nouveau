@@ -424,8 +424,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.spell.no_mana", "Not enough Mana.");
         add("block.ars_nouveau.potion_jar", "Potion Jar");
         add("block.ars_nouveau.potion_melder", "Potion Melder");
-        add("item.ars_nouveau.potion_flask_extend_time", "Enchanted Potion Flask: Extend Time");
-        add("item.ars_nouveau.potion_flask_amplify", "Enchanted Potion Flask: Amplify");
+        add("item.ars_nouveau.potion_flask_extend_time", "Potion Flask: Extend Time");
+        add("item.ars_nouveau.potion_flask_amplify", "Potion Flask: Amplify");
         add("tooltip.potion_flask_extend_time", "Increases the duration of potions by 50%.");
         add("tooltip.potion_flask_amplify", "Increases the level of potions, but reduces their duration.");
         add("tooltip.potion_flask", "Holds 8 charges of potion.");

@@ -34,9 +34,9 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 	public List<StoredItemStack> itemList = new ArrayList<>();
     protected Inventory pinv;
 	public String search;
-	public String selectedTab = null;
 	public Map<StoredItemStack, StoredItemStack> itemMap = new HashMap<>();
 	boolean sentSettings = false;
+	public Map<UUID, String> tabs = new HashMap<>();
 
 	public StorageTerminalMenu(int id, Inventory inv, StorageLecternTile te) {
 		this(MenuRegistry.STORAGE.get(), id, inv, te);
@@ -105,7 +105,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 			return;
 		}
 
-		Map<StoredItemStack, Long> itemsCount = te.getStacks(selectedTab);
+		Map<StoredItemStack, Long> itemsCount = te.getStacks(tabs.get(pinv.player.getUUID()));
 		List<StoredItemStack> toWrite = new ArrayList<>();
 		Set<StoredItemStack> found = new HashSet<>();
 		itemsCount.forEach((s, c) -> {
@@ -128,8 +128,8 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 		if(!sentSettings) {
 			Networking.sendToPlayerClient(new SetTerminalSettingsPacket(te.sortSettings, null), (ServerPlayer) pinv.player);
 			CompoundTag tag = new CompoundTag();
-			if(!te.getLastSearch().equals(search)) {
-				search = te.getLastSearch();
+			if(!te.getLastSearch(pinv.player).equals(search)) {
+				search = te.getLastSearch(pinv.player);
 				tag.putString("search", search);
 			}
 			ListTag tabs = new ListTag();
@@ -155,7 +155,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 			if (slots.get(index) != null && slots.get(index).hasItem()) {
 				Slot slot = slots.get(index);
 				ItemStack slotStack = slot.getItem();
-				StoredItemStack c = te.pushStack(new StoredItemStack(slotStack, slotStack.getCount()), selectedTab);
+				StoredItemStack c = te.pushStack(new StoredItemStack(slotStack, slotStack.getCount()), tabs.get(playerIn.getUUID()));
 				ItemStack itemstack = c != null ? c.getActualStack() : ItemStack.EMPTY;
 				slot.set(itemstack);
 				if (!playerIn.level.isClientSide)
@@ -227,20 +227,20 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 	}
 
 
-	public void receive(HolderLookup.Provider reg, CompoundTag message) {
-		if(pinv.player.isSpectator())return;
+	public void receive(ServerPlayer sender, HolderLookup.Provider reg, CompoundTag message) {
+		if(sender.isSpectator())return;
 		if(message.contains("search")) {
-			te.setLastSearch(message.getString("search"));
+			te.setLastSearch(sender, message.getString("search"));
 		}
-		this.receiveInteract(reg, message);
+		this.receiveInteract(sender, reg, message);
 	}
 
-	public void receiveSettings(SortSettings settings, String selectedTab) {
-		this.selectedTab = selectedTab;
+	public void receiveSettings(ServerPlayer sender, SortSettings settings, String selectedTab) {
+		this.tabs.put(sender.getUUID(), selectedTab);
 		te.setSorting(settings);
 	}
 
-	public void receiveInteract(HolderLookup.Provider provider, CompoundTag tag) {
+	public void receiveInteract(ServerPlayer sender, HolderLookup.Provider provider, CompoundTag tag) {
 		if(!tag.contains("interaction"))
 			return;
 
@@ -251,7 +251,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 			stack = ANCodecs.decode(provider, StoredItemStack.CODEC, interactTag.get("stack"));
 		}
 		StorageTerminalMenu.SlotAction action = StorageTerminalMenu.SlotAction.values()[interactTag.getInt("action")];
-		onInteract(stack, action, pullOne);
+		onInteract(sender, stack, action, pullOne);
 	}
 
 	@Override
@@ -264,14 +264,14 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 		return false;
 	}
 
-	public void onInteract(StoredItemStack clicked, SlotAction act, boolean pullOne) {
-		ServerPlayer player = (ServerPlayer) pinv.player;
+	public void onInteract(ServerPlayer player, StoredItemStack clicked, SlotAction act, boolean pullOne) {
 		player.resetLastActionTime();
 		if(act == SlotAction.SPACE_CLICK) {
 			for (int i = playerSlotsStart + 1;i < playerSlotsStart + 28;i++) {
 				quickMoveStack(player, i);
 			}
 		} else {
+			String selectedTab = tabs.get(player.getUUID());
 			if (act == SlotAction.PULL_OR_PUSH_STACK) {
 				ItemStack stack = getCarried();
 				if (!stack.isEmpty()) {
