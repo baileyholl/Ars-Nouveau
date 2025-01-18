@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ImbuementTile;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.ApparatusRecipeInput;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.common.network.HighlightAreaPacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -62,9 +63,7 @@ public class ImbuementBlock extends TickableModBlock {
 
                 Networking.sendToNearbyClient(worldIn, tile.getBlockPos(), new HighlightAreaPacket(colorPos, 60));
 
-                EnchantingApparatusTile apparatusTile = new EnchantingApparatusTile(pos, BlockRegistry.ENCHANTING_APP_BLOCK.defaultBlockState());
-                apparatusTile.setLevel(worldIn);
-                IEnchantingRecipe apparatusRecipe = apparatusTile.getRecipe(tile.stack, player);
+                IEnchantingRecipe apparatusRecipe = IEnchantingRecipe.getRecipe(worldIn, new ApparatusRecipeInput(tile.stack, tile.getPedestalItems(), player));
                 if (apparatusRecipe == null) {
                     PortUtil.sendMessage(player, Component.translatable("ars_nouveau.imbuement.norecipe"));
                 } else {

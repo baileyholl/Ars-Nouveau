@@ -138,9 +138,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
     }
 
     public IEnchantingRecipe getRecipe(ItemStack stack, @Nullable Player playerEntity) {
-        List<ItemStack> pedestalItems = getPedestalItems();
-        var holder = ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes(level).stream().filter(r -> r.value().matches(new ApparatusRecipeInput(stack, pedestalItems, playerEntity), level)).findFirst().orElse(null);
-        return holder != null ? holder.value() : null;
+        return IEnchantingRecipe.getRecipe(level, new ApparatusRecipeInput(stack, getPedestalItems(), playerEntity));
     }
 
     public boolean attemptCraft(ItemStack catalyst, @Nullable Player playerEntity) {

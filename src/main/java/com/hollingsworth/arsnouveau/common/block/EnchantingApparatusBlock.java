@@ -74,6 +74,8 @@ public class EnchantingApparatusBlock extends TickableModBlock {
 
                 Networking.sendToNearbyClient(world, tile.getBlockPos(), new HighlightAreaPacket(colorPos, 60));
 
+                // This is cursed, but IImbuementRecipe uses ImbuementTile as its Input and
+                // ImbuementRecipe calls ImbuementTile#getPedestalItems
                 ImbuementTile imbuementTile = new ImbuementTile(pos, BlockRegistry.IMBUEMENT_BLOCK.defaultBlockState());
                 imbuementTile.setLevel(world);
                 imbuementTile.stack = player.getItemInHand(handIn).copy();
