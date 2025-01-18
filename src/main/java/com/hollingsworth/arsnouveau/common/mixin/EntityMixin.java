@@ -19,7 +19,7 @@ public class EntityMixin {
 
     @ModifyReturnValue(method = "isInWaterOrRain", at = @At("RETURN"))
     private boolean ars_nouveau$isInWaterOrRain(boolean original) {
-        if (((Entity) (Object) this) instanceof LivingEntity livingEntity && ars_nouveau$isWet(livingEntity)) {
+        if ((Entity) (Object) this instanceof LivingEntity livingEntity && ars_nouveau$isWet(livingEntity)) {
             return true;
         }
         return original;
@@ -27,7 +27,7 @@ public class EntityMixin {
 
     @Inject(method = "setRemainingFireTicks", at = @At("HEAD"), cancellable = true)
     private void ars_nouveau$setSecondsOnFire(int pRemainingFireTicks, CallbackInfo ci) {
-        if (((Entity) (Object) this) instanceof LivingEntity livingEntity && ars_nouveau$isWet(livingEntity) && pRemainingFireTicks > 0) {
+        if ((Entity) (Object) this instanceof LivingEntity livingEntity && ars_nouveau$isWet(livingEntity) && pRemainingFireTicks > 0) {
             livingEntity.clearFire();
             ci.cancel();
         }
@@ -38,13 +38,20 @@ public class EntityMixin {
         return livingEntity.hasEffect(ModPotions.SOAKED_EFFECT) || livingEntity.getVehicle() instanceof BubbleEntity;
     }
 
+    /**
+     * This mixin is used to add the ability for players to set other players as allies.
+     * This is used to prevent players from damaging each other with spells.
+     *
+     * @param original the original return value of the method
+     * @param entity   the entity that is going to damage the current entity
+     */
     @ModifyReturnValue(method = "isAlliedTo(Lnet/minecraft/world/entity/Entity;)Z", at = @At("RETURN"))
     private boolean ars_nouveau$isAlliedTo(boolean original, Entity entity) {
         // the check only matters for players server-side
-        if (!(((Entity) (Object) this) instanceof Player dealer && entity.level() instanceof ServerLevel serverLevel))
+        if (!((Entity) (Object) this instanceof Player target && entity instanceof Player dealer && dealer.level() instanceof ServerLevel serverLevel))
             return original;
         // check if the target is a player and the dealer has the target set as an ally
-        return original || (entity instanceof Player target && AlliesSavedData.getAllies(serverLevel, dealer.getUUID()).contains(target.getUUID()));
+        return original || AlliesSavedData.getAllies(serverLevel, dealer.getUUID()).contains(target.getUUID());
     }
 
 }
