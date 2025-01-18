@@ -298,10 +298,10 @@ public class Documentation {
         addPage(new DocEntryBuilder(RESOURCES, "weald_walker")
                 .withIcon(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix( RitualLib.AWAKENING)))
                 .withIntroPage()
-                .withPage(EntityEntry.create(ModEntities.ENTITY_BLAZING_WEALD.get(), getLangPath("weald_walker", 2), 0.25f, walkerOffset))
-                .withPage(EntityEntry.create(ModEntities.ENTITY_CASCADING_WEALD.get(), getLangPath("weald_walker", 3), 0.25f, walkerOffset))
-                .withPage(EntityEntry.create(ModEntities.ENTITY_FLOURISHING_WEALD.get(),getLangPath("weald_walker", 4), 0.25f, walkerOffset))
-                .withPage(EntityEntry.create(ModEntities.ENTITY_VEXING_WEALD.get(), getLangPath("weald_walker", 5), 0.25f, walkerOffset)));
+                .withPage(EntityEntry.create(ModEntities.ENTITY_BLAZING_WEALD.get(), getLangPath("weald_walker", 2)))
+                .withPage(EntityEntry.create(ModEntities.ENTITY_CASCADING_WEALD.get(), getLangPath("weald_walker", 3)))
+                .withPage(EntityEntry.create(ModEntities.ENTITY_FLOURISHING_WEALD.get(),getLangPath("weald_walker", 4)))
+                .withPage(EntityEntry.create(ModEntities.ENTITY_VEXING_WEALD.get(), getLangPath("weald_walker", 5))));
 
         addPage(new DocEntryBuilder(RESOURCES, "wilden")
                 .withIcon(ItemsRegistry.WILDEN_SPIKE)
