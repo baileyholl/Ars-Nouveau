@@ -83,6 +83,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.village.VillageSiegeEvent;
 import net.neoforged.neoforge.event.village.VillagerTradesEvent;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -94,12 +95,12 @@ public class EventHandler {
     public static void resourceLoadEvent(AddReloadListenerEvent event) {
         event.addListener(new SimplePreparableReloadListener<>() {
             @Override
-            protected Object prepare(ResourceManager pResourceManager, ProfilerFiller pProfiler) {
+            protected @NotNull Object prepare(@NotNull ResourceManager pResourceManager, @NotNull ProfilerFiller pProfiler) {
                 return null;
             }
 
             @Override
-            protected void apply(Object pObject, ResourceManager pResourceManager, ProfilerFiller pProfiler) {
+            protected void apply(@NotNull Object pObject, @NotNull ResourceManager pResourceManager, @NotNull ProfilerFiller pProfiler) {
                 MultiRecipeWrapper.RECIPE_CACHE = new HashMap<>();
                 EffectWololo.recipeCache = new FixedStack<>(EffectWololo.MAX_RECIPE_CACHE);
                 ArsNouveauAPI.getInstance().onResourceReload();
@@ -180,10 +181,8 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void jumpEvent(LivingEvent.LivingJumpEvent e) {
-        e.getEntity();
         if (e.getEntity().hasEffect(ModPotions.SNARE_EFFECT)) {
             e.getEntity().setDeltaMovement(0, 0, 0);
-            return;
         }
     }
 
@@ -199,7 +198,6 @@ public class EventHandler {
             }
             if (e.getEntity().getCommandSenderWorld() instanceof ServerLevel level) {
                 Set<UUID> allies = AlliesSavedData.getAllies(level, e.getEntity().getUUID());
-                System.out.println("Sending allies data to " + serverPlayer.getUUID() + " with " + allies.size() + " allies");
                 Networking.sendToPlayerClient(new PacketSetAllies(serverPlayer.getUUID(), allies), serverPlayer);
             }
         }
