@@ -63,7 +63,7 @@ public class ImbuementBlock extends TickableModBlock {
 
                 Networking.sendToNearbyClient(worldIn, tile.getBlockPos(), new HighlightAreaPacket(colorPos, 60));
 
-                IEnchantingRecipe apparatusRecipe = IEnchantingRecipe.getRecipe(worldIn, new ApparatusRecipeInput(tile.stack, tile.getPedestalItems(), player));
+                var apparatusRecipe = IEnchantingRecipe.getRecipe(worldIn, new ApparatusRecipeInput(tile.stack, tile.getPedestalItems(), player));
                 if (apparatusRecipe == null) {
                     PortUtil.sendMessage(player, Component.translatable("ars_nouveau.imbuement.norecipe"));
                 } else {

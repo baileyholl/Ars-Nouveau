@@ -37,10 +37,10 @@ public interface IEnchantingRecipe extends Recipe<ApparatusRecipeInput> {
         return false;
     }
 
-    static IEnchantingRecipe getRecipe(Level level, ApparatusRecipeInput input) {
+    static @Nullable RecipeHolder<? extends IEnchantingRecipe> getRecipe(Level level, ApparatusRecipeInput input) {
         for (RecipeHolder<? extends IEnchantingRecipe> holder : ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes(level)) {
             if (holder.value().matches(input, level)) {
-                return holder.value();
+                return holder;
             }
         }
         return null;

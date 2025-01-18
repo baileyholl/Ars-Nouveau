@@ -138,7 +138,8 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
     }
 
     public IEnchantingRecipe getRecipe(ItemStack stack, @Nullable Player playerEntity) {
-        return IEnchantingRecipe.getRecipe(level, new ApparatusRecipeInput(stack, getPedestalItems(), playerEntity));
+        var recipe = IEnchantingRecipe.getRecipe(level, new ApparatusRecipeInput(stack, getPedestalItems(), playerEntity));
+        return recipe != null ? recipe.value() : null;
     }
 
     public boolean attemptCraft(ItemStack catalyst, @Nullable Player playerEntity) {
