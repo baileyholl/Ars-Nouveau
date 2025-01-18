@@ -22,7 +22,6 @@ public abstract class ColoredProjectile extends Projectile {
     public static final EntityDataAccessor<Integer> GREEN = SynchedEntityData.defineId(ColoredProjectile.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> BLUE = SynchedEntityData.defineId(ColoredProjectile.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<CompoundTag> PARTICLE_TAG = SynchedEntityData.defineId(ColoredProjectile.class, EntityDataSerializers.COMPOUND_TAG);
-    private ParticleColor color;
     public int rainbowStartTick = 0;
 
     public ColoredProjectile(EntityType<? extends ColoredProjectile> type, Level worldIn) {
@@ -41,12 +40,8 @@ public abstract class ColoredProjectile extends Projectile {
     }
 
     public ParticleColor getParticleColor() {
-        if (this.color != null) {
-            return this.color;
-        }
         CompoundTag tag = entityData.get(PARTICLE_TAG);
-        this.color = ParticleColorRegistry.from(tag).transition(tickCount*50);
-        return this.color;
+        return ParticleColorRegistry.from(entityData.get(PARTICLE_TAG)).transition(tickCount*50);
     }
 
     public boolean isRainbow() {
@@ -54,11 +49,10 @@ public abstract class ColoredProjectile extends Projectile {
     }
 
     public ParticleColor.IntWrapper getParticleColorWrapper() {
-        return this.getParticleColor().toWrapper();
+        return new ParticleColor.IntWrapper(entityData.get(RED), entityData.get(GREEN), entityData.get(BLUE));
     }
 
     public void setColor(ParticleColor colors) {
-        this.color = colors;
         ParticleColor.IntWrapper wrapper = colors.toWrapper();
         entityData.set(RED, wrapper.r);
         entityData.set(GREEN, wrapper.g);
@@ -68,7 +62,6 @@ public abstract class ColoredProjectile extends Projectile {
 
     @Override
     public void load(CompoundTag compound) {
-        this.color = null;
         super.load(compound);
         entityData.set(RED, compound.getInt("red"));
         entityData.set(GREEN, compound.getInt("green"));
