@@ -63,6 +63,7 @@ public class ModPotions {
         }
     });
     public static final RegistryObject<MobEffect> IMMOLATE_EFFECT = EFFECTS.register(IMMOLATE, ImmolateEffect::new);
+    public static final RegistryObject<MobEffect> SOAKED_EFFECT = EFFECTS.register(SOAKED, SoggyEffect::new);
     public static final RegistryObject<MobEffect> BOUNCE_EFFECT = EFFECTS.register(BOUNCE, BounceEffect::new);
     public static final RegistryObject<MobEffect> MAGIC_FIND_EFFECT = EFFECTS.register(MAGIC_FIND, MagicFindEffect::new);
 
