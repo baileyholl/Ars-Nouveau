@@ -19,6 +19,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -38,7 +39,7 @@ public class RecipeDatagen extends RecipeProvider {
     }
 
     @Override
-    protected void buildRecipes(RecipeOutput pRecipeOutput) {
+    protected void buildRecipes(@NotNull RecipeOutput pRecipeOutput) {
         {
             this.consumer = pRecipeOutput;
             Block SOURCESTONE = BlockRegistry.getBlock(LibBlockNames.SOURCESTONE);
@@ -782,6 +783,8 @@ public class RecipeDatagen extends RecipeProvider {
             clearBuilder(ItemsRegistry.WHIRLISPRIG_CHARM).save(consumer, ArsNouveau.prefix("clear_whirlisprig_charm"));
             clearBuilder(ItemsRegistry.AMETHYST_GOLEM_CHARM).save(consumer, ArsNouveau.prefix("clear_amethyst_golem_charm"));
             clearBuilder(ItemsRegistry.ALAKARKINOS_CHARM).save(consumer, ArsNouveau.prefix("clear_alakarkinos_charm"));
+
+            shapelessBuilder(ItemsRegistry.ARS_STENCIL.get()).requires(ItemsRegistry.ABJURATION_ESSENCE.get()).requires(Items.PAPER).save(consumer);
         }
     }
 
