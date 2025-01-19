@@ -298,7 +298,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     }
 
     public @Nullable RecipeHolder<? extends IImbuementRecipe> getRecipeNow() {
-        return ImbuementRecipeRegistry.INSTANCE.getRecipes().stream().filter(r -> r.value().matches(this, level)).findFirst().orElse(null);
+        return IImbuementRecipe.getRecipe(level, this);
     }
 
     @Override
