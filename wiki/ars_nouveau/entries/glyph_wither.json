@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_wither",
+  "icon": 100,
+  "title": "Wither",
+  "category": "ars_nouveau:glyphs_tier_three",
+  "pages": [
+    {
+      "title": "Wither",
+      "description": "Applies the Wither debuff.",
+      "icon": "item.ars_nouveau.glyph_wither"
+    }
+  ]
+}

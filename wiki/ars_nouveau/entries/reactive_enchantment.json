@@ -1,0 +1,19 @@
+{
+  "id": "ars_nouveau:reactive_enchantment",
+  "icon": 2,
+  "title": "Reactive",
+  "category": "ars_nouveau:enchanting",
+  "pages": [
+    {
+      "title": "Reactive",
+      "description": "Items with Reactive have a chance to cast spells when swung. The spell on the Spell Parchment determines the spell that will be inscribed on the item.",
+      "icon": "item.minecraft.enchanted_book"
+    },
+    {
+      "description": "Like other enchantments, Reactive levels can only be applied to an item with the previous level of enchantment. Reactive 2 requires Reactive 1, etc."
+    },
+    {
+      "description": "The spell inscribed for Reactive can be changed by placing the item in the apparatus with a new inscribed spell parchment."
+    }
+  ]
+}

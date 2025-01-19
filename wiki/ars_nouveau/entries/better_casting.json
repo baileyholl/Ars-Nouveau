@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:better_casting",
+  "icon": 7,
+  "title": "Better Casting",
+  "category": "ars_nouveau:getting_started",
+  "pages": [
+    {
+      "title": "Better Casting",
+      "description": "Your mana pool may be expanded with special mage armors, enchantments, learning new glyphs, or by drinking potions. Once you have acquired a Magebloom Seed you may craft a variety of configurable magic armors, altered using Threads.",
+      "icon": "item.ars_nouveau.sorcerer_robes"
+    }
+  ]
+}

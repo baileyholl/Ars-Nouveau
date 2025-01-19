@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:spell_books",
+  "icon": 1,
+  "title": "Spell Books",
+  "category": "ars_nouveau:spell_casting",
+  "pages": [
+    {
+      "title": "Spell Books",
+      "description": "Accessing higher tier spells will require a better spell book. While a novice spell book only has access to Tier 1 spells, the Apprentice and Archmage spell books will unlock tiers two and three. Upgrading your spell book will transfer all of the spells that you have learned into your new book. Books may be dyed by crafting them with a piece of dye.",
+      "icon": "item.ars_nouveau.archmage_spell_book"
+    }
+  ]
+}

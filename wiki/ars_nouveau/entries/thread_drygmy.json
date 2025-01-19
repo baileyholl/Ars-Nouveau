@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:thread_drygmy",
+  "icon": 100,
+  "title": "The Drygmy",
+  "category": "ars_nouveau:armor",
+  "pages": [
+    {
+      "title": "Thread of The Drygmy",
+      "description": "Grants an additional stack of looting.",
+      "icon": "item.ars_nouveau.thread_drygmy"
+    }
+  ]
+}

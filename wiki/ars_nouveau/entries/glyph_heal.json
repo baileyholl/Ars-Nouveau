@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_heal",
+  "icon": 100,
+  "title": "Heal",
+  "category": "ars_nouveau:glyphs_tier_two",
+  "pages": [
+    {
+      "title": "Heal",
+      "description": "Heals a small amount of health and consumes hunger from the caster. When used on Undead, the spell will deal an equal amount of magic damage.",
+      "icon": "item.ars_nouveau.glyph_heal"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_ignite",
+  "icon": 100,
+  "title": "Ignite",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Ignite",
+      "description": "Sets blocks and mobs on fire for a short time. Sensitive will summon Mage Fire, a shorter lived fire that will not spread or destroy blocks.",
+      "icon": "item.ars_nouveau.glyph_ignite"
+    }
+  ]
+}

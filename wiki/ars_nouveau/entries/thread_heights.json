@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:thread_heights",
+  "icon": 100,
+  "title": "Heights",
+  "category": "ars_nouveau:armor",
+  "pages": [
+    {
+      "title": "Thread of Heights",
+      "description": "Allows you to jump higher and increases how far you may fall before taking damage.",
+      "icon": "item.ars_nouveau.thread_heights"
+    }
+  ]
+}

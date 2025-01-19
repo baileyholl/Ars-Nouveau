@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_gravity",
+  "icon": 100,
+  "title": "Gravity",
+  "category": "ars_nouveau:glyphs_tier_two",
+  "pages": [
+    {
+      "title": "Gravity",
+      "description": "Causes blocks and entities to fall. When augmented with Extend Time, players will have their flight disabled and will obtain the Gravity effect. While afflicted with Gravity, entities will rapidly fall and take double falling damage.",
+      "icon": "item.ars_nouveau.glyph_gravity"
+    }
+  ]
+}

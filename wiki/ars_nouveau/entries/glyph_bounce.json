@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_bounce",
+  "icon": 100,
+  "title": "Bounce",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Bounce",
+      "description": "Gives players the Bounce effect, causing them to bounce upwards upon falling. Amplification of Bounce will preserve additional forward facing motion per bounce.",
+      "icon": "item.ars_nouveau.glyph_bounce"
+    }
+  ]
+}

@@ -1,7 +1,16 @@
 package com.hollingsworth.arsnouveau.api.documentation.entry;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.DocCategory;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
+import com.hollingsworth.arsnouveau.api.documentation.SinglePageWidget;
+import com.hollingsworth.arsnouveau.api.documentation.export.DocExporter;
+import com.hollingsworth.arsnouveau.api.documentation.export.IJsonExportable;
+import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
+import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
+import com.hollingsworth.arsnouveau.common.util.Log;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +28,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public record DocEntry(ResourceLocation id, CopyOnWriteArrayList<SinglePageCtor> pages,
                        ItemStack renderStack, Component entryTitle, int order, Set<DocCategory> categories,
-                       List<Component> searchTags) implements Comparable<DocEntry> {
+                       List<Component> searchTags) implements Comparable<DocEntry>, IJsonExportable {
 
     public DocEntry(ResourceLocation id, ItemStack renderStack, Component component) {
         this(id, new CopyOnWriteArrayList<>(), renderStack, component, 100, ConcurrentHashMap.newKeySet(), new CopyOnWriteArrayList<>());
@@ -100,5 +109,32 @@ public record DocEntry(ResourceLocation id, CopyOnWriteArrayList<SinglePageCtor>
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    @Override
+    public JsonObject toJson() {
+        JsonObject object = new JsonObject();
+        object.addProperty(DocExporter.ID_PROPERTY, id.toString());
+        object.addProperty(DocExporter.ICON_PROPERTY, order);
+        object.addProperty(DocExporter.TITLE_PROPERTY, entryTitle.getString());
+        object.addProperty(DocExporter.CATEGORY_PROPERY, DocumentationRegistry.getCategoryForEntry(this).id().toString());
+        if(!ArsNouveau.proxy.isClientSide()){
+            return object;
+        }
+        JsonArray pageJsons = new JsonArray();
+        for(SinglePageCtor pageCtor : pages){
+            var screen = new BaseDocScreen();
+            screen.setMinecraft(ArsNouveau.proxy.getMinecraft());
+            SinglePageWidget widget = pageCtor.create(screen, 0, 0, 0, 0);
+            JsonObject pageObject = widget.toJson();
+            if(pageObject.isEmpty()){
+                Log.getLogger().error("Page " + id + " " + pageCtor + " is empty!");
+                continue;
+            }
+            pageJsons.add(pageObject);
+        }
+        object.add("pages", pageJsons);
+
+        return object;
     }
 }

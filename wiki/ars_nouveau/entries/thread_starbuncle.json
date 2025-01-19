@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:thread_starbuncle",
+  "icon": 100,
+  "title": "The Starbuncle",
+  "category": "ars_nouveau:armor",
+  "pages": [
+    {
+      "title": "Thread of The Starbuncle",
+      "description": "Increases the speed of the player by 20% each level.",
+      "icon": "item.ars_nouveau.thread_starbuncle"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:armor",
+  "icon": 0,
+  "title": "Magical Armor",
+  "category": "ars_nouveau:armor",
+  "pages": [
+    {
+      "title": "Magical Armor",
+      "description": "Magical robes will increase the wearers mana regen and can be upgraded with special abilities using Threads. The Sorceror\u0027s set provides the lowest defence, but provides the most powerful set of slots for Threads. The Arcanist\u0027s and Battlemage\u0027s sets provide increasingly more defence, but fewer and less powerful Thread Slots. For more information on Threads, see the section on Armor and Perks.",
+      "icon": "item.ars_nouveau.sorcerer_robes"
+    },
+    {
+      "title": "Thread Slots",
+      "description": "Each type of armor has its own unique set of Thread Slots. Upgrading the armor to a new tier will unlock and add additional slots to the armor. The Sorcerors set provides the least amount of defence while providing the most powerful slots, while the Battlemage\u0027s set provides defence but much weaker slots. For recipes on upgrading your armor to the next tier, see the section in the Armor and Perks category."
+    }
+  ]
+}

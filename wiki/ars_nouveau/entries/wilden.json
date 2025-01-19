@@ -1,0 +1,16 @@
+{
+  "id": "ars_nouveau:wilden",
+  "icon": 100,
+  "title": "Wilden",
+  "category": "ars_nouveau:field_guide",
+  "pages": [
+    {
+      "title": "Wilden",
+      "description": "Wilden are hostile creatures that can be commonly found at night around Wilden Dens. While Wilden Defenders may only be found in cold biomes, Stalker and Hunter Dens can be found in any forest biome.",
+      "icon": "item.ars_nouveau.wilden_spike"
+    },
+    {
+      "description": "The Chimera is a worthy fight for a caster with Tier 2 spells and equipment. The Chimera resists cold damage, and a variety of spells including buffs, dispel, and mobility are suggested."
+    }
+  ]
+}

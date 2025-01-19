@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_evaporate",
+  "icon": 100,
+  "title": "Evaporate",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Evaporate",
+      "description": "Deletes fluids in an area. Can be expanded with AOE.",
+      "icon": "item.ars_nouveau.glyph_evaporate"
+    }
+  ]
+}

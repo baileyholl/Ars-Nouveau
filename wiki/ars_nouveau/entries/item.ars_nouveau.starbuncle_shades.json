@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:item.ars_nouveau.starbuncle_shades",
+  "icon": 100,
+  "title": "Starbuncle Shades",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Starbuncle Shades",
+      "description": "Using these on a Starbuncle will disable their ability to pick up items off the ground or pick Sourceberries. Wanding the starbuncle will drop the glasses.",
+      "icon": "item.ars_nouveau.starbuncle_shades"
+    }
+  ]
+}

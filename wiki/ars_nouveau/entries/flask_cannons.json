@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:flask_cannons",
+  "icon": 100,
+  "title": "Flask Cannons",
+  "category": "ars_nouveau:items",
+  "pages": [
+    {
+      "title": "Flask Cannons",
+      "description": "Flask Cannons can consume potions from bottles and flasks from the players inventory and convert the potion into a Splash or Lingering potion. To select the potion to be thrown, use the Radial Menu to select your flask or potion and use the launcher.",
+      "icon": "item.ars_nouveau.splash_flask_cannon"
+    }
+  ]
+}

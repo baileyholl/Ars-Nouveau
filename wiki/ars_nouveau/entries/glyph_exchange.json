@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_exchange",
+  "icon": 100,
+  "title": "Exchange",
+  "category": "ars_nouveau:glyphs_tier_two",
+  "pages": [
+    {
+      "title": "Exchange",
+      "description": "When used on blocks, exchanges the blocks in the players hotbar for the blocks hit as if they were mined with silk touch. Can be augmented with AOE, and Amplify is required for swapping blocks of higher hardness. When used on entities, the locations of the caster and the entity hit are swapped.",
+      "icon": "item.ars_nouveau.glyph_exchange"
+    }
+  ]
+}

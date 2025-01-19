@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:rewind",
+  "icon": 100,
+  "title": "Rewind",
+  "category": "ars_nouveau:glyphs_tier_three",
+  "pages": [
+    {
+      "title": "Rewind",
+      "description": "Rewinds an entity back in time to its previous locations and health. Can revert blocks that were moved with spells back into solid blocks. Glyphs that come after Rewind will be cast at the end of the rewind, as if they were Delayed.",
+      "icon": "item.ars_nouveau.rewind"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:thread_undying",
+  "icon": 100,
+  "title": "Undying",
+  "category": "ars_nouveau:armor",
+  "pages": [
+    {
+      "title": "Thread of Undying",
+      "description": "Once every time you sleep, you will nullify death a single time as if holding a Totem of the Undying. Requires a tier 3 slot.",
+      "icon": "item.ars_nouveau.thread_undying"
+    }
+  ]
+}

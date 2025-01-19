@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_decelerate",
+  "icon": 100,
+  "title": "Decelerate",
+  "category": "ars_nouveau:glyphs_tier_two",
+  "pages": [
+    {
+      "title": "Decelerate",
+      "description": "Decreases the speed of projectile spells.",
+      "icon": "item.ars_nouveau.glyph_decelerate"
+    }
+  ]
+}

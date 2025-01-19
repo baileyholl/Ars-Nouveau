@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:sourceberry_bush",
+  "icon": 100,
+  "title": "Sourceberry",
+  "category": "ars_nouveau:field_guide",
+  "pages": [
+    {
+      "title": "Sourceberry",
+      "description": "A Sourceberry Bush can be found in Taiga and Archwood Forest biomes, and produces Sourceberries. A Sourceberry can be used to craft a Potion of Mana Regeneration or consumed as food. Starbuncles will automatically harvest fully grown Source Berry Bushes, making them useful for early automation of the Agronomic Sourcelink. Sourceberry foods will also grant Mana Regeneration.",
+      "icon": "block.ars_nouveau.sourceberry_bush"
+    }
+  ]
+}

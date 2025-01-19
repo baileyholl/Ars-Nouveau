@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_dispel",
+  "icon": 100,
+  "title": "Dispel",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Dispel",
+      "description": "Removes any potion effects on the target. When used on a witch at half health, the witch will vanish in return for a Wixie shard. Will also dispel tamed summons back into their charm.",
+      "icon": "item.ars_nouveau.glyph_dispel"
+    }
+  ]
+}

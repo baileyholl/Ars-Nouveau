@@ -1,0 +1,28 @@
+{
+  "id": "ars_nouveau:illusion_blocks",
+  "icon": 100,
+  "title": "Illusion Blocks",
+  "category": "ars_nouveau:field_guide",
+  "pages": [
+    {
+      "title": "Mirrorweave",
+      "description": "Mirrorweave can replicate the appearance of any block that is used on it. These blocks will take on the same collisions and light as their replicated block. Sense Magic will reveal the illusion. All illusion blocks can also be used as frames for portals. Casting light on an illusion block will allow it to emit light.",
+      "icon": "block.ars_nouveau.mirrorweave"
+    },
+    {
+      "title": "Falseweave",
+      "description": "Falseweave has the same properties as Mirrorweave, but can be passed through as if it were air. Sense Magic will cause the block to become invisible, revealing any hidden paths.",
+      "icon": "block.ars_nouveau.falseweave"
+    },
+    {
+      "title": "Ghostweave",
+      "description": "Ghostweave has the same properties as Mirrorweave, but can be turned into an invisible wall by casting Invisbility on it. Casting Dispel will reveal the block again. Sense Magic will cause the block to appear solid again.",
+      "icon": "block.ars_nouveau.ghostweave"
+    },
+    {
+      "title": "Skyweave",
+      "description": "Skyweave will display the skybox of the dimension it is placed in. To toggle the skybox and show the facade, cast Dispel on it. The facade may be set to another block like Mirrorweave.",
+      "icon": "block.ars_nouveau.sky_block"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:ritual_burrowing",
+  "icon": 100,
+  "title": "Burrowing",
+  "category": "ars_nouveau:ritual_index",
+  "pages": [
+    {
+      "title": "Burrowing",
+      "description": "Digs four adjacent holes to bedrock, dropping any blocks.",
+      "icon": "item.ars_nouveau.ritual_burrowing"
+    }
+  ]
+}

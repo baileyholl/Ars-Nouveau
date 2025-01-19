@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_slowfall",
+  "icon": 100,
+  "title": "Slowfall",
+  "category": "ars_nouveau:glyphs_tier_two",
+  "pages": [
+    {
+      "title": "Slowfall",
+      "description": "Applies the Slow Fall buff.",
+      "icon": "item.ars_nouveau.glyph_slowfall"
+    }
+  ]
+}

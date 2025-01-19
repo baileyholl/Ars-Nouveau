@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_redstone_signal",
+  "icon": 100,
+  "title": "Redstone Signal",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Redstone Signal",
+      "description": "Places a temporary block of redstone with configurable power and duration. Augment with Sensitive to set the target block as a power source for itself and surrounding blocks. Dampen and Amplify will adjust the power from the base value of 10.",
+      "icon": "item.ars_nouveau.glyph_redstone_signal"
+    }
+  ]
+}

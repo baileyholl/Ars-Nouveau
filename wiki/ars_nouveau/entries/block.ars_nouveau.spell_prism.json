@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:block.ars_nouveau.spell_prism",
+  "icon": 100,
+  "title": "Spell Prism",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Spell Prism",
+      "description": "When a projectile spell hits this block, it is redirected the direction the block is facing. Spell Prisms will send a signal to nearby Observers if a spell is redirected.",
+      "icon": "block.ars_nouveau.spell_prism"
+    }
+  ]
+}

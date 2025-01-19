@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:new_glyphs",
+  "icon": 4,
+  "title": "New Glyphs",
+  "category": "ars_nouveau:getting_started",
+  "pages": [
+    {
+      "title": "New Glyphs",
+      "description": "Accessing new spells will require a small amount of setup, resources, and base building. New spells can be learned by obtaining Glyphs. Glyphs are created using the Scribe\u0027s Table with EXP and items. Once you have obtained a glyph, simply use it to memorize the glyph. Glyphs can be shared between players with an Annotated Codex. See the section on the Scribes Table for more information.",
+      "icon": "item.ars_nouveau.blank_glyph"
+    }
+  ]
+}

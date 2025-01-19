@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:mimic_scroll",
+  "icon": 100,
+  "title": "Mimic Scroll",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Mimic Scroll",
+      "description": "Provides a list of items to automation related entities. When this scroll is attached to an inventory, entities will only insert items that already exist in the inventory. To attach the scroll, place an item frame on the inventory, and place a Mimic Scroll in it.",
+      "icon": "item.ars_nouveau.mimic_scroll"
+    }
+  ]
+}

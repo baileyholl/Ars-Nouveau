@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_leap",
+  "icon": 100,
+  "title": "Leap",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Leap",
+      "description": "Launches the target in the direction they are looking. Amplification will increase the distance moved.",
+      "icon": "item.ars_nouveau.glyph_leap"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:volcanic_sourcelink",
+  "icon": 100,
+  "title": "Volcanic Sourcelink",
+  "category": "ars_nouveau:source",
+  "pages": [
+    {
+      "title": "Volcanic Sourcelink",
+      "description": "The Volcanic Sourcelink generates Source by consuming burnable items. Archwood logs will generate bonus Source, with Blazing Archwood generating the most. As the Volcanic Sourcelink produces Source, it also produces heat, converting stone into magma blocks and then lava. The Volcanic Sourcelink automatically outputs to nearby jars, starting with the one closest to it.",
+      "icon": "block.ars_nouveau.volcanic_sourcelink"
+    },
+    {
+      "title": "Active Generation",
+      "description": "Nearby Blazing Archwood items will be burned up in exchange for a chunk of Source and a moderate amount of heat. The Volcanic Sourcelink will also take items from surrounding pedestals."
+    }
+  ]
+}

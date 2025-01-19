@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:ritual_flowering",
+  "icon": 100,
+  "title": "Flowering",
+  "category": "ars_nouveau:ritual_index",
+  "pages": [
+    {
+      "title": "Flowering",
+      "description": "Populates the nearby area with flowers and grass. Augmenting with a source gem will increase the radius by 1 for each gem. Augmenting with sand will replace flowers with Cactus and Dead Bushes.",
+      "icon": "item.ars_nouveau.ritual_flowering"
+    }
+  ]
+}

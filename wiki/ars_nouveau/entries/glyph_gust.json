@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_gust",
+  "icon": 100,
+  "title": "Knockback",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Knockback",
+      "description": "Knocks a target or block away a short distance from the caster. Sensitive will stop this spell from launching blocks.",
+      "icon": "item.ars_nouveau.glyph_gust"
+    }
+  ]
+}

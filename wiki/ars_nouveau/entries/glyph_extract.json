@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_extract",
+  "icon": 100,
+  "title": "Extract",
+  "category": "ars_nouveau:glyphs_tier_two",
+  "pages": [
+    {
+      "title": "Extract",
+      "description": "Applies a silk-touch effect to Break and causes Explosion to not destroy blocks that drop. Cannot be combined with Fortune.",
+      "icon": "item.ars_nouveau.glyph_extract"
+    }
+  ]
+}

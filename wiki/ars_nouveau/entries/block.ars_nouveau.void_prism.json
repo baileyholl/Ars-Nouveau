@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:block.ars_nouveau.void_prism",
+  "icon": 100,
+  "title": "Void Prism",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Void Prism",
+      "description": "Destroys any spell projectiles that pass through it.",
+      "icon": "block.ars_nouveau.void_prism"
+    }
+  ]
+}

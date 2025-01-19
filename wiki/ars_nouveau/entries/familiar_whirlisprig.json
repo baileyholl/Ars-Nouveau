@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:familiar_whirlisprig",
+  "icon": 100,
+  "title": "Whirlisprig Familiar",
+  "category": "ars_nouveau:familiars",
+  "pages": [
+    {
+      "title": "Bound Script: Whirlisprig",
+      "description": "Whirlisprigs will reduce the cost of Elemental Earth glyphs by half, and grants bonus saturation when consuming food. Obtained by performing the Ritual of Binding near a Whirlisprig.",
+      "icon": "item.ars_nouveau.familiar_whirlisprig"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:item.ars_nouveau.dowsing_rod",
+  "icon": 100,
+  "title": "Dowsing Rod",
+  "category": "ars_nouveau:items",
+  "pages": [
+    {
+      "title": "Dowsing Rod",
+      "description": "A Dowsing Rod provides the user a short duration of Scrying for Budding Amethyst and Magic Find, which will cause magical creatures to glow within 75 blocks of you. The Dowsing Rod has a limited number of uses.",
+      "icon": "item.ars_nouveau.dowsing_rod"
+    }
+  ]
+}

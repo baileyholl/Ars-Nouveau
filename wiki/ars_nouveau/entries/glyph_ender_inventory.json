@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_ender_inventory",
+  "icon": 100,
+  "title": "Access Ender Inventory",
+  "category": "ars_nouveau:glyphs_tier_two",
+  "pages": [
+    {
+      "title": "Access Ender Inventory",
+      "description": "Opens your personal ender chest inventory from anywhere.",
+      "icon": "item.ars_nouveau.glyph_ender_inventory"
+    }
+  ]
+}

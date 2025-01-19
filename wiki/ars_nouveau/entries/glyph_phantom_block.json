@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_phantom_block",
+  "icon": 100,
+  "title": "Conjure Mageblock",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Conjure Mageblock",
+      "description": "Creates a temporary block that will disappear after a short time. Amplify will cause the block to be permanent. Dispelling this block will destroy it instantly.",
+      "icon": "item.ars_nouveau.glyph_phantom_block"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:block.ars_nouveau.scryers_oculus",
+  "icon": 100,
+  "title": "Scryer\u0027s Oculus",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Scryer\u0027s Oculus",
+      "description": "Allows you to remotely access Scry Crystals. To use, place Scryer\u0027s Scrolls on nearby pedestals and interact with the Oculus to select which Scry Crystal you would like to access. Scry Crystals must be chunk loaded.",
+      "icon": "block.ars_nouveau.scryers_oculus"
+    }
+  ]
+}

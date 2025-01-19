@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_blink",
+  "icon": 100,
+  "title": "Blink",
+  "category": "ars_nouveau:glyphs_tier_three",
+  "pages": [
+    {
+      "title": "Blink",
+      "description": "Teleports the caster to a location. If an entity is hit and the caster is holding a Warp Scroll in the offhand, the entity will be warped to the location on the Warp Scroll. When used on Self, the caster blinks forward. Spell Turrets and Runes can warp entities using Warp Scrolls from adjacent inventories without consuming the scroll.",
+      "icon": "item.ars_nouveau.glyph_blink"
+    }
+  ]
+}

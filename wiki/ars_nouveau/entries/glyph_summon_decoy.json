@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_summon_decoy",
+  "icon": 100,
+  "title": "Summon Decoy",
+  "category": "ars_nouveau:glyphs_tier_three",
+  "pages": [
+    {
+      "title": "Summon Decoy",
+      "description": "Summons a decoy of yourself. Upon summoning, the decoy will attract any nearby mobs to attack it.",
+      "icon": "item.ars_nouveau.glyph_summon_decoy"
+    }
+  ]
+}

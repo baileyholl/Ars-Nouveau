@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_pierce",
+  "icon": 100,
+  "title": "Pierce",
+  "category": "ars_nouveau:glyphs_tier_two",
+  "pages": [
+    {
+      "title": "Pierce",
+      "description": "When applied to the Projectile spell, projectiles may continue through their path an additional time after hitting a mob or block. Causes certain effects to also target the block behind them, like Break. Combines with AOE to provide depth.",
+      "icon": "item.ars_nouveau.glyph_pierce"
+    }
+  ]
+}

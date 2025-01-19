@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:ritual_binding",
+  "icon": 100,
+  "title": "Binding",
+  "category": "ars_nouveau:ritual_index",
+  "pages": [
+    {
+      "title": "Binding",
+      "description": "The Ritual of Binding converts nearby eligible entities into Bound Scripts, used for summoning a Familiar. For more information, see the section on Familiars.",
+      "icon": "item.ars_nouveau.ritual_binding"
+    }
+  ]
+}

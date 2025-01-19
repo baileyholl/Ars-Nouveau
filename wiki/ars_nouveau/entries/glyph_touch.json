@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_touch",
+  "icon": 100,
+  "title": "Touch",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Touch",
+      "description": "Applies spells at the block or entity that is targeted.",
+      "icon": "item.ars_nouveau.glyph_touch"
+    }
+  ]
+}

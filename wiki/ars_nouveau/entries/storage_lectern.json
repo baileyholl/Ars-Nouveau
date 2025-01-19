@@ -1,0 +1,21 @@
+{
+  "id": "ars_nouveau:storage_lectern",
+  "icon": 100,
+  "title": "Storage Lectern",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Storage Lectern",
+      "description": "The Storage Lectern can used to view, manage, and craft from multiple connected inventories. The number of inventories that may be connected is determined by the number of Bookwyrms bound to the lectern. You can add more Bookwyrms to the lectern by using a Bookwyrm Charm. Use the Dominion Wand from an inventory to the lectern in order to bind or remove access. Inventories can be connected 30 blocks away.",
+      "icon": "block.ars_nouveau.storage_lectern"
+    },
+    {
+      "title": "Advanced Usage",
+      "description": "Items can be automatically inserted into the lectern by placing them into an unbound inventory that is adjacent to the lectern. You may also link a lectern to the \u0027main\u0027 lectern in order to extend the view and access of the original lectern, these lecterns can be chained together within 30 blocks indefinitely. Once a lectern is linked to another lectern, it will no longer be able to connect to inventories or accept bookwyrms."
+    },
+    {
+      "title": "Storage Tabs",
+      "description": "Linked inventories that are named will create a tab in the Storage Lectern, allowing you to view and manipulate all inventories that share that name. Unlike normal chests, Repositories will preserve their name when dropped. The Name Effect can also name inventories placed in the world."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:magebloom_crop",
+  "icon": 100,
+  "title": "Magebloom Seed",
+  "category": "ars_nouveau:field_guide",
+  "pages": [
+    {
+      "title": "Magebloom Seed",
+      "description": "A magically infused flower, Mageblooms provide additional source to nearby Agronomic Sourcelinks as they grow and provide a source of Magebloom Fiber. Mageblooms can also be used in crafting Potions of Spell Damage, increasing the damage of your spells.",
+      "icon": "block.ars_nouveau.magebloom_crop"
+    }
+  ]
+}

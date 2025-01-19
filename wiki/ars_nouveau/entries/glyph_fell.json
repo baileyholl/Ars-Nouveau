@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_fell",
+  "icon": 100,
+  "title": "Fell",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Fell",
+      "description": "Harvests entire trees, mushrooms, cactus, and other vegetation. Can be amplified with Amplify to break materials of higher hardness. AOE will increase the number of blocks that may be broken at one time.",
+      "icon": "item.ars_nouveau.glyph_fell"
+    }
+  ]
+}

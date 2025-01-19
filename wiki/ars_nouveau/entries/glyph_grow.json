@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_grow",
+  "icon": 100,
+  "title": "Grow",
+  "category": "ars_nouveau:glyphs_tier_two",
+  "pages": [
+    {
+      "title": "Grow",
+      "description": "Causes plants to accelerate in growth as if they were bonemealed.",
+      "icon": "item.ars_nouveau.glyph_grow"
+    }
+  ]
+}

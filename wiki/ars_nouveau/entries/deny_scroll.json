@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:deny_scroll",
+  "icon": 100,
+  "title": "Item Scroll: Deny",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Item Scroll: Deny",
+      "description": "Provides a list of items to automation related entities. To inscribe an item, place on the Scribes Table and use blocks and items on the table while sneaking. When given to a Starbuncle, the Starbuncle will pickup and take any item that is NOT on this scroll.",
+      "icon": "item.ars_nouveau.deny_scroll"
+    }
+  ]
+}

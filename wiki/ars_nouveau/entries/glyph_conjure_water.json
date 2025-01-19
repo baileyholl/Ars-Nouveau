@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_conjure_water",
+  "icon": 100,
+  "title": "Conjure Water",
+  "category": "ars_nouveau:glyphs_tier_two",
+  "pages": [
+    {
+      "title": "Conjure Water",
+      "description": "Places water at a location or extinguishes entities on fire. If augmented with extend time, it will keep entities wet for a longer period of time.",
+      "icon": "item.ars_nouveau.glyph_conjure_water"
+    }
+  ]
+}

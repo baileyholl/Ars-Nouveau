@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:item.ars_nouveau.jar_of_light",
+  "icon": 100,
+  "title": "Jar of Light",
+  "category": "ars_nouveau:items",
+  "pages": [
+    {
+      "title": "Jar of Light",
+      "description": "Summons a light that will follow the user as they move. Can be summoned and dismissed at any time.",
+      "icon": "item.ars_nouveau.jar_of_light"
+    }
+  ]
+}

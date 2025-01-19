@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:thread_chilling",
+  "icon": 100,
+  "title": "Chilling",
+  "category": "ars_nouveau:armor",
+  "pages": [
+    {
+      "title": "Thread of Chilling",
+      "description": "Damaging effects inflict Freezing on the target before the spell resolves. Freezing lasts for 10 seconds per level, and becomes Freezing 2 at a level 3 slot.",
+      "icon": "item.ars_nouveau.thread_chilling"
+    }
+  ]
+}

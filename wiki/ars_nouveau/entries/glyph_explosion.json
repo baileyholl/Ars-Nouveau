@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_explosion",
+  "icon": 100,
+  "title": "Explosion",
+  "category": "ars_nouveau:glyphs_tier_two",
+  "pages": [
+    {
+      "title": "Explosion",
+      "description": "Causes an explosion at the location. Amplify increases the damage and size by a small amount, while AOE will increase the size of the explosion by a large amount, but not damage.",
+      "icon": "item.ars_nouveau.glyph_explosion"
+    }
+  ]
+}

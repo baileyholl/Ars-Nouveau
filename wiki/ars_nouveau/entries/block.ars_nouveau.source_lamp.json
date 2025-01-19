@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:block.ars_nouveau.source_lamp",
+  "icon": 100,
+  "title": "Source Gem Lamp",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Source Gem Lamp",
+      "description": "ars_nouveau.page.source_lamp",
+      "icon": "block.ars_nouveau.source_lamp"
+    }
+  ]
+}

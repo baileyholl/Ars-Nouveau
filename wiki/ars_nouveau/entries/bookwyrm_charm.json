@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:bookwyrm_charm",
+  "icon": 100,
+  "title": "Bookwyrm Charm",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Bookwyrm Charm",
+      "description": "Bookwyrm Charms can be used on a Storage Lectern to increase the number of accessible inventories. Augment a Ritual of Awakening with Book and Quills in order to obtain charms. Bookwyrms can be dyed using white, black, blue, green, red, or purple dye.",
+      "icon": "item.ars_nouveau.bookwyrm_charm"
+    }
+  ]
+}

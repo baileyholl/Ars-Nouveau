@@ -1,0 +1,21 @@
+{
+  "id": "ars_nouveau:alakarkinos_charm",
+  "icon": 100,
+  "title": "Alakarkinos Charm",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Alakarkinos Charm",
+      "description": "Alakarkinos can sift sand and gravel to find items found in archaeology sites. They can be found on beaches and will give you a token if they receive a Pottery Sherd of any kind.",
+      "icon": "item.ars_nouveau.alakarkinos_charm"
+    },
+    {
+      "title": "Summoning",
+      "description": "Alakarkinos can be summoned anywhere by using a charm on a block. To set its home, use the Dominion Wand to bind Alakarkinos to a chest or inventory."
+    },
+    {
+      "title": "Sifting",
+      "description": "Alakarkinos will seek out gravel or sand that is placed within 3 blocks horizontal and one block vertical around its bound inventory. In order to convert blocks into items, Source must be provided near its chest. After some time and a few magic tricks, Alakarkinos will destroy the sand or gravel and insert items into the inventory."
+    }
+  ]
+}

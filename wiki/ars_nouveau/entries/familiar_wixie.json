@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:familiar_wixie",
+  "icon": 100,
+  "title": "Wixie Familiar",
+  "category": "ars_nouveau:familiars",
+  "pages": [
+    {
+      "title": "Bound Script: Wixie",
+      "description": "Wixies will increase the duration of potions that you apply, and wixies will accept basic potion reagents in exchange for applying the tier 1 potion result. Additionally, the Wixie will apply harmful potions to enemies during combat. Obtained by performing the Ritual of Binding near a Wixie.",
+      "icon": "item.ars_nouveau.familiar_wixie"
+    }
+  ]
+}

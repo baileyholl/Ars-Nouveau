@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_summon_wolves",
+  "icon": 100,
+  "title": "Summon Wolves",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Summon Wolves",
+      "description": "Summons two wolves that will fight with you. Extend Time will increase the amount of time on the summons. Applies Summoning Sickness to the caster, preventing other summoning magic.",
+      "icon": "item.ars_nouveau.glyph_summon_wolves"
+    }
+  ]
+}

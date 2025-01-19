@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_cold_snap",
+  "icon": 100,
+  "title": "Cold Snap",
+  "category": "ars_nouveau:glyphs_tier_two",
+  "pages": [
+    {
+      "title": "Cold Snap",
+      "description": "Causes wet, slowed, or freezing entities to take a burst of damage and erupt into falling ice. Falling ice will slow and damage nearby entities. Can also be used to erupt a block of ice instead. Falling blocks of ice can be manipulated with the Focus of Block Shaping. Entities afflicted with Freezing will be set to the maximum freeze level immediately.",
+      "icon": "item.ars_nouveau.glyph_cold_snap"
+    }
+  ]
+}

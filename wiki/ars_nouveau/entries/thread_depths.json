@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:thread_depths",
+  "icon": 100,
+  "title": "Depths",
+  "category": "ars_nouveau:armor",
+  "pages": [
+    {
+      "title": "Thread of Depths",
+      "description": "Greatly increases the amount of time you may breathe underwater by reducing the chance your air will decrease. If this perk is in slot 3 or higher, you will no longer lose air and your swim speed is greatly increased. Stacks with Respiration Enchantments.",
+      "icon": "item.ars_nouveau.thread_depths"
+    }
+  ]
+}

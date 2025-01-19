@@ -1,0 +1,16 @@
+{
+  "id": "ars_nouveau:spell_mana",
+  "icon": 2,
+  "title": "Spell Mana",
+  "category": "ars_nouveau:getting_started",
+  "pages": [
+    {
+      "title": "Spell Mana",
+      "description": "Mana is used to cast spells with a Spell Book. Your max mana and regeneration, may be increased by wearing special Mage Armor or by applying the Mana Boost or Mana Regen enchantments on your gear. Additionally, you will gain bonus mana and regeneration for each glyph unlocked in your spell book.",
+      "icon": "item.ars_nouveau.novice_spell_book"
+    },
+    {
+      "description": "Adding glyphs to your spell book will also increase your maximum amount of mana and mana regeneration. This bonus also scales with the tier of your spell book."
+    }
+  ]
+}

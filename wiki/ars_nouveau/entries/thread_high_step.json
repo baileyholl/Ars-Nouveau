@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:thread_high_step",
+  "icon": 100,
+  "title": "High Step",
+  "category": "ars_nouveau:armor",
+  "pages": [
+    {
+      "title": "Thread of High Step",
+      "description": "Increases step height by one for each level.",
+      "icon": "item.ars_nouveau.thread_high_step"
+    }
+  ]
+}

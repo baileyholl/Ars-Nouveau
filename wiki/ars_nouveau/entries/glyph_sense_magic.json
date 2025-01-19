@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_sense_magic",
+  "icon": 100,
+  "title": "Sense Magic",
+  "category": "ars_nouveau:glyphs_tier_two",
+  "pages": [
+    {
+      "title": "Sense Magic",
+      "description": "Applies Magic Find to the target, causing magical mobs to glow within 75 blocks of them. Magic Find also reveals spells on Runes.",
+      "icon": "item.ars_nouveau.glyph_sense_magic"
+    }
+  ]
+}

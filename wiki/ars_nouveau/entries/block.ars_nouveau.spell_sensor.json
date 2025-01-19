@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:block.ars_nouveau.spell_sensor",
+  "icon": 100,
+  "title": "Spell Sensor",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Spell Sensor",
+      "description": "ars_nouveau.page.spell_sensor",
+      "icon": "block.ars_nouveau.spell_sensor"
+    }
+  ]
+}

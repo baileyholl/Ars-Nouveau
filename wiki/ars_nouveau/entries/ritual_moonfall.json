@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:ritual_moonfall",
+  "icon": 100,
+  "title": "Moonfall",
+  "category": "ars_nouveau:ritual_index",
+  "pages": [
+    {
+      "title": "Moonfall",
+      "description": "Sets the time to night.",
+      "icon": "item.ars_nouveau.ritual_moonfall"
+    }
+  ]
+}

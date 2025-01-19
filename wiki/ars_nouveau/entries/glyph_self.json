@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_self",
+  "icon": 100,
+  "title": "Self",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Self",
+      "description": "A spell you start with. Applies spells on the caster.",
+      "icon": "item.ars_nouveau.glyph_self"
+    }
+  ]
+}

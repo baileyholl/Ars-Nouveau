@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_freeze",
+  "icon": 100,
+  "title": "Freeze",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Freeze",
+      "description": "Freezes water or lava in a small area or slows a target for a short time. Freeze on Ice will turn it into Packed Ice, and Packed Ice into Blue Ice. Sensitive will turn water into Frosted Ice and will vanish after a short time.",
+      "icon": "item.ars_nouveau.glyph_freeze"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_amplify",
+  "icon": 100,
+  "title": "Amplify",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Amplify",
+      "description": "Additively increases the power of most spell effects. Can increase the harvest level of Break and increases the damage of spells.",
+      "icon": "item.ars_nouveau.glyph_amplify"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:block.ars_nouveau.potion_jar",
+  "icon": 100,
+  "title": "Potion Jar",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Potion Jar",
+      "description": "A jar that stores up to 100 potions. Potion can be removed by using an Empty Bottle, Potion Flask, or Arrows on the jar. Wixies will use these jars during Potion Autocrafting. The jar may be locked by using a Dominion Wand while sneaking. Locked Jars will only receive the potion it is locked to from Wixies. Can be used with a Comparator.",
+      "icon": "block.ars_nouveau.potion_jar"
+    }
+  ]
+}

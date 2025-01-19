@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_pantomime",
+  "icon": 100,
+  "title": "Pantomime",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Pantomime",
+      "description": "Applies spells to the nearest block in your line of sight. Dampen will reduce the distance, Amplify will increase it. Sensitive will highlight the selected block.",
+      "icon": "item.ars_nouveau.glyph_pantomime"
+    }
+  ]
+}

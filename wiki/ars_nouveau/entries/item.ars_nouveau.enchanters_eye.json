@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:item.ars_nouveau.enchanters_eye",
+  "icon": 100,
+  "title": "Enchanter\u0027s Eye",
+  "category": "ars_nouveau:spell_casting",
+  "pages": [
+    {
+      "title": "Enchanter\u0027s Eye",
+      "description": "A caster tool that can cast inscribed spells remotely through a Scry Crystal. Use the eye on a Scry Crystal to bind the location, or hold a bound Scry Parchment in the offhand. Spells will be cast through the eye similar to a Spell Turret, but you are considered the caster for all effects. Useful for remote teleportation or item movement.",
+      "icon": "item.ars_nouveau.enchanters_eye"
+    }
+  ]
+}

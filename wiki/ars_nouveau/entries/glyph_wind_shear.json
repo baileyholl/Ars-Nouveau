@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_wind_shear",
+  "icon": 100,
+  "title": "Wind Shear",
+  "category": "ars_nouveau:glyphs_tier_two",
+  "pages": [
+    {
+      "title": "Wind Shear",
+      "description": "Deals damage to targets in the air, with an increasing amount based on how high the target is off the ground, up to 10 blocks. Targets on the ground take no damage.",
+      "icon": "item.ars_nouveau.glyph_wind_shear"
+    }
+  ]
+}

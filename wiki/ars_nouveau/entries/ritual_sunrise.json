@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:ritual_sunrise",
+  "icon": 100,
+  "title": "Sunrise",
+  "category": "ars_nouveau:ritual_index",
+  "pages": [
+    {
+      "title": "Sunrise",
+      "description": "Sets the time to day.",
+      "icon": "item.ars_nouveau.ritual_sunrise"
+    }
+  ]
+}

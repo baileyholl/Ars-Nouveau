@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_rune",
+  "icon": 100,
+  "title": "Rune",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Rune",
+      "description": "Places a rune on the ground that will cast the spell on targets that touch the rune. Unlike runes placed by Runic Chalk, these runes are temporary and cannot be recharged. When using Item Pickup, items are deposited into adjacent inventories. Sensitive will cause the rune to use the Owner\u0027s inventory for pickup and usage instead. Players with Magic Find will be able to read spells inscribed on runes.",
+      "icon": "item.ars_nouveau.glyph_rune"
+    }
+  ]
+}

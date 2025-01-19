@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:item.ars_nouveau.void_jar",
+  "icon": 100,
+  "title": "Jar of Voiding",
+  "category": "ars_nouveau:items",
+  "pages": [
+    {
+      "title": "Jar of Voiding",
+      "description": "A jar that can destroy items on pickup and grants a small amount of mana in return. To turn the jar on and off, use the jar while sneaking. To add or remove an item to be destroyed by the jar, use the jar with an item in the off hand, or use an item on the Scribes Table with the jar placed on it. The jar must be in your hotbar to function.",
+      "icon": "item.ars_nouveau.void_jar"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:weald_walker",
+  "icon": 100,
+  "title": "Weald Walkers",
+  "category": "ars_nouveau:field_guide",
+  "pages": [
+    {
+      "title": "Weald Walkers",
+      "description": "Weald Walkers are living Archwood Trees that guard their homes against hostile monsters. A Weald Walker can be created from the Ritual of Awakening. When summoned, the Weald Walker will roam randomly unless given a home position. To give the Weald Walker a home, use the dominion wand on the Weald Walker, and then the block you wish it to guard.",
+      "icon": "item.ars_nouveau.ritual_awakening"
+    }
+  ]
+}

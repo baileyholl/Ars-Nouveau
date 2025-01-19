@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:decorative",
+  "icon": 100,
+  "title": "Decorative Blocks",
+  "category": "ars_nouveau:field_guide",
+  "pages": [
+    {
+      "title": "Decorative Blocks",
+      "description": "Purely decorative blocks. To see the full list, place Arcane Stone in a Stonecutter.",
+      "icon": "block.ars_nouveau.sourcestone"
+    }
+  ]
+}

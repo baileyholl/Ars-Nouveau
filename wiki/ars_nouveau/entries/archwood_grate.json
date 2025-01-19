@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:archwood_grate",
+  "icon": 100,
+  "title": "Archwood Grate",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Archwood Grate",
+      "description": "Liquids placed on top of them will be transported below, waterlogging the below block if possible. Interacting with the grate will also act as if you are interacting with the block below it, allowing you to bucket liquids below. Additionally, items and projectiles will pass through it. Can be placed in any direction.",
+      "icon": "block.ars_nouveau.archwood_grate"
+    }
+  ]
+}

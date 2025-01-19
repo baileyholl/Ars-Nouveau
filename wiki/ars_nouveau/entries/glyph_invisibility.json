@@ -1,0 +1,13 @@
+{
+  "id": "ars_nouveau:glyph_invisibility",
+  "icon": 100,
+  "title": "Invisibility",
+  "category": "ars_nouveau:glyphs_tier_two",
+  "pages": [
+    {
+      "title": "Invisibility",
+      "description": "Causes the target to turn invisible for a short time.",
+      "icon": "item.ars_nouveau.glyph_invisibility"
+    }
+  ]
+}

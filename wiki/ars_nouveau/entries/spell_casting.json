@@ -1,0 +1,19 @@
+{
+  "id": "ars_nouveau:spell_casting",
+  "icon": 1,
+  "title": "Spell Casting",
+  "category": "ars_nouveau:getting_started",
+  "pages": [
+    {
+      "title": "Spell Casting",
+      "description": "To begin spell casting, you will need to first obtain a spell book. A spell book will allow you to create, store, and cast spells using Mana. To craft your first spell, you must first select the Form that the spell will take on. A Form glyph must always be the first glyph in a spell recipe.",
+      "icon": "item.ars_nouveau.novice_spell_book"
+    },
+    {
+      "description": "Next, add any number of Effects to the chain. Effects refer to what the spell will do and they will resolve in the order they are placed in the book at the target or location the spell hits. An Augment can be used to modify the way an Effect or Form behaves. Augments may be placed after an Effect or Form. An Augment will only apply to the glyph to the left of it. Multiple augments may also be applied on the same Effect or Form by chaining Augments together."
+    },
+    {
+      "description": "If you would like to set a spell to a different tab, select the tab from the right side and repeat the above process. Several keybindings are provided for using the spellbook, check settings for more information."
+    }
+  ]
+}
