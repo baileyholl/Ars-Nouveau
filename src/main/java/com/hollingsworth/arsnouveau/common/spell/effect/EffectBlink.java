@@ -43,7 +43,7 @@ public class EffectBlink extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Vec3 vec = safelyGetHitPos(rayTraceResult);
         if(rayTraceResult.getEntity().getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED)){
             return;
@@ -64,7 +64,7 @@ public class EffectBlink extends AbstractEffect {
         }
 
         if ((rayTraceResult).getEntity().equals(shooter)) {
-            blinkForward(world, shooter, distance);
+            blinkForward(spellContext.level, shooter, distance);
             return;
         }
 
@@ -72,11 +72,11 @@ public class EffectBlink extends AbstractEffect {
             WarpScrollData scrollData = shooter.getOffhandItem().get(DataComponentRegistry.WARP_SCROLL);
             if (scrollData != null && scrollData.isValid() && scrollData.canTeleportWithDim(world)) {
                 warpEntity(rayTraceResult.getEntity(), scrollData);
-            } else {
-                shooter.teleportTo(vec.x(), vec.y(), vec.z());
+            } else if (spellContext.level instanceof ServerLevel serverLevel) {
+                shooter.teleportTo(serverLevel, vec.x(), vec.y(), vec.z(), Set.of(), shooter.getYRot(), shooter.getXRot());
             }
         } else if (spellContext.getCaster().getCasterType() == SpellContext.CasterType.RUNE && rayTraceResult.getEntity() instanceof LivingEntity living) {
-            blinkForward(world, living, distance);
+            blinkForward(spellContext.level, living, distance);
         }
     }
 
@@ -95,8 +95,9 @@ public class EffectBlink extends AbstractEffect {
 
     }
 
-    public static void warpEntity(Entity entity, BlockPos warpPos) {
-        if (entity == null) return;
+    public static void warpEntity(Entity entity, Level level, BlockPos warpPos) {
+        if (entity == null || !(level instanceof ServerLevel serverLevel)) return;
+
         Level world = entity.level;
         if (entity instanceof LivingEntity living){
             EntityTeleportEvent.EnderEntity event = EventHooks.onEnderTeleport(living, warpPos.getX(), warpPos.getY(), warpPos.getZ());
@@ -105,7 +106,7 @@ public class EffectBlink extends AbstractEffect {
         ((ServerLevel) entity.level).sendParticles(ParticleTypes.PORTAL, entity.getX(), entity.getY() + 1, entity.getZ(),
                 4, (world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
 
-        entity.teleportTo(warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + 0.5);
+        entity.teleportTo(serverLevel, warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + 0.5, Set.of(), entity.getYRot(), entity.getXRot());
         Networking.sendToNearbyClient(world, entity, new PacketWarpPosition(entity.getId(), entity.getX(), entity.getY(), entity.getZ(), entity.getXRot(), entity.getYRot()));
         entity.level.playSound(null, entity.blockPosition(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1.0f, 1.0f);
         ((ServerLevel) entity.level).sendParticles(ParticleTypes.PORTAL, entity.blockPosition().getX() + 0.5, entity.blockPosition().getY() + 1.0, entity.blockPosition().getZ() + 0.5,
@@ -113,10 +114,10 @@ public class EffectBlink extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Vec3 vec = rayTraceResult.getLocation();
         if (isRealPlayer(shooter) && isValidTeleport(world, (rayTraceResult).getBlockPos().relative((rayTraceResult).getDirection()))) {
-            warpEntity(shooter, BlockPos.containing(vec));
+            warpEntity(shooter, spellContext.level, BlockPos.containing(vec));
         }
     }
 
@@ -130,7 +131,7 @@ public class EffectBlink extends AbstractEffect {
         }
         if (pos == null)
             return;
-        warpEntity(shooter, pos);
+        warpEntity(shooter, world, pos);
     }
 
     public static BlockPos getForward(Level world, BlockPos pos, Entity shooter, double distance) {

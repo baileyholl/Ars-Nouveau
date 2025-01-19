@@ -56,6 +56,7 @@ public class ArsNouveau {
     public static boolean terrablenderLoaded = false;
     public static boolean optifineLoaded = false;
     public static boolean sodiumLoaded = false;
+    public static boolean immersivePortalsLoaded = false;
     public static boolean patchouliLoaded = false;
 
     public static List<String> postLoadWarnings = new ArrayList<>();
@@ -73,6 +74,7 @@ public class ArsNouveau {
         terrablenderLoaded = ModList.get().isLoaded("terrablender");
         sodiumLoaded = ModList.get().isLoaded("rubidium");
         patchouliLoaded = ModList.get().isLoaded("patchouli");
+        immersivePortalsLoaded = ModList.get().isLoaded("immersive_portals_core");
         APIRegistry.setup();
         modContainer.registerConfig(ModConfig.Type.STARTUP, StartupConfig.STARTUP_CONFIG);
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SERVER_CONFIG);
