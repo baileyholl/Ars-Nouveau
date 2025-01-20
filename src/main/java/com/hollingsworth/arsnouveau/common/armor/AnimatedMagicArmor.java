@@ -27,8 +27,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -122,7 +120,6 @@ public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext world, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
         super.appendHoverText(stack, world, tooltip, flag);
         var data = stack.get(DataComponentRegistry.ARMOR_PERKS);

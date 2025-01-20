@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.item.IRadialProvider;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
@@ -18,10 +19,8 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetCasterSlot;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -94,12 +93,13 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public void appendHoverText(final @NotNull ItemStack stack, final @NotNull TooltipContext world, final @NotNull List<Component> tooltip, final @NotNull TooltipFlag flag) {
         super.appendHoverText(stack, world, tooltip, flag);
-        tooltip.add(Component.translatable("ars_nouveau.spell_book.select", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_RADIAL_HUD.getName()).get()));
-        tooltip.add(Component.translatable("ars_nouveau.spell_book.craft", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_BOOK.getName()).get()));
-        tooltip.add(Component.translatable("tooltip.ars_nouveau.caster_level", getTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+        if(ArsNouveau.proxy.isClientSide()) {
+            tooltip.add(Component.translatable("ars_nouveau.spell_book.select", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_RADIAL_HUD.getName()).get()));
+            tooltip.add(Component.translatable("ars_nouveau.spell_book.craft", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_BOOK.getName()).get()));
+            tooltip.add(Component.translatable("tooltip.ars_nouveau.caster_level", getTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+        }
     }
 
     public SpellTier getTier() {
@@ -127,20 +127,24 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
         });
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
+    @OnlyIn(Dist.CLIENT)
     public void onOpenBookMenuKeyPressed(ItemStack stack, Player player) {
         InteractionHand hand = StackUtil.getBookHand(player);
         if (hand == null) {
             return;
         }
-        Minecraft.getInstance().setScreen(new GuiSpellBook(hand));
+        if(ArsNouveau.proxy.isClientSide()) {
+            ArsNouveau.proxy.getMinecraft().setScreen(new GuiSpellBook(hand));
+        }
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
+    @OnlyIn(Dist.CLIENT)
     public void onRadialKeyPressed(ItemStack stack, Player player) {
-        Minecraft.getInstance().setScreen(new GuiRadialMenu<>(getRadialMenuProviderForSpellpart(stack)));
+        if(ArsNouveau.proxy.isClientSide()) {
+            ArsNouveau.proxy.getMinecraft().setScreen(new GuiRadialMenu<>(getRadialMenuProviderForSpellpart(stack)));
+        }
     }
 
     public RadialMenu<AbstractSpellPart> getRadialMenuProviderForSpellpart(ItemStack itemStack) {

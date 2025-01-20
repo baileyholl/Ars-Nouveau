@@ -16,12 +16,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.ClientHooks;
 import org.joml.Matrix4f;
 
-@OnlyIn(Dist.CLIENT)
 public class SkyBlockRenderer<T extends SkyBlockTile> implements BlockEntityRenderer<T> {
     private BlockRenderDispatcher blockRenderer;
 

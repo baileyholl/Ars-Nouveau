@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.mixin.camera;
 
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.ScryerCamera;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.server.level.ChunkMap;
@@ -18,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 // https://github.com/Geforce132/an/blob/1.18.2/src/main/java/net/geforcemods/an/mixin/camera/ChunkMapMixin.java
 @Mixin(
         value = {ChunkMap.class},
-        priority = 1100
+        priority = 1300
 )
 public abstract class ChunkMapMixin {
 
@@ -26,7 +27,8 @@ public abstract class ChunkMapMixin {
     protected abstract void markChunkPendingToSend(ServerPlayer player, ChunkPos pos);
 
     @Shadow
-    private static void markChunkPendingToSend(ServerPlayer player, LevelChunk chunk) {}
+    private static void markChunkPendingToSend(ServerPlayer player, LevelChunk chunk) {
+    }
 
     /**
      * Sends chunks loaded by cameras to the client, and re-sends chunks around the player when they stop viewing a camera to
@@ -36,11 +38,11 @@ public abstract class ChunkMapMixin {
     private void an$onUpdateChunkTracking(ServerPlayer player, CallbackInfo callback) {
         if (player.getCamera() instanceof ScryerCamera camera) {
             if (!camera.hasSentChunks()) {
-                ChunkTrackingView.difference(player.getChunkTrackingView(), camera.getCameraChunks(), chunkPos -> markChunkPendingToSend(player, chunkPos), chunkPos -> {});
+                ChunkTrackingView.difference(player.getChunkTrackingView(), camera.getCameraChunks(), chunkPos -> markChunkPendingToSend(player, chunkPos), chunkPos -> {
+                });
                 camera.setHasSentChunks(true);
             }
-        }
-        else if (ScryerCamera.hasRecentlyDismounted(player))
+        } else if (ScryerCamera.hasRecentlyDismounted(player))
             player.getChunkTrackingView().forEach(chunkPos -> markChunkPendingToSend(player, chunkPos));
     }
 
@@ -59,7 +61,10 @@ public abstract class ChunkMapMixin {
      */
     @Inject(method = "isChunkTracked", at = @At("HEAD"), cancellable = true)
     private void an$onIsChunkTracked(ServerPlayer player, int x, int z, CallbackInfoReturnable<Boolean> callback) {
-        if (player.getCamera() instanceof ScryerCamera camera && camera.getCameraChunks().contains(x, z) && !player.connection.chunkSender.isPending(ChunkPos.asLong(x, z)))
-            callback.setReturnValue(true);
+        if (player.getCamera() instanceof ScryerCamera camera && camera.getCameraChunks().contains(x, z))
+            // if IP is loaded, isPending is always false
+            if (!ArsNouveau.immersivePortalsLoaded && !player.connection.chunkSender.isPending(ChunkPos.asLong(x, z))) {
+                callback.setReturnValue(true);
+            }
     }
 }

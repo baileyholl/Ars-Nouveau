@@ -70,8 +70,6 @@ import net.minecraft.world.level.block.DirtPathBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -393,7 +391,6 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         this.dynamicBehavior.pickUpItem(itemEntity);
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void setRecordPlayingNearby(@NotNull BlockPos pos, boolean hasSound) {
         super.setRecordPlayingNearby(pos, hasSound);

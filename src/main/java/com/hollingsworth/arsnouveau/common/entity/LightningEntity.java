@@ -21,8 +21,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -167,7 +165,6 @@ public class LightningEntity extends LightningBolt {
     /**
      * Checks if the entity is in range to render.
      */
-    @OnlyIn(Dist.CLIENT)
     public boolean shouldRenderAtSqrDistance(double distance) {
         double d0 = 64.0D * getViewScale();
         return distance < d0 * d0;
