@@ -46,6 +46,8 @@ public class RecipeDatagen extends RecipeProvider {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ItemsRegistry.NOVICE_SPELLBOOK).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .requires(Items.BOOK).requires(Items.IRON_SHOVEL).requires(Items.IRON_PICKAXE).requires(Items.IRON_AXE).requires(Items.IRON_SWORD).save(consumer);
 
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ItemsRegistry.NOVICE_SPELLBOOK).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
+                    .requires(ItemsRegistry.WORN_NOTEBOOK).requires(Items.IRON_SHOVEL).requires(Items.IRON_PICKAXE).requires(Items.IRON_AXE).requires(Items.IRON_SWORD).save(consumer, ArsNouveau.prefix("novice_spellbook_alt"));
             shapelessBuilder(ItemsRegistry.STABLE_WARP_SCROLL).requires(ItemsRegistry.STABLE_WARP_SCROLL).save(consumer, ArsNouveau.prefix("reset_stable_warp_scroll"));
 
             shapelessBuilder(ItemsRegistry.WARP_SCROLL).requires(ItemsRegistry.WARP_SCROLL).save(consumer, ArsNouveau.prefix("reset_warp_scroll"));

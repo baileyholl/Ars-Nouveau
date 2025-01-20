@@ -157,7 +157,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.magebloom_crop", "Magebloom Seed");
         add("item.ars_nouveau.source_gem", "Source Gem");
         add("item.ars_nouveau.blank_glyph", "Blank Glyph");
-        add("item.ars_nouveau.worn_notebook", "Worn Notebook");
+        add("item.ars_nouveau.worn_notebook", "Tattered Tome");
         add("item.ars_nouveau.warp_scroll", "Warp Scroll");
         add("item.ars_nouveau.spell_parchment", "Spell Parchment");
         add("item.ars_nouveau.ring_of_greater_discount", "Ring of Greater Discount");
@@ -1089,7 +1089,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page2.mob_jar", "Many entities can be interacted with inside the jar and will continue to simulate while inside the jar. Some examples include: chickens will lay eggs, sheep can be sheared, cows can be milked, and some mobs like the Blaze will turn the jar into a light source. Experiment with a variety of mobs to create aesthetic and functional farms. Drygmys will also treat the jar as if it were a normal entity in the area.");
         add("ars_nouveau.title.mob_jar", "Functionality");
         add("ars_nouveau.advancement.title.root", "Ars Nouveau");
-        add("ars_nouveau.advancement.desc.root", "Acquire a Worn Notebook");
+        add("ars_nouveau.advancement.desc.root", "Acquire a Tattered Tome");
         add("ars_nouveau.adv.title.ritual_brazier", "Brazen");
         add("ars_nouveau.adv.desc.ritual_brazier", "Acquire a Ritual Brazier");
         add("ars_nouveau.adv.title.familiar", "This Seems Familiar...");
