@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:block.ars_nouveau.source_lamp",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:source_lamp",
   "title": "Source Gem Lamp",
   "category": "ars_nouveau:crafting",
   "pages": [
     {
       "title": "Source Gem Lamp",
       "description": "ars_nouveau.page.source_lamp",
-      "icon": "block.ars_nouveau.source_lamp"
+      "icon": "ars_nouveau:source_lamp"
+    },
+    {
+      "recipe_1": "ars_nouveau:source_lamp"
     }
   ]
 }

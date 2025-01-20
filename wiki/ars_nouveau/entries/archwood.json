@@ -1,33 +1,34 @@
 {
   "id": "ars_nouveau:archwood",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:blue_archwood_sapling",
   "title": "Archwood Trees",
   "category": "ars_nouveau:field_guide",
   "pages": [
     {
       "title": "Archwood Trees",
       "description": "Archwood Trees have a small chance to spawn in any biome, and come in four types. Rarely, you may stumble upon an Archwood Forest, a biome full of magical creatures, naturally spawning lights, and Archwood trees. Can be used as decoration, rituals, or for crafting wands. Archwood Trees also have a chance to spawn magical fruits that can be consumed or brewed into potions.",
-      "icon": "block.ars_nouveau.blue_archwood_sapling"
+      "icon": "ars_nouveau:blue_archwood_sapling"
     },
     {
       "title": "Bombegranate",
       "description": "A fruit that packs an explosive punch. Can be brewed into a Potion of Blasting, causing the target to explode when the duration ends.",
-      "icon": "item.ars_nouveau.bombegranate_pod"
+      "icon": "ars_nouveau:bombegranate_pod"
     },
     {
       "title": "Mendosteen",
       "description": "A fruit that can be brewed into a Potion of Recovery, increases the amount of healing received from all sources.",
-      "icon": "item.ars_nouveau.mendosteen_pod"
+      "icon": "ars_nouveau:mendosteen_pod"
     },
     {
       "title": "Frostaya",
       "description": "A fruit that can be brewed into a Potion of Freezing, freezing the target over time.",
-      "icon": "item.ars_nouveau.frostaya_pod"
+      "icon": "ars_nouveau:frostaya_pod"
     },
     {
       "title": "Bastion Fruit",
       "description": "A fruit that can be brewed into a Potion of Defence, reducing the amount of damage taken.",
-      "icon": "item.ars_nouveau.bastion_pod"
+      "icon": "ars_nouveau:bastion_pod"
     }
   ]
 }

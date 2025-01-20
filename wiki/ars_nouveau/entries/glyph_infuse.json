@@ -1,13 +1,18 @@
 {
   "id": "ars_nouveau:glyph_infuse",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:glyph_infuse",
   "title": "Infuse",
   "category": "ars_nouveau:glyphs_tier_two",
   "pages": [
     {
       "title": "Infuse",
       "description": "Infuses a target with a potion or flask from your inventory. If augmented with AOE, a splash potion will spawn at the location. If augmented with Extend Time, a lingering potion will spawn at the location. Caster blocks may pull from adjacent Potion Jars to cast infuse.",
-      "icon": "item.ars_nouveau.glyph_infuse"
+      "icon": "ars_nouveau:glyph_infuse",
+      "tier": 2
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_infuse"
     }
   ]
 }

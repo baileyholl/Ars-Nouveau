@@ -1,13 +1,30 @@
 {
   "id": "ars_nouveau:wilden",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:wilden_spike",
   "title": "Wilden",
   "category": "ars_nouveau:field_guide",
   "pages": [
     {
       "title": "Wilden",
       "description": "Wilden are hostile creatures that can be commonly found at night around Wilden Dens. While Wilden Defenders may only be found in cold biomes, Stalker and Hunter Dens can be found in any forest biome.",
-      "icon": "item.ars_nouveau.wilden_spike"
+      "icon": "ars_nouveau:wilden_spike"
+    },
+    {
+      "description": "An aggressive and fast hunter that can summon allied wolves.",
+      "entity_type": "ars_nouveau:wilden_hunter"
+    },
+    {
+      "description": "Generally spawning in small groups, Stalkers have ground and aerial attacks.",
+      "entity_type": "ars_nouveau:wilden_stalker"
+    },
+    {
+      "description": "Found in cold biomes, a Defender is a slow moving heavy hitter with a ranged attack.",
+      "entity_type": "ars_nouveau:wilden_guardian"
+    },
+    {
+      "description": "Summoned with a Ritual of Wilden Tribute, the chimera is a powerful and destructive mid-level boss.",
+      "entity_type": "ars_nouveau:wilden_boss"
     },
     {
       "description": "The Chimera is a worthy fight for a caster with Tier 2 spells and equipment. The Chimera resists cold damage, and a variety of spells including buffs, dispel, and mobility are suggested."

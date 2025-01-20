@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:ritual_wilden_summon",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:ritual_wilden_summon",
   "title": "Summon Wilden",
   "category": "ars_nouveau:ritual_index",
   "pages": [
     {
       "title": "Summon Wilden",
       "description": "Without augments, this ritual will summon a random variety of Wilden monsters for a short duration. When augmented with a Wilden Spike, Wilden Horn, and a Wilden Wing, this ritual will summon the Wilden Chimera, a challenging and destructive monster. Note: If summoning the chimera, this ritual will destroy blocks around the brazier.",
-      "icon": "item.ars_nouveau.ritual_wilden_summon"
+      "icon": "ars_nouveau:ritual_wilden_summon"
+    },
+    {
+      "recipe_1": "ars_nouveau:ritual_wilden_summon"
     }
   ]
 }

@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:thread_repairing",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:thread_repairing",
   "title": "Repairing",
   "category": "ars_nouveau:armor",
   "pages": [
     {
       "title": "Thread of Repairing",
       "description": "Allows the wearer to repair ANY magical armor or enchanters item by consuming Mana over time. Additional levels increase the speed at which the items repair. This perk applies to all relevant items, not only the item with this perk.",
-      "icon": "item.ars_nouveau.thread_repairing"
+      "icon": "ars_nouveau:thread_repairing"
+    },
+    {
+      "recipe_1": "ars_nouveau:thread_repairing"
     }
   ]
 }

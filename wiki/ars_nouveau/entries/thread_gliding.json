@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:thread_gliding",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:thread_gliding",
   "title": "Gliding",
   "category": "ars_nouveau:armor",
   "pages": [
     {
       "title": "Thread of Gliding",
       "description": "Allows you to glide as if you are wearing an elytra. Must be equipped in a slot of at least level 3.",
-      "icon": "item.ars_nouveau.thread_gliding"
+      "icon": "ars_nouveau:thread_gliding"
+    },
+    {
+      "recipe_1": "ars_nouveau:thread_gliding"
     }
   ]
 }

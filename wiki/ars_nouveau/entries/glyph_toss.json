@@ -1,13 +1,18 @@
 {
   "id": "ars_nouveau:glyph_toss",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:glyph_toss",
   "title": "Toss",
   "category": "ars_nouveau:glyphs_tier_one",
   "pages": [
     {
       "title": "Toss",
       "description": "Causes the caster to place an item from their inventory to a location. If this glyph is used on an inventory, the item will attempt to be inserted into it. Toss throws 64 items by default. Dampen will halve the amount each time. Amplify will double the amount each time. Randomize will select a random stack.",
-      "icon": "item.ars_nouveau.glyph_toss"
+      "icon": "ars_nouveau:glyph_toss",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_toss"
     }
   ]
 }

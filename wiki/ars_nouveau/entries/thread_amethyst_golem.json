@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:thread_amethyst_golem",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:thread_amethyst_golem",
   "title": "The Amethyst Golem",
   "category": "ars_nouveau:armor",
   "pages": [
     {
       "title": "Thread of The Amethyst Golem",
       "description": "Grants 15% knockback resistance per level.",
-      "icon": "item.ars_nouveau.thread_amethyst_golem"
+      "icon": "ars_nouveau:thread_amethyst_golem"
+    },
+    {
+      "recipe_1": "ars_nouveau:thread_amethyst_golem"
     }
   ]
 }

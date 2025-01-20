@@ -1,13 +1,14 @@
 {
   "id": "ars_nouveau:familiar_amethyst_golem",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:familiar_amethyst_golem",
   "title": "Amethyst Golem Familiar",
   "category": "ars_nouveau:familiars",
   "pages": [
     {
       "title": "Bound Script: Amethyst Golem",
       "description": "Reduces knockback taken by half and knocks back any attackers. Giving the golem an Amethyst Shard will grant 3 minutes of Shielding.",
-      "icon": "item.ars_nouveau.familiar_amethyst_golem"
+      "icon": "ars_nouveau:familiar_amethyst_golem"
     }
   ]
 }

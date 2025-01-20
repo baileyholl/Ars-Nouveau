@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:thread_whirlisprig",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:thread_whirlisprig",
   "title": "The Whirlisprig",
   "category": "ars_nouveau:armor",
   "pages": [
     {
       "title": "Thread of The Whirlisprig",
       "description": "Increases the saturation of consumed food by 30% each level.",
-      "icon": "item.ars_nouveau.thread_whirlisprig"
+      "icon": "ars_nouveau:thread_whirlisprig"
+    },
+    {
+      "recipe_1": "ars_nouveau:thread_whirlisprig"
     }
   ]
 }

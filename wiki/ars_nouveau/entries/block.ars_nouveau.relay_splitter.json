@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:block.ars_nouveau.relay_splitter",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:relay_splitter",
   "title": "Source Relay: Splitter",
   "category": "ars_nouveau:source",
   "pages": [
     {
       "title": "Source Relay: Splitter",
       "description": "Operates similar to the Source Relay, but will support taking from and transferring to multiple jars at once. The splitter has a much larger through-put than the Source Relay, and will split this throughput amongst all of its jars. See the instructions on the Source Relay for use.",
-      "icon": "block.ars_nouveau.relay_splitter"
+      "icon": "ars_nouveau:relay_splitter"
+    },
+    {
+      "recipe_1": "ars_nouveau:relay_splitter"
     }
   ]
 }

@@ -1,13 +1,18 @@
 {
   "id": "ars_nouveau:glyph_name",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:glyph_name",
   "title": "Name",
   "category": "ars_nouveau:glyphs_tier_two",
   "pages": [
     {
       "title": "Name",
       "description": "Names an entity after the set Spell Name. Targeting a block will name nearby entities or name inventory blocks directly if possible. Targeting with Self will name the held offhand item. Can be overridden with a name tag in the hotbar.",
-      "icon": "item.ars_nouveau.glyph_name"
+      "icon": "ars_nouveau:glyph_name",
+      "tier": 2
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_name"
     }
   ]
 }

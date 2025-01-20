@@ -1,17 +1,24 @@
 {
   "id": "ars_nouveau:armor_upgrading",
-  "icon": 1,
+  "order": 1,
+  "icon": "ars_nouveau:arcanist_hood",
   "title": "Armor Upgrading",
   "category": "ars_nouveau:armor",
   "pages": [
     {
       "title": "Armor Upgrading",
       "description": "Magical armor can be upgraded with Threads to provide additional effects. Each type of armor has a different number of slots, and those slots vary in size. Larger slots will increase the power of threads, and some threads require a slot of a certain size or larger. To apply threads, see the section on the Alteration Table.",
-      "icon": "item.ars_nouveau.arcanist_hood"
+      "icon": "ars_nouveau:arcanist_hood"
     },
     {
       "title": "Armor Tiers",
       "description": "Armor also has three tiers, and these tiers may be increased using the Enchanting Apparatus and the upgrade recipes found in this section. Each tier will increase the amount of mana regen the armor grants, and increases the number and size of the slots of the armor."
+    },
+    {
+      "related": [
+        "ars_nouveau:alteration_table",
+        "ars_nouveau:armor"
+      ]
     }
   ]
 }

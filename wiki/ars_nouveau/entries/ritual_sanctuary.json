@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:ritual_sanctuary",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:ritual_sanctuary",
   "title": "Sanctuary",
   "category": "ars_nouveau:ritual_index",
   "pages": [
     {
       "title": "Sanctuary",
       "description": "Denies hostile mobs from naturally spawning in a 32 block radius. Augment with rotten flesh to increase the radius by 1 each, up to 128. Costs source once a minute if a spawn is denied.",
-      "icon": "item.ars_nouveau.ritual_sanctuary"
+      "icon": "ars_nouveau:ritual_sanctuary"
+    },
+    {
+      "recipe_1": "ars_nouveau:ritual_sanctuary"
     }
   ]
 }

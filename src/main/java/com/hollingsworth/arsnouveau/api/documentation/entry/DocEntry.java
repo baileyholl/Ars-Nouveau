@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.api.documentation.export.IJsonExportable;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.arsnouveau.common.util.Log;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -115,7 +116,8 @@ public record DocEntry(ResourceLocation id, CopyOnWriteArrayList<SinglePageCtor>
     public JsonObject toJson() {
         JsonObject object = new JsonObject();
         object.addProperty(DocExporter.ID_PROPERTY, id.toString());
-        object.addProperty(DocExporter.ICON_PROPERTY, order);
+        object.addProperty(DocExporter.ORDER_PROPERTY, order);
+        object.addProperty(DocExporter.ICON_PROPERTY, BuiltInRegistries.ITEM.getKey(renderStack.getItem()).toString());
         object.addProperty(DocExporter.TITLE_PROPERTY, entryTitle.getString());
         object.addProperty(DocExporter.CATEGORY_PROPERY, DocumentationRegistry.getCategoryForEntry(this).id().toString());
         if(!ArsNouveau.proxy.isClientSide()){

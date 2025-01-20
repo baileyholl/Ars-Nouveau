@@ -1,13 +1,18 @@
 {
   "id": "ars_nouveau:glyph_dampen",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:glyph_dampen",
   "title": "Dampen",
   "category": "ars_nouveau:glyphs_tier_two",
   "pages": [
     {
       "title": "Dampen",
       "description": "Decreases the power of most spells.",
-      "icon": "item.ars_nouveau.glyph_dampen"
+      "icon": "ars_nouveau:glyph_dampen",
+      "tier": 2
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_dampen"
     }
   ]
 }

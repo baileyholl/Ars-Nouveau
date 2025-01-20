@@ -1,13 +1,26 @@
 {
   "id": "ars_nouveau:spell_crossbow",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:spell_crossbow",
   "title": "Enchanter\u0027s Crossbow",
   "category": "ars_nouveau:spell_casting",
   "pages": [
     {
       "title": "Enchanter\u0027s Crossbow",
       "description": "A crossbow that can be inscribed with a spell. The mana cost of the spell will be deducted when the bow is loaded if mana is present. Enchanter\u0027s Crossbows may use special augment arrows to empower their spells.",
-      "icon": "item.ars_nouveau.spell_crossbow"
+      "icon": "ars_nouveau:spell_crossbow"
+    },
+    {
+      "recipe_1": "ars_nouveau:spell_crossbow"
+    },
+    {
+      "recipe_1": "ars_nouveau:imbuement_amplify_arrow"
+    },
+    {
+      "recipe_1": "ars_nouveau:imbuement_pierce_arrow"
+    },
+    {
+      "recipe_1": "ars_nouveau:imbuement_split_arrow"
     }
   ]
 }

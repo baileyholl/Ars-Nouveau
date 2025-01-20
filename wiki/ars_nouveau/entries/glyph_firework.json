@@ -1,13 +1,18 @@
 {
   "id": "ars_nouveau:glyph_firework",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:glyph_firework",
   "title": "Firework",
   "category": "ars_nouveau:glyphs_tier_two",
   "pages": [
     {
       "title": "Firework",
       "description": "Creates a firework at the location or entity. Amplify will add Firework Stars, while Extend Time will add additional flight time. If a firework exists in the casters inventory, the created firework will mimic the held one. Spell Turrets with Touch will create fireworks as if they were dispensed.",
-      "icon": "item.ars_nouveau.glyph_firework"
+      "icon": "ars_nouveau:glyph_firework",
+      "tier": 2
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_firework"
     }
   ]
 }

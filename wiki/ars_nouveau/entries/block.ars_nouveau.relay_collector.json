@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:block.ars_nouveau.relay_collector",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:relay_collector",
   "title": "Source Relay: Collector",
   "category": "ars_nouveau:source",
   "pages": [
     {
       "title": "Source Relay: Collector",
       "description": "Operates similar to the Source Relay, but will automatically take from jars it is not linked to within 5 blocks. See the instructions on the Source Relay for use.",
-      "icon": "block.ars_nouveau.relay_collector"
+      "icon": "ars_nouveau:relay_collector"
+    },
+    {
+      "recipe_1": "ars_nouveau:relay_collector"
     }
   ]
 }

@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:thread_life_drain",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:thread_life_drain",
   "title": "Life Drain",
   "category": "ars_nouveau:armor",
   "pages": [
     {
       "title": "Thread of Life Drain",
       "description": "Dealing damage with spells heals you for 20% per level of the damage dealt.",
-      "icon": "item.ars_nouveau.thread_life_drain"
+      "icon": "ars_nouveau:thread_life_drain"
+    },
+    {
+      "recipe_1": "ars_nouveau:thread_life_drain"
     }
   ]
 }

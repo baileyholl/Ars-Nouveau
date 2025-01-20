@@ -1,13 +1,18 @@
 {
   "id": "ars_nouveau:glyph_animate_block",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:glyph_animate_block",
   "title": "Animate Block",
   "category": "ars_nouveau:glyphs_tier_two",
   "pages": [
     {
       "title": "Animate Block",
       "description": "Animates a block to fight for you. The animated block will convert to a falling block when it dies. Costs a large amount of mana, but does not grant Summoning Sickness",
-      "icon": "item.ars_nouveau.glyph_animate_block"
+      "icon": "ars_nouveau:glyph_animate_block",
+      "tier": 2
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_animate_block"
     }
   ]
 }

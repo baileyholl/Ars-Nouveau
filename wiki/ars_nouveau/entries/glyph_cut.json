@@ -1,13 +1,18 @@
 {
   "id": "ars_nouveau:glyph_cut",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:glyph_cut",
   "title": "Cut",
   "category": "ars_nouveau:glyphs_tier_one",
   "pages": [
     {
       "title": "Cut",
       "description": "Simulates using shears on entities and blocks, or damages non-shearable entities for a small amount. Amplify will simulate using an Axe instead of Shears. For simulating breaking with shears, see Break and Sensitive. Costs nothing.",
-      "icon": "item.ars_nouveau.glyph_cut"
+      "icon": "ars_nouveau:glyph_cut",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_cut"
     }
   ]
 }

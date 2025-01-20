@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:item.ars_nouveau.summon_focus",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:summon_focus",
   "title": "Focus of Summoning",
   "category": "ars_nouveau:spell_casting",
   "pages": [
     {
       "title": "Focus of Summoning",
       "description": "A special casting focus. Grants summons from spells additional duration, strength, speed, and deals damage to enemies that kill them. Additionally, casting spells that target you like Self and Orbit will cast a copy of the spell on your nearby summons.",
-      "icon": "item.ars_nouveau.summon_focus"
+      "icon": "ars_nouveau:summon_focus"
+    },
+    {
+      "recipe_1": "ars_nouveau:summon_focus"
     }
   ]
 }

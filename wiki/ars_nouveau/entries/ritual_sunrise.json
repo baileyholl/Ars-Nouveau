@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:ritual_sunrise",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:ritual_sunrise",
   "title": "Sunrise",
   "category": "ars_nouveau:ritual_index",
   "pages": [
     {
       "title": "Sunrise",
       "description": "Sets the time to day.",
-      "icon": "item.ars_nouveau.ritual_sunrise"
+      "icon": "ars_nouveau:ritual_sunrise"
+    },
+    {
+      "recipe_1": "ars_nouveau:ritual_sunrise"
     }
   ]
 }

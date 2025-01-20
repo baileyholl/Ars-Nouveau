@@ -1,16 +1,23 @@
 {
   "id": "ars_nouveau:warp_portal",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:warp_scroll",
   "title": "Warp Portals",
   "category": "ars_nouveau:crafting",
   "pages": [
     {
       "title": "Warp Portals",
       "description": "Warp portals, like warp scrolls, provide a one-way teleport to any location, provided it is in the same dimension. To construct a Warp Portal, build a frame from Sourcestone or its variants in the shape of a rectangle and provide a full Source Jar nearby. Then, throw a warp scroll with a written location into the frame. Given there is enough source nearby, the portal will be created.",
-      "icon": "item.ars_nouveau.warp_scroll"
+      "icon": "ars_nouveau:warp_scroll"
     },
     {
       "description": "Portals can be built horizontal or vertical, from 1x1 to 21x21 in size. Warping does not cost any source after creation. Using a Dominion Wand on the portal will change the texture of the portal."
+    },
+    {
+      "related": [
+        "ars_nouveau:item.ars_nouveau.warp_scroll",
+        "ars_nouveau:item.ars_nouveau.stable_warp_scroll"
+      ]
     }
   ]
 }

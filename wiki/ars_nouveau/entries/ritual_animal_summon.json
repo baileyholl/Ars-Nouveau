@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:ritual_animal_summon",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:ritual_animal_summon",
   "title": "Summon Animals",
   "category": "ars_nouveau:ritual_index",
   "pages": [
     {
       "title": "Summon Animals",
       "description": "Summon a random variety of wild animals native to the biome it\u0027s in.",
-      "icon": "item.ars_nouveau.ritual_animal_summon"
+      "icon": "ars_nouveau:ritual_animal_summon"
+    },
+    {
+      "recipe_1": "ars_nouveau:ritual_animal_summon"
     }
   ]
 }

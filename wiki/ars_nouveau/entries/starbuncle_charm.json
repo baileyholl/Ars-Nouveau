@@ -1,13 +1,21 @@
 {
   "id": "ars_nouveau:starbuncle_charm",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:starbuncle_charm",
   "title": "Starbuncle Charm",
   "category": "ars_nouveau:crafting",
   "pages": [
     {
       "title": "Starbuncle Charm",
       "description": "Starbuncles naturally appear in wooded areas in search of golden nuggets. While Starbuncles are normally afraid of humans, they will allow someone to approach if they are holding a gold nugget. When a Starbuncle has picked up a golden nugget, it will vanish from this world and leave behind a Starbuncle Token.",
-      "icon": "item.ars_nouveau.starbuncle_charm"
+      "icon": "ars_nouveau:starbuncle_charm"
+    },
+    {
+      "recipe_1": "ars_nouveau:starbuncle_charm"
+    },
+    {
+      "description": "While wild Starbuncles cannot be tamed, their tokens may be used to summon a Starbuncle.",
+      "entity_type": "ars_nouveau:starbuncle"
     },
     {
       "title": "Summoning",
@@ -32,6 +40,18 @@
     {
       "title": "Starby Stacking",
       "description": "Using a charm on an existing Starbuncle will stack them. Stacked starbuncles will transport multiple stacks at a time, depositing them in the order that they are taken. Wanding a stackbuncle will wand the main starbuncle and will always display the main starbuncles tooltip. Note: multiple itemstacks are not simulated at a time, which can result in several items being taken, but only able to deposit one while holding the rest."
+    },
+    {
+      "related": [
+        "ars_nouveau:deny_scroll",
+        "ars_nouveau:mimic_scroll",
+        "ars_nouveau:allow_scroll",
+        "ars_nouveau:item.ars_nouveau.dominion_wand",
+        "ars_nouveau:storage_lectern",
+        "ars_nouveau:item.ars_nouveau.starbuncle_shades",
+        "ars_nouveau:item.ars_nouveau.wixie_hat",
+        "ars_nouveau:orange_sbed"
+      ]
     }
   ]
 }

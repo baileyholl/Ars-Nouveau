@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:item.ars_nouveau.amulet_of_mana_regen",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:amulet_of_mana_regen",
   "title": "Amulet of Mana Regen",
   "category": "ars_nouveau:items",
   "pages": [
     {
       "title": "Amulet of Mana Regen",
       "description": "Increases mana regeneration by a moderate amount.",
-      "icon": "item.ars_nouveau.amulet_of_mana_regen"
+      "icon": "ars_nouveau:amulet_of_mana_regen"
+    },
+    {
+      "recipe_1": "ars_nouveau:amulet_of_mana_regen"
     }
   ]
 }

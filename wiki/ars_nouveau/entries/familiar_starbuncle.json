@@ -1,13 +1,14 @@
 {
   "id": "ars_nouveau:familiar_starbuncle",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:familiar_starbuncle",
   "title": "Starbuncle Familiar",
   "category": "ars_nouveau:familiars",
   "pages": [
     {
       "title": "Bound Script: Starbuncle",
       "description": "A Starbuncle familiar that will grant you Speed 2. Additionally, using a Golden Nugget on the starbuncle will consume it and grant the owner a short duration of Scrying for Gold Ore. Obtained by performing the Ritual of Binding near a Starbuncle.",
-      "icon": "item.ars_nouveau.familiar_starbuncle"
+      "icon": "ars_nouveau:familiar_starbuncle"
     }
   ]
 }

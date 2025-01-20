@@ -1,13 +1,21 @@
 {
   "id": "ars_nouveau:drygmy_charm",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:drygmy_charm",
   "title": "Drygmy Charm",
   "category": "ars_nouveau:crafting",
   "pages": [
     {
       "title": "Drygmy Charm",
       "description": "Drygmys are often found following and tending to animals around it. They can be found anywhere, though somewhat rarely. Drygmys can be given a home in the world, and will produce items from nearby monsters and animals as if they were slain, without harming them. A wild drygmy may be befriended by throwing a Wilden Horn near it! You may dye a Drygmy Cyan, Orange, or Brown.",
-      "icon": "item.ars_nouveau.drygmy_charm"
+      "icon": "ars_nouveau:drygmy_charm"
+    },
+    {
+      "recipe_1": "ars_nouveau:drygmy_charm"
+    },
+    {
+      "description": "A Drygmy can also produce experience gems!",
+      "entity_type": "ars_nouveau:drygmy"
     },
     {
       "title": "Summoning",
@@ -20,6 +28,14 @@
     {
       "title": "Production",
       "description": "Each Drygmy working around a henge contributes progress. Once maximum progress has been reached, the henge will generate items and experience gems and deposit them into adjacent chests. Each time this occurs, the henge will require Source to recharge. The number of drops and experience gems is equal to the Drygmy happiness and experience value of the entities. To get started, place a chest and jar of Source next to the Henge."
+    },
+    {
+      "recipe_1": "ars_nouveau:greater_experience_gem"
+    },
+    {
+      "related": [
+        "ars_nouveau:mob_jar"
+      ]
     }
   ]
 }

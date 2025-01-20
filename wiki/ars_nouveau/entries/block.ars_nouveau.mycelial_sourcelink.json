@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:block.ars_nouveau.mycelial_sourcelink",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:mycelial_sourcelink",
   "title": "Mycelial Sourcelink",
   "category": "ars_nouveau:source",
   "pages": [
     {
       "title": "Mycelial Sourcelink",
       "description": "Generates a moderate amount of source from nearby food, generating more for more nourishing food. Source Berry food is worth far more than other mundane foods. Additionally, the Mycelial Sourcelink will convert Grass or Dirt in the 3x3 below it into Mycelium and will grow mushrooms around it given that the space is empty. The Sourcelink will also pull items from nearby pedestals.",
-      "icon": "block.ars_nouveau.mycelial_sourcelink"
+      "icon": "ars_nouveau:mycelial_sourcelink"
+    },
+    {
+      "recipe_1": "ars_nouveau:mycelial_sourcelink"
     }
   ]
 }

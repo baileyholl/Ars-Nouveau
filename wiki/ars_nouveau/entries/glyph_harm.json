@@ -1,13 +1,18 @@
 {
   "id": "ars_nouveau:glyph_harm",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:glyph_harm",
   "title": "Harm",
   "category": "ars_nouveau:glyphs_tier_one",
   "pages": [
     {
       "title": "Harm",
       "description": "A spell you start with. Damages a target. May be increased by Amplify, or applies the Poison debuff when using Extend Time. Note, multiple Harms without a delay will not apply due to invincibility on hit.",
-      "icon": "item.ars_nouveau.glyph_harm"
+      "icon": "ars_nouveau:glyph_harm",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_harm"
     }
   ]
 }

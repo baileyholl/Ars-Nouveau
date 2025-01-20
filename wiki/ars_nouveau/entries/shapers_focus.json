@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:shapers_focus",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:shapers_focus",
   "title": "Focus of Block Shaping",
   "category": "ars_nouveau:spell_casting",
   "pages": [
     {
       "title": "Focus of Block Shaping",
       "description": "A focus that modifies effects that move, create, or modify blocks. Blocks that you move with effects like Launch, Gravity, Pull, Knockback, etc. will now deal damage to entities they hit. Damage is increased by Spell Damage, block hardness, and the speed of the block. Additionally, effects that target or create blocks will duplicate the rest of the spell targeting the new block or moving block.",
-      "icon": "item.ars_nouveau.shapers_focus"
+      "icon": "ars_nouveau:shapers_focus"
+    },
+    {
+      "recipe_1": "ars_nouveau:shapers_focus"
     },
     {
       "title": "Block Targeting",

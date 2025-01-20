@@ -1,13 +1,18 @@
 {
   "id": "ars_nouveau:glyph_summon_undead",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:glyph_summon_undead",
   "title": "Summon Undead",
   "category": "ars_nouveau:glyphs_tier_three",
   "pages": [
     {
       "title": "Summon Undead",
       "description": "Summons a number of Skeleton allies that will attack nearby hostile enemies. These Skeletons will last a short time until they begin to take damage, but time may be extended with the Extend Time augment.  Additionally, their summoned weapons are changed using augments, use Amplify to give it a better sword, or Pierce to give it a bow.  Adding Split after the effect will add to the number of summoned skeletons.",
-      "icon": "item.ars_nouveau.glyph_summon_undead"
+      "icon": "ars_nouveau:glyph_summon_undead",
+      "tier": 3
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_summon_undead"
     }
   ]
 }

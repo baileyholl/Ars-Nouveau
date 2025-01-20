@@ -1,13 +1,21 @@
 {
   "id": "ars_nouveau:alakarkinos_charm",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:alakarkinos_charm",
   "title": "Alakarkinos Charm",
   "category": "ars_nouveau:crafting",
   "pages": [
     {
       "title": "Alakarkinos Charm",
       "description": "Alakarkinos can sift sand and gravel to find items found in archaeology sites. They can be found on beaches and will give you a token if they receive a Pottery Sherd of any kind.",
-      "icon": "item.ars_nouveau.alakarkinos_charm"
+      "icon": "ars_nouveau:alakarkinos_charm"
+    },
+    {
+      "recipe_1": "ars_nouveau:alakarkinos_charm"
+    },
+    {
+      "description": "Loves to dance to nearby jukeboxes.",
+      "entity_type": "ars_nouveau:alakarkinos"
     },
     {
       "title": "Summoning",

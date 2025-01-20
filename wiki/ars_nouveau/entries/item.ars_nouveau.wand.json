@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:item.ars_nouveau.wand",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:wand",
   "title": "Enchanter\u0027s Wand",
   "category": "ars_nouveau:spell_casting",
   "pages": [
     {
       "title": "Enchanter\u0027s Wand",
       "description": "Wands accept only a single spell, and are inscribed using the Scribes Table. A Wand always starts with Projectile -\u003e Accelerate, and MUST be inscribed with a spell that does not have another method. This allows you to cast spells beyond the 10 spell cap. If you want a wand that casts Break, inscribe the wand with JUST break, and your result will be a wand with Projectile -\u003e Acclerate -\u003e Break.",
-      "icon": "item.ars_nouveau.wand"
+      "icon": "ars_nouveau:wand"
+    },
+    {
+      "recipe_1": "ars_nouveau:wand"
     }
   ]
 }

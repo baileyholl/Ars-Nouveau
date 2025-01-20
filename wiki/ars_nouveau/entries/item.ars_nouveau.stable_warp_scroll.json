@@ -1,13 +1,23 @@
 {
   "id": "ars_nouveau:item.ars_nouveau.stable_warp_scroll",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:stable_warp_scroll",
   "title": "Stabilized Warp Scroll",
   "category": "ars_nouveau:items",
   "pages": [
     {
       "title": "Stabilized Warp Scroll",
       "description": "Creates a temporary Warp Portal when used on a block. This scroll is not consumed on use and can teleport between dimensions. Using a Stabilized Warp Scroll to create a Warp Portal will create a cross dimension warp portal, but consume the scroll. This scroll may only be bound to a location a single time.",
-      "icon": "item.ars_nouveau.stable_warp_scroll"
+      "icon": "ars_nouveau:stable_warp_scroll"
+    },
+    {
+      "recipe_1": "ars_nouveau:stable_warp_scroll"
+    },
+    {
+      "related": [
+        "ars_nouveau:item.ars_nouveau.warp_scroll",
+        "ars_nouveau:warp_portal"
+      ]
     }
   ]
 }

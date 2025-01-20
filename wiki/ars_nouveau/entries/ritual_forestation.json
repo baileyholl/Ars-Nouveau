@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:ritual_forestation",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:ritual_forestation",
   "title": "Forestation",
   "category": "ars_nouveau:ritual_index",
   "pages": [
     {
       "title": "Forestation",
       "description": "Places grown Oak and Birch trees, and applies bonemeal in a 7x7 (circular) area. Augmenting with a source gem will increase the radius by 1 for each gem. Augmenting with a Brown Mushroom will convert the area to Podzol and spawn taiga resources. Augmenting with Glow Berries will spawn jungle resources.",
-      "icon": "item.ars_nouveau.ritual_forestation"
+      "icon": "ars_nouveau:ritual_forestation"
+    },
+    {
+      "recipe_1": "ars_nouveau:ritual_forestation"
     }
   ]
 }

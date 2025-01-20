@@ -1,13 +1,24 @@
 {
   "id": "ars_nouveau:block.ars_nouveau.scryers_crystal",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:scryers_crystal",
   "title": "Scry Crystal",
   "category": "ars_nouveau:crafting",
   "pages": [
     {
       "title": "Scry Crystal",
       "description": "Can be used to look through as if you were standing there. Right click to enter the camera, or bind the camera to a Scryer\u0027s Scroll by using Blank Parchment on the block. A Scryer\u0027s Scroll will let you remotely access the block via a Scryer\u0027s Oculus. ",
-      "icon": "block.ars_nouveau.scryers_crystal"
+      "icon": "ars_nouveau:scryers_crystal"
+    },
+    {
+      "recipe_1": "ars_nouveau:scryers_crystal"
+    },
+    {
+      "related": [
+        "ars_nouveau:item.ars_nouveau.enchanters_eye",
+        "ars_nouveau:item.ars_nouveau.scryer_scroll",
+        "ars_nouveau:block.ars_nouveau.scryers_oculus"
+      ]
     }
   ]
 }

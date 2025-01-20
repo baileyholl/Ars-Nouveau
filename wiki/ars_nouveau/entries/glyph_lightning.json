@@ -1,13 +1,18 @@
 {
   "id": "ars_nouveau:glyph_lightning",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:glyph_lightning",
   "title": "Lightning",
   "category": "ars_nouveau:glyphs_tier_three",
   "pages": [
     {
       "title": "Lightning",
       "description": "Summons a lightning bolt at the location. Entities struck will be given the Shocked effect. Shocked causes all additional lightning damage to deal bonus damage, and increases the level of Shocked up to III. Lightning also deals bonus damage to entities that are wet or wearing RF powered items. Can be augmented with Amplify, Dampen, and Extend Time.",
-      "icon": "item.ars_nouveau.glyph_lightning"
+      "icon": "ars_nouveau:glyph_lightning",
+      "tier": 3
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_lightning"
     }
   ]
 }

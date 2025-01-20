@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:item.ars_nouveau.enchanters_mirror",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:enchanters_mirror",
   "title": "Enchanter\u0027s Mirror",
   "category": "ars_nouveau:spell_casting",
   "pages": [
     {
       "title": "Enchanter\u0027s Mirror",
       "description": "Applies a self spell to the user. Spells cast with this mirror are discounted and gain additional bonus duration to all glyphs. Apply a spell at the Scribe\u0027s table that DOES NOT contain a form such as Heal -\u003e Amplify.",
-      "icon": "item.ars_nouveau.enchanters_mirror"
+      "icon": "ars_nouveau:enchanters_mirror"
+    },
+    {
+      "recipe_1": "ars_nouveau:enchanters_mirror"
     }
   ]
 }

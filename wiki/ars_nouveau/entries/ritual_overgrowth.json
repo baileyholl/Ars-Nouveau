@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:ritual_overgrowth",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:ritual_overgrowth",
   "title": "Overgrowth",
   "category": "ars_nouveau:ritual_index",
   "pages": [
     {
       "title": "Overgrowth",
       "description": "Occasionally bone meals blocks in the area around it. This ritual requires source to operate. If augmented with a Bone Block, this ritual will instead force baby animals to grow faster.",
-      "icon": "item.ars_nouveau.ritual_overgrowth"
+      "icon": "ars_nouveau:ritual_overgrowth"
+    },
+    {
+      "recipe_1": "ars_nouveau:ritual_overgrowth"
     }
   ]
 }

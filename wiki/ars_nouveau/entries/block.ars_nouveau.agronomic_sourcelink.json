@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:block.ars_nouveau.agronomic_sourcelink",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:agronomic_sourcelink",
   "title": "Agronomic Sourcelink",
   "category": "ars_nouveau:source",
   "pages": [
     {
       "title": "Agronomic Sourcelink",
       "description": "The Agronomic Sourcelink generates source from crop and tree growth within 15 blocks. Bonus source is generated for magical plants such as Mageblooms, Source Berry Bushes, and Archwood Saplings. Source will be output from the Sourcelink to nearby jars within 5 blocks. Note: Bonemealing crops will not grant Source.",
-      "icon": "block.ars_nouveau.agronomic_sourcelink"
+      "icon": "ars_nouveau:agronomic_sourcelink"
+    },
+    {
+      "recipe_1": "ars_nouveau:agronomic_sourcelink"
     }
   ]
 }

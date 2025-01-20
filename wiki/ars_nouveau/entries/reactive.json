@@ -1,7 +1,18 @@
 {
   "id": "ars_nouveau:reactive",
-  "icon": 100,
+  "order": 100,
+  "icon": "minecraft:enchanted_book",
   "title": "Reactive",
   "category": "ars_nouveau:enchanting",
-  "pages": []
+  "pages": [
+    {
+      "recipe_1": "ars_nouveau:reactive_2"
+    },
+    {
+      "recipe_1": "ars_nouveau:reactive_3"
+    },
+    {
+      "recipe_1": "ars_nouveau:reactive_4"
+    }
+  ]
 }

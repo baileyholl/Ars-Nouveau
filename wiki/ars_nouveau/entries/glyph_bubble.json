@@ -1,13 +1,18 @@
 {
   "id": "ars_nouveau:glyph_bubble",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:glyph_bubble",
   "title": "Bubble",
   "category": "ars_nouveau:glyphs_tier_one",
   "pages": [
     {
       "title": "Bubble",
       "description": "Captures mobs and entities it touches, causing them to float upwards. If the bubble has been alive for at least one tick, damaging the entity trapped in the bubble will cause it to pop, dealing bonus damage to the entity inside. Extend time and amplify can be used to increase the duration and damage of the bubble.",
-      "icon": "item.ars_nouveau.glyph_bubble"
+      "icon": "ars_nouveau:glyph_bubble",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_bubble"
     }
   ]
 }

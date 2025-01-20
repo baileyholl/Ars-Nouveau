@@ -1,13 +1,18 @@
 {
   "id": "ars_nouveau:glyph_snare",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:glyph_snare",
   "title": "Snare",
   "category": "ars_nouveau:glyphs_tier_one",
   "pages": [
     {
       "title": "Snare",
       "description": "Stops entities from moving and jumping. Extend Time will increase the duration of this effect. Snaring a block created from the Focus of Block Shaping will cause it to attempt to place itself immediately.",
-      "icon": "item.ars_nouveau.glyph_snare"
+      "icon": "ars_nouveau:glyph_snare",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_snare"
     }
   ]
 }

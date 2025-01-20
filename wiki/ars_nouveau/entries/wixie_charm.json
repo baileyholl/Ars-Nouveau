@@ -1,13 +1,21 @@
 {
   "id": "ars_nouveau:wixie_charm",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:wixie_charm",
   "title": "Wixie Charm",
   "category": "ars_nouveau:crafting",
   "pages": [
     {
       "title": "Wixie Charm",
       "description": "A Wixie can automatically craft items for you at the expense of source. To obtain a Wixie Token, cast Dispel on a Witch while it is half health or less. Once you have obtained a Wixie Charm, use it on a Cauldron to summon your Wixie. A Wixie can be dyed Red, White, Black, Blue, or Green.",
-      "icon": "item.ars_nouveau.wixie_charm"
+      "icon": "ars_nouveau:wixie_charm"
+    },
+    {
+      "recipe_1": "ars_nouveau:wixie_charm"
+    },
+    {
+      "description": "To select an item for crafting, use your item or block on the Wixie Cauldron.",
+      "entity_type": "ars_nouveau:wixie"
     },
     {
       "title": "Item Crafting",
@@ -27,6 +35,13 @@
     },
     {
       "description": "When using multiple Wixies, you may wish to lock a jar to a specific potion. Wixies will only output potion to jars that contain the same potion, or an unlocked empty potion. Each craft costs Source. See the section on the Potion Jar for more information."
+    },
+    {
+      "related": [
+        "ars_nouveau:block.ars_nouveau.potion_jar",
+        "ars_nouveau:block.ars_nouveau.potion_melder",
+        "ars_nouveau:block.ars_nouveau.potion_diffuser"
+      ]
     }
   ]
 }

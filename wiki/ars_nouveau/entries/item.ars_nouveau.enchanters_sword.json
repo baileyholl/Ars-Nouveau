@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:item.ars_nouveau.enchanters_sword",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:enchanters_sword",
   "title": "Enchanter\u0027s Sword",
   "category": "ars_nouveau:spell_casting",
   "pages": [
     {
       "title": "Enchanter\u0027s Sword",
       "description": "Applies a Touch spell before damaging an entity. Additionally, all spells gain Spell Damage. Apply a spell at the Scribes Table that does NOT contain a form, such as Ignite -\u003e Extend Time.",
-      "icon": "item.ars_nouveau.enchanters_sword"
+      "icon": "ars_nouveau:enchanters_sword"
+    },
+    {
+      "recipe_1": "ars_nouveau:enchanters_sword"
     }
   ]
 }

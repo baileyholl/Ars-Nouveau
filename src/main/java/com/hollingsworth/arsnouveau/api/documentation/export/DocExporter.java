@@ -36,6 +36,13 @@ public class DocExporter {
     public static String DESCRIPTION_PROPERTY = "description";
     public static String ICON_PROPERTY = "icon";
     public static String CATEGORY_PROPERY = "category";
+    public static String RECIPE_PROPERTY = "recipe_1";
+    public static String RECIPE2_PROPERTY = "recipe_2";
+    public static String RELATED_PROPERTY = "related";
+    public static String TIER_PROPERTY = "tier";
+    public static String ENTITY_PROPERTY = "entity_type";
+    public static String ITEM_PROPERTY = "item";
+    public static String PERKS_PROPERTY = "perks";
 
 
     static ToIntFunction<String> FIXED_ORDER_FIELDS = Util.make(new Object2IntOpenHashMap<>(), p_236070_ -> {

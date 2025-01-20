@@ -1,13 +1,18 @@
 {
   "id": "ars_nouveau:glyph_orbit",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:glyph_orbit",
   "title": "Orbit",
   "category": "ars_nouveau:glyphs_tier_three",
   "pages": [
     {
       "title": "Orbit",
       "description": "Summons three orbiting projectiles around the target that will cast a spell on any entities it may hit. Additional projectiles, their speed, radius, and duration may be augmented. Sensitive will cause Orbit to hit blocks.",
-      "icon": "item.ars_nouveau.glyph_orbit"
+      "icon": "ars_nouveau:glyph_orbit",
+      "tier": 3
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_orbit"
     }
   ]
 }

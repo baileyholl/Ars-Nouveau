@@ -1,13 +1,18 @@
 {
   "id": "ars_nouveau:glyph_fortune",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:glyph_fortune",
   "title": "Luck",
   "category": "ars_nouveau:glyphs_tier_two",
   "pages": [
     {
       "title": "Luck",
       "description": "Increases the drop chance from mobs killed by Damage and blocks that are destroyed by Break. Cannot be combined with Extract.",
-      "icon": "item.ars_nouveau.glyph_fortune"
+      "icon": "ars_nouveau:glyph_fortune",
+      "tier": 2
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_fortune"
     }
   ]
 }

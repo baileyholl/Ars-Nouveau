@@ -1,13 +1,18 @@
 {
   "id": "ars_nouveau:glyph_ender_inventory",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:glyph_ender_inventory",
   "title": "Access Ender Inventory",
   "category": "ars_nouveau:glyphs_tier_two",
   "pages": [
     {
       "title": "Access Ender Inventory",
       "description": "Opens your personal ender chest inventory from anywhere.",
-      "icon": "item.ars_nouveau.glyph_ender_inventory"
+      "icon": "ars_nouveau:glyph_ender_inventory",
+      "tier": 2
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_ender_inventory"
     }
   ]
 }

@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:item.ars_nouveau.wixie_hat",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:wixie_hat",
   "title": "Wixie Hat",
   "category": "ars_nouveau:crafting",
   "pages": [
     {
       "title": "Wixie Hat",
       "description": "Allows starbuncles to transport potions. Once wearing a Wixie Hat, use the Dominion Wand to connect them between Potion Jars.",
-      "icon": "item.ars_nouveau.wixie_hat"
+      "icon": "ars_nouveau:wixie_hat"
+    },
+    {
+      "recipe_1": "ars_nouveau:wixie_hat"
     }
   ]
 }

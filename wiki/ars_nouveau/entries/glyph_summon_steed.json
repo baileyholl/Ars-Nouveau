@@ -1,13 +1,18 @@
 {
   "id": "ars_nouveau:glyph_summon_steed",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:glyph_summon_steed",
   "title": "Summon Steed",
   "category": "ars_nouveau:glyphs_tier_one",
   "pages": [
     {
       "title": "Summon Steed",
       "description": "Summons a saddled horse that will vanish after a few minutes. AOE will increase the amount summoned, while Extend Time will increase the duration of the summon. Applies Summoning Sickness to the caster, and cannot be cast while afflicted by this Sickness.",
-      "icon": "item.ars_nouveau.glyph_summon_steed"
+      "icon": "ars_nouveau:glyph_summon_steed",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_summon_steed"
     }
   ]
 }

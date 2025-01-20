@@ -1,13 +1,18 @@
 {
   "id": "ars_nouveau:glyph_self",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:glyph_self",
   "title": "Self",
   "category": "ars_nouveau:glyphs_tier_one",
   "pages": [
     {
       "title": "Self",
       "description": "A spell you start with. Applies spells on the caster.",
-      "icon": "item.ars_nouveau.glyph_self"
+      "icon": "ars_nouveau:glyph_self",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_self"
     }
   ]
 }

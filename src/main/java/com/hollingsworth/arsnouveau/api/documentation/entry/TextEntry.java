@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -93,7 +94,7 @@ public class TextEntry extends SinglePageWidget {
         }
         object.addProperty(DocExporter.DESCRIPTION_PROPERTY, body.getString());
         if(renderStack != null && !renderStack.isEmpty()) {
-            object.addProperty(DocExporter.ICON_PROPERTY, renderStack.getDescriptionId());
+            object.addProperty(DocExporter.ICON_PROPERTY, BuiltInRegistries.ITEM.getKey(renderStack.getItem()).toString());
         }
     }
 }

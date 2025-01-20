@@ -1,13 +1,24 @@
 {
   "id": "ars_nouveau:item.ars_nouveau.dominion_wand",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:dominion_wand",
   "title": "Dominion Wand",
   "category": "ars_nouveau:crafting",
   "pages": [
     {
       "title": "Dominion Wand",
       "description": "A tool for configuring Source Relays and automation entities. To set a transfer path, use the wand on the object that you would like to take source from, and then use it on the block you would like to send source to. For example: Source Jar to Source Relay, Source Relay to Source Relay, or Source Relay to Source Jar. To clear connections, sneak and use this wand on a relay. You can switch into Strict mode using the radial menu, allowing to specify the side of the blocks to use.",
-      "icon": "item.ars_nouveau.dominion_wand"
+      "icon": "ars_nouveau:dominion_wand"
+    },
+    {
+      "recipe_1": "ars_nouveau:dominion_wand"
+    },
+    {
+      "related": [
+        "ars_nouveau:storage_lectern",
+        "ars_nouveau:item_detector",
+        "ars_nouveau:starbuncle_charm"
+      ]
     }
   ]
 }

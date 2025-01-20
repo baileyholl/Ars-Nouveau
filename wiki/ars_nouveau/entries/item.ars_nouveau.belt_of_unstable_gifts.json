@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:item.ars_nouveau.belt_of_unstable_gifts",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:belt_of_unstable_gifts",
   "title": "Belt of Unstable Gifts",
   "category": "ars_nouveau:items",
   "pages": [
     {
       "title": "Belt of Unstable Gifts",
       "description": "Occasionally grants a random positive potion effect for a short duration. These effects can vary in strength.",
-      "icon": "item.ars_nouveau.belt_of_unstable_gifts"
+      "icon": "ars_nouveau:belt_of_unstable_gifts"
+    },
+    {
+      "recipe_1": "ars_nouveau:belt_of_unstable_gifts"
     }
   ]
 }

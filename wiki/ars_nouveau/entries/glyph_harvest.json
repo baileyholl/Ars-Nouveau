@@ -1,13 +1,18 @@
 {
   "id": "ars_nouveau:glyph_harvest",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:glyph_harvest",
   "title": "Harvest",
   "category": "ars_nouveau:glyphs_tier_one",
   "pages": [
     {
       "title": "Harvest",
       "description": "When used on grown crops, this spell will obtain the fully grown product without destroying the plant.",
-      "icon": "item.ars_nouveau.glyph_harvest"
+      "icon": "ars_nouveau:glyph_harvest",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_harvest"
     }
   ]
 }

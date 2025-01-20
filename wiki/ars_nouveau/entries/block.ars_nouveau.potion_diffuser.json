@@ -1,13 +1,24 @@
 {
   "id": "ars_nouveau:block.ars_nouveau.potion_diffuser",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:potion_diffuser",
   "title": "Potion Diffuser",
   "category": "ars_nouveau:crafting",
   "pages": [
     {
       "title": "Potion Diffuser",
       "description": "Consumes a potion and applies it to nearby entities, greatly extending the use of the potion. To use, bind a Potion Jar to the diffuser using the Dominion Wand. Every 10 minutes the diffuser will consume a single potion and apply it every few seconds.",
-      "icon": "block.ars_nouveau.potion_diffuser"
+      "icon": "ars_nouveau:potion_diffuser"
+    },
+    {
+      "recipe_1": "ars_nouveau:potion_diffuser"
+    },
+    {
+      "related": [
+        "ars_nouveau:block.ars_nouveau.potion_jar",
+        "ars_nouveau:block.ars_nouveau.potion_melder",
+        "ars_nouveau:wixie_charm"
+      ]
     }
   ]
 }

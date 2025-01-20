@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:item.ars_nouveau.enchanters_shield",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:enchanters_shield",
   "title": "Enchanter\u0027s Shield",
   "category": "ars_nouveau:spell_casting",
   "pages": [
     {
       "title": "Enchanter\u0027s Shield",
       "description": "Upon blocking damage, the user will gain a short duration of Mana Regeneration and Spell Damage. Additionally, this shield will repair over time using the wearers mana.",
-      "icon": "item.ars_nouveau.enchanters_shield"
+      "icon": "ars_nouveau:enchanters_shield"
+    },
+    {
+      "recipe_1": "ars_nouveau:enchanters_shield"
     }
   ]
 }

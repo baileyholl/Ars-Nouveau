@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:block.ars_nouveau.relay_deposit",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:relay_deposit",
   "title": "Source Relay: Depositor",
   "category": "ars_nouveau:source",
   "pages": [
     {
       "title": "Source Relay: Depositor",
       "description": "Operates similar to the Source Relay, but will deposit to jars it is not linked to within 5 blocks. See the instructions on the Source Relay for use.",
-      "icon": "block.ars_nouveau.relay_deposit"
+      "icon": "ars_nouveau:relay_deposit"
+    },
+    {
+      "recipe_1": "ars_nouveau:relay_deposit"
     }
   ]
 }

@@ -1,13 +1,18 @@
 {
   "id": "ars_nouveau:amethyst_golem_charm",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:amethyst_golem_charm",
   "title": "Amethyst Golem Charm",
   "category": "ars_nouveau:crafting",
   "pages": [
     {
       "title": "Amethyst Golem Charm",
       "description": "Amethyst Golems will harvest, grow, and collect Amethyst near its home. To obtain an Amethyst Golem, perform the Ritual of Awakening near Budding Amethyst to obtain the Amethyst Golem Charm.",
-      "icon": "item.ars_nouveau.amethyst_golem_charm"
+      "icon": "ars_nouveau:amethyst_golem_charm"
+    },
+    {
+      "description": "",
+      "entity_type": "ars_nouveau:amethyst_golem"
     },
     {
       "title": "Summoning",

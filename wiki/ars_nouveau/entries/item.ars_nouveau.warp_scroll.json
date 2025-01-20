@@ -1,13 +1,23 @@
 {
   "id": "ars_nouveau:item.ars_nouveau.warp_scroll",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:warp_scroll",
   "title": "Warp Scroll",
   "category": "ars_nouveau:items",
   "pages": [
     {
       "title": "Warp Scroll",
       "description": "A scroll that may be used a single time to teleport to a recorded location. However, teleporting across dimensions is not possible. Can be used to warp other entities if an inscribed scroll is held in the offhand and the holder casts Blink on an entity.",
-      "icon": "item.ars_nouveau.warp_scroll"
+      "icon": "ars_nouveau:warp_scroll"
+    },
+    {
+      "recipe_1": "ars_nouveau:warp_scroll"
+    },
+    {
+      "related": [
+        "ars_nouveau:item.ars_nouveau.stable_warp_scroll",
+        "ars_nouveau:warp_portal"
+      ]
     }
   ]
 }

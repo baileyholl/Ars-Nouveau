@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:ritual_restoration",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:ritual_restoration",
   "title": "Restoration",
   "category": "ars_nouveau:ritual_index",
   "pages": [
     {
       "title": "Restoration",
       "description": "Heals nearby entities or harms undead over time. Additionally, Zombie Villagers will be instantly cured, and the resulting villager will offer discounts if a player was nearby. This ritual requires source to operate.",
-      "icon": "item.ars_nouveau.ritual_restoration"
+      "icon": "ars_nouveau:ritual_restoration"
+    },
+    {
+      "recipe_1": "ars_nouveau:ritual_restoration"
     }
   ]
 }

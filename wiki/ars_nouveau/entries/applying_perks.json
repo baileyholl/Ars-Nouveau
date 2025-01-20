@@ -1,16 +1,23 @@
 {
   "id": "ars_nouveau:applying_perks",
-  "icon": 2,
+  "order": 2,
+  "icon": "ars_nouveau:blank_thread",
   "title": "Applying Threads",
   "category": "ars_nouveau:armor",
   "pages": [
     {
       "title": "Applying Threads",
       "description": "Threads may be applied to armor using the Alteration Apparatus. Each piece of armor has a unique set of Thread Slots with their own variety of levels. Some Threads may require a Thread Slot of a minimum level, but many threads simply increase in power based on the slot they are given.",
-      "icon": "item.ars_nouveau.blank_thread"
+      "icon": "ars_nouveau:blank_thread"
     },
     {
       "description": "Threads only apply a single time on an entire armor set, and they do not stack. For more information on applying threads, see the Alteration Table."
+    },
+    {
+      "related": [
+        "ars_nouveau:armor",
+        "ars_nouveau:alteration_table"
+      ]
     }
   ]
 }

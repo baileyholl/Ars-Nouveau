@@ -1,13 +1,18 @@
 {
   "id": "ars_nouveau:glyph_crush",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:glyph_crush",
   "title": "Crush",
   "category": "ars_nouveau:glyphs_tier_two",
   "pages": [
     {
       "title": "Crush",
       "description": "Turns stone into gravel, and gravel into sand. Will also crush flowers into bonus dye. Need Sensitive to work on items. For full recipe support, see JEI. Will also harm entities and deals bonus damage to entities that are swimming.",
-      "icon": "item.ars_nouveau.glyph_crush"
+      "icon": "ars_nouveau:glyph_crush",
+      "tier": 2
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_crush"
     }
   ]
 }

@@ -1,7 +1,16 @@
 {
   "id": "ars_nouveau:dull_trinket",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:dull_trinket",
   "title": "Dull Trinket",
   "category": "ars_nouveau:items",
-  "pages": []
+  "pages": [
+    {
+      "recipe_1": "ars_nouveau:dull_trinket",
+      "recipe_2": "ars_nouveau:mundane_belt"
+    },
+    {
+      "recipe_1": "ars_nouveau:ring_of_potential"
+    }
+  ]
 }

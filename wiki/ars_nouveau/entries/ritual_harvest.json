@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:ritual_harvest",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:ritual_harvest",
   "title": "Harvest",
   "category": "ars_nouveau:ritual_index",
   "pages": [
     {
       "title": "Harvest",
       "description": "Casts the Harvest effect on nearby crops. Consumes source each time a set of crops are harvested. If an inventory is adjacent to the brazier, the items will be deposited in them before dropping on the ground.",
-      "icon": "item.ars_nouveau.ritual_harvest"
+      "icon": "ars_nouveau:ritual_harvest"
+    },
+    {
+      "recipe_1": "ars_nouveau:ritual_harvest"
     }
   ]
 }

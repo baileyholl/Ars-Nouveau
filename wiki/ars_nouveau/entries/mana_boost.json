@@ -1,7 +1,18 @@
 {
   "id": "ars_nouveau:mana_boost",
-  "icon": 100,
+  "order": 100,
+  "icon": "minecraft:enchanted_book",
   "title": "Mana Boost",
   "category": "ars_nouveau:enchanting",
-  "pages": []
+  "pages": [
+    {
+      "recipe_1": "ars_nouveau:mana_boost_1"
+    },
+    {
+      "recipe_1": "ars_nouveau:mana_boost_2"
+    },
+    {
+      "recipe_1": "ars_nouveau:mana_boost_3"
+    }
+  ]
 }

@@ -1,17 +1,377 @@
 {
   "id": "ars_nouveau:armor",
-  "icon": 0,
+  "order": 0,
+  "icon": "ars_nouveau:sorcerer_robes",
   "title": "Magical Armor",
   "category": "ars_nouveau:armor",
   "pages": [
     {
       "title": "Magical Armor",
       "description": "Magical robes will increase the wearers mana regen and can be upgraded with special abilities using Threads. The Sorceror\u0027s set provides the lowest defence, but provides the most powerful set of slots for Threads. The Arcanist\u0027s and Battlemage\u0027s sets provide increasingly more defence, but fewer and less powerful Thread Slots. For more information on Threads, see the section on Armor and Perks.",
-      "icon": "item.ars_nouveau.sorcerer_robes"
+      "icon": "ars_nouveau:sorcerer_robes"
     },
     {
       "title": "Thread Slots",
       "description": "Each type of armor has its own unique set of Thread Slots. Upgrading the armor to a new tier will unlock and add additional slots to the armor. The Sorcerors set provides the least amount of defence while providing the most powerful slots, while the Battlemage\u0027s set provides defence but much weaker slots. For recipes on upgrading your armor to the next tier, see the section in the Armor and Perks category."
+    },
+    {
+      "item1": {
+        "item": "ars_nouveau:sorcerer_hood",
+        "perks": [
+          {
+            "tier": 0,
+            "perks": [
+              1
+            ]
+          },
+          {
+            "tier": 1,
+            "perks": [
+              1,
+              2
+            ]
+          },
+          {
+            "tier": 2,
+            "perks": [
+              1,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "item2": {
+        "item": "ars_nouveau:sorcerer_robes",
+        "perks": [
+          {
+            "tier": 0,
+            "perks": [
+              2
+            ]
+          },
+          {
+            "tier": 1,
+            "perks": [
+              2,
+              3
+            ]
+          },
+          {
+            "tier": 2,
+            "perks": [
+              2,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "item3": {
+        "item": "ars_nouveau:sorcerer_leggings",
+        "perks": [
+          {
+            "tier": 0,
+            "perks": [
+              2
+            ]
+          },
+          {
+            "tier": 1,
+            "perks": [
+              2,
+              3
+            ]
+          },
+          {
+            "tier": 2,
+            "perks": [
+              2,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "item4": {
+        "item": "ars_nouveau:sorcerer_boots",
+        "perks": [
+          {
+            "tier": 0,
+            "perks": [
+              1
+            ]
+          },
+          {
+            "tier": 1,
+            "perks": [
+              1,
+              2
+            ]
+          },
+          {
+            "tier": 2,
+            "perks": [
+              1,
+              2,
+              3
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "item1": {
+        "item": "ars_nouveau:arcanist_hood",
+        "perks": [
+          {
+            "tier": 0,
+            "perks": [
+              1
+            ]
+          },
+          {
+            "tier": 1,
+            "perks": [
+              1,
+              2
+            ]
+          },
+          {
+            "tier": 2,
+            "perks": [
+              1,
+              1,
+              3
+            ]
+          }
+        ]
+      },
+      "item2": {
+        "item": "ars_nouveau:arcanist_robes",
+        "perks": [
+          {
+            "tier": 0,
+            "perks": [
+              1
+            ]
+          },
+          {
+            "tier": 1,
+            "perks": [
+              1,
+              3
+            ]
+          },
+          {
+            "tier": 2,
+            "perks": [
+              1,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "item3": {
+        "item": "ars_nouveau:arcanist_leggings",
+        "perks": [
+          {
+            "tier": 0,
+            "perks": [
+              1
+            ]
+          },
+          {
+            "tier": 1,
+            "perks": [
+              1,
+              3
+            ]
+          },
+          {
+            "tier": 2,
+            "perks": [
+              1,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "item4": {
+        "item": "ars_nouveau:arcanist_boots",
+        "perks": [
+          {
+            "tier": 0,
+            "perks": [
+              1
+            ]
+          },
+          {
+            "tier": 1,
+            "perks": [
+              1,
+              2
+            ]
+          },
+          {
+            "tier": 2,
+            "perks": [
+              1,
+              2,
+              2
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "item1": {
+        "item": "ars_nouveau:battlemage_hood",
+        "perks": [
+          {
+            "tier": 0,
+            "perks": [
+              1
+            ]
+          },
+          {
+            "tier": 1,
+            "perks": [
+              1,
+              1
+            ]
+          },
+          {
+            "tier": 2,
+            "perks": [
+              1,
+              1,
+              2
+            ]
+          }
+        ]
+      },
+      "item2": {
+        "item": "ars_nouveau:battlemage_robes",
+        "perks": [
+          {
+            "tier": 0,
+            "perks": [
+              1
+            ]
+          },
+          {
+            "tier": 1,
+            "perks": [
+              1,
+              2
+            ]
+          },
+          {
+            "tier": 2,
+            "perks": [
+              1,
+              1,
+              3
+            ]
+          }
+        ]
+      },
+      "item3": {
+        "item": "ars_nouveau:battlemage_leggings",
+        "perks": [
+          {
+            "tier": 0,
+            "perks": [
+              1
+            ]
+          },
+          {
+            "tier": 1,
+            "perks": [
+              1,
+              2
+            ]
+          },
+          {
+            "tier": 2,
+            "perks": [
+              1,
+              1,
+              3
+            ]
+          }
+        ]
+      },
+      "item4": {
+        "item": "ars_nouveau:battlemage_boots",
+        "perks": [
+          {
+            "tier": 0,
+            "perks": [
+              1
+            ]
+          },
+          {
+            "tier": 1,
+            "perks": [
+              1,
+              1
+            ]
+          },
+          {
+            "tier": 2,
+            "perks": [
+              1,
+              1,
+              2
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "recipe_1": "ars_nouveau:sorcerer_hood"
+    },
+    {
+      "recipe_1": "ars_nouveau:sorcerer_robes"
+    },
+    {
+      "recipe_1": "ars_nouveau:sorcerer_leggings"
+    },
+    {
+      "recipe_1": "ars_nouveau:sorcerer_boots"
+    },
+    {
+      "recipe_1": "ars_nouveau:arcanist_hood"
+    },
+    {
+      "recipe_1": "ars_nouveau:arcanist_robes"
+    },
+    {
+      "recipe_1": "ars_nouveau:arcanist_leggings"
+    },
+    {
+      "recipe_1": "ars_nouveau:arcanist_boots"
+    },
+    {
+      "recipe_1": "ars_nouveau:battlemage_hood"
+    },
+    {
+      "recipe_1": "ars_nouveau:battlemage_robes"
+    },
+    {
+      "recipe_1": "ars_nouveau:battlemage_leggings"
+    },
+    {
+      "recipe_1": "ars_nouveau:battlemage_boots"
+    },
+    {
+      "related": [
+        "ars_nouveau:armor_upgrading"
+      ]
     }
   ]
 }

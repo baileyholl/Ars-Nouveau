@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:thread_warding",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:thread_warding",
   "title": "Warding",
   "category": "ars_nouveau:armor",
   "pages": [
     {
       "title": "Thread of Warding",
       "description": "Reduces the amount of magic damage taken by a flat amount each level.",
-      "icon": "item.ars_nouveau.thread_warding"
+      "icon": "ars_nouveau:thread_warding"
+    },
+    {
+      "recipe_1": "ars_nouveau:thread_warding"
     }
   ]
 }

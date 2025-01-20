@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:thread_feather",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:thread_feather",
   "title": "Feather",
   "category": "ars_nouveau:armor",
   "pages": [
     {
       "title": "Thread of Feather",
       "description": "Decreases the amount of fall damage taken by a percentage. Stacks with Feather Enchantments.",
-      "icon": "item.ars_nouveau.thread_feather"
+      "icon": "ars_nouveau:thread_feather"
+    },
+    {
+      "recipe_1": "ars_nouveau:thread_feather"
     }
   ]
 }

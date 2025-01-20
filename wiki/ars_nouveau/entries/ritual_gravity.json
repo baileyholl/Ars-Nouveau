@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:ritual_gravity",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:ritual_gravity",
   "title": "Gravity",
   "category": "ars_nouveau:ritual_index",
   "pages": [
     {
       "title": "Gravity",
       "description": "Grants nearby players the Gravity effect, forcing them to the ground for a short time. If the player is nearby, this ritual will refresh their gravity debuff. Each time this ritual grants or refreshes gravity, it will expend source from nearby jars.",
-      "icon": "item.ars_nouveau.ritual_gravity"
+      "icon": "ars_nouveau:ritual_gravity"
+    },
+    {
+      "recipe_1": "ars_nouveau:ritual_gravity"
     }
   ]
 }

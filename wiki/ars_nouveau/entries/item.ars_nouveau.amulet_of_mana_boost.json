@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:item.ars_nouveau.amulet_of_mana_boost",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:amulet_of_mana_boost",
   "title": "Amulet of Mana Boost",
   "category": "ars_nouveau:items",
   "pages": [
     {
       "title": "Amulet of Mana Boost",
       "description": "Increases max mana by a moderate amount.",
-      "icon": "item.ars_nouveau.amulet_of_mana_boost"
+      "icon": "ars_nouveau:amulet_of_mana_boost"
+    },
+    {
+      "recipe_1": "ars_nouveau:amulet_of_mana_boost"
     }
   ]
 }

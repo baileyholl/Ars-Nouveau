@@ -1,13 +1,18 @@
 {
   "id": "ars_nouveau:glyph_delay",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:glyph_delay",
   "title": "Delay",
   "category": "ars_nouveau:glyphs_tier_one",
   "pages": [
     {
       "title": "Delay",
       "description": "Delays the resolution of effects placed to the right of this spell for a few moments. The delay may be increased with the Extend Time augment, or decreased with Duration Down.",
-      "icon": "item.ars_nouveau.glyph_delay"
+      "icon": "ars_nouveau:glyph_delay",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_delay"
     }
   ]
 }

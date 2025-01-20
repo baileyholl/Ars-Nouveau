@@ -1,13 +1,17 @@
 {
   "id": "ars_nouveau:ritual_challenge",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:ritual_challenge",
   "title": "Challenge",
   "category": "ars_nouveau:ritual_index",
   "pages": [
     {
       "title": "Challenge",
       "description": "Summons an illager raid when used inside a village. An Emerald may be used to increase the difficulty of the raid to the maximum amount, making Totems of the Undying accessible on easier difficulties. Augmenting has no effect on Hard difficulty.",
-      "icon": "item.ars_nouveau.ritual_challenge"
+      "icon": "ars_nouveau:ritual_challenge"
+    },
+    {
+      "recipe_1": "ars_nouveau:ritual_challenge"
     }
   ]
 }

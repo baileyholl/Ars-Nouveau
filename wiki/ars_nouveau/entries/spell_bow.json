@@ -1,13 +1,26 @@
 {
   "id": "ars_nouveau:spell_bow",
-  "icon": 100,
+  "order": 100,
+  "icon": "ars_nouveau:spell_bow",
   "title": "Enchanter\u0027s Bow",
   "category": "ars_nouveau:spell_casting",
   "pages": [
     {
       "title": "Enchanter\u0027s Bow",
       "description": "A bow that can be inscribed with a spell using the Scribes Table. If the player has enough mana, arrows will become Spell Arrows and will apply the spell on their target. If no arrows are in the inventory, a spell arrow that deals 0 damage will be cast. If there is not enough mana, regular arrows will be fired. Enchanter\u0027s Bows may use special Augment Arrows for empowering the inscribed spell.",
-      "icon": "item.ars_nouveau.spell_bow"
+      "icon": "ars_nouveau:spell_bow"
+    },
+    {
+      "recipe_1": "ars_nouveau:spell_bow"
+    },
+    {
+      "recipe_1": "ars_nouveau:imbuement_amplify_arrow"
+    },
+    {
+      "recipe_1": "ars_nouveau:imbuement_pierce_arrow"
+    },
+    {
+      "recipe_1": "ars_nouveau:imbuement_split_arrow"
     }
   ]
 }
