@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animation.AnimationState;
 
 public class SpellBookModel extends TransformAnimatedModel<SpellBook> {
     public static final ResourceLocation OPEN = ArsNouveau.prefix( "geo/spellbook_open.geo.json");
@@ -17,6 +18,12 @@ public class SpellBookModel extends TransformAnimatedModel<SpellBook> {
         this.modelLoc = modelLocation;
     }
 
+
+    @Override
+    public void setCustomAnimations(SpellBook entity, long uniqueID, @org.jetbrains.annotations.Nullable AnimationState customPredicate) {
+        super.setCustomAnimations(entity, uniqueID, customPredicate);
+    }
+
     @Override
     public ResourceLocation getModelResource(SpellBook object) {
         return getModelResource(object, null);
@@ -24,6 +31,7 @@ public class SpellBookModel extends TransformAnimatedModel<SpellBook> {
 
     @Override
     public ResourceLocation getModelResource(SpellBook object, @Nullable ItemDisplayContext transformType) {
+//        return modelLoc;
         if (transformType == ItemDisplayContext.GUI || transformType == ItemDisplayContext.FIXED) {
             return CLOSED;
         }
