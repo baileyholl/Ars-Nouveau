@@ -25,4 +25,8 @@ public class ClientProxy implements IProxy {
         return Minecraft.getInstance();
     }
 
+    @Override
+    public boolean isClientSide() {
+        return true;
+    }
 }

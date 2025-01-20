@@ -8,8 +8,6 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -105,7 +103,6 @@ public class GlyphRecipeTooltip implements ClientTooltipComponent {
         return items.size() / 3;
     }
 
-    @OnlyIn(Dist.CLIENT)
     enum Texture {
         SLOT(0, 0, 18, 20),
         BLOCKED_SLOT(0, 40, 18, 20),

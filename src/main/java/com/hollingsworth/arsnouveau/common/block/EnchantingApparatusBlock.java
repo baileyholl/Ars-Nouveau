@@ -1,13 +1,17 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.imbuement_chamber.IImbuementRecipe;
+import com.hollingsworth.arsnouveau.api.registry.ImbuementRecipeRegistry;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
+import com.hollingsworth.arsnouveau.common.block.tile.ImbuementTile;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.common.network.HighlightAreaPacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -15,6 +19,7 @@ import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -66,8 +71,22 @@ public class EnchantingApparatusBlock extends TickableModBlock {
                         colorPos.add(ColorPos.centeredAbove(pedPos));
                     }
                 }
+
                 Networking.sendToNearbyClient(world, tile.getBlockPos(), new HighlightAreaPacket(colorPos, 60));
-                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.norecipe"));
+
+                // This is cursed, but IImbuementRecipe uses ImbuementTile as its Input and
+                // ImbuementRecipe calls ImbuementTile#getPedestalItems
+                ImbuementTile imbuementTile = new ImbuementTile(pos, BlockRegistry.IMBUEMENT_BLOCK.defaultBlockState());
+                imbuementTile.setLevel(world);
+                imbuementTile.stack = player.getItemInHand(handIn).copy();
+                RecipeHolder<? extends IImbuementRecipe> imbue = imbuementTile.getRecipeNow();
+
+                if (imbue == null) {
+                    PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.norecipe"));
+                } else {
+                    PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.use_imbuement"));
+                }
+
             } else if (recipe.consumesSource() && !SourceUtil.hasSourceNearby(tile.getBlockPos(), tile.getLevel(), 10, recipe.sourceCost())) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.nomana"));
             } else {

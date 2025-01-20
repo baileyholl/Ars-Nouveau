@@ -31,8 +31,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
@@ -48,7 +46,6 @@ public class PortalBlock extends TickableModBlock {
         this.registerDefaultState(this.defaultBlockState().setValue(AXIS, Direction.Axis.X).setValue(ALTERNATE, false));
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
         for (int i = 0; i < 4; ++i) {

@@ -7,8 +7,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.EvokerFangs;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+
 import java.util.UUID;
 
 public class EntityEvokerFangs extends EvokerFangs {
@@ -114,8 +113,6 @@ public class EntityEvokerFangs extends EvokerFangs {
 
     }
 
-
-    @OnlyIn(Dist.CLIENT)
     public void handleEntityEvent(byte id) {
         super.handleEntityEvent(id);
         if (id == 4) {
@@ -127,7 +124,6 @@ public class EntityEvokerFangs extends EvokerFangs {
 
     }
 
-    @OnlyIn(Dist.CLIENT)
     public float getAnimationProgress(float partialTicks) {
         if (!this.clientSideAttackStarted) {
             return 0.0F;

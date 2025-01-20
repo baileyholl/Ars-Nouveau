@@ -13,4 +13,6 @@ public interface IProxy {
     Minecraft getMinecraft();
 
     Player getPlayer();
+
+    boolean isClientSide();
 }

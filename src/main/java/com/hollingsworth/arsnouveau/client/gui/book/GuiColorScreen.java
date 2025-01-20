@@ -55,8 +55,8 @@ public class GuiColorScreen extends BaseBook {
         addRenderableWidget(redW);
         addRenderableWidget(greenW);
         addRenderableWidget(blueW);
-        addRenderableWidget(new GuiImageButton(bookLeft + 25, bookBottom - 36, 0, 0, 37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveClick));
-        addRenderableWidget(new GuiImageButton(bookLeft + 75, bookBottom - 36, 0, 0, 37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveAllClick));
+        addRenderableWidget(new GuiImageButton(bookLeft + 25, bookBottom - 30, 0, 0, 37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveClick));
+        addRenderableWidget(new GuiImageButton(bookLeft + 75, bookBottom - 30, 0, 0, 37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveAllClick));
 
         layoutPageOne();
 

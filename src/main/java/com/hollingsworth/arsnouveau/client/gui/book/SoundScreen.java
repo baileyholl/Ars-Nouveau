@@ -60,9 +60,9 @@ public class SoundScreen extends BaseBook {
 
         addRenderableWidget(volumeSlider);
         addRenderableWidget(pitchSlider);
-        addRenderableWidget(new GuiImageButton(bookLeft + 25, bookBottom - 36, 0, 0, 37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveClick));
-        addRenderableWidget(new GuiImageButton(bookLeft + 165, bookBottom - 36, 0, 0, 37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveAllClick));
-        GuiImageButton testButton = new GuiImageButton(bookLeft + 90, bookBottom - 36, 0, 0, 37, 12, 37, 12, "textures/gui/sound_test_icon.png", this::onTestClick);
+        addRenderableWidget(new GuiImageButton(bookLeft + 25, bookBottom - 30, 0, 0, 37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveClick));
+        addRenderableWidget(new GuiImageButton(bookLeft + 165, bookBottom - 30, 0, 0, 37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveAllClick));
+        GuiImageButton testButton = new GuiImageButton(bookLeft + 90, bookBottom - 30, 0, 0, 37, 12, 37, 12, "textures/gui/sound_test_icon.png", this::onTestClick);
         testButton.soundDisabled = true;
         addRenderableWidget(testButton);
 
