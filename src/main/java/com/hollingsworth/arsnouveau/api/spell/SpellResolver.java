@@ -1,15 +1,20 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.event.*;
-import com.hollingsworth.arsnouveau.api.mana.IManaCap;
+import com.hollingsworth.arsnouveau.api.event.EffectResolveEvent;
+import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
+import com.hollingsworth.arsnouveau.api.event.SpellCostCalcEvent;
+import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.NotEnoughManaPacket;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -38,6 +43,21 @@ public class SpellResolver implements Cloneable {
 
     public @Nullable HitResult hitResult = null;
     public @Nullable SpellResolver previousResolver = null;
+
+    public static final MapCodec<SpellResolver> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            SpellContext.CODEC.fieldOf("spellContext").forGetter(s -> s.spellContext)
+    ).apply(instance, SpellResolver::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, SpellResolver> STREAM = StreamCodec.of(
+            (buf, val) -> {
+                SpellContext.STREAM.encode(buf, val.spellContext);
+            },
+            buf -> {
+                SpellContext context = SpellContext.STREAM.decode(buf);
+                return new SpellResolver(context);
+            }
+    );
+
 
     public SpellResolver(SpellContext spellContext) {
         this.spell = spellContext.getSpell();

@@ -39,7 +39,7 @@ public class EffectLinger extends AbstractEffect {
         entityLingeringSpell.setAccelerates((int) spellStats.getAccMultiplier());
         entityLingeringSpell.extendedTime = spellStats.getDurationMultiplier();
         entityLingeringSpell.setShouldFall(!spellStats.hasBuff(AugmentDampen.INSTANCE));
-        entityLingeringSpell.spellResolver = resolver.getNewResolver(newContext);
+        entityLingeringSpell.setResolver(resolver.getNewResolver(newContext));
         entityLingeringSpell.setPos(hit.x, hit.y, hit.z);
         entityLingeringSpell.setColor(spellContext.getColors());
         world.addFreshEntity(entityLingeringSpell);
