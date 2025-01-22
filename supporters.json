@@ -34,7 +34,8 @@
   "e3298bd7-61bf-427f-af89-4e418a20bf57", "01b53c7e-c7f4-4465-88df-f8b6c645b6b9", "a29ffabb-ac40-4754-8df8-94b9f394045c",
   "aef9c054-e96e-4332-944b-9393105b6ac6", "1f62ed4b-91f9-42fa-b331-b7e3e3c0637f", "eb14192a-c53f-44c0-bb13-7f7ff1a0e662",
   "758ca96e-100a-4611-a849-5d76229b6c83", "1cf6b68a-a396-4ac1-8146-21fc314f6455", "f476db17-6995-44ab-b002-0a326959f01a",
-  "4a405d17-9e7b-4007-b4e3-a1adcd41c489", "f64bd7f1-ae18-4e9e-834e-eb0caf7f37d4", "ee6d035a-600d-40a3-b444-b987766121ee"],
+  "4a405d17-9e7b-4007-b4e3-a1adcd41c489", "f64bd7f1-ae18-4e9e-834e-eb0caf7f37d4", "ee6d035a-600d-40a3-b444-b987766121ee",
+  "26170985-ac0e-4e3c-b171-141e2193ce32"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -556,6 +557,11 @@
       "name": "Puff Ball",
       "color": "magenta",
       "bio": "A energetic and curious little Starbuncle that grows a bond to strengthen its heart. Many of worlds and friends have been made over the years and will continue to be made through its lifetime."
+    },{
+      "adopter": "Arin",
+      "color": "black",
+      "name": "Shadow",
+      "bio": "This little guy has been everywhere! Whether that be in your back yard, or the future, he's been there!"
     }
   ]
 }
