@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.google.common.collect.ImmutableMap;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.particle.ParticleTimeline;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
@@ -147,6 +148,12 @@ public abstract class AbstractCaster<T extends AbstractCaster<T>> implements Too
         var spell = this.getSpell(slot);
         return build(this.slot, flavorText, isHidden, hiddenText, maxSlots, this.spells.put(slot, new Spell(spell.name(), color, spell.sound(), new ArrayList<>(spell.unsafeList()))));
     }
+
+    public T setParticles(ParticleTimeline timeline, int slot) {
+        var spell = this.getSpell(slot);
+        return build(this.slot, flavorText, isHidden, hiddenText, maxSlots, this.spells.put(slot, new Spell(spell.name(), spell.color(), spell.sound(), new ArrayList<>(spell.unsafeList()), timeline)));
+    }
+
 
     @NotNull
     public Spell getSpell() {

@@ -15,10 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Spell {
 
@@ -26,7 +23,8 @@ public class Spell {
             Codec.STRING.fieldOf("name").forGetter(s -> s.name),
             ParticleColor.CODEC.fieldOf("color").forGetter(s -> s.color),
             ConfiguredSpellSound.CODEC.fieldOf("sound").forGetter(s -> s.sound),
-            Codec.list(AbstractSpellPart.CODEC).fieldOf("recipe").forGetter(s -> s.recipe)
+            Codec.list(AbstractSpellPart.CODEC).fieldOf("recipe").forGetter(s -> s.recipe),
+            ParticleTimeline.CODEC.codec().optionalFieldOf("particleTimeline").forGetter(s -> Optional.ofNullable(s.particleTimeline))
     ).apply(instance, Spell::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Spell> STREAM = StreamCodec.of(
@@ -35,13 +33,15 @@ public class Spell {
                 ParticleColor.STREAM.encode(buf, val.color);
                 ConfiguredSpellSound.STREAM.encode(buf, val.sound);
                 AbstractSpellPart.STREAM_LIST.encode(buf, val.recipe);
+                ParticleTimeline.STREAM_CODEC.encode(buf, val.particleTimeline);
             },
             buf -> {
                 String name = buf.readUtf();
                 ParticleColor color = ParticleColor.STREAM.decode(buf);
                 ConfiguredSpellSound sound = ConfiguredSpellSound.STREAM.decode(buf);
                 List<AbstractSpellPart> recipe = AbstractSpellPart.STREAM_LIST.decode(buf);
-                return new Spell(name, color, sound, recipe, ParticleTimeline.defaultTimeline());
+                ParticleTimeline particleTimeline = ParticleTimeline.STREAM_CODEC.decode(buf);
+                return new Spell(name, color, sound, recipe, particleTimeline);
             }
     );
 
@@ -75,6 +75,10 @@ public class Spell {
         this.sound = configuredSpellSound;
         this.recipe = ImmutableList.copyOf(abstractSpellParts);
         this.particleTimeline = particleTimeline;
+    }
+
+    public Spell(String name, ParticleColor color, ConfiguredSpellSound configuredSpellSound, List<AbstractSpellPart> abstractSpellParts, Optional<ParticleTimeline> particleTimeline) {
+        this(name, color, configuredSpellSound, abstractSpellParts, particleTimeline.orElseGet(ParticleTimeline::defaultTimeline));
     }
 
     public ConfiguredSpellSound sound(){

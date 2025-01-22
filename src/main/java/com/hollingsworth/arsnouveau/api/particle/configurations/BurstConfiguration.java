@@ -1,11 +1,34 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
+import com.hollingsworth.arsnouveau.api.registry.ParticleConfigRegistry;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
 
 public class BurstConfiguration extends ParticleConfiguration{
+
+    public static MapCodec<BurstConfiguration> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            ParticleTypes.CODEC.fieldOf("particleOptions").forGetter(i -> i.particleOptions)
+    ).apply(instance, BurstConfiguration::new));
+
+    public static StreamCodec<RegistryFriendlyByteBuf, BurstConfiguration> STREAM = StreamCodec.composite(
+            ParticleTypes.STREAM_CODEC,
+            ParticleConfiguration::particleOptions,
+            BurstConfiguration::new
+    );
+
     public BurstConfiguration(ParticleOptions particleOptions) {
         super(particleOptions);
+    }
+
+
+    @Override
+    public IParticleType<?> getType() {
+        return ParticleConfigRegistry.BURST_TYPE.get();
     }
 
     @Override

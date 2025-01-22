@@ -1,13 +1,36 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
+import com.hollingsworth.arsnouveau.api.registry.ParticleConfigRegistry;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 
 public class ParticleTrail extends ParticleConfiguration {
 
+    public static MapCodec<ParticleTrail> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            ParticleTypes.CODEC.fieldOf("particleOptions").forGetter(i -> i.particleOptions)
+    ).apply(instance, ParticleTrail::new));
+
+
+    public static StreamCodec<RegistryFriendlyByteBuf, ParticleTrail> STREAM = StreamCodec.composite(
+            ParticleTypes.STREAM_CODEC,
+            ParticleConfiguration::particleOptions,
+            ParticleTrail::new
+    );
+
+
     public ParticleTrail(ParticleOptions particleOptions) {
         super(particleOptions);
+    }
+
+    @Override
+    public IParticleType<?> getType() {
+        return ParticleConfigRegistry.TRAIL_TYPE.get();
     }
 
     @Override
@@ -29,4 +52,5 @@ public class ParticleTrail extends ParticleConfiguration {
                     0.0125f * (random.nextFloat() - 0.5f));
         }
     }
+
 }
