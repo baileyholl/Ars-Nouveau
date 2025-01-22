@@ -20,9 +20,9 @@ public class CustomParticle extends TextureSheetParticle {
         this.friction = 0.85F;
         this.setSize(0.02F, 0.02F);
         this.quadSize = this.quadSize * (this.random.nextFloat() * 0.6F + 0.2F);
-        this.xd = pXSpeed * 0.2F + (Math.random() * 2.0 - 1.0) * 0.02F;
-        this.yd = pYSpeed * 0.2F + (Math.random() * 2.0 - 1.0) * 0.02F;
-        this.zd = pZSpeed * 0.2F + (Math.random() * 2.0 - 1.0) * 0.02F;
+//        this.xd = pXSpeed * 0.2F + (Math.random() * 2.0 - 1.0) * 0.02F;
+//        this.yd = pYSpeed * 0.2F + (Math.random() * 2.0 - 1.0) * 0.02F;
+//        this.zd = pZSpeed * 0.2F + (Math.random() * 2.0 - 1.0) * 0.02F;
         this.lifetime = (int) (20 + ParticleUtil.inRange(0, 10));
         this.hasPhysics = false;
         movement = new SpiralMovement();
@@ -31,24 +31,23 @@ public class CustomParticle extends TextureSheetParticle {
 
     @Override
     public void tick() {
+        super.tick();
         movement.tick(this);
-        // Increment the angle to make the helix spiral
         float angle = age * 0.2f + 0; // You can adjust the increment to control the speed of the helix
         float radius = 0.1f;
         float radiusY = 0.1f;
         // Calculate new positions for the particle in the double helix pattern
-        double newX = xo + Math.cos(angle) * radius;
-        double newY = yo + age * radiusY; // Adjust this value to control the vertical spacing
-        double newZ = zo + Math.sin(angle) * radius;
-
-        // Update the particle's position
-        this.setPos(newX, newY, newZ);
-        super.tick();
+        x += Math.cos(angle) * radius;
+     //   y += age * radiusY; // Adjust this value to control the vertical spacing
+        y += Math.sin(angle) * radius;
     }
 
     @Override
     public void render(VertexConsumer buffer, Camera renderInfo, float partialTicks) {
+        // Increment the angle to make the helix spiral
+
         movement.render(buffer, renderInfo, partialTicks);
+      //  setPos(Mth.lerp(partialTicks, xo, x), Mth.lerp(partialTicks, yo, y), Mth.lerp(partialTicks, zo, z));
         super.render(buffer, renderInfo, partialTicks);
     }
 
