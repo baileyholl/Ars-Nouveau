@@ -5,6 +5,7 @@
   "refmap": "ars_nouveau.refmap.json",
   "plugin": "com.hollingsworth.arsnouveau.common.mixin.MixinPlugin",
   "client": [
+    "AddLayerPlayerMixin",
     "ChatComponentAccessor",
     "GameRendererMixin",
     "camera.ClientChunkCacheMixin",
