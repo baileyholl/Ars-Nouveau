@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.particle.behaviors;
 
+import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
 import com.hollingsworth.arsnouveau.common.mixin.ParticleAccessor;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
@@ -16,6 +17,7 @@ public class SpiralMovement implements IParticleMovement{
     private double centerY = 0; // Center of the spiral
     Particle particle;
     ParticleAccessor particleAccessor;
+    ParticleEmitter emitter;
     @Override
     public void init(Particle particle) {
         centerX = particle.getPos().x;
@@ -27,7 +29,7 @@ public class SpiralMovement implements IParticleMovement{
     }
 
     @Override
-    public void tick(Particle particle) {
+    public void tick() {
 //        angle += angularVelocity * ClientInfo.partialTicks;
 //        // Calculate new position based on the updated angle
 //        double newX = centerX + radius * Math.cos(angle);

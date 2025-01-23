@@ -20,34 +20,24 @@ public class CustomParticle extends TextureSheetParticle {
         this.friction = 0.85F;
         this.setSize(0.02F, 0.02F);
         this.quadSize = this.quadSize * (this.random.nextFloat() * 0.6F + 0.2F);
-//        this.xd = pXSpeed * 0.2F + (Math.random() * 2.0 - 1.0) * 0.02F;
-//        this.yd = pYSpeed * 0.2F + (Math.random() * 2.0 - 1.0) * 0.02F;
-//        this.zd = pZSpeed * 0.2F + (Math.random() * 2.0 - 1.0) * 0.02F;
-        this.lifetime = (int) (20 + ParticleUtil.inRange(0, 10));
+        this.lifetime = (int) (200 + ParticleUtil.inRange(0, 10));
         this.hasPhysics = false;
         movement = new SpiralMovement();
         movement.init(this);
+        this.xd = pXSpeed;
+        this.yd = pYSpeed;
+        this.zd = pZSpeed;
     }
 
     @Override
     public void tick() {
         super.tick();
-        movement.tick(this);
-        float angle = age * 0.2f + 0; // You can adjust the increment to control the speed of the helix
-        float radius = 0.1f;
-        float radiusY = 0.1f;
-        // Calculate new positions for the particle in the double helix pattern
-        x += Math.cos(angle) * radius;
-     //   y += age * radiusY; // Adjust this value to control the vertical spacing
-        y += Math.sin(angle) * radius;
+        movement.tick();
     }
 
     @Override
     public void render(VertexConsumer buffer, Camera renderInfo, float partialTicks) {
-        // Increment the angle to make the helix spiral
-
         movement.render(buffer, renderInfo, partialTicks);
-      //  setPos(Mth.lerp(partialTicks, xo, x), Mth.lerp(partialTicks, yo, y), Mth.lerp(partialTicks, zo, z));
         super.render(buffer, renderInfo, partialTicks);
     }
 

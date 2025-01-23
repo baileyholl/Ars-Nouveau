@@ -2,9 +2,11 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.block.IPrismaticBlock;
 import com.hollingsworth.arsnouveau.api.event.SpellProjectileHitEvent;
+import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
@@ -41,6 +43,8 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix4d;
+import org.joml.Vector3d;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
@@ -59,6 +63,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
     public boolean isNoGravity = true;
     public boolean canTraversePortals = true;
     public int prismRedirect;
+    ParticleEmitter trailEmitter;
     public static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(EntityProjectileSpell.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<SpellResolver> SPELL_RESOLVER = SynchedEntityData.defineId(EntityProjectileSpell.class, DataSerializers.SPELL_RESOLVER.get());
     @Deprecated
@@ -106,6 +111,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
     public void setResolver(SpellResolver resolver){
         this.entityData.set(SPELL_RESOLVER, resolver);
         this.spellResolver = resolver;
+        this.trailEmitter = new ParticleEmitter(() -> this.getPosition(0), this::getRotationVector, this.resolver().spell.particleTimeline().trailEffect);
     }
 
     @Override
@@ -213,16 +219,65 @@ public class EntityProjectileSpell extends ColoredProjectile {
         }
         this.setPos(x, y, z);
 
+        double yaw = Math.toDegrees(Mth.atan2(-vec3d.z, vec3d.x));
+        // Calculate horizontal distance
+        double horizontalDistance = Math.sqrt(vec3d.x * vec3d.x + vec3d.z * vec3d.z);
+
+        // Calculate pitch
+        double pitch = Math.toDegrees(Math.atan2(-vec3d.y, horizontalDistance));
+
+//        setXRot((float) pitch);
+//        setYRot((float) yaw);
+//        setYHeadRot((float) yaw);
+//        setYBodyRot((float) yaw);
     }
+
 
     public int getParticleDelay() {
         return 2;
     }
 
     public void playParticles() {
-        if(this.resolver() != null) {
-            this.resolver().spell.particleTimeline().trailEffect.tick(level, getX(), getY(), getZ(), xOld, yOld, zOld);
+        if(trailEmitter == null && resolver() != null) {
+            this.trailEmitter = new ParticleEmitter(() -> this.getPosition(0), this::getRotationVector, this.resolver().spell.particleTimeline().trailEffect);
         }
+//        if(this.trailEmitter != null) {
+//            //this.trailEmitter.tick(level);
+//            this.trailEmitter.age++;
+        double spiralRadius = 1f;  // Radius of the spiral
+        double spiralSpeed = 1;  // Speed at which the particles move along the spiral
+        double x = this.getX();
+        double y = this.getY();
+        double z = this.getZ();
+        double prevX = this.xOld;
+        double prevY = this.yOld;
+        double prevZ = this.zOld;
+        double distance = Math.sqrt(Math.pow(x - prevX, 2) + Math.pow(y - prevY, 2) + Math.pow(z - prevZ, 2));
+        int interpolationSteps = Math.max(1, (int) (distance / 0.1)); // Adjust 0.1 for step granularity
+        for (int step = 0; step <= interpolationSteps; step++) {
+            // Linear interpolation factor
+            double t = (double) step / interpolationSteps;
+
+            // Interpolated position between previous and current
+            double interpolatedX = prevX + t * (x - prevX);
+            double interpolatedY = prevY + t * (y - prevY);
+            double interpolatedZ = prevZ + t * (z - prevZ);
+
+            // Interpolate the angle for the current step
+            double interpolatedAge = age + t;
+            double angle = interpolatedAge * spiralSpeed;
+            float localX = (float) (Math.cos(angle) * spiralRadius);
+            float localZ = 0;
+            float localY = (float) (Math.sin(angle) * spiralRadius);
+            Matrix4d transform = new Matrix4d()
+                    .rotateX(Math.toRadians(xRot))
+                    .rotateY(Math.toRadians(yRot));
+            Vector3d worldPosition = new Vector3d();
+            transform.transformPosition(new Vector3d(localX, localY, localZ), worldPosition);
+
+            level.addParticle(ModParticles.CUSTOM_TYPE.get(), interpolatedX + worldPosition.x, interpolatedY + worldPosition.y, interpolatedZ + worldPosition.z, 0, 0, 0);
+        }
+      //  }
     }
 
     @Nullable

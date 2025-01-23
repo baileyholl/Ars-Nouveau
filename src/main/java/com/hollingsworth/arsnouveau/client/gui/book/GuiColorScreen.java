@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.particle.ParticleTimeline;
 import com.hollingsworth.arsnouveau.api.particle.configurations.BurstConfiguration;
-import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleTrail;
+import com.hollingsworth.arsnouveau.api.particle.configurations.SpiralConfiguration;
 import com.hollingsworth.arsnouveau.client.gui.BookSlider;
 import com.hollingsworth.arsnouveau.client.gui.buttons.ANButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
@@ -141,7 +141,7 @@ public class GuiColorScreen extends BaseBook {
     public void onSaveClick(Button button) {
         ParticleColor particleColor = new ParticleColor(redW.getValue(), greenW.getValue(), blueW.getValue());
         Networking.sendToServer(new PacketUpdateSpellColors(slot, particleColor, this.stackHand == InteractionHand.MAIN_HAND));
-        Networking.sendToServer(new PacketUpdateParticleTimeline(slot, new ParticleTimeline(new ParticleTrail(ModParticles.CUSTOM_TYPE.get()), new BurstConfiguration(GlowParticleData.createData(particleColor))), this.stackHand == InteractionHand.MAIN_HAND));
+        Networking.sendToServer(new PacketUpdateParticleTimeline(slot, new ParticleTimeline(new SpiralConfiguration(ModParticles.CUSTOM_TYPE.get()), new BurstConfiguration(GlowParticleData.createData(particleColor))), this.stackHand == InteractionHand.MAIN_HAND));
     }
 
     public void onSaveAllClick(Button button) {

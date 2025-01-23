@@ -154,6 +154,9 @@ public abstract class AbstractCaster<T extends AbstractCaster<T>> implements Too
         return build(this.slot, flavorText, isHidden, hiddenText, maxSlots, this.spells.put(slot, new Spell(spell.name(), spell.color(), spell.sound(), new ArrayList<>(spell.unsafeList()), timeline)));
     }
 
+    public T setParticles(ParticleTimeline timeline) {
+        return setParticles(timeline, getCurrentSlot());
+    }
 
     @NotNull
     public Spell getSpell() {

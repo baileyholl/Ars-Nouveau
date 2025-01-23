@@ -249,7 +249,7 @@ public class Spell {
     }
 
     public Mutable mutable(){
-        return new Mutable(new ArrayList<>(recipe), name, color, sound);
+        return new Mutable(new ArrayList<>(recipe), name, color, sound, particleTimeline);
     }
 
     @Override

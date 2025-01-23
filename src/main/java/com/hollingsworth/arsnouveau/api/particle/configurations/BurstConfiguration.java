@@ -33,7 +33,6 @@ public class BurstConfiguration extends ParticleConfiguration{
 
     @Override
     public void tick(Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
-        super.tick(level, x, y, z, prevX, prevY, prevZ);
         for (int i = 0; i < 10; i++) {
             double d0 = x + 0.5;
             double d1 = y + 1.2;

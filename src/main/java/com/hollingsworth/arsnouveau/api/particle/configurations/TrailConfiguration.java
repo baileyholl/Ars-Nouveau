@@ -10,21 +10,21 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 
-public class ParticleTrail extends ParticleConfiguration {
+public class TrailConfiguration extends ParticleConfiguration {
 
-    public static MapCodec<ParticleTrail> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+    public static MapCodec<TrailConfiguration> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ParticleTypes.CODEC.fieldOf("particleOptions").forGetter(i -> i.particleOptions)
-    ).apply(instance, ParticleTrail::new));
+    ).apply(instance, TrailConfiguration::new));
 
 
-    public static StreamCodec<RegistryFriendlyByteBuf, ParticleTrail> STREAM = StreamCodec.composite(
+    public static StreamCodec<RegistryFriendlyByteBuf, TrailConfiguration> STREAM = StreamCodec.composite(
             ParticleTypes.STREAM_CODEC,
             ParticleConfiguration::particleOptions,
-            ParticleTrail::new
+            TrailConfiguration::new
     );
 
 
-    public ParticleTrail(ParticleOptions particleOptions) {
+    public TrailConfiguration(ParticleOptions particleOptions) {
         super(particleOptions);
     }
 
@@ -35,7 +35,6 @@ public class ParticleTrail extends ParticleConfiguration {
 
     @Override
     public void tick(Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
-        super.tick(level, x, y, z, prevX, prevY, prevZ);
         RandomSource random = level.random;
         double deltaX = x - prevX;
         double deltaY = y - prevY;

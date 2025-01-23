@@ -1,14 +1,25 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
-import com.hollingsworth.arsnouveau.api.particle.IParticleCallback;
+import com.hollingsworth.arsnouveau.api.particle.IParticleConfig;
+import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.world.level.Level;
 
-public abstract class ParticleConfiguration implements IParticleCallback {
+/**
+ * Spawns particles via callbacks from the emitter
+ */
+public abstract class ParticleConfiguration implements IParticleConfig {
 
     public ParticleOptions particleOptions;
+    public ParticleEmitter emitter;
+
     public ParticleConfiguration(ParticleOptions particleOptions){
         this.particleOptions = particleOptions;
+    }
+
+    @Override
+    public void init(ParticleEmitter emitter) {
+        this.emitter = emitter;
     }
 
     @Override

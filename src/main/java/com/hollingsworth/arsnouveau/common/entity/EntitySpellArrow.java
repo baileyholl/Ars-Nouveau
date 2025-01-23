@@ -1,10 +1,12 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
-import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.setup.registry.DataSerializers;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -32,6 +34,7 @@ import net.minecraft.world.phys.Vec3;
 import javax.annotation.Nullable;
 
 public class EntitySpellArrow extends Arrow {
+    @Deprecated
     public SpellResolver spellResolver;
     public int pierceLeft;
     BlockPos lastPosHit;
@@ -39,7 +42,8 @@ public class EntitySpellArrow extends Arrow {
     public static final EntityDataAccessor<Integer> RED = SynchedEntityData.defineId(EntitySpellArrow.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> GREEN = SynchedEntityData.defineId(EntitySpellArrow.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> BLUE = SynchedEntityData.defineId(EntitySpellArrow.class, EntityDataSerializers.INT);
-
+    public static final EntityDataAccessor<SpellResolver> SPELL_RESOLVER = SynchedEntityData.defineId(EntitySpellArrow.class, DataSerializers.SPELL_RESOLVER.get());
+    ParticleEmitter trailEmitter;
     public EntitySpellArrow(EntityType<? extends Arrow> type, Level worldIn) {
         super(type, worldIn);
         setDefaultColors();
@@ -53,6 +57,17 @@ public class EntitySpellArrow extends Arrow {
     public EntitySpellArrow(Level worldIn, LivingEntity shooter, ItemStack pPickupItemStack, @Nullable ItemStack weaponStack) {
         super(worldIn, shooter, pPickupItemStack, weaponStack);
         setDefaultColors();
+    }
+
+
+    public SpellResolver resolver(){
+        return this.entityData.get(SPELL_RESOLVER);
+    }
+
+    public void setResolver(SpellResolver resolver){
+        this.entityData.set(SPELL_RESOLVER, resolver);
+        this.spellResolver = resolver;
+        this.trailEmitter = new ParticleEmitter(() -> this.getPosition(0), this::getRotationVector, this.resolver().spell.particleTimeline().trailEffect);
     }
 
     public void setDefaultColors() {
@@ -173,19 +188,25 @@ public class EntitySpellArrow extends Arrow {
         this.checkInsideBlocks();
 
         if (level.isClientSide && tickCount > 1) {
-
-            double deltaX = getX() - xOld;
-            double deltaY = getY() - yOld;
-            double deltaZ = getZ() - zOld;
-            double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 8);
-            int counter = 0;
-
-            for (double j = 0; j < dist; j++) {
-                double coeff = j / dist;
-                counter += level.random.nextInt(3);
-                if (counter % (Minecraft.getInstance().options.particles().get().getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles().get().getId()) == 0) {
-                    level.addParticle(GlowParticleData.createData(new ParticleColor(entityData.get(RED), entityData.get(GREEN), entityData.get(BLUE))), (float) (xo + deltaX * coeff), (float) (yo + deltaY * coeff), (float) (zo + deltaZ * coeff), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f));
-                }
+//
+//            double deltaX = getX() - xOld;
+//            double deltaY = getY() - yOld;
+//            double deltaZ = getZ() - zOld;
+//            double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 8);
+//            int counter = 0;
+//
+//            for (double j = 0; j < dist; j++) {
+//                double coeff = j / dist;
+//                counter += level.random.nextInt(3);
+//                if (counter % (Minecraft.getInstance().options.particles().get().getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles().get().getId()) == 0) {
+//                    level.addParticle(GlowParticleData.createData(new ParticleColor(entityData.get(RED), entityData.get(GREEN), entityData.get(BLUE))), (float) (xo + deltaX * coeff), (float) (yo + deltaY * coeff), (float) (zo + deltaZ * coeff), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f));
+//                }
+//            }
+            if(trailEmitter == null && resolver() != null) {
+                this.trailEmitter = new ParticleEmitter(() -> this.getPosition(0), this::getRotationVector, this.resolver().spell.particleTimeline().trailEffect);
+            }
+            if(trailEmitter != null){
+                trailEmitter.tick(level);
             }
         }
 
@@ -266,6 +287,7 @@ public class EntitySpellArrow extends Arrow {
         pBuilder.define(RED, 0);
         pBuilder.define(GREEN, 0);
         pBuilder.define(BLUE, 0);
+        pBuilder.define(SPELL_RESOLVER, new SpellResolver(new SpellContext(level, new Spell(), null, null)));
     }
 
     @Override
