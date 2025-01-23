@@ -63,8 +63,6 @@ public class TextEntry extends SinglePageWidget {
             DocClientUtils.drawHeader(titleLabel, guiGraphics, x + 70, y - 1);
             return 24;
         }else{
-//            DocClientUtils.blit(guiGraphics, DocAssets.UNDERLINE, x + 4, y + 10);
-//            GuiHelpers.drawCenteredStringNoShadow(font, guiGraphics, title, x + 60, y, 0);
             DocClientUtils.drawHeader(title, guiGraphics, x, y, width, mouseX, mouseY, partialTicks);
         }
         return 20;
