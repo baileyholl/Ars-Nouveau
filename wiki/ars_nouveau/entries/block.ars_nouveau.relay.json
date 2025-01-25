@@ -1,0 +1,23 @@
+{
+  "id": "ars_nouveau:block.ars_nouveau.relay",
+  "order": 100,
+  "icon": "ars_nouveau:relay",
+  "title": "Source Relay",
+  "category": "ars_nouveau:source",
+  "pages": [
+    {
+      "title": "Source Relay",
+      "description": "Enables the transport of source between Source Jars and other Source Relays. To pull source from jars, use the Dominion Wand on the jar, and then on the relay. To send between relays or from a relay to a jar, use the wand on the relay and then the target you wish to send source to. Relays may only reach up to 30 blocks away. To clear connections, sneak while using the Dominion Wand on the relay.",
+      "icon": "ars_nouveau:relay"
+    },
+    {
+      "recipe_1": "ars_nouveau:relay",
+      "description": "A redstone signal will disable the relay."
+    },
+    {
+      "related": [
+        "ars_nouveau:item.ars_nouveau.dominion_wand"
+      ]
+    }
+  ]
+}

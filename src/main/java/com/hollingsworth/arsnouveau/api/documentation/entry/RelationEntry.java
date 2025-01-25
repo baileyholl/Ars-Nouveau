@@ -1,8 +1,11 @@
 package com.hollingsworth.arsnouveau.api.documentation.entry;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageWidget;
+import com.hollingsworth.arsnouveau.api.documentation.export.DocExporter;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.arsnouveau.client.gui.documentation.DocEntryButton;
@@ -74,5 +77,15 @@ public class RelationEntry extends SinglePageWidget {
         public SinglePageWidget create(BaseDocScreen parent, int x, int y, int width, int height) {
             return new RelationEntry(entries, parent, x, y, width, height);
         }
+    }
+
+    @Override
+    public void addExportProperties(JsonObject object) {
+        super.addExportProperties(object);
+        JsonArray array = new JsonArray();
+        for(ResourceLocation id : relatedEntries){
+            array.add(id.toString());
+        }
+        object.add(DocExporter.RELATED_PROPERTY, array);
     }
 }

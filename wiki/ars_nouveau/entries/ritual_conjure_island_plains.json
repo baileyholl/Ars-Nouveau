@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:ritual_conjure_island_plains",
+  "order": 100,
+  "icon": "ars_nouveau:ritual_conjure_island_plains",
+  "title": "Conjure Island: Plains",
+  "category": "ars_nouveau:ritual_index",
+  "pages": [
+    {
+      "title": "Conjure Island: Plains",
+      "description": "Creates an island of grass and dirt in a circle around the ritual, converting the area to Plains. Augmenting with a Frostaya with convert to Snow Plains. The island will generate with a radius of 7 blocks. Augmenting the ritual with Source Gems will increase the radius by 1 for each gem. Source must be provided nearby as blocks are generated.",
+      "icon": "ars_nouveau:ritual_conjure_island_plains"
+    },
+    {
+      "recipe_1": "ars_nouveau:ritual_conjure_island_plains"
+    }
+  ]
+}

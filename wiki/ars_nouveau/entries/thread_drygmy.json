@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:thread_drygmy",
+  "order": 100,
+  "icon": "ars_nouveau:thread_drygmy",
+  "title": "The Drygmy",
+  "category": "ars_nouveau:armor",
+  "pages": [
+    {
+      "title": "Thread of The Drygmy",
+      "description": "Grants an additional stack of looting.",
+      "icon": "ars_nouveau:thread_drygmy"
+    },
+    {
+      "recipe_1": "ars_nouveau:thread_drygmy"
+    }
+  ]
+}

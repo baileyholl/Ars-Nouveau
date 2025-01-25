@@ -63,7 +63,8 @@ public class DocumentationRegistry {
 
     private static final Map<ResourceLocation, DocEntry> entryMap = new ConcurrentHashMap<>();
     private static final Set<DocEntry> allEntries = ConcurrentHashMap.newKeySet();
-    private static final Map<DocCategory, Set<DocEntry>> entryCategoryMap = new ConcurrentHashMap<>();
+    private static final Map<DocCategory, Set<DocEntry>> categoryToEntriesMap = new ConcurrentHashMap<>();
+    private static final Map<DocEntry, DocCategory> entryToCategoryMap = new ConcurrentHashMap<>();
 
 
     static {
@@ -101,7 +102,8 @@ public class DocumentationRegistry {
         }
         entryMap.put(entry.id(), entry);
         allEntries.add(entry);
-        var entries = entryCategoryMap.computeIfAbsent(category, k -> ConcurrentHashMap.newKeySet());
+        entryToCategoryMap.put(entry, category);
+        var entries = categoryToEntriesMap.computeIfAbsent(category, k -> ConcurrentHashMap.newKeySet());
         entries.remove(entry); // Remove and overwrite in the case of world reloads
         entries.add(entry);
         entry.categories().add(category);
@@ -113,7 +115,7 @@ public class DocumentationRegistry {
     }
 
     public static Set<DocEntry> getEntries(DocCategory category){
-        Set<DocEntry> entries = entryCategoryMap.get(category);
+        Set<DocEntry> entries = categoryToEntriesMap.get(category);
         return entries == null ? ConcurrentHashMap.newKeySet() : entries;
     }
 
@@ -123,6 +125,10 @@ public class DocumentationRegistry {
 
     public static DocCategory getCategory(ResourceLocation id){
         return mainCategoryMap.get(id);
+    }
+
+    public static DocCategory getCategoryForEntry(DocEntry entry){
+        return entryToCategoryMap.get(entry);
     }
 
     public static Map<ResourceLocation, DocCategory> getMainCategoryMap(){

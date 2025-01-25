@@ -1,0 +1,79 @@
+{
+  "id": "ars_nouveau:mob_jar",
+  "order": 100,
+  "icon": "ars_nouveau:mob_jar",
+  "title": "Containment Jar",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Containment Jar",
+      "description": "Allows you to capture and store mobs for transportation or decoration. To capture a mob, you must perform a Ritual of Containment. See the Ritual of Containment for more info. To release a mob, cast Dispel on the jar and the mob will be released above the jar. Note Blocks placed above a jar will play an ambient sound of the mob inside.",
+      "icon": "ars_nouveau:mob_jar"
+    },
+    {
+      "title": "Functionality",
+      "description": "Many entities can be interacted with inside the jar and will continue to simulate while inside the jar. Some examples include: chickens will lay eggs, sheep can be sheared, cows can be milked, and some mobs like the Blaze will turn the jar into a light source. Experiment with a variety of mobs to create aesthetic and functional farms. Drygmys will also treat the jar as if it were a normal entity in the area."
+    },
+    {
+      "description": "Can be traded with in a jar, periodically resetting its trades.",
+      "entity_type": "minecraft:villager"
+    },
+    {
+      "description": "Can be traded with by throwing gold ingots at the jar.",
+      "entity_type": "minecraft:piglin"
+    },
+    {
+      "title": "Allay Behavior",
+      "description": "A jarred Allay can pickup and deposit items within 5 blocks of the jar. Giving an Allay an item will cause it to only pickup that item. Giving an Allay an Item Scroll will pickup any item that matches the scroll. Items will be deposited into inventories placed adjacent to the jar. Allays will also respect any filters placed on the adjacent inventories."
+    },
+    {
+      "description": "",
+      "entity_type": "minecraft:allay"
+    },
+    {
+      "description": "Use a bottle to obtain Dragon\u0027s Breath.",
+      "entity_type": "minecraft:ender_dragon"
+    },
+    {
+      "description": "Can be sheared. Will eat Grass beneath the jar if available.",
+      "entity_type": "minecraft:sheep"
+    },
+    {
+      "description": "Will occasionally lay eggs.",
+      "entity_type": "minecraft:chicken"
+    },
+    {
+      "description": "Can be milked.",
+      "entity_type": "minecraft:cow"
+    },
+    {
+      "description": "Can use a bowl to obtain mushroom stew. Can be sheared into a normal cow.",
+      "entity_type": "minecraft:mooshroom"
+    },
+    {
+      "description": "Will inflate when mobs are nearby. While inflated, the jar produces a redstone signal.",
+      "entity_type": "minecraft:pufferfish"
+    },
+    {
+      "description": "Will eat nearby slimes.",
+      "entity_type": "minecraft:frog"
+    },
+    {
+      "description": "Baby pandas will occasionally sneeze, creating Slimeballs. Sick Pandas will sneeze more often.",
+      "entity_type": "minecraft:panda"
+    },
+    {
+      "description": "A player dummy in a jar will attract nearby mobs.",
+      "entity_type": "ars_nouveau:dummy"
+    },
+    {
+      "recipe_1": "ars_nouveau:mob_jar"
+    },
+    {
+      "related": [
+        "ars_nouveau:ritual_containment",
+        "ars_nouveau:drygmy_charm"
+      ]
+    }
+  ]
+}

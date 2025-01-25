@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_break",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_break",
+  "title": "Break",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Break",
+      "description": "Breaks blocks of an average hardness. Can be amplified to increase the harvest level. Sensitive will simulate breaking blocks with Shears instead of a pickaxe.",
+      "icon": "ars_nouveau:glyph_break",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_break"
+    }
+  ]
+}

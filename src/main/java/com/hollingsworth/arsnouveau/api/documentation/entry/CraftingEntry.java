@@ -1,10 +1,12 @@
 package com.hollingsworth.arsnouveau.api.documentation.entry;
 
+import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageWidget;
+import com.hollingsworth.arsnouveau.api.documentation.export.DocExporter;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.arsnouveau.setup.registry.RegistryHelper;
 import net.minecraft.client.Minecraft;
@@ -88,5 +90,19 @@ public class CraftingEntry extends SinglePageWidget {
         }
 
         this.setTooltipIfHovered(DocClientUtils.renderItemStack(guiGraphics, x + 86, y + 24, mouseX, mouseY, outputStack));
+    }
+
+    @Override
+    public void addExportProperties(JsonObject object) {
+        super.addExportProperties(object);
+        if(recipe1 != null) {
+            object.addProperty(DocExporter.RECIPE_PROPERTY, recipe1.id().toString());
+        }
+        if(recipe2 != null) {
+            object.addProperty(DocExporter.RECIPE2_PROPERTY, recipe2.id().toString());
+        }
+        if(description != null){
+            object.addProperty(DocExporter.DESCRIPTION_PROPERTY, description.getString());
+        }
     }
 }

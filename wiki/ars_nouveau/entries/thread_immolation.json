@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:thread_immolation",
+  "order": 100,
+  "icon": "ars_nouveau:thread_immolation",
+  "title": "Immolation",
+  "category": "ars_nouveau:armor",
+  "pages": [
+    {
+      "title": "Thread of Immolation",
+      "description": "If the user is on fire or standing in fire, the fire will be extinguished when the user casts a spell and will be granted the Immolation potion effect. Fire spells will deal additional damage and last longer for each level of Immolation.",
+      "icon": "ars_nouveau:thread_immolation"
+    },
+    {
+      "recipe_1": "ars_nouveau:thread_immolation"
+    }
+  ]
+}

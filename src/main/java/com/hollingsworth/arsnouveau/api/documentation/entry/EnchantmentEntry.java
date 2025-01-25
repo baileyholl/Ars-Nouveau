@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.api.documentation.entry;
 
+import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
+import com.hollingsworth.arsnouveau.api.documentation.export.DocExporter;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantmentRecipe;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
@@ -57,5 +59,14 @@ public class EnchantmentEntry extends PedestalRecipeEntry{
 
     public static SinglePageCtor create(ResourceLocation enchantmentRecipe){
         return (parent, x, y, width, height) -> new EnchantmentEntry(parent.recipeManager().byKeyTyped(RecipeRegistry.ENCHANTMENT_TYPE.get(), enchantmentRecipe), parent, x, y, width, height);
+    }
+
+
+    @Override
+    public void addExportProperties(JsonObject object) {
+        super.addExportProperties(object);
+        if(enchantmentRecipe != null) {
+            object.addProperty(DocExporter.RECIPE_PROPERTY, enchantmentRecipe.id().toString());
+        }
     }
 }

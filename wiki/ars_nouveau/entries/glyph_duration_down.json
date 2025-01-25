@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_duration_down",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_duration_down",
+  "title": "Reduce Time",
+  "category": "ars_nouveau:glyphs_tier_two",
+  "pages": [
+    {
+      "title": "Reduce Time",
+      "description": "Reduces the duration of spells like potion effects, delay, redstone signal, and others.",
+      "icon": "ars_nouveau:glyph_duration_down",
+      "tier": 2
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_duration_down"
+    }
+  ]
+}

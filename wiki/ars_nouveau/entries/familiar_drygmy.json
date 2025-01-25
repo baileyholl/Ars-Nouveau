@@ -1,0 +1,14 @@
+{
+  "id": "ars_nouveau:familiar_drygmy",
+  "order": 100,
+  "icon": "ars_nouveau:familiar_drygmy",
+  "title": "Drygmy Familiar",
+  "category": "ars_nouveau:familiars",
+  "pages": [
+    {
+      "title": "Bound Script: Drygmy",
+      "description": "A Drygmy familiar will increase the damage of Earth spells by 2, and has a chance to increase the amount of looting when slaying enemies. Obtained by performing the Ritual of Binding near a Drygmy.",
+      "icon": "ars_nouveau:familiar_drygmy"
+    }
+  ]
+}

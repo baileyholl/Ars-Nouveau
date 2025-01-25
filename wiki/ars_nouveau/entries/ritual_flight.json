@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:ritual_flight",
+  "order": 100,
+  "icon": "ars_nouveau:ritual_flight",
+  "title": "Flight",
+  "category": "ars_nouveau:ritual_index",
+  "pages": [
+    {
+      "title": "Flight",
+      "description": "Grants nearby players the Flight effect when they jump, allowing them to creatively fly for a short time. If the player is nearby, this ritual will refresh their flight buff. Each time this ritual grants or refreshes flight, it will expend source from nearby jars.",
+      "icon": "ars_nouveau:ritual_flight"
+    },
+    {
+      "recipe_1": "ars_nouveau:ritual_flight"
+    }
+  ]
+}

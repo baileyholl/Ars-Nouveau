@@ -1,0 +1,29 @@
+{
+  "id": "ars_nouveau:shapers_focus",
+  "order": 100,
+  "icon": "ars_nouveau:shapers_focus",
+  "title": "Focus of Block Shaping",
+  "category": "ars_nouveau:spell_casting",
+  "pages": [
+    {
+      "title": "Focus of Block Shaping",
+      "description": "A focus that modifies effects that move, create, or modify blocks. Blocks that you move with effects like Launch, Gravity, Pull, Knockback, etc. will now deal damage to entities they hit. Damage is increased by Spell Damage, block hardness, and the speed of the block. Additionally, effects that target or create blocks will duplicate the rest of the spell targeting the new block or moving block.",
+      "icon": "ars_nouveau:shapers_focus"
+    },
+    {
+      "recipe_1": "ars_nouveau:shapers_focus"
+    },
+    {
+      "title": "Block Targeting",
+      "description": "Modifying or creating a block will duplicate the rest of your spell onto that new block. For example, Freeze -\u003e Break will freeze the block, and cast break onto that block. Without the focus, break would only be applied to the block that was hit originally. Effects that will duplicate this target include glyphs such as Conjure Mageblock, Freeze, Break, Exchange, Place Block, and more. Using AOE on these effects will duplicate the spell onto every block."
+    },
+    {
+      "title": "Entity Targeting",
+      "description": "Effects that move blocks will duplicate the rest of the spell onto those moving blocks. To see this in action, try using Conjure Mageblock -\u003e Launch -\u003e Delay -\u003e Knockback to send a block flying in the direction you are looking. This targeting system applies to all moved blocks. Using AOE on block moving effects will let you manipulate many blocks at once."
+    },
+    {
+      "title": "Spell Examples",
+      "description": "Throw Ice: Conjure Water -\u003e Freeze -\u003e Launch -\u003e Delay -\u003e Knockback. Damage and ignite hit targets: Conjure Mageblock -\u003e Launch -\u003e Ignite -\u003e Delay -\u003e Knockback. Ignite TNT: Place Block (TNT) -\u003e Ignite. Throw Exploding Terrain: Launch -\u003e Delay -\u003e Knockback -\u003e Delay -\u003e Explosion. Throw many blocks: Launch -\u003e AOE x2 -\u003e Delay -\u003e Knockback. Pull blocks: Pull -\u003e AOE x2 -\u003e Delay -\u003e Duration Down -\u003e Launch -\u003e Delay -\u003e Knockback. Harvest Sand: Crush (on stone) -\u003e Aoe -\u003e Break"
+    }
+  ]
+}

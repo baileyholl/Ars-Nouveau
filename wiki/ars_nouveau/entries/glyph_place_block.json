@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_place_block",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_place_block",
+  "title": "Place Block",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Place Block",
+      "description": "Places blocks from the casters inventory. If a player is casting this, this spell will place blocks from the hot bar first.",
+      "icon": "ars_nouveau:glyph_place_block",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_place_block"
+    }
+  ]
+}

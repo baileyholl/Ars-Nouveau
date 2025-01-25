@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:item.ars_nouveau.ring_of_lesser_discount",
+  "order": 100,
+  "icon": "ars_nouveau:ring_of_lesser_discount",
+  "title": "Ring of Lesser Discount",
+  "category": "ars_nouveau:items",
+  "pages": [
+    {
+      "title": "Ring of Lesser Discount",
+      "description": "In addition to providing a small bonus to maximum mana and mana regen, Rings of Discount reduce the total cost to cast a spell.",
+      "icon": "ars_nouveau:ring_of_lesser_discount"
+    },
+    {
+      "recipe_1": "ars_nouveau:ring_of_lesser_discount"
+    }
+  ]
+}

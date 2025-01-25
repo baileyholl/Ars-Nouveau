@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.api.documentation.entry;
 
+import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
+import com.hollingsworth.arsnouveau.api.documentation.export.DocExporter;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantingApparatusRecipe;
 import net.minecraft.network.chat.Component;
@@ -22,5 +24,13 @@ public class ApparatusEntry extends PedestalRecipeEntry{
 
     public static SinglePageCtor create(RecipeHolder<EnchantingApparatusRecipe> recipe){
         return (parent, x, y, width, height) -> new ApparatusEntry(recipe, parent, x, y, width, height);
+    }
+
+    @Override
+    public void addExportProperties(JsonObject object) {
+        super.addExportProperties(object);
+        if(apparatusRecipe != null) {
+            object.addProperty(DocExporter.RECIPE_PROPERTY, apparatusRecipe.id().toString());
+        }
     }
 }

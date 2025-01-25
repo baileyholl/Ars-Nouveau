@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:item.ars_nouveau.belt_of_levitation",
+  "order": 100,
+  "icon": "ars_nouveau:belt_of_levitation",
+  "title": "Belt of Levitation",
+  "category": "ars_nouveau:items",
+  "pages": [
+    {
+      "title": "Belt of Levitation",
+      "description": "A belt that allows the user levitate a moderate distance above the ground. Useful for climbing mountains! Simply sneak in the air while falling (or jumping) to rise. Reduces a small amount of fall damage while worn.",
+      "icon": "ars_nouveau:belt_of_levitation"
+    },
+    {
+      "recipe_1": "ars_nouveau:belt_of_levitation"
+    }
+  ]
+}

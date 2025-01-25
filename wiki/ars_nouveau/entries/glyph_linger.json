@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_linger",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_linger",
+  "title": "Linger",
+  "category": "ars_nouveau:glyphs_tier_three",
+  "pages": [
+    {
+      "title": "Linger",
+      "description": "Creates a lingering field that applies spells on nearby entities for a short time. Applying Sensitive will make this spell target blocks instead. AOE will expand the effective range, Accelerate will cast spells faster, Dampen will ignore gravity, and Extend Time will increase the duration.",
+      "icon": "ars_nouveau:glyph_linger",
+      "tier": 3
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_linger"
+    }
+  ]
+}

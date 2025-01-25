@@ -1,0 +1,28 @@
+{
+  "id": "ars_nouveau:mimic_scroll",
+  "order": 100,
+  "icon": "ars_nouveau:mimic_scroll",
+  "title": "Mimic Scroll",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Mimic Scroll",
+      "description": "Provides a list of items to automation related entities. When this scroll is attached to an inventory, entities will only insert items that already exist in the inventory. To attach the scroll, place an item frame on the inventory, and place a Mimic Scroll in it.",
+      "icon": "ars_nouveau:mimic_scroll"
+    },
+    {
+      "recipe_1": "ars_nouveau:blank_parchment",
+      "recipe_2": "ars_nouveau:mimic_scroll"
+    },
+    {
+      "related": [
+        "ars_nouveau:deny_scroll",
+        "ars_nouveau:allow_scroll",
+        "ars_nouveau:item.ars_nouveau.dominion_wand",
+        "ars_nouveau:starbuncle_charm",
+        "ars_nouveau:storage_lectern",
+        "ars_nouveau:item_detector"
+      ]
+    }
+  ]
+}

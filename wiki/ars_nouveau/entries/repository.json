@@ -1,0 +1,23 @@
+{
+  "id": "ars_nouveau:repository",
+  "order": 100,
+  "icon": "ars_nouveau:repository",
+  "title": "Repository",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Repository",
+      "description": "A repository can store a double chests worth of items. When named, it will display the name as a tooltip, and preserve it when dropped as an item. Useful for creating named inventory tabs with the Storage Lectern.",
+      "icon": "ars_nouveau:repository"
+    },
+    {
+      "recipe_1": "ars_nouveau:repository",
+      "recipe_2": "ars_nouveau:archwood_chest"
+    },
+    {
+      "related": [
+        "ars_nouveau:storage_lectern"
+      ]
+    }
+  ]
+}

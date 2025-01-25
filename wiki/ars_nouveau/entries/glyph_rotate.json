@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_rotate",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_rotate",
+  "title": "Rotate",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Rotate",
+      "description": "Rotates a block or an entity clockwise. If augmented with sensitive it will change the axis of the block (if possible) or force the entity to turn their look. Dampen will rotate counter-clockwise.",
+      "icon": "ars_nouveau:glyph_rotate",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_rotate"
+    }
+  ]
+}

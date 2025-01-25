@@ -1,0 +1,22 @@
+{
+  "id": "ars_nouveau:scribes_table",
+  "order": 100,
+  "icon": "ars_nouveau:scribes_table",
+  "title": "Scribe\u0027s Table",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Glyph Crafting",
+      "description": "To craft new glyphs, use a spell book on the table to open the codex. Each glyph requires a set of items and experience points to unlock. Select a glyph by clicking on it in the menu, and hit select. Throw the items onto the table as rendered above, and the table will scribe a new glyph. The table will also pull items from nearby inventories. Using the dominion wand on the table will disable auto-pull.",
+      "icon": "ars_nouveau:scribes_table"
+    },
+    {
+      "title": "Scribing Spells",
+      "description": "You may also inscribe a spell onto Spell Parchment or Enchanters Items. To do this, place a Blank Parchment on the table. Then, with your spell book in hand, change your spell book to your desired spell as if you were going to cast it. Then, use the book on the table while sneaking. Your item will now contain that spell. Using Manipulation Essence will permanently hide the scribed spell."
+    },
+    {
+      "recipe_1": "ars_nouveau:blank_parchment",
+      "recipe_2": "ars_nouveau:scribes_table"
+    }
+  ]
+}

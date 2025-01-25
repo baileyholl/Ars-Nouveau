@@ -1,0 +1,20 @@
+{
+  "id": "ars_nouveau:obtaining_gems",
+  "order": 3,
+  "icon": "ars_nouveau:imbuement_chamber",
+  "title": "Obtaining Source Gems",
+  "category": "ars_nouveau:getting_started",
+  "pages": [
+    {
+      "title": "Obtaining Source Gems",
+      "description": "To obtain Source Gems, you must first build an Imbuement Chamber. An Imbuement Chamber imbues items inside it with Source, and will convert them to a new item. To obtain a source gem, place an Amethyst or Lapis inside your Imbuement Chamber and wait. Imbuement Chambers will consume source from nearby Source Jars to speed up any crafting. A Dowsing Rod can be used for finding Budding Amethyst early.",
+      "icon": "ars_nouveau:imbuement_chamber"
+    },
+    {
+      "related": [
+        "ars_nouveau:item.ars_nouveau.dowsing_rod",
+        "ars_nouveau:imbuement_chamber"
+      ]
+    }
+  ]
+}

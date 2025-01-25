@@ -1,0 +1,23 @@
+{
+  "id": "ars_nouveau:block.ars_nouveau.alchemical_sourcelink",
+  "order": 100,
+  "icon": "ars_nouveau:alchemical_sourcelink",
+  "title": "Alchemical Sourcelink",
+  "category": "ars_nouveau:source",
+  "pages": [
+    {
+      "title": "Alchemical Sourcelink",
+      "description": "Generates source by consuming potions from adjacent potion jars. The amount of source varies per potion and is dependent on the complexity of the potion. Bonus source is given for the length and level of the potion with multipliers for each effect a potion contains. Utilizing Wixies and Potion Melders is recommended for creating highly complex potions.",
+      "icon": "ars_nouveau:alchemical_sourcelink"
+    },
+    {
+      "recipe_1": "ars_nouveau:alchemical_sourcelink"
+    },
+    {
+      "related": [
+        "ars_nouveau:wixie_charm",
+        "ars_nouveau:block.ars_nouveau.potion_melder"
+      ]
+    }
+  ]
+}

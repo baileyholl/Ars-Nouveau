@@ -1,0 +1,57 @@
+{
+  "id": "ars_nouveau:starbuncle_charm",
+  "order": 100,
+  "icon": "ars_nouveau:starbuncle_charm",
+  "title": "Starbuncle Charm",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Starbuncle Charm",
+      "description": "Starbuncles naturally appear in wooded areas in search of golden nuggets. While Starbuncles are normally afraid of humans, they will allow someone to approach if they are holding a gold nugget. When a Starbuncle has picked up a golden nugget, it will vanish from this world and leave behind a Starbuncle Token.",
+      "icon": "ars_nouveau:starbuncle_charm"
+    },
+    {
+      "recipe_1": "ars_nouveau:starbuncle_charm"
+    },
+    {
+      "description": "While wild Starbuncles cannot be tamed, their tokens may be used to summon a Starbuncle.",
+      "entity_type": "ars_nouveau:starbuncle"
+    },
+    {
+      "title": "Summoning",
+      "description": "To summon a Starbuncle, use a Starbuncle charm on the ground. Summoned Starbuncles will pickup nearby items and can move items between inventories such as chests. Starbuncles will harvest fully grown Source Berry bushes around it. A Starbuncle will drop its charm when Dispelled or when killed. You may dye them any color."
+    },
+    {
+      "title": "Item Transport",
+      "description": "To bind a Starbuncle to place items into a chest, use the dominion wand on the Starbuncle and then the inventory. To take items from an inventory, use the wand on the inventory and then the Starbuncle. Starbuncles will move items between as many inventories as you desire. Looking at a Starbuncle will tell you how many chests are being taken from, and input to. Using the Dominion Wand on a Starbuncle while sneaking will reset them."
+    },
+    {
+      "title": "Filtering",
+      "description": "You may dictate where items go and may be picked up by using Item Scrolls or Item Frames. A Starbuncle may be given an Item Scroll: Allow or Deny, and will only pickup and move items respecting that filter. Alternatively, you may place an Item Frame on the inventory a Starbuncle is interacting with. You may either place an Item Scroll or a single item directly on the frame. Starbuncle interacting with that inventory will respect item framed filters."
+    },
+    {
+      "title": "Pathing",
+      "description": "Using a block on a Starbuncle will set them to prefer that block for pathing between areas, as long as it is on the way. They will also naturally prefer grass paths."
+    },
+    {
+      "title": "Resting",
+      "description": "Starbuncles may be bound to a Magebloom Bed using the Dominion Wand and will rest on the bed when there are no other tasks to be done. Useful for keeping them out of the way, or returning them to a spot where items drop. Providing a redstone signal to the bed will disable starbuncles and go back to their beds."
+    },
+    {
+      "title": "Starby Stacking",
+      "description": "Using a charm on an existing Starbuncle will stack them. Stacked starbuncles will transport multiple stacks at a time, depositing them in the order that they are taken. Wanding a stackbuncle will wand the main starbuncle and will always display the main starbuncles tooltip. Note: multiple itemstacks are not simulated at a time, which can result in several items being taken, but only able to deposit one while holding the rest."
+    },
+    {
+      "related": [
+        "ars_nouveau:deny_scroll",
+        "ars_nouveau:mimic_scroll",
+        "ars_nouveau:allow_scroll",
+        "ars_nouveau:item.ars_nouveau.dominion_wand",
+        "ars_nouveau:storage_lectern",
+        "ars_nouveau:item.ars_nouveau.starbuncle_shades",
+        "ars_nouveau:item.ars_nouveau.wixie_hat",
+        "ars_nouveau:orange_sbed"
+      ]
+    }
+  ]
+}

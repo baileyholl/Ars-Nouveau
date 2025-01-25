@@ -1,0 +1,24 @@
+{
+  "id": "ars_nouveau:alteration_table",
+  "order": 3,
+  "icon": "ars_nouveau:alteration_table",
+  "title": "Alteration Table",
+  "category": "ars_nouveau:armor",
+  "pages": [
+    {
+      "title": "Alteration Table",
+      "description": "Used to inscribe Threads onto magical armors. To use the table, place armor onto the stand of the table. The tablet will display the available Thread Slots on the armor. To add or remove a Thread, use the thread on the tablet of the table. Removing the armor will apply the threads to the armor. To remove a thread, place the armor on the table and interact with the display with an empty hand.",
+      "icon": "ars_nouveau:alteration_table"
+    },
+    {
+      "recipe_1": "ars_nouveau:alteration_table",
+      "recipe_2": "ars_nouveau:blank_thread"
+    },
+    {
+      "related": [
+        "ars_nouveau:armor",
+        "ars_nouveau:armor_upgrading"
+      ]
+    }
+  ]
+}

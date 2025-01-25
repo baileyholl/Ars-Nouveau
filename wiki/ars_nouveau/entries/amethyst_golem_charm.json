@@ -1,0 +1,30 @@
+{
+  "id": "ars_nouveau:amethyst_golem_charm",
+  "order": 100,
+  "icon": "ars_nouveau:amethyst_golem_charm",
+  "title": "Amethyst Golem Charm",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Amethyst Golem Charm",
+      "description": "Amethyst Golems will harvest, grow, and collect Amethyst near its home. To obtain an Amethyst Golem, perform the Ritual of Awakening near Budding Amethyst to obtain the Amethyst Golem Charm.",
+      "icon": "ars_nouveau:amethyst_golem_charm"
+    },
+    {
+      "description": "",
+      "entity_type": "ars_nouveau:amethyst_golem"
+    },
+    {
+      "title": "Summoning",
+      "description": "Summon the Amethyst Golem by using a charm on a block. Before an Amethyst Golem will perform tasks, they must first have a home. Set their home by using the Dominion Wand on the golem, and then on a block. The golem\u0027s home is considered to be 10 blocks in any direction from the set position."
+    },
+    {
+      "title": "Farming Amethyst",
+      "description": "Once a home has been set, the golem will begin performing tasks over time. They will convert Amethyst Blocks into Budding Amethyst, harvest Amethyst Clusters, speed up Budding Amethyst growth, and pick up and store Amethyst Shards."
+    },
+    {
+      "title": "Storing Amethyst",
+      "description": "If a golem\u0027s home has been set to an inventory, golems will pick up and store Amethyst Shards in their bounded inventory block. If their home is not an inventory, they will simply ignore items on the ground."
+    }
+  ]
+}

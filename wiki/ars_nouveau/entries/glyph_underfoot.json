@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_underfoot",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_underfoot",
+  "title": "Underfoot",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Underfoot",
+      "description": "Targets the spell on the block beneath the player.",
+      "icon": "ars_nouveau:glyph_underfoot",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_underfoot"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "ars_nouveau:basic_spell_turret",
+  "order": 100,
+  "icon": "ars_nouveau:basic_spell_turret",
+  "title": "Basic Spell Turret",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Basic Spell Turret",
+      "description": "Turrets can be used to cast spells when given a redstone signal, functioning like a dispenser. Turrets will accept spells that use Touch and Projectile. Spells may be set using an inscribed piece of Spell Parchment. In order to cast spells, turrets will draw source from nearby Source Jars. Turrets may use Item Pickup and Place Block as long as an inventory is placed adjacent to this block.",
+      "icon": "ars_nouveau:basic_spell_turret"
+    },
+    {
+      "recipe_1": "ars_nouveau:basic_spell_turret",
+      "recipe_2": "ars_nouveau:rotating_spell_turret"
+    },
+    {
+      "title": "Enchanted Spell Turret",
+      "description": "Enchanted Spell Turrets cast spells at half the source cost compared to basic spell turrets.",
+      "icon": "ars_nouveau:spell_turret"
+    },
+    {
+      "recipe_1": "ars_nouveau:spell_turret"
+    },
+    {
+      "title": "Timer Spell Turret",
+      "description": "Timer Spell Turrets will automatically fire on a timer. Defaulted to 1 second, the time may be increased by right-clicking the block. Punching will decrease the time. Sneaking will allow you to configure it in 10 second intervals. To prevent further changes, lock and unlock the turret using the dominion wand. Setting the turret to 0 seconds or providing a redstone signal will disable it. Casts Projectile, Touch, and Redstone for free.",
+      "icon": "ars_nouveau:timer_spell_turret"
+    },
+    {
+      "recipe_1": "ars_nouveau:timer_spell_turret"
+    },
+    {
+      "description": "Turrets can provide compact and efficient automation. Examples include: configurable redstone clocks, one block tree or crop farms, rapid smelting with fortune, or mob farms with looting."
+    },
+    {
+      "related": [
+        "ars_nouveau:block.ars_nouveau.spell_prism",
+        "ars_nouveau:block.ars_nouveau.void_prism"
+      ]
+    }
+  ]
+}

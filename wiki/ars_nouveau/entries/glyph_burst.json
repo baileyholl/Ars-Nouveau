@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_burst",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_burst",
+  "title": "Burst",
+  "category": "ars_nouveau:glyphs_tier_three",
+  "pages": [
+    {
+      "title": "Burst",
+      "description": "Resolves the spell in a spherical area around the target. Augment with Sensitive to target blocks instead of entities and Dampen to make an empty sphere. Augment with AOE to increase the radius. ",
+      "icon": "ars_nouveau:glyph_burst",
+      "tier": 3
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_burst"
+    }
+  ]
+}

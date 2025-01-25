@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_sensitive",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_sensitive",
+  "title": "Sensitive",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Sensitive",
+      "description": "Causes forms to target blocks they normally cannot target. Projectile and Orbit will target grass, and Touch will target fluids and air. Changes targeting rules of certain effects.",
+      "icon": "ars_nouveau:glyph_sensitive",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_sensitive"
+    }
+  ]
+}

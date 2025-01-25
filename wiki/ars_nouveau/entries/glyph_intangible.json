@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_intangible",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_intangible",
+  "title": "Intangible",
+  "category": "ars_nouveau:glyphs_tier_three",
+  "pages": [
+    {
+      "title": "Intangible",
+      "description": "Causes blocks to temporarily turn into air. Can be modified with Amplify for blocks of higher hardness, AOE, Duration Down, and Extend Time.",
+      "icon": "ars_nouveau:glyph_intangible",
+      "tier": 3
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_intangible"
+    }
+  ]
+}

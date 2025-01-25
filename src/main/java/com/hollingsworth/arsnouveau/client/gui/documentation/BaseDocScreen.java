@@ -238,4 +238,8 @@ public class BaseDocScreen extends BaseScreen {
         Level level = ArsNouveau.proxy.getClientWorld();
         return level.getRecipeManager();
     }
+
+    public void setMinecraft(Minecraft minecraft){
+        this.minecraft = minecraft;
+    }
 }

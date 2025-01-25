@@ -1,0 +1,24 @@
+{
+  "id": "ars_nouveau:block.ars_nouveau.source_jar",
+  "order": 0,
+  "icon": "ars_nouveau:source_jar",
+  "title": "Source Jar",
+  "category": "ars_nouveau:source",
+  "pages": [
+    {
+      "title": "Source Jar",
+      "description": "Source Jars store source gathered from nearby Sourcelinks. Source is used in rituals and automation by powering devices like the Imbuement Chamber and Enchanting Apparatus. Source may be moved using a Source Relay or by breaking and moving it. Devices will use source from nearby jars. Source Jars will provide a signal to comparators based on their level.",
+      "icon": "ars_nouveau:source_jar"
+    },
+    {
+      "recipe_1": "ars_nouveau:source_jar"
+    },
+    {
+      "related": [
+        "ars_nouveau:block.ars_nouveau.relay",
+        "ars_nouveau:block.ars_nouveau.agronomic_sourcelink",
+        "ars_nouveau:volcanic_sourcelink"
+      ]
+    }
+  ]
+}

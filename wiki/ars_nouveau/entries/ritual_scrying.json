@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:ritual_scrying",
+  "order": 100,
+  "icon": "ars_nouveau:ritual_scrying",
+  "title": "Scrying",
+  "category": "ars_nouveau:ritual_index",
+  "pages": [
+    {
+      "title": "Scrying",
+      "description": "Grants vision of a given block through any other block for a given time. White particles signify you are very close, green is semi-far, and blue particles are blocks very far from you.  To complete the ritual, throw any block of your choice before starting. You may also add a Manipulation Essence to increase the duration to 15 minutes.",
+      "icon": "ars_nouveau:ritual_scrying"
+    },
+    {
+      "recipe_1": "ars_nouveau:ritual_scrying"
+    }
+  ]
+}

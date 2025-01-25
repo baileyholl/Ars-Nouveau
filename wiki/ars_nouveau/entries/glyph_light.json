@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_light",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_light",
+  "title": "Conjure Magelight",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Conjure Magelight",
+      "description": "If cast on a block, a permanent light source is created. May be amplified up to Glowstone brightness, or Dampened for a lower light level. When cast on yourself, you will receive night vision. When cast on other entities or with Sensitive, they will receive Night Vision and Glowing. If Sensitive, Glowing will use the spell color.",
+      "icon": "ars_nouveau:glyph_light",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_light"
+    }
+  ]
+}
