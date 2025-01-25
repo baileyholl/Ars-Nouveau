@@ -43,8 +43,8 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix4d;
-import org.joml.Vector3d;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
@@ -253,12 +253,9 @@ public class EntityProjectileSpell extends ColoredProjectile {
         double prevY = this.yOld;
         double prevZ = this.zOld;
         double distance = Math.sqrt(Math.pow(x - prevX, 2) + Math.pow(y - prevY, 2) + Math.pow(z - prevZ, 2));
-        int interpolationSteps = Math.max(1, (int) (distance / 0.1)); // Adjust 0.1 for step granularity
+        int interpolationSteps = Math.max(1, (int) (distance / 0.1));
         for (int step = 0; step <= interpolationSteps; step++) {
-            // Linear interpolation factor
             double t = (double) step / interpolationSteps;
-
-            // Interpolated position between previous and current
             double interpolatedX = prevX + t * (x - prevX);
             double interpolatedY = prevY + t * (y - prevY);
             double interpolatedZ = prevZ + t * (z - prevZ);
@@ -269,15 +266,18 @@ public class EntityProjectileSpell extends ColoredProjectile {
             float localX = (float) (Math.cos(angle) * spiralRadius);
             float localZ = 0;
             float localY = (float) (Math.sin(angle) * spiralRadius);
-            Matrix4d transform = new Matrix4d()
-                    .rotateX(Math.toRadians(xRot))
-                    .rotateY(Math.toRadians(yRot));
-            Vector3d worldPosition = new Vector3d();
-            transform.transformPosition(new Vector3d(localX, localY, localZ), worldPosition);
+            float xRotRadians = (float) Math.toRadians(xRot);
+            float yRotRadians = (float) Math.toRadians(yRot);
+            Matrix4f transform = new Matrix4f();
+            transform.identity()
+                    .translate(new Vector3f((float) interpolatedX, (float) interpolatedY, (float) interpolatedZ))
+                    .rotateY(yRotRadians)
+                    .rotateX(-xRotRadians);
 
-            level.addParticle(ModParticles.CUSTOM_TYPE.get(), interpolatedX + worldPosition.x, interpolatedY + worldPosition.y, interpolatedZ + worldPosition.z, 0, 0, 0);
+            Vector3f localPos = new Vector3f(localX, localY, localZ);
+            transform.transformPosition(localPos);
+            level.addParticle(ModParticles.CUSTOM_TYPE.get(), localPos.x, localPos.y, localPos.z, 0, 0, 0);
         }
-      //  }
     }
 
     @Nullable
