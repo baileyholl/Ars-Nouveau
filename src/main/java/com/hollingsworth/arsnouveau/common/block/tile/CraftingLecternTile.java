@@ -144,17 +144,15 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 	}
 
 	public TransientCustomContainer getCraftingInv(UUID uuid) {
-		return craftingMatrices.computeIfAbsent(uuid, (key) -> {
-			TransientCustomContainer matrix = new TransientCustomContainer(craftingContainer.apply(uuid), 3, 3);
-			if (!legacyCraftMatrix.isEmpty()) {
-				for(int i = 0; i < legacyCraftMatrix.getContainerSize(); ++i) {
-					ItemStack itemstack = legacyCraftMatrix.getItem(i);
-					matrix.setItem(i, itemstack);
-					legacyCraftMatrix.setItem(i, ItemStack.EMPTY);
-				}
+		TransientCustomContainer matrix = craftingMatrices.computeIfAbsent(uuid, (key) -> new TransientCustomContainer(craftingContainer.apply(uuid), 3, 3));
+		if (!legacyCraftMatrix.isEmpty()) {
+			for(int i = 0; i < legacyCraftMatrix.getContainerSize(); ++i) {
+				ItemStack itemstack = legacyCraftMatrix.getItem(i);
+				matrix.setItem(i, itemstack);
+				legacyCraftMatrix.setItem(i, ItemStack.EMPTY);
 			}
-			return matrix;
-		});
+		}
+		return matrix;
 	}
 
 	public ResultContainer getCraftResult(Player player) {
