@@ -106,6 +106,15 @@ public class BlockUtil {
         return !ANEventBus.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), playerEntity));
     }
 
+    public static boolean canUUIDBreak(@Nullable UUID uuid, Level world, BlockPos pos) {
+        if (!(world instanceof ServerLevel serverLevel)) {
+            return false;
+        }
+
+        Player playerEntity = ANFakePlayer.getPlayer(serverLevel, uuid);
+        return !ANEventBus.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), playerEntity));
+    }
+
     public static void safelyUpdateState(Level world, BlockPos pos, BlockState state) {
         if (!world.isOutsideBuildHeight(pos))
             world.sendBlockUpdated(pos, state, state, 3);
