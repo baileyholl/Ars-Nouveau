@@ -28,13 +28,17 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.entity.BannerPattern;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import org.jetbrains.annotations.NotNull;
@@ -44,6 +48,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
+import static com.hollingsworth.arsnouveau.ArsNouveau.prefix;
 
 public class ItemsRegistry {
 
@@ -230,6 +235,8 @@ public class ItemsRegistry {
     public static final ItemRegistryWrapper<AlakarkinosCharm> ALAKARKINOS_CHARM = register(LibItemNames.ALAKARKINOS_CHARM, AlakarkinosCharm::new);
     public static final ItemRegistryWrapper<Item> ALAKARKINOS_SHARD = register(LibItemNames.ALAKARKINOS_SHARD, () -> new ModItem().withTooltip("tooltip.alakarkinos_shard1").withTooltip(Component.translatable("tooltip.alakarkinos_shard2").withStyle(LORE_STYLE)));
 
+    public static final DeferredHolder<Item, BannerPatternItem> ARS_STENCIL = createPatternItem("ars_stencil", Rarity.UNCOMMON);
+
     public static <T extends Item> ItemRegistryWrapper<T> register(String name, Supplier<T> item) {
         return new ItemRegistryWrapper<>(ITEMS.register(name, item));
     }
@@ -276,6 +283,10 @@ public class ItemsRegistry {
         ITEMS.register(LibItemNames.ALAKARKINOS_SE, () -> new DeferredSpawnEggItem(ModEntities.ALAKARKINOS_TYPE, 16724530, 3289855, defaultItemProperties()));
     }
 
+    private static DeferredHolder<Item, BannerPatternItem> createPatternItem(String name, Rarity rarity) {
+        final TagKey<BannerPattern> bannerTag = TagKey.create(Registries.BANNER_PATTERN, prefix("pattern_item/" + name));
+        return ITEMS.register(name, () -> new BannerPatternItem(bannerTag, new Item.Properties().stacksTo(1).rarity(rarity)));
+    }
 
     public static Item.Properties defaultItemProperties() {
         return new Item.Properties();

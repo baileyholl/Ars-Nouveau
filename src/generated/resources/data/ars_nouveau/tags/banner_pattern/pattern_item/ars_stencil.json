@@ -1,0 +1,36 @@
+{
+  "values": [
+    {
+      "id": "ars_nouveau:fire",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:water",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:earth",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:air",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:conjuration",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:manipulation",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:abjuration",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:spirals",
+      "required": false
+    }
+  ]
+}
