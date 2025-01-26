@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
-import com.hollingsworth.arsnouveau.client.registry.ModParticles;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
@@ -43,8 +43,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
@@ -111,7 +109,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
     public void setResolver(SpellResolver resolver){
         this.entityData.set(SPELL_RESOLVER, resolver);
         this.spellResolver = resolver;
-        this.trailEmitter = new ParticleEmitter(() -> this.getPosition(0), this::getRotationVector, this.resolver().spell.particleTimeline().trailEffect);
+        this.trailEmitter = createEmitter();
     }
 
     @Override
@@ -218,18 +216,6 @@ public class EntityProjectileSpell extends ColoredProjectile {
             setDeltaMovement(vec3d.x * 0.96, (vec3d.y > 0 ? vec3d.y * 0.97 : vec3d.y) - 0.03f, vec3d.z * 0.96);
         }
         this.setPos(x, y, z);
-
-        double yaw = Math.toDegrees(Mth.atan2(-vec3d.z, vec3d.x));
-        // Calculate horizontal distance
-        double horizontalDistance = Math.sqrt(vec3d.x * vec3d.x + vec3d.z * vec3d.z);
-
-        // Calculate pitch
-        double pitch = Math.toDegrees(Math.atan2(-vec3d.y, horizontalDistance));
-
-//        setXRot((float) pitch);
-//        setYRot((float) yaw);
-//        setYHeadRot((float) yaw);
-//        setYBodyRot((float) yaw);
     }
 
 
@@ -237,46 +223,16 @@ public class EntityProjectileSpell extends ColoredProjectile {
         return 2;
     }
 
+    public ParticleEmitter createEmitter(){
+        return new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, this.resolver().spell.particleTimeline().trailEffect);
+    }
+
     public void playParticles() {
         if(trailEmitter == null && resolver() != null) {
-            this.trailEmitter = new ParticleEmitter(() -> this.getPosition(0), this::getRotationVector, this.resolver().spell.particleTimeline().trailEffect);
+            this.trailEmitter = createEmitter();
         }
-//        if(this.trailEmitter != null) {
-//            //this.trailEmitter.tick(level);
-//            this.trailEmitter.age++;
-        double spiralRadius = 1f;  // Radius of the spiral
-        double spiralSpeed = 1;  // Speed at which the particles move along the spiral
-        double x = this.getX();
-        double y = this.getY();
-        double z = this.getZ();
-        double prevX = this.xOld;
-        double prevY = this.yOld;
-        double prevZ = this.zOld;
-        double distance = Math.sqrt(Math.pow(x - prevX, 2) + Math.pow(y - prevY, 2) + Math.pow(z - prevZ, 2));
-        int interpolationSteps = Math.max(1, (int) (distance / 0.1));
-        for (int step = 0; step <= interpolationSteps; step++) {
-            double t = (double) step / interpolationSteps;
-            double interpolatedX = prevX + t * (x - prevX);
-            double interpolatedY = prevY + t * (y - prevY);
-            double interpolatedZ = prevZ + t * (z - prevZ);
-
-            // Interpolate the angle for the current step
-            double interpolatedAge = age + t;
-            double angle = interpolatedAge * spiralSpeed;
-            float localX = (float) (Math.cos(angle) * spiralRadius);
-            float localZ = 0;
-            float localY = (float) (Math.sin(angle) * spiralRadius);
-            float xRotRadians = (float) Math.toRadians(xRot);
-            float yRotRadians = (float) Math.toRadians(yRot);
-            Matrix4f transform = new Matrix4f();
-            transform.identity()
-                    .translate(new Vector3f((float) interpolatedX, (float) interpolatedY, (float) interpolatedZ))
-                    .rotateY(yRotRadians)
-                    .rotateX(-xRotRadians);
-
-            Vector3f localPos = new Vector3f(localX, localY, localZ);
-            transform.transformPosition(localPos);
-            level.addParticle(ModParticles.CUSTOM_TYPE.get(), localPos.x, localPos.y, localPos.z, 0, 0, 0);
+        if(this.trailEmitter != null) {
+            this.trailEmitter.tick(level);
         }
     }
 

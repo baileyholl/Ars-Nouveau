@@ -64,10 +64,14 @@ public class EntitySpellArrow extends Arrow {
         return this.entityData.get(SPELL_RESOLVER);
     }
 
+    public ParticleEmitter createEmitter(){
+        return new ParticleEmitter(() -> this.position, this::getRotationVector, this.resolver().spell.particleTimeline().trailEffect);
+    }
+
     public void setResolver(SpellResolver resolver){
         this.entityData.set(SPELL_RESOLVER, resolver);
         this.spellResolver = resolver;
-        this.trailEmitter = new ParticleEmitter(() -> this.getPosition(0), this::getRotationVector, this.resolver().spell.particleTimeline().trailEffect);
+        this.trailEmitter = createEmitter();
     }
 
     public void setDefaultColors() {
@@ -203,7 +207,7 @@ public class EntitySpellArrow extends Arrow {
 //                }
 //            }
             if(trailEmitter == null && resolver() != null) {
-                this.trailEmitter = new ParticleEmitter(() -> this.getPosition(0), this::getRotationVector, this.resolver().spell.particleTimeline().trailEffect);
+                this.trailEmitter = createEmitter();
             }
             if(trailEmitter != null){
                 trailEmitter.tick(level);

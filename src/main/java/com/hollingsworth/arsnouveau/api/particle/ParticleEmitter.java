@@ -10,8 +10,8 @@ public class ParticleEmitter {
 
     public Vec3 offset;
     public Supplier<Vec3> position;
-    public IParticleConfig particleConfig;
     public Vec3 previousPosition;
+    public IParticleConfig particleConfig;
     public int age;
     public Supplier<Vec2> rotation;
     public Vec2 rotationOffset;
@@ -65,8 +65,9 @@ public class ParticleEmitter {
         if(this.previousPosition == null){
             this.previousPosition = this.getAdjustedPosition();
         }
-        particleConfig.tick(level, getAdjustedPosition().x, getAdjustedPosition().y, getAdjustedPosition().z, previousPosition.x, previousPosition.y, previousPosition.z);
-        this.previousPosition = this.getAdjustedPosition();
+        Vec3 pos = getAdjustedPosition();
+        particleConfig.tick(level, pos.x, pos.y, pos.z, previousPosition.x, previousPosition.y, previousPosition.z);
+        this.previousPosition = pos;
         this.age++;
     }
 
