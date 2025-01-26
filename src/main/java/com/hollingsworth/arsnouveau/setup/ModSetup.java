@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
+import com.hollingsworth.arsnouveau.api.registry.ParticleConfigRegistry;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
@@ -10,6 +11,7 @@ import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
@@ -21,6 +23,8 @@ public class ModSetup {
     public static DeferredHolder<TrunkPlacerType<?>, TrunkPlacerType<MagicTrunkPlacer>> MAGIC_TRUNK_PLACER = TRUNK_PLACER_TYPE_DEFERRED_REGISTER.register("magic_trunk_placer", () -> new TrunkPlacerType<>(MagicTrunkPlacer.CODEC));
 
     public static void registers(IEventBus modEventBus) {
+        modEventBus.addListener(ModSetup::registerRegistries);
+
         ItemsRegistry.ITEMS.register(modEventBus);
         BlockRegistry.BLOCKS.register(modEventBus);
         BlockRegistry.BLOCK_ENTITIES.register(modEventBus);
@@ -47,6 +51,11 @@ public class ModSetup {
         CreativeTabRegistry.TABS.register(modEventBus);
         DataSerializers.DS.register(modEventBus);
         AttachmentsRegistry.ATTACHMENT_TYPES.register(modEventBus);
+        ParticleConfigRegistry.PARTICLE_CONFIG.register(modEventBus);
+    }
+
+    public static void registerRegistries(NewRegistryEvent event) {
+        event.register(ParticleConfigRegistry.PARTICLE_CONFIG_REGISTRY);
     }
 
     public static void registerEvents(RegisterEvent event) {
