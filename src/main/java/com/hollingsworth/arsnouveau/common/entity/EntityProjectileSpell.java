@@ -372,7 +372,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
                     this.resolver().onResolveEffect(this.level, blockraytraceresult);
                 }
                 Networking.sendToNearbyClient(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                        BlockPos.containing(result.getLocation()).below(), getParticleColor()));
+                        BlockPos.containing(result.getLocation()), getParticleColor()));
                 attemptRemoval();
             }
         }

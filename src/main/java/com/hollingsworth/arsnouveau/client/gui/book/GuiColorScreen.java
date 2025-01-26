@@ -1,18 +1,12 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.particle.ParticleTimeline;
-import com.hollingsworth.arsnouveau.api.particle.configurations.BurstConfiguration;
-import com.hollingsworth.arsnouveau.api.particle.configurations.SpiralConfiguration;
 import com.hollingsworth.arsnouveau.client.gui.BookSlider;
 import com.hollingsworth.arsnouveau.client.gui.buttons.ANButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
-import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.RainbowParticleColor;
-import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketUpdateParticleTimeline;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellColorAll;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellColors;
 import net.minecraft.client.gui.GuiGraphics;
@@ -141,7 +135,6 @@ public class GuiColorScreen extends BaseBook {
     public void onSaveClick(Button button) {
         ParticleColor particleColor = new ParticleColor(redW.getValue(), greenW.getValue(), blueW.getValue());
         Networking.sendToServer(new PacketUpdateSpellColors(slot, particleColor, this.stackHand == InteractionHand.MAIN_HAND));
-        Networking.sendToServer(new PacketUpdateParticleTimeline(slot, new ParticleTimeline(new SpiralConfiguration(ModParticles.CUSTOM_TYPE.get()), new BurstConfiguration(GlowParticleData.createData(particleColor))), this.stackHand == InteractionHand.MAIN_HAND));
     }
 
     public void onSaveAllClick(Button button) {

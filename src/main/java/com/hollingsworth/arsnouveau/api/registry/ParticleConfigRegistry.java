@@ -19,4 +19,7 @@ public class ParticleConfigRegistry {
     public static final DeferredHolder<IParticleType<?>, IParticleType<TrailConfiguration>> TRAIL_TYPE = PARTICLE_CONFIG.register("trail", () -> new SimpleParticleType<>(TrailConfiguration.CODEC, TrailConfiguration.STREAM));
     public static final DeferredHolder<IParticleType<?>, IParticleType<SpiralConfiguration>> SPIRAL_TYPE = PARTICLE_CONFIG.register("spiral", () -> new SimpleParticleType<>(SpiralConfiguration.CODEC, SpiralConfiguration.STREAM));
 
+    public static final DeferredHolder<IParticleType<?>, IParticleType<HelixConfiguration>> HELIX_TYPE = PARTICLE_CONFIG.register("helix", () -> new SimpleParticleType<>(HelixConfiguration.CODEC, HelixConfiguration.STREAM));
+
+
 }

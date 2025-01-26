@@ -158,6 +158,14 @@ public abstract class AbstractCaster<T extends AbstractCaster<T>> implements Too
         return setParticles(timeline, getCurrentSlot());
     }
 
+    public ParticleTimeline getParticles() {
+        return getParticles(getCurrentSlot());
+    }
+
+    public ParticleTimeline getParticles(int slot) {
+        return this.getSpell(slot).particleTimeline();
+    }
+
     @NotNull
     public Spell getSpell() {
         return spells.getOrDefault(getCurrentSlot(), new Spell());
