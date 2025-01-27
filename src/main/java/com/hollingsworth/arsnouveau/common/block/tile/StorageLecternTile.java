@@ -282,6 +282,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         }
         this.mainLecternPos = storedPos.immutable();
         this.connectedInventories = new ArrayList<>();
+        this.invalidateCapabilities();
         PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.lectern_chained", storedPos.getX(), storedPos.getY(), storedPos.getZ()));
         updateBlock();
     }
