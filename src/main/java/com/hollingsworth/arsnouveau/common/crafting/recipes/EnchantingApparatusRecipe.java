@@ -6,6 +6,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -84,7 +85,9 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
         ItemStack reagent = input.catalyst();
         if (keepNbtOfReagent) {
             result.applyComponents(reagent.getComponentsPatch());
-            result.setDamageValue(0);
+            if (result.has(DataComponents.DAMAGE)) {
+                result.setDamageValue(0);
+            }
         }
         return result.copy();
     }
