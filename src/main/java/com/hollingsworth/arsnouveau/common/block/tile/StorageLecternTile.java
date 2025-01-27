@@ -252,12 +252,14 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         if (this.connectedInventories.contains(storedPos)) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.removed"));
             this.connectedInventories.remove(storedPos);
+            this.invalidateCapabilities();
         } else {
             if (this.connectedInventories.size() >= this.getMaxConnectedInventories()) {
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.too_many"));
                 return;
             }
             this.connectedInventories.add(storedPos.immutable());
+            this.invalidateCapabilities();
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.from_set"));
         }
         this.mainLecternPos = null;
@@ -515,6 +517,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             CompoundTag c = list.getCompound(i);
             connectedInventories.add(new BlockPos(c.getInt("x"), c.getInt("y"), c.getInt("z")));
         }
+        this.invalidateCapabilities();
         mainLecternPos = null;
         if (compound.contains("mainLecternPos")) {
             mainLecternPos = BlockPos.of(compound.getLong("mainLecternPos"));
