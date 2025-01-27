@@ -168,14 +168,22 @@ public class EventHandler {
     @SubscribeEvent
     public static void livingSpawnEvent(FinalizeSpawnEvent checkSpawn) {
         if (checkSpawn.getLevel() instanceof Level level && !level.isClientSide) {
-            RitualEventQueue.getRitual(level, DenySpawnRitual.class, ritu -> ritu.denySpawn(checkSpawn));
+            for (DenySpawnRitual ritu : RitualEventQueue.getRituals(level, DenySpawnRitual.class)) {
+                if (ritu.denySpawn(checkSpawn)) {
+                    break;
+                }
+            }
         }
     }
 
     @SubscribeEvent
     public static void villageSiegeEvent(VillageSiegeEvent checkSpawn) {
         if (checkSpawn.getLevel() instanceof Level level && !level.isClientSide) {
-            RitualEventQueue.getRitual(level, DenySpawnRitual.class, ritu -> ritu.denySiege(checkSpawn));
+            for (DenySpawnRitual ritu : RitualEventQueue.getRituals(level, DenySpawnRitual.class)) {
+                if (ritu.denySiege(checkSpawn)) {
+                    break;
+                }
+            }
         }
     }
 
