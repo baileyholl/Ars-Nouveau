@@ -100,9 +100,7 @@ public class Networking {
 
     public static void sendToNearbyClient(Level world, BlockPos pos, CustomPacketPayload toSend) {
         if (world instanceof ServerLevel ws) {
-            ws.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false).stream()
-                    .filter(p -> p.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) < 64 * 64)
-                    .forEach(p -> Networking.sendToPlayerClient(toSend, p));
+            PacketDistributor.sendToPlayersTrackingChunk(ws, new ChunkPos(pos), toSend);
         }
     }
 
