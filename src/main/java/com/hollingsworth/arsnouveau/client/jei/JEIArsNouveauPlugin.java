@@ -11,9 +11,11 @@ import com.hollingsworth.arsnouveau.common.spell.effect.EffectCrush;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
+import com.mojang.datafixers.util.Pair;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.ingredients.IIngredientTypeWithSubtypes;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.*;
 import mezz.jei.api.runtime.IJeiRuntime;
@@ -24,9 +26,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -106,6 +111,8 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         registry.addRecipes(ARMOR_RECIPE_TYPE, armorUpgrades);
         registry.addRecipes(BUDDING_CONVERSION_RECIPE_TYPE, buddingConversionRecipes);
         registry.addRecipes(SCRY_RITUAL_RECIPE_TYPE, scryRitualRecipes);
+
+        registry.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, List.of(BlockRegistry.PORTAL_BLOCK.asItem().getDefaultInstance()));
     }
 
     @Override
@@ -151,6 +158,12 @@ public class JEIArsNouveauPlugin implements IModPlugin {
                     school.getTextComponent().getString());
         }
 
+        for (DeferredHolder<Item, ? extends Item> entry : ItemsRegistry.ITEMS.getEntries()) {
+            if (entry.get() instanceof AliasProvider aliasProvider) {
+                Collection<String> aliases = aliasProvider.getAliases().stream().map(AliasProvider.Alias::toTranslationKey).toList();
+                registration.addAliases(VanillaTypes.ITEM_STACK, entry.get().getDefaultInstance(), aliases);
+            }
+        }
     }
 
     private static IJeiRuntime jeiRuntime;

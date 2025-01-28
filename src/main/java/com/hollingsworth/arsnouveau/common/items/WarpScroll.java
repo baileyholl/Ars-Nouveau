@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
+import com.hollingsworth.arsnouveau.client.jei.AliasProvider;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.items.data.WarpScrollData;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -27,10 +28,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public class WarpScroll extends ModItem {
+public class WarpScroll extends ModItem implements AliasProvider {
     public WarpScroll() {
         super(ItemsRegistry.defaultItemProperties().component(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(false)));
     }
@@ -112,5 +114,12 @@ public class WarpScroll extends ModItem {
     public void appendHoverText(@NotNull ItemStack stack, Item.@NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
         stack.addToTooltip(DataComponentRegistry.WARP_SCROLL, context, tooltip2::add, flagIn);
+    }
+
+    @Override
+    public Collection<Alias> getAliases() {
+        return List.of(
+                new Alias("warp_portal", "Warp Portal")
+        );
     }
 }
