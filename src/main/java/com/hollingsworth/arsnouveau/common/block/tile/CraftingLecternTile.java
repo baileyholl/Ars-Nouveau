@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -143,16 +144,23 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 		return getCraftingInv(player.getUUID());
 	}
 
-	public TransientCustomContainer getCraftingInv(UUID uuid) {
-		TransientCustomContainer matrix = craftingMatrices.computeIfAbsent(uuid, (key) -> new TransientCustomContainer(craftingContainer.apply(uuid), 3, 3));
+	public NonNullList<ItemStack> getInitialInventory(int width, int height) {
+		NonNullList<ItemStack> inventory = NonNullList.withSize(width * height, ItemStack.EMPTY);
+
 		if (!legacyCraftMatrix.isEmpty()) {
 			for(int i = 0; i < legacyCraftMatrix.getContainerSize(); ++i) {
 				ItemStack itemstack = legacyCraftMatrix.getItem(i);
-				matrix.setItem(i, itemstack);
+				inventory.set(i, itemstack);
 				legacyCraftMatrix.setItem(i, ItemStack.EMPTY);
 			}
 		}
-		return matrix;
+
+		return inventory;
+	}
+
+	public TransientCustomContainer getCraftingInv(UUID uuid) {
+		NonNullList<ItemStack> initialInventory = getInitialInventory(3, 3);
+        return craftingMatrices.computeIfAbsent(uuid, (key) -> new TransientCustomContainer(craftingContainer.apply(uuid), 3, 3, initialInventory));
 	}
 
 	public ResultContainer getCraftResult(Player player) {
