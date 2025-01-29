@@ -22,7 +22,8 @@ public class DenySpawnRitual extends RangeRitual {
     public boolean deniedSpawn;
 
     public boolean denySpawn(FinalizeSpawnEvent checkSpawn){
-        boolean shouldDeny = checkSpawn.getSpawnType() == MobSpawnType.NATURAL
+        boolean shouldDeny = !this.tile.isOff
+                && checkSpawn.getSpawnType() == MobSpawnType.NATURAL
                 && checkSpawn.getEntity() instanceof Enemy
                 && checkSpawn.getEntity().distanceToSqr(getPos().getX(), getPos().getY(), getPos().getZ()) <= radius * radius;
         if(shouldDeny){
@@ -33,7 +34,7 @@ public class DenySpawnRitual extends RangeRitual {
     }
 
     public boolean denySiege(VillageSiegeEvent checkSpawn) {
-        boolean shouldDeny = checkSpawn.getAttemptedSpawnPos().distanceToSqr(getPos().getX(), getPos().getY(), getPos().getZ()) <= radius * radius;
+        boolean shouldDeny = !this.tile.isOff && getPos() != null && checkSpawn.getAttemptedSpawnPos().distanceToSqr(getPos().getBottomCenter()) <= radius * radius;
         if (shouldDeny) {
             checkSpawn.setCanceled(true);
             deniedSpawn = true;
