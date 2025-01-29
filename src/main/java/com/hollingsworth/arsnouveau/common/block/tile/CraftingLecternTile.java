@@ -160,7 +160,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 
 	public TransientCustomContainer getCraftingInv(UUID uuid) {
 		NonNullList<ItemStack> initialInventory = getInitialInventory(3, 3);
-        return craftingMatrices.computeIfAbsent(uuid, (key) -> new TransientCustomContainer(craftingContainer.apply(uuid), 3, 3, initialInventory));
+		return craftingMatrices.computeIfAbsent(uuid, (key) -> new TransientCustomContainer(craftingContainer.apply(uuid), 3, 3, initialInventory));
 	}
 
 	public ResultContainer getCraftResult(Player player) {
