@@ -154,7 +154,7 @@ dependencies {
         jarJar.pin(it, '1.0.4')
     })
     localRuntime "maven.modrinth:cloth-config:15.0.140+neoforge"
-    localRuntime "curse.maven:immersive-portals-for-forge-355440:6013197"
+  //localRuntime "curse.maven:immersive-portals-for-forge-355440:6013197"
     //implementation "curse.maven:ars-elemental-561470:6086122"
     shade 'org.apache.lucene:lucene-core:10.1.0'
     shade 'org.apache.lucene:lucene-analysis-common:10.1.0'
