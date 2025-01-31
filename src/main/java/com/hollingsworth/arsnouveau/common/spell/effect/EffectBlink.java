@@ -68,7 +68,7 @@ public class EffectBlink extends AbstractEffect {
             return;
         }
 
-        if (isRealPlayer(shooter)) {
+        if (isNotFakePlayer(shooter)) {
             WarpScrollData scrollData = shooter.getOffhandItem().get(DataComponentRegistry.WARP_SCROLL);
             if (scrollData != null && scrollData.isValid() && scrollData.canTeleportWithDim(world)) {
                 warpEntity(rayTraceResult.getEntity(), scrollData);
@@ -116,7 +116,7 @@ public class EffectBlink extends AbstractEffect {
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Vec3 vec = rayTraceResult.getLocation();
-        if (isRealPlayer(shooter) && isValidTeleport(world, (rayTraceResult).getBlockPos().relative((rayTraceResult).getDirection()))) {
+        if (isNotFakePlayer(shooter) && isValidTeleport(world, (rayTraceResult).getBlockPos().relative((rayTraceResult).getDirection()))) {
             warpEntity(shooter, spellContext.level, BlockPos.containing(vec));
         }
     }

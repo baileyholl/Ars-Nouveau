@@ -75,8 +75,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public void summonLivingEntity(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats augments, SpellContext spellContext, @Nullable SpellResolver resolver, ISummon summon) {
-        if (isRealPlayer(shooter))
-            summon.setOwnerID(shooter.getUUID());
+        summon.setOwnerID(shooter.getUUID());
         LivingEntity summonLivingEntity = summon.getLivingEntity();
         if (summonLivingEntity != null) {
             world.addFreshEntity(summon.getLivingEntity());

@@ -51,8 +51,8 @@ public class EffectName extends AbstractEffect {
             item.getItem().set(DataComponents.CUSTOM_NAME, newName);
         }
 
-        if (shooter instanceof Player player && isRealPlayer(shooter) && player.equals(entity)) {
-            ItemStack offhand = player.getOffhandItem();
+        ItemStack offhand = shooter.getOffhandItem();
+        if (!offhand.isEmpty()) {
             offhand.set(DataComponents.CUSTOM_NAME, newName);
         }
     }
@@ -65,8 +65,8 @@ public class EffectName extends AbstractEffect {
             ItemStack stack = slotRef.getHandler().getStackInSlot(slotRef.getSlot());
             newName = stack.getDisplayName().plainCopy();
         }
-        if (newName == null && isRealPlayer(shooter) && shooter instanceof Player player) {
-            ItemStack stack = StackUtil.getHeldCasterToolOrEmpty(player);
+        if (newName == null) {
+            ItemStack stack = StackUtil.getHeldCasterToolOrEmpty(shooter);
             if (stack != ItemStack.EMPTY) {
                 AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
                 newName = Component.literal(caster.getSpellName());
