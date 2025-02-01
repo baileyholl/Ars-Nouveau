@@ -41,7 +41,7 @@ public class DecideStarbyActionState extends StarbyState{
             }
             behavior.takeItemBackoff = 5 + starbuncle.getRandom().nextInt(20);
         }
-        if(!starbuncle.isPassenger() && !pickupDisabled && starbuncle.getStarbuncleWithSpace() != null){
+        if(!pickupDisabled && starbuncle.getStarbuncleWithSpace() != null){
             if(behavior.findItemBackoff <= 0) {
                 List<ItemEntity> nearbyItems = FindItemState.nearbyItems(starbuncle, behavior);
                 if (!nearbyItems.isEmpty()) {

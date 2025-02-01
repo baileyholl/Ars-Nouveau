@@ -65,6 +65,10 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     @Override
     public void tick() {
         super.tick();
+        if (this.starbuncle.isPassenger()) {
+            return;
+        }
+
         if(!level.isClientSide) {
             if(berryBackoff > 0){
                 berryBackoff--;
