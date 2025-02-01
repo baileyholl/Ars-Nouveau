@@ -167,14 +167,22 @@ public class SourceUtil {
     }
 
     /**
-     * Searches for nearby mana jars that have enough mana.
-     * Returns the position where the source was taken, or null if none were found.
+     * Searches for source in nearby source jars.
+     * Returns whether enough source was found.
      */
     public static boolean hasSourceNearby(BlockPos pos, Level world, int range, int source) {
-        Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) -> world.getBlockEntity(b) instanceof SourceJarTile jar && jar.getSource() >= source);
-        if(loc.isPresent()){
-            return true;
+        for (var provider : SourceUtil.canTakeSource(pos, world, range)) {
+            ISourceTile sourceTile = provider.getSource();
+            if (sourceTile instanceof CreativeSourceJarTile) {
+                return true;
+            }
+
+            source -= sourceTile.removeSource(source, true);
+            if (source <= 0) {
+                return true;
+            }
         }
-        return SourceManager.INSTANCE.hasSourceNearby(pos, world, range, source) != null;
+
+        return false;
     }
 }
