@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +33,10 @@ public abstract class AbstractSummonCharm extends ModItem {
         } else {
             result = useOnBlock(context, world, pos);
         }
-        if (result == InteractionResult.SUCCESS) context.getItemInHand().shrink(1);
+        Player player = context.getPlayer();
+        if (result == InteractionResult.SUCCESS && (player == null || !player.hasInfiniteMaterials())) {
+            context.getItemInHand().shrink(1);
+        }
 
         return result;
     }
