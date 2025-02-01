@@ -53,10 +53,11 @@ public class DecideStarbyActionState extends StarbyState{
                 BlockPos takeBerryPos = HarvestBerryState.getNearbyManaBerry(starbuncle.level, starbuncle);
                 if (takeBerryPos != null
                         && behavior.getValidStorePos(new ItemStack(BlockRegistry.SOURCEBERRY_BUSH)) != null) {
-                    behavior.nextBerryBackoff = 0;
+                    behavior.nextBerryBackoff = 20;
                     return new HarvestBerryState(starbuncle, behavior, takeBerryPos);
                 }
                 behavior.berryBackoff = 20 * behavior.nextBerryBackoff + starbuncle.getRandom().nextInt(20);
+                // Cap backoff to 10s
                 behavior.nextBerryBackoff = Math.min(20 * 10, behavior.nextBerryBackoff + 20);
             }
         }
