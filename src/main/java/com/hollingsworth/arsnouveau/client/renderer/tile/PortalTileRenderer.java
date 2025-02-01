@@ -29,10 +29,11 @@ public class PortalTileRenderer<T extends PortalTile> implements BlockEntityRend
         int i = this.getPasses(d0);
         float f = this.getOffset();
         Matrix4f matrix4f = matrixStackIn.last().pose();
-        this.renderCube(tileEntityIn, f, 0.10F, matrix4f, bufferIn.getBuffer(RenderType.endPortal()));
+        VertexConsumer buffer = bufferIn.getBuffer(RenderType.endPortal());
+        this.renderCube(tileEntityIn, f, 0.10F, matrix4f, buffer);
 
         for (int j = 1; j < i; ++j) {
-            this.renderCube(tileEntityIn, f, 2.0F / (float) (35 - j), matrix4f, bufferIn.getBuffer( RenderType.endPortal()));
+            this.renderCube(tileEntityIn, f, 2.0F / (float) (35 - j), matrix4f, buffer);
         }
     }
 

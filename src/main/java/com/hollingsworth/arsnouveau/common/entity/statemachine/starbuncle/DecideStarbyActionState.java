@@ -41,7 +41,7 @@ public class DecideStarbyActionState extends StarbyState{
             }
             behavior.takeItemBackoff = 5 + starbuncle.getRandom().nextInt(20);
         }
-        if(!pickupDisabled && starbuncle.getStarbuncleWithSpace() != null){
+        if(!starbuncle.isPassenger() && !pickupDisabled && starbuncle.getStarbuncleWithSpace() != null){
             if(behavior.findItemBackoff <= 0) {
                 List<ItemEntity> nearbyItems = FindItemState.nearbyItems(starbuncle, behavior);
                 if (!nearbyItems.isEmpty()) {
@@ -53,9 +53,11 @@ public class DecideStarbyActionState extends StarbyState{
                 BlockPos takeBerryPos = HarvestBerryState.getNearbyManaBerry(starbuncle.level, starbuncle);
                 if (takeBerryPos != null
                         && behavior.getValidStorePos(new ItemStack(BlockRegistry.SOURCEBERRY_BUSH)) != null) {
+                    behavior.nextBerryBackoff = 0;
                     return new HarvestBerryState(starbuncle, behavior, takeBerryPos);
                 }
-                behavior.berryBackoff = 20 + starbuncle.getRandom().nextInt(20);
+                behavior.berryBackoff = 20 * behavior.nextBerryBackoff + starbuncle.getRandom().nextInt(20);
+                behavior.nextBerryBackoff = Math.min(20 * 10, behavior.nextBerryBackoff + 20);
             }
         }
         if(bedPos != null  && starbuncle.getBedBackoff() <= 0){
