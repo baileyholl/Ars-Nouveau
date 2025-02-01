@@ -51,7 +51,9 @@ public class FamiliarStarbuncle extends FamiliarEntity {
         if (!player.level.isClientSide && player.equals(getOwner())) {
             ItemStack stack = player.getItemInHand(hand);
             if (stack.is(Tags.Items.NUGGETS_GOLD)) {
-                stack.shrink(1);
+                if (!player.hasInfiniteMaterials()) {
+                    stack.shrink(1);
+                }
                 RitualScrying.grantScrying((ServerPlayer) player, 3 * 20 * 60, new CompoundScryer(new TagScryer(Tags.Blocks.ORES_GOLD), new TagScryer(BlockTags.GOLD_ORES)));
                 return InteractionResult.SUCCESS;
             }

@@ -97,7 +97,7 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
     }
 
     protected void usePlayerItem(Player p_175505_1_, ItemStack p_175505_2_) {
-        if (!p_175505_1_.getAbilities().instabuild) {
+        if (!p_175505_1_.hasInfiniteMaterials()) {
             p_175505_2_.shrink(1);
         }
     }

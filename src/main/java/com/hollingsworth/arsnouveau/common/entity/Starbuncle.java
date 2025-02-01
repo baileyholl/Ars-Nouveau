@@ -484,7 +484,9 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             level.addFreshEntity(carbuncle);
             carbuncle.restoreFromTag();
             carbuncle.startRiding(toRide);
-            stack.shrink(1);
+            if (!player.hasInfiniteMaterials()) {
+                stack.shrink(1);
+            }
             return InteractionResult.SUCCESS;
         }
 
@@ -493,7 +495,9 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             if (color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(carbyColors).contains(color.getName()))
                 return InteractionResult.SUCCESS;
             setColor(color.getName());
-            player.getMainHandItem().shrink(1);
+            if (!player.hasInfiniteMaterials()) {
+                player.getMainHandItem().shrink(1);
+            }
             return InteractionResult.SUCCESS;
         }
 
