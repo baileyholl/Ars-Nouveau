@@ -292,7 +292,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     }
 
     public void setLookAt(Entity entity, float deltaYaw, float deltaPitch) {
-        this.forEachInStack(d -> getLookControl().setLookAt(entity, deltaYaw, deltaPitch));
+        this.forEachInStack(d -> d.getLookControl().setLookAt(entity, deltaYaw, deltaPitch));
     }
 
     public void giveProgress() {
