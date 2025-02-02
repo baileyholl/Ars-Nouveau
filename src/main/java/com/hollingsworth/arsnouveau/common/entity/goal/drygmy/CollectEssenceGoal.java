@@ -23,7 +23,6 @@ public class CollectEssenceGoal extends Goal {
 
     public CollectEssenceGoal(EntityDrygmy drygmy) {
         this.drygmy = drygmy;
-        this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK, Goal.Flag.JUMP));
     }
 
     @Override
@@ -61,11 +60,15 @@ public class CollectEssenceGoal extends Goal {
         if (complete || target == null)
             return;
 
-        if(approached) {
+        var rootVehicle = drygmy.getRootVehicle();
+        if (!(rootVehicle.getRootVehicle() instanceof EntityDrygmy lowest)) {
+            return;
+        }
+
+        if((drygmy.equals(lowest) && approached) || (lowest.goalSelector.getAvailableGoals().stream().filter(g -> g.getGoal() instanceof CollectEssenceGoal).findFirst().map(g -> ((CollectEssenceGoal) g.getGoal()).approached).orElse(false))) {
             drygmy.setChannelingEntity(target.getId());
             drygmy.getLookControl().setLookAt(target, 10.0F, (float) drygmy.getMaxHeadXRot());
             drygmy.getNavigation().stop();
-            this.approached = true;
             drygmy.setChanneling(true);
             timeChanneling++;
             if (timeChanneling >= 100) {
@@ -78,16 +81,18 @@ public class CollectEssenceGoal extends Goal {
                 if (homePos.getY() >= targetPos.getY() - 2) {
                     targetPos = targetPos.above(homePos.getY() - targetPos.getY());
                 }
-                EntityFlyingItem.spawn(homePos, (ServerLevel) drygmy.level,
+                if (drygmy.equals(lowest)) {
+                    EntityFlyingItem.spawn(homePos, (ServerLevel) drygmy.level,
                             targetPos, homePos,
                             50,
                             255,
                             20);
+                }
 
                 drygmy.channelCooldown = 100;
                 drygmy.getHome().giveProgress();
             }
-        }else{
+        } else if (!drygmy.isPassenger()) {
             if(timePathing > 20 * 8){
                 approached = true;
                 drygmy.getNavigation().stop();

@@ -19,6 +19,7 @@ import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.FollowMobGoal
 import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.FollowPlayerGoal;
 import com.hollingsworth.arsnouveau.common.items.data.ICharmSerializable;
 import com.hollingsworth.arsnouveau.common.items.data.PersistentFamiliarData;
+import com.hollingsworth.arsnouveau.common.items.summon_charms.DrygmyCharm;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
@@ -117,6 +118,28 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
         if (level.isClientSide || hand != InteractionHand.MAIN_HAND)
             return InteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(hand);
+
+        if (stack.getItem() instanceof DrygmyCharm charm) {
+            EntityDrygmy toRide = this;
+            while (toRide.getFirstPassenger() instanceof EntityDrygmy riding) {
+                toRide = riding;
+            }
+
+            if (toRide.hasPassenger(e -> true)) {
+                return InteractionResult.FAIL;
+            }
+
+            EntityDrygmy drygmy = new EntityDrygmy(level, true);
+            drygmy.homePos = toRide.homePos;
+            drygmy.fromCharmData(stack.getOrDefault(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, new PersistentFamiliarData()));
+            drygmy.setPos(toRide.position().add(0, toRide.getBoundingBox().getYsize(), 0));
+            level.addFreshEntity(drygmy);
+            drygmy.startRiding(toRide);
+            if (!player.hasInfiniteMaterials()) {
+                stack.shrink(1);
+                return InteractionResult.SUCCESS;
+            }
+        }
 
         if (player.getMainHandItem().is(Tags.Items.DYES)) {
             DyeColor color = DyeColor.getColor(stack);
