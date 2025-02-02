@@ -16,9 +16,6 @@ import org.joml.Matrix4f;
 import java.util.Random;
 
 public class PortalTileRenderer<T extends PortalTile> implements BlockEntityRenderer<T> {
-
-    private static final Random RANDOM = new Random(31100L);
-
     public PortalTileRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
 
     }
