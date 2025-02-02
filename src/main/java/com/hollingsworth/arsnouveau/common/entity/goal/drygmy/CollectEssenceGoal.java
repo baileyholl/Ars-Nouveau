@@ -60,7 +60,7 @@ public class CollectEssenceGoal extends Goal {
 
         if (approached) {
             drygmy.setChannelingEntity(target.getId());
-            drygmy.setLookAt(target, 10.0F, (float) drygmy.getMaxHeadXRot());
+            drygmy.lookAtEntity(target);
             drygmy.getNavigation().stop();
             drygmy.setChanneling(true);
             timeChanneling++;

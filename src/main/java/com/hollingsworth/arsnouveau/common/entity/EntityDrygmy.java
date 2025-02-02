@@ -154,10 +154,14 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     }
 
     @Override
+    public boolean isEffectiveAi() {
+        return !this.isPassenger() && super.isEffectiveAi();
+    }
+
+    @Override
     public void tick() {
-        if (!this.isPassenger()) {
-            super.tick();
-        }
+        super.tick();
+
         SummonUtil.healOverTime(this);
         if (!level.isClientSide && channelCooldown > 0) {
             channelCooldown--;
@@ -291,8 +295,8 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
         return count;
     }
 
-    public void setLookAt(Entity entity, float deltaYaw, float deltaPitch) {
-        this.forEachInStack(d -> d.getLookControl().setLookAt(entity, deltaYaw, deltaPitch));
+    public void lookAtEntity(Entity entity) {
+        this.forEachInStack(d -> d.getLookControl().setLookAt(entity, 10.0F, d.getMaxHeadXRot()));
     }
 
     public void giveProgress() {
@@ -380,7 +384,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
         tag.putInt("cooldown", channelCooldown);
         tag.putInt("taming", tamingTime);
         tag.putBoolean("beingTamed", this.entityData.get(BEING_TAMED));
-        if(this.entityData.get(COLOR) != null) {
+        if (this.entityData.get(COLOR) != null) {
             tag.putString("color", this.entityData.get(COLOR));
         }
     }
