@@ -60,6 +60,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipProvider, IDispellable, ICharmSerializable {
 
@@ -154,7 +155,9 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
 
     @Override
     public void tick() {
-        super.tick();
+        if (!this.isPassenger()) {
+            super.tick();
+        }
         SummonUtil.healOverTime(this);
         if (!level.isClientSide && channelCooldown > 0) {
             channelCooldown--;
@@ -253,8 +256,20 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
         return this.entityData.get(CHANNELING);
     }
 
+    public void forEachInStack(Consumer<EntityDrygmy> fn) {
+        var root = this.getRootVehicle();
+        if (root instanceof EntityDrygmy drygmy) {
+            fn.accept(drygmy);
+            for (var passenger : drygmy.getIndirectPassengers()) {
+                if (passenger instanceof EntityDrygmy passengerDrygmy) {
+                    fn.accept(passengerDrygmy);
+                }
+            }
+        }
+    }
+
     public void setChanneling(boolean channeling) {
-        this.entityData.set(CHANNELING, channeling);
+        this.forEachInStack(d -> d.entityData.set(CHANNELING, channeling));
     }
 
     public int getChannelEntity() {
@@ -262,7 +277,29 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     }
 
     public void setChannelingEntity(int entityID) {
-        this.entityData.set(CHANNELING_ENTITY, entityID);
+        this.forEachInStack(d -> d.entityData.set(CHANNELING_ENTITY, entityID));
+    }
+
+    public int countDrygmiesInStack() {
+        var root = this.getRootVehicle();
+        var count = this.equals(root) ? 1 : 0;
+        for (var passenger : this.getIndirectPassengers()) {
+            if (passenger instanceof EntityDrygmy) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public void setLookAt(Entity entity, float deltaYaw, float deltaPitch) {
+        this.forEachInStack(d -> getLookControl().setLookAt(entity, deltaYaw, deltaPitch));
+    }
+
+    public void giveProgress() {
+        var home = this.getHome();
+        if (home != null) {
+            home.progress = Math.min(home.getMaxProgress(), home.progress + this.countDrygmiesInStack());
+        }
     }
 
     @Override

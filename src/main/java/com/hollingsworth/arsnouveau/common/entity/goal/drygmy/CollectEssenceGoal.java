@@ -10,8 +10,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.pathfinder.Path;
 
-import java.util.EnumSet;
-
 public class CollectEssenceGoal extends Goal {
 
     public EntityDrygmy drygmy;
@@ -27,7 +25,7 @@ public class CollectEssenceGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        return drygmy.channelCooldown <= 0 && drygmy.getHome() != null && !drygmy.getHome().isOff;
+        return drygmy.channelCooldown <= 0 && !drygmy.isPassenger() && drygmy.getHome() != null && !drygmy.getHome().isOff;
     }
 
     @Override
@@ -60,14 +58,9 @@ public class CollectEssenceGoal extends Goal {
         if (complete || target == null)
             return;
 
-        var rootVehicle = drygmy.getRootVehicle();
-        if (!(rootVehicle.getRootVehicle() instanceof EntityDrygmy lowest)) {
-            return;
-        }
-
-        if((drygmy.equals(lowest) && approached) || (lowest.goalSelector.getAvailableGoals().stream().filter(g -> g.getGoal() instanceof CollectEssenceGoal).findFirst().map(g -> ((CollectEssenceGoal) g.getGoal()).approached).orElse(false))) {
+        if (approached) {
             drygmy.setChannelingEntity(target.getId());
-            drygmy.getLookControl().setLookAt(target, 10.0F, (float) drygmy.getMaxHeadXRot());
+            drygmy.setLookAt(target, 10.0F, (float) drygmy.getMaxHeadXRot());
             drygmy.getNavigation().stop();
             drygmy.setChanneling(true);
             timeChanneling++;
@@ -81,18 +74,16 @@ public class CollectEssenceGoal extends Goal {
                 if (homePos.getY() >= targetPos.getY() - 2) {
                     targetPos = targetPos.above(homePos.getY() - targetPos.getY());
                 }
-                if (drygmy.equals(lowest)) {
-                    EntityFlyingItem.spawn(homePos, (ServerLevel) drygmy.level,
-                            targetPos, homePos,
-                            50,
-                            255,
-                            20);
-                }
+                EntityFlyingItem.spawn(homePos, (ServerLevel) drygmy.level,
+                        targetPos, homePos,
+                        50,
+                        255,
+                        20);
 
                 drygmy.channelCooldown = 100;
-                drygmy.getHome().giveProgress();
+                drygmy.giveProgress();
             }
-        } else if (!drygmy.isPassenger()) {
+        } else {
             if(timePathing > 20 * 8){
                 approached = true;
                 drygmy.getNavigation().stop();
