@@ -159,15 +159,6 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     }
 
     @Override
-    public void aiStep() {
-        if (this.isPassenger()) {
-            return;
-        }
-
-        super.aiStep();
-    }
-
-    @Override
     public void tick() {
         super.tick();
 
