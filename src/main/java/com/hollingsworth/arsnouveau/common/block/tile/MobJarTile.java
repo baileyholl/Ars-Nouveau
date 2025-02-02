@@ -44,7 +44,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
 
     private CompoundTag extraDataTag;
 
-    public boolean isVisible;
+    public boolean isVisible = true;
 
     public MobJarTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.MOB_JAR_TILE, pos, state);
@@ -58,14 +58,13 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
                     mob.getLookControl().tick();
                 }
 
+                this.isVisible = false;
                 var entity = this.getEntity();
                 if (entity != null) {
                     var camera = Minecraft.getInstance().gameRenderer.getMainCamera();
-                    this.isVisible = false;
 
                     var startPos = camera.getPosition();
                     if (startPos.distanceToSqr(this.getBlockPos().getCenter()) <= 64 * 64) {
-
                         var aabb = entity.getBoundingBoxForCulling();
                         for (var passenger : entity.getPassengers()) {
                             aabb = aabb.minmax(passenger.getBoundingBoxForCulling());
