@@ -26,11 +26,12 @@ public class MobJarRenderer implements BlockEntityRenderer<MobJarTile> {
     }
 
     @Override
-    public void render(MobJarTile pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
-        if (!pBlockEntity.isVisible) {
-            return;
-        }
+    public boolean shouldRender(MobJarTile blockEntity, Vec3 cameraPos) {
+        return blockEntity.isVisible && BlockEntityRenderer.super.shouldRender(blockEntity, cameraPos);
+    }
 
+    @Override
+    public void render(MobJarTile pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
         Entity entity = pBlockEntity.getEntity();
         if(entity == null)
             return;
