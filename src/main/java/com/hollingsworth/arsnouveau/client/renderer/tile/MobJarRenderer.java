@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.block.MobJar;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -26,6 +27,10 @@ public class MobJarRenderer implements BlockEntityRenderer<MobJarTile> {
 
     @Override
     public void render(MobJarTile pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
+        if (!pBlockEntity.isVisible) {
+            return;
+        }
+
         Entity entity = pBlockEntity.getEntity();
         if(entity == null)
             return;
@@ -82,9 +87,15 @@ public class MobJarRenderer implements BlockEntityRenderer<MobJarTile> {
         }else{
             pPartialTick = 0;
         }
-        this.entityRenderer.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, pPartialTick, pPoseStack, pBufferSource, pPackedLight);
-        for(Entity entity1 : entity.getPassengers()){
-            this.entityRenderer.render(entity1, 0.0D, 0.0D, 0.0D, 0.0F, pPartialTick, pPoseStack, pBufferSource, pPackedLight);
+
+        var frustum = Minecraft.getInstance().levelRenderer.getFrustum();
+        var camera = Minecraft.getInstance().gameRenderer.getMainCamera();
+        var camPos = camera.getPosition();
+        if (this.entityRenderer.shouldRender(entity, frustum, camPos.x, camPos.y, camPos.z)) {
+            this.entityRenderer.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, pPartialTick, pPoseStack, pBufferSource, pPackedLight);
+            for (Entity entity1 : entity.getPassengers()) {
+                this.entityRenderer.render(entity1, 0.0D, 0.0D, 0.0D, 0.0F, pPartialTick, pPoseStack, pBufferSource, pPackedLight);
+            }
         }
     }
 }

@@ -60,6 +60,11 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
     }
 
     @Override
+    protected VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return Shapes.empty();
+    }
+
+    @Override
     public ItemInteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         MobJarTile tile = (MobJarTile) pLevel.getBlockEntity(pPos);
         if (tile == null) {
