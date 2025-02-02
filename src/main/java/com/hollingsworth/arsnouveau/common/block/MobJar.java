@@ -61,7 +61,7 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
 
     @Override
     protected VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return Shapes.empty();
+        return Block.box(3, 14, 3, 13, 16, 13);
     }
 
     @Override
