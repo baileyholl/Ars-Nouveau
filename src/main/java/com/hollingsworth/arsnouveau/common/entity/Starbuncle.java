@@ -271,15 +271,6 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     }
 
     @Override
-    public void aiStep() {
-        if (this.isPassenger()) {
-            return;
-        }
-
-        super.aiStep();
-    }
-
-    @Override
     public void tick() {
         try {
             super.tick();
