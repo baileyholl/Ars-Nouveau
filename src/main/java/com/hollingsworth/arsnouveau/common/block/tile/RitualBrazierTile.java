@@ -55,6 +55,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
     public ParticleColor color = ParticleColor.defaultParticleColor();
     public boolean isOff;
     public BlockPos relayPos;
+    public int sourceBackoff;
 
 
     public RitualBrazierTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
@@ -151,10 +152,16 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
                 });
             }
             if (ritual.consumesSource() && ritual.needsSourceNow()) {
-                int cost = ritual.getSourceCost();
-                if (SourceUtil.takeSourceMultipleWithParticles(getBlockPos(), getLevel(), 6, cost) != null) {
-                    ritual.setNeedsSource(false);
-                    updateBlock();
+                if (this.sourceBackoff-- <= 0) {
+                    int cost = ritual.getSourceCost();
+                    if (SourceUtil.takeSourceMultipleWithParticles(getBlockPos(), getLevel(), 6, cost) != null) {
+                        ritual.setNeedsSource(false);
+                        this.sourceBackoff = 0;
+                        updateBlock();
+                    } else {
+                        this.sourceBackoff = 20;
+                        return;
+                    }
                 } else {
                     return;
                 }

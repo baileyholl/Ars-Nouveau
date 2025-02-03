@@ -16,73 +16,41 @@ import org.joml.Matrix4f;
 import java.util.Random;
 
 public class PortalTileRenderer<T extends PortalTile> implements BlockEntityRenderer<T> {
-
-    private static final Random RANDOM = new Random(31100L);
-
     public PortalTileRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
 
     }
 
     public void render(PortalTile tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         if (Config.ALTERNATE_PORTAL_RENDER.get() || tileEntityIn.getBlockState().getValue(PortalBlock.ALTERNATE)) return;
-        double d0 = 5d;
-        int i = this.getPasses(d0);
         float f = this.getOffset();
-        Matrix4f matrix4f = matrixStackIn.last().pose();
-        this.renderCube(tileEntityIn, f, 0.10F, matrix4f, bufferIn.getBuffer(RenderType.endPortal()));
+        Matrix4f pose = matrixStackIn.last().pose();
+        VertexConsumer buffer = bufferIn.getBuffer(RenderType.endPortal());
 
-        for (int j = 1; j < i; ++j) {
-            this.renderCube(tileEntityIn, f, 2.0F / (float) (35 - j), matrix4f, bufferIn.getBuffer( RenderType.endPortal()));
-        }
-    }
-
-    private void renderCube(PortalTile tileEntityIn, float p_228883_2_, float p_228883_3_, Matrix4f p_228883_4_, VertexConsumer p_228883_5_) {
-        float f = (RANDOM.nextFloat() * 0.5F + 0.1F) * p_228883_3_;
-        float f1 = (RANDOM.nextFloat() * 0.5F + 0.4F) * p_228883_3_;
-        float f2 = (RANDOM.nextFloat() * 0.5F + 0.5F) * p_228883_3_;
-        this.renderFace(tileEntityIn, p_228883_4_, p_228883_5_, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, f, f1, f2, Direction.SOUTH);
-        this.renderFace(tileEntityIn, p_228883_4_, p_228883_5_, 0.0F, 1.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, f, f1, f2, Direction.NORTH);
-        this.renderFace(tileEntityIn, p_228883_4_, p_228883_5_, 1.0F, 1.0F, 1.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F, f, f1, f2, Direction.EAST);
-        this.renderFace(tileEntityIn, p_228883_4_, p_228883_5_, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F, 0.0F, f, f1, f2, Direction.WEST);
-        this.renderFace(tileEntityIn, p_228883_4_, p_228883_5_, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, f, f1, f2, Direction.DOWN);
-        this.renderFace(tileEntityIn, p_228883_4_, p_228883_5_, 0.0F, 1.0F, p_228883_2_, p_228883_2_, 1.0F, 1.0F, 0.0F, 0.0F, f, f1, f2, Direction.UP);
-    }
-
-    private void renderFace(PortalTile tileEntityIn, Matrix4f matrix, VertexConsumer iBuilder, float p_228884_4_, float p_228884_5_, float p_228884_6_, float p_228884_7_, float p_228884_8_, float p_228884_9_, float p_228884_10_, float p_228884_11_, float p_228884_12_, float p_228884_13_, float p_228884_14_, Direction direction) {
         var beAxis = tileEntityIn.getBlockState().getValue(PortalBlock.AXIS);
-        var directionAxis = direction.getAxis();
-        // what have I done...
-        if (!tileEntityIn.isHorizontal && (beAxis == Direction.Axis.X && directionAxis == Direction.Axis.Z) || (beAxis == Direction.Axis.Z && directionAxis == Direction.Axis.X)) {
-            iBuilder.addVertex(matrix, p_228884_4_, p_228884_6_, p_228884_8_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);
-            iBuilder.addVertex(matrix, p_228884_5_, p_228884_6_, p_228884_9_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);
-            iBuilder.addVertex(matrix, p_228884_5_, p_228884_7_, p_228884_10_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);
-            iBuilder.addVertex(matrix, p_228884_4_, p_228884_7_, p_228884_11_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);
-
-        } else if (tileEntityIn.isHorizontal && direction.getAxis() == Direction.Axis.Y) {
-            iBuilder.addVertex(matrix, p_228884_4_, p_228884_6_, p_228884_8_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);
-            iBuilder.addVertex(matrix, p_228884_5_, p_228884_6_, p_228884_9_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);
-            iBuilder.addVertex(matrix, p_228884_5_, p_228884_7_, p_228884_10_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);
-            iBuilder.addVertex(matrix, p_228884_4_, p_228884_7_, p_228884_11_).setColor(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F);
-        }
+        this.renderCube(tileEntityIn, beAxis, f, pose, buffer);
     }
 
-    protected int getPasses(double p_191286_1_) {
-        if (p_191286_1_ > 36864.0D) {
-            return 1;
-        } else if (p_191286_1_ > 25600.0D) {
-            return 3;
-        } else if (p_191286_1_ > 16384.0D) {
-            return 5;
-        } else if (p_191286_1_ > 9216.0D) {
-            return 7;
-        } else if (p_191286_1_ > 4096.0D) {
-            return 9;
-        } else if (p_191286_1_ > 1024.0D) {
-            return 11;
-        } else if (p_191286_1_ > 576.0D) {
-            return 13;
-        } else {
-            return p_191286_1_ > 256.0D ? 14 : 15;
+    private void renderCube(PortalTile tileEntityIn, Direction.Axis beAxis, float offset, Matrix4f pose, VertexConsumer vertexConsumer) {
+        this.renderFace(tileEntityIn, pose, vertexConsumer, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, Direction.SOUTH, beAxis);
+        this.renderFace(tileEntityIn, pose, vertexConsumer, 0.0F, 1.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, Direction.NORTH, beAxis);
+        this.renderFace(tileEntityIn, pose, vertexConsumer, 1.0F, 1.0F, 1.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F, Direction.EAST, beAxis);
+        this.renderFace(tileEntityIn, pose, vertexConsumer, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F, 0.0F, Direction.WEST, beAxis);
+        this.renderFace(tileEntityIn, pose, vertexConsumer, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, Direction.DOWN, beAxis);
+        this.renderFace(tileEntityIn, pose, vertexConsumer, 0.0F, 1.0F, offset, offset, 1.0F, 1.0F, 0.0F, 0.0F, Direction.UP, beAxis);
+    }
+
+    private void renderFace(PortalTile tileEntityIn, Matrix4f pose, VertexConsumer vertexConsumer, float x0, float x1, float y0, float y1, float z0, float z1, float z2, float z3, Direction direction, Direction.Axis beAxis) {
+        var directionAxis = direction.getAxis();
+        if (!tileEntityIn.isHorizontal && (beAxis == Direction.Axis.X && directionAxis == Direction.Axis.Z) || (beAxis == Direction.Axis.Z && directionAxis == Direction.Axis.X)) {
+            vertexConsumer.addVertex(pose, x0, y0, z0);
+            vertexConsumer.addVertex(pose, x1, y0, z1);
+            vertexConsumer.addVertex(pose, x1, y1, z2);
+            vertexConsumer.addVertex(pose, x0, y1, z3);
+        } else if (tileEntityIn.isHorizontal && direction.getAxis() == Direction.Axis.Y) {
+            vertexConsumer.addVertex(pose, x0, y0, z0);
+            vertexConsumer.addVertex(pose, x1, y0, z1);
+            vertexConsumer.addVertex(pose, x1, y1, z2);
+            vertexConsumer.addVertex(pose, x0, y1, z3);
         }
     }
 

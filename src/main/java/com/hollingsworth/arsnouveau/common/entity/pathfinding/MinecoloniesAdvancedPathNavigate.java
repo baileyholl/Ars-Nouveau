@@ -147,6 +147,10 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
 
     @Override
     public void tick() {
+        if (this.mob.isPassenger()) {
+            return;
+        }
+
         if (desiredPosTimeout > 0) {
             if (--desiredPosTimeout <= 0) {
                 desiredPos = null;
