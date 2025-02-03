@@ -1,8 +1,6 @@
 package com.hollingsworth.arsnouveau.client.emi;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ScryRitualRecipe;
-import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -18,8 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EmiScryRitualRecipe implements EmiRecipe {
-    public static final ResourceLocation SCRY_RITUAL = ArsNouveau.prefix(RitualLib.SCRYING);
-
     private final ResourceLocation id;
     private final ScryRitualRecipe recipe;
 
