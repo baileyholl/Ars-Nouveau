@@ -35,7 +35,8 @@
   "aef9c054-e96e-4332-944b-9393105b6ac6", "1f62ed4b-91f9-42fa-b331-b7e3e3c0637f", "eb14192a-c53f-44c0-bb13-7f7ff1a0e662",
   "758ca96e-100a-4611-a849-5d76229b6c83", "1cf6b68a-a396-4ac1-8146-21fc314f6455", "f476db17-6995-44ab-b002-0a326959f01a",
   "4a405d17-9e7b-4007-b4e3-a1adcd41c489", "f64bd7f1-ae18-4e9e-834e-eb0caf7f37d4", "ee6d035a-600d-40a3-b444-b987766121ee",
-  "26170985-ac0e-4e3c-b171-141e2193ce32", "d153d78a-99bd-48c1-8c00-ea6ae02c0395", "860802dc-6314-46a6-b991-4ba8e7d061dc"],
+  "26170985-ac0e-4e3c-b171-141e2193ce32", "d153d78a-99bd-48c1-8c00-ea6ae02c0395", "860802dc-6314-46a6-b991-4ba8e7d061dc",
+  "5f6a9e19-7021-4fd3-9873-6beee620f5fa"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -572,6 +573,11 @@
       "color": "gray",
       "name": "Chiaroscuro",
       "bio": "Initially shy and skittish, Chiaroscuro becomes a deeply loyal and affectionate companion once she bonds with you. With an uncanny ability to sense your moods, she's always there to cuddle, comfort, and add a touch of playful mischief to your day!"
+    },{
+      "adopter": "SloppyBox",
+      "color": "purple",
+      "name": "Orion",
+      "bio": "Orion is a traveler he has explored countless worlds throught out the universe and he will continue this journey until the end of time."
     }
   ]
 }
