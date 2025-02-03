@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.*;
@@ -91,7 +90,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
             counter += 1;
         }
 
-        if (counter > craftingLength) {
+        if (counter >= craftingLength) {
             counter = 0;
 
             if (this.isCrafting) {
