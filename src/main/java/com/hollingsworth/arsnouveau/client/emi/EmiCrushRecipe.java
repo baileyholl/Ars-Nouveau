@@ -48,21 +48,21 @@ public class EmiCrushRecipe implements EmiRecipe {
 
     @Override
     public int getDisplayHeight() {
-        return 56;
+        return 86;
     }
 
     @Override
     public void addWidgets(WidgetHolder widgets) {
-        widgets.addSlot(EmiIngredient.of(recipe.input()), 6, 5);
+        widgets.addSlot(EmiIngredient.of(recipe.input()), 4, this.getDisplayHeight() / 2 - 10);
         for (int i = 0; i < recipe.outputs().size(); i++) {
             CrushRecipe.CrushOutput output = recipe.outputs().get(i);
-            widgets.addSlot(EmiStack.of(output.stack()), 50, 5 + 16 * i).recipeContext(this);
+            widgets.addSlot(EmiStack.of(output.stack()), 53, 5 + 16 * i).recipeContext(this);
         }
 
-        widgets.addFillingArrow(22, 6, 40 * 50);
+        widgets.addFillingArrow(24, this.getDisplayHeight() / 2 - 10, 40 * 50);
         for (int i = 0; i < recipe.outputs().size(); i++) {
             CrushRecipe.CrushOutput output = recipe.outputs().get(i);
-            widgets.addText(Component.literal(Math.round(100 * output.chance() - 0.5f) + "%"), 98, 11 + 17 * i, 10,false);
+            widgets.addText(Component.literal(Math.round(100 * output.chance() - 0.5f) + "%"), 97, 11 + 17 * i, 10,false);
             if(output.maxRange() > 1) {
                 widgets.addText(Component.literal("1-" + output.maxRange()), 75, 11 + 17 * i, 10,false);
             }
