@@ -23,6 +23,7 @@
     "EntityMixin",
     "LivingAccessor",
     "MobAccessor",
+    "ParticleAccessor",
     "PufferfishAccessor",
     "camera.ANServerPlayerMixin",
     "camera.ChunkMapMixin",

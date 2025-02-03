@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.particle.ParticleTimeline;
 import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
@@ -210,6 +211,11 @@ public class GuiSpellBook extends BaseBook {
                 throw new RuntimeException(e);
             }
         }).withTooltip(Component.translatable("ars_nouveau.gui.discord")));
+
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 164, 0, 0, 23, 20, 23, 20, "textures/gui/color_wheel_bookmark.png", (b) ->{
+            ParticleTimeline timeline = SpellCasterRegistry.from(bookStack).getParticles();
+            Minecraft.getInstance().setScreen(new ParticleScreen(timeline, selectedSpellSlot, this.hand));
+        }).withTooltip(Component.translatable("ars_nouveau.gui.color")));
 
         this.nextButton = addRenderableWidget(new PageButton(bookRight - 20, bookBottom - 6, true, this::onPageIncrease, true));
         this.previousButton = addRenderableWidget(new PageButton(bookLeft - 5, bookBottom - 6, false, this::onPageDec, true));

@@ -25,6 +25,9 @@ public class ModParticles {
     public static final DeferredHolder<ParticleType<?>, ParticleType<ColoredDynamicTypeData>> SPARKLE_TYPE = PARTICLES.register("sparkle", SparkleParticleType::new);
     public static final DeferredHolder<ParticleType<?>, ParticleType<HelixParticleTypeData>> HELIX_TYPE = PARTICLES.register(HelixParticleData.NAME, HelixParticleType::new);
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> BUBBLE_TYPE = PARTICLES.register("bubble", () -> new SimpleParticleType(false));
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> CUSTOM_TYPE = PARTICLES.register("custom", () -> new SimpleParticleType(false));
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SMOKE_TYPE = PARTICLES.register("smoke", () -> new SimpleParticleType(false));
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SNOW_TYPE = PARTICLES.register("snow", () -> new SimpleParticleType(false));
 
     @SubscribeEvent
     public static void registerFactories(RegisterParticleProvidersEvent evt) {
@@ -33,5 +36,8 @@ public class ModParticles {
         Minecraft.getInstance().particleEngine.register(SPARKLE_TYPE.get(), SparkleParticleProvider::new);
         Minecraft.getInstance().particleEngine.register(HELIX_TYPE.get(), HelixParticleData::new);
         Minecraft.getInstance().particleEngine.register(BUBBLE_TYPE.get(), BubbleParticle.Provider::new);
+        Minecraft.getInstance().particleEngine.register(CUSTOM_TYPE.get(), CustomParticle.Provider::new);
+        Minecraft.getInstance().particleEngine.register(SMOKE_TYPE.get(), SmokeParticle.Provider::new);
+        Minecraft.getInstance().particleEngine.register(SNOW_TYPE.get(), SnowParticle.Provider::new);
     }
 }
