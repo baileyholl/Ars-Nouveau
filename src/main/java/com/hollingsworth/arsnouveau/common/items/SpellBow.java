@@ -84,7 +84,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
                     }
                 }
 
-                return CommonHooks.getProjectile(playerEntity, shootable, playerEntity.abilities.instabuild ? new ItemStack(Items.ARROW) : ItemStack.EMPTY);
+                return CommonHooks.getProjectile(playerEntity, shootable, playerEntity.hasInfiniteMaterials() ? new ItemStack(Items.ARROW) : ItemStack.EMPTY);
             }
         }
     }
@@ -103,7 +103,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
             return InteractionResultHolder.consume(itemstack);
         }
 
-        if (!playerIn.abilities.instabuild && !hasAmmo) {
+        if (!playerIn.hasInfiniteMaterials() && !hasAmmo) {
             return InteractionResultHolder.fail(itemstack);
         } else {
             playerIn.startUsingItem(handIn);
@@ -125,7 +125,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
         //Copied from BowItem, so we can spawn arrows in case there are no items.
         if (!(entityLiving instanceof Player playerentity))
             return;
-        boolean isInfinity = playerentity.abilities.instabuild || bowStack.getEnchantmentLevel(HolderHelper.unwrap(worldIn, Enchantments.INFINITY)) > 0;
+        boolean isInfinity = playerentity.hasInfiniteMaterials() || bowStack.getEnchantmentLevel(HolderHelper.unwrap(worldIn, Enchantments.INFINITY)) > 0;
         ItemStack arrowStack = findAmmo(playerentity, bowStack);
 
         int useTime = this.getUseDuration(bowStack, entityLiving) - timeLeft;
@@ -152,7 +152,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
         boolean didCastSpell = false;
         if (f >= 0.1D) {
 
-            boolean isArrowInfinite = playerentity.abilities.instabuild || (arrowStack.getItem() instanceof ArrowItem arrowItem && arrowItem.isInfinite(arrowStack, bowStack, playerentity));
+            boolean isArrowInfinite = playerentity.hasInfiniteMaterials() || (arrowStack.getItem() instanceof ArrowItem arrowItem && arrowItem.isInfinite(arrowStack, bowStack, playerentity));
             if (!worldIn.isClientSide) {
                 int use = EnchantmentHelper.processAmmoUse((ServerLevel) worldIn, bowStack, arrowStack, 1);
                 ArrowItem arrowitem = (ArrowItem) (arrowStack.getItem() instanceof ArrowItem ? arrowStack.getItem() : Items.ARROW);
@@ -200,7 +200,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
                     }
                     addArrow(arr, bowStack, arrowStack, isArrowInfinite, playerentity);
                 }
-                if (!isArrowInfinite && !playerentity.abilities.instabuild) {
+                if (!isArrowInfinite && !playerentity.hasInfiniteMaterials()) {
                     arrowStack.shrink(use);
                 }
             }
@@ -222,7 +222,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
             abstractarrowentity.setRemainingFireTicks(100);
         }
 
-        if (isArrowInfinite || playerentity.abilities.instabuild && (arrowStack.getItem() == Items.SPECTRAL_ARROW || arrowStack.getItem() == Items.TIPPED_ARROW)) {
+        if (isArrowInfinite || playerentity.hasInfiniteMaterials() && (arrowStack.getItem() == Items.SPECTRAL_ARROW || arrowStack.getItem() == Items.TIPPED_ARROW)) {
             abstractarrowentity.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
         }
         playerentity.level.addFreshEntity(abstractarrowentity);

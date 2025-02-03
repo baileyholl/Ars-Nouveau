@@ -38,7 +38,7 @@ public class RitualTablet extends ModItem {
             }
 
             tile.setRitual(ritual.getRegistryName());
-            if (!context.getPlayer().isCreative())
+            if (!context.getPlayer().hasInfiniteMaterials())
                 context.getItemInHand().shrink(1);
             return InteractionResult.CONSUME;
         }

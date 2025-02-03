@@ -123,7 +123,9 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
             if (color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(COLORS).contains(color.getName()))
                 return InteractionResult.SUCCESS;
             this.entityData.set(COLOR, color.getName());
-            player.getMainHandItem().shrink(1);
+            if (!player.hasInfiniteMaterials()) {
+                player.getMainHandItem().shrink(1);
+            }
             return InteractionResult.SUCCESS;
         }
         return super.mobInteract(player, hand);
