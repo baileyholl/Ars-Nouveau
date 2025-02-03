@@ -1,3 +1,5 @@
+All assets including textures and models are All Rights Reserved unless otherwise stated or explicit permission is granted. You may not redistribute or modify any of the assets without explicit permission from the author.
+
                    GNU LESSER GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
