@@ -92,7 +92,9 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
             if (color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(COLORS).contains(color.getName()))
                 return InteractionResult.SUCCESS;
             setColor(color.getName());
-            player.getMainHandItem().shrink(1);
+            if (!player.hasInfiniteMaterials()) {
+                player.getMainHandItem().shrink(1);
+            }
             return InteractionResult.SUCCESS;
         }
         return super.mobInteract(player, hand);

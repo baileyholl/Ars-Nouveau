@@ -78,7 +78,7 @@ public class EffectInteract extends AbstractEffect {
                 return false;
             }
             ItemStack pickup = bp.pickupBlock(player, world, target, targetState);
-            if (!pickup.isEmpty() && !player.getAbilities().instabuild) {
+            if (!pickup.isEmpty() && !player.hasInfiniteMaterials()) {
                 bp.getPickupSound(targetState).ifPresent(sound -> player.playSound(sound, 1.0F, 1.0F));
                 world.gameEvent(player, GameEvent.FLUID_PICKUP, target);
                 ItemStack result = ItemUtils.createFilledResult(item, player, pickup);
@@ -101,7 +101,7 @@ public class EffectInteract extends AbstractEffect {
         }
         boolean placed = bucket.emptyContents(player, world, pos, rayTraceResult, item);
         if (placed) {
-            if (!player.getAbilities().instabuild) {
+            if (!player.hasInfiniteMaterials()) {
                 ItemStack result = ItemUtils.createFilledResult(item, player, new ItemStack(Items.BUCKET));
                 if(player.getItemInHand(hand).isEmpty()){
                     player.setItemInHand(hand, result);

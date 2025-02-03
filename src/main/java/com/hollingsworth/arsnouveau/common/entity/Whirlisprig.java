@@ -155,7 +155,9 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
         String color = getColorFromStack(stack);
         if (color != null && !getColor().equals(color)) {
             this.entityData.set(COLOR, color);
-            stack.shrink(1);
+            if (!player.hasInfiniteMaterials()) {
+                stack.shrink(1);
+            }
             return InteractionResult.SUCCESS;
         }
 
