@@ -1391,6 +1391,16 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.slots_armor", "Thread Slots and Tiers");
         add("ars_nouveau.thread_tier", "Tier %s thread slot");
         add("ars_nouveau.search_desc", "Search for any entry, item, or concepts such as Glyph, Familiar, Ritual, Spell School, etc.");
+
+        // EMI Categories
+        add("emi.category.ars_nouveau.apparatus_enchanting", data.get("ars_nouveau.enchanting"));
+        add("emi.category.ars_nouveau.scry_ritual", data.get("ars_nouveau.scry_ritual_recipe"));
+        add("emi.category.ars_nouveau.crush", data.get("ars_nouveau.crush_recipe"));
+        add("emi.category.ars_nouveau.glyph_recipe", data.get("block.ars_nouveau.scribes_table"));
+        add("emi.category.ars_nouveau.budding_conversion", data.get("ars_nouveau.budding_conversion_recipe"));
+        add("emi.category.ars_nouveau.enchanting_apparatus", data.get("ars_nouveau.enchanting_apparatus"));
+        add("emi.category.ars_nouveau.armor_upgrade", data.get("ars_nouveau.armor_upgrade"));
+        add("emi.category.ars_nouveau.imbuement", data.get("block.ars_nouveau.imbuement_chamber"));
     }
 
     public void addCategory(String key, String value){
