@@ -27,7 +27,7 @@ public class EffectCraft extends AbstractEffect {
 
     @Override
     public void onResolve(HitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (shooter instanceof Player playerEntity && isRealPlayer(shooter)) {
+        if (shooter instanceof Player playerEntity && isNotFakePlayer(shooter)) {
             playerEntity.openMenu(new SimpleMenuProvider((id, inventory, player) -> new CustomWorkbench(id, inventory, ContainerLevelAccess.create(player.getCommandSenderWorld(), player.blockPosition())), CONTAINER_NAME));
         }
     }
