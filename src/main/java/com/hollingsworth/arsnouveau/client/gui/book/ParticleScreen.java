@@ -26,12 +26,12 @@ public class ParticleScreen extends BaseBook {
         addRenderableWidget(new GuiImageButton(bookLeft + 25, bookBottom - 30, 0, 0, 37, 12, 37, 12, "textures/gui/save_icon.png", this::onCreate));
         addRenderableWidget(new GuiImageButton(bookRight - 131, bookTop + 44, 0, 0, 48, 11, 48, 11,
                 "textures/gui/color_icons/purple_color_icon.png", (_2) -> {
-            this.timeline.onResolvingEffect = new BurstConfiguration(ModParticles.SMOKE_TYPE.get());
+            this.timeline.onResolvingEffect = new BurstConfiguration(ModParticles.SNOW_TYPE.get());
         }));
 
         addRenderableWidget(new GuiImageButton(bookRight - 131, bookTop + 68, 0, 0, 48, 11, 48, 11,
                 "textures/gui/color_icons/yellow_color_icon.png", (_2) -> {
-            this.timeline.trailEffect = new TrailConfiguration(ModParticles.SMOKE_TYPE.get());
+            this.timeline.trailEffect = new TrailConfiguration(ModParticles.SNOW_TYPE.get());
         }));
     }
 
