@@ -33,7 +33,7 @@ public class DiveAttackGoal extends Goal {
             return false;
         } else if (!livingentity.isAlive()) {
             return false;
-        } else if (!(livingentity instanceof Player) || !livingentity.isSpectator() && !((Player) livingentity).isCreative()) {
+        } else if (!(livingentity instanceof Player player) || !livingentity.isSpectator() && !player.isCreative()) {
             return this.canUse();
         } else {
             return false;

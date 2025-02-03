@@ -50,7 +50,9 @@ public class Glyph extends ModItem {
                 return super.use(worldIn, playerIn, handIn);
             } else if (playerDataCap.unlockGlyph(spellPart)) {
                 CapabilityRegistry.EventHandler.syncPlayerCap(playerIn);
-                playerIn.getItemInHand(handIn).shrink(1);
+                if (!playerIn.hasInfiniteMaterials()) {
+                    playerIn.getItemInHand(handIn).shrink(1);
+                }
                 playerIn.sendSystemMessage(Component.literal("Unlocked " + this.spellPart.getName()));
             }
         }

@@ -291,6 +291,7 @@ public class CasterTomeProvider extends SimpleDataProvider {
         tomes.add(buildTome("bugcolez", "Pixie Pummel", new Spell(MethodSelf.INSTANCE).add(EffectSummonVex.INSTANCE).add(AugmentExtendTime.INSTANCE, 8)
                 .withSound(new ConfiguredSpellSound(SoundRegistry.DEFAULT_SPELL_SOUND, 1.0f, 1.9f)), "Their Friends are their power!", new ParticleColor(255, 25, 180)));
 
+        tomes.add(buildTome("sloppybox", "Arcane Smelt", new Spell(MethodTouch.INSTANCE).add(EffectRune.INSTANCE, EffectSmelt.INSTANCE).add(AugmentPierce.INSTANCE, 4), "Enough heat to melt a mountain or evaporate oceans.", new ParticleColor(139, 1, 1)));
         for (CasterRecipeWrapper g : tomes) {
             Path path = getRecipePath(output, g.id().getPath());
             saveStable(pOutput, CasterTomeData.CODEC.encodeStart(JsonOps.INSTANCE, g.toData()).getOrThrow(), path);

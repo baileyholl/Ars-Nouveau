@@ -20,7 +20,9 @@ public class ItemUtil {
             return true;
         }
         if(player.inventory.add(stack)){
-            heldStack.shrink(1);
+            if (!player.hasInfiniteMaterials()) {
+                heldStack.shrink(1);
+            }
             return true;
         }
         return false;

@@ -78,7 +78,9 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
                         PortUtil.sendMessage(player, Component.translatable("ars_nouveau.wixie_familiar.applied", potionStack.getHoverName().getString()));
                         Networking.sendToNearbyClient(level(), this, new PacketAnimEntity(this.getId(), EntityWixie.Animations.CAST.ordinal()));
                         ParticleUtil.spawnPoof((ServerLevel) level(), player.blockPosition().above());
-                        stack.shrink(1);
+                        if (!player.hasInfiniteMaterials()) {
+                            stack.shrink(1);
+                        }
                         return InteractionResult.SUCCESS;
                     }
                 }
