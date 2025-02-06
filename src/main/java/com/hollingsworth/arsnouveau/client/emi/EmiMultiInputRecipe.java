@@ -41,8 +41,16 @@ public abstract class EmiMultiInputRecipe<T> implements EmiRecipe {
     }
 
     public void reset() {
-        this.center = new Vec2((int) (this.getDisplayWidth() * 0.5) - 8, (int) (this.getDisplayHeight() * 0.5) - 10);
+        var w = this.getDisplayWidth();
+        var h = this.getDisplayHeight();
+
+        this.center = new Vec2((int) (w * 0.5) - 8, (int) (h * 0.5) - 9);
         this.point = center.add(new Vec2(0, -32));
+    }
+
+    @Override
+    public int getDisplayWidth() {
+        return 120;
     }
 
     @Override
@@ -60,7 +68,7 @@ public abstract class EmiMultiInputRecipe<T> implements EmiRecipe {
             point = rotatePointAbout(point, center, angleBetweenEach);
         }
 
-        widgets.addSlot(provider.getEmiOutput(), 93, 3).recipeContext(this);
+        widgets.addSlot(provider.getEmiOutput(), 100, 3).recipeContext(this);
     }
 
     @Override

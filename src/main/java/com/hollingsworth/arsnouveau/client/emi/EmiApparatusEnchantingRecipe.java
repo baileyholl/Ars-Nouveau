@@ -44,7 +44,7 @@ public class EmiApparatusEnchantingRecipe extends EmiEnchantingApparatusRecipe<E
             point = rotatePointAbout(point, center, angleBetweenEach);
         }
 
-        widgets.addSlot(EmiIngredient.of(Ingredient.of(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(HolderHelper.unwrap(level, this.getRecipe().enchantmentKey), this.getRecipe().enchantLevel)))), 93, 3).recipeContext(this);
+        widgets.addSlot(EmiIngredient.of(Ingredient.of(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(HolderHelper.unwrap(level, this.getRecipe().enchantmentKey), this.getRecipe().enchantLevel)))), 100, 3).recipeContext(this);
 
         this.addSourceWidget(widgets);
     }

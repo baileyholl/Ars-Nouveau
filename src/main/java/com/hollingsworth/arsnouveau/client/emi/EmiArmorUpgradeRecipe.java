@@ -53,7 +53,7 @@ public class EmiArmorUpgradeRecipe extends EmiEnchantingApparatusRecipe<ArmorUpg
         }
 
         widgets.addSlot(EmiIngredient.of(emiInputs), (int) this.center.x, (int) this.center.y);
-        widgets.addSlot(EmiIngredient.of(emiOutputs), 93, 3).recipeContext(this);
+        widgets.addSlot(EmiIngredient.of(emiOutputs), 100, 3).recipeContext(this);
 
         for (EmiIngredient input : provider.getEmiInputs()) {
             widgets.addSlot(input, (int) point.x, (int) point.y);
