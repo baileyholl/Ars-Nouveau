@@ -33,12 +33,7 @@ public class EffectPull extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity target = rayTraceResult.getEntity();
-        Entity caster = shooter;
-        if (spellStats.hasBuff(AugmentExtract.INSTANCE)) {
-            target = shooter;
-            caster = rayTraceResult.getEntity();
-        }
-        Vec3 vec3d = new Vec3(caster.getX() - target.getX(), caster.getY() - target.getY(), caster.getZ() - target.getZ());
+        Vec3 vec3d = new Vec3(shooter.getX() - target.getX(), shooter.getY() - target.getY(), shooter.getZ() - target.getZ());
         double d2 = GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
         target.setDeltaMovement(vec3d.normalize().scale(d2));
         target.hurtMarked = true;
@@ -83,7 +78,7 @@ public class EffectPull extends AbstractEffect {
     @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentSensitive.INSTANCE, AugmentExtract.INSTANCE);
+        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentSensitive.INSTANCE);
     }
 
     @Override
@@ -99,12 +94,11 @@ public class EffectPull extends AbstractEffect {
         map.put(AugmentAmplify.INSTANCE, "Increases the velocity.");
         map.put(AugmentDampen.INSTANCE, "Decreases the velocity.");
         map.put(AugmentSensitive.INSTANCE, "Prevents blocks from being pulled.");
-        map.put(AugmentExtract.INSTANCE, "Pulls the caster to the target.");
     }
 
     @Override
     public String getBookDescription() {
-        return "Pulls the target closer to the caster. When used on blocks, they become falling blocks with motion towards the side of the block that was hit. Sensitive will stop this spell from pulling blocks. Extract will move the caster to the target.";
+        return "Pulls the target closer to the caster. When used on blocks, they become falling blocks with motion towards the side of the block that was hit. Sensitive will stop this spell from pulling blocks.";
     }
 
     @NotNull
