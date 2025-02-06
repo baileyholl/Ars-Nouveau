@@ -23,7 +23,7 @@ public class EmiImbuementRecipe extends EmiMultiInputRecipe<ImbuementRecipe> {
 
     @Override
     public int getDisplayHeight() {
-        return 86;
+        return recipe.pedestalItems.size() <= 3 ? 86 : 110;
     }
 
     @Override
