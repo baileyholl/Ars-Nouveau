@@ -84,6 +84,8 @@
   "ars_nouveau.advancement.desc.root": "Acquire a Tattered Tome",
   "ars_nouveau.advancement.title.root": "Ars Nouveau",
   "ars_nouveau.alakarkinos.set_home": "Home set. Place source and gravel or sand within 3 blocks.",
+  "ars_nouveau.alakarkinos_recipe": "Alakarkinos Conversion",
+  "ars_nouveau.alakarkinos_recipe.chance": "Chance: %s",
   "ars_nouveau.alchemists_crown.no_flasks": "No flasks or potions equipped.",
   "ars_nouveau.alert.duplicate_method": "No duplicate cast methods are allowed.",
   "ars_nouveau.alert.spell_set": "Spell set.",
