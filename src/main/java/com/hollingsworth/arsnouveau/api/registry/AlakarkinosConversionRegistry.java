@@ -43,6 +43,10 @@ public class AlakarkinosConversionRegistry {
         return CONVERTABLE_BLOCKS.contains(block);
     }
 
+    public static int getTotalWeight(Block block) {
+        return CONVERTABLE_BLOCKS_MAP.get(block).totalWeight;
+    }
+
     public static @Nullable AlakarkinosRecipe getConversionResult(Block block, RandomSource random) {
         if (!isConvertable(block)) {
             return null;

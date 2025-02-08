@@ -92,7 +92,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
 
         int multishotLevel = EnchantmentHelper.getTagEnchantmentLevel(pShooter.level.holderOrThrow(Enchantments.MULTISHOT), pCrossbowStack);
         int numProjectiles = multishotLevel == 0 ? 1 : 3;
-        boolean isCreative = pShooter instanceof Player && ((Player)pShooter).getAbilities().instabuild;
+        boolean hasInfiniteMaterials = pShooter instanceof Player player && player.hasInfiniteMaterials();
         ItemStack ammoStack = pShooter.getProjectile(pCrossbowStack);
         ItemStack ammoCopy = ammoStack.copy();
 
@@ -114,7 +114,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
                 ammoStack = ammoCopy.copy();
             }
 
-            if (ammoStack.isEmpty() && isCreative) {
+            if (ammoStack.isEmpty() && hasInfiniteMaterials) {
                 ammoStack = new ItemStack(Items.ARROW);
                 ammoCopy = ammoStack.copy();
             }
@@ -146,7 +146,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
                     ((AbstractArrow)projectile).pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                 }
             }
-            LivingCaster livingCaster = pShooter instanceof Player ? new PlayerCaster((Player)pShooter) : new LivingCaster(pShooter);
+            LivingCaster livingCaster = pShooter instanceof Player player ? new PlayerCaster(player) : new LivingCaster(pShooter);
             AbstractCaster<?> caster = getSpellCaster(pCrossbowStack);
             SpellResolver resolver = new SpellResolver(new SpellContext(worldIn, caster.modifySpellBeforeCasting((ServerLevel) worldIn, pShooter,
                     InteractionHand.MAIN_HAND, caster.getSpell()), pShooter, livingCaster, pCrossbowStack));
@@ -191,7 +191,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
         boolean isSpell = tag.getBoolean("isSpell");
         for(int i = 0; i < chargedprojectiles.getItems().size(); ++i) {
             ItemStack itemstack = chargedprojectiles.getItems().get(i);
-            boolean flag = pShooter instanceof Player && ((Player)pShooter).getAbilities().instabuild;
+            boolean flag = pShooter instanceof Player player && player.hasInfiniteMaterials();
             if (!itemstack.isEmpty()) {
                 float offset = 10.0f * (float)((i > 0 ? 1 + i : 0) / 2);
                 boolean isOdd = i % 2 == 1;

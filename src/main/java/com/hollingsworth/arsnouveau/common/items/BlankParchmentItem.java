@@ -36,7 +36,9 @@ public class BlankParchmentItem extends ModItem implements IScribeable {
             if (!pContext.getPlayer().addItem(stack)) {
                 pContext.getLevel().addFreshEntity(new ItemEntity(pContext.getLevel(), pContext.getPlayer().getX(), pContext.getPlayer().getY(), pContext.getPlayer().getZ(), stack));
             }
-            pContext.getItemInHand().shrink(1);
+            if (!pContext.getPlayer().hasInfiniteMaterials()) {
+                pContext.getItemInHand().shrink(1);
+            }
             return InteractionResult.SUCCESS;
         }
         return super.useOn(pContext);

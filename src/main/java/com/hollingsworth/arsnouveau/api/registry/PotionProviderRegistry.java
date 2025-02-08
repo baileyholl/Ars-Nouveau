@@ -43,9 +43,13 @@ public class PotionProviderRegistry {
         @Override
         public void consumeUses(ItemStack stack, int amount, @Nullable LivingEntity entity) {
             if(stack.getItem() instanceof PotionItem potionItem){
-                stack.shrink(1);
-                if(entity instanceof Player player){
+                if(entity instanceof Player player) {
+                    if (!player.hasInfiniteMaterials()) {
+                        stack.shrink(1);
+                    }
                     player.inventory.add(new ItemStack(Items.GLASS_BOTTLE));
+                } else {
+                    stack.shrink(1);
                 }
             }
         }
@@ -56,7 +60,9 @@ public class PotionProviderRegistry {
                 ItemStack bottle = new ItemStack(Items.GLASS_BOTTLE);
                 bottle.set(DataComponents.POTION_CONTENTS, stack.get(DataComponents.POTION_CONTENTS));
                 if(entity instanceof Player player){
-                    stack.shrink(1);
+                    if (!player.hasInfiniteMaterials()) {
+                        stack.shrink(1);
+                    }
                     player.inventory.add(bottle);
                 }
             }

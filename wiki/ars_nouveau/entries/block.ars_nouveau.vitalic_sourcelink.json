@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:block.ars_nouveau.vitalic_sourcelink",
+  "order": 100,
+  "icon": "ars_nouveau:vitalic_sourcelink",
+  "title": "Vitalic Sourcelink",
+  "category": "ars_nouveau:source",
+  "pages": [
+    {
+      "title": "Vitalic Sourcelink",
+      "description": "Generates a moderate amount of source from nearby mob death and animal breeding. Additionally, the Vitalic Sourcelink will generate passive Source from nearby baby animals and will accelerate their growth.",
+      "icon": "ars_nouveau:vitalic_sourcelink"
+    },
+    {
+      "recipe_1": "ars_nouveau:vitalic_sourcelink"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "ars_nouveau:trinkets",
+  "order": 11,
+  "icon": "ars_nouveau:warp_scroll",
+  "title": "Trinkets",
+  "category": "ars_nouveau:getting_started",
+  "pages": [
+    {
+      "title": "Trinkets",
+      "description": "Items and curios can expand your casting and can provide unique buffs. For more casting, you may want to craft a Ring of Discount or an Amulet of Mana Regen. For travel, see the Belt of Levitation, or improve your mining efficiency with the Jar of Voiding.",
+      "icon": "ars_nouveau:warp_scroll"
+    },
+    {
+      "related": [
+        "ars_nouveau:item.ars_nouveau.jar_of_light",
+        "ars_nouveau:item.ars_nouveau.amulet_of_mana_regen",
+        "ars_nouveau:item.ars_nouveau.ring_of_greater_discount",
+        "ars_nouveau:item.ars_nouveau.belt_of_levitation",
+        "ars_nouveau:item.ars_nouveau.stable_warp_scroll"
+      ]
+    }
+  ]
+}

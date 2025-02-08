@@ -98,7 +98,7 @@ public class AnimatedAttackGoal extends Goal {
         } else if (!this.mob.isWithinRestriction(livingentity.blockPosition())) {
             return false;
         } else {
-            return !(livingentity instanceof Player) || !livingentity.isSpectator() && !((Player) livingentity).isCreative();
+            return !(livingentity instanceof Player player) || !livingentity.isSpectator() && !player.isCreative();
         }
     }
 

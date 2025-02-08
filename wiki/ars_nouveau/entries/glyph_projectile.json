@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_projectile",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_projectile",
+  "title": "Projectile",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Projectile",
+      "description": "A spell you start with. Summons a projectile that applies spell effects when this projectile hits a target or block. Sensitive will allow Projectiles to break plants or other materials that do not block motion.",
+      "icon": "ars_nouveau:glyph_projectile",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_projectile"
+    }
+  ]
+}

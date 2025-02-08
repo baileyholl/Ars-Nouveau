@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:item.ars_nouveau.annotated_codex",
+  "order": 100,
+  "icon": "ars_nouveau:annotated_codex",
+  "title": "Annotated Codex",
+  "category": "ars_nouveau:spell_casting",
+  "pages": [
+    {
+      "title": "Annotated Codex",
+      "description": "The Annoted Codex allows players to share their knowledge of glyphs with other players. To record your known glyphs, simply use the codex. Recording glyphs requires EXP for each glyph known, and the EXP will be consumed upon using the item. Using the item again will update the list of known glyphs. Other players may use the book to learn the glyphs, consuming the codex in the process.",
+      "icon": "ars_nouveau:annotated_codex"
+    },
+    {
+      "recipe_1": "ars_nouveau:annotated_codex"
+    }
+  ]
+}
