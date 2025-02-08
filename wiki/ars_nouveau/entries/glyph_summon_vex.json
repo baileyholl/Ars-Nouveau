@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_summon_vex",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_summon_vex",
+  "title": "Summon Vex",
+  "category": "ars_nouveau:glyphs_tier_three",
+  "pages": [
+    {
+      "title": "Summon Vex",
+      "description": "Summons three Vex allies that will attack nearby hostile enemies. These Vex will last a short time until they begin to take damage, but time may be extended with the Extend Time augment.",
+      "icon": "ars_nouveau:glyph_summon_vex",
+      "tier": 3
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_summon_vex"
+    }
+  ]
+}

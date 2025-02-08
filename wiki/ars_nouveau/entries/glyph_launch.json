@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_launch",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_launch",
+  "title": "Launch",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Launch",
+      "description": "Launches an entity or block into the air. Can be used for large jumps, yeeting mobs in the sky or for scaling mountains! Sensitive will stop this spell from launching blocks.",
+      "icon": "ars_nouveau:glyph_launch",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_launch"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:ritual_cloudshaping",
+  "order": 100,
+  "icon": "ars_nouveau:ritual_cloudshaping",
+  "title": "Cloudshaping",
+  "category": "ars_nouveau:ritual_index",
+  "pages": [
+    {
+      "title": "Cloudshaping",
+      "description": "This ritual can change the weather at a moments notice. By default, this ritual will set the weather to clear. Augmenting with Gunpowder will cause it to rain, while a Lapis Block will cause it to storm.",
+      "icon": "ars_nouveau:ritual_cloudshaping"
+    },
+    {
+      "recipe_1": "ars_nouveau:ritual_cloudshaping"
+    }
+  ]
+}

@@ -71,7 +71,10 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
         try {
             Player playerEntity = uuid != null ? FakePlayerFactory.get(serverLevel, new GameProfile(uuid, "")) : ANFakePlayer.getPlayer(serverLevel);
             if (this.isSensitive) {
-                playerEntity = serverLevel.getPlayerByUUID(uuid);
+                Player onlinePlayer = serverLevel.getServer().getPlayerList().getPlayer(uuid);
+                if (onlinePlayer != null) {
+                    playerEntity = onlinePlayer;
+                }
             }
             EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(entity.level, spell, playerEntity, new RuneCaster(this, SpellContext.CasterType.RUNE)));
             resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);
@@ -127,8 +130,7 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
         if (level == null)
             return;
         if (!level.isClientSide) {
-            if (ticksUntilCharge > 0) {
-                ticksUntilCharge -= 1;
+            if (--ticksUntilCharge > 0) {
                 return;
             }
         }
@@ -138,7 +140,7 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
             level.destroyBlock(this.worldPosition, false);
         }
         if (!level.isClientSide) {
-            List<ISpecialSourceProvider> provider = SourceUtil.takeSourceMultipleWithParticles(worldPosition, level, 10, 100);
+            List<ISpecialSourceProvider> provider = SourceUtil.takeSourceMultipleWithParticles(worldPosition, level, 10, spell.getCost());
             if (provider != null) {
                 this.isCharged = true;
                 level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).cycle(RuneBlock.POWERED));

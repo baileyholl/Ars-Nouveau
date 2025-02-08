@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:block.ars_nouveau.redstone_relay",
+  "order": 100,
+  "icon": "ars_nouveau:redstone_relay",
+  "title": "Redstone Relay",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Redstone Relay",
+      "description": "ars_nouveau.page.redstone_relay",
+      "icon": "ars_nouveau:redstone_relay"
+    },
+    {
+      "recipe_1": "ars_nouveau:redstone_relay"
+    }
+  ]
+}

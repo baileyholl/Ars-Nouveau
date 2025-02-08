@@ -55,7 +55,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     public Map<String, InventoryManager> tabManagerMap = new HashMap<>();
     public Map<String, Map<StoredItemStack, Long>> itemsByTab = new HashMap<>();
     public Map<Item, Long> itemCounts = new HashMap<>();
-    public String lastSearch = "";
+    public Map<UUID, String> searches = new HashMap<>();
     public boolean updateItems;
     public List<BlockPos> connectedInventories = new ArrayList<>();
     public List<String> tabNames = new ArrayList<>();
@@ -252,12 +252,14 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         if (this.connectedInventories.contains(storedPos)) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.removed"));
             this.connectedInventories.remove(storedPos);
+            this.invalidateCapabilities();
         } else {
             if (this.connectedInventories.size() >= this.getMaxConnectedInventories()) {
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.too_many"));
                 return;
             }
             this.connectedInventories.add(storedPos.immutable());
+            this.invalidateCapabilities();
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.from_set"));
         }
         this.mainLecternPos = null;
@@ -280,6 +282,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         }
         this.mainLecternPos = storedPos.immutable();
         this.connectedInventories = new ArrayList<>();
+        this.invalidateCapabilities();
         PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.lectern_chained", storedPos.getX(), storedPos.getY(), storedPos.getZ()));
         updateBlock();
     }
@@ -515,6 +518,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             CompoundTag c = list.getCompound(i);
             connectedInventories.add(new BlockPos(c.getInt("x"), c.getInt("y"), c.getInt("z")));
         }
+        this.invalidateCapabilities();
         mainLecternPos = null;
         if (compound.contains("mainLecternPos")) {
             mainLecternPos = BlockPos.of(compound.getLong("mainLecternPos"));
@@ -529,12 +533,12 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         updateItems = true;
     }
 
-    public String getLastSearch() {
-        return lastSearch;
+    public String getLastSearch(Player player) {
+        return searches.getOrDefault(player.getUUID(), "");
     }
 
-    public void setLastSearch(String string) {
-        lastSearch = string;
+    public void setLastSearch(Player sender, String string) {
+        searches.put(sender.getUUID(), string);
     }
 
     @Override

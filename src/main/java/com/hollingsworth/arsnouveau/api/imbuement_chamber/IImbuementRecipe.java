@@ -1,9 +1,17 @@
 package com.hollingsworth.arsnouveau.api.imbuement_chamber;
 
+import com.hollingsworth.arsnouveau.api.registry.ImbuementRecipeRegistry;
 import com.hollingsworth.arsnouveau.common.block.tile.ImbuementTile;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantingApparatusRecipe;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.Level;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public interface IImbuementRecipe extends Recipe<ImbuementTile> {
     int getSourceCost(ImbuementTile imbuementTile);
@@ -18,5 +26,14 @@ public interface IImbuementRecipe extends Recipe<ImbuementTile> {
 
     default Component getCraftingProgressText(ImbuementTile imbuementTile, int progress) {
         return Component.translatable("ars_nouveau.crafting_progress", progress).withStyle(ChatFormatting.GOLD);
+    }
+
+    static @Nullable RecipeHolder<? extends IImbuementRecipe> getRecipe(Level level, ImbuementTile input) {
+        for (RecipeHolder<? extends IImbuementRecipe> holder : ImbuementRecipeRegistry.INSTANCE.getRecipes()) {
+            if (holder.value().matches(input, level)) {
+                return holder;
+            }
+        }
+        return null;
     }
 }

@@ -77,7 +77,9 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
                 Entity entity = type.create(pLevel);
                 if (entity != null) {
                     tile.setEntityData(entity);
-                    stack.shrink(1);
+                    if (!pPlayer.hasInfiniteMaterials()) {
+                        stack.shrink(1);
+                    }
                     return ItemInteractionResult.CONSUME;
                 }
             } else if (!stack.isEmpty() && !(stack.getItem() instanceof MobJarItem) && !(pPlayer instanceof ANFakePlayer)) {

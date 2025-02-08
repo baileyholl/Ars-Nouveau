@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.*;
@@ -91,7 +90,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
             counter += 1;
         }
 
-        if (counter > craftingLength) {
+        if (counter >= craftingLength) {
             counter = 0;
 
             if (this.isCrafting) {
@@ -138,9 +137,8 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
     }
 
     public IEnchantingRecipe getRecipe(ItemStack stack, @Nullable Player playerEntity) {
-        List<ItemStack> pedestalItems = getPedestalItems();
-        var holder = ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes(level).stream().filter(r -> r.value().matches(new ApparatusRecipeInput(stack, pedestalItems, playerEntity), level)).findFirst().orElse(null);
-        return holder != null ? holder.value() : null;
+        var recipe = IEnchantingRecipe.getRecipe(level, new ApparatusRecipeInput(stack, getPedestalItems(), playerEntity));
+        return recipe != null ? recipe.value() : null;
     }
 
     public boolean attemptCraft(ItemStack catalyst, @Nullable Player playerEntity) {

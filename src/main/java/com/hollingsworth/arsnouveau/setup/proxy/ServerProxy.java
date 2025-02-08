@@ -25,4 +25,8 @@ public class ServerProxy implements IProxy {
         throw new IllegalStateException("Accessing client player on server proxy");
     }
 
+    @Override
+    public boolean isClientSide() {
+        return false;
+    }
 }

@@ -40,6 +40,7 @@ public class Networking {
         reg.playToServer(PacketHotkeyPressed.TYPE, PacketHotkeyPressed.CODEC, Networking::handle);
         reg.playToClient(PacketJoinedServer.TYPE, PacketJoinedServer.CODEC, Networking::handle);
         reg.playToClient(PacketInitDocs.TYPE, PacketInitDocs.CODEC, Networking::handle);
+        reg.playToClient(PacketExportDocs.TYPE, PacketExportDocs.CODEC, Networking::handle);
         reg.playToServer(PacketGenericClientMessage.TYPE, PacketGenericClientMessage.CODEC, Networking::handle);
         reg.playToServer(PacketMountCamera.TYPE, PacketMountCamera.CODEC, Networking::handle);
         reg.playToClient(PacketNoSpamChatMessage.TYPE, PacketNoSpamChatMessage.CODEC, Networking::handle);
@@ -73,6 +74,7 @@ public class Networking {
         reg.playToClient(UpdateStorageItemsPacket.TYPE, UpdateStorageItemsPacket.CODEC, Networking::handle);
         reg.playToClient(PacketUpdateGlowColor.TYPE, PacketUpdateGlowColor.CODEC, Networking::handle);
         reg.playToServer(PacketUpdateDominionWand.TYPE, PacketUpdateDominionWand.CODEC, Networking::handle);
+
     }
 
     private static <T extends AbstractPacket> void handle(T message, IPayloadContext ctx) {
@@ -100,9 +102,7 @@ public class Networking {
 
     public static void sendToNearbyClient(Level world, BlockPos pos, CustomPacketPayload toSend) {
         if (world instanceof ServerLevel ws) {
-            ws.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false).stream()
-                    .filter(p -> p.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) < 64 * 64)
-                    .forEach(p -> Networking.sendToPlayerClient(toSend, p));
+            PacketDistributor.sendToPlayersTrackingChunk(ws, new ChunkPos(pos), toSend);
         }
     }
 

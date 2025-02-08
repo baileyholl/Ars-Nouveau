@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau;
 
-
 import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
 import com.hollingsworth.arsnouveau.client.registry.ClientHandler;
@@ -23,7 +22,6 @@ import com.hollingsworth.arsnouveau.setup.proxy.ServerProxy;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.DispenserBlock;
@@ -56,6 +54,7 @@ public class ArsNouveau {
     public static boolean terrablenderLoaded = false;
     public static boolean optifineLoaded = false;
     public static boolean sodiumLoaded = false;
+    public static boolean immersivePortalsLoaded = false;
     public static boolean patchouliLoaded = false;
 
     public static List<String> postLoadWarnings = new ArrayList<>();
@@ -73,6 +72,7 @@ public class ArsNouveau {
         terrablenderLoaded = ModList.get().isLoaded("terrablender");
         sodiumLoaded = ModList.get().isLoaded("rubidium");
         patchouliLoaded = ModList.get().isLoaded("patchouli");
+        immersivePortalsLoaded = ModList.get().isLoaded("immersive_portals_core");
         APIRegistry.setup();
         modContainer.registerConfig(ModConfig.Type.STARTUP, StartupConfig.STARTUP_CONFIG);
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SERVER_CONFIG);
@@ -123,7 +123,7 @@ public class ArsNouveau {
 
         NeoForge.EVENT_BUS.addListener((ServerStartedEvent e) -> {
             GenericRecipeRegistry.reloadAll(e.getServer().getRecipeManager());
-            CasterTomeRegistry.reloadTomeData(e.getServer().getRecipeManager(), e.getServer().getLevel(Level.OVERWORLD));
+            CasterTomeRegistry.reloadTomeData(e.getServer().getRecipeManager(), e.getServer().registryAccess());
             BuddingConversionRegistry.reloadBuddingConversionRecipes(e.getServer().getRecipeManager());
             ScryRitualRegistry.reloadScryRitualRecipes(e.getServer().getRecipeManager());
         });

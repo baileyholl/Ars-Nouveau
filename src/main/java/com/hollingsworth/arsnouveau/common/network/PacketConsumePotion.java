@@ -51,7 +51,9 @@ public class PacketConsumePotion extends AbstractPacket{
                 return;
             }
             PotionUtil.applyContents(contents, player, player, player);
-            stack.shrink(1);
+            if (!player.hasInfiniteMaterials()) {
+                stack.shrink(1);
+            }
             player.inventory.add(new ItemStack(Items.GLASS_BOTTLE));
             player.level.playSound(null, player.blockPosition(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 0.5f, player.level.random.nextFloat() * 0.1F + 0.9F);
         }else if(stack.getItem() instanceof PotionFlask){

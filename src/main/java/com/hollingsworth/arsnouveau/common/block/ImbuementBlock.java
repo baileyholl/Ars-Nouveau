@@ -2,10 +2,14 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
+import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ImbuementTile;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.ApparatusRecipeInput;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.common.network.HighlightAreaPacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -56,8 +60,16 @@ public class ImbuementBlock extends TickableModBlock {
                         colorPos.add(ColorPos.centeredAbove(pedPos));
                     }
                 }
+
                 Networking.sendToNearbyClient(worldIn, tile.getBlockPos(), new HighlightAreaPacket(colorPos, 60));
-                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.imbuement.norecipe"));
+
+                var apparatusRecipe = IEnchantingRecipe.getRecipe(worldIn, new ApparatusRecipeInput(tile.stack, tile.getPedestalItems(), player));
+                if (apparatusRecipe == null) {
+                    PortUtil.sendMessage(player, Component.translatable("ars_nouveau.imbuement.norecipe"));
+                } else {
+                    PortUtil.sendMessage(player, Component.translatable("ars_nouveau.imbuement.use_apparatus"));
+                }
+
                 tile.stack = ItemStack.EMPTY;
             } else {
                 tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);

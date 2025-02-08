@@ -11,13 +11,10 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Matrix4f;
 
 import java.util.Random;
 
-@OnlyIn(Dist.CLIENT)
 public class PortalTileRenderer<T extends PortalTile> implements BlockEntityRenderer<T> {
 
     private static final Random RANDOM = new Random(31100L);

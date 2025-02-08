@@ -27,13 +27,17 @@ public abstract class ExperienceGem extends ModItem {
                 val = repairPlayerItems(playerEntity, val, val);
                 if (val > 0)
                     playerEntity.giveExperiencePoints(val);
-                playerEntity.getItemInHand(hand).shrink(playerEntity.getItemInHand(hand).getCount());
+                if (!playerEntity.hasInfiniteMaterials()) {
+                    playerEntity.getItemInHand(hand).shrink(playerEntity.getItemInHand(hand).getCount());
+                }
             } else {
                 int val = getValue();
                 val = repairPlayerItems(playerEntity, val, val);
                 if (val > 0)
                     playerEntity.giveExperiencePoints(val);
-                playerEntity.getItemInHand(hand).shrink(1);
+                if (!playerEntity.hasInfiniteMaterials()) {
+                    playerEntity.getItemInHand(hand).shrink(1);
+                }
             }
 
         }

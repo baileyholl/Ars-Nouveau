@@ -1,15 +1,18 @@
 package com.hollingsworth.arsnouveau.api.documentation.entry;
 
+import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageWidget;
+import com.hollingsworth.arsnouveau.api.documentation.export.DocExporter;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.nuggets.client.gui.NuggetMultilLineLabel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -63,8 +66,6 @@ public class TextEntry extends SinglePageWidget {
             DocClientUtils.drawHeader(titleLabel, guiGraphics, x + 70, y - 1);
             return 24;
         }else{
-//            DocClientUtils.blit(guiGraphics, DocAssets.UNDERLINE, x + 4, y + 10);
-//            GuiHelpers.drawCenteredStringNoShadow(font, guiGraphics, title, x + 60, y, 0);
             DocClientUtils.drawHeader(title, guiGraphics, x, y, width, mouseX, mouseY, partialTicks);
         }
         return 20;
@@ -74,7 +75,6 @@ public class TextEntry extends SinglePageWidget {
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
         boolean hasTitle = title != null;
-        Font font = Minecraft.getInstance().font;
         int yOffset = 0;
         if(hasTitle){
            yOffset = drawTitle(guiGraphics, mouseX, mouseY, partialTick);
@@ -85,5 +85,16 @@ public class TextEntry extends SinglePageWidget {
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
 
+    }
+
+    @Override
+    public void addExportProperties(JsonObject object) {
+        if(title != null){
+            object.addProperty(DocExporter.TITLE_PROPERTY, title.getString());
+        }
+        object.addProperty(DocExporter.DESCRIPTION_PROPERTY, body.getString());
+        if(renderStack != null && !renderStack.isEmpty()) {
+            object.addProperty(DocExporter.ICON_PROPERTY, BuiltInRegistries.ITEM.getKey(renderStack.getItem()).toString());
+        }
     }
 }

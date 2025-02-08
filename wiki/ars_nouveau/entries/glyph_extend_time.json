@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_extend_time",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_extend_time",
+  "title": "Extend Time",
+  "category": "ars_nouveau:glyphs_tier_two",
+  "pages": [
+    {
+      "title": "Extend Time",
+      "description": "Extends the time that spells last, including buffs, fangs, and summons",
+      "icon": "ars_nouveau:glyph_extend_time",
+      "tier": 2
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_extend_time"
+    }
+  ]
+}

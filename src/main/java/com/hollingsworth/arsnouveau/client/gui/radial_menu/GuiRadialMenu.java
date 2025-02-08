@@ -252,7 +252,7 @@ public class GuiRadialMenu<T> extends Screen {
             radialMenu.setCurrentSlot(selectedItem);
             minecraft.player.closeContainer();
         }
-        return true;
+        return super.mouseClicked(p_mouseClicked_1_, p_mouseClicked_3_, p_mouseClicked_5_);
     }
 
     public void drawSlice(

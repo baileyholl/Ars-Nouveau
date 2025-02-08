@@ -23,10 +23,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart> {
-    public static final Codec<AbstractSpellPart> CODEC = ResourceLocation.CODEC.xmap(GlyphRegistry::getSpellPart, AbstractSpellPart::getRegistryName);
+    public static final Codec<AbstractSpellPart> CODEC = ResourceLocation.CODEC.xmap(GlyphRegistry::getSpellPartOrDefault, AbstractSpellPart::getRegistryName);
     public static final StreamCodec<RegistryFriendlyByteBuf, AbstractSpellPart> STREAM = StreamCodec.of(
             (buf, val) -> buf.writeResourceLocation(val.getRegistryName()),
-            buf -> GlyphRegistry.getSpellPart(buf.readResourceLocation())
+            buf -> GlyphRegistry.getSpellPartOrDefault(buf.readResourceLocation())
     );
 
     public static final StreamCodec<RegistryFriendlyByteBuf, List<AbstractSpellPart>> STREAM_LIST = StreamCodec.of(

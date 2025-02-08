@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:wololo",
+  "order": 100,
+  "icon": "ars_nouveau:wololo",
+  "title": "Wololo",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Wololo",
+      "description": "Changes the color of an entity or compatible block to the color of the spell.",
+      "icon": "ars_nouveau:wololo",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:wololo"
+    }
+  ]
+}
