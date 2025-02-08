@@ -21,7 +21,7 @@ public class EntityRenderDispatcherMixin {
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/EntityRenderer;render(Lnet/minecraft/world/entity/Entity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"))
     private void ars_nouveau$PotionEffectWorldRendering(Entity pEntity, double pX, double pY, double pZ, float pRotationYaw, float pPartialTicks, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight, CallbackInfo ci) {
-        if (pEntity instanceof LivingEntity living && living.hasEffect(ModPotions.SNARE_EFFECT.get())) {
+        if (pEntity instanceof LivingEntity living && living.hasEffect(ModPotions.SNARE_EFFECT)) {
             VinesEffectHandler.renderWorldVinesEffect(pMatrixStack, pBuffer, camera, pEntity);
         }
     }

@@ -15,8 +15,9 @@ import net.minecraft.world.inventory.InventoryMenu;
 
 public class VinesEffectHandler {
 
-    public static final Material VINES_1 =new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(ArsNouveau.MODID,"block/snare_0"));
-    public static final Material VINES_2 =new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(ArsNouveau.MODID,"block/snare_1"));
+    public static final Material VINES_1 = new Material(InventoryMenu.BLOCK_ATLAS, ResourceLocation.fromNamespaceAndPath(ArsNouveau.MODID, "block/snare_0"));
+    public static final Material VINES_2 = new Material(InventoryMenu.BLOCK_ATLAS, ResourceLocation.fromNamespaceAndPath(ArsNouveau.MODID, "block/snare_1"));
+
     public static void renderWorldVinesEffect(PoseStack pMatrixStack, MultiBufferSource pBuffer, Camera camera, Entity pEntity) {
         TextureAtlasSprite textureAtlasSprite0 = VINES_1.sprite();
         TextureAtlasSprite textureAtlasSprite1 = VINES_2.sprite();
@@ -31,7 +32,8 @@ public class VinesEffectHandler {
         float f5 = 0.0F;
         int i = 0;
         VertexConsumer vertexconsumer = pBuffer.getBuffer(Sheets.cutoutBlockSheet());
-
+        // find a way to scale it to the light level, getRawBrightness is trolling me
+        float lightScaled = 255F / 2;
         for (PoseStack.Pose last = pMatrixStack.last(); f3 > 0.0F; ++i) {
             TextureAtlasSprite finalSprite = i % 2 == 0 ? textureAtlasSprite0 : textureAtlasSprite1;
             float f6 = finalSprite.getU0();
@@ -44,11 +46,11 @@ public class VinesEffectHandler {
                 f6 = f10;
             }
 
-            fireVertex(last, vertexconsumer, f1 - 0.0F, 0.0F - f4, f5, f8, f9);
-            fireVertex(last, vertexconsumer, -f1 - 0.0F, 0.0F - f4, f5, f6, f9);
-            fireVertex(last, vertexconsumer, -f1 - 0.0F, 1.4F - f4, f5, f6, f7);
-            fireVertex(last, vertexconsumer, f1 - 0.0F, 1.4F - f4, f5, f8, f7);
-            f3 -= 0.45F;
+            addVertex(last, vertexconsumer, f1 - 0.0F, 0.0F - f4, f5, f8, f9, lightScaled);
+            addVertex(last, vertexconsumer, -f1 - 0.0F, 0.0F - f4, f5, f6, f9, lightScaled);
+            addVertex(last, vertexconsumer, -f1 - 0.0F, 1.4F - f4, f5, f6, f7, lightScaled);
+            addVertex(last, vertexconsumer, f1 - 0.0F, 1.4F - f4, f5, f8, f7, lightScaled);
+            f3 -= 1.5F;
             f4 -= 0.45F;
             f1 *= 0.9F;
             f5 += 0.03F;
@@ -57,8 +59,14 @@ public class VinesEffectHandler {
         pMatrixStack.popPose();
     }
 
-    protected static void fireVertex(PoseStack.Pose pMatrixEntry, VertexConsumer pBuffer, float pX, float pY, float pZ, float pTexU, float pTexV) {
-        pBuffer.vertex(pMatrixEntry.pose(), pX, pY, pZ).color(255, 255, 255, 255).uv(pTexU, pTexV).overlayCoords(0, 10).uv2(240).normal(pMatrixEntry.normal(), 0.0F, 1.0F, 0.0F).endVertex();
+    public static void addVertex(
+            PoseStack.Pose matrixEntry, VertexConsumer buffer, float x, float y, float z, float texU, float texV, float light
+    ) {
+        buffer.addVertex(matrixEntry, x, y, z)
+                .setColor(-1)
+                .setUv(texU, texV)
+                .setUv1(0, 10)
+                .setLight((int) light)
+                .setNormal(matrixEntry, 0.0F, 1.0F, 0.0F);
     }
-
 }
