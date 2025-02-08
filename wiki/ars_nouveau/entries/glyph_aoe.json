@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_aoe",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_aoe",
+  "title": "AOE",
+  "category": "ars_nouveau:glyphs_tier_two",
+  "pages": [
+    {
+      "title": "AOE",
+      "description": "Spells will affect a larger area around a targeted block.",
+      "icon": "ars_nouveau:glyph_aoe",
+      "tier": 2
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_aoe"
+    }
+  ]
+}

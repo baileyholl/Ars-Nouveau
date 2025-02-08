@@ -1,9 +1,11 @@
 package com.hollingsworth.arsnouveau.api.documentation.entry;
 
+import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageWidget;
+import com.hollingsworth.arsnouveau.api.documentation.export.DocExporter;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.mojang.blaze3d.platform.Lighting;
@@ -13,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -90,5 +93,14 @@ public class EntityEntry extends SinglePageWidget {
         immediate.endBatch();
         ms.popPose();
         Lighting.setupFor3DItems();
+    }
+
+    @Override
+    public void addExportProperties(JsonObject object) {
+        super.addExportProperties(object);
+        if(description != null) {
+            object.addProperty(DocExporter.DESCRIPTION_PROPERTY, this.description.getString());
+        }
+        object.addProperty(DocExporter.ENTITY_PROPERTY,  BuiltInRegistries.ENTITY_TYPE.getKey(entityType).toString());
     }
 }

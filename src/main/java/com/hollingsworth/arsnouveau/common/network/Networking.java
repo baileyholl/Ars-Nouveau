@@ -40,6 +40,7 @@ public class Networking {
         reg.playToServer(PacketHotkeyPressed.TYPE, PacketHotkeyPressed.CODEC, Networking::handle);
         reg.playToClient(PacketJoinedServer.TYPE, PacketJoinedServer.CODEC, Networking::handle);
         reg.playToClient(PacketInitDocs.TYPE, PacketInitDocs.CODEC, Networking::handle);
+        reg.playToClient(PacketExportDocs.TYPE, PacketExportDocs.CODEC, Networking::handle);
         reg.playToServer(PacketGenericClientMessage.TYPE, PacketGenericClientMessage.CODEC, Networking::handle);
         reg.playToServer(PacketMountCamera.TYPE, PacketMountCamera.CODEC, Networking::handle);
         reg.playToClient(PacketNoSpamChatMessage.TYPE, PacketNoSpamChatMessage.CODEC, Networking::handle);

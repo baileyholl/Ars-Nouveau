@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.api.documentation.entry;
 
+import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
+import com.hollingsworth.arsnouveau.api.documentation.export.DocExporter;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
@@ -70,5 +72,13 @@ public class SpellWriteEntry extends PedestalRecipeEntry{
             RecipeHolder<SpellWriteRecipe> recipe = parent.recipeManager().byKeyTyped(RecipeRegistry.SPELL_WRITE_TYPE.get(), id);
             return new SpellWriteEntry(recipe, parent, x, y, width, height);
         };
+    }
+
+    @Override
+    public void addExportProperties(JsonObject object) {
+        super.addExportProperties(object);
+        if(spellWriteRecipe != null) {
+            object.addProperty(DocExporter.RECIPE_PROPERTY, spellWriteRecipe.id().toString());
+        }
     }
 }

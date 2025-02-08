@@ -1,0 +1,21 @@
+{
+  "id": "ars_nouveau:item.ars_nouveau.scryer_scroll",
+  "order": 100,
+  "icon": "ars_nouveau:scryer_scroll",
+  "title": "Scryer\u0027s Scroll",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Scryer\u0027s Scroll",
+      "description": "Stores the location of a Scryer\u0027s Crystal. To create one, use a Blank Parchment on a Scry Crystal. You can remotely access the stored position by placing this item on a pedestal near a Scryer\u0027s Oculus. Naming this item will allow you to easily recognize it in the Scryer\u0027s Oculus interface.",
+      "icon": "ars_nouveau:scryer_scroll"
+    },
+    {
+      "related": [
+        "ars_nouveau:item.ars_nouveau.enchanters_eye",
+        "ars_nouveau:block.ars_nouveau.scryers_oculus",
+        "ars_nouveau:block.ars_nouveau.scryers_crystal"
+      ]
+    }
+  ]
+}

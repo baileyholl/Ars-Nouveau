@@ -120,6 +120,7 @@ public class APIRegistry {
         registerSpell(EffectWololo.INSTANCE);
         registerSpell(EffectRewind.INSTANCE);
         registerSpell(EffectBubble.INSTANCE);
+        registerSpell(EffectWindburst.INSTANCE);
 
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());

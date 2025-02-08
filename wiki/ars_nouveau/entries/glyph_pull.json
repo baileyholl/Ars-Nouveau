@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_pull",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_pull",
+  "title": "Pull",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Pull",
+      "description": "Pulls the target closer to the caster. When used on blocks, they become falling blocks with motion towards the side of the block that was hit. Sensitive will stop this spell from pulling blocks.",
+      "icon": "ars_nouveau:glyph_pull",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_pull"
+    }
+  ]
+}

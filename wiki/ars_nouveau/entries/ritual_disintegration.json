@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:ritual_disintegration",
+  "order": 100,
+  "icon": "ars_nouveau:ritual_disintegration",
+  "title": "Disintegration",
+  "category": "ars_nouveau:ritual_index",
+  "pages": [
+    {
+      "title": "Disintegration",
+      "description": "Destroys nearby monsters and converts them into Experience Gems worth twice as much experience. Monsters destroyed this way will not drop items. This ritual consumes source each time a monster is destroyed.",
+      "icon": "ars_nouveau:ritual_disintegration"
+    },
+    {
+      "recipe_1": "ars_nouveau:ritual_disintegration"
+    }
+  ]
+}

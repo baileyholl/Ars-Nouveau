@@ -255,8 +255,7 @@ public class GuiEntityInfoHUD {
 
             if (lineNumber + 1 == titleLinesCount)
                 tooltipY += 2;
-
-            tooltipY += 10;
+            tooltipY += line == null ? 10 : line.getHeight();
         }
         renderType.endBatch();
         pStack.popPose();

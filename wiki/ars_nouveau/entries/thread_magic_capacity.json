@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:thread_magic_capacity",
+  "order": 100,
+  "icon": "ars_nouveau:thread_magic_capacity",
+  "title": "Magic Capacity",
+  "category": "ars_nouveau:armor",
+  "pages": [
+    {
+      "title": "Thread of Magic Capacity",
+      "description": "Increases the users maximum mana by 10% per level.",
+      "icon": "ars_nouveau:thread_magic_capacity"
+    },
+    {
+      "recipe_1": "ars_nouveau:thread_magic_capacity"
+    }
+  ]
+}
