@@ -19,6 +19,7 @@
   "mixins": [
     "CrossbowMixin",
     "DamageSourceMixin",
+    "EntityMixin",
     "LivingAccessor",
     "MobAccessor",
     "PotionRecipeMixin",
