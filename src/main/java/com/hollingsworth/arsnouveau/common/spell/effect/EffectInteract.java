@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -139,6 +140,11 @@ public class EffectInteract extends AbstractEffect {
         var pPlayer = (ServerPlayer) player;
         InteractionHand pHand = spellStats.isSensitive() ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
+        if(spellStats.getAmpMultiplier() > 0){
+            blockstate.attack(pLevel, blockpos, pPlayer);
+            return;
+        }
+
         ItemInteractionResult iteminteractionresult = blockstate.useItemOn(pPlayer.getItemInHand(pHand), pLevel, pPlayer, pHand, pHitResult);
 
         if (itemstack.getItem() instanceof BucketItem bucket) {
@@ -200,24 +206,26 @@ public class EffectInteract extends AbstractEffect {
    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentSensitive.INSTANCE);
+        return augmentSetOf(AugmentSensitive.INSTANCE, AugmentAmplify.INSTANCE);
     }
 
     @Override
     protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
         super.addDefaultAugmentLimits(defaults);
         defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
+        defaults.put(AugmentAmplify.INSTANCE.getRegistryName(), 1);
     }
 
     @Override
     public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
         super.addAugmentDescriptions(map);
         map.put(AugmentSensitive.INSTANCE, "Will interact with your off-hand item.");
+        map.put(AugmentAmplify.INSTANCE, "Uses left-click instead of right-click.");
     }
 
     @Override
     public String getBookDescription() {
-        return "Interacts with blocks or entities as it were a player. Useful for reaching levers, chests, or animals. Sensitive will use your off-hand item on the block or entity.";
+        return "Interacts with blocks or entities as it were a player. Useful for reaching levers, chests, or animals. Sensitive will use your off-hand item on the block or entity, Amplify will use left-click instead of right-click on blocks.";
     }
 
     @Override
