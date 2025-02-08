@@ -605,6 +605,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.crush_recipe", "Crush Glyph");
         add("ars_nouveau.budding_conversion_recipe", "Amethyst Golem Conversion");
         add("ars_nouveau.scry_ritual_recipe", "Scry Ritual");
+        add("ars_nouveau.alakarkinos_recipe", "Alakarkinos Conversion");
+        add("ars_nouveau.alakarkinos_recipe.chance", "Chance: %s");
         add("ars_nouveau.enchanting_apparatus", "Enchanting Apparatus");
         add("ars_nouveau.armor_upgrade", "Magic Armor Upgrade");
         add("ars_nouveau.page.apparatus_crafting", "Apparatus Crafting");
