@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.api.documentation;
 
+import com.google.gson.JsonObject;
+import com.hollingsworth.arsnouveau.api.documentation.export.IJsonExportable;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.nuggets.client.gui.ITooltipRenderer;
 import com.hollingsworth.nuggets.client.gui.NestedWidgets;
@@ -15,7 +17,7 @@ import net.minecraft.world.item.TooltipFlag;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SinglePageWidget extends AbstractWidget implements NestedWidgets, ITooltipRenderer {
+public class SinglePageWidget extends AbstractWidget implements NestedWidgets, ITooltipRenderer, IJsonExportable {
     public ItemStack tooltipStack = ItemStack.EMPTY;
     public BaseDocScreen parent;
 
@@ -64,5 +66,16 @@ public class SinglePageWidget extends AbstractWidget implements NestedWidgets, I
         if (!tooltipStack.isEmpty()) {
             list.addAll(tooltipStack.getTooltipLines(Item.TooltipContext.EMPTY, null, TooltipFlag.NORMAL));
         }
+    }
+
+    @Override
+    public JsonObject toJson() {
+        JsonObject object = new JsonObject();
+        addExportProperties(object);
+        return object;
+    }
+
+    public void addExportProperties(JsonObject object){
+
     }
 }

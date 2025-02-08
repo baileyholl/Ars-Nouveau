@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:item.ars_nouveau.alchemists_crown",
+  "order": 100,
+  "icon": "ars_nouveau:alchemists_crown",
+  "title": "Alchemist\u0027s Crown",
+  "category": "ars_nouveau:items",
+  "pages": [
+    {
+      "title": "Alchemist\u0027s Crown",
+      "description": "Allows the wearer to consume potions and flasks instantly from their inventory.",
+      "icon": "ars_nouveau:alchemists_crown"
+    },
+    {
+      "recipe_1": "ars_nouveau:alchemists_crown"
+    }
+  ]
+}

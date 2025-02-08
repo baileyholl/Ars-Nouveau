@@ -1,0 +1,25 @@
+{
+  "id": "ars_nouveau:magelight_torch",
+  "order": 100,
+  "icon": "ars_nouveau:magelight_torch",
+  "title": "Magelight Torch",
+  "category": "ars_nouveau:field_guide",
+  "pages": [
+    {
+      "title": "Magelight Torch",
+      "description": "Decorative lights. To ignite, cast Light on the sconce. The color of the flame corresponds with your spell color. The Magelight Torch on a wall can change the direction of its flames by interacting. Use Touch or Projectile Sensitive to target the sconce.",
+      "icon": "ars_nouveau:magelight_torch"
+    },
+    {
+      "recipe_1": "ars_nouveau:sconce",
+      "recipe_2": "ars_nouveau:sourcestone_sconce"
+    },
+    {
+      "recipe_1": "ars_nouveau:polished_sconce",
+      "recipe_2": "ars_nouveau:archwood_sconce"
+    },
+    {
+      "recipe_1": "ars_nouveau:magelight_torch"
+    }
+  ]
+}
