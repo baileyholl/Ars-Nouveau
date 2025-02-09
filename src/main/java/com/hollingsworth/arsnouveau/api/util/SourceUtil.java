@@ -17,10 +17,10 @@ public class SourceUtil {
 
     public static List<ISpecialSourceProvider> canGiveSource(BlockPos pos, Level world, int range) {
         List<ISpecialSourceProvider> posList = new ArrayList<>();
-        BlockPos.withinManhattanStream(pos, range, range, range).forEach(b -> {
+        for (BlockPos b : BlockPos.withinManhattan(pos, range, range, range)) {
             if (world.isLoaded(b) && world.getBlockEntity(b) instanceof SourceJarTile jar && jar.canAcceptSource())
                 posList.add(new SourceProvider(jar, b.immutable()));
-        });
+        }
         List<ISpecialSourceProvider> provider = SourceManager.INSTANCE.canGiveSourceNearby(pos, world, range);
         for(ISpecialSourceProvider p : provider){
             posList.add(new SourceProvider(p));
@@ -30,10 +30,10 @@ public class SourceUtil {
 
     public static List<ISpecialSourceProvider> canTakeSource(BlockPos pos, Level world, int range) {
         List<ISpecialSourceProvider> posList = new ArrayList<>();
-        BlockPos.withinManhattanStream(pos, range, range, range).forEach(b -> {
+        for (BlockPos b : BlockPos.withinManhattan(pos, range, range, range)) {
             if (world.isLoaded(b) && world.getBlockEntity(b) instanceof SourceJarTile jar && jar.getSource() > 0)
                 posList.add(new SourceProvider(jar, b.immutable()));
-        });
+        }
         List<ISpecialSourceProvider> provider = SourceManager.INSTANCE.canTakeSourceNearby(pos, world, range);
         for(ISpecialSourceProvider p : provider){
             posList.add(new SourceProvider(p));
