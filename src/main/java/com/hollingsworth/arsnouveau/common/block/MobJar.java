@@ -59,9 +59,11 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
         this.registerDefaultState(this.stateDefinition.any().setValue(BlockStateProperties.WATERLOGGED, false).setValue(FACING, Direction.NORTH).setValue(LIGHT_LEVEL, 0).setValue(POWERED, false));
     }
 
+    private static final VoxelShape VISUAL_SHAPE = Block.box(3, 14, 3, 13, 16, 13);
+
     @Override
     protected VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return Block.box(3, 14, 3, 13, 16, 13);
+        return VISUAL_SHAPE;
     }
 
     @Override
