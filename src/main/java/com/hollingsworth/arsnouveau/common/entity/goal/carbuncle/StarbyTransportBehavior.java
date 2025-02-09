@@ -65,7 +65,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     @Override
     public void tick() {
         super.tick();
-        if (this.starbuncle.isPassenger()) {
+        if (!this.starbuncle.isEffectiveAi()) {
             return;
         }
 

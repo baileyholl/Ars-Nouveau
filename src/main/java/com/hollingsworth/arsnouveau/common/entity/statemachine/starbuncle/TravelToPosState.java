@@ -28,10 +28,6 @@ public class TravelToPosState extends StarbyState{
 
     @Override
     public @Nullable StarbyState tick() {
-        if (this.starbuncle.isPassenger()) {
-            return null;
-        }
-
         if (this.ticksRunning % 100 == 0 && !isDestinationStillValid(targetPos)) {
             starbuncle.addDebugEvent(new DebugEvent("became_invalid", "Invalid position " + targetPos.toString()));
             return nextState;
