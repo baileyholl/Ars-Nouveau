@@ -1,14 +1,16 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.event.*;
-import com.hollingsworth.arsnouveau.api.mana.IManaCap;
+import com.hollingsworth.arsnouveau.api.event.EffectResolveEvent;
+import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
+import com.hollingsworth.arsnouveau.api.event.SpellCostCalcEvent;
+import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.NotEnoughManaPacket;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -194,6 +196,10 @@ public class SpellResolver implements Cloneable {
     }
 
     public void expendMana() {
+        if (spellContext.getCaster() instanceof TileCaster tc && tc.getCasterType() == SpellContext.CasterType.TURRET) {
+            return;
+        }
+
         int totalCost = getResolveCost();
         spellContext.getCaster().expendMana(totalCost);
     }
