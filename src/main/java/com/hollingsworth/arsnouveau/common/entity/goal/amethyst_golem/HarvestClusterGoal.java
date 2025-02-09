@@ -91,7 +91,7 @@ public class HarvestClusterGoal extends Goal {
         boolean shouldDropAsItems = golem.getHome() == null || !golem.canBreak(golem.getHome());
 
         boolean harvestedAny = false;
-        nextFace: for (Direction d : Direction.values()) {
+        for (Direction d : Direction.values()) {
             BlockPos pos = p.relative(d);
             if (!golem.canBreak(pos)) {
                 continue;
@@ -130,6 +130,7 @@ public class HarvestClusterGoal extends Goal {
                             level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), drop));
                         }
                     } else {
+                        var noSpaceLeft = false;
                         // Otherwise, try to insert directly.
                         for (ItemStack drop : drops) {
                             // Simulate insertion to ensure we have sufficient space for the drops.
@@ -138,7 +139,8 @@ public class HarvestClusterGoal extends Goal {
                                 // No space left in inventory, don't harvest for this face.
                                 // Other faces may have different clusters or drop a different
                                 // amount of items that can fit, so we continue.
-                                continue nextFace;
+                                noSpaceLeft = true;
+                                break;
                             }
 
                             // Attempt real insertion.
@@ -147,6 +149,10 @@ public class HarvestClusterGoal extends Goal {
                                 // Since we already simulated, this should not be possible; however, we still want to preserve any drops if it does occur.
                                 level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), left));
                             }
+                        }
+
+                        if (noSpaceLeft) {
+                            continue;
                         }
                     }
                 }
