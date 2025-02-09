@@ -266,6 +266,11 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     }
 
     @Override
+    public boolean isEffectiveAi() {
+        return !this.isPassenger() && super.isEffectiveAi();
+    }
+
+    @Override
     public void tick() {
         try {
             super.tick();
@@ -299,7 +304,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         if (this.dead)
             return;
 
-        if (!level.isClientSide && this.getStarbuncleWithSpace() != null) {
+        if (!level.isClientSide && !this.isPassenger() && this.getStarbuncleWithSpace() != null) {
             for (ItemEntity itementity : this.level.getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(1))) {
                 if (itementity.isAlive() && !itementity.getItem().isEmpty() && !itementity.hasPickUpDelay()) {
                     this.pickUpItem(itementity);

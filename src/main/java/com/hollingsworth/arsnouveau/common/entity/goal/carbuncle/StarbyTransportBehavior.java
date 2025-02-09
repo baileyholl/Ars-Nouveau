@@ -49,6 +49,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     public SimpleStateMachine<StarbyState, IStateEvent> stateMachine;
 
     public int berryBackoff;
+    public int nextBerryBackoff = 20;
     public int findItemBackoff;
     public int takeItemBackoff;
 
@@ -64,6 +65,10 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     @Override
     public void tick() {
         super.tick();
+        if (!this.starbuncle.isEffectiveAi()) {
+            return;
+        }
+
         if(!level.isClientSide) {
             if(berryBackoff > 0){
                 berryBackoff--;
