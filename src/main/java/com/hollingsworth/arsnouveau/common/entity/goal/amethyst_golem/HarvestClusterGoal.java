@@ -88,7 +88,7 @@ public class HarvestClusterGoal extends Goal {
         LootParams.Builder lootBuilder = new LootParams.Builder(level)
                 .withParameter(LootContextParams.TOOL, TOOL);
 
-        boolean shouldDropAsItems = golem.getHome() == null || !golem.canBreak(golem.getHome());
+        boolean hasUsableHome = golem.getHome() == null || !golem.canBreak(golem.getHome());
 
         boolean harvestedAny = false;
         for (Direction d : Direction.values()) {
@@ -118,7 +118,7 @@ public class HarvestClusterGoal extends Goal {
                 }
 
                 // Handle drops
-                if (shouldDropAsItems) {
+                if (hasUsableHome) {
                     for (ItemStack drop : drops) {
                         level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), drop));
                     }
