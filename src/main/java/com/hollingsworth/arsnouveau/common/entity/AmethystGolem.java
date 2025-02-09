@@ -47,7 +47,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -119,19 +118,6 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
             this.pathNavigate.setStuckHandler(PathingStuckHandler.createStuckHandler());
         }
         return pathNavigate;
-    }
-
-    @Override
-    public float getWalkTargetValue(BlockPos pos, LevelReader level) {
-        if (this.getHome() == null) {
-            return super.getWalkTargetValue(pos, level);
-        }
-
-        double distance = pos.getCenter().distanceToSqr(this.getHome().getCenter());
-
-        // Encourage amethyst golem to stay within 10 blocks of its home.
-        // See 1/max(10, x) on a graphing calculator.
-        return (float) (1.0D / Math.max(10, distance));
     }
 
     @Override
