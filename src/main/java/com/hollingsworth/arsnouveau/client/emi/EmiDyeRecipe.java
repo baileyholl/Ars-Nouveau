@@ -18,11 +18,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class EmiDyeRecipeCategory implements EmiRecipe {
+public class EmiDyeRecipe implements EmiRecipe {
     private final ResourceLocation id;
     private final DyeRecipe recipe;
 
-    public EmiDyeRecipeCategory(ResourceLocation id, DyeRecipe recipe) {
+    public EmiDyeRecipe(ResourceLocation id, DyeRecipe recipe) {
         this.id = id;
         this.recipe = recipe;
     }
