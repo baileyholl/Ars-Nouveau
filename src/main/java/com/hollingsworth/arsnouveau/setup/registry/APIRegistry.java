@@ -295,6 +295,10 @@ public class APIRegistry {
             }
         });
         JarBehaviorRegistry.register(EntityType.WITHER, new WitherBehavior());
+        JarBehaviorRegistry.register(EntityType.ARMADILLO, new ArmadilloBehavior());
+        JarBehaviorRegistry.register(EntityType.CAT, new CatBehavior());
+        JarBehaviorRegistry.register(EntityType.SNOW_GOLEM, new SnowGolemBehavior());
+        JarBehaviorRegistry.register(EntityType.SNIFFER, new SnifferBehavior());
         DynamicTooltipRegistry.register(DataComponentRegistry.REACTIVE_CASTER.get());
     }
 
