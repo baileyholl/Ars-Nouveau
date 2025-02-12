@@ -12,9 +12,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.windcharge.WindCharge;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.SimpleExplosionDamageCalculator;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,22 +38,40 @@ public class EffectWindburst extends AbstractEffect {
     public void onResolve(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         super.onResolve(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
 
+        double x, y, z;
+        if (rayTraceResult instanceof BlockHitResult bhr) {
+            var pos = bhr.getBlockPos();
+            x = pos.getX();
+            y = pos.getY();
+            z = pos.getZ();
+        } else {
+            var loc = rayTraceResult.getLocation();
+            x = loc.x;
+            y = loc.y;
+            z = loc.z;
+        }
+
+        var dummyWindCharge = new WindCharge(world, x, y, z, Vec3.ZERO);
+        if (spellStats.isSensitive()) {
+            dummyWindCharge.setOwner(shooter);
+        }
+
         world.explode(
-                        spellStats.isSensitive() ? shooter : null,
-                        null,
+                dummyWindCharge,
+                null,
                 new SimpleExplosionDamageCalculator(
                         true, false, Optional.of(1.22f + (float) (spellStats.getAmpMultiplier() * this.AMP_VALUE.getAsDouble())), BuiltInRegistries.BLOCK.getTag(BlockTags.BLOCKS_WIND_CHARGE_EXPLOSIONS).map(Function.identity())
                 ),
-                        rayTraceResult.getLocation().x,
-                        rayTraceResult.getLocation().y,
-                        rayTraceResult.getLocation().z,
-                        1.2f + (float) (spellStats.getAoeMultiplier() * this.GENERIC_DOUBLE.getAsDouble()),
-                        false,
-                        Level.ExplosionInteraction.TRIGGER,
-                        ParticleTypes.GUST_EMITTER_SMALL,
-                        ParticleTypes.GUST_EMITTER_LARGE,
-                        SoundEvents.WIND_CHARGE_BURST
-                );
+                x,
+                y,
+                z,
+                1.2f + (float) (spellStats.getAoeMultiplier() * this.GENERIC_DOUBLE.getAsDouble()),
+                false,
+                Level.ExplosionInteraction.TRIGGER,
+                ParticleTypes.GUST_EMITTER_SMALL,
+                ParticleTypes.GUST_EMITTER_LARGE,
+                SoundEvents.WIND_CHARGE_BURST
+        );
     }
 
     @Override
