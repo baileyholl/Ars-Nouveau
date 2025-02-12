@@ -1067,13 +1067,13 @@ public abstract class AbstractPathJob implements Callable<Path> {
         double parentMaxY = parentY + parent.pos.below().getY();
         final double targetMaxY = target.getCollisionShape(world, pos).max(Direction.Axis.Y) + pos.getY();
         if (targetMaxY - parentMaxY < MAX_JUMP_HEIGHT) {
-            return pos.getY() + (isSmall ? 0 : 1);
+            return pos.getY() + 1;
         }
         if (target.getBlock() instanceof StairBlock
                 && parentY - HALF_A_BLOCK < MAX_JUMP_HEIGHT
                 && target.getValue(StairBlock.HALF) == Half.BOTTOM
                 && getXZFacing(parent.pos, pos) == target.getValue(StairBlock.FACING)) {
-            return pos.getY() + (isSmall ? 0 : 1);
+            return pos.getY() + 1;
         }
         return -100;
     }
