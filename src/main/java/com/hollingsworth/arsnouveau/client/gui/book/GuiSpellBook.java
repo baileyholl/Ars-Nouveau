@@ -589,19 +589,26 @@ public class GuiSpellBook extends BaseBook {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_3 && hoveredWidget instanceof CraftingButton craftingCell) {
             int idx = -1;
+            int emptySpace = -1;
             for (int i = 0; i < craftingCells.size(); i++) {
                 CraftingButton cell = craftingCells.get(i);
                 if (cell.slotNum == craftingCell.slotNum) {
                     idx = i;
+                    continue;
+                }
+
+                if (idx != -1 && cell.getAbstractSpellPart() == null) {
+                    emptySpace = i;
                     break;
                 }
             }
 
-            if (idx == -1 || craftingCells.getLast().getAbstractSpellPart() != null) {
+            if (idx == -1 || emptySpace == -1) {
                 return true;
             }
 
-            for (int i = craftingCells.size() - 1; i >= idx + 1; i--) {
+            spell.remove(emptySpace);
+            for (int i = emptySpace; i >= idx + 1; i--) {
                 CraftingButton cell = craftingCells.get(i);
                 CraftingButton prev = craftingCells.get(i - 1);
 
@@ -611,6 +618,7 @@ public class GuiSpellBook extends BaseBook {
             spell.add(idx, null);
             craftingCells.get(idx).setAbstractSpellPart(null);
             this.setFocused(craftingCell);
+            validate();
         }
 
         return super.mouseClicked(mouseX, mouseY, button);
