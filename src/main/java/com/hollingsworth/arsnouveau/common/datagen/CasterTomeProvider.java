@@ -292,6 +292,9 @@ public class CasterTomeProvider extends SimpleDataProvider {
                 .withSound(new ConfiguredSpellSound(SoundRegistry.DEFAULT_SPELL_SOUND, 1.0f, 1.9f)), "Their Friends are their power!", new ParticleColor(255, 25, 180)));
 
         tomes.add(buildTome("sloppybox", "Arcane Smelt", new Spell(MethodTouch.INSTANCE).add(EffectRune.INSTANCE, EffectSmelt.INSTANCE).add(AugmentPierce.INSTANCE, 4), "Enough heat to melt a mountain or evaporate oceans.", new ParticleColor(139, 1, 1)));
+
+        tomes.add(buildTome("lootz", "Fireworks and Mobs", new Spell(MethodProjectile.INSTANCE, EffectHarm.INSTANCE, AugmentAmplify.INSTANCE, EffectLaunch.INSTANCE, AugmentAmplify.INSTANCE, AugmentAmplify.INSTANCE, EffectFirework.INSTANCE, AugmentExtendTime.INSTANCE, EffectExplosion.INSTANCE), "Mobs meet fireworks", new ParticleColor(255, 255, 1)));
+        tomes.add(buildTome("yuukiukami", "Yuuki's Mineral Assimilator", new Spell(MethodProjectile.INSTANCE, EffectBreak.INSTANCE, AugmentAmplify.INSTANCE, AugmentExtract.INSTANCE, EffectPickup.INSTANCE), "One of YuukiUkami’s earliest creations, this spell reflects their desire for precision and mastery. Infused with the arcane finesse of its creator, it draws minerals from the earth at a distance, as if the ores themselves were eager to join the mage’s growing legacy", new ParticleColor(48, 1, 105)));
         for (CasterRecipeWrapper g : tomes) {
             Path path = getRecipePath(output, g.id().getPath());
             saveStable(pOutput, CasterTomeData.CODEC.encodeStart(JsonOps.INSTANCE, g.toData()).getOrThrow(), path);
