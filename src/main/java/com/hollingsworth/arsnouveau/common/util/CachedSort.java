@@ -6,27 +6,20 @@ import java.util.List;
 import java.util.function.ToIntFunction;
 
 public class CachedSort {
-    record IntIntPair(int left, int right) implements Comparable<IntIntPair> {
-        @Override
-        public int compareTo(IntIntPair o) {
-            return Integer.compare(this.left, o.left);
-        }
-    }
-
     public static <T> void sortByCachedIntKey(List<T> list, ToIntFunction<T> mappingFunction) {
-        IntIntPair[] indices = new IntIntPair[list.size()];
+        long[] indices = new long[list.size()];
 
         for (int i = 0; i < list.size(); i++) {
-            indices[i] = new IntIntPair(mappingFunction.applyAsInt(list.get(i)), i);
+            indices[i] = ((long) mappingFunction.applyAsInt(list.get(i)) << 32L) + i;
         }
 
         Arrays.sort(indices);
         for (int i = 0; i < list.size(); i++) {
-            var index = indices[i].right;
+            int index = (int) (indices[i] & 0xFFFF_FFFFL);
             while (index < i) {
-                index = indices[index].right;
+                index = (int) (indices[index] & 0xFFFF_FFFFL);
             }
-            indices[i] = new IntIntPair(indices[i].left, index);
+            indices[i] = (indices[i] << 32L) + (index & 0xFFFF_FFFFL);
             Collections.swap(list, i, index);
         }
     }
