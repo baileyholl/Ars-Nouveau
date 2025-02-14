@@ -300,7 +300,7 @@ public class InventoryManager {
                 .filter(filterableItemHandler -> includeInvalid || filterableItemHandler.getHighestPreference(stack) != ItemScroll.SortPref.INVALID)
                 .collect(Collectors.toCollection(ArrayList::new));
         /// Sort by highest pref first
-        CachedSort.sortByCachedIntKey(filtered, (FilterableItemHandler o) -> -o.getHighestPreference(stack).ordinal());
+        CachedSort.sortByCachedIntKey(filtered, (FilterableItemHandler o) -> ~o.getHighestPreference(stack).ordinal());
         return filtered;
     }
 
