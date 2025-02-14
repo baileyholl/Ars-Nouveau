@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.item.inv;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.util.InvUtil;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
+import com.hollingsworth.arsnouveau.common.util.CachedSort;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -299,7 +300,7 @@ public class InventoryManager {
                 .filter(filterableItemHandler -> includeInvalid || filterableItemHandler.getHighestPreference(stack) != ItemScroll.SortPref.INVALID)
                 .collect(Collectors.toCollection(ArrayList::new));
         /// Sort by highest pref first
-        filtered.sort((o1, o2) -> o2.getHighestPreference(stack).ordinal() - o1.getHighestPreference(stack).ordinal());
+        CachedSort.sortByCachedIntKey(filtered, (FilterableItemHandler o) -> -o.getHighestPreference(stack).ordinal());
         return filtered;
     }
 
