@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.*;
 import com.hollingsworth.arsnouveau.common.block.ArcanePlatform;
-import com.hollingsworth.arsnouveau.common.block.EnchantingApparatusBlock;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ApparatusRecipeInput;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IEnchantingRecipe;
@@ -25,6 +24,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
@@ -65,7 +65,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
                 BlockPos pos = getBlockPos().offset(0, 0, 0);
                 RandomSource rand = world.getRandom();
                 BlockState state = this.getBlockState();
-                Direction facing = state.getValue(EnchantingApparatusBlock.FACING);
+                Direction facing = state.getValue(BlockStateProperties.FACING);
                 Vector3f step = facing.step();
 
                 Vec3 particlePos = new Vec3(pos.getX(), pos.getY(), pos.getZ()).add(0.5 + step.x * 0.5, 0.5 + step.y * 0.5, 0.5 + step.z * 0.5);

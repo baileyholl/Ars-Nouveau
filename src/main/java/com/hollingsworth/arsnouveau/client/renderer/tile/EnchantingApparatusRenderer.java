@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
-import com.hollingsworth.arsnouveau.common.block.EnchantingApparatusBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -12,6 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.util.RenderUtil;
@@ -38,7 +38,7 @@ public class EnchantingApparatusRenderer extends ArsGeoBlockRenderer<EnchantingA
             stack.pushPose();
 
             RenderUtil.translateMatrixToBone(stack, frame);
-            var facing = tile.getBlockState().getValue(EnchantingApparatusBlock.FACING);
+            var facing = tile.getBlockState().getValue(BlockStateProperties.FACING);
             stack.translate(0.5 - facing.getStepX() * 0.1, 0.5 - facing.getStepY() * 0.1, 0.5 - facing.getStepZ() * 0.1);
             stack.scale(0.75f, 0.75f, 0.75f);
             stack.mulPose(facing.getRotation());

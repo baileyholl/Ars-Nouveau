@@ -23,11 +23,14 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -38,11 +41,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EnchantingApparatusBlock extends TickableModBlock {
-    public static final DirectionProperty FACING = DirectionalBlock.FACING;
-
     public EnchantingApparatusBlock() {
         this(TickableModBlock.defaultProperties().noOcclusion());
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP));
+        this.registerDefaultState(this.defaultBlockState().setValue(BlockStateProperties.FACING, Direction.UP));
     }
 
     public EnchantingApparatusBlock(Properties properties) {
@@ -63,14 +64,14 @@ public class EnchantingApparatusBlock extends TickableModBlock {
             return ItemInteractionResult.SUCCESS;
 
 
-        var facing = state.getValue(FACING);
+        var facing = state.getValue(BlockStateProperties.FACING);
         var maybeCore = world.getBlockState(pos.relative(facing.getOpposite()));
         if (!(maybeCore.getBlock() instanceof ArcaneCore)) {
             PortUtil.sendMessage(player, Component.translatable("alert.core"));
             return ItemInteractionResult.SUCCESS;
         }
 
-        if (!maybeCore.getValue(ArcaneCore.FACING).getAxis().test(facing)) {
+        if (!maybeCore.getValue(BlockStateProperties.FACING).getAxis().test(facing)) {
             PortUtil.sendMessage(player, Component.translatable("alert.core.wrong_axis"));
             return ItemInteractionResult.SUCCESS;
         }
@@ -129,7 +130,7 @@ public class EnchantingApparatusBlock extends TickableModBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        return switch (state.getValue(FACING)) {
+        return switch (state.getValue(BlockStateProperties.FACING)) {
             case DOWN -> DOWN_SHAPE;
             case UP -> UP_SHAPE;
             case NORTH -> NORTH_SHAPE;
@@ -160,21 +161,21 @@ public class EnchantingApparatusBlock extends TickableModBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(BlockStateProperties.FACING);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
+        return state.setValue(BlockStateProperties.FACING, rot.rotate(state.getValue(BlockStateProperties.FACING)));
     }
 
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(BlockStateProperties.FACING)));
     }
 
     @NotNull
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         context.getLevel().scheduleTick(context.getClickedPos(), this, 1);
-        return this.defaultBlockState().setValue(FACING, context.getClickedFace());
+        return this.defaultBlockState().setValue(BlockStateProperties.FACING, context.getClickedFace());
     }
 }
