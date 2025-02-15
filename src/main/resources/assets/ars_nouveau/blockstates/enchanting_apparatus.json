@@ -21,7 +21,8 @@
 		"facing=down": {
 			"model": "ars_nouveau:block/enchanting_apparatus",
 			"x": 180
-		}, "facing=up": {
+		},
+		"facing=up": {
 			"model": "ars_nouveau:block/enchanting_apparatus"
 		}
 	}
