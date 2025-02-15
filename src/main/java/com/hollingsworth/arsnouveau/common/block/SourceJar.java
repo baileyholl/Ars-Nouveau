@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -51,6 +52,11 @@ public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
     public SourceJar(Properties properties, String registryName) {
         super(properties, registryName);
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
+    }
+
+    @Override
+    public @org.jetbrains.annotations.Nullable PushReaction getPistonPushReaction(BlockState state) {
+        return PushReaction.DESTROY;
     }
 
     @Override
