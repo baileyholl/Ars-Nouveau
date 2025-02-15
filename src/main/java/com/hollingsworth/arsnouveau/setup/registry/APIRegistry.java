@@ -298,6 +298,7 @@ public class APIRegistry {
         JarBehaviorRegistry.register(EntityType.ARMADILLO, new ArmadilloBehavior());
         JarBehaviorRegistry.register(EntityType.CAT, new CatBehavior());
         JarBehaviorRegistry.register(EntityType.SNOW_GOLEM, new SnowGolemBehavior());
+        JarBehaviorRegistry.register(EntityType.BREEZE, new BreezeBehavior());
         JarBehaviorRegistry.register(EntityType.SNIFFER, new SnifferBehavior());
         DynamicTooltipRegistry.register(DataComponentRegistry.REACTIVE_CASTER.get());
     }
