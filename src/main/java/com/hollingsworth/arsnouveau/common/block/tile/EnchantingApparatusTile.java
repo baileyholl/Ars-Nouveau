@@ -52,7 +52,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
     public void lightPedestal(Level level) {
         if (level != null) {
             for (BlockPos pos : pedestalList()) {
-                ParticleUtil.spawnOrb(level, ParticleColor.makeRandomColor(255, 255, 255, level.random), pos.above(), 300);
+                ParticleUtil.spawnOrb(level, ParticleColor.makeRandomColor(255, 255, 255, level.random), pos.relative(level.getBlockState(pos).getValue(BlockStateProperties.FACING)), 300);
             }
         }
     }
@@ -76,10 +76,11 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
 
                 for (BlockPos p : pedestalList()) {
                     if (level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile && pedestalTile.getStack() != null && !pedestalTile.getStack().isEmpty()) {
-                        var yOffset = level.getBlockState(p).getBlock() instanceof ArcanePlatform ? 0.6 : 1.3;
+                        var pedestalState = level.getBlockState(p);
+                        var offset = pedestalState.getValue(BlockStateProperties.FACING).step().mul(pedestalState.getBlock() instanceof ArcanePlatform ? 0.6F : 1.3F);
                         getLevel().addParticle(
                                 GlowParticleData.createData(new ParticleColor(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255))),
-                                p.getX() + 0.5 + ParticleUtil.inRange(-0.2, 0.2), p.getY() + yOffset + ParticleUtil.inRange(-0.3, 0.3), p.getZ() + 0.5 + ParticleUtil.inRange(-0.2, 0.2),
+                                p.getX() + 0.5 + ParticleUtil.inRange(-0.2, 0.2) + offset.x, p.getY() + 0.5 + ParticleUtil.inRange(-0.2, 0.2) + offset.y, p.getZ() + 0.5 + ParticleUtil.inRange(-0.2, 0.2) + offset.z,
                                 0, 0, 0);
                     }
                 }

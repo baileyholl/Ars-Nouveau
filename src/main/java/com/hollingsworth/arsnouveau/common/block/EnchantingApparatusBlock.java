@@ -33,6 +33,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
@@ -82,7 +83,7 @@ public class EnchantingApparatusBlock extends TickableModBlock {
                 List<ColorPos> colorPos = new ArrayList<>();
                 for(BlockPos pedPos : tile.pedestalList()){
                     if(world.getBlockEntity(pedPos) instanceof ArcanePedestalTile pedestalTile){
-                        colorPos.add(ColorPos.centeredAbove(pedPos));
+                        colorPos.add(new ColorPos(pedPos.getCenter().add(new Vec3(pedestalTile.getBlockState().getValue(BlockStateProperties.FACING).step()).scale(0.5))));
                     }
                 }
 
