@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.imbuement_chamber.IImbuementRecipe;
-import com.hollingsworth.arsnouveau.api.registry.ImbuementRecipeRegistry;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
@@ -13,31 +12,37 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EnchantingApparatusBlock extends TickableModBlock {
+    public static final DirectionProperty FACING = DirectionalBlock.FACING;
 
     public EnchantingApparatusBlock() {
         this(TickableModBlock.defaultProperties().noOcclusion());
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP));
     }
 
     public EnchantingApparatusBlock(Properties properties) {
@@ -58,10 +63,18 @@ public class EnchantingApparatusBlock extends TickableModBlock {
             return ItemInteractionResult.SUCCESS;
 
 
-        if (!(world.getBlockState(pos.below()).getBlock() instanceof ArcaneCore)) {
+        var facing = state.getValue(FACING);
+        var maybeCore = world.getBlockState(pos.relative(facing.getOpposite()));
+        if (!(maybeCore.getBlock() instanceof ArcaneCore)) {
             PortUtil.sendMessage(player, Component.translatable("alert.core"));
             return ItemInteractionResult.SUCCESS;
         }
+
+        if (!maybeCore.getValue(ArcaneCore.FACING).getAxis().test(facing)) {
+            PortUtil.sendMessage(player, Component.translatable("alert.core.wrong_axis"));
+            return ItemInteractionResult.SUCCESS;
+        }
+
         if (tile.getStack() == null || tile.getStack().isEmpty()) {
             IEnchantingRecipe recipe = tile.getRecipe(player.getMainHandItem(), player);
             if (recipe == null) {
@@ -107,9 +120,23 @@ public class EnchantingApparatusBlock extends TickableModBlock {
         return ItemInteractionResult.SUCCESS;
     }
 
+    public static final VoxelShape DOWN_SHAPE = Block.box(1, 0, 1, 15, 15, 15);
+    public static final VoxelShape UP_SHAPE = Block.box(1, 1, 1, 15, 16, 15);
+    public static final VoxelShape NORTH_SHAPE = Block.box(1, 1, 0, 15, 15, 15);
+    public static final VoxelShape SOUTH_SHAPE = Block.box(1, 1, 1, 15, 15, 16);
+    public static final VoxelShape WEST_SHAPE = Block.box(0, 1, 1, 15, 15, 15);
+    public static final VoxelShape EAST_SHAPE = Block.box(1, 1, 1, 16, 15, 15);
+
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        return Block.box(1D, 1.0D, 1.0D, 15, 16, 15);
+        return switch (state.getValue(FACING)) {
+            case DOWN -> DOWN_SHAPE;
+            case UP -> UP_SHAPE;
+            case NORTH -> NORTH_SHAPE;
+            case SOUTH -> SOUTH_SHAPE;
+            case WEST -> WEST_SHAPE;
+            case EAST -> EAST_SHAPE;
+        };
     }
 
     @Override
@@ -129,5 +156,25 @@ public class EnchantingApparatusBlock extends TickableModBlock {
     @Override
     public boolean isPathfindable(BlockState pState, PathComputationType pType) {
         return false;
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
+    }
+
+    public BlockState rotate(BlockState state, Rotation rot) {
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
+    }
+
+    public BlockState mirror(BlockState state, Mirror mirrorIn) {
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
+    }
+
+    @NotNull
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        context.getLevel().scheduleTick(context.getClickedPos(), this, 1);
+        return this.defaultBlockState().setValue(FACING, context.getClickedFace());
     }
 }

@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.*;
 import com.hollingsworth.arsnouveau.common.block.ArcanePlatform;
+import com.hollingsworth.arsnouveau.common.block.EnchantingApparatusBlock;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ApparatusRecipeInput;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IEnchantingRecipe;
@@ -13,6 +14,7 @@ import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -24,6 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -61,12 +64,15 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
                 Level world = getLevel();
                 BlockPos pos = getBlockPos().offset(0, 0, 0);
                 RandomSource rand = world.getRandom();
+                BlockState state = this.getBlockState();
+                Direction facing = state.getValue(EnchantingApparatusBlock.FACING);
+                Vector3f step = facing.step();
 
-                Vec3 particlePos = new Vec3(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0, 0.5);
+                Vec3 particlePos = new Vec3(pos.getX(), pos.getY(), pos.getZ()).add(0.5 + step.x * 0.5, 0.5 + step.y * 0.5, 0.5 + step.z * 0.5);
                 particlePos = particlePos.add(ParticleUtil.pointInSphere());
                 world.addParticle(ParticleLineData.createData(new ParticleColor(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255))),
-                        particlePos.x(), particlePos.y() + 1, particlePos.z(),
-                        pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+                        particlePos.x(), particlePos.y(), particlePos.z(),
+                        pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
 
                 for (BlockPos p : pedestalList()) {
                     if (level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile && pedestalTile.getStack() != null && !pedestalTile.getStack().isEmpty()) {
