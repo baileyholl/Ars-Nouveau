@@ -178,6 +178,7 @@ public class APIRegistry {
         registerPerk(TotemPerk.INSTANCE);
         registerPerk(VampiricPerk.INSTANCE);
         registerPerk(KnockbackResistPerk.INSTANCE);
+        registerPerk(BondedPerk.INSTANCE);
 
         ImbuementRecipeRegistry.INSTANCE.addRecipeType(RecipeRegistry.IMBUEMENT_TYPE);
     }
