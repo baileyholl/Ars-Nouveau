@@ -33,6 +33,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
@@ -222,5 +223,10 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
     @Override
     public boolean isPathfindable(BlockState pState, PathComputationType pType) {
         return false;
+    }
+
+    @Override
+    public @Nullable PushReaction getPistonPushReaction(BlockState state) {
+        return PushReaction.DESTROY;
     }
 }
