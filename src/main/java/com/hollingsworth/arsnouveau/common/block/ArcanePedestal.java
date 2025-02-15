@@ -39,7 +39,7 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
 
     public ArcanePedestal() {
         super(ModBlock.defaultProperties().noOcclusion().forceSolidOn());
-        registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false).setValue(BlockStateProperties.FACING, Direction.NORTH));
+        registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false).setValue(BlockStateProperties.FACING, Direction.UP));
     }
 
     @Override
