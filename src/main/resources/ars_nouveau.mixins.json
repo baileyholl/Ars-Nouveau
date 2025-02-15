@@ -18,6 +18,7 @@
   ],
   "mixins": [
     "BlockBehaviourAccessor",
+    "BlockItemAccessor",
     "BrushableBlockEntityAccessor",
     "DamageSourceMixin",
     "EntityMixin",
