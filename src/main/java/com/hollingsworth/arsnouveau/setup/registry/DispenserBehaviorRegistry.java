@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
+import com.hollingsworth.arsnouveau.common.block.CreativeSourceJar;
 import com.hollingsworth.arsnouveau.common.block.SourceJar;
 import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
 import com.hollingsworth.arsnouveau.common.items.data.BlockFillContents;
@@ -30,6 +31,29 @@ public class DispenserBehaviorRegistry {
                         if (be instanceof SourceJarTile tile) {
                             tile.setSource(BlockFillContents.get(item));
                         }
+                    }
+
+                    item.shrink(1);
+                    this.setSuccess(true);
+                } else {
+                    this.setSuccess(false);
+                }
+                return item;
+            }
+        });
+
+        DispenserBlock.registerBehavior(BlockRegistry.CREATIVE_SOURCE_JAR.get(), new OptionalDispenseItemBehavior() {
+            @Override
+            @SuppressWarnings("resource")
+            protected @NotNull ItemStack execute(@NotNull BlockSource blockSource, @NotNull ItemStack item) {
+                Level level = blockSource.level();
+                BlockPos pos = blockSource.pos().relative(blockSource.state().getValue(DispenserBlock.FACING));
+                CreativeSourceJar jar = BlockRegistry.CREATIVE_SOURCE_JAR.get();
+                if (level.isEmptyBlock(pos)) {
+                    if (!level.isClientSide) {
+                        var state = jar.defaultBlockState();
+                        level.setBlock(pos, state, 3);
+                        level.gameEvent(null, GameEvent.BLOCK_PLACE, pos);
                     }
 
                     item.shrink(1);
