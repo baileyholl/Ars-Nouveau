@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.block.IntangibleAirBlock;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.mixin.BlockItemAccessor;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.util.HolderHelper;
 import net.minecraft.core.BlockPos;
@@ -108,17 +109,19 @@ public class EffectExchange extends AbstractEffect {
         fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
         BlockPlaceContext context = BlockPlaceContext.at(new BlockPlaceContext(new UseOnContext(fakePlayer, InteractionHand.MAIN_HAND, result)), pos1.relative(result.getDirection().getOpposite()), result.getDirection());
         BlockState placeState = item.getBlock().getStateForPlacement(context);
-        if (placeState != null && placeState.getBlock() == world.getBlockState(pos1).getBlock())
+        if (placeState == null || placeState.getBlock() == world.getBlockState(pos1).getBlock()) {
             return;
-
+        }
         if (!BlockUtil.breakExtraBlock((ServerLevel) world, pos1, tool, shooter.getUUID(), true)) {
             return;
         }
-        if (placeState == null)
-            return;
+
         world.setBlock(pos1, placeState, 3);
         item.getBlock().setPlacedBy(world, pos1, placeState, shooter, stack);
+
+        ((BlockItemAccessor) item).invokeUpdateBlockStateFromTag(pos1, world, stack, placeState);
         BlockItem.updateCustomBlockEntityTag(world, shooter instanceof Player player ? player : fakePlayer, pos1, stack);
+        BlockItemAccessor.invokeUpdateBlockEntityComponents(world, pos1, stack);
         stack.shrink(1);
         ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), result.getDirection(), pos1, false), world, shooter, spellContext, resolver);
     }
