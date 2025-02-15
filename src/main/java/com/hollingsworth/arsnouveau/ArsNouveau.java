@@ -1,14 +1,15 @@
 package com.hollingsworth.arsnouveau;
 
-import com.hollingsworth.arsnouveau.api.registry.*;
-import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
+import com.hollingsworth.arsnouveau.api.registry.BuddingConversionRegistry;
+import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
+import com.hollingsworth.arsnouveau.api.registry.GenericRecipeRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ScryRitualRegistry;
 import com.hollingsworth.arsnouveau.client.registry.ClientHandler;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.entity.BubbleEntity;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
 import com.hollingsworth.arsnouveau.common.event.BreezeEvent;
-import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import com.hollingsworth.arsnouveau.common.world.Terrablender;
@@ -24,7 +25,6 @@ import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
-import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -153,10 +153,7 @@ public class ArsNouveau {
                 flowerPot.addPlant(pot.getKey().get(), pot::getValue);
             }
 
-            for (RitualTablet tablet : RitualRegistry.getRitualItemMap().values()){
-                DispenserBlock.registerBehavior(tablet, new DispenserRitualBehavior());
-            }
-
+            DispenserBehaviorRegistry.register();
         });
         for(String warning : postLoadWarnings){
             Log.getLogger().error(warning);

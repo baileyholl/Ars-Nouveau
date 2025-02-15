@@ -1,8 +1,11 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
+import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
 import com.hollingsworth.arsnouveau.common.block.CreativeSourceJar;
 import com.hollingsworth.arsnouveau.common.block.SourceJar;
 import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
+import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.items.data.BlockFillContents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.dispenser.BlockSource;
@@ -15,6 +18,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class DispenserBehaviorRegistry {
     public static void register() {
+        for (RitualTablet tablet : RitualRegistry.getRitualItemMap().values()){
+            DispenserBlock.registerBehavior(tablet, new DispenserRitualBehavior());
+        }
+
         DispenserBlock.registerBehavior(BlockRegistry.SOURCE_JAR.get(), new OptionalDispenseItemBehavior() {
             @Override
             @SuppressWarnings("resource")
