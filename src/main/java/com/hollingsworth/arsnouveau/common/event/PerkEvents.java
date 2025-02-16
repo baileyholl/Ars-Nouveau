@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.api.perk.IEffectResolvePerk;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkInstance;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
+import com.hollingsworth.arsnouveau.common.perk.BondedPerk;
 import com.hollingsworth.arsnouveau.common.perk.TotemPerk;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
@@ -21,11 +22,15 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @EventBusSubscriber(modid = ArsNouveau.MODID)
@@ -188,6 +193,35 @@ public class PerkEvents {
                 holder.getA().set(DataComponentRegistry.ARMOR_PERKS, holder.getB().setTagForPerk(TotemPerk.INSTANCE, tag));
             }
             PortUtil.sendMessage(p, Component.translatable("ars_nouveau.totem_perk.active"));
+        }
+    }
+
+    @SubscribeEvent
+    public static void preHurt(LivingDamageEvent.Pre event) {
+        if (event.getEntity() instanceof Player player) {
+            PerkUtil.getPerksFromLiving(player).forEach(perkInstance -> {
+                if (perkInstance.getPerk() instanceof BondedPerk bondedPerk) {
+                    var familiars = FamiliarEvents.getFamiliars(f -> true);
+                    if (familiars.isEmpty()) {
+                        return;
+                    }
+
+                    var level = PerkUtil.countForPerk(bondedPerk, player);
+                    var percentage = level * 0.2F;
+
+                    var damagePerFamiliar = event.getNewDamage() * percentage;
+                    var familiarsHurt = 0;
+                    for (var familiar : familiars) {
+                        if (familiar.hurt(event.getSource(), damagePerFamiliar)) {
+                            familiarsHurt++;
+                        }
+                    }
+
+                    if (familiarsHurt != 0) {
+                        event.setNewDamage(event.getNewDamage() * Math.max(0, 1.0F - percentage * familiarsHurt));
+                    }
+                }
+            });
         }
     }
 }
