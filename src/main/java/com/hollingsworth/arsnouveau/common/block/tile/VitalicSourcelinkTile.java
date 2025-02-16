@@ -7,7 +7,7 @@ import com.hollingsworth.arsnouveau.api.source.SourcelinkEventQueue;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -34,7 +34,7 @@ public class VitalicSourcelinkTile extends SourcelinkTile {
     public void tick() {
         super.tick();
         if (!level.isClientSide && level.getGameTime() % 60 == 0) {
-            for (Animal entity : level.getEntitiesOfClass(Animal.class, new AABB(worldPosition).inflate(6))) {
+            for (AgeableMob entity : level.getEntitiesOfClass(AgeableMob.class, new AABB(worldPosition).inflate(6))) {
                 if (entity.isBaby()) {
                     if (entity.getAge() < 0) {
                         if (ModList.get().isLoaded("quark") && entity.getPersistentData().contains(TAG_POISONED)) {
