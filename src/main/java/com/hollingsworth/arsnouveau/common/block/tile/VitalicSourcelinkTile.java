@@ -5,9 +5,11 @@ import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.api.source.SourcelinkEventQueue;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -35,7 +37,7 @@ public class VitalicSourcelinkTile extends SourcelinkTile {
         super.tick();
         if (!level.isClientSide && level.getGameTime() % 60 == 0) {
             for (AgeableMob entity : level.getEntitiesOfClass(AgeableMob.class, new AABB(worldPosition).inflate(6))) {
-                if (entity.isBaby()) {
+                if (!entity.getType().is(EntityTags.VITALIC_GROWTH_BLACKLIST) && entity.isBaby()) {
                     if (entity.getAge() < 0) {
                         if (ModList.get().isLoaded("quark") && entity.getPersistentData().contains(TAG_POISONED)) {
                             return;
@@ -57,11 +59,12 @@ public class VitalicSourcelinkTile extends SourcelinkTile {
     }
 
     @SubscribeEvent
-    public static void livingDeath(LivingDeathEvent e) {
-        if (e.getEntity().level.isClientSide || e.getEntity() instanceof IDispellable || e.getEntity() instanceof ISummon)
+    public static void livingDeath(LivingDeathEvent event) {
+        LivingEntity e = event.getEntity();
+        if (e.level.isClientSide || e instanceof IDispellable || e instanceof ISummon || e.getType().is(EntityTags.VITALIC_DEATH_BLACKLIST))
             return;
         int mana = 200;
-        SourcelinkEventQueue.addManaEvent(e.getEntity().level, VitalicSourcelinkTile.class, mana, e, e.getEntity().blockPosition());
+        SourcelinkEventQueue.addManaEvent(e.level, VitalicSourcelinkTile.class, mana, event, e.blockPosition());
     }
 
     @Override
