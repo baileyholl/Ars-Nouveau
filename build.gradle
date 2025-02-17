@@ -154,7 +154,7 @@ dependencies {
     implementation "curse.maven:jade-324717:5444008"
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}+1.21"
 
-    compileOnly "dev.emi:emi-neoforge:${emi_version}"
+    localRuntime "dev.emi:emi-neoforge:${emi_version}"
     localRuntime 'curse.maven:ftb-teams-forge-404468:5631446'
     localRuntime 'curse.maven:ftb-chunks-forge-314906:5710609'
     localRuntime 'curse.maven:ftb-library-forge-404465:5754910'
