@@ -74,12 +74,12 @@ public class EffectWither extends AbstractEffect implements IPotionEffect {
 
             var block = state.getBlock();
 
-            var demossed = SIMPLE_CONVERSION_MAP.get(block);
-            if (demossed != null) {
-                if (demossed == Blocks.AIR) {
+            var replacement = SIMPLE_CONVERSION_MAP.get(block);
+            if (replacement != null) {
+                if (replacement == Blocks.AIR) {
                     level.removeBlock(pos, false);
                 } else {
-                    level.setBlock(pos, demossed.defaultBlockState(), 3);
+                    level.setBlock(pos, replacement.defaultBlockState(), 3);
                 }
             }
 
