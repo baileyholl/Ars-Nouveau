@@ -229,7 +229,8 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
     }
 
     @Override
-    public void die(DamageSource source) {
+    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
+        super.dropCustomDeathLoot(level, damageSource, recentlyHit);
         if (!level.isClientSide) {
             ItemStack stack = new ItemStack(ItemsRegistry.AMETHYST_GOLEM_CHARM.get());
             stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
@@ -237,7 +238,6 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
             if (this.getMainHandItem() != null)
                 level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getMainHandItem()));
         }
-        super.die(source);
     }
 
     @Override
