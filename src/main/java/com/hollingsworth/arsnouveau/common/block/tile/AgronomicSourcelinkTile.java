@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.event.SuccessfulTreeGrowthEvent;
 import com.hollingsworth.arsnouveau.api.source.SourcelinkEventQueue;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -9,7 +10,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.level.BlockGrowFeatureEvent;
 import net.neoforged.neoforge.event.level.block.CropGrowEvent;
 
 @EventBusSubscriber(modid = ArsNouveau.MODID)
@@ -31,13 +31,12 @@ public class AgronomicSourcelinkTile extends SourcelinkTile {
     }
 
     @SubscribeEvent
-    public static void treeGrow(BlockGrowFeatureEvent event) {
+    public static void treeGrow(SuccessfulTreeGrowthEvent event) {
         int mana = 50;
-        if (event.getLevel().getBlockState(event.getPos()).is(BlockTagProvider.MAGIC_SAPLINGS)) {
+        if (event.sapling.is(BlockTagProvider.MAGIC_SAPLINGS)) {
             mana += 50;
         }
-        if (event.getLevel() instanceof Level)
-            SourcelinkEventQueue.addManaEvent((Level) event.getLevel(), AgronomicSourcelinkTile.class, mana, event, event.getPos());
+        SourcelinkEventQueue.addManaEvent(event.level, AgronomicSourcelinkTile.class, mana, event, event.pos);
     }
 
     @Override
