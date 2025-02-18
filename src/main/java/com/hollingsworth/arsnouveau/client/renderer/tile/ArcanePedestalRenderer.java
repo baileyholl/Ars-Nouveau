@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.common.block.ArcanePlatform;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -30,17 +31,24 @@ public class ArcanePedestalRenderer implements BlockEntityRenderer<ArcanePedesta
 
         matrixStack.pushPose();
 
-        if (tileEntityIn.getBlockState().hasProperty(BlockStateProperties.FACING)) {
+        if (tileEntityIn.getBlockState().getBlock() instanceof ArcanePlatform) {
             switch (tileEntityIn.getBlockState().getValue(BlockStateProperties.FACING)) {
                 case DOWN -> yOffset = 0.4f;
+                case UP -> yOffset = 0.6f;
+                case NORTH -> zOffset = 0.45f;
+                case SOUTH -> zOffset = 0.55f;
                 case WEST -> xOffset = 0.45f;
                 case EAST -> xOffset = 0.55f;
-                case SOUTH -> zOffset = 0.55f;
-                case NORTH -> zOffset = 0.45f;
-                default -> yOffset = 0.6f;
             }
         } else {
-            yOffset = 1.1f;
+            switch (tileEntityIn.getBlockState().getValue(BlockStateProperties.FACING)) {
+                case DOWN -> yOffset = -0.1f;
+                case UP -> yOffset = 1.1f;
+                case NORTH -> zOffset = -0.05f;
+                case SOUTH -> zOffset = 1.05f;
+                case WEST -> xOffset = -0.05f;
+                case EAST -> xOffset = 1.05f;
+            }
         }
         matrixStack.translate(xOffset, yOffset, zOffset);
         matrixStack.scale(0.5f, 0.5f, 0.5f);
