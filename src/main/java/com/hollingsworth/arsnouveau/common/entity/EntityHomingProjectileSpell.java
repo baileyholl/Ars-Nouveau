@@ -65,7 +65,8 @@ public class EntityHomingProjectileSpell extends EntityProjectileSpell {
                 }
             }
 
-            if (target != null) {
+            //keep going if we are in target bounding box until exit
+            if (target != null && !target.getBoundingBox().inflate(0.2).intersects(this.getBoundingBox())) {
                 homeTo(target.blockPosition());
             } else {
                 super.tickNextPosition();
