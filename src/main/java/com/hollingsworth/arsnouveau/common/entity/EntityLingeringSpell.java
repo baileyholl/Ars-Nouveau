@@ -75,7 +75,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
     public void castSpells() {
         float aoe = getAoe();
         int flatAoe = Math.round(aoe);
-        if (!level.isClientSide && age % (20 - 2 * getAccelerates()) == 0) {
+        if (!level.isClientSide && age % (Math.max(1,20 - 2 * getAccelerates())) == 0) {
             if (isSensitive()) {
                 for (BlockPos p : BlockPos.betweenClosed(blockPosition().east(flatAoe).north(flatAoe), blockPosition().west(flatAoe).south(flatAoe))) {
                     p = p.immutable();
