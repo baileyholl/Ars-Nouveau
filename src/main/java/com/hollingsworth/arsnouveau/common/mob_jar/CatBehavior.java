@@ -42,7 +42,7 @@ public class CatBehavior extends JarBehavior<Cat> {
     }
 
     @Override
-    public int getAnalogPower(MobJarTile tile) {
+    public int getSignalPower(MobJarTile tile) {
         var level = tile.getLevel();
 
         if (!(level instanceof ServerLevel)) {
