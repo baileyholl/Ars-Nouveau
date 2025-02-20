@@ -21,7 +21,9 @@ public class SnifferBehavior extends JarBehavior<Sniffer> {
 
         Sniffer sniffer = this.entityFromJar(tile);
 
-        if (!isEntityBaby(sniffer) && sniffer.getEntityData().get(Sniffer.DATA_DROP_SEED_AT_TICK) <= sniffer.tickCount) {
+        int dropTime = Math.max(8 * 60 * 20, sniffer.getEntityData().get(Sniffer.DATA_DROP_SEED_AT_TICK));
+
+        if (!isEntityBaby(sniffer) && dropTime <= sniffer.tickCount) {
             sniffer.getEntityData().set(Sniffer.DATA_DROP_SEED_AT_TICK, sniffer.tickCount + 8 * 60 * 20);
             level.broadcastEntityEvent(sniffer, (byte) 63);
 
