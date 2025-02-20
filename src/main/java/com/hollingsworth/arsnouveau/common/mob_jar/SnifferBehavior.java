@@ -11,8 +11,15 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
 
 public class SnifferBehavior extends JarBehavior<Sniffer> {
+    @Override
+    public Vec3 scaleOffset(MobJarTile pBlockEntity) {
+        float scale = -0.45F;
+        return new Vec3(scale, scale, scale);
+    }
+
     @Override
     public void tick(MobJarTile tile) {
         if(!(tile.getLevel() instanceof ServerLevel level)) {
