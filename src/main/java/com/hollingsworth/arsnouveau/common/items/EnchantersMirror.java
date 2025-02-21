@@ -58,8 +58,17 @@ public class EnchantersMirror extends ModItem implements ICasterTool, GeoItem, I
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-        AbstractCaster<?> caster = getSpellCaster(stack);
-        return caster.castSpell(worldIn, playerIn, handIn, Component.translatable("ars_nouveau.mirror.invalid"), caster.getSpell());
+        if (!worldIn.isClientSide) {
+            return InteractionResultHolder.pass(stack);
+        }
+
+        var caster = this.getSpellCaster(stack);
+        if (caster == null) {
+            return InteractionResultHolder.pass(stack);
+        }
+        caster.castOnServer(handIn, Component.translatable("ars_nouveau.mirror.invalid"));
+
+        return InteractionResultHolder.consume(stack);
     }
 
     @Override
