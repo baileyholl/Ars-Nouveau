@@ -57,6 +57,11 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     public void tick() {
         try {
             if (level.isClientSide && this.cachedEntity != null) {
+                if (this.cachedEntity.isRemoved()) {
+                    this.removeEntity();
+                    return;
+                }
+
                 if (cachedEntity instanceof Mob mob && !(mob instanceof Bee)) {
                     mob.getLookControl().tick();
                 }
