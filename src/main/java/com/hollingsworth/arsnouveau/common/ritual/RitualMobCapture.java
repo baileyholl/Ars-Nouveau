@@ -47,6 +47,9 @@ public class RitualMobCapture extends AbstractRitual {
                         continue;
                     }
                     for(Entity e : level.getEntities((Entity)null, new AABB(tile.getBlockPos()).inflate(5), this::canJar)){
+                        for (var passenger : e.getPassengers()) {
+                            passenger.stopRiding();
+                        }
                         if(e instanceof Mob mob && ((Mob) e).isLeashed() && e.shouldBeSaved()){
                             if(mob.isLeashed()){
                                 mob.dropLeash(true, true);

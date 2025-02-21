@@ -71,6 +71,8 @@ public class MobJarRenderer implements BlockEntityRenderer<MobJarTile> {
             pPoseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
         } else if (direction == Direction.SOUTH) {
             pPoseStack.mulPose(Axis.XP.rotationDegrees(-90.0F));
+        } else if (direction == Direction.DOWN) {
+            pPoseStack.translate(0, entity.getBbHeight() + 0.75, 0);
         }
         pPoseStack.mulPose(pBlockEntity.getBlockState().getValue(MobJar.FACING).getRotation());
         entity.setDeltaMovement(0, 0, 0);

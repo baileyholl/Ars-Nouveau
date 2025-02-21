@@ -20,6 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,9 +28,11 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.neoforged.neoforge.capabilities.EntityCapability;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -54,6 +57,11 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     public void tick() {
         try {
             if (level.isClientSide && this.cachedEntity != null) {
+                if (this.cachedEntity.isRemoved()) {
+                    this.removeEntity();
+                    return;
+                }
+
                 if (cachedEntity instanceof Mob mob && !(mob instanceof Bee)) {
                     mob.getLookControl().tick();
                 }
@@ -107,6 +115,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
             this.extraDataTag = null;
             this.entityTag = tag;
             if (!level.isClientSide) {
+                this.invalidateCapabilities();
                 level.setBlockAndUpdate(worldPosition, this.getBlockState().setValue(MobJar.LIGHT_LEVEL, calculateLight()));
                 updateBlock();
             }
@@ -184,6 +193,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
         this.entityTag = null;
         this.cachedEntity = null;
         this.extraDataTag = null;
+        this.invalidateCapabilities();
         updateBlock();
     }
 
@@ -286,5 +296,72 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     protected void collectImplicitComponents(DataComponentMap.@NotNull Builder pComponents) {
         super.collectImplicitComponents(pComponents);
         pComponents.set(DataComponentRegistry.MOB_JAR, new MobJarData(this.entityTag, this.extraDataTag));
+    }
+
+    public <T, C> T getEntityCapability(EntityCapability<T, C> type, C context) {
+        var entity = this.getEntity();
+        if (entity == null) {
+            return null;
+        }
+
+        return entity.getCapability(type, context);
+    }
+
+    public static class SavingItemHandler implements IItemHandler {
+        MobJarTile tile;
+        IItemHandler inner;
+
+        private SavingItemHandler(MobJarTile tile, IItemHandler inner) {
+            this.tile = tile;
+            this.inner = inner;
+        }
+
+        public static SavingItemHandler of(MobJarTile tile, IItemHandler inner) {
+            return inner == null ? null : new SavingItemHandler(tile, inner);
+        }
+
+        @Override
+        public int getSlots() {
+            return inner.getSlots();
+        }
+
+        @Override
+        public ItemStack getStackInSlot(int slot) {
+            return inner.getStackInSlot(slot);
+        }
+
+        @Override
+        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+            var result = inner.insertItem(slot, stack, simulate);
+            if (!simulate) {
+                var entity = tile.getEntity();
+                if (entity != null) {
+                    tile.entityTag = tile.saveEntityToTag(entity);
+                }
+            }
+            return result;
+        }
+
+        @Override
+        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+            var result = inner.extractItem(slot, amount, simulate);
+            if (!simulate) {
+                var entity = tile.getEntity();
+                if (entity != null) {
+                    tile.entityTag = tile.saveEntityToTag(entity);
+                }
+            }
+            return result;
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return inner.getSlotLimit(slot);
+        }
+
+        @Override
+        public boolean isItemValid(int slot, ItemStack stack) {
+            return inner.isItemValid(slot, stack);
+        }
     }
 }
