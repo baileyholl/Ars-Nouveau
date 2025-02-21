@@ -31,7 +31,6 @@ public class PacketCastSpell extends AbstractPacket {
     InteractionHand hand;
     @Nullable
     Component invalidMessage;
-    Spell spell;
 
     public PacketCastSpell(AbstractCaster<?> caster, InteractionHand hand, @Nullable Component invalidMessage) {
         this.slot = caster.getCurrentSlot();
@@ -40,7 +39,6 @@ public class PacketCastSpell extends AbstractPacket {
         this.yRot = cam.yRot;
         this.hand = hand;
         this.invalidMessage = invalidMessage;
-        this.spell = caster.getSpell();
     }
 
     //Decoder
@@ -49,7 +47,6 @@ public class PacketCastSpell extends AbstractPacket {
         this.xRot = buf.readFloat();
         this.yRot = buf.readFloat();
         this.hand = buf.readEnum(InteractionHand.class);
-        this.spell = buf.readJsonWithCodec(Spell.CODEC.codec());
         if (buf.readBoolean()) {
             this.invalidMessage = buf.readJsonWithCodec(ComponentSerialization.CODEC);
         }
@@ -61,7 +58,6 @@ public class PacketCastSpell extends AbstractPacket {
         buf.writeFloat(this.xRot);
         buf.writeFloat(this.yRot);
         buf.writeEnum(this.hand);
-        buf.writeJsonWithCodec(Spell.CODEC.codec(), this.spell);
         if (invalidMessage != null) {
             buf.writeBoolean(true);
             buf.writeJsonWithCodec(ComponentSerialization.CODEC, this.invalidMessage);
@@ -102,7 +98,7 @@ public class PacketCastSpell extends AbstractPacket {
             player.setXRot(this.xRot);
             player.setYHeadRot(this.yRot);
 
-            caster.castSpell(player.level, player, this.hand, this.invalidMessage, this.spell);
+            caster.castSpell(player.level, player, this.hand, this.invalidMessage, caster.getSpell(this.slot));
 
             player.setXRot(pXRot);
             player.setYHeadRot(pYRot);
