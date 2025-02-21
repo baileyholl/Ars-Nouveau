@@ -13,11 +13,9 @@ import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenuSlot;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.client.registry.ModKeyBindings;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellBookRenderer;
-import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetCasterSlot;
-import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
@@ -25,14 +23,13 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.LevelReader;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -62,29 +59,22 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
-        ItemStack stack = playerIn.getItemInHand(handIn);
-        if (tier != SpellTier.CREATIVE) {
-            var iMana = CapabilityRegistry.getMana(playerIn);
-            if(iMana != null){
-                boolean shouldSync = false;
-                if (iMana.getBookTier() < this.tier.value) {
-                    iMana.setBookTier(this.tier.value);
-                    shouldSync = true;
-                }
-                IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerIn);
-                if (iMana.getGlyphBonus() < cap.getKnownGlyphs().size()) {
-                    iMana.setGlyphBonus(cap.getKnownGlyphs().size());
-                    shouldSync = true;
-                }
-                if(shouldSync && playerIn instanceof ServerPlayer player) {
-                    iMana.syncToClient(player);
-                }
-            }
+    public @NotNull InteractionResult onItemUseFirst(@NotNull ItemStack stack, UseOnContext context) {
+        if (context.getPlayer() == null) {
+            return super.onItemUseFirst(stack, context);
         }
-        AbstractCaster<?> caster = getSpellCaster(stack);
 
-        return caster.castSpell(worldIn, playerIn, handIn, Component.translatable("ars_nouveau.invalid_spell"));
+        if (!context.getLevel().isClientSide) {
+            return InteractionResult.PASS;
+        }
+
+        var caster = this.getSpellCaster(stack);
+        if (caster == null) {
+            return InteractionResult.PASS;
+        }
+        caster.castOnServer(context.getHand(), Component.translatable("ars_nouveau.invalid_spell"));
+
+        return InteractionResult.CONSUME;
     }
 
     @Override
