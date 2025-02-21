@@ -149,6 +149,10 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
 
     public RadialMenu<AbstractSpellPart> getRadialMenuProviderForSpellpart(ItemStack itemStack) {
         return new RadialMenu<>((int slot) -> {
+            AbstractCaster<?> caster = this.getSpellCaster(itemStack);
+            if (caster != null) {
+                caster.setCurrentSlot(slot).saveToStack(itemStack);
+            }
             Networking.sendToServer(new PacketSetCasterSlot(slot));
         },
                 getRadialMenuSlotsForSpellpart(itemStack),
