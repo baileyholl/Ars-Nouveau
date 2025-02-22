@@ -48,7 +48,7 @@ public class EffectWindburst extends AbstractEffect {
         }
 
         world.explode(
-                dummyWindCharge,
+                spellStats.isSensitive() ? shooter : dummyWindCharge,
                 null,
                 new SimpleExplosionDamageCalculator(
                         true, false, Optional.of(1.22f + (float) (spellStats.getAmpMultiplier() * this.AMP_VALUE.getAsDouble())), BuiltInRegistries.BLOCK.getTag(BlockTags.BLOCKS_WIND_CHARGE_EXPLOSIONS).map(Function.identity())
