@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.emi;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.*;
+import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectCrush;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
@@ -13,11 +14,10 @@ import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.NotNull;
-
-import static com.hollingsworth.arsnouveau.client.jei.ScryRitualRecipeCategory.SCRY_RITUAL;
 
 @EmiEntrypoint
 public class EmiArsNouveauPlugin implements EmiPlugin {
@@ -38,7 +38,7 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
     public static final EmiStack CRUSH_GLYPH = EmiStack.of(EffectCrush.INSTANCE.glyphItem);
     public static final EmiRecipeCategory CRUSH_CATEGORY = new EmiRecipeCategory(ArsNouveau.prefix("crush"), CRUSH_GLYPH);
 
-    public static final EmiStack SCRY_TABLET = EmiStack.of(RitualRegistry.getRitualItemMap().get(SCRY_RITUAL));
+    public static final EmiStack SCRY_TABLET = EmiStack.of(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix(RitualLib.SCRYING)));
     public static final EmiRecipeCategory SCRY_RITUAL_CATEGORY = new EmiRecipeCategory(ArsNouveau.prefix("scry_ritual"), SCRY_TABLET);
 
     @Override
