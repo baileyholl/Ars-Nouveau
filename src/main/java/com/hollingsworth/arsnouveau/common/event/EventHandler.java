@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.event.DispelEvent;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
+import com.hollingsworth.arsnouveau.api.event.SuccessfulTreeGrowthEvent;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.recipe.MultiRecipeWrapper;
@@ -80,7 +81,6 @@ import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.level.BlockGrowFeatureEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.village.VillageSiegeEvent;
@@ -471,16 +471,13 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void treeGrow(BlockGrowFeatureEvent event) {
-        if (!(event.getLevel() instanceof ServerLevel level))
-            return;
-
-        Set<UUID> sprigs = Whirlisprig.WHIRLI_MAP.getEntities(level);
+    public static void treeGrow(SuccessfulTreeGrowthEvent event) {
+        Set<UUID> sprigs = Whirlisprig.WHIRLI_MAP.getEntities(event.level);
         List<UUID> sprigsToRemove = new ArrayList<>();
 
         for (UUID uuid : sprigs) {
-            if (level.getEntity(uuid) instanceof Whirlisprig whirlisprig) {
-                if (BlockUtil.distanceFrom(whirlisprig.blockPosition(), event.getPos()) <= 10 && !whirlisprig.isTamed()) {
+            if (event.level.getEntity(uuid) instanceof Whirlisprig whirlisprig) {
+                if (BlockUtil.distanceFrom(whirlisprig.blockPosition(), event.pos) <= 10 && !whirlisprig.isTamed()) {
                     whirlisprig.droppingShards = true;
                 }
             } else {
@@ -488,7 +485,7 @@ public class EventHandler {
             }
         }
         for (UUID uuid : sprigsToRemove) {
-            Whirlisprig.WHIRLI_MAP.removeEntity(level, uuid);
+            Whirlisprig.WHIRLI_MAP.removeEntity(event.level, uuid);
         }
     }
 

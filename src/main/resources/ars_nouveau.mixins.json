@@ -24,6 +24,7 @@
     "LivingAccessor",
     "MobAccessor",
     "PufferfishAccessor",
+    "TreeGrowerMixin",
     "camera.ANServerPlayerMixin",
     "camera.ChunkMapMixin",
     "camera.PlayerListMixin",
