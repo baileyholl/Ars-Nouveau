@@ -1403,6 +1403,7 @@ public class LangDatagen extends LanguageProvider {
         add("emi.category.ars_nouveau.enchanting_apparatus", data.get("ars_nouveau.enchanting_apparatus"));
         add("emi.category.ars_nouveau.armor_upgrade", data.get("ars_nouveau.armor_upgrade"));
         add("emi.category.ars_nouveau.imbuement", data.get("block.ars_nouveau.imbuement_chamber"));
+        add("emi.category.ars_nouveau.alakarkinos", data.get("ars_nouveau.alakarkinos_recipe"));
 
         add("block.ars_nouveau.banner.fire", "Fire School");
         add("block.ars_nouveau.banner.water", "Water School");

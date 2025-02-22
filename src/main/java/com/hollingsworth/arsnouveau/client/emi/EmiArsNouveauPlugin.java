@@ -41,6 +41,9 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
     public static final EmiStack SCRY_TABLET = EmiStack.of(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix(RitualLib.SCRYING)));
     public static final EmiRecipeCategory SCRY_RITUAL_CATEGORY = new EmiRecipeCategory(ArsNouveau.prefix("scry_ritual"), SCRY_TABLET);
 
+    public static final EmiStack ALAKARKINOS_CHARM = EmiStack.of(ItemsRegistry.ALAKARKINOS_CHARM);
+    public static final EmiRecipeCategory ALAKARKINOS_CATEGORY = new EmiRecipeCategory(ArsNouveau.prefix("alakarkinos"), ALAKARKINOS_CHARM);
+
     @Override
     public void register(EmiRegistry registry) {
         this.registerCategories(registry);
@@ -71,11 +74,14 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
 
         registry.addCategory(SCRY_RITUAL_CATEGORY);
         registry.addWorkstation(SCRY_RITUAL_CATEGORY, SCRY_TABLET);
+
+        registry.addCategory(ALAKARKINOS_CATEGORY);
+        registry.addWorkstation(ALAKARKINOS_CATEGORY, ALAKARKINOS_CHARM);
     }
 
     public void registerRecipes(@NotNull EmiRegistry registry) {
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
-        for (RecipeHolder<?> i : manager.getRecipes().stream().toList()) {
+        for (RecipeHolder<?> i : manager.getRecipes()) {
             var id = i.id();
             var emiRecipe = switch (i.value()) {
                 case GlyphRecipe glyphRecipe -> new EmiGlyphRecipe(id, glyphRecipe);
@@ -86,6 +92,7 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
                 case CrushRecipe crushRecipe -> new EmiCrushRecipe(id, crushRecipe);
                 case BuddingConversionRecipe buddingConversionRecipe -> new EmiBuddingConversionRecipe(id, buddingConversionRecipe);
                 case ScryRitualRecipe scryRitualRecipe -> new EmiScryRitualRecipe(id, scryRitualRecipe);
+                case AlakarkinosRecipe alakarkinosRecipe -> new EmiAlakarkinosRecipe(id, alakarkinosRecipe);
                 default -> null;
             };
 
