@@ -11,6 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 public class SkyBlockTile extends MirrorWeaveTile implements ITickable, IDispellable {
 
     private boolean showFacade;
-    private final boolean[] shouldRender = new boolean[6];
+    private final boolean[] shouldRender = {true, true, true, true, true, true};
     public int previousLight;
 
     public SkyBlockTile(BlockPos pos, BlockState state) {
@@ -28,21 +29,6 @@ public class SkyBlockTile extends MirrorWeaveTile implements ITickable, IDispell
 
     @Override
     public void tick() {
-        if (level.isClientSide && !showFacade) {
-            for (var direction : Direction.values()) {
-                var blockingPos = this.getBlockPos().relative(direction);
-                var blockingState = this.level.getBlockState(blockingPos);
-                if (!blockingState.canOcclude() && !blockingState.is(BlockRegistry.SKY_WEAVE.get())) {
-                    shouldRender[direction.ordinal()] = true;
-                    continue;
-                }
-
-                var blockingShape = blockingState.getOcclusionShape(this.level, blockingPos);
-
-                shouldRender[direction.ordinal()] = !Shapes.blockOccudes(Shapes.block(), blockingShape, direction);
-            }
-        }
-
         if(showFacade && !level.isClientSide) {
             if(getBlockState().getValue(MirrorWeave.LIGHT_LEVEL) != this.mimicState.getLightEmission(level, worldPosition)){
                 level.setBlockAndUpdate(worldPosition, getBlockState().setValue(MirrorWeave.LIGHT_LEVEL, this.mimicState.getLightEmission(level, worldPosition)));
@@ -62,6 +48,47 @@ public class SkyBlockTile extends MirrorWeaveTile implements ITickable, IDispell
         }
     }
 
+    public void recalculateFaceVisibility() {
+        if (this.level == null || !this.level.isClientSide) {
+            return;
+        }
+
+        for (var direction : Direction.values()) {
+            this.recalculateFaceVisibility(direction);
+        }
+    }
+
+    public void recalculateFaceVisibility(Direction direction) {
+        if (this.level == null || !this.level.isClientSide) {
+            return;
+        }
+
+        if (direction == null) {
+            recalculateFaceVisibility();
+            return;
+        }
+
+        var blockingPos = this.getBlockPos().relative(direction);
+        var blockingState = level.getBlockState(blockingPos);
+        if (!blockingState.canOcclude() && !blockingState.is(BlockRegistry.SKY_WEAVE.get())) {
+            this.shouldRender[direction.ordinal()] = true;
+            return;
+        }
+
+        var blockingShape = blockingState.getOcclusionShape(this.level, blockingPos);
+
+        this.shouldRender[direction.ordinal()] = !Shapes.blockOccudes(Shapes.block(), blockingShape, direction);
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+
+        Level level = this.getLevel();
+        if (level != null && level.isClientSide) {
+            this.recalculateFaceVisibility();
+        }
+    }
 
     public void setShowFacade(boolean showFacade){
         if(this.showFacade == showFacade){
@@ -79,6 +106,7 @@ public class SkyBlockTile extends MirrorWeaveTile implements ITickable, IDispell
             }
         }
         this.showFacade = showFacade;
+        this.recalculateFaceVisibility();
         this.updateBlock();
     }
 
