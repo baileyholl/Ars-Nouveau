@@ -51,7 +51,7 @@ public class ArmorPerkHolder extends StackPerkHolder<ArmorPerkHolder> {
 
     @Override
     public List<PerkSlot> getSlotsForTier(ItemStack stack) {
-        List<List<PerkSlot>> slotsForTier = PerkRegistry.getPerkProvider(stack.getItem());
+        List<List<PerkSlot>> slotsForTier = PerkRegistry.getPerkProvider(stack);
         if (slotsForTier == null) {
             return Collections.emptyList();
         }
