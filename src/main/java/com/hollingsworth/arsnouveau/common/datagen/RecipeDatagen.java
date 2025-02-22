@@ -623,11 +623,11 @@ public class RecipeDatagen extends RecipeProvider {
                     .save(consumer);
             // stonecutter for sourcestone
             for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
-                if(s.equals(LibBlockNames.SOURCESTONE))
-                    continue;
-                makeStonecutter(consumer, BlockRegistry.getBlock(LibBlockNames.SOURCESTONE), BlockRegistry.getBlock(s), LibBlockNames.SOURCESTONE);
-                shapelessBuilder(SOURCESTONE).requires(BlockRegistry.getBlock(s)).save(consumer, ArsNouveau.prefix( s + "_to_sourcestone"));
-
+                if(!s.equals(LibBlockNames.SOURCESTONE)) {
+                    makeStonecutter(consumer, BlockRegistry.getBlock(LibBlockNames.SOURCESTONE), BlockRegistry.getBlock(s), LibBlockNames.SOURCESTONE);
+                    shapelessBuilder(SOURCESTONE).requires(BlockRegistry.getBlock(s)).save(consumer, ArsNouveau.prefix(s + "_to_sourcestone"));
+                }
+                
                 Block stair = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( s + "_stairs"));
                 Block slab = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( s + "_slab"));
                 SingleItemRecipeBuilder.stonecutting(Ingredient.of(BlockRegistry.getBlock(s)), RecipeCategory.BUILDING_BLOCKS, stair)
