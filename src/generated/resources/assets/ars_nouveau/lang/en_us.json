@@ -1,5 +1,6 @@
 {
-  "alert.core": "An Arcane Core must be placed beneath this block.",
+  "alert.core": "An Arcane Core must be placed next to the base of the Enchanting Apparatus.",
+  "alert.core.wrong_axis": "The Arcane Core must be aligned with the base of the Enchanting Apparatus.",
   "ars_nouveau.active_generation": "Active Generation",
   "ars_nouveau.add_bookmark": "Add Bookmark",
   "ars_nouveau.adopter": "Adopted by %s",
@@ -879,7 +880,7 @@
   "ars_nouveau.page1.decorative": "Purely decorative blocks. To see the full list, place Arcane Stone in a Stonecutter.",
   "ars_nouveau.page1.deny_scroll": "Provides a list of items to automation related entities. To inscribe an item, place on the Scribes Table and use blocks and items on the table while sneaking. When given to a Starbuncle, the Starbuncle will pickup and take any item that is NOT on this scroll.",
   "ars_nouveau.page1.drygmy_charm": "Drygmys are often found following and tending to animals around it. They can be found anywhere, though somewhat rarely. Drygmys can be given a home in the world, and will produce items from nearby monsters and animals as if they were slain, without harming them. A wild drygmy may be befriended by throwing a Wilden Horn near it! You may dye a Drygmy Cyan, Orange, or Brown.",
-  "ars_nouveau.page1.enchanting_apparatus": "The Enchanting Apparatus utilizes pedestals and Source for crafting. To use the Enchanting Apparatus, place any number of Arcane Pedestals within 3 blocks with their items. Once you have filled the pedestals, use the middle item on the Enchanting Apparatus block. The Enchanting Apparatus requires an Arcane Core beneath it in order to work.",
+  "ars_nouveau.page1.enchanting_apparatus": "The Enchanting Apparatus utilizes pedestals and Source for crafting. To use the Enchanting Apparatus, place any number of Arcane Pedestals within 3 blocks with their items. Once you have filled the pedestals, use the middle item on the Enchanting Apparatus block. The Enchanting Apparatus requires an Arcane Core next to the its base in order to work.",
   "ars_nouveau.page1.flask_cannons": "Flask Cannons can consume potions from bottles and flasks from the players inventory and convert the potion into a Splash or Lingering potion. To select the potion to be thrown, use the Radial Menu to select your flask or potion and use the launcher.",
   "ars_nouveau.page1.how_to_enchant": "The Enchanting Apparatus may add new enchantments or upgrade existing ones by using Source and items. To begin, select a level 1 enchantment and add its items to the pedestals. Place a jar of Source nearby, and use the item you want to enchant on the apparatus. The apparatus may only apply enchantments that are valid to the item you have given it.",
   "ars_nouveau.page1.illusion_blocks": "Mirrorweave can replicate the appearance of any block that is used on it. These blocks will take on the same collisions and light as their replicated block. Sense Magic will reveal the illusion. All illusion blocks can also be used as frames for portals. Casting light on an illusion block will allow it to emit light.",
