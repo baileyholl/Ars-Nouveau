@@ -1,7 +1,5 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem;
 
-import com.hollingsworth.arsnouveau.api.ANFakePlayer;
-import com.hollingsworth.arsnouveau.api.util.ANEventBus;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -11,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.event.level.BlockEvent;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -56,7 +53,7 @@ public class ConvertBuddingGoal extends Goal {
             BlockState targetState = level.getBlockState(targetCluster);
             Optional<BuddingConversionRecipe> recipe = golem.recipes.stream().filter(r -> r.matches(targetState)).findFirst();
             recipe.ifPresent(r -> {
-                if (!golem.canBreak(targetCluster)) {
+                if (golem.canBreak(targetCluster)) {
                     golem.level.setBlock(targetCluster, r.result().defaultBlockState(), 3);
                     ParticleUtil.spawnTouchPacket(level, targetCluster, ParticleColor.defaultParticleColor());
                 }
