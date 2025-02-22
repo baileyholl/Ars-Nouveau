@@ -19,7 +19,7 @@ public class ChickenBehavior extends JarBehavior<Chicken> {
         chicken.eggTime -= 1;
         if(chicken.eggTime <= 0){
             chicken.playSound(SoundEvents.CHICKEN_EGG, 1.0F, (chicken.getRandom().nextFloat() - chicken.getRandom().nextFloat()) * 0.2F + 1.0F);
-            chicken.spawnAtLocation(Items.EGG);
+            JarBehavior.insertOrCreateItem(tile, Items.EGG.getDefaultInstance());
             chicken.gameEvent(GameEvent.ENTITY_PLACE);
             chicken.eggTime = chicken.getRandom().nextInt(6000) + 6000;
         }
