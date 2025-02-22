@@ -16,8 +16,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
-public class EmiAlakarkinosRecipe  implements EmiRecipe {
+public class EmiAlakarkinosRecipe implements EmiRecipe {
     public static float ITEMS_PER_ROW = 7f;
 
     private final ResourceLocation id;
@@ -47,7 +48,7 @@ public class EmiAlakarkinosRecipe  implements EmiRecipe {
     public List<EmiStack> getOutputs() {
         if (this.recipe.drops().isPresent()) {
             List<EmiStack> out = new ArrayList<>();
-            for (var drop : this.recipe.drops().get()) {
+            for (var drop : this.recipe.drops().get().list()) {
                 out.add(EmiStack.of(drop.item()));
             }
             return out;
@@ -73,26 +74,31 @@ public class EmiAlakarkinosRecipe  implements EmiRecipe {
         widgets.addText(Component.literal(name), 22, 4, 0xFF000000, false);
 
         DecimalFormat df = new DecimalFormat("##.##%");
-        String recipeChance = df.format((float) recipe.weight() / AlakarkinosConversionRegistry.getTotalWeight(recipe.input()));
+        Optional<AlakarkinosConversionRegistry.LootDrops> lootDrops = recipe.drops();
+        if (lootDrops.isEmpty()) {
+            return;
+        }
+
+        AlakarkinosConversionRegistry.LootDrops drops = lootDrops.get();
+
+        String recipeChance = df.format((float) recipe.weight() / drops.weight());
         widgets.addSlot(EmiStack.of(recipe.input()), 0, 0).appendTooltip(
                 Component.translatable("ars_nouveau.alakarkinos_recipe.chance", recipeChance)
         );
 
-        recipe.drops().ifPresent(drops -> {
-            int yOffset = 9;
-            int i = (int) ITEMS_PER_ROW;
+        int yOffset = 9;
+        int i = (int) ITEMS_PER_ROW;
 
-            for (AlakarkinosRecipe.LootDrop drop : drops) {
-                int row = (int) Math.floor(i / ITEMS_PER_ROW);
-                int x = (int) ((i - (row * ITEMS_PER_ROW)) * 18);
-                int y = row * 18 + yOffset;
+        for (var drop : drops.list()) {
+            int row = (int) Math.floor(i / ITEMS_PER_ROW);
+            int x = (int) ((i - (row * ITEMS_PER_ROW)) * 18);
+            int y = row * 18 + yOffset;
 
-                String chance = df.format(drop.chance());
-                widgets.addSlot(EmiStack.of(drop.item()), x, y).appendTooltip(
-                        Component.translatable("ars_nouveau.alakarkinos_recipe.chance", chance)
-                ).recipeContext(this);
-                i += 1;
-            }
-        });
+            String chance = df.format(drop.chance());
+            widgets.addSlot(EmiStack.of(drop.item()), x, y).appendTooltip(
+                    Component.translatable("ars_nouveau.alakarkinos_recipe.chance", chance)
+            ).recipeContext(this);
+            i += 1;
+        }
     }
 }
