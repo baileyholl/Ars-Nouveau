@@ -1273,6 +1273,11 @@ public class LangDatagen extends LanguageProvider {
         add("mob_jar.panda", "Baby pandas will occasionally sneeze, creating Slimeballs. Sick Pandas will sneeze more often.");
         add("mob_jar.allay.title", "Allay Behavior");
         add("mob_jar.allay", "A jarred Allay can pickup and deposit items within 5 blocks of the jar. Giving an Allay an item will cause it to only pickup that item. Giving an Allay an Item Scroll will pickup any item that matches the scroll. Items will be deposited into inventories placed adjacent to the jar. Allays will also respect any filters placed on the adjacent inventories.");
+        add("mob_jar.armadillo", "Will occasionally shed scutes.");
+        add("mob_jar.breeze", "Shoots a wind charge when powered with redstone.");
+        add("mob_jar.cat", "Will give gifts if its owner sleeps nearby. Produces a redstone signal if the owner is online.");
+        add("mob_jar.sniffer", "Will occasionally dig up ancient seeds.");
+        add("mob_jar.snow_golem", "Shoots a snowball when powered with redstone.");
         add("ars_nouveau.cauldron.num_bounded", "%s bounded inventories");
         add("ars_nouveau.wixie_cauldron.bound", "Inventory bound.");
         add("ars_nouveau.wixie_cauldron.removed", "Inventory removed.");
