@@ -18,25 +18,25 @@ import javax.annotation.Nullable;
 public class EntitySubPredicatesRegistry {
     public static final DeferredRegister<MapCodec<? extends EntitySubPredicate>> ENTITY_SUB_PREDICATES = DeferredRegister.create(Registries.ENTITY_SUB_PREDICATE_TYPE, ArsNouveau.MODID);
 
-    public static final DeferredHolder<MapCodec<? extends EntitySubPredicate>, MapCodec<HealthEqualOrLowerPredicate>> HEALTH_EQUAL_OR_LOWER = ENTITY_SUB_PREDICATES.register(
-            "health_equal_or_lower",
-            () -> HealthEqualOrLowerPredicate.CODEC
+    public static final DeferredHolder<MapCodec<? extends EntitySubPredicate>, MapCodec<PercentHealthEqualOrLowerPredicate>> PERCENT_HEALTH_EQUAL_OR_LOWER = ENTITY_SUB_PREDICATES.register(
+            "percent_health_equal_or_lower",
+            () -> PercentHealthEqualOrLowerPredicate.CODEC
     );
 
 
-    public record HealthEqualOrLowerPredicate(float threshold) implements EntitySubPredicate {
-        public static final MapCodec<HealthEqualOrLowerPredicate> CODEC = RecordCodecBuilder.mapCodec(
-                instance -> instance.group(Codec.FLOAT.fieldOf("threshold").forGetter((HealthEqualOrLowerPredicate i) -> i.threshold)).apply(instance, HealthEqualOrLowerPredicate::new)
+    public record PercentHealthEqualOrLowerPredicate(float threshold) implements EntitySubPredicate {
+        public static final MapCodec<PercentHealthEqualOrLowerPredicate> CODEC = RecordCodecBuilder.mapCodec(
+                instance -> instance.group(Codec.FLOAT.fieldOf("threshold").forGetter((PercentHealthEqualOrLowerPredicate i) -> i.threshold)).apply(instance, PercentHealthEqualOrLowerPredicate::new)
         );
 
         @Override
-        public MapCodec<HealthEqualOrLowerPredicate> codec() {
+        public MapCodec<PercentHealthEqualOrLowerPredicate> codec() {
             return CODEC;
         }
 
         @Override
         public boolean matches(Entity entity, ServerLevel level, @Nullable Vec3 position) {
-            return entity instanceof LivingEntity livingEntity && livingEntity.getHealth() <= threshold;
+            return entity instanceof LivingEntity livingEntity && livingEntity.getHealth() / livingEntity.getMaxHealth() <= threshold;
         }
     }
 }

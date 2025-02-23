@@ -41,8 +41,8 @@ public class DispelEntityProvider extends SimpleDataProvider{
                 LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().flags(EntityFlagsPredicate.Builder.flags().setOnFire(true))).build()
         })));
 
-        recipes.add(new Wrapper(ArsNouveau.prefix("wixie_shard"), new DispelEntityRecipe(EntityType.VILLAGER, ArsNouveau.prefix("dispel_villager"), new LootItemCondition[]{
-                LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().subPredicate(new EntitySubPredicatesRegistry.HealthEqualOrLowerPredicate(10))).build(),
+        recipes.add(new Wrapper(ArsNouveau.prefix("wixie_shard"), new DispelEntityRecipe(EntityType.WITCH, ArsNouveau.prefix("dispel_witch"), new LootItemCondition[]{
+                LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().subPredicate(new EntitySubPredicatesRegistry.PercentHealthEqualOrLowerPredicate(0.5f))).build(),
         })));
     }
 

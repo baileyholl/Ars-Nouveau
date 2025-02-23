@@ -1,17 +1,17 @@
 {
   "type": "ars_nouveau:dispel_entity",
-  "entity": "minecraft:villager",
+  "entity": "minecraft:witch",
   "loot_conditions": [
     {
       "condition": "minecraft:entity_properties",
       "entity": "this",
       "predicate": {
         "type_specific": {
-          "type": "ars_nouveau:health_equal_or_lower",
-          "threshold": 10.0
+          "type": "ars_nouveau:percent_health_equal_or_lower",
+          "threshold": 0.5
         }
       }
     }
   ],
-  "loot_table": "ars_nouveau:dispel_villager"
+  "loot_table": "ars_nouveau:dispel_witch"
 }

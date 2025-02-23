@@ -68,11 +68,10 @@ public class DefaultTableProvider extends LootTableProvider {
 
         @Override
         public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> consumer) {
-            consumer.accept(ResourceKey.create(Registries.LOOT_TABLE, ArsNouveau.prefix("dispel_villager")), LootTable.lootTable()
+            consumer.accept(ResourceKey.create(Registries.LOOT_TABLE, ArsNouveau.prefix("dispel_witch")), LootTable.lootTable()
                     .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))
                     .withPool(LootPool.lootPool()
                             .add(LootItem.lootTableItem(ItemsRegistry.WIXIE_SHARD))
-                            .when(LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().subPredicate(new EntitySubPredicatesRegistry.HealthEqualOrLowerPredicate(10))))
                             .setRolls(ConstantValue.exactly(1))));
         }
     }
