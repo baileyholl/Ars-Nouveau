@@ -118,6 +118,15 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
             return InteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(hand);
 
+        if (!isTamed() && !this.entityData.get(BEING_TAMED) && stack.is(ItemTagProvider.WILDEN_DROP_TAG)) {
+            entityData.set(BEING_TAMED, true);
+            if (!player.hasInfiniteMaterials()) {
+                stack.shrink(1);
+            }
+
+            return InteractionResult.SUCCESS;
+        }
+
         if (player.getMainHandItem().is(Tags.Items.DYES)) {
             DyeColor color = DyeColor.getColor(stack);
             if (color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(COLORS).contains(color.getName()))
