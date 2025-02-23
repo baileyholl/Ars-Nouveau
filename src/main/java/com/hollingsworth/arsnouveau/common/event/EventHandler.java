@@ -331,13 +331,6 @@ public class EventHandler {
         if (event.rayTraceResult instanceof EntityHitResult hit && event.world instanceof ServerLevel level) {
             Entity entity = hit.getEntity();
             if (!entity.isAlive()) return;
-            // TODO: Replace with EntitySubPredicate when it becomes a registry in 1.21
-            if (entity instanceof Witch witch) {
-                if (witch.getHealth() <= witch.getMaxHealth() / 2) {
-                    replaceEntityWithItems(level, witch, new ItemStack(ItemsRegistry.WIXIE_SHARD));
-                    return;
-                }
-            }
             for (RecipeHolder<DispelEntityRecipe> holder : level.getRecipeManager().getAllRecipesFor(RecipeRegistry.DISPEL_ENTITY_TYPE.get())) {
                 var recipe = holder.value();
                 if (recipe.matches(event.shooter, entity)) {
