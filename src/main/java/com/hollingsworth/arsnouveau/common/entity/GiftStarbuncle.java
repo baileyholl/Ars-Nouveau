@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -28,6 +29,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
@@ -79,6 +81,22 @@ public class GiftStarbuncle extends PathfinderMob implements GeoEntity {
     public static AttributeSupplier.Builder attributes() {
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 6.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.25d);
+    }
+
+    @Override
+    protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
+        if (hand != InteractionHand.MAIN_HAND || player.getCommandSenderWorld().isClientSide || isTaming() || !this.getMainHandItem().isEmpty()) {
+            return super.mobInteract(player, hand);
+        }
+
+        ItemStack stack = player.getItemInHand(hand);
+        if (stack.is(Tags.Items.NUGGETS_GOLD)) {
+            setItemInHand(InteractionHand.MAIN_HAND, player.hasInfiniteMaterials() ? stack.copyWithCount(1) : stack.split(1));
+            setTaming(true);
+            return InteractionResult.SUCCESS;
+        }
+
+        return InteractionResult.PASS;
     }
 
     @Override
