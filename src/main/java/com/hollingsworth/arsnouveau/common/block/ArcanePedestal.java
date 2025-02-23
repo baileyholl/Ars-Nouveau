@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
+import com.hollingsworth.arsnouveau.common.util.VoxelShapeUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -14,9 +15,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -31,6 +30,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
@@ -39,7 +39,7 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
 
     public ArcanePedestal() {
         super(ModBlock.defaultProperties().noOcclusion().forceSolidOn());
-        registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
+        registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false).setValue(BlockStateProperties.FACING, Direction.UP));
     }
 
     @Override
@@ -74,7 +74,15 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        return shape;
+        Direction facing = state.getValue(BlockStateProperties.FACING);
+        return switch (facing) {
+            case UP -> UP;
+            case DOWN -> DOWN;
+            case NORTH -> NORTH;
+            case SOUTH -> SOUTH;
+            case WEST -> WEST;
+            case EAST -> EAST;
+        };
     }
 
     @Override
@@ -83,8 +91,8 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> builder) {
-        builder.add(WATERLOGGED);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(WATERLOGGED, BlockStateProperties.FACING);
     }
 
     @Override
@@ -96,7 +104,15 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
-        return this.defaultBlockState().setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
+        return this.defaultBlockState().setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER).setValue(BlockStateProperties.FACING, context.getClickedFace());
+    }
+
+    public BlockState rotate(BlockState state, Rotation rot) {
+        return state.setValue(BlockStateProperties.FACING, rot.rotate(state.getValue(BlockStateProperties.FACING)));
+    }
+
+    public BlockState mirror(BlockState state, Mirror mirrorIn) {
+        return state.rotate(mirrorIn.getRotation(state.getValue(BlockStateProperties.FACING)));
     }
 
     @Override
@@ -130,7 +146,7 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
         }
     }
 
-    public static final VoxelShape shape = Stream.of(
+    public static final VoxelShape UP = Stream.of(
             Block.box(2, 11, 2, 14, 13, 14),
             Block.box(5, 0, 5, 11, 3, 11),
             Block.box(5, 8, 5, 11, 11, 11),
@@ -157,6 +173,11 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
             ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get()
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
+    public static final VoxelShape DOWN = VoxelShapeUtils.rotate(UP, Direction.UP);
+    public static final VoxelShape EAST = VoxelShapeUtils.rotate(UP, Direction.WEST);
+    public static final VoxelShape WEST = VoxelShapeUtils.rotate(UP, Direction.EAST);
+    public static final VoxelShape NORTH = VoxelShapeUtils.rotate(UP, Direction.SOUTH);
+    public static final VoxelShape SOUTH = VoxelShapeUtils.rotate(UP, Direction.NORTH);
 
     @Override
     protected boolean isPathfindable(BlockState pState, PathComputationType pPathComputationType) {
@@ -164,7 +185,7 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
     }
 
     @Override
-    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @javax.annotation.Nullable LivingEntity pPlacer, ItemStack pStack) {
+    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
         BlockEntity blockentity = pLevel.getBlockEntity(pPos);
         if (blockentity instanceof ArcanePedestalTile tile) {
             if (pStack.get(DataComponents.CUSTOM_NAME) != null) {

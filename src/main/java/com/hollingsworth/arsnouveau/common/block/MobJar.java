@@ -33,6 +33,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
@@ -78,7 +79,9 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
                 return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
             }
         }
-        if (tile.getEntity() == null && !pLevel.isClientSide) {
+        
+        var jarEntity = tile.getEntity();
+        if (jarEntity == null && !pLevel.isClientSide) {
             if (stack.getItem() instanceof SpawnEggItem spawnEggItem) {
                 EntityType<?> type = spawnEggItem.getType(stack);
                 Entity entity = type.create(pLevel);
@@ -97,14 +100,29 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
                 return ItemInteractionResult.CONSUME;
             }
         }
-        if (tile.getEntity() != null
-            && !(tile.getEntity() instanceof PlayerRideable)
-            && !JarBehaviorRegistry.containsEntity(tile.getEntity())
-            && !(tile.getEntity() instanceof ContainerEntity)) {
-            Entity tileEntity = tile.getEntity();
-            pPlayer.interactOn(tileEntity, pHand);
-            if (!tileEntity.isAlive() || tileEntity.isRemoved()) {
+        if (jarEntity != null
+            && !(jarEntity instanceof PlayerRideable)
+            && !JarBehaviorRegistry.containsEntity(jarEntity)
+            && !(jarEntity instanceof ContainerEntity)) {
+            pPlayer.interactOn(jarEntity, pHand);
+            if (!jarEntity.isAlive() || jarEntity.isRemoved()) {
                 tile.removeEntity();
+            }
+        }
+        if (pPlayer.isSecondaryUseActive() && jarEntity instanceof ContainerEntity ce) {
+            switch (ce.interactWithContainerVehicle(pPlayer)) {
+                case SUCCESS, SUCCESS_NO_ITEM_USED -> {
+                    return ItemInteractionResult.SUCCESS;
+                }
+                case CONSUME -> {
+                    return ItemInteractionResult.CONSUME;
+                }
+                case CONSUME_PARTIAL -> {
+                    return ItemInteractionResult.CONSUME_PARTIAL;
+                }
+                case FAIL -> {
+                    return ItemInteractionResult.FAIL;
+                }
             }
         }
         tile.dispatchBehavior((behavior) -> {
@@ -222,5 +240,10 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
     @Override
     public boolean isPathfindable(BlockState pState, PathComputationType pType) {
         return false;
+    }
+
+    @Override
+    public @Nullable PushReaction getPistonPushReaction(BlockState state) {
+        return PushReaction.DESTROY;
     }
 }

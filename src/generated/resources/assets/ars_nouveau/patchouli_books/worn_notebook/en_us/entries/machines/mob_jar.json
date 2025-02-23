@@ -48,6 +48,16 @@
     },
     {
       "type": "patchouli:entity",
+      "entity": "minecraft:armadillo",
+      "text": "mob_jar.armadillo"
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "minecraft:sniffer",
+      "text": "mob_jar.sniffer"
+    },
+    {
+      "type": "patchouli:entity",
       "entity": "minecraft:cow",
       "text": "mob_jar.cow"
     },
@@ -70,6 +80,21 @@
       "type": "patchouli:entity",
       "entity": "minecraft:panda",
       "text": "mob_jar.panda"
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "minecraft:cat",
+      "text": "mob_jar.cat"
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "minecraft:breeze",
+      "text": "mob_jar.breeze"
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "minecraft:snow_golem",
+      "text": "mob_jar.snow_golem"
     },
     {
       "type": "patchouli:entity",

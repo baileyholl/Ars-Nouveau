@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.emi;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.*;
+import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectCrush;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
@@ -13,11 +14,10 @@ import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.NotNull;
-
-import static com.hollingsworth.arsnouveau.client.jei.ScryRitualRecipeCategory.SCRY_RITUAL;
 
 @EmiEntrypoint
 public class EmiArsNouveauPlugin implements EmiPlugin {
@@ -38,8 +38,11 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
     public static final EmiStack CRUSH_GLYPH = EmiStack.of(EffectCrush.INSTANCE.glyphItem);
     public static final EmiRecipeCategory CRUSH_CATEGORY = new EmiRecipeCategory(ArsNouveau.prefix("crush"), CRUSH_GLYPH);
 
-    public static final EmiStack SCRY_TABLET = EmiStack.of(RitualRegistry.getRitualItemMap().get(SCRY_RITUAL));
+    public static final EmiStack SCRY_TABLET = EmiStack.of(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix(RitualLib.SCRYING)));
     public static final EmiRecipeCategory SCRY_RITUAL_CATEGORY = new EmiRecipeCategory(ArsNouveau.prefix("scry_ritual"), SCRY_TABLET);
+
+    public static final EmiStack ALAKARKINOS_CHARM = EmiStack.of(ItemsRegistry.ALAKARKINOS_CHARM);
+    public static final EmiRecipeCategory ALAKARKINOS_CATEGORY = new EmiRecipeCategory(ArsNouveau.prefix("alakarkinos"), ALAKARKINOS_CHARM);
 
     @Override
     public void register(EmiRegistry registry) {
@@ -71,11 +74,14 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
 
         registry.addCategory(SCRY_RITUAL_CATEGORY);
         registry.addWorkstation(SCRY_RITUAL_CATEGORY, SCRY_TABLET);
+
+        registry.addCategory(ALAKARKINOS_CATEGORY);
+        registry.addWorkstation(ALAKARKINOS_CATEGORY, ALAKARKINOS_CHARM);
     }
 
     public void registerRecipes(@NotNull EmiRegistry registry) {
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
-        for (RecipeHolder<?> i : manager.getRecipes().stream().toList()) {
+        for (RecipeHolder<?> i : manager.getRecipes()) {
             var id = i.id();
             var emiRecipe = switch (i.value()) {
                 case GlyphRecipe glyphRecipe -> new EmiGlyphRecipe(id, glyphRecipe);
@@ -86,6 +92,7 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
                 case CrushRecipe crushRecipe -> new EmiCrushRecipe(id, crushRecipe);
                 case BuddingConversionRecipe buddingConversionRecipe -> new EmiBuddingConversionRecipe(id, buddingConversionRecipe);
                 case ScryRitualRecipe scryRitualRecipe -> new EmiScryRitualRecipe(id, scryRitualRecipe);
+                case AlakarkinosRecipe alakarkinosRecipe -> new EmiAlakarkinosRecipe(id, alakarkinosRecipe);
                 default -> null;
             };
 

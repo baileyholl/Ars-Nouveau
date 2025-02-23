@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.jei;
 
-import com.hollingsworth.arsnouveau.api.registry.AlakarkinosConversionRegistry;
+import com.hollingsworth.arsnouveau.api.registry.AlakarkinosConversionRegistry.LootDrop;
+import com.hollingsworth.arsnouveau.api.registry.AlakarkinosConversionRegistry.LootDrops;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.AlakarkinosRecipe;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import mezz.jei.api.constants.VanillaTypes;
@@ -18,8 +19,8 @@ import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.text.WordUtils;
 
 import java.text.DecimalFormat;
-import java.util.Comparator;
 import java.util.Locale;
+import java.util.Optional;
 
 public class AlakarkinosRecipeCategory implements IRecipeCategory<AlakarkinosRecipe> {
     public static float ITEMS_PER_ROW = 7f;
@@ -63,25 +64,29 @@ public class AlakarkinosRecipeCategory implements IRecipeCategory<AlakarkinosRec
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, AlakarkinosRecipe recipe, IFocusGroup focuses) {
         DecimalFormat df = new DecimalFormat("##.##%");
-        String recipeChance = df.format((float) recipe.weight() / AlakarkinosConversionRegistry.getTotalWeight(recipe.input()));
+        Optional<LootDrops> lootDrops = recipe.drops();
+        if (lootDrops.isEmpty()) return;
+
+        LootDrops drops = lootDrops.get();
+        
+        String recipeChance = df.format((float) recipe.weight() / drops.weight());
         builder.addSlot(RecipeIngredientRole.INPUT, 0, 0).addIngredient(VanillaTypes.ITEM_STACK, recipe.input().asItem().getDefaultInstance()).addRichTooltipCallback(
                 (view, tooltip) -> tooltip.add(Component.translatable("ars_nouveau.alakarkinos_recipe.chance", recipeChance))
         );
-        recipe.drops().ifPresent(drops -> {
-            int yOffset = 9;
-            int i = (int) ITEMS_PER_ROW;
 
-            for (AlakarkinosRecipe.LootDrop drop : drops) {
-                int row = (int) Math.floor(i / ITEMS_PER_ROW);
-                int x = (int) ((i - (row * ITEMS_PER_ROW)) * 18);
-                int y = row * 18 + yOffset;
+        int yOffset = 9;
+        int i = (int) ITEMS_PER_ROW;
 
-                String chance = df.format(drop.chance());
-                builder.addSlot(RecipeIngredientRole.OUTPUT, x, y).addItemStack(drop.item()).addRichTooltipCallback(
-                        (view, tooltip) -> tooltip.add(Component.translatable("ars_nouveau.alakarkinos_recipe.chance", chance))
-                );
-                i += 1;
-            }
-        });
+        for (LootDrop drop : drops.list()) {
+            int row = (int) Math.floor(i / ITEMS_PER_ROW);
+            int x = (int) ((i - (row * ITEMS_PER_ROW)) * 18);
+            int y = row * 18 + yOffset;
+
+            String chance = df.format(drop.chance());
+            builder.addSlot(RecipeIngredientRole.OUTPUT, x, y).addItemStack(drop.item()).addRichTooltipCallback(
+                    (view, tooltip) -> tooltip.add(Component.translatable("ars_nouveau.alakarkinos_recipe.chance", chance))
+            );
+            i += 1;
+        }
     }
 }

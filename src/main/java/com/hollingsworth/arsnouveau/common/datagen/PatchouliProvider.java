@@ -21,7 +21,6 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.CachedOutput;
@@ -563,11 +562,16 @@ public class PatchouliProvider extends SimpleDataProvider{
                 .withPage(new EntityPage(EntityType.ENDER_DRAGON).withText("mob_jar.ender_dragon"))
                 .withPage(new EntityPage(EntityType.SHEEP).withText("mob_jar.sheep"))
                 .withPage(new EntityPage(EntityType.CHICKEN).withText("mob_jar.chicken"))
+                .withPage(new EntityPage(EntityType.ARMADILLO).withText("mob_jar.armadillo"))
+                .withPage(new EntityPage(EntityType.SNIFFER).withText("mob_jar.sniffer"))
                 .withPage(new EntityPage(EntityType.COW).withText("mob_jar.cow"))
                 .withPage(new EntityPage(EntityType.MOOSHROOM).withText("mob_jar.mooshroom"))
                 .withPage(new EntityPage(EntityType.PUFFERFISH).withText("mob_jar.pufferfish"))
                 .withPage(new EntityPage(EntityType.FROG).withText("mob_jar.frog"))
                 .withPage(new EntityPage(EntityType.PANDA).withText("mob_jar.panda"))
+                .withPage(new EntityPage(EntityType.CAT).withText("mob_jar.cat"))
+                .withPage(new EntityPage(EntityType.BREEZE).withText("mob_jar.breeze"))
+                .withPage(new EntityPage(EntityType.SNOW_GOLEM).withText("mob_jar.snow_golem"))
                 .withPage(new EntityPage(ModEntities.ENTITY_DUMMY.get()).withText("mob_jar.dummy"))
                 .withPage(new CraftingPage(BlockRegistry.MOB_JAR))
                 .withPage(new RelationsPage().withEntry(RITUALS, RitualLib.CONTAINMENT).withEntry(AUTOMATION, "drygmy_charm")), getPath(MACHINES, "mob_jar"));
