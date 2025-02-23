@@ -3,11 +3,6 @@ package com.hollingsworth.arsnouveau.common.network;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
-import com.hollingsworth.arsnouveau.api.spell.Spell;
-import com.hollingsworth.arsnouveau.api.spell.SpellTier;
-import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
-import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -69,27 +64,6 @@ public class PacketCastSpell extends AbstractPacket {
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
         ItemStack stack = player.getItemInHand(this.hand);
-
-        if (stack.getItem() instanceof SpellBook spellbook && spellbook.tier != SpellTier.CREATIVE) {
-            var iMana = CapabilityRegistry.getMana(player);
-            if (iMana != null) {
-                boolean shouldSync = false;
-                if (iMana.getBookTier() < spellbook.tier.value) {
-                    iMana.setBookTier(spellbook.tier.value);
-                    shouldSync = true;
-                }
-
-                IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(player);
-                if (iMana.getGlyphBonus() < cap.getKnownGlyphs().size()) {
-                    iMana.setGlyphBonus(cap.getKnownGlyphs().size());
-                    shouldSync = true;
-                }
-
-                if (shouldSync) {
-                    iMana.syncToClient(player);
-                }
-            }
-        }
 
         AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
         if (caster != null) {

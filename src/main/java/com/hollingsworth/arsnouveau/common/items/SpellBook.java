@@ -13,9 +13,11 @@ import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenuSlot;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.client.registry.ModKeyBindings;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellBookRenderer;
+import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetCasterSlot;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
@@ -23,6 +25,7 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -60,11 +63,33 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
 
     @Override
     public @NotNull InteractionResult onItemUseFirst(@NotNull ItemStack stack, UseOnContext context) {
-        if (context.getPlayer() == null) {
+        var player = context.getPlayer();
+        if (player == null) {
             return super.onItemUseFirst(stack, context);
         }
 
-        if (!context.getLevel().isClientSide) {
+        if (player instanceof ServerPlayer serverPlayer) {
+            if (this.tier != SpellTier.CREATIVE) {
+                var iMana = CapabilityRegistry.getMana(serverPlayer);
+                if (iMana != null) {
+                    boolean shouldSync = false;
+                    if (iMana.getBookTier() < this.tier.value) {
+                        iMana.setBookTier(this.tier.value);
+                        shouldSync = true;
+                    }
+
+                    IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(serverPlayer);
+                    if (iMana.getGlyphBonus() < cap.getKnownGlyphs().size()) {
+                        iMana.setGlyphBonus(cap.getKnownGlyphs().size());
+                        shouldSync = true;
+                    }
+
+                    if (shouldSync) {
+                        iMana.syncToClient(serverPlayer);
+                    }
+                }
+            }
+
             return InteractionResult.PASS;
         }
 
