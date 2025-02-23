@@ -592,6 +592,10 @@ public class GuiSpellBook extends BaseBook {
             for (int i = 0; i < craftingCells.size(); i++) {
                 CraftingButton cell = craftingCells.get(i);
                 if (cell.slotNum == craftingCell.slotNum) {
+                    while (cell.getAbstractSpellPart() == null && i < craftingCells.size()) {
+                        i++;
+                        cell = craftingCells.get(i);
+                    }
                     idx = i;
                     continue;
                 }
