@@ -1,0 +1,17 @@
+{
+  "type": "ars_nouveau:dispel_entity",
+  "entity": "minecraft:villager",
+  "loot_conditions": [
+    {
+      "condition": "minecraft:entity_properties",
+      "entity": "this",
+      "predicate": {
+        "type_specific": {
+          "type": "ars_nouveau:health_equal_or_lower",
+          "threshold": 10.0
+        }
+      }
+    }
+  ],
+  "loot_table": "ars_nouveau:dispel_villager"
+}

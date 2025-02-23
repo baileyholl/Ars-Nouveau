@@ -26,6 +26,7 @@ public class ModSetup {
         BlockRegistry.BLOCK_ENTITIES.register(modEventBus);
         BlockRegistry.BS_PROVIDERS.register(modEventBus);
         ModEntities.ENTITIES.register(modEventBus);
+        EntitySubPredicatesRegistry.ENTITY_SUB_PREDICATES.register(modEventBus);
         ModPotions.EFFECTS.register(modEventBus);
         ModPotions.POTIONS.register(modEventBus);
         DataComponentRegistry.DATA.register(modEventBus);
