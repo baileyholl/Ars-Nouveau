@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.client.events;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.DynamicTooltipRegistry;
-import com.hollingsworth.arsnouveau.client.gui.PatchouliTooltipEvent;
+import com.hollingsworth.arsnouveau.client.gui.DocItemTooltipHandler;
 import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
@@ -79,12 +79,7 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void TooltipEvent(RenderTooltipEvent.Pre e) {
-        try {
-            // Uses patchouli internals, don't crash if they change something :)
-            PatchouliTooltipEvent.onTooltip(e.getGraphics().pose(), e.getItemStack(), e.getX(), e.getY());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        DocItemTooltipHandler.onTooltip(e.getGraphics(), e.getItemStack(), e.getX(), e.getY());
     }
 
     @SubscribeEvent

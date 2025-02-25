@@ -144,7 +144,8 @@ public class Documentation {
                 .withSortNum(2)
                 .withIntroPage()
                 .withPage(getRecipePages(BlockRegistry.ARCANE_PEDESTAL, BlockRegistry.ARCANE_PLATFORM))
-                .withPage(getRecipePages(BlockRegistry.ENCHANTING_APP_BLOCK, BlockRegistry.ARCANE_CORE_BLOCK)));
+                .withPage(getRecipePages(BlockRegistry.ENCHANTING_APP_BLOCK, BlockRegistry.ARCANE_CORE_BLOCK))
+                .addConnectedSearch(BlockRegistry.ARCANE_CORE_BLOCK));
 
 
         var drygmyCharm = addPage(new DocEntryBuilder(AUTOMATION, ItemsRegistry.DRYGMY_CHARM)

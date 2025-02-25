@@ -14,7 +14,6 @@ import com.hollingsworth.arsnouveau.api.ritual.RitualEventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
-import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.command.*;
 import com.hollingsworth.arsnouveau.common.compat.CaelusHandler;
@@ -73,7 +72,6 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -210,18 +208,6 @@ public class EventHandler {
             e.getEntity().getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
         }
     }
-
-
-    @SubscribeEvent
-    public static void clientTickEnd(ClientTickEvent.Post event) {
-
-        ClientInfo.ticksInGame++;
-        if (ClientInfo.redTicks()) {
-            ClientInfo.redOverlayTicks--;
-        }
-
-    }
-
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onGlideTick(PlayerTickEvent.Pre event) {

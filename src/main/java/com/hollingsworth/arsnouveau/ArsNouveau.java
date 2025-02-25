@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.registry.BuddingConversionRegistry;
 import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GenericRecipeRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ScryRitualRegistry;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.registry.ClientHandler;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.entity.BubbleEntity;
@@ -36,6 +37,8 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
 import net.neoforged.neoforge.common.world.chunk.TicketController;
@@ -95,6 +98,18 @@ public class ArsNouveau {
         NeoForge.EVENT_BUS.addListener(BubbleEntity::onAttacked);
         NeoForge.EVENT_BUS.addListener(BubbleEntity::entityHurt);
         NeoForge.EVENT_BUS.addListener(BreezeEvent::onSpellResolve);
+
+        NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post e) ->{
+            ClientInfo.endClientTick();
+        });
+
+        NeoForge.EVENT_BUS.addListener((RenderFrameEvent.Pre e) -> {
+            ClientInfo.renderTickStart(e.getPartialTick().getGameTimeDeltaPartialTick(false));
+        });
+        NeoForge.EVENT_BUS.addListener((RenderFrameEvent.Post e) -> {
+            ClientInfo.renderTickEnd();
+        });
+
         ANCriteriaTriggers.init();
         try {
             Thread thread = new Thread(Rewards::init);
