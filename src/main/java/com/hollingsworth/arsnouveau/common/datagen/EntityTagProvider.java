@@ -58,6 +58,18 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
                 ModEntities.ENTITY_FLOURISHING_WEALD.get(),
                 ModEntities.ENTITY_VEXING_WEALD.get()
         );
+        this.tag(EntityTags.BUBBLE_BLACKLIST).add(
+                ModEntities.BUBBLE.get(),
+                ModEntities.ENTITY_FOLLOW_PROJ.get(),
+                ModEntities.ENTITY_FLYING_ITEM.get(),
+                ModEntities.STARBUNCLE_TYPE.get(),
+                ModEntities.ENTITY_DRYGMY.get(),
+                ModEntities.WHIRLISPRIG_TYPE.get(),
+                ModEntities.ENTITY_WIXIE_TYPE.get(),
+                EntityType.WITHER_SKULL,
+                EntityType.SMALL_FIREBALL,
+                EntityType.DRAGON_FIREBALL
+        );
         this.tag(EntityTags.FAMILIAR).add(ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get(), ModEntities.ENTITY_FAMILIAR_SYLPH.get(),
                 ModEntities.ENTITY_FAMILIAR_WIXIE.get(), ModEntities.ENTITY_FAMILIAR_DRYGMY.get(),
                 ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get(), ModEntities.LILY.get());
