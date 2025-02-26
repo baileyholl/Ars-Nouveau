@@ -214,9 +214,13 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
         if (entityTag != null || cachedEntity != null) {
             cachedEntity = getEntity();
             if (cachedEntity != null) {
-                tag.put("entityTag", saveEntityToTag(cachedEntity));
-                if (tag.getCompound("entityTag").contains("id")) {
-                    tag.putString("entityId", tag.getCompound("entityTag").getString("id"));
+                try {
+                    tag.put("entityTag", saveEntityToTag(cachedEntity));
+                    if (tag.getCompound("entityTag").contains("id")) {
+                        tag.putString("entityId", tag.getCompound("entityTag").getString("id"));
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             }
         }
