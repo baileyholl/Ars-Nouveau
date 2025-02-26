@@ -47,6 +47,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     public static TagKey<Block> BUSHES = BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", "bushes"));
     public static TagKey<Block> STORAGE_GEMS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/source_gem"));
     public static TagKey<Block> STORAGE_MAGEBLOOM = BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/mage_bloom"));
+    public static TagKey<Block> LECTERN_BLACKLIST = BlockTags.create(ArsNouveau.prefix("lectern_blacklist"));
 
     public static TagKey<Block> SPRING_CROPS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sereneseasons", "spring_crops"));
     public static TagKey<Block> SUMMER_CROPS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sereneseasons", "summer_crops"));
@@ -61,6 +62,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
         this.tag(INTERACT_BLACKLIST);
+        this.tag(LECTERN_BLACKLIST);
         this.tag(BlockTags.FIRE).add(BlockRegistry.MAGIC_FIRE.get());
         this.tag(OCCLUDES_SPELL_SENSOR).add(BlockRegistry.MAGEBLOOM_BLOCK.get());
         this.tag(RELOCATION_NOT_SUPPORTED);
