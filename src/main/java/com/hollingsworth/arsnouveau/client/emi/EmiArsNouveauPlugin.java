@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectCrush;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
@@ -14,7 +15,6 @@ import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.NotNull;
@@ -48,6 +48,7 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
     public void register(EmiRegistry registry) {
         this.registerCategories(registry);
         this.registerRecipes(registry);
+        registry.addRecipeHandler(MenuRegistry.STORAGE.get(), new EmiLecternRecipeHandler<>());
     }
 
     public void registerCategories(EmiRegistry registry) {
