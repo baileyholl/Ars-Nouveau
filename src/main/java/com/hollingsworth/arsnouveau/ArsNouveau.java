@@ -97,6 +97,7 @@ public class ArsNouveau {
         });
         NeoForge.EVENT_BUS.addListener(BubbleEntity::onAttacked);
         NeoForge.EVENT_BUS.addListener(BubbleEntity::entityHurt);
+        NeoForge.EVENT_BUS.addListener(BubbleEntity::preEntityRemoval);
         NeoForge.EVENT_BUS.addListener(BreezeEvent::onSpellResolve);
 
         NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post e) ->{
