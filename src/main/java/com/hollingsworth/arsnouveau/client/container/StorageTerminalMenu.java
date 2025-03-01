@@ -1,11 +1,7 @@
 package com.hollingsworth.arsnouveau.client.container;
 
 import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.ServerToClientStoragePacket;
-import com.hollingsworth.arsnouveau.common.network.SetTerminalSettingsPacket;
-import com.hollingsworth.arsnouveau.common.network.UpdateStorageItemsPacket;
-import com.hollingsworth.arsnouveau.common.util.ANCodecs;
+import com.hollingsworth.arsnouveau.common.network.*;
 import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
@@ -227,10 +223,10 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 	}
 
 
-	public void receive(ServerPlayer sender, HolderLookup.Provider reg, CompoundTag message) {
+	public void receive(ServerPlayer sender, HolderLookup.Provider reg, ClientToServerStoragePacket.Data message) {
 		if(sender.isSpectator())return;
-		if(message.contains("search")) {
-			te.setLastSearch(sender, message.getString("search"));
+		if(message.search().isPresent()) {
+			te.setLastSearch(sender, message.search().get());
 		}
 		this.receiveInteract(sender, reg, message);
 	}
@@ -240,17 +236,18 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 		te.setSorting(settings);
 	}
 
-	public void receiveInteract(ServerPlayer sender, HolderLookup.Provider provider, CompoundTag tag) {
-		if(!tag.contains("interaction"))
+	public void receiveInteract(ServerPlayer sender, HolderLookup.Provider provider, ClientToServerStoragePacket.Data data) {
+		if (data.interaction().isEmpty()) {
 			return;
-
-		CompoundTag interactTag = tag.getCompound("interaction");
-		boolean pullOne = interactTag.getBoolean("pullOne");
-		StoredItemStack stack = null;
-		if(interactTag.contains("stack")){
-			stack = ANCodecs.decode(provider, StoredItemStack.CODEC, interactTag.get("stack"));
 		}
-		StorageTerminalMenu.SlotAction action = StorageTerminalMenu.SlotAction.values()[interactTag.getInt("action")];
+
+		ClientToServerStoragePacket.InteractionData interact = data.interaction().get();
+		boolean pullOne = interact.pullOne();
+		StoredItemStack stack = null;
+		if (interact.stack().isPresent()) {
+			stack = interact.stack().get();
+		}
+		StorageTerminalMenu.SlotAction action = interact.action();
 		onInteract(sender, stack, action, pullOne);
 	}
 
