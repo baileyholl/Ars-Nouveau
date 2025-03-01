@@ -84,7 +84,7 @@ public class DispenserBehaviorRegistry {
         });
     }
 
-    static class UnbiasedDirectionalPlaceContext extends DirectionalPlaceContext {
+    public static class UnbiasedDirectionalPlaceContext extends DirectionalPlaceContext {
         private final Direction direction;
 
         public UnbiasedDirectionalPlaceContext(Level level, BlockPos pos, Direction direction, ItemStack itemStack, Direction face) {

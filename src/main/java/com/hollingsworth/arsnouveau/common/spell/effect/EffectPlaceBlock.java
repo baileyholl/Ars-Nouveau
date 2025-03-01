@@ -10,6 +10,8 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
+import com.hollingsworth.arsnouveau.setup.registry.DispenserBehaviorRegistry;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -19,7 +21,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -44,6 +45,8 @@ public class EffectPlaceBlock extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
         Player fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world, shooter instanceof Player player ? player.getUUID() : null);
+        fakePlayer.setPos(spellContext.getUnwrappedCaster().position);
+        fakePlayer.lookAt(EntityAnchorArgument.Anchor.EYES, rayTraceResult.getLocation());
         for (BlockPos pos1 : posList) {
             if (!world.isInWorldBounds(pos1))
                 continue;
@@ -78,7 +81,8 @@ public class EffectPlaceBlock extends AbstractEffect {
 
     public static InteractionResult attemptPlace(Level world, ItemStack stack, BlockItem item, BlockHitResult result, Player fakePlayer) {
         fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
-        BlockPlaceContext context = new BlockPlaceContext(fakePlayer, InteractionHand.MAIN_HAND, stack, result);
+        Direction nearestDirection = fakePlayer.getNearestViewDirection();
+        var context = new DispenserBehaviorRegistry.UnbiasedDirectionalPlaceContext(world, result.getBlockPos(), nearestDirection, stack, nearestDirection);
         return item.place(context);
     }
 
