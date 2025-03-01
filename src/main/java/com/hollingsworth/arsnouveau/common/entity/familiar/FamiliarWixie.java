@@ -98,8 +98,8 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
         boolean isBeneficialOwner = target.equals(getOwner()) && event.getEffectInstance().getEffect().value().isBeneficial();
         boolean isApplierOwner = applier != null && applier.equals(this.getOwner());
         if (isBeneficialOwner || isApplierOwner) {
-            //event.getEffectInstance().getCures(); why is this here Jarva
-            event.getEffectInstance().mapDuration(duration -> duration + duration * 2);
+            var effect = event.getEffectInstance();
+            effect.duration += effect.duration / 5;
         }
     }
 
