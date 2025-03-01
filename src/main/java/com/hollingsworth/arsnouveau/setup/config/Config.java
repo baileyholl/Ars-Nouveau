@@ -39,6 +39,7 @@ public class Config {
     public static ModConfigSpec.IntValue DRYGMY_UNIQUE_BONUS;
     public static ModConfigSpec.IntValue DRYGMY_QUANTITY_CAP;
     public static ModConfigSpec.IntValue JUMP_RING_COST;
+    public static ModConfigSpec.IntValue BASE_ARMOR_REPAIR_RATE;
 
     public static ModConfigSpec.IntValue MELDER_OUTPUT;
     public static ModConfigSpec.IntValue MELDER_INPUT_COST;
@@ -156,6 +157,7 @@ public class Config {
         SERVER_BUILDER.comment("Items").push("item");
         SPAWN_TOMES = SERVER_BUILDER.comment("Spawn Caster Tomes in Dungeon Loot?").define("spawnTomes", true);
         JUMP_RING_COST = SERVER_BUILDER.comment("How much mana the Ring of Jumping consumes per jump").defineInRange("jumpRingCost", 30, 0, 10000);
+        BASE_ARMOR_REPAIR_RATE = SERVER_BUILDER.comment("How much durability to repair armor by every 10 seconds without any Thread of Repairing").defineInRange("baseArmorRepairRate", 1, 0, 10000);
         SERVER_BUILDER.pop();
         SERVER_BUILDER.comment("Blocks").push("block");
         MELDER_INPUT_COST = SERVER_BUILDER.comment("How much potion a melder takes from each input jar. 100 = 1 potion").defineInRange("melderInputCost", 200, 100, Integer.MAX_VALUE);
