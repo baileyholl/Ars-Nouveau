@@ -1,12 +1,20 @@
 package com.hollingsworth.arsnouveau.api.item.inv;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.items.IItemHandler;
+
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -14,7 +22,7 @@ import java.util.function.Supplier;
  * Represents an ItemHandler and its list of filters.
  */
 public class FilterableItemHandler {
-
+    private LoadingCache<Item, HashSet<Integer>> slotCache;
     private IItemHandler handler;
     private List<Function<ItemStack, ItemScroll.SortPref>> filters;
     private @Nullable Supplier<BlockPos> posSupplier;
@@ -31,6 +39,7 @@ public class FilterableItemHandler {
         this.handler = handler;
         this.filters = filters;
         this.posSupplier = posSupplier;
+        this.slotCache = CacheBuilder.newBuilder().maximumSize(100).build(CacheLoader.from((key) -> new HashSet<>()));
     }
 
     public @Nullable BlockPos getPos(){
@@ -92,4 +101,108 @@ public class FilterableItemHandler {
         return false;
     }
 
+    /**
+     * Inserts the ItemStack into the inventory, filling up already present stacks first.
+     * This is equivalent to the behaviour of a player picking up an item.
+     * Note: This function stacks items without subtypes with different metadata together.
+     */
+    public ItemStack insertItemStacked(ItemStack stack, boolean simulate) {
+        IItemHandler inventory = handler;
+        if (inventory == null || stack.isEmpty())
+            return stack;
+
+        // not stackable -> just insert into a new slot
+        if (!stack.isStackable()) {
+            return insertItem(stack, simulate);
+        }
+
+        int sizeInventory = inventory.getSlots();
+        stack = insertUsingCache(stack, simulate);
+        if(stack.isEmpty()){
+            return stack;
+        }
+        Set<Integer> emptySlots = slotCache.getUnchecked(Items.AIR);
+        // go through the inventory and try to fill up already existing items
+        for (int i = 0; i < sizeInventory; i++) {
+            ItemStack slot = inventory.getStackInSlot(i);
+            if (ItemStack.isSameItemSameComponents(slot, stack)) {
+                stack = inventory.insertItem(i, stack, simulate);
+
+                if (stack.isEmpty()) {
+                    return stack;
+                }
+            }else if(slot.isEmpty()){
+                emptySlots.add(i);
+            }
+        }
+
+        List<Integer> invalidSlots = new ArrayList<>();
+        // find empty slot
+        for (int slot : emptySlots) {
+            if (inventory.getStackInSlot(slot).isEmpty()) {
+                stack = inventory.insertItem(slot, stack, simulate);
+                if (stack.isEmpty()) {
+                    break;
+                }
+            }else{
+                invalidSlots.add(slot);
+            }
+        }
+
+        for(int slot : invalidSlots){
+            emptySlots.remove(slot);
+        }
+
+
+        return stack;
+    }
+
+
+    private ItemStack insertItem(ItemStack stack, boolean simulate) {
+        IItemHandler dest = handler;
+        if (dest == null || stack.isEmpty())
+            return stack;
+
+        stack = insertUsingCache(stack, simulate);
+
+        if(stack.isEmpty()){
+            return ItemStack.EMPTY;
+        }
+
+        for (int i = 0; i < dest.getSlots(); i++) {
+            stack = dest.insertItem(i, stack, simulate);
+            if (stack.isEmpty()) {
+                return ItemStack.EMPTY;
+            }
+        }
+
+        return stack;
+    }
+
+    private ItemStack insertUsingCache(ItemStack stack, boolean simulate){
+        IItemHandler dest = handler;
+        // Get all empty slots if we can't stack.
+        Set<Integer> slots = slotCache.getIfPresent(stack.isStackable() ? stack.getItem() : Items.AIR);
+        if(slots == null){
+            return stack;
+        }
+
+        List<Integer> invalidSlots = new ArrayList<>();
+        for(int slot : slots){
+            int count = stack.getCount();
+            stack = dest.insertItem(slot, stack, simulate);
+            if(stack.getCount() == count){
+                ItemStack targetStack = dest.getStackInSlot(slot);
+                if(!ItemStack.isSameItemSameComponents(targetStack, stack)){
+                    invalidSlots.add(slot);
+                }
+            }
+        }
+
+        for(int slot : invalidSlots){
+            slots.remove(slot);
+        }
+
+        return stack;
+    }
 }

@@ -35,6 +35,7 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.RarityFilter;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
 import java.util.List;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
@@ -124,22 +125,4 @@ public class WorldgenRegistry {
                 new BlobFoliagePlacer(UniformInt.of(0, 0), UniformInt.of(0, 0), 0),
                 new TwoLayersFeatureSize(2, 0, 2)).build();
     }
-
-//    public static final RegistryObject<Feature<DiskConfiguration>> DISK = FEAT_REG.register("disk", () -> new DiskFeature(DiskConfiguration.CODEC));
-//
-//
-//    public static final RegistryObject<ConfiguredFeature<?, ?>> DISK_CLAY = CONFG_REG.register("disk_clay", () ->new ConfiguredFeature<>(DISK.get(), new DiskConfiguration(RuleBasedBlockStateProvider.simple(Blocks.CLAY), BlockPredicate.matchesBlocks(List.of(Blocks.DIRT, Blocks.CLAY)), UniformInt.of(2, 3), 1)));
-//    public static final RegistryObject<ConfiguredFeature<?, ?>> DISK_SAND = CONFG_REG.register("disk_sand", () ->new ConfiguredFeature<>(DISK.get(), new DiskConfiguration(new RuleBasedBlockStateProvider(BlockStateProvider.simple(Blocks.SAND), List.of(new RuleBasedBlockStateProvider.Rule(BlockPredicate.matchesBlocks(Direction.DOWN.getNormal(), Blocks.AIR), BlockStateProvider.simple(Blocks.SANDSTONE)))), BlockPredicate.matchesBlocks(List.of(Blocks.DIRT, Blocks.GRASS_BLOCK)), UniformInt.of(2, 6), 2)));
-//    public static final RegistryObject<ConfiguredFeature<?, ?>> DISK_GRAVEL = CONFG_REG.register("disk_gravel", () ->new ConfiguredFeature<>(DISK.get(), new DiskConfiguration(RuleBasedBlockStateProvider.simple(Blocks.GRAVEL), BlockPredicate.matchesBlocks(List.of(Blocks.DIRT, Blocks.GRASS_BLOCK)), UniformInt.of(2, 5), 2)));
-//
-//
-//    public static final RegistryObject<PlacedFeature> DISK_CLAY_PLACED = PLACED_FEAT_REG.register("placed_disk_clay", () -> new
-//            PlacedFeature(Holder.direct(DISK_CLAY.get()), List.of(InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_TOP_SOLID, BlockPredicateFilter.forPredicate(BlockPredicate.matchesFluids(Fluids.WATER)), BiomeFilter.biome())));
-//    public static final RegistryObject<PlacedFeature> DISK_SAND_PLACED = PLACED_FEAT_REG.register("placed_disk_sand", () -> new
-//            PlacedFeature(Holder.direct(DISK_SAND.get()), List.of(CountPlacement.of(3), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_TOP_SOLID, BlockPredicateFilter.forPredicate(BlockPredicate.matchesFluids(Fluids.WATER)), BiomeFilter.biome())));
-//    public static final RegistryObject<PlacedFeature> DISK_GRAVEL_PLACED = PLACED_FEAT_REG.register("placed_disk_gravel", () -> new
-//            PlacedFeature(Holder.direct(DISK_GRAVEL.get()), List.of(InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_TOP_SOLID, BlockPredicateFilter.forPredicate(BlockPredicate.matchesFluids(Fluids.WATER)), BiomeFilter.biome())));
-//
-
-
 }
