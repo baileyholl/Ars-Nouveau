@@ -186,6 +186,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.alert.turret_type", "Selected form cannot be used by a turret.");
         add("ars_nouveau.alert.spell_set", "Spell set.");
         add("ars_nouveau.alert.duplicate_method", "No duplicate cast methods are allowed.");
+        add("ars_nouveau.relay.current_power", "Current Power: %d");
         add("ars_nouveau.relay.no_to", "No send location set.");
         add("ars_nouveau.relay.one_to", "Sending to %d location(s).");
         add("ars_nouveau.relay.no_from", "No take location set.");
