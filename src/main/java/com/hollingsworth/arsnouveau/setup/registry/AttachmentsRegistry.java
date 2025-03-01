@@ -26,4 +26,8 @@ public class AttachmentsRegistry {
                     () -> AttachmentType.serializable(ANPlayerData::new)
                             .copyOnDeath()
                             .build());
+
+
+    public static final Supplier<AttachmentType<Integer>> OPENED_CONTAINER_VIA_INTERACT =
+            ATTACHMENT_TYPES.register("opened_container_via_interact", () -> AttachmentType.builder(() -> Integer.MIN_VALUE).build());
 }
