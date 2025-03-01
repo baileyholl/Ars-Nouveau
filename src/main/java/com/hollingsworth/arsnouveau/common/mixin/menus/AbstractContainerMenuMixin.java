@@ -12,6 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class AbstractContainerMenuMixin  {
     @Inject(method = "removed", at = @At("RETURN"))
     private void removed(Player player, CallbackInfo ci) {
-        player.setData(AttachmentsRegistry.OPENED_CONTAINER_VIA_INTERACT, Integer.MIN_VALUE);
+        player.removeData(AttachmentsRegistry.OPENED_CONTAINER_VIA_INTERACT);
     }
 }
