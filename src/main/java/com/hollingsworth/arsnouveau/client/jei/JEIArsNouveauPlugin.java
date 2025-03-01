@@ -40,6 +40,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
     public static final RecipeType<ArmorUpgradeRecipe> ARMOR_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "armor_upgrade", ArmorUpgradeRecipe.class);
 
     public static final RecipeType<ImbuementRecipe> IMBUEMENT_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "imbuement", ImbuementRecipe.class);
+    public static final RecipeType<WarpScrollImbuementRecipe> WARP_SCROLL_IMBUEMENT_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "warp_scroll_imbuement", WarpScrollImbuementRecipe.class);
     public static final RecipeType<CrushRecipe> CRUSH_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "crush", CrushRecipe.class);
     public static final RecipeType<BuddingConversionRecipe> BUDDING_CONVERSION_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "budding_conversion", BuddingConversionRecipe.class);
     public static final RecipeType<ScryRitualRecipe> SCRY_RITUAL_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "scry_ritual", ScryRitualRecipe.class);
@@ -56,6 +57,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
                 new GlyphRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
                 new CrushRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
                 new ImbuementRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
+                new WarpScrollImbuementRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
                 new EnchantingApparatusRecipeCategory<>(registry.getJeiHelpers().getGuiHelper()),
                 new ApparatusEnchantingRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
                 new ArmorUpgradeRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
@@ -74,6 +76,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         List<ArmorUpgradeRecipe> armorUpgrades = new ArrayList<>();
 
         List<ImbuementRecipe> imbuementRecipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream().map(RecipeHolder::value).toList();
+        List<WarpScrollImbuementRecipe> warpScrollImbuementRecipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.WARP_SCROLL_IMBUEMENT_TYPE.get()).stream().map(RecipeHolder::value).toList();
 
         List<BuddingConversionRecipe> buddingConversionRecipes = new ArrayList<>();
         List<ScryRitualRecipe> scryRitualRecipes = new ArrayList<>();
@@ -109,6 +112,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         registry.addRecipes(ENCHANTING_APP_RECIPE_TYPE, apparatus);
         registry.addRecipes(ENCHANTING_RECIPE_TYPE, enchantments);
         registry.addRecipes(IMBUEMENT_RECIPE_TYPE, imbuementRecipes);
+        registry.addRecipes(WARP_SCROLL_IMBUEMENT_RECIPE_TYPE, warpScrollImbuementRecipes);
         registry.addRecipes(ARMOR_RECIPE_TYPE, armorUpgrades);
         registry.addRecipes(BUDDING_CONVERSION_RECIPE_TYPE, buddingConversionRecipes);
         registry.addRecipes(SCRY_RITUAL_RECIPE_TYPE, scryRitualRecipes);
@@ -120,6 +124,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(BlockRegistry.SCRIBES_BLOCK), GLYPH_RECIPE_TYPE);
         registry.addRecipeCatalyst(new ItemStack(EffectCrush.INSTANCE.glyphItem), CRUSH_RECIPE_TYPE);
         registry.addRecipeCatalyst(new ItemStack(BlockRegistry.IMBUEMENT_BLOCK), IMBUEMENT_RECIPE_TYPE);
+        registry.addRecipeCatalyst(new ItemStack(BlockRegistry.IMBUEMENT_BLOCK), WARP_SCROLL_IMBUEMENT_RECIPE_TYPE);
         registry.addRecipeCatalyst(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK), ENCHANTING_APP_RECIPE_TYPE);
         registry.addRecipeCatalyst(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK), ENCHANTING_RECIPE_TYPE);
         registry.addRecipeCatalyst(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK), ARMOR_RECIPE_TYPE);
