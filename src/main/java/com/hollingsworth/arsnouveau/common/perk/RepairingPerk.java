@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.perk;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.Perk;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
+import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,7 +26,7 @@ public class RepairingPerk extends Perk {
             if(cap.getCurrentMana() < 20)
                 return;
             cap.removeMana(20);
-            stack.setDamageValue(stack.getDamageValue() - Math.min(stack.getDamageValue(), (int)repairLevel + 1));
+            stack.setDamageValue(stack.getDamageValue() - Math.min(stack.getDamageValue(), (int)repairLevel + Config.BASE_ARMOR_REPAIR_RATE.get()));
         }
     }
 
