@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenuSlot;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
+import com.hollingsworth.arsnouveau.client.jei.AliasProvider;
 import com.hollingsworth.arsnouveau.client.registry.ModKeyBindings;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellBookRenderer;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
@@ -44,10 +45,11 @@ import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable, IRadialProvider {
+public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable, IRadialProvider, AliasProvider {
 
     public SpellTier tier;
     AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
@@ -181,5 +183,12 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     @Override
     public boolean canQuickCast() {
         return true;
+    }
+
+    @Override
+    public Collection<Alias> getAliases() {
+        return List.of(
+                new Alias("spellbook", "Spellbook")
+        );
     }
 }
