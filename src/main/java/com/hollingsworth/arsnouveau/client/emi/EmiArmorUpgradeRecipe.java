@@ -35,22 +35,9 @@ public class EmiArmorUpgradeRecipe extends EmiEnchantingApparatusRecipe<ArmorUpg
         double angleBetweenEach = 360.0 / this.recipe.pedestalItems().size();
 
         MultiProvider provider = multiProvider;
-        List<ItemStack> stacks = PerkRegistry.getPerkProviderItems().stream().filter(item -> item instanceof AnimatedMagicArmor ama && ama.getMinTier() < recipe.tier).map(Item::getDefaultInstance).toList();
-        List<EmiStack> emiInputs = new ArrayList<>();
-        List<EmiStack> emiOutputs = new ArrayList<>();
-
-        for (ItemStack stack : stacks){
-            ItemStack copy = stack.copy();
-            List<List<PerkSlot>> perkProvider = PerkRegistry.getPerkProvider(stack);
-            if (perkProvider != null) {
-                ArmorPerkHolder perkHolder = stack.getOrDefault(DataComponentRegistry.ARMOR_PERKS, new ArmorPerkHolder(null, List.of(), 0, new HashMap<>()));
-                stack.set(DataComponentRegistry.ARMOR_PERKS, perkHolder.setTier(recipe.tier-1));
-                ArmorPerkHolder copyHolder = copy.getOrDefault(DataComponentRegistry.ARMOR_PERKS, new ArmorPerkHolder(null, List.of(), 0, new HashMap<>()));
-                copy.set(DataComponentRegistry.ARMOR_PERKS, copyHolder.setTier(recipe.tier));
-            }
-            emiInputs.add(EmiStack.of(stack));
-            emiOutputs.add(EmiStack.of(copy));
-        }
+        var upgradable = this.getUpgradable();
+        List<EmiStack> emiInputs = upgradable.from;
+        List<EmiStack> emiOutputs = upgradable.to;
 
         widgets.addSlot(EmiIngredient.of(emiInputs), (int) this.center.x, (int) this.center.y);
         widgets.addSlot(EmiIngredient.of(emiOutputs), 100, 3).recipeContext(this);
@@ -60,8 +47,49 @@ public class EmiArmorUpgradeRecipe extends EmiEnchantingApparatusRecipe<ArmorUpg
             point = rotatePointAbout(point, center, angleBetweenEach);
         }
 
-        widgets.addText(Component.translatable("ars_nouveau.tier", 1 + recipe.tier), 0, 0, 10,false);
+        widgets.addText(Component.translatable("ars_nouveau.tier", 1 + recipe.tier), 0, 0, 10, false);
 
         this.addSourceWidget(widgets);
+    }
+
+    @Override
+    public List<EmiIngredient> getInputs() {
+        var inputs = super.getInputs();
+        if (!inputs.isEmpty()) {
+            inputs.set(0, EmiIngredient.of(this.getUpgradable().from));
+        }
+        return inputs;
+    }
+
+    protected record Upgrades(List<EmiStack> from, List<EmiStack> to) {}
+
+    protected Upgrades upgradableCache = null;
+
+    private Upgrades getUpgradable() {
+        if (upgradableCache != null) {
+            return upgradableCache;
+        }
+
+        List<EmiStack> fromList = new ArrayList<>();
+        List<EmiStack> toList = new ArrayList<>();
+
+        List<ItemStack> stacks = PerkRegistry.getPerkProviderItems().stream().filter(item -> item instanceof AnimatedMagicArmor ama && ama.getMinTier() < recipe.tier).map(Item::getDefaultInstance).toList();
+
+        for (ItemStack from : stacks) {
+            ItemStack to = from.copy();
+            List<List<PerkSlot>> perkProvider = PerkRegistry.getPerkProvider(from);
+            if (perkProvider != null) {
+                ArmorPerkHolder perkHolder = from.getOrDefault(DataComponentRegistry.ARMOR_PERKS, new ArmorPerkHolder(null, List.of(), 0, new HashMap<>()));
+                from.set(DataComponentRegistry.ARMOR_PERKS, perkHolder.setTier(recipe.tier - 1));
+                ArmorPerkHolder copyHolder = to.getOrDefault(DataComponentRegistry.ARMOR_PERKS, new ArmorPerkHolder(null, List.of(), 0, new HashMap<>()));
+                to.set(DataComponentRegistry.ARMOR_PERKS, copyHolder.setTier(recipe.tier));
+            }
+
+            fromList.add(EmiStack.of(from));
+            toList.add(EmiStack.of(to));
+        }
+
+        upgradableCache = new Upgrades(fromList, toList);
+        return upgradableCache;
     }
 }
