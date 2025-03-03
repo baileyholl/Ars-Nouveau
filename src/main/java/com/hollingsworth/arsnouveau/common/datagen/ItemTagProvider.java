@@ -212,8 +212,7 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
                 .add(ItemsRegistry.SORCERER_BOOTS.asItem(), ItemsRegistry.ARCANIST_BOOTS.asItem(), ItemsRegistry.BATTLEMAGE_BOOTS.asItem());
 
         this.tag(ItemTags.FOOT_ARMOR)
-                .addTag(MAGIC_ARMOR);
-
+                .addTag(MAGIC_BOOT);
         this.tag(ItemTags.CHEST_ARMOR)
                 .addTag(MAGIC_ROBE);
         this.tag(ItemTags.HEAD_ARMOR)
