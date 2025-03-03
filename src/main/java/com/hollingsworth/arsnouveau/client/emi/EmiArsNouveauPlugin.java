@@ -28,6 +28,7 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
 
     public static final EmiStack IMBUEMENT_CHAMBER = EmiStack.of(BlockRegistry.IMBUEMENT_BLOCK);
     public static final EmiRecipeCategory IMBUEMENT_CATEGORY = new EmiRecipeCategory(ArsNouveau.prefix("imbuement"), IMBUEMENT_CHAMBER);
+    public static final EmiRecipeCategory WARP_SCROLL_IMBUEMENT_CATEGORY = new EmiRecipeCategory(ArsNouveau.prefix("warp_scroll_imbuement"), IMBUEMENT_CHAMBER);
 
     public static final EmiStack SCRIBES_TABLE = EmiStack.of(BlockRegistry.SCRIBES_BLOCK);
     public static final EmiRecipeCategory GLYPH_CATEGORY = new EmiRecipeCategory(ArsNouveau.prefix("glyph_recipe"), SCRIBES_TABLE);
@@ -63,6 +64,9 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
 
         registry.addCategory(IMBUEMENT_CATEGORY);
         registry.addWorkstation(IMBUEMENT_CATEGORY, IMBUEMENT_CHAMBER);
+
+        registry.addCategory(WARP_SCROLL_IMBUEMENT_CATEGORY);
+        registry.addWorkstation(WARP_SCROLL_IMBUEMENT_CATEGORY, IMBUEMENT_CHAMBER);
 
         registry.addCategory(GLYPH_CATEGORY);
         registry.addWorkstation(GLYPH_CATEGORY, SCRIBES_TABLE);
@@ -104,6 +108,10 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
 
         for (var recipe : Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get())) {
             registry.addRecipe(new EmiImbuementRecipe(recipe.id(), recipe.value()));
+        }
+
+        for (var recipe : Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.WARP_SCROLL_IMBUEMENT_TYPE.get())) {
+            registry.addRecipe(new EmiWarpScrollImbuementRecipe(recipe.id(), recipe.value()));
         }
     }
 }
