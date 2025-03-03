@@ -201,7 +201,6 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
 
         this.tag(Tags.Items.ARMORS)
                 .addTag(MAGIC_ARMOR);
-us
 
         this.tag(MAGIC_HOOD)
                 .add(ItemsRegistry.SORCERER_HOOD.asItem(), ItemsRegistry.ARCANIST_HOOD.asItem(), ItemsRegistry.BATTLEMAGE_HOOD.asItem());
