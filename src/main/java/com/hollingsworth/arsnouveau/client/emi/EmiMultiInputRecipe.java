@@ -85,7 +85,16 @@ public abstract class EmiMultiInputRecipe<T> implements EmiRecipe {
 
     @Override
     public List<EmiIngredient> getInputs() {
-        ArrayList<EmiIngredient> inputs = new ArrayList<>(this.multiProvider.input.size());
+        int size = this.multiProvider.input.size();
+        if (this.multiProvider.hasCenter()) {
+            size += 1;
+        }
+
+        ArrayList<EmiIngredient> inputs = new ArrayList<>(size);
+        if (this.multiProvider.hasCenter()) {
+            inputs.add(this.multiProvider.getEmiCenter());
+        }
+
         for (var entry : this.multiProvider.input) {
             inputs.add(EmiIngredient.of(entry));
         }
