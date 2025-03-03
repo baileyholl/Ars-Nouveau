@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EmiEnchantingApparatusRecipe<T extends EnchantingApparatusRecipe> extends EmiMultiInputRecipe<T> {
+    EmiIngredient fakeReagent = null;
+    EmiStack fakeOutput = null;
+
     public EmiEnchantingApparatusRecipe(ResourceLocation id, T recipe) {
         super(id, recipe, new EmiMultiInputRecipe.MultiProvider(recipe.result(), recipe.pedestalItems(), recipe.reagent()));
     }
@@ -26,7 +29,7 @@ public class EmiEnchantingApparatusRecipe<T extends EnchantingApparatusRecipe> e
     @Override
     public List<EmiIngredient> getInputs() {
         ArrayList<EmiIngredient> inputs = new ArrayList<>(1 + this.recipe.pedestalItems().size());
-        inputs.add(EmiIngredient.of(this.recipe.reagent()));
+        inputs.add(fakeReagent != null ? fakeReagent : EmiIngredient.of(this.recipe.reagent()));
         for (Ingredient ingredient : this.recipe.pedestalItems()) {
             inputs.add(EmiIngredient.of(ingredient));
         }
@@ -35,8 +38,20 @@ public class EmiEnchantingApparatusRecipe<T extends EnchantingApparatusRecipe> e
     }
 
     @Override
+    public EmiIngredient getCenter() {
+        return this.fakeReagent != null ? fakeReagent : super.getCenter();
+    }
+
+    public EmiEnchantingApparatusRecipe<T> withReagentAndOutput(EmiIngredient reagent, EmiStack output) {
+        var copy = new EmiEnchantingApparatusRecipe<>(this.id, this.recipe);
+        copy.fakeReagent = reagent;
+        copy.fakeOutput = output;
+        return copy;
+    }
+
+    @Override
     public List<EmiStack> getOutputs() {
-        return List.of(EmiStack.of(this.recipe.result()));
+        return List.of(this.fakeOutput != null ? this.fakeOutput : EmiStack.of(this.recipe.result()));
     }
 
     public void reset() {

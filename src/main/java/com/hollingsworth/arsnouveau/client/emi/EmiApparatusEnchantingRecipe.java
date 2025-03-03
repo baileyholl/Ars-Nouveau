@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantmentRecipe;
 import com.hollingsworth.arsnouveau.common.util.HolderHelper;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
+import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
@@ -37,7 +38,7 @@ public class EmiApparatusEnchantingRecipe extends EmiEnchantingApparatusRecipe<E
         Component message = this.getRecipe().enchantLevel == 1 ? Component.literal("Any compatible item") : Component.literal("Needs lower level enchantment");
         dummy.set(DataComponents.CUSTOM_NAME, message); //TODO Translatable
 
-        widgets.addSlot(EmiIngredient.of(Ingredient.of(dummy)), (int) this.center.x, (int) this.center.y);
+        widgets.addSlot(EmiStack.of(dummy), (int) this.center.x, (int) this.center.y);
 
         for (EmiIngredient input : provider.getEmiInputs()) {
             widgets.addSlot(input, (int) point.x, (int) point.y);

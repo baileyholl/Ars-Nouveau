@@ -11,6 +11,7 @@
     "camera.LevelRendererMixin",
     "camera.MinecraftMixin",
     "elytra.ClientElytraMixin",
+    "emi.EmiRecipeManagerMixin",
     "light.ClientMixin",
     "light.EntityRendererMixin",
     "light.LevelRendererMixin",
