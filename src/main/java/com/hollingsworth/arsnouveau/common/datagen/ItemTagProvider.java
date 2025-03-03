@@ -34,11 +34,11 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
     public static TagKey<Item> STORAGE_BLOCKS_QUARTZ = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/quartz"));
     public static TagKey<Item> SHADY_WIZARD_FRUITS = ItemTags.create(ArsNouveau.prefix( "shady_wizard_fruits"));
 
-    public static TagKey<Item> MAGIC_ARMOR = ItemTags.create(ArsNouveau.prefix( "magic_armor"));
-    public static TagKey<Item> MAGIC_HOOD = ItemTags.create(ArsNouveau.prefix( "magic_hood"));
-    public static TagKey<Item> MAGIC_ROBE = ItemTags.create(ArsNouveau.prefix( "magic_robe"));
-    public static TagKey<Item> MAGIC_LEGS = ItemTags.create(ArsNouveau.prefix( "magic_legs"));
-    public static TagKey<Item> MAGIC_BOOT = ItemTags.create(ArsNouveau.prefix( "magic_boots"));
+    public static TagKey<Item> MAGIC_ARMOR = ItemTags.create(ArsNouveau.prefix("magic_armor"));
+    public static TagKey<Item> MAGIC_HOOD = ItemTags.create(ArsNouveau.prefix("magic_hood"));
+    public static TagKey<Item> MAGIC_ROBE = ItemTags.create(ArsNouveau.prefix("magic_robe"));
+    public static TagKey<Item> MAGIC_LEGS = ItemTags.create(ArsNouveau.prefix("magic_legs"));
+    public static TagKey<Item> MAGIC_BOOT = ItemTags.create(ArsNouveau.prefix("magic_boots"));
 
 
     public ItemTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
