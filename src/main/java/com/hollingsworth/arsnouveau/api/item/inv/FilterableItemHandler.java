@@ -121,13 +121,17 @@ public class FilterableItemHandler {
         if(stack.isEmpty()){
             return stack;
         }
+        Set<Integer> slotsForStack = slotCache.getUnchecked(stack.getItem());
         Set<Integer> emptySlots = slotCache.getUnchecked(Items.AIR);
         // go through the inventory and try to fill up already existing items
         for (int i = 0; i < sizeInventory; i++) {
             ItemStack slot = inventory.getStackInSlot(i);
             if (ItemStack.isSameItemSameComponents(slot, stack)) {
+                int count = stack.getCount();
                 stack = inventory.insertItem(i, stack, simulate);
-
+                if(stack.getCount() != count){
+                    slotsForStack.add(i);
+                }
                 if (stack.isEmpty()) {
                     return stack;
                 }
@@ -196,6 +200,8 @@ public class FilterableItemHandler {
                 if(!ItemStack.isSameItemSameComponents(targetStack, stack)){
                     invalidSlots.add(slot);
                 }
+            }else{
+                System.out.println("cache hit: " + slot);
             }
         }
 
