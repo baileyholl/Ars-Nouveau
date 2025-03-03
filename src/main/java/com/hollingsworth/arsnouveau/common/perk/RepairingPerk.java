@@ -56,6 +56,6 @@ public class RepairingPerk extends Perk {
 
     @Override
     public String getLangDescription() {
-        return "Allows the wearer to repair ANY magical armor or enchanters item by consuming Mana over time. Additional levels increase the speed at which the items repair. This perk applies to all relevant items, not only the item with this perk.";
+        return "Allows the wearer to repair ANY magical armor or enchanters item by consuming Mana over time. Additional levels increase the speed at which the items repair. This perk applies to all relevant items, not only the item with this perk. When in a slot of level 3 or higher, it makes all equipped magical armor unbreakable.";
     }
 }

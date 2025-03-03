@@ -1032,7 +1032,7 @@
   "ars_nouveau.perk_desc.thread_kindling": "Damaging effects cause the target to burn for a short duration before the effect resolves. Burn time is increased by 5 seconds per level.",
   "ars_nouveau.perk_desc.thread_life_drain": "Dealing damage with spells heals you for 20%% per level of the damage dealt.",
   "ars_nouveau.perk_desc.thread_magic_capacity": "Increases the users maximum mana by 10%% per level.",
-  "ars_nouveau.perk_desc.thread_repairing": "Allows the wearer to repair ANY magical armor or enchanters item by consuming Mana over time. Additional levels increase the speed at which the items repair. This perk applies to all relevant items, not only the item with this perk.",
+  "ars_nouveau.perk_desc.thread_repairing": "Allows the wearer to repair ANY magical armor or enchanters item by consuming Mana over time. Additional levels increase the speed at which the items repair. This perk applies to all relevant items, not only the item with this perk. When in a slot of level 3 or higher, it makes all equipped magical armor unbreakable.",
   "ars_nouveau.perk_desc.thread_spellpower": "Grants an increasing amount of Spell Damage each level.",
   "ars_nouveau.perk_desc.thread_starbuncle": "Increases the speed of the player by 20%% each level.",
   "ars_nouveau.perk_desc.thread_undying": "Once every time you sleep, you will nullify death a single time as if holding a Totem of the Undying. Requires a tier 3 slot.",
