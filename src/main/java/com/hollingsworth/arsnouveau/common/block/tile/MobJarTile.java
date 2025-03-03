@@ -78,21 +78,26 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
                             aabb = aabb.minmax(passenger.getBoundingBoxForCulling());
                         }
 
-                        for (var endPos : new Vec3[]{
-                                new Vec3(aabb.minX, aabb.minY, aabb.minZ),
-                                new Vec3(aabb.minX, aabb.minY, aabb.maxZ),
-                                new Vec3(aabb.minX, aabb.maxY, aabb.minZ),
-                                new Vec3(aabb.minX, aabb.maxY, aabb.maxZ),
-                                new Vec3(aabb.maxX, aabb.minY, aabb.minZ),
-                                new Vec3(aabb.maxX, aabb.minY, aabb.maxZ),
-                                new Vec3(aabb.maxX, aabb.maxY, aabb.minZ),
-                                new Vec3(aabb.maxX, aabb.maxY, aabb.maxZ),
-                        }) {
-                            var result = level.clip(new ClipContext(startPos, endPos, ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, CollisionContext.empty()));
-                            if (result.getType() == HitResult.Type.MISS || this.getBlockPos() == result.getBlockPos()) {
-                                this.isVisible = true;
-                                break;
+                        if (Double.isFinite(aabb.minX) && Double.isFinite(aabb.minY) && Double.isFinite(aabb.minZ)
+                            && Double.isFinite(aabb.maxX) && Double.isFinite(aabb.maxY) && Double.isFinite(aabb.maxZ)) {
+                            for (var endPos : new Vec3[]{
+                                    new Vec3(aabb.minX, aabb.minY, aabb.minZ),
+                                    new Vec3(aabb.minX, aabb.minY, aabb.maxZ),
+                                    new Vec3(aabb.minX, aabb.maxY, aabb.minZ),
+                                    new Vec3(aabb.minX, aabb.maxY, aabb.maxZ),
+                                    new Vec3(aabb.maxX, aabb.minY, aabb.minZ),
+                                    new Vec3(aabb.maxX, aabb.minY, aabb.maxZ),
+                                    new Vec3(aabb.maxX, aabb.maxY, aabb.minZ),
+                                    new Vec3(aabb.maxX, aabb.maxY, aabb.maxZ),
+                            }) {
+                                var result = level.clip(new ClipContext(startPos, endPos, ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, CollisionContext.empty()));
+                                if (result.getType() == HitResult.Type.MISS || this.getBlockPos() == result.getBlockPos()) {
+                                    this.isVisible = true;
+                                    break;
+                                }
                             }
+                        } else {
+                            this.isVisible = true;
                         }
                     }
                 }
