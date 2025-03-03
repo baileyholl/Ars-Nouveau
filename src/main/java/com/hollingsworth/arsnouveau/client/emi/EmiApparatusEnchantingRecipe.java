@@ -49,7 +49,7 @@ public class EmiApparatusEnchantingRecipe extends EmiEnchantingApparatusRecipe<E
 
         MultiProvider provider = multiProvider;
         Level level = Minecraft.getInstance().level;
-        ItemStack dummy = this.getRecipe().enchantLevel > 1 ? EnchantedBookItem.createForEnchantment(new EnchantmentInstance(HolderHelper.unwrap(level, recipe.enchantmentKey), recipe.enchantLevel-1)) : Items.BOOK.getDefaultInstance();
+        ItemStack dummy = this.getRecipe().enchantLevel > 1 ? this.createEnchantedBook(this.recipe.enchantLevel - 1) : Items.BOOK.getDefaultInstance();
         Component message = this.getRecipe().enchantLevel == 1 ? Component.literal("Any compatible item") : Component.literal("Needs lower level enchantment");
         dummy.set(DataComponents.CUSTOM_NAME, message); //TODO Translatable
 
@@ -69,7 +69,7 @@ public class EmiApparatusEnchantingRecipe extends EmiEnchantingApparatusRecipe<E
             var stack = getStack(r, enchantable, dummy).copy();
             stack.remove(DataComponents.CUSTOM_NAME);
             if (stack.is(Items.ENCHANTED_BOOK)) {
-                stack = EnchantedBookItem.createForEnchantment(new EnchantmentInstance(HolderHelper.unwrap(level, recipe.enchantmentKey), recipe.enchantLevel));
+                stack = this.createEnchantedBook();
             } else {
                 stack.enchant(HolderHelper.unwrap(level, recipe.enchantmentKey), recipe.enchantLevel);
             }
@@ -91,6 +91,19 @@ public class EmiApparatusEnchantingRecipe extends EmiEnchantingApparatusRecipe<E
             inputs.set(0, EmiIngredient.of(this.getEnchantable().stream().map(EmiStack::of).toList()));
         }
         return inputs;
+    }
+
+    public ItemStack createEnchantedBook(int level) {
+        return EnchantedBookItem.createForEnchantment(new EnchantmentInstance(HolderHelper.unwrap(Minecraft.getInstance().level, recipe.enchantmentKey), level));
+    }
+
+    public ItemStack createEnchantedBook() {
+        return createEnchantedBook(this.recipe.enchantLevel);
+    }
+
+    @Override
+    public List<EmiStack> getOutputs() {
+        return List.of(EmiStack.of(this.createEnchantedBook()));
     }
 
     protected List<ItemStack> enchantableCache = null;
@@ -117,7 +130,7 @@ public class EmiApparatusEnchantingRecipe extends EmiEnchantingApparatusRecipe<E
             var stack = item.getDefaultInstance();
             this.addName(stack);
             if (stack.is(Items.ENCHANTED_BOOK)) {
-                stack = EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantment, recipe.enchantLevel - 1));
+                stack = this.createEnchantedBook(this.recipe.enchantLevel - 1);
             } else {
                 stack.enchant(enchantment, recipe.enchantLevel - 1);
             }
