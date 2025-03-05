@@ -38,4 +38,9 @@ public class SkyWeave extends MirrorWeave implements ITickableBlock{
 
         return newState;
     }
+
+    @Override
+    protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
+        return level.getBlockEntity(pos) instanceof SkyBlockTile tile && !tile.showFacade();
+    }
 }
