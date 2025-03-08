@@ -1,20 +1,27 @@
 package com.hollingsworth.arsnouveau.client.emi;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.util.PerkUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.common.armor.AnimatedMagicArmor;
+import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.*;
+import com.hollingsworth.arsnouveau.common.items.data.ArmorPerkHolder;
+import com.hollingsworth.arsnouveau.common.items.data.BlockFillContents;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectCrush;
-import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.*;
 import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.NotNull;
@@ -48,6 +55,7 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
     public void register(EmiRegistry registry) {
         this.registerCategories(registry);
         this.registerRecipes(registry);
+        this.registerStacks(registry);
         registry.addRecipeHandler(MenuRegistry.STORAGE.get(), new EmiLecternRecipeHandler<>());
     }
 
@@ -104,6 +112,36 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
 
         for (var recipe : Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get())) {
             registry.addRecipe(new EmiImbuementRecipe(recipe.id(), recipe.value()));
+        }
+    }
+
+    public void registerStacks(@NotNull EmiRegistry registry) {
+        var fullSourceJar = BlockRegistry.SOURCE_JAR.asItem().getDefaultInstance();
+        var fullSourceJarTag = new CompoundTag();
+        fullSourceJarTag.putString("id", BlockRegistry.SOURCE_JAR_TILE.registryObject.getId().toString());
+        fullSourceJarTag.putInt(SourceJarTile.SOURCE_TAG, 10000);
+        fullSourceJarTag.putInt(SourceJarTile.COLOR_TAG, ParticleColor.defaultParticleColor().getColor());
+        fullSourceJar.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(fullSourceJarTag));
+        fullSourceJar.set(DataComponentRegistry.BLOCK_FILL_CONTENTS, new BlockFillContents(10000));
+
+        registry.addEmiStackAfter(EmiStack.of(fullSourceJar), EmiStack.of(BlockRegistry.SOURCE_JAR.asItem()));
+
+        for (var item : new AnimatedMagicArmor[]{
+                ItemsRegistry.SORCERER_HOOD.get(), ItemsRegistry.SORCERER_ROBES.get(), ItemsRegistry.SORCERER_LEGGINGS.get(), ItemsRegistry.SORCERER_BOOTS.get(),
+                ItemsRegistry.ARCANIST_HOOD.get(), ItemsRegistry.ARCANIST_ROBES.get(), ItemsRegistry.ARCANIST_LEGGINGS.get(), ItemsRegistry.ARCANIST_BOOTS.get(),
+                ItemsRegistry.BATTLEMAGE_HOOD.get(), ItemsRegistry.BATTLEMAGE_ROBES.get(), ItemsRegistry.BATTLEMAGE_LEGGINGS.get(), ItemsRegistry.BATTLEMAGE_BOOTS.get(),
+        }) {
+            var stack = item.getDefaultInstance();
+            IPerkHolder<ArmorPerkHolder> perkHolder = PerkUtil.getPerkHolder(stack);
+            if (perkHolder == null) {
+                continue;
+            }
+
+            for (int tier = 1; tier <= 2; tier++) {
+                stack.set(DataComponentRegistry.ARMOR_PERKS, perkHolder.setTier(tier));
+                final int finalTier = tier;
+                registry.addEmiStackAfter(EmiStack.of(stack.copy()), s -> s.getItemStack().is(stack.getItem()) && s.getItemStack().get(DataComponentRegistry.ARMOR_PERKS).getTier() == finalTier - 1);
+            }
         }
     }
 }

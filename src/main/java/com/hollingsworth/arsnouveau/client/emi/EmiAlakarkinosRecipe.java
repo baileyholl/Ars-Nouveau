@@ -7,8 +7,11 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectUtil;
 import org.apache.commons.lang3.text.WordUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,6 +30,11 @@ public class EmiAlakarkinosRecipe implements EmiRecipe {
     public EmiAlakarkinosRecipe(ResourceLocation id, AlakarkinosRecipe recipe) {
         this.id = id;
         this.recipe = recipe;
+    }
+
+    @Override
+    public boolean supportsRecipeTree() {
+        return false;
     }
 
     @Override
@@ -82,9 +90,7 @@ public class EmiAlakarkinosRecipe implements EmiRecipe {
         AlakarkinosConversionRegistry.LootDrops drops = lootDrops.get();
 
         String recipeChance = df.format((float) recipe.weight() / drops.weight());
-        widgets.addSlot(EmiStack.of(recipe.input()), 0, 0).appendTooltip(
-                Component.translatable("ars_nouveau.alakarkinos_recipe.chance", recipeChance)
-        );
+        widgets.addSlot(EmiStack.of(recipe.input()), 0, 0).appendTooltip(Component.translatable("ars_nouveau.alakarkinos_recipe.chance", recipeChance));
 
         int yOffset = 9;
         int i = (int) ITEMS_PER_ROW;
@@ -94,10 +100,23 @@ public class EmiAlakarkinosRecipe implements EmiRecipe {
             int x = (int) ((i - (row * ITEMS_PER_ROW)) * 18);
             int y = row * 18 + yOffset;
 
-            String chance = df.format(drop.chance());
-            widgets.addSlot(EmiStack.of(drop.item()), x, y).appendTooltip(
-                    Component.translatable("ars_nouveau.alakarkinos_recipe.chance", chance)
-            ).recipeContext(this);
+            var slot = widgets.addSlot(EmiStack.of(drop.item()).setChance(drop.chance()), x, y).recipeContext(this);
+            if (drop.item().has(DataComponents.SUSPICIOUS_STEW_EFFECTS)) {
+                for (var effectHolder : drop.item().get(DataComponents.SUSPICIOUS_STEW_EFFECTS).effects()) {
+                    var effect = effectHolder.createEffectInstance();
+                    MutableComponent tooltip = Component.translatable(effect.getDescriptionId());
+                    if (effect.getAmplifier() > 0) {
+                        tooltip = Component.translatable("potion.withAmplifier", tooltip, Component.translatable("potion.potency." + effect.getAmplifier()));
+                    }
+
+                    if (!effect.endsWithin(20)) {
+                        tooltip = Component.translatable("potion.withDuration", tooltip, MobEffectUtil.formatDuration(effect, 1.0F, 20));
+                    }
+
+                    slot.appendTooltip(tooltip);
+                }
+            }
+
             i += 1;
         }
     }
