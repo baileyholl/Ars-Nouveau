@@ -68,6 +68,8 @@ public class DocAssets {
 
     public static final BlitInfo SEARCH_SPLASH = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_search_results.png"), 70, 85);
 
+    public static final BlitInfo POTION_RECIPE = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_brewing_stand.png"), 112, 58);
+
     public record BlitInfo(ResourceLocation location, int u, int v, int width, int height) {
         public BlitInfo(ResourceLocation location, int width, int height){
             this(location, 0, 0, width, height);

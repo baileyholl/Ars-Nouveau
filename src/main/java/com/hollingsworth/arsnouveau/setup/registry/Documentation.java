@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.documentation.DocCategory;
 import com.hollingsworth.arsnouveau.api.documentation.DocPlayerData;
 import com.hollingsworth.arsnouveau.api.documentation.ReloadDocumentationEvent;
@@ -21,6 +22,7 @@ import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.perk.EmptyPerk;
 import com.hollingsworth.arsnouveau.common.util.Log;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -37,6 +39,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.brewing.BrewingRecipe;
 
 import java.util.*;
 
@@ -278,12 +281,20 @@ public class Documentation {
                 .addConnectedSearch(ItemsRegistry.WIXIE_SHARD));
 
         var archwood = addPage(new DocEntryBuilder(RESOURCES, "archwood")
-                        .withIcon(BlockRegistry.CASCADING_SAPLING)
-                        .withIntroPage()
-                        .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.bombegrante"), Component.translatable("block.ars_nouveau.bombegranate_pod"), BlockRegistry.BOMBEGRANTE_POD))
-                        .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.mendosteen"), Component.translatable("block.ars_nouveau.mendosteen_pod"),BlockRegistry.MENDOSTEEN_POD))
-                        .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.frostaya"), Component.translatable("block.ars_nouveau.frostaya_pod"),BlockRegistry.FROSTAYA_POD))
-                        .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.bastion_fruit"), Component.translatable("block.ars_nouveau.bastion_pod"),BlockRegistry.BASTION_POD))
+                .withIcon(BlockRegistry.CASCADING_SAPLING)
+                .withIntroPage()
+                .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.bombegrante"), Component.translatable("block.ars_nouveau.bombegranate_pod"), BlockRegistry.BOMBEGRANTE_POD))
+                .withCraftingPages(BlockRegistry.BOMBEGRANTE_POD)
+                .withPage(Documentation.getForPotionRecipes(BlockRegistry.BOMBEGRANTE_POD.asItem().getDefaultInstance()))
+                .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.mendosteen"), Component.translatable("block.ars_nouveau.mendosteen_pod"),BlockRegistry.MENDOSTEEN_POD))
+                .withCraftingPages(BlockRegistry.MENDOSTEEN_POD)
+                .withPage(Documentation.getForPotionRecipes(BlockRegistry.MENDOSTEEN_POD.asItem().getDefaultInstance()))
+                .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.frostaya"), Component.translatable("block.ars_nouveau.frostaya_pod"),BlockRegistry.FROSTAYA_POD))
+                .withCraftingPages(BlockRegistry.FROSTAYA_POD)
+                .withPage(Documentation.getForPotionRecipes(BlockRegistry.FROSTAYA_POD.asItem().getDefaultInstance()))
+                .withPage(TextEntry.create(Component.translatable("ars_nouveau.page.bastion_fruit"), Component.translatable("block.ars_nouveau.bastion_pod"),BlockRegistry.BASTION_POD))
+                .withCraftingPages(BlockRegistry.BASTION_POD)
+                .withPage(Documentation.getForPotionRecipes(BlockRegistry.BASTION_POD.asItem().getDefaultInstance()))
                 .addConnectedSearch(BlockRegistry.BOMBEGRANTE_POD)
                 .addConnectedSearch(BlockRegistry.MENDOSTEEN_POD)
                 .addConnectedSearch(BlockRegistry.FROSTAYA_POD)
@@ -876,7 +887,30 @@ public class Documentation {
             pages.add(ImbuementRecipeEntry.create(imbuementRecipe));
             return pages;
         }
+        return pages;
+    }
 
+    public static List<SinglePageCtor> getForPotionRecipes(ItemStack stack){
+        List<BrewingRecipe> brewingRecipes = ArsNouveauAPI.getInstance().getAllPotionRecipes(Minecraft.getInstance().level);
+        List<SinglePageCtor> pages = new ArrayList<>();
+        List<BrewingRecipe> matchingRecipes = new ArrayList<>();
+        for(BrewingRecipe recipe : brewingRecipes){
+            if(recipe.isInput(stack) || recipe.isIngredient(stack) || ItemStack.isSameItem(stack, recipe.getOutput())) {
+                matchingRecipes.add(recipe);
+            }
+        }
+        BrewingRecipe recipe1 = null;
+        for (BrewingRecipe matchingRecipe : matchingRecipes) {
+            if (recipe1 == null) {
+                recipe1 = matchingRecipe;
+            } else {
+                pages.add(PotionRecipeEntry.create(recipe1, matchingRecipe));
+                recipe1 = null;
+            }
+        }
+        if(recipe1 != null){
+            pages.add(PotionRecipeEntry.create(recipe1, null));
+        }
         return pages;
     }
 
