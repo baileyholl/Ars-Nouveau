@@ -214,7 +214,7 @@ public class GuiSpellBook extends BaseBook {
 
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 164, 0, 0, 23, 20, 23, 20, "textures/gui/color_wheel_bookmark.png", (b) ->{
             ParticleTimeline timeline = SpellCasterRegistry.from(bookStack).getParticles();
-            Minecraft.getInstance().setScreen(new ParticleScreen(timeline, selectedSpellSlot, this.hand));
+            Minecraft.getInstance().setScreen(new ParticleOverviewScreen(timeline, selectedSpellSlot, this.hand));
         }).withTooltip(Component.translatable("ars_nouveau.gui.color")));
 
         this.nextButton = addRenderableWidget(new PageButton(bookRight - 20, bookBottom - 6, true, this::onPageIncrease, true));

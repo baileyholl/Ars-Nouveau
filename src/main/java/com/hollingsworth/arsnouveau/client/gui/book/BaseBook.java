@@ -19,6 +19,12 @@ public class BaseBook extends ModdedScreen {
 
     public static final int FULL_WIDTH = 290;
     public static final int FULL_HEIGHT = 188;
+    public static final int LEFT_PAGE_OFFSET = 19;
+    public static final int RIGHT_PAGE_OFFSET = 153;
+    public static final int PAGE_TOP_OFFSET = 17;
+    public static final int ONE_PAGE_WIDTH = 118;
+    public static final int ONE_PAGE_HEIGHT = 146;
+
     public static ResourceLocation background = ArsNouveau.prefix( "textures/gui/spell_book_template.png");
     public int bookLeft;
     public int bookTop;
