@@ -1072,6 +1072,7 @@
   "ars_nouveau.reagent": "Reagent:",
   "ars_nouveau.recorded_by": "Created by %s",
   "ars_nouveau.recorded_codex": "You record your known glyphs to the codex.",
+  "ars_nouveau.relay.current_power": "Current Power: %d",
   "ars_nouveau.relay.no_from": "No take location set.",
   "ars_nouveau.relay.no_to": "No send location set.",
   "ars_nouveau.relay.one_from": "Taking from %d location(s).",
