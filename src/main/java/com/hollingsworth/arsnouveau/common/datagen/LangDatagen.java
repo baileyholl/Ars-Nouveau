@@ -1433,6 +1433,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.banner.abjuration", "Abjuration School");
         add("block.ars_nouveau.banner.conjuration", "Conjuration School");
         add("ars_nouveau.lectern_blacklist", "This block has been disabled from being connected to the Storage Lectern.");
+        add("key.ars_nouveau.open_documentation", "Open Documentation");
     }
 
     public void addCategory(String key, String value) {
