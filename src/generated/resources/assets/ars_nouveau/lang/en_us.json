@@ -291,6 +291,7 @@
   "ars_nouveau.augment_desc.glyph_intangible_glyph_pierce": "Increases the depth of targeted blocks.",
   "ars_nouveau.augment_desc.glyph_intangible_glyph_randomize": "Adds a chance to not target a block.",
   "ars_nouveau.augment_desc.glyph_interact_glyph_amplify": "Uses left-click instead of right-click.",
+  "ars_nouveau.augment_desc.glyph_interact_glyph_dampen": "Will use shift clicks.",
   "ars_nouveau.augment_desc.glyph_interact_glyph_sensitive": "Will interact with your off-hand item.",
   "ars_nouveau.augment_desc.glyph_invisibility_glyph_amplify": "Increases the level of the effect.",
   "ars_nouveau.augment_desc.glyph_invisibility_glyph_duration_down": "Reduces the duration of the effect.",
