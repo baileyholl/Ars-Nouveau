@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.event.DispelEvent;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
+import com.hollingsworth.arsnouveau.api.event.SuccessfulTreeGrowthEvent;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.recipe.MultiRecipeWrapper;
@@ -13,7 +14,6 @@ import com.hollingsworth.arsnouveau.api.ritual.RitualEventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
-import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.command.*;
 import com.hollingsworth.arsnouveau.common.compat.CaelusHandler;
@@ -72,7 +72,6 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -80,7 +79,6 @@ import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.level.BlockGrowFeatureEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.village.VillageSiegeEvent;
@@ -211,18 +209,6 @@ public class EventHandler {
         }
     }
 
-
-    @SubscribeEvent
-    public static void clientTickEnd(ClientTickEvent.Post event) {
-
-        ClientInfo.ticksInGame++;
-        if (ClientInfo.redTicks()) {
-            ClientInfo.redOverlayTicks--;
-        }
-
-    }
-
-
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onGlideTick(PlayerTickEvent.Pre event) {
         var player = event.getEntity();
@@ -331,13 +317,6 @@ public class EventHandler {
         if (event.rayTraceResult instanceof EntityHitResult hit && event.world instanceof ServerLevel level) {
             Entity entity = hit.getEntity();
             if (!entity.isAlive()) return;
-            // TODO: Replace with EntitySubPredicate when it becomes a registry in 1.21
-            if (entity instanceof Witch witch) {
-                if (witch.getHealth() <= witch.getMaxHealth() / 2) {
-                    replaceEntityWithItems(level, witch, new ItemStack(ItemsRegistry.WIXIE_SHARD));
-                    return;
-                }
-            }
             for (RecipeHolder<DispelEntityRecipe> holder : level.getRecipeManager().getAllRecipesFor(RecipeRegistry.DISPEL_ENTITY_TYPE.get())) {
                 var recipe = holder.value();
                 if (recipe.matches(event.shooter, entity)) {
@@ -471,16 +450,13 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void treeGrow(BlockGrowFeatureEvent event) {
-        if (!(event.getLevel() instanceof ServerLevel level))
-            return;
-
-        Set<UUID> sprigs = Whirlisprig.WHIRLI_MAP.getEntities(level);
+    public static void treeGrow(SuccessfulTreeGrowthEvent event) {
+        Set<UUID> sprigs = Whirlisprig.WHIRLI_MAP.getEntities(event.level);
         List<UUID> sprigsToRemove = new ArrayList<>();
 
         for (UUID uuid : sprigs) {
-            if (level.getEntity(uuid) instanceof Whirlisprig whirlisprig) {
-                if (BlockUtil.distanceFrom(whirlisprig.blockPosition(), event.getPos()) <= 10 && !whirlisprig.isTamed()) {
+            if (event.level.getEntity(uuid) instanceof Whirlisprig whirlisprig) {
+                if (BlockUtil.distanceFrom(whirlisprig.blockPosition(), event.pos) <= 10 && !whirlisprig.isTamed()) {
                     whirlisprig.droppingShards = true;
                 }
             } else {
@@ -488,7 +464,7 @@ public class EventHandler {
             }
         }
         for (UUID uuid : sprigsToRemove) {
-            Whirlisprig.WHIRLI_MAP.removeEntity(level, uuid);
+            Whirlisprig.WHIRLI_MAP.removeEntity(event.level, uuid);
         }
     }
 

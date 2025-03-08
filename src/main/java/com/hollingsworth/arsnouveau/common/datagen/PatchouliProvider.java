@@ -21,7 +21,6 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.CachedOutput;
@@ -563,11 +562,16 @@ public class PatchouliProvider extends SimpleDataProvider{
                 .withPage(new EntityPage(EntityType.ENDER_DRAGON).withText("mob_jar.ender_dragon"))
                 .withPage(new EntityPage(EntityType.SHEEP).withText("mob_jar.sheep"))
                 .withPage(new EntityPage(EntityType.CHICKEN).withText("mob_jar.chicken"))
+                .withPage(new EntityPage(EntityType.ARMADILLO).withText("mob_jar.armadillo"))
+                .withPage(new EntityPage(EntityType.SNIFFER).withText("mob_jar.sniffer"))
                 .withPage(new EntityPage(EntityType.COW).withText("mob_jar.cow"))
                 .withPage(new EntityPage(EntityType.MOOSHROOM).withText("mob_jar.mooshroom"))
                 .withPage(new EntityPage(EntityType.PUFFERFISH).withText("mob_jar.pufferfish"))
                 .withPage(new EntityPage(EntityType.FROG).withText("mob_jar.frog"))
                 .withPage(new EntityPage(EntityType.PANDA).withText("mob_jar.panda"))
+                .withPage(new EntityPage(EntityType.CAT).withText("mob_jar.cat"))
+                .withPage(new EntityPage(EntityType.BREEZE).withText("mob_jar.breeze"))
+                .withPage(new EntityPage(EntityType.SNOW_GOLEM).withText("mob_jar.snow_golem"))
                 .withPage(new EntityPage(ModEntities.ENTITY_DUMMY.get()).withText("mob_jar.dummy"))
                 .withPage(new CraftingPage(BlockRegistry.MOB_JAR))
                 .withPage(new RelationsPage().withEntry(RITUALS, RitualLib.CONTAINMENT).withEntry(AUTOMATION, "drygmy_charm")), getPath(MACHINES, "mob_jar"));
@@ -652,14 +656,14 @@ public class PatchouliProvider extends SimpleDataProvider{
                 .withEntries(scrollRelations));
         dominionWand.builder.withPage(new RelationsPage().withEntry(storageLectern).withEntry(displayCase).withEntry(starby));
 
-        addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.SPELL_SENSOR).withLocalizedText().withPage(new ApparatusPage(BlockRegistry.SPELL_SENSOR)), getPath(AUTOMATION, "spell_sensor"));
-        addPage(new PatchouliBuilder(EQUIPMENT, ItemsRegistry.JUMP_RING).withLocalizedText().withPage(new ApparatusPage(ItemsRegistry.JUMP_RING)), getPath(EQUIPMENT, "jump_ring"));
-        addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.REDSTONE_RELAY).withLocalizedText().withPage(new CraftingPage(BlockRegistry.REDSTONE_RELAY)), getPath(AUTOMATION, "redstone_relay"));
+        addBasicItem(BlockRegistry.SPELL_SENSOR, AUTOMATION, new ApparatusPage(BlockRegistry.SPELL_SENSOR));
+        addBasicItem(ItemsRegistry.JUMP_RING, EQUIPMENT, new ApparatusPage(ItemsRegistry.JUMP_RING));
+        addBasicItem(BlockRegistry.REDSTONE_RELAY, AUTOMATION, new CraftingPage(BlockRegistry.REDSTONE_RELAY));
 
         addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.ARCHWOOD_GRATE).withLocalizedText()
                 .withPage(new CraftingPage(BlockRegistry.ARCHWOOD_GRATE).withRecipe2(BlockRegistry.GOLD_GRATE))
                 .withPage(new CraftingPage(BlockRegistry.SMOOTH_SOURCESTONE_GRATE).withRecipe2(BlockRegistry.SOURCESTONE_GRATE)), getPath(AUTOMATION, "grates"));
-        addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.SOURCE_LAMP).withLocalizedText().withPage(new CraftingPage(BlockRegistry.SOURCE_LAMP)), getPath(AUTOMATION, "source_lamp"));
+        addBasicItem(BlockRegistry.SOURCE_LAMP, AUTOMATION, new CraftingPage(BlockRegistry.SOURCE_LAMP));
 
         addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.ALAKARKINOS_CHARM)
                 .withLocalizedText()

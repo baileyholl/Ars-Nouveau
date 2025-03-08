@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:frostaya_pod"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:light_blue_dye"
+  }
+}

@@ -32,13 +32,28 @@ public class DocEntryBuilder {
 
     public Component title;
     public List<ConnectedSearch> connectedSearches = new ArrayList<>();
+    public String namespace = ArsNouveau.MODID;
 
     public DocEntryBuilder(DocCategory category, String name) {
         this(category, name, ArsNouveau.prefix(name));
     }
 
     public DocEntryBuilder(DocCategory category, String name, ResourceLocation entryId){
-        this.titleKey = name.contains(".") ? name : "ars_nouveau.page." + name;
+        this(ArsNouveau.MODID, category, name, entryId);
+    }
+
+
+    public DocEntryBuilder(DocCategory category, ItemLike itemLike) {
+        this(ArsNouveau.MODID, category, itemLike);
+    }
+
+    public DocEntryBuilder(String modid, DocCategory category, String name) {
+        this(modid, category, name, ResourceLocation.fromNamespaceAndPath(modid, name));
+    }
+
+    public DocEntryBuilder(String modid, DocCategory category, String name, ResourceLocation entryId){
+        this.namespace = modid;
+        this.titleKey = name.contains(".") ? name : namespace + ".page." + name;
         this.textKey = name;
         this.title = Component.translatable(titleKey);
         this.category = category;
@@ -47,7 +62,8 @@ public class DocEntryBuilder {
     }
 
 
-    public DocEntryBuilder(DocCategory category, ItemLike itemLike) {
+    public DocEntryBuilder(String modid, DocCategory category, ItemLike itemLike) {
+        this.namespace = modid;
         this.category = category;
         this.titleKey = itemLike.asItem().getDescriptionId();
         this.textKey = getRegistryName(itemLike.asItem()).getPath();
@@ -95,7 +111,7 @@ public class DocEntryBuilder {
 
     public DocEntryBuilder withIntroPage(String id) {
         textCounter++;
-        pages.add(TextEntry.create(Component.translatable("ars_nouveau.page" + textCounter + "." + id), Component.translatable(titleKey), displayItem));
+        pages.add(TextEntry.create(Component.translatable(namespace + ".page" + textCounter + "." + id), Component.translatable(titleKey), displayItem));
         return this;
     }
 
@@ -106,7 +122,7 @@ public class DocEntryBuilder {
 
     public DocEntryBuilder withLocalizedText(String id) {
         textCounter++;
-        return withTextPage("ars_nouveau.page" + textCounter + "." + id);
+        return withTextPage(namespace + ".page" + textCounter + "." + id);
     }
 
 
@@ -116,7 +132,7 @@ public class DocEntryBuilder {
 
     public DocEntryBuilder withLocalizedText(ItemLike itemLike){
         textCounter++;
-        pages.add(TextEntry.create(Component.translatable("ars_nouveau.page" + textCounter + "." + this.textKey), itemLike.asItem().getDescription(), itemLike.asItem().getDefaultInstance()));
+        pages.add(TextEntry.create(Component.translatable(namespace + ".page" + textCounter + "." + this.textKey), itemLike.asItem().getDescription(), itemLike.asItem().getDefaultInstance()));
         return this;
     }
 

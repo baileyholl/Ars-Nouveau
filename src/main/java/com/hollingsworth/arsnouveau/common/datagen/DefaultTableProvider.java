@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.registry.*;
+import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.WritableRegistry;
@@ -17,6 +18,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.StringRepresentable;
@@ -33,15 +35,13 @@ import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.state.properties.SlabType;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
-import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.ValidationContext;
+import net.minecraft.world.level.storage.loot.*;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.*;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
@@ -55,7 +55,25 @@ import java.util.stream.Stream;
 public class DefaultTableProvider extends LootTableProvider {
 
     public DefaultTableProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pRegistries) {
-        super(pOutput, new HashSet<>(), List.of(new LootTableProvider.SubProviderEntry(BlockLootTable::new, LootContextParamSets.BLOCK), new LootTableProvider.SubProviderEntry(EntityLootTable::new, LootContextParamSets.ENTITY)), pRegistries);
+        super(pOutput, new HashSet<>(), List.of(new LootTableProvider.SubProviderEntry(MyLootTableSubProvider::new, LootContextParamSets.ENTITY), new LootTableProvider.SubProviderEntry(BlockLootTable::new, LootContextParamSets.BLOCK), new LootTableProvider.SubProviderEntry(EntityLootTable::new, LootContextParamSets.ENTITY)), pRegistries);
+    }
+
+    public static class MyLootTableSubProvider implements LootTableSubProvider {
+        public List<Block> list = new ArrayList<>();
+        HolderLookup.Provider lookupProvider;
+
+        public MyLootTableSubProvider(HolderLookup.Provider lookupProvider) {
+            this.lookupProvider = lookupProvider;
+        }
+
+        @Override
+        public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> consumer) {
+            consumer.accept(ResourceKey.create(Registries.LOOT_TABLE, ArsNouveau.prefix("dispel_witch")), LootTable.lootTable()
+                    .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))
+                    .withPool(LootPool.lootPool()
+                            .add(LootItem.lootTableItem(ItemsRegistry.WIXIE_SHARD))
+                            .setRolls(ConstantValue.exactly(1))));
+        }
     }
 
     private static final float[] DEFAULT_SAPLING_DROP_RATES = new float[]{0.05F, 0.0625F, 0.083333336F, 0.1F};

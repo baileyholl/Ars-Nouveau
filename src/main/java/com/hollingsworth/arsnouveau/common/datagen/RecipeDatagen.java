@@ -460,6 +460,10 @@ public class RecipeDatagen extends RecipeProvider {
 
             shapelessBuilder(Items.PINK_DYE, 2).requires(ItemsRegistry.MAGE_BLOOM, 2).save(consumer, ArsNouveau.prefix( "magebloom_to_pink"));
             shapelessBuilder(Items.PURPLE_DYE).requires(BlockRegistry.SOURCEBERRY_BUSH).save(consumer, ArsNouveau.prefix( "sourceberry_to_purple"));
+            shapelessBuilder(Items.LIME_DYE).requires(BlockRegistry.MENDOSTEEN_POD).save(consumer, ArsNouveau.prefix( "mendosteen_to_lime"));
+            shapelessBuilder(Items.PURPLE_DYE).requires(BlockRegistry.BASTION_POD).save(consumer, ArsNouveau.prefix( "bastion_to_purple"));
+            shapelessBuilder(Items.LIGHT_BLUE_DYE).requires(BlockRegistry.FROSTAYA_POD).save(consumer, ArsNouveau.prefix( "frostaya_to_light_blue"));
+            shapelessBuilder(Items.ORANGE_DYE).requires(BlockRegistry.BOMBEGRANTE_POD).save(consumer, ArsNouveau.prefix( "bombegranate_to_orange"));
 
             shapelessBuilder(Items.WATER_BUCKET).requires(ItemsRegistry.WATER_ESSENCE).requires(Items.BUCKET).save(consumer, ArsNouveau.prefix( "water_essence_to_bucket"));
             shapelessBuilder(Items.FIRE_CHARGE, 3).requires(ItemsRegistry.FIRE_ESSENCE).requires(Items.GUNPOWDER).requires(Items.COAL).save(consumer, ArsNouveau.prefix( "fire_essence_to_charge"));
@@ -623,11 +627,11 @@ public class RecipeDatagen extends RecipeProvider {
                     .save(consumer);
             // stonecutter for sourcestone
             for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
-                if(s.equals(LibBlockNames.SOURCESTONE))
-                    continue;
-                makeStonecutter(consumer, BlockRegistry.getBlock(LibBlockNames.SOURCESTONE), BlockRegistry.getBlock(s), LibBlockNames.SOURCESTONE);
-                shapelessBuilder(SOURCESTONE).requires(BlockRegistry.getBlock(s)).save(consumer, ArsNouveau.prefix( s + "_to_sourcestone"));
-
+                if(!s.equals(LibBlockNames.SOURCESTONE)) {
+                    makeStonecutter(consumer, BlockRegistry.getBlock(LibBlockNames.SOURCESTONE), BlockRegistry.getBlock(s), LibBlockNames.SOURCESTONE);
+                    shapelessBuilder(SOURCESTONE).requires(BlockRegistry.getBlock(s)).save(consumer, ArsNouveau.prefix(s + "_to_sourcestone"));
+                }
+                
                 Block stair = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( s + "_stairs"));
                 Block slab = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( s + "_slab"));
                 SingleItemRecipeBuilder.stonecutting(Ingredient.of(BlockRegistry.getBlock(s)), RecipeCategory.BUILDING_BLOCKS, stair)

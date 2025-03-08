@@ -235,6 +235,10 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         if(tile instanceof StorageLecternTile newMasterLectern){
             return;
         }
+        if(level.getBlockState(storedPos).is(BlockTagProvider.LECTERN_BLACKLIST)){
+            playerEntity.sendSystemMessage(Component.translatable("ars_nouveau.lectern_blacklist"));
+            return;
+        }
 
         IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, storedPos, side);
         if (handler == null) {

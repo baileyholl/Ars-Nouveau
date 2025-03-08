@@ -9,15 +9,18 @@ import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.client.jei.AliasProvider;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -35,6 +38,16 @@ public class LangDatagen extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
+        for (DeferredHolder<Item, ? extends Item> entry : ItemsRegistry.ITEMS.getEntries()) {
+            if (entry.get() instanceof AliasProvider provider) {
+                for (AliasProvider.Alias alias : provider.getAliases()) {
+                    String key = alias.toTranslationKey();
+                    if (data.containsKey(key)) continue;
+                    add(key, alias.name());
+                }
+            }
+        }
+
         ArsNouveauAPI arsNouveauAPI = ArsNouveauAPI.getInstance();
         for (Supplier<Glyph> supplier : GlyphRegistry.getGlyphItemMap().values()) {
             Glyph glyph = supplier.get();
@@ -162,7 +175,8 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.spell_parchment", "Spell Parchment");
         add("item.ars_nouveau.ring_of_greater_discount", "Ring of Greater Discount");
         add("item.ars_nouveau.ring_of_lesser_discount", "Ring of Lesser Discount");
-        add("alert.core", "An Arcane Core must be placed beneath this block.");
+        add("alert.core", "An Arcane Core must be placed next to the base of the Enchanting Apparatus.");
+        add("alert.core.wrong_axis", "The Arcane Core must be aligned with the base of the Enchanting Apparatus.");
         add("whirlisprig.unhappy", "The Whirlisprig seems very unhappy in her home. Try sprucing it up!");
         add("whirlisprig.content", "The Whirlisprig seems content, but could be better.");
         add("whirlisprig.happy", "The Whirlisprig appears happy enough.");
@@ -185,6 +199,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.alert.turret_type", "Selected form cannot be used by a turret.");
         add("ars_nouveau.alert.spell_set", "Spell set.");
         add("ars_nouveau.alert.duplicate_method", "No duplicate cast methods are allowed.");
+        add("ars_nouveau.relay.current_power", "Current Power: %d");
         add("ars_nouveau.relay.no_to", "No send location set.");
         add("ars_nouveau.relay.one_to", "Sending to %d location(s).");
         add("ars_nouveau.relay.no_from", "No take location set.");
@@ -658,7 +673,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.whirlisprig_flower", "Whirlisprig Blossom");
         add("ars_nouveau.page.relay", "Enables the transport of source between Source Jars and other Source Relays. To pull source from jars, use the Dominion Wand on the jar, and then on the relay. To send between relays or from a relay to a jar, use the wand on the relay and then the target you wish to send source to. Relays may only reach up to 30 blocks away. To clear connections, sneak while using the Dominion Wand on the relay.");
         add("ars_nouveau.page.relay_splitter", "Operates similar to the Source Relay, but will support taking from and transferring to multiple jars at once. The splitter has a much larger through-put than the Source Relay, and will split this throughput amongst all of its jars. See the instructions on the Source Relay for use.");
-        add("ars_nouveau.page1.enchanting_apparatus", "The Enchanting Apparatus utilizes pedestals and Source for crafting. To use the Enchanting Apparatus, place any number of Arcane Pedestals within 3 blocks with their items. Once you have filled the pedestals, use the middle item on the Enchanting Apparatus block. The Enchanting Apparatus requires an Arcane Core beneath it in order to work.");
+        add("ars_nouveau.page1.enchanting_apparatus", "The Enchanting Apparatus utilizes pedestals and Source for crafting. To use the Enchanting Apparatus, place any number of Arcane Pedestals within 3 blocks with their items. Once you have filled the pedestals, use the middle item on the Enchanting Apparatus block. The Enchanting Apparatus requires an Arcane Core next to the its base in order to work.");
         add("ars_nouveau.page1.imbuement_chamber", "Imbues items with Source to create new items. The primary way to obtain Source Gems, amethyst and lapis may be used to create Source Gems. The Imbuement Chamber will passively accumulate source for recipes, or will draw from Source Jars 2 block away. Some recipes require additional items placed in pedestals within 1 block of the Imbuement Chamber, such as Essences. Items in pedestals will not be consumed.");
         add("ars_nouveau.page.potion_melder", "Converts three doses of a potion from two Potion Jars and outputs a potion with the combined effects. Use the Dominion Wand from a Potion Jar to Melder to link a jar for consumption. Link two input potion jars to the melder. Then, use the wand on the Melder and then to a third jar to set the output. The Potion Melder requires source per mix.");
         add("ars_nouveau.page.warp_portal", "Warp Portals");
@@ -1273,6 +1288,11 @@ public class LangDatagen extends LanguageProvider {
         add("mob_jar.panda", "Baby pandas will occasionally sneeze, creating Slimeballs. Sick Pandas will sneeze more often.");
         add("mob_jar.allay.title", "Allay Behavior");
         add("mob_jar.allay", "A jarred Allay can pickup and deposit items within 5 blocks of the jar. Giving an Allay an item will cause it to only pickup that item. Giving an Allay an Item Scroll will pickup any item that matches the scroll. Items will be deposited into inventories placed adjacent to the jar. Allays will also respect any filters placed on the adjacent inventories.");
+        add("mob_jar.armadillo", "Will occasionally shed scutes.");
+        add("mob_jar.breeze", "Shoots a wind charge when powered with redstone.");
+        add("mob_jar.cat", "Will give gifts if its owner sleeps nearby. Produces a redstone signal if the owner is online.");
+        add("mob_jar.sniffer", "Will occasionally dig up ancient seeds.");
+        add("mob_jar.snow_golem", "Shoots a snowball when powered with redstone.");
         add("ars_nouveau.cauldron.num_bounded", "%s bounded inventories");
         add("ars_nouveau.wixie_cauldron.bound", "Inventory bound.");
         add("ars_nouveau.wixie_cauldron.removed", "Inventory removed.");
@@ -1307,14 +1327,14 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.sensor.on_resolve", "Mode: On Resolve");
         add("ars_nouveau.sensor.on_cast", "Mode: On Cast");
         add("block.ars_nouveau.spell_sensor", "Spell Sensor");
-        add("ars_nouveau.page1.spell_sensor", "Outputs a redstone signal when a spell is cast nearby. Output strength is determined by the length of the spell cast. Using a Dominion Wand will cause it to trigger when a spell resolves nearby, instead of being cast. Using a Spell Parchment will set the sensor to only output when that exact spell is detected.");
+        add("ars_nouveau.page.spell_sensor", "Outputs a redstone signal when a spell is cast nearby. Output strength is determined by the length of the spell cast. Using a Dominion Wand will cause it to trigger when a spell resolves nearby, instead of being cast. Using a Spell Parchment will set the sensor to only output when that exact spell is detected.");
         add("ars_nouveau.no_stack_crafting", "No valid craft nearby.");
         add("item.ars_nouveau.jump_ring", "Ring of Jumping");
-        add("ars_nouveau.page1.jump_ring", "Allows the user to continue jumping in the air. Each jump will expend mana.");
+        add("ars_nouveau.page.jump_ring", "Allows the user to continue jumping in the air. Each jump will expend mana.");
         add("ars_nouveau.connections.remove", "Connection removed.");
         add("ars_nouveau.powered_from", "Receiving signal from %d relays");
         add("block.ars_nouveau.redstone_relay", "Redstone Relay");
-        add("ars_nouveau.page1.redstone_relay", "Can be connected to other Redstone Relays to wirelessly send a redstone signal. Takes input from one side and outputs in all other directions. Can be connected within 30 blocks of another relay, and multiple relays can be connected.");
+        add("ars_nouveau.page.redstone_relay", "Can be connected to other Redstone Relays to wirelessly send a redstone signal. Takes input from one side and outputs in all other directions. Can be connected within 30 blocks of another relay, and multiple relays can be connected.");
         add("block.ars_nouveau.magic_fire", "Mage Fire");
         add("effect.ars_nouveau.immolate", "Immolate");
         add("effect.ars_nouveau.immolate.desc", "Enhances fire spells.");
@@ -1336,7 +1356,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.archwood_grate", "Archwood Grate");
         add("block.ars_nouveau.smooth_sourcestone_grate", "Smooth Sourcestone Grate");
         add("block.ars_nouveau.source_lamp", "Source Gem Lamp");
-        add("ars_nouveau.page1.source_lamp", "Behaves like a copper bulb, but the light and comparator values can be adjusted by casting Light with dampen.");
+        add("ars_nouveau.page.source_lamp", "Behaves like a copper bulb, but the light and comparator values can be adjusted by casting Light with dampen.");
         add("ars_nouveau.patchouli.missing", "Patchouli missing: opening online wiki");
         add("ars_nouveau.dependency.install", "Open mod page");
         add("tooltip.starbuncle_shard2", "Made with love.");
@@ -1403,6 +1423,7 @@ public class LangDatagen extends LanguageProvider {
         add("emi.category.ars_nouveau.enchanting_apparatus", data.get("ars_nouveau.enchanting_apparatus"));
         add("emi.category.ars_nouveau.armor_upgrade", data.get("ars_nouveau.armor_upgrade"));
         add("emi.category.ars_nouveau.imbuement", data.get("block.ars_nouveau.imbuement_chamber"));
+        add("emi.category.ars_nouveau.alakarkinos", data.get("ars_nouveau.alakarkinos_recipe"));
 
         add("block.ars_nouveau.banner.fire", "Fire School");
         add("block.ars_nouveau.banner.water", "Water School");
@@ -1411,7 +1432,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.banner.manipulation", "Manipulation School");
         add("block.ars_nouveau.banner.abjuration", "Abjuration School");
         add("block.ars_nouveau.banner.conjuration", "Conjuration School");
-
+        add("ars_nouveau.lectern_blacklist", "This block has been disabled from being connected to the Storage Lectern.");
     }
 
     public void addCategory(String key, String value) {

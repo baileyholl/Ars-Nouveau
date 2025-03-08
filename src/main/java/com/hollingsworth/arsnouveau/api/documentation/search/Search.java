@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import com.hollingsworth.arsnouveau.client.documentation.DocDataLoader;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
@@ -27,15 +28,13 @@ import org.apache.lucene.store.MMapDirectory;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public class Search {
     public static IndexSearcher searcher;
     public static PerFieldAnalyzerWrapper analyzer = new PerFieldAnalyzerWrapper(new StandardAnalyzer());
     public static List<ConnectedSearch> connectedSearches = new ArrayList<>();
+    public static Map<Item, DocEntry> itemToEntryMap = new HashMap<>();
 
     public static void addConnectedSearch(ConnectedSearch connectedSearch){
         connectedSearches.add(connectedSearch);
@@ -58,6 +57,7 @@ public class Search {
                         document.add(new TextField("tags", tag.getString(), Field.Store.YES));
                     }
                     writer.addDocument(document);
+                    itemToEntryMap.put(docEntry.renderStack().getItem(), docEntry);
                 }
                 for(int i = 0; i < connectedSearches.size(); i++){
                     ConnectedSearch connectedSearch = connectedSearches.get(i);
@@ -66,6 +66,7 @@ public class Search {
                     document.add(new StoredField("connectedIndex", i));
                     document.add(new TextField("title", connectedSearch.title().getString(), Field.Store.YES));
                     document.add(new TextField("titleGrams", connectedSearch.title().getString(), Field.Store.YES));
+                    itemToEntryMap.put(connectedSearch.icon().getItem(), DocumentationRegistry.getEntry(connectedSearch.entryId()));
                     writer.addDocument(document);
                 }
                 writer.commit();

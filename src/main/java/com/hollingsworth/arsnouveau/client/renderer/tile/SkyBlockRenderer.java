@@ -51,12 +51,12 @@ public class SkyBlockRenderer<T extends SkyBlockTile> implements BlockEntityRend
     }
 
     private void renderFace(SkyBlockTile tileEntityIn, Matrix4f matrix, VertexConsumer buffer, float f, float g, float h, float i, float j, float k, float l, float m, Direction direction) {
-      //  if (tileEntityIn.shouldRenderFace(direction)) {
+        if (tileEntityIn.shouldRenderFace(direction)) {
             buffer.addVertex(matrix, f, h, j);
             buffer.addVertex(matrix, g, h, k);
             buffer.addVertex(matrix, g, i, l);
             buffer.addVertex(matrix, f, i, m);
-     //   }
+        }
     }
 
     private void renderBlock(BlockPos pPos, BlockState pState, PoseStack pPoseStack, MultiBufferSource pBufferSource, Level pLevel, boolean pExtended, int pPackedOverlay) {
