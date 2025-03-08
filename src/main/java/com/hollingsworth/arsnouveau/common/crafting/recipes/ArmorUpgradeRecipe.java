@@ -50,7 +50,7 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
         if(!(perkHolder instanceof ArmorPerkHolder armorPerkHolder)){
             return false;
         }
-        return armorPerkHolder.getTier() == (tier - 1) && super.matches(input, level, player);
+        return armorPerkHolder.getTier() == (tier - 1);
     }
 
     @Override
