@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_wither",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_wither",
+  "title": "Wither",
+  "category": "ars_nouveau:glyphs_tier_three",
+  "pages": [
+    {
+      "title": "Wither",
+      "description": "Applies the Wither debuff.",
+      "icon": "ars_nouveau:glyph_wither",
+      "tier": 3
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_wither"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "ars_nouveau:block.ars_nouveau.potion_melder",
+  "order": 100,
+  "icon": "ars_nouveau:potion_melder",
+  "title": "Potion Melder",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Potion Melder",
+      "description": "Converts three doses of a potion from two Potion Jars and outputs a potion with the combined effects. Use the Dominion Wand from a Potion Jar to Melder to link a jar for consumption. Link two input potion jars to the melder. Then, use the wand on the Melder and then to a third jar to set the output. The Potion Melder requires source per mix.",
+      "icon": "ars_nouveau:potion_melder"
+    },
+    {
+      "recipe_1": "ars_nouveau:potion_melder"
+    },
+    {
+      "related": [
+        "ars_nouveau:block.ars_nouveau.potion_jar",
+        "ars_nouveau:block.ars_nouveau.potion_diffuser",
+        "ars_nouveau:wixie_charm"
+      ]
+    }
+  ]
+}

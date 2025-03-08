@@ -77,15 +77,19 @@ public class WarpScroll extends ModItem implements AliasProvider {
                 return InteractionResultHolder.fail(stack);
             }
             BlockPos pos = data.pos().get();
-            player.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
             Vec2 rotation = data.rotation();
+
+            Networking.sendToNearbyClient(world, player, new PacketWarpPosition(player.getId(),pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, rotation.x, rotation.y));
+            player.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
             player.setXRot(rotation.x);
             player.setYRot(rotation.y);
-            Networking.sendToNearbyClient(world, player, new PacketWarpPosition(player.getId(),pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, rotation.x, rotation.y));
+
             serverLevel.sendParticles(ParticleTypes.PORTAL, pos.getX(), pos.getY() + 1.0, pos.getZ(),
                     10, (world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
             world.playSound(null, pos, SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.NEUTRAL, 1.0f, 1.0f);
-            stack.shrink(1);
+            if (!player.hasInfiniteMaterials()) {
+                stack.shrink(1);
+            }
             return InteractionResultHolder.pass(stack);
         }
         if (player.isShiftKeyDown()) {
@@ -97,8 +101,9 @@ public class WarpScroll extends ModItem implements AliasProvider {
                 didAdd = true;
             } else {
                 didAdd = player.addItem(newWarpStack);
-                if (didAdd)
+                if (didAdd && !player.hasInfiniteMaterials()) {
                     stack.shrink(1);
+                }
             }
             if (!didAdd) {
                 player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.inv_full"));

@@ -78,7 +78,9 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
                         PortUtil.sendMessage(player, Component.translatable("ars_nouveau.wixie_familiar.applied", potionStack.getHoverName().getString()));
                         Networking.sendToNearbyClient(level(), this, new PacketAnimEntity(this.getId(), EntityWixie.Animations.CAST.ordinal()));
                         ParticleUtil.spawnPoof((ServerLevel) level(), player.blockPosition().above());
-                        stack.shrink(1);
+                        if (!player.hasInfiniteMaterials()) {
+                            stack.shrink(1);
+                        }
                         return InteractionResult.SUCCESS;
                     }
                 }
@@ -96,8 +98,8 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
         boolean isBeneficialOwner = target.equals(getOwner()) && event.getEffectInstance().getEffect().value().isBeneficial();
         boolean isApplierOwner = applier != null && applier.equals(this.getOwner());
         if (isBeneficialOwner || isApplierOwner) {
-            //event.getEffectInstance().getCures(); why is this here Jarva
-            event.getEffectInstance().mapDuration(duration -> duration + duration * 2);
+            var effect = event.getEffectInstance();
+            effect.duration += effect.duration / 5;
         }
     }
 

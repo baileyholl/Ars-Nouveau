@@ -58,10 +58,7 @@ public class EffectWololo extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-
-        Player player = ANFakePlayer.getPlayer((ServerLevel) world);
-
-        ItemStack dyeStack = getDye(shooter, spellStats, spellContext, player);
+        ItemStack dyeStack = getDye(shooter, spellStats, spellContext);
         if (dyeStack.isEmpty()) return;
         DyeItem dye = (DyeItem) dyeStack.getItem();
 
@@ -90,6 +87,7 @@ public class EffectWololo extends AbstractEffect {
                     }
                 }
             } else if (living instanceof Mob mob) {
+                Player player = ANFakePlayer.getPlayer((ServerLevel) world);
                 player.setItemInHand(InteractionHand.MAIN_HAND, dyeStack);
                 ((MobAccessor) mob).callMobInteract(player, InteractionHand.MAIN_HAND);
                 player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
@@ -99,7 +97,7 @@ public class EffectWololo extends AbstractEffect {
     }
 
     @NotNull
-    private ItemStack getDye(@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, Player player) {
+    private ItemStack getDye(@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
 
         if (spellContext.getCaster() instanceof TileCaster) {
             InventoryManager manager = spellContext.getCaster().getInvManager();
@@ -107,8 +105,8 @@ public class EffectWololo extends AbstractEffect {
             if (!reference.isEmpty()) {
                 return reference.getHandler().getStackInSlot(reference.getSlot());
             }
-        } else if (isRealPlayer(shooter)) {
-            ItemStack stack = player.getOffhandItem();
+        } else {
+            ItemStack stack = shooter.getOffhandItem();
             if (stack.getItem() instanceof DyeItem) {
                 return stack;
             }
@@ -127,7 +125,7 @@ public class EffectWololo extends AbstractEffect {
             ParticleColor color = spellStats.isRandomized() ? ParticleColor.makeRandomColor(255, 255, 255, shooter.getRandom()) : spellContext.getSpell().color();
             tileToDye.setColor(color);
         } else {
-            ItemStack dyeStack = getDye(shooter, spellStats, spellContext, ANFakePlayer.getPlayer((ServerLevel) world));
+            ItemStack dyeStack = getDye(shooter, spellStats, spellContext);
             if (dyeStack.isEmpty()) return;
             DyeItem dye = (DyeItem) dyeStack.getItem();
 

@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_split",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_split",
+  "title": "Split",
+  "category": "ars_nouveau:glyphs_tier_three",
+  "pages": [
+    {
+      "title": "Split",
+      "description": "Causes multiple projectiles to be cast at once. Each projectile applies a set of effects.",
+      "icon": "ars_nouveau:glyph_split",
+      "tier": 3
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_split"
+    }
+  ]
+}

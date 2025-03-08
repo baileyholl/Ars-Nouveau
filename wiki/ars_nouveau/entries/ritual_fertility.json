@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:ritual_fertility",
+  "order": 100,
+  "icon": "ars_nouveau:ritual_fertility",
+  "title": "Fertility",
+  "category": "ars_nouveau:ritual_index",
+  "pages": [
+    {
+      "title": "Fertility",
+      "description": "Periodically causes nearby animals to breed if possible. This ritual requires source to operate, and will have no effect if there are twenty or more animals nearby.",
+      "icon": "ars_nouveau:ritual_fertility"
+    },
+    {
+      "recipe_1": "ars_nouveau:ritual_fertility"
+    }
+  ]
+}

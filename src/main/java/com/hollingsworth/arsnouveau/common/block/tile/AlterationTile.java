@@ -76,7 +76,9 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
         this.perkList = new ArrayList<>(PerkUtil.getPerksAsItems(stack).stream().map(Item::getDefaultInstance).toList());
         stack.set(DataComponentRegistry.ARMOR_PERKS, holder.setPerks(new ArrayList<>()));
         this.armorStack = stack.copy();
-        stack.shrink(1);
+        if (!player.hasInfiniteMaterials()) {
+            stack.shrink(1);
+        }
         this.newPerkTimer = 0;
         updateBlock();
 

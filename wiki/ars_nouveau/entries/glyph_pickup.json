@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_pickup",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_pickup",
+  "title": "Item Pickup",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Item Pickup",
+      "description": "Picks up nearby items in a medium radius where this spell is activated. The range may be expanded with AOE.",
+      "icon": "ars_nouveau:glyph_pickup",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_pickup"
+    }
+  ]
+}

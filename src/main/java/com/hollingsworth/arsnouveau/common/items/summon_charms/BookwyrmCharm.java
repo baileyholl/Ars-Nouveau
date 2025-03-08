@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
@@ -31,7 +32,10 @@ public class BookwyrmCharm extends ModItem {
             EntityBookwyrm bookwyrm = tile.addBookwyrm();
             if(bookwyrm != null){
                 bookwyrm.fromCharmData(pContext.getItemInHand().getOrDefault(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, new PersistentFamiliarData()));
-                pContext.getItemInHand().shrink(1);
+                Player player = pContext.getPlayer();
+                if (player == null || !pContext.getPlayer().hasInfiniteMaterials()) {
+                    pContext.getItemInHand().shrink(1);
+                }
                 return InteractionResult.SUCCESS;
             }
         }

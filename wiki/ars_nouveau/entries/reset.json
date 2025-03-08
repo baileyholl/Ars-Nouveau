@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:reset",
+  "order": 100,
+  "icon": "ars_nouveau:reset",
+  "title": "Reset",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Reset",
+      "description": "Resets the spell chain to the original target if it was changed by a previous effect. For example, Burst -\u003e Place Block -\u003e Reset -\u003e Break will cause Burst to place blocks, but only Break will apply to the original location. As a result, using Reset will allow you to bypass combination and duplicate limits on glyphs.",
+      "icon": "ars_nouveau:reset",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:reset"
+    }
+  ]
+}

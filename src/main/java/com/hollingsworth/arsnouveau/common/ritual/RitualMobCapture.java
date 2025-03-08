@@ -17,7 +17,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.Items;
@@ -47,6 +49,9 @@ public class RitualMobCapture extends AbstractRitual {
                         continue;
                     }
                     for(Entity e : level.getEntities((Entity)null, new AABB(tile.getBlockPos()).inflate(5), this::canJar)){
+                        for (var passenger : e.getPassengers()) {
+                            passenger.stopRiding();
+                        }
                         if(e instanceof Mob mob && ((Mob) e).isLeashed() && e.shouldBeSaved()){
                             if(mob.isLeashed()){
                                 mob.dropLeash(true, true);
@@ -54,6 +59,12 @@ public class RitualMobCapture extends AbstractRitual {
                         }
                         if (e instanceof Raider raider && raider.hasActiveRaid()) {
                             raider.getCurrentRaid().removeFromRaid(raider, false);
+                        }
+                        if (e instanceof Villager villager) {
+                            villager.releasePoi(MemoryModuleType.HOME);
+                            villager.releasePoi(MemoryModuleType.JOB_SITE);
+                            villager.releasePoi(MemoryModuleType.POTENTIAL_JOB_SITE);
+                            villager.releasePoi(MemoryModuleType.MEETING_POINT);
                         }
                         if(tile.setEntityData(e)){
                             e.remove(Entity.RemovalReason.UNLOADED_TO_CHUNK);

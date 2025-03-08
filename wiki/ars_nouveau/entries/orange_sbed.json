@@ -1,0 +1,26 @@
+{
+  "id": "ars_nouveau:orange_sbed",
+  "order": 100,
+  "icon": "ars_nouveau:orange_sbed",
+  "title": "Magebloom Bed",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Magebloom Bed",
+      "description": "A decorative bed. Starbuncles can be bound to a bed using the Dominion Wand, and they will rest on the bed when there are no other tasks.",
+      "icon": "ars_nouveau:orange_sbed"
+    },
+    {
+      "recipe_1": "ars_nouveau:orange_sbed",
+      "recipe_2": "ars_nouveau:blue_sbed"
+    },
+    {
+      "recipe_1": "ars_nouveau:green_sbed",
+      "recipe_2": "ars_nouveau:yellow_sbed"
+    },
+    {
+      "recipe_1": "ars_nouveau:red_sbed",
+      "recipe_2": "ars_nouveau:purple_sbed"
+    }
+  ]
+}

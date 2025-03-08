@@ -1,0 +1,47 @@
+{
+  "id": "ars_nouveau:wixie_charm",
+  "order": 100,
+  "icon": "ars_nouveau:wixie_charm",
+  "title": "Wixie Charm",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Wixie Charm",
+      "description": "A Wixie can automatically craft items for you at the expense of source. To obtain a Wixie Token, cast Dispel on a Witch while it is half health or less. Once you have obtained a Wixie Charm, use it on a Cauldron to summon your Wixie. A Wixie can be dyed Red, White, Black, Blue, or Green.",
+      "icon": "ars_nouveau:wixie_charm"
+    },
+    {
+      "recipe_1": "ars_nouveau:wixie_charm"
+    },
+    {
+      "description": "To select an item for crafting, use your item or block on the Wixie Cauldron.",
+      "entity_type": "ars_nouveau:wixie"
+    },
+    {
+      "title": "Item Crafting",
+      "description": "The Wixie will select the recipe for crafting based on the inventories nearby, you need not specify the exact materials for the recipe. For example, if you want to craft Sticks, the Wixie will mix and match planks from nearby chests in order to fulfill the recipe. Each craft requires a small amount of source and will be drained from nearby Source Jars. A redstone signal on the cauldron will stop crafting."
+    },
+    {
+      "title": "Multi-Item Crafting",
+      "description": "Wixies can craft multiple items at once by placing pedestals adjacent to the cauldron. Wixie\u0027s will attempt to craft items in the pedestal, rotating round robin. Powering the pedestal will disable the wixie from crafting its item."
+    },
+    {
+      "title": "Binding Inventories",
+      "description": "You can select specific inventories for the wixie by using a dominion wand on an inventory, and then the cauldron. If any inventories are selected, only these inventories can be used and the Wixie will no longer pull from all nearby inventories by default."
+    },
+    {
+      "title": "Potion Crafting",
+      "description": "Wixies will autocraft potions using nearby Potion Jars and items. Potions that require Water will be supplied by the Wixie. Potions that require another potion as a base will be taken from nearby Potion Jars. A Wixie will output 3 doses of a Potion into a nearby Potion Jar when complete. To begin, place down an empty Potion Jar, right click the cauldron with an Awkward Potion, and supply Nether Wart from a nearby chest."
+    },
+    {
+      "description": "When using multiple Wixies, you may wish to lock a jar to a specific potion. Wixies will only output potion to jars that contain the same potion, or an unlocked empty potion. Each craft costs Source. See the section on the Potion Jar for more information."
+    },
+    {
+      "related": [
+        "ars_nouveau:block.ars_nouveau.potion_jar",
+        "ars_nouveau:block.ars_nouveau.potion_melder",
+        "ars_nouveau:block.ars_nouveau.potion_diffuser"
+      ]
+    }
+  ]
+}

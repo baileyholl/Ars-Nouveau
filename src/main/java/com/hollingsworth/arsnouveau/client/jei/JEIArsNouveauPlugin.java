@@ -48,6 +48,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
     public static final RecipeType<CrushRecipe> CRUSH_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "crush", CrushRecipe.class);
     public static final RecipeType<BuddingConversionRecipe> BUDDING_CONVERSION_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "budding_conversion", BuddingConversionRecipe.class);
     public static final RecipeType<ScryRitualRecipe> SCRY_RITUAL_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "scry_ritual", ScryRitualRecipe.class);
+    public static final RecipeType<AlakarkinosRecipe> ALAKARKINOS_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "alakarkinos", AlakarkinosRecipe.class);
 
     @Override
     public @NotNull ResourceLocation getPluginUid() {
@@ -64,7 +65,8 @@ public class JEIArsNouveauPlugin implements IModPlugin {
                 new ApparatusEnchantingRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
                 new ArmorUpgradeRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
                 new BuddingConversionRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
-                new ScryRitualRecipeCategory(registry.getJeiHelpers().getGuiHelper())
+                new ScryRitualRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
+                new AlakarkinosRecipeCategory(registry.getJeiHelpers().getGuiHelper())
         );
     }
 
@@ -80,6 +82,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
 
         List<BuddingConversionRecipe> buddingConversionRecipes = new ArrayList<>();
         List<ScryRitualRecipe> scryRitualRecipes = new ArrayList<>();
+        List<AlakarkinosRecipe> alakarkinosRecipes = new ArrayList<>();
 
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
         for (Recipe<?> i : manager.getRecipes().stream().map(RecipeHolder::value).toList()) {
@@ -102,6 +105,9 @@ public class JEIArsNouveauPlugin implements IModPlugin {
             if (i instanceof ScryRitualRecipe scryRitualRecipe) {
                 scryRitualRecipes.add(scryRitualRecipe);
             }
+            if (i instanceof AlakarkinosRecipe alakarkinosRecipe) {
+                alakarkinosRecipes.add(alakarkinosRecipe);
+            }
         }
         registry.addRecipes(GLYPH_RECIPE_TYPE, recipeList);
         registry.addRecipes(CRUSH_RECIPE_TYPE, crushRecipes);
@@ -111,8 +117,8 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         registry.addRecipes(ARMOR_RECIPE_TYPE, armorUpgrades);
         registry.addRecipes(BUDDING_CONVERSION_RECIPE_TYPE, buddingConversionRecipes);
         registry.addRecipes(SCRY_RITUAL_RECIPE_TYPE, scryRitualRecipes);
-
         registry.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, List.of(BlockRegistry.PORTAL_BLOCK.asItem().getDefaultInstance()));
+        registry.addRecipes(ALAKARKINOS_RECIPE_TYPE, alakarkinosRecipes);
     }
 
     @Override
@@ -125,6 +131,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK), ARMOR_RECIPE_TYPE);
         registry.addRecipeCatalyst(new ItemStack(ItemsRegistry.AMETHYST_GOLEM_CHARM), BUDDING_CONVERSION_RECIPE_TYPE);
         registry.addRecipeCatalyst(RitualRegistry.getRitualItemMap().get(SCRY_RITUAL).asItem().getDefaultInstance(), SCRY_RITUAL_RECIPE_TYPE);
+        registry.addRecipeCatalyst(new ItemStack(ItemsRegistry.ALAKARKINOS_CHARM), ALAKARKINOS_RECIPE_TYPE);
     }
 
     @Override

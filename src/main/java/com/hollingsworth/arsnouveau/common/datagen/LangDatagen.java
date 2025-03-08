@@ -53,34 +53,34 @@ public class LangDatagen extends LanguageProvider {
             Glyph glyph = supplier.get();
             AbstractSpellPart spellPart = glyph.spellPart;
             ResourceLocation registryName = glyph.spellPart.getRegistryName();
-            if(registryName.getNamespace().equals(ArsNouveau.MODID)) {
+            if (registryName.getNamespace().equals(ArsNouveau.MODID)) {
                 add("ars_nouveau.glyph_desc." + registryName.getPath(), spellPart.getBookDescription());
                 add("ars_nouveau.glyph_name." + registryName.getPath(), spellPart.getName());
 
                 Map<AbstractAugment, String> augmentDescriptions = new HashMap<>();
                 spellPart.addAugmentDescriptions(augmentDescriptions);
 
-                for(AbstractAugment augment : augmentDescriptions.keySet()){
+                for (AbstractAugment augment : augmentDescriptions.keySet()) {
                     add("ars_nouveau.augment_desc." + registryName.getPath() + "_" + augment.getRegistryName().getPath(), augmentDescriptions.get(augment));
                 }
             }
         }
         for (FamiliarScript i : FamiliarRegistry.getFamiliarScriptMap().values()) {
-            if (i.familiar.getRegistryName().getNamespace().equals(ArsNouveau.MODID)){
+            if (i.familiar.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
                 add("ars_nouveau.familiar_desc." + i.familiar.getRegistryName().getPath(), i.familiar.getBookDescription());
                 add("ars_nouveau.familiar_name." + i.familiar.getRegistryName().getPath(), i.familiar.getBookName());
                 add("item.ars_nouveau." + i.familiar.getRegistryName().getPath(), i.familiar.getBookName());
             }
         }
         for (RitualTablet i : RitualRegistry.getRitualItemMap().values()) {
-            if(i.ritual.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
+            if (i.ritual.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
                 add("ars_nouveau.ritual_desc." + i.ritual.getRegistryName().getPath(), i.ritual.getLangDescription());
                 add("item.ars_nouveau." + i.ritual.getRegistryName().getPath(), i.ritual.getLangName());
             }
         }
 
         for (PerkItem i : PerkRegistry.getPerkItemMap().values()) {
-            if(i.perk.getRegistryName().getNamespace().equals(ArsNouveau.MODID) && !i.perk.getRegistryName().getPath().equals("blank_thread")) {
+            if (i.perk.getRegistryName().getNamespace().equals(ArsNouveau.MODID) && !i.perk.getRegistryName().getPath().equals("blank_thread")) {
                 add("ars_nouveau.perk_desc." + i.perk.getRegistryName().getPath(), i.perk.getLangDescription());
                 add("item.ars_nouveau." + i.perk.getRegistryName().getPath(), i.perk.getLangName());
             }
@@ -175,7 +175,8 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.spell_parchment", "Spell Parchment");
         add("item.ars_nouveau.ring_of_greater_discount", "Ring of Greater Discount");
         add("item.ars_nouveau.ring_of_lesser_discount", "Ring of Lesser Discount");
-        add("alert.core", "An Arcane Core must be placed beneath this block.");
+        add("alert.core", "An Arcane Core must be placed next to the base of the Enchanting Apparatus.");
+        add("alert.core.wrong_axis", "The Arcane Core must be aligned with the base of the Enchanting Apparatus.");
         add("whirlisprig.unhappy", "The Whirlisprig seems very unhappy in her home. Try sprucing it up!");
         add("whirlisprig.content", "The Whirlisprig seems content, but could be better.");
         add("whirlisprig.happy", "The Whirlisprig appears happy enough.");
@@ -618,6 +619,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.crush_recipe", "Crush Glyph");
         add("ars_nouveau.budding_conversion_recipe", "Amethyst Golem Conversion");
         add("ars_nouveau.scry_ritual_recipe", "Scry Ritual");
+        add("ars_nouveau.alakarkinos_recipe", "Alakarkinos Conversion");
+        add("ars_nouveau.alakarkinos_recipe.chance", "Chance: %s");
         add("ars_nouveau.enchanting_apparatus", "Enchanting Apparatus");
         add("ars_nouveau.armor_upgrade", "Magic Armor Upgrade");
         add("ars_nouveau.page.apparatus_crafting", "Apparatus Crafting");
@@ -669,7 +672,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.whirlisprig_flower", "Whirlisprig Blossom");
         add("ars_nouveau.page.relay", "Enables the transport of source between Source Jars and other Source Relays. To pull source from jars, use the Dominion Wand on the jar, and then on the relay. To send between relays or from a relay to a jar, use the wand on the relay and then the target you wish to send source to. Relays may only reach up to 30 blocks away. To clear connections, sneak while using the Dominion Wand on the relay.");
         add("ars_nouveau.page.relay_splitter", "Operates similar to the Source Relay, but will support taking from and transferring to multiple jars at once. The splitter has a much larger through-put than the Source Relay, and will split this throughput amongst all of its jars. See the instructions on the Source Relay for use.");
-        add("ars_nouveau.page1.enchanting_apparatus", "The Enchanting Apparatus utilizes pedestals and Source for crafting. To use the Enchanting Apparatus, place any number of Arcane Pedestals within 3 blocks with their items. Once you have filled the pedestals, use the middle item on the Enchanting Apparatus block. The Enchanting Apparatus requires an Arcane Core beneath it in order to work.");
+        add("ars_nouveau.page1.enchanting_apparatus", "The Enchanting Apparatus utilizes pedestals and Source for crafting. To use the Enchanting Apparatus, place any number of Arcane Pedestals within 3 blocks with their items. Once you have filled the pedestals, use the middle item on the Enchanting Apparatus block. The Enchanting Apparatus requires an Arcane Core next to the its base in order to work.");
         add("ars_nouveau.page1.imbuement_chamber", "Imbues items with Source to create new items. The primary way to obtain Source Gems, amethyst and lapis may be used to create Source Gems. The Imbuement Chamber will passively accumulate source for recipes, or will draw from Source Jars 2 block away. Some recipes require additional items placed in pedestals within 1 block of the Imbuement Chamber, such as Essences. Items in pedestals will not be consumed.");
         add("ars_nouveau.page.potion_melder", "Converts three doses of a potion from two Potion Jars and outputs a potion with the combined effects. Use the Dominion Wand from a Potion Jar to Melder to link a jar for consumption. Link two input potion jars to the melder. Then, use the wand on the Melder and then to a third jar to set the output. The Potion Melder requires source per mix.");
         add("ars_nouveau.page.warp_portal", "Warp Portals");
@@ -687,8 +690,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page.dominion_wand", "A tool for configuring Source Relays and automation entities. To set a transfer path, use the wand on the object that you would like to take source from, and then use it on the block you would like to send source to. For example: Source Jar to Source Relay, Source Relay to Source Relay, or Source Relay to Source Jar. To clear connections, sneak and use this wand on a relay. You can switch into Strict mode using the radial menu, allowing to specify the side of the blocks to use.");
         add("ars_nouveau.page1.drygmy_charm", "Drygmys are often found following and tending to animals around it. They can be found anywhere, though somewhat rarely. Drygmys can be given a home in the world, and will produce items from nearby monsters and animals as if they were slain, without harming them. A wild drygmy may be befriended by throwing a Wilden Horn near it! You may dye a Drygmy Cyan, Orange, or Brown.");
         add("ars_nouveau.page2.drygmy_charm", "A Drygmy can also produce experience gems!");
-        add("ars_nouveau.page3.drygmy_charm", "To summon a Drygmy, use a Drymy Charm on a block of Mossy Cobblestone. After a short time, the cobblestone will transform into a Drygmy Henge and summon your Drgymy! To summon additional drygmys, use more charms on the henge. Casting dispel or killing the Drygmy will return your charm.");
-        add("ars_nouveau.page4.drygmy_charm", "A Drygmy considers its home to be 10 blocks in every direction from its home. The drygmy will use this area to produce items from any entities nearby. Your drgymy's efficiency is dependent on its happiness. This may be increased for each entity nearby, with a bonus for each unique type in its home. Nearby Containment Jars will also count as an entity.");
+        add("ars_nouveau.page3.drygmy_charm", "To summon a Drygmy, use a Drymy Charm on a block of Mossy Cobblestone. After a short time, the cobblestone will transform into a Drygmy Henge and summon your Drygmy! To summon additional drygmys, use more charms on the henge. Casting dispel or killing the Drygmy will return your charm.");
+        add("ars_nouveau.page4.drygmy_charm", "A Drygmy considers its home to be 10 blocks in every direction from its home. The drygmy will use this area to produce items from any entities nearby. Your drygmy's efficiency is dependent on its happiness. This may be increased for each entity nearby, with a bonus for each unique type in its home. Nearby Containment Jars will also count as an entity.");
         add("ars_nouveau.page5.drygmy_charm", "Each Drygmy working around a henge contributes progress. Once maximum progress has been reached, the henge will generate items and experience gems and deposit them into adjacent chests. Each time this occurs, the henge will require Source to recharge. The number of drops and experience gems is equal to the Drygmy happiness and experience value of the entities. To get started, place a chest and jar of Source next to the Henge.");
         add("ars_nouveau.happiness", "Happiness");
         add("ars_nouveau.production", "Production");
@@ -1001,13 +1004,13 @@ public class LangDatagen extends LanguageProvider {
         add("item.minecraft.tipped_arrow.effect.shielding_potion", "Arrow of Shielding");
         add("item.minecraft.tipped_arrow.effect.shielding_potion_long", "Arrow of Shielding");
         add("effect.ars_nouveau.recovery", "Recovery");
-        add("effect.ars_nouveau.recovery.desc","Increases healing received from all sources.");
+        add("effect.ars_nouveau.recovery.desc", "Increases healing received from all sources.");
         add("effect.ars_nouveau.blasting", "Blasting");
-        add("effect.ars_nouveau.blasting.desc","Causes the target to explode when the duration ends.");
+        add("effect.ars_nouveau.blasting.desc", "Causes the target to explode when the duration ends.");
         add("effect.ars_nouveau.freezing", "Freezing");
-        add("effect.ars_nouveau.freezing.desc","Freezes the target over time.");
+        add("effect.ars_nouveau.freezing.desc", "Freezes the target over time.");
         add("effect.ars_nouveau.shielding", "Shielding");
-        add("effect.ars_nouveau.shielding.desc","Reduces the amount of damage taken.");
+        add("effect.ars_nouveau.shielding.desc", "Reduces the amount of damage taken.");
         add("item.ars_nouveau.wixie_hat", "Wixie Hat");
         add("tooltip.ars_nouveau.wixie_hat", "Give to a Starbuncle to make them transport potions.");
         add("ars_nouveau.starbuncle.default_behavior", "Starbuncle will now transport items!");
@@ -1272,7 +1275,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page3.storage", "Linked inventories that are named will create a tab in the Storage Lectern, allowing you to view and manipulate all inventories that share that name. Unlike normal chests, Repositories will preserve their name when dropped. The Name Effect can also name inventories placed in the world.");
         add("ars_nouveau.page2.item_detector", "If a Filter Scroll is given to the Display Case, it will count all items that match the filter.");
         add("config.jade.plugin_ars_nouveau.mob_jar", "Mob Jar");
-        add("mob_jar.villager","Can be traded with in a jar, periodically resetting its trades.");
+        add("mob_jar.villager", "Can be traded with in a jar, periodically resetting its trades.");
         add("mob_jar.piglin", "Can be traded with by throwing gold ingots at the jar.");
         add("mob_jar.ender_dragon", "Use a bottle to obtain Dragon's Breath.");
         add("mob_jar.sheep", "Can be sheared. Will eat Grass beneath the jar if available.");
@@ -1284,6 +1287,11 @@ public class LangDatagen extends LanguageProvider {
         add("mob_jar.panda", "Baby pandas will occasionally sneeze, creating Slimeballs. Sick Pandas will sneeze more often.");
         add("mob_jar.allay.title", "Allay Behavior");
         add("mob_jar.allay", "A jarred Allay can pickup and deposit items within 5 blocks of the jar. Giving an Allay an item will cause it to only pickup that item. Giving an Allay an Item Scroll will pickup any item that matches the scroll. Items will be deposited into inventories placed adjacent to the jar. Allays will also respect any filters placed on the adjacent inventories.");
+        add("mob_jar.armadillo", "Will occasionally shed scutes.");
+        add("mob_jar.breeze", "Shoots a wind charge when powered with redstone.");
+        add("mob_jar.cat", "Will give gifts if its owner sleeps nearby. Produces a redstone signal if the owner is online.");
+        add("mob_jar.sniffer", "Will occasionally dig up ancient seeds.");
+        add("mob_jar.snow_golem", "Shoots a snowball when powered with redstone.");
         add("ars_nouveau.cauldron.num_bounded", "%s bounded inventories");
         add("ars_nouveau.wixie_cauldron.bound", "Inventory bound.");
         add("ars_nouveau.wixie_cauldron.removed", "Inventory removed.");
@@ -1332,45 +1340,45 @@ public class LangDatagen extends LanguageProvider {
         add("effect.ars_nouveau.soaked", "Soaked");
         add("effect.ars_nouveau.soaked.desc", "Wets the target, protecting from fire and triggering effects as if under the rain.");
         add("block.ars_nouveau.sourceberry_sack", "Sourceberry Sack");
-        add("ars_nouveau.empty","Empty");
+        add("ars_nouveau.empty", "Empty");
         add("ars_nouveau.melder.output_not_unique", "Output potion is not a unique mix.");
         add("ars_nouveau.melder.output_duplicate_effect", "Cannot mix potions with the same effect but different levels.");
         add("ars_nouveau.page1.archwood_grate", "Liquids placed on top of them will be transported below, waterlogging the below block if possible. Interacting with the grate will also act as if you are interacting with the block below it, allowing you to bucket liquids below. Additionally, items and projectiles will pass through it. Can be placed in any direction.");
-        for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
+        for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
             String key = "block.ars_nouveau." + s;
             String val = data.get(key);
             add(key + "_slab", val + " Slab");
             add(key + "_stairs", val + " Stairs");
         }
-        add("block.ars_nouveau.sourcestone_grate","Sourcestone Grate");
-        add("block.ars_nouveau.gold_grate","Gold Grate");
-        add("block.ars_nouveau.archwood_grate","Archwood Grate");
-        add("block.ars_nouveau.smooth_sourcestone_grate","Smooth Sourcestone Grate");
+        add("block.ars_nouveau.sourcestone_grate", "Sourcestone Grate");
+        add("block.ars_nouveau.gold_grate", "Gold Grate");
+        add("block.ars_nouveau.archwood_grate", "Archwood Grate");
+        add("block.ars_nouveau.smooth_sourcestone_grate", "Smooth Sourcestone Grate");
         add("block.ars_nouveau.source_lamp", "Source Gem Lamp");
         add("ars_nouveau.page1.source_lamp", "Behaves like a copper bulb, but the light and comparator values can be adjusted by casting Light with dampen.");
         add("ars_nouveau.patchouli.missing", "Patchouli missing: opening online wiki");
         add("ars_nouveau.dependency.install", "Open mod page");
         add("tooltip.starbuncle_shard2", "Made with love.");
-        add("tooltip.whirlisprig_shard2","A natural portrait.");
-        add("tooltip.drygmy_shard2","A tribute to what once was.");
+        add("tooltip.whirlisprig_shard2", "A natural portrait.");
+        add("tooltip.drygmy_shard2", "A tribute to what once was.");
         add("tooltip.wixie_shard2", "Knowledge for freedom.");
         add("block.ars_nouveau.alakarkinos_hat", "Alakarkinos Hat");
         add("entity.ars_nouveau.bubble", "Bubble");
         add("entity.ars_nouveau.alakarkinos", "Alakarkinos");
         add("item.ars_nouveau.alakarkinos_charm", "Alakarkinos Charm");
         add("item.ars_nouveau.alakarkinos_token", "Alakarkinos Token");
-        add("ars_nouveau.page1.alakarkinos_charm","Alakarkinos can sift sand and gravel to find items found in archaeology sites. They can be found on beaches and will give you a token if they receive a Pottery Sherd of any kind.");
-        add("ars_nouveau.page2.alakarkinos_charm","Loves to dance to nearby jukeboxes.");
-        add("ars_nouveau.page3.alakarkinos_charm","Alakarkinos can be summoned anywhere by using a charm on a block. To set its home, use the Dominion Wand to bind Alakarkinos to a chest or inventory.");
-        add("ars_nouveau.page4.alakarkinos_charm","Alakarkinos will seek out gravel or sand that is placed within 3 blocks horizontal and one block vertical around its bound inventory. In order to convert blocks into items, Source must be provided near its chest. After some time and a few magic tricks, Alakarkinos will destroy the sand or gravel and insert items into the inventory.");
+        add("ars_nouveau.page1.alakarkinos_charm", "Alakarkinos can sift sand and gravel to find items found in archaeology sites. They can be found on beaches and will give you a token if they receive a Pottery Sherd of any kind.");
+        add("ars_nouveau.page2.alakarkinos_charm", "Loves to dance to nearby jukeboxes.");
+        add("ars_nouveau.page3.alakarkinos_charm", "Alakarkinos can be summoned anywhere by using a charm on a block. To set its home, use the Dominion Wand to bind Alakarkinos to a chest or inventory.");
+        add("ars_nouveau.page4.alakarkinos_charm", "Alakarkinos will seek out gravel or sand that is placed within 3 blocks horizontal and one block vertical around its bound inventory. In order to convert blocks into items, Source must be provided near its chest. After some time and a few magic tricks, Alakarkinos will destroy the sand or gravel and insert items into the inventory.");
         add("ars_nouveau.alakarkinos.set_home", "Home set. Place source and gravel or sand within 3 blocks.");
         add("ars_nouveau.sifting", "Sifting");
         add("tooltip.alakarkinos_shard1", "Found by giving an Alakarkinos a Sherd.");
         add("tooltip.alakarkinos_shard2", "What's that behind your ear?");
         addCategory("getting_started", "Getting Started");
-        addCategory("crafting","Crafting and Automation");
-        addCategory("glyph_index","Glyph Index");
-        addCategory("ritual_index","Ritual Index");
+        addCategory("crafting", "Crafting and Automation");
+        addCategory("glyph_index", "Glyph Index");
+        addCategory("ritual_index", "Ritual Index");
         addCategory("source", "Source");
         addCategory("creature_compendium", "Creature Compendium");
         addCategory("items_equipment", "Items and Equipment");
@@ -1404,9 +1412,29 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.slots_armor", "Thread Slots and Tiers");
         add("ars_nouveau.thread_tier", "Tier %s thread slot");
         add("ars_nouveau.search_desc", "Search for any entry, item, or concepts such as Glyph, Familiar, Ritual, Spell School, etc.");
+
+        // EMI Categories
+        add("emi.category.ars_nouveau.apparatus_enchanting", data.get("ars_nouveau.enchanting"));
+        add("emi.category.ars_nouveau.scry_ritual", data.get("ars_nouveau.scry_ritual_recipe"));
+        add("emi.category.ars_nouveau.crush", data.get("ars_nouveau.crush_recipe"));
+        add("emi.category.ars_nouveau.glyph_recipe", data.get("block.ars_nouveau.scribes_table"));
+        add("emi.category.ars_nouveau.budding_conversion", data.get("ars_nouveau.budding_conversion_recipe"));
+        add("emi.category.ars_nouveau.enchanting_apparatus", data.get("ars_nouveau.enchanting_apparatus"));
+        add("emi.category.ars_nouveau.armor_upgrade", data.get("ars_nouveau.armor_upgrade"));
+        add("emi.category.ars_nouveau.imbuement", data.get("block.ars_nouveau.imbuement_chamber"));
+        add("emi.category.ars_nouveau.alakarkinos", data.get("ars_nouveau.alakarkinos_recipe"));
+
+        add("block.ars_nouveau.banner.fire", "Fire School");
+        add("block.ars_nouveau.banner.water", "Water School");
+        add("block.ars_nouveau.banner.air", "Air School");
+        add("block.ars_nouveau.banner.earth", "Earth School");
+        add("block.ars_nouveau.banner.manipulation", "Manipulation School");
+        add("block.ars_nouveau.banner.abjuration", "Abjuration School");
+        add("block.ars_nouveau.banner.conjuration", "Conjuration School");
+        add("ars_nouveau.lectern_blacklist", "This block has been disabled from being connected to the Storage Lectern.");
     }
 
-    public void addCategory(String key, String value){
+    public void addCategory(String key, String value) {
         add("ars_nouveau.section." + key, value);
     }
 

@@ -266,6 +266,11 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     }
 
     @Override
+    public boolean isEffectiveAi() {
+        return !this.isPassenger() && super.isEffectiveAi();
+    }
+
+    @Override
     public void tick() {
         try {
             super.tick();
@@ -299,7 +304,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         if (this.dead)
             return;
 
-        if (!level.isClientSide && this.getStarbuncleWithSpace() != null) {
+        if (!level.isClientSide && !this.isPassenger() && this.getStarbuncleWithSpace() != null) {
             for (ItemEntity itementity : this.level.getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(1))) {
                 if (itementity.isAlive() && !itementity.getItem().isEmpty() && !itementity.hasPickUpDelay()) {
                     this.pickUpItem(itementity);
@@ -430,11 +435,11 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     }
 
     @Override
-    public void die(@NotNull DamageSource source) {
+    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
+        super.dropCustomDeathLoot(level, damageSource, recentlyHit);
         if (!level.isClientSide && isTamed()) {
             dropData();
         }
-        super.die(source);
     }
 
     public void dropData() {
@@ -484,7 +489,9 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             level.addFreshEntity(carbuncle);
             carbuncle.restoreFromTag();
             carbuncle.startRiding(toRide);
-            stack.shrink(1);
+            if (!player.hasInfiniteMaterials()) {
+                stack.shrink(1);
+            }
             return InteractionResult.SUCCESS;
         }
 
@@ -493,7 +500,9 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             if (color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(carbyColors).contains(color.getName()))
                 return InteractionResult.SUCCESS;
             setColor(color.getName());
-            player.getMainHandItem().shrink(1);
+            if (!player.hasInfiniteMaterials()) {
+                player.getMainHandItem().shrink(1);
+            }
             return InteractionResult.SUCCESS;
         }
 

@@ -27,9 +27,9 @@ public class EffectEnderChest extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (shooter instanceof Player && !(shooter instanceof FakePlayer)) {
-            PlayerEnderChestContainer chestInventory = ((Player) shooter).getEnderChestInventory();
-            ((Player) shooter).openMenu(new SimpleMenuProvider((p_226928_1_, p_226928_2_, p_226928_3_) -> ChestMenu.threeRows(p_226928_1_, p_226928_2_, chestInventory), CONTAINER_NAME));
+        if (shooter instanceof Player player && !(shooter instanceof FakePlayer)) {
+            PlayerEnderChestContainer chestInventory = player.getEnderChestInventory();
+            player.openMenu(new SimpleMenuProvider((p_226928_1_, p_226928_2_, p_226928_3_) -> ChestMenu.threeRows(p_226928_1_, p_226928_2_, chestInventory), CONTAINER_NAME));
         }
     }
 

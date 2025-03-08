@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:ritual_awakening",
+  "order": 100,
+  "icon": "ars_nouveau:ritual_awakening",
+  "title": "Awakening",
+  "category": "ars_nouveau:ritual_index",
+  "pages": [
+    {
+      "title": "Awakening",
+      "description": "Awakens nearby Archwood trees into Weald Walkers and Budding Amethyst into Amethyst Golems. Weald Walkers can be given a position in the world to guard against hostile mobs. They will heal over time, and turn into Weald Waddlers if they die. To create a Weald Walker, perform this ritual near the base of an Archwood Tree. Augmenting with Book and Quills will create Bookwyrm Charms.",
+      "icon": "ars_nouveau:ritual_awakening"
+    },
+    {
+      "recipe_1": "ars_nouveau:ritual_awakening"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_accelerate",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_accelerate",
+  "title": "Accelerate",
+  "category": "ars_nouveau:glyphs_tier_two",
+  "pages": [
+    {
+      "title": "Accelerate",
+      "description": "Increases the speed of projectile spells.",
+      "icon": "ars_nouveau:glyph_accelerate",
+      "tier": 2
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_accelerate"
+    }
+  ]
+}

@@ -56,7 +56,9 @@ public class Present extends ModItem{
             ItemEntity entity = new ItemEntity(pLevel, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(), stack);
             pLevel.addFreshEntity(entity);
         }
-        pPlayer.getItemInHand(pUsedHand).shrink(1);
+        if (!pPlayer.hasInfiniteMaterials()) {
+            pPlayer.getItemInHand(pUsedHand).shrink(1);
+        }
         return super.use(pLevel, pPlayer, pUsedHand);
     }
 

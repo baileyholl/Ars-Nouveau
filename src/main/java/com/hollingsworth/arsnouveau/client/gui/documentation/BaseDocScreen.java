@@ -99,6 +99,9 @@ public class BaseDocScreen extends BaseScreen {
                 throw new RuntimeException(e);
             }
         }).withTooltip(Component.translatable("ars_nouveau.gui.discord")));
+        if(previousScreen == null && !(this instanceof IndexScreen)){
+            previousScreen = new IndexScreen();
+        }
         backButton.visible = previousScreen != null;
         initBookmarks();
     }
@@ -237,5 +240,9 @@ public class BaseDocScreen extends BaseScreen {
     public RecipeManager recipeManager(){
         Level level = ArsNouveau.proxy.getClientWorld();
         return level.getRecipeManager();
+    }
+
+    public void setMinecraft(Minecraft minecraft){
+        this.minecraft = minecraft;
     }
 }
