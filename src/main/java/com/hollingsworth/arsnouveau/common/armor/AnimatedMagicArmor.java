@@ -166,6 +166,11 @@ public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem {
         });
     }
 
+    @Override
+    public boolean isDamageable(ItemStack stack) {
+        return !stack.has(DataComponentRegistry.UNBREAKING);
+    }
+
     public GeoModel<AnimatedMagicArmor> getArmorModel() {
         return model;
     }
