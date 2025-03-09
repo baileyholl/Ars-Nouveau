@@ -5,15 +5,16 @@ import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.arsnouveau.api.documentation.search.Search;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.documentation.PageHolderScreen;
+import com.hollingsworth.arsnouveau.client.registry.ModKeyBindings;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.items.WornNotebook;
 import com.hollingsworth.nuggets.client.rendering.RenderHelpers;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -60,8 +61,9 @@ public class DocItemTooltipHandler {
 
         graphics.fill(x - 4, tooltipY - 4, x + 20, tooltipY + 26, 0x44000000);
         graphics.fill(x - 6, tooltipY - 6, x + 22, tooltipY + 28, 0x44000000);
-
-        if (Screen.hasControlDown()) {
+        boolean boundToControl = ModKeyBindings.OPEN_DOCUMENTATION.getKey().getValue() == 341;
+        if (boundToControl ? PageHolderScreen.hasControlDown() :
+                InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), ModKeyBindings.OPEN_DOCUMENTATION.getKey().getValue())) {
             lexiconLookupTime += ClientInfo.deltaTicks;
 
             int cx = x + 8;
@@ -106,8 +108,8 @@ public class DocItemTooltipHandler {
 
         ms.scale(0.5F, 0.5F, 1F);
         boolean mac = Minecraft.ON_OSX;
-        Component key = Component.literal(mac ? "Cmd" : "Ctrl")
-                .withStyle(ChatFormatting.BOLD);
+        Component key = (boundToControl ? (mac ? Component.literal("Cmd") : Component.literal("Ctrl")) : ModKeyBindings.OPEN_DOCUMENTATION.getTranslatedKeyMessage().copy())
+        .withStyle(ChatFormatting.BOLD);
         graphics.drawString(mc.font, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, 0xFFFFFFFF);
         ms.popPose();
 

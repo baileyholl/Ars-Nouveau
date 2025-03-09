@@ -20,6 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -61,11 +62,12 @@ public class EffectHarvest extends AbstractEffect {
                     break;
                 }
             }
+        final Vec3 center = pos.getBottomCenter();
         cropDrops.forEach(d -> {
             if (d.isEmpty() || d.getItem() == BlockRegistry.MAGE_BLOOM_CROP.asItem()) {
                 return;
             }
-            world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), d));
+            world.addFreshEntity(new ItemEntity(world, center.x, center.y, center.z, d));
         });
     }
 

@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -311,6 +312,37 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
     @Override
     public void setOwnerID(UUID uuid) {
         this.entityData.set(OWNER_UNIQUE_ID, Optional.ofNullable(uuid));
+    }
+
+
+    @Override
+    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
+
+    }
+
+    @Override
+    protected void dropAllDeathLoot(ServerLevel p_level, DamageSource damageSource) {
+
+    }
+
+    @Override
+    protected void dropEquipment() {
+
+    }
+
+    @Override
+    protected void dropExperience(@org.jetbrains.annotations.Nullable Entity entity) {
+
+    }
+
+    @Override
+    protected void dropFromLootTable(DamageSource damageSource, boolean attackedRecently) {
+
+    }
+
+    @Override
+    public void dropPreservedEquipment() {
+
     }
 
     class MoveHelperController extends MoveControl {

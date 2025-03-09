@@ -13,7 +13,6 @@ import com.hollingsworth.arsnouveau.client.gui.buttons.StorageTabButton;
 import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.SetTerminalSettingsPacket;
-import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.JsonOps;
@@ -40,7 +39,6 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.hollingsworth.arsnouveau.client.container.StorageTerminalMenu.SlotAction.*;
@@ -293,9 +291,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 				if (searchType == 1) {
 					IAutoFillTerminal.sync(searchString);
 				}
-				CompoundTag nbt = new CompoundTag();
-				nbt.putString("search", searchString);
-				Networking.sendToServer(new ClientToServerStoragePacket(nbt));
+				Networking.sendToServer(new ClientToServerStoragePacket(new ClientToServerStoragePacket.Data(Optional.of(searchString), Optional.empty(), Optional.empty())));
 				onUpdateSearch(searchString);
 			} else {
 				this.scrollTo(this.currentScroll);
@@ -526,15 +522,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	}
 
 	protected void storageSlotClick(StoredItemStack slotStack, StorageTerminalMenu.SlotAction act, boolean pullOne) {
-		CompoundTag interactTag = new CompoundTag();
-		interactTag.putBoolean("pullOne", pullOne);
-		interactTag.putInt("action", act.ordinal());
-		if(slotStack != null){
-			interactTag.put("stack", ANCodecs.encode(ArsNouveau.proxy.getMinecraft().level.registryAccess(), StoredItemStack.CODEC, slotStack));
-		}
-		CompoundTag dataTag = new CompoundTag();
-		dataTag.put("interaction", interactTag);
-		Networking.sendToServer(new ClientToServerStoragePacket(dataTag));
+		Networking.sendToServer(new ClientToServerStoragePacket(new ClientToServerStoragePacket.Data(Optional.empty(), Optional.of(new ClientToServerStoragePacket.InteractionData(pullOne, Optional.ofNullable(slotStack), act)), Optional.empty())));
 	}
 
 	public boolean isPullOne(int mouseButton) {

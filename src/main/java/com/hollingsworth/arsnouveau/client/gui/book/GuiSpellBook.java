@@ -297,7 +297,7 @@ public class GuiSpellBook extends BaseBook {
                 adjustedRowsPlaced = 0;
             }
             int xOffset = 20 * ((adjustedXPlaced) % PER_ROW) + (nextPage ? 134 : 0);
-            int yPlace = adjustedRowsPlaced * 18 + yStart;
+            int yPlace = adjustedRowsPlaced * 18 + yStart + (nextPage && !foundForms ? 18 : 0);
 
             GlyphButton cell = new GlyphButton(xStart + xOffset, yPlace, part, this::onGlyphClick);
             addRenderableWidget(cell);

@@ -77,7 +77,7 @@ public class Networking {
 
     }
 
-    private static <T extends AbstractPacket> void handle(T message, IPayloadContext ctx) {
+    public static <T extends AbstractPacket> void handle(T message, IPayloadContext ctx) {
         if (ctx.flow().getReceptionSide() == LogicalSide.SERVER) {
             handleServer(message, ctx);
         } else {

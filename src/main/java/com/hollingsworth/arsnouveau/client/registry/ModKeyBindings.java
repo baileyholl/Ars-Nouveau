@@ -9,7 +9,6 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import org.lwjgl.glfw.GLFW;
 
 
-
 @EventBusSubscriber(modid = ArsNouveau.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public class ModKeyBindings {
 
@@ -17,6 +16,7 @@ public class ModKeyBindings {
 
     public static final KeyMapping OPEN_BOOK = new KeyMapping("key.ars_nouveau.open_book", GLFW.GLFW_KEY_C, CATEGORY);
     public static final KeyMapping OPEN_RADIAL_HUD = new KeyMapping("key.ars_nouveau.selection_hud", GLFW.GLFW_KEY_V, CATEGORY);
+    public static final KeyMapping OPEN_DOCUMENTATION = new KeyMapping("key.ars_nouveau.open_documentation", GLFW.GLFW_KEY_LEFT_CONTROL, CATEGORY);
     public static final KeyMapping NEXT_SLOT = new KeyMapping("key.ars_nouveau.next_slot",
             GLFW.GLFW_KEY_X,
             CATEGORY);
@@ -39,9 +39,9 @@ public class ModKeyBindings {
     public static final KeyMapping QC_9 = new KeyMapping("key.ars_nouveau.qc9", -1, CATEGORY);
     public static final KeyMapping QC_10 = new KeyMapping("key.ars_nouveau.qc10", -1, CATEGORY);
 
-    public static int usedQuickSlot(int key){
-        for(QuickSlot q : QuickSlot.VALUES){
-            if(q.key().getKey().getValue()== key){
+    public static int usedQuickSlot(int key) {
+        for (QuickSlot q : QuickSlot.VALUES) {
+            if (q.key().getKey().getValue() == key) {
                 return q.slot;
             }
         }
@@ -55,6 +55,7 @@ public class ModKeyBindings {
         event.register(NEXT_SLOT);
         event.register(PREVIOUS_SLOT);
         event.register(HEAD_CURIO_HOTKEY);
+        event.register(OPEN_DOCUMENTATION);
         event.register(QC_1);
         event.register(QC_2);
         event.register(QC_3);
@@ -70,16 +71,16 @@ public class ModKeyBindings {
 
     public record QuickSlot(int slot, KeyMapping key) {
         public static final QuickSlot[] VALUES = new QuickSlot[]{
-            new QuickSlot(0, QC_1),
-            new QuickSlot(1, QC_2),
-            new QuickSlot(2, QC_3),
-            new QuickSlot(3, QC_4),
-            new QuickSlot(4, QC_5),
-            new QuickSlot(5, QC_6),
-            new QuickSlot(6, QC_7),
-            new QuickSlot(7, QC_8),
-            new QuickSlot(8, QC_9),
-            new QuickSlot(9, QC_10)
+                new QuickSlot(0, QC_1),
+                new QuickSlot(1, QC_2),
+                new QuickSlot(2, QC_3),
+                new QuickSlot(3, QC_4),
+                new QuickSlot(4, QC_5),
+                new QuickSlot(5, QC_6),
+                new QuickSlot(6, QC_7),
+                new QuickSlot(7, QC_8),
+                new QuickSlot(8, QC_9),
+                new QuickSlot(9, QC_10)
         };
     }
 }

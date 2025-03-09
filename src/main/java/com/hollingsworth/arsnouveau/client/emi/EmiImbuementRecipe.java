@@ -2,9 +2,13 @@ package com.hollingsworth.arsnouveau.client.emi;
 
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
+import dev.emi.emi.api.stack.EmiIngredient;
+import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+
+import java.util.List;
 
 public class EmiImbuementRecipe extends EmiMultiInputRecipe<ImbuementRecipe> {
     public EmiImbuementRecipe(ResourceLocation id, ImbuementRecipe recipe) {
@@ -22,6 +26,22 @@ public class EmiImbuementRecipe extends EmiMultiInputRecipe<ImbuementRecipe> {
             case 0, 1, 3 -> 86;
             default -> 100;
         };
+    }
+
+    @Override
+    public List<EmiIngredient> getInputs() {
+        var inputs = super.getInputs();
+        for (int i = 1; i < inputs.size(); i++) {
+            var ingredient = inputs.get(i);
+            if (ingredient.getEmiStacks().size() == 1 && ingredient.getEmiStacks().get(0) instanceof EmiStack stack) {
+                stack.setRemainder(stack);
+            } else {
+                // Hack to get EMI to recognise that the Ingredient is not used
+                ingredient.setChance(0);
+            }
+        }
+
+        return inputs;
     }
 
     @Override

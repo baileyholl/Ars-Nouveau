@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.items.summon_charms;
 
 
 import com.hollingsworth.arsnouveau.api.item.AbstractSummonCharm;
+import com.hollingsworth.arsnouveau.client.jei.AliasProvider;
 import com.hollingsworth.arsnouveau.common.block.tile.SummoningTile;
 import com.hollingsworth.arsnouveau.common.block.tile.WhirlisprigTile;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
@@ -15,7 +16,10 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
-public class WhirlisprigCharm extends AbstractSummonCharm {
+import java.util.Collection;
+import java.util.List;
+
+public class WhirlisprigCharm extends AbstractSummonCharm implements AliasProvider {
 
     public WhirlisprigCharm() {
         super(ItemsRegistry.defaultItemProperties().component(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, new PersistentFamiliarData().setColor("summer")));
@@ -42,4 +46,10 @@ public class WhirlisprigCharm extends AbstractSummonCharm {
         } else return InteractionResult.PASS;
     }
 
+    @Override
+    public Collection<Alias> getAliases() {
+        return List.of(
+            new Alias("crop_farm", "Crop Farm")
+        );
+    }
 }

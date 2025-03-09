@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items.summon_charms;
 
 import com.hollingsworth.arsnouveau.api.item.AbstractSummonCharm;
+import com.hollingsworth.arsnouveau.client.jei.AliasProvider;
 import com.hollingsworth.arsnouveau.common.block.tile.SummoningTile;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.items.data.StarbuncleCharmData;
@@ -10,7 +11,10 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
-public class StarbuncleCharm extends AbstractSummonCharm {
+import java.util.Collection;
+import java.util.List;
+
+public class StarbuncleCharm extends AbstractSummonCharm implements AliasProvider {
     public StarbuncleCharm() {
         super(defaultProps().component(DataComponentRegistry.STARBUNCLE_DATA, new StarbuncleCharmData()));
     }
@@ -30,5 +34,14 @@ public class StarbuncleCharm extends AbstractSummonCharm {
     @Override
     public InteractionResult useOnSummonTile(UseOnContext context, Level world, SummoningTile tile, BlockPos pos) {
         return useOnBlock(context, world, pos);
+    }
+
+    @Override
+    public Collection<Alias> getAliases() {
+        return List.of(
+            new Alias("hopper", "Hopper"),
+            new Alias("pipe", "Pipe"),
+            new Alias("item_transporter", "Item Transporter")
+        );
     }
 }

@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "ars_nouveau.page1.redstone_relay"
+      "text": "ars_nouveau.page.redstone_relay"
     },
     {
       "type": "patchouli:crafting",

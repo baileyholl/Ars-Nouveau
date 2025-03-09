@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.AbstractSummonCharm;
+import com.hollingsworth.arsnouveau.client.jei.AliasProvider;
 import com.hollingsworth.arsnouveau.common.block.tile.SummoningTile;
 import com.hollingsworth.arsnouveau.common.entity.Alakarkinos;
 import com.hollingsworth.arsnouveau.common.items.data.PersistentFamiliarData;
@@ -14,9 +15,10 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.List;
 
-public class AlakarkinosCharm extends AbstractSummonCharm {
+public class AlakarkinosCharm extends AbstractSummonCharm implements AliasProvider {
 
     public AlakarkinosCharm() {
         super(defaultProps().component(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, new PersistentFamiliarData().setColor("red")));
@@ -55,4 +57,11 @@ public class AlakarkinosCharm extends AbstractSummonCharm {
         stack.addToTooltip(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, context, tooltip2::add, flagIn);
     }
 
+    @Override
+    public Collection<Alias> getAliases() {
+        return List.of(
+            new Alias("archaeology", "Archaeology"),
+            new Alias("sherd", "Sherd")
+        );
+    }
 }

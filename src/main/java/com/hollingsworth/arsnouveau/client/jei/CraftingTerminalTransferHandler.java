@@ -17,9 +17,6 @@ import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandlerHelper;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -58,13 +55,13 @@ public class CraftingTerminalTransferHandler<C extends AbstractContainerMenu & I
 		if (container instanceof IAutoFillTerminal term) {
 			List<IRecipeSlotView> missing = new ArrayList<>();
 			List<IRecipeSlotView> views = recipeSlots.getSlotViews();
-			List<ItemStack[]> inputs = new ArrayList<>();
+			List<List<ItemStack>> inputs = new ArrayList<>();
 			Set<StoredItemStack> stored = new HashSet<>(term.getStoredItems());
 
 			for (IRecipeSlotView view : views) {
 				if(view.getRole() == RecipeIngredientRole.INPUT || view.getRole() == RecipeIngredientRole.CATALYST) {
-					ItemStack[] possibleStacks = view.getIngredients(VanillaTypes.ITEM_STACK).toArray(ItemStack[]::new);
-					if(possibleStacks.length == 0){
+					List<ItemStack> possibleStacks = view.getIngredients(VanillaTypes.ITEM_STACK).toList();
+					if(possibleStacks.isEmpty()){
 						inputs.add(null);
 						continue;
 					}
@@ -95,30 +92,9 @@ public class CraftingTerminalTransferHandler<C extends AbstractContainerMenu & I
 
 				}
 			}
+
 			if (doTransfer) {
-				ItemStack[][] stacks = inputs.toArray(new ItemStack[][]{});
-				CompoundTag compound = new CompoundTag();
-				ListTag list = new ListTag();
-				for (int i = 0;i < stacks.length;++i) {
-					if (stacks[i] != null) {
-						CompoundTag CompoundNBT = new CompoundTag();
-						CompoundNBT.putByte("s", (byte) i);
-						int k = 0;
-						for (int j = 0;j < stacks[i].length && k < 9;j++) {
-							if (stacks[i][j] != null && !stacks[i][j].isEmpty()) {
-								StoredItemStack s = new StoredItemStack(stacks[i][j]);
-								if(stored.contains(s) || player.getInventory().findSlotMatchingItem(stacks[i][j]) != -1) {
-									Tag tag = stacks[i][j].save(player.level.registryAccess());
-									CompoundNBT.put("i" + (k++), tag);
-								}
-							}
-						}
-						CompoundNBT.putByte("l", (byte) Math.min(9, k));
-						list.add(CompoundNBT);
-					}
-				}
-				compound.put("i", list);
-				Networking.sendToServer(new ClientToServerStoragePacket(compound));
+				Networking.sendToServer(new ClientToServerStoragePacket(new ClientToServerStoragePacket.Data(Optional.empty(), Optional.empty(), Optional.of(inputs))));
 			}
 
 			if(!missing.isEmpty()) {

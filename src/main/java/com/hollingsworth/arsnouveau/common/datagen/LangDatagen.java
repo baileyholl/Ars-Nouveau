@@ -9,15 +9,18 @@ import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.client.jei.AliasProvider;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -35,6 +38,16 @@ public class LangDatagen extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
+        for (DeferredHolder<Item, ? extends Item> entry : ItemsRegistry.ITEMS.getEntries()) {
+            if (entry.get() instanceof AliasProvider provider) {
+                for (AliasProvider.Alias alias : provider.getAliases()) {
+                    String key = alias.toTranslationKey();
+                    if (data.containsKey(key)) continue;
+                    add(key, alias.name());
+                }
+            }
+        }
+
         ArsNouveauAPI arsNouveauAPI = ArsNouveauAPI.getInstance();
         for (Supplier<Glyph> supplier : GlyphRegistry.getGlyphItemMap().values()) {
             Glyph glyph = supplier.get();
@@ -186,6 +199,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.alert.turret_type", "Selected form cannot be used by a turret.");
         add("ars_nouveau.alert.spell_set", "Spell set.");
         add("ars_nouveau.alert.duplicate_method", "No duplicate cast methods are allowed.");
+        add("ars_nouveau.relay.current_power", "Current Power: %d");
         add("ars_nouveau.relay.no_to", "No send location set.");
         add("ars_nouveau.relay.one_to", "Sending to %d location(s).");
         add("ars_nouveau.relay.no_from", "No take location set.");
@@ -1313,14 +1327,14 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.sensor.on_resolve", "Mode: On Resolve");
         add("ars_nouveau.sensor.on_cast", "Mode: On Cast");
         add("block.ars_nouveau.spell_sensor", "Spell Sensor");
-        add("ars_nouveau.page1.spell_sensor", "Outputs a redstone signal when a spell is cast nearby. Output strength is determined by the length of the spell cast. Using a Dominion Wand will cause it to trigger when a spell resolves nearby, instead of being cast. Using a Spell Parchment will set the sensor to only output when that exact spell is detected.");
+        add("ars_nouveau.page.spell_sensor", "Outputs a redstone signal when a spell is cast nearby. Output strength is determined by the length of the spell cast. Using a Dominion Wand will cause it to trigger when a spell resolves nearby, instead of being cast. Using a Spell Parchment will set the sensor to only output when that exact spell is detected.");
         add("ars_nouveau.no_stack_crafting", "No valid craft nearby.");
         add("item.ars_nouveau.jump_ring", "Ring of Jumping");
-        add("ars_nouveau.page1.jump_ring", "Allows the user to continue jumping in the air. Each jump will expend mana.");
+        add("ars_nouveau.page.jump_ring", "Allows the user to continue jumping in the air. Each jump will expend mana.");
         add("ars_nouveau.connections.remove", "Connection removed.");
         add("ars_nouveau.powered_from", "Receiving signal from %d relays");
         add("block.ars_nouveau.redstone_relay", "Redstone Relay");
-        add("ars_nouveau.page1.redstone_relay", "Can be connected to other Redstone Relays to wirelessly send a redstone signal. Takes input from one side and outputs in all other directions. Can be connected within 30 blocks of another relay, and multiple relays can be connected.");
+        add("ars_nouveau.page.redstone_relay", "Can be connected to other Redstone Relays to wirelessly send a redstone signal. Takes input from one side and outputs in all other directions. Can be connected within 30 blocks of another relay, and multiple relays can be connected.");
         add("block.ars_nouveau.magic_fire", "Mage Fire");
         add("effect.ars_nouveau.immolate", "Immolate");
         add("effect.ars_nouveau.immolate.desc", "Enhances fire spells.");
@@ -1342,7 +1356,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.archwood_grate", "Archwood Grate");
         add("block.ars_nouveau.smooth_sourcestone_grate", "Smooth Sourcestone Grate");
         add("block.ars_nouveau.source_lamp", "Source Gem Lamp");
-        add("ars_nouveau.page1.source_lamp", "Behaves like a copper bulb, but the light and comparator values can be adjusted by casting Light with dampen.");
+        add("ars_nouveau.page.source_lamp", "Behaves like a copper bulb, but the light and comparator values can be adjusted by casting Light with dampen.");
         add("ars_nouveau.patchouli.missing", "Patchouli missing: opening online wiki");
         add("ars_nouveau.dependency.install", "Open mod page");
         add("tooltip.starbuncle_shard2", "Made with love.");
@@ -1419,6 +1433,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.banner.abjuration", "Abjuration School");
         add("block.ars_nouveau.banner.conjuration", "Conjuration School");
         add("ars_nouveau.lectern_blacklist", "This block has been disabled from being connected to the Storage Lectern.");
+        add("key.ars_nouveau.open_documentation", "Open Documentation");
     }
 
     public void addCategory(String key, String value) {

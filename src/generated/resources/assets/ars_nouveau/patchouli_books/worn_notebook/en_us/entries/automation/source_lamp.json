@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "ars_nouveau.page1.source_lamp"
+      "text": "ars_nouveau.page.source_lamp"
     },
     {
       "type": "patchouli:crafting",

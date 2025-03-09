@@ -3,12 +3,16 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.client.particle.ColorPos;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.block.RedstoneRelay;
 import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -99,11 +103,16 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
 
     protected void setNewPower(int power){
         this.currentPower = power;
-        if(!level.getBlockState(worldPosition).hasProperty(BlockRegistry.REDSTONE_RELAY.get().POWER))
+        BlockState state = level.getBlockState(worldPosition);
+        if (!state.hasProperty(RedstoneRelay.POWER)) {
             return;
-        this.level.setBlock(worldPosition, level.getBlockState(worldPosition).setValue(BlockRegistry.REDSTONE_RELAY.get().POWER, power), 3);
+        }
+        this.level.setBlock(worldPosition, level.getBlockState(worldPosition).setValue(RedstoneRelay.POWER, power), 3);
         updateBlock();
-        level.updateNeighborsAt(worldPosition, BlockRegistry.REDSTONE_RELAY.get());
+        level.updateNeighborsAt(worldPosition, state.getBlock());
+        for (Direction direction : Direction.values()) {
+            level.updateNeighborsAt(worldPosition.relative(direction), state.getBlock());
+        }
         updateListeners();
 
     }
@@ -181,6 +190,17 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
     }
 
     @Override
+    public List<ColorPos> getWandHighlight(List<ColorPos> list) {
+        for(BlockPos pos : poweredFrom){
+            list.add(ColorPos.centered(pos, ParticleColor.FROM_HIGHLIGHT));
+        }
+        for(BlockPos pos : powering){
+            list.add(ColorPos.centered(pos, ParticleColor.TO_HIGHLIGHT));
+        }
+        return list;
+    }
+
+    @Override
     public void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(pTag, pRegistries);
         poweredFrom = new ArrayList<>();
@@ -248,7 +268,7 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        tooltip.add(Component.literal("current power: " + currentPower));
+        tooltip.add(Component.translatable("ars_nouveau.relay.current_power", currentPower));
         if (powering.isEmpty()) {
             tooltip.add(Component.translatable("ars_nouveau.relay.no_to"));
         } else {

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items.summon_charms;
 
 import com.hollingsworth.arsnouveau.api.item.AbstractSummonCharm;
+import com.hollingsworth.arsnouveau.client.jei.AliasProvider;
 import com.hollingsworth.arsnouveau.common.block.tile.DrygmyTile;
 import com.hollingsworth.arsnouveau.common.block.tile.SummoningTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
@@ -14,7 +15,10 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
-public class DrygmyCharm extends AbstractSummonCharm {
+import java.util.Collection;
+import java.util.List;
+
+public class DrygmyCharm extends AbstractSummonCharm implements AliasProvider {
 
     public DrygmyCharm() {
         super(ItemsRegistry.defaultItemProperties().component(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, new PersistentFamiliarData().setColor("brown")));
@@ -42,4 +46,10 @@ public class DrygmyCharm extends AbstractSummonCharm {
         return InteractionResult.PASS;
     }
 
+    @Override
+    public Collection<Alias> getAliases() {
+        return List.of(
+            new Alias("mob_farm", "Mob Farm")
+        );
+    }
 }

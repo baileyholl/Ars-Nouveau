@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:mendosteen_pod"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:lime_dye"
+  }
+}

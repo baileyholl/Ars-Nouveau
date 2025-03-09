@@ -1,7 +1,7 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "particle": "ars_nouveau:blocks/agronomic_sourcelink"
+    "particle": "ars_nouveau:block/redstone_relay"
   },
   "render_type": "cutout"
 }
