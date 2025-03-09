@@ -73,8 +73,9 @@ public class MagelightTorchTile extends SconceTile {
         ySpeedOffset = onRoof ? -ySpeedOffset : ySpeedOffset;
         ParticleColor nextColor = this.color.transition((int) level.getGameTime() * 10);
         for (int i = 0; i < 5; i++) {
-            level.addParticle(
+            level.addAlwaysVisibleParticle(
                     GlowParticleData.createData(nextColor),
+                    true,
                     centerX, pos.getY() + yOffset + ParticleUtil.inRange(-0.00, 0.1), centerZ,
                     xSpeedOffset, ySpeedOffset, zSpeedOffset);
 

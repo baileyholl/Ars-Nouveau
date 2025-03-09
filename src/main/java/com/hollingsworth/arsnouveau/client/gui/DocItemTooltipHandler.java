@@ -5,15 +5,16 @@ import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.arsnouveau.api.documentation.search.Search;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.documentation.PageHolderScreen;
+import com.hollingsworth.arsnouveau.client.registry.ModKeyBindings;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.items.WornNotebook;
 import com.hollingsworth.nuggets.client.rendering.RenderHelpers;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -21,7 +22,7 @@ import org.lwjgl.opengl.GL11;
 
 public class DocItemTooltipHandler {
 
-    private static float lexiconLookupTime = 0;
+    private static long lexiconStartLookupTime = -1;
 
     public static void onTooltip(GuiGraphics graphics, ItemStack stack, int mouseX, int mouseY) {
         PoseStack ms = graphics.pose();
@@ -47,7 +48,7 @@ public class DocItemTooltipHandler {
             }
         }
         if (!hasSpellBook) {
-            lexiconLookupTime = 0F;
+            resetLexiconLookupTime();
             return;
         }
 
@@ -60,17 +61,22 @@ public class DocItemTooltipHandler {
 
         graphics.fill(x - 4, tooltipY - 4, x + 20, tooltipY + 26, 0x44000000);
         graphics.fill(x - 6, tooltipY - 6, x + 22, tooltipY + 28, 0x44000000);
+        boolean boundToControl = ModKeyBindings.OPEN_DOCUMENTATION.getKey().getValue() == 341;
+        if (boundToControl ? PageHolderScreen.hasControlDown() :
+                InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), ModKeyBindings.OPEN_DOCUMENTATION.getKey().getValue())) {
 
-        if (Screen.hasControlDown()) {
-            lexiconLookupTime += ClientInfo.deltaTicks;
+            if (lexiconStartLookupTime == -1) {
+                lexiconStartLookupTime = System.currentTimeMillis();
+            }
 
             int cx = x + 8;
             int cy = tooltipY + 8;
             float r = 12;
-            float time = 20F;
-            float angles = lexiconLookupTime / time * 360F;
+            float time = 1000;
+            float angles = (System.currentTimeMillis() - lexiconStartLookupTime) / time * 360F;
 
             RenderSystem.enableBlend();
+            RenderSystem.disableDepthTest();
             RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
             BufferBuilder buf = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
@@ -86,13 +92,14 @@ public class DocItemTooltipHandler {
             buf.addVertex(cx, cy, 0).setColor(0F, 1F, 0F, 0F);
             BufferUploader.drawWithShader(buf.build());
             RenderSystem.disableBlend();
+            RenderSystem.enableDepthTest();
 
-            if (lexiconLookupTime >= time) {
+            if (angles >= 360) {
                 DocClientUtils.openToEntry(docEntry.id(), 0);
-                lexiconLookupTime = 0F;
+                resetLexiconLookupTime();
             }
-        }else {
-            lexiconLookupTime = 0f;
+        } else {
+            resetLexiconLookupTime();
         }
 
         ms.pushPose();
@@ -106,11 +113,15 @@ public class DocItemTooltipHandler {
 
         ms.scale(0.5F, 0.5F, 1F);
         boolean mac = Minecraft.ON_OSX;
-        Component key = Component.literal(mac ? "Cmd" : "Ctrl")
-                .withStyle(ChatFormatting.BOLD);
+        Component key = (boundToControl ? (mac ? Component.literal("Cmd") : Component.literal("Ctrl")) : ModKeyBindings.OPEN_DOCUMENTATION.getTranslatedKeyMessage().copy())
+        .withStyle(ChatFormatting.BOLD);
         graphics.drawString(mc.font, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, 0xFFFFFFFF);
         ms.popPose();
 
         RenderSystem.enableDepthTest();
+    }
+
+    public static void resetLexiconLookupTime() {
+        lexiconStartLookupTime = -1;
     }
 }

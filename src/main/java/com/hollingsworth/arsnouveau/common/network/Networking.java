@@ -24,7 +24,9 @@ public class Networking {
         reg.playToClient(PacketOpenSpellBook.TYPE, PacketOpenSpellBook.CODEC,  Networking::handle);
         reg.playToClient(ChangeBiomePacket.TYPE, ChangeBiomePacket.CODEC, Networking::handle);
         reg.playToServer(PacketSetLauncher.TYPE, PacketSetLauncher.CODEC, Networking::handle);
-        reg.playToServer(ClientToServerStoragePacket.TYPE, ClientToServerStoragePacket.CODEC, Networking::handle);
+        reg.playToServer(ClientSearchPacket.TYPE, ClientSearchPacket.CODEC, Networking::handle);
+        reg.playToServer(ClientSlotClick.TYPE, ClientSlotClick.STREAM_CODEC, Networking::handle);
+        reg.playToServer(ClientTransferHandlerPacket.TYPE, ClientTransferHandlerPacket.CODEC, Networking::handle);
         reg.playBidirectional(SetTerminalSettingsPacket.TYPE, SetTerminalSettingsPacket.CODEC, new DirectionalPayloadHandler<>((msg, ctx) -> ClientMessageHandler.handleClient(msg, ctx), (msg, ctx) -> msg.onServerReceived(ctx.player().getServer(), (ServerPlayer) ctx.player())));
         reg.playToClient(HighlightAreaPacket.TYPE, HighlightAreaPacket.CODEC, Networking::handle);
         reg.playToClient(NotEnoughManaPacket.TYPE, NotEnoughManaPacket.CODEC, Networking::handle);
@@ -74,10 +76,11 @@ public class Networking {
         reg.playToClient(UpdateStorageItemsPacket.TYPE, UpdateStorageItemsPacket.CODEC, Networking::handle);
         reg.playToClient(PacketUpdateGlowColor.TYPE, PacketUpdateGlowColor.CODEC, Networking::handle);
         reg.playToServer(PacketUpdateDominionWand.TYPE, PacketUpdateDominionWand.CODEC, Networking::handle);
-
+        reg.playToServer(PacketCastSpell.TYPE, PacketCastSpell.CODEC, Networking::handle);
+        reg.playToClient(PacketToggleDebug.TYPE, PacketToggleDebug.CODEC, Networking::handle);
     }
 
-    private static <T extends AbstractPacket> void handle(T message, IPayloadContext ctx) {
+    public static <T extends AbstractPacket> void handle(T message, IPayloadContext ctx) {
         if (ctx.flow().getReceptionSide() == LogicalSide.SERVER) {
             handleServer(message, ctx);
         } else {

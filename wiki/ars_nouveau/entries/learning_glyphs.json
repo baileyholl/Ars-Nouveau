@@ -1,0 +1,20 @@
+{
+  "id": "ars_nouveau:learning_glyphs",
+  "order": 6,
+  "icon": "ars_nouveau:scribes_table",
+  "title": "6 - Learning Glyphs",
+  "category": "ars_nouveau:getting_started",
+  "pages": [
+    {
+      "title": "6 - Learning Glyphs",
+      "description": "New Glyphs may be created through the Scribe’s Table from certain items and paying EXP. Once crafted, the Glyph can be consumed to learn it, making it available during spellcrafting.  Players can share their current Glyph knowledge with each other by crafting an Annotated Codex.",
+      "icon": "ars_nouveau:scribes_table"
+    },
+    {
+      "related": [
+        "ars_nouveau:scribes_table",
+        "ars_nouveau:item.ars_nouveau.annotated_codex"
+      ]
+    }
+  ]
+}

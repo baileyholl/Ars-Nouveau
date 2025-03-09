@@ -9,15 +9,18 @@ import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.client.jei.AliasProvider;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -35,6 +38,16 @@ public class LangDatagen extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
+        for (DeferredHolder<Item, ? extends Item> entry : ItemsRegistry.ITEMS.getEntries()) {
+            if (entry.get() instanceof AliasProvider provider) {
+                for (AliasProvider.Alias alias : provider.getAliases()) {
+                    String key = alias.toTranslationKey();
+                    if (data.containsKey(key)) continue;
+                    add(key, alias.name());
+                }
+            }
+        }
+
         ArsNouveauAPI arsNouveauAPI = ArsNouveauAPI.getInstance();
         for (Supplier<Glyph> supplier : GlyphRegistry.getGlyphItemMap().values()) {
             Glyph glyph = supplier.get();
@@ -185,7 +198,8 @@ public class LangDatagen extends LanguageProvider {
         add("tooltip.magebloom", "Crafted using the Enchanting Apparatus");
         add("ars_nouveau.alert.turret_type", "Selected form cannot be used by a turret.");
         add("ars_nouveau.alert.spell_set", "Spell set.");
-        add("ars_nouveau.alert.duplicate_method", "No duplicate cast methods are allowed.");
+        add("ars_nouveau.alert.duplicate_method", "No duplicate cast forms are allowed.");
+        add("ars_nouveau.relay.current_power", "Current Power: %d");
         add("ars_nouveau.relay.no_to", "No send location set.");
         add("ars_nouveau.relay.one_to", "Sending to %d location(s).");
         add("ars_nouveau.relay.no_from", "No take location set.");
@@ -230,8 +244,9 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.void_jar", "Jar of Voiding");
         add("ars_nouveau.rune.setperm", "This rune is now permanent.");
         add("ars_nouveau.page.void_jar", "A jar that can destroy items on pickup and grants a small amount of mana in return. To turn the jar on and off, use the jar while sneaking. To add or remove an item to be destroyed by the jar, use the jar with an item in the off hand, or use an item on the Scribes Table with the jar placed on it. The jar must be in your hotbar to function.");
-        add("ars_nouveau.page.runic_chalk", "Runic chalk can be used to place permanent Runes on the ground that will cast spells on entities that walk over them. To give a rune a spell, inscribe spell parchment using the scribes table. Once the rune has cast the spell, it will become uncharged. An uncharged rune will charge itself from nearby source jars. Using Runic Chalk on a temporary rune will convert it to a permanent one.");
+        add("ars_nouveau.page.runic_chalk", "Runic chalk can be used to place permanent Runes on the ground that will cast spells on entities that walk over them. To give a rune a spell, inscribe spell parchment using the scribes table. Once the rune has cast the spell, it will become uncharged. An uncharged rune will charge itself from nearby source jars. Using Runic Chalk on a temporary rune will convert it to a permanent one. Using an essence on the rune will change its pattern.");
         add("ars_nouveau.wand.invalid", "Invalid spell. Wands accept Effects and Augments only.");
+        add("ars_nouveau.gauntlet.invalid", "Invalid spell. Gauntlets accept Effects and Augments only.");
         add("item.ars_nouveau.wand", "Enchanter's Wand");
         add("ars_nouveau.wixie.has_wixie", "This cauldron already has a wixie.");
         add("ars_nouveau.wixie.no_recipe", "No recipes found.");
@@ -254,7 +269,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.green_archwood_leaves", "Flourishing Archwood Leaves");
         add("block.ars_nouveau.red_archwood_leaves", "Blazing Archwood Leaves");
         add("block.ars_nouveau.archwood_planks", "Archwood Planks");
-        add("ars_nouveau.page.wand", "Wands accept only a single spell, and are inscribed using the Scribes Table. A Wand always starts with Projectile -> Accelerate, and MUST be inscribed with a spell that does not have another method. This allows you to cast spells beyond the 10 spell cap. If you want a wand that casts Break, inscribe the wand with JUST break, and your result will be a wand with Projectile -> Acclerate -> Break.");
+        add("ars_nouveau.page.wand", "Wands accept only a single spell, and are inscribed using the Scribes Table. A Wand always starts with Projectile -> Accelerate, and MUST be inscribed with a spell that does not have another form. This allows you to cast spells beyond the 10 spell cap. If you want a wand that casts Break, inscribe the wand with JUST break, and your result will be a wand with Projectile -> Acclerate -> Break.");
         add("ars_nouveau.starbuncle.cleared", "Tasks cleared.");
         add("block.ars_nouveau.red_archwood_wood", "Blazing Archwood Wood");
         add("block.ars_nouveau.green_archwood_wood", "Flourishing Archwood Wood");
@@ -446,6 +461,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.tooltip.running", "Running");
         add("ars_nouveau.tooltip.conditions_unmet", "Conditions Unmet");
         add("ars_nouveau.tooltip.exp_gem", "Grants experience on use. Sneak to consume the entire stack.");
+        add("ars_nouveau.tooltip.too_many_animals", "Too many animals nearby.");
         add("item.ars_nouveau.experience_gem", "Experience Gem");
         add("item.ars_nouveau.greater_experience_gem", "Greater Experience Gem");
         add("effect.ars_nouveau.hex", "Hex");
@@ -610,31 +626,48 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.alakarkinos_recipe.chance", "Chance: %s");
         add("ars_nouveau.enchanting_apparatus", "Enchanting Apparatus");
         add("ars_nouveau.armor_upgrade", "Magic Armor Upgrade");
-        add("ars_nouveau.page.apparatus_crafting", "Apparatus Crafting");
-        add("ars_nouveau.page1.apparatus_crafting", "The Enchanting Apparatus is used for crafting special machines, curios, and equipment used to progress in Ars Nouveau. Crafting with the Enchanting Apparatus requires up to eight Arcane Pedestals, an Arcane Core, and the Enchanting Apparatus block. Once you have setup your apparatus, you should craft your first Magebloom Seed.");
-        add("ars_nouveau.page.better_casting", "Better Casting");
-        add("ars_nouveau.page1.better_casting", "Your mana pool may be expanded with special mage armors, enchantments, learning new glyphs, or by drinking potions. Once you have acquired a Magebloom Seed you may craft a variety of configurable magic armors, altered using Threads.");
-        add("ars_nouveau.page.new_glyphs", "New Glyphs");
-        add("ars_nouveau.page1.new_glyphs", "Accessing new spells will require a small amount of setup, resources, and base building. New spells can be learned by obtaining Glyphs. Glyphs are created using the Scribe's Table with EXP and items. Once you have obtained a glyph, simply use it to memorize the glyph. Glyphs can be shared between players with an Annotated Codex. See the section on the Scribes Table for more information.");
-        add("ars_nouveau.page.source", "Source");
-        add("ars_nouveau.page1.source", "Source is a special resource that must be gathered using devices in the world. Source is used for powering devices like the Imbuement Chamber and Enchanting Apparatus. To begin gathering Source, you will need a Source Jar and a Sourcelink.");
-        add("ars_nouveau.page.spell_casting", "Spell Casting");
-        add("ars_nouveau.page1.spell_casting", "To begin spell casting, you will need to first obtain a spell book. A spell book will allow you to create, store, and cast spells using Mana. To craft your first spell, you must first select the Form that the spell will take on. A Form glyph must always be the first glyph in a spell recipe.");
-        add("ars_nouveau.page2.spell_casting", "Next, add any number of Effects to the chain. Effects refer to what the spell will do and they will resolve in the order they are placed in the book at the target or location the spell hits. An Augment can be used to modify the way an Effect or Form behaves. Augments may be placed after an Effect or Form. An Augment will only apply to the glyph to the left of it. Multiple augments may also be applied on the same Effect or Form by chaining Augments together.");
-        add("ars_nouveau.page3.spell_casting", "If you would like to set a spell to a different tab, select the tab from the right side and repeat the above process. Several keybindings are provided for using the spellbook, check settings for more information.");
-        add("ars_nouveau.page.spell_mana", "Spell Mana");
-        add("ars_nouveau.page1.spell_mana", "Mana is used to cast spells with a Spell Book. Your max mana and regeneration, may be increased by wearing special Mage Armor or by applying the Mana Boost or Mana Regen enchantments on your gear. Additionally, you will gain bonus mana and regeneration for each glyph unlocked in your spell book.");
-        add("ars_nouveau.page2.spell_mana", "Adding glyphs to your spell book will also increase your maximum amount of mana and mana regeneration. This bonus also scales with the tier of your spell book.");
-        add("ars_nouveau.page.starting_automation", "Starting Automation");
-        add("ars_nouveau.page1.starting_automation", "Spells may be used in Automation using Spell Turrets. Use these to create auto harvesters, tree farms, quarries, cake farms, glass factories, and more! For item transport, autocrafting, or resource generation, see the variety of magical entities that may be summoned using Charms.");
-        add("ars_nouveau.page.trinkets", "Trinkets");
-        add("ars_nouveau.page1.trinkets", "Items and curios can expand your casting and can provide unique buffs. For more casting, you may want to craft a Ring of Discount or an Amulet of Mana Regen. For travel, see the Belt of Levitation, or improve your mining efficiency with the Jar of Voiding.");
-        add("ars_nouveau.page.upgrades", "Upgrades");
-        add("ars_nouveau.page1.upgrades", "Tier 2 and 3 glyphs will require an Apprentice and Archmage spell book respectively. Higher tier books will allow you to cast higher tier spells, use them in automation, and provide additional mana and mana regeneration as a bonus. Once you are able to upgrade your book, upgrading your armor to the next tier of robes will also grant you another boost in casting.");
-        add("ars_nouveau.page.world_generation", "World Generation");
-        add("ars_nouveau.page1.world_generation", "Archwood trees come in several decorative variants and is needed to craft several important blocks. Archwood fruits may also spawn on these trees, used for potions. Source Berries, found in Taigas, are essential for crafting Mana Regeneration potions or powering a Mycelial Sourcelink. Various mobs will also spawn, but can be revealed by using a Dowsing Rod or Sense Magic with a Tier 2 spell book.");
+
         add("ars_nouveau.page.archwood", "Archwood Trees");
         add("ars_nouveau.page1.archwood", "Archwood Trees have a small chance to spawn in any biome, and come in four types. Rarely, you may stumble upon an Archwood Forest, a biome full of magical creatures, naturally spawning lights, and Archwood trees. Can be used as decoration, rituals, or for crafting wands. Archwood Trees also have a chance to spawn magical fruits that can be consumed or brewed into potions.");
+
+        add("ars_nouveau.page.spell_casting", "1 - Spells");
+        add("ars_nouveau.page1.spell_casting", "Ars Nouveau grants aspiring wizards the ability to craft powerful spells. Through creative spellcrafting, you can vanquish foes, reshape the world, automate tasks, create spectacles, and so much more!\n\nTo begin spellcasting, you will need to craft a Novice’s Spell Book which will allow you to create, store, and cast spells using Mana.");
+        add("ars_nouveau.page2.spell_casting", "Upgrading your Spell Book, learning new Glyphs, and crafting magical equipment will further enhance your ability to cast new and more powerful spells.");
+
+        add("ars_nouveau.page.introduction_to_glyphs", "2 - Glyphs");
+        add("ars_nouveau.page1.introduction_to_glyphs", "Glyphs are the building blocks that make up spells. A spell’s outcome is determined by which Glyphs are used and in what order they appear. They fall under three major categories: Forms, Effects, and Augments.\n\nForm Glyphs are the vessels that deliver the contents of a spell to the target. Every spell must begin with a Form, and only one Form may be present.");
+        add("ars_nouveau.page2.introduction_to_glyphs", "Effect Glyphs determine what a spell will do once it reaches its target. Spells can contain multiple Effects and will resolve in the order they are placed during spellcrafting.\n\nAugment Glyphs change the properties of the Form or Effect Glyph to their left as long as they are compatible. Multiple Augments may be chained together to modify the same Glyph. Augments have no effect on other Augments.");
+        add("ars_nouveau.page3.introduction_to_glyphs", "Glyphs fall into tiers of I, II, or III. The Novice’s Spell Book can only cast tier I Glyphs, but higher tiers will be available each time you upgrade your Spell Book.");
+
+        add("ars_nouveau.page.introduction_to_spellcrafting", "3 - Spellcrafting");
+        add("ars_nouveau.page1.introduction_to_spellcrafting", "Spellcrafting is accessed by pressing [C] while your Spell Book is selected on the inventory bar. Clicking Glyphs from the list will add them to the bottom of the page to represent they are part of the spell. Clicking Glyphs inside your spell will remove them.\n\nOnce satisfied, you may name the spell and click “Create” to save it. Spell Books may hold up to ten spells at once as");
+        add("ars_nouveau.page2.introduction_to_spellcrafting", "shown by the bookmarks on the right side of the book. Clicking one will swap the spell you are working on.");
+
+        add("ars_nouveau.page.spellcasting", "4 - Spellcasting");
+        add("ars_nouveau.page1.spellcasting", "To use a spell, select your Spell Book on the inventory bar and right-click to cast it.\n\nYour active spell is shown above your Mana bar. Press [X] to swap to your next spell and [Z] to swap your previous spell. Press [V] to open a radial menu that allows you to quickly swap between spells on your book. Each spell may also be hotkeyed individually via the Key Bind menu.");
+        add("ars_nouveau.page2.spellcasting", "If the spell fails to cast, check to make sure that:\n\nYou have enough Mana to cast the spell.\n\nThe spell begins with a Form Glyph and has at least one Effect Glyph.");
+
+        add("ars_nouveau.page.spell_mana", "5 - Mana");
+        add("ars_nouveau.page1.spell_mana", "Casting a spell consumes your Mana based on the total cost of all the Glyphs that make up the spell. Your current Mana stores can be seen on the bar in the bottom left corner of your screen.\n\nExpended Mana will regenerate over time. Mana may also be consumed or reserved by other things such as magical items or familiars.");
+        add("ars_nouveau.page2.spell_mana", "Each new Glyph you learn will give a small permanent boost to your Mana’s regeneration and maximum capacity. These boosts can also be gained by upgrading your spell book, equipping some pieces of magical gear, or drinking a Mana potion.");
+
+        add("ars_nouveau.page.learning_glyphs", "6 - Learning Glyphs");
+        add("ars_nouveau.page1.learning_glyphs", "New Glyphs may be created through the Scribe’s Table from certain items and paying EXP. Once crafted, the Glyph can be consumed to learn it, making it available during spellcrafting.\n\nPlayers can share their current Glyph knowledge with each other by crafting an Annotated Codex.");
+
+        add("ars_nouveau.page.important_resources", "7 - Important Resources");
+        add("ars_nouveau.page1.important_resources", "It's recommended to keep stock of certain resources as they will be used in many crafting recipes.\n\nWhile exploring, look for Iron Ore, Gold Ore, Amethyst Shards (or Lapis Lazuli), Diamond, Sourceberries, and Archwood Logs.\n\nDowsing Rods can help with locating Budding Amethyst Blocks and magical creatures.");
+
+        add("ars_nouveau.page.source", "8 - Source");
+        add("ars_nouveau.page1.source", "Source is a magical resource used for many purposes such as speeding up the Imbuement Chamber, fueling devices, powering magical helpers, creating portals, or fueling powerful Enchanting Apparatus recipes.\n\nSourcelinks are specialized artifacts that can collect and concentrate Source from the world into Source Jars. Source Relays can be used to transfer");
+        add("ars_nouveau.page2.source", "Source over large distances between jars.\n\nThe Agronomic and Mycelial Sourcelinks are good early options for building up your Source supply.");
+
+        add("ars_nouveau.page.magical_crafting", "9 - Magical Crafting");
+        add("ars_nouveau.page1.magical_crafting", "The Imbuement Chamber allows the conversion of Amethyst Shards or Lapis Lazuli into Source Gems. By placing three Arcane Pedestals bearing certain items adjacent to the chamber, Source Gems can be imbued further into Essences which are used in many Glyph recipes.\n\nPlacing an Enchanting Apparatus on top of an Arcane Core allows the crafting of");
+        add("ars_nouveau.page2.magical_crafting", "essentials such as Magebloom Seeds, magical equipment, and charms to summon magical helpers. It can also directly enchant your gear with enchantments of your choice.\n\nThe Alteration Table allows for slotting in various Threads into magical armor that grant special properties while worn.");
+
+        add("ars_nouveau.page.magical_automation", "10 - Magical Automation");
+        add("ars_nouveau.page1.magical_automation", "Ars Nouveau supports a wide variety of automation methods via Spell Turrets, magical helpers, and Rituals.\n\nUsing one or a combination of these options can achieve almost anything you want such as farming crops and trees, quarrying the earth, crafting and transporting items, smelting, and brewing potions.");
+
         add("ars_nouveau.page1.decorative", "Purely decorative blocks. To see the full list, place Arcane Stone in a Stonecutter.");
         add("ars_nouveau.wilden", "Wilden");
         add("ars_nouveau.page.decorative", "Decorative Blocks");
@@ -659,7 +692,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.whirlisprig_flower", "Whirlisprig Blossom");
         add("ars_nouveau.page.relay", "Enables the transport of source between Source Jars and other Source Relays. To pull source from jars, use the Dominion Wand on the jar, and then on the relay. To send between relays or from a relay to a jar, use the wand on the relay and then the target you wish to send source to. Relays may only reach up to 30 blocks away. To clear connections, sneak while using the Dominion Wand on the relay.");
         add("ars_nouveau.page.relay_splitter", "Operates similar to the Source Relay, but will support taking from and transferring to multiple jars at once. The splitter has a much larger through-put than the Source Relay, and will split this throughput amongst all of its jars. See the instructions on the Source Relay for use.");
-        add("ars_nouveau.page1.enchanting_apparatus", "The Enchanting Apparatus utilizes pedestals and Source for crafting. To use the Enchanting Apparatus, place any number of Arcane Pedestals within 3 blocks with their items. Once you have filled the pedestals, use the middle item on the Enchanting Apparatus block. The Enchanting Apparatus requires an Arcane Core next to the its base in order to work.");
+        add("ars_nouveau.page1.enchanting_apparatus", "The Enchanting Apparatus utilizes pedestals and Source for crafting. To use the Enchanting Apparatus, place any number of Arcane Pedestals within 3 blocks with their items. Once you have filled the pedestals, use the middle item on the Enchanting Apparatus block. The Enchanting Apparatus requires an Arcane Core next to its base in order to work.");
         add("ars_nouveau.page1.imbuement_chamber", "Imbues items with Source to create new items. The primary way to obtain Source Gems, amethyst and lapis may be used to create Source Gems. The Imbuement Chamber will passively accumulate source for recipes, or will draw from Source Jars 2 block away. Some recipes require additional items placed in pedestals within 1 block of the Imbuement Chamber, such as Essences. Items in pedestals will not be consumed.");
         add("ars_nouveau.page.potion_melder", "Converts three doses of a potion from two Potion Jars and outputs a potion with the combined effects. Use the Dominion Wand from a Potion Jar to Melder to link a jar for consumption. Link two input potion jars to the melder. Then, use the wand on the Melder and then to a third jar to set the output. The Potion Melder requires source per mix.");
         add("ars_nouveau.page.warp_portal", "Warp Portals");
@@ -1192,6 +1225,8 @@ public class LangDatagen extends LanguageProvider {
         add("entity.minecraft.villager.shady_wizard", "Shady Wizard");
         add("death.attack.an_enchantedBlock", "%1$s was crushed by %2$s magic blocks");
         add("death.attack.freeze.item", "%1$s was frozen to death by %2$s using %3$");
+        add("death.attack.sourceberry_bush", "%1$s was poked to death by a sourceberry bush");
+        add("death.attack.sourceberry_bush.player", "%1$s was poked to death by a sourceberry bush while trying to escape %2$s");
         add("block.ars_nouveau.magelight_torch", "Magelight Torch");
         add("block.ars_nouveau.arcane_platform", "Arcane Platform");
         add("ars_nouveau.arcane_platform.tooltip", "Can be placed in any direction and can be used in place of a pedestal.");
@@ -1257,9 +1292,11 @@ public class LangDatagen extends LanguageProvider {
         add("key.ars_nouveau.familiar_toggle", "Summon/Dispel Familiar");
         add("ars_nouveau.spell_book_gui.dispel", "Dispel");
         add("tooltip.ars_nouveau.master_tab", "All Items");
-        add("ars_nouveau.page1.repository", "A repository can store a double chests worth of items. When named, it will display the name as a tooltip, and preserve it when dropped as an item. Useful for creating named inventory tabs with the Storage Lectern.");
+        add("ars_nouveau.page1.repository", "A repository can store a double chests worth of items. When named, it will display the name as a tooltip, and preserve it when dropped as an item. Useful for creating named inventory tabs with the Storage Lectern. A Repository Catalog can be used as a proxy for a chain of connected repositories, and respects filter scrolls on repositories when inserting items.");
         add("ars_nouveau.storage_tabs", "Storage Tabs");
         add("ars_nouveau.page3.storage", "Linked inventories that are named will create a tab in the Storage Lectern, allowing you to view and manipulate all inventories that share that name. Unlike normal chests, Repositories will preserve their name when dropped. The Name Effect can also name inventories placed in the world.");
+        add("ars_nouveau.storage_performance", "Performance");
+        add("ars_nouveau.page4.storage", "Repository Catalogs should be used when possible for large or frequent item automations involving the storage lectern. Repository catalogs are bound to a single location that exposes all connected repositories, and is optimized for server performance over other large slot inventories or chests.");
         add("ars_nouveau.page2.item_detector", "If a Filter Scroll is given to the Display Case, it will count all items that match the filter.");
         add("config.jade.plugin_ars_nouveau.mob_jar", "Mob Jar");
         add("mob_jar.villager", "Can be traded with in a jar, periodically resetting its trades.");
@@ -1313,14 +1350,14 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.sensor.on_resolve", "Mode: On Resolve");
         add("ars_nouveau.sensor.on_cast", "Mode: On Cast");
         add("block.ars_nouveau.spell_sensor", "Spell Sensor");
-        add("ars_nouveau.page1.spell_sensor", "Outputs a redstone signal when a spell is cast nearby. Output strength is determined by the length of the spell cast. Using a Dominion Wand will cause it to trigger when a spell resolves nearby, instead of being cast. Using a Spell Parchment will set the sensor to only output when that exact spell is detected.");
+        add("ars_nouveau.page.spell_sensor", "Outputs a redstone signal when a spell is cast nearby. Output strength is determined by the length of the spell cast. Using a Dominion Wand will cause it to trigger when a spell resolves nearby, instead of being cast. Using a Spell Parchment will set the sensor to only output when that exact spell is detected.");
         add("ars_nouveau.no_stack_crafting", "No valid craft nearby.");
         add("item.ars_nouveau.jump_ring", "Ring of Jumping");
-        add("ars_nouveau.page1.jump_ring", "Allows the user to continue jumping in the air. Each jump will expend mana.");
+        add("ars_nouveau.page.jump_ring", "Allows the user to continue jumping in the air. Each jump will expend mana.");
         add("ars_nouveau.connections.remove", "Connection removed.");
         add("ars_nouveau.powered_from", "Receiving signal from %d relays");
         add("block.ars_nouveau.redstone_relay", "Redstone Relay");
-        add("ars_nouveau.page1.redstone_relay", "Can be connected to other Redstone Relays to wirelessly send a redstone signal. Takes input from one side and outputs in all other directions. Can be connected within 30 blocks of another relay, and multiple relays can be connected.");
+        add("ars_nouveau.page.redstone_relay", "Can be connected to other Redstone Relays to wirelessly send a redstone signal. Takes input from one side and outputs in all other directions. Can be connected within 30 blocks of another relay, and multiple relays can be connected.");
         add("block.ars_nouveau.magic_fire", "Mage Fire");
         add("effect.ars_nouveau.immolate", "Immolate");
         add("effect.ars_nouveau.immolate.desc", "Enhances fire spells.");
@@ -1342,7 +1379,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.archwood_grate", "Archwood Grate");
         add("block.ars_nouveau.smooth_sourcestone_grate", "Smooth Sourcestone Grate");
         add("block.ars_nouveau.source_lamp", "Source Gem Lamp");
-        add("ars_nouveau.page1.source_lamp", "Behaves like a copper bulb, but the light and comparator values can be adjusted by casting Light with dampen.");
+        add("ars_nouveau.page.source_lamp", "Behaves like a copper bulb, but the light and comparator values can be adjusted by casting Light with dampen.");
         add("ars_nouveau.patchouli.missing", "Patchouli missing: opening online wiki");
         add("ars_nouveau.dependency.install", "Open mod page");
         add("tooltip.starbuncle_shard2", "Made with love.");
@@ -1419,6 +1456,16 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.banner.abjuration", "Abjuration School");
         add("block.ars_nouveau.banner.conjuration", "Conjuration School");
         add("ars_nouveau.lectern_blacklist", "This block has been disabled from being connected to the Storage Lectern.");
+        add("key.ars_nouveau.open_documentation", "Open Documentation");
+
+        add("block.ars_nouveau.repository_controller", "Repository Catalog");
+        add("ars_nouveau.page1.repository_controller", "Catalogs can insert and extract items from any adjacent and connected repository. Catalogs respect filters placed on repositories via item frames while inserting items, and will prioritize existing stacks of an item. Filter scrolls can be used on the Catalog, storing the filter and applying it to all connected repositories when interacted with directly.");
+        add("ars_nouveau.page2.repository_controller", "Catalogs are highly performant when used with the Storage Lectern and should be used over other big inventories or systems with many slots. Filters are not applied when items are extracted from other systems like a Hopper, and insertions via hopper will not respect the catalogs own filter, but will respect inserting into a filtered repository.");
+        add("item.ars_nouveau.enchanters_fishing_rod", "Enchanter's Fishing Rod");
+        add("item.ars_nouveau.enchanters_gauntlet", "Enchanter's Gauntlet");
+        add("ars_nouveau.fishing_rod.invalid", "Invalid Spell. Enchanter's Fishing Rod accept Effects and Augments only.");
+        add("ars_nouveau.page1.enchanters_gauntlet", "Gauntlets are a spell casting multi-tool that can break blocks at diamond hardness. Gauntlets accept a single spell and are inscribed using the Scribes Table. Gauntlets always start with Touch and MUST be inscribed with a spell that does not contain a form. Spells cast with the gauntlet are cast with a discount.");
+        add("ars_nouveau.page1.enchanters_fishing_rod", "Fishing Rods accept a single spell and are inscribed using the Scribes Table. Rods always start with Touch and MUST be inscribed with a spell that does not contain a form. Fishing Rods can be used like a normal fishing rod, but hooking an entity will allow the user to cast the spell on the hooked entity until the line is broken.");
     }
 
     public void addCategory(String key, String value) {

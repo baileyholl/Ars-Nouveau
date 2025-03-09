@@ -7,7 +7,7 @@
   "pages": [
     {
       "title": "Source Gem Lamp",
-      "description": "ars_nouveau.page.source_lamp",
+      "description": "Behaves like a copper bulb, but the light and comparator values can be adjusted by casting Light with dampen.",
       "icon": "ars_nouveau:source_lamp"
     },
     {

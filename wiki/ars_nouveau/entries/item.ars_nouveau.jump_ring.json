@@ -7,7 +7,7 @@
   "pages": [
     {
       "title": "Ring of Jumping",
-      "description": "ars_nouveau.page.jump_ring",
+      "description": "Allows the user to continue jumping in the air. Each jump will expend mana.",
       "icon": "ars_nouveau:jump_ring"
     },
     {

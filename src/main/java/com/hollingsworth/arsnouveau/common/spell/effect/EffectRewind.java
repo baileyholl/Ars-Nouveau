@@ -65,10 +65,10 @@ public class EffectRewind extends AbstractEffect {
     public int getRewindTicks(SpellStats spellStats){
         double multiplier = spellStats.getDurationMultiplier();
         int ticksToRewind = BASE_REWIND_TIME.get();
-        if(multiplier < 0){
+        if(multiplier > 0){
             ticksToRewind = (int) (ticksToRewind + EXTEND_TIME.get() * multiplier);
-        }else if(multiplier > 0){
-            ticksToRewind = (int) (ticksToRewind - DURATION_DOWN_TIME.get() * multiplier);
+        }else if(multiplier < 0){
+            ticksToRewind = (int) (ticksToRewind - DURATION_DOWN_TIME.get() * Math.abs(multiplier));
         }
         return ticksToRewind;
     }

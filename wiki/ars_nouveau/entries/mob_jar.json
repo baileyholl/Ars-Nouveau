@@ -43,6 +43,14 @@
       "entity_type": "minecraft:chicken"
     },
     {
+      "description": "Will occasionally shed scutes.",
+      "entity_type": "minecraft:armadillo"
+    },
+    {
+      "description": "Will occasionally dig up ancient seeds.",
+      "entity_type": "minecraft:sniffer"
+    },
+    {
       "description": "Can be milked.",
       "entity_type": "minecraft:cow"
     },
@@ -61,6 +69,18 @@
     {
       "description": "Baby pandas will occasionally sneeze, creating Slimeballs. Sick Pandas will sneeze more often.",
       "entity_type": "minecraft:panda"
+    },
+    {
+      "description": "Will give gifts if its owner sleeps nearby. Produces a redstone signal if the owner is online.",
+      "entity_type": "minecraft:cat"
+    },
+    {
+      "description": "Shoots a wind charge when powered with redstone.",
+      "entity_type": "minecraft:breeze"
+    },
+    {
+      "description": "Shoots a snowball when powered with redstone.",
+      "entity_type": "minecraft:snow_golem"
     },
     {
       "description": "A player dummy in a jar will attract nearby mobs.",

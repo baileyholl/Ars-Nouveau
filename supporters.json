@@ -36,7 +36,10 @@
   "758ca96e-100a-4611-a849-5d76229b6c83", "1cf6b68a-a396-4ac1-8146-21fc314f6455", "f476db17-6995-44ab-b002-0a326959f01a",
   "4a405d17-9e7b-4007-b4e3-a1adcd41c489", "f64bd7f1-ae18-4e9e-834e-eb0caf7f37d4", "ee6d035a-600d-40a3-b444-b987766121ee",
   "26170985-ac0e-4e3c-b171-141e2193ce32", "d153d78a-99bd-48c1-8c00-ea6ae02c0395", "860802dc-6314-46a6-b991-4ba8e7d061dc",
-  "5f6a9e19-7021-4fd3-9873-6beee620f5fa", "9431623c-476c-4417-a51a-d4993a04e5b2", "465e651c-9928-4c32-aa41-7fc09f102f01"],
+  "5f6a9e19-7021-4fd3-9873-6beee620f5fa", "9431623c-476c-4417-a51a-d4993a04e5b2", "465e651c-9928-4c32-aa41-7fc09f102f01",
+  "066f67d4-51dc-4767-b48f-d03dd7359f4a", "5a6e40e5-10f3-4c40-a2ba-f2a1c638ded9", "6d60f894-2a95-4dfd-8afb-64980e0a6d17",
+  "9529428c-25ea-443e-b56f-f24a18ebb5f1", "7cfc08a6-65c3-49fa-ae4d-8ebf80484dd8", "60aca7d2-9026-495e-bdfe-de5bf0ccfe12",
+  "7e0a1802-2a6a-403d-a487-d3a60cb2d037", "4295cb3b-245c-481d-ad3c-60b179b8cc27"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -590,6 +593,47 @@
       "color": "black",
       "name": "Void",
       "bio": "Void, the loyal familiar of Yuuki, was altered by their prolonged time in the Beyond. The dimension’s strange magic granted Void the ability to open wormholes, allowing him to collect and store items from across vast distances, forever tied to the mysteries of the void."
+    },{
+      "adopter": "Riftderp",
+      "color": "red",
+      "name": "Strawbee",
+      "bio": "This little starbuncle searches for strawberries. So far, she has not been successful."
+    },{
+      "adopter": "Andrey",
+      "color": "pink",
+      "bio": "oiiaiioiiiaii",
+      "name": "Nikkkkkkk"
+    },{
+      "adopter": "CocoaEyebrows",
+      "color": "purple",
+      "name": "Violet",
+      "bio": "This Starbuncle figured out how to ferment sourceberries into a strange beverage. If it moves erratically, that's the reason."
+    },{
+      "adopter": "ConeOfTraffic",
+      "name": "Connor",
+      "color": "orange",
+      "bio": "Connor got in trouble for blowing up a tree house once, I wouldn't let him near any respawn anchors if I were you. He also has a strange liking to cone shaped objects, couldn't tell you why though"
+    },
+    {
+      "adopter": "Beepsterr",
+      "color": "brown",
+      "name": "Pansy",
+      "bio": "A lost looking critter that loves cinnamon."
+    },{
+      "adopter": "Rayne Drogoth",
+      "color": "red",
+      "name": "Gerald Viripotens",
+      "bio": "A big pyromaniac in a little package. Gerald's only goal in life is to someday cast fireball."
+    },{
+      "adopter": "Emmulah",
+      "color": "yellow",
+      "bio": "Camembert, once a simple pet ferret, attained eternal life when his owner sealed his soul safely in this Starbuncle. He still likes butt scratches and cheese.",
+      "name": "Camembert"
+    },{
+      "adopter": "Imperial Mage",
+      "bio": "He stared into the Abyss and the Abyss gave scritches back",
+      "color": "black",
+      "name": "Sir Wiggles the Dour"
     }
   ]
 }

@@ -24,6 +24,7 @@
     "EntityMixin",
     "LivingAccessor",
     "MobAccessor",
+    "PlayerListMixin",
     "PufferfishAccessor",
     "TreeGrowerMixin",
     "camera.ANServerPlayerMixin",

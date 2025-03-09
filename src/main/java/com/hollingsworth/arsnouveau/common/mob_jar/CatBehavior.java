@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.mob_jar;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.event.PlayerPostLogOutEvent;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
 import com.hollingsworth.arsnouveau.api.util.LevelPosMap;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
@@ -17,11 +18,15 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 
 @EventBusSubscriber(modid = ArsNouveau.MODID)
 public class CatBehavior extends JarBehavior<Cat> {
@@ -32,12 +37,13 @@ public class CatBehavior extends JarBehavior<Cat> {
     @Override
     public void tick(MobJarTile tile) {
         Level level = tile.getLevel();
-        if (level == null) {
+        if (level == null || level.isClientSide) {
             return;
         }
 
+        var pos = tile.getBlockPos();
         if (level.getGameTime() % 20 == 0) {
-            CAT_MAP.addPosition(level, tile.getBlockPos());
+            CAT_MAP.addPosition(level, pos);
         }
     }
 
@@ -46,11 +52,50 @@ public class CatBehavior extends JarBehavior<Cat> {
         var level = tile.getLevel();
 
         if (!(level instanceof ServerLevel)) {
-            return super.getAnalogPower(tile);
+            return super.getSignalPower(tile);
         }
 
         Cat cat = this.entityFromJar(tile);
         return cat.getOwner() == null ? 0 : 15;
+    }
+
+    private static void updateOwnedJars(@NotNull Player player) {
+        var level = player.level;
+
+        var map = CAT_MAP.posMap.get(level.dimension().location().toString());
+        if (map == null) {
+            return;
+        }
+
+        List<BlockPos> stale = new ArrayList<>();
+        for (var pos : map) {
+            if (!level.isLoaded(pos)) {
+                continue;
+            }
+
+            if (CAT_MAP.removeFunction.apply(level, pos)) {
+                stale.add(pos);
+                continue;
+            }
+
+            if (level.getBlockEntity(pos) instanceof MobJarTile jar && jar.getEntity() instanceof Cat cat && player.getUUID().equals(cat.getOwnerUUID())) {
+                level.updateNeighborsAt(pos, jar.getBlockState().getBlock());
+            }
+        }
+
+        for (var pos : stale) {
+            map.remove(pos);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerJoined(PlayerEvent.PlayerLoggedInEvent event) {
+        updateOwnedJars(event.getEntity());
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLeft(PlayerPostLogOutEvent event) {
+        updateOwnedJars(event.getEntity());
     }
 
     @SubscribeEvent

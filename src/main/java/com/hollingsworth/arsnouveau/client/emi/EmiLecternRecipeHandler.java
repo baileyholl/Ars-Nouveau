@@ -2,17 +2,13 @@ package com.hollingsworth.arsnouveau.client.emi;
 
 import com.hollingsworth.arsnouveau.client.container.CraftingTerminalMenu;
 import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
-import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
+import com.hollingsworth.arsnouveau.common.network.ClientTransferHandlerPacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
 import dev.emi.emi.api.recipe.handler.EmiCraftContext;
 import dev.emi.emi.api.recipe.handler.StandardRecipeHandler;
 import dev.emi.emi.api.stack.EmiIngredient;
-import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -34,6 +30,19 @@ public class EmiLecternRecipeHandler<T extends CraftingTerminalMenu> implements 
             container.setItem(idx, storedItem.getActualStack());
             fakeSlots.add(new Slot(container, idx, idx, 0));
             idx++;
+        }
+
+        int numCraftingSlots = 0;
+        for (var slot : handler.slots) {
+            if (slot instanceof CraftingTerminalMenu.SlotCrafting) {
+                container.setItem(idx, slot.getItem());
+                fakeSlots.add(new Slot(container, idx, idx, 0));
+                idx++;
+                numCraftingSlots++;
+                if (numCraftingSlots >= 9) {
+                    break;
+                }
+            }
         }
 
         for (Slot slot : playerInventory) {
@@ -87,7 +96,7 @@ public class EmiLecternRecipeHandler<T extends CraftingTerminalMenu> implements 
         List<EmiIngredient> missing = new ArrayList<>();
         var requiredItems = recipe.getInputs();
         var sources = this.getInputSources(handler);
-        List<ItemStack[]> inputs = new ArrayList<>();
+        List<List<ItemStack>> inputs = new ArrayList<>();
 
         for (var required : requiredItems) {
             List<ItemStack> possibleStacks = new ArrayList<>();
@@ -96,11 +105,11 @@ public class EmiLecternRecipeHandler<T extends CraftingTerminalMenu> implements 
             }
 
             if (possibleStacks.isEmpty()) {
-                inputs.add(null);
+                inputs.add(List.of());
                 continue;
             }
 
-            inputs.add(possibleStacks.toArray(ItemStack[]::new));
+            inputs.add(possibleStacks);
 
             boolean found = false;
             for (ItemStack stack : possibleStacks) {
@@ -115,30 +124,7 @@ public class EmiLecternRecipeHandler<T extends CraftingTerminalMenu> implements 
             }
 
         }
-
-        ItemStack[][] stacks = inputs.toArray(new ItemStack[][]{});
-        CompoundTag compound = new CompoundTag();
-        ListTag list = new ListTag();
-        for (int i = 0; i < stacks.length; ++i) {
-            if (stacks[i] != null) {
-                CompoundTag CompoundNBT = new CompoundTag();
-                CompoundNBT.putByte("s", (byte) i);
-                int k = 0;
-                for (int j = 0; j < stacks[i].length && k < 9; j++) {
-                    var stack = stacks[i][j];
-                    if (stack != null && !stack.isEmpty()) {
-                        if (sources.stream().anyMatch(slot -> ItemStack.isSameItemSameComponents(slot.getItem(), stack))) {
-                            Tag tag = stack.save(Minecraft.getInstance().level.registryAccess());
-                            CompoundNBT.put("i" + (k++), tag);
-                        }
-                    }
-                }
-                CompoundNBT.putByte("l", (byte) Math.min(9, k));
-                list.add(CompoundNBT);
-            }
-        }
-        compound.put("i", list);
-        Networking.sendToServer(new ClientToServerStoragePacket(compound));
+        Networking.sendToServer(new ClientTransferHandlerPacket(inputs));
 
         return missing.isEmpty();
     }

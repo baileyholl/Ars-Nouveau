@@ -22,13 +22,6 @@ public class DepositItemState extends TravelToPosState {
     @Override
     public StarbyState onDestinationReached() {
         this.starbuncle.getNavigation().stop();
-        Level world = starbuncle.level;
-        BlockEntity tileEntity = world.getBlockEntity(this.targetPos);
-        if (tileEntity == null) {
-            starbuncle.addGoalDebug(this, new DebugEvent("missing_tile", "store pos broken " + targetPos.toString()));
-            starbuncle.setBackOff(5 + starbuncle.level.random.nextInt(20));
-            return nextState;
-        }
 
         IItemHandler iItemHandler = behavior.getItemCapFromTile(targetPos, behavior.TO_DIRECTION_MAP.get(targetPos.hashCode()));
         if (iItemHandler == null) {

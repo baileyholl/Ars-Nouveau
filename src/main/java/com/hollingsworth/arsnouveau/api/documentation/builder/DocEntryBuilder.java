@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.documentation.builder;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.DocCategory;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
 import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.arsnouveau.api.documentation.entry.TextEntry;
@@ -9,6 +10,7 @@ import com.hollingsworth.arsnouveau.api.documentation.search.ConnectedSearch;
 import com.hollingsworth.arsnouveau.api.documentation.search.Search;
 import com.hollingsworth.arsnouveau.setup.registry.Documentation;
 import com.hollingsworth.arsnouveau.setup.registry.RegistryHelper;
+import com.hollingsworth.nuggets.client.gui.NuggetMultilLineLabel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -111,12 +113,23 @@ public class DocEntryBuilder {
 
     public DocEntryBuilder withIntroPage(String id) {
         textCounter++;
-        pages.add(TextEntry.create(Component.translatable(namespace + ".page" + textCounter + "." + id), Component.translatable(titleKey), displayItem));
+        List<NuggetMultilLineLabel> labels = DocClientUtils.splitToFitTitlePage(Component.translatable(namespace + ".page" + textCounter + "." + id));
+        for(int i = 0; i < labels.size(); i++){
+            NuggetMultilLineLabel label = labels.get(i);
+            if(i == 0) {
+                pages.add(TextEntry.create(label, Component.translatable(titleKey), displayItem));
+            }else{
+                pages.add(TextEntry.create(label));
+            }
+        }
         return this;
     }
 
     public DocEntryBuilder withTextPage(String contents) {
-        pages.add(TextEntry.create(Component.translatable(contents)));
+        List<NuggetMultilLineLabel> multiLines = DocClientUtils.splitToFitFullPage(Component.translatable(contents));
+        for (NuggetMultilLineLabel label : multiLines) {
+            pages.add(TextEntry.create(label));
+        }
         return this;
     }
 
@@ -132,7 +145,16 @@ public class DocEntryBuilder {
 
     public DocEntryBuilder withLocalizedText(ItemLike itemLike){
         textCounter++;
-        pages.add(TextEntry.create(Component.translatable(namespace + ".page" + textCounter + "." + this.textKey), itemLike.asItem().getDescription(), itemLike.asItem().getDefaultInstance()));
+        List<NuggetMultilLineLabel> multiLines = DocClientUtils.splitToFitTitlePage(Component.translatable(namespace + ".page" + textCounter + "." + this.textKey));
+
+        for (int i = 0; i < multiLines.size(); i++) {
+            NuggetMultilLineLabel label = multiLines.get(i);
+            if(i == 0) {
+                pages.add(TextEntry.create(label, itemLike.asItem().getDescription(), itemLike.asItem().getDefaultInstance()));
+            }else{
+                pages.add(TextEntry.create(label));
+            }
+        }
         return this;
     }
 

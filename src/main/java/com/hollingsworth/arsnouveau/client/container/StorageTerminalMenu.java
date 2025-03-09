@@ -5,13 +5,9 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.ServerToClientStoragePacket;
 import com.hollingsworth.arsnouveau.common.network.SetTerminalSettingsPacket;
 import com.hollingsworth.arsnouveau.common.network.UpdateStorageItemsPacket;
-import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -25,6 +21,7 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingRecipe> {
@@ -127,19 +124,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 
 		if(!sentSettings) {
 			Networking.sendToPlayerClient(new SetTerminalSettingsPacket(te.sortSettings, null), (ServerPlayer) pinv.player);
-			CompoundTag tag = new CompoundTag();
-			if(!te.getLastSearch(pinv.player).equals(search)) {
-				search = te.getLastSearch(pinv.player);
-				tag.putString("search", search);
-			}
-			ListTag tabs = new ListTag();
-			for(String s : te.getTabNames()){
-				CompoundTag nameTag = new CompoundTag();
-				nameTag.putString("name", s);
-				tabs.add(nameTag);
-			}
-			tag.put("tabs", tabs);
-			Networking.sendToPlayerClient(new ServerToClientStoragePacket(tag), (ServerPlayer) pinv.player);
+			Networking.sendToPlayerClient(new ServerToClientStoragePacket(te.getLastSearch(pinv.player), te.getTabNames()), (ServerPlayer) pinv.player);
 			sentSettings = true;
 		}
 
@@ -162,13 +147,15 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 					broadcastChanges();
 			}
 		} else {
-			return shiftClickItems(playerIn, index);
+			if(playerIn instanceof ServerPlayer serverPlayer) {
+				return shiftClickItems(serverPlayer, index);
+			}
 		}
 
 		return ItemStack.EMPTY;
 	}
 
-	protected ItemStack shiftClickItems(Player playerIn, int index) {
+	protected ItemStack shiftClickItems(ServerPlayer playerIn, int index) {
 		return ItemStack.EMPTY;
 	}
 
@@ -221,37 +208,19 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 		pinv.setChanged();
 	}
 
-	public final void receiveClientNBTPacket(CompoundTag message) {
-		if(message.contains("search"))
-			search = message.getString("search");
+	public final void receiveServerSearchString(String searchString) {
+		if(!searchString.isEmpty())
+			search = searchString;
 	}
 
 
-	public void receive(ServerPlayer sender, HolderLookup.Provider reg, CompoundTag message) {
-		if(sender.isSpectator())return;
-		if(message.contains("search")) {
-			te.setLastSearch(sender, message.getString("search"));
-		}
-		this.receiveInteract(sender, reg, message);
+	public void receiveClientSearch(ServerPlayer sender, String search) {
+		te.setLastSearch(sender, search);
 	}
 
 	public void receiveSettings(ServerPlayer sender, SortSettings settings, String selectedTab) {
 		this.tabs.put(sender.getUUID(), selectedTab);
 		te.setSorting(settings);
-	}
-
-	public void receiveInteract(ServerPlayer sender, HolderLookup.Provider provider, CompoundTag tag) {
-		if(!tag.contains("interaction"))
-			return;
-
-		CompoundTag interactTag = tag.getCompound("interaction");
-		boolean pullOne = interactTag.getBoolean("pullOne");
-		StoredItemStack stack = null;
-		if(interactTag.contains("stack")){
-			stack = ANCodecs.decode(provider, StoredItemStack.CODEC, interactTag.get("stack"));
-		}
-		StorageTerminalMenu.SlotAction action = StorageTerminalMenu.SlotAction.values()[interactTag.getInt("action")];
-		onInteract(sender, stack, action, pullOne);
 	}
 
 	@Override
@@ -264,7 +233,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 		return false;
 	}
 
-	public void onInteract(ServerPlayer player, StoredItemStack clicked, SlotAction act, boolean pullOne) {
+	public void onInteract(ServerPlayer player, @Nullable StoredItemStack clicked, SlotAction act, boolean pullOne) {
 		player.resetLastActionTime();
 		if(act == SlotAction.SPACE_CLICK) {
 			for (int i = playerSlotsStart + 1;i < playerSlotsStart + 28;i++) {

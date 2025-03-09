@@ -297,7 +297,7 @@ public class GuiSpellBook extends BaseBook {
                 adjustedRowsPlaced = 0;
             }
             int xOffset = 20 * ((adjustedXPlaced) % PER_ROW) + (nextPage ? 134 : 0);
-            int yPlace = adjustedRowsPlaced * 18 + yStart;
+            int yPlace = adjustedRowsPlaced * 18 + yStart + (nextPage && !foundForms ? 18 : 0);
 
             GlyphButton cell = new GlyphButton(xStart + xOffset, yPlace, part, this::onGlyphClick);
             addRenderableWidget(cell);
@@ -569,19 +569,43 @@ public class GuiSpellBook extends BaseBook {
             }
         }
 
-        if (!super.charTyped(pCodePoint, pModifiers)) {
-            if ((!searchBar.isFocused() || !searchBar.active) && System.currentTimeMillis() - timeOpened > 30) {
-                this.clearFocus();
-                this.setFocused(searchBar);
-                searchBar.active = true;
-                this.searchBar.setValue("");
-                this.searchBar.onClear.apply("");
-                return searchBar.charTyped(pCodePoint, pModifiers);
-            }
-            return false;
+        if (super.charTyped(pCodePoint, pModifiers)) {
+            return true;
         }
 
-        return true;
+        if ((!searchBar.isFocused() || !searchBar.active) && System.currentTimeMillis() - timeOpened > 30) {
+            this.clearFocus();
+            this.setFocused(searchBar);
+            searchBar.active = true;
+            this.searchBar.setValue("");
+            this.searchBar.onClear.apply("");
+            return searchBar.charTyped(pCodePoint, pModifiers);
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (super.keyPressed(keyCode, scanCode, modifiers)) {
+            return true;
+        }
+
+        if (!(keyCode >= GLFW.GLFW_KEY_LEFT_SHIFT && keyCode <= GLFW.GLFW_KEY_MENU) && !searchBar.isFocused() || !searchBar.active) {
+            var prevFocus = this.getFocused();
+            this.clearFocus();
+            this.setFocused(searchBar);
+            searchBar.active = true;
+            if (!searchBar.keyPressed(keyCode, scanCode, modifiers)) {
+                searchBar.active = false;
+                this.clearFocus();
+                this.setFocused(prevFocus);
+                return false;
+            }
+            return true;
+        }
+
+        return false;
     }
 
     @Override

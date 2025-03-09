@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "ars_nouveau.page1.jump_ring"
+      "text": "ars_nouveau.page.jump_ring"
     },
     {
       "type": "ars_nouveau:apparatus_recipe",

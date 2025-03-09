@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_wind_burst",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_wind_burst",
+  "title": "Wind Burst",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Wind Burst",
+      "description": "Activates a wind charge at the target location, knocking entities back. Sensitive will allow the caster to ignore the knockback.",
+      "icon": "ars_nouveau:glyph_wind_burst",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_wind_burst"
+    }
+  ]
+}

@@ -9,9 +9,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 public class ApparatusEntry extends PedestalRecipeEntry{
-    RecipeHolder<EnchantingApparatusRecipe> apparatusRecipe;
+    RecipeHolder<? extends EnchantingApparatusRecipe> apparatusRecipe;
 
-    public ApparatusEntry(RecipeHolder<EnchantingApparatusRecipe> recipe, BaseDocScreen parent, int x, int y, int width, int height) {
+    public ApparatusEntry(RecipeHolder<? extends EnchantingApparatusRecipe> recipe, BaseDocScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
         this.apparatusRecipe = recipe;
         this.title = Component.translatable("block.ars_nouveau.enchanting_apparatus");
@@ -22,7 +22,7 @@ public class ApparatusEntry extends PedestalRecipeEntry{
         }
     }
 
-    public static SinglePageCtor create(RecipeHolder<EnchantingApparatusRecipe> recipe){
+    public static SinglePageCtor create(RecipeHolder<? extends EnchantingApparatusRecipe> recipe){
         return (parent, x, y, width, height) -> new ApparatusEntry(recipe, parent, x, y, width, height);
     }
 

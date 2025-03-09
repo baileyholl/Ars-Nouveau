@@ -24,6 +24,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     public static TagKey<Block> SUMMON_BED = BlockTags.create(ArsNouveau.prefix( "summon_bed"));
     public static TagKey<Block> SUMMON_SLEEPABLE = BlockTags.create(ArsNouveau.prefix( "summon_sleepable"));
     public static TagKey<Block> DECORATIVE_AN = BlockTags.create(ArsNouveau.prefix( "an_decorative"));
+    public static TagKey<Block> FALSE_OCCLUSION = BlockTags.create(ArsNouveau.prefix( "an_false_occlusion"));
     public static TagKey<Block> MAGIC_SAPLINGS = BlockTags.create(ArsNouveau.prefix( "magic_saplings"));
     public static TagKey<Block> MAGIC_PLANTS = BlockTags.create(ArsNouveau.prefix( "magic_plants"));
     public static TagKey<Block> HARVEST_FOLIAGE = BlockTags.create(ArsNouveau.prefix( "harvest/foliage"));
@@ -141,7 +142,8 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.ARCHWOOD_CHEST.get(),
                 BlockRegistry.ALTERATION_TABLE.get(),
                 BlockRegistry.ITEM_DETECTOR.get(),
-                BlockRegistry.REPOSITORY.get()
+                BlockRegistry.REPOSITORY.get(),
+                BlockRegistry.REPOSITORY_CONTROLLER.get()
         );
         this.tag(BlockTags.MINEABLE_WITH_HOE).add(
                 BlockRegistry.CASCADING_LEAVE.get(),
@@ -161,7 +163,9 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
             this.tag(BlockTags.SLABS).add(slab);
         }
 
-        this.tag(DECORATIVE_AN).add(BlockRegistry.FALSE_WEAVE.get(), BlockRegistry.MIRROR_WEAVE.get(), BlockRegistry.GHOST_WEAVE.get(), BlockRegistry.MAGEBLOOM_BLOCK.get());
+        this.tag(DECORATIVE_AN).add(BlockRegistry.FALSE_WEAVE.get(), BlockRegistry.MIRROR_WEAVE.get(), BlockRegistry.GHOST_WEAVE.get(), BlockRegistry.SKY_WEAVE.get(), BlockRegistry.MAGEBLOOM_BLOCK.get());
+        this.tag(FALSE_OCCLUSION).add(BlockRegistry.FALSE_WEAVE.get(), BlockRegistry.MIRROR_WEAVE.get(), BlockRegistry.GHOST_WEAVE.get(), BlockRegistry.SKY_WEAVE.get());
+
 
         this.tag(HARVEST_FOLIAGE).addTag(BlockTags.LEAVES).add(
                 Blocks.BROWN_MUSHROOM_BLOCK,
@@ -298,7 +302,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(GRAVITY_BLACKLIST).add(Blocks.BEDROCK, BlockRegistry.MAGE_BLOCK.get()).addTag(RELOCATION_NOT_SUPPORTED);
         this.tag(BREAK_WITH_PICKAXE).add(Blocks.AMETHYST_CLUSTER);
         this.tag(BlockTags.PORTALS).add(BlockRegistry.PORTAL_BLOCK.get());
-        this.tag(AUTOPULL_DISABLED).add(BlockRegistry.SCRIBES_BLOCK.get(), BlockRegistry.ALTERATION_TABLE.get());
+        this.tag(AUTOPULL_DISABLED).add(BlockRegistry.SCRIBES_BLOCK.get(), BlockRegistry.ALTERATION_TABLE.get(), BlockRegistry.CRAFTING_LECTERN.get());
 
         this.tag(BLAZING_LOGS).add(BlockRegistry.BLAZING_LOG.get(), BlockRegistry.BLAZING_WOOD.get(), BlockRegistry.STRIPPED_AWLOG_RED.get(), BlockRegistry.STRIPPED_AWWOOD_RED.get());
         this.tag(CASCADING_LOGS).add(BlockRegistry.CASCADING_LOG.get(), BlockRegistry.CASCADING_WOOD.get(), BlockRegistry.STRIPPED_AWLOG_BLUE.get(), BlockRegistry.STRIPPED_AWWOOD_BLUE.get());

@@ -10,10 +10,10 @@ import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StateButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StorageSettingsButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StorageTabButton;
-import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
+import com.hollingsworth.arsnouveau.common.network.ClientSearchPacket;
+import com.hollingsworth.arsnouveau.common.network.ClientSlotClick;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.SetTerminalSettingsPacket;
-import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.JsonOps;
@@ -26,8 +26,6 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -40,7 +38,6 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.hollingsworth.arsnouveau.client.container.StorageTerminalMenu.SlotAction.*;
@@ -179,6 +176,8 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		this.searchField.setBordered(false);
 		this.searchField.setVisible(true);
 		this.searchField.setValue(searchLast);
+		this.setFocused(this.searchField);
+		this.searchField.active = false;
 		searchLast = "";
 		addRenderableWidget(searchField);
 
@@ -293,9 +292,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 				if (searchType == 1) {
 					IAutoFillTerminal.sync(searchString);
 				}
-				CompoundTag nbt = new CompoundTag();
-				nbt.putString("search", searchString);
-				Networking.sendToServer(new ClientToServerStoragePacket(nbt));
+				Networking.sendToServer(new ClientSearchPacket(searchString));
 				onUpdateSearch(searchString);
 			} else {
 				this.scrollTo(this.currentScroll);
@@ -329,10 +326,6 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 	private void addStackToClientList(StoredItemStack is) {
 		this.itemsSorted.add(is);
-	}
-
-	public static TooltipFlag getTooltipFlag(){
-		return Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL;
 	}
 
 	@Override
@@ -526,15 +519,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	}
 
 	protected void storageSlotClick(StoredItemStack slotStack, StorageTerminalMenu.SlotAction act, boolean pullOne) {
-		CompoundTag interactTag = new CompoundTag();
-		interactTag.putBoolean("pullOne", pullOne);
-		interactTag.putInt("action", act.ordinal());
-		if(slotStack != null){
-			interactTag.put("stack", ANCodecs.encode(ArsNouveau.proxy.getMinecraft().level.registryAccess(), StoredItemStack.CODEC, slotStack));
-		}
-		CompoundTag dataTag = new CompoundTag();
-		dataTag.put("interaction", interactTag);
-		Networking.sendToServer(new ClientToServerStoragePacket(dataTag));
+		Networking.sendToServer(new ClientSlotClick(pullOne, Optional.ofNullable(slotStack), act));
 	}
 
 	public boolean isPullOne(int mouseButton) {
@@ -559,19 +544,48 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	}
 
 	@Override
-	public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
-		if (p_keyPressed_1_ == 256) {
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+		if (keyCode == 256) {
 			this.onClose();
 			return true;
 		}
-		return this.searchField.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) || this.searchField.canConsumeInput() || super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
+
+		if (!(keyCode >= GLFW.GLFW_KEY_LEFT_SHIFT && keyCode <= GLFW.GLFW_KEY_MENU) && !searchField.isFocused() || !searchField.active) {
+			var prevFocus = this.getFocused();
+			this.clearFocus();
+			this.setFocused(searchField);
+			searchField.active = true;
+			if (!searchField.keyPressed(keyCode, scanCode, modifiers)) {
+				searchField.active = false;
+				this.clearFocus();
+				this.setFocused(prevFocus);
+				return false;
+			}
+			return true;
+		}
+
+		return this.searchField.canConsumeInput() && this.searchField.keyPressed(keyCode, scanCode, modifiers);
 	}
 
 	@Override
-	public boolean charTyped(char p_charTyped_1_, int p_charTyped_2_) {
-		if(searchField.charTyped(p_charTyped_1_, p_charTyped_2_))return true;
-		return super.charTyped(p_charTyped_1_, p_charTyped_2_);
-	}
+	public boolean charTyped(char codePoint, int modifiers) {
+		if (super.charTyped(codePoint, modifiers)) {
+			return true;
+		}
+		
+        if (!searchField.isFocused() || !searchField.active) {
+            this.clearFocus();
+            this.setFocused(searchField);
+            searchField.active = true;
+            this.searchField.setValue("");
+            if (this.searchField.onClear != null) {
+                this.searchField.onClear.apply("");
+            }
+            return searchField.charTyped(codePoint, modifiers);
+        }
+
+        return false;
+    }
 
 	@Override
 	public boolean mouseScrolled(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_, double scrollY) {
@@ -596,21 +610,12 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 	protected void onUpdateSearch(String text) {}
 
-	public void receive(CompoundTag tag) {
-		menu.receiveClientNBTPacket(tag);
+	public void receiveServerSettings(String searchString, List<String> tabs) {
+		menu.receiveServerSearchString(searchString);
 		refreshItemList = true;
-		if(tag.contains("tabs")){
-			ListTag tabs = tag.getList("tabs", 10);
-			tabNames = new ArrayList<>();
-			Set<String> nameSet = new HashSet<>();
-			for(int i = 0; i < tabs.size(); i++){
-				nameSet.add(tabs.getCompound(i).getString("name"));
-			}
-			tabNames.addAll(new ArrayList<>(nameSet).subList(0, Math.min(nameSet.size(), 11)));
-			Collections.sort(tabNames);
-		}
-
-
+		Set<String> nameSet = new HashSet<>(tabs);
+		tabNames = new ArrayList<>(nameSet).subList(0, Math.min(nameSet.size(), 11));
+		Collections.sort(tabNames);
 		this.onPacket();
 	}
 

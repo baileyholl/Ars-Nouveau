@@ -57,7 +57,9 @@ public class Search {
                         document.add(new TextField("tags", tag.getString(), Field.Store.YES));
                     }
                     writer.addDocument(document);
-                    itemToEntryMap.put(docEntry.renderStack().getItem(), docEntry);
+                    if (!docEntry.renderStack().isEmpty()) {
+                        itemToEntryMap.put(docEntry.renderStack().getItem(), docEntry);
+                    }
                 }
                 for(int i = 0; i < connectedSearches.size(); i++){
                     ConnectedSearch connectedSearch = connectedSearches.get(i);
@@ -66,7 +68,9 @@ public class Search {
                     document.add(new StoredField("connectedIndex", i));
                     document.add(new TextField("title", connectedSearch.title().getString(), Field.Store.YES));
                     document.add(new TextField("titleGrams", connectedSearch.title().getString(), Field.Store.YES));
-                    itemToEntryMap.put(connectedSearch.icon().getItem(), DocumentationRegistry.getEntry(connectedSearch.entryId()));
+                    if (!connectedSearch.icon().isEmpty()) {
+                        itemToEntryMap.put(connectedSearch.icon().getItem(), DocumentationRegistry.getEntry(connectedSearch.entryId()));
+                    }
                     writer.addDocument(document);
                 }
                 writer.commit();

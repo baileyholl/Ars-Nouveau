@@ -118,6 +118,15 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
             return InteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(hand);
 
+        if (!isTamed() && !this.entityData.get(BEING_TAMED) && stack.is(ItemTagProvider.WILDEN_DROP_TAG)) {
+            entityData.set(BEING_TAMED, true);
+            if (!player.hasInfiniteMaterials()) {
+                stack.shrink(1);
+            }
+
+            return InteractionResult.SUCCESS;
+        }
+
         if (player.getMainHandItem().is(Tags.Items.DYES)) {
             DyeColor color = DyeColor.getColor(stack);
             if (color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(COLORS).contains(color.getName()))
@@ -149,7 +158,8 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
             if (entity == null || entity.isRemoved())
                 return;
             Vec3 vec = entity.position;
-            level.addParticle(GlowParticleData.createData(new ParticleColor(50, 255, 20)),
+            level.addAlwaysVisibleParticle(GlowParticleData.createData(new ParticleColor(50, 255, 20)),
+                    false,
                     (float) (vec.x) - Math.sin((ClientInfo.ticksInGame) / 8D),
                     (float) (vec.y) + Math.sin(ClientInfo.ticksInGame / 5d) / 8D + 0.5,
                     (float) (vec.z) - Math.cos((ClientInfo.ticksInGame) / 8D),

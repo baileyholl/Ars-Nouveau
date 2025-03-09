@@ -19,7 +19,7 @@ public class EmiGlyphRecipe extends EmiMultiInputRecipe<GlyphRecipe> {
 
     @Override
     public int getDisplayWidth() {
-        return 114;
+        return 120;
     }
 
     @Override

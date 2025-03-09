@@ -11,6 +11,8 @@ import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.NotEnoughManaPacket;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -169,6 +171,8 @@ public class SpellResolver implements Cloneable {
         NeoForge.EVENT_BUS.post(spellResolveEvent);
         if (spellResolveEvent.isCanceled())
             return;
+        BlockPos hitPos = this.hitResult instanceof BlockHitResult blockHitResult ? blockHitResult.getBlockPos() : null;
+        Entity hitEntity = this.hitResult instanceof EntityHitResult entityHitResult ? entityHitResult.getEntity() : null;
         while (spellContext.hasNextPart()) {
             AbstractSpellPart part = spellContext.nextPart();
             if (part == null)
@@ -189,6 +193,17 @@ public class SpellResolver implements Cloneable {
             if (preEvent.isCanceled())
                 continue;
             effect.onResolve(this.hitResult, world, shooter, stats, spellContext, this);
+            if(hitPos != null){
+                var resolveListener = world.getCapability(CapabilityRegistry.BLOCK_SPELL_RESOLVE_CAP, hitPos);
+                if(resolveListener != null)
+                    resolveListener.onResolve(world, shooter, this.hitResult, spell, spellContext, effect, stats, this);
+            }
+
+            if(hitEntity != null){
+                var resolveListener = hitEntity.getCapability(CapabilityRegistry.ENTITY_SPELL_RESOLVE_CAP);
+                if(resolveListener != null)
+                    resolveListener.onResolve(world, shooter, this.hitResult, spell, spellContext, effect, stats, this);
+            }
             NeoForge.EVENT_BUS.post(new EffectResolveEvent.Post(world, shooter, this.hitResult, spell, spellContext, effect, stats, this));
         }
 
@@ -200,16 +215,27 @@ public class SpellResolver implements Cloneable {
             return;
         }
 
-        int totalCost = getResolveCost();
+        int totalCost = getExpendedCost();
         spellContext.getCaster().expendMana(totalCost);
     }
 
     /**
      * Simulates the cost required to cast a spell
      */
+    // TODO: Remove backwards compat for SpellCostCalcEvent
     public int getResolveCost() {
         int cost = spellContext.getSpell().getCost() - getPlayerDiscounts(spellContext.getUnwrappedCaster(), spell, spellContext.getCasterTool());
         SpellCostCalcEvent event = new SpellCostCalcEvent(spellContext, cost);
+        NeoForge.EVENT_BUS.post(event);
+        SpellCostCalcEvent.Pre preEvent = new SpellCostCalcEvent.Pre(spellContext, event.currentCost);
+        NeoForge.EVENT_BUS.post(preEvent);
+        cost = Math.max(0, preEvent.currentCost);
+        return cost;
+    }
+
+    public int getExpendedCost() {
+        int cost = spellContext.getSpell().getCost() - getPlayerDiscounts(spellContext.getUnwrappedCaster(), spell, spellContext.getCasterTool());
+        SpellCostCalcEvent event = new SpellCostCalcEvent.Post(spellContext, cost);
         NeoForge.EVENT_BUS.post(event);
         cost = Math.max(0, event.currentCost);
         return cost;

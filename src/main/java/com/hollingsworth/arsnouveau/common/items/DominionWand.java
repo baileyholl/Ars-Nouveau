@@ -14,14 +14,15 @@ import com.hollingsworth.arsnouveau.common.network.PacketUpdateDominionWand;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -71,8 +72,10 @@ public class DominionWand extends ModItem implements IRadialProvider {
 
         ItemStack stack = playerEntity.getItemInHand(hand);
         DominionWandData data = stack.getOrDefault(DataComponentRegistry.DOMINION_WAND, new DominionWandData());
+        Level level = playerEntity.level;
         if (playerEntity.isShiftKeyDown() && target instanceof IWandable wandable) {
-            wandable.onWanded(playerEntity);
+            var result = wandable.onClearConnections(playerEntity);
+            playSoundFromResult(level, target.getOnPos(), result);
             clear(stack, playerEntity);
             return InteractionResult.SUCCESS;
         }
@@ -85,11 +88,13 @@ public class DominionWand extends ModItem implements IRadialProvider {
         Level world = data.storedPos().isPresent() ? playerEntity.getServer().getLevel(data.storedPos().get().dimension()) : playerEntity.getCommandSenderWorld();
 
         if (data.storedPos().isPresent() && world.getBlockEntity(data.storedPos().get().pos()) instanceof IWandable wandable) {
-            wandable.onFinishedConnectionFirst(data.storedPos().orElse(null), data.face().orElse(null), target, playerEntity);
+            var result = wandable.onFirstConnection(data.storedPos().orElse(null), data.face().orElse(null), target, playerEntity);
+            playSoundFromResult(world, target.getOnPos(), result);
         }
 
         if (target instanceof IWandable wandable) {
-            wandable.onFinishedConnectionLast(data.storedPos().orElse(null), data.face().orElse(null), target, playerEntity);
+            var result = wandable.onLastConnection(data.storedPos().orElse(null), data.face().orElse(null), target, playerEntity);
+            playSoundFromResult(world, target.getOnPos(), result);
             clear(stack, playerEntity);
         }
 
@@ -124,8 +129,10 @@ public class DominionWand extends ModItem implements IRadialProvider {
         Level world = data.storedPos().isPresent() ? playerEntity.getServer().getLevel(data.storedPos().get().dimension()) : context.getLevel();
 
         if (playerEntity.isShiftKeyDown() && world.getBlockEntity(pos) instanceof IWandable wandable && !data.hasStoredData()) {
-            wandable.onWanded(playerEntity);
+            var result = wandable.onClearConnections(playerEntity);
+            playSoundFromResult(world, pos, result);
             clear(stack, playerEntity);
+            world.playSound(null, pos, SoundRegistry.DOMINION_WAND_CLEAR.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
             return InteractionResult.CONSUME;
         }
 
@@ -134,19 +141,23 @@ public class DominionWand extends ModItem implements IRadialProvider {
             if (data.strict()) data = data.setFace(face);
             stack.set(DataComponentRegistry.DOMINION_WAND, data);
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.dominion_wand.position_set"));
+            playSoundFromResult(playerEntity.level, pos, IWandable.Result.SELECT);
             return InteractionResult.SUCCESS;
         }
 
         GlobalPos storedPos = data.storedPos().orElse(null);
         Direction storedDirection = data.face().orElse(null);
         if (storedPos != null && world.getBlockEntity(storedPos.pos()) instanceof IWandable wandable) {
-            wandable.onFinishedConnectionFirst(new GlobalPos(world.dimension(), pos), storedDirection, (LivingEntity) world.getEntity(data.storedEntityId()), playerEntity);
+            var result = wandable.onFirstConnection(new GlobalPos(world.dimension(), pos), storedDirection, (LivingEntity) world.getEntity(data.storedEntityId()), playerEntity);
+            playSoundFromResult(world, pos, result);
         }
         if (world.getBlockEntity(pos) instanceof IWandable wandable) {
-            wandable.onFinishedConnectionLast(storedPos, storedDirection, (LivingEntity) world.getEntity(data.storedEntityId()), playerEntity);
+            var result = wandable.onLastConnection(storedPos, storedDirection, (LivingEntity) world.getEntity(data.storedEntityId()), playerEntity);
+            playSoundFromResult(world, pos, result);
         }
         if (data.storedEntityId() != DominionWandData.NULL_ENTITY && world.getEntity(data.storedEntityId()) instanceof IWandable wandable) {
-            wandable.onFinishedConnectionFirst(new GlobalPos(world.dimension(), pos), data.strict() ? face : null, null, playerEntity);
+            var result = wandable.onFirstConnection(new GlobalPos(world.dimension(), pos), data.strict() ? face : null, null, playerEntity);
+            playSoundFromResult(world, pos, result);
         }
 
         clear(stack, playerEntity);
@@ -226,6 +237,16 @@ public class DominionWand extends ModItem implements IRadialProvider {
         radialMenuSlots.add(new RadialMenuSlot<>(DominionSlots.NORMAL.translatable().getString(), DominionSlots.NORMAL.key));
         radialMenuSlots.add(new RadialMenuSlot<>(DominionSlots.STRICT.translatable().getString(), DominionSlots.STRICT.key));
         return radialMenuSlots;
+    }
+
+    public void playSoundFromResult(Level level, BlockPos at, IWandable.Result result){
+        switch (result){
+            case SUCCESS -> level.playSound(null, at, SoundRegistry.DOMINION_WAND_SUCCESS.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            case FAIL -> level.playSound(null, at, SoundRegistry.DOMINION_WAND_FAIL.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            case SELECT -> level.playSound(null, at, SoundRegistry.DOMINION_WAND_SELECT.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            case CLEAR -> level.playSound(null, at, SoundRegistry.DOMINION_WAND_CLEAR.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            default -> {}
+        }
     }
 
 }
