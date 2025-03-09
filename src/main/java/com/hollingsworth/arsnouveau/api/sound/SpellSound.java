@@ -14,11 +14,11 @@ import java.util.Objects;
 
 public class SpellSound {
 
-    public static MapCodec<SpellSound> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+    public static final MapCodec<SpellSound> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("id").forGetter(SpellSound::getId)
     ).apply(instance, SpellSoundRegistry::get));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, SpellSound> STREAM = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, SpellSound> STREAM = StreamCodec.composite(
             ResourceLocation.STREAM_CODEC,
             SpellSound::getId,
             SpellSoundRegistry::get

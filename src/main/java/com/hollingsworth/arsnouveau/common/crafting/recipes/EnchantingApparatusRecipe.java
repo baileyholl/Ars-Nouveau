@@ -140,7 +140,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
 
     public static class Serializer implements RecipeSerializer<EnchantingApparatusRecipe> {
 
-        public static MapCodec<EnchantingApparatusRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+        public static final MapCodec<EnchantingApparatusRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 Ingredient.CODEC.fieldOf("reagent").forGetter(EnchantingApparatusRecipe::reagent),
                 ItemStack.CODEC.fieldOf("result").forGetter(EnchantingApparatusRecipe::result),
                 Ingredient.CODEC.listOf().fieldOf("pedestalItems").forGetter(EnchantingApparatusRecipe::pedestalItems),
@@ -148,7 +148,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
                 Codec.BOOL.fieldOf("keepNbtOfReagent").forGetter(EnchantingApparatusRecipe::keepNbtOfReagent)
         ).apply(instance, EnchantingApparatusRecipe::new));
 
-        public static StreamCodec<RegistryFriendlyByteBuf, EnchantingApparatusRecipe> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<RegistryFriendlyByteBuf, EnchantingApparatusRecipe> STREAM_CODEC = StreamCodec.composite(
                 Ingredient.CONTENTS_STREAM_CODEC,
                 EnchantingApparatusRecipe::reagent,
                 ItemStack.STREAM_CODEC,

@@ -20,7 +20,7 @@ public class ClientToServerStoragePacket extends AbstractPacket{
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientToServerStoragePacket> CODEC = StreamCodec.ofMember(ClientToServerStoragePacket::toBytes, ClientToServerStoragePacket::new);
 
     public record Data(Optional<String> search, Optional<InteractionData> interaction, Optional<List<List<ItemStack>>> craft) {
-        public static StreamCodec<RegistryFriendlyByteBuf, Data> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<RegistryFriendlyByteBuf, Data> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8), Data::search,
                 ByteBufCodecs.optional(InteractionData.STREAM_CODEC), Data::interaction,
                 ByteBufCodecs.optional(ItemStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list()).apply(ByteBufCodecs.list(9))), Data::craft,
@@ -29,7 +29,7 @@ public class ClientToServerStoragePacket extends AbstractPacket{
     }
 
     public record InteractionData(boolean pullOne, Optional<StoredItemStack> stack, StorageTerminalMenu.SlotAction action) {
-        public static StreamCodec<RegistryFriendlyByteBuf, InteractionData> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<RegistryFriendlyByteBuf, InteractionData> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.BOOL, InteractionData::pullOne,
                 ByteBufCodecs.optional(StoredItemStack.STREAM), InteractionData::stack,
                 ByteBufCodecs.VAR_INT.map(i -> StorageTerminalMenu.SlotAction.values()[i], StorageTerminalMenu.SlotAction::ordinal), InteractionData::action,

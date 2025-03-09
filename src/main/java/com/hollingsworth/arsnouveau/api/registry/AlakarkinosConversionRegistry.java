@@ -7,6 +7,9 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -73,22 +76,34 @@ public class AlakarkinosConversionRegistry {
     }
 
     public record LootDrops(List<LootDrop> list, int weight) {
-        public static Codec<LootDrops> CODEC = RecordCodecBuilder.create(instance ->
+        public static final Codec<LootDrops> CODEC = RecordCodecBuilder.create(instance ->
                 instance.group(
                         LootDrop.CODEC.listOf().fieldOf("list").forGetter(LootDrops::list),
                         Codec.INT.fieldOf("weight").forGetter(LootDrops::weight)
                 ).apply(instance, LootDrops::new)
         );
-    };
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, LootDrops> STREAM_CODEC = StreamCodec.composite(
+                LootDrop.STREAM_CODEC.apply(ByteBufCodecs.list()), LootDrops::list,
+                ByteBufCodecs.INT, LootDrops::weight,
+                LootDrops::new
+        );
+    }
 
     public record LootDrop(ItemStack item, float chance) {
         private static HashMap<ResourceKey<LootTable>, LootDrops> DROPS = new HashMap<>();
 
-        public static Codec<LootDrop> CODEC = RecordCodecBuilder.create(instance ->
+        public static final Codec<LootDrop> CODEC = RecordCodecBuilder.create(instance ->
                 instance.group(
                         ItemStack.CODEC.fieldOf("item").forGetter(LootDrop::item),
                         Codec.FLOAT.fieldOf("chance").forGetter(LootDrop::chance)
                 ).apply(instance, LootDrop::new)
+        );
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, LootDrop> STREAM_CODEC = StreamCodec.composite(
+                ItemStack.STREAM_CODEC, LootDrop::item,
+                ByteBufCodecs.FLOAT, LootDrop::chance,
+                LootDrop::new
         );
 
         public static LootDrops getLootDrops(ResourceKey<LootTable> resourceKey) {

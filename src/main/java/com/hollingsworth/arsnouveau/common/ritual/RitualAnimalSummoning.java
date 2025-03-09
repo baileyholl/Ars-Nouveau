@@ -8,12 +8,14 @@ import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -70,12 +72,20 @@ public class RitualAnimalSummoning extends AbstractRitual {
 
             Optional<? extends WeightedEntry> opt = mobs.getRandom(rand);
             opt.ifPresent(entry -> {
+                Entity mob = null;
                 if (entry instanceof MobSpawnSettings.SpawnerData spawnerData) {
-                    Entity mob = spawnerData.type.create(world);
-                    if (mob == null) return;
-                    summon(mob, summonPos);
-                    incrementProgress();
+                    mob = spawnerData.type.create(world);
+                } else if (entry instanceof SummonRitualRecipe.WeightedMobType weighted) {
+                    EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(weighted.mob());
+                    mob = type.create(world);
                 }
+
+                if (mob == null) {
+                    return;
+                }
+
+                summon(mob, summonPos);
+                incrementProgress();
             });
 
             recipe.ifPresentOrElse(recipe -> {

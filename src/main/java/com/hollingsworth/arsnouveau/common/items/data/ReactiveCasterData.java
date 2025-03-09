@@ -13,9 +13,9 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.FakePlayer;
 
 public class ReactiveCasterData extends AbstractCaster<ReactiveCasterData> {
-    public static MapCodec<ReactiveCasterData> CODEC = SpellCaster.createCodec(ReactiveCasterData::new);
+    public static final MapCodec<ReactiveCasterData> CODEC = SpellCaster.createCodec(ReactiveCasterData::new);
 
-    public static StreamCodec<RegistryFriendlyByteBuf, ReactiveCasterData> STREAM_CODEC = createStream(ReactiveCasterData::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, ReactiveCasterData> STREAM_CODEC = createStream(ReactiveCasterData::new);
 
     @Override
     public MapCodec<ReactiveCasterData> codec() {
