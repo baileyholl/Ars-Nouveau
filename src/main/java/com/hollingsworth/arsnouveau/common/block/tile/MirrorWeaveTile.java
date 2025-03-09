@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.common.block.MirrorWeave;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.BlockPos;
@@ -23,21 +24,25 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.HashMap;
+import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+
+import static net.minecraft.world.level.block.Block.OCCLUSION_CACHE;
 
 public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILightable {
     public BlockState mimicState;
     public BlockState nextState = BlockRegistry.MIRROR_WEAVE.defaultBlockState();
     public boolean renderInvalid = true;
-
+    protected boolean[] renderDirections = new boolean[6];
+    public boolean disableRender = false;
     public MirrorWeaveTile(BlockEntityType type, BlockPos pos, BlockState state) {
         super(type, pos, state);
         this.mimicState = getDefaultBlockState();
@@ -76,6 +81,38 @@ public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILigh
     }
 
 
+    public boolean shouldRenderFace(BlockState state, BlockState blockstate, Level level, BlockPos offset, Direction face, BlockPos pos) {
+        if (state.skipRendering(blockstate, face)) {
+            return false;
+        } else if (blockstate.hidesNeighborFace(level, pos, state, face.getOpposite()) && state.supportsExternalFaceHiding()) {
+            return false;
+        } else if (blockstate.canOcclude()) {
+            Block.BlockStatePairKey block$blockstatepairkey = new Block.BlockStatePairKey(state, blockstate, face);
+            Object2ByteLinkedOpenHashMap<Block.BlockStatePairKey> object2bytelinkedopenhashmap = OCCLUSION_CACHE.get();
+            byte b0 = object2bytelinkedopenhashmap.getAndMoveToFirst(block$blockstatepairkey);
+            if (b0 != 127) {
+                return b0 != 0;
+            } else {
+                VoxelShape voxelshape = state.getFaceOcclusionShape(level, offset, face);
+                if (voxelshape.isEmpty()) {
+                    return true;
+                } else {
+                    VoxelShape voxelshape1 = blockstate.getFaceOcclusionShape(level, pos, face.getOpposite());
+                    boolean flag = Shapes.joinIsNotEmpty(voxelshape, voxelshape1, BooleanOp.ONLY_FIRST);
+                    if (object2bytelinkedopenhashmap.size() == 2048) {
+                        object2bytelinkedopenhashmap.removeLastByte();
+                    }
+
+                    object2bytelinkedopenhashmap.putAndMoveToFirst(block$blockstatepairkey, (byte)(flag ? 1 : 0));
+                    return flag;
+                }
+            }
+        } else {
+            return true;
+        }
+    }
+
+
     public BlockState getDefaultBlockState(){
         return BlockRegistry.MIRROR_WEAVE.defaultBlockState();
     }
@@ -91,15 +128,52 @@ public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILigh
         updateBlock();
     }
 
+    public void setRenderDirection(Direction direction, boolean render){
+        renderDirections[direction.ordinal()] = render;
+    }
+
+    public boolean shouldRenderDirection(Direction direction){
+        return renderDirections[direction.ordinal()];
+    }
+
+    public void recalculateFaceVisibility() {
+        for (var direction : Direction.values()) {
+            renderDirections[direction.ordinal()] = this.shouldRenderDirection(direction);
+        }
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        this.recalculateFaceVisibility();
+    }
+
     public ClientData clientData;
 
     public static class ClientData{
-        public CachedAO nullDirectionAO = null;
-        public Map<Direction, CachedAO> aoCalcMap = new HashMap<>();
-        public Set<Direction> renderDirections = null;
+        protected CachedAO nullDirectionAO = null;
+        protected CachedAO[] aoForDirection = new CachedAO[6];
         public boolean renderInvalid = true;
 
         public ClientData(){}
+
+        public void clearCache(){
+            nullDirectionAO = null;
+            aoForDirection = new CachedAO[6];
+        }
+
+
+        public CachedAO getCachedAO(@Nullable Direction direction){
+            return direction == null ? nullDirectionAO : aoForDirection[direction.ordinal()];
+        }
+
+        public void setCachedAO(@Nullable Direction direction, CachedAO ao){
+            if(direction == null){
+                nullDirectionAO = ao;
+            }else{
+                aoForDirection[direction.ordinal()] = ao;
+            }
+        }
 
 
         public record CachedAO(List<BakedQuad> quads, List<ModelBlockRenderer.AmbientOcclusionFace> aoFace) {

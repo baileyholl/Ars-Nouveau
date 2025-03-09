@@ -5,11 +5,11 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
@@ -22,24 +22,19 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.client.ClientHooks;
 import net.neoforged.neoforge.client.RenderTypeHelper;
 import net.neoforged.neoforge.client.model.data.ModelData;
 
-import java.util.*;
-
-import static net.minecraft.world.level.block.Block.OCCLUSION_CACHE;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
 
 public class MirrorweaveRenderer implements BlockEntityRenderer<MirrorWeaveTile> {
     private BlockRenderDispatcher blockRenderer;
-
-
 
     public MirrorweaveRenderer(BlockEntityRendererProvider.Context pContext) {
         this.blockRenderer = pContext.getBlockRenderDispatcher();
@@ -59,71 +54,47 @@ public class MirrorweaveRenderer implements BlockEntityRenderer<MirrorWeaveTile>
         MirrorWeaveTile.ClientData clientData = tileEntityIn.clientData;
         if(clientData.renderInvalid || tileEntityIn.renderInvalid){
             System.out.println("set invalid");
+            boolean disableEntireRender = true;
             tileEntityIn.renderInvalid = false;
             clientData.renderInvalid = false;
-            clientData.aoCalcMap = new HashMap<>();
-            clientData.nullDirectionAO = null;
-            clientData.renderDirections = new HashSet<>();
+            clientData.clearCache();
             for(Direction direction : Direction.values()){
                 BlockPos blockingPos = tileEntityIn.getBlockPos().relative(direction);
                 BlockState blockingState = tileEntityIn.getLevel().getBlockState(blockingPos);
+                tileEntityIn.setRenderDirection(direction, false);
                 if(tileEntityIn.getLevel().getBlockEntity(blockingPos) instanceof MirrorWeaveTile neighborTile){
                     blockingState = neighborTile.mimicState;
                 }
                 var blockingShape = blockingState.getOcclusionShape(tileEntityIn.getLevel(), blockingPos);
-                if(!shouldRenderFace(renderState, blockingState, tileEntityIn.getLevel(), tileEntityIn.getBlockPos(), direction, blockingPos)){
-                    System.out.println("skipping " + direction);
+                if(!tileEntityIn.shouldRenderFace(renderState, blockingState, tileEntityIn.getLevel(), tileEntityIn.getBlockPos(), direction, blockingPos)){
+                    System.out.println("not rendering for neighbor " + direction + blockingState);
                     continue;
                 }
                 if(!blockingState.canOcclude()) {
-                    clientData.renderDirections.add(direction);
-                    System.out.println("neightbor is not occluding" + blockingState);
+                    tileEntityIn.setRenderDirection(direction, true);
+                    disableEntireRender = false;
+                    System.out.println("blocking state cannot occlude" + blockingState);
                     continue;
                 }
 
                 if(blockingState.canOcclude() && Shapes.blockOccudes(Shapes.block(), blockingShape, direction)){
-                    clientData.renderDirections.add(direction);
+                    tileEntityIn.setRenderDirection(direction, true);
+                    System.out.println("neighbor is occluding" + blockingState);
+                    disableEntireRender = false;
                     continue;
                 }
                 System.out.println("skipping " + direction);
-
             }
+            tileEntityIn.disableRender = disableEntireRender;
         }
-
+        if(tileEntityIn.disableRender){
+            return;
+        }
+        ModelBlockRenderer.enableCaching();
         pPoseStack.pushPose();
         renderBlock(tileEntityIn, tileEntityIn.getBlockPos(), renderState, pPoseStack, bufferIn, tileEntityIn.getLevel(), true, combinedOverlayIn);
         pPoseStack.popPose();
-    }
-
-    public static boolean shouldRenderFace(BlockState state, BlockState blockstate, Level level, BlockPos offset, Direction face, BlockPos pos) {
-        if (state.skipRendering(blockstate, face)) {
-            return false;
-        } else if (blockstate.hidesNeighborFace(level, pos, state, face.getOpposite()) && state.supportsExternalFaceHiding()) {
-            return false;
-        } else if (blockstate.canOcclude()) {
-            Block.BlockStatePairKey block$blockstatepairkey = new Block.BlockStatePairKey(state, blockstate, face);
-            Object2ByteLinkedOpenHashMap<Block.BlockStatePairKey> object2bytelinkedopenhashmap = OCCLUSION_CACHE.get();
-            byte b0 = object2bytelinkedopenhashmap.getAndMoveToFirst(block$blockstatepairkey);
-            if (b0 != 127) {
-                return b0 != 0;
-            } else {
-                VoxelShape voxelshape = state.getFaceOcclusionShape(level, offset, face);
-                if (voxelshape.isEmpty()) {
-                    return true;
-                } else {
-                    VoxelShape voxelshape1 = blockstate.getFaceOcclusionShape(level, pos, face.getOpposite());
-                    boolean flag = Shapes.joinIsNotEmpty(voxelshape, voxelshape1, BooleanOp.ONLY_FIRST);
-                    if (object2bytelinkedopenhashmap.size() == 2048) {
-                        object2bytelinkedopenhashmap.removeLastByte();
-                    }
-
-                    object2bytelinkedopenhashmap.putAndMoveToFirst(block$blockstatepairkey, (byte)(flag ? 1 : 0));
-                    return flag;
-                }
-            }
-        } else {
-            return true;
-        }
+        ModelBlockRenderer.clearCache();
     }
 
     private void renderBlock(MirrorWeaveTile tile, BlockPos pPos, BlockState pState, PoseStack pPoseStack, MultiBufferSource pBufferSource, Level pLevel, boolean pExtended, int pPackedOverlay) {
@@ -138,6 +109,7 @@ public class MirrorweaveRenderer implements BlockEntityRenderer<MirrorWeaveTile>
             tesselateBlock(tile, blockRenderer.getModelRenderer(), level, model, state, pos, stack, vertexConsumer, checkSides, RandomSource.create(), state.getSeed(pos), packedOverlay, ModelData.EMPTY, renderType);
         }
     }
+    // Taken from ModelBlockRenderer and modified to cache AO data and culled sides
 
     /**
      * @param checkSides if {@code true}, only renders each side if {@link
@@ -175,7 +147,7 @@ public class MirrorweaveRenderer implements BlockEntityRenderer<MirrorWeaveTile>
             if (flag) {
                 tesselateWithAO(tile, blockRenderer, level, model, state, pos, poseStack, consumer, checkSides, random, seed, packedOverlay, modelData, renderType);
             } else {
-                blockRenderer.tesselateWithoutAO(level, model, state, pos, poseStack, consumer, checkSides, random, seed, packedOverlay, modelData, renderType);
+                tesselateWithoutAO(tile, blockRenderer, level, model, state, pos, poseStack, consumer, checkSides, random, seed, packedOverlay, modelData, renderType);
             }
         } catch (Throwable throwable) {
             CrashReport crashreport = CrashReport.forThrowable(throwable, "Tesselating block model");
@@ -185,6 +157,80 @@ public class MirrorweaveRenderer implements BlockEntityRenderer<MirrorWeaveTile>
             throw new ReportedException(crashreport);
         }
     }
+
+    public void tesselateWithoutAO(
+            MirrorWeaveTile tile,
+            ModelBlockRenderer renderer,
+            BlockAndTintGetter level,
+            BakedModel model,
+            BlockState state,
+            BlockPos pos,
+            PoseStack poseStack,
+            VertexConsumer consumer,
+            boolean checkSides,
+            RandomSource random,
+            long seed,
+            int packedOverlay,
+            net.neoforged.neoforge.client.model.data.ModelData modelData,
+            net.minecraft.client.renderer.RenderType renderType
+    ) {
+        BitSet bitset = new BitSet(3);
+        BlockPos.MutableBlockPos blockpos$mutableblockpos = pos.mutable();
+
+        for (Direction direction : DIRECTIONS) {
+            random.setSeed(seed);
+            List<BakedQuad> list = model.getQuads(state, direction, random, modelData, renderType);
+            if (!list.isEmpty()) {
+                blockpos$mutableblockpos.setWithOffset(pos, direction);
+                if (!checkSides || tile.shouldRenderDirection(direction)) {
+                    int i = LevelRenderer.getLightColor(level, state, blockpos$mutableblockpos);
+                    renderModelFaceFlat(tile, renderer, level, state, pos, i, packedOverlay, false, poseStack, consumer, list, bitset);
+                }
+            }
+        }
+
+        random.setSeed(seed);
+        List<BakedQuad> list1 = model.getQuads(state, null, random, modelData, renderType);
+        if (!list1.isEmpty()) {
+            renderModelFaceFlat(tile, renderer, level, state, pos, -1, packedOverlay, true, poseStack, consumer, list1, bitset);
+        }
+    }
+
+    /**
+     * @param repackLight {@code true} if packed light should be re-calculated
+     * @param shapeFlags  the bit set to store the shape flags in. The first bit will
+     *                    be {@code true} if the face should be offset, and the second
+     *                    if the face is less than a block in width and height.
+     */
+    private void renderModelFaceFlat(
+            MirrorWeaveTile tile,
+            ModelBlockRenderer renderer,
+            BlockAndTintGetter level,
+            BlockState state,
+            BlockPos pos,
+            int packedLight,
+            int packedOverlay,
+            boolean repackLight,
+            PoseStack poseStack,
+            VertexConsumer consumer,
+            List<BakedQuad> quads,
+            BitSet shapeFlags
+    ) {
+        for (BakedQuad bakedquad : quads) {
+            if (repackLight) {
+                renderer.calculateShape(level, state, pos, bakedquad.getVertices(), bakedquad.getDirection(), null, shapeFlags);
+                BlockPos blockpos = shapeFlags.get(0) ? pos.relative(bakedquad.getDirection()) : pos;
+                packedLight = LevelRenderer.getLightColor(level, state, blockpos);
+            }
+
+            float f = level.getShade(bakedquad.getDirection(), bakedquad.isShade());
+            renderer.putQuadData(
+                    level, state, pos, consumer, poseStack.last(), bakedquad, f, f, f, f, packedLight, packedLight, packedLight, packedLight, packedOverlay
+            );
+        }
+    }
+
+
 
     /**
      * @param checkSides if {@code true}, only renders each side if {@link
@@ -215,20 +261,19 @@ public class MirrorweaveRenderer implements BlockEntityRenderer<MirrorWeaveTile>
         BlockPos.MutableBlockPos blockpos$mutableblockpos = pos.mutable();
 
         for (Direction direction : DIRECTIONS) {
+            if(checkSides && !tile.shouldRenderDirection(direction)){
+                continue;
+            }
             random.setSeed(seed);
             List<BakedQuad> list = model.getQuads(state, direction, random, modelData, renderType);
             if (!list.isEmpty()) {
                 blockpos$mutableblockpos.setWithOffset(pos, direction);
-                if (!checkSides || tile.clientData.renderDirections.contains(direction)) {
-                    this.renderModelFaceAO(
-                            tile,
-                            direction,
-                            blockRenderer,
-                            level, state, pos, poseStack, consumer, list, afloat, bitset, packedOverlay
-                    );
-                }else{
-//                    System.out.println("skipping " + direction);
-                }
+                this.renderModelFaceAO(
+                        tile,
+                        direction,
+                        blockRenderer,
+                        level, state, pos, poseStack, consumer, list, afloat, bitset, packedOverlay
+                );
             }
         }
 
@@ -262,11 +307,11 @@ public class MirrorweaveRenderer implements BlockEntityRenderer<MirrorWeaveTile>
             int packedOverlay
     ) {
         MirrorWeaveTile.ClientData data = tile.clientData;
-        var cachedAO = direction == null ? data.nullDirectionAO : data.aoCalcMap.get(direction);
+        MirrorWeaveTile.ClientData.CachedAO cachedAO = data.getCachedAO(direction);
         ModelBlockRenderer.AmbientOcclusionFace aoFace = new ModelBlockRenderer.AmbientOcclusionFace();
         if(cachedAO == null) {
             List<ModelBlockRenderer.AmbientOcclusionFace> faces = new ArrayList<>();
-            System.out.println("cache miss");
+//            System.out.println("cache miss");
             for (BakedQuad bakedquad : quads) {
                 blockRenderer.calculateShape(level, state, pos, bakedquad.getVertices(), bakedquad.getDirection(), shape, shapeFlags);
                 if (!ClientHooks.calculateFaceWithoutAO(level, state, pos, bakedquad, shapeFlags.get(0), aoFace.brightness, aoFace.lightmap))
@@ -290,11 +335,7 @@ public class MirrorweaveRenderer implements BlockEntityRenderer<MirrorWeaveTile>
                 );
                 faces.add(aoFace);
             }
-            if(direction == null) {
-                data.nullDirectionAO = new MirrorWeaveTile.ClientData.CachedAO(quads, faces);
-            }else{
-                data.aoCalcMap.put(direction, new MirrorWeaveTile.ClientData.CachedAO(quads, faces));
-            }
+            data.setCachedAO(direction, new MirrorWeaveTile.ClientData.CachedAO(quads, faces));
         }else{
             for (int i = 0; i < cachedAO.getQuads().size(); i++) {
                 BakedQuad bakedquad = cachedAO.getQuads().get(i);

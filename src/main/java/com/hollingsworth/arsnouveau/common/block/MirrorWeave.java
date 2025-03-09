@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.event.EventQueue;
+import com.hollingsworth.arsnouveau.api.event.InvalidateMirrorweaveRender;
 import com.hollingsworth.arsnouveau.common.block.tile.MirrorWeaveTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -89,6 +91,7 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
         if(tile == null)
             return;
         this.setMimicState(pLevel, pPos, true);
+        EventQueue.getServerInstance().addEvent(new InvalidateMirrorweaveRender(pPos, pLevel));
     }
 
     @Override
@@ -161,8 +164,9 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
-        if(level.isClientSide && level.getBlockEntity(pos) instanceof MirrorWeaveTile tile){
-//            tile.renderInvalid = true;
+        if(!level.isClientSide && level.getBlockEntity(pos) instanceof MirrorWeaveTile tile){
+            tile.renderInvalid = true;
+            tile.updateBlock();
         }
     }
 
