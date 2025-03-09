@@ -58,7 +58,9 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
                 ModEntities.ENTITY_FLOURISHING_WEALD.get(),
                 ModEntities.ENTITY_VEXING_WEALD.get()
         );
-        this.tag(EntityTags.BUBBLE_BLACKLIST).add(
+        this.tag(EntityTags.BUBBLE_BLACKLIST).addTags(
+                Tags.EntityTypes.BOSSES
+        ).add(
                 ModEntities.BUBBLE.get(),
                 ModEntities.ENTITY_FOLLOW_PROJ.get(),
                 ModEntities.ENTITY_FLYING_ITEM.get(),
