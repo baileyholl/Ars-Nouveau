@@ -6,7 +6,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -117,11 +116,54 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
     }
 
     @Override
+    public boolean hidesNeighborFace(BlockGetter level, BlockPos pos, BlockState state, BlockState neighborState, Direction dir) {
+        if(level.getBlockEntity(pos) instanceof MirrorWeaveTile tile  && tile.mimicState.getBlock() != this){
+            return tile.mimicState.hidesNeighborFace(level, pos, neighborState, dir);
+        }
+        return super.hidesNeighborFace(level, pos, state, neighborState, dir);
+    }
+
+    @Override
+    public boolean supportsExternalFaceHiding(BlockState state) {
+        return super.supportsExternalFaceHiding(state);
+    }
+
+    @Override
+    public boolean hasDynamicShape() {
+        return true;
+    }
+
+    @Override
     public boolean isCollisionShapeFullBlock(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
         if(pLevel.getBlockEntity(pPos) instanceof MirrorWeaveTile tile  && tile.mimicState.getBlock() != this){
             return tile.mimicState != null && tile.mimicState.isCollisionShapeFullBlock(pLevel, pPos);
         }
         return super.isCollisionShapeFullBlock(pState, pLevel, pPos);
+    }
+
+    @Override
+    protected boolean isOcclusionShapeFullBlock(BlockState state, BlockGetter level, BlockPos pos) {
+        if(level.getBlockEntity(pos) instanceof MirrorWeaveTile tile  && tile.mimicState.getBlock() != this){
+            return Block.isShapeFullBlock(tile.mimicState.getOcclusionShape(level, pos));
+        }
+        return super.isOcclusionShapeFullBlock(state, level, pos);
+    }
+
+
+    @Override
+    protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
+        if(level.getBlockEntity(pos) instanceof MirrorWeaveTile tile  && tile.mimicState.getBlock() != this){
+            return tile.mimicState.getOcclusionShape(level, pos);
+        }
+        return super.getOcclusionShape(state, level, pos);
+    }
+
+    @Override
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
+        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+        if(level.isClientSide && level.getBlockEntity(pos) instanceof MirrorWeaveTile tile){
+//            tile.renderInvalid = true;
+        }
     }
 
     @Nullable
