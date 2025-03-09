@@ -165,7 +165,8 @@ public class EntityWallSpell extends EntityProjectileSpell {
                     double x = blockPos.getX() + ParticleUtil.inRange(-growthFactor, growthFactor) + 0.5;
                     double y = blockPos.getY() + ParticleUtil.inRange(-growthFactor, growthFactor);
                     double z = blockPos.getZ() + ParticleUtil.inRange(-growthFactor, growthFactor) + 0.5;
-                    level.addParticle(ParticleLineData.createData(getParticleColor()),
+                    level.addAlwaysVisibleParticle(ParticleLineData.createData(getParticleColor()),
+                            true,
                             x, y, z,
                             x, y + ParticleUtil.inRange(0.5, 5), z);
                 }

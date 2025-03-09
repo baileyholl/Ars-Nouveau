@@ -99,8 +99,9 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable, IDi
         }
         ParticleColor nextColor = this.color.transition((int) level.getGameTime() * 10);
         for (int i = 0; i < 10; i++) {
-            level.addParticle(
+            level.addAlwaysVisibleParticle(
                     GlowParticleData.createData(nextColor),
+                    true,
                     centerX, pos.getY() + 0.9 + ParticleUtil.inRange(-0.00, 0.1), centerZ,
                     0, ParticleUtil.inRange(0.0, 0.03f), 0);
 

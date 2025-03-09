@@ -147,7 +147,8 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
 
         if (level.isClientSide && isImbueing() && getImbuePos() != null) {
             Vec3 vec = new Vec3(getImbuePos().getX() + 0.5, getImbuePos().getY(), getImbuePos().getZ() + 0.5);
-            level.addParticle(GlowParticleData.createData(new ParticleColor(255, 50, 150)),
+            level.addAlwaysVisibleParticle(GlowParticleData.createData(new ParticleColor(255, 50, 150)),
+                    true,
                     (float) (vec.x) - Math.sin((ClientInfo.ticksInGame) / 8D),
                     (float) (vec.y) + Math.sin(ClientInfo.ticksInGame / 5d) / 8D + 0.5,
                     (float) (vec.z) - Math.cos((ClientInfo.ticksInGame) / 8D),
