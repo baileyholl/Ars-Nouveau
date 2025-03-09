@@ -7,8 +7,6 @@ import com.hollingsworth.arsnouveau.common.block.MirrorWeave;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
-import net.minecraft.client.renderer.block.ModelBlockRenderer;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderGetter;
@@ -31,9 +29,6 @@ import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
-
-import javax.annotation.Nullable;
-import java.util.List;
 
 import static net.minecraft.world.level.block.Block.OCCLUSION_CACHE;
 
@@ -79,7 +74,6 @@ public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILigh
             mimicState = getDefaultBlockState();
         }
     }
-
 
     public boolean shouldRenderFace(BlockState state, BlockState blockstate, Level level, BlockPos offset, Direction face, BlockPos pos) {
         if (state.skipRendering(blockstate, face)) {
@@ -136,56 +130,8 @@ public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILigh
         return renderDirections[direction.ordinal()];
     }
 
-    public void recalculateFaceVisibility() {
-        for (var direction : Direction.values()) {
-            renderDirections[direction.ordinal()] = this.shouldRenderDirection(direction);
-        }
-    }
-
     @Override
     public void onLoad() {
         super.onLoad();
-        this.recalculateFaceVisibility();
-    }
-
-    public ClientData clientData;
-
-    public static class ClientData{
-        protected CachedAO nullDirectionAO = null;
-        protected CachedAO[] aoForDirection = new CachedAO[6];
-        public boolean renderInvalid = true;
-
-        public ClientData(){}
-
-        public void clearCache(){
-            nullDirectionAO = null;
-            aoForDirection = new CachedAO[6];
-        }
-
-
-        public CachedAO getCachedAO(@Nullable Direction direction){
-            return direction == null ? nullDirectionAO : aoForDirection[direction.ordinal()];
-        }
-
-        public void setCachedAO(@Nullable Direction direction, CachedAO ao){
-            if(direction == null){
-                nullDirectionAO = ao;
-            }else{
-                aoForDirection[direction.ordinal()] = ao;
-            }
-        }
-
-
-        public record CachedAO(List<BakedQuad> quads, List<ModelBlockRenderer.AmbientOcclusionFace> aoFace) {
-            public List<BakedQuad> getQuads() {
-                return quads;
-            }
-
-            public List<ModelBlockRenderer.AmbientOcclusionFace> getAoFace() {
-                return aoFace;
-            }
-        }
-
-
     }
 }
