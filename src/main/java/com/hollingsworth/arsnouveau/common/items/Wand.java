@@ -52,8 +52,17 @@ public class Wand extends ModItem implements GeoItem, ICasterTool {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-        AbstractCaster<?> caster = getSpellCaster(stack);
-        return caster.castSpell(worldIn, playerIn, handIn, Component.translatable("ars_nouveau.wand.invalid"));
+        if (!worldIn.isClientSide) {
+            return InteractionResultHolder.pass(stack);
+        }
+
+        var caster = this.getSpellCaster(stack);
+        if (caster == null) {
+            return InteractionResultHolder.pass(stack);
+        }
+        caster.castOnServer(handIn, Component.translatable("ars_nouveau.wand.invalid"));
+
+        return InteractionResultHolder.pass(stack);
     }
 
     @Override

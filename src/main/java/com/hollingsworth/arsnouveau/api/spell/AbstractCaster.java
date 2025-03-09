@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
+import com.hollingsworth.arsnouveau.common.network.PacketCastSpell;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.mojang.datafixers.util.Function6;
@@ -44,6 +45,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -269,7 +271,7 @@ public abstract class AbstractCaster<T extends AbstractCaster<T>> implements Too
         IWrappedCaster wrappedCaster = entity instanceof Player pCaster ? new PlayerCaster(pCaster) : new LivingCaster(entity);
         SpellResolver resolver = getSpellResolver(new SpellContext(worldIn, spell, entity, wrappedCaster, stack), worldIn, player, handIn);
         boolean isSensitive = resolver.spell.getBuffsAtIndex(0, entity, AugmentSensitive.INSTANCE) > 0;
-        HitResult result = SpellUtil.rayTrace(entity, 0.5 + player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE).getValue(), 0, isSensitive);
+        HitResult result = SpellUtil.rayTrace(entity, 0.5 + player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE).getValue(), 1, isSensitive);
         if (result instanceof BlockHitResult blockHit) {
             BlockEntity tile = worldIn.getBlockEntity(blockHit.getBlockPos());
             if (tile instanceof ScribesTile)
@@ -304,6 +306,10 @@ public abstract class AbstractCaster<T extends AbstractCaster<T>> implements Too
 
     public InteractionResultHolder<ItemStack> castSpell(Level worldIn, LivingEntity playerIn, InteractionHand handIn, Component invalidMessage) {
         return castSpell(worldIn, playerIn, handIn, invalidMessage, getSpell(worldIn, playerIn, handIn, this));
+    }
+
+    public void castOnServer(InteractionHand handIn, Component invalidMessage) {
+        PacketDistributor.sendToServer(new PacketCastSpell(this, handIn, invalidMessage));
     }
 
     @SuppressWarnings("unchecked")
