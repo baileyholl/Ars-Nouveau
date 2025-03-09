@@ -6,7 +6,10 @@ import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.common.block.MirrorWeave;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -25,9 +28,15 @@ import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILightable {
     public BlockState mimicState;
     public BlockState nextState = BlockRegistry.MIRROR_WEAVE.defaultBlockState();
+    public boolean renderInvalid = true;
 
     public MirrorWeaveTile(BlockEntityType type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -57,6 +66,7 @@ public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILigh
     @Override
     protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(pTag, pRegistries);
+        renderInvalid = true;
         if(pTag.contains("mimic_state")) {
             HolderGetter<Block> holdergetter = this.level != null ? this.level.holderLookup(Registries.BLOCK) : BuiltInRegistries.BLOCK.asLookup();
             mimicState = NbtUtils.readBlockState(holdergetter, pTag.getCompound("mimic_state"));
@@ -79,5 +89,29 @@ public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILigh
                     state.setValue(MirrorWeave.LIGHT_LEVEL, Math.min(Math.max(0, 15 - stats.getBuffCount(AugmentDampen.INSTANCE)), 15)), 3);
         }
         updateBlock();
+    }
+
+    public ClientData clientData;
+
+    public static class ClientData{
+        public CachedAO nullDirectionAO = null;
+        public Map<Direction, CachedAO> aoCalcMap = new HashMap<>();
+        public Set<Direction> renderDirections = null;
+        public boolean renderInvalid = true;
+
+        public ClientData(){}
+
+
+        public record CachedAO(List<BakedQuad> quads, List<ModelBlockRenderer.AmbientOcclusionFace> aoFace) {
+            public List<BakedQuad> getQuads() {
+                return quads;
+            }
+
+            public List<ModelBlockRenderer.AmbientOcclusionFace> getAoFace() {
+                return aoFace;
+            }
+        }
+
+
     }
 }
