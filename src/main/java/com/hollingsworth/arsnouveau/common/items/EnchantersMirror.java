@@ -68,7 +68,7 @@ public class EnchantersMirror extends ModItem implements ICasterTool, GeoItem, I
         }
         caster.castOnServer(handIn, Component.translatable("ars_nouveau.mirror.invalid"));
 
-        return InteractionResultHolder.consume(stack);
+        return InteractionResultHolder.pass(stack);
     }
 
     @Override
