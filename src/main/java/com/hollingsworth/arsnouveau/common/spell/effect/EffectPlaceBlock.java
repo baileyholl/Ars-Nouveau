@@ -10,10 +10,12 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.setup.registry.DispenserBehaviorRegistry;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -45,8 +47,15 @@ public class EffectPlaceBlock extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
         Player fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world, shooter instanceof Player player ? player.getUUID() : null);
-        fakePlayer.setPos(spellContext.getUnwrappedCaster().position);
-        fakePlayer.lookAt(EntityAnchorArgument.Anchor.EYES, rayTraceResult.getLocation());
+        var sensitiveCount = spellStats.getBuffCount(AugmentSensitive.INSTANCE);
+        if (sensitiveCount > 0) {
+            fakePlayer.setPos(spellContext.getUnwrappedCaster().position);
+            var lookLoc = rayTraceResult.getLocation();
+            if (sensitiveCount > 1) {
+                fakePlayer.setPos(fakePlayer.position.subtract(fakePlayer.position.subtract(lookLoc).scale(2)));
+            }
+            fakePlayer.lookAt(EntityAnchorArgument.Anchor.EYES, lookLoc);
+        }
         for (BlockPos pos1 : posList) {
             if (!world.isInWorldBounds(pos1))
                 continue;
@@ -94,18 +103,24 @@ public class EffectPlaceBlock extends AbstractEffect {
     @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentRandomize.INSTANCE);
+        return augmentSetOf(AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentRandomize.INSTANCE, AugmentSensitive.INSTANCE);
+    }
+
+    @Override
+    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 2);
     }
 
     @Override
     public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
         super.addAugmentDescriptions(map);
         addBlockAoeAugmentDescriptions(map);
+        map.put(AugmentSensitive.INSTANCE, "Places the block with the caster's facing direction. Using two makes it place in the opposite direction.");
     }
 
     @Override
     public String getBookDescription() {
-        return "Places blocks from the casters inventory. If a player is casting this, this spell will place blocks from the hot bar first. Casting on an entity will place the blocks beneath the entity in the up direction.";
+        return "Places blocks from the casters inventory. If cast by a player, this spell will place blocks from the hot bar first. Casting on an entity will place the blocks beneath the entity in the up direction. Sensitive causes the block to be placed in the caster's facing direction, two Sensitives will place it in the opposite direction.";
     }
 
     @NotNull
