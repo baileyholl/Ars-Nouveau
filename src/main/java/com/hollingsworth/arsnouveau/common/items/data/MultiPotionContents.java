@@ -16,13 +16,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 public record MultiPotionContents(int charges, PotionContents contents, int maxUses) implements IPotionProvider {
-    public static Codec<MultiPotionContents> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<MultiPotionContents> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("charges").forGetter(MultiPotionContents::charges),
             PotionContents.CODEC.fieldOf("contents").forGetter(MultiPotionContents::contents),
             Codec.INT.fieldOf("maxUses").forGetter(MultiPotionContents::maxUses)
     ).apply(instance, MultiPotionContents::new));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, MultiPotionContents> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.INT, MultiPotionContents::charges, PotionContents.STREAM_CODEC, MultiPotionContents::contents,ByteBufCodecs.INT, MultiPotionContents::maxUses, MultiPotionContents::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, MultiPotionContents> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.INT, MultiPotionContents::charges, PotionContents.STREAM_CODEC, MultiPotionContents::contents,ByteBufCodecs.INT, MultiPotionContents::maxUses, MultiPotionContents::new);
 
     public MultiPotionContents withCharges(int charges){
         return new MultiPotionContents(charges, contents, maxUses);

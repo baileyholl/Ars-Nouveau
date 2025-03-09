@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public record PerkMap(Map<IPerk, CompoundTag> map) {
-    public static Codec<PerkMap> CODEC =  Codec.unboundedMap(Codec.STRING, CompoundTag.CODEC).xmap((stringMap) ->{
+    public static final Codec<PerkMap> CODEC =  Codec.unboundedMap(Codec.STRING, CompoundTag.CODEC).xmap((stringMap) ->{
         var builder = ImmutableMap.<IPerk, CompoundTag>builder();
         stringMap.forEach((key, value) ->{
             if(key != null) {

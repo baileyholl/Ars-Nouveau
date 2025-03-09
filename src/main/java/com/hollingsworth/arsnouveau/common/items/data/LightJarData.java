@@ -11,12 +11,12 @@ import java.util.Objects;
 import java.util.Optional;
 
 public record LightJarData(Optional<BlockPos> pos, boolean enabled) {
-    public static Codec<LightJarData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<LightJarData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             BlockPos.CODEC.optionalFieldOf("pos").forGetter(LightJarData::pos),
             Codec.BOOL.fieldOf("enabled").forGetter(LightJarData::enabled)
     ).apply(instance, LightJarData::new));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, LightJarData> STREAM_CODEC = StreamCodec.composite(BlockPos.STREAM_CODEC.apply(ByteBufCodecs::optional), LightJarData::pos, ByteBufCodecs.BOOL,LightJarData::enabled, LightJarData::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, LightJarData> STREAM_CODEC = StreamCodec.composite(BlockPos.STREAM_CODEC.apply(ByteBufCodecs::optional), LightJarData::pos, ByteBufCodecs.BOOL,LightJarData::enabled, LightJarData::new);
 
     public LightJarData() {
         this(Optional.empty(), false);

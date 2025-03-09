@@ -12,6 +12,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -76,7 +77,11 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe {
                 Codec.INT.fieldOf("sourceCost").forGetter(ReactiveEnchantmentRecipe::sourceCost)
         ).apply(instance, ReactiveEnchantmentRecipe::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, ReactiveEnchantmentRecipe> STREAM = CheatSerializer.create(CODEC);
+        public static final StreamCodec<RegistryFriendlyByteBuf, ReactiveEnchantmentRecipe> STREAM = StreamCodec.composite(
+                Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()), ReactiveEnchantmentRecipe::pedestalItems,
+                ByteBufCodecs.INT, ReactiveEnchantmentRecipe::sourceCost,
+                ReactiveEnchantmentRecipe::new
+        );
 
         @Override
         public @NotNull MapCodec<ReactiveEnchantmentRecipe> codec() {

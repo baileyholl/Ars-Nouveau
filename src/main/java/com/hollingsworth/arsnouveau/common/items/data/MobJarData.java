@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 public record MobJarData(Optional<CompoundTag> entityTag, Optional<CompoundTag> extraDataTag){
-    public static Codec<MobJarData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<MobJarData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             CompoundTag.CODEC.optionalFieldOf("entity_tag").forGetter(MobJarData::entityTag),
             CompoundTag.CODEC.optionalFieldOf("extra_data_tag").forGetter(MobJarData::extraDataTag)
     ).apply(instance, MobJarData::new));
@@ -20,7 +20,7 @@ public record MobJarData(Optional<CompoundTag> entityTag, Optional<CompoundTag> 
         this(Optional.ofNullable(tag), Optional.ofNullable(extraTag));
     }
 
-    public static StreamCodec<RegistryFriendlyByteBuf, MobJarData> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.OPTIONAL_COMPOUND_TAG, MobJarData::entityTag, ByteBufCodecs.OPTIONAL_COMPOUND_TAG, MobJarData::extraDataTag, MobJarData::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, MobJarData> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.OPTIONAL_COMPOUND_TAG, MobJarData::entityTag, ByteBufCodecs.OPTIONAL_COMPOUND_TAG, MobJarData::extraDataTag, MobJarData::new);
 
 
     @Override

@@ -22,13 +22,13 @@ import java.util.function.Consumer;
 
 public class PersistentFamiliarData implements NBTComponent<PersistentFamiliarData>, TooltipProvider {
 
-    public static MapCodec<PersistentFamiliarData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+    public static final MapCodec<PersistentFamiliarData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
         ComponentSerialization.CODEC.optionalFieldOf("name", CommonComponents.EMPTY).forGetter(data -> data.name),
         Codec.STRING.optionalFieldOf("color", "").forGetter(data -> data.color),
         ItemStack.CODEC.optionalFieldOf("cosmetic", ItemStack.EMPTY).forGetter(data -> data.cosmetic)
     ).apply(instance, PersistentFamiliarData::new));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, PersistentFamiliarData>  STREAM_CODEC = StreamCodec.composite(ComponentSerialization.STREAM_CODEC, s -> s.name,
+    public static final StreamCodec<RegistryFriendlyByteBuf, PersistentFamiliarData>  STREAM_CODEC = StreamCodec.composite(ComponentSerialization.STREAM_CODEC, s -> s.name,
             ByteBufCodecs.STRING_UTF8, s -> s.color, ItemStack.OPTIONAL_STREAM_CODEC, s -> s.cosmetic, PersistentFamiliarData::new);
 
     private final Component name;
