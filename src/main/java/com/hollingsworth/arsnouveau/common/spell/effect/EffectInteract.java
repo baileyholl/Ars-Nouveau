@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
+import com.hollingsworth.arsnouveau.setup.registry.AttachmentsRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -141,6 +142,7 @@ public class EffectInteract extends AbstractEffect {
     }
 
     public void useOnEntity(Player player, SpellStats spellStats, Entity target) {
+        var menuBefore = player.containerMenu.containerId;
         if (spellStats.isSensitive()) {
             ItemStack item = player.getItemInHand(getHand(player));
             if(target instanceof  LivingEntity livingEntity) {
@@ -154,6 +156,10 @@ public class EffectInteract extends AbstractEffect {
         } else {
             player.interactOn(target, InteractionHand.MAIN_HAND);
         }
+
+        if (player.containerMenu.containerId != menuBefore) {
+            player.setData(AttachmentsRegistry.OPENED_CONTAINER_VIA_INTERACT.get(), player.containerMenu.containerId);
+        }
     }
 
     public void useOnBlock(Player player, SpellStats spellStats, BlockPos blockpos, BlockState blockstate, Level pLevel, BlockHitResult pHitResult) {
@@ -165,6 +171,7 @@ public class EffectInteract extends AbstractEffect {
             return;
         }
 
+        var menuBefore = player.containerMenu.containerId;
         ItemInteractionResult iteminteractionresult = blockstate.useItemOn(pPlayer.getItemInHand(pHand), pLevel, pPlayer, pHand, pHitResult);
 
         if (itemstack.getItem() instanceof BucketItem bucket) {
@@ -181,6 +188,10 @@ public class EffectInteract extends AbstractEffect {
             if (interactionresult.consumesAction()) {
                 CriteriaTriggers.DEFAULT_BLOCK_USE.trigger(pPlayer, blockpos);
             }
+        }
+      
+        if (player.containerMenu.containerId != menuBefore) {
+            player.setData(AttachmentsRegistry.OPENED_CONTAINER_VIA_INTERACT.get(), player.containerMenu.containerId);
         }
     }
 
