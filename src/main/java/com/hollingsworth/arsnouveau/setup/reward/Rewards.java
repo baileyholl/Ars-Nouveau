@@ -1,9 +1,12 @@
 package com.hollingsworth.arsnouveau.setup.reward;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.world.item.DyeColor;
 import net.neoforged.fml.loading.FMLEnvironment;
 
@@ -20,28 +23,22 @@ public class Rewards {
     public static List<ContributorStarby> starbuncles = new ArrayList<>();
     public static List<UUID> CONTRIBUTORS = new ArrayList<>();
 
+    record Data(List<UUID> supporters, List<ContributorStarby> adoptions) {
+        public static final Codec<Data> CODEC = RecordCodecBuilder.create(
+                instance -> instance.group(
+                        Codec.list(UUIDUtil.STRING_CODEC).fieldOf("uuids").forGetter(Data::supporters),
+                        Codec.list(ContributorStarby.CODEC).fieldOf("starbuncleAdoptions").forGetter(Data::adoptions)
+                ).apply(instance, Data::new)
+        );
+    }
+
     public static void init() {
         try {
             JsonObject object = JsonParser.parseString(readUrl(new URL("https://raw.githubusercontent.com/baileyholl/Ars-Nouveau/main/supporters.json"))).getAsJsonObject();
-
-            JsonArray supporters = object.getAsJsonArray("uuids");
-            for (JsonElement element : supporters) {
-                String uuid = element.getAsString();
-                try {
-                    CONTRIBUTORS.add(UUID.fromString(uuid.trim()));
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-            JsonArray adoptions = object.getAsJsonArray("starbuncleAdoptions");
-            for (JsonElement element : adoptions) {
-                JsonObject jsonObject = element.getAsJsonObject();
-                String name = jsonObject.get("name").getAsString();
-                String adopter = jsonObject.get("adopter").getAsString();
-                String color = jsonObject.get("color").getAsString();
-                String bio = jsonObject.get("bio").getAsString();
-                starbuncles.add(new ContributorStarby(name, adopter, color, bio));
-            }
+            var dyn = new Dynamic<>(JsonOps.INSTANCE, object);
+            Data data = Data.CODEC.decode(dyn.getOps(), dyn.getValue()).getOrThrow().getFirst();
+            CONTRIBUTORS = data.supporters;
+            starbuncles = data.adoptions;
         } catch (IOException var2) {
             var2.printStackTrace();
             if (!FMLEnvironment.production) {
@@ -66,6 +63,15 @@ public class Rewards {
     }
 
     public static class ContributorStarby {
+        public static final Codec<ContributorStarby> CODEC = RecordCodecBuilder.create(
+                instance -> instance.group(
+                        Codec.STRING.fieldOf("name").forGetter(ContributorStarby::getName),
+                        Codec.STRING.fieldOf("adopter").forGetter(ContributorStarby::getAdopter),
+                        Codec.STRING.fieldOf("color").forGetter(ContributorStarby::getColor),
+                        Codec.STRING.fieldOf("bio").forGetter(ContributorStarby::getBio)
+                ).apply(instance, ContributorStarby::new)
+        );
+
         public String name;
         public String adopter;
         public String color;
@@ -95,6 +101,22 @@ public class Rewards {
                     throw new RuntimeException("Color is not a valid dye color");
                 }
             }
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getAdopter() {
+            return adopter;
+        }
+
+        public String getColor() {
+            return color;
+        }
+
+        public String getBio() {
+            return bio;
         }
     }
 }
