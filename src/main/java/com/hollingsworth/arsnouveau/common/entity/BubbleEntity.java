@@ -66,7 +66,9 @@ public class BubbleEntity extends Projectile implements GeoEntity {
 
         if (entityData.get(HAS_POPPED)) {
             poppingTicks++;
-        } else if(!level.isClientSide) {
+        }
+
+        if (!level.isClientSide) {
             age++;
             if (age > maxAge) {
                 this.pop();
