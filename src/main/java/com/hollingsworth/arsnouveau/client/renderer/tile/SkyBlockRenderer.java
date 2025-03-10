@@ -26,6 +26,12 @@ public class SkyBlockRenderer extends MirrorweaveRenderer<SkyBlockTile>{
         if(tileEntityIn.showFacade() || Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasEffect(ModPotions.MAGIC_FIND_EFFECT)){
             super.render((MirrorWeaveTile) tileEntityIn, partialTicks, pPoseStack, bufferIn, combinedLightIn, combinedOverlayIn);
         }else {
+            if(tileEntityIn.renderInvalid){
+                updateCulling(tileEntityIn, tileEntityIn.getStateForCulling());
+            }
+            if(tileEntityIn.disableRender){
+                return;
+            }
             renderCube(tileEntityIn, pPoseStack.last().pose(), bufferIn.getBuffer(ShaderRegistry.SKY_RENDER_TYPE));
         }
     }
@@ -40,7 +46,7 @@ public class SkyBlockRenderer extends MirrorweaveRenderer<SkyBlockTile>{
     }
 
     private void renderFace(SkyBlockTile tileEntityIn, Matrix4f matrix, VertexConsumer buffer, float f, float g, float h, float i, float j, float k, float l, float m, Direction direction) {
-        if (tileEntityIn.shouldRenderFace(direction)) {
+        if (tileEntityIn.shouldRenderDirection(direction)) {
             buffer.addVertex(matrix, f, h, j);
             buffer.addVertex(matrix, g, h, k);
             buffer.addVertex(matrix, g, i, l);

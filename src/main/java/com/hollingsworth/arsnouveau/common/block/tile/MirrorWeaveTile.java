@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.spell.ILightable;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.common.block.MirrorWeave;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
@@ -18,6 +19,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -106,9 +108,18 @@ public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILigh
         }
     }
 
-
     public BlockState getDefaultBlockState(){
         return BlockRegistry.MIRROR_WEAVE.defaultBlockState();
+    }
+
+    /**
+     * Which state should be used for culling renderable sides
+     */
+    public BlockState getStateForCulling(){
+        if(this.mimicState.is(BlockTagProvider.FALSE_OCCLUSION)){
+            return Blocks.COBBLESTONE.defaultBlockState();
+        }
+        return mimicState;
     }
 
     @Override

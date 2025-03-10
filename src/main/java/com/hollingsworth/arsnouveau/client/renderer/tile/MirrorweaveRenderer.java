@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.common.block.tile.MirrorWeaveTile;
-import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -42,38 +41,13 @@ public class MirrorweaveRenderer<T extends MirrorWeaveTile> implements BlockEnti
     public void render(MirrorWeaveTile tileEntityIn, float partialTick, PoseStack pPoseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         BlockState renderState = tileEntityIn.mimicState;
         if(Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasEffect(ModPotions.MAGIC_FIND_EFFECT)){
-            renderState = BlockRegistry.MIRROR_WEAVE.defaultBlockState();
+            renderState = tileEntityIn.getDefaultBlockState();
         }
         if (renderState == null)
             return;
 
         if(tileEntityIn.renderInvalid){
-            boolean disableEntireRender = true;
-            tileEntityIn.renderInvalid = false;
-            for(Direction direction : DIRECTIONS){
-                BlockPos blockingPos = tileEntityIn.getBlockPos().relative(direction);
-                BlockState blockingState = tileEntityIn.getLevel().getBlockState(blockingPos);
-                tileEntityIn.setRenderDirection(direction, false);
-                if(tileEntityIn.getLevel().getBlockEntity(blockingPos) instanceof MirrorWeaveTile neighborTile){
-                    blockingState = neighborTile.mimicState;
-                }
-                var blockingShape = blockingState.getOcclusionShape(tileEntityIn.getLevel(), blockingPos);
-                if(!tileEntityIn.shouldRenderFace(renderState, blockingState, tileEntityIn.getLevel(), tileEntityIn.getBlockPos(), direction, blockingPos)){
-                    continue;
-                }
-                if(!blockingState.canOcclude()) {
-                    tileEntityIn.setRenderDirection(direction, true);
-                    disableEntireRender = false;
-                    continue;
-                }
-
-                if(blockingState.canOcclude() && Shapes.blockOccudes(Shapes.block(), blockingShape, direction)){
-                    tileEntityIn.setRenderDirection(direction, true);
-                    disableEntireRender = false;
-                    continue;
-                }
-            }
-            tileEntityIn.disableRender = disableEntireRender;
+            updateCulling(tileEntityIn, tileEntityIn.getStateForCulling());
         }
         if(tileEntityIn.disableRender){
             return;
@@ -83,6 +57,35 @@ public class MirrorweaveRenderer<T extends MirrorWeaveTile> implements BlockEnti
         renderBlock(tileEntityIn, tileEntityIn.getBlockPos(), renderState, pPoseStack, bufferIn, tileEntityIn.getLevel(), true, combinedOverlayIn);
         pPoseStack.popPose();
         ModelBlockRenderer.clearCache();
+    }
+
+    public void updateCulling(MirrorWeaveTile tileEntityIn, BlockState renderState){
+        boolean disableEntireRender = true;
+        tileEntityIn.renderInvalid = false;
+        for(Direction direction : DIRECTIONS){
+            BlockPos blockingPos = tileEntityIn.getBlockPos().relative(direction);
+            BlockState blockingState = tileEntityIn.getLevel().getBlockState(blockingPos);
+            tileEntityIn.setRenderDirection(direction, false);
+            if(tileEntityIn.getLevel().getBlockEntity(blockingPos) instanceof MirrorWeaveTile neighborTile){
+                blockingState = neighborTile.getStateForCulling();
+            }
+            var blockingShape = blockingState.getOcclusionShape(tileEntityIn.getLevel(), blockingPos);
+            if(!tileEntityIn.shouldRenderFace(renderState, blockingState, tileEntityIn.getLevel(), tileEntityIn.getBlockPos(), direction, blockingPos)){
+                continue;
+            }
+            if(!blockingState.canOcclude()) {
+                tileEntityIn.setRenderDirection(direction, true);
+                disableEntireRender = false;
+                continue;
+            }
+
+            if(blockingState.canOcclude() && Shapes.blockOccudes(Shapes.block(), blockingShape, direction)){
+                tileEntityIn.setRenderDirection(direction, true);
+                disableEntireRender = false;
+                continue;
+            }
+        }
+        tileEntityIn.disableRender = disableEntireRender;
     }
 
     private void renderBlock(MirrorWeaveTile tile, BlockPos pPos, BlockState pState, PoseStack pPoseStack, MultiBufferSource pBufferSource, Level pLevel, boolean pExtended, int pPackedOverlay) {
