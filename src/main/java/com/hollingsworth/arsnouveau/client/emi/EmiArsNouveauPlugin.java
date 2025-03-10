@@ -2,8 +2,12 @@ package com.hollingsworth.arsnouveau.client.emi;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
+import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
+import com.hollingsworth.arsnouveau.api.spell.SpellSchools;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
+import com.hollingsworth.arsnouveau.client.jei.AliasProvider;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.armor.AnimatedMagicArmor;
 import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
@@ -17,14 +21,23 @@ import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
+import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @EmiEntrypoint
 public class EmiArsNouveauPlugin implements EmiPlugin {
@@ -56,6 +69,7 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
         this.registerCategories(registry);
         this.registerRecipes(registry);
         this.registerStacks(registry);
+        this.registerAliases(registry);
         registry.addRecipeHandler(MenuRegistry.STORAGE.get(), new EmiLecternRecipeHandler<>());
     }
 
@@ -99,7 +113,8 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
                 case EnchantingApparatusRecipe enchantingApparatusRecipe when !enchantingApparatusRecipe.excludeJei() ->
                         new EmiEnchantingApparatusRecipe<>(id, enchantingApparatusRecipe);
                 case CrushRecipe crushRecipe -> new EmiCrushRecipe(id, crushRecipe);
-                case BuddingConversionRecipe buddingConversionRecipe -> new EmiBuddingConversionRecipe(id, buddingConversionRecipe);
+                case BuddingConversionRecipe buddingConversionRecipe ->
+                        new EmiBuddingConversionRecipe(id, buddingConversionRecipe);
                 case ScryRitualRecipe scryRitualRecipe -> new EmiScryRitualRecipe(id, scryRitualRecipe);
                 case AlakarkinosRecipe alakarkinosRecipe -> new EmiAlakarkinosRecipe(id, alakarkinosRecipe);
                 default -> null;
@@ -141,6 +156,33 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
                 stack.set(DataComponentRegistry.ARMOR_PERKS, perkHolder.setTier(tier));
                 final int finalTier = tier;
                 registry.addEmiStackAfter(EmiStack.of(stack.copy()), s -> s.getItemStack().is(stack.getItem()) && s.getItemStack().get(DataComponentRegistry.ARMOR_PERKS).getTier() == finalTier - 1);
+            }
+        }
+    }
+
+    public void registerAliases(EmiRegistry registry) {
+        List<SpellSchool> schools = List.of(SpellSchools.ELEMENTAL, SpellSchools.ABJURATION, SpellSchools.CONJURATION, SpellSchools.NECROMANCY, SpellSchools.MANIPULATION, SpellSchools.ELEMENTAL_AIR, SpellSchools.ELEMENTAL_EARTH, SpellSchools.ELEMENTAL_FIRE, SpellSchools.ELEMENTAL_WATER);
+        Map<SpellSchool, List<EmiStack>> schoolToIngredientMap = new HashMap<>();
+
+        for (var supplier : GlyphRegistry.getGlyphItemMap().values()) {
+            for (var school : schools) {
+                var glyph = supplier.get();
+                if (school.isPartOfSchool(glyph.spellPart)) {
+                    schoolToIngredientMap.computeIfAbsent(school, k -> new ArrayList<>()).add(EmiStack.of(glyph));
+                }
+            }
+        }
+
+        for (var entry : schoolToIngredientMap.entrySet()) {
+            registry.addAlias(EmiIngredient.of(entry.getValue()), entry.getKey().getTextComponent());
+        }
+
+        for (DeferredHolder<Item, ? extends Item> entry : ItemsRegistry.ITEMS.getEntries()) {
+            if (entry.get() instanceof AliasProvider aliasProvider) {
+                for (var alias : aliasProvider.getAliases()) {
+                    // TODO: switch to method that allows for passing List<Component> if and when it exists.
+                    registry.addAlias(EmiStack.of(entry.get()), Component.translatable(alias.toTranslationKey()));
+                }
             }
         }
     }
