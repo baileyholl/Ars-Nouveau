@@ -45,9 +45,17 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-        AbstractCaster<?> caster = getSpellCaster(stack);
-        Spell spell = caster.getSpell();
-        return caster.castSpell(worldIn, playerIn, handIn, Component.empty(), spell);
+        if (!worldIn.isClientSide) {
+            return InteractionResultHolder.pass(stack);
+        }
+
+        var caster = this.getSpellCaster(stack);
+        if (caster == null) {
+            return InteractionResultHolder.pass(stack);
+        }
+        caster.castOnServer(handIn, Component.empty());
+
+        return InteractionResultHolder.pass(stack);
     }
 
     @Override
