@@ -129,14 +129,14 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
 
     public static class Serializer implements RecipeSerializer<EnchantmentRecipe> {
 
-        public static MapCodec<EnchantmentRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+        public static final MapCodec<EnchantmentRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 Ingredient.CODEC.listOf().fieldOf("pedestalItems").forGetter(EnchantmentRecipe::pedestalItems),
                 ResourceKey.codec(Registries.ENCHANTMENT).fieldOf("enchantment").forGetter(EnchantmentRecipe::enchantmentKey),
                 Codec.INT.fieldOf("level").forGetter(EnchantmentRecipe::enchantLevel),
                 Codec.INT.fieldOf("sourceCost").forGetter(EnchantmentRecipe::sourceCost)
         ).apply(instance, EnchantmentRecipe::new));
 
-        public static StreamCodec<RegistryFriendlyByteBuf, EnchantmentRecipe> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<RegistryFriendlyByteBuf, EnchantmentRecipe> STREAM_CODEC = StreamCodec.composite(
                 Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.collection(ArrayList::new)),
                 EnchantmentRecipe::pedestalItems,
                 ResourceKey.streamCodec(Registries.ENCHANTMENT),

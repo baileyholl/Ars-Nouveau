@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -37,7 +38,11 @@ public record ScryRitualRecipe(TagKey<Item> augment, TagKey<Block> highlight) im
                 TagKey.codec(Registries.BLOCK).fieldOf("highlight").forGetter(ScryRitualRecipe::highlight)
         ).apply(instance, ScryRitualRecipe::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, ScryRitualRecipe> STREAM_CODEC = CheatSerializer.create(CODEC);
+        public static final StreamCodec<RegistryFriendlyByteBuf, ScryRitualRecipe> STREAM_CODEC = StreamCodec.composite(
+                ANCodecs.streamTagKey(Registries.ITEM), ScryRitualRecipe::augment,
+                ANCodecs.streamTagKey(Registries.BLOCK), ScryRitualRecipe::highlight,
+                ScryRitualRecipe::new
+        );
 
         @Override
         public MapCodec<ScryRitualRecipe> codec() {

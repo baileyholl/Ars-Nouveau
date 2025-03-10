@@ -21,6 +21,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -87,7 +88,7 @@ public record CasterTomeData(String name, List<ResourceLocation> spell, Resource
     }
 
     public static class Serializer implements RecipeSerializer<CasterTomeData> {
-        public static MapCodec<CasterTomeData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+        public static final MapCodec<CasterTomeData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 Codec.STRING.fieldOf("name").forGetter(CasterTomeData::name),
                 Codec.list(ResourceLocation.CODEC).fieldOf("spell").forGetter(CasterTomeData::spell),
                 ResourceLocation.CODEC.fieldOf("tome_type").forGetter(CasterTomeData::tomeType),
@@ -96,7 +97,15 @@ public record CasterTomeData(String name, List<ResourceLocation> spell, Resource
                 ConfiguredSpellSound.CODEC.fieldOf("sound").forGetter(CasterTomeData::sound)
         ).apply(instance, CasterTomeData::new));
 
-        public static StreamCodec<RegistryFriendlyByteBuf, CasterTomeData> STREAM = CheatSerializer.create(CODEC);
+        public static final StreamCodec<RegistryFriendlyByteBuf, CasterTomeData> STREAM = StreamCodec.composite(
+                ByteBufCodecs.STRING_UTF8, CasterTomeData::name,
+                ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()), CasterTomeData::spell,
+                ResourceLocation.STREAM_CODEC, CasterTomeData::tomeType,
+                ByteBufCodecs.STRING_UTF8,  CasterTomeData::flavorText,
+                ParticleColor.STREAM, CasterTomeData::particleColor,
+                ConfiguredSpellSound.STREAM, CasterTomeData::sound,
+                CasterTomeData::new
+        );
 
         @Override
         public MapCodec<CasterTomeData> codec() {

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
 import com.hollingsworth.arsnouveau.api.registry.AlakarkinosConversionRegistry.LootDrop;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -56,7 +57,13 @@ public record AlakarkinosRecipe(Block input, ResourceKey<LootTable> table, int w
                 LootDrops.CODEC.optionalFieldOf("drops").forGetter(AlakarkinosRecipe::drops)
         ).apply(instance, AlakarkinosRecipe::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, AlakarkinosRecipe> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(CODEC.codec());
+        public static final StreamCodec<RegistryFriendlyByteBuf, AlakarkinosRecipe> STREAM_CODEC = StreamCodec.composite(
+                ANCodecs.streamRegistry(BuiltInRegistries.BLOCK), AlakarkinosRecipe::input,
+                ResourceKey.streamCodec(Registries.LOOT_TABLE), AlakarkinosRecipe::table,
+                ByteBufCodecs.INT, AlakarkinosRecipe::weight,
+                ByteBufCodecs.optional(LootDrops.STREAM_CODEC), AlakarkinosRecipe::drops,
+                AlakarkinosRecipe::new
+        );
 
         public static final StreamCodec<RegistryFriendlyByteBuf, AlakarkinosRecipe> STREAM = StreamCodec.of(
                 AlakarkinosRecipe.Serializer::toNetwork, AlakarkinosRecipe.Serializer::fromNetwork

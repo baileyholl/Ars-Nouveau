@@ -33,7 +33,7 @@ import java.util.function.Consumer;
 
 public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, TooltipProvider {
 
-    public static MapCodec<StarbuncleCharmData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+    public static final MapCodec<StarbuncleCharmData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ComponentSerialization.CODEC.optionalFieldOf("name").forGetter(StarbuncleCharmData::getName),
             Codec.STRING.optionalFieldOf("color", DyeColor.ORANGE.getName()).forGetter(StarbuncleCharmData::getColor),
 //            Block.CODEC.fieldOf("path").forGetter(data -> data.pathBlock),
@@ -45,7 +45,7 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
             Codec.STRING.optionalFieldOf("bio", "").forGetter(StarbuncleCharmData::getBio)
     ).apply(instance, StarbuncleCharmData::new));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, StarbuncleCharmData> STREAM_CODEC = ANCodecs.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, StarbuncleCharmData> STREAM_CODEC = ANCodecs.composite(
             ComponentSerialization.STREAM_CODEC.apply(ByteBufCodecs::optional),
             StarbuncleCharmData::getName,
             ByteBufCodecs.STRING_UTF8,
