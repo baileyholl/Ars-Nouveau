@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.event.InvalidateMirrorweaveRender;
 import com.hollingsworth.arsnouveau.common.block.tile.MirrorWeaveTile;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -38,7 +40,22 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
     }
 
     public MirrorWeave(){
-        this(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion());
+        this(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion().isSuffocating(MirrorWeave::isSuffocating)
+                .isViewBlocking(MirrorWeave::isViewBlocking));
+    }
+
+    public static boolean isSuffocating(BlockState state, BlockGetter level, BlockPos pos) {
+        if(level.getBlockEntity(pos) instanceof MirrorWeaveTile tile && !tile.mimicState.is(BlockTagProvider.FALSE_OCCLUSION)){
+            return tile.mimicState.isSuffocating(level, pos);
+        }
+        return true;
+    }
+
+    public static boolean isViewBlocking(BlockState state, BlockGetter level, BlockPos pos) {
+        if(level.getBlockEntity(pos) instanceof MirrorWeaveTile tile && !tile.mimicState.is(BlockTagProvider.FALSE_OCCLUSION)){
+            return tile.mimicState.isViewBlocking(level, pos);
+        }
+        return true;
     }
 
     @Override
@@ -96,7 +113,7 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
 
     @Override
     public VoxelShape getInteractionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
-        if(pLevel.getBlockEntity(pPos) instanceof MirrorWeaveTile tile  && tile.mimicState.getBlock() != this){
+        if(pLevel.getBlockEntity(pPos) instanceof MirrorWeaveTile tile && !tile.mimicState.is(BlockTagProvider.FALSE_OCCLUSION)){
             return tile.mimicState.getInteractionShape(pLevel, pPos);
         }
         return super.getInteractionShape(pState, pLevel, pPos);
@@ -104,7 +121,7 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
 
     @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        if(pLevel.getBlockEntity(pPos) instanceof MirrorWeaveTile tile  && tile.mimicState.getBlock() != this){
+        if(pLevel.getBlockEntity(pPos) instanceof MirrorWeaveTile tile && !tile.mimicState.is(BlockTagProvider.FALSE_OCCLUSION)){
             return tile.mimicState.getShape(pLevel, pPos);
         }
         return super.getShape(pState, pLevel, pPos, pContext);
@@ -112,7 +129,7 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
 
     @Override
     public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        if(pLevel.getBlockEntity(pPos) instanceof MirrorWeaveTile tile && tile.mimicState.getBlock() != this){
+        if(pLevel.getBlockEntity(pPos) instanceof MirrorWeaveTile tile && !tile.mimicState.is(BlockTagProvider.FALSE_OCCLUSION)){
             return tile.mimicState.getCollisionShape(pLevel, pPos, pContext);
         }
         return super.getCollisionShape(pState, pLevel, pPos, pContext);
@@ -120,7 +137,7 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
 
     @Override
     public boolean hidesNeighborFace(BlockGetter level, BlockPos pos, BlockState state, BlockState neighborState, Direction dir) {
-        if(level.getBlockEntity(pos) instanceof MirrorWeaveTile tile  && tile.mimicState.getBlock() != this){
+        if(level.getBlockEntity(pos) instanceof MirrorWeaveTile tile && !tile.mimicState.is(BlockTagProvider.FALSE_OCCLUSION)){
             return tile.mimicState.hidesNeighborFace(level, pos, neighborState, dir);
         }
         return super.hidesNeighborFace(level, pos, state, neighborState, dir);
@@ -132,21 +149,38 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
     }
 
     @Override
+    public BlockState getAppearance(BlockState state, BlockAndTintGetter level, BlockPos pos, Direction side, @Nullable BlockState queryState, @Nullable BlockPos queryPos) {
+        if(level.getBlockEntity(pos) instanceof MirrorWeaveTile tile && !tile.mimicState.is(BlockTagProvider.FALSE_OCCLUSION)){
+            return tile.mimicState;
+        }
+
+        return super.getAppearance(state, level, pos, side, queryState, queryPos);
+    }
+
+    @Override
+    protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
+        if(level.getBlockEntity(pos) instanceof MirrorWeaveTile tile && !tile.mimicState.is(BlockTagProvider.FALSE_OCCLUSION)){
+            return tile.mimicState.propagatesSkylightDown(level, pos);
+        }
+        return super.propagatesSkylightDown(state, level, pos);
+    }
+
+    @Override
     public boolean hasDynamicShape() {
         return true;
     }
 
     @Override
     public boolean isCollisionShapeFullBlock(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
-        if(pLevel.getBlockEntity(pPos) instanceof MirrorWeaveTile tile  && tile.mimicState.getBlock() != this){
-            return tile.mimicState != null && tile.mimicState.isCollisionShapeFullBlock(pLevel, pPos);
+        if(pLevel.getBlockEntity(pPos) instanceof MirrorWeaveTile tile && !tile.mimicState.is(BlockTagProvider.FALSE_OCCLUSION)){
+            return tile.mimicState.isCollisionShapeFullBlock(pLevel, pPos);
         }
         return super.isCollisionShapeFullBlock(pState, pLevel, pPos);
     }
 
     @Override
     protected boolean isOcclusionShapeFullBlock(BlockState state, BlockGetter level, BlockPos pos) {
-        if(level.getBlockEntity(pos) instanceof MirrorWeaveTile tile  && tile.mimicState.getBlock() != this){
+        if(level.getBlockEntity(pos) instanceof MirrorWeaveTile tile && !tile.mimicState.is(BlockTagProvider.FALSE_OCCLUSION)){
             return Block.isShapeFullBlock(tile.mimicState.getOcclusionShape(level, pos));
         }
         return super.isOcclusionShapeFullBlock(state, level, pos);
@@ -155,7 +189,7 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
 
     @Override
     protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
-        if(level.getBlockEntity(pos) instanceof MirrorWeaveTile tile  && tile.mimicState.getBlock() != this){
+        if(level.getBlockEntity(pos) instanceof MirrorWeaveTile tile  && !tile.mimicState.is(BlockTagProvider.FALSE_OCCLUSION)){
             return tile.mimicState.getOcclusionShape(level, pos);
         }
         return super.getOcclusionShape(state, level, pos);
@@ -168,6 +202,22 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
             tile.renderInvalid = true;
             tile.updateBlock();
         }
+    }
+
+    @Override
+    protected float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
+        if(level.getBlockEntity(pos) instanceof MirrorWeaveTile tile && !tile.mimicState.is(BlockTagProvider.FALSE_OCCLUSION)){
+            return tile.mimicState.getShadeBrightness(level, pos);
+        }
+        return super.getShadeBrightness(state, level, pos);
+    }
+
+    @Override
+    protected VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        if(level.getBlockEntity(pos) instanceof MirrorWeaveTile tile && !tile.mimicState.is(BlockTagProvider.FALSE_OCCLUSION)){
+            return tile.mimicState.getVisualShape(level, pos, context);
+        }
+        return super.getVisualShape(state, level, pos, context);
     }
 
     @Nullable
