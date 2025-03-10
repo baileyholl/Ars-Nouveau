@@ -32,12 +32,9 @@ import net.neoforged.neoforge.client.model.data.ModelData;
 import java.util.BitSet;
 import java.util.List;
 
-public class MirrorweaveRenderer implements BlockEntityRenderer<MirrorWeaveTile> {
-    private BlockRenderDispatcher blockRenderer;
+public class MirrorweaveRenderer<T extends MirrorWeaveTile> implements BlockEntityRenderer<T> {
 
-    public MirrorweaveRenderer(BlockEntityRendererProvider.Context pContext) {
-        this.blockRenderer = pContext.getBlockRenderDispatcher();
-    }
+    public MirrorweaveRenderer(BlockEntityRendererProvider.Context pContext) {}
 
     static final Direction[] DIRECTIONS = Direction.values();
 
