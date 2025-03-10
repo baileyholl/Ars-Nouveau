@@ -185,12 +185,4 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(LIGHT_LEVEL);
     }
-
-    @Override
-    protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
-        if(level.getBlockEntity(pos) instanceof MirrorWeaveTile tile && tile.mimicState.getBlock() != this){
-            return tile.mimicState.propagatesSkylightDown(level, pos);
-        }
-        return super.propagatesSkylightDown(state, level, pos);
-    }
 }
