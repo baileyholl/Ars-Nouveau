@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.registry.BuddingConversionRegistry;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
@@ -31,6 +32,8 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -45,6 +48,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -57,6 +61,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider.BUDDING_BLOCKS;
 
@@ -77,6 +82,9 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
     public MinecoloniesAdvancedPathNavigate pathNavigate;
     public PathNavigation minecraftPathNav;
     public AmethystGolemGoalState goalState;
+
+    @Nullable
+    public UUID playerUUID;
 
     @Override
     public void fromCharmData(PersistentFamiliarData data) {
@@ -261,6 +269,23 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
         return true;
     }
 
+    public boolean canBreak(BlockPos pos) {
+        return BlockUtil.canUUIDBreak(this.playerUUID, this.level, pos);
+    }
+
+    public void setPlayerUUID(@Nullable UUID playerUUID) {
+        this.playerUUID = playerUUID;
+    }
+
+    @Override
+    public @NotNull InteractionResult interactAt(@NotNull Player player, @NotNull Vec3 vec, @NotNull InteractionHand hand) {
+        if (this.playerUUID == null) {
+            this.playerUUID = player.getUUID();
+            return InteractionResult.SUCCESS;
+        }
+        return InteractionResult.PASS;
+    }
+
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
@@ -269,6 +294,9 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
         tag.putInt("convert", convertCooldown);
         tag.putInt("harvest", harvestCooldown);
         tag.putInt("pickup", pickupCooldown);
+        if (playerUUID != null) {
+            tag.putUUID("playerUUID", playerUUID);
+        }
 
         if (getMainHandItem() != null && !getMainHandItem().isEmpty()) {
             Tag itemTag = getMainHandItem().save(level.registryAccess());
@@ -286,6 +314,9 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
         this.convertCooldown = tag.getInt("convert");
         this.harvestCooldown = tag.getInt("harvest");
         this.pickupCooldown = tag.getInt("pickup");
+        if (tag.hasUUID("playerUUID")) {
+            this.playerUUID = tag.getUUID("playerUUID");
+        }
 
         setHeldStack(ItemStack.parseOptional(level.registryAccess(), tag.getCompound("held")));
     }
