@@ -43,6 +43,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -52,12 +53,11 @@ import java.util.*;
 
 
 public class StorageLecternTile extends ModdedTile implements MenuProvider, ITickable, IWandable, ITooltipProvider, ICapabilityProvider<CraftingLecternTile, Direction, IItemHandler> {
-    public Map<String, InventoryManager> tabManagerMap = new HashMap<>();
+    public Map<String, List<HandlerPos>> tabManagerMap = new HashMap<>();
     public Map<String, Map<StoredItemStack, Long>> itemsByTab = new HashMap<>();
     public Map<Item, Long> itemCounts = new HashMap<>();
     public Map<UUID, String> searches = new HashMap<>();
     public boolean updateItems;
-    public List<BlockPos> connectedInventories = new ArrayList<>();
     public List<String> tabNames = new ArrayList<>();
     public List<HandlerPos> handlerPosList = new ArrayList<>();
 
@@ -68,7 +68,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     public int checkPlayerRangeTicks;
     public boolean canCreateTasks = false;
     public static final String TAB_ALL = "8f6fe318-4ca6-4b29-ab63-15ec5289f5c9";
-
+    public boolean invalidateNextTick;
     public Queue<TransferTask> transferTasks = EvictingQueue.create(10);
     IItemHandler lecternInvWrapper;
 
@@ -82,14 +82,27 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     }
 
     public InventoryManager getInvManager(@Nullable String tab) {
-        if (tab == null || tab.isEmpty())
-            return tabManagerMap.getOrDefault(TAB_ALL, new InventoryManager());
-        return tabManagerMap.getOrDefault(tab, tabManagerMap.getOrDefault(TAB_ALL, new InventoryManager()));
-    }
+        List<HandlerPos> handlers;
+        if(tab == null || tab.isEmpty()){
+            handlers = tabManagerMap.getOrDefault(TAB_ALL, new ArrayList<>());
+        }else{
+            handlers = tabManagerMap.getOrDefault(tab, new ArrayList<>());
+        }
+        List<FilterableItemHandler> itemHandlers = handlers.stream().filter(handler -> {
+            if(handler.handler.getCapability() == null){
+                return false;
+            }
 
-    @Override
-    public void setRemoved() {
-        super.setRemoved();
+            if(tab == null || tab.equals(TAB_ALL)){
+                return true;
+            }
+
+            if(level.isLoaded(handler.pos) && level.getBlockEntity(handler.pos) instanceof Nameable nameable && nameable.hasCustomName()){
+                return nameable.getCustomName().getString().trim().equals(tab.trim());
+            }
+            return false;
+        }).map(handlerPos -> new FilterableItemHandler(handlerPos.handler.getCapability()).withSlotCache(handlerPos.slotCache)).toList();
+        return new InventoryManager(itemHandlers);
     }
 
     @Override
@@ -112,12 +125,15 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 
     public List<String> getTabNames() {
         tabNames = new ArrayList<>();
-        for (BlockPos pos : connectedInventories) {
-            BlockEntity tile = level.getBlockEntity(pos);
-            if (tile instanceof Nameable provider && provider.hasCustomName()) {
-                String tabName = provider.getCustomName().getString().trim();
-                if (!tabName.isEmpty()) {
-                    tabNames.add(provider.getDisplayName().getString());
+        for (HandlerPos handlerPos : this.handlerPosList) {
+            BlockPos pos = handlerPos.pos;
+            if(handlerPos.handler.getCapability() != null){
+                BlockEntity tile = level.getBlockEntity(pos);
+                if (tile instanceof Nameable provider && provider.hasCustomName()) {
+                    String tabName = provider.getCustomName().getString().trim();
+                    if (!tabName.isEmpty()) {
+                        tabNames.add(provider.getDisplayName().getString());
+                    }
                 }
             }
         }
@@ -253,17 +269,16 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             return;
         }
 
-        if (this.connectedInventories.contains(storedPos)) {
+        if (this.handlerPosList.stream().anyMatch(handlerPos -> handlerPos.pos.equals(storedPos))) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.removed"));
-            this.connectedInventories.remove(storedPos);
+            handlerPosList.removeIf(handlerPos -> handlerPos.pos().equals(storedPos));
             this.invalidateCapabilities();
         } else {
-            if (this.connectedInventories.size() >= this.getMaxConnectedInventories()) {
+            if (this.handlerPosList.size() >= this.getMaxConnectedInventories()) {
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.too_many"));
                 return;
             }
-            this.connectedInventories.add(storedPos.immutable());
-            this.invalidateCapabilities();
+            this.addHandlerPos(this, storedPos);
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.from_set"));
         }
         this.mainLecternPos = null;
@@ -285,7 +300,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             return;
         }
         this.mainLecternPos = storedPos.immutable();
-        this.connectedInventories = new ArrayList<>();
+        this.handlerPosList = new ArrayList<>();
         this.invalidateCapabilities();
         PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.lectern_chained", storedPos.getX(), storedPos.getY(), storedPos.getZ()));
         updateBlock();
@@ -297,8 +312,8 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             list.add(ColorPos.centered(mainLecternPos, ParticleColor.TO_HIGHLIGHT));
             return list;
         }
-        for (BlockPos pos : connectedInventories) {
-            list.add(ColorPos.centered(pos, ParticleColor.FROM_HIGHLIGHT));
+        for (HandlerPos pos : handlerPosList) {
+            list.add(ColorPos.centered(pos.pos, ParticleColor.FROM_HIGHLIGHT));
         }
         for (EntityBookwyrm bookwyrm : getBookwyrmEntities()) {
             list.add(ColorPos.centered(bookwyrm.blockPosition(), ParticleColor.GREEN));
@@ -331,6 +346,12 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 				}
 			}
 		}
+
+        if(invalidateNextTick){
+            invalidateCapabilities();
+            invalidateNextTick = false;
+        }
+
 		if(updateItems) {
 			updateItems();
 			updateItems = false;
@@ -340,28 +361,27 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     public void updateItems() {
         itemsByTab.clear();
         tabManagerMap.clear();
-        this.handlerPosList = new ArrayList<>();
         Map<String, List<FilterableItemHandler>> mappedFilterables = new HashMap<>();
         itemsByTab.put(TAB_ALL, new HashMap<>());
-        for (BlockPos pos : connectedInventories) {
+        for (HandlerPos handlerPos : handlerPosList) {
+            BlockPos pos = handlerPos.pos;
             BlockEntity invTile = level.getBlockEntity(pos);
             if (invTile == null) {
                 continue;
             }
-            IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
-            if (handler == null) {
-                continue;
-            }
-            StorageItemHandler storageItemHandler = new StorageItemHandler(handler, InvUtil.filtersOnTile(invTile));
+            IItemHandler handler = handlerPos.handler.getCapability();
+            StorageItemHandler storageItemHandler = new StorageItemHandler(handler, InvUtil.filtersOnTile(invTile), handlerPos.slotCache);
             mappedFilterables.computeIfAbsent(TAB_ALL, s -> new ArrayList<>()).add(storageItemHandler);
-            handlerPosList.add(new HandlerPos(pos, handler));
             if (invTile instanceof Nameable nameable && nameable.hasCustomName()) {
                 String tabName = nameable.getCustomName().getString();
                 mappedFilterables.computeIfAbsent(tabName, s -> new ArrayList<>()).add(storageItemHandler);
+                tabManagerMap.computeIfAbsent(tabName, (key) -> new ArrayList<>()).add(handlerPos);
             }
+            tabManagerMap.computeIfAbsent(TAB_ALL, (key) -> new ArrayList<>()).add(handlerPos);
         }
+
         for (String tabName : mappedFilterables.keySet()) {
-            itemsByTab.put(tabName, new HashMap<>());
+            itemsByTab.computeIfAbsent(tabName, (key) -> new HashMap<>()).clear();
             for (FilterableItemHandler filterableItemHandler : mappedFilterables.get(tabName)) {
                 IItemHandler handler = filterableItemHandler.getHandler();
                 for (int i = 0; i < handler.getSlots(); i++) {
@@ -372,8 +392,8 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
                     itemsByTab.get(tabName).merge(storedItemStack, storedItemStack.getQuantity(), Long::sum);
                 }
             }
-            tabManagerMap.put(tabName, new InventoryManager(mappedFilterables.get(tabName)));
         }
+
         itemCounts = new HashMap<>();
         Map<StoredItemStack, Long> allItems = itemsByTab.get(TAB_ALL);
         for (StoredItemStack stack : allItems.keySet()) {
@@ -408,8 +428,8 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 			if(level.getBlockState(pos).is(BlockTagProvider.AUTOPULL_DISABLED)){
 				continue;
 			}
-			BlockEntity tile = this.level.getBlockEntity(pos);
-			if(tile == null || mainLectern.connectedInventories.contains(pos))
+
+			if(mainLectern.handlerPosList.stream().anyMatch(p -> p.pos.equals(pos)))
 				continue;
 			IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
 			if(handler == null)
@@ -492,7 +512,8 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         super.saveAdditional(compound, pRegistries);
         compound.put("settings", ANCodecs.encode(SortSettings.CODEC, sortSettings));
         ListTag list = new ListTag();
-        for (BlockPos pos : connectedInventories) {
+        for (HandlerPos handlerPos : handlerPosList) {
+            BlockPos pos = handlerPos.pos;
             CompoundTag c = new CompoundTag();
             c.putInt("x", pos.getX());
             c.putInt("y", pos.getY());
@@ -517,12 +538,11 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             sortSettings = ANCodecs.decode(SortSettings.CODEC, compound.getCompound("settings"));
         }
         ListTag list = compound.getList("invs", 10);
-        connectedInventories.clear();
+        handlerPosList.clear();
         for (int i = 0; i < list.size(); i++) {
             CompoundTag c = list.getCompound(i);
-            connectedInventories.add(new BlockPos(c.getInt("x"), c.getInt("y"), c.getInt("z")));
+            handlerPosList.add(new HandlerPos(new BlockPos(c.getInt("x"), c.getInt("y"), c.getInt("z")), null));
         }
-        this.invalidateCapabilities();
         mainLecternPos = null;
         if (compound.contains("mainLecternPos")) {
             mainLecternPos = BlockPos.of(compound.getLong("mainLecternPos"));
@@ -535,6 +555,12 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             }
         }
         updateItems = true;
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        this.initHandlerCache();
     }
 
     public String getLastSearch(Player player) {
@@ -550,9 +576,61 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         if (mainLecternPos != null) {
             tooltip.add(Component.translatable("ars_nouveau.storage.lectern_chained", mainLecternPos.getX(), mainLecternPos.getY(), mainLecternPos.getZ()));
         } else {
-            tooltip.add(Component.translatable("ars_nouveau.storage.num_connected", connectedInventories.size()));
+            tooltip.add(Component.translatable("ars_nouveau.storage.num_connected", handlerPosList.size()));
             tooltip.add(Component.translatable("ars_nouveau.storage.num_bookwyrms", bookwyrmUUIDs.size()));
         }
+    }
+
+    public List<IItemHandler> getConnectedHandlers(){
+        StorageLecternTile lecternTile = this.getMainLectern();
+        List<IItemHandler> handlers = new ArrayList<>();
+        if(lecternTile == null){
+            return handlers;
+        }
+        for(HandlerPos handlerPos : lecternTile.handlerPosList){
+            if(handlerPos.handler == null)
+                continue;
+            IItemHandler handler = handlerPos.handler.getCapability();
+            if(handler != null){
+                handlers.add(handler);
+            }
+        }
+        return handlers;
+    }
+
+    public void addHandlerPos(StorageLecternTile tile, BlockPos pos){
+        BlockCapabilityCache<IItemHandler, Direction> capabilityCache = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, (ServerLevel) level, pos, null, () -> !tile.isRemoved(), () -> {
+            this.invalidateNextTick = true;
+        });
+        if(capabilityCache.getCapability() != null){
+            tile.handlerPosList.add(new HandlerPos(pos.immutable(), capabilityCache));
+            tile.invalidateCapabilities();
+        }
+    }
+
+    // Initialized all existing handlers with their capabilities as they load in null before onLoad
+    public void initHandlerCache(){
+        if(level.isClientSide)
+            return;
+        StorageLecternTile lecternTile = this.getMainLectern();
+        if(lecternTile == null){
+            return;
+        }
+        for (HandlerPos handlerPos : lecternTile.handlerPosList) {
+            BlockPos pos  = handlerPos.pos;
+            if (pos.equals(this.getBlockPos())) {
+                continue;
+            }
+
+            BlockCapabilityCache<IItemHandler, Direction> capabilityCache = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, (ServerLevel) level, pos, null, () -> !lecternTile.isRemoved(), () -> {
+                System.out.println("invalidated");
+                this.invalidateNextTick = true;
+            });
+            if(capabilityCache.getCapability() != null) {
+                handlerPos.handler = capabilityCache;
+            }
+        }
+        this.invalidateCapabilities();
     }
 
     @Override
@@ -562,24 +640,36 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             this.lecternInvWrapper = new LecternInvWrapper(this);
             return this.lecternInvWrapper;
         }
-        List<IItemHandler> modifiables = new ArrayList<>();
-        for (BlockPos pos : lecternTile.connectedInventories) {
-            if (pos.equals(this.getBlockPos())) {
-                continue;
-            }
-            BlockEntity invTile = lecternTile.level.getBlockEntity(pos);
-            if (invTile != null) {
-                IItemHandler lih = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
-                if (lih == null) {
-                    continue;
-                }
-                modifiables.add(lih);
-            }
-        }
-        lecternTile.lecternInvWrapper = new LecternInvWrapper(this, modifiables.toArray(new IItemHandler[0]));
+        lecternTile.lecternInvWrapper = new LecternInvWrapper(this, this.getConnectedHandlers().toArray(new IItemHandler[0]));
         return lecternTile.lecternInvWrapper;
     }
 
-    public record HandlerPos(BlockPos pos, IItemHandler handler) {
+    public static class HandlerPos {
+
+        public BlockPos pos;
+        public BlockCapabilityCache<IItemHandler, Direction> handler;
+        public SlotCache slotCache;
+
+        public HandlerPos(BlockPos pos, BlockCapabilityCache<IItemHandler, Direction> handler) {
+            this.pos = pos;
+            this.handler = handler;
+            this.slotCache = new SlotCache();
+        }
+
+        public BlockPos pos() {
+            return pos;
+        }
+
+        public BlockCapabilityCache<IItemHandler, Direction> handler() {
+            return handler;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof HandlerPos handlerPos) {
+                return this.pos.equals(handlerPos.pos);
+            }
+            return false;
+        }
     }
 }

@@ -24,7 +24,7 @@ public class InventoryManager {
 
     private static final Random random = new Random();
 
-    private List<FilterableItemHandler> filterables;
+    public List<FilterableItemHandler> filterables;
 
     private int extractSlotMax = -1;
 

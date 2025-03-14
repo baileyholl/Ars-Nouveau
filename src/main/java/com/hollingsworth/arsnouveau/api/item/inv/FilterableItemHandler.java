@@ -1,18 +1,15 @@
 package com.hollingsworth.arsnouveau.api.item.inv;
 
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.items.IItemHandler;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * Represents an ItemHandler and its list of filters.
@@ -21,25 +18,20 @@ public class FilterableItemHandler {
     private SlotCache slotCache;
     private IItemHandler handler;
     private List<Function<ItemStack, ItemScroll.SortPref>> filters;
-    private @Nullable Supplier<BlockPos> posSupplier;
 
     public FilterableItemHandler(IItemHandler handler){
         this(handler, new ArrayList<>());
     }
 
     public FilterableItemHandler(IItemHandler handler, List<Function<ItemStack, ItemScroll.SortPref>> filters){
-        this(handler, filters, null);
-    }
-
-    public FilterableItemHandler(IItemHandler handler, List<Function<ItemStack, ItemScroll.SortPref>> filters, @Nullable Supplier<BlockPos> posSupplier){
         this.handler = handler;
         this.filters = filters;
-        this.posSupplier = posSupplier;
         this.slotCache = new SlotCache();
     }
 
-    public @Nullable BlockPos getPos(){
-        return posSupplier == null ? null : posSupplier.get();
+    public FilterableItemHandler withSlotCache(SlotCache cache){
+        this.slotCache = cache;
+        return this;
     }
 
     /**
@@ -126,8 +118,11 @@ public class FilterableItemHandler {
                 int count = stack.getCount();
                 stack = inventory.insertItem(i, stack, simulate);
                 if(stack.getCount() != count){
-                    slotsForStack.add(i);
-                    System.out.println("Adding to cache: " + i);
+                    System.out.println(slotsForStack);
+                    if(slotsForStack.add(i)) {
+                        System.out.println("Adding to cache: " + i);
+                        System.out.println(slotsForStack);
+                    }
                 }
                 if (stack.isEmpty()) {
                     return stack;
@@ -185,8 +180,9 @@ public class FilterableItemHandler {
             int count = stack.getCount();
             stack = dest.insertItem(i, stack, simulate);
             if(stack.getCount() != count){
-                slotCache.getOrCreateSlots(item).add(i);
-                System.out.println("Adding to cache: " + i);
+                if(slotCache.getOrCreateSlots(item).add(i)) {
+                    System.out.println("Adding to cache: " + i);
+                }
             }
 
             if (stack.isEmpty()) {
@@ -194,8 +190,9 @@ public class FilterableItemHandler {
             }
             ItemStack targetStack = dest.getStackInSlot(i);
             if(targetStack.isEmpty()){
-                slotCache.getOrCreateSlots(Items.AIR).add(i);
-                System.out.println("Adding to cache: " + i);
+                if(slotCache.getOrCreateSlots(Items.AIR).add(i)) {
+                    System.out.println("Adding to cache: " + i);
+                }
             }
         }
 
