@@ -62,7 +62,7 @@ public class CraftingTerminalTransferHandler<C extends AbstractContainerMenu & I
 				if(view.getRole() == RecipeIngredientRole.INPUT || view.getRole() == RecipeIngredientRole.CATALYST) {
 					List<ItemStack> possibleStacks = view.getIngredients(VanillaTypes.ITEM_STACK).toList();
 					if(possibleStacks.isEmpty()){
-						inputs.add(null);
+						inputs.add(List.of());
 						continue;
 					}
 

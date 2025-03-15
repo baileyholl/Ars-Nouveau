@@ -93,7 +93,7 @@ public class EmiLecternRecipeHandler<T extends CraftingTerminalMenu> implements 
             }
 
             if (possibleStacks.isEmpty()) {
-                inputs.add(null);
+                inputs.add(List.of());
                 continue;
             }
 
