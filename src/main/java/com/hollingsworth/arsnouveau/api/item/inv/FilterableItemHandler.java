@@ -184,7 +184,7 @@ public class FilterableItemHandler {
             }
             ItemStack targetStack = dest.getStackInSlot(i);
             if(targetStack.isEmpty()){
-                slotCache.getOrCreateSlots(Items.AIR).add(i));
+                slotCache.getOrCreateSlots(Items.AIR).add(i);
             }
         }
 
