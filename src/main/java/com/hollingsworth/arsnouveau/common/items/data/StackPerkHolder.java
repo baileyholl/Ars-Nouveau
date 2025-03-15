@@ -19,7 +19,7 @@ import java.util.Objects;
  */
 public abstract class StackPerkHolder<T> implements IPerkHolder<T> {
 
-    public static Codec<IPerk> PERK_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+    public static final Codec<IPerk> PERK_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             ResourceLocation.CODEC.fieldOf("perk").forGetter(IPerk::getRegistryName)
     ).apply(instance, (name) -> PerkRegistry.getPerkMap().getOrDefault(name, StarbunclePerk.INSTANCE)));
 

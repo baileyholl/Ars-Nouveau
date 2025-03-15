@@ -18,12 +18,12 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public record PresentData(String name, Optional<UUID> uuid) implements TooltipProvider {
-    public static Codec<PresentData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<PresentData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.fieldOf("name").forGetter(PresentData::name),
             UUIDUtil.CODEC.optionalFieldOf("uuid").forGetter(PresentData::uuid)
     ).apply(instance, PresentData::new));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, PresentData> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.STRING_UTF8, PresentData::name, ByteBufCodecs.STRING_UTF8, p -> p.uuid().toString(), PresentData::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, PresentData> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.STRING_UTF8, PresentData::name, ByteBufCodecs.STRING_UTF8, p -> p.uuid().toString(), PresentData::new);
 
     public PresentData(String name, String uuid){
         this(name, Optional.ofNullable(uuid == null ? null : UUID.fromString(uuid)));

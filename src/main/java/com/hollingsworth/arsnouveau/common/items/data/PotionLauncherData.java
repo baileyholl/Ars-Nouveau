@@ -18,12 +18,12 @@ import java.util.Objects;
 
 public record PotionLauncherData(PotionContents renderData, int lastSlot) {
 
-    public static MapCodec<PotionLauncherData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+    public static final MapCodec<PotionLauncherData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
         PotionContents.CODEC.fieldOf("lastDataForRender").forGetter(PotionLauncherData::renderData),
         Codec.INT.fieldOf("lastSlot").forGetter(PotionLauncherData::lastSlot)
     ).apply(instance, PotionLauncherData::new));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, PotionLauncherData> STREAM = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, PotionLauncherData> STREAM = StreamCodec.composite(
             PotionContents.STREAM_CODEC,
             PotionLauncherData::renderData,
             ByteBufCodecs.INT,
