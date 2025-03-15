@@ -118,18 +118,13 @@ public class FilterableItemHandler {
                 int count = stack.getCount();
                 stack = inventory.insertItem(i, stack, simulate);
                 if(stack.getCount() != count){
-                    System.out.println(slotsForStack);
-                    if(slotsForStack.add(i)) {
-                        System.out.println("Adding to cache: " + i);
-                        System.out.println(slotsForStack);
-                    }
+                    slotsForStack.add(i);
                 }
                 if (stack.isEmpty()) {
                     return stack;
                 }
             }else if(slot.isEmpty()){
                 emptySlots.add(i);
-                System.out.println("caching air: " + i);
             }
         }
 
@@ -180,9 +175,8 @@ public class FilterableItemHandler {
             int count = stack.getCount();
             stack = dest.insertItem(i, stack, simulate);
             if(stack.getCount() != count){
-                if(slotCache.getOrCreateSlots(item).add(i)) {
-                    System.out.println("Adding to cache: " + i);
-                }
+                slotCache.getOrCreateSlots(item).add(i);
+
             }
 
             if (stack.isEmpty()) {
@@ -190,9 +184,7 @@ public class FilterableItemHandler {
             }
             ItemStack targetStack = dest.getStackInSlot(i);
             if(targetStack.isEmpty()){
-                if(slotCache.getOrCreateSlots(Items.AIR).add(i)) {
-                    System.out.println("Adding to cache: " + i);
-                }
+                slotCache.getOrCreateSlots(Items.AIR).add(i));
             }
         }
 
@@ -220,7 +212,6 @@ public class FilterableItemHandler {
             // If we blindly insert here, we can create partial stacks instead of combining.
             // If this is a non-stackable, ignore this and insert anywhere because our slot list is air.
             if(stack.isStackable() && targetStack.isEmpty()){
-                System.out.println("cache miss: " + slot);
                 invalidSlots.add(slot);
                 continue;
             }
@@ -228,11 +219,9 @@ public class FilterableItemHandler {
             if(stack.getCount() == count){
                 if(!ItemStack.isSameItemSameComponents(targetStack, stack)){
                     invalidSlots.add(slot);
-                    System.out.println("cache miss: " + slot);
                 }
-            }else{
-                System.out.println("cache hit: " + slot);
             }
+
             if(stack.isEmpty()){
                 break;
             }
@@ -240,7 +229,6 @@ public class FilterableItemHandler {
 
         for(int slot : invalidSlots){
             slots.remove(slot);
-            System.out.println("Removing from cache: " + slot);
         }
 
         return stack;
@@ -262,7 +250,6 @@ public class FilterableItemHandler {
             }else{
                 // If we successfully inserted into an empty slot, cache the inserted item slot and remove it from the empty slot list.
                 if(!dest.getStackInSlot(slot).isEmpty()){
-                    System.out.println("cache hit: " + slot);
                     slotCache.getOrCreateSlots(stack.getItem()).add(slot);
                     invalidSlots.add(slot);
                 }
@@ -274,7 +261,6 @@ public class FilterableItemHandler {
 
         for(int slot : invalidSlots){
             slots.remove(slot);
-            System.out.println("Removing from cache: " + slot);
         }
 
         return stack;
