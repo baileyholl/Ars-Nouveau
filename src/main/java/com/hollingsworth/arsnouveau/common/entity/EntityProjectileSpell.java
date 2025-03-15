@@ -212,7 +212,8 @@ public class EntityProjectileSpell extends ColoredProjectile {
         double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 6);
         for (double j = 0; j < dist; j++) {
             double coeff = j / dist;
-            level.addParticle(GlowParticleData.createData(getParticleColor()),
+            level.addAlwaysVisibleParticle(GlowParticleData.createData(getParticleColor()),
+                    true,
                     (float) (xo + deltaX * coeff),
                     (float) (yo + deltaY * coeff) + 0.1, (float)
                             (zo + deltaZ * coeff),

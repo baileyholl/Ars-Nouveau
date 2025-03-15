@@ -2,11 +2,10 @@ package com.hollingsworth.arsnouveau.client.container;
 
 import com.google.common.collect.Lists;
 import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
+import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
 import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
 import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -291,21 +290,19 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 	}
 
 	@Override
-	public void receive(ServerPlayer sender, HolderLookup.Provider reg, CompoundTag message) {
+	public void receive(ServerPlayer sender, HolderLookup.Provider reg, ClientToServerStoragePacket.Data message) {
 		super.receive(sender, reg, message);
-		if(message.contains("i")) {
-			ItemStack[][] stacks = new ItemStack[9][];
-			ListTag list = message.getList("i", 10);
-			for (int i = 0;i < list.size();i++) {
-				CompoundTag nbttagcompound = list.getCompound(i);
-				byte slot = nbttagcompound.getByte("s");
-				byte l = nbttagcompound.getByte("l");
-				stacks[slot] = new ItemStack[l];
-				for (int j = 0;j < l;j++) {
-					CompoundTag tag = nbttagcompound.getCompound("i" + j);
-					stacks[slot][j] = ItemStack.parseOptional(reg, tag);
-				}
+		if(message.craft().isPresent()) {
+			List<List<ItemStack>> stacksList = message.craft().get();
+			if (stacksList.size() != 9) {
+				return;
 			}
+
+			ItemStack[][] stacks = new ItemStack[9][];
+			for (int i = 0; i < 9; i++) {
+				stacks[i] = stacksList.get(i).toArray(ItemStack[]::new);
+			}
+
 			((CraftingLecternTile) te).transferToGrid(pinv.player, stacks, tabs.get(sender.getUUID()));
 		}
 	}

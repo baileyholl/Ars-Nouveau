@@ -656,14 +656,14 @@ public class PatchouliProvider extends SimpleDataProvider{
                 .withEntries(scrollRelations));
         dominionWand.builder.withPage(new RelationsPage().withEntry(storageLectern).withEntry(displayCase).withEntry(starby));
 
-        addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.SPELL_SENSOR).withLocalizedText().withPage(new ApparatusPage(BlockRegistry.SPELL_SENSOR)), getPath(AUTOMATION, "spell_sensor"));
-        addPage(new PatchouliBuilder(EQUIPMENT, ItemsRegistry.JUMP_RING).withLocalizedText().withPage(new ApparatusPage(ItemsRegistry.JUMP_RING)), getPath(EQUIPMENT, "jump_ring"));
-        addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.REDSTONE_RELAY).withLocalizedText().withPage(new CraftingPage(BlockRegistry.REDSTONE_RELAY)), getPath(AUTOMATION, "redstone_relay"));
+        addBasicItem(BlockRegistry.SPELL_SENSOR, AUTOMATION, new ApparatusPage(BlockRegistry.SPELL_SENSOR));
+        addBasicItem(ItemsRegistry.JUMP_RING, EQUIPMENT, new ApparatusPage(ItemsRegistry.JUMP_RING));
+        addBasicItem(BlockRegistry.REDSTONE_RELAY, AUTOMATION, new CraftingPage(BlockRegistry.REDSTONE_RELAY));
 
         addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.ARCHWOOD_GRATE).withLocalizedText()
                 .withPage(new CraftingPage(BlockRegistry.ARCHWOOD_GRATE).withRecipe2(BlockRegistry.GOLD_GRATE))
                 .withPage(new CraftingPage(BlockRegistry.SMOOTH_SOURCESTONE_GRATE).withRecipe2(BlockRegistry.SOURCESTONE_GRATE)), getPath(AUTOMATION, "grates"));
-        addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.SOURCE_LAMP).withLocalizedText().withPage(new CraftingPage(BlockRegistry.SOURCE_LAMP)), getPath(AUTOMATION, "source_lamp"));
+        addBasicItem(BlockRegistry.SOURCE_LAMP, AUTOMATION, new CraftingPage(BlockRegistry.SOURCE_LAMP));
 
         addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.ALAKARKINOS_CHARM)
                 .withLocalizedText()
