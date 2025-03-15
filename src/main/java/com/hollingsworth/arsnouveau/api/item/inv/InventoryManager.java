@@ -9,7 +9,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,7 @@ public class InventoryManager {
 
     private static final Random random = new Random();
 
-    private List<FilterableItemHandler> filterables;
+    public List<FilterableItemHandler> filterables;
 
     private int extractSlotMax = -1;
 
@@ -90,7 +89,7 @@ public class InventoryManager {
         List<SlotReference> references = new ArrayList<>();
         for (FilterableItemHandler filterable : preferredForStack(stack, false)) {
             int count = stack.getCount();
-            stack = ItemHandlerHelper.insertItemStacked(filterable.getHandler(), stack, false);
+            stack = filterable.insertItemStacked(stack, false);
             if (count != stack.getCount()) {
                 references.add(new SlotReference(filterable.getHandler(), filterable.getHandler().getSlots()));
             }

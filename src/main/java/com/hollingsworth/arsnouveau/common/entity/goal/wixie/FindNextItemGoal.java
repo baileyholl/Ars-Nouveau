@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.event.FlyingItemEvent;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NearbyPlayerCache;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
@@ -111,7 +110,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
             List<ItemStack> neededStacks = new ArrayList<>(tile.craftManager.neededItems);
             boolean anyFound = false;
             int spawnDelay = 0;
-            List<StorageLecternTile.HandlerPos> handlers = new ArrayList<>();
+            List<ItemHandlerPos> handlers = new ArrayList<>();
             for (BlockPos b : tile.getInventories()) {
                 BlockEntity blockEntity = world.getBlockEntity(b);
                 if(blockEntity == null)
@@ -119,15 +118,17 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
                 IItemHandler itemHandler = world.getCapability(Capabilities.ItemHandler.BLOCK, b, null);
                 if (itemHandler == null)
                     continue;
-               handlers.add(new StorageLecternTile.HandlerPos(b.immutable(), itemHandler));
+               handlers.add(new ItemHandlerPos(b.immutable(), itemHandler));
             }
             for(ItemStack needed : neededStacks) {
-                for (StorageLecternTile.HandlerPos handler : handlers) {
+                for (ItemHandlerPos handler : handlers) {
                     if(tile.craftManager.neededItems.isEmpty()){
                         found = true;
                         return;
                     }
                     IItemHandler itemHandler = handler.handler();
+                    if(itemHandler == null)
+                        continue;
                     for (int j = 0; j < itemHandler.getSlots(); j++) {
                         ItemStack slotStack = itemHandler.getStackInSlot(j);
                         if (slotStack.getItem() == needed.getItem()) {
@@ -174,5 +175,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
     public void setPath(double x, double y, double z, double speedIn) {
         wixie.getNavigation().moveTo(wixie.getNavigation().createPath(x + 0.5, y + 0.5, z + 0.5, 0), speedIn);
     }
+
+    record ItemHandlerPos(BlockPos pos, IItemHandler handler) {}
 
 }
