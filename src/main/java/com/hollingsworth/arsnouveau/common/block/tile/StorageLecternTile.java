@@ -127,7 +127,8 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         tabNames = new ArrayList<>();
         for (HandlerPos handlerPos : this.handlerPosList) {
             BlockPos pos = handlerPos.pos;
-            if(handlerPos.handler.getCapability() != null){
+            var capCache = handlerPos.handler;
+            if(capCache != null && capCache.getCapability() != null){
                 BlockEntity tile = level.getBlockEntity(pos);
                 if (tile instanceof Nameable provider && provider.hasCustomName()) {
                     String tabName = provider.getCustomName().getString().trim();
@@ -159,7 +160,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         }
 
         for (ExtractedStack extractedStack : multiSlotReference.getSlots()) {
-            BlockPos pos = handlerPosList.stream().filter(handlerPos -> handlerPos.handler().equals(extractedStack.getHandler())).findFirst().map(HandlerPos::pos).orElse(null);
+            BlockPos pos = handlerPosList.stream().filter(handlerPos -> handlerPos.handler() != null && handlerPos.handler().equals(extractedStack.getHandler())).findFirst().map(HandlerPos::pos).orElse(null);
             if (pos != null) {
                 addTransferTask(new TransferTask(pos.above(), getBlockPos().above(), extractedStack.stack, level.getGameTime()));
             }
@@ -171,7 +172,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             return;
         }
         for (SlotReference extractedStack : reference.getSlots()) {
-            BlockPos pos = handlerPosList.stream().filter(handlerPos -> handlerPos.handler().equals(extractedStack.getHandler())).findFirst().map(HandlerPos::pos).orElse(null);
+            BlockPos pos = handlerPosList.stream().filter(handlerPos -> handlerPos.handler != null && handlerPos.handler().equals(extractedStack.getHandler())).findFirst().map(HandlerPos::pos).orElse(null);
             if (pos != null) {
                 addTransferTask(new TransferTask(getBlockPos().above(), pos.above(), stack, level.getGameTime()));
             }
