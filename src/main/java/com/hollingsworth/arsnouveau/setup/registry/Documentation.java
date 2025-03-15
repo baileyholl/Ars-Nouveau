@@ -757,6 +757,7 @@ public class Documentation {
         for (var entry : enchantmentMap.entrySet()) {
             var enchantment = entry.getKey();
             var minMax = entry.getValue();
+            if (level.holder(enchantment).isEmpty()) break;
             DocEntryBuilder builder = new DocEntryBuilder(ENCHANTMENTS, enchantment.location().getPath())
                     .withIcon(Items.ENCHANTED_BOOK);
             builder.entryId = enchantment.location();

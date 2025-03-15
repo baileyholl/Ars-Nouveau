@@ -70,7 +70,7 @@ public class EmiApparatusEnchantingRecipe extends EmiEnchantingApparatusRecipe<E
             stack.remove(DataComponents.CUSTOM_NAME);
             if (stack.is(Items.ENCHANTED_BOOK)) {
                 stack = this.createEnchantedBook();
-            } else {
+            } else if (level != null) {
                 stack.enchant(HolderHelper.unwrap(level, recipe.enchantmentKey), recipe.enchantLevel);
             }
             return EmiStack.of(stack);
@@ -125,24 +125,26 @@ public class EmiApparatusEnchantingRecipe extends EmiEnchantingApparatusRecipe<E
 
         enchantableCache = new ArrayList<>();
         var level = Minecraft.getInstance().level;
-        var enchantment = HolderHelper.unwrap(level, recipe.enchantmentKey);
-        for (var item : BuiltInRegistries.ITEM) {
-            var stack = item.getDefaultInstance();
-            this.addName(stack);
-            if (stack.is(Items.ENCHANTED_BOOK)) {
-                stack = this.createEnchantedBook(this.recipe.enchantLevel - 1);
-            } else {
-                stack.enchant(enchantment, recipe.enchantLevel - 1);
-            }
-
-            var apparatus = new ApparatusRecipeInput(stack, List.of(), null);
-            try {
-                if (recipe.doesReagentMatch(apparatus, level, null)) {
-                    enchantableCache.add(stack);
+        if (level != null && level.holder(recipe.enchantmentKey).isPresent()) {
+            var enchantment = HolderHelper.unwrap(level, recipe.enchantmentKey);
+            for (var item : BuiltInRegistries.ITEM) {
+                var stack = item.getDefaultInstance();
+                this.addName(stack);
+                if (stack.is(Items.ENCHANTED_BOOK)) {
+                    stack = this.createEnchantedBook(this.recipe.enchantLevel - 1);
+                } else {
+                    stack.enchant(enchantment, recipe.enchantLevel - 1);
                 }
-            } catch (Exception ignored) {}
-        }
 
+                var apparatus = new ApparatusRecipeInput(stack, List.of(), null);
+                try {
+                    if (recipe.doesReagentMatch(apparatus, level, null)) {
+                        enchantableCache.add(stack);
+                    }
+                } catch (Exception ignored) {
+                }
+            }
+        }
         return enchantableCache;
     }
 
