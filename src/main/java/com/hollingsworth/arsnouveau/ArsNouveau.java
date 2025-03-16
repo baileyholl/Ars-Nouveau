@@ -1,9 +1,6 @@
 package com.hollingsworth.arsnouveau;
 
-import com.hollingsworth.arsnouveau.api.registry.BuddingConversionRegistry;
-import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
-import com.hollingsworth.arsnouveau.api.registry.GenericRecipeRegistry;
-import com.hollingsworth.arsnouveau.api.registry.ScryRitualRegistry;
+import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.registry.ClientHandler;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
@@ -43,6 +40,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
 import net.neoforged.neoforge.common.world.chunk.TicketController;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +75,8 @@ public class ArsNouveau {
         patchouliLoaded = ModList.get().isLoaded("patchouli");
         immersivePortalsLoaded = ModList.get().isLoaded("immersive_portals_core");
         APIRegistry.setup();
+        modEventBus.addListener(this::registerRegistries);
+        modEventBus.addListener(APIRegistry::onRegisterEvent);
         modContainer.registerConfig(ModConfig.Type.STARTUP, StartupConfig.STARTUP_CONFIG);
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SERVER_CONFIG);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
@@ -138,7 +138,6 @@ public class ArsNouveau {
 
         NeoForge.EVENT_BUS.addListener((ServerStartedEvent e) -> {
             GenericRecipeRegistry.reloadAll(e.getServer().getRecipeManager());
-            CasterTomeRegistry.reloadTomeData(e.getServer().getRecipeManager(), e.getServer().registryAccess());
             BuddingConversionRegistry.reloadBuddingConversionRecipes(e.getServer().getRecipeManager());
             ScryRitualRegistry.reloadScryRitualRecipes(e.getServer().getRecipeManager());
         });
@@ -183,6 +182,15 @@ public class ArsNouveau {
         } catch (Exception e) {
             optifineLoaded = false;
         }
+    }
+
+    private void registerRegistries(NewRegistryEvent event) {
+        event.register(ANRegistries.GLYPH_TYPES);
+        event.register(ANRegistries.GLYPH_ITEMS);
+        event.register(ANRegistries.PERK_TYPES);
+        event.register(ANRegistries.PARTICLE_PROVIDERS);
+        event.register(ANRegistries.RITUAL_TYPES);
+        event.register(ANRegistries.SPELL_SOUNDS);
     }
 
     public static ResourceLocation prefix(String str) {

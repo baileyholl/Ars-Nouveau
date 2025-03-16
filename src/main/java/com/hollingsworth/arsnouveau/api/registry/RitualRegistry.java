@@ -2,31 +2,35 @@ package com.hollingsworth.arsnouveau.api.registry;
 
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class RitualRegistry {
-
-    private static ConcurrentHashMap<ResourceLocation, AbstractRitual> ritualMap = new ConcurrentHashMap<>();
 
     private static ConcurrentHashMap<ResourceLocation, RitualTablet> ritualItemMap = new ConcurrentHashMap<>();
 
     public static @Nullable AbstractRitual getRitual(ResourceLocation id) {
-        if (!ritualMap.containsKey(id))
+        AbstractRitual ritual = ANRegistries.RITUAL_TYPES.get(id);
+        if (ritual == null) {
             return null;
+        }
+
         try {
-            return ritualMap.get(id).getClass().getDeclaredConstructor().newInstance();
+            return ritual.getClass().getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
+    @Deprecated
     public static Map<ResourceLocation, AbstractRitual> getRitualMap() {
-        return ritualMap;
+        return ANRegistries.RITUAL_TYPES.entrySet().stream().collect(Collectors.toUnmodifiableMap(e -> e.getKey().location(), Map.Entry::getValue));
     }
 
     public static Map<ResourceLocation, RitualTablet> getRitualItemMap() {
@@ -34,6 +38,7 @@ public class RitualRegistry {
     }
 
     public static AbstractRitual registerRitual(AbstractRitual ritual) {
-        return ritualMap.put(ritual.getRegistryName(), ritual);
+        Registry.registerForHolder(ANRegistries.RITUAL_TYPES, ritual.getRegistryName(), ritual);
+        return ritual;
     }
 }
