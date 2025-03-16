@@ -205,7 +205,13 @@ public class FilterableItemHandler {
         }
 
         List<Integer> invalidSlots = new ArrayList<>();
+        int maxSlots  = dest.getSlots();
         for(int slot : slots){
+            if(slot >= maxSlots){
+                invalidSlots.add(slot);
+                continue;
+            }
+
             int count = stack.getCount();
             ItemStack targetStack = dest.getStackInSlot(slot);
             // If this stack wants to stack and our cached slot is air but the slot is not, this means our item has moved locations.
@@ -242,7 +248,12 @@ public class FilterableItemHandler {
         }
 
         List<Integer> invalidSlots = new ArrayList<>();
+        int maxSlots  = dest.getSlots();
         for(int slot : slots){
+            if(slot >= maxSlots){
+                invalidSlots.add(slot);
+                continue;
+            }
             int count = stack.getCount();
             stack = dest.insertItem(slot, stack, simulate);
             if(stack.getCount() == count){
