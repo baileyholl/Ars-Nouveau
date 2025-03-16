@@ -28,12 +28,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -64,44 +64,29 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     }
 
     @Override
-    public @NotNull InteractionResult onItemUseFirst(@NotNull ItemStack stack, UseOnContext context) {
-        var player = context.getPlayer();
-        if (player == null) {
-            return super.onItemUseFirst(stack, context);
-        }
-
-        if (player instanceof ServerPlayer serverPlayer) {
-            if (this.tier != SpellTier.CREATIVE) {
-                var iMana = CapabilityRegistry.getMana(serverPlayer);
-                if (iMana != null) {
-                    boolean shouldSync = false;
-                    if (iMana.getBookTier() < this.tier.value) {
-                        iMana.setBookTier(this.tier.value);
-                        shouldSync = true;
-                    }
-
-                    IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(serverPlayer);
-                    if (iMana.getGlyphBonus() < cap.getKnownGlyphs().size()) {
-                        iMana.setGlyphBonus(cap.getKnownGlyphs().size());
-                        shouldSync = true;
-                    }
-
-                    if (shouldSync) {
-                        iMana.syncToClient(serverPlayer);
-                    }
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
+        ItemStack stack = playerIn.getItemInHand(handIn);
+        if (tier != SpellTier.CREATIVE) {
+            var iMana = CapabilityRegistry.getMana(playerIn);
+            if(iMana != null){
+                boolean shouldSync = false;
+                if (iMana.getBookTier() < this.tier.value) {
+                    iMana.setBookTier(this.tier.value);
+                    shouldSync = true;
+                }
+                IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerIn);
+                if (iMana.getGlyphBonus() < cap.getKnownGlyphs().size()) {
+                    iMana.setGlyphBonus(cap.getKnownGlyphs().size());
+                    shouldSync = true;
+                }
+                if(shouldSync && playerIn instanceof ServerPlayer player) {
+                    iMana.syncToClient(player);
                 }
             }
-
-            return InteractionResult.PASS;
         }
+        AbstractCaster<?> caster = getSpellCaster(stack);
 
-        var caster = this.getSpellCaster(stack);
-        if (caster == null) {
-            return InteractionResult.PASS;
-        }
-        caster.castOnServer(context.getHand(), Component.translatable("ars_nouveau.invalid_spell"));
-
-        return InteractionResult.PASS;
+        return caster.castSpell(worldIn, playerIn, handIn, Component.translatable("ars_nouveau.invalid_spell"));
     }
 
     @Override
