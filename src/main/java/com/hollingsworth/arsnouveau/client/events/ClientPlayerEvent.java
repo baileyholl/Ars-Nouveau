@@ -26,16 +26,6 @@ public class ClientPlayerEvent {
     }
 
     @SubscribeEvent
-    public static void onItem(final PlayerInteractEvent.RightClickItem event) {
-        Player entity = event.getEntity();
-        if (!event.getLevel().isClientSide || event.getHand() != InteractionHand.MAIN_HAND)
-            return;
-        if (entity.getItemInHand(event.getHand()).getItem() instanceof SpellBook) {
-            event.setCanceled(true);
-        }
-    }
-
-    @SubscribeEvent
     public static void playerLogout(ClientPlayerNetworkEvent.LoggingOut e) {
         DocDataLoader.writeBookmarks();
     }
