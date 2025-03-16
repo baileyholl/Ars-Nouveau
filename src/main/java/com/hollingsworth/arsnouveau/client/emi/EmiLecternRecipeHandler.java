@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.client.emi;
 
 import com.hollingsworth.arsnouveau.client.container.CraftingTerminalMenu;
 import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
-import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
+import com.hollingsworth.arsnouveau.common.network.ClientTransferHandlerPacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
@@ -16,7 +16,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class EmiLecternRecipeHandler<T extends CraftingTerminalMenu> implements StandardRecipeHandler<T> {
     @Override
@@ -112,7 +111,7 @@ public class EmiLecternRecipeHandler<T extends CraftingTerminalMenu> implements 
             }
 
         }
-        Networking.sendToServer(new ClientToServerStoragePacket(new ClientToServerStoragePacket.Data(Optional.empty(), Optional.empty(), Optional.of(inputs))));
+        Networking.sendToServer(new ClientTransferHandlerPacket(inputs));
 
         return missing.isEmpty();
     }

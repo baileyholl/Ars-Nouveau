@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.client.jei;
 import com.hollingsworth.arsnouveau.client.container.CraftingTerminalMenu;
 import com.hollingsworth.arsnouveau.client.container.IAutoFillTerminal;
 import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
-import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
+import com.hollingsworth.arsnouveau.common.network.ClientTransferHandlerPacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
 import mezz.jei.api.constants.RecipeTypes;
@@ -94,7 +94,7 @@ public class CraftingTerminalTransferHandler<C extends AbstractContainerMenu & I
 			}
 
 			if (doTransfer) {
-				Networking.sendToServer(new ClientToServerStoragePacket(new ClientToServerStoragePacket.Data(Optional.empty(), Optional.empty(), Optional.of(inputs))));
+				Networking.sendToServer(new ClientTransferHandlerPacket(inputs));
 			}
 
 			if(!missing.isEmpty()) {
