@@ -64,11 +64,6 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
                 ModEntities.BUBBLE.get(),
                 ModEntities.ENTITY_FOLLOW_PROJ.get(),
                 ModEntities.ENTITY_FLYING_ITEM.get(),
-                ModEntities.STARBUNCLE_TYPE.get(),
-                ModEntities.ENTITY_DRYGMY.get(),
-                ModEntities.WHIRLISPRIG_TYPE.get(),
-                ModEntities.ENTITY_WIXIE_TYPE.get(),
-                ModEntities.ENTITY_CHIMERA_SPIKE.get(),
                 EntityType.WITHER_SKULL,
                 EntityType.SMALL_FIREBALL,
                 EntityType.DRAGON_FIREBALL
