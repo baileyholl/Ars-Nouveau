@@ -20,13 +20,13 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public record CodexData(Optional<UUID> uuid, String playerName, List<ResourceLocation> glyphIds) implements TooltipProvider {
-    public static Codec<CodexData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<CodexData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             UUIDUtil.CODEC.optionalFieldOf("uuid").forGetter(CodexData::uuid),
             Codec.STRING.optionalFieldOf("playerName", "").forGetter(CodexData::playerName),
             Codec.list(ResourceLocation.CODEC).fieldOf("glyphIds").forGetter(CodexData::glyphIds)
     ).apply(instance, CodexData::new));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, CodexData> STREAM = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, CodexData> STREAM = StreamCodec.composite(
             UUIDUtil.STREAM_CODEC.apply(ByteBufCodecs::optional),
             CodexData::uuid,
             ByteBufCodecs.STRING_UTF8,

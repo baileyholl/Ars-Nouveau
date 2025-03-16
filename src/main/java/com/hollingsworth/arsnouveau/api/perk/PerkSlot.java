@@ -15,13 +15,13 @@ public record PerkSlot(ResourceLocation id, int value, DocAssets.BlitInfo icon) 
         this(id, value, DocAssets.ICON_THREAD_TIER3);
     }
     public static final Codec<PerkSlot> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-            ResourceLocation.CODEC.fieldOf("id").forGetter((PerkSlot::id)),
-            Codec.INT.fieldOf("value").forGetter((PerkSlot::value))
+            ResourceLocation.CODEC.fieldOf("id").forGetter(PerkSlot::id),
+            Codec.INT.fieldOf("value").forGetter(PerkSlot::value)
     ).apply(instance, PerkSlot::new));
 
-    public static Codec<List<PerkSlot>> LIST_CODEC = Codec.list(CODEC);
+    public static final Codec<List<PerkSlot>> LIST_CODEC = Codec.list(CODEC);
 
-    public static Codec<List<List<PerkSlot>>> TIERED_LIST_CODEC = Codec.list(LIST_CODEC);
+    public static final Codec<List<List<PerkSlot>>> TIERED_LIST_CODEC = Codec.list(LIST_CODEC);
 
     public static ConcurrentHashMap<ResourceLocation, PerkSlot> PERK_SLOTS = new ConcurrentHashMap<>();
 

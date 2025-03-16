@@ -1,11 +1,13 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -31,7 +33,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public record DispelEntityRecipe(EntityType<?> entity, ResourceLocation lootTable, LootItemCondition[] conditions) implements SpecialSingleInputRecipe {
+public record DispelEntityRecipe(EntityType<?> entity, ResourceKey<LootTable> lootTable, LootItemCondition[] conditions) implements SpecialSingleInputRecipe {
+    public DispelEntityRecipe(EntityType<?> entity, ResourceLocation lootTable, LootItemCondition[] conditions) {
+        this(entity, ResourceKey.create(Registries.LOOT_TABLE, lootTable), conditions);
+    }
 
     public boolean matches(LivingEntity killer, Entity victim) {
         if (!victim.getType().equals(this.entity)) return false;
@@ -64,7 +69,7 @@ public record DispelEntityRecipe(EntityType<?> entity, ResourceLocation lootTabl
 
         LootParams params = getLootParams(killer, victim);
 
-        LootTable lootTable = killer.level().getServer().reloadableRegistries().getLootTable(ResourceKey.create(Registries.LOOT_TABLE, lootTable()));
+        LootTable lootTable = killer.level().getServer().reloadableRegistries().getLootTable(lootTable());
         return lootTable.getRandomItems(params);
     }
 
@@ -86,11 +91,16 @@ public record DispelEntityRecipe(EntityType<?> entity, ResourceLocation lootTabl
     public static class Serializer implements RecipeSerializer<DispelEntityRecipe> {
         public static final MapCodec<DispelEntityRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity").forGetter(DispelEntityRecipe::entity),
-                ResourceLocation.CODEC.fieldOf("loot_table").forGetter(DispelEntityRecipe::lootTable),
+                ResourceKey.codec(Registries.LOOT_TABLE).fieldOf("loot_table").forGetter(DispelEntityRecipe::lootTable),
                 IGlobalLootModifier.LOOT_CONDITIONS_CODEC.optionalFieldOf("loot_conditions", new LootItemCondition[]{}).forGetter(DispelEntityRecipe::conditions)
         ).apply(instance, DispelEntityRecipe::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, DispelEntityRecipe> STREAM = CheatSerializer.create(CODEC);
+        public static final StreamCodec<RegistryFriendlyByteBuf, DispelEntityRecipe> STREAM = StreamCodec.composite(
+                ANCodecs.streamRegistry(BuiltInRegistries.ENTITY_TYPE), DispelEntityRecipe::entity,
+                ResourceKey.streamCodec(Registries.LOOT_TABLE), DispelEntityRecipe::lootTable,
+                ByteBufCodecs.optional(ByteBufCodecs.fromCodecWithRegistries(IGlobalLootModifier.LOOT_CONDITIONS_CODEC)).map(o -> o.orElse(new LootItemCondition[]{}), Optional::of), DispelEntityRecipe::conditions,
+                DispelEntityRecipe::new
+        );
 
         @Override
         public MapCodec<DispelEntityRecipe> codec() {

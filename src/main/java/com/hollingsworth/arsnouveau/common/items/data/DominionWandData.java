@@ -21,14 +21,14 @@ public record DominionWandData(Optional<GlobalPos> storedPos, Optional<Direction
 
     public static final int NULL_ENTITY = -1;
 
-    public static Codec<DominionWandData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<DominionWandData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             GlobalPos.CODEC.optionalFieldOf("pos").forGetter(DominionWandData::storedPos),
             Direction.CODEC.optionalFieldOf("face").forGetter(DominionWandData::face),
             Codec.BOOL.fieldOf("strict").forGetter(DominionWandData::strict),
             Codec.INT.fieldOf("entityId").forGetter(DominionWandData::storedEntityId)
     ).apply(instance, DominionWandData::new));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, DominionWandData> STREAM = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, DominionWandData> STREAM = StreamCodec.composite(
             GlobalPos.STREAM_CODEC.apply(ByteBufCodecs::optional),
             DominionWandData::storedPos,
             Direction.STREAM_CODEC.apply(ByteBufCodecs::optional),

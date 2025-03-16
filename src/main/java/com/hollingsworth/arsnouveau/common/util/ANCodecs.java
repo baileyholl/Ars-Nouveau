@@ -6,10 +6,15 @@ import com.mojang.datafixers.util.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.phys.Vec2;
 
 import java.util.Map;
@@ -18,7 +23,7 @@ import java.util.function.Function;
 
 public class ANCodecs {
 
-    public static Codec<Vec2> VEC2 = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<Vec2> VEC2 = RecordCodecBuilder.create(instance -> instance.group(
             Codec.FLOAT.fieldOf("x").forGetter(v -> v.x),
             Codec.FLOAT.fieldOf("y").forGetter(v -> v.y)
     ).apply(instance, Vec2::new));
@@ -336,4 +341,11 @@ public class ANCodecs {
         };
     }
 
+    public static <T> StreamCodec<ByteBuf, T> streamRegistry(Registry<T> registry) {
+        return ResourceLocation.STREAM_CODEC.map(registry::get, registry::getKey);
+    }
+
+    public static <T> StreamCodec<ByteBuf, TagKey<T>> streamTagKey(ResourceKey<? extends Registry<T>> registry) {
+        return ResourceLocation.STREAM_CODEC.map(r -> TagKey.create(registry, r), TagKey::location);
+    }
 }

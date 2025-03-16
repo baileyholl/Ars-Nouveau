@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -42,7 +43,11 @@ public record BuddingConversionRecipe(Block input, Block result) implements Spec
                 BuiltInRegistries.BLOCK.byNameCodec().fieldOf("result").forGetter(BuddingConversionRecipe::result)
         ).apply(instance, BuddingConversionRecipe::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, BuddingConversionRecipe> STREAM = CheatSerializer.create(CODEC);
+        public static final StreamCodec<RegistryFriendlyByteBuf, BuddingConversionRecipe> STREAM = StreamCodec.composite(
+                ANCodecs.streamRegistry(BuiltInRegistries.BLOCK), BuddingConversionRecipe::input,
+                ANCodecs.streamRegistry(BuiltInRegistries.BLOCK), BuddingConversionRecipe::result,
+                BuddingConversionRecipe::new
+        );
 
         @Override
         public MapCodec<BuddingConversionRecipe> codec() {

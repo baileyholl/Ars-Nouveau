@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 public record ScryPosData(Optional<BlockPos> pos) {
-    public static Codec<ScryPosData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<ScryPosData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             BlockPos.CODEC.optionalFieldOf("pos").forGetter(ScryPosData::pos)
     ).apply(instance, ScryPosData::new));
 

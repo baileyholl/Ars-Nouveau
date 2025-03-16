@@ -11,6 +11,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -93,13 +94,18 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
     }
 
     public static class Serializer implements RecipeSerializer<ArmorUpgradeRecipe> {
-        public static MapCodec<ArmorUpgradeRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+        public static final MapCodec<ArmorUpgradeRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 Ingredient.CODEC.listOf().fieldOf("pedestalItems").forGetter(ArmorUpgradeRecipe::pedestalItems),
                 Codec.INT.fieldOf("sourceCost").forGetter(ArmorUpgradeRecipe::sourceCost),
                 Codec.INT.fieldOf("tier").forGetter(ArmorUpgradeRecipe::tier)
         ).apply(instance, ArmorUpgradeRecipe::new));
 
-        public static StreamCodec<RegistryFriendlyByteBuf, ArmorUpgradeRecipe> STREAM_CODEC = CheatSerializer.create(CODEC);
+        public static final StreamCodec<RegistryFriendlyByteBuf, ArmorUpgradeRecipe> STREAM_CODEC = StreamCodec.composite(
+                Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()), ArmorUpgradeRecipe::pedestalItems,
+                ByteBufCodecs.INT, ArmorUpgradeRecipe::sourceCost,
+                ByteBufCodecs.INT, ArmorUpgradeRecipe::tier,
+                ArmorUpgradeRecipe::new
+        );
 
         @Override
         public @NotNull MapCodec<ArmorUpgradeRecipe> codec() {

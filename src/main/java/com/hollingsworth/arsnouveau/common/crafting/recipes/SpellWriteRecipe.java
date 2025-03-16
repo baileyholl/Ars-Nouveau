@@ -14,6 +14,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -91,7 +92,11 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe implements IText
                 Codec.INT.fieldOf("sourceCost").forGetter(SpellWriteRecipe::sourceCost)
         ).apply(instance, SpellWriteRecipe::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, SpellWriteRecipe> STREAM = CheatSerializer.create(CODEC);
+        public static final StreamCodec<RegistryFriendlyByteBuf, SpellWriteRecipe> STREAM = StreamCodec.composite(
+                Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()), SpellWriteRecipe::pedestalItems,
+                ByteBufCodecs.INT, SpellWriteRecipe::sourceCost,
+                SpellWriteRecipe::new
+        );
 
         @Override
         public @NotNull MapCodec<SpellWriteRecipe> codec() {
