@@ -79,7 +79,7 @@ public class Documentation {
                 .withIntroPage()
                 .withCraftingPages(ItemsRegistry.NOVICE_SPELLBOOK));
 
-        for (AbstractSpellPart spellPart : GlyphRegistry.GLYPH_TYPES) {
+        for (AbstractSpellPart spellPart : ANRegistries.GLYPH_TYPES) {
             ItemStack renderStack = spellPart.glyphItem.getDefaultInstance();
             var entry = addPage(new DocEntryBuilder(spellPart.getRegistryName().getNamespace(), glyphCategory(spellPart.getConfigTier()), spellPart.getLocalizationKey(), spellPart.getRegistryName())
                     .withTitle(Component.translatable(spellPart.getLocalizationKey()))

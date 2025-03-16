@@ -2,10 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.common.base.Preconditions;
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
-import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
-import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
-import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
@@ -37,7 +34,7 @@ public class ItemModelGenerator extends ItemModelProvider {
     @Override
     protected void registerModels() {
 
-        for (Supplier<Glyph> i : GlyphRegistry.GLYPH_ITEMS) {
+        for (Supplier<Glyph> i : ANRegistries.GLYPH_ITEMS) {
             try {
                 if (i.get().spellPart.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
                     getBuilder(i.get().spellPart.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", spellTexture(i.get()));

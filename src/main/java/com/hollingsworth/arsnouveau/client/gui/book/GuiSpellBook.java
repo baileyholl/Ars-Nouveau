@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
+import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
 import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
@@ -100,7 +101,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
         if (bookStack.getItem() instanceof SpellBook book) {
             tier = book.getTier().value;
             if (book.getTier() == SpellTier.CREATIVE) {
-                parts = new ArrayList<>(GlyphRegistry.GLYPH_TYPES.stream().filter(AbstractSpellPart::shouldShowInSpellBook).toList());
+                parts = new ArrayList<>(ANRegistries.GLYPH_TYPES.stream().filter(AbstractSpellPart::shouldShowInSpellBook).toList());
             }
         }
         if (SpellCasterRegistry.hasCaster(bookStack)) {

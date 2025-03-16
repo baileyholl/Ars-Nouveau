@@ -1,15 +1,10 @@
 package com.hollingsworth.arsnouveau.api.registry;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.spell.ItemCasterProvider;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
-import com.mojang.serialization.Lifecycle;
-import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -17,8 +12,6 @@ import net.minecraft.world.level.ItemLike;
 import javax.annotation.Nullable;
 
 public class SpellCasterRegistry {
-
-    public static final Registry<ItemCasterProvider> SPELL_CASTER_TYPES = new MappedRegistry<>(ResourceKey.createRegistryKey(ArsNouveau.prefix("spell_caster_types")), Lifecycle.stable());
 
     static {
         register(ItemsRegistry.NOVICE_SPELLBOOK, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
@@ -31,18 +24,18 @@ public class SpellCasterRegistry {
     }
 
     public static @Nullable AbstractCaster<?> from(ItemStack stack){
-        return SPELL_CASTER_TYPES.getOptional(BuiltInRegistries.ITEM.getKey(stack.getItem())).orElse((s) -> s.get(DataComponentRegistry.SPELL_CASTER)).getSpellCaster(stack);
+        return ANRegistries.SPELL_CASTER_TYPES.getOptional(stack.getItem().builtInRegistryHolder().key().location()).orElse((s) -> s.get(DataComponentRegistry.SPELL_CASTER)).getSpellCaster(stack);
     }
 
     public static boolean hasCaster(ItemStack stack) {
-        return SPELL_CASTER_TYPES.containsKey(BuiltInRegistries.ITEM.getKey(stack.getItem()));
+        return ANRegistries.SPELL_CASTER_TYPES.containsKey(stack.getItem().builtInRegistryHolder().key().location());
     }
 
     public static void register(ItemLike itemLike, ItemCasterProvider provider) {
-        Registry.registerForHolder(SPELL_CASTER_TYPES, BuiltInRegistries.ITEM.getKey(itemLike.asItem()), provider);
+        Registry.registerForHolder(ANRegistries.SPELL_CASTER_TYPES, itemLike.asItem().builtInRegistryHolder().key().location(), provider);
     }
 
     public static void register(ResourceLocation location, ItemCasterProvider provider){
-        Registry.registerForHolder(SPELL_CASTER_TYPES, location, provider);
+        Registry.registerForHolder(ANRegistries.SPELL_CASTER_TYPES, location, provider);
     }
 }
