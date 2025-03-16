@@ -147,13 +147,15 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
 					broadcastChanges();
 			}
 		} else {
-			return shiftClickItems(playerIn, index);
+			if(playerIn instanceof ServerPlayer serverPlayer) {
+				return shiftClickItems(serverPlayer, index);
+			}
 		}
 
 		return ItemStack.EMPTY;
 	}
 
-	protected ItemStack shiftClickItems(Player playerIn, int index) {
+	protected ItemStack shiftClickItems(ServerPlayer playerIn, int index) {
 		return ItemStack.EMPTY;
 	}
 

@@ -98,7 +98,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 					return;
 				this.checkTakeAchievements(stack);
 				if (!pinv.player.getCommandSenderWorld().isClientSide) {
-					((CraftingLecternTile) te).craft(thePlayer, tabs.get(thePlayer.getUUID()));
+					((CraftingLecternTile) te).craft((ServerPlayer) thePlayer, tabs.get(thePlayer.getUUID()));
 				}
 			}
 		});
@@ -130,7 +130,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 	}
 
 	@Override
-	public ItemStack shiftClickItems(Player playerIn, int index) {
+	public ItemStack shiftClickItems(ServerPlayer playerIn, int index) {
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.slots.get(index);
 		if (slot != null && slot.hasItem()) {

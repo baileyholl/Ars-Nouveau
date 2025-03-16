@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.client.container.CraftingTerminalMenu;
 import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.SetTerminalSettingsPacket;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -9,6 +11,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Inventory;
@@ -170,7 +173,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 		return craftingResults.computeIfAbsent(uuid, (key) -> new ResultContainer());
 	}
 
-	public void craftShift(Player player, @Nullable String tab) {
+	public void craftShift(ServerPlayer player, @Nullable String tab) {
 		ResultContainer craftResult = getCraftResult(player);
 		TransientCustomContainer craftMatrix = getCraftingInv(player);
 
@@ -198,7 +201,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 		EventHooks.firePlayerCraftingEvent(player, copyStack, craftMatrix);
 	}
 
-	public void craft(Player thePlayer, @Nullable String tab) {
+	public void craft(ServerPlayer thePlayer, @Nullable String tab) {
 		TransientCustomContainer craftMatrix = getCraftingInv(thePlayer);
 
 		if(currentRecipe == null) {
@@ -267,13 +270,19 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 	}
 
 	protected void onCraftingMatrixChanged(UUID uuid) {
+		if(sortSettings.expanded()) {
+			setSorting(sortSettings.setExpanded(false));
+			Player player = level.getPlayerByUUID(uuid);
+			if(player instanceof ServerPlayer serverPlayer) {
+				Networking.sendToPlayerClient(new SetTerminalSettingsPacket(sortSettings, searches.get(uuid)), serverPlayer);
+			}
+		}
 		ResultContainer craftResult = getCraftResult(uuid);
 		TransientCustomContainer craftMatrix = getCraftingInv(uuid);
 
 		if (currentRecipe == null || !currentRecipe.matches(craftMatrix.asCraftInput(), level)) {
 			var holder = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftMatrix.asCraftInput(), level).orElse(null);
 			currentRecipe = holder == null ? null : holder.value();
-
 		}
 
 		if (currentRecipe == null) {
