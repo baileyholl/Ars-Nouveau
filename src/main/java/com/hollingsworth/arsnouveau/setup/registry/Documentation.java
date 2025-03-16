@@ -71,7 +71,7 @@ public class Documentation {
         DocCategory ENCHANTMENTS = DocumentationRegistry.ENCHANTING;
         DocCategory FAMILIARS = DocumentationRegistry.FAMILIARS;
         DocCategory MOD_NEWS = DocumentationRegistry.GETTING_STARTED;
-        for (AbstractSpellPart spellPart : GlyphRegistry.getSpellpartMap().values()) {
+        for (AbstractSpellPart spellPart : GlyphRegistry.GLYPH_TYPES) {
             ItemStack renderStack = spellPart.glyphItem.getDefaultInstance();
             var entry = new DocEntry(spellPart.getRegistryName(), renderStack, Component.literal(spellPart.getLocaleName()));
             entry.addPage(GlyphEntry.create(spellPart));

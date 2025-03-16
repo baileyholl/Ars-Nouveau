@@ -49,7 +49,7 @@ public class LangDatagen extends LanguageProvider {
         }
 
         ArsNouveauAPI arsNouveauAPI = ArsNouveauAPI.getInstance();
-        for (Supplier<Glyph> supplier : GlyphRegistry.getGlyphItemMap().values()) {
+        for (Supplier<Glyph> supplier : GlyphRegistry.GLYPH_ITEMS) {
             Glyph glyph = supplier.get();
             AbstractSpellPart spellPart = glyph.spellPart;
             ResourceLocation registryName = glyph.spellPart.getRegistryName();

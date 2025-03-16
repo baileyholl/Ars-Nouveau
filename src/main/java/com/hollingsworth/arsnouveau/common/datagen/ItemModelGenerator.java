@@ -36,7 +36,7 @@ public class ItemModelGenerator extends ItemModelProvider {
     @Override
     protected void registerModels() {
 
-        for (Supplier<Glyph> i : GlyphRegistry.getGlyphItemMap().values()) {
+        for (Supplier<Glyph> i : GlyphRegistry.GLYPH_ITEMS) {
             try {
                 if(i.get().spellPart.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
                     getBuilder(i.get().spellPart.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", spellTexture(i.get()));

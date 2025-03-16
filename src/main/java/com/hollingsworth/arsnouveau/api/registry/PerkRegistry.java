@@ -1,8 +1,13 @@
 package com.hollingsworth.arsnouveau.api.registry;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
+import com.mojang.serialization.Lifecycle;
+import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -17,6 +22,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PerkRegistry {
+    public static final Registry<IPerk> PERK_TYPES = new MappedRegistry<>(ResourceKey.createRegistryKey(ArsNouveau.prefix("perk_types")), Lifecycle.stable());
+
     private static ConcurrentHashMap<ResourceLocation, IPerk> perkMap = new ConcurrentHashMap<>();
 
     private static ConcurrentHashMap<ResourceLocation, PerkItem> perkItemMap = new ConcurrentHashMap<>();
@@ -31,7 +38,8 @@ public class PerkRegistry {
         return perkItemMap;
     }
 
-    public static boolean registerPerk(IPerk perk){
+    public static boolean registerPerk(IPerk perk) {
+        Registry.registerForHolder(PERK_TYPES, perk.getRegistryName(), perk);
         perkMap.put(perk.getRegistryName(), perk);
         return true;
     }

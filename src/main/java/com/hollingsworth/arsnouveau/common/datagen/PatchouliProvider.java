@@ -78,7 +78,7 @@ public class PatchouliProvider extends SimpleDataProvider{
         for (ResourceKey<Enchantment> g : enchants) {
             addEnchantmentPage(g);
         }
-        for (AbstractRitual r : RitualRegistry.getRitualMap().values()) {
+        for (AbstractRitual r : RitualRegistry.RITUAL_TYPES) {
             if(r.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
                 addRitualPage(r);
         }
@@ -88,7 +88,7 @@ public class PatchouliProvider extends SimpleDataProvider{
                 addFamiliarPage(r);
         }
 
-        for (AbstractSpellPart s : GlyphRegistry.getSpellpartMap().values()) {
+        for (AbstractSpellPart s : GlyphRegistry.GLYPH_TYPES) {
             if(s.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
                 addGlyphPage(s);
             }

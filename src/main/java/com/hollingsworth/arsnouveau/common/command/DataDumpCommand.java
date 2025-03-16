@@ -11,7 +11,6 @@ import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
 import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.logging.log4j.LogManager;
@@ -24,7 +23,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -44,22 +42,21 @@ public class DataDumpCommand {
      * Creates a CSV file at {@link DataDumpCommand#PATH_AUGMENT_COMPATIBILITY} all augment compatibility information
      */
     public static int dumpAugmentCompat(CommandContext<CommandSourceStack> context) {
-        Map<ResourceLocation, AbstractSpellPart> spells = GlyphRegistry.getSpellpartMap();
-
         // Collect the Augments
-        List<AbstractAugment> augments = spells.values().stream()
+        List<AbstractAugment> augments = GlyphRegistry.GLYPH_TYPES.stream()
                 .filter(p -> p instanceof AbstractAugment)
                 .map(p -> (AbstractAugment) p)
                 .sorted(Comparator.comparing(AbstractSpellPart::getRegistryName)).toList();
 
         // Collect the augment compatibilities
-        List<Tuple<AbstractSpellPart, Set<AbstractAugment>>> augmentCompat = spells.values().stream()
+        List<Tuple<AbstractSpellPart, Set<AbstractAugment>>> augmentCompat = GlyphRegistry.GLYPH_TYPES.stream()
                 .filter(part -> part instanceof AbstractCastMethod)
                 .map(part -> new Tuple<>(part, part.compatibleAugments))
                 .sorted(Comparator.comparing(t -> t.getA().getRegistryName()))
                 .collect(Collectors.toList());
+
         // Technically can be done in one sort, but writing a comparator based on type is ugly.
-        augmentCompat.addAll(spells.values().stream()
+        augmentCompat.addAll(GlyphRegistry.GLYPH_TYPES.stream()
                 .filter(part -> part instanceof AbstractEffect)
                 .map(part -> new Tuple<>(part, part.compatibleAugments))
                 .sorted(Comparator.comparing(t -> t.getA().getRegistryName())).toList());

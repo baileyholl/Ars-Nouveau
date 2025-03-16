@@ -62,7 +62,7 @@ public class CreativeTabRegistry {
             .icon(() -> MethodProjectile.INSTANCE.glyphItem.getDefaultInstance())
             .displayItems((params, output) -> {
 
-                for (var glyph : GlyphRegistry.getSpellpartMap().values().stream()
+                for (var glyph : GlyphRegistry.GLYPH_TYPES.stream()
                         .sorted(COMPARE_SPELL_TYPE_NAME).toList()) {
                     output.accept(glyph.getGlyph().getDefaultInstance());
                 }
