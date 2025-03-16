@@ -227,4 +227,6 @@ public abstract class AbstractRitual {
     public void onDestroy() {}
 
     public void onStatusChanged(boolean status) {}
+
+    public void modifyTooltips(List<Component> tooltips) {}
 }
