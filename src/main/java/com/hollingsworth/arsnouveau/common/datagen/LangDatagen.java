@@ -3,10 +3,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
-import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
-import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
-import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.client.jei.AliasProvider;
@@ -49,7 +46,7 @@ public class LangDatagen extends LanguageProvider {
         }
 
         ArsNouveauAPI arsNouveauAPI = ArsNouveauAPI.getInstance();
-        for (Supplier<Glyph> supplier : GlyphRegistry.GLYPH_ITEMS) {
+        for (Supplier<Glyph> supplier : ANRegistries.GLYPH_ITEMS) {
             Glyph glyph = supplier.get();
             AbstractSpellPart spellPart = glyph.spellPart;
             ResourceLocation registryName = glyph.spellPart.getRegistryName();

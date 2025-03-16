@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.command;
 
+import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
@@ -20,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class LearnGlyphCommand {
-    private static final SuggestionProvider<CommandSourceStack> sugg = (ctx, builder) -> SharedSuggestionProvider.suggestResource(GlyphRegistry.GLYPH_TYPES.keySet(), builder);
+    private static final SuggestionProvider<CommandSourceStack> sugg = (ctx, builder) -> SharedSuggestionProvider.suggestResource(ANRegistries.GLYPH_TYPES.keySet(), builder);
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("ars-glyph")
@@ -45,7 +46,7 @@ public class LearnGlyphCommand {
 
             if (glyph == null) {
                 if (playerCap == null) continue;
-                playerCap.setKnownGlyphs(GlyphRegistry.GLYPH_TYPES.stream().filter(g -> !g.defaultedStarterGlyph()).toList());
+                playerCap.setKnownGlyphs(ANRegistries.GLYPH_TYPES.stream().filter(g -> !g.defaultedStarterGlyph()).toList());
                 player.sendSystemMessage(Component.literal("Unlocked all glyphs"));
             } else {
                 AbstractSpellPart spellPart = GlyphRegistry.getSpellPart(glyph);

@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.command;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
@@ -43,20 +43,20 @@ public class DataDumpCommand {
      */
     public static int dumpAugmentCompat(CommandContext<CommandSourceStack> context) {
         // Collect the Augments
-        List<AbstractAugment> augments = GlyphRegistry.GLYPH_TYPES.stream()
+        List<AbstractAugment> augments = ANRegistries.GLYPH_TYPES.stream()
                 .filter(p -> p instanceof AbstractAugment)
                 .map(p -> (AbstractAugment) p)
                 .sorted(Comparator.comparing(AbstractSpellPart::getRegistryName)).toList();
 
         // Collect the augment compatibilities
-        List<Tuple<AbstractSpellPart, Set<AbstractAugment>>> augmentCompat = GlyphRegistry.GLYPH_TYPES.stream()
+        List<Tuple<AbstractSpellPart, Set<AbstractAugment>>> augmentCompat = ANRegistries.GLYPH_TYPES.stream()
                 .filter(part -> part instanceof AbstractCastMethod)
                 .map(part -> new Tuple<>(part, part.compatibleAugments))
                 .sorted(Comparator.comparing(t -> t.getA().getRegistryName()))
                 .collect(Collectors.toList());
 
         // Technically can be done in one sort, but writing a comparator based on type is ugly.
-        augmentCompat.addAll(GlyphRegistry.GLYPH_TYPES.stream()
+        augmentCompat.addAll(ANRegistries.GLYPH_TYPES.stream()
                 .filter(part -> part instanceof AbstractEffect)
                 .map(part -> new Tuple<>(part, part.compatibleAugments))
                 .sorted(Comparator.comparing(t -> t.getA().getRegistryName())).toList());

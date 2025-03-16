@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.jei;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchools;
@@ -153,7 +153,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         List<SpellSchool> schools = List.of(SpellSchools.ELEMENTAL, SpellSchools.ABJURATION, SpellSchools.CONJURATION, SpellSchools.NECROMANCY, SpellSchools.MANIPULATION, SpellSchools.ELEMENTAL_AIR, SpellSchools.ELEMENTAL_EARTH, SpellSchools.ELEMENTAL_FIRE, SpellSchools.ELEMENTAL_WATER);
 
         for (SpellSchool school : schools) {
-            registration.addAliases(VanillaTypes.ITEM_STACK, GlyphRegistry.GLYPH_ITEMS
+            registration.addAliases(VanillaTypes.ITEM_STACK, ANRegistries.GLYPH_ITEMS
                             .stream()
                             .map(Supplier::get)
                             .filter(glyph -> school.isPartOfSchool(glyph.spellPart))
