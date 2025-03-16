@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.event.EntityPreRemovalEvent;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -61,22 +63,25 @@ public class BubbleEntity extends Projectile implements GeoEntity {
     @Override
     public void tick() {
         super.tick();
-        if(!level.isClientSide){
+
+        if (entityData.get(HAS_POPPED)) {
+            poppingTicks++;
+        }
+
+        if (!level.isClientSide) {
             age++;
-            if(age > maxAge) {
+            if (age > maxAge) {
                 this.pop();
             }
-            if(this.getPassengers().isEmpty()) {
+
+            if (this.getPassengers().isEmpty()) {
                 for (Entity entity1 : level.getEntities(this, this.getBoundingBox().inflate(0.5f), this::canHitEntity)) {
                     entity1.startRiding(this);
                 }
             }
         }
 
-        if(entityData.get(HAS_POPPED)){
-            poppingTicks++;
-        }
-        if(poppingTicks > 5 && !level.isClientSide){
+        if (poppingTicks > 5 && !level.isClientSide) {
             this.remove(RemovalReason.DISCARDED);
         }
 
@@ -88,7 +93,7 @@ public class BubbleEntity extends Projectile implements GeoEntity {
     }
 
     public boolean tryCapturing(Entity target){
-        if(this.getPassengers().isEmpty() && this.canHitEntity(target)){
+        if (!this.entityData.get(HAS_POPPED) && this.getPassengers().isEmpty() && this.canHitEntity(target)) {
             target.startRiding(this);
             return !this.getPassengers().isEmpty();
         }
@@ -148,6 +153,12 @@ public class BubbleEntity extends Projectile implements GeoEntity {
         }
     }
 
+    public static void preEntityRemoval(EntityPreRemovalEvent event) {
+        if (event.getEntity().getVehicle() instanceof BubbleEntity bubble) {
+            bubble.getEntityData().set(BubbleEntity.HAS_POPPED, true);
+        }
+    }
+
     @Override
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
@@ -179,7 +190,7 @@ public class BubbleEntity extends Projectile implements GeoEntity {
                 return false;
             }
         }
-        return !(pTarget instanceof BubbleEntity) && !(pTarget.getVehicle() instanceof BubbleEntity);
+        return !pTarget.getType().is(EntityTags.BUBBLE_BLACKLIST) && !(pTarget.getVehicle() instanceof BubbleEntity);
     }
 
     @Override
