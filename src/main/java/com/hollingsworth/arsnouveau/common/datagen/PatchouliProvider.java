@@ -40,6 +40,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
@@ -78,8 +79,8 @@ public class PatchouliProvider extends SimpleDataProvider {
         for (ResourceKey<Enchantment> g : enchants) {
             addEnchantmentPage(g);
         }
-        for (AbstractRitual r : RitualRegistry.getRitualMap().values()) {
-            if (r.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
+        for (AbstractRitual r : RitualRegistry.RITUAL_TYPES) {
+            if(r.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
                 addRitualPage(r);
         }
 
@@ -88,14 +89,15 @@ public class PatchouliProvider extends SimpleDataProvider {
                 addFamiliarPage(r);
         }
 
-        for (AbstractSpellPart s : GlyphRegistry.getSpellpartMap().values()) {
-            if (s.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
+        for (AbstractSpellPart s : GlyphRegistry.GLYPH_TYPES) {
+            if(s.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
                 addGlyphPage(s);
             }
         }
 
-        for (IPerk perk : PerkRegistry.getPerkMap().values()) {
-            if (perk.getRegistryName().getNamespace().equals(ArsNouveau.MODID) && !(perk instanceof EmptyPerk))
+        for (Map.Entry<ResourceKey<IPerk>, IPerk> entry : PerkRegistry.PERK_TYPES.entrySet()) {
+            var perk = entry.getValue();
+            if (entry.getKey().location().getNamespace().equals(ArsNouveau.MODID) && !(perk instanceof EmptyPerk))
                 addPerkPage(perk);
         }
 
@@ -797,7 +799,7 @@ public class PatchouliProvider extends SimpleDataProvider {
     }
 
     public void addPerkPage(IPerk perk) {
-        PerkItem perkItem = PerkRegistry.getPerkItemMap().get(perk.getRegistryName());
+        PerkItem perkItem = PerkRegistry.PERK_ITEMS.get(perk.getRegistryName());
         PatchouliBuilder builder = new PatchouliBuilder(ARMOR, perkItem)
                 .withIcon(perkItem)
                 .withTextPage(perk.getDescriptionKey())

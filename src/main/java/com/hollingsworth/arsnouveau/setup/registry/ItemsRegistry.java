@@ -33,7 +33,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
@@ -45,7 +44,6 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -258,13 +256,13 @@ public class ItemsRegistry {
 
     public static void onItemRegistry(RegisterEvent.RegisterHelper<Item> helper) {
         ArsNouveauAPI api = ArsNouveauAPI.getInstance();
-        for (Map.Entry<ResourceLocation, Supplier<Glyph>> glyphEntry : GlyphRegistry.getGlyphItemMap().entrySet()) {
+        for (var glyphEntry : GlyphRegistry.GLYPH_ITEMS.entrySet()) {
             Glyph glyph = glyphEntry.getValue().get();
-            helper.register(glyphEntry.getKey(), glyph);
+            helper.register(glyphEntry.getKey().location(), glyph);
             glyph.spellPart.glyphItem = glyph;
         }
 
-        for (AbstractRitual ritual : RitualRegistry.getRitualMap().values()) {
+        for (AbstractRitual ritual : RitualRegistry.RITUAL_TYPES) {
             RitualTablet tablet = new RitualTablet(ritual);
             helper.register(ritual.getRegistryName(), tablet);
             RitualRegistry.getRitualItemMap().put(ritual.getRegistryName(), tablet);
@@ -276,9 +274,9 @@ public class ItemsRegistry {
             helper.register(holder.getRegistryName(), script);
         }
 
-        for (IPerk perk : PerkRegistry.getPerkMap().values()) {
+        for (IPerk perk : PerkRegistry.PERK_TYPES) {
             PerkItem perkItem = new PerkItem(perk);
-            PerkRegistry.getPerkItemMap().put(perk.getRegistryName(), perkItem);
+            PerkRegistry.registerPerkItem(perkItem);
             helper.register(perk.getRegistryName(), perkItem);
             if (perk instanceof EmptyPerk) {
                 BLANK_THREAD = perkItem;

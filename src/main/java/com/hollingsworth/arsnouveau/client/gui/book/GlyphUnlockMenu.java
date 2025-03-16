@@ -207,7 +207,7 @@ public class GlyphUnlockMenu extends BaseBook {
             for (Renderable w : renderables) {
                 if (w instanceof GlyphButton glyphButton) {
                     if (glyphButton.abstractSpellPart.getRegistryName() != null) {
-                        AbstractSpellPart part = GlyphRegistry.getSpellpartMap().get(glyphButton.abstractSpellPart.getRegistryName());
+                        AbstractSpellPart part = GlyphRegistry.getSpellPart(glyphButton.abstractSpellPart.getRegistryName());
                         if (part != null) {
                             glyphButton.visible = part.getLocaleName().toLowerCase().contains(searchBar.value.toLowerCase());
                         }

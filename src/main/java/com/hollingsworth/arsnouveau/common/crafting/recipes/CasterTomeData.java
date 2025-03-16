@@ -69,7 +69,7 @@ public record CasterTomeData(String name, List<ResourceLocation> spell, Resource
         if (this.particleColor != null)
             spell.color = this.particleColor;
         for (ResourceLocation rl : this.spell) {
-            AbstractSpellPart part = GlyphRegistry.getSpellpartMap().get(rl);
+            AbstractSpellPart part = GlyphRegistry.GLYPH_TYPES.get(rl);
             if (part != null)
                 spell.recipe.add(part);
         }

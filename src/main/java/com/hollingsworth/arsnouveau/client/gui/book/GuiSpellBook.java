@@ -100,7 +100,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
         if (bookStack.getItem() instanceof SpellBook book) {
             tier = book.getTier().value;
             if (book.getTier() == SpellTier.CREATIVE) {
-                parts = new ArrayList<>(GlyphRegistry.getSpellpartMap().values().stream().filter(AbstractSpellPart::shouldShowInSpellBook).toList());
+                parts = new ArrayList<>(GlyphRegistry.GLYPH_TYPES.stream().filter(AbstractSpellPart::shouldShowInSpellBook).toList());
             }
         }
         if (SpellCasterRegistry.hasCaster(bookStack)) {
@@ -313,7 +313,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
             for (Renderable w : renderables) {
                 if (w instanceof GlyphButton glyphButton) {
                     if (glyphButton.abstractSpellPart.getRegistryName() != null) {
-                        AbstractSpellPart part = GlyphRegistry.getSpellpartMap().get(glyphButton.abstractSpellPart.getRegistryName());
+                        AbstractSpellPart part = GlyphRegistry.getSpellPart(glyphButton.abstractSpellPart.getRegistryName());
                         if (part != null) {
                             glyphButton.visible = part.getLocaleName().toLowerCase().contains(str.toLowerCase());
                         }
@@ -841,7 +841,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
             glyphButton.validationErrors.clear();
             glyphButton.augmentingParent = lastEffect;
             // Simulate adding the glyph to the current spell
-            slicedSpell.add(GlyphRegistry.getSpellpartMap().get(glyphButton.abstractSpellPart.getRegistryName()));
+            slicedSpell.add(GlyphRegistry.getSpellPart(glyphButton.abstractSpellPart.getRegistryName()));
 
             // Filter the errors to ones referring to the simulated glyph
             glyphButton.validationErrors.addAll(

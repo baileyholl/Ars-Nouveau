@@ -21,7 +21,7 @@ public abstract class StackPerkHolder<T> implements IPerkHolder<T> {
 
     public static Codec<IPerk> PERK_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             ResourceLocation.CODEC.fieldOf("perk").forGetter(IPerk::getRegistryName)
-    ).apply(instance, (name) -> PerkRegistry.getPerkMap().getOrDefault(name, StarbunclePerk.INSTANCE)));
+    ).apply(instance, (name) -> PerkRegistry.PERK_TYPES.getOptional(name).orElse(StarbunclePerk.INSTANCE)));
 
     private List<IPerk> perks;
     private int tier;

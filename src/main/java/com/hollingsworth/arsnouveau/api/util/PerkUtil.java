@@ -39,7 +39,7 @@ public class PerkUtil {
             return perkItems;
         }
         for (IPerk perk : holder.getPerks()) {
-            PerkItem item = PerkRegistry.getPerkItemMap().get(perk.getRegistryName());
+            PerkItem item = PerkRegistry.PERK_ITEMS.get(perk.getRegistryName());
             if (item != null) {
                 perkItems.add(item);
             }

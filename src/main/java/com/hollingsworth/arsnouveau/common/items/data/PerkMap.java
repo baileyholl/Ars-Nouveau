@@ -21,7 +21,7 @@ public record PerkMap(Map<IPerk, CompoundTag> map) {
                 if (loc == null) {
                     return;
                 }
-                var perk = PerkRegistry.getPerkMap().getOrDefault(loc, StarbunclePerk.INSTANCE);
+                var perk = PerkRegistry.PERK_TYPES.getOptional(loc).orElse(StarbunclePerk.INSTANCE);
                 builder.put(perk, value);
             }
         });

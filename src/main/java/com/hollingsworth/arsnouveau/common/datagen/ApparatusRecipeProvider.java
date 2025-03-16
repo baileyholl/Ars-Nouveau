@@ -1127,7 +1127,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
     }
 
     public PerkItem getPerkItem(ResourceLocation id) {
-        return PerkRegistry.getPerkItemMap().get(id);
+        return PerkRegistry.PERK_ITEMS.get(id);
     }
 
     public void addRecipe(ApparatusRecipeBuilder.RecipeWrapper recipe) {

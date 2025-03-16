@@ -42,10 +42,10 @@ public class GlyphButton extends ANButton {
 
     @Override
     public void getTooltip(List<Component> tip) {
-        if (!GlyphRegistry.getSpellpartMap().containsKey(this.abstractSpellPart.getRegistryName())) {
+        AbstractSpellPart spellPart = GlyphRegistry.getSpellPart(this.abstractSpellPart.getRegistryName());
+        if (spellPart == null) {
             return;
         }
-        AbstractSpellPart spellPart = GlyphRegistry.getSpellpartMap().get(this.abstractSpellPart.getRegistryName());
         tip.add(Component.translatable(spellPart.getLocalizationKey()));
         for (SpellValidationError ve : validationErrors) {
             tip.add(ve.makeTextComponentAdding().withStyle(ChatFormatting.RED));

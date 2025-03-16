@@ -49,7 +49,7 @@ public class LangDatagen extends LanguageProvider {
         }
 
         ArsNouveauAPI arsNouveauAPI = ArsNouveauAPI.getInstance();
-        for (Supplier<Glyph> supplier : GlyphRegistry.getGlyphItemMap().values()) {
+        for (Supplier<Glyph> supplier : GlyphRegistry.GLYPH_ITEMS) {
             Glyph glyph = supplier.get();
             AbstractSpellPart spellPart = glyph.spellPart;
             ResourceLocation registryName = glyph.spellPart.getRegistryName();
@@ -79,7 +79,7 @@ public class LangDatagen extends LanguageProvider {
             }
         }
 
-        for (PerkItem i : PerkRegistry.getPerkItemMap().values()) {
+        for (PerkItem i : PerkRegistry.PERK_ITEMS) {
             if (i.perk.getRegistryName().getNamespace().equals(ArsNouveau.MODID) && !i.perk.getRegistryName().getPath().equals("blank_thread")) {
                 add("ars_nouveau.perk_desc." + i.perk.getRegistryName().getPath(), i.perk.getLangDescription());
                 add("item.ars_nouveau." + i.perk.getRegistryName().getPath(), i.perk.getLangName());

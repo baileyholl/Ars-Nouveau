@@ -44,7 +44,7 @@ public class CreativeTabRegistry {
                         output.accept(entry.get().getDefaultInstance());
                     }
                 }
-                for (PerkItem perk : PerkRegistry.getPerkItemMap().values()) {
+                for (PerkItem perk : PerkRegistry.PERK_ITEMS) {
                     output.accept(perk.getDefaultInstance());
                 }
                 for (RitualTablet ritual : RitualRegistry.getRitualItemMap().values()) {
@@ -62,7 +62,7 @@ public class CreativeTabRegistry {
             .icon(() -> MethodProjectile.INSTANCE.glyphItem.getDefaultInstance())
             .displayItems((params, output) -> {
 
-                for (var glyph : GlyphRegistry.getSpellpartMap().values().stream()
+                for (var glyph : GlyphRegistry.GLYPH_TYPES.stream()
                         .sorted(COMPARE_SPELL_TYPE_NAME).toList()) {
                     output.accept(glyph.getGlyph().getDefaultInstance());
                 }

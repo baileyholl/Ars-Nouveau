@@ -37,7 +37,7 @@ public class ItemModelGenerator extends ItemModelProvider {
     @Override
     protected void registerModels() {
 
-        for (Supplier<Glyph> i : GlyphRegistry.getGlyphItemMap().values()) {
+        for (Supplier<Glyph> i : GlyphRegistry.GLYPH_ITEMS) {
             try {
                 if (i.get().spellPart.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
                     getBuilder(i.get().spellPart.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", spellTexture(i.get()));
@@ -63,7 +63,7 @@ public class ItemModelGenerator extends ItemModelProvider {
             }
         }
 
-        for (PerkItem i : PerkRegistry.getPerkItemMap().values()) {
+        for (PerkItem i : PerkRegistry.PERK_ITEMS) {
             try {
                 if (i.perk.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
                     getBuilder(i.perk.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(i));

@@ -79,7 +79,7 @@ public class Documentation {
                 .withIntroPage()
                 .withCraftingPages(ItemsRegistry.NOVICE_SPELLBOOK));
 
-        for (AbstractSpellPart spellPart : GlyphRegistry.getSpellpartMap().values()) {
+        for (AbstractSpellPart spellPart : GlyphRegistry.GLYPH_TYPES) {
             ItemStack renderStack = spellPart.glyphItem.getDefaultInstance();
             var entry = addPage(new DocEntryBuilder(spellPart.getRegistryName().getNamespace(), glyphCategory(spellPart.getConfigTier()), spellPart.getLocalizationKey(), spellPart.getRegistryName())
                     .withTitle(Component.translatable(spellPart.getLocalizationKey()))
@@ -108,7 +108,7 @@ public class Documentation {
             entry.addPages(pages).withSearchTag(Component.translatable("ars_nouveau.keyword.ritual"));
         }
 
-        for (PerkItem perk : PerkRegistry.getPerkItemMap().values()) {
+        for (PerkItem perk : PerkRegistry.PERK_ITEMS) {
             if (perk.perk instanceof EmptyPerk)
                 continue;
 

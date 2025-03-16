@@ -153,7 +153,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         List<SpellSchool> schools = List.of(SpellSchools.ELEMENTAL, SpellSchools.ABJURATION, SpellSchools.CONJURATION, SpellSchools.NECROMANCY, SpellSchools.MANIPULATION, SpellSchools.ELEMENTAL_AIR, SpellSchools.ELEMENTAL_EARTH, SpellSchools.ELEMENTAL_FIRE, SpellSchools.ELEMENTAL_WATER);
 
         for (SpellSchool school : schools) {
-            registration.addAliases(VanillaTypes.ITEM_STACK, GlyphRegistry.getGlyphItemMap().values()
+            registration.addAliases(VanillaTypes.ITEM_STACK, GlyphRegistry.GLYPH_ITEMS
                             .stream()
                             .map(Supplier::get)
                             .filter(glyph -> school.isPartOfSchool(glyph.spellPart))

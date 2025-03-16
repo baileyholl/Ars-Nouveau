@@ -1,17 +1,20 @@
 package com.hollingsworth.arsnouveau.api.registry;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.particle.IParticleProvider;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.RainbowParticleColor;
+import com.mojang.serialization.Lifecycle;
+import net.minecraft.core.DefaultedMappedRegistry;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ParticleColorRegistry {
-
-    private static ConcurrentHashMap<ResourceLocation, IParticleProvider> MAP = new ConcurrentHashMap<>();
+    public static final Registry<IParticleProvider> PARTICLE_PROVIDERS = new DefaultedMappedRegistry<>(ParticleColor.ID.getPath(), ResourceKey.createRegistryKey(ArsNouveau.prefix("particle_providers")), Lifecycle.stable(), false);
 
     static IParticleProvider DEFAULT = new IParticleProvider() {
         @Override
@@ -26,8 +29,8 @@ public class ParticleColorRegistry {
     };
 
     static {
-        MAP.put(ParticleColor.ID, DEFAULT);
-        MAP.put(RainbowParticleColor.ID, new IParticleProvider() {
+        Registry.registerForHolder(PARTICLE_PROVIDERS, ParticleColor.ID, DEFAULT);
+        Registry.registerForHolder(PARTICLE_PROVIDERS, RainbowParticleColor.ID, new IParticleProvider() {
             @Override
             public ParticleColor create(CompoundTag tag) {
                 return new RainbowParticleColor(tag);
@@ -41,17 +44,17 @@ public class ParticleColorRegistry {
     }
 
     public static void register(ResourceLocation id, IParticleProvider factory) {
-        MAP.put(id, factory);
+        Registry.registerForHolder(PARTICLE_PROVIDERS, id, factory);
     }
 
     public static ParticleColor from(@Nullable CompoundTag compoundTag) {
         if (compoundTag == null) {
             return new ParticleColor(0, 0, 0);
         }
-        return MAP.getOrDefault(ResourceLocation.tryParse(compoundTag.getString("type")), DEFAULT).create(compoundTag);
+        return PARTICLE_PROVIDERS.getOptional(ResourceLocation.tryParse(compoundTag.getString("type"))).orElse(DEFAULT).create(compoundTag);
     }
 
     public static ParticleColor from(ResourceLocation location, int r, int g, int b) {
-        return MAP.getOrDefault(location, DEFAULT).create(r, g, b);
+        return PARTICLE_PROVIDERS.getOptional(location).orElse(DEFAULT).create(r, g, b);
     }
 }
