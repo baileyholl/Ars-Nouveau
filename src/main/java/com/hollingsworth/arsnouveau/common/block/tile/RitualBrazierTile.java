@@ -302,6 +302,8 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
             }
             if (ritual.needsSourceNow())
                 tooltips.add(Component.translatable("ars_nouveau.wixie.need_mana").withStyle(ChatFormatting.GOLD));
+
+            ritual.modifyTooltips(tooltips);
         }
     }
 
