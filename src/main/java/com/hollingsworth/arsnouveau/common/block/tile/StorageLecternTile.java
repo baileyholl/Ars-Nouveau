@@ -89,7 +89,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             handlers = tabManagerMap.getOrDefault(tab, new ArrayList<>());
         }
         List<FilterableItemHandler> itemHandlers = handlers.stream().filter(handler -> {
-            if(handler.handler.getCapability() == null){
+            if(handler.handler == null || handler.handler.getCapability() == null){
                 return false;
             }
 
@@ -367,7 +367,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         for (HandlerPos handlerPos : handlerPosList) {
             BlockPos pos = handlerPos.pos;
             BlockEntity invTile = level.getBlockEntity(pos);
-            if (invTile == null) {
+            if (invTile == null || handlerPos.handler == null) {
                 continue;
             }
             IItemHandler handler = handlerPos.handler.getCapability();
