@@ -3,30 +3,29 @@ package com.hollingsworth.arsnouveau.api.registry;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.CasterTomeData;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
-import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CasterTomeRegistry {
 
-    @Deprecated
+    private static List<RecipeHolder<CasterTomeData>> TOME_DATA = new ArrayList<>();
+
     public static List<RecipeHolder<CasterTomeData>> getTomeData(){
-        return ANRegistries.CASTER_TOMES.entrySet().stream().map(e -> new RecipeHolder<>(e.getKey().location(), e.getValue())).toList();
+        return Collections.unmodifiableList(TOME_DATA);
     }
 
     public static List<RecipeHolder<CasterTomeData>> reloadTomeData(RecipeManager recipeManager, RegistryAccess access) {
         var recipes = recipeManager.getAllRecipesFor(RecipeRegistry.CASTER_TOME_TYPE.get());
         DungeonLootTables.CASTER_TOMES = new ArrayList<>();
-        for (var recipe : recipes) {
-            Registry.registerForHolder(ANRegistries.CASTER_TOMES, recipe.id(), recipe.value());
-            DungeonLootTables.CASTER_TOMES.add(() -> recipe.value().getResultItem(access));
-        }
-
-        return getTomeData();
+        TOME_DATA = new ArrayList<>();
+        TOME_DATA.addAll(recipes);
+        recipes.forEach(tome -> DungeonLootTables.CASTER_TOMES.add(() -> tome.value().getResultItem(access)));
+        return TOME_DATA;
     }
 
 }

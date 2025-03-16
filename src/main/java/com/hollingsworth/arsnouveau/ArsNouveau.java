@@ -76,8 +76,9 @@ public class ArsNouveau {
         sodiumLoaded = ModList.get().isLoaded("rubidium");
         patchouliLoaded = ModList.get().isLoaded("patchouli");
         immersivePortalsLoaded = ModList.get().isLoaded("immersive_portals_core");
-        modEventBus.addListener(this::registerRegistries);
         APIRegistry.setup();
+        modEventBus.addListener(this::registerRegistries);
+        modEventBus.addListener(APIRegistry::onRegisterEvent);
         modContainer.registerConfig(ModConfig.Type.STARTUP, StartupConfig.STARTUP_CONFIG);
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SERVER_CONFIG);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
@@ -140,7 +141,6 @@ public class ArsNouveau {
 
         NeoForge.EVENT_BUS.addListener((ServerStartedEvent e) -> {
             GenericRecipeRegistry.reloadAll(e.getServer().getRecipeManager());
-            CasterTomeRegistry.reloadTomeData(e.getServer().getRecipeManager(), e.getServer().registryAccess());
             BuddingConversionRegistry.reloadBuddingConversionRecipes(e.getServer().getRecipeManager());
             AlakarkinosConversionRegistry.initLootParams(e.getServer().overworld());
             AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(e.getServer().getRecipeManager(), e.getServer().reloadableRegistries());
@@ -190,13 +190,11 @@ public class ArsNouveau {
     }
 
     private void registerRegistries(NewRegistryEvent event) {
-        event.register(ANRegistries.CASTER_TOMES);
         event.register(ANRegistries.GLYPH_TYPES);
         event.register(ANRegistries.GLYPH_ITEMS);
         event.register(ANRegistries.PERK_TYPES);
         event.register(ANRegistries.PARTICLE_PROVIDERS);
         event.register(ANRegistries.RITUAL_TYPES);
-        event.register(ANRegistries.SPELL_CASTER_TYPES);
         event.register(ANRegistries.SPELL_SOUNDS);
     }
 

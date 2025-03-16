@@ -108,7 +108,7 @@ public class Documentation {
             entry.addPages(pages).withSearchTag(Component.translatable("ars_nouveau.keyword.ritual"));
         }
 
-        for (PerkItem perk : PerkRegistry.PERK_ITEMS) {
+        for (PerkItem perk : ANRegistries.PERK_ITEMS) {
             if (perk.perk instanceof EmptyPerk)
                 continue;
 

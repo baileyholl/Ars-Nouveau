@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
 import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
 import com.hollingsworth.arsnouveau.api.particle.timelines.*;
+import com.hollingsworth.arsnouveau.api.particle.IParticleProvider;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import com.hollingsworth.arsnouveau.api.registry.*;
@@ -16,6 +17,8 @@ import com.hollingsworth.arsnouveau.api.scrying.SingleBlockScryer;
 import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.particle.RainbowParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.familiars.*;
 import com.hollingsworth.arsnouveau.common.mob_jar.*;
@@ -25,6 +28,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -32,6 +36,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.util.Arrays;
 import java.util.List;
@@ -198,82 +203,6 @@ public class APIRegistry {
         api.getEnchantingRecipeTypes().add(RecipeRegistry.REACTIVE_TYPE.get());
         api.getEnchantingRecipeTypes().add(RecipeRegistry.SPELL_WRITE_TYPE.get());
         api.getEnchantingRecipeTypes().add(RecipeRegistry.ARMOR_UPGRADE_TYPE.get());
-        api.getEnchantingRecipeTypes().add(RecipeRegistry.PRESTIDIGITATION_TYPE.get());
-        PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_BOOTS, Arrays.asList(
-                Arrays.asList(PerkSlot.ONE),
-                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE),
-                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.TWO)
-        ));
-        PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_HOOD, Arrays.asList(
-                Arrays.asList(PerkSlot.ONE),
-                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE),
-                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.TWO)
-        ));
-        PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_LEGGINGS, Arrays.asList(
-                Arrays.asList(PerkSlot.ONE),
-                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
-                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.THREE)
-        ));
-        PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_ROBES, Arrays.asList(
-                List.of(PerkSlot.ONE),
-                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
-                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.THREE)
-        ));
-
-        PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_HOOD, Arrays.asList(
-                Arrays.asList(PerkSlot.ONE),
-                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
-                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.THREE)
-        ));
-        PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_BOOTS, Arrays.asList(
-                Arrays.asList(PerkSlot.ONE),
-                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
-                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.TWO)
-        ));
-
-        PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_LEGGINGS, Arrays.asList(
-                Arrays.asList(PerkSlot.ONE),
-                Arrays.asList(PerkSlot.ONE, PerkSlot.THREE),
-                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
-        ));
-
-        PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_ROBES, Arrays.asList(
-                Arrays.asList(PerkSlot.ONE),
-                Arrays.asList(PerkSlot.ONE, PerkSlot.THREE),
-                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
-        ));
-
-
-        PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_BOOTS, Arrays.asList(
-                Arrays.asList(PerkSlot.ONE),
-                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
-                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
-        ));
-
-        PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_ROBES, Arrays.asList(
-                Arrays.asList(PerkSlot.TWO),
-                Arrays.asList(PerkSlot.TWO, PerkSlot.THREE),
-                Arrays.asList(PerkSlot.TWO, PerkSlot.TWO, PerkSlot.THREE)
-        ));
-
-        PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_LEGGINGS, Arrays.asList(
-                Arrays.asList(PerkSlot.TWO),
-                Arrays.asList(PerkSlot.TWO, PerkSlot.THREE),
-                Arrays.asList(PerkSlot.TWO, PerkSlot.TWO, PerkSlot.THREE)
-        ));
-
-        PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_HOOD, Arrays.asList(
-                Arrays.asList(PerkSlot.ONE),
-                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
-                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
-        ));
-
-
-        SpellSoundRegistry.registerSpellSound(SoundRegistry.DEFAULT_SPELL_SOUND);
-        SpellSoundRegistry.registerSpellSound(SoundRegistry.EMPTY_SPELL_SOUND);
-        SpellSoundRegistry.registerSpellSound(SoundRegistry.GAIA_SPELL_SOUND);
-        SpellSoundRegistry.registerSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND);
-        SpellSoundRegistry.registerSpellSound(SoundRegistry.FIRE_SPELL_SOUND);
 
         JarBehaviorRegistry.register(EntityType.ELDER_GUARDIAN, new ElderGuardianBehavior());
         JarBehaviorRegistry.register(EntityType.CREEPER, new CreeperBehavior());
@@ -420,6 +349,99 @@ public class APIRegistry {
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.EXPLOSION.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SCULK_CHARGE.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SCULK_CHARGE_POP.get(), true));
+    }
+
+    public static void onRegisterEvent(RegisterEvent event) {
+        var key = event.getRegistryKey();
+        if (ANRegistries.Keys.PERK_TYPES.equals(key)) {
+            PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_BOOTS, Arrays.asList(
+                    Arrays.asList(PerkSlot.ONE),
+                    Arrays.asList(PerkSlot.ONE, PerkSlot.ONE),
+                    Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.TWO)
+            ));
+            PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_HOOD, Arrays.asList(
+                    Arrays.asList(PerkSlot.ONE),
+                    Arrays.asList(PerkSlot.ONE, PerkSlot.ONE),
+                    Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.TWO)
+            ));
+            PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_LEGGINGS, Arrays.asList(
+                    Arrays.asList(PerkSlot.ONE),
+                    Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                    Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.THREE)
+            ));
+            PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_ROBES, Arrays.asList(
+                    List.of(PerkSlot.ONE),
+                    Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                    Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.THREE)
+            ));
+
+            PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_HOOD, Arrays.asList(
+                    Arrays.asList(PerkSlot.ONE),
+                    Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                    Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.THREE)
+            ));
+            PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_BOOTS, Arrays.asList(
+                    Arrays.asList(PerkSlot.ONE),
+                    Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                    Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.TWO)
+            ));
+
+            PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_LEGGINGS, Arrays.asList(
+                    Arrays.asList(PerkSlot.ONE),
+                    Arrays.asList(PerkSlot.ONE, PerkSlot.THREE),
+                    Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
+            ));
+
+            PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_ROBES, Arrays.asList(
+                    Arrays.asList(PerkSlot.ONE),
+                    Arrays.asList(PerkSlot.ONE, PerkSlot.THREE),
+                    Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
+            ));
+
+
+            PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_BOOTS, Arrays.asList(
+                    Arrays.asList(PerkSlot.ONE),
+                    Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                    Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
+            ));
+
+            PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_ROBES,Arrays.asList(
+                    Arrays.asList(PerkSlot.TWO),
+                    Arrays.asList(PerkSlot.TWO, PerkSlot.THREE),
+                    Arrays.asList(PerkSlot.TWO, PerkSlot.TWO, PerkSlot.THREE)
+            ));
+
+            PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_LEGGINGS, Arrays.asList(
+                    Arrays.asList(PerkSlot.TWO),
+                    Arrays.asList(PerkSlot.TWO, PerkSlot.THREE),
+                    Arrays.asList(PerkSlot.TWO, PerkSlot.TWO, PerkSlot.THREE)
+            ));
+
+            PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_HOOD, Arrays.asList(
+                    Arrays.asList(PerkSlot.ONE),
+                    Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                    Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
+            ));
+        } else if (ANRegistries.Keys.SPELL_SOUNDS.equals(key)) {
+            SpellSoundRegistry.registerSpellSound(SoundRegistry.DEFAULT_SPELL_SOUND);
+            SpellSoundRegistry.registerSpellSound(SoundRegistry.EMPTY_SPELL_SOUND);
+            SpellSoundRegistry.registerSpellSound(SoundRegistry.GAIA_SPELL_SOUND);
+            SpellSoundRegistry.registerSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND);
+            SpellSoundRegistry.registerSpellSound(SoundRegistry.FIRE_SPELL_SOUND);
+        } else if (ANRegistries.Keys.PARTICLE_PROVIDERS.equals(key)) {
+            ParticleColorRegistry.register(ParticleColor.ID, ParticleColorRegistry.DEFAULT);
+            ParticleColorRegistry.register(RainbowParticleColor.ID, new IParticleProvider() {
+                @Override
+                public ParticleColor create(CompoundTag tag) {
+                    return new RainbowParticleColor(tag);
+                }
+
+                @Override
+                public ParticleColor create(int r, int g, int b) {
+                    return new RainbowParticleColor(r, g, b);
+                }
+            });
+        }
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {
