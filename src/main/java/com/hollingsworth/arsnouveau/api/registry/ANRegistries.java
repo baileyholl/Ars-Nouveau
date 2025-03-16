@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.api.spell.ItemCasterProvider;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
@@ -38,7 +37,6 @@ public class ANRegistries {
         public static final ResourceKey<Registry<IParticleProvider>> PARTICLE_PROVIDERS = key("particle_providers");
         public static final ResourceKey<Registry<IPerk>> PERK_TYPES = key("perk_types");
         public static final ResourceKey<Registry<AbstractRitual>> RITUAL_TYPES = key("ritual_types");
-        public static final ResourceKey<Registry<ItemCasterProvider>> SPELL_CASTER_TYPES = key("spell_caster_types");
         public static final ResourceKey<Registry<SpellSound>> SPELL_SOUNDS = key("spell_sounds");
 
         private static <T> ResourceKey<Registry<T>> key(String name) {

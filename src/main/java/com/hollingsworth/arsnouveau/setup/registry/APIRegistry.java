@@ -204,6 +204,76 @@ public class APIRegistry {
         api.getEnchantingRecipeTypes().add(RecipeRegistry.SPELL_WRITE_TYPE.get());
         api.getEnchantingRecipeTypes().add(RecipeRegistry.ARMOR_UPGRADE_TYPE.get());
 
+
+        PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_BOOTS, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.TWO)
+        ));
+        PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_HOOD, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.TWO)
+        ));
+        PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_LEGGINGS, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.THREE)
+        ));
+        PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_ROBES, Arrays.asList(
+                List.of(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.THREE)
+        ));
+
+        PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_HOOD, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.THREE)
+        ));
+        PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_BOOTS, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.TWO)
+        ));
+
+        PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_LEGGINGS, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.THREE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
+        ));
+
+        PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_ROBES, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.THREE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
+        ));
+
+
+        PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_BOOTS, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
+        ));
+
+        PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_ROBES,Arrays.asList(
+                Arrays.asList(PerkSlot.TWO),
+                Arrays.asList(PerkSlot.TWO, PerkSlot.THREE),
+                Arrays.asList(PerkSlot.TWO, PerkSlot.TWO, PerkSlot.THREE)
+        ));
+
+        PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_LEGGINGS, Arrays.asList(
+                Arrays.asList(PerkSlot.TWO),
+                Arrays.asList(PerkSlot.TWO, PerkSlot.THREE),
+                Arrays.asList(PerkSlot.TWO, PerkSlot.TWO, PerkSlot.THREE)
+        ));
+
+        PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_HOOD, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
+        ));
+
         JarBehaviorRegistry.register(EntityType.ELDER_GUARDIAN, new ElderGuardianBehavior());
         JarBehaviorRegistry.register(EntityType.CREEPER, new CreeperBehavior());
         JarBehaviorRegistry.register(EntityType.CHICKEN, new ChickenBehavior());
@@ -353,76 +423,7 @@ public class APIRegistry {
 
     public static void onRegisterEvent(RegisterEvent event) {
         var key = event.getRegistryKey();
-        if (ANRegistries.Keys.PERK_TYPES.equals(key)) {
-            PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_BOOTS, Arrays.asList(
-                    Arrays.asList(PerkSlot.ONE),
-                    Arrays.asList(PerkSlot.ONE, PerkSlot.ONE),
-                    Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.TWO)
-            ));
-            PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_HOOD, Arrays.asList(
-                    Arrays.asList(PerkSlot.ONE),
-                    Arrays.asList(PerkSlot.ONE, PerkSlot.ONE),
-                    Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.TWO)
-            ));
-            PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_LEGGINGS, Arrays.asList(
-                    Arrays.asList(PerkSlot.ONE),
-                    Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
-                    Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.THREE)
-            ));
-            PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_ROBES, Arrays.asList(
-                    List.of(PerkSlot.ONE),
-                    Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
-                    Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.THREE)
-            ));
-
-            PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_HOOD, Arrays.asList(
-                    Arrays.asList(PerkSlot.ONE),
-                    Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
-                    Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.THREE)
-            ));
-            PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_BOOTS, Arrays.asList(
-                    Arrays.asList(PerkSlot.ONE),
-                    Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
-                    Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.TWO)
-            ));
-
-            PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_LEGGINGS, Arrays.asList(
-                    Arrays.asList(PerkSlot.ONE),
-                    Arrays.asList(PerkSlot.ONE, PerkSlot.THREE),
-                    Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
-            ));
-
-            PerkRegistry.registerPerkProvider(ItemsRegistry.ARCANIST_ROBES, Arrays.asList(
-                    Arrays.asList(PerkSlot.ONE),
-                    Arrays.asList(PerkSlot.ONE, PerkSlot.THREE),
-                    Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
-            ));
-
-
-            PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_BOOTS, Arrays.asList(
-                    Arrays.asList(PerkSlot.ONE),
-                    Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
-                    Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
-            ));
-
-            PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_ROBES,Arrays.asList(
-                    Arrays.asList(PerkSlot.TWO),
-                    Arrays.asList(PerkSlot.TWO, PerkSlot.THREE),
-                    Arrays.asList(PerkSlot.TWO, PerkSlot.TWO, PerkSlot.THREE)
-            ));
-
-            PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_LEGGINGS, Arrays.asList(
-                    Arrays.asList(PerkSlot.TWO),
-                    Arrays.asList(PerkSlot.TWO, PerkSlot.THREE),
-                    Arrays.asList(PerkSlot.TWO, PerkSlot.TWO, PerkSlot.THREE)
-            ));
-
-            PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_HOOD, Arrays.asList(
-                    Arrays.asList(PerkSlot.ONE),
-                    Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
-                    Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
-            ));
-        } else if (ANRegistries.Keys.SPELL_SOUNDS.equals(key)) {
+        if (ANRegistries.Keys.SPELL_SOUNDS.equals(key)) {
             SpellSoundRegistry.registerSpellSound(SoundRegistry.DEFAULT_SPELL_SOUND);
             SpellSoundRegistry.registerSpellSound(SoundRegistry.EMPTY_SPELL_SOUND);
             SpellSoundRegistry.registerSpellSound(SoundRegistry.GAIA_SPELL_SOUND);
