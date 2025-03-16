@@ -469,10 +469,18 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
 
     @Override
     protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-        if (hand != InteractionHand.MAIN_HAND || player.getCommandSenderWorld().isClientSide || !isTamed())
+        if (hand != InteractionHand.MAIN_HAND || player.getCommandSenderWorld().isClientSide) {
             return InteractionResult.SUCCESS;
+        }
 
         ItemStack stack = player.getItemInHand(hand);
+
+        if (!isTamed() && this.getHeldStack().isEmpty() && stack.is(Tags.Items.NUGGETS_GOLD)) {
+            setHeldStack(player.hasInfiniteMaterials() ? stack.copyWithCount(1) : stack.split(1));
+
+            return InteractionResult.SUCCESS;
+        }
+
         if (player.getMainHandItem().getItem() instanceof StarbuncleCharm) {
             Starbuncle toRide = this;
             while (toRide.getFirstPassenger() instanceof Starbuncle riding) {
