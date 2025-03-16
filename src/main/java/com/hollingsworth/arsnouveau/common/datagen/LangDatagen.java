@@ -460,6 +460,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.tooltip.running", "Running");
         add("ars_nouveau.tooltip.conditions_unmet", "Conditions Unmet");
         add("ars_nouveau.tooltip.exp_gem", "Grants experience on use. Sneak to consume the entire stack.");
+        add("ars_nouveau.tooltip.too_many_animals", "Too many animals nearby.");
         add("item.ars_nouveau.experience_gem", "Experience Gem");
         add("item.ars_nouveau.greater_experience_gem", "Greater Experience Gem");
         add("effect.ars_nouveau.hex", "Hex");
