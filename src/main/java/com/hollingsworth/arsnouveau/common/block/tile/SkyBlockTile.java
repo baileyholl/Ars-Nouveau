@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.event.InvalidateMirrorweaveRender;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
@@ -17,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 
-public class SkyBlockTile extends MirrorWeaveTile implements ITickable, IDispellable {
+public class SkyBlockTile extends MirrorWeaveTile implements ITickable {
 
     private boolean showFacade;
     public int previousLight;

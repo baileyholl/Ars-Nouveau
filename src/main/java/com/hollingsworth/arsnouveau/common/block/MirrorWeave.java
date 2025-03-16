@@ -40,30 +40,11 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
     }
 
     public MirrorWeave(){
-        this(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion().isSuffocating(MirrorWeave::isSuffocating)
-                .isViewBlocking(MirrorWeave::isViewBlocking));
-    }
-
-    public static boolean isSuffocating(BlockState state, BlockGetter level, BlockPos pos) {
-        if(level.getBlockEntity(pos) instanceof MirrorWeaveTile tile && !tile.mimicState.is(BlockTagProvider.FALSE_OCCLUSION)){
-            return tile.mimicState.isSuffocating(level, pos);
-        }
-        return true;
-    }
-
-    public static boolean isViewBlocking(BlockState state, BlockGetter level, BlockPos pos) {
-        if(level.getBlockEntity(pos) instanceof MirrorWeaveTile tile && !tile.mimicState.is(BlockTagProvider.FALSE_OCCLUSION)){
-            return tile.mimicState.isViewBlocking(level, pos);
-        }
-        return true;
+        this(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion());
     }
 
     @Override
     public ItemInteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pLevel.isClientSide || pHand != InteractionHand.MAIN_HAND) {
-            return ItemInteractionResult.SUCCESS;
-        }
-
         MirrorWeaveTile tile = (MirrorWeaveTile) pLevel.getBlockEntity(pPos);
         if(tile != null){
             if(stack.getItem() instanceof BlockItem blockItem && !(blockItem.getBlock() instanceof EntityBlock)){
@@ -81,7 +62,7 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
 
     public void setMimicState(Level level, BlockPos pos, boolean updateNeighbors) {
         MirrorWeaveTile tile = (MirrorWeaveTile) level.getBlockEntity(pos);
-        if(tile == null || tile.mimicState == null || tile.nextState == null || tile.nextState.equals(tile.mimicState)){
+        if(level.isClientSide || tile == null || tile.mimicState == null || tile.nextState == null || tile.nextState.equals(tile.mimicState)){
             return;
         }
         BlockState previousState = tile.mimicState;

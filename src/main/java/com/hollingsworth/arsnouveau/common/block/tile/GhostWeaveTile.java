@@ -7,7 +7,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 public class GhostWeaveTile extends MirrorWeaveTile{
 
@@ -56,5 +58,11 @@ public class GhostWeaveTile extends MirrorWeaveTile{
     @Override
     public BlockState getDefaultBlockState() {
         return BlockRegistry.GHOST_WEAVE.defaultBlockState();
+    }
+
+    @Override
+    public boolean onDispel(@NotNull LivingEntity caster) {
+        setVisibility(false);
+        return super.onDispel(caster);
     }
 }

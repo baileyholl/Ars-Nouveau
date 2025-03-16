@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.spell.ILightable;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
@@ -27,6 +28,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -34,7 +36,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import static net.minecraft.world.level.block.Block.OCCLUSION_CACHE;
 
-public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILightable {
+public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILightable, IDispellable {
     public BlockState mimicState;
     public BlockState nextState = BlockRegistry.MIRROR_WEAVE.defaultBlockState();
     public boolean renderInvalid = true;
@@ -144,5 +146,17 @@ public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILigh
     @Override
     public void onLoad() {
         super.onLoad();
+    }
+
+    @Override
+    public boolean onDispel(@NotNull LivingEntity caster) {
+        if(this.mimicState.getBlock() == this.getDefaultBlockState().getBlock()){
+            return false;
+        }
+        if(level.getBlockState(worldPosition).getBlock() instanceof MirrorWeave mirrorWeave){
+            this.nextState = this.getDefaultBlockState();
+            mirrorWeave.setMimicState(level, worldPosition, true);
+        }
+        return true;
     }
 }

@@ -79,11 +79,12 @@ public class MirrorweaveRenderer<T extends MirrorWeaveTile> implements BlockEnti
                 continue;
             }
 
-            if(blockingState.canOcclude() && Shapes.blockOccudes(Shapes.block(), blockingShape, direction)){
+            if(blockingState.canOcclude() && !Shapes.blockOccudes(Shapes.block(), blockingShape, direction)){
                 tileEntityIn.setRenderDirection(direction, true);
                 disableEntireRender = false;
                 continue;
             }
+
         }
         tileEntityIn.disableRender = disableEntireRender;
     }
