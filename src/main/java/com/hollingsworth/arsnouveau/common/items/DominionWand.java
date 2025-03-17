@@ -156,7 +156,7 @@ public class DominionWand extends ModItem implements IRadialProvider {
             playSoundFromResult(world, pos, result);
         }
         if (data.storedEntityId() != DominionWandData.NULL_ENTITY && world.getEntity(data.storedEntityId()) instanceof IWandable wandable) {
-            var result = wandable.onLastConnection(new GlobalPos(world.dimension(), pos), data.strict() ? face : null, null, playerEntity);
+            var result = wandable.onFirstConnection(new GlobalPos(world.dimension(), pos), data.strict() ? face : null, null, playerEntity);
             playSoundFromResult(world, pos, result);
         }
 
