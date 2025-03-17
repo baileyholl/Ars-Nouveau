@@ -174,6 +174,23 @@ public class ParticleColor implements IParticleColor, Cloneable {
         return new ParticleColor(random.nextInt(wrapper.r), random.nextInt(wrapper.g), random.nextInt(wrapper.b));
     }
 
+    private int nextIntBetweenInclusive(int min, int max) {
+        int newMin = Math.min(min, max);
+        int newMax = Math.max(min, max);
+        return random.nextInt(newMax - newMin + 1) + newMin;
+    }
+
+    @Override
+    public ParticleColor transitionTowards(ParticleColor dest) {
+        ParticleColor.IntWrapper wrapper = toWrapper();
+        ParticleColor.IntWrapper destWrapper = dest.toWrapper();
+        return new ParticleColor(
+                nextIntBetweenInclusive(wrapper.r, destWrapper.r),
+                nextIntBetweenInclusive(wrapper.g, destWrapper.g),
+                nextIntBetweenInclusive(wrapper.b, destWrapper.b)
+        );
+    }
+
     public double euclideanDistance(ParticleColor color) {
         return Math.sqrt(Math.pow(this.r - color.getRed(), 2) + Math.pow(this.g - color.getGreen(), 2) + Math.pow(this.b - color.getBlue(), 2));
     }

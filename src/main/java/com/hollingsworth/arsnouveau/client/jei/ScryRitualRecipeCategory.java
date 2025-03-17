@@ -19,7 +19,9 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
@@ -68,9 +70,19 @@ public class ScryRitualRecipeCategory implements IRecipeCategory<ScryRitualRecip
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ScryRitualRecipe recipe, IFocusGroup focuses) {
         List<ItemStack> items = new ArrayList<>();
-        for (Holder<Block> blockHolder : BuiltInRegistries.BLOCK.getTagOrEmpty(recipe.highlight())) {
-            items.add(blockHolder.value().asItem().getDefaultInstance());
-        }
+        recipe.highlight().left().ifPresent(block -> {
+            for (Holder<Block> blockHolder : BuiltInRegistries.BLOCK.getTagOrEmpty(block.tag())) {
+                items.add(blockHolder.value().asItem().getDefaultInstance());
+            }
+        });
+        recipe.highlight().right().ifPresent(entity -> {
+            for (Holder<EntityType<?>> entityTypeHolder : BuiltInRegistries.ENTITY_TYPE.getTagOrEmpty(entity.tag())) {
+                SpawnEggItem item = SpawnEggItem.byId(entityTypeHolder.value());
+                if (item != null) {
+                    items.add(item.getDefaultInstance());
+                }
+            }
+        });
         ItemStack[] stacks = items.toArray(new ItemStack[]{});
         builder.addSlot(RecipeIngredientRole.OUTPUT, 120-16-6, 4).addIngredients(Ingredient.of(stacks));
         builder.addSlot(RecipeIngredientRole.INPUT, 6, 4).addIngredients(Ingredient.of(recipe.augment()));

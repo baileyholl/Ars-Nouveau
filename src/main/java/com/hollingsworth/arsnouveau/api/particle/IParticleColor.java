@@ -15,6 +15,14 @@ public interface IParticleColor extends ITagSerializable, Cloneable {
     int getColor();
 
     default ParticleColor transition(int ticks){
+        return transition();
+    }
+
+    default ParticleColor transition(){
+        return (ParticleColor) this;
+    }
+
+    default ParticleColor transitionTowards(ParticleColor color) {
         return (ParticleColor) this;
     }
 

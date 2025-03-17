@@ -9,6 +9,8 @@ import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,9 +44,20 @@ public class EmiScryRitualRecipe implements EmiRecipe {
     @Override
     public List<EmiStack> getOutputs() {
         List<EmiStack> outputs = new ArrayList<>();
-        for (Holder<Block> blockHolder : BuiltInRegistries.BLOCK.getTagOrEmpty(recipe.highlight())) {
-            outputs.add(EmiStack.of(blockHolder.value()));
-        }
+
+        recipe.highlight().left().ifPresent(block -> {
+            for (Holder<Block> blockHolder : BuiltInRegistries.BLOCK.getTagOrEmpty(block.tag())) {
+                outputs.add(EmiStack.of(blockHolder.value()));
+            }
+        });
+        recipe.highlight().right().ifPresent(entity -> {
+            for (Holder<EntityType<?>> entityTypeHolder : BuiltInRegistries.ENTITY_TYPE.getTagOrEmpty(entity.tag())) {
+                SpawnEggItem item = SpawnEggItem.byId(entityTypeHolder.value());
+                if (item != null) {
+                    outputs.add(EmiStack.of(item));
+                }
+            }
+        });
 
         return outputs;
     }

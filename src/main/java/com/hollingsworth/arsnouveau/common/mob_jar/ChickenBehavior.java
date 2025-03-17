@@ -5,12 +5,13 @@ import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.animal.Chicken;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gameevent.GameEvent;
 
 public class ChickenBehavior extends JarBehavior<Chicken> {
     @Override
     public void tick(MobJarTile tile) {
-        if(tile.getLevel().isClientSide)
+        if(tile.getLevel().isClientSide || isPowered(tile))
             return;
         Chicken chicken = this.entityFromJar(tile);
         if(isEntityBaby(chicken)){

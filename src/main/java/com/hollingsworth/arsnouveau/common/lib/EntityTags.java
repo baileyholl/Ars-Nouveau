@@ -27,5 +27,5 @@ public class EntityTags {
     public static final TagKey<EntityType<?>> ITEM_GRATE_COLLIDE = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix( "item_grate_collide"));
 
     public static final TagKey<EntityType<?>> BURST_WHITELIST = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix( "burst_whitelist"));
-
+    public static final TagKey<EntityType<?>> MINECARTS = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix("minecarts"));
 }

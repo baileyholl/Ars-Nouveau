@@ -33,7 +33,7 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
     public static TagKey<Item> RITUAL_TRADE_BLACKLIST = ItemTags.create(ArsNouveau.prefix( "ritual_trade_blacklist"));
     public static TagKey<Item> STORAGE_BLOCKS_QUARTZ = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/quartz"));
     public static TagKey<Item> SHADY_WIZARD_FRUITS = ItemTags.create(ArsNouveau.prefix( "shady_wizard_fruits"));
-
+    public static TagKey<Item> MINECARTS = ItemTags.create(ArsNouveau.prefix( "minecarts"));
 
     public ItemTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
         super(output, Registries.ITEM, future, item -> item.builtInRegistryHolder().key(), ArsNouveau.MODID, helper);
@@ -234,5 +234,7 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
         this.tag(ItemTags.BOW_ENCHANTABLE).add(ItemsRegistry.SPELL_BOW.get());
         this.tag(ItemTags.CROSSBOW_ENCHANTABLE).add(ItemsRegistry.SPELL_CROSSBOW.get());
         this.tag(ItemTags.DURABILITY_ENCHANTABLE).add(ItemsRegistry.ENCHANTERS_SHIELD.get());
+
+        this.tag(MINECARTS).add(Items.MINECART, Items.CHEST_MINECART, Items.FURNACE_MINECART, Items.TNT_MINECART, Items.HOPPER_MINECART);
     }
 }

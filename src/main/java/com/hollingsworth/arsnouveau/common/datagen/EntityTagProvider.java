@@ -75,5 +75,7 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
 
         this.tag(EntityTags.ANIMAL_SUMMON_BLACKLIST).add(ModEntities.GIFT_STARBY.get());
         this.tag(EntityTags.BURST_WHITELIST).add(ModEntities.BUBBLE.get(), EntityType.ARROW);
+
+        this.tag(EntityTags.MINECARTS).add(EntityType.MINECART, EntityType.CHEST_MINECART, EntityType.FURNACE_MINECART, EntityType.TNT_MINECART, EntityType.HOPPER_MINECART);
     }
 }

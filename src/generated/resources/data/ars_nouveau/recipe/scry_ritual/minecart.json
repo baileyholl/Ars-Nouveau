@@ -1,0 +1,13 @@
+{
+  "type": "ars_nouveau:scry_ritual",
+  "augment": "ars_nouveau:minecarts",
+  "entity_highlight": {
+    "color": {
+      "b": 255,
+      "g": 255,
+      "id": "ars_nouveau:constant",
+      "r": 50
+    },
+    "highlight": "ars_nouveau:minecarts"
+  }
+}

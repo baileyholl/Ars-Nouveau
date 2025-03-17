@@ -7,10 +7,7 @@ import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
-import com.hollingsworth.arsnouveau.api.scrying.CompoundScryer;
-import com.hollingsworth.arsnouveau.api.scrying.IScryer;
-import com.hollingsworth.arsnouveau.api.scrying.SingleBlockScryer;
-import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
+import com.hollingsworth.arsnouveau.api.scrying.*;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.familiars.*;
@@ -157,6 +154,7 @@ public class APIRegistry {
         registerScryer(SingleBlockScryer.INSTANCE);
         registerScryer(CompoundScryer.INSTANCE);
         registerScryer(TagScryer.INSTANCE);
+        registerScryer(EntityTagScryer.INSTANCE);
 
         registerPerk(EmptyPerk.INSTANCE);
         registerPerk(StarbunclePerk.INSTANCE);

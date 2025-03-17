@@ -19,7 +19,7 @@ public class FrogBehavior extends JarBehavior<Frog> {
 
     @Override
     public void tick(MobJarTile tile) {
-        if(tile.getLevel().isClientSide){
+        if(tile.getLevel().isClientSide || isPowered(tile)){
             return;
         }
         ExtraData data = new ExtraData(tile.getExtraDataTag());

@@ -11,7 +11,8 @@ public class SheepBehavior extends JarBehavior<Sheep> {
     @Override
     public void tick(MobJarTile tile) {
         Sheep sheep = entityFromJar(tile);
-        if(!sheep.level.isClientSide && sheep.isSheared()) {
+        if (tile.getLevel().isClientSide || isPowered(tile)) return;
+        if(sheep.isSheared()) {
             if (sheep.getRandom().nextInt(sheep.isBaby() ? 50 : 1000) != 0) {
                 return;
             }

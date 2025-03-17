@@ -19,6 +19,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -43,20 +44,33 @@ public class ScryEvents {
         }
     }
 
+    public static IScryer getScryer() {
+        if (!ArsNouveau.proxy.getPlayer().hasEffect(ModPotions.SCRYING_EFFECT)) return null;
+
+        CompoundTag tag = ClientInfo.persistentData;
+        if (!tag.contains("an_scryer")) return null;
+        CompoundTag scryerTag = tag.getCompound("an_scryer");
+
+        ResourceLocation scryerLocation = ResourceLocation.tryParse(scryerTag.getString("id"));
+        if (scryerLocation == null) return null;
+
+        IScryer scryer = ArsNouveauAPI.getInstance().getScryer(scryerLocation);
+        if (scryer == null) return null;
+
+        return scryer.fromTag(scryerTag);
+    }
+
     @SubscribeEvent
     public static void playerTickEvent(final PlayerTickEvent.Post event) {
-        if (event.getEntity().level.isClientSide && event.getEntity().getEffect(ModPotions.SCRYING_EFFECT) != null && ClientInfo.ticksInGame % 30 == 0) {
+        if (event.getEntity().level.isClientSide && ClientInfo.ticksInGame % 30 == 0) {
+            IScryer scryer = getScryer();
+            if (scryer == null) return;
+            if (!scryer.revealsBlocks()) return;
 
-            List<BlockPos> scryingPos = new ArrayList<>();
-            CompoundTag tag = ClientInfo.persistentData;
-            if (!tag.contains("an_scryer"))
-                return;
-            IScryer scryer = ArsNouveauAPI.getInstance().getScryer(ResourceLocation.tryParse(tag.getCompound("an_scryer").getString("id"))).fromTag(tag.getCompound("an_scryer"));
-            if (scryer == null)
-                return;
             Player playerEntity = event.getEntity();
             Level world = playerEntity.level;
             Vec3i scrySize = scryer.getScryingSize();
+            List<BlockPos> scryingPos = new ArrayList<>();
             for (BlockPos p : BlockPos.withinManhattan(playerEntity.blockPosition(), scrySize.getX(), scrySize.getY(), scrySize.getZ())) {
                 if (world.isOutsideBuildHeight(p) || world.getBlockState(p).isAir())
                     continue;
@@ -103,39 +117,56 @@ public class ScryEvents {
 
     @SubscribeEvent
     public static void renderScry(final RenderLevelStageEvent event) {
-
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_WEATHER) return;
         ClientLevel world = Minecraft.getInstance().level;
         final Player playerEntity = Minecraft.getInstance().player;
-        if (playerEntity == null || playerEntity.getEffect(ModPotions.SCRYING_EFFECT) == null)
-            return;
-        Vec3 vector3d = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+        if (playerEntity == null || playerEntity.getEffect(ModPotions.SCRYING_EFFECT) == null || world == null) return;
 
-        double yView = vector3d.y();
         if (Minecraft.getInstance().isPaused())
             return;
-        RandomSource rand = playerEntity.getRandom();
-        for (BlockPos p : ClientInfo.scryingPositions) {
-            ParticleColor color = new ParticleColor(
-                    rand.nextInt(255),
-                    rand.nextInt(255),
-                    rand.nextInt(255));
-            BlockPos renderPos = new BlockPos(p);
-            if (Math.abs(yView - p.getY()) >= 30) {
-                renderPos = new BlockPos(p.getX(), (int) (p.getY() > yView ? yView + 20 : yView - 20), p.getZ());
-                color = new ParticleColor(
-                        rand.nextInt(30),
-                        rand.nextInt(255),
-                        rand.nextInt(50));
-            }
 
-            if (Math.abs(yView - p.getY()) >= 60) {
-                renderPos = new BlockPos(p.getX(), (int) (p.getY() > yView ? yView + 20 : yView - 20), p.getZ());
-                color = new ParticleColor(
-                        rand.nextInt(50),
-                        rand.nextInt(50),
-                        rand.nextInt(255));
+        IScryer scryer = getScryer();
+        if (scryer == null) return;
+
+        Vec3i size = scryer.getScryingSize();
+        int horizontal = Math.max(size.getX(), size.getZ()) / 2;
+        int vertical = size.getY() / 2;
+
+        for (BlockPos p : ClientInfo.scryingPositions) {
+            double x = p.getX() - playerEntity.getX();
+            double y = p.getY() - playerEntity.getY();
+            double z = p.getZ() - playerEntity.getZ();
+            boolean overHalf = Mth.lengthSquared(x, z) < Mth.square(horizontal) && Mth.square(y) < Mth.square(vertical);
+
+            ParticleColor color = scryer.getParticleColor();
+            if (!overHalf) {
+                color = color.transitionTowards(ParticleColor.BLACK);
+            } else {
+                color = color.transitionTowards(ParticleColor.WHITE);
             }
+            BlockPos renderPos = new BlockPos(p);
+//            ParticleColor color = new ParticleColor(
+//                    rand.nextInt(255),
+//                    rand.nextInt(255),
+//                    rand.nextInt(255));
+//
+//            color.transition()
+//            BlockPos renderPos = new BlockPos(p);
+//            if (Math.abs(yView - p.getY()) >= 30) {
+//                renderPos = new BlockPos(p.getX(), (int) (p.getY() > yView ? yView + 20 : yView - 20), p.getZ());
+//                color = new ParticleColor(
+//                        rand.nextInt(30),
+//                        rand.nextInt(255),
+//                        rand.nextInt(50));
+//            }
+//
+//            if (Math.abs(yView - p.getY()) >= 60) {
+//                renderPos = new BlockPos(p.getX(), (int) (p.getY() > yView ? yView + 20 : yView - 20), p.getZ());
+//                color = new ParticleColor(
+//                        rand.nextInt(50),
+//                        rand.nextInt(50),
+//                        rand.nextInt(255));
+//            }
 
             world.addParticle(
                     GlowParticleData.createData(color, true),

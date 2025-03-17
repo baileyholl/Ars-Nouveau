@@ -14,7 +14,8 @@
     "light.ClientMixin",
     "light.EntityRendererMixin",
     "light.LevelRendererMixin",
-    "light.LightEntityMixin"
+    "light.LightEntityMixin",
+    "scrying.LevelRendererMixin"
   ],
   "mixins": [
     "BlockBehaviourAccessor",
