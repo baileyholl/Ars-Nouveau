@@ -543,12 +543,14 @@ public class Documentation {
                 .withSortNum(3))
                 .withRelation(armorEntry);
 
+        var firstUpgrade = manager.byKeyTyped(RecipeRegistry.ARMOR_UPGRADE_TYPE.get(), ArsNouveau.prefix("first_armor_upgrade"));
+        var secondUpgrade = manager.byKeyTyped(RecipeRegistry.ARMOR_UPGRADE_TYPE.get(), ArsNouveau.prefix("second_armor_upgrade"));
         var armorUpgrade = addPage(new DocEntryBuilder(ARMOR, "armor_upgrading")
                 .withIcon(ItemsRegistry.ARCANIST_HOOD)
                 .withIntroPage()
                 .withPage(TextEntry.create(getLangPath("armor_upgrading", 2), Component.translatable("ars_nouveau.armor_tiers")))
-                .withCraftingPages("ars_nouveau:first_armor_upgrade", null)
-                .withCraftingPages("ars_nouveau:second_armor_upgrade", null)
+                .withPage(ArmorUpgradeEntry.create(firstUpgrade))
+                .withPage(ArmorUpgradeEntry.create(secondUpgrade))
                 .withSortNum(1))
                 .withRelations(alteraitonTable, armorEntry);
 
