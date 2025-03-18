@@ -288,12 +288,8 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 	}
 
 	public void onTransferHandler(ServerPlayer sender, List<List<ItemStack>> stacksList){
-		if (stacksList.size() != 9) {
-			return;
-		}
-
 		ItemStack[][] stacks = new ItemStack[9][];
-		for (int i = 0; i < 9; i++) {
+		for (int i = 0; i < stacksList.size(); i++) {
 			stacks[i] = stacksList.get(i).toArray(ItemStack[]::new);
 		}
 
