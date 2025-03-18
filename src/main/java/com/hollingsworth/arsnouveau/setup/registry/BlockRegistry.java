@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.client.renderer.tile.*;
 import com.hollingsworth.arsnouveau.common.block.LightBlock;
 import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.block.tile.*;
+import com.hollingsworth.arsnouveau.common.block.tile.repository.RepositoryControllerTile;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.items.MobJarItem;
 import com.hollingsworth.arsnouveau.common.items.ModBlockItem;
@@ -262,6 +263,7 @@ public class BlockRegistry {
     public static BlockRegistryWrapper<SummonBed> YELLOW_SBED = registerBlockAndItem(LibBlockNames.YELLOW_SBED, SummonBed::new);
     public static BlockRegistryWrapper<SummonBed> PURPLE_SBED = registerBlockAndItem(LibBlockNames.PURPLE_SBED, SummonBed::new);
     public static BlockRegistryWrapper<CrabHat> CRAB_HAT = registerBlockAndItem(LibBlockNames.CRAB_HAT, CrabHat::new);
+    public static BlockRegistryWrapper<RepositoryController> REPOSITORY_CONTROLLER = registerBlockAndItem(LibBlockNames.REPOSITORY_CONTROLLER, RepositoryController::new);
 
     public static BlockRegistryWrapper<ScryersOculus> SCRYERS_OCULUS = registerBlockAndItem(LibBlockNames.SCRYERS_OCULUS, ScryersOculus::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
         @Override
@@ -347,7 +349,7 @@ public class BlockRegistry {
     public static final BlockEntityTypeRegistryWrapper<ItemDetectorTile> ITEM_DETECTOR_TILE = registerTile(LibBlockNames.ITEM_DETECTOR, ItemDetectorTile::new, ITEM_DETECTOR);
     public static final BlockEntityTypeRegistryWrapper<SpellSensorTile> SPELL_SENSOR_TILE = registerTile(LibBlockNames.SPELL_SENSOR, SpellSensorTile::new, SPELL_SENSOR);
     public static final BlockEntityTypeRegistryWrapper<RedstoneRelayTile> REDSTONE_RELAY_TILE = registerTile(LibBlockNames.REDSTONE_RELAY, RedstoneRelayTile::new, REDSTONE_RELAY);
-
+    public static final BlockEntityTypeRegistryWrapper<RepositoryControllerTile> REPOSITORY_CONTROLLER_TILE = registerTile(LibBlockNames.REPOSITORY_CONTROLLER, RepositoryControllerTile::new, REPOSITORY_CONTROLLER);
 
     public static void onBlocksRegistry() {
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {

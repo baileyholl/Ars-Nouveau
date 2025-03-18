@@ -1,8 +1,13 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
+import com.hollingsworth.arsnouveau.api.item.inv.IMapInventory;
+import com.hollingsworth.arsnouveau.api.item.inv.SlotCache;
+import com.hollingsworth.arsnouveau.common.block.tile.repository.RepositoryControllerTile;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -16,20 +21,26 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
 
-public class RepositoryTile extends RandomizableContainerBlockEntity implements GeoBlockEntity, ITooltipProvider {
+public class RepositoryTile extends RandomizableContainerBlockEntity implements GeoBlockEntity, ITooltipProvider, IMapInventory {
     public static String[][] CONFIGURATIONS = new String[][]{
             {"1","2_3","4_6","7_9","10_12","13_15","16_18","19_21","22_24", "25_27"},
             {"1","2_3","25_27","22_24","19_21","10_12","7_9","4_6","13_15","16_18"},
@@ -43,6 +54,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     private NonNullList<ItemStack> items = NonNullList.withSize(54, ItemStack.EMPTY);
     public int fillLevel;
     public int configuration;
+    public SlotCache slotCache = new SlotCache(false);
 
     private ContainerOpenersCounter openersCounter = new ContainerOpenersCounter() {
         protected void onOpen(Level p_155062_, BlockPos p_155063_, BlockState p_155064_) {
@@ -96,19 +108,43 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     @Override
     protected void setItems(NonNullList<ItemStack> pItemStacks) {
         items = pItemStacks;
+        initCache();
     }
 
     @Override
     public void setItem(int pIndex, ItemStack pStack) {
+        ItemStack oldItem = getItem(pIndex);
         super.setItem(pIndex, pStack);
+        if(pStack.getItem() != oldItem.getItem()){
+            slotCache.replaceSlotWithItem(oldItem.getItem(), pStack.getItem(), pIndex);
+            System.out.println("replacing slots!");
+            System.out.println(slotCache);
+        }
         updateFill();
     }
 
     @Override
     public ItemStack removeItem(int pIndex, int pCount) {
-        ItemStack stack = super.removeItem(pIndex, pCount);
+        ItemStack extracted = super.removeItem(pIndex, pCount);
+        Item newItem = getItem(pIndex).getItem();
+        if(extracted.getItem() != newItem){
+            slotCache.replaceSlotWithItem(extracted.getItem(), newItem, pIndex);
+            System.out.println("replacing slots!");
+
+        }
         updateFill();
-        return stack;
+        return extracted;
+    }
+
+    @Override
+    public ItemStack removeItemNoUpdate(int pIndex) {
+        ItemStack extracted = super.removeItemNoUpdate(pIndex);
+        Item newItem = getItem(pIndex).getItem();
+        if(extracted.getItem() != newItem){
+            slotCache.replaceSlotWithItem(extracted.getItem(), newItem, pIndex);
+            System.out.println("replacing slots!");
+        }
+        return extracted;
     }
 
     @Override
@@ -134,6 +170,43 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     @Override
     public int getContainerSize() {
         return 54;
+    }
+
+    public void invalidateNetwork(){
+        if(level.isClientSide){
+            return;
+        }
+        Set<BlockPos> visited = new HashSet<>();
+        invalidateNetwork(visited);
+    }
+
+    protected void invalidateNetwork(Set<BlockPos> visited){
+        visited.add(worldPosition);
+        for(Direction direction : Direction.values()){
+            BlockPos pos = worldPosition.relative(direction);
+            if(!visited.contains(pos)){
+                visited.add(pos);
+                if(!level.isLoaded(pos)){
+                    continue;
+                }
+                BlockEntity neighbor = level.getBlockEntity(pos);
+                if(neighbor instanceof RepositoryTile repositoryTile){
+                    repositoryTile.invalidateNetwork(visited);
+                }else if(neighbor instanceof RepositoryControllerTile controllerTile){
+                    controllerTile.invalidateNetwork();
+                }
+            }
+        }
+    }
+
+    public void initCache(){
+        if(!this.level.isClientSide){
+            slotCache = new SlotCache(false);
+            for(int i = 0; i < getContainerSize(); i++) {
+                ItemStack stack = getItem(i);
+                slotCache.getOrCreateSlots(stack.getItem()).add(i);
+            }
+        }
     }
 
     @Override
@@ -181,6 +254,12 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     }
 
     @Override
+    public void onLoad() {
+        super.onLoad();
+        initCache();
+    }
+
+    @Override
     @Nullable
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
@@ -201,5 +280,22 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
         if(hasCustomName()){
             tooltip.add(getCustomName());
         }
+    }
+
+    @Override
+    public ItemStack insertStack(ItemStack stack) {
+        InvWrapper invWrapper = new InvWrapper(this);
+        FilterableItemHandler filterableItemHandler = new FilterableItemHandler(invWrapper).withSlotCache(slotCache);
+        return filterableItemHandler.insertItemStacked(stack, false);
+    }
+
+    @Override
+    public boolean hasExistingSlotsFor(ItemStack stack) {
+        return slotCache.getIfPresent(stack.getItem()) != null && !slotCache.getIfPresent(stack.getItem()).isEmpty();
+    }
+
+    @Override
+    public ItemStack getByItem(Item item, Predicate<ItemStack> filter) {
+        return null;
     }
 }

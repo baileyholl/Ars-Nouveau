@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.common.block.tile.RepositoryTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.stats.Stats;
-import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -33,6 +32,7 @@ public class RepositoryBlock extends ModBlock implements EntityBlock {
         if (blockentity instanceof RepositoryTile tile) {
             tile.configuration = pLevel.random.nextInt(RepositoryTile.CONFIGURATIONS.length);
             tile.updateBlock();
+            tile.invalidateNetwork();
         }
     }
 
@@ -55,8 +55,9 @@ public class RepositoryBlock extends ModBlock implements EntityBlock {
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
         if (!pState.is(pNewState.getBlock())) {
             BlockEntity blockentity = pLevel.getBlockEntity(pPos);
-            if (blockentity instanceof Container container) {
+            if (blockentity instanceof RepositoryTile container) {
                 Containers.dropContents(pLevel, pPos, container);
+                container.invalidateNetwork();
                 pLevel.updateNeighbourForOutputSignal(pPos, this);
             }
 
