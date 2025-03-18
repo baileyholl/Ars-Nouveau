@@ -18,6 +18,7 @@ import com.hollingsworth.arsnouveau.common.mixin.MobAccessor;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -31,16 +32,17 @@ import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.DyedItemColor;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
@@ -52,8 +54,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -80,14 +84,12 @@ public class EffectWololo extends AbstractEffect {
             if (itemEntity.getItem().has(DataComponents.BASE_COLOR)) {
                 itemEntity.getItem().set(DataComponents.BASE_COLOR, dye.getDyeColor());
             } else if (item.getItem() instanceof BlockItem blockItem) {
-                ItemStack result = getDyedResult((ServerLevel) world, makeContainer(dye, blockItem));
+                ItemStack result = getDyedResult((ServerLevel) world, makeInput(dye, blockItem));
                 result.setCount(itemEntity.getItem().getCount());
                 if (!result.isEmpty() && result.getItem() instanceof BlockItem) {
                     itemEntity.setItem(result);
                 }
             }
-
-
         } else if (rayTraceResult.getEntity() instanceof LivingEntity living) {
             if (living instanceof Sheep sheep)
                 sheep.setColor(dye.getDyeColor());
@@ -152,11 +154,11 @@ public class EffectWololo extends AbstractEffect {
                 // Try block + dye
                 BlockState hitBlock = world.getBlockState(blockPos);
                 if (hitBlock.isAir()) return;
-                ItemStack result = getDyedResult((ServerLevel) world, makeContainer(dye, hitBlock.getBlock()));
+                ItemStack result = getDyedResult((ServerLevel) world, makeInput(dye, hitBlock.getBlock()));
                 BlockItem blockItem;
                 if (result.isEmpty() || !(result.getItem() instanceof BlockItem)) {
                     // Try blocks surrounding the dye
-                    result = getDyedResult((ServerLevel) world, makeContainer8(dye, hitBlock.getBlock()));
+                    result = getDyedResult((ServerLevel) world, makeInput8(dye, hitBlock.getBlock()));
                     if (result.isEmpty() || !(result.getItem() instanceof BlockItem)) return;
                 }
                 blockItem = (BlockItem) result.getItem();
@@ -174,59 +176,62 @@ public class EffectWololo extends AbstractEffect {
         }
     }
 
+    record EmptyResultRecipe(CraftingInput input) implements CraftingRecipe {
+        @Override
+        public @NotNull CraftingBookCategory category() {
+            return CraftingBookCategory.MISC;
+        }
+
+        @Override
+        public boolean matches(@NotNull CraftingInput input, @NotNull Level level) {
+            return this.input.equals(input);
+        }
+
+        @Override
+        public @NotNull ItemStack assemble(@NotNull CraftingInput input, HolderLookup.@NotNull Provider registries) {
+            return ItemStack.EMPTY;
+        }
+
+        @Override
+        public boolean canCraftInDimensions(int width, int height) {
+            return true;
+        }
+
+        @Override
+        public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider registries) {
+            return ItemStack.EMPTY;
+        }
+
+        @Override
+        public @NotNull RecipeSerializer<?> getSerializer() {
+            return RecipeSerializer.SHAPELESS_RECIPE;
+        }
+    }
+
     @NotNull
-    private ItemStack getDyedResult(ServerLevel world, CraftingContainer craftingcontainer) {
-        Optional<CraftingRecipe> recipe = recipeCache.stream().filter(craftingRecipe -> craftingRecipe.matches(craftingcontainer.asCraftInput(), world)).findFirst();
-        if (recipe.isPresent()) {
-            recipeCache.add(recipe.get());
-            return recipe.get().assemble(craftingcontainer.asCraftInput(), world.registryAccess());
+    private ItemStack getDyedResult(ServerLevel world, CraftingInput input) {
+        Optional<CraftingRecipe> cached = recipeCache.stream().filter(craftingRecipe -> craftingRecipe.matches(input, world)).findFirst();
+        CraftingRecipe recipe;
+        if (cached.isEmpty()) {
+            recipe = world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, world).map(RecipeHolder::value).orElseGet(() -> new EmptyResultRecipe(input));
+            recipeCache.add(recipe);
+        } else {
+            recipe = cached.get();
         }
-        return world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingcontainer.asCraftInput(), world).map(craftingRecipe -> craftingRecipe.value().assemble(craftingcontainer.asCraftInput(), world.registryAccess())).orElse(ItemStack.EMPTY);
+
+        return recipe.assemble(input, world.registryAccess());
     }
 
-    private static CraftingContainer makeContainer(DyeItem targetColor, ItemLike blockToDye) {
-        CraftingContainer craftingcontainer = new TransientCraftingContainer(new AbstractContainerMenu(null, -1) {
-            /**
-             * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the
-             * player inventory and the other inventory(s).
-             */
-            public @NotNull ItemStack quickMoveStack(@NotNull Player p_218264_, int p_218265_) {
-                return ItemStack.EMPTY;
-            }
-
-            /**
-             * Determines whether supplied player can use this container
-             */
-            public boolean stillValid(@NotNull Player p_29888_) {
-                return false;
-            }
-        }, 2, 1);
-        craftingcontainer.setItem(0, new ItemStack(targetColor));
-        craftingcontainer.setItem(1, new ItemStack(blockToDye));
-        return craftingcontainer;
+    private static CraftingInput makeInput(DyeItem targetColor, ItemLike blockToDye) {
+        return CraftingInput.of(2, 1, List.of(new ItemStack(targetColor), new ItemStack(blockToDye)));
     }
 
-    private static CraftingContainer makeContainer8(DyeItem targetColor, Block blockToDye) {
-        CraftingContainer craftingcontainer = new TransientCraftingContainer(new AbstractContainerMenu(null, -1) {
-            /**
-             * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the
-             * player inventory and the other inventory(s).
-             */
-            public @NotNull ItemStack quickMoveStack(@NotNull Player p_218264_, int p_218265_) {
-                return ItemStack.EMPTY;
-            }
-
-            /**
-             * Determines whether supplied player can use this container
-             */
-            public boolean stillValid(@NotNull Player p_29888_) {
-                return false;
-            }
-        }, 3, 3);
+    private static CraftingInput makeInput8(DyeItem targetColor, Block blockToDye) {
+        List<ItemStack> items = new ArrayList<>(9);
         for (int i = 0; i < 9; i++) {
-            craftingcontainer.setItem(i, i == 4 ? new ItemStack(targetColor) : new ItemStack(blockToDye));
+            items.add(i == 4 ? new ItemStack(targetColor) : new ItemStack(blockToDye));
         }
-        return craftingcontainer;
+        return CraftingInput.of(3, 3, items);
     }
 
     private DyeItem getRandomDye(RandomSource random) {
