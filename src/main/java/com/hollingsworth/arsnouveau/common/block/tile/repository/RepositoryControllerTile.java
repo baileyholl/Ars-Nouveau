@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.item.inv.IMapInventory;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RepositoryBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.ModdedTile;
+import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.setup.registry.BlockEntityTypeRegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
@@ -26,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class RepositoryControllerTile extends ModdedTile implements ITooltipProvider, ICapabilityProvider<RepositoryControllerTile, Direction, IItemHandler>, IMapInventory,
         ITickable, Nameable {
@@ -74,9 +76,10 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
     }
 
     public ItemStack insertStack(ItemStack stack){
-        for(ConnectedRepository connectedRepository : connectedRepositories){
+        List<ConnectedRepository> validRepositories = preferredForStack(stack, false);
+        for(ConnectedRepository connectedRepository : validRepositories){
             IMapInventory connected = connectedRepository.capability.getCapability();
-            if(connected != null && connected.hasExistingSlotsFor(stack)){
+            if(connected != null && connected.hasExistingSlotsForInsertion(stack)){
                 ItemStack remainder = connected.insertStack(stack);
                 if(remainder.isEmpty()){
                     return ItemStack.EMPTY;
@@ -84,14 +87,26 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
                 stack = remainder;
             }
         }
+
+        for(ConnectedRepository connectedRepository : validRepositories){
+            IMapInventory connected = connectedRepository.capability.getCapability();
+            if(connected != null && connected.hasExistingSlotsForInsertion(ItemStack.EMPTY)){
+                ItemStack remainder = connected.insertStack(stack);
+                if(remainder.isEmpty()){
+                    return ItemStack.EMPTY;
+                }
+                stack = remainder;
+            }
+        }
+
         return stack;
     }
 
     @Override
-    public boolean hasExistingSlotsFor(ItemStack stack) {
+    public boolean hasExistingSlotsForInsertion(ItemStack stack) {
         for(ConnectedRepository connectedRepository : connectedRepositories){
             IMapInventory connected = connectedRepository.capability.getCapability();
-            if(connected != null && connected.hasExistingSlotsFor(stack)){
+            if(connected != null && connected.hasExistingSlotsForInsertion(stack)){
                 return true;
             }
         }
@@ -99,7 +114,15 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
     }
 
     @Override
-    public ItemStack getByItem(Item item, Predicate<ItemStack> filter) {
+    public ItemScroll.SortPref getInsertionPreference(ItemStack stack) {
+        List<ConnectedRepository> validRepositories = preferredForStack(stack, false);
+        if(validRepositories.isEmpty())
+            return ItemScroll.SortPref.INVALID;
+        return validRepositories.getFirst().capability.getCapability().getInsertionPreference(stack);
+    }
+
+    @Override
+    public ItemStack extractByItem(Item item, Predicate<ItemStack> filter) {
         return null;
     }
 
@@ -146,6 +169,21 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
 
     public void setName(Component name) {
         this.name = name;
+    }
+
+    public List<ConnectedRepository> preferredForStack(ItemStack stack, boolean includeInvalid) {
+        List<ConnectedRepository> filtered = new ArrayList<>();
+        filtered = connectedRepositories.stream()
+                .filter(filterableItemHandler ->{
+                    IMapInventory mapInventory = filterableItemHandler.capability.getCapability();
+                    if(mapInventory == null)
+                        return false;
+                    return includeInvalid || mapInventory.getInsertionPreference(stack) != ItemScroll.SortPref.INVALID;
+                })
+                .collect(Collectors.toCollection(ArrayList::new));
+        /// Sort by highest pref first
+        filtered.sort((o1, o2) -> o2.capability.getCapability().getInsertionPreference(stack).ordinal() - o1.capability.getCapability().getInsertionPreference(stack).ordinal());
+        return filtered;
     }
 
     @Override

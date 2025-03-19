@@ -1,10 +1,12 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.item.inv.FilterSet;
 import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
 import com.hollingsworth.arsnouveau.api.item.inv.IMapInventory;
 import com.hollingsworth.arsnouveau.api.item.inv.SlotCache;
 import com.hollingsworth.arsnouveau.common.block.tile.repository.RepositoryControllerTile;
+import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -35,6 +37,7 @@ import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -55,6 +58,8 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     public int fillLevel;
     public int configuration;
     public SlotCache slotCache = new SlotCache(false);
+    public FilterSet filterSet = new FilterSet();
+    FilterableItemHandler filterableItemHandler;
 
     private ContainerOpenersCounter openersCounter = new ContainerOpenersCounter() {
         protected void onOpen(Level p_155062_, BlockPos p_155063_, BlockState p_155064_) {
@@ -206,7 +211,15 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
                 ItemStack stack = getItem(i);
                 slotCache.getOrCreateSlots(stack.getItem()).add(i);
             }
+            filterableItemHandler = new FilterableItemHandler(new InvWrapper(this), filterSet).withSlotCache(slotCache);
         }
+    }
+
+    public void attachFilters(){
+        this.filterSet = FilterSet.forPosition(level, worldPosition);
+
+        filterableItemHandler = new FilterableItemHandler(new InvWrapper(this), filterSet).withSlotCache(slotCache);
+        System.out.println("attaching filters" + filterSet.filters.size());
     }
 
     @Override
@@ -257,6 +270,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     public void onLoad() {
         super.onLoad();
         initCache();
+        attachFilters();
     }
 
     @Override
@@ -284,18 +298,33 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
 
     @Override
     public ItemStack insertStack(ItemStack stack) {
-        InvWrapper invWrapper = new InvWrapper(this);
-        FilterableItemHandler filterableItemHandler = new FilterableItemHandler(invWrapper).withSlotCache(slotCache);
+        if(filterableItemHandler == null || !filterableItemHandler.canInsert(stack).valid()){
+            return stack;
+        }
         return filterableItemHandler.insertItemStacked(stack, false);
     }
 
     @Override
-    public boolean hasExistingSlotsFor(ItemStack stack) {
+    public boolean hasExistingSlotsForInsertion(ItemStack stack) {
         return slotCache.getIfPresent(stack.getItem()) != null && !slotCache.getIfPresent(stack.getItem()).isEmpty();
     }
 
     @Override
-    public ItemStack getByItem(Item item, Predicate<ItemStack> filter) {
-        return null;
+    public ItemStack extractByItem(Item item, Predicate<ItemStack> filter) {
+        Collection<Integer> slots = slotCache.getIfPresent(item);
+        if(slots == null)
+            return ItemStack.EMPTY;
+        for(Integer slot : slots){
+            ItemStack stack = getItem(slot);
+            if(filter.test(stack)){
+                return stack;
+            }
+        }
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public ItemScroll.SortPref getInsertionPreference(ItemStack stack) {
+        return filterSet.getHighestPreference(stack);
     }
 }

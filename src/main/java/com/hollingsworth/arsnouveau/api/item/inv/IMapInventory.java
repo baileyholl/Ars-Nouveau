@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.item.inv;
 
+import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -9,13 +10,15 @@ public interface IMapInventory {
 
     ItemStack insertStack(ItemStack stack);
 
-    boolean hasExistingSlotsFor(ItemStack stack);
+    boolean hasExistingSlotsForInsertion(ItemStack stack);
 
-    default ItemStack getByItem(Item item){
-        return getByItem(item, stack -> true);
+    default ItemStack extractByItem(Item item){
+        return extractByItem(item, stack -> true);
     }
 
-    ItemStack getByItem(Item item, Predicate<ItemStack> filter);
+    ItemStack extractByItem(Item item, Predicate<ItemStack> filter);
+
+    ItemScroll.SortPref getInsertionPreference(ItemStack stack);
 
 
 }
