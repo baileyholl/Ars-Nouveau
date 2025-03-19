@@ -1207,6 +1207,8 @@ public class LangDatagen extends LanguageProvider {
         add("entity.minecraft.villager.shady_wizard", "Shady Wizard");
         add("death.attack.an_enchantedBlock", "%1$s was crushed by %2$s magic blocks");
         add("death.attack.freeze.item", "%1$s was frozen to death by %2$s using %3$");
+        add("death.attack.sourceberry_bush", "%1$s was poked to death by a sourceberry bush");
+        add("death.attack.sourceberry_bush.player", "%1$s was poked to death by a sourceberry bush while trying to escape %2$s");
         add("block.ars_nouveau.magelight_torch", "Magelight Torch");
         add("block.ars_nouveau.arcane_platform", "Arcane Platform");
         add("ars_nouveau.arcane_platform.tooltip", "Can be placed in any direction and can be used in place of a pedestal.");
