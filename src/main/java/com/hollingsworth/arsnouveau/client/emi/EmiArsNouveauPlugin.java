@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
+import com.hollingsworth.arsnouveau.client.container.IAutoFillTerminal;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.armor.AnimatedMagicArmor;
 import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
@@ -13,9 +14,7 @@ import com.hollingsworth.arsnouveau.common.items.data.BlockFillContents;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectCrush;
 import com.hollingsworth.arsnouveau.setup.registry.*;
-import dev.emi.emi.api.EmiEntrypoint;
-import dev.emi.emi.api.EmiPlugin;
-import dev.emi.emi.api.EmiRegistry;
+import dev.emi.emi.api.*;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.client.Minecraft;
@@ -143,5 +142,24 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
                 registry.addEmiStackAfter(EmiStack.of(stack.copy()), s -> s.getItemStack().is(stack.getItem()) && s.getItemStack().get(DataComponentRegistry.ARMOR_PERKS).getTier() == finalTier - 1);
             }
         }
+    }
+
+    static {
+        IAutoFillTerminal.updateSearch.add(new IAutoFillTerminal.ISearchHandler() {
+            @Override
+            public void setSearch(String text) {
+                EmiApi.setSearchText(text);
+            }
+
+            @Override
+            public String getSearch() {
+                return EmiApi.getSearchText();
+            }
+
+            @Override
+            public String getName() {
+                return "EMI";
+            }
+        });
     }
 }
