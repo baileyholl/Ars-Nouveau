@@ -532,10 +532,15 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
     /**
      * Returns true if other Entities should be prevented from moving through this Entity.
      */
+    @Override
     public boolean isPickable() {
         return !this.isRemoved();
     }
 
+    @Override
+    public float getPickRadius() {
+        return 0.0F;
+    }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
