@@ -21,6 +21,6 @@ public class ControllerInv extends CombinedHandlerInv {
 
     @Override
     public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-        return !simulate ? lecternTile.insertStack(stack) : super.insertItem(slot, stack, simulate);
+        return lecternTile.insertStack(stack, simulate);
     }
 }

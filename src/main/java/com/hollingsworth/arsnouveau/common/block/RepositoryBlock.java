@@ -2,7 +2,9 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.RepositoryTile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -51,6 +53,14 @@ public class RepositoryBlock extends ModBlock implements EntityBlock {
             }
 
             return ItemInteractionResult.CONSUME;
+        }
+    }
+
+    @Override
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        super.tick(state, level, pos, random);
+        if(!level.isClientSide && level.getBlockEntity(pos) instanceof RepositoryTile repositoryTile){
+            repositoryTile.attachFilters();
         }
     }
 

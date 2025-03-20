@@ -17,17 +17,13 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.Mth;
-import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
@@ -60,27 +56,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     public SlotCache slotCache = new SlotCache(false);
     public FilterSet filterSet = new FilterSet();
     FilterableItemHandler filterableItemHandler;
-
-    private ContainerOpenersCounter openersCounter = new ContainerOpenersCounter() {
-        protected void onOpen(Level p_155062_, BlockPos p_155063_, BlockState p_155064_) {
-        }
-
-        protected void onClose(Level level, BlockPos p_155073_, BlockState p_155074_) {
-            updateFill();
-        }
-
-        protected void openerCountChanged(Level p_155066_, BlockPos p_155067_, BlockState p_155068_, int p_155069_, int p_155070_) {
-        }
-
-        protected boolean isOwnContainer(Player p_155060_) {
-            if (p_155060_.containerMenu instanceof ChestMenu) {
-                Container container = ((ChestMenu)p_155060_.containerMenu).getContainer();
-                return container == RepositoryTile.this;
-            } else {
-                return false;
-            }
-        }
-    };
+    InvWrapper invWrapper = new InvWrapper(this);
 
     public void updateFill(){
         int i = 0;
@@ -150,18 +126,6 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
             System.out.println("replacing slots!");
         }
         return extracted;
-    }
-
-    @Override
-    public void startOpen(Player pPlayer) {
-        super.startOpen(pPlayer);
-        openersCounter.incrementOpeners(pPlayer, this.getLevel(), this.getBlockPos(), this.getBlockState());
-    }
-
-    @Override
-    public void stopOpen(Player pPlayer) {
-        super.stopOpen(pPlayer);
-        openersCounter.decrementOpeners(pPlayer, this.getLevel(), this.getBlockPos(), this.getBlockState());
     }
 
     protected Component getDefaultName() {
@@ -270,7 +234,10 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     public void onLoad() {
         super.onLoad();
         initCache();
+        // If item frames are in an adjacent chunk that is unloaded, scheduling one tick later has a chance to catch them
+        // when the player joins the world.
         attachFilters();
+        level.scheduleTick(worldPosition, BlockRegistry.REPOSITORY.get(), 1);
     }
 
     @Override
@@ -297,11 +264,11 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     }
 
     @Override
-    public ItemStack insertStack(ItemStack stack) {
+    public ItemStack insertStack(ItemStack stack, boolean simulate) {
         if(filterableItemHandler == null || !filterableItemHandler.canInsert(stack).valid()){
             return stack;
         }
-        return filterableItemHandler.insertItemStacked(stack, false);
+        return filterableItemHandler.insertItemStacked(stack, simulate);
     }
 
     @Override
@@ -310,14 +277,18 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     }
 
     @Override
-    public ItemStack extractByItem(Item item, Predicate<ItemStack> filter) {
+    public ItemStack extractByItem(Item item, int count, boolean simulate, Predicate<ItemStack> filter) {
         Collection<Integer> slots = slotCache.getIfPresent(item);
         if(slots == null)
             return ItemStack.EMPTY;
         for(Integer slot : slots){
             ItemStack stack = getItem(slot);
-            if(filter.test(stack)){
-                return stack;
+            if(!filter.test(stack))
+                continue;
+            if(simulate) {
+               return stack.copy();
+            }else{
+                return invWrapper.extractItem(slot, count, false);
             }
         }
         return ItemStack.EMPTY;

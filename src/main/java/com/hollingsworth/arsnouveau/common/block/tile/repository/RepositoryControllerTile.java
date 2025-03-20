@@ -75,12 +75,13 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
         }
     }
 
-    public ItemStack insertStack(ItemStack stack){
+    public ItemStack insertStack(ItemStack stack, boolean simulate){
         List<ConnectedRepository> validRepositories = preferredForStack(stack, false);
+        // Prefer inserting into existing stacks first, splitting across as many inventories as needed
         for(ConnectedRepository connectedRepository : validRepositories){
             IMapInventory connected = connectedRepository.capability.getCapability();
             if(connected != null && connected.hasExistingSlotsForInsertion(stack)){
-                ItemStack remainder = connected.insertStack(stack);
+                ItemStack remainder = connected.insertStack(stack, simulate);
                 if(remainder.isEmpty()){
                     return ItemStack.EMPTY;
                 }
@@ -88,10 +89,11 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
             }
         }
 
+        // Fall back to inserting into any empty slots.
         for(ConnectedRepository connectedRepository : validRepositories){
             IMapInventory connected = connectedRepository.capability.getCapability();
             if(connected != null && connected.hasExistingSlotsForInsertion(ItemStack.EMPTY)){
-                ItemStack remainder = connected.insertStack(stack);
+                ItemStack remainder = connected.insertStack(stack, simulate);
                 if(remainder.isEmpty()){
                     return ItemStack.EMPTY;
                 }
@@ -122,7 +124,7 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
     }
 
     @Override
-    public ItemStack extractByItem(Item item, Predicate<ItemStack> filter) {
+    public ItemStack extractByItem(Item item, int count, boolean simulate, Predicate<ItemStack> filter) {
         return null;
     }
 
