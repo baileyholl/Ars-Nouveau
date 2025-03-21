@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.events;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.DynamicTooltipRegistry;
+import com.hollingsworth.arsnouveau.api.registry.GenericRecipeRegistry;
 import com.hollingsworth.arsnouveau.client.gui.DocItemTooltipHandler;
 import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
@@ -68,6 +69,11 @@ public class ClientEvents {
                 }
             }, BlockRegistry.ARCHWOOD_CHEST.get().asItem());
         }
+    }
+
+    @SubscribeEvent
+    public static void onRecipesUpdate(RecipesUpdatedEvent event) {
+        GenericRecipeRegistry.reloadAll(event.getRecipeManager());
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
