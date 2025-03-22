@@ -16,7 +16,7 @@
     "ars_nouveau:glyph_blink",
     "ars_nouveau:glyph_amplify",
     "ars_nouveau:glyph_pickup",
-    "ars_nouveau:glyph_amplify"
+    "ars_nouveau:glyph_aoe"
   ],
   "tome_type": "ars_nouveau:caster_tome"
 }
