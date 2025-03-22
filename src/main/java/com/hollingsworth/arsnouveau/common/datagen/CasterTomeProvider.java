@@ -297,6 +297,8 @@ public class CasterTomeProvider extends SimpleDataProvider {
         tomes.add(buildTome("yuukiukami", "Yuuki's Mineral Assimilator", new Spell(MethodProjectile.INSTANCE, EffectBreak.INSTANCE, AugmentAmplify.INSTANCE, AugmentExtract.INSTANCE, EffectPickup.INSTANCE), "One of YuukiUkami’s earliest creations, this spell reflects their desire for precision and mastery. Infused with the arcane finesse of its creator, it draws minerals from the earth at a distance, as if the ores themselves were eager to join the mage’s growing legacy", new ParticleColor(48, 1, 105)));
 
         tomes.add(buildTome("riftderp","Rift's Blink Strike", new Spell(MethodProjectile.INSTANCE, AugmentAccelerate.INSTANCE, AugmentAccelerate.INSTANCE, EffectHarm.INSTANCE, EffectBlink.INSTANCE), "Just like that one guy, from that one thing! This spell will put you right in the enemy's face, so be ready for some swordplay!", new ParticleColor(120, 25, 255)));
+
+        tomes.add(buildTome("nikk", "Sutokahs LOVE", new Spell(MethodProjectile.INSTANCE, EffectHex.INSTANCE, EffectHarm.INSTANCE, EffectBlink.INSTANCE, AugmentAmplify.INSTANCE, EffectPickup.INSTANCE, AugmentAOE.INSTANCE), "Weaken it, kill it and take it home.", new ParticleColor(255, 204, 204)));
         for (CasterRecipeWrapper g : tomes) {
             Path path = getRecipePath(output, g.id().getPath());
             saveStable(pOutput, CasterTomeData.CODEC.encodeStart(JsonOps.INSTANCE, g.toData()).getOrThrow(), path);

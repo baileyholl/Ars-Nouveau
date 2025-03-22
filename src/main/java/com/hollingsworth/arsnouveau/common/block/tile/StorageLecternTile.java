@@ -42,6 +42,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -433,7 +434,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 			if(mainLectern.handlerPosList.stream().anyMatch(p -> p.pos.equals(pos)))
 				continue;
 			IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
-			if(handler == null)
+			if(handler == null || (level.getBlockEntity(pos) instanceof HopperBlockEntity hopperBlockEntity && hopperBlockEntity.getBlockPos().equals(worldPosition.below())))
 				continue;
 			for(int i = 0; i < handler.getSlots(); i++){
 				ItemStack stack = handler.getStackInSlot(i);
@@ -626,9 +627,8 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             BlockCapabilityCache<IItemHandler, Direction> capabilityCache = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, (ServerLevel) level, pos, null, () -> !lecternTile.isRemoved(), () -> {
                 this.invalidateNextTick = true;
             });
-            if(capabilityCache.getCapability() != null) {
-                handlerPos.handler = capabilityCache;
-            }
+            handlerPos.handler = capabilityCache;
+
         }
         this.invalidateCapabilities();
     }

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs;
 
+import com.hollingsworth.arsnouveau.common.block.tile.PortalTile;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.*;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import net.minecraft.core.BlockPos;
@@ -15,11 +16,6 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Half;
-
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
-
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.level.pathfinder.PathType;
@@ -877,6 +873,17 @@ public abstract class AbstractPathJob implements Callable<Path> {
         }
 
         nodesOpen.offer(node);
+
+        if (world.getBlockEntity(pos) instanceof PortalTile portal) {
+            if (portal.dimID != null && portal.dimID.equals(portal.getLevel().dimension().location().toString())) {
+                BlockPos warpPos = portal.warpPos;
+                double portalHeuristic = computeHeuristic(warpPos);
+                double portalCost = node.getCost();
+                double portalScore = cost + heuristic;
+                ModNode portalNode = createNode(node, warpPos, nodeKey, isSwimming, portalHeuristic, portalCost, portalScore);
+                nodesOpen.offer(portalNode);
+            }
+        }
 
         //  Jump Point Search-ish optimization:
         // If this node was a (heuristic-based) improvement on our parent,
