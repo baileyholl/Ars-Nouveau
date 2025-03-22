@@ -875,7 +875,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
         nodesOpen.offer(node);
 
         if (world.getBlockEntity(pos) instanceof PortalTile portal) {
-            if (portal.dimID.equals(portal.getLevel().dimension().location().toString())) {
+            if (portal.dimID != null && portal.dimID.equals(portal.getLevel().dimension().location().toString())) {
                 BlockPos warpPos = portal.warpPos;
                 double portalHeuristic = computeHeuristic(warpPos);
                 double portalCost = node.getCost();
