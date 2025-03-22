@@ -626,9 +626,8 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             BlockCapabilityCache<IItemHandler, Direction> capabilityCache = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, (ServerLevel) level, pos, null, () -> !lecternTile.isRemoved(), () -> {
                 this.invalidateNextTick = true;
             });
-            if(capabilityCache.getCapability() != null) {
-                handlerPos.handler = capabilityCache;
-            }
+            handlerPos.handler = capabilityCache;
+
         }
         this.invalidateCapabilities();
     }
