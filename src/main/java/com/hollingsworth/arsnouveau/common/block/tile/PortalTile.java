@@ -62,6 +62,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
             Networking.sendToNearbyClient(serverWorld, e, new PacketWarpPosition(e.getId(), e.getX() + 0.5, e.getY(), e.getZ() + 0.5, rotationVec.x, rotationVec.y));
             serverLevel.sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
                     4, (serverWorld.random.nextDouble() - 0.5D) * 2.0D, -serverWorld.random.nextDouble(), (serverWorld.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
+            e.placePortalTicket(warpPos);
         }
     }
 
