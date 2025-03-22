@@ -17,6 +17,11 @@ public interface IMapInventory {
      */
     ItemStack insertStack(ItemStack stack, boolean simulate);
 
+    /**
+     * Determines if there is an existing slot that can accept the item for insertion.
+     * This does not guarantee that the item will be inserted, as it may not fit in the existing stacks or slot, just
+     * that this item exists in the inventory and would be valid for insertion.
+     */
     boolean hasExistingSlotsForInsertion(ItemStack stack);
 
     default ItemStack extractByItem(Item item, int count, boolean simulate){
@@ -26,8 +31,4 @@ public interface IMapInventory {
     ItemStack extractByItem(Item item, int count, boolean simulate, Predicate<ItemStack> filter);
 
     ItemScroll.SortPref getInsertionPreference(ItemStack stack);
-
-
-
-
 }

@@ -125,7 +125,16 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
 
     @Override
     public ItemStack extractByItem(Item item, int count, boolean simulate, Predicate<ItemStack> filter) {
-        return null;
+        for(ConnectedRepository connectedRepository : connectedRepositories){
+            IMapInventory connected = connectedRepository.capability.getCapability();
+            if(connected != null){
+                ItemStack extracted = connected.extractByItem(item, count, simulate, filter);
+                if(!extracted.isEmpty()){
+                    return extracted;
+                }
+            }
+        }
+        return ItemStack.EMPTY;
     }
 
     @Override

@@ -128,6 +128,7 @@ public class ItemModelGenerator extends ItemModelProvider {
         getBuilder(LibBlockNames.GOLD_GRATE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.GOLD_GRATE));
         getBuilder(LibBlockNames.SOURCE_LAMP).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.SOURCE_LAMP));
         getBuilder(LibBlockNames.CRAB_HAT).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.CRAB_HAT));
+        getBuilder(LibBlockNames.REPOSITORY_CONTROLLER).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.REPOSITORY_CONTROLLER));
         itemUnchecked(ItemsRegistry.ALAKARKINOS_CHARM);
         itemUnchecked(ItemsRegistry.ALAKARKINOS_SHARD);
         spawnEgg(LibItemNames.ALAKARKINOS_SE);

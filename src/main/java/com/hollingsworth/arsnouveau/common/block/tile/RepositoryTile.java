@@ -98,8 +98,6 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
         super.setItem(pIndex, pStack);
         if(pStack.getItem() != oldItem.getItem()){
             slotCache.replaceSlotWithItem(oldItem.getItem(), pStack.getItem(), pIndex);
-            System.out.println("replacing slots!");
-            System.out.println(slotCache);
         }
         updateFill();
     }
@@ -110,8 +108,6 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
         Item newItem = getItem(pIndex).getItem();
         if(extracted.getItem() != newItem){
             slotCache.replaceSlotWithItem(extracted.getItem(), newItem, pIndex);
-            System.out.println("replacing slots!");
-
         }
         updateFill();
         return extracted;
