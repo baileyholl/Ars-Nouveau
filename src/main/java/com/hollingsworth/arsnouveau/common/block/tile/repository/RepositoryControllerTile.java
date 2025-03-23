@@ -16,23 +16,21 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Nameable;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.items.IItemHandler;
-import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class RepositoryControllerTile extends ModdedTile implements ITooltipProvider, ICapabilityProvider<RepositoryControllerTile, Direction, IItemHandler>, IMapInventory,
-        ITickable, Nameable {
+public class RepositoryControllerTile extends ModdedTile implements ITooltipProvider, ITickable, Nameable, GeoBlockEntity {
 
-    ControllerInv controllerInv;
     List<ConnectedRepository> connectedRepositories = new ArrayList<>();
     boolean invalidateNextTick;
 
@@ -75,68 +73,6 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
         }
     }
 
-    public ItemStack insertStack(ItemStack stack, boolean simulate){
-        List<ConnectedRepository> validRepositories = preferredForStack(stack, false);
-        // Prefer inserting into existing stacks first, splitting across as many inventories as needed
-        for(ConnectedRepository connectedRepository : validRepositories){
-            IMapInventory connected = connectedRepository.capability.getCapability();
-            if(connected != null && connected.hasExistingSlotsForInsertion(stack)){
-                ItemStack remainder = connected.insertStack(stack, simulate);
-                if(remainder.isEmpty()){
-                    return ItemStack.EMPTY;
-                }
-                stack = remainder;
-            }
-        }
-
-        // Fall back to inserting into any empty slots.
-        for(ConnectedRepository connectedRepository : validRepositories){
-            IMapInventory connected = connectedRepository.capability.getCapability();
-            if(connected != null && connected.hasExistingSlotsForInsertion(ItemStack.EMPTY)){
-                ItemStack remainder = connected.insertStack(stack, simulate);
-                if(remainder.isEmpty()){
-                    return ItemStack.EMPTY;
-                }
-                stack = remainder;
-            }
-        }
-
-        return stack;
-    }
-
-    @Override
-    public boolean hasExistingSlotsForInsertion(ItemStack stack) {
-        for(ConnectedRepository connectedRepository : connectedRepositories){
-            IMapInventory connected = connectedRepository.capability.getCapability();
-            if(connected != null && connected.hasExistingSlotsForInsertion(stack)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public ItemScroll.SortPref getInsertionPreference(ItemStack stack) {
-        List<ConnectedRepository> validRepositories = preferredForStack(stack, false);
-        if(validRepositories.isEmpty())
-            return ItemScroll.SortPref.INVALID;
-        return validRepositories.getFirst().capability.getCapability().getInsertionPreference(stack);
-    }
-
-    @Override
-    public ItemStack extractByItem(Item item, int count, boolean simulate, Predicate<ItemStack> filter) {
-        for(ConnectedRepository connectedRepository : connectedRepositories){
-            IMapInventory connected = connectedRepository.capability.getCapability();
-            if(connected != null){
-                ItemStack extracted = connected.extractByItem(item, count, simulate, filter);
-                if(!extracted.isEmpty()){
-                    return extracted;
-                }
-            }
-        }
-        return ItemStack.EMPTY;
-    }
-
     @Override
     public void getTooltip(List<Component> tooltip) {
         if(hasCustomName()){
@@ -159,8 +95,7 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
         invalidateNetwork();
     }
 
-    @Override
-    public @Nullable IItemHandler getCapability(RepositoryControllerTile object, Direction context) {
+    public ControllerInv getControllerInv(){
         List<IItemHandler> handlers = new ArrayList<>();
         for(ConnectedRepository connectedRepository : this.connectedRepositories){
             IItemHandler handler = connectedRepository.itemHandler.getCapability();
@@ -168,8 +103,7 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
                 handlers.add(handler);
             }
         }
-        this.controllerInv = new ControllerInv(this, handlers.toArray(new IItemHandler[0]));
-        return controllerInv;
+        return new ControllerInv(this, handlers.toArray(new IItemHandler[0]));
     }
 
     public Component name;
@@ -211,6 +145,17 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
         if(name != null){
             tag.putString("name", name.getString());
         }
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+
+    }
+    AnimatableInstanceCache instanceCache = GeckoLibUtil.createInstanceCache(this);
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return instanceCache;
     }
 
     public static class ConnectedRepository{

@@ -624,10 +624,9 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
                 continue;
             }
 
-            BlockCapabilityCache<IItemHandler, Direction> capabilityCache = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, (ServerLevel) level, pos, null, () -> !lecternTile.isRemoved(), () -> {
+            handlerPos.handler = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, (ServerLevel) level, pos, null, () -> !lecternTile.isRemoved(), () -> {
                 this.invalidateNextTick = true;
             });
-            handlerPos.handler = capabilityCache;
 
         }
         this.invalidateCapabilities();
@@ -647,10 +646,10 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     public static class HandlerPos {
 
         public BlockPos pos;
-        public BlockCapabilityCache<IItemHandler, Direction> handler;
+        public BlockCapabilityCache<? extends IItemHandler, Direction> handler;
         public SlotCache slotCache;
 
-        public HandlerPos(BlockPos pos, BlockCapabilityCache<IItemHandler, Direction> handler) {
+        public HandlerPos(BlockPos pos, BlockCapabilityCache<? extends IItemHandler, Direction> handler) {
             this.pos = pos;
             this.handler = handler;
             this.slotCache = new SlotCache();
@@ -660,7 +659,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             return pos;
         }
 
-        public BlockCapabilityCache<IItemHandler, Direction> handler() {
+        public BlockCapabilityCache<? extends IItemHandler, Direction> handler() {
             return handler;
         }
 

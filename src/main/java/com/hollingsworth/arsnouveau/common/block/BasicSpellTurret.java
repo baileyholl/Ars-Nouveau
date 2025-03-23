@@ -40,8 +40,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
@@ -50,7 +50,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
 
-    public static HashMap<AbstractCastMethod, ITurretBehavior> TURRET_BEHAVIOR_MAP = new HashMap<>();
+    public static ConcurrentHashMap<AbstractCastMethod, ITurretBehavior> TURRET_BEHAVIOR_MAP = new ConcurrentHashMap<>();
 
     public BasicSpellTurret(Properties properties) {
         super(properties.forceSolidOn());

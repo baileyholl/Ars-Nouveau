@@ -69,8 +69,8 @@ public class CapabilityRegistry {
         }
 
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BlockRegistry.CRAFTING_LECTERN_TILE.get(), (c, side) -> c.getCapability(c, side));
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BlockRegistry.REPOSITORY_CONTROLLER_TILE.get(), (c, side) -> c.getCapability(c, side));
-        event.registerBlockEntity(MAP_INV_CAP, BlockRegistry.REPOSITORY_CONTROLLER_TILE.get(), (c, side) -> c);
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BlockRegistry.REPOSITORY_CONTROLLER_TILE.get(), (c, side) -> c.getControllerInv());
+        event.registerBlockEntity(MAP_INV_CAP, BlockRegistry.REPOSITORY_CONTROLLER_TILE.get(), (c, side) -> c.getControllerInv());
         event.registerBlockEntity(MAP_INV_CAP, BlockRegistry.REPOSITORY_TILE.get(), (c, side) -> c);
 
         var sourceContainers = List.of(BlockRegistry.SOURCE_JAR_TILE, BlockRegistry.CREATIVE_SOURCE_JAR_TILE,

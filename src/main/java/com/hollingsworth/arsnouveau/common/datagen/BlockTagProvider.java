@@ -142,7 +142,8 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.ARCHWOOD_CHEST.get(),
                 BlockRegistry.ALTERATION_TABLE.get(),
                 BlockRegistry.ITEM_DETECTOR.get(),
-                BlockRegistry.REPOSITORY.get()
+                BlockRegistry.REPOSITORY.get(),
+                BlockRegistry.REPOSITORY_CONTROLLER.get()
         );
         this.tag(BlockTags.MINEABLE_WITH_HOE).add(
                 BlockRegistry.CASCADING_LEAVE.get(),

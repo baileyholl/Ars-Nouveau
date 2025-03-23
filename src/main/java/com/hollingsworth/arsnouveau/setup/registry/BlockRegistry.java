@@ -263,7 +263,12 @@ public class BlockRegistry {
     public static BlockRegistryWrapper<SummonBed> YELLOW_SBED = registerBlockAndItem(LibBlockNames.YELLOW_SBED, SummonBed::new);
     public static BlockRegistryWrapper<SummonBed> PURPLE_SBED = registerBlockAndItem(LibBlockNames.PURPLE_SBED, SummonBed::new);
     public static BlockRegistryWrapper<CrabHat> CRAB_HAT = registerBlockAndItem(LibBlockNames.CRAB_HAT, CrabHat::new);
-    public static BlockRegistryWrapper<RepositoryController> REPOSITORY_CONTROLLER = registerBlockAndItem(LibBlockNames.REPOSITORY_CONTROLLER, RepositoryController::new);
+    public static BlockRegistryWrapper<RepositoryController> REPOSITORY_CONTROLLER = registerBlockAndItem(LibBlockNames.REPOSITORY_CONTROLLER, RepositoryController::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return  GenericTileRenderer.getISTER(new RepoControllerModel());
+        }
+    });
 
     public static BlockRegistryWrapper<ScryersOculus> SCRYERS_OCULUS = registerBlockAndItem(LibBlockNames.SCRYERS_OCULUS, ScryersOculus::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
         @Override
