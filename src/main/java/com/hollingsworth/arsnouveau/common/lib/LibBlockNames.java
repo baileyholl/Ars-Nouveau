@@ -173,7 +173,7 @@ public class LibBlockNames {
     public static final String SOURCEBERRY_SACK = "sourceberry_sack";
 
     public static final String CRAB_HAT = "alakarkinos_hat";
-    public static final String REPOSITORY_CONTROLLER = "repository_controller";
+    public static final String REPOSITORY_CATALOG = "repository_controller";
 
     public static final String[] DECORATIVE_SOURCESTONE = new String[]{
             SOURCESTONE, SOURCESTONE_MOSAIC, SOURCESTONE_BASKET, SOURCESTONE_ALTERNATING, SOURCESTONE_LARGE_BRICKS, SOURCESTONE_SMALL_BRICKS,
