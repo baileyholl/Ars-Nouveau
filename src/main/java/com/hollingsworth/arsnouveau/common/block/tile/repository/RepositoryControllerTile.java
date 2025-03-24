@@ -38,7 +38,7 @@ import java.util.*;
 
 public class RepositoryControllerTile extends ModdedTile implements ITooltipProvider, ITickable, Nameable, GeoBlockEntity, IFiltersetProvider {
 
-    List<ConnectedRepository> connectedRepositories = new ArrayList<>();
+    public List<ConnectedRepository> connectedRepositories = new ArrayList<>();
     public ItemStack scrollStack = ItemStack.EMPTY;
     boolean invalidateNextTick;
 
@@ -193,9 +193,9 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
     }
 
     public static class ConnectedRepository{
-        BlockPos pos;
-        BlockCapabilityCache<IMapInventory, Direction> capability;
-        BlockCapabilityCache<IItemHandler, Direction> itemHandler;
+        public BlockPos pos;
+        public BlockCapabilityCache<IMapInventory, Direction> capability;
+        public BlockCapabilityCache<IItemHandler, Direction> itemHandler;
 
         public ConnectedRepository(BlockPos pos, BlockCapabilityCache<IMapInventory, Direction> capability, BlockCapabilityCache<IItemHandler, Direction> itemHandler) {
             this.pos = pos;

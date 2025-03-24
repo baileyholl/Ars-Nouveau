@@ -55,10 +55,6 @@ public class InventoryManager {
         return this;
     }
 
-    public boolean addFilterable(FilterableItemHandler filterable) {
-        return this.filterables.add(filterable);
-    }
-
     public List<FilterableItemHandler> getInventory() {
         return filterables;
     }
@@ -229,21 +225,6 @@ public class InventoryManager {
         }
         //apply uniform chance if there are any valid slots
         return new SlotReference(itemHandler.getHandler(), validSlots.get(random.nextInt(validSlots.size())));
-    }
-
-    /**
-     * Returns a list with up to maxSlots references to matching stacks, if any. Does not modify the inventory.
-     */
-    public List<SlotReference> findItems(FilterableItemHandler itemHandler, Predicate<ItemStack> stackPredicate, InteractType type, int maxSlots) {
-        List<SlotReference> slots = new ArrayList<>();
-        int numSlots = Math.min(maxSlotForType(itemHandler, type), maxSlots);
-        for (int slot = 0; slot < numSlots; slot++) {
-            ItemStack stackInSlot = itemHandler.getHandler().getStackInSlot(slot);
-            if (!stackInSlot.isEmpty() && stackPredicate.test(stackInSlot) && itemHandler.canInteractFor(stackInSlot, type).valid()) {
-                slots.add(new SlotReference(itemHandler.getHandler(), slot));
-            }
-        }
-        return slots;
     }
 
     /**

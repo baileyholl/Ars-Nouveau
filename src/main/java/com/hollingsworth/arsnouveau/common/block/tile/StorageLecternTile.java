@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
 import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.block.tile.repository.RepositoryControllerTile;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
 import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.TransferTask;
@@ -160,7 +161,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         }
 
         for (ExtractedStack extractedStack : multiSlotReference.getSlots()) {
-            BlockPos pos = handlerPosList.stream().filter(handlerPos -> handlerPos.handler() != null && handlerPos.handler().equals(extractedStack.getHandler())).findFirst().map(HandlerPos::pos).orElse(null);
+            BlockPos pos = posFromSlotRef(extractedStack);
             if (pos != null) {
                 addTransferTask(new TransferTask(pos.above(), getBlockPos().above(), extractedStack.stack, level.getGameTime()));
             }
@@ -172,11 +173,29 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             return;
         }
         for (SlotReference extractedStack : reference.getSlots()) {
-            BlockPos pos = handlerPosList.stream().filter(handlerPos -> handlerPos.handler != null && handlerPos.handler().equals(extractedStack.getHandler())).findFirst().map(HandlerPos::pos).orElse(null);
+            BlockPos pos = posFromSlotRef(extractedStack);
             if (pos != null) {
                 addTransferTask(new TransferTask(getBlockPos().above(), pos.above(), stack, level.getGameTime()));
             }
         }
+    }
+
+    private BlockPos posFromSlotRef(SlotReference extractedStack){
+        for(HandlerPos handlerPos : handlerPosList){
+            if(handlerPos.handler == null || handlerPos.handler.getCapability() == null)
+                continue;
+            if(handlerPos.handler.getCapability().equals(extractedStack.getHandler())){
+                if(level.getBlockEntity(handlerPos.pos) instanceof RepositoryControllerTile controllerTile){
+                    if(controllerTile.connectedRepositories.isEmpty()){
+                        return null;
+                    }else{
+                        return controllerTile.connectedRepositories.get(level.random.nextInt(controllerTile.connectedRepositories.size())).pos;
+                    }
+                }
+                return handlerPos.pos;
+            }
+        }
+        return null;
     }
 
     public void addTransferTask(TransferTask task) {
