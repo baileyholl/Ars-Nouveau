@@ -136,6 +136,12 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
         return false;
     }
 
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        this.entityTag = this.saveEntityToTag(this.getEntity());
+    }
+
     public void writeSimple(Entity e) {
         CompoundTag tag = new CompoundTag();
         tag.putString("id", EntityType.getKey(e.getType()).toString());
