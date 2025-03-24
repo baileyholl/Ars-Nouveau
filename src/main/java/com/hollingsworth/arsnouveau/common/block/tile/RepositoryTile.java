@@ -54,7 +54,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     public int fillLevel;
     public int configuration;
     public SlotCache slotCache = new SlotCache(false);
-    public FilterSet filterSet = new FilterSet();
+    public FilterSet filterSet = new FilterSet.ListSet();
     FilterableItemHandler filterableItemHandler;
     InvWrapper invWrapper = new InvWrapper(this);
 
@@ -177,9 +177,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
 
     public void attachFilters(){
         this.filterSet = FilterSet.forPosition(level, worldPosition);
-
         filterableItemHandler = new FilterableItemHandler(new InvWrapper(this), filterSet).withSlotCache(slotCache);
-        System.out.println("attaching filters" + filterSet.filters.size());
     }
 
     @Override

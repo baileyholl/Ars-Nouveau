@@ -38,7 +38,11 @@ public class InvUtil {
         if(thisTile == null){
             return new ArrayList<>();
         }
-        return FilterSet.forPosition(thisTile.getLevel(), thisTile.getBlockPos()).filters;
+        FilterSet filterSet = FilterSet.forPosition(thisTile.getLevel(), thisTile.getBlockPos());
+        if(filterSet instanceof FilterSet.ListSet listSet){
+            return listSet.filters;
+        }
+        return new ArrayList<>();
     }
 
     public static List<FilterableItemHandler> fromPlayer(Player player){

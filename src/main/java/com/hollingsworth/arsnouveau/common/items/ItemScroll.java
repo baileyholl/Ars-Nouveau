@@ -18,6 +18,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 public abstract class ItemScroll extends ModItem implements IScribeable, AliasProvider {
@@ -44,13 +45,15 @@ public abstract class ItemScroll extends ModItem implements IScribeable, AliasPr
         }
         return super.use(pLevel, pPlayer, pUsedHand);
     }
-    // TODO: Move this to API.
+    // TODO 1.22: Move this to API.
     public enum SortPref {
         INVALID,
         LOW,
         HIGH,
         HIGHEST
     }
+
+    public static Comparator<SortPref> sortPrefComparator = Comparator.comparingInt(Enum::ordinal);
 
     @Override
     public boolean onScribe(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack thisStack) {

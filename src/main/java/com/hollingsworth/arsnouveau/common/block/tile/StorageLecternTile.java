@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.item.inv.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.api.util.InvUtil;
 import com.hollingsworth.arsnouveau.client.container.SortSettings;
 import com.hollingsworth.arsnouveau.client.container.StorageTerminalMenu;
 import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
@@ -102,7 +101,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
                 return nameable.getCustomName().getString().trim().equals(tab.trim());
             }
             return false;
-        }).map(handlerPos -> new FilterableItemHandler(handlerPos.handler.getCapability()).withSlotCache(handlerPos.slotCache)).toList();
+        }).map(handlerPos -> new FilterableItemHandler(handlerPos.handler.getCapability(), FilterSet.forPosition(level, handlerPos.pos)).withSlotCache(handlerPos.slotCache)).toList();
         return new InventoryManager(itemHandlers);
     }
 
@@ -372,7 +371,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
                 continue;
             }
             IItemHandler handler = handlerPos.handler.getCapability();
-            StorageItemHandler storageItemHandler = new StorageItemHandler(handler, InvUtil.filtersOnTile(invTile), handlerPos.slotCache);
+            StorageItemHandler storageItemHandler = new StorageItemHandler(handler, FilterSet.forPosition(level, pos), handlerPos.slotCache);
             mappedFilterables.computeIfAbsent(TAB_ALL, s -> new ArrayList<>()).add(storageItemHandler);
             if (invTile instanceof Nameable nameable && nameable.hasCustomName()) {
                 String tabName = nameable.getCustomName().getString();

@@ -15,6 +15,9 @@ public class RepoControllerModel extends GenericModel<RepositoryControllerTile> 
 
     @Override
     public ResourceLocation getTextureResource(RepositoryControllerTile animatable) {
-        return ArsNouveau.prefix("textures/block/storage_catalog_unfiltered.png");
+        if(animatable == null){
+            return EMPTY;
+        }
+        return animatable.scrollStack.isEmpty() ? EMPTY : FILLED;
     }
 }

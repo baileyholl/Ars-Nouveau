@@ -17,14 +17,14 @@ import java.util.function.Function;
 public class FilterableItemHandler {
     private SlotCache slotCache;
     private IItemHandler handler;
-    private FilterSet filters;
+    public FilterSet filters;
 
     public FilterableItemHandler(IItemHandler handler){
-        this(handler, new FilterSet());
+        this(handler, new FilterSet.ListSet());
     }
 
     public FilterableItemHandler(IItemHandler handler, List<Function<ItemStack, ItemScroll.SortPref>> functions){
-        this(handler, new FilterSet(functions));
+        this(handler, new FilterSet.ListSet(functions));
     }
 
     public FilterableItemHandler(IItemHandler handler, FilterSet filters){
@@ -71,10 +71,6 @@ public class FilterableItemHandler {
 
     public IItemHandler getHandler() {
         return handler;
-    }
-
-    public boolean addFilterScroll(ItemStack scrollStack){
-        return filters.addFilterScroll(scrollStack, handler);
     }
 
     /**

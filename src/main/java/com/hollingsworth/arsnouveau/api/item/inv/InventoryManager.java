@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
-import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 /**
@@ -98,46 +97,6 @@ public class InventoryManager {
             }
         }
         return new MultiInsertReference(stack, references);
-    }
-
-    public ExtractedStack extractByAmount(ToIntFunction<ItemStack> getExtractAmount) {
-        ItemScroll.SortPref highestPref = ItemScroll.SortPref.INVALID;
-        FilterableItemHandler highestHandler = null;
-        int toExtract = 0;
-        int slot = -1;
-        for (FilterableItemHandler wrapper : getInventory()) {
-            ItemScroll.SortPref pref = ItemScroll.SortPref.INVALID;
-            // Get the highest pref item in the handler
-            int forAmount = 0;
-            int forSlot = 0;
-            for (int i = 0; i < getExtractSlotMax(wrapper); i++) {
-                ItemStack stack = wrapper.getHandler().getStackInSlot(i);
-                if (stack.isEmpty()) {
-                    continue;
-                }
-                int amount = getExtractAmount.applyAsInt(stack);
-                if (amount <= 0)
-                    continue;
-                ItemScroll.SortPref foundPref = wrapper.getHighestPreference(stack);
-                if (pref == ItemScroll.SortPref.HIGHEST) {
-                    return extractItem(wrapper, stack1 -> true, amount);
-                } else if (foundPref == ItemScroll.SortPref.INVALID) {
-                    continue;
-                }
-                if (foundPref.ordinal() > pref.ordinal()) {
-                    pref = foundPref;
-                    forAmount = amount;
-                    forSlot = i;
-                }
-            }
-            if (pref.ordinal() > highestPref.ordinal()) {
-                highestHandler = wrapper;
-                highestPref = pref;
-                toExtract = forAmount;
-                slot = forSlot;
-            }
-        }
-        return highestHandler == null ? ExtractedStack.empty() : ExtractedStack.from(highestHandler.getHandler(), slot, toExtract);
     }
 
     /**
