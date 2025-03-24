@@ -200,16 +200,27 @@ public class SpellResolver implements Cloneable {
             return;
         }
 
-        int totalCost = getResolveCost();
+        int totalCost = getExpendedCost();
         spellContext.getCaster().expendMana(totalCost);
     }
 
     /**
      * Simulates the cost required to cast a spell
      */
+    // TODO: Remove backwards compat for SpellCostCalcEvent
     public int getResolveCost() {
         int cost = spellContext.getSpell().getCost() - getPlayerDiscounts(spellContext.getUnwrappedCaster(), spell, spellContext.getCasterTool());
         SpellCostCalcEvent event = new SpellCostCalcEvent(spellContext, cost);
+        NeoForge.EVENT_BUS.post(event);
+        SpellCostCalcEvent.Pre preEvent = new SpellCostCalcEvent.Pre(spellContext, event.currentCost);
+        NeoForge.EVENT_BUS.post(preEvent);
+        cost = Math.max(0, preEvent.currentCost);
+        return cost;
+    }
+
+    public int getExpendedCost() {
+        int cost = spellContext.getSpell().getCost() - getPlayerDiscounts(spellContext.getUnwrappedCaster(), spell, spellContext.getCasterTool());
+        SpellCostCalcEvent event = new SpellCostCalcEvent.Post(spellContext, cost);
         NeoForge.EVENT_BUS.post(event);
         cost = Math.max(0, event.currentCost);
         return cost;

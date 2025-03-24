@@ -106,7 +106,7 @@ public interface IWandable {
         if (playerEntity.level.dimension().equals(dim)) {
             onFinishedConnectionFirst(storedPos != null ? storedPos.pos() : null, face, storedEntity, playerEntity);
         }
-        return Result.NONE;
+        return Result.SUCCESS;
     }
 
     default Result onLastConnection(@Nullable GlobalPos storedPos, @Nullable Direction face, @Nullable LivingEntity storedEntity, Player playerEntity) {

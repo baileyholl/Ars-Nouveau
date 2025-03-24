@@ -37,7 +37,7 @@
   "4a405d17-9e7b-4007-b4e3-a1adcd41c489", "f64bd7f1-ae18-4e9e-834e-eb0caf7f37d4", "ee6d035a-600d-40a3-b444-b987766121ee",
   "26170985-ac0e-4e3c-b171-141e2193ce32", "d153d78a-99bd-48c1-8c00-ea6ae02c0395", "860802dc-6314-46a6-b991-4ba8e7d061dc",
   "5f6a9e19-7021-4fd3-9873-6beee620f5fa", "9431623c-476c-4417-a51a-d4993a04e5b2", "465e651c-9928-4c32-aa41-7fc09f102f01",
-  "066f67d4-51dc-4767-b48f-d03dd7359f4a"],
+  "066f67d4-51dc-4767-b48f-d03dd7359f4a", "5a6e40e5-10f3-4c40-a2ba-f2a1c638ded9"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -596,6 +596,11 @@
       "color": "red",
       "name": "Strawbee",
       "bio": "This little starbuncle searches for strawberries. So far, she has not been successful."
+    },{
+      "adopter": "Andrey",
+      "color": "pink",
+      "bio": "oiiaiioiiiaii",
+      "name": "Nikkkkkkk"
     }
   ]
 }

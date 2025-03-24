@@ -675,7 +675,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.whirlisprig_flower", "Whirlisprig Blossom");
         add("ars_nouveau.page.relay", "Enables the transport of source between Source Jars and other Source Relays. To pull source from jars, use the Dominion Wand on the jar, and then on the relay. To send between relays or from a relay to a jar, use the wand on the relay and then the target you wish to send source to. Relays may only reach up to 30 blocks away. To clear connections, sneak while using the Dominion Wand on the relay.");
         add("ars_nouveau.page.relay_splitter", "Operates similar to the Source Relay, but will support taking from and transferring to multiple jars at once. The splitter has a much larger through-put than the Source Relay, and will split this throughput amongst all of its jars. See the instructions on the Source Relay for use.");
-        add("ars_nouveau.page1.enchanting_apparatus", "The Enchanting Apparatus utilizes pedestals and Source for crafting. To use the Enchanting Apparatus, place any number of Arcane Pedestals within 3 blocks with their items. Once you have filled the pedestals, use the middle item on the Enchanting Apparatus block. The Enchanting Apparatus requires an Arcane Core next to the its base in order to work.");
+        add("ars_nouveau.page1.enchanting_apparatus", "The Enchanting Apparatus utilizes pedestals and Source for crafting. To use the Enchanting Apparatus, place any number of Arcane Pedestals within 3 blocks with their items. Once you have filled the pedestals, use the middle item on the Enchanting Apparatus block. The Enchanting Apparatus requires an Arcane Core next to its base in order to work.");
         add("ars_nouveau.page1.imbuement_chamber", "Imbues items with Source to create new items. The primary way to obtain Source Gems, amethyst and lapis may be used to create Source Gems. The Imbuement Chamber will passively accumulate source for recipes, or will draw from Source Jars 2 block away. Some recipes require additional items placed in pedestals within 1 block of the Imbuement Chamber, such as Essences. Items in pedestals will not be consumed.");
         add("ars_nouveau.page.potion_melder", "Converts three doses of a potion from two Potion Jars and outputs a potion with the combined effects. Use the Dominion Wand from a Potion Jar to Melder to link a jar for consumption. Link two input potion jars to the melder. Then, use the wand on the Melder and then to a third jar to set the output. The Potion Melder requires source per mix.");
         add("ars_nouveau.page.warp_portal", "Warp Portals");
@@ -1208,6 +1208,8 @@ public class LangDatagen extends LanguageProvider {
         add("entity.minecraft.villager.shady_wizard", "Shady Wizard");
         add("death.attack.an_enchantedBlock", "%1$s was crushed by %2$s magic blocks");
         add("death.attack.freeze.item", "%1$s was frozen to death by %2$s using %3$");
+        add("death.attack.sourceberry_bush", "%1$s was poked to death by a sourceberry bush");
+        add("death.attack.sourceberry_bush.player", "%1$s was poked to death by a sourceberry bush while trying to escape %2$s");
         add("block.ars_nouveau.magelight_torch", "Magelight Torch");
         add("block.ars_nouveau.arcane_platform", "Arcane Platform");
         add("ars_nouveau.arcane_platform.tooltip", "Can be placed in any direction and can be used in place of a pedestal.");
