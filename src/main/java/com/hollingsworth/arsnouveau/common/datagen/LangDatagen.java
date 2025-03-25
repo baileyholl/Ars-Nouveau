@@ -1438,6 +1438,9 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.banner.conjuration", "Conjuration School");
         add("ars_nouveau.lectern_blacklist", "This block has been disabled from being connected to the Storage Lectern.");
         add("key.ars_nouveau.open_documentation", "Open Documentation");
+        add("item.ars_nouveau.enchanters_fishing_rod", "Enchanter's Fishing Rod");
+        add("item.ars_nouveau.enchanters_gauntlet", "Enchanter's Gauntlet");
+        add("ars_nouveau.fishing_rod.invalid", "Invalid Spell. Enchanter's Fishing Rod accept Effects and Augments only.");
     }
 
     public void addCategory(String key, String value) {
