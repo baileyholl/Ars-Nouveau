@@ -198,7 +198,7 @@ public class LangDatagen extends LanguageProvider {
         add("tooltip.magebloom", "Crafted using the Enchanting Apparatus");
         add("ars_nouveau.alert.turret_type", "Selected form cannot be used by a turret.");
         add("ars_nouveau.alert.spell_set", "Spell set.");
-        add("ars_nouveau.alert.duplicate_method", "No duplicate cast methods are allowed.");
+        add("ars_nouveau.alert.duplicate_method", "No duplicate cast forms are allowed.");
         add("ars_nouveau.relay.current_power", "Current Power: %d");
         add("ars_nouveau.relay.no_to", "No send location set.");
         add("ars_nouveau.relay.one_to", "Sending to %d location(s).");
@@ -269,7 +269,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.green_archwood_leaves", "Flourishing Archwood Leaves");
         add("block.ars_nouveau.red_archwood_leaves", "Blazing Archwood Leaves");
         add("block.ars_nouveau.archwood_planks", "Archwood Planks");
-        add("ars_nouveau.page.wand", "Wands accept only a single spell, and are inscribed using the Scribes Table. A Wand always starts with Projectile -> Accelerate, and MUST be inscribed with a spell that does not have another method. This allows you to cast spells beyond the 10 spell cap. If you want a wand that casts Break, inscribe the wand with JUST break, and your result will be a wand with Projectile -> Acclerate -> Break.");
+        add("ars_nouveau.page.wand", "Wands accept only a single spell, and are inscribed using the Scribes Table. A Wand always starts with Projectile -> Accelerate, and MUST be inscribed with a spell that does not have another form. This allows you to cast spells beyond the 10 spell cap. If you want a wand that casts Break, inscribe the wand with JUST break, and your result will be a wand with Projectile -> Acclerate -> Break.");
         add("ars_nouveau.starbuncle.cleared", "Tasks cleared.");
         add("block.ars_nouveau.red_archwood_wood", "Blazing Archwood Wood");
         add("block.ars_nouveau.green_archwood_wood", "Flourishing Archwood Wood");
@@ -1441,6 +1441,8 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.enchanters_fishing_rod", "Enchanter's Fishing Rod");
         add("item.ars_nouveau.enchanters_gauntlet", "Enchanter's Gauntlet");
         add("ars_nouveau.fishing_rod.invalid", "Invalid Spell. Enchanter's Fishing Rod accept Effects and Augments only.");
+        add("ars_nouveau.page1.enchanters_gauntlet", "Gauntlets accept a single spell and are inscribed using the Scribes Table. Gauntlets always start with Touch and MUST be inscribed with a spell that does not contain a form. Spells cast with the gauntlet are cast with a discount.");
+        add("ars_nouveau.page1.enchanters_fishing_rod", "Fishing Rods accept a single spell and are inscribed using the Scribes Table. Rods always start with Touch and MUST be inscribed with a spell that does not contain a form. Fishing Rods can be used like a normal fishing rod, but hooking an entity will allow the user to cast the spell on the hooked entity until the line is broken.");
     }
 
     public void addCategory(String key, String value) {

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
+import com.hollingsworth.arsnouveau.api.mana.IManaDiscountEquipment;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.client.renderer.item.GauntletRenderer;
@@ -30,7 +31,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class EnchantersGauntlet extends ModItem implements ICasterTool, GeoItem {
+public class EnchantersGauntlet extends ModItem implements ICasterTool, GeoItem, IManaDiscountEquipment {
 
     public EnchantersGauntlet(Properties properties) {
         super(properties);
@@ -55,6 +56,11 @@ public class EnchantersGauntlet extends ModItem implements ICasterTool, GeoItem 
     @Override
     public void sendInvalidMessage(Player player) {
         PortUtil.sendMessageNoSpam(player, Component.translatable("ars_nouveau.gauntlet.invalid"));
+    }
+
+    @Override
+    public int getManaDiscount(ItemStack i, Spell spell) {
+        return (int) (spell.getCost() * .25);
     }
 
     @Override
