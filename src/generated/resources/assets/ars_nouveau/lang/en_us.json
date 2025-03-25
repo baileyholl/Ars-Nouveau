@@ -1542,6 +1542,8 @@
   "curios.identifier.an_focus": "Spell Focus",
   "death.attack.an_enchantedBlock": "%1$s was crushed by %2$s magic blocks",
   "death.attack.freeze.item": "%1$s was frozen to death by %2$s using %3$",
+  "death.attack.sourceberry_bush": "%1$s was poked to death by a sourceberry bush",
+  "death.attack.sourceberry_bush.player": "%1$s was poked to death by a sourceberry bush while trying to escape %2$s",
   "effect.ars_nouveau.blasting": "Blasting",
   "effect.ars_nouveau.blasting.desc": "Causes the target to explode when the duration ends.",
   "effect.ars_nouveau.bounce": "Bounce",
