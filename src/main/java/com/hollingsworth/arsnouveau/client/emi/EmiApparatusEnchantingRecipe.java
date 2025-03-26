@@ -108,15 +108,20 @@ public class EmiApparatusEnchantingRecipe extends EmiEnchantingApparatusRecipe<E
 
     protected List<ItemStack> enchantableCache = null;
 
+    // Special static cache to fix re-initialization lag with many items.
+    protected static List<ItemStack> reactiveEnchantableCache = null;
+
     private List<ItemStack> getEnchantable() {
         if (this.recipe instanceof ReactiveEnchantmentRecipe) {
-            enchantableCache = new ArrayList<>();
-            for (var item : BuiltInRegistries.ITEM) {
-                var stack = item.getDefaultInstance();
-                this.addName(stack);
-                enchantableCache.add(stack);
+            if (reactiveEnchantableCache == null) {
+                reactiveEnchantableCache = new ArrayList<>();
+                for (var item : BuiltInRegistries.ITEM) {
+                    var stack = item.getDefaultInstance();
+                    this.addName(stack);
+                    reactiveEnchantableCache.add(stack);
+                }
             }
-            return enchantableCache;
+            enchantableCache = reactiveEnchantableCache;
         }
 
         if (enchantableCache != null) {
