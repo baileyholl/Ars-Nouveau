@@ -1,9 +1,11 @@
 package com.hollingsworth.arsnouveau.client.emi;
 
+import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ApparatusRecipeInput;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantmentRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ReactiveEnchantmentRecipe;
 import com.hollingsworth.arsnouveau.common.util.HolderHelper;
+import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.render.EmiTooltipComponents;
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -20,7 +22,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.Level;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -112,44 +113,49 @@ public class EmiApparatusEnchantingRecipe extends EmiEnchantingApparatusRecipe<E
     protected static List<ItemStack> reactiveEnchantableCache = null;
 
     private List<ItemStack> getEnchantable() {
-        if (this.recipe instanceof ReactiveEnchantmentRecipe) {
+        if (this.recipe instanceof ReactiveEnchantmentRecipe || this.recipe.enchantmentKey == EnchantmentRegistry.REACTIVE_ENCHANTMENT) {
             if (reactiveEnchantableCache == null) {
-                reactiveEnchantableCache = new ArrayList<>();
+                ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
                 for (var item : BuiltInRegistries.ITEM) {
+                    if (item == Items.AIR) {
+                        continue;
+                    }
                     var stack = item.getDefaultInstance();
                     this.addName(stack);
-                    reactiveEnchantableCache.add(stack);
+                    builder.add(stack);
                 }
+                reactiveEnchantableCache = builder.build();
             }
             enchantableCache = reactiveEnchantableCache;
         }
 
-        if (enchantableCache != null) {
-            return enchantableCache;
-        }
-
-        enchantableCache = new ArrayList<>();
-        var level = Minecraft.getInstance().level;
-        if (level != null && level.holder(recipe.enchantmentKey).isPresent()) {
-            var enchantment = HolderHelper.unwrap(level, recipe.enchantmentKey);
-            for (var item : BuiltInRegistries.ITEM) {
-                var stack = item.getDefaultInstance();
-                this.addName(stack);
-                if (stack.is(Items.ENCHANTED_BOOK)) {
-                    stack = this.createEnchantedBook(this.recipe.enchantLevel - 1);
-                } else {
-                    stack.enchant(enchantment, recipe.enchantLevel - 1);
-                }
-
-                var apparatus = new ApparatusRecipeInput(stack, List.of(), null);
-                try {
-                    if (recipe.doesReagentMatch(apparatus, level, null)) {
-                        enchantableCache.add(stack);
+        if (enchantableCache == null) {
+            ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
+            var level = Minecraft.getInstance().level;
+            if (level != null && level.holder(recipe.enchantmentKey).isPresent()) {
+                var enchantment = HolderHelper.unwrap(level, recipe.enchantmentKey);
+                for (var item : BuiltInRegistries.ITEM) {
+                    var stack = item.getDefaultInstance();
+                    this.addName(stack);
+                    if (stack.is(Items.ENCHANTED_BOOK)) {
+                        stack = this.createEnchantedBook(this.recipe.enchantLevel - 1);
+                    } else {
+                        stack.enchant(enchantment, recipe.enchantLevel - 1);
                     }
-                } catch (Exception ignored) {
+
+                    var apparatus = new ApparatusRecipeInput(stack, List.of(), null);
+                    try {
+                        if (recipe.doesReagentMatch(apparatus, level, null)) {
+                            builder.add(stack);
+                        }
+                    } catch (Exception ignored) {
+                    }
                 }
             }
+
+            enchantableCache = builder.build();
         }
+
         return enchantableCache;
     }
 
