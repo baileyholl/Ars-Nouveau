@@ -336,4 +336,9 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     public void setColor(String color) {
         getEntityData().set(EntityBookwyrm.COLOR, color);
     }
+
+    @Override
+    public boolean canUsePortal(boolean allowPassengers) {
+        return false;
+    }
 }

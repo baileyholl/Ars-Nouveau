@@ -238,5 +238,6 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
         this.tag(ItemTags.BOW_ENCHANTABLE).add(ItemsRegistry.SPELL_BOW.get());
         this.tag(ItemTags.CROSSBOW_ENCHANTABLE).add(ItemsRegistry.SPELL_CROSSBOW.get());
         this.tag(ItemTags.DURABILITY_ENCHANTABLE).add(ItemsRegistry.ENCHANTERS_SHIELD.get());
+        this.tag(ItemTags.FISHING_ENCHANTABLE).add(ItemsRegistry.ENCHANTERS_FISHING_ROD.get());
     }
 }

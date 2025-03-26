@@ -607,6 +607,12 @@ public class Documentation {
                 .withIntroPage()
                 .withCraftingPages(BlockRegistry.REPOSITORY, BlockRegistry.ARCHWOOD_CHEST));
 
+        addPage(new DocEntryBuilder(EQUIPMENT, ItemsRegistry.ENCHANTERS_GAUNTLET)
+                .withIntroPage()
+                .withCraftingPages(ItemsRegistry.ENCHANTERS_GAUNTLET));
+        addPage(new DocEntryBuilder(EQUIPMENT, ItemsRegistry.ENCHANTERS_FISHING_ROD)
+                .withIntroPage()
+                .withCraftingPages(ItemsRegistry.ENCHANTERS_FISHING_ROD));
         // add scrolls to arrylist
         var scrollRelations = new ArrayList<DocEntry>() {
             {

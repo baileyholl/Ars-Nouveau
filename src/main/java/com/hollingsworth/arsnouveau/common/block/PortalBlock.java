@@ -108,10 +108,10 @@ public class PortalBlock extends TickableModBlock {
 
     @Override
     public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
-        if (worldIn.getBlockEntity(pos) instanceof PortalTile tile) {
-            if(entityIn instanceof Player player) {
+        if (entityIn.canUsePortal(false) && worldIn.getBlockEntity(pos) instanceof PortalTile tile) {
+            if (entityIn instanceof Player player) {
                 tile.entityQueue.add(player);
-            }else{
+            } else {
                 tile.warp(entityIn);
                 entityIn.fallDistance = 0;
             }
