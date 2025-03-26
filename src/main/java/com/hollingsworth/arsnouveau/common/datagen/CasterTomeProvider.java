@@ -299,6 +299,8 @@ public class CasterTomeProvider extends SimpleDataProvider {
         tomes.add(buildTome("riftderp","Rift's Blink Strike", new Spell(MethodProjectile.INSTANCE, AugmentAccelerate.INSTANCE, AugmentAccelerate.INSTANCE, EffectHarm.INSTANCE, EffectBlink.INSTANCE), "Just like that one guy, from that one thing! This spell will put you right in the enemy's face, so be ready for some swordplay!", new ParticleColor(120, 25, 255)));
 
         tomes.add(buildTome("nikk", "Sutokahs LOVE", new Spell(MethodProjectile.INSTANCE, EffectHex.INSTANCE, EffectHarm.INSTANCE, EffectBlink.INSTANCE, AugmentAmplify.INSTANCE, EffectPickup.INSTANCE, AugmentAOE.INSTANCE), "Weaken it, kill it and take it home.", new ParticleColor(255, 204, 204)));
+
+        tomes.add(buildTome("cocoaeyebrows", "Gobute's Humble Tunnel", new Spell(MethodTouch.INSTANCE, EffectBreak.INSTANCE).add(AugmentDampen.INSTANCE, 2).add(AugmentAOE.INSTANCE, 2).add(AugmentPierce.INSTANCE, 4), "Leave the riches untouched. Seek only to carve the earth.", new ParticleColor(255, 128, 1)));
         for (CasterRecipeWrapper g : tomes) {
             Path path = getRecipePath(output, g.id().getPath());
             saveStable(pOutput, CasterTomeData.CODEC.encodeStart(JsonOps.INSTANCE, g.toData()).getOrThrow(), path);
