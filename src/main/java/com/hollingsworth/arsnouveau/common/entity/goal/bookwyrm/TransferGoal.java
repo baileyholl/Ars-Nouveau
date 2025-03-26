@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.block.tile.repository.RepositoryControllerTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
 import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
 import net.minecraft.core.BlockPos;
@@ -72,6 +73,9 @@ public class TransferGoal extends Goal {
                         event.open();
                         EventQueue.getServerInstance().addEvent(event);
                     }
+                    if(bookwyrm.level.getBlockEntity(task.fromPos) instanceof RepositoryControllerTile controllerTile){
+                        controllerTile.openRandomDrawer();
+                    }
                 }
             } else {
                 bookwyrm.getNavigation().moveTo(task.from.x(), task.from.y(), task.from.z(), 1.3d);
@@ -87,6 +91,9 @@ public class TransferGoal extends Goal {
                     OpenChestEvent event = new OpenChestEvent(serverLevel, BlockPos.containing(task.to.subtract(0, 1, 0)), 20);
                     event.open();
                     EventQueue.getServerInstance().addEvent(event);
+                }
+                if(bookwyrm.level.getBlockEntity(task.toPos) instanceof RepositoryControllerTile controllerTile){
+                    controllerTile.openRandomDrawer();
                 }
             } else {
                 bookwyrm.getNavigation().moveTo(task.to.x(), task.to.y(), task.to.z(), 1.3d);

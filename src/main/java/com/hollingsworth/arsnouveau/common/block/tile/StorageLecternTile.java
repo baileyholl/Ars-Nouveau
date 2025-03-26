@@ -163,7 +163,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         for (ExtractedStack extractedStack : multiSlotReference.getSlots()) {
             BlockPos pos = posFromSlotRef(extractedStack);
             if (pos != null) {
-                addTransferTask(new TransferTask(pos.above(), getBlockPos().above(), extractedStack.stack, level.getGameTime()));
+                addTransferTask(new TransferTask(pos, getBlockPos(), extractedStack.stack, level.getGameTime()));
             }
         }
     }
@@ -175,7 +175,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         for (SlotReference extractedStack : reference.getSlots()) {
             BlockPos pos = posFromSlotRef(extractedStack);
             if (pos != null) {
-                addTransferTask(new TransferTask(getBlockPos().above(), pos.above(), stack, level.getGameTime()));
+                addTransferTask(new TransferTask(getBlockPos(), pos, stack, level.getGameTime()));
             }
         }
     }
@@ -186,11 +186,11 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
                 continue;
             if(handlerPos.handler.getCapability().equals(extractedStack.getHandler())){
                 if(level.getBlockEntity(handlerPos.pos) instanceof RepositoryControllerTile controllerTile){
-                    if(controllerTile.connectedRepositories.isEmpty()){
-                        return null;
-                    }else{
-                        return controllerTile.connectedRepositories.get(level.random.nextInt(controllerTile.connectedRepositories.size())).pos;
-                    }
+//                    if(controllerTile.connectedRepositories.isEmpty()){
+//                        return null;
+//                    }else{
+//                        return controllerTile.connectedRepositories.get(level.random.nextInt(controllerTile.connectedRepositories.size())).pos;
+//                    }
                 }
                 return handlerPos.pos;
             }

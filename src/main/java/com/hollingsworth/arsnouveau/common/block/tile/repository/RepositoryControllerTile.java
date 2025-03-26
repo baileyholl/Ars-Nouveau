@@ -4,11 +4,16 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.inv.FilterSet;
 import com.hollingsworth.arsnouveau.api.item.inv.IFiltersetProvider;
 import com.hollingsworth.arsnouveau.api.item.inv.IMapInventory;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RepositoryBlock;
+import com.hollingsworth.arsnouveau.common.block.RepositoryController;
+import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.block.tile.ModdedTile;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.common.items.data.ItemScrollData;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.setup.registry.BlockEntityTypeRegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
@@ -21,26 +26,35 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Nameable;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.*;
 
-public class RepositoryControllerTile extends ModdedTile implements ITooltipProvider, ITickable, Nameable, GeoBlockEntity, IFiltersetProvider {
+public class RepositoryControllerTile extends ModdedTile implements ITooltipProvider, ITickable, Nameable, GeoBlockEntity, IFiltersetProvider, IAnimationListener {
 
     public List<ConnectedRepository> connectedRepositories = new ArrayList<>();
     public ItemStack scrollStack = ItemStack.EMPTY;
     boolean invalidateNextTick;
+    private int openDrawer = 0;
+    private int drawerTicks = 0;
 
     public RepositoryControllerTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.REPOSITORY_CONTROLLER_TILE, pos, state);
@@ -111,9 +125,41 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
 
     @Override
     public void tick() {
+        if(!level.isClientSide){
+            if(level.getGameTime() % 100 == 0){
+                openRandomDrawer();
+            }
+        }
         if(invalidateNextTick){
             invalidateNetwork();
             invalidateNextTick = false;
+        }
+        if(drawerTicks > 0){
+            drawerTicks--;
+            if(drawerTicks == 38){
+                level.playSound(null, worldPosition, SoundEvents.BARREL_OPEN, SoundSource.BLOCKS, 0.5f, 1.6f + (float) ParticleUtil.inRange(-0.2, 0.2));
+            }
+            if(drawerTicks == 15){
+                level.playSound(null, worldPosition, SoundEvents.BARREL_CLOSE, SoundSource.BLOCKS, 0.5f, 1.6f + (float) ParticleUtil.inRange(-0.2, 0.2));
+            }
+            if(drawerTicks == 38 && !level.isClientSide){
+                Direction direction = level.getBlockState(worldPosition).getValue(RepositoryController.FACING);
+                for(Entity entity : level.getEntities(null, AABB.unitCubeFromLowerCorner(worldPosition.relative(direction).getBottomCenter()))){
+                    entity.push(direction.getStepX() * 0.5, 0.1, direction.getStepZ() * 0.5);
+                    entity.hurtMarked = true;
+                }
+            }
+        }else{
+            openDrawer = 0;
+        }
+    }
+
+    public void openRandomDrawer(){
+
+        openDrawer = level.random.nextIntBetweenInclusive(1, 6);
+        drawerTicks = 60;
+        if(!level.isClientSide) {
+            Networking.sendToNearbyClient(level, worldPosition, new PacketOneShotAnimation(worldPosition));
         }
     }
 
@@ -162,15 +208,38 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
         tag.put("scrollStack", scrollStack.saveOptional(registries));
     }
 
+    List<AnimationController> animControllers = new ArrayList<>();
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-
+        for(int index = 1; index < 7; index++){
+            int finalIndex = index;
+            AnimationController controller = new AnimationController<>(this, "drawer" + index, 20, event ->{
+                if(openDrawer == finalIndex) {
+                    event.getController().setAnimation(RawAnimation.begin().thenPlay("drawer" + finalIndex));
+                    return PlayState.CONTINUE;
+                }else{
+                    event.getController().forceAnimationReset();
+                    return PlayState.STOP;
+                }
+            });
+            animControllers.add(controller);
+            controllers.add(controller);
+        }
     }
+
     AnimatableInstanceCache instanceCache = GeckoLibUtil.createInstanceCache(this);
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return instanceCache;
+    }
+
+    @Override
+    public void startAnimation(int arg) {
+        for(var controller : animControllers){
+            controller.forceAnimationReset();
+        }
+        openRandomDrawer();
     }
 
     /**
