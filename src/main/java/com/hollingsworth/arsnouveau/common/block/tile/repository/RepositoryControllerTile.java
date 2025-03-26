@@ -125,11 +125,6 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
 
     @Override
     public void tick() {
-        if(!level.isClientSide){
-            if(level.getGameTime() % 100 == 0){
-                openRandomDrawer();
-            }
-        }
         if(invalidateNextTick){
             invalidateNetwork();
             invalidateNextTick = false;

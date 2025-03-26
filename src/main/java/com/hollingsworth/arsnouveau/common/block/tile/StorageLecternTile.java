@@ -90,7 +90,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             handlers = tabManagerMap.getOrDefault(tab, new ArrayList<>());
         }
         List<FilterableItemHandler> itemHandlers = handlers.stream().filter(handler -> {
-            if(handler.handler == null || handler.handler.getCapability() == null){
+            if(level.getBlockEntity(handler.pos) instanceof StorageLecternTile || handler.handler == null || handler.handler.getCapability() == null){
                 return false;
             }
 
@@ -129,8 +129,8 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         for (HandlerPos handlerPos : this.handlerPosList) {
             BlockPos pos = handlerPos.pos;
             var capCache = handlerPos.handler;
+            BlockEntity tile = level.getBlockEntity(pos);
             if(capCache != null && capCache.getCapability() != null){
-                BlockEntity tile = level.getBlockEntity(pos);
                 if (tile instanceof Nameable provider && provider.hasCustomName()) {
                     String tabName = provider.getCustomName().getString().trim();
                     if (!tabName.isEmpty()) {
@@ -186,11 +186,11 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
                 continue;
             if(handlerPos.handler.getCapability().equals(extractedStack.getHandler())){
                 if(level.getBlockEntity(handlerPos.pos) instanceof RepositoryControllerTile controllerTile){
-//                    if(controllerTile.connectedRepositories.isEmpty()){
-//                        return null;
-//                    }else{
-//                        return controllerTile.connectedRepositories.get(level.random.nextInt(controllerTile.connectedRepositories.size())).pos;
-//                    }
+                    if(controllerTile.connectedRepositories.isEmpty()){
+                        return null;
+                    }else if(level.random.nextFloat() > 0.9){
+                        return controllerTile.connectedRepositories.get(level.random.nextInt(controllerTile.connectedRepositories.size())).pos;
+                    }
                 }
                 return handlerPos.pos;
             }
@@ -386,7 +386,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         for (HandlerPos handlerPos : handlerPosList) {
             BlockPos pos = handlerPos.pos;
             BlockEntity invTile = level.getBlockEntity(pos);
-            if (invTile == null || handlerPos.handler == null) {
+            if (invTile instanceof StorageLecternTile lecternTile || invTile == null || handlerPos.handler == null) {
                 continue;
             }
             IItemHandler handler = handlerPos.handler.getCapability();
@@ -608,7 +608,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             return handlers;
         }
         for(HandlerPos handlerPos : lecternTile.handlerPosList){
-            if(handlerPos.handler == null)
+            if(handlerPos.handler == null || level.getBlockEntity(handlerPos.pos) instanceof StorageLecternTile)
                 continue;
             IItemHandler handler = handlerPos.handler.getCapability();
             if(handler != null){
