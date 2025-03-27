@@ -348,6 +348,8 @@ public class BlockRegistry {
     public static final BlockEntityTypeRegistryWrapper<SpellSensorTile> SPELL_SENSOR_TILE = registerTile(LibBlockNames.SPELL_SENSOR, SpellSensorTile::new, SPELL_SENSOR);
     public static final BlockEntityTypeRegistryWrapper<RedstoneRelayTile> REDSTONE_RELAY_TILE = registerTile(LibBlockNames.REDSTONE_RELAY, RedstoneRelayTile::new, REDSTONE_RELAY);
 
+    public static final BlockRegistryWrapper<DimBlock> DIM_BLOCK = registerBlockAndItem(LibBlockNames.DIM_BLOCK, DimBlock::new);
+    public static final BlockEntityTypeRegistryWrapper<DimTile> DIM_TILE = registerTile(LibBlockNames.DIM_BLOCK, DimTile::new, DIM_BLOCK);
 
     public static void onBlocksRegistry() {
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {

@@ -101,6 +101,7 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.ITEM_DETECTOR_TILE.get(), ItemDetectorRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.REPOSITORY_TILE.get(), RepositoryRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.REDSTONE_RELAY_TILE.get(), RedstoneRelayRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.DIM_TILE.get(), DimWorldRenderer::new);
 
         event.registerEntityRenderer(ModEntities.SPELL_PROJ.get(),
                 renderManager -> new RenderSpell(renderManager, ArsNouveau.prefix("textures/entity/spell_proj.png")));

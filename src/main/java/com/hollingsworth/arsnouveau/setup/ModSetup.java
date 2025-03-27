@@ -3,9 +3,12 @@ package com.hollingsworth.arsnouveau.setup;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
+import com.hollingsworth.arsnouveau.common.world.dimension.VoidChunkGenerator;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
 import com.hollingsworth.arsnouveau.setup.registry.*;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -19,6 +22,9 @@ public class ModSetup {
     public static final DeferredRegister<TrunkPlacerType<?>> TRUNK_PLACER_TYPE_DEFERRED_REGISTER = DeferredRegister.create(Registries.TRUNK_PLACER_TYPE, MODID);
 
     public static DeferredHolder<TrunkPlacerType<?>, TrunkPlacerType<MagicTrunkPlacer>> MAGIC_TRUNK_PLACER = TRUNK_PLACER_TYPE_DEFERRED_REGISTER.register("magic_trunk_placer", () -> new TrunkPlacerType<>(MagicTrunkPlacer.CODEC));
+
+    public static DeferredRegister<MapCodec<? extends ChunkGenerator>> chunkGeneratorCodecs = DeferredRegister.create(Registries.CHUNK_GENERATOR, MODID);
+    public static DeferredHolder<MapCodec<? extends ChunkGenerator>, MapCodec<VoidChunkGenerator>> VOID_CHUNK_GENERATOR_CODEC = chunkGeneratorCodecs.register("void_chunk_generator", VoidChunkGenerator::makeCodec);
 
     public static void registers(IEventBus modEventBus) {
         ItemsRegistry.ITEMS.register(modEventBus);
@@ -35,6 +41,7 @@ public class ModSetup {
         ModParticles.PARTICLES.register(modEventBus);
         PerkAttributes.ATTRIBUTES.register(modEventBus);
         TRUNK_PLACER_TYPE_DEFERRED_REGISTER.register(modEventBus);
+        chunkGeneratorCodecs.register(modEventBus);
         WorldgenRegistry.FEAT_REG.register(modEventBus);
         LootRegistry.GLM.register(modEventBus);
         SoundRegistry.SOUND_REG.register(modEventBus);

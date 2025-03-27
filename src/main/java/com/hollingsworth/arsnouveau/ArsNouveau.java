@@ -23,10 +23,14 @@ import com.hollingsworth.arsnouveau.setup.proxy.IProxy;
 import com.hollingsworth.arsnouveau.setup.proxy.ServerProxy;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
@@ -50,6 +54,8 @@ import java.util.function.Supplier;
 
 @Mod(ArsNouveau.MODID)
 public class ArsNouveau {
+    public static final ResourceKey<DimensionType> DIMENSION_TYPE_KEY = ResourceKey.create(Registries.DIMENSION_TYPE, ArsNouveau.prefix("test"));
+    public static final ResourceKey<Biome> BIOME_KEY = ResourceKey.create(Registries.BIOME, ArsNouveau.prefix("test"));
     public static final String MODID = "ars_nouveau";
     @SuppressWarnings("deprecation") // Has to be runForDist, SafeRunForDist will throw a sided crash
     public static IProxy proxy;

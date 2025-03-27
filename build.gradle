@@ -148,18 +148,18 @@ dependencies {
     compileOnly "mezz.jei:jei-1.21.1-neoforge-api:${jei_version}"
     implementation "mezz.jei:jei-1.21.1-neoforge:${jei_version}"
     compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
-    implementation 'com.github.glitchfiend:TerraBlender-neoforge:1.21-4.0.0.0'
+    implementation 'com.github.glitchfiend:TerraBlender-neoforge:1.21.1-4.1.0.8'
     implementation "curse.maven:jade-324717:5444008"
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}+1.21"
-
+    implementation "curse.maven:infiniverse-568341:5486311"
     localRuntime "dev.emi:emi-neoforge:${emi_version}"
     localRuntime 'curse.maven:ftb-teams-forge-404468:5631446'
     localRuntime 'curse.maven:ftb-chunks-forge-314906:5710609'
     localRuntime 'curse.maven:ftb-library-forge-404465:5754910'
     localRuntime 'curse.maven:architectury-api-419699:5553800'
 //    localRuntime 'curse.maven:productivebees-377897:6154395'
-    implementation(jarJar(group: 'com.hollingsworth.nuggets', name: 'nuggets-neoforge-1.21', version:'[1.0.4,)'){
-        jarJar.pin(it, '1.0.4')
+    implementation(jarJar(group: 'com.hollingsworth.nuggets', name: 'nuggets-neoforge-1.21', version:'[1.0.5,)'){
+        jarJar.pin(it, '1.0.5')
     })
     localRuntime "maven.modrinth:cloth-config:15.0.140+neoforge"
   //localRuntime "curse.maven:immersive-portals-for-forge-355440:6013197"
