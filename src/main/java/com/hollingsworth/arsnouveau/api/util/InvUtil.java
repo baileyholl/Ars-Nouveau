@@ -27,7 +27,7 @@ public class InvUtil {
             IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, relativePos, level.getBlockState(relativePos), null, d.getOpposite());
             if(handler == null)
                 continue;
-            inventories.add(new FilterableItemHandler(handler, FilterSet.forPosition(level, pos)));
+            inventories.add(new FilterableItemHandler(handler, FilterSet.forPosition(level, relativePos)));
         }
         return inventories;
     }
