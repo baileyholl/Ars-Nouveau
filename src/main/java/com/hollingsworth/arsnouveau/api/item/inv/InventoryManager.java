@@ -10,11 +10,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.IItemHandler;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * Stores a list of {@link FilterableItemHandler}s and provides methods to interact with them.
@@ -82,7 +79,8 @@ public class InventoryManager {
 
     public MultiInsertReference insertStackWithReference(ItemStack stack) {
         List<SlotReference> references = new ArrayList<>();
-        for (FilterableItemHandler filterable : preferredForStack(stack, false)) {
+        for (var filterPref : preferredForStack(stack, false)) {
+            FilterableItemHandler filterable = filterPref.handler;
             int count = stack.getCount();
             stack = filterable.insertItemStacked(stack, false);
             if (count != stack.getCount()) {
@@ -163,9 +161,10 @@ public class InventoryManager {
     public MultiExtractedReference extractItemFromAll(ItemStack desiredStack, int count, boolean includeInvalidInvs) {
         ItemStack merged = ItemStack.EMPTY;
         int remaining = count;
-        List<FilterableItemHandler> preferred = preferredForStack(desiredStack, includeInvalidInvs);
+        Collection<FilterablePreference> preferred = preferredForStack(desiredStack, includeInvalidInvs);
         List<ExtractedStack> extracted = new ArrayList<>();
-        for (FilterableItemHandler filterable : preferred) {
+        for (FilterablePreference filterPref : preferred) {
+            FilterableItemHandler filterable = filterPref.handler;
             if (remaining <= 0)
                 break;
             MultiExtractedReference extractedFromHandler = extractAllFromHandler(filterable, desiredStack, remaining);
@@ -232,13 +231,18 @@ public class InventoryManager {
      *
      * @return The list of inventories sorted by highest preference.
      */
-    public List<FilterableItemHandler> preferredForStack(ItemStack stack, boolean includeInvalid) {
-        List<FilterableItemHandler> filtered = new ArrayList<>(getInventory());
-        filtered = filtered.stream()
-                .filter(filterableItemHandler -> includeInvalid || filterableItemHandler.getHighestPreference(stack) != ItemScroll.SortPref.INVALID)
-                .collect(Collectors.toCollection(ArrayList::new));
-        /// Sort by highest pref first
-        filtered.sort((o1, o2) -> o2.getHighestPreference(stack).ordinal() - o1.getHighestPreference(stack).ordinal());
+    public Collection<FilterablePreference> preferredForStack(ItemStack stack, boolean includeInvalid) {
+        TreeSet<FilterablePreference> filtered = new TreeSet<>((o1, o2) -> {
+            ItemScroll.SortPref pref1 = o1.pref();
+            ItemScroll.SortPref pref2 = o2.pref();
+            return pref2.ordinal() - pref1.ordinal();
+        });
+        for(FilterableItemHandler filterableItemHandler : getInventory()){
+            ItemScroll.SortPref sortPref = filterableItemHandler.getHighestPreference(stack);
+            if(includeInvalid || sortPref != ItemScroll.SortPref.INVALID){
+                filtered.add(new FilterablePreference(filterableItemHandler, sortPref));
+            }
+        }
         return filtered;
     }
 
@@ -290,5 +294,8 @@ public class InventoryManager {
         if (insertSlotMax == -1)
             return handler.getHandler().getSlots();
         return Math.min(insertSlotMax, handler.getHandler().getSlots());
+    }
+
+    public record FilterablePreference(FilterableItemHandler handler, ItemScroll.SortPref pref) {
     }
 }
