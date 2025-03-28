@@ -31,7 +31,7 @@ public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
         // Prefer inserting into existing stacks first, splitting across as many inventories as needed
         for(SortResult connectedRepository : validRepositories){
             IMapInventory connected = connectedRepository.mapInventory();
-            if(connected != null && (connected.hasExistingSlotsForInsertion(stack) || connectedRepository.sortPref.ordinal() >= ItemScroll.SortPref.HIGH.ordinal())){
+            if(connected != null && connected.hasExistingSlotsForInsertion(stack)){
                 ItemStack remainder = connected.insertStack(stack, simulate);
                 if(remainder.isEmpty()){
                     return ItemStack.EMPTY;

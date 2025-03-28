@@ -290,6 +290,11 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
 
     @Override
     public ItemScroll.SortPref getInsertionPreference(ItemStack stack) {
-        return filterSet.getHighestPreference(stack);
+        var defaultPref = filterSet.getHighestPreference(stack);
+        return switch (defaultPref){
+            case INVALID -> ItemScroll.SortPref.INVALID;
+            case LOW ->  hasExistingSlotsForInsertion(stack) ? ItemScroll.SortPref.HIGH : ItemScroll.SortPref.LOW;
+            default -> defaultPref;
+        };
     }
 }
