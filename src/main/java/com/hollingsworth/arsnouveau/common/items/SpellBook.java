@@ -66,27 +66,36 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-        if (tier != SpellTier.CREATIVE) {
-            var iMana = CapabilityRegistry.getMana(playerIn);
-            if(iMana != null){
-                boolean shouldSync = false;
-                if (iMana.getBookTier() < this.tier.value) {
-                    iMana.setBookTier(this.tier.value);
-                    shouldSync = true;
-                }
-                IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerIn);
-                if (iMana.getGlyphBonus() < cap.getKnownGlyphs().size()) {
-                    iMana.setGlyphBonus(cap.getKnownGlyphs().size());
-                    shouldSync = true;
-                }
-                if(shouldSync && playerIn instanceof ServerPlayer player) {
-                    iMana.syncToClient(player);
+        if (playerIn instanceof ServerPlayer) {
+            if (tier != SpellTier.CREATIVE) {
+                var iMana = CapabilityRegistry.getMana(playerIn);
+                if (iMana != null) {
+                    boolean shouldSync = false;
+                    if (iMana.getBookTier() < this.tier.value) {
+                        iMana.setBookTier(this.tier.value);
+                        shouldSync = true;
+                    }
+                    IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerIn);
+                    if (iMana.getGlyphBonus() < cap.getKnownGlyphs().size()) {
+                        iMana.setGlyphBonus(cap.getKnownGlyphs().size());
+                        shouldSync = true;
+                    }
+                    if (shouldSync && playerIn instanceof ServerPlayer player) {
+                        iMana.syncToClient(player);
+                    }
                 }
             }
-        }
-        AbstractCaster<?> caster = getSpellCaster(stack);
 
-        return caster.castSpell(worldIn, playerIn, handIn, Component.translatable("ars_nouveau.invalid_spell"));
+            return InteractionResultHolder.pass(stack);
+        }
+
+        var caster = this.getSpellCaster(stack);
+        if (caster == null) {
+            return InteractionResultHolder.pass(stack);
+        }
+        caster.castOnServer(handIn, Component.translatable("ars_nouveau.mirror.invalid"));
+
+        return InteractionResultHolder.pass(stack);
     }
 
     @Override
