@@ -4,10 +4,7 @@ import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
-import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
-import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
-import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
-import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
@@ -78,7 +75,7 @@ public class PatchouliProvider extends SimpleDataProvider{
         for (ResourceKey<Enchantment> g : enchants) {
             addEnchantmentPage(g);
         }
-        for (AbstractRitual r : RitualRegistry.getRitualMap().values()) {
+        for (AbstractRitual r : ANRegistries.RITUAL_TYPES) {
             if(r.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
                 addRitualPage(r);
         }
@@ -88,7 +85,7 @@ public class PatchouliProvider extends SimpleDataProvider{
                 addFamiliarPage(r);
         }
 
-        for (AbstractSpellPart s : GlyphRegistry.getSpellpartMap().values()) {
+        for (AbstractSpellPart s : ANRegistries.GLYPH_TYPES) {
             if(s.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
                 addGlyphPage(s);
             }

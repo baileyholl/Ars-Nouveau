@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
 import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
@@ -114,7 +115,7 @@ public class GuiSpellBook extends BaseBook {
         if (heldStack.getItem() instanceof SpellBook book) {
             tier = book.getTier().value;
             if (book.getTier() == SpellTier.CREATIVE) {
-                parts = new ArrayList<>(GlyphRegistry.getSpellpartMap().values().stream().filter(AbstractSpellPart::shouldShowInSpellBook).toList());
+                parts = new ArrayList<>(ANRegistries.GLYPH_TYPES.stream().filter(AbstractSpellPart::shouldShowInSpellBook).toList());
             }
         }
         if (SpellCasterRegistry.hasCaster(heldStack)) {
@@ -324,7 +325,7 @@ public class GuiSpellBook extends BaseBook {
             for (Renderable w : renderables) {
                 if (w instanceof GlyphButton glyphButton) {
                     if (glyphButton.abstractSpellPart.getRegistryName() != null) {
-                        AbstractSpellPart part = GlyphRegistry.getSpellpartMap().get(glyphButton.abstractSpellPart.getRegistryName());
+                        AbstractSpellPart part = GlyphRegistry.getSpellPart(glyphButton.abstractSpellPart.getRegistryName());
                         if (part != null) {
                             glyphButton.visible = part.getLocaleName().toLowerCase().contains(str.toLowerCase());
                         }
@@ -841,7 +842,7 @@ public class GuiSpellBook extends BaseBook {
             glyphButton.validationErrors.clear();
             glyphButton.augmentingParent = lastEffect;
             // Simulate adding the glyph to the current spell
-            slicedSpell.add(GlyphRegistry.getSpellpartMap().get(glyphButton.abstractSpellPart.getRegistryName()));
+            slicedSpell.add(GlyphRegistry.getSpellPart(glyphButton.abstractSpellPart.getRegistryName()));
 
             // Filter the errors to ones referring to the simulated glyph
             glyphButton.validationErrors.addAll(
