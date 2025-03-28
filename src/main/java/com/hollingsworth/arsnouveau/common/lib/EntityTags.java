@@ -12,6 +12,7 @@ public class EntityTags {
     public static final TagKey<EntityType<?>> HOSTILE_MOBS = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix( "an_hostile"));
     public static final TagKey<EntityType<?>> VITALIC_GROWTH_BLACKLIST = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix( "vitalic_growth_blacklist"));
     public static final TagKey<EntityType<?>> VITALIC_DEATH_BLACKLIST = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix( "vitalic_death_blacklist"));
+    public static final TagKey<EntityType<?>> BUBBLE_BLACKLIST = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix( "bubble_blacklist"));
 
     public static final TagKey<EntityType<?>> MAGIC_FIND = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix( "magic_find"));
     public static final TagKey<EntityType<?>> SPELL_CAN_HIT = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix( "spell_can_hit"));
