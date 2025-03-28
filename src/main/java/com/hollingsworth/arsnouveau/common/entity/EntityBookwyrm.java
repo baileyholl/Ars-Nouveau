@@ -171,7 +171,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
             if(tile == null || playerTooFar){
                 return null;
             }
-            List<BlockPos> targets = new ArrayList<>(tile.connectedInventories);
+            List<BlockPos> targets = new ArrayList<>(tile.handlerPosList.stream().map(StorageLecternTile.HandlerPos::pos).toList());
             targets.add(tile.getBlockPos());
             return targets.get(level.random.nextInt(targets.size())).above();
         }));
@@ -335,5 +335,10 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
 
     public void setColor(String color) {
         getEntityData().set(EntityBookwyrm.COLOR, color);
+    }
+
+    @Override
+    public boolean canUsePortal(boolean allowPassengers) {
+        return false;
     }
 }

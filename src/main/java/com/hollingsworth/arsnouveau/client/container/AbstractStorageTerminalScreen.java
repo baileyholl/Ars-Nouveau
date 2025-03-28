@@ -10,7 +10,8 @@ import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StateButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StorageSettingsButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StorageTabButton;
-import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
+import com.hollingsworth.arsnouveau.common.network.ClientSearchPacket;
+import com.hollingsworth.arsnouveau.common.network.ClientSlotClick;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.SetTerminalSettingsPacket;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -25,8 +26,6 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -291,7 +290,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 				if (searchType == 1) {
 					IAutoFillTerminal.sync(searchString);
 				}
-				Networking.sendToServer(new ClientToServerStoragePacket(new ClientToServerStoragePacket.Data(Optional.of(searchString), Optional.empty(), Optional.empty())));
+				Networking.sendToServer(new ClientSearchPacket(searchString));
 				onUpdateSearch(searchString);
 			} else {
 				this.scrollTo(this.currentScroll);
@@ -325,10 +324,6 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 	private void addStackToClientList(StoredItemStack is) {
 		this.itemsSorted.add(is);
-	}
-
-	public static TooltipFlag getTooltipFlag(){
-		return Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL;
 	}
 
 	@Override
@@ -522,7 +517,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	}
 
 	protected void storageSlotClick(StoredItemStack slotStack, StorageTerminalMenu.SlotAction act, boolean pullOne) {
-		Networking.sendToServer(new ClientToServerStoragePacket(new ClientToServerStoragePacket.Data(Optional.empty(), Optional.of(new ClientToServerStoragePacket.InteractionData(pullOne, Optional.ofNullable(slotStack), act)), Optional.empty())));
+		Networking.sendToServer(new ClientSlotClick(pullOne, Optional.ofNullable(slotStack), act));
 	}
 
 	public boolean isPullOne(int mouseButton) {
@@ -584,21 +579,12 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 	protected void onUpdateSearch(String text) {}
 
-	public void receive(CompoundTag tag) {
-		menu.receiveClientNBTPacket(tag);
+	public void receiveServerSettings(String searchString, List<String> tabs) {
+		menu.receiveServerSearchString(searchString);
 		refreshItemList = true;
-		if(tag.contains("tabs")){
-			ListTag tabs = tag.getList("tabs", 10);
-			tabNames = new ArrayList<>();
-			Set<String> nameSet = new HashSet<>();
-			for(int i = 0; i < tabs.size(); i++){
-				nameSet.add(tabs.getCompound(i).getString("name"));
-			}
-			tabNames.addAll(new ArrayList<>(nameSet).subList(0, Math.min(nameSet.size(), 11)));
-			Collections.sort(tabNames);
-		}
-
-
+		Set<String> nameSet = new HashSet<>(tabs);
+		tabNames = new ArrayList<>(nameSet).subList(0, Math.min(nameSet.size(), 11));
+		Collections.sort(tabNames);
 		this.onPacket();
 	}
 

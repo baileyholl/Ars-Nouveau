@@ -2,10 +2,8 @@ package com.hollingsworth.arsnouveau.client.container;
 
 import com.google.common.collect.Lists;
 import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
-import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
 import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
 import net.minecraft.client.RecipeBookCategories;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -100,7 +98,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 					return;
 				this.checkTakeAchievements(stack);
 				if (!pinv.player.getCommandSenderWorld().isClientSide) {
-					((CraftingLecternTile) te).craft(thePlayer, tabs.get(thePlayer.getUUID()));
+					((CraftingLecternTile) te).craft((ServerPlayer) thePlayer, tabs.get(thePlayer.getUUID()));
 				}
 			}
 		});
@@ -132,7 +130,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 	}
 
 	@Override
-	public ItemStack shiftClickItems(Player playerIn, int index) {
+	public ItemStack shiftClickItems(ServerPlayer playerIn, int index) {
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.slots.get(index);
 		if (slot != null && slot.hasItem()) {
@@ -289,22 +287,13 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 //		}).recipeClicked(pPlaceAll, pRecipe, pPlayer);
 	}
 
-	@Override
-	public void receive(ServerPlayer sender, HolderLookup.Provider reg, ClientToServerStoragePacket.Data message) {
-		super.receive(sender, reg, message);
-		if(message.craft().isPresent()) {
-			List<List<ItemStack>> stacksList = message.craft().get();
-			if (stacksList.size() != 9) {
-				return;
-			}
-
-			ItemStack[][] stacks = new ItemStack[9][];
-			for (int i = 0; i < 9; i++) {
-				stacks[i] = stacksList.get(i).toArray(ItemStack[]::new);
-			}
-
-			((CraftingLecternTile) te).transferToGrid(pinv.player, stacks, tabs.get(sender.getUUID()));
+	public void onTransferHandler(ServerPlayer sender, List<List<ItemStack>> stacksList){
+		ItemStack[][] stacks = new ItemStack[9][];
+		for (int i = 0; i < stacksList.size(); i++) {
+			stacks[i] = stacksList.get(i).toArray(ItemStack[]::new);
 		}
+
+		((CraftingLecternTile) te).transferToGrid(pinv.player, stacks, tabs.get(sender.getUUID()));
 	}
 
 	@Override

@@ -3,6 +3,8 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.client.particle.ColorPos;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RedstoneRelay;
@@ -185,6 +187,17 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
         } else {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.fail"));
         }
+    }
+
+    @Override
+    public List<ColorPos> getWandHighlight(List<ColorPos> list) {
+        for(BlockPos pos : poweredFrom){
+            list.add(ColorPos.centered(pos, ParticleColor.FROM_HIGHLIGHT));
+        }
+        for(BlockPos pos : powering){
+            list.add(ColorPos.centered(pos, ParticleColor.TO_HIGHLIGHT));
+        }
+        return list;
     }
 
     @Override

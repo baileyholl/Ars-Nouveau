@@ -300,6 +300,11 @@ public class ModEntities {
                     .sized(0.5F, 0.5f)
                     .setTrackingRange(10));
 
+    public static final DeferredHolder<EntityType<?>, EntityType<EnchantedHook>> ENCHANTED_HOOK = registerEntity(
+            LibEntityNames.ENCHANTED_HOOK,
+            EntityType.Builder.<EnchantedHook>of(EnchantedHook::new, MobCategory.MISC).noSave().noSummon().sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(5)
+    );
+
 
     @SubscribeEvent
     public static void registerPlacements(RegisterSpawnPlacementsEvent event) {

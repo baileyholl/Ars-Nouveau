@@ -33,7 +33,10 @@ public class SoundRegistry {
     public static DeferredHolder<SoundEvent, SoundEvent> WILD_HUNT = SOUND_REG.register("firel_the_wild_hunt", () -> makeSound("firel_the_wild_hunt"));
 
     public static DeferredHolder<SoundEvent, SoundEvent> SOUND_OF_GLASS = SOUND_REG.register("thistle_the_sound_of_glass", () -> makeSound("thistle_the_sound_of_glass"));
-
+    public static DeferredHolder<SoundEvent, SoundEvent> DOMINION_WAND_FAIL = SOUND_REG.register("dominion_wand_fail", () -> makeSound("dominion_wand_fail"));
+    public static DeferredHolder<SoundEvent, SoundEvent> DOMINION_WAND_SUCCESS = SOUND_REG.register("dominion_wand_success", () -> makeSound("dominion_wand_success"));
+    public static DeferredHolder<SoundEvent, SoundEvent> DOMINION_WAND_SELECT = SOUND_REG.register("dominion_wand_select", () -> makeSound("dominion_wand_select"));
+    public static DeferredHolder<SoundEvent, SoundEvent> DOMINION_WAND_CLEAR = SOUND_REG.register("dominion_wand_clear", () -> makeSound("dominion_wand_clear"));
 
     public static SpellSound DEFAULT_SPELL_SOUND = new SpellSound(SoundRegistry.DEFAULT_FAMILY, Component.translatable("ars_nouveau.sound.default_family"), ArsNouveau.prefix(DEFAULT_SOUND_LIB));
     public static SpellSound EMPTY_SPELL_SOUND = new SpellSound(SoundRegistry.EMPTY_SOUND_FAMILY, Component.translatable("ars_nouveau.sound.empty"), ArsNouveau.prefix(NO_SOUND_LIB));

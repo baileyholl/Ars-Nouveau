@@ -1097,6 +1097,20 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
 
         addRecipe(builder().withResult(ItemsRegistry.ALAKARKINOS_CHARM).withReagent(ItemsRegistry.ALAKARKINOS_SHARD).withPedestalItem(Items.BRUSH).withPedestalItem(3, Ingredient.of(ItemTags.DECORATED_POT_SHERDS)).build());
 
+        addRecipe(builder().withResult(ItemsRegistry.ENCHANTERS_GAUNTLET)
+                .withReagent(Ingredient.of(Tags.Items.LEATHERS))
+                .withPedestalItem(1, Ingredient.of(Tags.Items.GEMS_DIAMOND))
+                .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
+                .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
+                .keepNbtOfReagent(true)
+                .build());
+        addRecipe(builder().withResult(ItemsRegistry.ENCHANTERS_FISHING_ROD)
+                .withReagent(Items.FISHING_ROD)
+                .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
+                .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
+                .keepNbtOfReagent(true)
+                .build());
+
     }
 
     public void makeArmor(ItemLike outputItem, ItemLike armorItem) {

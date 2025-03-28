@@ -1,7 +1,10 @@
 package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.event.*;
+import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
+import com.hollingsworth.arsnouveau.api.event.SpellCostCalcEvent;
+import com.hollingsworth.arsnouveau.api.event.SpellDamageEvent;
+import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.PlayerCaster;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
@@ -51,13 +54,6 @@ public class ArsEvents {
     public static void preSpellDamage(SpellDamageEvent.Pre e) {
         if (e.damageSource.is(DamageTypeTags.IS_FIRE) && e.caster.hasEffect(ModPotions.IMMOLATE_EFFECT)) {
             e.damage += 2 * (e.caster.getEffect(ModPotions.IMMOLATE_EFFECT).getAmplifier() + 1);
-        }
-    }
-
-    @SubscribeEvent
-    public static void dispelEvent(DispelEvent e) {
-        if (e.rayTraceResult instanceof BlockHitResult blockHitResult && e.world.getBlockEntity(blockHitResult.getBlockPos()) instanceof GhostWeaveTile ghostWeaveTile) {
-            ghostWeaveTile.setVisibility(false);
         }
     }
 }
