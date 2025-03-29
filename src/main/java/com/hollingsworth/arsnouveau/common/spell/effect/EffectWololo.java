@@ -6,15 +6,14 @@ import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.item.inv.SlotReference;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
+import com.hollingsworth.arsnouveau.api.util.GenericRecipeCache;
 import com.hollingsworth.arsnouveau.api.util.IWololoable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
-import com.hollingsworth.arsnouveau.common.entity.debug.FixedStack;
 import com.hollingsworth.arsnouveau.common.mixin.MobAccessor;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -30,7 +29,9 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.DyedItemColor;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -50,8 +51,8 @@ public class EffectWololo extends AbstractEffect {
         super("wololo", "Wololo");
     }
 
-    public static int MAX_RECIPE_CACHE = 16;
-    public static FixedStack<CraftingRecipe> recipeCache = new FixedStack<>(MAX_RECIPE_CACHE);
+    public static int MAX_RECIPE_CACHE = 32;
+    public static GenericRecipeCache<CraftingRecipe, CraftingInput> recipeCache = new GenericRecipeCache<>(RecipeType.CRAFTING, MAX_RECIPE_CACHE);
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
@@ -147,50 +148,14 @@ public class EffectWololo extends AbstractEffect {
         }
     }
 
-    record EmptyResultRecipe(CraftingInput input) implements CraftingRecipe {
-        @Override
-        public @NotNull CraftingBookCategory category() {
-            return CraftingBookCategory.MISC;
-        }
-
-        @Override
-        public boolean matches(@NotNull CraftingInput input, @NotNull Level level) {
-            return this.input.equals(input);
-        }
-
-        @Override
-        public @NotNull ItemStack assemble(@NotNull CraftingInput input, HolderLookup.@NotNull Provider registries) {
-            return ItemStack.EMPTY;
-        }
-
-        @Override
-        public boolean canCraftInDimensions(int width, int height) {
-            return true;
-        }
-
-        @Override
-        public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider registries) {
-            return ItemStack.EMPTY;
-        }
-
-        @Override
-        public @NotNull RecipeSerializer<?> getSerializer() {
-            return RecipeSerializer.SHAPELESS_RECIPE;
-        }
-    }
-
     @NotNull
     private ItemStack getDyedResult(ServerLevel world, CraftingInput input) {
-        Optional<CraftingRecipe> cached = recipeCache.stream().filter(craftingRecipe -> craftingRecipe.matches(input, world)).findFirst();
-        CraftingRecipe recipe;
-        if (cached.isEmpty()) {
-            recipe = world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, world).map(RecipeHolder::value).orElseGet(() -> new EmptyResultRecipe(input));
-            recipeCache.add(recipe);
-        } else {
-            recipe = cached.get();
+        var recipe = recipeCache.get(world, input);
+        if (recipe == null) {
+            return ItemStack.EMPTY;
         }
 
-        return recipe.assemble(input, world.registryAccess());
+        return recipe.value().assemble(input, world.registryAccess());
     }
 
     private static CraftingInput makeInput(DyeItem targetColor, ItemLike blockToDye) {
