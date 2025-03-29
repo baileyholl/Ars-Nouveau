@@ -11,9 +11,9 @@ import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
+import com.hollingsworth.arsnouveau.api.util.GenericRecipeCache;
 import com.hollingsworth.arsnouveau.api.util.IWololoable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.common.entity.debug.FixedStack;
 import com.hollingsworth.arsnouveau.common.mixin.MobAccessor;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
@@ -41,7 +41,6 @@ import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
@@ -59,7 +58,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 public class EffectWololo extends AbstractEffect {
@@ -69,8 +67,8 @@ public class EffectWololo extends AbstractEffect {
         super("wololo", "Wololo");
     }
 
-    public static int MAX_RECIPE_CACHE = 16;
-    public static FixedStack<CraftingRecipe> recipeCache = new FixedStack<>(MAX_RECIPE_CACHE);
+    public static int MAX_RECIPE_CACHE = 32;
+    public static GenericRecipeCache<CraftingRecipe, CraftingInput> recipeCache = new GenericRecipeCache<>(RecipeType.CRAFTING, MAX_RECIPE_CACHE);
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
@@ -210,16 +208,12 @@ public class EffectWololo extends AbstractEffect {
 
     @NotNull
     private ItemStack getDyedResult(ServerLevel world, CraftingInput input) {
-        Optional<CraftingRecipe> cached = recipeCache.stream().filter(craftingRecipe -> craftingRecipe.matches(input, world)).findFirst();
-        CraftingRecipe recipe;
-        if (cached.isEmpty()) {
-            recipe = world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, world).map(RecipeHolder::value).orElseGet(() -> new EmptyResultRecipe(input));
-            recipeCache.add(recipe);
-        } else {
-            recipe = cached.get();
+        var recipe = recipeCache.get(world, input);
+        if (recipe == null) {
+            return ItemStack.EMPTY;
         }
 
-        return recipe.assemble(input, world.registryAccess());
+        return recipe.value().assemble(input, world.registryAccess());
     }
 
     private static CraftingInput makeInput(DyeItem targetColor, ItemLike blockToDye) {

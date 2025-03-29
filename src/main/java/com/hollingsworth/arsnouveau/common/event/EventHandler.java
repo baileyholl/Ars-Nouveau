@@ -8,13 +8,28 @@ import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
 import com.hollingsworth.arsnouveau.api.event.SuccessfulTreeGrowthEvent;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
-import com.hollingsworth.arsnouveau.api.registry.*;
+import com.hollingsworth.arsnouveau.api.recipe.MultiRecipeWrapper;
+import com.hollingsworth.arsnouveau.api.registry.AlakarkinosConversionRegistry;
+import com.hollingsworth.arsnouveau.api.registry.BuddingConversionRegistry;
+import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
+import com.hollingsworth.arsnouveau.api.registry.GenericRecipeRegistry;
+import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ScryRitualRegistry;
 import com.hollingsworth.arsnouveau.api.ritual.RitualEventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.command.*;
+import com.hollingsworth.arsnouveau.common.command.AddTomeCommand;
+import com.hollingsworth.arsnouveau.common.command.AdoptCommand;
+import com.hollingsworth.arsnouveau.common.command.DataDumpCommand;
+import com.hollingsworth.arsnouveau.common.command.DebugNumberCommand;
+import com.hollingsworth.arsnouveau.common.command.DroplessMobsCommand;
+import com.hollingsworth.arsnouveau.common.command.ExportDocsCommand;
+import com.hollingsworth.arsnouveau.common.command.LearnGlyphCommand;
+import com.hollingsworth.arsnouveau.common.command.ResetCommand;
+import com.hollingsworth.arsnouveau.common.command.SummonAnimHeadCommand;
+import com.hollingsworth.arsnouveau.common.command.ToggleLightCommand;
 import com.hollingsworth.arsnouveau.common.compat.CaelusHandler;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.DispelEntityRecipe;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
@@ -34,7 +49,11 @@ import com.hollingsworth.arsnouveau.common.ritual.RitualFlight;
 import com.hollingsworth.arsnouveau.common.ritual.RitualGravity;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
 import com.hollingsworth.arsnouveau.setup.config.Config;
-import com.hollingsworth.arsnouveau.setup.registry.*;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
+import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.VillagerRegistry;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.ChatFormatting;
@@ -79,7 +98,14 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
-import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHealEvent;
+import net.neoforged.neoforge.event.entity.living.LivingShieldBlockEvent;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
@@ -89,6 +115,7 @@ import net.neoforged.neoforge.event.village.VillagerTradesEvent;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -96,6 +123,7 @@ import java.util.UUID;
 
 @EventBusSubscriber(modid = ArsNouveau.MODID)
 public class EventHandler {
+
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void resourceLoadEvent(AddReloadListenerEvent event) {
         event.addListener(new SimplePreparableReloadListener<>() {
@@ -108,6 +136,7 @@ public class EventHandler {
             @SuppressWarnings("NullableProblems")
             @Override
             protected void apply(Object pObject, ResourceManager pResourceManager, ProfilerFiller pProfiler) {
+                MultiRecipeWrapper.RECIPE_CACHE = new HashMap<>();
                 ArsNouveauAPI.getInstance().onResourceReload();
 
                 EventQueue.getServerInstance().addEvent(new ITimedEvent() {
