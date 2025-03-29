@@ -20,7 +20,9 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -61,9 +63,7 @@ public class GuiEntityInfoHUD {
             }
             if (result.getEntity() instanceof ItemFrame frame) {
                 ItemScrollData data = frame.getItem().getOrDefault(DataComponentRegistry.ITEM_SCROLL_DATA, new ItemScrollData(List.of()));
-                for(ItemStack i : data.getItems()){
-                    tooltip.add(i.getHoverName());
-                }
+                data.addToTooltip(Item.TooltipContext.EMPTY, tooltip::add, TooltipFlag.NORMAL);
             }
             hovering = result.getEntity();
         }

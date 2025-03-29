@@ -30,6 +30,7 @@
     "ars_nouveau:archwood_chest",
     "ars_nouveau:alteration_table",
     "ars_nouveau:item_detector",
-    "ars_nouveau:repository"
+    "ars_nouveau:repository",
+    "ars_nouveau:repository_controller"
   ]
 }

@@ -595,6 +595,7 @@ public class Documentation {
                 .withIntroPage()
                 .withPage(TextEntry.create(getLangPath("storage", 2), Component.translatable("ars_nouveau.storage")))
                 .withPage(TextEntry.create(getLangPath("storage", 3), Component.translatable("ars_nouveau.storage_tabs")))
+                .withPage(TextEntry.create(getLangPath("storage", 4), Component.translatable("ars_nouveau.storage_performance")))
                 .withCraftingPages(BlockRegistry.CRAFTING_LECTERN));
         bookwyrm.withRelation(storageLectern);
 
@@ -678,6 +679,14 @@ public class Documentation {
                 .withPage(TextEntry.create(getLangPath("alakarkinos_charm", 4), Component.translatable("ars_nouveau.sifting")))
                 .addConnectedSearch(ItemsRegistry.ALAKARKINOS_SHARD));
 
+        var repoCatalog = addPage(new DocEntryBuilder(AUTOMATION, BlockRegistry.REPOSITORY_CONTROLLER)
+                .withIntroPage()
+                .withLocalizedText()
+                .withCraftingPages(BlockRegistry.REPOSITORY_CONTROLLER))
+                .withRelation(repository)
+                .withRelation(storageLectern);
+        storageLectern.withRelation(repoCatalog);
+        repository.withRelation(repoCatalog);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "spell_casting")
                 .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)

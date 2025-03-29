@@ -1,15 +1,14 @@
 package com.hollingsworth.arsnouveau.api.util;
 
+import com.hollingsworth.arsnouveau.api.item.inv.FilterSet;
 import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.PlayerMainInvWrapper;
@@ -24,47 +23,26 @@ public class InvUtil {
         List<FilterableItemHandler> inventories = new ArrayList<>();
         for (Direction d : Direction.values()) {
             BlockPos relativePos = pos.relative(d);
-            // TODO: Disentangle inventory handling from block entities due to new capabilities system
-            BlockEntity adjacentInvTile = level.getBlockEntity(relativePos);
-            if (adjacentInvTile == null || adjacentInvTile.isRemoved())
-                continue;
 
-            IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, relativePos, level.getBlockState(relativePos), adjacentInvTile, d.getOpposite());
+            IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, relativePos, level.getBlockState(relativePos), null, d.getOpposite());
             if(handler == null)
                 continue;
-            inventories.add(new FilterableItemHandler(handler, filtersOnTile(adjacentInvTile)));
+            inventories.add(new FilterableItemHandler(handler, FilterSet.forPosition(level, relativePos)));
         }
         return inventories;
     }
 
+    // Use FilterSet
+    @Deprecated(forRemoval = true)
     public static List<Function<ItemStack, ItemScroll.SortPref>> filtersOnTile(@Nullable BlockEntity thisTile){
-        if(thisTile == null || thisTile.isRemoved()){
+        if(thisTile == null){
             return new ArrayList<>();
         }
-        Level level = thisTile.getLevel();
-        BlockPos pos = thisTile.getBlockPos();
-        List<Function<ItemStack, ItemScroll.SortPref>> filters = new ArrayList<>();
-        IItemHandler inv = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, level.getBlockState(pos), thisTile, null);
-        if(inv == null)
-            return filters;
-
-        // Get all item frames attached to the tile
-        for (ItemFrame i : level.getEntitiesOfClass(ItemFrame.class, new AABB(pos).inflate(1))) {
-            // Check if these frames are attached to the tile
-            BlockEntity tileOnFrame = level.getBlockEntity(i.blockPosition().relative(i.getDirection().getOpposite()));
-            ItemStack stackInFrame = i.getItem();
-            if (tileOnFrame == null || !tileOnFrame.equals(thisTile) || i.getItem().isEmpty() || stackInFrame.isEmpty()) {
-                continue;
-            }
-
-            if (stackInFrame.getItem() instanceof ItemScroll scrollItem) {
-                filters.add(stackToStore -> scrollItem.getSortPref(stackToStore, stackInFrame, inv));
-            } else {
-                filters.add(stackToStore -> stackToStore.getItem() == stackInFrame.getItem() ? ItemScroll.SortPref.HIGHEST : ItemScroll.SortPref.INVALID);
-            }
+        FilterSet filterSet = FilterSet.forPosition(thisTile.getLevel(), thisTile.getBlockPos());
+        if(filterSet instanceof FilterSet.ListSet listSet){
+            return listSet.filters;
         }
-
-        return filters;
+        return new ArrayList<>();
     }
 
     public static List<FilterableItemHandler> fromPlayer(Player player){

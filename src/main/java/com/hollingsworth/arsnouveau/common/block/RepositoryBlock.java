@@ -2,8 +2,9 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.RepositoryTile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
-import net.minecraft.world.Container;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -13,6 +14,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -33,6 +36,7 @@ public class RepositoryBlock extends ModBlock implements EntityBlock {
         if (blockentity instanceof RepositoryTile tile) {
             tile.configuration = pLevel.random.nextInt(RepositoryTile.CONFIGURATIONS.length);
             tile.updateBlock();
+            tile.invalidateNetwork();
         }
     }
 
@@ -52,11 +56,20 @@ public class RepositoryBlock extends ModBlock implements EntityBlock {
         }
     }
 
+    @Override
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        super.tick(state, level, pos, random);
+        if(!level.isClientSide && level.getBlockEntity(pos) instanceof RepositoryTile repositoryTile){
+            repositoryTile.attachFilters();
+        }
+    }
+
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
         if (!pState.is(pNewState.getBlock())) {
             BlockEntity blockentity = pLevel.getBlockEntity(pPos);
-            if (blockentity instanceof Container container) {
+            if (blockentity instanceof RepositoryTile container) {
                 Containers.dropContents(pLevel, pPos, container);
+                container.invalidateNetwork();
                 pLevel.updateNeighbourForOutputSignal(pPos, this);
             }
 
@@ -81,5 +94,21 @@ public class RepositoryBlock extends ModBlock implements EntityBlock {
 
     public int getAnalogOutputSignal(BlockState pBlockState, Level pLevel, BlockPos pPos) {
         return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(pLevel.getBlockEntity(pPos));
+    }
+
+    @Override
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
+        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+    }
+
+    @Override
+    public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
+        super.onNeighborChange(state, level, pos, neighbor);
+        // ItemFrames call this method with AIR when placed or updated nearby.
+        if(level.getBlockState(neighbor).isAir()){
+            if(level.getBlockEntity(pos) instanceof RepositoryTile repositoryTile){
+                repositoryTile.attachFilters();
+            }
+        }
     }
 }

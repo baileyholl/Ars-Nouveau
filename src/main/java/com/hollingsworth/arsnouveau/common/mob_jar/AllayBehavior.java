@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.mob_jar;
 
+import com.hollingsworth.arsnouveau.api.item.inv.FilterSet;
 import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.item.inv.MultiInsertReference;
@@ -71,9 +72,12 @@ public class AllayBehavior extends JarBehavior<Allay> {
                 if(inventories.isEmpty()){
                     return;
                 }
+
                 if(heldStack.getItem() instanceof ItemScroll){
-                    for(FilterableItemHandler filterableItemHandler : inventories){
-                        filterableItemHandler.addFilterScroll(heldStack);
+                    for(FilterableItemHandler filterableItemHandler : inventories) {
+                        if(filterableItemHandler.filters instanceof FilterSet.ListSet listSet){
+                            listSet.addFilterScroll(heldStack, filterableItemHandler.getHandler());
+                        }
                     }
                 }
                 InventoryManager manager = new InventoryManager(inventories);

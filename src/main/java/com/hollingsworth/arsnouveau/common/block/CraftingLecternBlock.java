@@ -5,16 +5,15 @@ import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
 import com.hollingsworth.arsnouveau.common.block.tile.TransientCustomContainer;
 import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.common.items.summon_charms.BookwyrmCharm;
+import com.hollingsworth.arsnouveau.common.util.VoxelShapeUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -23,13 +22,29 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.stream.Stream;
 
 public class CraftingLecternBlock extends TickableModBlock {
+
+	public static VoxelShape SHAPE_NORTH = Stream.of(
+			Block.box(4, 0, 2, 12, 2, 10),
+			Block.box(5, 2, 3, 11, 14, 9),
+			Block.box(5, 14, 4, 11, 15, 9),
+			Block.box(0, 12, 1, 16, 15, 5),
+			Block.box(0, 14, 5, 16, 17, 9),
+			Block.box(0, 16, 9, 16, 19, 13)
+	).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+
+	public static final VoxelShape SHAPE_SOUTH = VoxelShapeUtils.rotateHorizontal(SHAPE_NORTH, Direction.SOUTH);
+	public static final VoxelShape SHAPE_EAST = VoxelShapeUtils.rotateHorizontal(SHAPE_NORTH, Direction.EAST);
+	public static final VoxelShape SHAPE_WEST = VoxelShapeUtils.rotateHorizontal(SHAPE_NORTH, Direction.WEST);
 
 	public CraftingLecternBlock() {
 		super(Properties.of().strength(3).noOcclusion().pushReaction(PushReaction.BLOCK).ignitedByLava().sound(SoundType.WOOD));
@@ -48,6 +63,18 @@ public class CraftingLecternBlock extends TickableModBlock {
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext pContext) {
 		return this.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, pContext.getHorizontalDirection().getOpposite());
+	}
+
+	@Override
+	protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+		Direction direction = state.getValue(HorizontalDirectionalBlock.FACING);
+        return switch (direction) {
+            case NORTH -> SHAPE_NORTH;
+			case SOUTH -> SHAPE_SOUTH;
+			case EAST -> SHAPE_EAST;
+			case WEST -> SHAPE_WEST;
+            default -> SHAPE_NORTH;
+        };
 	}
 
 	@Override
@@ -70,6 +97,11 @@ public class CraftingLecternBlock extends TickableModBlock {
 			}
 		}
 		return ItemInteractionResult.SUCCESS;
+	}
+
+	@Override
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+		return false;
 	}
 
 	@SuppressWarnings("deprecation")
