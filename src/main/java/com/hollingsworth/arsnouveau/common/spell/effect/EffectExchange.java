@@ -51,7 +51,7 @@ public class EffectExchange extends AbstractEffect {
         Vec3 origLoc = shooter.position;
 
         Level shooterLevel = shooter.level;
-        if(rayTraceResult.getEntity().getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED)){
+        if(entity.getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED)){
             return;
         }
         if (!EventHooks.onEnderTeleport(shooter, entity.getX(), entity.getY(), entity.getZ()).isCanceled())
