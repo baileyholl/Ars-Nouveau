@@ -108,13 +108,11 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
 
     @Override
     public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltip2, TooltipFlag pTooltipFlag) {
-        if (!name.isEmpty()) {
-            tooltip2.accept(name.get());
-        }
-        if(adopter != null){
+        name.ifPresent(tooltip2);
+        if(adopter != null && !adopter.isEmpty()){
             tooltip2.accept(Component.translatable("ars_nouveau.adopter", adopter).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
         }
-        if(bio != null){
+        if(bio != null && !bio.isEmpty()){
             tooltip2.accept(Component.literal(bio).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE)));
         }
         if(behavior != null){
