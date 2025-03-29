@@ -269,7 +269,7 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
             if(preferencedStacks.isEmpty()){
                 return ItemScroll.SortPref.INVALID;
             }
-            return preferencedStacks.getFirst().sortPref();
+            return preferencedStacks.peek().sortPref();
         }
     }
 

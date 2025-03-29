@@ -232,7 +232,7 @@ public class InventoryManager {
      * @return The list of inventories sorted by highest preference.
      */
     public Collection<FilterablePreference> preferredForStack(ItemStack stack, boolean includeInvalid) {
-        TreeSet<FilterablePreference> filtered = new TreeSet<>((o1, o2) -> {
+        PriorityQueue<FilterablePreference> filtered = new PriorityQueue<>((o1, o2) -> {
             ItemScroll.SortPref pref1 = o1.pref();
             ItemScroll.SortPref pref2 = o2.pref();
             return pref2.ordinal() - pref1.ordinal();
