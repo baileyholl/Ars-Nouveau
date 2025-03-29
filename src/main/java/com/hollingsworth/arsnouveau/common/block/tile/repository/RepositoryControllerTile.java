@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.inv.FilterSet;
 import com.hollingsworth.arsnouveau.api.item.inv.IFiltersetProvider;
 import com.hollingsworth.arsnouveau.api.item.inv.IMapInventory;
+import com.hollingsworth.arsnouveau.api.spell.IResolveListener;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RepositoryBlock;
@@ -14,6 +15,7 @@ import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.common.items.data.ItemScrollData;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
+import com.hollingsworth.arsnouveau.common.spell.effect.EffectName;
 import com.hollingsworth.arsnouveau.setup.registry.BlockEntityTypeRegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
@@ -38,6 +40,7 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -109,6 +112,12 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
         }
     }
 
+    @Nullable
+    @Override
+    public Component getCustomName() {
+        return name;
+    }
+
     @Override
     public void getTooltip(List<Component> tooltip) {
         if(hasCustomName()){
@@ -176,13 +185,21 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
     }
 
     public Component name;
+
     @Override
     public Component getName() {
         return name;
     }
-
-    public void setName(Component name) {
+        public void setName(Component name) {
         this.name = name;
+    }
+
+    public IResolveListener getSpellListener(){
+        return (world, shooter, result, spell, spellContext, resolveEffect, spellStats, spellResolver) -> {
+            if(resolveEffect instanceof EffectName && spell.name() != null){
+                setName(Component.literal(spell.name()));
+            }
+        };
     }
 
     @Override
