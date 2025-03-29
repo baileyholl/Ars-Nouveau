@@ -59,6 +59,9 @@ public class GenericRecipeCache<R extends Recipe<I>, I extends RecipeInput> {
 
         @Override
         public boolean matches(@NotNull I input, @NotNull Level level) {
+            if (this.input instanceof SingleRecipeInput single && input instanceof SingleRecipeInput other) {
+                return ItemStack.isSameItemSameComponents(single.item(), other.item());
+            }
             return this.input.equals(input);
         }
 
