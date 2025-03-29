@@ -191,8 +191,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider, IWand
         if (!stacks.isEmpty()) {
             for (int i = 0; i < numberItems; i++) {
                 ItemStack stack = stacks.get(level.random.nextInt(stacks.size())).copy();
-                itemsPicked += stack.getCount();
-                BlockUtil.insertItemAdjacent(level, worldPosition, stack);
+                itemsPicked += Math.max(0, stack.getCount() - BlockUtil.insertItemAdjacent(level, worldPosition, stack).getCount());
                 if (itemsPicked >= numberItems)
                     break;
             }
