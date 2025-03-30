@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -321,9 +322,11 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
     public static class ItemHandler implements IItemHandler {
         ImbuementTile tile;
+        @Nullable Direction side;
 
-        public ItemHandler(ImbuementTile tile) {
+        public ItemHandler(ImbuementTile tile, @Nullable Direction side) {
             this.tile = tile;
+            this.side = side;
         }
 
         @Override
@@ -332,12 +335,12 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         }
 
         @Override
-        public ItemStack getStackInSlot(int slot) {
+        public @NotNull ItemStack getStackInSlot(int slot) {
             return this.tile.stack;
         }
 
         @Override
-        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
             if (!this.isItemValid(slot ,stack)) {
                 return stack;
             }
@@ -365,8 +368,8 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         }
 
         @Override
-        public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            if (this.tile.stack.isEmpty() || this.tile.getRecipeNow() != null) {
+        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
+            if (this.tile.stack.isEmpty() || (this.side != null && this.tile.getRecipeNow() != null)) {
                 return ItemStack.EMPTY;
             }
 
@@ -386,7 +389,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         }
 
         @Override
-        public boolean isItemValid(int slot, ItemStack stack) {
+        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
             return this.tile.canPlaceItem(slot, stack);
         }
     }
