@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.api.util;
 
+import com.google.common.collect.EvictingQueue;
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.entity.debug.FixedStack;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -14,11 +14,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class GenericRecipeCache<R extends Recipe<I>, I extends RecipeInput> {
     public final RecipeType<R> recipeType;
-    protected final FixedStack<RecipeHolder<? extends Recipe<I>>> cache;
+    protected final EvictingQueue<RecipeHolder<? extends Recipe<I>>> cache;
 
     public GenericRecipeCache(RecipeType<R> recipeType, int size) {
         this.recipeType = recipeType;
-        this.cache = new FixedStack<>(size);
+        this.cache = EvictingQueue.create(size);
         NeoForge.EVENT_BUS.addListener(this::onDatapackReload);
     }
 
@@ -41,12 +41,12 @@ public class GenericRecipeCache<R extends Recipe<I>, I extends RecipeInput> {
 
         var holder = level.getRecipeManager().getRecipeFor(this.recipeType, input, level);
         if (holder.isEmpty()) {
-            this.cache.push(new RecipeHolder<>(EmptyResultRecipe.ID, new EmptyResultRecipe<>(input)));
+            this.cache.add(new RecipeHolder<>(EmptyResultRecipe.ID, new EmptyResultRecipe<>(input)));
             return null;
         }
 
         var recipe = holder.get();
-        this.cache.push(recipe);
+        this.cache.add(recipe);
         return recipe;
     }
 
