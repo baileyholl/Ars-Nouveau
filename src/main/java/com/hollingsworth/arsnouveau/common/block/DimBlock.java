@@ -53,7 +53,12 @@ public class DimBlock extends TickableModBlock{
             var newLevel = DimensionManager.INSTANCE.getOrCreateLevel(serverLevel.getServer(), key, () ->{
                 return createDimension(serverLevel.getServer());
             });
-            player.teleportTo(newLevel, 7, 2, 7, Set.of(), player.getYRot(), player.getXRot());
+            if(level.getBlockEntity(pos) instanceof DimTile tile){
+                tile.key = key;
+            }
+            if(player.isCrouching()){
+                player.teleportTo(newLevel, 7, 2, 7, Set.of(), player.getYRot(), player.getXRot());
+            }
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }

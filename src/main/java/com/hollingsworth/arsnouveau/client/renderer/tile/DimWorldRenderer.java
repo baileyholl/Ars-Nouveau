@@ -21,12 +21,10 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.decoration.Painting;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Mirror;
@@ -36,7 +34,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.neoforged.neoforge.client.model.data.ModelData;
@@ -58,27 +55,12 @@ public class DimWorldRenderer implements BlockEntityRenderer<DimTile> {
 
     @Override
     public void render(DimTile blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-
-        StructureTemplate structureTemplate = new StructureTemplate();
+        if(blockEntity.template == null)
+            return;
+        StructureTemplate structureTemplate = blockEntity.template;
         BlockPos pos = BlockPos.ZERO;
         Vec3i size = new Vec3i(16, 16, 16);
-        structureTemplate.fillFromWorld(blockEntity.getLevel(), pos, size, true, null);
 
-        BlockPos blockpos = pos.offset(size).offset(-1, -1, -1);
-        BlockPos blockpos1 = new BlockPos(
-                Math.min(pos.getX(), blockpos.getX()), Math.min(pos.getY(), blockpos.getY()), Math.min(pos.getZ(), blockpos.getZ())
-        );
-        BlockPos blockpos2 = new BlockPos(
-                Math.max(pos.getX(), blockpos.getX()), Math.max(pos.getY(), blockpos.getY()), Math.max(pos.getZ(), blockpos.getZ())
-        );
-//            StructureRenderData renderData = new StructureRenderData(structureTemplate, "test", "test");
-
-//        if(renderData != null){
-//            buildRender(blockEntity, renderData, poseStack, Minecraft.getInstance().player);
-//        }
-//        var renderer = Minecraft.getInstance().gameRenderer;
-//        var projMatrix = Minecraft.getInstance().gameRenderer.getProjectionMatrix(70);
-//        drawRender(blockEntity, renderData, poseStack, RenderSystem.getProjectionMatrix(), RenderSystem.getModelViewMatrix(), Minecraft.getInstance().player);
         List<StatePos> statePosCache = new ArrayList<>();
         for (StructureTemplate.StructureBlockInfo blockInfo : structureTemplate.palettes.getFirst().blocks()) {
             statePosCache.add(new StatePos(blockInfo.state(), blockInfo.pos()));
@@ -96,24 +78,7 @@ public class DimWorldRenderer implements BlockEntityRenderer<DimTile> {
         }
         StructureTemplateAccessor accessor = (StructureTemplateAccessor) structureTemplate;
         EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
-        List<Entity> list = blockEntity.getLevel().getEntitiesOfClass(
-                Entity.class, AABB.encapsulatingFullBlocks(blockpos1, blockpos2));
-        var templateList = new ArrayList<StructureTemplate.StructureEntityInfo>();
-        BlockPos startPos = blockpos1;
-        for (Entity entity : list) {
-            Vec3 vec3 = new Vec3(entity.getX() - (double)startPos.getX(), entity.getY() - (double)startPos.getY(), entity.getZ() - (double)startPos.getZ());
-            CompoundTag compoundtag = new CompoundTag();
-            entity.save(compoundtag);
-            BlockPos entityPos;
-            if (entity instanceof Painting) {
-                entityPos = ((Painting)entity).getPos().subtract(startPos);
-            } else {
-                entityPos = BlockPos.containing(vec3);
-            }
-
-            templateList.add(new StructureTemplate.StructureEntityInfo(vec3, entityPos, compoundtag.copy()));
-        }
-        for (StructureTemplate.StructureEntityInfo entityInfo : templateList) {
+        for (StructureTemplate.StructureEntityInfo entityInfo : accessor.getEntityInfoList()) {
             Entity entity = EntityType.loadEntityRecursive(entityInfo.nbt, blockEntity.getLevel(), (entityx) -> entityx);
             if(entity == null){
                 continue;
@@ -133,9 +98,6 @@ public class DimWorldRenderer implements BlockEntityRenderer<DimTile> {
                 entityRenderDispatcher.render(entity1, 0.0D, 0.0D, 0.0D, 0.0F, partialTick, poseStack, bufferSource, packedLight);
             }
         }
-        // Shrink the entire structure to render above this cube as a model
-
-
         poseStack.popPose();
     }
 
