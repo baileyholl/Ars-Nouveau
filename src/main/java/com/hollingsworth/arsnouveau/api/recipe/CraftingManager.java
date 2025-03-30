@@ -93,10 +93,9 @@ public class CraftingManager {
     }
 
     public void write(HolderLookup.Provider provider, CompoundTag tag) {
-        if(!outputStack.isEmpty()) {
-            Tag stack = outputStack.save(provider);
-            tag.put("output_stack", stack);
-        }
+        Tag stack = outputStack.saveOptional(provider);
+        tag.put("output_stack", stack);
+
         NBTUtil.writeItems(provider, tag, "progress", neededItems);
         NBTUtil.writeItems(provider, tag, "refund", remainingItems);
         tag.putBoolean("completed", craftCompleted);
