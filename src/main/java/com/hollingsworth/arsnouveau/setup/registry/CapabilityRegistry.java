@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.item.inv.IMapInventory;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.source.ISourceCap;
 import com.hollingsworth.arsnouveau.api.spell.IResolveListener;
+import com.hollingsworth.arsnouveau.common.block.tile.ImbuementTile;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.capability.ANPlayerDataCap;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
@@ -64,7 +65,6 @@ public class CapabilityRegistry {
         event.registerEntity(MANA_CAPABILITY, EntityType.PLAYER, (player, ctx) -> new ManaCap(player));
         event.registerEntity(PLAYER_DATA_CAP, EntityType.PLAYER, (player, ctx) -> new ANPlayerDataCap(player));
         var containers = List.of(BlockRegistry.ENCHANTING_APP_TILE,
-                BlockRegistry.IMBUEMENT_TILE,
                 BlockRegistry.SCRIBES_TABLE_TILE,
                 BlockRegistry.ARCANE_PEDESTAL_TILE,
                 BlockRegistry.ARCHWOOD_CHEST_TILE,
@@ -78,6 +78,7 @@ public class CapabilityRegistry {
         event.registerBlockEntity(MAP_INV_CAP, BlockRegistry.REPOSITORY_CONTROLLER_TILE.get(), (c, side) -> c.getControllerInv());
         event.registerBlockEntity(FILTERSET_CAPABILITY, BlockRegistry.REPOSITORY_CONTROLLER_TILE.get(), (c, side) -> c);
         event.registerBlockEntity(MAP_INV_CAP, BlockRegistry.REPOSITORY_TILE.get(), (c, side) -> c);
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BlockRegistry.IMBUEMENT_TILE.get(), (c, side) -> new ImbuementTile.ItemHandler(c));
 
         var sourceContainers = List.of(BlockRegistry.SOURCE_JAR_TILE, BlockRegistry.CREATIVE_SOURCE_JAR_TILE,
                 BlockRegistry.AGRONOMIC_SOURCELINK_TILE, BlockRegistry.ALCHEMICAL_TILE, BlockRegistry.VITALIC_TILE, BlockRegistry.MYCELIAL_TILE, BlockRegistry.VOLCANIC_TILE,
