@@ -17,7 +17,7 @@ import java.util.function.Function;
 public abstract class FilterSet {
 
     /**
-     * Returns the highest preference from a list of predicates, unless it is invalid.
+     * Returns the highest preference for a given item.
      * Invalid overrules all other preferences, as the user does NOT want that item to be inserted.
      */
     public abstract ItemScroll.SortPref getHighestPreference(ItemStack stack);
@@ -87,17 +87,6 @@ public abstract class FilterSet {
                 }
             }
             return pref;
-        }
-    }
-
-    public static class Provider extends FilterSet{
-        public IFiltersetProvider provider;
-        public Provider(IFiltersetProvider provider){
-            this.provider = provider;
-        }
-
-        public ItemScroll.SortPref getHighestPreference(ItemStack stack){
-            return provider.getFilterSet().getHighestPreference(stack);
         }
     }
 
