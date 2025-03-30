@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.imbuement_chamber.IImbuementRecipe;
-import com.hollingsworth.arsnouveau.api.registry.ImbuementRecipeRegistry;
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
@@ -30,6 +29,7 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -317,5 +317,77 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
     public ItemStack getStack() {
         return stack;
+    }
+
+    public static class ItemHandler implements IItemHandler {
+        ImbuementTile tile;
+
+        public ItemHandler(ImbuementTile tile) {
+            this.tile = tile;
+        }
+
+        @Override
+        public int getSlots() {
+            return 1;
+        }
+
+        @Override
+        public ItemStack getStackInSlot(int slot) {
+            return this.tile.stack;
+        }
+
+        @Override
+        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+            if (!this.isItemValid(slot ,stack)) {
+                return stack;
+            }
+
+            if (this.tile.stack.isEmpty()) {
+                if (!simulate) {
+                    this.tile.stack = stack;
+                }
+
+                return ItemStack.EMPTY;
+            }
+
+            if (this.tile.stack.isStackable() && this.tile.stack.getCount() < this.tile.stack.getMaxStackSize() && ItemStack.isSameItemSameComponents(stack, this.tile.stack)) {
+                int currentCount = this.tile.stack.getCount();
+                int newCount = Math.min(this.tile.stack.getMaxStackSize(), currentCount + stack.getCount());
+                int change = newCount - currentCount;
+                if (!simulate) {
+                    this.tile.stack.setCount(newCount);
+                }
+
+                stack.shrink(change);
+            }
+
+            return stack;
+        }
+
+        @Override
+        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+            if (this.tile.stack.isEmpty() || this.tile.getRecipeNow() != null) {
+                return ItemStack.EMPTY;
+            }
+
+            int currentCount = this.tile.stack.getCount();
+            int toExtract = Math.min(currentCount, amount);
+            ItemStack split = this.tile.stack.copyWithCount(toExtract);
+            if (!simulate) {
+                this.tile.stack.setCount(currentCount - toExtract);
+            }
+
+            return split;
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return slot == 0 ? this.tile.stack.getMaxStackSize() : 0;
+        }
+
+        @Override
+        public boolean isItemValid(int slot, ItemStack stack) {
+            return this.tile.canPlaceItem(slot, stack);
+        }
     }
 }
