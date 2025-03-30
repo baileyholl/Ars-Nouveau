@@ -1275,9 +1275,11 @@ public class LangDatagen extends LanguageProvider {
         add("key.ars_nouveau.familiar_toggle", "Summon/Dispel Familiar");
         add("ars_nouveau.spell_book_gui.dispel", "Dispel");
         add("tooltip.ars_nouveau.master_tab", "All Items");
-        add("ars_nouveau.page1.repository", "A repository can store a double chests worth of items. When named, it will display the name as a tooltip, and preserve it when dropped as an item. Useful for creating named inventory tabs with the Storage Lectern.");
+        add("ars_nouveau.page1.repository", "A repository can store a double chests worth of items. When named, it will display the name as a tooltip, and preserve it when dropped as an item. Useful for creating named inventory tabs with the Storage Lectern. A Repository Catalog can be used as a proxy for a chain of connected repositories, and respects filter scrolls on repositories when inserting items.");
         add("ars_nouveau.storage_tabs", "Storage Tabs");
         add("ars_nouveau.page3.storage", "Linked inventories that are named will create a tab in the Storage Lectern, allowing you to view and manipulate all inventories that share that name. Unlike normal chests, Repositories will preserve their name when dropped. The Name Effect can also name inventories placed in the world.");
+        add("ars_nouveau.storage_performance", "Performance");
+        add("ars_nouveau.page4.storage", "Repository Catalogs should be used when possible for large or frequent item automations involving the storage lectern. Repository catalogs are bound to a single location that exposes all connected repositories, and is optimized for server performance over other large slot inventories or chests.");
         add("ars_nouveau.page2.item_detector", "If a Filter Scroll is given to the Display Case, it will count all items that match the filter.");
         add("config.jade.plugin_ars_nouveau.mob_jar", "Mob Jar");
         add("mob_jar.villager", "Can be traded with in a jar, periodically resetting its trades.");
@@ -1438,6 +1440,10 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.banner.conjuration", "Conjuration School");
         add("ars_nouveau.lectern_blacklist", "This block has been disabled from being connected to the Storage Lectern.");
         add("key.ars_nouveau.open_documentation", "Open Documentation");
+
+        add("block.ars_nouveau.repository_controller", "Repository Catalog");
+        add("ars_nouveau.page1.repository_controller", "Catalogs can insert and extract items from any adjacent and connected repository. Catalogs respect filters placed on repositories via item frames while inserting items, and will prioritize existing stacks of an item. Filter scrolls can be used on the Catalog, storing the filter and applying it to all connected repositories when interacted with directly.");
+        add("ars_nouveau.page2.repository_controller", "Catalogs are highly performant when used with the Storage Lectern and should be used over other big inventories or systems with many slots. Filters are not applied when items are extracted from other systems like a Hopper, and insertions via hopper will not respect the catalogs own filter, but will respect inserting into a filtered repository.");
         add("item.ars_nouveau.enchanters_fishing_rod", "Enchanter's Fishing Rod");
         add("item.ars_nouveau.enchanters_gauntlet", "Enchanter's Gauntlet");
         add("ars_nouveau.fishing_rod.invalid", "Invalid Spell. Enchanter's Fishing Rod accept Effects and Augments only.");

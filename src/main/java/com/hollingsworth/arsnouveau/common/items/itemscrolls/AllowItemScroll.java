@@ -19,6 +19,6 @@ public class AllowItemScroll extends ItemScroll {
     @Override
     public SortPref getSortPref(ItemStack stackToStore, ItemStack scrollStack, IItemHandler inventory) {
         ItemScrollData data = scrollStack.getOrDefault(DataComponentRegistry.ITEM_SCROLL_DATA, new ItemScrollData());
-        return data.containsStack(stackToStore) ? SortPref.HIGH : SortPref.INVALID;
+        return data.containsStack(stackToStore) ? SortPref.HIGHEST : SortPref.INVALID;
     }
 }
