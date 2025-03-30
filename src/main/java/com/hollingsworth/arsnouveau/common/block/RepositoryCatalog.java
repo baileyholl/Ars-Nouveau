@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.common.block.tile.repository.RepositoryControllerTile;
+import com.hollingsworth.arsnouveau.common.block.tile.RepositoryCatalogTile;
 import com.hollingsworth.arsnouveau.common.items.data.ItemScrollData;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.BlockPos;
@@ -27,10 +27,10 @@ import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-public class RepositoryController extends TickableModBlock {
+public class RepositoryCatalog extends TickableModBlock {
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
 
-    public RepositoryController() {
+    public RepositoryCatalog() {
         super(ModBlock.defaultProperties().noOcclusion());
         this.registerDefaultState(this.stateDefinition.any().setValue(BlockStateProperties.WATERLOGGED, false).setValue(FACING, Direction.NORTH));
     }
@@ -38,7 +38,7 @@ public class RepositoryController extends TickableModBlock {
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         ItemScrollData scrollData = stack.get(DataComponentRegistry.ITEM_SCROLL_DATA);
-        if(hand != InteractionHand.MAIN_HAND || !(level.getBlockEntity(pos) instanceof RepositoryControllerTile controllerTile)){
+        if(hand != InteractionHand.MAIN_HAND || !(level.getBlockEntity(pos) instanceof RepositoryCatalogTile controllerTile)){
             return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
         }
         if(scrollData != null){
@@ -88,7 +88,7 @@ public class RepositoryController extends TickableModBlock {
 
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        if(!level.isClientSide && level.getBlockEntity(pos) instanceof RepositoryControllerTile tile){
+        if(!level.isClientSide && level.getBlockEntity(pos) instanceof RepositoryCatalogTile tile){
             if(!tile.scrollStack.isEmpty()){
                 level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, tile.scrollStack));
             }
@@ -99,7 +99,7 @@ public class RepositoryController extends TickableModBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new RepositoryControllerTile(pPos, pState);
+        return new RepositoryCatalogTile(pPos, pState);
     }
 
     @Override

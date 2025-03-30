@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.item.inv.FilterSet;
 import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
 import com.hollingsworth.arsnouveau.api.item.inv.IMapInventory;
 import com.hollingsworth.arsnouveau.api.item.inv.SlotCache;
-import com.hollingsworth.arsnouveau.common.block.tile.repository.RepositoryControllerTile;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -157,7 +156,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
                 BlockEntity neighbor = level.getBlockEntity(pos);
                 if(neighbor instanceof RepositoryTile repositoryTile){
                     repositoryTile.invalidateNetwork(visited);
-                }else if(neighbor instanceof RepositoryControllerTile controllerTile){
+                }else if(neighbor instanceof RepositoryCatalogTile controllerTile){
                     controllerTile.invalidateNetwork();
                 }
             }

@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.block.tile.repository;
+package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.item.inv.CombinedHandlerInv;
 import com.hollingsworth.arsnouveau.api.item.inv.FilterSet;
@@ -16,9 +16,9 @@ import java.util.PriorityQueue;
 import java.util.function.Predicate;
 
 public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
-    public RepositoryControllerTile controllerTile;
+    public RepositoryCatalogTile controllerTile;
 
-    public ControllerInv(RepositoryControllerTile controllerTile, IItemHandler... itemHandler)
+    public ControllerInv(RepositoryCatalogTile controllerTile, IItemHandler... itemHandler)
     {
         super(itemHandler);
         this.controllerTile = controllerTile;
@@ -56,7 +56,7 @@ public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
 
     @Override
     public boolean hasExistingSlotsForInsertion(ItemStack stack) {
-        for(RepositoryControllerTile.ConnectedRepository connectedRepository : controllerTile.connectedRepositories){
+        for(RepositoryCatalogTile.ConnectedRepository connectedRepository : controllerTile.connectedRepositories){
             IMapInventory connected = connectedRepository.capability.getCapability();
             if(connected != null && connected.hasExistingSlotsForInsertion(stack)){
                 return true;
@@ -67,7 +67,7 @@ public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
 
     @Override
     public ItemStack extractByItem(Item item, int count, boolean simulate, Predicate<ItemStack> filter) {
-        for(RepositoryControllerTile.ConnectedRepository connectedRepository : controllerTile.connectedRepositories){
+        for(RepositoryCatalogTile.ConnectedRepository connectedRepository : controllerTile.connectedRepositories){
             IMapInventory connected = connectedRepository.capability.getCapability();
             if(connected != null){
                 ItemStack extracted = connected.extractByItem(item, count, simulate, filter);
@@ -122,7 +122,7 @@ public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
         return set.getHighestPreference(stack) != ItemScroll.SortPref.INVALID;
     }
 
-    public record SortResult(ItemScroll.SortPref sortPref, @NotNull RepositoryControllerTile.ConnectedRepository connectedRepository){
+    public record SortResult(ItemScroll.SortPref sortPref, @NotNull RepositoryCatalogTile.ConnectedRepository connectedRepository){
         /**
          * Comparator for sorting SortResult by their sort preference in descending order, i.e. higher preferences come first.
          */

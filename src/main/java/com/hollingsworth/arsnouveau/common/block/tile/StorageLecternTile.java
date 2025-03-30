@@ -11,7 +11,6 @@ import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
 import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
-import com.hollingsworth.arsnouveau.common.block.tile.repository.RepositoryControllerTile;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
 import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.TransferTask;
@@ -188,7 +187,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             if (handlerPos.handler == null || handlerPos.handler.getCapability() == null)
                 continue;
             if (handlerPos.handler.getCapability().equals(extractedStack.getHandler())) {
-                if (level.getBlockEntity(handlerPos.pos) instanceof RepositoryControllerTile controllerTile) {
+                if (level.getBlockEntity(handlerPos.pos) instanceof RepositoryCatalogTile controllerTile) {
                     if (controllerTile.connectedRepositories.isEmpty()) {
                         return null;
                     } else if (level.random.nextFloat() > 0.9) {

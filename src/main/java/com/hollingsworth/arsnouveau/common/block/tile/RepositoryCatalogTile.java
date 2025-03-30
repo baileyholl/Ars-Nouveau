@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.block.tile.repository;
+package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.inv.FilterSet;
@@ -8,9 +8,7 @@ import com.hollingsworth.arsnouveau.api.spell.IResolveListener;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RepositoryBlock;
-import com.hollingsworth.arsnouveau.common.block.RepositoryController;
-import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
-import com.hollingsworth.arsnouveau.common.block.tile.ModdedTile;
+import com.hollingsworth.arsnouveau.common.block.RepositoryCatalog;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.common.items.data.ItemScrollData;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -24,6 +22,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -35,6 +34,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
@@ -51,7 +51,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.*;
 
-public class RepositoryControllerTile extends ModdedTile implements ITooltipProvider, ITickable, Nameable, GeoBlockEntity, IFiltersetProvider, IAnimationListener {
+public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvider, ITickable, Nameable, GeoBlockEntity, IFiltersetProvider, IAnimationListener {
 
     public List<ConnectedRepository> connectedRepositories = new ArrayList<>();
     public ItemStack scrollStack = ItemStack.EMPTY;
@@ -59,11 +59,11 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
     private int openDrawer = 0;
     private int drawerTicks = 0;
 
-    public RepositoryControllerTile(BlockPos pos, BlockState state) {
+    public RepositoryCatalogTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.REPOSITORY_CONTROLLER_TILE, pos, state);
     }
 
-    public RepositoryControllerTile(BlockEntityTypeRegistryWrapper<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+    public RepositoryCatalogTile(BlockEntityTypeRegistryWrapper<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
     }
 
@@ -147,7 +147,7 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
                 level.playSound(null, worldPosition, SoundEvents.BARREL_CLOSE, SoundSource.BLOCKS, 0.5f, 1.6f + (float) ParticleUtil.inRange(-0.2, 0.2));
             }
             if(drawerTicks == 38 && !level.isClientSide){
-                Direction direction = level.getBlockState(worldPosition).getValue(RepositoryController.FACING);
+                Direction direction = level.getBlockState(worldPosition).getValue(RepositoryCatalog.FACING);
                 for(Entity entity : level.getEntities(null, AABB.unitCubeFromLowerCorner(worldPosition.relative(direction).getBottomCenter()))){
                     entity.push(direction.getStepX() * 0.5, 0.1, direction.getStepZ() * 0.5);
                     entity.hurtMarked = true;
@@ -220,6 +220,13 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
         tag.put("scrollStack", scrollStack.saveOptional(registries));
     }
 
+    @Override
+    protected void applyImplicitComponents(BlockEntity.DataComponentInput componentInput) {
+        super.applyImplicitComponents(componentInput);
+        this.name = componentInput.get(DataComponents.CUSTOM_NAME);
+    }
+
+
     List<AnimationController> animControllers = new ArrayList<>();
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
@@ -258,8 +265,8 @@ public class RepositoryControllerTile extends ModdedTile implements ITooltipProv
      * Returns the highest preference from the connected inventories ignoring this controllers own scroll.
      */
     public static class ProxyFilterSet extends FilterSet{
-        RepositoryControllerTile tile;
-        public ProxyFilterSet(RepositoryControllerTile tile) {
+        RepositoryCatalogTile tile;
+        public ProxyFilterSet(RepositoryCatalogTile tile) {
             this.tile = tile;
         }
 
