@@ -95,7 +95,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
         }
         caster.castOnServer(handIn, Component.translatable("ars_nouveau.mirror.invalid"));
 
-        return InteractionResultHolder.pass(stack);
+        return InteractionResultHolder.consume(stack);
     }
 
     @Override
