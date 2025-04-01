@@ -18,14 +18,20 @@ public interface IPerkHolder<T> {
 
     default List<PerkInstance> getPerkInstances(ItemStack stack){
         List<PerkInstance> perkInstances = new ArrayList<>();
-        List<PerkSlot> slots = new ArrayList<>(getSlotsForTier(stack));
-        List<IPerk> perks = getPerks();
-        for(int i = 0; i < slots.size(); i++){
-            if(i < perks.size()) {
-                perkInstances.add(new PerkInstance(slots.get(i), perks.get(i)));
-            }
-        }
+        addPerkInstances(perkInstances, stack);
         return perkInstances;
+    }
+
+    default void addPerkInstances(List<PerkInstance> target, ItemStack stack){
+        List<PerkSlot> slots = getSlotsForTier(stack);
+        List<IPerk> perks = getPerks();
+        int max = Math.min(slots.size(), perks.size());
+        if (target instanceof ArrayList<PerkInstance> arrayList) {
+            arrayList.ensureCapacity(target.size() + max);
+        }
+        for (int i = 0; i < max; i++) {
+            target.add(new PerkInstance(slots.get(i), perks.get(i)));
+        }
     }
 
     List<IPerk> getPerks();

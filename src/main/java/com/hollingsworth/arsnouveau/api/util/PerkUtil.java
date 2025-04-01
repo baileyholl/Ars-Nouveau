@@ -10,6 +10,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import oshi.util.tuples.Pair;
 
@@ -49,18 +50,30 @@ public class PerkUtil {
 
     public static List<PerkInstance> getPerksFromItem(ItemStack stack){
         List<PerkInstance> perkInstances = new ArrayList<>();
-        var data = stack.get(DataComponentRegistry.ARMOR_PERKS);
-        if(data == null){
-            return perkInstances;
-        }
-        perkInstances.addAll(data.getPerkInstances(stack));
+        addPerksFromItem(perkInstances, stack);
         return perkInstances;
     }
 
-    public static List<PerkInstance> getPerksFromLiving(LivingEntity player){
+    public static void addPerksFromItem(List<PerkInstance> target, ItemStack stack){
+        var data = stack.get(DataComponentRegistry.ARMOR_PERKS);
+        if(data == null){
+            return;
+        }
+
+        data.addPerkInstances(target, stack);
+    }
+
+    public static List<PerkInstance> getPerksFromLiving(LivingEntity entity){
         List<PerkInstance> perkInstances = new ArrayList<>();
-        for(ItemStack stack : player.getArmorSlots()){
-            perkInstances.addAll(getPerksFromItem(stack));
+        if (entity instanceof Player player) {
+            // Common case that avoids allocating unnecessary Iterables.
+            for (ItemStack stack : player.inventory.armor) {
+                addPerksFromItem(perkInstances, stack);
+            }
+        } else {
+            for (ItemStack stack : entity.getArmorSlots()) {
+                addPerksFromItem(perkInstances, stack);
+            }
         }
         return perkInstances;
     }

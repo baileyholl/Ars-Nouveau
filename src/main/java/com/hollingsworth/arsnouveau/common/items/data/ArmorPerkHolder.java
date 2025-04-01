@@ -56,7 +56,9 @@ public class ArmorPerkHolder extends StackPerkHolder<ArmorPerkHolder> {
             return Collections.emptyList();
         }
         List<PerkSlot> slots = new ArrayList<>(slotsForTier.get(getTier()));
-        slots.sort(Comparator.comparingInt((a) -> -a.value()));
+        if (slots.size() > 1) {
+            slots.sort(Comparator.comparingInt((a) -> -a.value()));
+        }
         return slots;
     }
 
