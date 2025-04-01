@@ -49,7 +49,7 @@ public class EffectBurst extends AbstractEffect {
     }
 
     public void makeSphere(BlockPos center, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (spellContext.getRemainingSpell().isEmpty()) return;
+        if (!spellContext.hasRemainingSpell()) return;
 
         // like linger, reduce the radius if sensitive
         int radius = (int) spellStats.getAoeMultiplier() + (spellStats.isSensitive() ? 1 : 3);

@@ -178,6 +178,10 @@ public class ParticleColor implements IParticleColor, Cloneable {
         return Math.sqrt(Math.pow(this.r - color.getRed(), 2) + Math.pow(this.g - color.getGreen(), 2) + Math.pow(this.b - color.getBlue(), 2));
     }
 
+    /**
+     * @deprecated Use {@link ParticleColor#copy()} instead
+     */
+    @Deprecated
     @Override
     public ParticleColor clone() {
         try {
@@ -187,6 +191,10 @@ public class ParticleColor implements IParticleColor, Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
+    }
+
+    public ParticleColor copy() {
+        return new ParticleColor(r, g, b);
     }
 
     @Override

@@ -7,6 +7,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
@@ -37,11 +38,11 @@ public class SpellStats {
 
     private List<AbstractAugment> augments;
 
-    private List<ItemStack> modifierItems;
+    private ArrayList<ItemStack> modifierItems;
 
     private SpellStats() {
         augments = new ArrayList<>();
-        modifierItems = new ArrayList<>();
+        modifierItems = new ArrayList<>(6);
     }
 
     public int getDurationInTicks() {
@@ -49,7 +50,14 @@ public class SpellStats {
     }
 
     public int getBuffCount(AbstractAugment abstractAugment) {
-        return (int) augments.stream().filter(abstractAugment::equals).count();
+        int count = 0;
+        for (AbstractAugment augment : augments) {
+            if (abstractAugment.equals(augment)) {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     public boolean hasBuff(AbstractAugment abstractAugment) {
@@ -119,8 +127,19 @@ public class SpellStats {
         return modifierItems;
     }
 
-    public void setModifierItems(List<ItemStack> modifierItems) {
+    public void setModifierItems(ArrayList<ItemStack> modifierItems) {
         this.modifierItems = modifierItems;
+    }
+
+    @Deprecated
+    public void setModifierItems(List<ItemStack> modifierItems) {
+        if (modifierItems instanceof ArrayList<ItemStack> arrayList) {
+            this.setModifierItems(arrayList);
+            return;
+        }
+
+        this.modifierItems.clear();
+        this.modifierItems.addAll(modifierItems);
     }
 
     public boolean isSensitive() {
@@ -182,14 +201,26 @@ public class SpellStats {
             if (entity == null)
                 return this;
             var handler = CuriosUtil.getAllWornItems(entity);
-            if(handler != null){
+            if (handler != null) {
+                spellStats.modifierItems.ensureCapacity(6 + handler.getSlots());
                 for (int i = 0; i < handler.getSlots(); i++) {
                     ItemStack item = handler.getStackInSlot(i);
                     spellStats.modifierItems.add(item);
                 }
             }
-            for (ItemStack i : entity.getAllSlots()) {
-                spellStats.modifierItems.add(i);
+
+            spellStats.modifierItems.add(entity.getMainHandItem());
+            spellStats.modifierItems.add(entity.getOffhandItem());
+            // Common case that avoids allocating unnecessary Iterables.
+            if (entity instanceof Player player) {
+                for (var armorItem : player.inventory.armor) {
+                    //noinspection UseBulkOperation
+                    spellStats.modifierItems.add(armorItem);
+                }
+            } else {
+                for (ItemStack i : entity.getArmorSlots()) {
+                    spellStats.modifierItems.add(i);
+                }
             }
 
             return this;
@@ -241,8 +272,18 @@ public class SpellStats {
             return this;
         }
 
-        public Builder setItems(List<ItemStack> items) {
+        public Builder setItems(ArrayList<ItemStack> items) {
             spellStats.modifierItems = items;
+            return this;
+        }
+
+        public Builder setItems(List<ItemStack> items) {
+            if (items instanceof ArrayList<ItemStack> arrayList) {
+                return this.setItems(arrayList);
+            }
+
+            spellStats.modifierItems.clear();
+            spellStats.modifierItems.addAll(items);
             return this;
         }
 

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityOrbitProjectile;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
@@ -11,6 +12,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,7 +26,7 @@ public class EffectOrbit extends AbstractEffect {
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats stats, SpellContext spellContext, SpellResolver resolver) {
-        if (spellContext.getRemainingSpell().isEmpty()) return;
+        if (!spellContext.hasRemainingSpell()) return;
         int total = 3 + stats.getBuffCount(AugmentSplit.INSTANCE);
         SpellContext newContext = resolver.spellContext.makeChildContext();
         var spell = newContext.getSpell().mutable().add(0, MethodProjectile.INSTANCE);
@@ -43,10 +46,16 @@ public class EffectOrbit extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats stats, SpellContext spellContext, SpellResolver resolver) {
-        if (spellContext.getRemainingSpell().isEmpty()) return;
+        if (spellContext.hasRemainingSpell()) return;
         int total = 3 + stats.getBuffCount(AugmentSplit.INSTANCE);
-        Spell newSpell = spellContext.getRemainingSpell();
-        SpellContext newContext = resolver.spellContext.makeChildContext().withSpell(newSpell.mutable().add(0, MethodProjectile.INSTANCE).immutable());
+        ImmutableList.Builder<AbstractSpellPart> glyphs = ImmutableList.builderWithExpectedSize(1 + spellContext.getUnsafeRemainingSpellRecipeView().size());
+        glyphs.add(MethodProjectile.INSTANCE);
+        for (var glyph : spellContext.getUnsafeRemainingSpellRecipeView()) {
+            glyphs.add(glyph);
+        }
+        var spell = spellContext.getSpell();
+        Spell newSpell = new Spell(spell.name(), spell.color(), spell.sound(), glyphs.build());
+        SpellContext newContext = resolver.spellContext.makeChildContext().withSpell(newSpell);
         spellContext.setCanceled(true);
         for (int i = 0; i < total; i++) {
             EntityOrbitProjectile wardProjectile = new EntityOrbitProjectile(world, resolver.getNewResolver(newContext), rayTraceResult.getEntity());

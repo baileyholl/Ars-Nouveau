@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.event.DelayedSpellEvent;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
@@ -18,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SpellContext implements Cloneable {
@@ -109,8 +111,7 @@ public class SpellContext implements Cloneable {
      * The new context will have its previous context set to this context.
      */
     public @NotNull SpellContext makeChildContext() {
-        Spell remainder = getRemainingSpell();
-        for(AbstractSpellPart spellPart : remainder.recipe()){
+        for (AbstractSpellPart spellPart : this.getUnsafeRemainingSpellRecipeView()) {
             if(spellPart instanceof IContextManipulator manipulator){
                 boolean shouldPush = manipulator.shouldPushContext(this);
                 SpellContext newContext = manipulator.manipulate(this);
@@ -120,9 +121,10 @@ public class SpellContext implements Cloneable {
                 }
             }
         }
+
         SpellContext newContext = this.clone();
         newContext.previousContext = this;
-        newContext.spell = remainder;
+        newContext.spell = this.getRemainingSpell();
         newContext.currentIndex = 0;
         return newContext;
     }
@@ -202,8 +204,7 @@ public class SpellContext implements Cloneable {
         isCanceled = canceled;
         this.cancelReason = cancelReason;
         if(isCanceled) {
-            Spell remainder = getRemainingSpell();
-            for (AbstractSpellPart spellPart : remainder.recipe()) {
+            for (AbstractSpellPart spellPart : this.getUnsafeRemainingSpellRecipeView()) {
                 boolean keepChecking = spellPart.contextCanceled(this);
                 if (!keepChecking) {
                     break;
@@ -239,15 +240,35 @@ public class SpellContext implements Cloneable {
     }
 
     /**
+     * Returns true if the spell is not fully resolved.
+     */
+    public boolean hasRemainingSpell() {
+        return getCurrentIndex() < spell.unsafeList().size();
+    }
+
+    /**
      * Returns a new copy of the spell with the recipe set to the remainder of the unresolved spell.
      */
     public @NotNull Spell getRemainingSpell() {
-        Spell.Mutable remainder = getSpell().mutable();
-        var spell = getSpell().mutable();
-        if (getCurrentIndex() >= spell.recipe.size())
-            return remainder.setRecipe(new ArrayList<>()).immutable();
+        if (!this.hasRemainingSpell()) {
+            Spell spell = getSpell();
+            return new Spell(spell.name(), spell.color(), spell.sound(), ImmutableList.of());
+        }
 
-        return remainder.setRecipe(new ArrayList<>(spell.recipe.subList(getCurrentIndex(), spell.recipe.size()))).immutable();
+        Spell spell = getSpell();
+        return new Spell(spell.name(), spell.color(), spell.sound(), ImmutableList.copyOf(spell.unsafeList().subList(getCurrentIndex(), spell.unsafeList().size())));
+    }
+
+    /**
+     * Returns a view of the remainder of the unresolved spell.
+     */
+    public @NotNull List<AbstractSpellPart> getUnsafeRemainingSpellRecipeView() {
+        if (!this.hasRemainingSpell()) {
+            return List.of();
+        }
+
+        Spell spell = getSpell();
+        return spell.unsafeList().subList(getCurrentIndex(), spell.unsafeList().size());
     }
 
     public @Nullable SpellContext getPreviousContext(){
@@ -259,7 +280,7 @@ public class SpellContext implements Cloneable {
         try {
             SpellContext clone = (SpellContext) super.clone();
             clone.spell = this.spell;
-            clone.colors = this.colors.clone();
+            clone.colors = this.colors.copy();
             clone.tag = this.tag.copy();
             clone.caster = this.caster;
             clone.castingTile = this.castingTile;

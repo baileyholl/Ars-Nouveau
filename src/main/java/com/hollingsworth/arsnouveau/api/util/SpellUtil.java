@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.util;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import it.unimi.dsi.fastutil.objects.ObjectLists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -86,6 +87,14 @@ public class SpellUtil {
 
     // https://github.com/SlimeKnights/TinkersConstruct/blob/1.12/src/main/java/slimeknights/tconstruct/library/utils/ToolHelper.java
     public static List<BlockPos> calcAOEBlocks(Vec3i facingVec, BlockPos origin, BlockHitResult mop, int width, int height, int depth, int distance) {
+        if (width == 0 || height == 0 || depth == 0) {
+            return List.of();
+        }
+
+        if (width == 1 && height == 1 && depth == 1) {
+            return ObjectLists.singleton(origin);
+        }
+
         // we know the block and we know which side of the block we're hitting. time to calculate the depth along the different axes
         int x, y, z;
         BlockPos start = origin;
