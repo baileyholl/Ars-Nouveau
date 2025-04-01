@@ -280,7 +280,7 @@ public class SpellContext implements Cloneable {
         try {
             SpellContext clone = (SpellContext) super.clone();
             clone.spell = this.spell;
-            clone.colors = this.colors.clone();
+            clone.colors = this.colors;
             clone.tag = this.tag.copy();
             clone.caster = this.caster;
             clone.castingTile = this.castingTile;

@@ -125,9 +125,10 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
     }
 
     public static boolean canFall(Level level, BlockPos pos, Entity owner, SpellStats spellStats) {
-        if (level.isEmptyBlock(pos)
+        var state = level.getBlockState(pos);
+        if (state.isAir()
                 || !level.getFluidState(pos).isEmpty()
-                || level.getBlockState(pos).is(BlockTagProvider.RELOCATION_NOT_SUPPORTED)
+                || state.is(BlockTagProvider.RELOCATION_NOT_SUPPORTED)
                 || (level.getBlockEntity(pos) != null && !(level.getBlockEntity(pos) instanceof MageBlockTile
                 || level.getBlockEntity(pos) instanceof SkullBlockEntity))) {
             return false;
