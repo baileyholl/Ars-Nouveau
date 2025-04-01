@@ -29,9 +29,15 @@ public class LevelPosMap {
     }
 
     public void applyForRange(Level level, Vec3 atPos, double distanceFrom, Function<BlockPos, Boolean> breakEarlyFunction){
-        String key = level.dimension().location().toString();
-        if (posMap.isEmpty() || !posMap.containsKey(key))
+        if (posMap.isEmpty()) {
             return;
+        }
+
+        String key = level.dimension().location().toString();
+        if (!posMap.containsKey(key)) {
+            return;
+        }
+
         Set<BlockPos> worldList = posMap.getOrDefault(key, new HashSet<>());
         List<BlockPos> stale = new ArrayList<>();
         for (BlockPos p : worldList) {
