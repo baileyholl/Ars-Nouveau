@@ -38,11 +38,11 @@ public class SpellStats {
 
     private List<AbstractAugment> augments;
 
-    private List<ItemStack> modifierItems;
+    private ArrayList<ItemStack> modifierItems;
 
     private SpellStats() {
         augments = new ArrayList<>();
-        modifierItems = new ArrayList<>();
+        modifierItems = new ArrayList<>(6);
     }
 
     public int getDurationInTicks() {
@@ -127,8 +127,19 @@ public class SpellStats {
         return modifierItems;
     }
 
-    public void setModifierItems(List<ItemStack> modifierItems) {
+    public void setModifierItems(ArrayList<ItemStack> modifierItems) {
         this.modifierItems = modifierItems;
+    }
+
+    @Deprecated
+    public void setModifierItems(List<ItemStack> modifierItems) {
+        if (modifierItems instanceof ArrayList<ItemStack> arrayList) {
+            this.setModifierItems(arrayList);
+            return;
+        }
+
+        this.modifierItems.clear();
+        this.modifierItems.addAll(modifierItems);
     }
 
     public boolean isSensitive() {
@@ -190,15 +201,8 @@ public class SpellStats {
             if (entity == null)
                 return this;
             var handler = CuriosUtil.getAllWornItems(entity);
-
-            if (spellStats.modifierItems instanceof ArrayList<ItemStack> arrayList) {
-                arrayList.ensureCapacity(6);
-            }
-
             if (handler != null) {
-                if (spellStats.modifierItems instanceof ArrayList<ItemStack> arrayList) {
-                    arrayList.ensureCapacity(6 + handler.getSlots());
-                }
+                spellStats.modifierItems.ensureCapacity(6 + handler.getSlots());
                 for (int i = 0; i < handler.getSlots(); i++) {
                     ItemStack item = handler.getStackInSlot(i);
                     spellStats.modifierItems.add(item);
@@ -268,8 +272,18 @@ public class SpellStats {
             return this;
         }
 
-        public Builder setItems(List<ItemStack> items) {
+        public Builder setItems(ArrayList<ItemStack> items) {
             spellStats.modifierItems = items;
+            return this;
+        }
+
+        public Builder setItems(List<ItemStack> items) {
+            if (items instanceof ArrayList<ItemStack> arrayList) {
+                return this.setItems(arrayList);
+            }
+
+            spellStats.modifierItems.clear();
+            spellStats.modifierItems.addAll(items);
             return this;
         }
 
