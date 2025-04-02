@@ -10,7 +10,9 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import oshi.util.tuples.Pair;
 
 import javax.annotation.Nullable;
@@ -57,10 +59,33 @@ public class PerkUtil {
         return perkInstances;
     }
 
-    public static List<PerkInstance> getPerksFromLiving(LivingEntity player){
+    public static List<PerkInstance> getPerksFromLiving(LivingEntity entity){
         List<PerkInstance> perkInstances = new ArrayList<>();
-        for(ItemStack stack : player.getArmorSlots()){
-            perkInstances.addAll(getPerksFromItem(stack));
+        if (entity instanceof Player player) {
+            for (ItemStack stack : player.inventory.armor) {
+                perkInstances = addItemPerkInstances(perkInstances, stack);
+            }
+        } else {
+            for (ItemStack stack : entity.getArmorSlots()) {
+                perkInstances = addItemPerkInstances(perkInstances, stack);
+            }
+        }
+        return perkInstances;
+    }
+
+    @NotNull
+    private static List<PerkInstance> addItemPerkInstances(List<PerkInstance> perkInstances, ItemStack stack) {
+        var newPerks = getPerksFromItem(stack);
+        if (newPerks.isEmpty()) {
+            return perkInstances;
+        }
+        if (perkInstances.isEmpty()) {
+            perkInstances = newPerks;
+            return perkInstances;
+        }
+        for (PerkInstance perk : newPerks) {
+            //noinspection UseBulkOperation
+            perkInstances.add(perk);
         }
         return perkInstances;
     }
