@@ -7,6 +7,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
@@ -49,7 +50,14 @@ public class SpellStats {
     }
 
     public int getBuffCount(AbstractAugment abstractAugment) {
-        return (int) augments.stream().filter(abstractAugment::equals).count();
+        int count = 0;
+        for (AbstractAugment augment : augments) {
+            if (abstractAugment.equals(augment)) {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     public boolean hasBuff(AbstractAugment abstractAugment) {
@@ -182,14 +190,33 @@ public class SpellStats {
             if (entity == null)
                 return this;
             var handler = CuriosUtil.getAllWornItems(entity);
-            if(handler != null){
+
+            if (handler != null) {
+                if (spellStats.modifierItems instanceof ArrayList<ItemStack> arrayList) {
+                    arrayList.ensureCapacity(6 + handler.getSlots());
+                }
                 for (int i = 0; i < handler.getSlots(); i++) {
                     ItemStack item = handler.getStackInSlot(i);
                     spellStats.modifierItems.add(item);
                 }
             }
-            for (ItemStack i : entity.getAllSlots()) {
-                spellStats.modifierItems.add(i);
+            
+            if (spellStats.modifierItems instanceof ArrayList<ItemStack> arrayList) {
+                arrayList.ensureCapacity(6);
+            }
+
+            spellStats.modifierItems.add(entity.getMainHandItem());
+            spellStats.modifierItems.add(entity.getOffhandItem());
+            // Common case that avoids allocating unnecessary Iterables.
+            if (entity instanceof Player player) {
+                for (var armorItem : player.inventory.armor) {
+                    //noinspection UseBulkOperation
+                    spellStats.modifierItems.add(armorItem);
+                }
+            } else {
+                for (ItemStack i : entity.getArmorSlots()) {
+                    spellStats.modifierItems.add(i);
+                }
             }
 
             return this;
