@@ -17,13 +17,12 @@ import java.util.List;
 public interface IPerkHolder<T> {
 
     default List<PerkInstance> getPerkInstances(ItemStack stack){
-        List<PerkInstance> perkInstances = new ArrayList<>();
         List<PerkSlot> slots = new ArrayList<>(getSlotsForTier(stack));
         List<IPerk> perks = getPerks();
-        for(int i = 0; i < slots.size(); i++){
-            if(i < perks.size()) {
-                perkInstances.add(new PerkInstance(slots.get(i), perks.get(i)));
-            }
+        int max = Math.min(slots.size(), perks.size());
+        List<PerkInstance> perkInstances = new ArrayList<>(max);
+        for (int i = 0; i < max; i++) {
+            perkInstances.add(new PerkInstance(slots.get(i), perks.get(i)));
         }
         return perkInstances;
     }
