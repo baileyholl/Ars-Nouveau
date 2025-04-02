@@ -17,7 +17,7 @@ import java.util.List;
 public interface IPerkHolder<T> {
 
     default List<PerkInstance> getPerkInstances(ItemStack stack){
-        List<PerkSlot> slots = new ArrayList<>(getSlotsForTier(stack));
+        List<PerkSlot> slots = getSlotsForTier(stack);
         List<IPerk> perks = getPerks();
         int max = Math.min(slots.size(), perks.size());
         List<PerkInstance> perkInstances = new ArrayList<>(max);
