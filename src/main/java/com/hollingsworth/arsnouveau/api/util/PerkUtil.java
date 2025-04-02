@@ -50,13 +50,11 @@ public class PerkUtil {
     }
 
     public static List<PerkInstance> getPerksFromItem(ItemStack stack){
-        List<PerkInstance> perkInstances = new ArrayList<>();
         var data = stack.get(DataComponentRegistry.ARMOR_PERKS);
         if(data == null){
-            return perkInstances;
+            return new ArrayList<>();
         }
-        perkInstances.addAll(data.getPerkInstances(stack));
-        return perkInstances;
+        return data.getPerkInstances(stack);
     }
 
     public static List<PerkInstance> getPerksFromLiving(LivingEntity entity){
