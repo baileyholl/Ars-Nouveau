@@ -6,10 +6,10 @@ import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.item.inv.SlotReference;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
+import com.hollingsworth.arsnouveau.api.util.GenericRecipeCache;
 import com.hollingsworth.arsnouveau.api.util.IWololoable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
-import com.hollingsworth.arsnouveau.common.entity.debug.FixedStack;
 import com.hollingsworth.arsnouveau.common.mixin.MobAccessor;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
@@ -27,11 +27,9 @@ import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.DyedItemColor;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
@@ -53,8 +51,8 @@ public class EffectWololo extends AbstractEffect {
         super("wololo", "Wololo");
     }
 
-    public static int MAX_RECIPE_CACHE = 16;
-    public static FixedStack<CraftingRecipe> recipeCache = new FixedStack<>(MAX_RECIPE_CACHE);
+    public static int MAX_RECIPE_CACHE = 32;
+    public static GenericRecipeCache<CraftingRecipe, CraftingInput> recipeCache = new GenericRecipeCache<>(RecipeType.CRAFTING, MAX_RECIPE_CACHE);
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
@@ -66,7 +64,7 @@ public class EffectWololo extends AbstractEffect {
             if (itemEntity.getItem().getItem() instanceof IDyeable iDyeable)
                 iDyeable.onDye(itemEntity.getItem(), dye.getDyeColor());
             else if (itemEntity.getItem().getItem() instanceof BlockItem blockItem) {
-                ItemStack result = getDyedResult((ServerLevel) world, makeContainer(dye, blockItem));
+                ItemStack result = getDyedResult((ServerLevel) world, makeInput(dye, blockItem));
                 result.setCount(itemEntity.getItem().getCount());
                 if (!result.isEmpty() && result.getItem() instanceof BlockItem) {
                     itemEntity.setItem(result);
@@ -136,11 +134,11 @@ public class EffectWololo extends AbstractEffect {
                 // Try block + dye
                 BlockState hitBlock = world.getBlockState(blockPos);
                 if (hitBlock.isAir()) return;
-                ItemStack result = getDyedResult((ServerLevel) world, makeContainer(dye, hitBlock.getBlock()));
+                ItemStack result = getDyedResult((ServerLevel) world, makeInput(dye, hitBlock.getBlock()));
                 BlockItem blockItem;
                 if (result.isEmpty() || !(result.getItem() instanceof BlockItem)) {
                     // Try blocks surrounding the dye
-                    result = getDyedResult((ServerLevel) world, makeContainer8(dye, hitBlock.getBlock()));
+                    result = getDyedResult((ServerLevel) world, makeInput8(dye, hitBlock.getBlock()));
                     if (result.isEmpty() || !(result.getItem() instanceof BlockItem)) return;
                 }
                 blockItem = (BlockItem) result.getItem();
@@ -151,58 +149,25 @@ public class EffectWololo extends AbstractEffect {
     }
 
     @NotNull
-    private ItemStack getDyedResult(ServerLevel world, CraftingContainer craftingcontainer) {
-        Optional<CraftingRecipe> recipe = recipeCache.stream().filter(craftingRecipe -> craftingRecipe.matches(craftingcontainer.asCraftInput(), world)).findFirst();
-        if (recipe.isPresent()) {
-            recipeCache.add(recipe.get());
-            return recipe.get().assemble(craftingcontainer.asCraftInput(), world.registryAccess());
+    private ItemStack getDyedResult(ServerLevel world, CraftingInput input) {
+        var recipe = recipeCache.get(world, input);
+        if (recipe == null) {
+            return ItemStack.EMPTY;
         }
-        return world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingcontainer.asCraftInput(), world).map(craftingRecipe -> craftingRecipe.value().assemble(craftingcontainer.asCraftInput(), world.registryAccess())).orElse(ItemStack.EMPTY);
+
+        return recipe.value().assemble(input, world.registryAccess());
     }
 
-    private static CraftingContainer makeContainer(DyeItem targetColor, ItemLike blockToDye) {
-        CraftingContainer craftingcontainer = new TransientCraftingContainer(new AbstractContainerMenu(null, -1) {
-            /**
-             * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the
-             * player inventory and the other inventory(s).
-             */
-            public @NotNull ItemStack quickMoveStack(@NotNull Player p_218264_, int p_218265_) {
-                return ItemStack.EMPTY;
-            }
-
-            /**
-             * Determines whether supplied player can use this container
-             */
-            public boolean stillValid(@NotNull Player p_29888_) {
-                return false;
-            }
-        }, 2, 1);
-        craftingcontainer.setItem(0, new ItemStack(targetColor));
-        craftingcontainer.setItem(1, new ItemStack(blockToDye));
-        return craftingcontainer;
+    private static CraftingInput makeInput(DyeItem targetColor, ItemLike blockToDye) {
+        return CraftingInput.of(2, 1, List.of(new ItemStack(targetColor), new ItemStack(blockToDye)));
     }
 
-    private static CraftingContainer makeContainer8(DyeItem targetColor, Block blockToDye) {
-        CraftingContainer craftingcontainer = new TransientCraftingContainer(new AbstractContainerMenu(null, -1) {
-            /**
-             * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the
-             * player inventory and the other inventory(s).
-             */
-            public @NotNull ItemStack quickMoveStack(@NotNull Player p_218264_, int p_218265_) {
-                return ItemStack.EMPTY;
-            }
-
-            /**
-             * Determines whether supplied player can use this container
-             */
-            public boolean stillValid(@NotNull Player p_29888_) {
-                return false;
-            }
-        }, 3, 3);
+    private static CraftingInput makeInput8(DyeItem targetColor, Block blockToDye) {
+        List<ItemStack> items = new ArrayList<>(9);
         for (int i = 0; i < 9; i++) {
-            craftingcontainer.setItem(i, i == 4 ? new ItemStack(targetColor) : new ItemStack(blockToDye));
+            items.add(i == 4 ? new ItemStack(targetColor) : new ItemStack(blockToDye));
         }
-        return craftingcontainer;
+        return CraftingInput.of(3, 3, items);
     }
 
     private DyeItem getRandomDye(RandomSource random) {
