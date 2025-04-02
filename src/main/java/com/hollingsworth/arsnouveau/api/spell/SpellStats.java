@@ -191,10 +191,6 @@ public class SpellStats {
                 return this;
             var handler = CuriosUtil.getAllWornItems(entity);
 
-            if (spellStats.modifierItems instanceof ArrayList<ItemStack> arrayList) {
-                arrayList.ensureCapacity(6);
-            }
-
             if (handler != null) {
                 if (spellStats.modifierItems instanceof ArrayList<ItemStack> arrayList) {
                     arrayList.ensureCapacity(6 + handler.getSlots());
@@ -203,6 +199,10 @@ public class SpellStats {
                     ItemStack item = handler.getStackInSlot(i);
                     spellStats.modifierItems.add(item);
                 }
+            }
+            
+            if (spellStats.modifierItems instanceof ArrayList<ItemStack> arrayList) {
+                arrayList.ensureCapacity(6);
             }
 
             spellStats.modifierItems.add(entity.getMainHandItem());
