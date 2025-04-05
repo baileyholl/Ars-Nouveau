@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.item.inv.IMapInventory;
 import com.hollingsworth.arsnouveau.api.item.inv.SlotCache;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -15,6 +16,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
@@ -32,10 +34,7 @@ import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class RepositoryTile extends RandomizableContainerBlockEntity implements GeoBlockEntity, ITooltipProvider, IMapInventory {
@@ -136,28 +135,31 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
         return 54;
     }
 
-    public void invalidateNetwork(){
-        if(level.isClientSide){
+    public void invalidateNetwork() {
+        if (!(level instanceof ServerLevel serverLevel)) {
             return;
         }
-        Set<BlockPos> visited = new HashSet<>();
-        invalidateNetwork(visited);
-    }
 
-    protected void invalidateNetwork(Set<BlockPos> visited){
-        visited.add(worldPosition);
-        for(Direction direction : Direction.values()){
-            BlockPos pos = worldPosition.relative(direction);
-            if(!visited.contains(pos)){
-                visited.add(pos);
-                if(!level.isLoaded(pos)){
-                    continue;
-                }
-                BlockEntity neighbor = level.getBlockEntity(pos);
-                if(neighbor instanceof RepositoryTile repositoryTile){
-                    repositoryTile.invalidateNetwork(visited);
-                }else if(neighbor instanceof RepositoryCatalogTile controllerTile){
-                    controllerTile.invalidateNetwork();
+        Set<Long> visited = new LongOpenHashSet();
+        visited.add(worldPosition.asLong());
+        List<BlockPos> stack = new ArrayList<>(8);
+        stack.add(worldPosition);
+
+        while (!stack.isEmpty()) {
+            var toExplore = stack.removeLast();
+            for (Direction direction : Direction.values()) {
+                BlockPos pos = toExplore.relative(direction);
+                if (visited.add(pos.asLong())) {
+                    if (!level.isLoaded(pos)) {
+                        continue;
+                    }
+
+                    BlockEntity neighbor = serverLevel.getBlockEntity(pos);
+                    if (neighbor instanceof RepositoryTile) {
+                        stack.add(pos);
+                    } else if (neighbor instanceof RepositoryCatalogTile controllerTile) {
+                        controllerTile.invalidateNetwork();
+                    }
                 }
             }
         }
