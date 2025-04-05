@@ -22,12 +22,6 @@ public class TakeItemState extends TravelToPosState{
 
     @Override
     public StarbyState onDestinationReached() {
-        Level world = starbuncle.level;
-        BlockEntity tileEntity = world.getBlockEntity(targetPos);
-        if (tileEntity == null) {
-            starbuncle.addGoalDebug(this, new DebugEvent("TakePosBroken", "Take Tile Broken" ));
-            return nextState;
-        }
         IItemHandler iItemHandler = behavior.getItemCapFromTile(targetPos, behavior.FROM_DIRECTION_MAP.get(targetPos.hashCode()));
         if (iItemHandler == null) {
             starbuncle.addGoalDebug(this, new DebugEvent("NoItemHandler", "No item handler at " + targetPos.toString()));
