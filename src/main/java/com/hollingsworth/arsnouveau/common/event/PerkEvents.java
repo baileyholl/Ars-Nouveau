@@ -42,6 +42,8 @@ public class PerkEvents {
 
         if (fromInstances.equals(toInstances)) return;
 
+        PerkUtil.LIVING_CACHE.remove(event.getEntity());
+
         LivingEntity entity = event.getEntity();
 
         ArrayList<IPerk> playerPerks = PerkUtil.getPerksFromLiving(entity).stream().map(PerkInstance::getPerk).collect(Collectors.toCollection(ArrayList::new));

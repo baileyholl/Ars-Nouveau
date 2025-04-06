@@ -148,9 +148,9 @@ public class SpellStats {
             }
 
             for (ItemStack stack : spellStats.modifierItems) {
-                if (stack.getItem() instanceof ISpellModifierItem) {
+                if (stack.getItem() instanceof ISpellModifierItem item) {
                     for (int i = 0; i < stack.getCount(); i++) {
-                        ((ISpellModifierItem) stack.getItem()).applyItemModifiers(stack, this, spellPart, rayTraceResult, world, shooter, spellContext);
+                        item.applyItemModifiers(stack, this, spellPart, rayTraceResult, world, shooter, spellContext);
                     }
                 }
             }

@@ -17,7 +17,9 @@ import oshi.util.tuples.Pair;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PerkUtil {
 
@@ -57,18 +59,22 @@ public class PerkUtil {
         return data.getPerkInstances(stack);
     }
 
-    public static List<PerkInstance> getPerksFromLiving(LivingEntity entity){
-        List<PerkInstance> perkInstances = new ArrayList<>();
-        if (entity instanceof Player player) {
-            for (ItemStack stack : player.inventory.armor) {
-                perkInstances = addItemPerkInstances(perkInstances, stack);
+    public static final Map<LivingEntity, List<PerkInstance>> LIVING_CACHE = new HashMap<>();
+
+    public static List<PerkInstance> getPerksFromLiving(LivingEntity entity) {
+        return LIVING_CACHE.computeIfAbsent(entity, e -> {
+            List<PerkInstance> perkInstances = new ArrayList<>();
+            if (entity instanceof Player player) {
+                for (ItemStack stack : player.inventory.armor) {
+                    perkInstances = addItemPerkInstances(perkInstances, stack);
+                }
+            } else {
+                for (ItemStack stack : entity.getArmorSlots()) {
+                    perkInstances = addItemPerkInstances(perkInstances, stack);
+                }
             }
-        } else {
-            for (ItemStack stack : entity.getArmorSlots()) {
-                perkInstances = addItemPerkInstances(perkInstances, stack);
-            }
-        }
-        return perkInstances;
+            return perkInstances;
+        });
     }
 
     @NotNull
