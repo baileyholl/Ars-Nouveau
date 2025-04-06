@@ -141,6 +141,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         EnchantedFallingBlock fallingblockentity;
         if (level.getBlockEntity(pos) instanceof MageBlockTile tile) {
             fallingblockentity = new EnchantedMageblock(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, blockState.hasProperty(BlockStateProperties.WATERLOGGED) ? blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE) : blockState);
+            fallingblockentity.resolver = resolver;
             fallingblockentity.blockData = tile.saveWithoutMetadata(level.registryAccess());
             fallingblockentity.setColor(tile.color);
         } else if (level.getBlockEntity(pos) instanceof SkullBlockEntity tile) {
