@@ -86,72 +86,72 @@ public class PerkEvents {
 
     @SubscribeEvent
     public static void onSpellCast(SpellCastEvent spellCastEvent){
-        PerkUtil.getPerksFromLiving(spellCastEvent.getEntity()).forEach(perkInstance -> {
+        for (PerkInstance perkInstance : PerkUtil.getPerksFromLiving(spellCastEvent.getEntity())) {
             IPerk perk = perkInstance.getPerk();
-            if (perk instanceof IEffectResolvePerk) {
-                ((IEffectResolvePerk) perk).onSpellCast(spellCastEvent, perkInstance);
+            if (perk instanceof IEffectResolvePerk effectResolvePerk) {
+                effectResolvePerk.onSpellCast(spellCastEvent, perkInstance);
             }
-        });
+        }
     }
 
     @SubscribeEvent
     public static void preSpellResolve(final SpellResolveEvent.Pre event){
-        PerkUtil.getPerksFromLiving(event.shooter).forEach(perkInstance -> {
+        for (PerkInstance perkInstance : PerkUtil.getPerksFromLiving(event.shooter)) {
             IPerk perk = perkInstance.getPerk();
-            if (perk instanceof IEffectResolvePerk) {
-                ((IEffectResolvePerk) perk).onSpellPreResolve(event, perkInstance);
+            if (perk instanceof IEffectResolvePerk effectResolvePerk) {
+                effectResolvePerk.onSpellPreResolve(event, perkInstance);
             }
-        });
+        }
     }
 
     @SubscribeEvent
     public static void postSpellResolve(final SpellResolveEvent.Post event){
-        PerkUtil.getPerksFromLiving(event.shooter).forEach(perkInstance -> {
+        for (PerkInstance perkInstance : PerkUtil.getPerksFromLiving(event.shooter)) {
             IPerk perk = perkInstance.getPerk();
-            if (perk instanceof IEffectResolvePerk) {
-                ((IEffectResolvePerk) perk).onSpellPostResolve(event, perkInstance);
+            if (perk instanceof IEffectResolvePerk effectResolvePerk) {
+                effectResolvePerk.onSpellPostResolve(event, perkInstance);
             }
-        });
+        }
     }
 
     @SubscribeEvent
     public static void preEffectResolve(final EffectResolveEvent.Pre event){
-        PerkUtil.getPerksFromLiving(event.shooter).forEach(perkInstance -> {
+        for (PerkInstance perkInstance : PerkUtil.getPerksFromLiving(event.shooter)) {
             IPerk perk = perkInstance.getPerk();
-            if (perk instanceof IEffectResolvePerk) {
-                ((IEffectResolvePerk) perk).onEffectPreResolve(event, perkInstance);
+            if (perk instanceof IEffectResolvePerk effectResolvePerk) {
+                effectResolvePerk.onEffectPreResolve(event, perkInstance);
             }
-        });
+        }
     }
 
     @SubscribeEvent
     public static void postEffectResolve(final EffectResolveEvent.Post event){
-        PerkUtil.getPerksFromLiving(event.shooter).forEach(perkInstance -> {
+        for (PerkInstance perkInstance : PerkUtil.getPerksFromLiving(event.shooter)) {
             IPerk perk = perkInstance.getPerk();
-            if (perk instanceof IEffectResolvePerk) {
-                ((IEffectResolvePerk) perk).onEffectPostResolve(event, perkInstance);
+            if (perk instanceof IEffectResolvePerk effectResolvePerk) {
+                effectResolvePerk.onEffectPostResolve(event, perkInstance);
             }
-        });
+        }
     }
 
     @SubscribeEvent
     public static void preSpellDamageEvent(final SpellDamageEvent.Pre event) {
-        PerkUtil.getPerksFromLiving(event.caster).forEach(perkInstance -> {
+        for (PerkInstance perkInstance : PerkUtil.getPerksFromLiving(event.caster)) {
             IPerk perk = perkInstance.getPerk();
-            if (perk instanceof IEffectResolvePerk) {
-                ((IEffectResolvePerk) perk).onPreSpellDamageEvent(event, perkInstance);
+            if (perk instanceof IEffectResolvePerk effectResolvePerk) {
+                effectResolvePerk.onPreSpellDamageEvent(event, perkInstance);
             }
-        });
+        }
     }
 
     @SubscribeEvent
     public static void postSpellDamageEvent(final SpellDamageEvent.Post event) {
-        PerkUtil.getPerksFromLiving(event.caster).forEach(perkInstance -> {
+        for (PerkInstance perkInstance : PerkUtil.getPerksFromLiving(event.caster)) {
             IPerk perk = perkInstance.getPerk();
-            if (perk instanceof IEffectResolvePerk) {
-                ((IEffectResolvePerk) perk).onPostSpellDamageEvent(event, perkInstance);
+            if (perk instanceof IEffectResolvePerk effectResolvePerk) {
+                effectResolvePerk.onPostSpellDamageEvent(event, perkInstance);
             }
-        });
+        }
     }
 
     @SubscribeEvent
