@@ -17,6 +17,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.StringRepresentable;
@@ -55,7 +56,25 @@ import java.util.stream.Stream;
 public class DefaultTableProvider extends LootTableProvider {
 
     public DefaultTableProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pRegistries) {
-        super(pOutput, new HashSet<>(), List.of(new LootTableProvider.SubProviderEntry(BlockLootTable::new, LootContextParamSets.BLOCK), new LootTableProvider.SubProviderEntry(EntityLootTable::new, LootContextParamSets.ENTITY)), pRegistries);
+        super(pOutput, new HashSet<>(), List.of(new LootTableProvider.SubProviderEntry(MyLootTableSubProvider::new, LootContextParamSets.ENTITY), new LootTableProvider.SubProviderEntry(BlockLootTable::new, LootContextParamSets.BLOCK), new LootTableProvider.SubProviderEntry(EntityLootTable::new, LootContextParamSets.ENTITY)), pRegistries);
+    }
+
+    public static class MyLootTableSubProvider implements LootTableSubProvider {
+        public List<Block> list = new ArrayList<>();
+        HolderLookup.Provider lookupProvider;
+
+        public MyLootTableSubProvider(HolderLookup.Provider lookupProvider) {
+            this.lookupProvider = lookupProvider;
+        }
+
+        @Override
+        public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> consumer) {
+            consumer.accept(ResourceKey.create(Registries.LOOT_TABLE, ArsNouveau.prefix("dispel_witch")), LootTable.lootTable()
+                    .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))
+                    .withPool(LootPool.lootPool()
+                            .add(LootItem.lootTableItem(ItemsRegistry.WIXIE_SHARD))
+                            .setRolls(ConstantValue.exactly(1))));
+        }
     }
 
     private static final float[] DEFAULT_SAPLING_DROP_RATES = new float[]{0.05F, 0.0625F, 0.083333336F, 0.1F};
@@ -259,6 +278,7 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.SMOOTH_SOURCESTONE_GRATE);
             registerDropSelf(BlockRegistry.SOURCESTONE_GRATE);
             registerDropSelf(BlockRegistry.SOURCE_LAMP);
+            registerDropSelf(BlockRegistry.REPOSITORY_CONTROLLER);
         }
 
         protected LootTable.Builder createCropDrops(Block pCropBlock, Item pGrownCropItem, Item pSeedsItem, LootItemCondition.Builder pDropGrownCropCondition, int bonus) {

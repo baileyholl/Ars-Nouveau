@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.client.container.CraftingTerminalMenu;
 import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.SetTerminalSettingsPacket;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -9,12 +11,12 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.item.Item;
@@ -171,7 +173,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 		return craftingResults.computeIfAbsent(uuid, (key) -> new ResultContainer());
 	}
 
-	public void craftShift(Player player, @Nullable String tab) {
+	public void craftShift(ServerPlayer player, @Nullable String tab) {
 		ResultContainer craftResult = getCraftResult(player);
 		TransientCustomContainer craftMatrix = getCraftingInv(player);
 
@@ -199,7 +201,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 		EventHooks.firePlayerCraftingEvent(player, copyStack, craftMatrix);
 	}
 
-	public void craft(Player thePlayer, @Nullable String tab) {
+	public void craft(ServerPlayer thePlayer, @Nullable String tab) {
 		TransientCustomContainer craftMatrix = getCraftingInv(thePlayer);
 
 		if(currentRecipe == null) {
@@ -268,13 +270,19 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 	}
 
 	protected void onCraftingMatrixChanged(UUID uuid) {
+		if(sortSettings.expanded()) {
+			setSorting(sortSettings.setExpanded(false));
+			Player player = level.getPlayerByUUID(uuid);
+			if(player instanceof ServerPlayer serverPlayer) {
+				Networking.sendToPlayerClient(new SetTerminalSettingsPacket(sortSettings, searches.get(uuid)), serverPlayer);
+			}
+		}
 		ResultContainer craftResult = getCraftResult(uuid);
 		TransientCustomContainer craftMatrix = getCraftingInv(uuid);
 
 		if (currentRecipe == null || !currentRecipe.matches(craftMatrix.asCraftInput(), level)) {
 			var holder = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftMatrix.asCraftInput(), level).orElse(null);
 			currentRecipe = holder == null ? null : holder.value();
-
 		}
 
 		if (currentRecipe == null) {
@@ -310,34 +318,38 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 			if (ingredient == null) {
 				continue;
 			}
-			Map<Item, Long> inv = itemCounts;
-			// sort ingredient by the amount of items in the inv map
-			ingredient = Arrays.stream(ingredient).filter(Objects::nonNull).sorted(Comparator.comparingLong(a -> inv.getOrDefault(((ItemStack)a).getItem(), 0L)).reversed()).toArray(ItemStack[]::new);
 
-			// Sort ingredient by the amount of items in this inventory
 			ItemStack stack = ItemStack.EMPTY;
 			for (ItemStack itemStack : ingredient) {
-				ItemStack pulled = pullStack(itemStack, tab);
-				if (!pulled.isEmpty()) {
-					stack = pulled;
+				boolean br = false;
+				Inventory playerInv = player.getInventory();
+				for (int k = 0; k < playerInv.getContainerSize(); k++) {
+					if (ItemStack.isSameItem(playerInv.getItem(k), itemStack)) {
+						stack = playerInv.removeItem(k, 1);
+						br = true;
+						break;
+					}
+				}
+				if (br) {
 					break;
 				}
 			}
+
 			if (stack.isEmpty()) {
+				Map<Item, Long> inv = itemCounts;
+				// sort ingredient by the amount of items in the inv map
+				ingredient = Arrays.stream(ingredient).filter(Objects::nonNull).sorted(Comparator.comparingLong(a -> inv.getOrDefault(((ItemStack)a).getItem(), 0L)).reversed()).toArray(ItemStack[]::new);
+
+				// Sort ingredient by the amount of items in this inventory
 				for (ItemStack itemStack : ingredient) {
-					boolean br = false;
-					Inventory playerInv = player.getInventory();
-					for (int k = 0; k < playerInv.getContainerSize(); k++) {
-						if (ItemStack.isSameItem(playerInv.getItem(k), itemStack)) {
-							stack = playerInv.removeItem(k, 1);
-							br = true;
-							break;
-						}
-					}
-					if (br)
+					ItemStack pulled = pullStack(itemStack, tab);
+					if (!pulled.isEmpty()) {
+						stack = pulled;
 						break;
+					}
 				}
 			}
+
 			if (!stack.isEmpty()) {
 				craftMatrix.setItem(i, stack);
 			}

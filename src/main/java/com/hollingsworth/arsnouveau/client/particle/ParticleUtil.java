@@ -74,7 +74,7 @@ public class ParticleUtil {
         while ((d4 + .65) < d3) {
             d4 += 1.8D - d5 + r.nextDouble() * (1.5D - d5);
             if (world.isClientSide)
-                world.addParticle(ParticleTypes.ENCHANT, x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, 0.0D, 0.0D, 0.0D);
+                world.addAlwaysVisibleParticle(ParticleTypes.ENCHANT, true, x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, 0.0D, 0.0D, 0.0D);
             if (world instanceof ServerLevel) {
                 ((ServerLevel) world).sendParticles(ParticleTypes.WITCH, x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, r.nextInt(4), 0, 0.0, 0, 0.0);
             }
@@ -99,7 +99,7 @@ public class ParticleUtil {
             double d0 = loc.getX() + 0.5;
             double d1 = loc.getY() + 1.0;
             double d2 = loc.getZ() + .5;
-            world.addParticle(GlowParticleData.createData(particleColor), d0, d1, d2, (world.random.nextFloat() * 1 - 0.5) / 5, (world.random.nextFloat() * 1 - 0.5) / 5, (world.random.nextFloat() * 1 - 0.5) / 5);
+            world.addAlwaysVisibleParticle(GlowParticleData.createData(particleColor), true, d0, d1, d2, (world.random.nextFloat() * 1 - 0.5) / 5, (world.random.nextFloat() * 1 - 0.5) / 5, (world.random.nextFloat() * 1 - 0.5) / 5);
         }
     }
 
@@ -123,8 +123,8 @@ public class ParticleUtil {
                     double x = blockPos.getX() + ParticleUtil.inRange(-0.5, 0.5) + 0.5;
                     double y = blockPos.getY() + ParticleUtil.inRange(-0.5, 0.5);
                     double z = blockPos.getZ() + ParticleUtil.inRange(-0.5, 0.5) + 0.5;
-                    world.addParticle(ParticleLineData.createData(color),
-                            x, y, z,
+                    world.addAlwaysVisibleParticle(ParticleLineData.createData(color),
+                            true, x, y, z,
                             x, y + ParticleUtil.inRange(0.5, 5), z);
                 }
             }
@@ -196,9 +196,9 @@ public class ParticleUtil {
 
     public static void spawnLight(Level world, ParticleColor color, Vec3 vec, int intensity) {
         for (int i = 0; i < intensity; i++) {
-            world.addParticle(
+            world.addAlwaysVisibleParticle(
                     GlowParticleData.createData(color),
-                    vec.x() + ParticleUtil.inRange(-0.1, 0.1), vec.y() + ParticleUtil.inRange(-0.1, 0.1), vec.z() + ParticleUtil.inRange(-0.1, 0.1),
+                    true, vec.x() + ParticleUtil.inRange(-0.1, 0.1), vec.y() + ParticleUtil.inRange(-0.1, 0.1), vec.z() + ParticleUtil.inRange(-0.1, 0.1),
                     0, 0, 0);
         }
     }

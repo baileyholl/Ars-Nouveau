@@ -30,6 +30,7 @@ public class DamageTypesProvider extends DatapackBuiltinEntriesProvider {
         ctx.register(DamageTypesRegistry.FLARE, new DamageType("fire", 0.1F));
         ctx.register(DamageTypesRegistry.CRUSH, new DamageType("player", 0.1F));
         ctx.register(DamageTypesRegistry.WINDSHEAR, new DamageType("player", 0.1F));
+        ctx.register(DamageTypesRegistry.SOURCE_BERRY_BUSH, new DamageType("sourceberry_bush", 0.1F));
     }
 
     public DamageTypesProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
@@ -69,7 +70,9 @@ public class DamageTypesProvider extends DatapackBuiltinEntriesProvider {
                     .addOptional(DamageTypesRegistry.FLARE.location())
                     .addOptional(DamageTypesRegistry.CRUSH.location())
                     .addOptional(DamageTypesRegistry.WINDSHEAR.location());
-
+            tag(DamageTypeTags.NO_KNOCKBACK).addOptional(DamageTypesRegistry.SOURCE_BERRY_BUSH.location());
+            tag(Tags.DamageTypes.IS_ENVIRONMENT).addOptional(DamageTypesRegistry.SOURCE_BERRY_BUSH.location());
+            tag(Tags.DamageTypes.IS_PHYSICAL).addOptional(DamageTypesRegistry.SOURCE_BERRY_BUSH.location());
         }
     }
 

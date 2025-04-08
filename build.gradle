@@ -25,7 +25,7 @@ java.withSourcesJar()
 
 subsystems {
     parchment {
-        minecraftVersion = "1.21"
+        minecraftVersion = "1.21.1"
         mappingsVersion = project.parchment_version
     }
 }
@@ -157,9 +157,7 @@ dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
 
     implementation "software.bernie.geckolib:geckolib-neoforge-1.21.1:${geckolib_version}"
-    implementation(jarJar(group: 'vazkii.patchouli', name: 'Patchouli', version: '[1.21,)') {
-        jarJar.pin(it, patchouli_version)
-    })
+    compileOnly('vazkii.patchouli:Patchouli:1.21-87-NEOFORGE')
 
     localRuntime "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}"
     compileOnly "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}:api"

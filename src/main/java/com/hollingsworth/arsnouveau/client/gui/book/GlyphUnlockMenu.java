@@ -108,7 +108,7 @@ public class GlyphUnlockMenu extends BaseBook {
             searchBar.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.search").getString());
         searchBar.setResponder((val) -> this.onSearchChanged(val));
         addRenderableWidget(searchBar);
-        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 13, 50, 12, ArsNouveau.prefix("textures/gui/create_icon.png"), this::onSelectClick));
+        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 11, 50, 12, ArsNouveau.prefix("textures/gui/create_icon.png"), this::onSelectClick));
         this.nextButton = addRenderableWidget(new PageButton(bookRight - 20, bookBottom - 10, true, this::onPageIncrease, true));
         this.previousButton = addRenderableWidget(new PageButton(bookLeft - 5, bookBottom - 10, false, this::onPageDec, true));
         updateNextPageButtons();
@@ -123,7 +123,7 @@ public class GlyphUnlockMenu extends BaseBook {
         itemButtons = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             int offset = i >= 5 ? 14 : 0;
-            ItemButton cell = new ItemButton(this, bookLeft + 19 + 24 * i + offset, bookBottom - 47);
+            ItemButton cell = new ItemButton(this, bookLeft + 19 + 24 * i + offset, bookBottom - 43);
             addRenderableWidget(cell);
             itemButtons.add(cell);
         }
@@ -366,10 +366,10 @@ public class GlyphUnlockMenu extends BaseBook {
 
         graphics.drawString(font, orderingTitle, tier1Row > 7 ? 154 : 20, 5 + 18 * (tier1Row + (tier1Row == 1 ? 0 : 1)), -8355712, false);
 
-        graphics.blit(ArsNouveau.prefix("textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15);
+        graphics.blit(ArsNouveau.prefix("textures/gui/create_paper.png"), 216, 175, 0, 0, 56, 15, 56, 15);
 
         graphics.blit(ArsNouveau.prefix("textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15, 72, 15);
-        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.select"), 233, 183, -8355712, false);
+        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.select"), 233, 179, -8355712, false);
     }
 
     public void drawTooltip(GuiGraphics stack, int mouseX, int mouseY) {

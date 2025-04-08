@@ -78,21 +78,26 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
                             aabb = aabb.minmax(passenger.getBoundingBoxForCulling());
                         }
 
-                        for (var endPos : new Vec3[]{
-                                new Vec3(aabb.minX, aabb.minY, aabb.minZ),
-                                new Vec3(aabb.minX, aabb.minY, aabb.maxZ),
-                                new Vec3(aabb.minX, aabb.maxY, aabb.minZ),
-                                new Vec3(aabb.minX, aabb.maxY, aabb.maxZ),
-                                new Vec3(aabb.maxX, aabb.minY, aabb.minZ),
-                                new Vec3(aabb.maxX, aabb.minY, aabb.maxZ),
-                                new Vec3(aabb.maxX, aabb.maxY, aabb.minZ),
-                                new Vec3(aabb.maxX, aabb.maxY, aabb.maxZ),
-                        }) {
-                            var result = level.clip(new ClipContext(startPos, endPos, ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, CollisionContext.empty()));
-                            if (result.getType() == HitResult.Type.MISS || this.getBlockPos() == result.getBlockPos()) {
-                                this.isVisible = true;
-                                break;
+                        if (Double.isFinite(aabb.minX) && Double.isFinite(aabb.minY) && Double.isFinite(aabb.minZ)
+                            && Double.isFinite(aabb.maxX) && Double.isFinite(aabb.maxY) && Double.isFinite(aabb.maxZ)) {
+                            for (var endPos : new Vec3[]{
+                                    new Vec3(aabb.minX, aabb.minY, aabb.minZ),
+                                    new Vec3(aabb.minX, aabb.minY, aabb.maxZ),
+                                    new Vec3(aabb.minX, aabb.maxY, aabb.minZ),
+                                    new Vec3(aabb.minX, aabb.maxY, aabb.maxZ),
+                                    new Vec3(aabb.maxX, aabb.minY, aabb.minZ),
+                                    new Vec3(aabb.maxX, aabb.minY, aabb.maxZ),
+                                    new Vec3(aabb.maxX, aabb.maxY, aabb.minZ),
+                                    new Vec3(aabb.maxX, aabb.maxY, aabb.maxZ),
+                            }) {
+                                var result = level.clip(new ClipContext(startPos, endPos, ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, CollisionContext.empty()));
+                                if (result.getType() == HitResult.Type.MISS || this.getBlockPos() == result.getBlockPos()) {
+                                    this.isVisible = true;
+                                    break;
+                                }
                             }
+                        } else {
+                            this.isVisible = true;
                         }
                     }
                 }
@@ -129,6 +134,12 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
             }
         }
         return false;
+    }
+
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        this.entityTag = this.saveEntityToTag(this.getEntity());
     }
 
     public void writeSimple(Entity e) {
@@ -214,9 +225,13 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
         if (entityTag != null || cachedEntity != null) {
             cachedEntity = getEntity();
             if (cachedEntity != null) {
-                tag.put("entityTag", saveEntityToTag(cachedEntity));
-                if (tag.getCompound("entityTag").contains("id")) {
-                    tag.putString("entityId", tag.getCompound("entityTag").getString("id"));
+                try {
+                    tag.put("entityTag", saveEntityToTag(cachedEntity));
+                    if (tag.getCompound("entityTag").contains("id")) {
+                        tag.putString("entityId", tag.getCompound("entityTag").getString("id"));
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             }
         }

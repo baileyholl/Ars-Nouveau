@@ -1,18 +1,9 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
-import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 
 public class GuiUtils {
 
@@ -25,34 +16,10 @@ public class GuiUtils {
     }
 
     public static void openWiki(Player player) {
-        if (player instanceof ServerPlayer serverPlayer) {
+        if (player instanceof ServerPlayer) {
             return;
         }
 
-        if (ArsNouveau.patchouliLoaded) {
-            DocClientUtils.openBook();
-            return;
-        }
-
-        ClickEvent clickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.curseforge.com/minecraft/mc-mods/patchouli");
-        Component clickText = Component.literal("[")
-                .append(
-                        Component.translatable("ars_nouveau.dependency.install").withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD))
-                )
-                .append("]")
-                .withStyle(Style.EMPTY.withClickEvent(clickEvent));
-
-        Component text = Component.translatable("ars_nouveau.patchouli.missing")
-                .withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))
-                .append(" ")
-                .append(clickText);
-
-        player.sendSystemMessage(text);
-
-        try {
-            Util.getPlatform().openUri(new URI("https://www.arsnouveau.wiki/"));
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
+        DocClientUtils.openBook();
     }
 }

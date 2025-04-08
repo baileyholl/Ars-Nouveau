@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 
+import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
@@ -119,6 +120,7 @@ public class DocumentationRegistry {
         return entries == null ? ConcurrentHashMap.newKeySet() : entries;
     }
 
+    @Nullable
     public static DocEntry getEntry(ResourceLocation id){
         return entryMap.get(id);
     }

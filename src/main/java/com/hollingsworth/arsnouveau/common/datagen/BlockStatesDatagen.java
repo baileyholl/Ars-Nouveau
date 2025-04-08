@@ -51,7 +51,7 @@ public class BlockStatesDatagen extends BlockStateProvider {
         registerNormalCube(BlockRegistry.FALSE_WEAVE.get(), LibBlockNames.FALSE_WEAVE);
         registerNormalCube(BlockRegistry.GHOST_WEAVE.get(), LibBlockNames.GHOST_WEAVE);
         registerNormalCube(BlockRegistry.MIRROR_WEAVE.get(), LibBlockNames.MIRROR_WEAVE);
-
+        registerOnlyState(BlockRegistry.REPOSITORY_CONTROLLER.get(), LibBlockNames.REPOSITORY_CATALOG);
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             ResourceLocation tex = ArsNouveau.prefix( "block/" + s);
             Block block = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( s + "_stairs"));

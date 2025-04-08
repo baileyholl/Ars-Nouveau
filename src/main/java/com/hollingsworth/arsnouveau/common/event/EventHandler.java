@@ -14,7 +14,6 @@ import com.hollingsworth.arsnouveau.api.ritual.RitualEventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
-import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.command.*;
 import com.hollingsworth.arsnouveau.common.compat.CaelusHandler;
@@ -71,7 +70,6 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -214,18 +212,6 @@ public class EventHandler {
         }
     }
 
-
-    @SubscribeEvent
-    public static void clientTickEnd(ClientTickEvent.Post event) {
-
-        ClientInfo.ticksInGame++;
-        if (ClientInfo.redTicks()) {
-            ClientInfo.redOverlayTicks--;
-        }
-
-    }
-
-
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onGlideTick(PlayerTickEvent.Pre event) {
         var player = event.getEntity();
@@ -334,13 +320,6 @@ public class EventHandler {
         if (event.rayTraceResult instanceof EntityHitResult hit && event.world instanceof ServerLevel level) {
             Entity entity = hit.getEntity();
             if (!entity.isAlive()) return;
-            // TODO: Replace with EntitySubPredicate when it becomes a registry in 1.21
-            if (entity instanceof Witch witch) {
-                if (witch.getHealth() <= witch.getMaxHealth() / 2) {
-                    replaceEntityWithItems(level, witch, new ItemStack(ItemsRegistry.WIXIE_SHARD));
-                    return;
-                }
-            }
             for (RecipeHolder<DispelEntityRecipe> holder : level.getRecipeManager().getAllRecipesFor(RecipeRegistry.DISPEL_ENTITY_TYPE.get())) {
                 var recipe = holder.value();
                 if (recipe.matches(event.shooter, entity)) {

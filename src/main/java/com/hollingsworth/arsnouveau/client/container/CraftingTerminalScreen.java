@@ -77,8 +77,6 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 		btnClr = new GuiImageButton(leftPos + 86, recipeButtonY, 0,0,9,9,9,9, CLEAR_CRAFT_TEXTURE, b -> clearGrid());
 		btnExpand = new GuiImageButton(leftPos + 86, recipeButtonY - 12, 0,0,14,3,14, 3, EXPAND_TEXTURE, b -> expandScreen());
 		btnCollapse = new GuiImageButton(leftPos + 86, collapseButtonY, 0,0,14,3,14, 3, COLLAPSE_TEXTURE, b -> collapseScreen());
-		btnCollapse.visible = this.expanded;
-		btnExpand.visible = !this.expanded;
 		addRenderableWidget(btnClr);
 		addRenderableWidget(btnCollapse);
 		addRenderableWidget(btnExpand);
@@ -109,11 +107,13 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 			btnExpand.setX(leftPos + 86);
 		}
 		btnRecipeBook.visible = Config.SHOW_RECIPE_BOOK.get();
+		onExpandedChanged(expanded);
 		onPacket();
 	}
 
 	@Override
 	protected void onExpandedChanged(boolean expanded) {
+		this.expanded = expanded;
 		super.onExpandedChanged(expanded);
 		btnCollapse.visible = this.expanded;
 		btnExpand.visible = !this.expanded;

@@ -45,16 +45,6 @@ public class SearchScreen extends BaseDocScreen{
         getRightPageButtons(resultDocs, arrowIndex * 9, (arrowIndex + 1) * 9);
     }
 
-    public void getLeftPageButtons(List<Search.Result> docs, int from, int to){
-        for(int i = 0; i < Math.min(docs.size(), 8); i++){
-            var entry = docs.get(i);
-            var button = new DocEntryButton(bookLeft + LEFT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET  +  (16 * i) + 16, entry.entry(), entry.icon(), entry.displayTitle(), (b) -> {
-                previousScreen.transition(new PageHolderScreen(entry.entry()));
-            });
-            addRenderableWidget(button);
-            searchResults.add(button);
-        }
-    }
 
     public void getRightPageButtons(List<Search.Result> docs, int from, int to){
         if(from > docs.size()){
@@ -85,8 +75,6 @@ public class SearchScreen extends BaseDocScreen{
             onArrowIndexChange();
         }
     }
-
-
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {

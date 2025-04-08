@@ -53,14 +53,23 @@ public abstract class EmiMultiInputRecipe<T> implements EmiRecipe {
         return 120;
     }
 
+    public MultiProvider getMultiProvider() {
+        return this.multiProvider;
+    }
+
+    public EmiIngredient getCenter() {
+        return this.multiProvider.getEmiCenter();
+    }
+
     @Override
     public void addWidgets(WidgetHolder widgets) {
         this.reset();
         MultiProvider provider = multiProvider;
         List<Ingredient> inputs = provider.input;
         double angleBetweenEach = 360.0 / inputs.size();
-        if (provider.hasCenter()) {
-            widgets.addSlot(provider.getEmiCenter(), (int) this.center.x, (int) this.center.y);
+        var centerIngredient = this.getCenter();
+        if (centerIngredient != null) {
+            widgets.addSlot(centerIngredient, (int) this.center.x, (int) this.center.y);
         }
 
         for (EmiIngredient input : provider.getEmiInputs()) {
@@ -68,12 +77,24 @@ public abstract class EmiMultiInputRecipe<T> implements EmiRecipe {
             point = rotatePointAbout(point, center, angleBetweenEach);
         }
 
-        widgets.addSlot(provider.getEmiOutput(), 100, 3).recipeContext(this);
+        var outputs = this.getOutputs();
+        if (!outputs.isEmpty()) {
+            widgets.addSlot(outputs.getFirst(), 100, 3).recipeContext(this);
+        }
     }
 
     @Override
     public List<EmiIngredient> getInputs() {
-        ArrayList<EmiIngredient> inputs = new ArrayList<>(this.multiProvider.input.size());
+        int size = this.multiProvider.input.size();
+        if (this.multiProvider.hasCenter()) {
+            size += 1;
+        }
+
+        ArrayList<EmiIngredient> inputs = new ArrayList<>(size);
+        if (this.multiProvider.hasCenter()) {
+            inputs.add(this.multiProvider.getEmiCenter());
+        }
+
         for (var entry : this.multiProvider.input) {
             inputs.add(EmiIngredient.of(entry));
         }

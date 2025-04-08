@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,6 +51,9 @@ public class EffectExchange extends AbstractEffect {
         Vec3 origLoc = shooter.position;
 
         Level shooterLevel = shooter.level;
+        if(entity.getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED)){
+            return;
+        }
         if (!EventHooks.onEnderTeleport(shooter, entity.getX(), entity.getY(), entity.getZ()).isCanceled())
             if (entity.level instanceof ServerLevel serverLevel) {
                 shooter.teleportTo(serverLevel, entity.getX(), entity.getY(), entity.getZ(), Set.of(), entity.getYRot(), entity.getXRot());

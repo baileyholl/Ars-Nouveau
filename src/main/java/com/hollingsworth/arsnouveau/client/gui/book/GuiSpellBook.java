@@ -282,7 +282,7 @@ public class GuiSpellBook extends BaseBook {
                 adjustedRowsPlaced = 0;
             }
             int xOffset = 20 * ((adjustedXPlaced) % PER_ROW) + (nextPage ? 134 : 0);
-            int yPlace = adjustedRowsPlaced * 18 + yStart;
+            int yPlace = adjustedRowsPlaced * 18 + yStart + (nextPage && !foundForms ? 18 : 0);
 
             GlyphButton cell = new GlyphButton(xStart + xOffset, yPlace, part, this::onGlyphClick);
             addRenderableWidget(cell);
@@ -564,6 +564,10 @@ public class GuiSpellBook extends BaseBook {
             for (int i = 0; i < craftingCells.size(); i++) {
                 CraftingButton cell = craftingCells.get(i);
                 if (cell.slotNum == craftingCell.slotNum) {
+                    while (cell.getAbstractSpellPart() == null && i < craftingCells.size()) {
+                        i++;
+                        cell = craftingCells.get(i);
+                    }
                     idx = i;
                     continue;
                 }

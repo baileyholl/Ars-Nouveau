@@ -219,6 +219,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         craftManager.completeCraft(this);
         this.craftCooldown = 1;
         this.stackBeingCrafted = ItemStack.EMPTY;
+        craftManager.outputStack = ItemStack.EMPTY;
         updateBlock();
     }
 
@@ -309,10 +310,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
         super.loadAdditional(compound, pRegistries);
-        stackBeingCrafted = ItemStack.EMPTY;
-        if (compound.contains("currentCraft")) {
-            this.stackBeingCrafted = ItemStack.parseOptional(pRegistries, compound.getCompound("currentCraft"));
-        }
+        this.stackBeingCrafted = ItemStack.parseOptional(pRegistries, compound.getCompound("currentCraft"));
         craftManager = CraftingManager.fromTag(pRegistries, compound);
         this.entityID = compound.getInt("entityid");
         this.hasSource = compound.getBoolean("hasmana");
@@ -334,10 +332,9 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     public void saveAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
         super.saveAdditional(compound, pRegistries);
 
-        if (!stackBeingCrafted.isEmpty()) {
-            Tag itemTag = stackBeingCrafted.save(pRegistries);
-            compound.put("currentCraft", itemTag);
-        }
+        Tag itemTag = stackBeingCrafted.saveOptional(pRegistries);
+        compound.put("currentCraft", itemTag);
+
         if (craftManager != null)
             craftManager.write(pRegistries, compound);
 
