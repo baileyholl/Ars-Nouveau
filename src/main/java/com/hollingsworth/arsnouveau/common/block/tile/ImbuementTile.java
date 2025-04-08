@@ -30,19 +30,20 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class ImbuementTile extends AbstractSourceMachine implements Container, ITickable, GeoBlockEntity, ITooltipProvider, IPedestalMachine, RecipeInput {
+public class ImbuementTile extends AbstractSourceMachine implements Container, ITickable, GeoBlockEntity, ITooltipProvider, IPedestalMachine, RecipeInput, ICapabilityProvider<ImbuementTile, @Nullable Direction, IItemHandler> {
     public ItemStack stack = ItemStack.EMPTY;
     public ItemEntity entity;
     public boolean draining;
@@ -318,6 +319,12 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
     public ItemStack getStack() {
         return stack;
+    }
+
+    @Nullable
+    @Override
+    public IItemHandler getCapability(@NotNull ImbuementTile tile, @Nullable Direction side) {
+        return new ItemHandler(tile, side);
     }
 
     public static class ItemHandler implements IItemHandler {

@@ -78,7 +78,7 @@ public class CapabilityRegistry {
         event.registerBlockEntity(MAP_INV_CAP, BlockRegistry.REPOSITORY_CONTROLLER_TILE.get(), (c, side) -> c.getControllerInv());
         event.registerBlockEntity(FILTERSET_CAPABILITY, BlockRegistry.REPOSITORY_CONTROLLER_TILE.get(), (c, side) -> c);
         event.registerBlockEntity(MAP_INV_CAP, BlockRegistry.REPOSITORY_TILE.get(), (c, side) -> c);
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BlockRegistry.IMBUEMENT_TILE.get(), ImbuementTile.ItemHandler::new);
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BlockRegistry.IMBUEMENT_TILE.get(), (c, side) -> c.getCapability(c, side));
 
         var sourceContainers = List.of(BlockRegistry.SOURCE_JAR_TILE, BlockRegistry.CREATIVE_SOURCE_JAR_TILE,
                 BlockRegistry.AGRONOMIC_SOURCELINK_TILE, BlockRegistry.ALCHEMICAL_TILE, BlockRegistry.VITALIC_TILE, BlockRegistry.MYCELIAL_TILE, BlockRegistry.VOLCANIC_TILE,
