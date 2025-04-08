@@ -41,7 +41,7 @@ public class ANExplosion extends Explosion {
 
     @Override
     public void explode() {
-        Set<BlockPos> set = Sets.newHashSet();
+        Set<BlockPos> set = BlockPosSet.newHashSet();
         int i = 16;
 
         for (int j = 0; j < 16; ++j) {
