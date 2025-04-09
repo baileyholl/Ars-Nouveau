@@ -18,6 +18,7 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockEntityTypeRegistryWrappe
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -88,25 +89,33 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
 
     public void invalidateNetwork(){
         connectedRepositories = new ArrayList<>();
-        buildRepositoryNetwork(new HashSet<>(), worldPosition);
+        buildRepositoryNetwork(worldPosition);
         invalidateCapabilities();
     }
 
-    private void buildRepositoryNetwork(Set<BlockPos> visited, BlockPos nextPos) {
-        if(!(level instanceof ServerLevel serverLevel)){
+    private void buildRepositoryNetwork(BlockPos nextPos) {
+        if (!(level instanceof ServerLevel serverLevel)) {
             return;
         }
-        visited.add(nextPos);
-        for(Direction direction : Direction.values()) {
-            BlockPos pos = nextPos.relative(direction);
-            if (!visited.contains(pos)) {
-                visited.add(pos);
-                if(level.getBlockState(pos).getBlock() instanceof RepositoryBlock) {
-                    var mapCap = BlockCapabilityCache.create(CapabilityRegistry.MAP_INV_CAP, serverLevel, pos, direction, () -> !this.isRemoved(), () -> this.invalidateNextTick = true);
-                    var invCap = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, serverLevel, pos, direction, () -> !this.isRemoved(), () -> this.invalidateNextTick = true);
-                    connectedRepositories.add(new ConnectedRepository(pos, mapCap, invCap));
 
-                    buildRepositoryNetwork(visited, pos);
+        Set<Long> visited = new LongOpenHashSet();
+        visited.add(nextPos.asLong());
+        List<BlockPos> stack = new ArrayList<>(8);
+        stack.add(nextPos);
+
+        while (!stack.isEmpty()) {
+            var toExplore = stack.removeLast();
+            for (Direction direction : Direction.values()) {
+                BlockPos pos = toExplore.relative(direction);
+                long key = pos.asLong();
+                if (visited.add(key)) {
+                    if (level.getBlockState(pos).getBlock() instanceof RepositoryBlock) {
+                        var mapCap = BlockCapabilityCache.create(CapabilityRegistry.MAP_INV_CAP, serverLevel, pos, direction, () -> !this.isRemoved(), () -> this.invalidateNextTick = true);
+                        var invCap = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, serverLevel, pos, direction, () -> !this.isRemoved(), () -> this.invalidateNextTick = true);
+                        connectedRepositories.add(new ConnectedRepository(pos, mapCap, invCap));
+
+                        stack.add(pos);
+                    }
                 }
             }
         }
