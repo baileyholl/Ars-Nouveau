@@ -391,6 +391,9 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
                 continue;
             }
             IItemHandler handler = handlerPos.handler.getCapability();
+            if (handler == null) {
+                continue;
+            }
             StorageItemHandler storageItemHandler = new StorageItemHandler(handler, FilterSet.forPosition(level, pos), handlerPos.slotCache);
             mappedFilterables.computeIfAbsent(TAB_ALL, s -> new ArrayList<>()).add(storageItemHandler);
             if (level.getBlockEntity(pos) instanceof Nameable nameable && nameable.hasCustomName()) {
