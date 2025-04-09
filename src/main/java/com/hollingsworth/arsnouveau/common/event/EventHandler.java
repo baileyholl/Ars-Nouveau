@@ -84,6 +84,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.village.VillageSiegeEvent;
 import net.neoforged.neoforge.event.village.VillagerTradesEvent;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
+import top.theillusivec4.curios.api.event.CurioChangeEvent;
 
 import java.util.*;
 
@@ -475,6 +476,11 @@ public class EventHandler {
                 event.setCanceled(true);
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void invalidateCuriosCache(CurioChangeEvent event) {
+        CuriosUtil.WORN_CACHE.remove(event.getEntity());
     }
 
     private EventHandler() {

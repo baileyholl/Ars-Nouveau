@@ -173,17 +173,22 @@ public class SpellResolver implements Cloneable {
             return;
         BlockPos hitPos = this.hitResult instanceof BlockHitResult blockHitResult ? blockHitResult.getBlockPos() : null;
         Entity hitEntity = this.hitResult instanceof EntityHitResult entityHitResult ? entityHitResult.getEntity() : null;
+
+        List<ItemStack> modifierItems = new SpellStats.Builder()
+                .addItemsFromEntity(shooter)
+                .build()
+                .getModifierItems();
+
         while (spellContext.hasNextPart()) {
             AbstractSpellPart part = spellContext.nextPart();
             if (part == null)
                 break;
             if (part instanceof AbstractAugment || !part.isEnabled())
                 continue;
-            SpellStats.Builder builder = new SpellStats.Builder();
             List<AbstractAugment> augments = spell.getAugments(spellContext.getCurrentIndex() - 1, shooter);
-            SpellStats stats = builder
+            SpellStats stats = new SpellStats.Builder()
+                    .setItems(modifierItems)
                     .setAugments(augments)
-                    .addItemsFromEntity(shooter)
                     .build(part, this.hitResult, world, shooter, spellContext);
             if (!(part instanceof AbstractEffect effect))
                 continue;
