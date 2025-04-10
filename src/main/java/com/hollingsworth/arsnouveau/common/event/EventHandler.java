@@ -55,7 +55,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
@@ -94,11 +93,13 @@ public class EventHandler {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void resourceLoadEvent(AddReloadListenerEvent event) {
         event.addListener(new SimplePreparableReloadListener<>() {
+            @SuppressWarnings({"NullableProblems", "DataFlowIssue"})
             @Override
             protected Object prepare(ResourceManager pResourceManager, ProfilerFiller pProfiler) {
                 return null;
             }
 
+            @SuppressWarnings("NullableProblems")
             @Override
             protected void apply(Object pObject, ResourceManager pResourceManager, ProfilerFiller pProfiler) {
                 MultiRecipeWrapper.RECIPE_CACHE = new HashMap<>();
@@ -337,6 +338,7 @@ public class EventHandler {
         LearnGlyphCommand.register(event.getDispatcher());
         AdoptCommand.register(event.getDispatcher());
         DroplessMobsCommand.register(event.getDispatcher());
+        DebugNumberCommand.register(event.getDispatcher());
         if(!FMLEnvironment.production){
             ExportDocsCommand.register(event.getDispatcher());
         }
