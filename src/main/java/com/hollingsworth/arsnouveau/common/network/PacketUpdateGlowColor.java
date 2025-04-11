@@ -33,9 +33,9 @@ public class PacketUpdateGlowColor extends AbstractPacket {
     public void onClientReceived(Minecraft mc, Player player) {
         if (player.level.getEntity(this.entity) instanceof LivingEntity living)
             if (color != 0) {
-                living.getPersistentData().putInt("GlowColor", color);
+                living.getPersistentData().putInt("ars_nouveau:glow_color", color);
             } else {
-                living.getPersistentData().remove("GlowColor");
+                living.getPersistentData().remove("ars_nouveau:glow_color");
             }
     }
 
