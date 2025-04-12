@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemDisplayContext;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 
@@ -37,6 +38,17 @@ public class ImbuementRenderer extends ArsGeoBlockRenderer<ImbuementTile> {
                 (int) tileEntityIn.getBlockPos().asLong());
         matrixStack.popPose();
 
+    }
+
+    @Override
+    protected void rotateBlock(Direction facing, PoseStack poseStack) {
+        if (facing.getAxis().isHorizontal()) {
+            var step = facing.step();
+            poseStack.translate(-step.x * 0.5, 0.5, -step.z * 0.5);
+        } else if (facing == Direction.DOWN) {
+            poseStack.translate(0, 1.0, 0);
+        }
+        poseStack.mulPose(facing.getRotation());
     }
 
 }

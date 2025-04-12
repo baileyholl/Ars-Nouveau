@@ -95,7 +95,9 @@ public class AnnotatedCodex extends ModItem {
                 }
             }
             if (numUnlocked > 0) {
-                stack.shrink(1);
+                if (!pPlayer.hasInfiniteMaterials()) {
+                    stack.shrink(1);
+                }
                 PortUtil.sendMessageNoSpam(pPlayer, Component.translatable("ars_nouveau.consumed_codex", numUnlocked));
                 CapabilityRegistry.EventHandler.syncPlayerCap(pPlayer);
             } else {

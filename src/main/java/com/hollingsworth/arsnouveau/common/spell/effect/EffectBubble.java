@@ -29,7 +29,7 @@ public class EffectBubble extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         var bubble = createBubble(world, spellStats);
         bubble.setPos(rayTraceResult.getLocation().x, rayTraceResult.getLocation().y, rayTraceResult.getLocation().z);
-        if(isRealPlayer(shooter)){
+        if(isNotFakePlayer(shooter)){
             bubble.setOwner(shooter);
         }
         world.addFreshEntity(bubble);
@@ -43,7 +43,7 @@ public class EffectBubble extends AbstractEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         var bubble = createBubble(world, spellStats);
         bubble.setPos(rayTraceResult.getLocation().x, rayTraceResult.getLocation().y, rayTraceResult.getLocation().z);
-        if(isRealPlayer(shooter)){
+        if(isNotFakePlayer(shooter)){
             bubble.setOwner(shooter);
         }
         world.addFreshEntity(bubble);

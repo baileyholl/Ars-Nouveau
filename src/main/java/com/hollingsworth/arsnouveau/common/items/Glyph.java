@@ -50,7 +50,9 @@ public class Glyph extends ModItem {
                 return super.use(worldIn, playerIn, handIn);
             } else if (playerDataCap.unlockGlyph(spellPart)) {
                 CapabilityRegistry.EventHandler.syncPlayerCap(playerIn);
-                playerIn.getItemInHand(handIn).shrink(1);
+                if (!playerIn.hasInfiniteMaterials()) {
+                    playerIn.getItemInHand(handIn).shrink(1);
+                }
                 playerIn.sendSystemMessage(Component.literal("Unlocked " + this.spellPart.getName()));
             }
         }
@@ -71,7 +73,7 @@ public class Glyph extends ModItem {
             tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_disabled"));
         } else if (spellPart != null) {
             tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getConfigTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
-            if (Screen.hasShiftDown()) {
+            if (Screen.hasShiftDown() && !spellPart.spellSchools.isEmpty()) {
                 tooltip2.add(Component.translatable("ars_nouveau.schools"));
                 for (SpellSchool s : spellPart.spellSchools) {
                     tooltip2.add(s.getTextComponent());

@@ -23,7 +23,8 @@ public class PageHolderScreen extends BaseDocScreen{
 
     public SinglePageWidget rightPage = null;
     List<SinglePageCtor> pages;
-    DocEntry entry;
+    public DocEntry entry;
+
     public PageHolderScreen(DocEntry entry) {
         super();
         this.entry = entry;

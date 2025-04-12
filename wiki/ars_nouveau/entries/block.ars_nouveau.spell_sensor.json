@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:block.ars_nouveau.spell_sensor",
+  "order": 100,
+  "icon": "ars_nouveau:spell_sensor",
+  "title": "Spell Sensor",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Spell Sensor",
+      "description": "ars_nouveau.page.spell_sensor",
+      "icon": "ars_nouveau:spell_sensor"
+    },
+    {
+      "recipe_1": "ars_nouveau:spell_sensor"
+    }
+  ]
+}

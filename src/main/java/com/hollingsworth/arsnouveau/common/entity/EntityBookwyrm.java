@@ -92,7 +92,9 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
             if (color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(COLORS).contains(color.getName()))
                 return InteractionResult.SUCCESS;
             setColor(color.getName());
-            player.getMainHandItem().shrink(1);
+            if (!player.hasInfiniteMaterials()) {
+                player.getMainHandItem().shrink(1);
+            }
             return InteractionResult.SUCCESS;
         }
         return super.mobInteract(player, hand);
@@ -169,7 +171,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
             if(tile == null || playerTooFar){
                 return null;
             }
-            List<BlockPos> targets = new ArrayList<>(tile.connectedInventories);
+            List<BlockPos> targets = new ArrayList<>(tile.handlerPosList.stream().map(StorageLecternTile.HandlerPos::pos).toList());
             targets.add(tile.getBlockPos());
             return targets.get(level.random.nextInt(targets.size())).above();
         }));
@@ -286,14 +288,13 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     }
 
     @Override
-    public void die(DamageSource source) {
+    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
+        super.dropCustomDeathLoot(level, damageSource, recentlyHit);
         if (!level.isClientSide) {
             ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM.get());
             stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
         }
-
-        super.die(source);
     }
 
     public static AttributeSupplier.Builder attributes() {
@@ -334,5 +335,10 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
 
     public void setColor(String color) {
         getEntityData().set(EntityBookwyrm.COLOR, color);
+    }
+
+    @Override
+    public boolean canUsePortal(boolean allowPassengers) {
+        return false;
     }
 }

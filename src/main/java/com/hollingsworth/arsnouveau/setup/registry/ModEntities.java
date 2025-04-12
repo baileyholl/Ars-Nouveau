@@ -274,14 +274,12 @@ public class ModEntities {
             "animated_block",
             EntityType.Builder.<AnimBlockSummon>of(AnimBlockSummon::new, MobCategory.MISC)
                     .sized(1.0f, 1.5f)
-                    .noSave()
                     .setTrackingRange(10));
 
     public static final DeferredHolder<EntityType<?>, EntityType<AnimHeadSummon>> ANIMATED_HEAD = registerEntity(
             "animated_head",
             EntityType.Builder.<AnimHeadSummon>of(AnimHeadSummon::new, MobCategory.MISC)
                     .sized(1.0f, 1.5f)
-                    .noSave()
                     .setTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<Lily>> LILY = registerEntity(
             LibEntityNames.LILY,
@@ -301,6 +299,11 @@ public class ModEntities {
             EntityType.Builder.<BubbleEntity>of(BubbleEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5f)
                     .setTrackingRange(10));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<EnchantedHook>> ENCHANTED_HOOK = registerEntity(
+            LibEntityNames.ENCHANTED_HOOK,
+            EntityType.Builder.<EnchantedHook>of(EnchantedHook::new, MobCategory.MISC).noSave().noSummon().sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(5)
+    );
 
 
     @SubscribeEvent

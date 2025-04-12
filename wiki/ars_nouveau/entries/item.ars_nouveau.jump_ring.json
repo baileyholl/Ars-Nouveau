@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:item.ars_nouveau.jump_ring",
+  "order": 100,
+  "icon": "ars_nouveau:jump_ring",
+  "title": "Ring of Jumping",
+  "category": "ars_nouveau:items",
+  "pages": [
+    {
+      "title": "Ring of Jumping",
+      "description": "ars_nouveau.page.jump_ring",
+      "icon": "ars_nouveau:jump_ring"
+    },
+    {
+      "recipe_1": "ars_nouveau:jump_ring"
+    }
+  ]
+}

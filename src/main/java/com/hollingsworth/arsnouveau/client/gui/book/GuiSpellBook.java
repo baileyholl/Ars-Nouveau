@@ -303,7 +303,7 @@ public class GuiSpellBook extends BaseBook {
                 adjustedRowsPlaced = 0;
             }
             int xOffset = 20 * ((adjustedXPlaced) % PER_ROW) + (nextPage ? 134 : 0);
-            int yPlace = adjustedRowsPlaced * 18 + yStart;
+            int yPlace = adjustedRowsPlaced * 18 + yStart + (nextPage && !foundForms ? 18 : 0);
 
             GlyphButton cell = new GlyphButton(xStart + xOffset, yPlace, part, this::onGlyphClick);
             addRenderableWidget(cell);
@@ -538,11 +538,10 @@ public class GuiSpellBook extends BaseBook {
                     return true;
                 }
                 case CraftingButton button -> {
-                    if (idx < this.spell.size()) {
-                        Collections.swap(spell, button.slotNum, idx);
-                    } else {
-                        spell.add(button.getAbstractSpellPart());
+                    for (int i = spell.size(); i <= Math.max(button.slotNum, idx); i++) {
+                        spell.add(null);
                     }
+                    Collections.swap(spell, button.slotNum, idx);
 
                     int left = -1;
                     int right = -1;
@@ -595,19 +594,33 @@ public class GuiSpellBook extends BaseBook {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_3 && hoveredWidget instanceof CraftingButton craftingCell) {
             int idx = -1;
+            int emptySpace = -1;
             for (int i = 0; i < craftingCells.size(); i++) {
                 CraftingButton cell = craftingCells.get(i);
                 if (cell.slotNum == craftingCell.slotNum) {
+                    while (cell.getAbstractSpellPart() == null && i < craftingCells.size()) {
+                        i++;
+                        cell = craftingCells.get(i);
+                    }
                     idx = i;
+                    continue;
+                }
+
+                if (idx != -1 && cell.getAbstractSpellPart() == null) {
+                    emptySpace = i;
                     break;
                 }
             }
 
-            if (idx == -1 || craftingCells.getLast().getAbstractSpellPart() != null) {
+            if (idx == -1 || emptySpace == -1) {
                 return true;
             }
 
-            for (int i = craftingCells.size() - 1; i >= idx + 1; i--) {
+            for (int i = spell.size(); i <= emptySpace; i++) {
+                spell.add(null);
+            }
+            spell.remove(emptySpace);
+            for (int i = emptySpace; i >= idx + 1; i--) {
                 CraftingButton cell = craftingCells.get(i);
                 CraftingButton prev = craftingCells.get(i - 1);
 
@@ -617,6 +630,7 @@ public class GuiSpellBook extends BaseBook {
             spell.add(idx, null);
             craftingCells.get(idx).setAbstractSpellPart(null);
             this.setFocused(craftingCell);
+            validate();
         }
 
         return super.mouseClicked(mouseX, mouseY, button);

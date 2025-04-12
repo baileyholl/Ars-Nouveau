@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:thread_spellpower",
+  "order": 100,
+  "icon": "ars_nouveau:thread_spellpower",
+  "title": "Spell Power",
+  "category": "ars_nouveau:armor",
+  "pages": [
+    {
+      "title": "Thread of Spell Power",
+      "description": "Grants an increasing amount of Spell Damage each level.",
+      "icon": "ars_nouveau:thread_spellpower"
+    },
+    {
+      "recipe_1": "ars_nouveau:thread_spellpower"
+    }
+  ]
+}

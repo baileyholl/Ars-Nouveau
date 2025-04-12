@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
+import com.hollingsworth.arsnouveau.client.jei.AliasProvider;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.items.data.WarpScrollData;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -27,10 +28,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public class WarpScroll extends ModItem {
+public class WarpScroll extends ModItem implements AliasProvider {
     public WarpScroll() {
         super(ItemsRegistry.defaultItemProperties().component(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(false)));
     }
@@ -75,15 +77,19 @@ public class WarpScroll extends ModItem {
                 return InteractionResultHolder.fail(stack);
             }
             BlockPos pos = data.pos().get();
-            player.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
             Vec2 rotation = data.rotation();
+
+            Networking.sendToNearbyClient(world, player, new PacketWarpPosition(player.getId(),pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, rotation.x, rotation.y));
+            player.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
             player.setXRot(rotation.x);
             player.setYRot(rotation.y);
-            Networking.sendToNearbyClient(world, player, new PacketWarpPosition(player.getId(),pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, rotation.x, rotation.y));
+
             serverLevel.sendParticles(ParticleTypes.PORTAL, pos.getX(), pos.getY() + 1.0, pos.getZ(),
                     10, (world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
             world.playSound(null, pos, SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.NEUTRAL, 1.0f, 1.0f);
-            stack.shrink(1);
+            if (!player.hasInfiniteMaterials()) {
+                stack.shrink(1);
+            }
             return InteractionResultHolder.pass(stack);
         }
         if (player.isShiftKeyDown()) {
@@ -95,8 +101,9 @@ public class WarpScroll extends ModItem {
                 didAdd = true;
             } else {
                 didAdd = player.addItem(newWarpStack);
-                if (didAdd)
+                if (didAdd && !player.hasInfiniteMaterials()) {
                     stack.shrink(1);
+                }
             }
             if (!didAdd) {
                 player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.inv_full"));
@@ -112,5 +119,12 @@ public class WarpScroll extends ModItem {
     public void appendHoverText(@NotNull ItemStack stack, Item.@NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
         stack.addToTooltip(DataComponentRegistry.WARP_SCROLL, context, tooltip2::add, flagIn);
+    }
+
+    @Override
+    public Collection<Alias> getAliases() {
+        return List.of(
+                new Alias("warp_portal", "Warp Portal")
+        );
     }
 }

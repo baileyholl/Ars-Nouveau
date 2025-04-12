@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:block.ars_nouveau.brazier_relay",
+  "order": 100,
+  "icon": "ars_nouveau:brazier_relay",
+  "title": "Ritual Brazier Relay",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Ritual Brazier Relay",
+      "description": "Allows the users to bind a Ritual Brazier ritual to a new location. Multiple rituals can be connected to the same brazier relay. To connect, use the Dominion Wand on your Ritual Brazier, then the relay. Source is consumed at the original braziers location. Can be bound within 15 blocks.",
+      "icon": "ars_nouveau:brazier_relay"
+    },
+    {
+      "recipe_1": "ars_nouveau:brazier_relay"
+    }
+  ]
+}

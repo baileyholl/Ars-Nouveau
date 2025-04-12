@@ -3,7 +3,9 @@ package com.hollingsworth.arsnouveau.api.documentation;
 import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.client.gui.DocItemTooltipHandler;
 import com.hollingsworth.arsnouveau.client.gui.GuiUtils;
+import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.arsnouveau.client.gui.documentation.IndexScreen;
 import com.hollingsworth.arsnouveau.client.gui.documentation.PageHolderScreen;
 import com.hollingsworth.nuggets.client.gui.GuiHelpers;
@@ -31,16 +33,21 @@ public class DocClientUtils {
     }
 
     public static void openToEntry(ResourceLocation resourceLocation, int pageIndex){
-
         DocEntry entry = DocumentationRegistry.getEntry(resourceLocation);
-        if(entry != null){
-            PageHolderScreen pageHolderScreen = new PageHolderScreen(entry);
-            pageHolderScreen.arrowIndex = pageIndex < entry.pages().size() ? pageIndex : 0;
-            Minecraft.getInstance().setScreen(pageHolderScreen);
+        if(entry == null){
+            IndexScreen.open();
             return;
         }
-
-        IndexScreen.open();
+        if(Minecraft.getInstance().screen instanceof BaseDocScreen baseDocScreen){
+            baseDocScreen.transition(new PageHolderScreen(entry));
+        }else {
+            PageHolderScreen pageHolderScreen = new PageHolderScreen(entry);
+            pageHolderScreen.arrowIndex = pageIndex < entry.pages().size() ? pageIndex : 0;
+            if(!(DocPlayerData.previousScreen instanceof PageHolderScreen pageHolderScreen1 && pageHolderScreen1.entry == entry)) {
+                pageHolderScreen.previousScreen = DocPlayerData.previousScreen;
+            }
+            Minecraft.getInstance().setScreen(pageHolderScreen);
+        }
     }
 
     public static void drawStringScaled(GuiGraphics graphics, Component component, int x, int y, int color, float scale, boolean shadow){
@@ -106,6 +113,7 @@ public class DocClientUtils {
         graphics.renderItem(stack, x, y);
         graphics.renderItemDecorations(font, stack, x, y);
         if(GuiUtils.isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)){
+            DocItemTooltipHandler.onTooltip(graphics, stack, mouseX, mouseY);
             return stack;
         }
         return ItemStack.EMPTY;

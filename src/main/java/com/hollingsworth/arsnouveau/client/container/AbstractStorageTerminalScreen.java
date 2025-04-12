@@ -10,10 +10,10 @@ import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StateButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StorageSettingsButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StorageTabButton;
-import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
+import com.hollingsworth.arsnouveau.common.network.ClientSearchPacket;
+import com.hollingsworth.arsnouveau.common.network.ClientSlotClick;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.SetTerminalSettingsPacket;
-import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.JsonOps;
@@ -26,8 +26,6 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -40,7 +38,6 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.hollingsworth.arsnouveau.client.container.StorageTerminalMenu.SlotAction.*;
@@ -293,9 +290,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 				if (searchType == 1) {
 					IAutoFillTerminal.sync(searchString);
 				}
-				CompoundTag nbt = new CompoundTag();
-				nbt.putString("search", searchString);
-				Networking.sendToServer(new ClientToServerStoragePacket(nbt));
+				Networking.sendToServer(new ClientSearchPacket(searchString));
 				onUpdateSearch(searchString);
 			} else {
 				this.scrollTo(this.currentScroll);
@@ -329,10 +324,6 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 	private void addStackToClientList(StoredItemStack is) {
 		this.itemsSorted.add(is);
-	}
-
-	public static TooltipFlag getTooltipFlag(){
-		return Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL;
 	}
 
 	@Override
@@ -526,15 +517,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	}
 
 	protected void storageSlotClick(StoredItemStack slotStack, StorageTerminalMenu.SlotAction act, boolean pullOne) {
-		CompoundTag interactTag = new CompoundTag();
-		interactTag.putBoolean("pullOne", pullOne);
-		interactTag.putInt("action", act.ordinal());
-		if(slotStack != null){
-			interactTag.put("stack", ANCodecs.encode(ArsNouveau.proxy.getMinecraft().level.registryAccess(), StoredItemStack.CODEC, slotStack));
-		}
-		CompoundTag dataTag = new CompoundTag();
-		dataTag.put("interaction", interactTag);
-		Networking.sendToServer(new ClientToServerStoragePacket(dataTag));
+		Networking.sendToServer(new ClientSlotClick(pullOne, Optional.ofNullable(slotStack), act));
 	}
 
 	public boolean isPullOne(int mouseButton) {
@@ -596,21 +579,12 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 	protected void onUpdateSearch(String text) {}
 
-	public void receive(CompoundTag tag) {
-		menu.receiveClientNBTPacket(tag);
+	public void receiveServerSettings(String searchString, List<String> tabs) {
+		menu.receiveServerSearchString(searchString);
 		refreshItemList = true;
-		if(tag.contains("tabs")){
-			ListTag tabs = tag.getList("tabs", 10);
-			tabNames = new ArrayList<>();
-			Set<String> nameSet = new HashSet<>();
-			for(int i = 0; i < tabs.size(); i++){
-				nameSet.add(tabs.getCompound(i).getString("name"));
-			}
-			tabNames.addAll(new ArrayList<>(nameSet).subList(0, Math.min(nameSet.size(), 11)));
-			Collections.sort(tabNames);
-		}
-
-
+		Set<String> nameSet = new HashSet<>(tabs);
+		tabNames = new ArrayList<>(nameSet).subList(0, Math.min(nameSet.size(), 11));
+		Collections.sort(tabNames);
 		this.onPacket();
 	}
 

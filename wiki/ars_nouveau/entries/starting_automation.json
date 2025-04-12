@@ -1,0 +1,23 @@
+{
+  "id": "ars_nouveau:starting_automation",
+  "order": 10,
+  "icon": "ars_nouveau:basic_spell_turret",
+  "title": "Starting Automation",
+  "category": "ars_nouveau:getting_started",
+  "pages": [
+    {
+      "title": "Starting Automation",
+      "description": "Spells may be used in Automation using Spell Turrets. Use these to create auto harvesters, tree farms, quarries, cake farms, glass factories, and more! For item transport, autocrafting, or resource generation, see the variety of magical entities that may be summoned using Charms.",
+      "icon": "ars_nouveau:basic_spell_turret"
+    },
+    {
+      "related": [
+        "ars_nouveau:basic_spell_turret",
+        "ars_nouveau:block.ars_nouveau.spell_prism",
+        "ars_nouveau:starbuncle_charm",
+        "ars_nouveau:wixie_charm",
+        "ars_nouveau:drygmy_charm"
+      ]
+    }
+  ]
+}

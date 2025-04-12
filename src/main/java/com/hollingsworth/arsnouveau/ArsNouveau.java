@@ -1,15 +1,16 @@
 package com.hollingsworth.arsnouveau;
 
-
-import com.hollingsworth.arsnouveau.api.registry.*;
-import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
+import com.hollingsworth.arsnouveau.api.registry.BuddingConversionRegistry;
+import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
+import com.hollingsworth.arsnouveau.api.registry.GenericRecipeRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ScryRitualRegistry;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.registry.ClientHandler;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.entity.BubbleEntity;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
 import com.hollingsworth.arsnouveau.common.event.BreezeEvent;
-import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import com.hollingsworth.arsnouveau.common.world.Terrablender;
@@ -23,10 +24,8 @@ import com.hollingsworth.arsnouveau.setup.proxy.ServerProxy;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
-import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -38,6 +37,8 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
 import net.neoforged.neoforge.common.world.chunk.TicketController;
@@ -96,7 +97,20 @@ public class ArsNouveau {
         });
         NeoForge.EVENT_BUS.addListener(BubbleEntity::onAttacked);
         NeoForge.EVENT_BUS.addListener(BubbleEntity::entityHurt);
+        NeoForge.EVENT_BUS.addListener(BubbleEntity::preEntityRemoval);
         NeoForge.EVENT_BUS.addListener(BreezeEvent::onSpellResolve);
+
+        NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post e) ->{
+            ClientInfo.endClientTick();
+        });
+
+        NeoForge.EVENT_BUS.addListener((RenderFrameEvent.Pre e) -> {
+            ClientInfo.renderTickStart(e.getPartialTick().getGameTimeDeltaPartialTick(false));
+        });
+        NeoForge.EVENT_BUS.addListener((RenderFrameEvent.Post e) -> {
+            ClientInfo.renderTickEnd();
+        });
+
         ANCriteriaTriggers.init();
         try {
             Thread thread = new Thread(Rewards::init);
@@ -125,7 +139,7 @@ public class ArsNouveau {
 
         NeoForge.EVENT_BUS.addListener((ServerStartedEvent e) -> {
             GenericRecipeRegistry.reloadAll(e.getServer().getRecipeManager());
-            CasterTomeRegistry.reloadTomeData(e.getServer().getRecipeManager(), e.getServer().getLevel(Level.OVERWORLD));
+            CasterTomeRegistry.reloadTomeData(e.getServer().getRecipeManager(), e.getServer().registryAccess());
             BuddingConversionRegistry.reloadBuddingConversionRecipes(e.getServer().getRecipeManager());
             ScryRitualRegistry.reloadScryRitualRecipes(e.getServer().getRecipeManager());
         });
@@ -155,10 +169,7 @@ public class ArsNouveau {
                 flowerPot.addPlant(pot.getKey().get(), pot::getValue);
             }
 
-            for (RitualTablet tablet : RitualRegistry.getRitualItemMap().values()){
-                DispenserBlock.registerBehavior(tablet, new DispenserRitualBehavior());
-            }
-
+            DispenserBehaviorRegistry.register();
         });
         for(String warning : postLoadWarnings){
             Log.getLogger().error(warning);

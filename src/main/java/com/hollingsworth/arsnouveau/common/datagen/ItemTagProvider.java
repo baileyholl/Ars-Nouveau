@@ -34,6 +34,12 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
     public static TagKey<Item> STORAGE_BLOCKS_QUARTZ = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/quartz"));
     public static TagKey<Item> SHADY_WIZARD_FRUITS = ItemTags.create(ArsNouveau.prefix( "shady_wizard_fruits"));
 
+    public static TagKey<Item> MAGIC_ARMOR = ItemTags.create(ArsNouveau.prefix("magic_armor"));
+    public static TagKey<Item> MAGIC_HOOD = ItemTags.create(ArsNouveau.prefix("magic_hood"));
+    public static TagKey<Item> MAGIC_ROBE = ItemTags.create(ArsNouveau.prefix("magic_robe"));
+    public static TagKey<Item> MAGIC_LEGS = ItemTags.create(ArsNouveau.prefix("magic_legs"));
+    public static TagKey<Item> MAGIC_BOOT = ItemTags.create(ArsNouveau.prefix("magic_boots"));
+
 
     public ItemTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
         super(output, Registries.ITEM, future, item -> item.builtInRegistryHolder().key(), ArsNouveau.MODID, helper);
@@ -187,34 +193,32 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
         this.tag(ItemTags.SWORDS).add(ItemsRegistry.ENCHANTERS_SWORD.get());
         this.tag(Tags.Items.TOOLS_SHIELD).add(ItemsRegistry.ENCHANTERS_SHIELD.get());
 
-        this.tag(Tags.Items.ARMORS).add(ItemsRegistry.SORCERER_ROBES.asItem(),
-                ItemsRegistry.ARCANIST_ROBES.asItem(),
-                ItemsRegistry.BATTLEMAGE_ROBES.asItem(),
-                ItemsRegistry.SORCERER_BOOTS.asItem(),
-                ItemsRegistry.ARCANIST_BOOTS.asItem(),
-                ItemsRegistry.BATTLEMAGE_BOOTS.asItem(),
-                ItemsRegistry.SORCERER_LEGGINGS.asItem(),
-                ItemsRegistry.ARCANIST_LEGGINGS.asItem(),
-                ItemsRegistry.BATTLEMAGE_LEGGINGS.asItem(),
-                ItemsRegistry.SORCERER_HOOD.asItem(),
-                ItemsRegistry.ARCANIST_HOOD.asItem(),
-                ItemsRegistry.BATTLEMAGE_HOOD.asItem());
+        this.tag(MAGIC_ARMOR)
+                .addTag(MAGIC_HOOD)
+                .addTag(MAGIC_ROBE)
+                .addTag(MAGIC_LEGS)
+                .addTag(MAGIC_BOOT);
+
+        this.tag(Tags.Items.ARMORS)
+                .addTag(MAGIC_ARMOR);
+
+        this.tag(MAGIC_HOOD)
+                .add(ItemsRegistry.SORCERER_HOOD.asItem(), ItemsRegistry.ARCANIST_HOOD.asItem(), ItemsRegistry.BATTLEMAGE_HOOD.asItem());
+        this.tag(MAGIC_ROBE)
+                .add(ItemsRegistry.SORCERER_ROBES.asItem(), ItemsRegistry.ARCANIST_ROBES.asItem(), ItemsRegistry.BATTLEMAGE_ROBES.asItem());
+        this.tag(MAGIC_LEGS)
+                .add(ItemsRegistry.SORCERER_LEGGINGS.asItem(), ItemsRegistry.ARCANIST_LEGGINGS.asItem(), ItemsRegistry.BATTLEMAGE_LEGGINGS.asItem());
+        this.tag(MAGIC_BOOT)
+                .add(ItemsRegistry.SORCERER_BOOTS.asItem(), ItemsRegistry.ARCANIST_BOOTS.asItem(), ItemsRegistry.BATTLEMAGE_BOOTS.asItem());
 
         this.tag(ItemTags.FOOT_ARMOR)
-                .add(ItemsRegistry.SORCERER_BOOTS.asItem(),
-                        ItemsRegistry.ARCANIST_BOOTS.asItem(),
-                        ItemsRegistry.BATTLEMAGE_BOOTS.asItem());
+                .addTag(MAGIC_BOOT);
         this.tag(ItemTags.CHEST_ARMOR)
-                .add(ItemsRegistry.SORCERER_ROBES.asItem(),
-                        ItemsRegistry.ARCANIST_ROBES.asItem(),
-                        ItemsRegistry.BATTLEMAGE_ROBES.asItem());
+                .addTag(MAGIC_ROBE);
         this.tag(ItemTags.HEAD_ARMOR)
-                .add(ItemsRegistry.SORCERER_HOOD.asItem(),
-                        ItemsRegistry.ARCANIST_HOOD.asItem(),
-                        ItemsRegistry.BATTLEMAGE_HOOD.asItem());
-        this.tag(ItemTags.LEG_ARMOR).add(ItemsRegistry.SORCERER_LEGGINGS.asItem(),
-                ItemsRegistry.ARCANIST_LEGGINGS.asItem(),
-                ItemsRegistry.BATTLEMAGE_LEGGINGS.asItem());
+                .addTag(MAGIC_HOOD);
+        this.tag(ItemTags.LEG_ARMOR)
+                .addTag(MAGIC_LEGS);
 
         this.tag(Tags.Items.CHESTS).add(BlockRegistry.ARCHWOOD_CHEST.asItem());
         this.tag(Tags.Items.CHESTS_WOODEN).add(BlockRegistry.ARCHWOOD_CHEST.asItem());
@@ -234,5 +238,6 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
         this.tag(ItemTags.BOW_ENCHANTABLE).add(ItemsRegistry.SPELL_BOW.get());
         this.tag(ItemTags.CROSSBOW_ENCHANTABLE).add(ItemsRegistry.SPELL_CROSSBOW.get());
         this.tag(ItemTags.DURABILITY_ENCHANTABLE).add(ItemsRegistry.ENCHANTERS_SHIELD.get());
+        this.tag(ItemTags.FISHING_ENCHANTABLE).add(ItemsRegistry.ENCHANTERS_FISHING_ROD.get());
     }
 }

@@ -29,13 +29,6 @@ license="GNU GENERAL PUBLIC LICENSE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
     side="BOTH"
 
-#[[dependencies.ars_nouveau]]
-#    modId="patchouli"
-#    mandatory = true
-#versionRange = "[1.19-77,)"
-#ordering = "AFTER"
-#    side="BOTH"
-
 [[dependencies.ars_nouveau]]
     modId="curios"
     mandatory=true

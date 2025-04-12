@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_flare",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_flare",
+  "title": "Flare",
+  "category": "ars_nouveau:glyphs_tier_two",
+  "pages": [
+    {
+      "title": "Flare",
+      "description": "When used on an entity or block that is on fire or afflicted with Blasting, Cinders will explode around the target, dealing damage and creating Mage Fire nearby. Mage Fire cannot spread to blocks and is short lived. Entities with Blasting will immediately explode for extra strength.",
+      "icon": "ars_nouveau:glyph_flare",
+      "tier": 2
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_flare"
+    }
+  ]
+}

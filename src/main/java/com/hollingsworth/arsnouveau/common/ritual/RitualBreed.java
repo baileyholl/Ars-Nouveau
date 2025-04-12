@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.phys.AABB;
@@ -12,6 +13,9 @@ import net.minecraft.world.phys.AABB;
 import java.util.List;
 
 public class RitualBreed extends AbstractRitual {
+    long lastTick = -1;
+    boolean tooManyAnimals = false;
+
     @Override
     protected void tick() {
         if (getWorld().isClientSide) {
@@ -19,8 +23,9 @@ public class RitualBreed extends AbstractRitual {
         } else {
             if (getWorld().getGameTime() % 200 == 0) {
                 List<Animal> animals = getWorld().getEntitiesOfClass(Animal.class, new AABB(getPos()).inflate(5));
-                if (animals.size() >= 20)
+                if (animals.size() >= 20) {
                     return;
+                }
                 boolean didWorkOnce = false;
                 for (Animal a : animals) {
                     if (a.getAge() == 0 && a.canFallInLove()) {
@@ -31,6 +36,19 @@ public class RitualBreed extends AbstractRitual {
                 if (didWorkOnce)
                     setNeedsSource(true);
             }
+        }
+    }
+
+    @Override
+    public void modifyTooltips(List<Component> tooltips) {
+        var lastCheck = getWorld().getGameTime();
+        if (lastCheck != lastTick && lastCheck  % 20 == 0) {
+            List<Animal> animals = getWorld().getEntitiesOfClass(Animal.class, new AABB(getPos()).inflate(5));
+            tooManyAnimals = animals.size() >= 20;
+            lastTick = lastCheck;
+        }
+        if (tooManyAnimals) {
+            tooltips.add(Component.translatable("ars_nouveau.tooltip.too_many_animals"));
         }
     }
 

@@ -83,13 +83,9 @@ public class EffectToss extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
         InventoryManager manager = new InventoryManager(spellContext.getCaster());
-        if (world.getBlockEntity(rayTraceResult.getBlockPos()) == null) {
-            summonStack(shooter, spellContext, spellStats, world, pos, manager);
-            return;
-        }
         IItemHandler targetInv = world.getCapability(Capabilities.ItemHandler.BLOCK, rayTraceResult.getBlockPos(), null);
-
         if (targetInv == null) {
+            summonStack(shooter, spellContext, spellStats, world, pos, manager);
             return;
         }
 

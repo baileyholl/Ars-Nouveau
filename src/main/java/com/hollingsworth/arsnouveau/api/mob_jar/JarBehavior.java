@@ -1,15 +1,18 @@
 package com.hollingsworth.arsnouveau.api.mob_jar;
 
+import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -103,5 +106,24 @@ public class JarBehavior<T extends Entity> {
 
     public void getTooltip(MobJarTile tile, List<Component> tooltips){
 
+    }
+
+    public static boolean insertOrCreateItem(MobJarTile tile, ItemStack stack) {
+        if (!(tile.getLevel() instanceof ServerLevel level)) {
+            return false;
+        }
+
+        var pos = tile.getBlockPos();
+        var inv = InventoryManager.fromTile(tile);
+        var remaining = inv.insertStack(stack);
+
+        if (!remaining.isEmpty()) {
+            var center = pos.above().getCenter();
+            var item = new ItemEntity(level, center.x, center.y, center.z, remaining);
+            item.setDefaultPickUpDelay();
+            level.addFreshEntity(item);
+        }
+
+        return true;
     }
 }

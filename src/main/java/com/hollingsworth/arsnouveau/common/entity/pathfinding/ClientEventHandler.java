@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
-import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.light.LightManager;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.config.Config;
@@ -27,7 +26,6 @@ public class ClientEventHandler {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void renderWorldLastEvent(final RenderLevelStageEvent event) {
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
-            ClientInfo.partialTicks = event.getPartialTick().getGameTimeDeltaPartialTick(false);
             LightManager.updateAll(event.getLevelRenderer());
         }
     }

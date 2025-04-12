@@ -29,7 +29,9 @@ public class EarthEssence extends ModItem {
 
         if (pContext.getLevel().getBlockState(pContext.getClickedPos()).is(BlockTags.DIRT)) {
             pContext.getLevel().setBlock(pContext.getClickedPos(), Blocks.GRASS_BLOCK.defaultBlockState(), 3);
-            pContext.getItemInHand().shrink(1);
+            if (!pContext.getPlayer().hasInfiniteMaterials()) {
+                pContext.getItemInHand().shrink(1);
+            }
         }
 
         return super.useOn(pContext);

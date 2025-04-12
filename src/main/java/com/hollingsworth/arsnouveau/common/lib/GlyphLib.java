@@ -89,7 +89,7 @@ public class GlyphLib {
     public static final String EffectWallId = prependGlyph("wall");
 
     public static final String EffectBurstID = prependGlyph("burst");
-
+    public static final String EffectWindburstID = prependGlyph("wind_burst");
 
     public static String prependGlyph(String glyph) {
         return "glyph_" + glyph;

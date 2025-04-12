@@ -7,6 +7,8 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -20,6 +22,7 @@ import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
@@ -50,15 +53,33 @@ public class EffectInteract extends AbstractEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity e = rayTraceResult.getEntity();
         Player player = getPlayer(shooter, (ServerLevel) world);
+        boolean wasShiftDown = player.isShiftKeyDown();
+        Pose previousPose = player.getPose();
+        boolean shouldShift = spellStats.hasBuff(AugmentDampen.INSTANCE);
         if (!isRealPlayer(shooter)) {
             InventoryManager manager = spellContext.getCaster().getInvManager();
             player = setupFakeInventory(spellContext, world);
+            if (shouldShift) {
+                player.setShiftKeyDown(true);
+                player.setPose(Pose.CROUCHING);
+            }
             useOnEntity(player, spellStats, e);
             for(ItemStack i : player.inventory.items){
                 manager.insertOrDrop(i, world, e.blockPosition());
             }
         }else {
+            if (shouldShift) {
+                wasShiftDown = player.isShiftKeyDown();
+                previousPose = player.getPose();
+                player.setShiftKeyDown(true);
+                player.setPose(Pose.CROUCHING);
+            }
             useOnEntity(player, spellStats, e);
+        }
+
+        if (shouldShift) {
+            player.setShiftKeyDown(wasShiftDown);
+            player.setPose(previousPose);
         }
     }
 
@@ -78,7 +99,7 @@ public class EffectInteract extends AbstractEffect {
                 return false;
             }
             ItemStack pickup = bp.pickupBlock(player, world, target, targetState);
-            if (!pickup.isEmpty() && !player.getAbilities().instabuild) {
+            if (!pickup.isEmpty() && !player.hasInfiniteMaterials()) {
                 bp.getPickupSound(targetState).ifPresent(sound -> player.playSound(sound, 1.0F, 1.0F));
                 world.gameEvent(player, GameEvent.FLUID_PICKUP, target);
                 ItemStack result = ItemUtils.createFilledResult(item, player, pickup);
@@ -101,7 +122,7 @@ public class EffectInteract extends AbstractEffect {
         }
         boolean placed = bucket.emptyContents(player, world, pos, rayTraceResult, item);
         if (placed) {
-            if (!player.getAbilities().instabuild) {
+            if (!player.hasInfiniteMaterials()) {
                 ItemStack result = ItemUtils.createFilledResult(item, player, new ItemStack(Items.BUCKET));
                 if(player.getItemInHand(hand).isEmpty()){
                     player.setItemInHand(hand, result);
@@ -139,6 +160,11 @@ public class EffectInteract extends AbstractEffect {
         var pPlayer = (ServerPlayer) player;
         InteractionHand pHand = spellStats.isSensitive() ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
+        if (spellStats.hasBuff(AugmentAmplify.INSTANCE)) {
+            blockstate.attack(pLevel, blockpos, pPlayer);
+            return;
+        }
+
         ItemInteractionResult iteminteractionresult = blockstate.useItemOn(pPlayer.getItemInHand(pHand), pLevel, pPlayer, pHand, pHitResult);
 
         if (itemstack.getItem() instanceof BucketItem bucket) {
@@ -156,7 +182,6 @@ public class EffectInteract extends AbstractEffect {
                 CriteriaTriggers.DEFAULT_BLOCK_USE.trigger(pPlayer, blockpos);
             }
         }
-
     }
 
     @Override
@@ -169,11 +194,24 @@ public class EffectInteract extends AbstractEffect {
             return;
         }
         Player player = getPlayer(shooter, (ServerLevel) world);
+        boolean wasShiftDown = player.isShiftKeyDown();
+        Pose previousPose = player.getPose();
+        boolean shouldShift = spellStats.hasBuff(AugmentDampen.INSTANCE);
         if(isRealPlayer(shooter)){
+            if (shouldShift) {
+                player.setShiftKeyDown(true);
+                player.setPose(Pose.CROUCHING);
+            }
             useOnBlock(player, spellStats, blockPos, blockState, world, rayTraceResult);
         }else{
             InventoryManager manager = spellContext.getCaster().getInvManager();
             player = setupFakeInventory(spellContext, world);
+            if (shouldShift) {
+                wasShiftDown = player.isShiftKeyDown();
+                previousPose = player.getPose();
+                player.setShiftKeyDown(true);
+                player.setPose(Pose.CROUCHING);
+            }
             useOnBlock(player, spellStats, blockPos, blockState, world, rayTraceResult);
             for(ItemStack i : player.inventory.items){
                 manager.insertOrDrop(i, world, rayTraceResult.getBlockPos());
@@ -181,6 +219,11 @@ public class EffectInteract extends AbstractEffect {
             for(ItemStack i : player.inventory.offhand){
                 manager.insertOrDrop(i, world, rayTraceResult.getBlockPos());
             }
+        }
+
+        if (shouldShift) {
+            player.setShiftKeyDown(wasShiftDown);
+            player.setPose(previousPose);
         }
     }
 
@@ -200,24 +243,28 @@ public class EffectInteract extends AbstractEffect {
    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentSensitive.INSTANCE);
+        return augmentSetOf(AugmentSensitive.INSTANCE, AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE);
     }
 
     @Override
     protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
         super.addDefaultAugmentLimits(defaults);
         defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
+        defaults.put(AugmentAmplify.INSTANCE.getRegistryName(), 1);
+        defaults.put(AugmentDampen.INSTANCE.getRegistryName(), 1);
     }
 
     @Override
     public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
         super.addAugmentDescriptions(map);
         map.put(AugmentSensitive.INSTANCE, "Will interact with your off-hand item.");
+        map.put(AugmentAmplify.INSTANCE, "Uses left-click instead of right-click.");
+        map.put(AugmentDampen.INSTANCE, "Will use shift clicks.");
     }
 
     @Override
     public String getBookDescription() {
-        return "Interacts with blocks or entities as it were a player. Useful for reaching levers, chests, or animals. Sensitive will use your off-hand item on the block or entity.";
+        return "Interacts with blocks or entities as it were a player. Useful for reaching levers, chests, or animals. Sensitive will use your off-hand item on the block or entity, Amplify will use left-click instead of right-click on blocks.";
     }
 
     @Override

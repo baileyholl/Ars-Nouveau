@@ -30,6 +30,7 @@ public abstract class StructureRitual extends AbstractRitual {
     public int sourceRequired;
     public boolean hasConsumed;
     public ResourceKey<Biome> biome;
+    public boolean hasDoneSetup;
 
     public StructureRitual(ResourceLocation structure, BlockPos offset, int sourceRequired, ResourceKey<Biome> biome){
         this.structure = structure;
@@ -48,7 +49,7 @@ public abstract class StructureRitual extends AbstractRitual {
     }
 
     public void setup(){
-        if(getWorld().isClientSide)
+        if(getWorld().isClientSide || hasDoneSetup)
             return;
         StructureTemplateManager manager = getWorld().getServer().getStructureManager();
         StructureTemplate structureTemplate = manager.getOrCreate(structure);
@@ -56,12 +57,16 @@ public abstract class StructureRitual extends AbstractRitual {
         blocks = new ArrayList<>(infoList.stream().filter(b -> !b.state().isAir()).toList());
         blocks.sort(new StructureComparator(getPos(), offset));
         entityInfoList = new ArrayList<>(((StructureTemplateAccessor) structureTemplate).getEntityInfoList());
+        hasDoneSetup = true;
     }
 
     @Override
     protected void tick() {
         if(getWorld().isClientSide)
             return;
+        if(!hasDoneSetup){
+            setup();
+        }
         if(!hasConsumed){
             setNeedsSource(true);
             return;
@@ -124,7 +129,6 @@ public abstract class StructureRitual extends AbstractRitual {
         super.read(provider, tag);
         index = tag.getInt("index");
         hasConsumed = tag.getBoolean("hasConsumed");
-        setup();
     }
 
     @Override

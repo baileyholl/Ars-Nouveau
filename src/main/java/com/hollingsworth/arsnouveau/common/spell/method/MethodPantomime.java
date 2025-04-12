@@ -37,7 +37,7 @@ public class MethodPantomime extends AbstractCastMethod {
         double dist = viewXRot < 45.0f ? 2 + offset : 3 + offset;
         Vec3 to = eyes.add(shooter.getViewVector(1.0f).scale(dist));
         BlockPos toPos = BlockPos.containing(to);
-        return new BlockHitResult(eyes, Direction.getNearest(to.x, to.y, to.z).getOpposite(), toPos, true);
+        return new BlockHitResult(to, Direction.getNearest(to.x, to.y, to.z).getOpposite(), toPos, true);
     }
 
     public CastResolveType getTarget(Level world, LivingEntity shooter, SpellResolver resolver, SpellStats stats) {

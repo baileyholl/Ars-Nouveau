@@ -1,0 +1,22 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": {
+    "b": 204,
+    "g": 204,
+    "id": "ars_nouveau:constant",
+    "r": 255
+  },
+  "flavour_text": "Weaken it, kill it and take it home.",
+  "name": "Sutokahs LOVE",
+  "sound": {},
+  "spell": [
+    "ars_nouveau:glyph_projectile",
+    "ars_nouveau:glyph_hex",
+    "ars_nouveau:glyph_harm",
+    "ars_nouveau:glyph_blink",
+    "ars_nouveau:glyph_amplify",
+    "ars_nouveau:glyph_pickup",
+    "ars_nouveau:glyph_aoe"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

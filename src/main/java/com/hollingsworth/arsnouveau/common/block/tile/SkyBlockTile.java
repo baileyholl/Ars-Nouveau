@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
+import com.hollingsworth.arsnouveau.api.event.InvalidateMirrorweaveRender;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.MirrorWeave;
 import com.hollingsworth.arsnouveau.common.event.timed.SkyweaveVisibilityEvent;
@@ -11,11 +11,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 
-public class SkyBlockTile extends MirrorWeaveTile implements ITickable, IDispellable {
+public class SkyBlockTile extends MirrorWeaveTile implements ITickable {
 
     private boolean showFacade;
     public int previousLight;
@@ -45,7 +46,6 @@ public class SkyBlockTile extends MirrorWeaveTile implements ITickable, IDispell
         }
     }
 
-
     public void setShowFacade(boolean showFacade){
         if(this.showFacade == showFacade){
             return;
@@ -62,7 +62,18 @@ public class SkyBlockTile extends MirrorWeaveTile implements ITickable, IDispell
             }
         }
         this.showFacade = showFacade;
+        EventQueue.getServerInstance().addEvent(new InvalidateMirrorweaveRender(getBlockPos(), level));
         this.updateBlock();
+    }
+
+    @Override
+    public BlockState getDefaultBlockState() {
+        return BlockRegistry.SKY_WEAVE.defaultBlockState();
+    }
+
+    @Override
+    public BlockState getStateForCulling() {
+        return showFacade ? super.getStateForCulling() : Blocks.COBBLESTONE.defaultBlockState();
     }
 
     @Override

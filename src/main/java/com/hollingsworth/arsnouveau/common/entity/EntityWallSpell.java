@@ -94,7 +94,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
         BlockPos start = blockPosition().offset(flatAoe * getDirection().getStepX(), 0, flatAoe * getDirection().getStepZ());
         BlockPos end = blockPosition().offset(-flatAoe  * getDirection().getStepX(), flatAoe, -flatAoe * getDirection().getStepZ());
         if (isSensitive()) {
-            if(age % (20 - 2 * getAccelerates()) != 0 && age != 1)
+            if(age % (Math.max(1,20 - 2 * getAccelerates())) != 0 && age != 1)
                 return;
             for(BlockPos p : BlockPos.betweenClosed(start, end)){
                 p = p.immutable();
@@ -165,7 +165,8 @@ public class EntityWallSpell extends EntityProjectileSpell {
                     double x = blockPos.getX() + ParticleUtil.inRange(-growthFactor, growthFactor) + 0.5;
                     double y = blockPos.getY() + ParticleUtil.inRange(-growthFactor, growthFactor);
                     double z = blockPos.getZ() + ParticleUtil.inRange(-growthFactor, growthFactor) + 0.5;
-                    level.addParticle(ParticleLineData.createData(getParticleColor()),
+                    level.addAlwaysVisibleParticle(ParticleLineData.createData(getParticleColor()),
+                            true,
                             x, y, z,
                             x, y + ParticleUtil.inRange(0.5, 5), z);
                 }

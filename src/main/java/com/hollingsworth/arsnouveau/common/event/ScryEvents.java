@@ -93,8 +93,9 @@ public class ScryEvents {
                 zSpeedOffset = ParticleUtil.inRange(-0.01f, 0.01f);
                 Vec3 renderPos = pos.pos;
                 ParticleColor color = pos.color;
-                world.addParticle(
+                world.addAlwaysVisibleParticle(
                         GlowParticleData.createData(color, true),
+                        false,
                         renderPos.x, renderPos.y  + ParticleUtil.inRange(-0.00, 0.1), renderPos.z,
                         xSpeedOffset, ySpeedOffset, zSpeedOffset);
             }
@@ -137,8 +138,9 @@ public class ScryEvents {
                         rand.nextInt(255));
             }
 
-            world.addParticle(
+            world.addAlwaysVisibleParticle(
                     GlowParticleData.createData(color, true),
+                    false,
                     renderPos.getX() + 0.5 + ParticleUtil.inRange(-0.1, 0.1), renderPos.getY() + 0.2 + ParticleUtil.inRange(-0.1, 0.1), renderPos.getZ() + 0.5 + ParticleUtil.inRange(-0.1, 0.1),
                     0, 0.03f, 0);
         }
