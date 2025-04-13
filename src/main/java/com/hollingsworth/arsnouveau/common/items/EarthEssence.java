@@ -13,17 +13,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class EarthEssence extends ModItem {
+public class EarthEssence extends AbstractEssence {
 
     public EarthEssence() {
-        super();
-        withTooltip(Component.translatable("tooltip.ars_nouveau.essences"));
+        super("earth");
     }
 
     @Override
-    public @NotNull InteractionResult useOn(UseOnContext pContext) {
+    public @NotNull InteractionResult useOn(@NotNull UseOnContext pContext) {
 
-        if (pContext.getPlayer().level.isClientSide) {
+        if (pContext.getPlayer() != null && pContext.getPlayer().level.isClientSide) {
             return super.useOn(pContext);
         }
 

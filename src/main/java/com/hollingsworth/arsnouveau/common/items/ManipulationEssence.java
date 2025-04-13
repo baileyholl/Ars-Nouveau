@@ -9,11 +9,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class ManipulationEssence extends ModItem{
+public class ManipulationEssence extends AbstractEssence {
 
     public ManipulationEssence() {
-        super();
-        withTooltip(Component.translatable("tooltip.ars_nouveau.essences"));
+        super("manipulation");
     }
 
     @Override

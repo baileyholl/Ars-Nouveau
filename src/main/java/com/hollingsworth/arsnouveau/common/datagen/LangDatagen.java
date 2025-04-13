@@ -244,7 +244,7 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.void_jar", "Jar of Voiding");
         add("ars_nouveau.rune.setperm", "This rune is now permanent.");
         add("ars_nouveau.page.void_jar", "A jar that can destroy items on pickup and grants a small amount of mana in return. To turn the jar on and off, use the jar while sneaking. To add or remove an item to be destroyed by the jar, use the jar with an item in the off hand, or use an item on the Scribes Table with the jar placed on it. The jar must be in your hotbar to function.");
-        add("ars_nouveau.page.runic_chalk", "Runic chalk can be used to place permanent Runes on the ground that will cast spells on entities that walk over them. To give a rune a spell, inscribe spell parchment using the scribes table. Once the rune has cast the spell, it will become uncharged. An uncharged rune will charge itself from nearby source jars. Using Runic Chalk on a temporary rune will convert it to a permanent one.");
+        add("ars_nouveau.page.runic_chalk", "Runic chalk can be used to place permanent Runes on the ground that will cast spells on entities that walk over them. To give a rune a spell, inscribe spell parchment using the scribes table. Once the rune has cast the spell, it will become uncharged. An uncharged rune will charge itself from nearby source jars. Using Runic Chalk on a temporary rune will convert it to a permanent one. Using an essence on the rune will change its pattern.");
         add("ars_nouveau.wand.invalid", "Invalid spell. Wands accept Effects and Augments only.");
         add("ars_nouveau.gauntlet.invalid", "Invalid spell. Gauntlets accept Effects and Augments only.");
         add("item.ars_nouveau.wand", "Enchanter's Wand");

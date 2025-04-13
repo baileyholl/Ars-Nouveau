@@ -38,6 +38,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -63,7 +64,7 @@ public class RuneBlock extends TickableModBlock {
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack stack, @NotNull BlockState state, Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
 
         if (worldIn.getBlockEntity(pos) instanceof RuneTile runeTile) {
 
@@ -93,16 +94,16 @@ public class RuneBlock extends TickableModBlock {
 
 
     @Override
-    public BlockState rotate(BlockState state, Rotation rot) {
+    public @NotNull BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(BlockStateProperties.FACING, rot.rotate(state.getValue(BlockStateProperties.FACING)));
     }
 
     @Override
-    public BlockState mirror(BlockState state, Mirror mirrorIn) {
+    public @NotNull BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(BlockStateProperties.FACING)));
     }
     @Override
-    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource rand) {
+    public void tick(@NotNull BlockState state, @NotNull ServerLevel worldIn, @NotNull BlockPos pos, @NotNull RandomSource rand) {
         super.tick(state, worldIn, pos, rand);
 
         if (worldIn.getBlockEntity(pos) instanceof RuneTile rune && rune.touchedEntity != null) {
@@ -112,7 +113,7 @@ public class RuneBlock extends TickableModBlock {
     }
 
     @Override
-    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
+    public void entityInside(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Entity entityIn) {
         super.entityInside(state, worldIn, pos, entityIn);
         List<Entity> entities = worldIn.getEntitiesOfClass(Entity.class, getShape(state, worldIn, pos, CollisionContext.empty()).bounds().move(pos), EntitySelector.NO_SPECTATORS.and((p_289691_) -> {
             return !p_289691_.isIgnoringBlockTriggers();
@@ -127,13 +128,13 @@ public class RuneBlock extends TickableModBlock {
                     } else break;
                 }
             }
-            rune.touchedEntity = entities.get(0);
+            rune.touchedEntity = entities.getFirst();
             worldIn.scheduleTick(pos, this, 1);
         }
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+    public void neighborChanged(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Block blockIn, @NotNull BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
         if (!world.isClientSide() && world.getBlockEntity(pos) instanceof RuneTile runeTile) {
             runeTile.disabled = world.hasNeighborSignal(pos);
@@ -141,21 +142,16 @@ public class RuneBlock extends TickableModBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         Direction facing = state.getValue(BlockStateProperties.FACING);
-        switch(facing){
-            case EAST:
-                return VoxelShapeUtils.rotate(shape, Direction.WEST);
-            case NORTH:
-                return VoxelShapeUtils.rotateX(shape, 270);
-            case DOWN:
-                return VoxelShapeUtils.rotate(shape, Direction.UP);
-            case WEST:
-                return VoxelShapeUtils.rotate(shape, Direction.EAST);
-            case SOUTH:
-                return VoxelShapeUtils.rotateX(shape, 90);
-        }
-        return shape;
+        return switch (facing) {
+            case EAST -> VoxelShapeUtils.rotate(shape, Direction.WEST);
+            case NORTH -> VoxelShapeUtils.rotateX(shape, 270);
+            case DOWN -> VoxelShapeUtils.rotate(shape, Direction.UP);
+            case WEST -> VoxelShapeUtils.rotate(shape, Direction.EAST);
+            case SOUTH -> VoxelShapeUtils.rotateX(shape, 90);
+            default -> shape;
+        };
     }
 
     @Override
@@ -164,12 +160,12 @@ public class RuneBlock extends TickableModBlock {
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState p_149645_1_) {
+    public @NotNull RenderShape getRenderShape(@NotNull BlockState p_149645_1_) {
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         return new RuneTile(pos, state);
     }
 
