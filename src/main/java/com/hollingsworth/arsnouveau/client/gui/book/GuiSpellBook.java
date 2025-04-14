@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
@@ -48,6 +50,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -915,24 +920,65 @@ public class GuiSpellBook extends BaseBook {
     public void onCopyOrExport(Button ignoredB) {
         if (hasShiftDown() && clipboard != null && !clipboard.isEmpty()) {
             // copy the spell to the clipboard
+
             StringBuilder spellString = new StringBuilder(spellname);
             for (AbstractSpellPart part : spell) {
                 if (part != null) {
                     spellString.append(";").append(part.getRegistryName());
                 }
             }
-            getMinecraft().keyboardHandler.setClipboard(spellString.toString());
+            getMinecraft().keyboardHandler.setClipboard(hasAltDown() ? spellToJson(new Spell(spell)) : spellToBinaryBase64(new Spell(spell)));
         } else if (spell != null && !spell.isEmpty()) {
             clipboard = new ArrayList<>(spell);
             this.clipboardW.setClipboard(clipboard);
         }
     }
 
+    public static String spellToJson(Spell spell) {
+        JsonObject json = new JsonObject();
+        json.addProperty("version", 1);
+        json.addProperty("name", spell.name());
+
+        JsonArray parts = new JsonArray();
+        for (AbstractSpellPart part : spell.recipe()) {
+            if (part != null) {
+                parts.add(part.getRegistryName().toString());
+            }
+        }
+        json.add("parts", parts);
+        return json.toString();
+    }
+
+    public static String spellToBinaryBase64(Spell spell) {
+        try {
+            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+            DataOutputStream out = new DataOutputStream(byteStream);
+
+            out.writeByte(2); // version
+            out.writeUTF(spell.name());
+            out.writeInt(spell.unsafeList().size());
+
+            for (AbstractSpellPart part : spell.recipe()) {
+                if (part != null) {
+                    out.writeUTF(part.getRegistryName().toString());
+                }
+            }
+
+            out.close();
+            return Base64.getEncoder().encodeToString(byteStream.toByteArray());
+
+        } catch (IOException e) {
+            System.out.println("Error writing spell to binary: " + e.getMessage());
+            return "";
+        }
+    }
+
+
     public void onPasteOrImport(Button ignoredB) {
         if (Screen.hasShiftDown()) {
             String clipboardString = Minecraft.getInstance().keyboardHandler.getClipboard();
             if (!clipboardString.isEmpty()) {
-                Spell spell = Spell.fromString(clipboardString);
+                Spell spell = hasAltDown() ? Spell.fromJson(clipboardString) : Spell.fromBinaryBase64(clipboardString);
                 if (spell.isValid()) {
                     clipboard = spell.mutable().recipe;
                     clipboardW.setClipboard(clipboard);
@@ -945,4 +991,22 @@ public class GuiSpellBook extends BaseBook {
         }
     }
 
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        // only react if ctrl is pressed
+        if (hasControlDown() && !spell_name.isFocused() && !searchBar.isFocused()) {
+            if (isCopy(keyCode)) {
+                onCopyOrExport(null);
+                return true;
+            } else if (isPaste(keyCode)) {
+                onPasteOrImport(null);
+                return true;
+            } else if (isCut(keyCode)) {
+                onCopyOrExport(null);
+                clear(null);
+                return true;
+            }
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
 }
