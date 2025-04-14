@@ -61,6 +61,10 @@ public class Spell {
         this(Arrays.asList(spellParts));
     }
 
+    public Spell(List<AbstractSpellPart> recipe, String name) {
+        this(name, ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, recipe);
+    }
+
     public Spell(List<AbstractSpellPart> recipe) {
         this("", ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, recipe);
     }
@@ -128,12 +132,17 @@ public class Spell {
                 throw new IllegalArgumentException("Unsupported spell version: " + version);
             }
 
+            System.out.println("About to read spell from binary base64: " + base64);
+
             String name = in.readUTF();
+            System.out.println("Spell name: " + name);
             int partCount = in.readInt();
+            System.out.println("Part count: " + partCount);
             List<AbstractSpellPart> recipe = new ArrayList<>();
 
             for (int i = 0; i < partCount; i++) {
                 String partId = in.readUTF();
+                System.out.println("Part ID: " + partId);
                 AbstractSpellPart part = GlyphRegistry.getSpellpartMap()
                         .getOrDefault(ResourceLocation.tryParse(partId), null);
                 if (part != null) {
@@ -143,10 +152,12 @@ public class Spell {
 
             return new Spell(name, ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, recipe);
 
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             System.out.println("Failed to read spell from binary base64: " + e.getMessage());
-            return new Spell();
+        } catch (IllegalArgumentException e) {
+            System.out.println("String format not valid.");
         }
+        return new Spell();
     }
 
 

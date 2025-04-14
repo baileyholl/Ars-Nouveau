@@ -927,7 +927,7 @@ public class GuiSpellBook extends BaseBook {
                     spellString.append(";").append(part.getRegistryName());
                 }
             }
-            getMinecraft().keyboardHandler.setClipboard(hasAltDown() ? spellToJson(new Spell(spell)) : spellToBinaryBase64(new Spell(spell)));
+            getMinecraft().keyboardHandler.setClipboard(hasAltDown() ? spellToJson(new Spell(spell)) : spellToBinaryBase64(new Spell(spell, spellname)));
         } else if (spell != null && !spell.isEmpty()) {
             clipboard = new ArrayList<>(spell);
             this.clipboardW.setClipboard(clipboard);
@@ -981,11 +981,18 @@ public class GuiSpellBook extends BaseBook {
                 Spell spell = hasAltDown() ? Spell.fromJson(clipboardString) : Spell.fromBinaryBase64(clipboardString);
                 if (spell.isValid()) {
                     clipboard = spell.mutable().recipe;
+                    spell_name.setValue(spell.name());
                     clipboardW.setClipboard(clipboard);
                 }
             }
         } else {
-            spell = new ArrayList<>(clipboard);
+            if (clipboard == null || clipboard.isEmpty()) {
+                return;
+            }
+            // before pasting, trim the spell to the max size supported by the spell book
+            int maxSize = 10 + getExtraGlyphSlots();
+            spell = clipboard.size() > maxSize ? clipboard.subList(0, maxSize) : new ArrayList<>(clipboard);
+            // reset the crafting cells and validate the spell
             resetCraftingCells();
             onCreateClick(null);
         }
