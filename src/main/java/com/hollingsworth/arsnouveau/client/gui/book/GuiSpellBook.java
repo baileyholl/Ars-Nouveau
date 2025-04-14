@@ -440,8 +440,8 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void onColorClick(Button button) {
-        ParticleColor.IntWrapper color = SpellCasterRegistry.from(bookStack).getColor(selectedSpellSlot).toWrapper();
-        Minecraft.getInstance().setScreen(new GuiColorScreen(color.r, color.g, color.b, selectedSpellSlot, this.hand));
+        ParticleColor color = SpellCasterRegistry.from(bookStack).getColor(selectedSpellSlot);
+        Minecraft.getInstance().setScreen(new GuiColorScreen(color.getRedInt(), color.getGreenInt(), color.getBlueInt(), selectedSpellSlot, this.hand));
     }
 
     public void onSoundsClick(Button button) {
@@ -921,12 +921,12 @@ public class GuiSpellBook extends BaseBook {
         if (hasShiftDown() && clipboard != null && !clipboard.isEmpty()) {
             // copy the spell to the clipboard
 
-            StringBuilder spellString = new StringBuilder(spellname);
-            for (AbstractSpellPart part : spell) {
-                if (part != null) {
-                    spellString.append(";").append(part.getRegistryName());
-                }
-            }
+//            StringBuilder spellString = new StringBuilder(spellname);
+//            for (AbstractSpellPart part : spell) {
+//                if (part != null) {
+//                    spellString.append(";").append(part.getRegistryName());
+//                }
+//            }
             getMinecraft().keyboardHandler.setClipboard(hasAltDown() ? spellToJson(new Spell(spell)) : spellToBinaryBase64(new Spell(spell, spellname)));
         } else if (spell != null && !spell.isEmpty()) {
             clipboard = new ArrayList<>(spell);
