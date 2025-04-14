@@ -6,10 +6,12 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ModdedScreen extends Screen {
 
@@ -31,7 +33,7 @@ public class ModdedScreen extends Screen {
         List<Component> tooltip = new ArrayList<>();
         collectTooltips(stack, mouseX, mouseY, tooltip);
         if (!tooltip.isEmpty()) {
-            stack.renderComponentTooltip(font, tooltip, mouseX, mouseY);
+            stack.renderTooltip(font, tooltip, Optional.ofNullable(collectComponent(mouseX, mouseY)), mouseX, mouseY);
         }
     }
 
@@ -44,6 +46,17 @@ public class ModdedScreen extends Screen {
                 }
             }
         }
+    }
+
+    protected TooltipComponent collectComponent(int mouseX, int mouseY) {
+        for (Renderable renderable : renderables) {
+            if (renderable instanceof AbstractWidget widget && (widget instanceof ITooltipProvider tooltipProvider)) {
+                if (GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)) {
+                    return tooltipProvider.getTooltipImage();
+                }
+            }
+        }
+        return null;
     }
 
     public @Nullable Renderable getHoveredRenderable(int mouseX, int mouseY){

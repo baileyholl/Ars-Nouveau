@@ -12,7 +12,6 @@ import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.Color;
 import com.hollingsworth.arsnouveau.client.gui.GuiUtils;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
-import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
 import com.hollingsworth.arsnouveau.client.gui.buttons.*;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -35,6 +34,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.PageButton;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
@@ -45,7 +45,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
@@ -57,6 +56,9 @@ import java.util.stream.Collectors;
 import static com.hollingsworth.arsnouveau.api.util.ManaUtil.getPlayerDiscounts;
 
 public class GuiSpellBook extends BaseBook {
+
+    public List<AbstractSpellPart> clipboard = new ArrayList<>();
+    public ClipboardWidget clipboardW;
 
     public int numLinks = 10;
 
@@ -180,6 +182,14 @@ public class GuiSpellBook extends BaseBook {
         searchBar.setResponder(this::onSearchChanged);
         addRenderableWidget(spell_name);
         addRenderableWidget(searchBar);
+
+        // clipboard, copy and paste buttons
+        this.clipboardW = addRenderableWidget(
+                new ClipboardWidget(this)
+        );
+        addRenderableWidget(new CopyButton(this).withTooltip(Component.translatable("ars_nouveau.spell_book_gui.copy")));
+        addRenderableWidget(new PasteButton(this).withTooltip(Component.translatable("ars_nouveau.spell_book_gui.paste")));
+
         // Add spell slots
         for (int i = 0; i < 10; i++) {
             String name = caster.getSpellName(i);
@@ -225,6 +235,7 @@ public class GuiSpellBook extends BaseBook {
             updateWindowOffset(0);
         }
         validate();
+
     }
 
     public int getNumPages() {
@@ -565,7 +576,8 @@ public class GuiSpellBook extends BaseBook {
 
                     return true;
                 }
-                case null, default -> {}
+                case null, default -> {
+                }
             }
         }
 
@@ -753,7 +765,7 @@ public class GuiSpellBook extends BaseBook {
 
         // default length is 96
         // rainbow effect for perfect match is currently disabled by the >=
-        if (manaLength >= 0) {
+        if (manaLength > 0) {
             graphics.blit(ArsNouveau.prefix("textures/gui/manabar_gui_mana.png"), offsetLeft + 9, yOffset - 9, 0, manaOffset, manaLength, 6, 256, 256);
         } else {
             //color rainbow if mana cost = max mana, red if mana cost > max mana
@@ -900,14 +912,37 @@ public class GuiSpellBook extends BaseBook {
         }
     }
 
-    protected TooltipComponent collectComponent(int mouseX, int mouseY) {
-        for (Renderable renderable : renderables) {
-            if (renderable instanceof GlyphButton widget) {
-                if (GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)) {
-                    return widget.abstractSpellPart.spellSchools.isEmpty() ? null : new SchoolTooltip(widget.abstractSpellPart);
+    public void onCopyOrExport(Button ignoredB) {
+        if (hasShiftDown() && clipboard != null && !clipboard.isEmpty()) {
+            // copy the spell to the clipboard
+            StringBuilder spellString = new StringBuilder(spellname);
+            for (AbstractSpellPart part : spell) {
+                if (part != null) {
+                    spellString.append(";").append(part.getRegistryName());
                 }
             }
+            getMinecraft().keyboardHandler.setClipboard(spellString.toString());
+        } else if (spell != null && !spell.isEmpty()) {
+            clipboard = new ArrayList<>(spell);
+            this.clipboardW.setClipboard(clipboard);
         }
-        return null;
     }
+
+    public void onPasteOrImport(Button ignoredB) {
+        if (Screen.hasShiftDown()) {
+            String clipboardString = Minecraft.getInstance().keyboardHandler.getClipboard();
+            if (!clipboardString.isEmpty()) {
+                Spell spell = Spell.fromString(clipboardString);
+                if (spell.isValid()) {
+                    clipboard = spell.mutable().recipe;
+                    clipboardW.setClipboard(clipboard);
+                }
+            }
+        } else {
+            spell = new ArrayList<>(clipboard);
+            resetCraftingCells();
+            onCreateClick(null);
+        }
+    }
+
 }

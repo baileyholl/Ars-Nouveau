@@ -7,6 +7,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class GuiImageButton extends ANButton {
     }
 
     public GuiImageButton(int x, int y, int u, int v, int w, int h, int image_width, int image_height, String resource_image, Button.OnPress onPress) {
-        this(x, y, u, v, w, h, image_width, image_height, ArsNouveau.prefix( resource_image), onPress);
+        this(x, y, u, v, w, h, image_width, image_height, ArsNouveau.prefix(resource_image), onPress);
     }
 
     public GuiImageButton(int x, int y, int u, int v, int w, int h, int image_width, int image_height, ResourceLocation image, Button.OnPress onPress) {
@@ -54,9 +55,10 @@ public class GuiImageButton extends ANButton {
     }
 
     @Override
-    public void playDownSound(SoundManager pHandler) {
+    public void playDownSound(@NotNull SoundManager pHandler) {
         if (soundDisabled)
             return;
         super.playDownSound(pHandler);
     }
+
 }

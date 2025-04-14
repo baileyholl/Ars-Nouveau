@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
+import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -12,6 +13,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforgespi.language.IModInfo;
@@ -34,7 +36,7 @@ public class GlyphButton extends ANButton {
 
     @Override
     protected void renderWidget(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        if(!visible){
+        if (!visible) {
             return;
         }
         RenderUtils.drawSpellPart(this.abstractSpellPart, graphics, x, y, 16, !validationErrors.isEmpty(), 0);
@@ -42,7 +44,7 @@ public class GlyphButton extends ANButton {
 
     @Override
     public void getTooltip(List<Component> tip) {
-        if(!GlyphRegistry.getSpellpartMap().containsKey(this.abstractSpellPart.getRegistryName())){
+        if (!GlyphRegistry.getSpellpartMap().containsKey(this.abstractSpellPart.getRegistryName())) {
             return;
         }
         AbstractSpellPart spellPart = GlyphRegistry.getSpellpartMap().get(this.abstractSpellPart.getRegistryName());
@@ -65,8 +67,8 @@ public class GlyphButton extends ANButton {
                     .map(IModInfo::getDisplayName).orElse(spellPart.getRegistryName().getNamespace());
             tip.add(Component.literal(modName).withStyle(ChatFormatting.BLUE));
         }
-        if(this.abstractSpellPart instanceof AbstractAugment augment && this.augmentingParent != null){
-            if(validationErrors != null && !validationErrors.isEmpty()){
+        if (this.abstractSpellPart instanceof AbstractAugment augment && this.augmentingParent != null) {
+            if (validationErrors != null && !validationErrors.isEmpty()) {
                 return;
             }
             Component augmentDescription = augmentingParent.augmentDescriptions.get(augment);
@@ -75,5 +77,10 @@ public class GlyphButton extends ANButton {
                 tip.add(augmentDescription.copy().withStyle(ChatFormatting.GOLD));
             }
         }
+    }
+
+    @Override
+    public TooltipComponent getTooltipImage() {
+        return abstractSpellPart.spellSchools.isEmpty() ? null : new SchoolTooltip(abstractSpellPart);
     }
 }

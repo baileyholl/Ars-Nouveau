@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.client.gui;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
+import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -18,6 +20,10 @@ public record SpellTooltip(AbstractCaster<?> spellcaster, boolean showName) impl
         this(spellcaster, false);
     }
 
+    public SpellTooltip(Spell spell) {
+        this(new SpellCaster().setSpell(spell), false);
+    }
+
     public static class SpellTooltipRenderer implements ClientTooltipComponent {
         private final AbstractCaster<?> spellCaster;
         private final boolean showName;
@@ -30,7 +36,7 @@ public record SpellTooltip(AbstractCaster<?> spellcaster, boolean showName) impl
         @Override
         public int getHeight() {
 
-            return (showName ? 28 : 20) +  (spellCaster.getSpell().size() / 10) * 16;
+            return (showName ? 28 : 20) + (spellCaster.getSpell().size() / 10) * 16;
         }
 
         @Override
@@ -50,7 +56,7 @@ public record SpellTooltip(AbstractCaster<?> spellcaster, boolean showName) impl
         @Override
         public void renderImage(@NotNull Font pFont, int pX, int pY, @NotNull GuiGraphics pGuiGraphics) {
             var spell = spellCaster.getSpell();
-            for (int i = 0; i <  spell.size(); i++) {
+            for (int i = 0; i < spell.size(); i++) {
                 int yOffset = i / 10;
                 AbstractSpellPart part = spell.get(i);
                 RenderUtils.drawSpellPart(part, pGuiGraphics, pX + (i % 10) * 16, pY + (showName ? 10 : 0) + yOffset * 16, 16, false);

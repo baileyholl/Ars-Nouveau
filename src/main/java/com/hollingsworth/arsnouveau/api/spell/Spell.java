@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.google.common.collect.ImmutableList;
+import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.mojang.serialization.Codec;
@@ -70,11 +71,25 @@ public class Spell {
         this.recipe = ImmutableList.copyOf(abstractSpellParts);
     }
 
-    public ConfiguredSpellSound sound(){
+    // to be replaced with better decoding
+    public static Spell fromString(String clipboardString) {
+        String[] parts = clipboardString.split(";");
+        String name = parts[0];
+        List<AbstractSpellPart> recipe = new ArrayList<>();
+        for (int i = 1; i < parts.length; i++) {
+            AbstractSpellPart part = GlyphRegistry.getSpellpartMap().getOrDefault(ResourceLocation.tryParse(parts[i]), null);
+            if (part != null) {
+                recipe.add(part);
+            }
+        }
+        return new Spell(name, ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, recipe);
+    }
+
+    public ConfiguredSpellSound sound() {
         return sound;
     }
 
-    public Iterable<AbstractSpellPart> recipe(){
+    public Iterable<AbstractSpellPart> recipe() {
         return recipe;
     }
 
@@ -82,19 +97,19 @@ public class Spell {
      * DO NOT MUTATE.
      * See {@link Spell#mutable()} for a mutable version.
      */
-    public List<AbstractSpellPart> unsafeList(){
+    public List<AbstractSpellPart> unsafeList() {
         return recipe;
     }
 
-    public AbstractSpellPart get(int index){
+    public AbstractSpellPart get(int index) {
         return recipe.get(index);
     }
 
-    public int size(){
+    public int size() {
         return recipe.size();
     }
 
-    public int indexOf(AbstractSpellPart part){
+    public int indexOf(AbstractSpellPart part) {
         return recipe.indexOf(part);
     }
 
@@ -125,15 +140,15 @@ public class Spell {
         return new Spell(name, color, sound, recipe);
     }
 
-    public Spell withSound(@NotNull ConfiguredSpellSound sound){
+    public Spell withSound(@NotNull ConfiguredSpellSound sound) {
         return new Spell(name, color, sound, recipe);
     }
 
-    public ParticleColor color(){
+    public ParticleColor color() {
         return color;
     }
 
-    public String name(){
+    public String name() {
         return name;
     }
 
@@ -172,18 +187,18 @@ public class Spell {
         return (int) getAugments(startPosition, caster).stream().filter(a -> a.equals(augment)).count();
     }
 
-    public int getCost(){
+    public int getCost() {
         int cost = 0;
         AbstractSpellPart augmentedPart = null;
-        for(AbstractSpellPart part : recipe){
-            if(part == null)
+        for (AbstractSpellPart part : recipe) {
+            if (part == null)
                 continue;
-            if(!(part instanceof AbstractAugment))
+            if (!(part instanceof AbstractAugment))
                 augmentedPart = part;
 
-            if(augmentedPart != null && part instanceof AbstractAugment augment) {
+            if (augmentedPart != null && part instanceof AbstractAugment augment) {
                 cost += augment.getCostForPart(augmentedPart);
-            }else {
+            } else {
                 cost += part.getCastingCost();
             }
         }
@@ -229,11 +244,11 @@ public class Spell {
         return this;
     }
 
-    public List<ResourceLocation> serializeRecipe(){
+    public List<ResourceLocation> serializeRecipe() {
         return this.recipe.stream().map(AbstractSpellPart::getRegistryName).toList();
     }
 
-    public Mutable mutable(){
+    public Mutable mutable() {
         return new Mutable(new ArrayList<>(recipe), name, color, sound);
     }
 
@@ -250,7 +265,7 @@ public class Spell {
         return Objects.hash(recipe, name, color, sound);
     }
 
-    public static class Mutable{
+    public static class Mutable {
         public List<AbstractSpellPart> recipe;
         public String name;
         public ParticleColor color;
@@ -283,7 +298,7 @@ public class Spell {
             return this;
         }
 
-        public Spell immutable(){
+        public Spell immutable() {
             return new Spell(name, color, sound, recipe);
         }
     }
