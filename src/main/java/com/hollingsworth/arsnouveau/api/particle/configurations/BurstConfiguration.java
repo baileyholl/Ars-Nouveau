@@ -27,7 +27,7 @@ public class BurstConfiguration extends ParticleConfiguration{
 
 
     @Override
-    public IParticleType<?> getType() {
+    public IParticleConfigType<?> getType() {
         return ParticleConfigRegistry.BURST_TYPE.get();
     }
 

@@ -29,7 +29,7 @@ public class TrailConfiguration extends ParticleConfiguration {
     }
 
     @Override
-    public IParticleType<?> getType() {
+    public IParticleConfigType<?> getType() {
         return ParticleConfigRegistry.TRAIL_TYPE.get();
     }
 

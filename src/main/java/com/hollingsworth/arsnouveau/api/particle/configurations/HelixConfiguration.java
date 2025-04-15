@@ -42,7 +42,7 @@ public class HelixConfiguration extends ParticleConfiguration {
     }
 
     @Override
-    public IParticleType<?> getType() {
+    public IParticleConfigType<?> getType() {
         return ParticleConfigRegistry.HELIX_TYPE.get();
     }
 

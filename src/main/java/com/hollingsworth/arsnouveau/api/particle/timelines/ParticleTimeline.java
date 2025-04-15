@@ -1,6 +1,7 @@
-package com.hollingsworth.arsnouveau.api.particle;
+package com.hollingsworth.arsnouveau.api.particle.timelines;
 
 import com.hollingsworth.arsnouveau.api.particle.configurations.BurstConfiguration;
+import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleConfig;
 import com.hollingsworth.arsnouveau.api.particle.configurations.TrailConfiguration;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;

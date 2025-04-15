@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.google.common.collect.ImmutableMap;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
-import com.hollingsworth.arsnouveau.api.particle.ParticleTimeline;
+import com.hollingsworth.arsnouveau.api.particle.timelines.ParticleTimeline;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;

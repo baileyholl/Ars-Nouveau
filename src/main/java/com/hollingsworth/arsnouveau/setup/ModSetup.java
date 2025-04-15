@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.registry.ParticleConfigRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
@@ -57,6 +58,7 @@ public class ModSetup {
 
     public static void registerRegistries(NewRegistryEvent event) {
         event.register(ParticleConfigRegistry.PARTICLE_CONFIG_REGISTRY);
+        event.register(ParticleTimelineRegistry.PARTICLE_TIMELINE_REGISTRY);
     }
 
     public static void registerEvents(RegisterEvent event) {

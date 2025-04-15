@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.google.common.collect.ImmutableList;
-import com.hollingsworth.arsnouveau.api.particle.ParticleTimeline;
+import com.hollingsworth.arsnouveau.api.particle.timelines.ParticleTimeline;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.mojang.serialization.Codec;

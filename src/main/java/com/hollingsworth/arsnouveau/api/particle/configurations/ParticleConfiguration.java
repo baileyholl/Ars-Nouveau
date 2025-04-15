@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
-import com.hollingsworth.arsnouveau.api.particle.IParticleConfig;
 import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.world.level.Level;
