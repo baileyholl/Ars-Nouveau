@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -11,15 +12,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 public class ClipboardWidget extends AbstractWidget {
 
     private final GuiSpellBook spellbook;
     public ResourceLocation image = ArsNouveau.prefix("textures/gui/clipboard.png");
-    private List<AbstractSpellPart> clipboard = new ArrayList<>();
+    private Spell clipboard = new Spell();
 
     static int image_width = 80;
     static int image_height = 60;
@@ -55,9 +52,8 @@ public class ClipboardWidget extends AbstractWidget {
     }
 
 
-    public void setClipboard(List<AbstractSpellPart> clipboard) {
-        this.clipboard = clipboard;
-        this.clipboard.removeIf(Objects::isNull);
+    public void setClipboard(Spell.Mutable clipboard) {
+        this.clipboard = clipboard.immutable();
     }
 
 }

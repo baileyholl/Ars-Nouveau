@@ -1,11 +1,12 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.*;
+import com.google.gson.JsonParser;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.Util;
@@ -76,53 +77,37 @@ public class Spell {
         this.recipe = ImmutableList.copyOf(abstractSpellParts);
     }
 
-    // to be replaced with better decoding
-    public static Spell fromString(String clipboardString) {
-        String[] parts = clipboardString.split(";");
-        String name = parts[0];
-        List<AbstractSpellPart> recipe = new ArrayList<>();
-        if (parts.length > 1) {
-            for (int i = 1; i < parts.length; i++) {
-                AbstractSpellPart part = GlyphRegistry.getSpellpartMap().getOrDefault(ResourceLocation.tryParse(parts[i]), null);
-                if (part != null) {
-                    recipe.add(part);
-                }
-            }
-        }
-        return new Spell(name, ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, recipe);
-    }
-
     public static Spell fromJson(String jsonString) {
+
         try {
-            JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
-
-            int version = json.has("version") ? json.get("version").getAsInt() : 0;
-            if (version != 1) {
-                throw new IllegalArgumentException("Unsupported spell version: " + version);
-            }
-
-            String name = json.get("name").getAsString();
-            JsonArray partsArray = json.getAsJsonArray("parts");
-
-            List<AbstractSpellPart> recipe = new ArrayList<>();
-            for (JsonElement element : partsArray) {
-                String partId = element.getAsString();
-                AbstractSpellPart part = GlyphRegistry.getSpellpartMap()
-                        .getOrDefault(ResourceLocation.tryParse(partId), null);
-                if (part != null) {
-                    recipe.add(part);
-                }
-            }
-
-            return new Spell(name, ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, recipe);
-
-        } catch (JsonSyntaxException | IllegalStateException e) {
-            System.out.println(jsonString);
-            return new Spell();
+            Spell spell = CODEC.codec().parse(JsonOps.INSTANCE, JsonParser.parseString(jsonString)).getOrThrow();
+            System.out.println("About to read full spell from JSON: " + jsonString);
+            System.out.println("Full decoded spell: " + spell);
+            return spell;
+        } catch (Exception e) {
+            System.out.println("Failed to read spell from JSON: " + e.getMessage());
         }
+
+        return new Spell();
+
     }
 
     public static Spell fromBinaryBase64(String base64) {
+
+//        try{
+//            byte[] data = Base64.getDecoder().decode(base64);
+//            FriendlyByteBuf baseBuf = new FriendlyByteBuf(Unpooled.wrappedBuffer(data));
+//            RegistryFriendlyByteBuf buf = new RegistryFriendlyByteBuf(baseBuf, ArsNouveau.proxy.getPlayer().registryAccess(), ConnectionType.NEOFORGE);
+//
+//            Spell spell = Spell.STREAM.decode(buf);
+//
+//            System.out.println("About to read full spell from binary base64: " + base64);
+//            System.out.println("Full decoded spell: " + spell);
+//            return spell;
+//        }catch (Exception e) {
+//            System.out.println("Failed to read spell from binary base64: " + e.getMessage());
+//        }
+
         try {
             byte[] bytes = Base64.getDecoder().decode(base64);
             DataInputStream in = new DataInputStream(new ByteArrayInputStream(bytes));

@@ -1,9 +1,8 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
@@ -20,8 +19,11 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketSetSound;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateCaster;
+import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellColors;
 import com.hollingsworth.arsnouveau.common.spell.validation.CombinedSpellValidator;
+import com.hollingsworth.arsnouveau.common.spell.validation.GlyphKnownValidator;
 import com.hollingsworth.arsnouveau.common.spell.validation.GlyphMaxTierValidator;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
@@ -50,19 +52,18 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.hollingsworth.arsnouveau.api.util.ManaUtil.getPlayerDiscounts;
+import static com.hollingsworth.arsnouveau.api.util.SpellUtil.spellToBinaryBase64;
+import static com.hollingsworth.arsnouveau.api.util.SpellUtil.spellToJson;
 
 public class GuiSpellBook extends BaseBook {
 
-    public List<AbstractSpellPart> clipboard = new ArrayList<>();
+    public Spell clipboard = new Spell();
     public ClipboardWidget clipboardW;
 
     public int numLinks = 10;
@@ -136,7 +137,8 @@ public class GuiSpellBook extends BaseBook {
         this.validationErrors = new LinkedList<>();
         this.spellValidator = new CombinedSpellValidator(
                 ArsNouveauAPI.getInstance().getSpellCraftingSpellValidator(),
-                new GlyphMaxTierValidator(tier)
+                new GlyphMaxTierValidator(tier),
+                new GlyphKnownValidator(player.isCreative() ? null : cap)
         );
         caster = SpellCasterRegistry.from(bookStack);
         this.selectedSpellSlot = caster.getCurrentSlot();
@@ -173,7 +175,7 @@ public class GuiSpellBook extends BaseBook {
                 54, 12, null, Component.translatable("ars_nouveau.spell_book_gui.search"));
         searchBar.setBordered(false);
         searchBar.setTextColor(12694931);
-        searchBar.onClear = (val) -> {
+        searchBar.onClear = val -> {
             this.onSearchChanged("");
             return null;
         };
@@ -189,7 +191,7 @@ public class GuiSpellBook extends BaseBook {
         addRenderableWidget(searchBar);
 
         // clipboard, copy and paste buttons
-        this.clipboardW = addRenderableWidget(
+        clipboardW = addRenderableWidget(
                 new ClipboardWidget(this)
         );
         addRenderableWidget(new CopyButton(this).withTooltip(Component.translatable("ars_nouveau.spell_book_gui.copy")));
@@ -214,11 +216,11 @@ public class GuiSpellBook extends BaseBook {
                 .withTooltip(Component.translatable("ars_nouveau.gui.familiar")));
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 92, 0, 0, 23, 20, 23, 20, "textures/gui/sounds_tab.png", this::onSoundsClick)
                 .withTooltip(Component.translatable("ars_nouveau.gui.sounds")));
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 116, 0, 0, 23, 20, 23, 20, "textures/gui/settings_tab.png", (b) -> {
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 116, 0, 0, 23, 20, 23, 20, "textures/gui/settings_tab.png", b -> {
             Minecraft.getInstance().setScreen(new GuiSettingsScreen(this));
         }).withTooltip(Component.translatable("ars_nouveau.gui.settings")));
 
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 140, 0, 0, 23, 20, 23, 20, "textures/gui/discord_tab.png", (b) -> {
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 140, 0, 0, 23, 20, 23, 20, "textures/gui/discord_tab.png", b -> {
             try {
                 Util.getPlatform().openUri(new URI("https://discord.com/invite/y7TMXZu"));
             } catch (URISyntaxException e) {
@@ -312,7 +314,7 @@ public class GuiSpellBook extends BaseBook {
                 adjustedXPlaced = 0;
                 adjustedRowsPlaced = 0;
             }
-            int xOffset = 20 * ((adjustedXPlaced) % PER_ROW) + (nextPage ? 134 : 0);
+            int xOffset = 20 * (adjustedXPlaced % PER_ROW) + (nextPage ? 134 : 0);
             int yPlace = adjustedRowsPlaced * 18 + yStart + (nextPage && !foundForms ? 18 : 0);
 
             GlyphButton cell = new GlyphButton(xStart + xOffset, yPlace, part, this::onGlyphClick);
@@ -766,7 +768,7 @@ public class GuiSpellBook extends BaseBook {
         poseStack.scale(1.2F, 1.2F, 1.2F);
         poseStack.translate(-25, -30, 0);
         graphics.blit(ArsNouveau.prefix("textures/gui/manabar_gui_border.png"), offsetLeft, yOffset - 18, 0, 0, 108, 18, 256, 256);
-        int manaOffset = (int) (((ClientInfo.ticksInGame + partialTicks) / 3 % (33))) * 6;
+        int manaOffset = (int) ((ClientInfo.ticksInGame + partialTicks) / 3 % 33) * 6;
 
         // default length is 96
         // rainbow effect for perfect match is currently disabled by the >=
@@ -780,7 +782,7 @@ public class GuiSpellBook extends BaseBook {
         if (ArsNouveauAPI.ENABLE_DEBUG_NUMBERS && minecraft != null) {
             String text = currentCostCache + "  /  " + maxManaCache;
             int maxWidth = minecraft.font.width(maxManaCache + "  /  " + maxManaCache);
-            int offset = offsetLeft - maxWidth / 2 + (maxWidth - minecraft.font.width(text));
+            int offset = offsetLeft - maxWidth / 2 + maxWidth - minecraft.font.width(text);
 
             graphics.drawString(minecraft.font, text, offset + 55, yOffset - 10, 0xFFFFFF, false);
         }
@@ -852,7 +854,7 @@ public class GuiSpellBook extends BaseBook {
         }
 
 
-        List<AbstractSpellPart> slicedSpell = spell.subList(0, spell.isEmpty() ? 0 : (lastGlyphNoGap + 1));
+        List<AbstractSpellPart> slicedSpell = spell.subList(0, spell.isEmpty() ? 0 : lastGlyphNoGap + 1);
         // Set validation errors on all of the glyph buttons
         for (GlyphButton glyphButton : glyphButtons) {
             glyphButton.validationErrors.clear();
@@ -920,52 +922,13 @@ public class GuiSpellBook extends BaseBook {
     public void onCopyOrExport(Button ignoredB) {
         if (hasShiftDown() && clipboard != null && !clipboard.isEmpty()) {
             // copy the spell to the clipboard
-            getMinecraft().keyboardHandler.setClipboard(hasAltDown() ? spellToJson(new Spell(spell)) : spellToBinaryBase64(new Spell(spell, spellname)));
+            Spell spell = fetchCurrentSpell();
+            getMinecraft().keyboardHandler.setClipboard(hasAltDown() ? spellToJson(spell) : spellToBinaryBase64(spell));
         } else if (spell != null && !spell.isEmpty()) {
-            clipboard = new ArrayList<>(spell);
-            this.clipboardW.setClipboard(clipboard);
+            clipboard = fetchCurrentSpell();
+            clipboardW.setClipboard(clipboard.mutable());
         }
     }
-
-    public static String spellToJson(Spell spell) {
-        JsonObject json = new JsonObject();
-        json.addProperty("version", 1);
-        json.addProperty("name", spell.name());
-
-        JsonArray parts = new JsonArray();
-        for (AbstractSpellPart part : spell.recipe()) {
-            if (part != null) {
-                parts.add(part.getRegistryName().toString());
-            }
-        }
-        json.add("parts", parts);
-        return json.toString();
-    }
-
-    public static String spellToBinaryBase64(Spell spell) {
-        try {
-            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-            DataOutputStream out = new DataOutputStream(byteStream);
-
-            out.writeByte(2); // version
-            out.writeUTF(spell.name());
-            out.writeInt(spell.unsafeList().size());
-
-            for (AbstractSpellPart part : spell.recipe()) {
-                if (part != null) {
-                    out.writeUTF(part.getRegistryName().toString());
-                }
-            }
-
-            out.close();
-            return Base64.getEncoder().encodeToString(byteStream.toByteArray());
-
-        } catch (IOException e) {
-            System.out.println("Error writing spell to binary: " + e.getMessage());
-            return "";
-        }
-    }
-
 
     public void onPasteOrImport(Button ignoredB) {
         if (Screen.hasShiftDown()) {
@@ -973,9 +936,9 @@ public class GuiSpellBook extends BaseBook {
             if (!clipboardString.isEmpty()) {
                 Spell spell = hasAltDown() ? Spell.fromJson(clipboardString) : Spell.fromBinaryBase64(clipboardString);
                 if (spell.isValid()) {
-                    clipboard = spell.mutable().recipe;
+                    clipboard = spell;
                     spell_name.setValue(spell.name());
-                    clipboardW.setClipboard(clipboard);
+                    clipboardW.setClipboard(clipboard.mutable());
                 }
             }
         } else {
@@ -984,10 +947,24 @@ public class GuiSpellBook extends BaseBook {
             }
             // before pasting, trim the spell to the max size supported by the spell book
             int maxSize = 10 + getExtraGlyphSlots();
-            spell = clipboard.size() > maxSize ? clipboard.subList(0, maxSize) : new ArrayList<>(clipboard);
-            // reset the crafting cells and validate the spell
-            resetCraftingCells();
-            onCreateClick(null);
+            Spell oldSpell = fetchCurrentSpell();
+            Spell.Mutable clipSpell = clipboard.mutable();
+            spell = clipboard.size() > maxSize ? clipSpell.recipe.subList(0, maxSize) : clipSpell.recipe;
+
+            // validate the spell
+            validate();
+
+            if (validationErrors.isEmpty()) {
+                spell.removeIf(Objects::isNull);
+                if (clipboard.color() != ParticleColor.DEFAULT) // if color is default, it's likely absent, keep the old one
+                    Networking.sendToServer(new PacketUpdateSpellColors(this.selectedSpellSlot, clipboard.color(), this.hand == InteractionHand.MAIN_HAND));
+                if (clipboard.sound() != ConfiguredSpellSound.DEFAULT) // if sound is default, it's likely absent, keep the old one
+                    Networking.sendToServer(new PacketSetSound(this.selectedSpellSlot, clipboard.sound(), this.hand == InteractionHand.MAIN_HAND));
+                Networking.sendToServer(new PacketUpdateCaster(new Spell(spell), this.selectedSpellSlot, this.spell_name.getValue(), hand == InteractionHand.MAIN_HAND));
+            } else {
+                // if the spell is invalid, set the spell back to the old one
+                spell = oldSpell.mutable().recipe;
+            }
         }
     }
 
@@ -1009,4 +986,17 @@ public class GuiSpellBook extends BaseBook {
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
+
+    public Spell fetchCurrentSpell() {
+        Player player = Minecraft.getInstance().player;
+        if (player != null && player.getItemInHand(hand).getItem() instanceof ICasterTool tool) {
+            AbstractCaster<?> caster = tool.getSpellCaster(player.getItemInHand(hand));
+            if (caster != null) {
+                return caster.getSpell(selectedSpellSlot);
+            }
+        }
+        return new Spell(spell, spellname);
+    }
+
+
 }

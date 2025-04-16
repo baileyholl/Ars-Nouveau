@@ -27,7 +27,7 @@ public class PasteButton extends GuiImageButton {
         if (guiSpellBook.clipboard == null || guiSpellBook.clipboard.isEmpty()) {
             return null;
         }
-        return new SpellTooltip(new Spell(guiSpellBook.clipboard));
+        return new SpellTooltip(new Spell(guiSpellBook.clipboard.unsafeList()));
     }
 
 }
