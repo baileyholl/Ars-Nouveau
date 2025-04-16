@@ -1,6 +1,11 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ColorProperty;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.IParticleProperty;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.TextureProperty;
 import com.hollingsworth.arsnouveau.api.registry.ParticleConfigRegistry;
+import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
@@ -8,6 +13,8 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
+
+import java.util.List;
 
 public class BurstConfiguration extends ParticleConfiguration{
 
@@ -25,9 +32,13 @@ public class BurstConfiguration extends ParticleConfiguration{
         super(particleOptions);
     }
 
+    public BurstConfiguration() {
+        this(GlowParticleData.createData(ParticleColor.defaultParticleColor()));
+    }
+
 
     @Override
-    public IParticleConfigType<?> getType() {
+    public IConfigurableParticleType<?> getType() {
         return ParticleConfigRegistry.BURST_TYPE.get();
     }
 
@@ -42,5 +53,10 @@ public class BurstConfiguration extends ParticleConfiguration{
                     (level.random.nextFloat() - 0.5) / 3.0,
                     (level.random.nextFloat() - 0.5) / 3.0);
         }
+    }
+
+    @Override
+    public List<IParticleProperty> getProperties() {
+        return List.of(new TextureProperty((texture) -> {}), new ColorProperty((color) -> {}));
     }
 }

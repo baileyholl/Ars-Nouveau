@@ -1,6 +1,11 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ColorProperty;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.IParticleProperty;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.TextureProperty;
 import com.hollingsworth.arsnouveau.api.registry.ParticleConfigRegistry;
+import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
@@ -9,6 +14,8 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
+
+import java.util.List;
 
 public class TrailConfiguration extends ParticleConfiguration {
 
@@ -28,8 +35,12 @@ public class TrailConfiguration extends ParticleConfiguration {
         super(particleOptions);
     }
 
+    public TrailConfiguration(){
+        this(GlowParticleData.createData(ParticleColor.defaultParticleColor()));
+    }
+
     @Override
-    public IParticleConfigType<?> getType() {
+    public IConfigurableParticleType<?> getType() {
         return ParticleConfigRegistry.TRAIL_TYPE.get();
     }
 
@@ -52,4 +63,8 @@ public class TrailConfiguration extends ParticleConfiguration {
         }
     }
 
+    @Override
+    public List<IParticleProperty> getProperties() {
+        return List.of(new TextureProperty((texture) -> {}), new ColorProperty((color) -> {}));
+    }
 }

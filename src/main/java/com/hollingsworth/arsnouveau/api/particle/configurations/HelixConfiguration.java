@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
 import com.hollingsworth.arsnouveau.api.registry.ParticleConfigRegistry;
+import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -28,6 +30,10 @@ public class HelixConfiguration extends ParticleConfiguration {
     public double spiralRadius;
     public double spiralSpeed;
 
+    public HelixConfiguration() {
+        this(GlowParticleData.createData(ParticleColor.defaultParticleColor()));
+    }
+
     public HelixConfiguration(ParticleOptions particleOptions) {
         super(particleOptions);
         spiralRadius = 1f;
@@ -42,7 +48,7 @@ public class HelixConfiguration extends ParticleConfiguration {
     }
 
     @Override
-    public IParticleConfigType<?> getType() {
+    public IConfigurableParticleType<?> getType() {
         return ParticleConfigRegistry.HELIX_TYPE.get();
     }
 

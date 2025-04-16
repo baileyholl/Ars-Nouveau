@@ -3,6 +3,8 @@ package com.hollingsworth.arsnouveau.setup.registry;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
+import com.hollingsworth.arsnouveau.api.particle.configurations.IConfigurableParticleType;
+import com.hollingsworth.arsnouveau.api.particle.timelines.ProjectileTimeline;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import com.hollingsworth.arsnouveau.api.registry.*;
@@ -301,6 +303,15 @@ public class APIRegistry {
         JarBehaviorRegistry.register(EntityType.BREEZE, new BreezeBehavior());
         JarBehaviorRegistry.register(EntityType.SNIFFER, new SnifferBehavior());
         DynamicTooltipRegistry.register(DataComponentRegistry.REACTIVE_CASTER.get());
+
+        ParticleTimelineRegistry.registerGlyphTimeline(MethodProjectile.INSTANCE, ParticleTimelineRegistry.PROJECTILE_TIMELINE::get);
+
+        List<IConfigurableParticleType<?>> PROJECTILE_OPTIONS = Arrays.asList(ParticleConfigRegistry.HELIX_TYPE.get(),
+                ParticleConfigRegistry.TRAIL_TYPE.get(),
+                ParticleConfigRegistry.SPIRAL_TYPE.get());
+
+        ProjectileTimeline.TRAIL_OPTIONS.addAll(PROJECTILE_OPTIONS);
+        ProjectileTimeline.RESOLVING_OPTIONS.add(ParticleConfigRegistry.BURST_TYPE.get());
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {

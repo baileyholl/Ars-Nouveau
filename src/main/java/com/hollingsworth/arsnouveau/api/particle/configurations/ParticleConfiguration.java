@@ -7,7 +7,7 @@ import net.minecraft.world.level.Level;
 /**
  * Spawns particles via callbacks from the emitter
  */
-public abstract class ParticleConfiguration implements IParticleConfig {
+public abstract class ParticleConfiguration implements IConfigurableParticle {
 
     public ParticleOptions particleOptions;
     public ParticleEmitter emitter;

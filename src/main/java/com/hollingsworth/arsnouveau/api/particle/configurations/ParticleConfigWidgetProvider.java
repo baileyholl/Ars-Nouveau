@@ -9,16 +9,20 @@ import java.util.List;
  * Provides a renderable page that is used in the book for configuring particles.
  */
 public abstract class ParticleConfigWidgetProvider {
-    /**
-     * Should be mutated by the widgets on the screen
-     */
-    public IParticleConfig type;
 
-    public ParticleConfigWidgetProvider(IParticleConfig type) {
-        this.type = type;
+    public int x;
+    public int y;
+    public int width;
+    public int height;
+
+    public ParticleConfigWidgetProvider(int x, int y, int width, int height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
     }
 
     public abstract void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks);
 
-    public abstract void addWidgets(List<AbstractWidget> widgets, int x, int y, int width, int height);
+    public abstract void addWidgets(List<AbstractWidget> widgets);
 }

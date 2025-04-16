@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.api.particle.timelines;
 
+import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.api.particle.configurations.BurstConfiguration;
-import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleConfig;
+import com.hollingsworth.arsnouveau.api.particle.configurations.IConfigurableParticle;
+import com.hollingsworth.arsnouveau.api.particle.configurations.IConfigurableParticleType;
 import com.hollingsworth.arsnouveau.api.particle.configurations.TrailConfiguration;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
@@ -11,40 +13,51 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 public class ProjectileTimeline implements IParticleTimeline{
     public static final MapCodec<ProjectileTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            IParticleConfig.CODEC.fieldOf("trailEffect").forGetter(i -> i.trailEffect),
-            IParticleConfig.CODEC.fieldOf("onResolvingEffect").forGetter(i -> i.onResolvingEffect)
+            IConfigurableParticle.CODEC.fieldOf("trailEffect").forGetter(i -> i.trailEffect),
+            IConfigurableParticle.CODEC.fieldOf("onResolvingEffect").forGetter(i -> i.onResolvingEffect)
     ).apply(instance, ProjectileTimeline::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ProjectileTimeline> STREAM_CODEC = StreamCodec.composite(IParticleConfig.STREAM_CODEC, ProjectileTimeline::trailEffect,
-            IParticleConfig.STREAM_CODEC,
+    public static final StreamCodec<RegistryFriendlyByteBuf, ProjectileTimeline> STREAM_CODEC = StreamCodec.composite(IConfigurableParticle.STREAM_CODEC, ProjectileTimeline::trailEffect,
+            IConfigurableParticle.STREAM_CODEC,
             ProjectileTimeline::onResolvingEffect,
             ProjectileTimeline::new);
 
-    public IParticleConfig trailEffect;
-    public IParticleConfig onResolvingEffect;
+    public static final List<IConfigurableParticleType<?>> TRAIL_OPTIONS = new CopyOnWriteArrayList<>();
+    public static final List<IConfigurableParticleType<?>> RESOLVING_OPTIONS = new CopyOnWriteArrayList<>();
+
+    public IConfigurableParticle trailEffect;
+    public IConfigurableParticle onResolvingEffect;
 
     public ProjectileTimeline(){
         this(new TrailConfiguration(GlowParticleData.createData(ParticleColor.defaultParticleColor())), new BurstConfiguration(GlowParticleData.createData(ParticleColor.defaultParticleColor())));
     }
 
-    public ProjectileTimeline(IParticleConfig trailEffect, IParticleConfig onResolvingEffect){
+    public ProjectileTimeline(IConfigurableParticle trailEffect, IConfigurableParticle onResolvingEffect){
         this.trailEffect = trailEffect;
         this.onResolvingEffect = onResolvingEffect;
     }
 
-    public IParticleConfig trailEffect(){
+    public IConfigurableParticle trailEffect(){
         return trailEffect;
     }
 
-    public IParticleConfig onResolvingEffect(){
+    public IConfigurableParticle onResolvingEffect(){
         return onResolvingEffect;
     }
-
 
     @Override
     public IParticleTimelineType<?> getType() {
         return ParticleTimelineRegistry.PROJECTILE_TIMELINE.get();
+    }
+
+    @Override
+    public List<TimelineOption> getTimelineOptions() {
+        return List.of(new TimelineOption(this::trailEffect, (setEffect) -> this.trailEffect = setEffect, ImmutableList.copyOf(TRAIL_OPTIONS)),
+                new TimelineOption(this::onResolvingEffect, (setEffect) -> this.onResolvingEffect = setEffect,ImmutableList.copyOf(RESOLVING_OPTIONS)));
     }
 }

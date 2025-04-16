@@ -74,7 +74,7 @@ public class DocAssets {
     public static final BlitInfo POTION_RECIPE = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_brewing_stand.png"), 112, 58);
 
     public static final BlitInfo DOC_ENTRY_BUTTON = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_chapter.png"), 118, 14);
-
+//    public static final BlitInfo NESTED_ENTRY_BUTTON = new BlitInfo(ArsNouveau.prefix("textures/gui/doc_button_chapter2.png"))
     public record BlitInfo(ResourceLocation location, int u, int v, int width, int height) {
         public BlitInfo(ResourceLocation location, int width, int height){
             this(location, 0, 0, width, height);

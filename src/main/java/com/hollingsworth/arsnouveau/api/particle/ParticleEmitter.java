@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.api.particle;
 
-import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleConfig;
+import com.hollingsworth.arsnouveau.api.particle.configurations.IConfigurableParticle;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -12,12 +12,12 @@ public class ParticleEmitter {
     public Vec3 offset;
     public Supplier<Vec3> position;
     public Vec3 previousPosition;
-    public IParticleConfig particleConfig;
+    public IConfigurableParticle particleConfig;
     public int age;
     public Supplier<Vec2> rotation;
     public Vec2 rotationOffset;
 
-    public ParticleEmitter(Supplier<Vec3> getPosition, Supplier<Vec2> rot, IParticleConfig particleConfig){
+    public ParticleEmitter(Supplier<Vec3> getPosition, Supplier<Vec2> rot, IConfigurableParticle particleConfig){
         this.position = getPosition;
         this.offset = Vec3.ZERO;
         this.particleConfig = particleConfig;
