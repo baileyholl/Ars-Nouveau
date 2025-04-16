@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.api.block.IPrismaticBlock;
 import com.hollingsworth.arsnouveau.api.event.SpellProjectileHitEvent;
 import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
@@ -224,7 +225,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
     }
 
     public ParticleEmitter createEmitter(){
-        return new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, this.resolver().spell.particleTimeline().trailEffect);
+        return new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, this.resolver().spell.particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get()).trailEffect);
     }
 
     public void playParticles() {

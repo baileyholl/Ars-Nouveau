@@ -17,6 +17,6 @@ public class ParticleTimelineRegistry {
     public static final Registry<IParticleTimelineType<?>> PARTICLE_TIMELINE_REGISTRY = new RegistryBuilder<>(PARTICLE_TIMELINE_REGISTRY_KEY).sync(true).create();
     public static final DeferredRegister<IParticleTimelineType<?>> TIMELINE_DF = DeferredRegister.create(PARTICLE_TIMELINE_REGISTRY, ArsNouveau.MODID);
 
-    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<ProjectileTimeline>> PROJECTILE_TIMELINE = TIMELINE_DF.register("projectile", () -> new SimpleParticleTimelineType<>(ProjectileTimeline.CODEC, ProjectileTimeline.STREAM_CODEC));
+    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<ProjectileTimeline>> PROJECTILE_TIMELINE = TIMELINE_DF.register("projectile", () -> new SimpleParticleTimelineType<>(ProjectileTimeline.CODEC, ProjectileTimeline.STREAM_CODEC, ProjectileTimeline::new));
 
 }

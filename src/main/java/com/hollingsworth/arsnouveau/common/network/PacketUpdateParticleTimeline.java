@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.particle.timelines.ParticleTimeline;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
@@ -16,10 +16,10 @@ import net.minecraft.world.item.ItemStack;
 public class PacketUpdateParticleTimeline extends AbstractPacket{
 
     int castSlot;
-    ParticleTimeline color;
+    TimelineMap color;
     boolean mainHand;
 
-    public PacketUpdateParticleTimeline(int slot, ParticleTimeline color, boolean mainHand) {
+    public PacketUpdateParticleTimeline(int slot, TimelineMap color, boolean mainHand) {
         this.castSlot = slot;
         this.color = color;
         this.mainHand = mainHand;
@@ -28,14 +28,14 @@ public class PacketUpdateParticleTimeline extends AbstractPacket{
     //Decoder
     public PacketUpdateParticleTimeline(RegistryFriendlyByteBuf buf) {
         castSlot = buf.readInt();
-        color = ParticleTimeline.STREAM_CODEC.decode(buf);
+        color = TimelineMap.STREAM.decode(buf);
         mainHand = buf.readBoolean();
     }
 
     //Encoder
     public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeInt(castSlot);
-        ParticleTimeline.STREAM_CODEC.encode(buf, color);
+        TimelineMap.STREAM.encode(buf, color);
         buf.writeBoolean(mainHand);
     }
 

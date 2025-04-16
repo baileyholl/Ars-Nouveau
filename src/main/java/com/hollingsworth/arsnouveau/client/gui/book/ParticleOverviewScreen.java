@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
-import com.hollingsworth.arsnouveau.api.particle.timelines.ParticleTimeline;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -15,11 +15,11 @@ import net.minecraft.world.InteractionHand;
 public class ParticleOverviewScreen extends BaseBook {
     int slot;
     InteractionHand stackHand;
-    ParticleTimeline timeline;
+    TimelineMap timeline;
 
     public AbstractSpellPart selectedPart = MethodProjectile.INSTANCE;
 
-    public ParticleOverviewScreen(ParticleTimeline particleTimeline, int slot, InteractionHand stackHand) {
+    public ParticleOverviewScreen(TimelineMap particleTimeline, int slot, InteractionHand stackHand) {
         this.slot = slot;
         this.stackHand = stackHand;
         this.timeline = particleTimeline;

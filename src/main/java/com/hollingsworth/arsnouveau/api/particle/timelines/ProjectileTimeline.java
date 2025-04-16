@@ -1,7 +1,11 @@
 package com.hollingsworth.arsnouveau.api.particle.timelines;
 
+import com.hollingsworth.arsnouveau.api.particle.configurations.BurstConfiguration;
 import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleConfig;
+import com.hollingsworth.arsnouveau.api.particle.configurations.TrailConfiguration;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
+import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -20,6 +24,10 @@ public class ProjectileTimeline implements IParticleTimeline{
 
     public IParticleConfig trailEffect;
     public IParticleConfig onResolvingEffect;
+
+    public ProjectileTimeline(){
+        this(new TrailConfiguration(GlowParticleData.createData(ParticleColor.defaultParticleColor())), new BurstConfiguration(GlowParticleData.createData(ParticleColor.defaultParticleColor())));
+    }
 
     public ProjectileTimeline(IParticleConfig trailEffect, IParticleConfig onResolvingEffect){
         this.trailEffect = trailEffect;

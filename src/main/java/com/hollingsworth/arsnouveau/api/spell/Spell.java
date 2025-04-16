@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.google.common.collect.ImmutableList;
-import com.hollingsworth.arsnouveau.api.particle.timelines.ParticleTimeline;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.mojang.serialization.Codec;
@@ -24,7 +24,7 @@ public class Spell {
             ParticleColor.CODEC.fieldOf("color").forGetter(s -> s.color),
             ConfiguredSpellSound.CODEC.fieldOf("sound").forGetter(s -> s.sound),
             Codec.list(AbstractSpellPart.CODEC).fieldOf("recipe").forGetter(s -> s.recipe),
-            ParticleTimeline.CODEC.codec().optionalFieldOf("particleTimeline").forGetter(s -> Optional.ofNullable(s.particleTimeline))
+            TimelineMap.CODEC.optionalFieldOf("particleTimeline").forGetter(s -> Optional.ofNullable(s.particleTimeline))
     ).apply(instance, Spell::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Spell> STREAM = StreamCodec.of(
@@ -33,14 +33,14 @@ public class Spell {
                 ParticleColor.STREAM.encode(buf, val.color);
                 ConfiguredSpellSound.STREAM.encode(buf, val.sound);
                 AbstractSpellPart.STREAM_LIST.encode(buf, val.recipe);
-                ParticleTimeline.STREAM_CODEC.encode(buf, val.particleTimeline);
+                TimelineMap.STREAM.encode(buf, val.particleTimeline);
             },
             buf -> {
                 String name = buf.readUtf();
                 ParticleColor color = ParticleColor.STREAM.decode(buf);
                 ConfiguredSpellSound sound = ConfiguredSpellSound.STREAM.decode(buf);
                 List<AbstractSpellPart> recipe = AbstractSpellPart.STREAM_LIST.decode(buf);
-                ParticleTimeline particleTimeline = ParticleTimeline.STREAM_CODEC.decode(buf);
+                TimelineMap particleTimeline = TimelineMap.STREAM.decode(buf);
                 return new Spell(name, color, sound, recipe, particleTimeline);
             }
     );
@@ -50,11 +50,11 @@ public class Spell {
     private final String name;
     private final ParticleColor color;
     private final ConfiguredSpellSound sound;
-    private final ParticleTimeline particleTimeline;
+    private final TimelineMap particleTimeline;
 
 
     public Spell() {
-        this("", ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, ImmutableList.of(), ParticleTimeline.defaultTimeline());
+        this("", ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, ImmutableList.of());
     }
 
     public Spell(AbstractSpellPart... spellParts) {
@@ -62,14 +62,14 @@ public class Spell {
     }
 
     public Spell(List<AbstractSpellPart> recipe) {
-        this("", ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, recipe, ParticleTimeline.defaultTimeline());
+        this("", ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, recipe);
     }
 
     public Spell(String name, ParticleColor color, ConfiguredSpellSound configuredSpellSound, List<AbstractSpellPart> abstractSpellParts) {
-        this(name, color, configuredSpellSound, abstractSpellParts, ParticleTimeline.defaultTimeline());
+        this(name, color, configuredSpellSound, abstractSpellParts, new TimelineMap());
     }
 
-    public Spell(String name, ParticleColor color, ConfiguredSpellSound configuredSpellSound, List<AbstractSpellPart> abstractSpellParts, ParticleTimeline particleTimeline) {
+    public Spell(String name, ParticleColor color, ConfiguredSpellSound configuredSpellSound, List<AbstractSpellPart> abstractSpellParts, TimelineMap particleTimeline) {
         this.name = name;
         this.color = color;
         this.sound = configuredSpellSound;
@@ -77,8 +77,8 @@ public class Spell {
         this.particleTimeline = particleTimeline;
     }
 
-    public Spell(String name, ParticleColor color, ConfiguredSpellSound configuredSpellSound, List<AbstractSpellPart> abstractSpellParts, Optional<ParticleTimeline> particleTimeline) {
-        this(name, color, configuredSpellSound, abstractSpellParts, particleTimeline.orElseGet(ParticleTimeline::defaultTimeline));
+    public Spell(String name, ParticleColor color, ConfiguredSpellSound configuredSpellSound, List<AbstractSpellPart> abstractSpellParts, Optional<TimelineMap> particleTimeline) {
+        this(name, color, configuredSpellSound, abstractSpellParts, particleTimeline.orElseGet(TimelineMap::new));
     }
 
     public ConfiguredSpellSound sound(){
@@ -148,14 +148,14 @@ public class Spell {
         return name;
     }
 
-    public ParticleTimeline particleTimeline(){
+    public TimelineMap particleTimeline(){
         return particleTimeline;
     }
 
     public @Nullable AbstractCastMethod getCastMethod() {
         if (this.recipe == null || this.recipe.isEmpty())
             return null;
-        return this.recipe.get(0) instanceof AbstractCastMethod ? (AbstractCastMethod) recipe.get(0) : null;
+        return this.recipe.getFirst() instanceof AbstractCastMethod ? (AbstractCastMethod) recipe.getFirst() : null;
     }
 
     public List<AbstractAugment> getAugments(int startPosition, @Nullable LivingEntity caster) {
@@ -270,9 +270,9 @@ public class Spell {
         public String name;
         public ParticleColor color;
         public ConfiguredSpellSound sound;
-        public ParticleTimeline particleTimeline;
+        public TimelineMap particleTimeline;
 
-        public Mutable(List<AbstractSpellPart> recipe, String name, ParticleColor color, ConfiguredSpellSound spellSound, ParticleTimeline timeline) {
+        public Mutable(List<AbstractSpellPart> recipe, String name, ParticleColor color, ConfiguredSpellSound spellSound, TimelineMap timeline) {
             this.recipe = recipe;
             this.name = name;
             this.color = color;
@@ -281,7 +281,7 @@ public class Spell {
         }
 
         public Mutable(List<AbstractSpellPart> recipe, String name, ParticleColor color, ConfiguredSpellSound spellSound) {
-            this(recipe, name, color, spellSound, ParticleTimeline.defaultTimeline());
+            this(recipe, name, color, spellSound, new TimelineMap());
         }
 
         public Mutable add(AbstractSpellPart spellPart) {

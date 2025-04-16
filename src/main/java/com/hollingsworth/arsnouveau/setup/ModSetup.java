@@ -54,6 +54,7 @@ public class ModSetup {
         DataSerializers.DS.register(modEventBus);
         AttachmentsRegistry.ATTACHMENT_TYPES.register(modEventBus);
         ParticleConfigRegistry.PARTICLE_CONFIG.register(modEventBus);
+        ParticleTimelineRegistry.TIMELINE_DF.register(modEventBus);
     }
 
     public static void registerRegistries(NewRegistryEvent event) {
