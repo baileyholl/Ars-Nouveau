@@ -301,6 +301,8 @@ public class CasterTomeProvider extends SimpleDataProvider {
         tomes.add(buildTome("nikk", "Sutokahs LOVE", new Spell(MethodProjectile.INSTANCE, EffectHex.INSTANCE, EffectHarm.INSTANCE, EffectBlink.INSTANCE, AugmentAmplify.INSTANCE, EffectPickup.INSTANCE, AugmentAOE.INSTANCE), "Weaken it, kill it and take it home.", new ParticleColor(255, 204, 204)));
 
         tomes.add(buildTome("cocoaeyebrows", "Gobute's Humble Tunnel", new Spell(MethodTouch.INSTANCE, EffectBreak.INSTANCE).add(AugmentDampen.INSTANCE, 2).add(AugmentAOE.INSTANCE, 2).add(AugmentPierce.INSTANCE, 4), "Leave the riches untouched. Seek only to carve the earth.", new ParticleColor(255, 128, 1)));
+
+        tomes.add(buildTome("beepsterr", "Verdant Aura", new Spell(MethodProjectile.INSTANCE, EffectOrbit.INSTANCE, AugmentExtendTime.INSTANCE, AugmentSensitive.INSTANCE, AugmentSplit.INSTANCE, EffectGrow.INSTANCE, AugmentAOE.INSTANCE, AugmentAOE.INSTANCE).withSound(new ConfiguredSpellSound(SoundRegistry.GAIA_SPELL_SOUND)), " It's covered in dirt and moss..", new ParticleColor(145, 145, 201)));
         for (CasterRecipeWrapper g : tomes) {
             Path path = getRecipePath(output, g.id().getPath());
             saveStable(pOutput, CasterTomeData.CODEC.encodeStart(JsonOps.INSTANCE, g.toData()).getOrThrow(), path);
