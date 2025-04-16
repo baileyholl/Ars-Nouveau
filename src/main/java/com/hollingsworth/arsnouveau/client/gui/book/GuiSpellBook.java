@@ -920,13 +920,6 @@ public class GuiSpellBook extends BaseBook {
     public void onCopyOrExport(Button ignoredB) {
         if (hasShiftDown() && clipboard != null && !clipboard.isEmpty()) {
             // copy the spell to the clipboard
-
-//            StringBuilder spellString = new StringBuilder(spellname);
-//            for (AbstractSpellPart part : spell) {
-//                if (part != null) {
-//                    spellString.append(";").append(part.getRegistryName());
-//                }
-//            }
             getMinecraft().keyboardHandler.setClipboard(hasAltDown() ? spellToJson(new Spell(spell)) : spellToBinaryBase64(new Spell(spell, spellname)));
         } else if (spell != null && !spell.isEmpty()) {
             clipboard = new ArrayList<>(spell);
