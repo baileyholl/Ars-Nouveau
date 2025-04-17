@@ -1,10 +1,10 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations.properties;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
@@ -18,16 +18,11 @@ public class TextureProperty implements IParticleProperty{
         this.onTextureChanged = onTextureChanged;
     }
 
-    @Override
-    public Component getName() {
-        return Component.translatable("ars_nouveau.particle.property.texture");
-    }
 
     @Override
-    public ResourceLocation getIconLocation() {
-        return null;
+    public ResourceLocation getId() {
+        return ArsNouveau.prefix("texture");
     }
-
 
     @Override
     public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height) {

@@ -1449,12 +1449,15 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.fishing_rod.invalid", "Invalid Spell. Enchanter's Fishing Rod accept Effects and Augments only.");
         add("ars_nouveau.page1.enchanters_gauntlet", "Gauntlets accept a single spell and are inscribed using the Scribes Table. Gauntlets always start with Touch and MUST be inscribed with a spell that does not contain a form. Spells cast with the gauntlet are cast with a discount.");
         add("ars_nouveau.page1.enchanters_fishing_rod", "Fishing Rods accept a single spell and are inscribed using the Scribes Table. Rods always start with Touch and MUST be inscribed with a spell that does not contain a form. Fishing Rods can be used like a normal fishing rod, but hooking an entity will allow the user to cast the spell on the hooked entity until the line is broken.");
-        add("ars_nouveau.particle_config.trail", "Trail");
+        add("ars_nouveau.particle_config.trail", "Line");
         add("ars_nouveau.particle_config.burst", "Burst");
         add("ars_nouveau.particle_config.helix", "Helix");
         add("ars_nouveau.particle_config.spiral", "Spiral");
         add("ars_nouveau.particle.property.color", "Color");
         add("ars_nouveau.particle.property.texture", "Texture");
+        add("ars_nouveau.spell_styles", "Spell Styles");
+        add("ars_nouveau.timeline.trail", "Trail");
+        add("ars_nouveau.timeline.impact", "On Impact");
 
     }
 

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.particle.timelines;
 
 import com.google.common.collect.ImmutableList;
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.particle.configurations.BurstConfiguration;
 import com.hollingsworth.arsnouveau.api.particle.configurations.IConfigurableParticle;
 import com.hollingsworth.arsnouveau.api.particle.configurations.IConfigurableParticleType;
@@ -57,7 +58,7 @@ public class ProjectileTimeline implements IParticleTimeline{
 
     @Override
     public List<TimelineOption> getTimelineOptions() {
-        return List.of(new TimelineOption(this::trailEffect, (setEffect) -> this.trailEffect = setEffect, ImmutableList.copyOf(TRAIL_OPTIONS)),
-                new TimelineOption(this::onResolvingEffect, (setEffect) -> this.onResolvingEffect = setEffect,ImmutableList.copyOf(RESOLVING_OPTIONS)));
+        return List.of(new TimelineOption(ArsNouveau.prefix("trail"), this::trailEffect, (setEffect) -> this.trailEffect = setEffect, ImmutableList.copyOf(TRAIL_OPTIONS)),
+                new TimelineOption(ArsNouveau.prefix("impact"), this::onResolvingEffect, (setEffect) -> this.onResolvingEffect = setEffect,ImmutableList.copyOf(RESOLVING_OPTIONS)));
     }
 }

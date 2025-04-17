@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.client.gui.book;
+package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
@@ -8,11 +8,11 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-public class ParticleOptionButton extends NuggetImageButton {
+public class ParticleTimelineButton extends NuggetImageButton {
     public Component label;
     public ItemStack renderStack;
 
-    public ParticleOptionButton(int x, int y, OnPress onPress, Component title, ItemStack renderStack) {
+    public ParticleTimelineButton(int x, int y, OnPress onPress, Component title, ItemStack renderStack) {
         super(x, y, DocAssets.DOC_ENTRY_BUTTON.width(), DocAssets.DOC_ENTRY_BUTTON.height(), DocAssets.DOC_ENTRY_BUTTON.location(), onPress);
         this.label = title;
         this.renderStack = renderStack;

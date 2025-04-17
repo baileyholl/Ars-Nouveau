@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.particle.configurations.IConfigurableParticleType;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
@@ -9,8 +10,10 @@ import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineOption;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.client.gui.buttons.DropdownParticleButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GlyphButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
+import com.hollingsworth.arsnouveau.client.gui.buttons.ParticleTimelineButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateParticleTimeline;
 import net.minecraft.client.gui.GuiGraphics;
@@ -18,7 +21,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.Items;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +52,7 @@ public class ParticleOverviewScreen extends BaseBook {
         AbstractSpellPart selectedPart = selectedTimeline.getKey();
         addRenderableWidget(new GuiImageButton(bookLeft + 25, bookBottom - 30, 0, 0, 37, 12, 37, 12, "textures/gui/save_icon.png", this::onCreate));
 
-        addRenderableWidget(new ParticleOptionButton(bookLeft + LEFT_PAGE_OFFSET, bookTop + 36, (button) -> {
+        addRenderableWidget(new ParticleTimelineButton(bookLeft + LEFT_PAGE_OFFSET, bookTop + 36, (button) -> {
             addTimelinePage();
         }, Component.translatable(selectedPart.getLocaleName()), selectedPart.glyphItem.getDefaultInstance()));
         addTimelinePage();
@@ -88,18 +90,18 @@ public class ParticleOverviewScreen extends BaseBook {
         var configurableParticles = timeline.get(selectedTimeline.getValue().get()).getTimelineOptions();
         int propertyOffset = 0;
         for(TimelineOption timelineOption : configurableParticles){
-
-            leftPageWidgets.add(addRenderableWidget(new ParticleOptionButton(bookLeft + LEFT_PAGE_OFFSET + 14, bookTop + 52 + 16 * (propertyOffset), (button) -> {
-                System.out.println(timelineOption.options());
+            var type = timelineOption.getSelected().get().getType();
+            Component name = Component.literal(timelineOption.name().getString() + ": " + timelineOption.getSelected().get().getType().getName().getString());
+            leftPageWidgets.add(addRenderableWidget(new DropdownParticleButton(bookLeft + LEFT_PAGE_OFFSET + 13, bookTop + 52 + 16 * (propertyOffset), name, DocAssets.NESTED_ENTRY_BUTTON, type.getIconLocation(), (button) -> {
                 addConfiguredParticleOptions(timelineOption);
-            }, timelineOption.getSelected().get().getType().getName(), Items.DIRT.getDefaultInstance())));
+            })));
 
             propertyOffset++;
 
             for(IParticleProperty property : timelineOption.getSelected().get().getProperties()){
-                leftPageWidgets.add(addRenderableWidget(new ParticleOptionButton(bookLeft + LEFT_PAGE_OFFSET + 28, bookTop + 52 + 16 * (propertyOffset), (button) -> {
+                leftPageWidgets.add(addRenderableWidget(new DropdownParticleButton(bookLeft + LEFT_PAGE_OFFSET + 26, bookTop + 52 + 16 * (propertyOffset), property.getName(), DocAssets.DOUBLE_NESTED_ENTRY_BUTTON, property.getIconLocation(), (button) -> {
                     addPropertyWidgets(property);
-                }, property.getName(), Items.RED_DYE.getDefaultInstance())));
+                })));
                 propertyOffset++;
             }
         }
@@ -133,7 +135,7 @@ public class ParticleOverviewScreen extends BaseBook {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
-        DocClientUtils.drawHeader(Component.literal("Spell Styles"), graphics, bookLeft + LEFT_PAGE_OFFSET, bookTop + 20, ONE_PAGE_WIDTH, mouseX, mouseY, partialTicks);
+        DocClientUtils.drawHeader(Component.translatable("ars_nouveau.spell_styles"), graphics, bookLeft + LEFT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, mouseX, mouseY, partialTicks);
         if(propertyWidgetProvider != null){
             propertyWidgetProvider.render(graphics, mouseX, mouseY, partialTicks);
         }

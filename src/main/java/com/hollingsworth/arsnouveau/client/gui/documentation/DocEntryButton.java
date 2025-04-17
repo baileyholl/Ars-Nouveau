@@ -30,6 +30,6 @@ public class DocEntryButton extends NuggetImageButton {
     protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
         RenderHelpers.drawItemAsIcon(renderStack, graphics, x - 1, y - 1 , 10, false);
-        DocClientUtils.drawStringScaled(graphics, title, x + 14, y + 4, 0, 0.8f, false);
+        DocClientUtils.drawStringScaled(graphics, title, x + 14, y + 3, 0, 0.8f, false);
     }
 }
