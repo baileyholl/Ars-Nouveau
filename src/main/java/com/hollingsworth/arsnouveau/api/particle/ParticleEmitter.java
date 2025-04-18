@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.particle;
 
-import com.hollingsworth.arsnouveau.api.particle.configurations.IConfigurableParticle;
+import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleMotion;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -12,17 +13,19 @@ public class ParticleEmitter {
     public Vec3 offset;
     public Supplier<Vec3> position;
     public Vec3 previousPosition;
-    public IConfigurableParticle particleConfig;
+    public ParticleMotion particleConfig;
     public int age;
     public Supplier<Vec2> rotation;
     public Vec2 rotationOffset;
+    public ParticleOptions particleOptions;
 
-    public ParticleEmitter(Supplier<Vec3> getPosition, Supplier<Vec2> rot, IConfigurableParticle particleConfig){
+    public ParticleEmitter(Supplier<Vec3> getPosition, Supplier<Vec2> rot, ParticleMotion particleConfig, ParticleOptions particleOptions) {
         this.position = getPosition;
         this.offset = Vec3.ZERO;
         this.particleConfig = particleConfig;
         this.rotation = rot;
         this.rotationOffset = Vec2.ZERO;
+        this.particleOptions = particleOptions;
         particleConfig.init(this);
     }
 
@@ -67,7 +70,7 @@ public class ParticleEmitter {
             this.previousPosition = this.getAdjustedPosition();
         }
         Vec3 pos = getAdjustedPosition();
-        particleConfig.tick(level, pos.x, pos.y, pos.z, previousPosition.x, previousPosition.y, previousPosition.z);
+        particleConfig.tick(particleOptions, level, pos.x, pos.y, pos.z, previousPosition.x, previousPosition.y, previousPosition.z);
         this.previousPosition = pos;
         this.age++;
     }

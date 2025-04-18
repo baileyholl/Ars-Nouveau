@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
+import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.core.particles.SimpleParticleType;
 
 public class SnowParticle extends TextureSheetParticle {
     private static final float ACCELERATION_SCALE = 0.0025F;
@@ -81,7 +81,7 @@ public class SnowParticle extends TextureSheetParticle {
         }
     }
 
-    public static class Provider implements ParticleProvider<SimpleParticleType> {
+    public static class Provider implements ParticleProvider<PropertyParticleOptions> {
         private final SpriteSet sprite;
 
         public Provider(SpriteSet pSprites) {
@@ -89,7 +89,7 @@ public class SnowParticle extends TextureSheetParticle {
         }
 
         public Particle createParticle(
-                SimpleParticleType pType,
+                PropertyParticleOptions pType,
                 ClientLevel pLevel,
                 double pX,
                 double pY,

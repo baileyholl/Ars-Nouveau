@@ -1458,6 +1458,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.spell_styles", "Spell Styles");
         add("ars_nouveau.timeline.trail", "Trail");
         add("ars_nouveau.timeline.impact", "On Impact");
+        add("ars_nouveau.particle_timelines", "Configurable Particles");
 
     }
 

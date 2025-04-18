@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.setup.registry;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
-import com.hollingsworth.arsnouveau.api.particle.configurations.IConfigurableParticleType;
+import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
 import com.hollingsworth.arsnouveau.api.particle.timelines.ProjectileTimeline;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
@@ -306,7 +306,7 @@ public class APIRegistry {
 
         ParticleTimelineRegistry.registerGlyphTimeline(MethodProjectile.INSTANCE, ParticleTimelineRegistry.PROJECTILE_TIMELINE::get);
 
-        List<IConfigurableParticleType<?>> PROJECTILE_OPTIONS = Arrays.asList(ParticleConfigRegistry.HELIX_TYPE.get(),
+        List<IParticleMotionType<?>> PROJECTILE_OPTIONS = Arrays.asList(ParticleConfigRegistry.HELIX_TYPE.get(),
                 ParticleConfigRegistry.TRAIL_TYPE.get(),
                 ParticleConfigRegistry.SPIRAL_TYPE.get());
 

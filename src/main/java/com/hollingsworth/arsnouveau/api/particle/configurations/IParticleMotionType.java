@@ -7,7 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 
-public interface IConfigurableParticleType<T extends IConfigurableParticle> {
+public interface IParticleMotionType<T extends ParticleMotion> {
 
     MapCodec<T> codec();
 

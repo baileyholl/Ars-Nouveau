@@ -2,10 +2,9 @@ package com.hollingsworth.arsnouveau.api.particle.timelines;
 
 import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.particle.configurations.BurstConfiguration;
-import com.hollingsworth.arsnouveau.api.particle.configurations.IConfigurableParticle;
-import com.hollingsworth.arsnouveau.api.particle.configurations.IConfigurableParticleType;
-import com.hollingsworth.arsnouveau.api.particle.configurations.TrailConfiguration;
+import com.hollingsworth.arsnouveau.api.particle.configurations.BurstMotion;
+import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
+import com.hollingsworth.arsnouveau.api.particle.configurations.TrailMotion;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -19,35 +18,36 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ProjectileTimeline implements IParticleTimeline{
     public static final MapCodec<ProjectileTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            IConfigurableParticle.CODEC.fieldOf("trailEffect").forGetter(i -> i.trailEffect),
-            IConfigurableParticle.CODEC.fieldOf("onResolvingEffect").forGetter(i -> i.onResolvingEffect)
+            TimelineEntryData.CODEC.fieldOf("trailEffect").forGetter(i -> i.trailEffect),
+            TimelineEntryData.CODEC.fieldOf("onResolvingEffect").forGetter(i -> i.onResolvingEffect)
     ).apply(instance, ProjectileTimeline::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ProjectileTimeline> STREAM_CODEC = StreamCodec.composite(IConfigurableParticle.STREAM_CODEC, ProjectileTimeline::trailEffect,
-            IConfigurableParticle.STREAM_CODEC,
+    public static final StreamCodec<RegistryFriendlyByteBuf, ProjectileTimeline> STREAM_CODEC = StreamCodec.composite(TimelineEntryData.STREAM, ProjectileTimeline::trailEffect,
+            TimelineEntryData.STREAM,
             ProjectileTimeline::onResolvingEffect,
             ProjectileTimeline::new);
 
-    public static final List<IConfigurableParticleType<?>> TRAIL_OPTIONS = new CopyOnWriteArrayList<>();
-    public static final List<IConfigurableParticleType<?>> RESOLVING_OPTIONS = new CopyOnWriteArrayList<>();
+    public static final List<IParticleMotionType<?>> TRAIL_OPTIONS = new CopyOnWriteArrayList<>();
+    public static final List<IParticleMotionType<?>> RESOLVING_OPTIONS = new CopyOnWriteArrayList<>();
 
-    public IConfigurableParticle trailEffect;
-    public IConfigurableParticle onResolvingEffect;
+    public TimelineEntryData trailEffect;
+    public TimelineEntryData onResolvingEffect;
 
     public ProjectileTimeline(){
-        this(new TrailConfiguration(GlowParticleData.createData(ParticleColor.defaultParticleColor())), new BurstConfiguration(GlowParticleData.createData(ParticleColor.defaultParticleColor())));
+        this(new TimelineEntryData(new TrailMotion(), GlowParticleData.createData(ParticleColor.defaultParticleColor())),
+                new TimelineEntryData(new BurstMotion(), GlowParticleData.createData(ParticleColor.defaultParticleColor())));
     }
 
-    public ProjectileTimeline(IConfigurableParticle trailEffect, IConfigurableParticle onResolvingEffect){
+    public ProjectileTimeline(TimelineEntryData trailEffect, TimelineEntryData onResolvingEffect){
         this.trailEffect = trailEffect;
         this.onResolvingEffect = onResolvingEffect;
     }
 
-    public IConfigurableParticle trailEffect(){
+    public TimelineEntryData trailEffect(){
         return trailEffect;
     }
 
-    public IConfigurableParticle onResolvingEffect(){
+    public TimelineEntryData onResolvingEffect(){
         return onResolvingEffect;
     }
 
@@ -58,7 +58,7 @@ public class ProjectileTimeline implements IParticleTimeline{
 
     @Override
     public List<TimelineOption> getTimelineOptions() {
-        return List.of(new TimelineOption(ArsNouveau.prefix("trail"), this::trailEffect, (setEffect) -> this.trailEffect = setEffect, ImmutableList.copyOf(TRAIL_OPTIONS)),
-                new TimelineOption(ArsNouveau.prefix("impact"), this::onResolvingEffect, (setEffect) -> this.onResolvingEffect = setEffect,ImmutableList.copyOf(RESOLVING_OPTIONS)));
+        return List.of(new TimelineOption(ArsNouveau.prefix("trail"), this.trailEffect, ImmutableList.copyOf(TRAIL_OPTIONS)),
+                new TimelineOption(ArsNouveau.prefix("impact"), this.onResolvingEffect, ImmutableList.copyOf(RESOLVING_OPTIONS)));
     }
 }

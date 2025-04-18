@@ -2,14 +2,16 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
-import com.hollingsworth.arsnouveau.api.particle.configurations.IConfigurableParticleType;
+import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.IParticleProperty;
+import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleMotion;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.Property;
 import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimelineType;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineOption;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.client.gui.HeaderWidget;
 import com.hollingsworth.arsnouveau.client.gui.buttons.DropdownParticleButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GlyphButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
@@ -59,11 +61,12 @@ public class ParticleOverviewScreen extends BaseBook {
         addSelectedTimelineOptions();
     }
 
-    public void addConfiguredParticleOptions(TimelineOption timelineOption){
+    public void addParticleMotionOptions(TimelineOption timelineOption){
         clearRightPage();
         int entryCount = 0;
-        for(IConfigurableParticleType<?> type : timelineOption.options()){
-            var widget = new GuiImageButton(bookLeft + RIGHT_PAGE_OFFSET + 10 + entryCount * 20, bookTop + 20, 16, 16, type.getIconLocation(), (button) -> {
+        rightPageWidgets.add(addRenderableWidget(new HeaderWidget(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, 20, timelineOption.name())));
+        for(IParticleMotionType<?> type : timelineOption.options()){
+            var widget = new GuiImageButton(bookLeft + RIGHT_PAGE_OFFSET + 10 + entryCount * 20, bookTop + 40, 16, 16, type.getIconLocation(), (button) -> {
                 System.out.println(type);
             }).withTooltip(type.getName());
             rightPageWidgets.add(widget);
@@ -72,7 +75,7 @@ public class ParticleOverviewScreen extends BaseBook {
         }
     }
 
-    public void addPropertyWidgets(IParticleProperty property){
+    public void addPropertyWidgets(Property property){
         clearRightPage();
         propertyWidgetProvider = property.buildWidgets(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, ONE_PAGE_HEIGHT);
         List<AbstractWidget> propertyWidgets = new ArrayList<>();
@@ -90,28 +93,32 @@ public class ParticleOverviewScreen extends BaseBook {
         var configurableParticles = timeline.get(selectedTimeline.getValue().get()).getTimelineOptions();
         int propertyOffset = 0;
         for(TimelineOption timelineOption : configurableParticles){
-            var type = timelineOption.getSelected().get().getType();
-            Component name = Component.literal(timelineOption.name().getString() + ": " + timelineOption.getSelected().get().getType().getName().getString());
+            ParticleMotion configuration = timelineOption.entry().motion();
+            IParticleMotionType<?> motionType = timelineOption.entry().motion().getType();
+            var type = configuration.getType();
+            Component name = Component.literal(timelineOption.name().getString() + ": " + motionType.getName().getString());
             leftPageWidgets.add(addRenderableWidget(new DropdownParticleButton(bookLeft + LEFT_PAGE_OFFSET + 13, bookTop + 52 + 16 * (propertyOffset), name, DocAssets.NESTED_ENTRY_BUTTON, type.getIconLocation(), (button) -> {
-                addConfiguredParticleOptions(timelineOption);
+                addParticleMotionOptions(timelineOption);
             })));
-
+//
             propertyOffset++;
-
-            for(IParticleProperty property : timelineOption.getSelected().get().getProperties()){
-                leftPageWidgets.add(addRenderableWidget(new DropdownParticleButton(bookLeft + LEFT_PAGE_OFFSET + 26, bookTop + 52 + 16 * (propertyOffset), property.getName(), DocAssets.DOUBLE_NESTED_ENTRY_BUTTON, property.getIconLocation(), (button) -> {
-                    addPropertyWidgets(property);
-                })));
-                propertyOffset++;
-            }
+//            PropertyHolder holder = configuration.getPropertyHolder();
+//
+//            for(Property property : configuration.buildProperties(holder)){
+//                leftPageWidgets.add(addRenderableWidget(new DropdownParticleButton(bookLeft + LEFT_PAGE_OFFSET + 26, bookTop + 52 + 16 * (propertyOffset), property.getName(), DocAssets.DOUBLE_NESTED_ENTRY_BUTTON, property.getIconLocation(), (button) -> {
+//                    addPropertyWidgets(property);
+//                })));
+//                propertyOffset++;
+//            }
         }
     }
 
     public void addTimelinePage(){
         clearRightPage();
         int entryCount = 0;
+        rightPageWidgets.add(addRenderableWidget(new HeaderWidget(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, 20, Component.translatable("ars_nouveau.particle_timelines"))));
         for(var entry : ParticleTimelineRegistry.PARTICLE_TIMELINE_MAP.map.entrySet()){
-            var widget = new GlyphButton(bookLeft + RIGHT_PAGE_OFFSET + 10 + entryCount * 20, bookTop + 20, entry.getKey(), (button) -> {
+            var widget = new GlyphButton(bookLeft + RIGHT_PAGE_OFFSET + 10 + entryCount * 20, bookTop + 40, entry.getKey(), (button) -> {
                 selectedTimeline = entry;
             });
             rightPageWidgets.add(widget);

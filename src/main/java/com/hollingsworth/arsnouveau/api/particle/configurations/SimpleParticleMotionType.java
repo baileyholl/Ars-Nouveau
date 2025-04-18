@@ -6,7 +6,7 @@ import net.minecraft.network.codec.StreamCodec;
 
 import java.util.function.Supplier;
 
-public record SimpleConfigurableParticleType<T extends IConfigurableParticle>(MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec, Supplier<T> createConfigured) implements IConfigurableParticleType<T> {
+public record SimpleParticleMotionType<T extends ParticleMotion>(MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec, Supplier<T> createConfigured) implements IParticleMotionType<T> {
     @Override
     public MapCodec<T> codec() {
         return codec;
