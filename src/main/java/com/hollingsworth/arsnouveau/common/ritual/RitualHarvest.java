@@ -40,12 +40,18 @@ public class RitualHarvest extends AbstractRitual {
         boolean hasPlayedSound = false;
         for (BlockPos blockpos : BlockPos.betweenClosed(pos.offset(range, -1, range), pos.offset(-range, 1, -range))) {
             BlockState state = world.getBlockState(blockpos);
+            Block block  = state.getBlock();
+            BlockPos above = blockpos.above();
+            BlockState aboveState = world.getBlockState(above);
+            Block aboveBlock = aboveState.getBlock();
 
-            if (state.getBlock() instanceof FarmBlock || world.getBlockState(blockpos.above()).getBlock() instanceof CropBlock || world.getBlockState(blockpos.above()).getBlock() instanceof NetherWartBlock || world.getBlockState(blockpos.above()).is(BlockTagProvider.HARVEST_STEMS)) {
-                blockpos = blockpos.above();
+            if (block instanceof FarmBlock || aboveBlock instanceof CropBlock || aboveBlock instanceof NetherWartBlock || aboveBlock instanceof PumpkinBlock || aboveBlock == Blocks.MELON || aboveState.is(BlockTagProvider.HARVEST_STEMS)) {
+                blockpos = above;
                 state = world.getBlockState(blockpos);
+                block = state.getBlock();
             }
-            if (state.getBlock() instanceof NetherWartBlock) {
+
+            if (block instanceof NetherWartBlock) {
                 if (harvestNetherwart(blockpos, state, world) && !hasPlayedSound) {
                     world.playSound(null, getPos(), SoundEvents.CROP_BREAK, SoundSource.BLOCKS, 1, 1);
                     hasPlayedSound = true;
@@ -53,7 +59,7 @@ public class RitualHarvest extends AbstractRitual {
                 continue;
             }
 
-            if (state.getBlock() instanceof CocoaBlock) {
+            if (block instanceof CocoaBlock) {
                 if (harvestPods(blockpos, state, world) && !hasPlayedSound) {
                     world.playSound(null, getPos(), SoundEvents.CROP_BREAK, SoundSource.BLOCKS, 1, 1);
                     hasPlayedSound = true;
@@ -61,18 +67,35 @@ public class RitualHarvest extends AbstractRitual {
                 continue;
             }
 
-            if (state.is(BlockTagProvider.HARVEST_STEMS) && state.getBlock() == world.getBlockState(blockpos.below()).getBlock()) {
+            if (block instanceof PumpkinBlock || block == Blocks.MELON) {
                 processAndSpawnDrops(blockpos, state, world, false);
                 BlockUtil.destroyBlockSafely(world, blockpos, false, null);
                 continue;
             }
 
-            if (!(state.getBlock() instanceof CropBlock))
+            if (state.is(BlockTagProvider.HARVEST_STEMS) && block == world.getBlockState(blockpos.below()).getBlock()) {
+                var top = blockpos.mutable();
+                var previousState = world.getBlockState(top);
+                while (true) {
+                    top.setY(top.getY() + 1);
+                    var nextState = world.getBlockState(top);
+                    if (!nextState.is(block) && !(previousState.getBlock() instanceof GrowingPlantBodyBlock && nextState.getBlock() instanceof GrowingPlantHeadBlock)) {
+                        var bottomY = blockpos.getY();
+                        for (int y = top.getY() - 1; y >= bottomY; y--) {
+                            top.setY(y);
+                            processAndSpawnDrops(top, state, world, false);
+                            BlockUtil.destroyBlockSafely(world, top, false, null);
+                        }
+                        break;
+                    }
+                    previousState = nextState;
+                }
                 continue;
-            CropBlock cropsBlock = (CropBlock) world.getBlockState(blockpos).getBlock();
+            }
 
-            if (!cropsBlock.isMaxAge(state) || !(world instanceof ServerLevel))
+            if (!(block instanceof CropBlock cropsBlock) || !cropsBlock.isMaxAge(state) || !(world instanceof ServerLevel)) {
                 continue;
+            }
 
             if (processAndSpawnDrops(blockpos, state, world, true) && !hasPlayedSound) {
                 world.playSound(null, getPos(), SoundEvents.CROP_BREAK, SoundSource.BLOCKS, 1, 1);
