@@ -9,10 +9,20 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 
 public class TrailMotion extends ParticleMotion {
-
+    public static TrailMotion INSTANCE = new TrailMotion();
     public static MapCodec<TrailMotion> CODEC = MapCodec.unit(TrailMotion::new);
 
-    public static StreamCodec<RegistryFriendlyByteBuf, TrailMotion> STREAM = StreamCodec.unit(new TrailMotion());
+    public static StreamCodec<RegistryFriendlyByteBuf, TrailMotion> STREAM = new StreamCodec<>() {
+        @Override
+        public TrailMotion decode(RegistryFriendlyByteBuf buffer) {
+            return new TrailMotion();
+        }
+
+        @Override
+        public void encode(RegistryFriendlyByteBuf buffer, TrailMotion value) {
+
+        }
+    };
 
 
     @Override

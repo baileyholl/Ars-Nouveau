@@ -31,4 +31,8 @@ public abstract class Property {
         return new ArrayList<>();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Property property && this.getId().equals(property.getId());
+    }
 }

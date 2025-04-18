@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.particle.configurations.properties;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
+import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 public class ParticleTypeProperty extends Property{
     public static final Map<ParticleType<? extends ParticleOptions>, ParticleData> PARTICLE_TYPES = new ConcurrentHashMap<>();
@@ -25,7 +27,7 @@ public class ParticleTypeProperty extends Property{
     }
 
     public static void addType(ParticleType<? extends ParticleOptions> type) {
-        PARTICLE_TYPES.put(type, new ParticleData(false));
+        PARTICLE_TYPES.put(type, new ParticleTypeProperty.ParticleData(type, false));
     }
 
 
@@ -77,7 +79,9 @@ public class ParticleTypeProperty extends Property{
         return List.of(new ColorProperty(propertyHolder));
     }
 
-    public record ParticleData(boolean acceptsColor){
-
+    public record ParticleData(ParticleType<?> type, Supplier<ParticleOptions> defaultOptions, boolean acceptsColor){
+        public ParticleData(ParticleType<?> type, boolean acceptsColor){
+            this(type, () -> new PropertyParticleOptions(type), acceptsColor);
+        }
     }
 }

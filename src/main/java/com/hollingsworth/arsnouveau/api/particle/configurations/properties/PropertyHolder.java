@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations.properties;
 
+import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 
@@ -13,6 +15,15 @@ public class PropertyHolder {
     public ParticleColor defaultColor;
 
 
+    public PropertyHolder(Consumer<ParticleType<? extends ParticleOptions>> onParticleChanged, PropertyParticleOptions particleOptions){
+        this.onTextureChanged = onParticleChanged;
+        this.colorChanged = (color) ->{
+            particleOptions.color = color;
+        };
+        this.defaultColor = particleOptions.color;
+        this.defaultType = ModParticles.NEW_GLOW_TYPE.get();
+    }
+
 
     public PropertyHolder(
             Consumer<ParticleType<? extends ParticleOptions>> onTextureChanged,
@@ -20,7 +31,6 @@ public class PropertyHolder {
             Consumer<ParticleColor> colorChanged,
             ParticleColor defaultColor
     ) {
-//        this.subPropsChanged = subPropsChanged;
         this.onTextureChanged = onTextureChanged;
         this.defaultType = defaultType;
         this.colorChanged = colorChanged;

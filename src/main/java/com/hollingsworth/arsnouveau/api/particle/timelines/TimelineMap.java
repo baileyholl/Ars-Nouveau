@@ -7,6 +7,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public record TimelineMap(Map<IParticleTimelineType<?>, IParticleTimeline> timelines) {
@@ -50,5 +51,29 @@ public record TimelineMap(Map<IParticleTimelineType<?>, IParticleTimeline> timel
 
     private static <T extends IParticleTimeline> void encodeTimeline(RegistryFriendlyByteBuf buffer, IParticleTimelineType<T> component, Object value) {
         component.streamCodec().encode(buffer, (T)value);
+    }
+
+    public MutableTimelineMap mutable(){
+        return new MutableTimelineMap(timelines);
+    }
+
+    public static class MutableTimelineMap {
+        private final Map<IParticleTimelineType<?>, IParticleTimeline> timelines;
+
+        public MutableTimelineMap(Map<IParticleTimelineType<?>, IParticleTimeline> map) {
+            timelines = new HashMap<>(map);
+        }
+
+        public <T extends IParticleTimeline> T getOrCreate(IParticleTimelineType<T> type) {
+            return (T) timelines.computeIfAbsent(type, (key) ->  type.create());
+        }
+
+        public <T extends IParticleTimeline> IParticleTimeline put(IParticleTimelineType<T> type, T value) {
+            return timelines.put(type, value);
+        }
+
+        public TimelineMap immutable(){
+            return new TimelineMap(ImmutableMap.copyOf(timelines));
+        }
     }
 }

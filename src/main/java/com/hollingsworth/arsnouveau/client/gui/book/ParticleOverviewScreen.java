@@ -2,11 +2,15 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
+import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleMotion;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.Property;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropertyHolder;
 import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimelineType;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineOption;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
@@ -21,18 +25,21 @@ import com.hollingsworth.arsnouveau.common.network.PacketUpdateParticleTimeline;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ParticleOverviewScreen extends BaseBook {
     int slot;
     InteractionHand stackHand;
-    TimelineMap timeline;
+    TimelineMap.MutableTimelineMap timeline;
 
     public Map.Entry<AbstractSpellPart, Supplier<IParticleTimelineType<?>>> selectedTimeline = null;
 
@@ -44,7 +51,7 @@ public class ParticleOverviewScreen extends BaseBook {
     public ParticleOverviewScreen(TimelineMap particleTimeline, int slot, InteractionHand stackHand) {
         this.slot = slot;
         this.stackHand = stackHand;
-        this.timeline = particleTimeline;
+        this.timeline = particleTimeline.mutable();
         selectedTimeline = ParticleTimelineRegistry.PARTICLE_TIMELINE_MAP.map.entrySet().iterator().next();
     }
 
@@ -68,6 +75,8 @@ public class ParticleOverviewScreen extends BaseBook {
         for(IParticleMotionType<?> type : timelineOption.options()){
             var widget = new GuiImageButton(bookLeft + RIGHT_PAGE_OFFSET + 10 + entryCount * 20, bookTop + 40, 16, 16, type.getIconLocation(), (button) -> {
                 System.out.println(type);
+                timelineOption.entry().setMotion(type.create());
+                addSelectedTimelineOptions();
             }).withTooltip(type.getName());
             rightPageWidgets.add(widget);
             addRenderableWidget(widget);
@@ -75,7 +84,7 @@ public class ParticleOverviewScreen extends BaseBook {
         }
     }
 
-    public void addPropertyWidgets(Property property){
+    public void addParticleDataWidgets(Property property){
         clearRightPage();
         propertyWidgetProvider = property.buildWidgets(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, ONE_PAGE_HEIGHT);
         List<AbstractWidget> propertyWidgets = new ArrayList<>();
@@ -90,7 +99,7 @@ public class ParticleOverviewScreen extends BaseBook {
     public void addSelectedTimelineOptions(){
         clearList(leftPageWidgets);
         clearRightPage();
-        var configurableParticles = timeline.get(selectedTimeline.getValue().get()).getTimelineOptions();
+        var configurableParticles = timeline.getOrCreate(selectedTimeline.getValue().get()).getTimelineOptions();
         int propertyOffset = 0;
         for(TimelineOption timelineOption : configurableParticles){
             ParticleMotion configuration = timelineOption.entry().motion();
@@ -100,17 +109,25 @@ public class ParticleOverviewScreen extends BaseBook {
             leftPageWidgets.add(addRenderableWidget(new DropdownParticleButton(bookLeft + LEFT_PAGE_OFFSET + 13, bookTop + 52 + 16 * (propertyOffset), name, DocAssets.NESTED_ENTRY_BUTTON, type.getIconLocation(), (button) -> {
                 addParticleMotionOptions(timelineOption);
             })));
-//
+
             propertyOffset++;
-//            PropertyHolder holder = configuration.getPropertyHolder();
-//
-//            for(Property property : configuration.buildProperties(holder)){
-//                leftPageWidgets.add(addRenderableWidget(new DropdownParticleButton(bookLeft + LEFT_PAGE_OFFSET + 26, bookTop + 52 + 16 * (propertyOffset), property.getName(), DocAssets.DOUBLE_NESTED_ENTRY_BUTTON, property.getIconLocation(), (button) -> {
-//                    addPropertyWidgets(property);
-//                })));
-//                propertyOffset++;
-//            }
+            ParticleTypeProperty property = new ParticleTypeProperty(getHolderFromEntry(timelineOption.entry().particleOptions().getType(), (newParticle) -> {
+                var entry = ParticleTypeProperty.PARTICLE_TYPES.get(newParticle);
+                timelineOption.entry().setOptions(entry.defaultOptions().get());
+            },timelineOption.entry()));
+            leftPageWidgets.add(addRenderableWidget(new DropdownParticleButton(bookLeft + LEFT_PAGE_OFFSET + 26, bookTop + 52 + 16 * (propertyOffset), property.getName(), DocAssets.DOUBLE_NESTED_ENTRY_BUTTON, property.getIconLocation(), (button) -> {
+                addParticleDataWidgets(property);
+            })));
+            propertyOffset++;
+
         }
+    }
+
+    public PropertyHolder getHolderFromEntry(ParticleType<? extends ParticleOptions> type, Consumer<ParticleType<? extends ParticleOptions>> particleChanged, TimelineEntryData entryData){
+        if(entryData.particleOptions() instanceof PropertyParticleOptions particleOptions){
+            return new PropertyHolder(particleChanged, particleOptions);
+        }
+        return new PropertyHolder(particleChanged, new PropertyParticleOptions(type));
     }
 
     public void addTimelinePage(){
@@ -149,6 +166,6 @@ public class ParticleOverviewScreen extends BaseBook {
     }
 
     public void onCreate(Button button){
-        Networking.sendToServer(new PacketUpdateParticleTimeline(slot, timeline, this.stackHand == InteractionHand.MAIN_HAND));
+        Networking.sendToServer(new PacketUpdateParticleTimeline(slot, timeline.immutable(), this.stackHand == InteractionHand.MAIN_HAND));
     }
 }

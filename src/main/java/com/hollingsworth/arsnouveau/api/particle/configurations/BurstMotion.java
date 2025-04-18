@@ -8,10 +8,20 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
 
 public class BurstMotion extends ParticleMotion {
-
+    public static BurstMotion INSTANCE = new BurstMotion();
     public static MapCodec<BurstMotion> CODEC = MapCodec.unit(BurstMotion::new);
 
-    public static StreamCodec<RegistryFriendlyByteBuf, BurstMotion> STREAM = StreamCodec.unit(new BurstMotion());
+    public static StreamCodec<RegistryFriendlyByteBuf, BurstMotion> STREAM = new StreamCodec<RegistryFriendlyByteBuf, BurstMotion>() {
+        @Override
+        public BurstMotion decode(RegistryFriendlyByteBuf buffer) {
+            return new BurstMotion();
+        }
+
+        @Override
+        public void encode(RegistryFriendlyByteBuf buffer, BurstMotion value) {
+
+        }
+    };
 
     @Override
     public IParticleMotionType<?> getType() {
