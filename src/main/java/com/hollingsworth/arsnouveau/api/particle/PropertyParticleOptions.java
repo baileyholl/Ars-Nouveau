@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.particle;
 
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.Property;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
@@ -39,6 +40,10 @@ public class PropertyParticleOptions implements ParticleOptions, IConfigurablePa
 
     public ParticleColor color;
     protected ParticleType<?> type;
+
+    public static PropertyParticleOptions defaultGlow(){
+        return new PropertyParticleOptions(ModParticles.NEW_GLOW_TYPE.get(), ParticleColor.defaultParticleColor());
+    }
 
     public PropertyParticleOptions(ParticleType<?> type, ParticleColor color) {
         this.type = type;

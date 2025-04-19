@@ -67,28 +67,15 @@ public class ParticleOverviewScreen extends BaseBook {
     public void addParticleMotionOptions(TimelineOption timelineOption){
         clearRightPage();
         int entryCount = 0;
-        rightPageWidgets.add(addRenderableWidget(new HeaderWidget(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, 20, timelineOption.name())));
+        addRightPageWidget(new HeaderWidget(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, 20, timelineOption.name()));
         for(IParticleMotionType<?> type : timelineOption.options()){
             var widget = new GuiImageButton(bookLeft + RIGHT_PAGE_OFFSET + 10 + entryCount * 20, bookTop + 40, 14, 14, type.getIconLocation(), (button) -> {
                 System.out.println(type);
                 timelineOption.entry().setMotion(type.create());
                 addSelectedTimelineOptions();
             }).withTooltip(type.getName());
-            rightPageWidgets.add(widget);
-            addRenderableWidget(widget);
+            addRightPageWidget(widget);
             entryCount++;
-        }
-    }
-
-    public void addParticleDataWidgets(ParticleConfigWidgetProvider property){
-        clearRightPage();
-        propertyWidgetProvider = property;
-        List<AbstractWidget> propertyWidgets = new ArrayList<>();
-        propertyWidgetProvider.addWidgets(propertyWidgets);
-
-        for(AbstractWidget widget : propertyWidgets){
-            rightPageWidgets.add(widget);
-            addRenderableWidget(widget);
         }
     }
 
@@ -102,27 +89,37 @@ public class ParticleOverviewScreen extends BaseBook {
             ParticleMotion configuration = entryData.motion();
             IParticleMotionType<?> motionType = configuration.getType();
             Component name = Component.literal(timelineOption.name().getString() + ": " + motionType.getName().getString());
-            leftPageWidgets.add(addRenderableWidget(new DropdownParticleButton(bookLeft + LEFT_PAGE_OFFSET + 13, bookTop + 52 + 16 * (propertyOffset), name, DocAssets.NESTED_ENTRY_BUTTON, motionType.getIconLocation(), (button) -> {
+            DropdownParticleButton dropdownParticleButton = new DropdownParticleButton(bookLeft + LEFT_PAGE_OFFSET + 13, bookTop + 52 + 16 * (propertyOffset), name, DocAssets.NESTED_ENTRY_BUTTON, motionType.getIconLocation(), (button) -> {
                 addParticleMotionOptions(timelineOption);
-            })));
+            });
+            addLeftPageWidget(dropdownParticleButton);
 
             propertyOffset++;
-            ParticleTypeProperty property = new ParticleTypeProperty(getHolderFromEntry(entryData.particleOptions().getType(), (newParticle) -> {
-                var entry = ParticleTypeProperty.PARTICLE_TYPES.get(newParticle);
-                entryData.setOptions(entry.defaultOptions().get());
-            }, entryData));
 
-
-            var propWidgetProvider = property.buildWidgets(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, ONE_PAGE_HEIGHT);
-
-            PropertyButton propertyButton = new PropertyButton(bookLeft + LEFT_PAGE_OFFSET + 26, bookTop + 52 + 16 * (propertyOffset), DocAssets.DOUBLE_NESTED_ENTRY_BUTTON, propWidgetProvider, (button) -> {
-                var widgetProvider = property.buildWidgets(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, ONE_PAGE_HEIGHT);
-                addParticleDataWidgets(widgetProvider);
-            });
-            leftPageWidgets.add(addRenderableWidget(propertyButton));
+            PropertyButton propertyButton = buildPropertyButton(entryData, propertyOffset);
+            addLeftPageWidget(propertyButton);
             propertyOffset++;
 
         }
+    }
+
+    public PropertyButton buildPropertyButton(TimelineEntryData entryData, int yOffset){
+        ParticleTypeProperty property = new ParticleTypeProperty(getHolderFromEntry(entryData.particleOptions().getType(), (newParticle) -> {
+            var entry = ParticleTypeProperty.PARTICLE_TYPES.get(newParticle);
+            entryData.setOptions(entry.defaultOptions().get());
+        }, entryData));
+
+        var widgetProvider = property.buildWidgets(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, ONE_PAGE_HEIGHT);
+        return new PropertyButton(bookLeft + LEFT_PAGE_OFFSET + 26, bookTop + 52 + 16 * (yOffset), DocAssets.DOUBLE_NESTED_ENTRY_BUTTON, widgetProvider, (button) -> {
+            clearRightPage();
+            propertyWidgetProvider = widgetProvider;
+            List<AbstractWidget> propertyWidgets = new ArrayList<>();
+            propertyWidgetProvider.addWidgets(propertyWidgets);
+
+            for(AbstractWidget widget : propertyWidgets){
+                addRightPageWidget(widget);
+            }
+        });
     }
 
     public PropertyHolder getHolderFromEntry(ParticleType<? extends ParticleOptions> type, Consumer<ParticleType<? extends ParticleOptions>> particleChanged, TimelineEntryData entryData){
@@ -162,12 +159,26 @@ public class ParticleOverviewScreen extends BaseBook {
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
         DocClientUtils.drawHeader(Component.translatable("ars_nouveau.spell_styles"), graphics, bookLeft + LEFT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, mouseX, mouseY, partialTicks);
-        if(propertyWidgetProvider != null){
-            propertyWidgetProvider.render(graphics, mouseX, mouseY, partialTicks);
+        try {
+            if (propertyWidgetProvider != null) {
+                propertyWidgetProvider.render(graphics, mouseX, mouseY, partialTicks);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 
     public void onCreate(Button button){
         Networking.sendToServer(new PacketUpdateParticleTimeline(slot, timeline.immutable(), this.stackHand == InteractionHand.MAIN_HAND));
+    }
+
+    public void addLeftPageWidget(AbstractWidget widget){
+        leftPageWidgets.add(widget);
+        addRenderableWidget(widget);
+    }
+
+    public void addRightPageWidget(AbstractWidget widget){
+        rightPageWidgets.add(widget);
+        addRenderableWidget(widget);
     }
 }

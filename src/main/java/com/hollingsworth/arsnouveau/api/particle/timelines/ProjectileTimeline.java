@@ -2,12 +2,11 @@ package com.hollingsworth.arsnouveau.api.particle.timelines;
 
 import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.BurstMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
 import com.hollingsworth.arsnouveau.api.particle.configurations.TrailMotion;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
-import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
-import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -34,8 +33,8 @@ public class ProjectileTimeline implements IParticleTimeline{
     public TimelineEntryData onResolvingEffect;
 
     public ProjectileTimeline(){
-        this(new TimelineEntryData(new TrailMotion(), GlowParticleData.createData(ParticleColor.defaultParticleColor())),
-                new TimelineEntryData(new BurstMotion(), GlowParticleData.createData(ParticleColor.defaultParticleColor())));
+        this(new TimelineEntryData(new TrailMotion(), PropertyParticleOptions.defaultGlow()),
+                new TimelineEntryData(new BurstMotion(), PropertyParticleOptions.defaultGlow()));
     }
 
     public ProjectileTimeline(TimelineEntryData trailEffect, TimelineEntryData onResolvingEffect){

@@ -21,7 +21,7 @@ public class PropertyHolder {
             particleOptions.color = color;
         };
         this.defaultColor = particleOptions.color;
-        this.defaultType = ModParticles.NEW_GLOW_TYPE.get();
+        this.defaultType = particleOptions.getType() == null ? ModParticles.NEW_GLOW_TYPE.get() : particleOptions.getType();
     }
 
 

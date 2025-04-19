@@ -36,6 +36,10 @@ public class ParticleTypeProperty extends Property {
     public ParticleTypeProperty(PropertyHolder propertyHolder) {
         super(propertyHolder);
         this.selectedData = PARTICLE_TYPES.get(propertyHolder.defaultType);
+        if (selectedData == null) {
+            System.out.println("UNREGISTERED PARTICLE TYPE FOR " + propertyHolder.defaultType);
+            selectedData = new ParticleData(propertyHolder.defaultType, false);
+        }
     }
 
     @Override
