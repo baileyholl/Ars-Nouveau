@@ -60,7 +60,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
     @Override
     public void tick() {
         if (!level.isClientSide) {
-            if(spellResolver == null)
+            if(resolver() == null)
                 return;
             boolean isOnGround = level.getBlockState(blockPosition()).blocksMotion();
 
@@ -98,7 +98,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
                 return;
             for(BlockPos p : BlockPos.betweenClosed(start, end)){
                 p = p.immutable();
-                spellResolver.getNewResolver(spellResolver.spellContext.clone().makeChildContext()).onResolveEffect(level, new
+                resolver().getNewResolver(resolver().spellContext.clone().makeChildContext()).onResolveEffect(level, new
                         BlockHitResult(new Vec3(p.getX(), p.getY(), p.getZ()), Direction.UP, p, false));
             }
         }else{
@@ -127,7 +127,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
                 }
                 if(skipEntity)
                     continue;
-                spellResolver.getNewResolver(spellResolver.spellContext.clone().makeChildContext()).onResolveEffect(level, new EntityHitResult(entity));
+                resolver().getNewResolver(resolver().spellContext.clone().makeChildContext()).onResolveEffect(level, new EntityHitResult(entity));
                 i++;
                 if(hit.isEmpty()){
                     hitEntities.add(new EntityHit(entity));
