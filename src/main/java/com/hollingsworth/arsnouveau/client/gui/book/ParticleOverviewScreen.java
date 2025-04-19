@@ -98,19 +98,21 @@ public class ParticleOverviewScreen extends BaseBook {
         var configurableParticles = timeline.getOrCreate(selectedTimeline.getValue().get()).getTimelineOptions();
         int propertyOffset = 0;
         for(TimelineOption timelineOption : configurableParticles){
-            ParticleMotion configuration = timelineOption.entry().motion();
-            IParticleMotionType<?> motionType = timelineOption.entry().motion().getType();
-            var type = configuration.getType();
+            TimelineEntryData entryData = timelineOption.entry();
+            ParticleMotion configuration = entryData.motion();
+            IParticleMotionType<?> motionType = configuration.getType();
             Component name = Component.literal(timelineOption.name().getString() + ": " + motionType.getName().getString());
-            leftPageWidgets.add(addRenderableWidget(new DropdownParticleButton(bookLeft + LEFT_PAGE_OFFSET + 13, bookTop + 52 + 16 * (propertyOffset), name, DocAssets.NESTED_ENTRY_BUTTON, type.getIconLocation(), (button) -> {
+            leftPageWidgets.add(addRenderableWidget(new DropdownParticleButton(bookLeft + LEFT_PAGE_OFFSET + 13, bookTop + 52 + 16 * (propertyOffset), name, DocAssets.NESTED_ENTRY_BUTTON, motionType.getIconLocation(), (button) -> {
                 addParticleMotionOptions(timelineOption);
             })));
 
             propertyOffset++;
-            ParticleTypeProperty property = new ParticleTypeProperty(getHolderFromEntry(timelineOption.entry().particleOptions().getType(), (newParticle) -> {
+            ParticleTypeProperty property = new ParticleTypeProperty(getHolderFromEntry(entryData.particleOptions().getType(), (newParticle) -> {
                 var entry = ParticleTypeProperty.PARTICLE_TYPES.get(newParticle);
-                timelineOption.entry().setOptions(entry.defaultOptions().get());
-            },timelineOption.entry()));
+                entryData.setOptions(entry.defaultOptions().get());
+            }, entryData));
+
+
             var propWidgetProvider = property.buildWidgets(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, ONE_PAGE_HEIGHT);
 
             PropertyButton propertyButton = new PropertyButton(bookLeft + LEFT_PAGE_OFFSET + 26, bookTop + 52 + 16 * (propertyOffset), DocAssets.DOUBLE_NESTED_ENTRY_BUTTON, propWidgetProvider, (button) -> {
