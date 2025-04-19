@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.particle.configurations;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.Component;
 
 import java.util.List;
 
@@ -25,4 +26,8 @@ public abstract class ParticleConfigWidgetProvider {
     public abstract void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks);
 
     public abstract void addWidgets(List<AbstractWidget> widgets);
+
+    public abstract void renderIcon(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float partialTicks);
+
+    public abstract Component getButtonTitle();
 }

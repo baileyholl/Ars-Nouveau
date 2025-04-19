@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-public class ParticleTypeProperty extends Property{
+public class ParticleTypeProperty extends Property {
     public static final Map<ParticleType<? extends ParticleOptions>, ParticleData> PARTICLE_TYPES = new ConcurrentHashMap<>();
 
     public static void addType(ParticleType<? extends ParticleOptions> type, ParticleData data) {
@@ -56,31 +56,51 @@ public class ParticleTypeProperty extends Property{
                 var particleEntries = PARTICLE_TYPES.entrySet();
                 int count = 0;
                 for (var particleType : particleEntries) {
-
-                    ResourceLocation location = BuiltInRegistries.PARTICLE_TYPE.getKey(particleType.getKey());
-
-                    widgets.add(new GuiImageButton(x + 24 * count, y + 20, 16, 16, ResourceLocation.fromNamespaceAndPath(location.getNamespace(), "textures/particle_config/" + location.getPath()), (b) ->{
-                        System.out.println(location);
+                    widgets.add(new GuiImageButton(x + 24 * count, y + 20, 16, 16, getImagePath(particleType.getKey()), (b) -> {
                         selectedData = particleType.getValue();
                         propertyHolder.onTextureChanged.accept(particleType.getKey());
-                    }).withTooltip(Component.translatable(location.getNamespace() + ".particle." + location.getPath())));
+                    }).withTooltip(getTypeName(particleType.getKey())));
                     count++;
                 }
+            }
+
+            private ResourceLocation getImagePath(ParticleType<?> type) {
+                ResourceLocation location = getKey(type);
+                return ResourceLocation.fromNamespaceAndPath(location.getNamespace(), "textures/particle_config/" + location.getPath() + ".png");
+            }
+
+            private ResourceLocation getKey(ParticleType<?> type) {
+                return BuiltInRegistries.PARTICLE_TYPE.getKey(type);
+            }
+
+            private Component getTypeName(ParticleType<?> type) {
+                ResourceLocation location = getKey(type);
+                return Component.translatable(location.getNamespace() + ".particle." + location.getPath());
+            }
+
+            @Override
+            public void renderIcon(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float partialTicks) {
+                graphics.blit(getImagePath(selectedData.type()), x, y, 0, 0, 14, 14, 14, 14);
+            }
+
+            @Override
+            public Component getButtonTitle() {
+                return Component.literal(getName().getString() + ": " + getTypeName(selectedData.type()).getString());
             }
         };
     }
 
     @Override
     public List<Property> subProperties() {
-        if(selectedData == null || !selectedData.acceptsColor) {
+        if (selectedData == null || !selectedData.acceptsColor) {
             return Collections.emptyList();
         }
 
         return List.of(new ColorProperty(propertyHolder));
     }
 
-    public record ParticleData(ParticleType<?> type, Supplier<ParticleOptions> defaultOptions, boolean acceptsColor){
-        public ParticleData(ParticleType<?> type, boolean acceptsColor){
+    public record ParticleData(ParticleType<?> type, Supplier<ParticleOptions> defaultOptions, boolean acceptsColor) {
+        public ParticleData(ParticleType<?> type, boolean acceptsColor) {
             this(type, () -> new PropertyParticleOptions(type), acceptsColor);
         }
     }

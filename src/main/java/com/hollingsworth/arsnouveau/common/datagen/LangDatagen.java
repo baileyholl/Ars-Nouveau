@@ -1454,11 +1454,13 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.particle_config.helix", "Helix");
         add("ars_nouveau.particle_config.spiral", "Spiral");
         add("ars_nouveau.particle.property.color", "Color");
-        add("ars_nouveau.particle.property.texture", "Texture");
+        add("ars_nouveau.particle.property.particle_type", "Particle");
         add("ars_nouveau.spell_styles", "Spell Styles");
         add("ars_nouveau.timeline.trail", "Trail");
         add("ars_nouveau.timeline.impact", "On Impact");
         add("ars_nouveau.particle_timelines", "Configurable Particles");
+        add("ars_nouveau.particle.new_glow", "Glow");
+        add("ars_nouveau.particle.snow", "Snow");
 
     }
 

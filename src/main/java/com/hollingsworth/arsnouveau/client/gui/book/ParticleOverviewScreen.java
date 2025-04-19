@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionT
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.Property;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropertyHolder;
 import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimelineType;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
@@ -16,10 +15,7 @@ import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineOption;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.client.gui.HeaderWidget;
-import com.hollingsworth.arsnouveau.client.gui.buttons.DropdownParticleButton;
-import com.hollingsworth.arsnouveau.client.gui.buttons.GlyphButton;
-import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
-import com.hollingsworth.arsnouveau.client.gui.buttons.ParticleTimelineButton;
+import com.hollingsworth.arsnouveau.client.gui.buttons.*;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateParticleTimeline;
 import net.minecraft.client.gui.GuiGraphics;
@@ -73,7 +69,7 @@ public class ParticleOverviewScreen extends BaseBook {
         int entryCount = 0;
         rightPageWidgets.add(addRenderableWidget(new HeaderWidget(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, 20, timelineOption.name())));
         for(IParticleMotionType<?> type : timelineOption.options()){
-            var widget = new GuiImageButton(bookLeft + RIGHT_PAGE_OFFSET + 10 + entryCount * 20, bookTop + 40, 16, 16, type.getIconLocation(), (button) -> {
+            var widget = new GuiImageButton(bookLeft + RIGHT_PAGE_OFFSET + 10 + entryCount * 20, bookTop + 40, 14, 14, type.getIconLocation(), (button) -> {
                 System.out.println(type);
                 timelineOption.entry().setMotion(type.create());
                 addSelectedTimelineOptions();
@@ -84,9 +80,9 @@ public class ParticleOverviewScreen extends BaseBook {
         }
     }
 
-    public void addParticleDataWidgets(Property property){
+    public void addParticleDataWidgets(ParticleConfigWidgetProvider property){
         clearRightPage();
-        propertyWidgetProvider = property.buildWidgets(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, ONE_PAGE_HEIGHT);
+        propertyWidgetProvider = property;
         List<AbstractWidget> propertyWidgets = new ArrayList<>();
         propertyWidgetProvider.addWidgets(propertyWidgets);
 
@@ -115,9 +111,13 @@ public class ParticleOverviewScreen extends BaseBook {
                 var entry = ParticleTypeProperty.PARTICLE_TYPES.get(newParticle);
                 timelineOption.entry().setOptions(entry.defaultOptions().get());
             },timelineOption.entry()));
-            leftPageWidgets.add(addRenderableWidget(new DropdownParticleButton(bookLeft + LEFT_PAGE_OFFSET + 26, bookTop + 52 + 16 * (propertyOffset), property.getName(), DocAssets.DOUBLE_NESTED_ENTRY_BUTTON, property.getIconLocation(), (button) -> {
-                addParticleDataWidgets(property);
-            })));
+            var propWidgetProvider = property.buildWidgets(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, ONE_PAGE_HEIGHT);
+
+            PropertyButton propertyButton = new PropertyButton(bookLeft + LEFT_PAGE_OFFSET + 26, bookTop + 52 + 16 * (propertyOffset), DocAssets.DOUBLE_NESTED_ENTRY_BUTTON, propWidgetProvider, (button) -> {
+                var widgetProvider = property.buildWidgets(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, ONE_PAGE_HEIGHT);
+                addParticleDataWidgets(widgetProvider);
+            });
+            leftPageWidgets.add(addRenderableWidget(propertyButton));
             propertyOffset++;
 
         }

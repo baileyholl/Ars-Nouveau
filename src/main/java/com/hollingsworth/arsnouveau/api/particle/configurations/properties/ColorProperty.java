@@ -63,6 +63,16 @@ public class ColorProperty extends Property{
             public BookSlider buildSlider(int x, int y, Component prefix, Component suffix, double currentVal, Consumer<Double> onValueChange) {
                 return new BookSlider(x, y, 100, 20, prefix, suffix, 1.0D, 255.0D, currentVal, 1, 1, true, onValueChange);
             }
+
+            @Override
+            public void renderIcon(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float partialTicks) {
+                graphics.fill(x + 10, y + 10, x + 20, y + 20, propertyHolder.defaultColor.getColor());
+            }
+
+            @Override
+            public Component getButtonTitle() {
+                return getName();
+            }
         };
     }
 
