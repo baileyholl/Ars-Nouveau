@@ -19,6 +19,7 @@ import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.FollowMobGoal
 import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.FollowPlayerGoal;
 import com.hollingsworth.arsnouveau.common.items.data.ICharmSerializable;
 import com.hollingsworth.arsnouveau.common.items.data.PersistentFamiliarData;
+import com.hollingsworth.arsnouveau.common.items.summon_charms.DrygmyCharm;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
@@ -59,6 +60,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipProvider, IDispellable, ICharmSerializable {
 
@@ -118,6 +120,28 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
             return InteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(hand);
 
+        if (stack.getItem() instanceof DrygmyCharm charm) {
+            EntityDrygmy toRide = this;
+            while (toRide.getFirstPassenger() instanceof EntityDrygmy riding) {
+                toRide = riding;
+            }
+
+            if (toRide.hasPassenger(e -> true)) {
+                return InteractionResult.FAIL;
+            }
+
+            EntityDrygmy drygmy = new EntityDrygmy(level, true);
+            drygmy.homePos = toRide.homePos;
+            drygmy.fromCharmData(stack.getOrDefault(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, new PersistentFamiliarData()));
+            drygmy.setPos(toRide.position().add(0, toRide.getBoundingBox().getYsize(), 0));
+            level.addFreshEntity(drygmy);
+            drygmy.startRiding(toRide);
+            if (!player.hasInfiniteMaterials()) {
+                stack.shrink(1);
+                return InteractionResult.SUCCESS;
+            }
+        }
+
         if (player.getMainHandItem().is(Tags.Items.DYES)) {
             DyeColor color = DyeColor.getColor(stack);
             if (color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(COLORS).contains(color.getName()))
@@ -132,8 +156,14 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     }
 
     @Override
+    public boolean isEffectiveAi() {
+        return !this.isPassenger() && super.isEffectiveAi();
+    }
+
+    @Override
     public void tick() {
         super.tick();
+
         SummonUtil.healOverTime(this);
         if (!level.isClientSide && channelCooldown > 0) {
             channelCooldown--;
@@ -233,8 +263,20 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
         return this.entityData.get(CHANNELING);
     }
 
+    public void forEachInStack(Consumer<EntityDrygmy> fn) {
+        var root = this.getRootVehicle();
+        if (root instanceof EntityDrygmy drygmy) {
+            fn.accept(drygmy);
+            for (var passenger : drygmy.getIndirectPassengers()) {
+                if (passenger instanceof EntityDrygmy passengerDrygmy) {
+                    fn.accept(passengerDrygmy);
+                }
+            }
+        }
+    }
+
     public void setChanneling(boolean channeling) {
-        this.entityData.set(CHANNELING, channeling);
+        this.forEachInStack(d -> d.entityData.set(CHANNELING, channeling));
     }
 
     public int getChannelEntity() {
@@ -242,7 +284,29 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     }
 
     public void setChannelingEntity(int entityID) {
-        this.entityData.set(CHANNELING_ENTITY, entityID);
+        this.forEachInStack(d -> d.entityData.set(CHANNELING_ENTITY, entityID));
+    }
+
+    public int countDrygmiesInStack() {
+        var root = this.getRootVehicle();
+        var count = this.equals(root) ? 1 : 0;
+        for (var passenger : this.getIndirectPassengers()) {
+            if (passenger instanceof EntityDrygmy) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public void lookAtEntity(Entity entity) {
+        this.forEachInStack(d -> d.getLookControl().setLookAt(entity, 10.0F, d.getMaxHeadXRot()));
+    }
+
+    public void giveProgress() {
+        var home = this.getHome();
+        if (home != null) {
+            home.progress = Math.min(home.getMaxProgress(), home.progress + this.countDrygmiesInStack());
+        }
     }
 
     @Override
@@ -323,7 +387,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
         tag.putInt("cooldown", channelCooldown);
         tag.putInt("taming", tamingTime);
         tag.putBoolean("beingTamed", this.entityData.get(BEING_TAMED));
-        if(this.entityData.get(COLOR) != null) {
+        if (this.entityData.get(COLOR) != null) {
             tag.putString("color", this.entityData.get(COLOR));
         }
     }

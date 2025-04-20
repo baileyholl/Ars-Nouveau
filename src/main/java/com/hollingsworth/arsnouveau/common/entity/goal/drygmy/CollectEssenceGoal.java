@@ -10,8 +10,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.pathfinder.Path;
 
-import java.util.EnumSet;
-
 public class CollectEssenceGoal extends Goal {
 
     public EntityDrygmy drygmy;
@@ -23,12 +21,11 @@ public class CollectEssenceGoal extends Goal {
 
     public CollectEssenceGoal(EntityDrygmy drygmy) {
         this.drygmy = drygmy;
-        this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK, Goal.Flag.JUMP));
     }
 
     @Override
     public boolean canUse() {
-        return drygmy.channelCooldown <= 0 && drygmy.getHome() != null && !drygmy.getHome().isOff;
+        return drygmy.channelCooldown <= 0 && drygmy.isEffectiveAi() && drygmy.getHome() != null && !drygmy.getHome().isOff;
     }
 
     @Override
@@ -61,11 +58,10 @@ public class CollectEssenceGoal extends Goal {
         if (complete || target == null)
             return;
 
-        if(approached) {
+        if (approached) {
             drygmy.setChannelingEntity(target.getId());
-            drygmy.getLookControl().setLookAt(target, 10.0F, (float) drygmy.getMaxHeadXRot());
+            drygmy.lookAtEntity(target);
             drygmy.getNavigation().stop();
-            this.approached = true;
             drygmy.setChanneling(true);
             timeChanneling++;
             if (timeChanneling >= 100) {
@@ -79,15 +75,15 @@ public class CollectEssenceGoal extends Goal {
                     targetPos = targetPos.above(homePos.getY() - targetPos.getY());
                 }
                 EntityFlyingItem.spawn(homePos, (ServerLevel) drygmy.level,
-                            targetPos, homePos,
-                            50,
-                            255,
-                            20);
+                        targetPos, homePos,
+                        50,
+                        255,
+                        20);
 
                 drygmy.channelCooldown = 100;
-                drygmy.getHome().giveProgress();
+                drygmy.giveProgress();
             }
-        }else{
+        } else {
             if(timePathing > 20 * 8){
                 approached = true;
                 drygmy.getNavigation().stop();
