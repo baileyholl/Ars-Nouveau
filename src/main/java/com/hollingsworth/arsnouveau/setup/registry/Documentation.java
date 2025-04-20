@@ -673,7 +673,7 @@ public class Documentation {
                 .withPage(TextEntry.create(getLangPath("alakarkinos_charm", 4), Component.translatable("ars_nouveau.sifting")))
                 .addConnectedSearch(ItemsRegistry.ALAKARKINOS_SHARD));
 
-
+        
         addPage(new DocEntryBuilder(GETTING_STARTED, "spell_casting")
                 .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
                 .withSortNum(1)
@@ -683,76 +683,98 @@ public class Documentation {
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "introduction_to_glyphs")
                 .withSortNum(2)
-                .withIcon(MethodProjectile.INSTANCE.glyphItem)
+                .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
                 .withIntroPage()
                 .withLocalizedText()
                 .withLocalizedText());
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "introduction_to_spellcrafting")
                 .withSortNum(3)
-                .withIcon(MethodProjectile.INSTANCE.glyphItem)
+                .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
+                .withIntroPage()
+                .withLocalizedText());
+
+        addPage(new DocEntryBuilder(GETTING_STARTED, "spellcasting")
+                .withSortNum(4)
+                .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
                 .withIntroPage()
                 .withLocalizedText());
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "spell_mana")
-                .withSortNum(4)
+                .withSortNum(5)
                 .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
-                .withIcon(ItemsRegistry.POTION_FLASK)
                 .withIntroPage()
                 .withLocalizedText());
 
+        addPage(new DocEntryBuilder(GETTING_STARTED, "learning_glyphs")
+                .withSortNum(6)
+                .withIcon(BlockRegistry.SCRIBES_BLOCK)
+                .withIntroPage());
+
+        addPage(new DocEntryBuilder(GETTING_STARTED, "important_resources")
+                .withSortNum(7)
+                .withIcon(Items.RAW_GOLD)
+                .withIntroPage());
+
+        addPage(new DocEntryBuilder(GETTING_STARTED, "magical_crafting")
+                .withSortNum(8)
+                .withIcon(BlockRegistry.IMBUEMENT_BLOCK)
+                .withIntroPage()
+                .withLocalizedText());
+
+        addPage(new DocEntryBuilder(GETTING_STARTED, "source")
+                .withSortNum(9)
+                .withIcon(BlockRegistry.SOURCE_JAR)
+                .withIntroPage()
+                .withLocalizedText())
+                .withRelations(sourceJar, agronomic, relay);
+
         addPage(new DocEntryBuilder(GETTING_STARTED, "obtaining_gems")
                 .withIcon(BlockRegistry.IMBUEMENT_BLOCK)
-                .withSortNum(3)
+                .withSortNum(12)
                 .withIntroPage())
                 .withRelation(dowsingRod)
                 .withRelation(imbuementChamber);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "new_glyphs")
                 .withIcon(ItemsRegistry.BLANK_GLYPH)
-                .withSortNum(4)
+                .withSortNum(13)
                 .withIntroPage())
                 .withRelations(scribesTable, annotatedCodex);
 
-        addPage(new DocEntryBuilder(GETTING_STARTED, "source")
-                .withSortNum(5)
-                .withIcon(BlockRegistry.SOURCE_JAR)
-                .withIntroPage())
-                .withRelations(sourceJar, agronomic, relay);
-
         addPage(new DocEntryBuilder(GETTING_STARTED, "apparatus_crafting")
-                .withSortNum(6)
+                .withSortNum(15)
                 .withIcon(BlockRegistry.ENCHANTING_APP_BLOCK)
                 .withIntroPage())
                 .withRelations(enchantingApparatus, magebloom);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "better_casting")
-                .withSortNum(7)
+                .withSortNum(16)
                 .withIcon(ItemsRegistry.SORCERER_ROBES)
                 .withIntroPage())
                 .withRelations(enchantingApparatus, armorEntry, armorUpgrade);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "world_generation")
-                .withSortNum(8)
+                .withSortNum(17)
                 .withIcon(ItemsRegistry.SOURCE_GEM)
                 .withIntroPage())
                 .withRelations(imbuementChamber, archwood, sourceberry, dowsingRod);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "upgrades")
-                .withSortNum(9)
+                .withSortNum(18)
                 .withIcon(ItemsRegistry.ARCHMAGE_SPELLBOOK)
                 .withIntroPage())
                 .withRelations(spellBooks, armorEntry);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "starting_automation")
-                .withSortNum(10)
+                .withSortNum(19)
                 .withIcon(BlockRegistry.BASIC_SPELL_TURRET)
                 .withIntroPage())
                 .withRelations(turrets, prisms, starby, wixie, drygmyCharm);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "trinkets")
                 .withIcon(ItemsRegistry.WARP_SCROLL)
-                .withSortNum(11)
+                .withSortNum(20)
                 .withIntroPage())
                 .withRelations(jarOfLight, amuletOfRegen, discountRing, beltOfLevitation, stableScroll);
 
