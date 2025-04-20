@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.client.gui.BookSlider;
+import com.hollingsworth.arsnouveau.client.gui.Color;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -14,11 +15,14 @@ import net.minecraft.util.Mth;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ColorProperty extends Property{
+public class ColorProperty extends SubProperty{
     public static final ResourceLocation ID = ArsNouveau.prefix("color");
+
+    public ParticleColor particleColor;
 
     public ColorProperty(PropertyHolder propertyHolder) {
         super(propertyHolder);
+        this.particleColor = propertyHolder.defaultColor;
     }
 
     @Override
@@ -36,22 +40,27 @@ public class ColorProperty extends Property{
             @Override
             public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
                 DocClientUtils.drawHeader(getName(), graphics, x, y, width, mouseX, mouseY, partialTicks);
-
+                Color color = new Color(particleColor.getColor(), false);
+                int xOffset = x + 50;
+                int yOffset = y + 130;
+                int size = 16;
+                graphics.fill(xOffset, yOffset, xOffset + size,  yOffset + size, color.getRGB());
             }
 
             @Override
             public void addWidgets(List<AbstractWidget> widgets) {
                 Consumer<Double> colorChanged = (value) -> {
                     ParticleColor color = new ParticleColor((int)redW.getValue(), (int)greenW.getValue(), (int)blueW.getValue());
+                    particleColor = color;
                     propertyHolder.colorChanged.accept(color);
                 };
-                redW = buildSlider(x + 28, y + 49, Component.translatable("ars_nouveau.color_gui.red_slider"), Component.empty(), 255, colorChanged);
-                greenW = buildSlider(x + 28, y + 89, Component.translatable("ars_nouveau.color_gui.green_slider"), Component.empty(), 25, colorChanged);
-                blueW = buildSlider(x + 28, y + 129, Component.translatable("ars_nouveau.color_gui.blue_slider"), Component.empty(), 180, colorChanged);
+                redW = buildSlider(x + 10, y + 30, Component.translatable("ars_nouveau.color_gui.red_slider"), Component.empty(), 255, colorChanged);
+                greenW = buildSlider(x + 10, y + 70, Component.translatable("ars_nouveau.color_gui.green_slider"), Component.empty(), 25, colorChanged);
+                blueW = buildSlider(x + 10, y + 110, Component.translatable("ars_nouveau.color_gui.blue_slider"), Component.empty(), 180, colorChanged);
+                setFromPreset(particleColor);
                 widgets.add(redW);
                 widgets.add(greenW);
                 widgets.add(blueW);
-                setFromPreset(propertyHolder.defaultColor);
             }
 
             public void setFromPreset(ParticleColor preset) {
@@ -66,7 +75,8 @@ public class ColorProperty extends Property{
 
             @Override
             public void renderIcon(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float partialTicks) {
-                graphics.fill(x + 10, y + 10, x + 20, y + 20, propertyHolder.defaultColor.getColor());
+                Color color = new Color(particleColor.getColor(), false);
+                graphics.fill(x + 2, y + 2, x + 12,  y + 12, color.getRGB());
             }
 
             @Override

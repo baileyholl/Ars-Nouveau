@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
 import com.hollingsworth.arsnouveau.api.registry.ParticleConfigRegistry;
-import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -78,7 +77,7 @@ public class SpiralMotion extends ParticleMotion {
 
             Vector3f localPos = new Vector3f(localX, localY, localZ);
             transform.transformPosition(localPos);
-            level.addParticle(ModParticles.CUSTOM_TYPE.get(), localPos.x, localPos.y, localPos.z, 0, 0, 0);
+            level.addParticle(particleOptions, localPos.x, localPos.y, localPos.z, 0, 0, 0);
         }
     }
 }

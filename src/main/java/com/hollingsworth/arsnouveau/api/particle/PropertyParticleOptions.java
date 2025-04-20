@@ -59,6 +59,10 @@ public class PropertyParticleOptions implements ParticleOptions, IConfigurablePa
         return type;
     }
 
+    public ParticleColor getColor() {
+        return color;
+    }
+
     @Override
     public List<Property> getProperties() {
         return List.of();

@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
 import com.hollingsworth.arsnouveau.api.registry.ParticleConfigRegistry;
-import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -79,9 +78,9 @@ public class HelixMotion extends ParticleMotion {
             Vector3f localPos = new Vector3f(localX, localY, localZ);
             Vector3f opposite = new Vector3f(-localX, -localY, -localZ);
             transform.transformPosition(localPos);
-            level.addParticle(ModParticles.CUSTOM_TYPE.get(), localPos.x, localPos.y, localPos.z, 0, 0, 0);
+            level.addParticle(particleOptions, localPos.x, localPos.y, localPos.z, 0, 0, 0);
             transform.transformPosition(opposite);
-            level.addParticle(ModParticles.CUSTOM_TYPE.get(), opposite.x, opposite.y, opposite.z, 0, 0, 0);
+            level.addParticle(particleOptions, opposite.x, opposite.y, opposite.z, 0, 0, 0);
         }
     }
 }

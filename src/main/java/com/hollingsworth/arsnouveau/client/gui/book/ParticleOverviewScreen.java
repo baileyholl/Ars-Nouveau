@@ -2,12 +2,12 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
-import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleMotion;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropertyHolder;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.Property;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.SubProperty;
 import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimelineType;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
@@ -21,15 +21,12 @@ import com.hollingsworth.arsnouveau.common.network.PacketUpdateParticleTimeline;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ParticleOverviewScreen extends BaseBook {
@@ -73,6 +70,7 @@ public class ParticleOverviewScreen extends BaseBook {
                 System.out.println(type);
                 timelineOption.entry().setMotion(type.create());
                 addSelectedTimelineOptions();
+
             }).withTooltip(type.getName());
             addRightPageWidget(widget);
             entryCount++;
@@ -81,7 +79,6 @@ public class ParticleOverviewScreen extends BaseBook {
 
     public void addSelectedTimelineOptions(){
         clearList(leftPageWidgets);
-        clearRightPage();
         var configurableParticles = timeline.getOrCreate(selectedTimeline.getValue().get()).getTimelineOptions();
         int propertyOffset = 0;
         for(TimelineOption timelineOption : configurableParticles){
@@ -89,28 +86,31 @@ public class ParticleOverviewScreen extends BaseBook {
             ParticleMotion configuration = entryData.motion();
             IParticleMotionType<?> motionType = configuration.getType();
             Component name = Component.literal(timelineOption.name().getString() + ": " + motionType.getName().getString());
-            DropdownParticleButton dropdownParticleButton = new DropdownParticleButton(bookLeft + LEFT_PAGE_OFFSET + 13, bookTop + 52 + 16 * (propertyOffset), name, DocAssets.NESTED_ENTRY_BUTTON, motionType.getIconLocation(), (button) -> {
+            DropdownParticleButton dropdownParticleButton = new DropdownParticleButton(bookLeft + LEFT_PAGE_OFFSET + 13, bookTop + 51 + 15 * (propertyOffset), name, DocAssets.NESTED_ENTRY_BUTTON, motionType.getIconLocation(), (button) -> {
                 addParticleMotionOptions(timelineOption);
             });
             addLeftPageWidget(dropdownParticleButton);
 
             propertyOffset++;
-
-            PropertyButton propertyButton = buildPropertyButton(entryData, propertyOffset);
-            addLeftPageWidget(propertyButton);
-            propertyOffset++;
-
+            List<BaseProperty> allProps = new ArrayList<>();
+            for(Property property : timelineOption.properties()) {
+                property.setChangedListener(this::addSelectedTimelineOptions);
+                allProps.add(property);
+                List<SubProperty> subProperties = property.subProperties();
+                allProps.addAll(subProperties);
+            }
+            for(BaseProperty property : allProps){
+                PropertyButton propertyButton = buildPropertyButton(property, propertyOffset);
+                addLeftPageWidget(propertyButton);
+                propertyOffset++;
+            }
         }
     }
 
-    public PropertyButton buildPropertyButton(TimelineEntryData entryData, int yOffset){
-        ParticleTypeProperty property = new ParticleTypeProperty(getHolderFromEntry(entryData.particleOptions().getType(), (newParticle) -> {
-            var entry = ParticleTypeProperty.PARTICLE_TYPES.get(newParticle);
-            entryData.setOptions(entry.defaultOptions().get());
-        }, entryData));
-
+    public PropertyButton buildPropertyButton(BaseProperty property, int yOffset){
+        boolean isSubProperty = property instanceof SubProperty;
         var widgetProvider = property.buildWidgets(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, ONE_PAGE_HEIGHT);
-        return new PropertyButton(bookLeft + LEFT_PAGE_OFFSET + 26, bookTop + 52 + 16 * (yOffset), DocAssets.DOUBLE_NESTED_ENTRY_BUTTON, widgetProvider, (button) -> {
+        return new PropertyButton(bookLeft + LEFT_PAGE_OFFSET + 26 + (isSubProperty ? 13 : 0), bookTop + 51 + 15 * (yOffset), isSubProperty ? DocAssets.TRIPLE_NESTED_ENTRY_BUTTON: DocAssets.DOUBLE_NESTED_ENTRY_BUTTON, widgetProvider, (button) -> {
             clearRightPage();
             propertyWidgetProvider = widgetProvider;
             List<AbstractWidget> propertyWidgets = new ArrayList<>();
@@ -120,13 +120,6 @@ public class ParticleOverviewScreen extends BaseBook {
                 addRightPageWidget(widget);
             }
         });
-    }
-
-    public PropertyHolder getHolderFromEntry(ParticleType<? extends ParticleOptions> type, Consumer<ParticleType<? extends ParticleOptions>> particleChanged, TimelineEntryData entryData){
-        if(entryData.particleOptions() instanceof PropertyParticleOptions particleOptions){
-            return new PropertyHolder(particleChanged, particleOptions);
-        }
-        return new PropertyHolder(particleChanged, new PropertyParticleOptions(type));
     }
 
     public void addTimelinePage(){

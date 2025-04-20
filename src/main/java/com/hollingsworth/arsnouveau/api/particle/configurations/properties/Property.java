@@ -1,38 +1,23 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations.properties;
 
-import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Property {
+public abstract class Property extends BaseProperty {
 
-    public PropertyHolder propertyHolder;
+    public Runnable onDependenciesChanged;
 
     public Property(PropertyHolder propertyHolder) {
-        this.propertyHolder = propertyHolder;
+        super(propertyHolder);
     }
 
-    abstract ResourceLocation getId();
-
-    public Component getName(){
-        return Component.translatable(getId().getNamespace() + ".particle.property." + getId().getPath());
+    public void setChangedListener(Runnable onDependenciesChanged) {
+        this.onDependenciesChanged = onDependenciesChanged;
     }
 
-    public ResourceLocation getIconLocation(){
-        return ResourceLocation.fromNamespaceAndPath(getId().getNamespace(), "textures/gui/particle/" + getId().getPath() + ".png");
-    }
-
-    abstract public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height);
-
-    public List<Property> subProperties(){
+    public List<SubProperty> subProperties(){
         return new ArrayList<>();
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof Property property && this.getId().equals(property.getId());
-    }
+
 }

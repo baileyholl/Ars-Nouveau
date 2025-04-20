@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWi
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -20,13 +19,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 public class ParticleTypeProperty extends Property {
-    public static final Map<ParticleType<? extends ParticleOptions>, ParticleData> PARTICLE_TYPES = new ConcurrentHashMap<>();
+    public static final Map<ParticleType<? extends PropertyParticleOptions>, ParticleData> PARTICLE_TYPES = new ConcurrentHashMap<>();
 
-    public static void addType(ParticleType<? extends ParticleOptions> type, ParticleData data) {
+    public static void addType(ParticleType<? extends PropertyParticleOptions> type, ParticleData data) {
         PARTICLE_TYPES.put(type, data);
     }
 
-    public static void addType(ParticleType<? extends ParticleOptions> type) {
+    public static void addType(ParticleType<? extends PropertyParticleOptions> type) {
         PARTICLE_TYPES.put(type, new ParticleTypeProperty.ParticleData(type, false));
     }
 
@@ -61,8 +60,13 @@ public class ParticleTypeProperty extends Property {
                 int count = 0;
                 for (var particleType : particleEntries) {
                     widgets.add(new GuiImageButton(x + 24 * count, y + 20, 16, 16, getImagePath(particleType.getKey()), (b) -> {
+                        var didHaveColor = selectedData.acceptsColor;
                         selectedData = particleType.getValue();
+                        var nowHasColor = selectedData.acceptsColor;
                         propertyHolder.onTextureChanged.accept(particleType.getKey());
+                        if(didHaveColor != nowHasColor && onDependenciesChanged != null){
+                            onDependenciesChanged.run();
+                        }
                     }).withTooltip(getTypeName(particleType.getKey())));
                     count++;
                 }
@@ -95,7 +99,7 @@ public class ParticleTypeProperty extends Property {
     }
 
     @Override
-    public List<Property> subProperties() {
+    public List<SubProperty> subProperties() {
         if (selectedData == null || !selectedData.acceptsColor) {
             return Collections.emptyList();
         }
@@ -103,7 +107,7 @@ public class ParticleTypeProperty extends Property {
         return List.of(new ColorProperty(propertyHolder));
     }
 
-    public record ParticleData(ParticleType<?> type, Supplier<ParticleOptions> defaultOptions, boolean acceptsColor) {
+    public record ParticleData(ParticleType<?> type, Supplier<PropertyParticleOptions> defaultOptions, boolean acceptsColor) {
         public ParticleData(ParticleType<?> type, boolean acceptsColor) {
             this(type, () -> new PropertyParticleOptions(type), acceptsColor);
         }

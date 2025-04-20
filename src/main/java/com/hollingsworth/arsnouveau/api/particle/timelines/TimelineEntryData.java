@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.particle.timelines;
 
+import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleMotion;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -21,9 +22,14 @@ public class TimelineEntryData {
             TimelineEntryData::particleOptions, TimelineEntryData::new);
 
     ParticleMotion motion;
-    ParticleOptions particleOptions;
+    PropertyParticleOptions particleOptions;
 
-    public TimelineEntryData(ParticleMotion motion, ParticleOptions particleOptions){
+    protected TimelineEntryData(ParticleMotion motion, ParticleOptions particleOptions) {
+        this.motion = motion;
+        this.particleOptions = (PropertyParticleOptions) particleOptions;
+    }
+
+    public TimelineEntryData(ParticleMotion motion, PropertyParticleOptions particleOptions){
         this.motion = motion;
         this.particleOptions = particleOptions;
     }
@@ -32,7 +38,7 @@ public class TimelineEntryData {
         return motion;
     }
 
-    public ParticleOptions particleOptions(){
+    public PropertyParticleOptions particleOptions(){
         return particleOptions;
     }
 
@@ -40,7 +46,7 @@ public class TimelineEntryData {
         this.motion = motion;
     }
 
-    public void setOptions(ParticleOptions particleOptions) {
+    public void setOptions(PropertyParticleOptions particleOptions) {
         this.particleOptions = particleOptions;
     }
 }
