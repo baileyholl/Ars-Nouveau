@@ -180,13 +180,6 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             }
             return PlayState.STOP;
         }));
-        animatableManager.add(new AnimationController<>(this, "danceController", 1, (event) -> {
-            if ((!this.isTamed() && getHeldStack().is(Tags.Items.NUGGETS_GOLD)) || (this.partyCarby && this.jukeboxPos != null && BlockUtil.distanceFrom(position, jukeboxPos) <= 8)) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("dance"));
-                return PlayState.CONTINUE;
-            }
-            return PlayState.STOP;
-        }));
         animatableManager.add(new AnimationController<>(this, "sleepController", 1, (event) -> {
             boolean shouldSleep = canSleep || (this.getVehicle() instanceof Starbuncle vehicle && vehicle.sleeping);
             if (!event.isMoving() && shouldSleep) {
@@ -201,6 +194,13 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             boolean shouldSleep = canSleep || (this.getVehicle() instanceof Starbuncle vehicle && vehicle.sleeping);
             if (!event.isMoving() && !shouldSleep) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
+                return PlayState.CONTINUE;
+            }
+            return PlayState.STOP;
+        }));
+        animatableManager.add(new AnimationController<>(this, "danceController", 1, (event) -> {
+            if ((!this.isTamed() && getHeldStack().is(Tags.Items.NUGGETS_GOLD)) || (this.partyCarby && this.jukeboxPos != null && BlockUtil.distanceFrom(position, jukeboxPos) <= 8)) {
+                event.getController().setAnimation(RawAnimation.begin().thenPlay("dance"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
@@ -719,6 +719,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             put("Xacris", ArsNouveau.prefix("geo/xacris.geo.json"));
             put("starbuncle", ArsNouveau.prefix("geo/starbuncle.geo.json"));
             put("Xollus", ArsNouveau.prefix("geo/starbuncle_jarva.geo.json"));
+            put("Bootybuncle", ArsNouveau.prefix("geo/bootybuncle.geo.json"));
         }
     };
 
