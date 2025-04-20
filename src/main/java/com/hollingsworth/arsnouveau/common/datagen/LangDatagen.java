@@ -630,7 +630,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page1.archwood", "Archwood Trees have a small chance to spawn in any biome, and come in four types. Rarely, you may stumble upon an Archwood Forest, a biome full of magical creatures, naturally spawning lights, and Archwood trees. Can be used as decoration, rituals, or for crafting wands. Archwood Trees also have a chance to spawn magical fruits that can be consumed or brewed into potions.");
 
         add("ars_nouveau.page.spell_casting", "1 - Spells");
-        add("ars_nouveau.page1.spell_casting", "Ars Nouveau grants aspiring wizards the ability to craft powerful spells. Through creative spellcrafting, you can vanquish foes, reshape the world, automate tasks, create spectacles, and so much more!\n\nTo begin spellcasting, you will first need to upgrade your Tattered Tome into a Novice’s Spell Book which will allow you to craft, store, and cast spells using Mana.");
+        add("ars_nouveau.page1.spell_casting", "Ars Nouveau grants aspiring wizards the ability to craft powerful spells. Through creative spellcrafting, you can vanquish foes, reshape the world, automate tasks, create spectacles, and so much more!\n\nTo begin spellcasting, you will need to craft a Novice’s Spell Book which will allow you to create, store, and cast spells using Mana.");
         add("ars_nouveau.page2.spell_casting", "Upgrading your Spell Book, learning new Glyphs, and crafting magical equipment will further enhance your ability to cast new and more powerful spells.");
 
         add("ars_nouveau.page.introduction_to_glyphs", "2 - Glyphs");
