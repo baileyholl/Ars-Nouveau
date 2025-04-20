@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.api.block.IPrismaticBlock;
 import com.hollingsworth.arsnouveau.api.event.SpellProjectileHitEvent;
 import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.api.particle.timelines.ProjectileTimeline;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
@@ -10,9 +11,10 @@ import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
+import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
@@ -51,7 +53,7 @@ import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class EntityProjectileSpell extends ColoredProjectile {
+public class EntityProjectileSpell extends ColoredProjectile implements IAnimationListener {
 
     public int age;
     @Deprecated(forRemoval = true)
@@ -65,6 +67,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
     public boolean canTraversePortals = true;
     public int prismRedirect;
     ParticleEmitter trailEmitter;
+    ParticleEmitter resolveEmitter;
     public static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(EntityProjectileSpell.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<SpellResolver> SPELL_RESOLVER = SynchedEntityData.defineId(EntityProjectileSpell.class, DataSerializers.SPELL_RESOLVER.get());
     @Deprecated
@@ -112,7 +115,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
     public void setResolver(SpellResolver resolver){
         this.entityData.set(SPELL_RESOLVER, resolver);
         this.spellResolver = resolver;
-        this.trailEmitter = createEmitter();
+        buildEmitters();
     }
 
     @Override
@@ -226,15 +229,18 @@ public class EntityProjectileSpell extends ColoredProjectile {
         return 2;
     }
 
-    public ParticleEmitter createEmitter(){
+    public void buildEmitters(){
         TimelineMap timelineMap = this.resolver().spell.particleTimeline();
-        TimelineEntryData configuration = timelineMap.get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get()).trailEffect;
-        return new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, configuration.motion(), configuration.particleOptions());
+        ProjectileTimeline projectileTimeline = timelineMap.get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
+        TimelineEntryData trailConfig = projectileTimeline.trailEffect;
+        TimelineEntryData resolveConfig = projectileTimeline.onResolvingEffect;
+        this.trailEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, trailConfig.motion(), trailConfig.particleOptions());
+        this.resolveEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, resolveConfig.motion(), resolveConfig.particleOptions());
     }
 
     public void playParticles() {
         if(trailEmitter == null && resolver() != null) {
-            this.trailEmitter = createEmitter();
+            buildEmitters();
         }
         if(this.trailEmitter != null) {
             this.trailEmitter.tick(level);
@@ -259,6 +265,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
     /**
      * Similar to setArrowHeading, it's point the throwable entity to an x, y, z direction.
      */
+    @Override
     public void shoot(double x, double y, double z, float velocity, float inaccuracy) {
         Vec3 vec3d = (new Vec3(x, y, z)).normalize().add(this.random.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.random.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.random.nextGaussian() * (double) 0.0075F * (double) inaccuracy).scale(velocity);
         this.setDeltaMovement(vec3d);
@@ -340,8 +347,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
                 if (entityHitResult.getEntity().equals(this.getOwner())) return;
                 if (this.resolver() != null) {
                     this.resolver().onResolveEffect(level, result);
-                    Networking.sendToNearbyClient(level, BlockPos.containing(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                            BlockPos.containing(result.getLocation()), getParticleColor()));
+                    sendResolveParticles();
                     attemptRemoval();
                 }
             }
@@ -376,11 +382,15 @@ public class EntityProjectileSpell extends ColoredProjectile {
                     this.hitList.add(blockraytraceresult.getBlockPos());
                     this.resolver().onResolveEffect(this.level, blockraytraceresult);
                 }
-                Networking.sendToNearbyClient(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                        BlockPos.containing(result.getLocation()), getParticleColor()));
+
+                sendResolveParticles();
                 attemptRemoval();
             }
         }
+    }
+
+    public void sendResolveParticles(){
+        Networking.sendToNearbyClient(level, this.blockPosition(), new PacketAnimEntity(this));
     }
 
     @Override
@@ -388,16 +398,19 @@ public class EntityProjectileSpell extends ColoredProjectile {
         return super.canHitEntity(entity) || entity.getType().is(EntityTags.SPELL_CAN_HIT);
     }
 
+    @Deprecated(forRemoval = true)
     public void writeSpawnData(FriendlyByteBuf buffer) {
         buffer.writeBoolean(isNoGravity);
         buffer.writeInt(numSensitive);
     }
 
+    @Deprecated(forRemoval = true)
     public void readSpawnData(FriendlyByteBuf additionalData) {
         isNoGravity = additionalData.readBoolean();
         numSensitive = additionalData.readInt();
     }
 
+    @Override
     public void recreateFromPacket(ClientboundAddEntityPacket pPacket) {
         super.recreateFromPacket(pPacket);
         Entity entity = this.level.getEntity(pPacket.getData());
@@ -453,5 +466,12 @@ public class EntityProjectileSpell extends ColoredProjectile {
         spell.age = this.age;
         spell.numSensitive = this.numSensitive;
         return changed;
+    }
+
+    @Override
+    public void startAnimation(int arg) {
+        if(this.resolveEmitter != null){
+            this.resolveEmitter.tick(level);
+        }
     }
 }

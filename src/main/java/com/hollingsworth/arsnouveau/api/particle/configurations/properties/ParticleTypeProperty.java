@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
+import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.core.particles.ParticleType;
@@ -21,14 +22,9 @@ import java.util.function.Supplier;
 public class ParticleTypeProperty extends Property {
     public static final Map<ParticleType<? extends PropertyParticleOptions>, ParticleData> PARTICLE_TYPES = new ConcurrentHashMap<>();
 
-    public static void addType(ParticleType<? extends PropertyParticleOptions> type, ParticleData data) {
-        PARTICLE_TYPES.put(type, data);
+    public static void addType(ParticleData data) {
+        PARTICLE_TYPES.put(data.type, data);
     }
-
-    public static void addType(ParticleType<? extends PropertyParticleOptions> type) {
-        PARTICLE_TYPES.put(type, new ParticleTypeProperty.ParticleData(type, false));
-    }
-
 
     protected ParticleData selectedData;
 
@@ -37,7 +33,7 @@ public class ParticleTypeProperty extends Property {
         this.selectedData = PARTICLE_TYPES.get(propertyHolder.defaultType);
         if (selectedData == null) {
             System.out.println("UNREGISTERED PARTICLE TYPE FOR " + propertyHolder.defaultType);
-            selectedData = new ParticleData(propertyHolder.defaultType, false);
+            selectedData = new ParticleData(ModParticles.NEW_GLOW_TYPE.get(), false);
         }
     }
 
@@ -107,8 +103,8 @@ public class ParticleTypeProperty extends Property {
         return List.of(new ColorProperty(propertyHolder));
     }
 
-    public record ParticleData(ParticleType<?> type, Supplier<PropertyParticleOptions> defaultOptions, boolean acceptsColor) {
-        public ParticleData(ParticleType<?> type, boolean acceptsColor) {
+    public record ParticleData(ParticleType<? extends PropertyParticleOptions> type, Supplier<PropertyParticleOptions> defaultOptions, boolean acceptsColor) {
+        public ParticleData(ParticleType<? extends PropertyParticleOptions> type, boolean acceptsColor) {
             this(type, () -> new PropertyParticleOptions(type), acceptsColor);
         }
     }

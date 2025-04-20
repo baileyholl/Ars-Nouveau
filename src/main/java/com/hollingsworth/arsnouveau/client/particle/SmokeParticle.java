@@ -1,11 +1,9 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
+import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.client.gui.Color;
-import net.minecraft.client.GraphicsStatus;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.core.particles.SimpleParticleType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,11 +55,11 @@ public class SmokeParticle extends TextureSheetParticle {
 
     @Override
     public ParticleRenderType getRenderType() {
-        return Minecraft.getInstance().options.graphicsMode().get() == GraphicsStatus.FABULOUS ? ParticleRenderTypes.EMBER_RENDER : ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
 
-    public static class Provider implements ParticleProvider<SimpleParticleType> {
+    public static class Provider implements ParticleProvider<PropertyParticleOptions> {
         private final SpriteSet sprite;
 
         public Provider(SpriteSet pSprites) {
@@ -69,7 +67,7 @@ public class SmokeParticle extends TextureSheetParticle {
         }
 
         public Particle createParticle(
-                SimpleParticleType pType,
+                PropertyParticleOptions pType,
                 ClientLevel pLevel,
                 double pX,
                 double pY,

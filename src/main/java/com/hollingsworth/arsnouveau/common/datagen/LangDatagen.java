@@ -1461,6 +1461,9 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.particle_timelines", "Configurable Particles");
         add("ars_nouveau.particle.new_glow", "Glow");
         add("ars_nouveau.particle.snow", "Snow");
+        add("ars_nouveau.particle.smoke", "Smoke");
+        add("ars_nouveau.gui.spell_style", "Spell Style");
+
 
     }
 

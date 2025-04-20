@@ -7,6 +7,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
 public class PacketAnimEntity extends AbstractPacket{
@@ -15,6 +16,11 @@ public class PacketAnimEntity extends AbstractPacket{
 
     int entityID;
     int anim;
+
+    public PacketAnimEntity(Entity entity){
+        this.entityID = entity.getId();
+        this.anim = 0;
+    }
 
     public PacketAnimEntity(int entityID) {
         this.entityID = entityID;
@@ -45,8 +51,8 @@ public class PacketAnimEntity extends AbstractPacket{
     @Override
     public void onClientReceived(Minecraft minecraft, Player player) {
         ClientLevel world = minecraft.level;
-        if (world.getEntity(entityID) instanceof IAnimationListener) {
-            ((IAnimationListener) world.getEntity(entityID)).startAnimation(anim);
+        if (world.getEntity(entityID) instanceof IAnimationListener animationListener) {
+            animationListener.startAnimation(anim);
         }
     }
 }

@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.api.particle.configurations.TrailMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropertyHolder;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
-import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -61,15 +60,10 @@ public class ProjectileTimeline implements IParticleTimeline{
     @Override
     public List<TimelineOption> getTimelineOptions() {
         return List.of(new TimelineOption(ArsNouveau.prefix("trail"), this.trailEffect, ImmutableList.copyOf(TRAIL_OPTIONS)).withProperty(new ParticleTypeProperty(buildHolderForEffect(this.trailEffect))),
-                new TimelineOption(ArsNouveau.prefix("impact"), this.onResolvingEffect, ImmutableList.copyOf(RESOLVING_OPTIONS)));
+                new TimelineOption(ArsNouveau.prefix("impact"), this.onResolvingEffect, ImmutableList.copyOf(RESOLVING_OPTIONS)).withProperty(new ParticleTypeProperty(buildHolderForEffect(this.onResolvingEffect))));
     }
 
     protected PropertyHolder buildHolderForEffect(TimelineEntryData timelineEntryData){
-        ParticleColor defaultColor = ParticleColor.defaultParticleColor();
-
-        if(timelineEntryData.particleOptions instanceof PropertyParticleOptions propertyParticleOptions){
-            defaultColor = propertyParticleOptions.color;
-        }
 
         return new PropertyHolder(
                 (type) -> {
