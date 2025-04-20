@@ -678,8 +678,8 @@ public class Documentation {
                 .withSortNum(1)
                 .withIntroPage()
                 .withLocalizedText()
-                .withLocalizedText()
                 .withCraftingPages(ItemsRegistry.NOVICE_SPELLBOOK));
+
         addPage(new DocEntryBuilder(GETTING_STARTED, "spell_mana")
                 .withSortNum(2)
                 .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
