@@ -259,7 +259,7 @@ public class Documentation {
         addBasicItem(ItemsRegistry.SUMMONING_FOCUS, SPELL_CASTING);
         addBasicItem(ItemsRegistry.VOID_JAR, EQUIPMENT);
         addBasicItem(ItemsRegistry.WAND, SPELL_CASTING);
-        addPage(new DocEntryBuilder(AUTOMATION, ItemsRegistry.WHIRLISPRIG_CHARM)
+        var whirlisprig = addPage(new DocEntryBuilder(AUTOMATION, ItemsRegistry.WHIRLISPRIG_CHARM)
                 .withIntroPage()
                 .withCraftingPages(ItemsRegistry.WHIRLISPRIG_CHARM)
                 .withPage(EntityEntry.create(ModEntities.WHIRLISPRIG_TYPE.get(), getLangPath("whirlisprig_charm", 2)))
@@ -673,13 +673,14 @@ public class Documentation {
                 .withPage(TextEntry.create(getLangPath("alakarkinos_charm", 4), Component.translatable("ars_nouveau.sifting")))
                 .addConnectedSearch(ItemsRegistry.ALAKARKINOS_SHARD));
 
-        
+
         addPage(new DocEntryBuilder(GETTING_STARTED, "spell_casting")
                 .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
                 .withSortNum(1)
                 .withIntroPage()
                 .withLocalizedText()
-                .withCraftingPages(ItemsRegistry.NOVICE_SPELLBOOK));
+                .withCraftingPages(ItemsRegistry.NOVICE_SPELLBOOK))
+                .withRelations(spellBooks);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "introduction_to_glyphs")
                 .withSortNum(2)
@@ -709,74 +710,35 @@ public class Documentation {
         addPage(new DocEntryBuilder(GETTING_STARTED, "learning_glyphs")
                 .withSortNum(6)
                 .withIcon(BlockRegistry.SCRIBES_BLOCK)
-                .withIntroPage());
+                .withIntroPage())
+                .withRelations(scribesTable, annotatedCodex);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "important_resources")
                 .withSortNum(7)
                 .withIcon(Items.RAW_GOLD)
-                .withIntroPage());
-
-        addPage(new DocEntryBuilder(GETTING_STARTED, "magical_crafting")
-                .withSortNum(8)
-                .withIcon(BlockRegistry.IMBUEMENT_BLOCK)
-                .withIntroPage()
-                .withLocalizedText());
+                .withIntroPage())
+                .withRelations(sourceberry, archwood, dowsingRod);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "source")
-                .withSortNum(9)
+                .withSortNum(8)
                 .withIcon(BlockRegistry.SOURCE_JAR)
                 .withIntroPage()
                 .withLocalizedText())
-                .withRelations(sourceJar, agronomic, relay);
+                .withRelations(sourceJar, agronomic, mycelial, relay);
 
-        addPage(new DocEntryBuilder(GETTING_STARTED, "obtaining_gems")
+        addPage(new DocEntryBuilder(GETTING_STARTED, "magical_crafting")
+                .withSortNum(9)
                 .withIcon(BlockRegistry.IMBUEMENT_BLOCK)
-                .withSortNum(12)
-                .withIntroPage())
-                .withRelation(dowsingRod)
-                .withRelation(imbuementChamber);
+                .withIntroPage()
+                .withLocalizedText())
+                .withRelations(imbuementChamber, enchantingApparatus, armorEntry, magebloom);
 
-        addPage(new DocEntryBuilder(GETTING_STARTED, "new_glyphs")
-                .withIcon(ItemsRegistry.BLANK_GLYPH)
-                .withSortNum(13)
-                .withIntroPage())
-                .withRelations(scribesTable, annotatedCodex);
-
-        addPage(new DocEntryBuilder(GETTING_STARTED, "apparatus_crafting")
-                .withSortNum(15)
-                .withIcon(BlockRegistry.ENCHANTING_APP_BLOCK)
-                .withIntroPage())
-                .withRelations(enchantingApparatus, magebloom);
-
-        addPage(new DocEntryBuilder(GETTING_STARTED, "better_casting")
-                .withSortNum(16)
-                .withIcon(ItemsRegistry.SORCERER_ROBES)
-                .withIntroPage())
-                .withRelations(enchantingApparatus, armorEntry, armorUpgrade);
-
-        addPage(new DocEntryBuilder(GETTING_STARTED, "world_generation")
-                .withSortNum(17)
-                .withIcon(ItemsRegistry.SOURCE_GEM)
-                .withIntroPage())
-                .withRelations(imbuementChamber, archwood, sourceberry, dowsingRod);
-
-        addPage(new DocEntryBuilder(GETTING_STARTED, "upgrades")
-                .withSortNum(18)
-                .withIcon(ItemsRegistry.ARCHMAGE_SPELLBOOK)
-                .withIntroPage())
-                .withRelations(spellBooks, armorEntry);
-
-        addPage(new DocEntryBuilder(GETTING_STARTED, "starting_automation")
-                .withSortNum(19)
+        addPage(new DocEntryBuilder(GETTING_STARTED, "magical_automation")
+                .withSortNum(10)
                 .withIcon(BlockRegistry.BASIC_SPELL_TURRET)
                 .withIntroPage())
-                .withRelations(turrets, prisms, starby, wixie, drygmyCharm);
+                .withRelations(turrets, starby, whirlisprig, drygmyCharm, wixie);
 
-        addPage(new DocEntryBuilder(GETTING_STARTED, "trinkets")
-                .withIcon(ItemsRegistry.WARP_SCROLL)
-                .withSortNum(20)
-                .withIntroPage())
-                .withRelations(jarOfLight, amuletOfRegen, discountRing, beltOfLevitation, stableScroll);
 
         var enchantmentRecipes = new ArrayList<>(manager.getAllRecipesFor(RecipeRegistry.ENCHANTMENT_TYPE.get()));
         enchantmentRecipes.sort(Comparator.comparingInt(a -> a.value() == null ? -1 : a.value().enchantLevel));
