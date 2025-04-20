@@ -21,6 +21,7 @@ import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.perk.EmptyPerk;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -679,6 +680,12 @@ public class Documentation {
                 .withIntroPage()
                 .withLocalizedText()
                 .withCraftingPages(ItemsRegistry.NOVICE_SPELLBOOK));
+
+        addPage(new DocEntryBuilder(GETTING_STARTED, "introduction_to_glyphs")
+                .withSortNum(2)
+                .withIcon(MethodProjectile.INSTANCE.glyphItem)
+                .withIntroPage()
+                .withLocalizedText());
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "spell_mana")
                 .withSortNum(2)
