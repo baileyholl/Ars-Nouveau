@@ -685,11 +685,19 @@ public class Documentation {
                 .withSortNum(2)
                 .withIcon(MethodProjectile.INSTANCE.glyphItem)
                 .withIntroPage()
+                .withLocalizedText()
+                .withLocalizedText());
+
+        addPage(new DocEntryBuilder(GETTING_STARTED, "introduction_to_spellcrafting")
+                .withSortNum(3)
+                .withIcon(MethodProjectile.INSTANCE.glyphItem)
+                .withIntroPage()
                 .withLocalizedText());
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "spell_mana")
-                .withSortNum(2)
+                .withSortNum(4)
                 .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
+                .withIcon(ItemsRegistry.POTION_FLASK)
                 .withIntroPage()
                 .withLocalizedText());
 
