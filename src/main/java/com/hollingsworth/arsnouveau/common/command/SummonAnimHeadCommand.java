@@ -1,8 +1,11 @@
 package com.hollingsworth.arsnouveau.common.command;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.entity.AnimBlockSummon;
 import com.hollingsworth.arsnouveau.common.entity.AnimHeadSummon;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
+import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -11,10 +14,12 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.CompoundTagArgument;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.block.Blocks;
+
+import java.util.Optional;
 
 public class SummonAnimHeadCommand {
 
@@ -43,14 +48,20 @@ public class SummonAnimHeadCommand {
             });
             AnimHeadSummon animHeadSummon = (AnimHeadSummon) entity;
             animHeadSummon.blockState = Blocks.PLAYER_HEAD.defaultBlockState();
-            animHeadSummon.head_data = AnimHeadSummon.getHeadTagFromName(player_name);
-//        AnimHeadSummon animHeadSummon = new AnimHeadSummon(source.getLevel(), Blocks.PLAYER_HEAD.defaultBlockState(), AnimHeadSummon.getHeadTagFromName(player_name));
-            animHeadSummon.setPos(source.getPosition());
-            animHeadSummon.setTicksLeft(duration);
-            animHeadSummon.getEntityData().set(AnimBlockSummon.CAN_WALK, true);
-            animHeadSummon.getEntityData().set(AnimBlockSummon.AGE, 21);
-            animHeadSummon.dropItem = dropSkull;
-            source.getLevel().addFreshEntity(animHeadSummon);
+            CompoundTag compoundtag = new CompoundTag();
+            ResolvableProfile resolvableProfile = new ResolvableProfile(Optional.of(player_name), Optional.empty(), new PropertyMap());
+            resolvableProfile.resolve().thenApply((profile) ->{
+                compoundtag.put("profile", ANCodecs.encode(ResolvableProfile.CODEC, profile));
+                animHeadSummon.head_data = compoundtag;
+                animHeadSummon.setPos(source.getPosition());
+                animHeadSummon.setTicksLeft(duration);
+                animHeadSummon.getEntityData().set(AnimBlockSummon.CAN_WALK, true);
+                animHeadSummon.getEntityData().set(AnimBlockSummon.AGE, 21);
+                animHeadSummon.dropItem = dropSkull;
+                animHeadSummon.setColor(ParticleColor.defaultParticleColor().getColor());
+                source.getLevel().addFreshEntity(animHeadSummon);
+                return resolvableProfile;
+            });
         }catch (Exception e){
             e.printStackTrace();
         }

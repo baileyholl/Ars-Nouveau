@@ -17,13 +17,12 @@ public class StarbuncleModel extends GeoModel<Starbuncle> {
     @Override
     public void setCustomAnimations(Starbuncle entity, long uniqueID, @Nullable AnimationState<Starbuncle> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
+        if (this.getBone("basket").isPresent())
+            this.getBone("basket").get().setHidden(!entity.isTamed());
         if (entity.partyCarby)
             return;
         if (customPredicate == null)
             return;
-        if (this.getBone("basket").isPresent())
-            this.getBone("basket").get().setHidden(!entity.isTamed());
-
         GeoBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraData().get(DataTickets.ENTITY_MODEL_DATA);
         head.setRotX(extraData.headPitch() * 0.017453292F);

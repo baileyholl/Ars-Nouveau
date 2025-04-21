@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:enchanters_fishing_rod",
+  "order": 100,
+  "icon": "ars_nouveau:enchanters_fishing_rod",
+  "title": "Enchanter\u0027s Fishing Rod",
+  "category": "ars_nouveau:items",
+  "pages": [
+    {
+      "title": "Enchanter\u0027s Fishing Rod",
+      "description": "Fishing Rods accept a single spell and are inscribed using the Scribes Table. Rods always start with Touch and MUST be inscribed with a spell that does not contain a form. Fishing Rods can be used like a normal fishing rod, but hooking an entity will allow the user to cast the spell on the hooked entity until the line is broken.",
+      "icon": "ars_nouveau:enchanters_fishing_rod"
+    },
+    {
+      "recipe_1": "ars_nouveau:enchanters_fishing_rod"
+    }
+  ]
+}

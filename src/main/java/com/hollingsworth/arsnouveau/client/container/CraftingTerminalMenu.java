@@ -63,6 +63,10 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 		listeners.remove(listener);
 	}
 
+	public List<ItemStack> getItemsInCraftingSlots() {
+		return this.craftMatrix.getItems();
+	}
+
 	public CraftingTerminalMenu(int id, Inventory inv, CraftingLecternTile te) {
 		super(MenuRegistry.STORAGE.get(), id, inv, te);
 		craftMatrix = te.getCraftingInv(inv.player);

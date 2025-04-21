@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:enchanters_gauntlet",
+  "order": 100,
+  "icon": "ars_nouveau:enchanters_gauntlet",
+  "title": "Enchanter\u0027s Gauntlet",
+  "category": "ars_nouveau:items",
+  "pages": [
+    {
+      "title": "Enchanter\u0027s Gauntlet",
+      "description": "Gauntlets accept a single spell and are inscribed using the Scribes Table. Gauntlets always start with Touch and MUST be inscribed with a spell that does not contain a form. Spells cast with the gauntlet are cast with a discount.",
+      "icon": "ars_nouveau:enchanters_gauntlet"
+    },
+    {
+      "recipe_1": "ars_nouveau:enchanters_gauntlet"
+    }
+  ]
+}
