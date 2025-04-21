@@ -54,7 +54,7 @@ public class EffectAnimate extends AbstractEffect {
     }
 
     private AnimBlockSummon animateBlock(HitResult rayTraceResult, Vec3 pos, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver, BlockState state, CompoundTag data) {
-        AnimBlockSummon blockSummon = state.getBlock() instanceof AbstractSkullBlock ? new AnimHeadSummon(world, state, data) : new AnimBlockSummon(world, state);
+        AnimBlockSummon blockSummon = state.getBlock() instanceof AbstractSkullBlock ? new AnimHeadSummon(world, state, data) : new AnimBlockSummon(world, state, data);
         blockSummon.setColor(spellContext.getColors().getColor());
         blockSummon.setPos(pos);
         int ticks = (int) (20 * (GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier()));
