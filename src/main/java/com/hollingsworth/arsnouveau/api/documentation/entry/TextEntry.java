@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.api.documentation.export.DocExporter;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.nuggets.client.gui.NuggetMultilLineLabel;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -21,11 +20,11 @@ import net.minecraft.world.level.ItemLike;
 import javax.annotation.Nullable;
 
 public class TextEntry extends SinglePageWidget {
-    NuggetMultilLineLabel body;
-    @Nullable Component title;
-    @Nullable ItemStack renderStack;
-    NuggetMultilLineLabel titleLabel;
-    public static int MAX_WIDTH = 94;
+    public NuggetMultilLineLabel body;
+    public @Nullable Component title;
+    public @Nullable ItemStack renderStack;
+    public NuggetMultilLineLabel titleLabel;
+    public static int TITLE_WIDTH = 94;
 
     public TextEntry(Component body, Component title, ItemStack renderStack, BaseDocScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
@@ -33,7 +32,7 @@ public class TextEntry extends SinglePageWidget {
         this.title = title;
         this.renderStack = renderStack;
         if(title != null){
-            this.titleLabel = NuggetMultilLineLabel.create(Minecraft.getInstance().font, title, MAX_WIDTH);
+            this.titleLabel = NuggetMultilLineLabel.create(Minecraft.getInstance().font, title, TITLE_WIDTH);
         }
     }
 
@@ -43,7 +42,7 @@ public class TextEntry extends SinglePageWidget {
         this.title = title;
         this.renderStack = renderStack;
         if(title != null){
-            this.titleLabel = NuggetMultilLineLabel.create(Minecraft.getInstance().font, title, MAX_WIDTH);
+            this.titleLabel = NuggetMultilLineLabel.create(Minecraft.getInstance().font, title, TITLE_WIDTH);
         }
     }
 
@@ -80,7 +79,6 @@ public class TextEntry extends SinglePageWidget {
     }
 
     public int drawTitle(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks){
-        Font font = Minecraft.getInstance().font;
         if(renderStack != null){
             DocClientUtils.blit(guiGraphics, DocAssets.HEADER_WITH_ITEM, x , y - 1);
             setTooltipIfHovered(DocClientUtils.renderItemStack(guiGraphics, x + 3, y + 2, mouseX, mouseY, renderStack));
@@ -113,8 +111,8 @@ public class TextEntry extends SinglePageWidget {
         if(title != null){
             object.addProperty(DocExporter.TITLE_PROPERTY, title.getString());
         }
-        // TODO: reimplement this, edit nuggets
-//        object.addProperty(DocExporter.DESCRIPTION_PROPERTY, body.getString());
+
+        object.addProperty(DocExporter.DESCRIPTION_PROPERTY, body.getString());
         if(renderStack != null && !renderStack.isEmpty()) {
             object.addProperty(DocExporter.ICON_PROPERTY, BuiltInRegistries.ITEM.getKey(renderStack.getItem()).toString());
         }

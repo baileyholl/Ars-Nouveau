@@ -7,7 +7,7 @@
   "pages": [
     {
       "title": "Spell Sensor",
-      "description": "ars_nouveau.page.spell_sensor",
+      "description": "Outputs a redstone signal when a spell is cast nearby. Output strength is determined by the length of the spell cast. Using a Dominion Wand will cause it to trigger when a spell resolves nearby, instead of being cast. Using a Spell Parchment will set the sensor to only output when that exact spell is detected.",
       "icon": "ars_nouveau:spell_sensor"
     },
     {

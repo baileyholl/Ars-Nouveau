@@ -7,7 +7,7 @@
   "pages": [
     {
       "title": "Conjure Mageblock",
-      "description": "Creates a temporary block that will disappear after a short time. Amplify will cause the block to be permanent. Dispelling this block will destroy it instantly.",
+      "description": "Creates a temporary block that will disappear after a short time. Amplify will cause the block to be permanent. Dispelling this block will destroy it instantly. Casting on an entity will create blocks around them in the upwards direction.",
       "icon": "ars_nouveau:glyph_phantom_block",
       "tier": 1
     },

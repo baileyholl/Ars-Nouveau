@@ -7,7 +7,7 @@
   "pages": [
     {
       "title": "Burst",
-      "description": "Resolves the spell in a spherical area around the target. Augment with Sensitive to target blocks instead of entities and Dampen to make an empty sphere. Augment with AOE to increase the radius. ",
+      "description": "Resolves the spell in a spherical area around the target. Augment with Sensitive to target blocks instead of entities and Dampen to make an empty sphere. Augment with AOE to increase the radius.",
       "icon": "ars_nouveau:glyph_burst",
       "tier": 3
     },
