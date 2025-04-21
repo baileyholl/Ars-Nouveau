@@ -13,7 +13,6 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.brewing.BrewingRecipe;
 
@@ -33,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ArsNouveauAPI {
 
     //This is intended as a dev debug tool, used in mana bars. Do not make into a config option with a PR. A Starkiller will be dispatched if you do.
-    public static boolean ENABLE_DEBUG_NUMBERS = !FMLEnvironment.production;
+    public static boolean ENABLE_DEBUG_NUMBERS;
 
     private ConcurrentHashMap<ResourceLocation, IScryer> scryerMap = new ConcurrentHashMap<>();
 

@@ -244,7 +244,7 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.void_jar", "Jar of Voiding");
         add("ars_nouveau.rune.setperm", "This rune is now permanent.");
         add("ars_nouveau.page.void_jar", "A jar that can destroy items on pickup and grants a small amount of mana in return. To turn the jar on and off, use the jar while sneaking. To add or remove an item to be destroyed by the jar, use the jar with an item in the off hand, or use an item on the Scribes Table with the jar placed on it. The jar must be in your hotbar to function.");
-        add("ars_nouveau.page.runic_chalk", "Runic chalk can be used to place permanent Runes on the ground that will cast spells on entities that walk over them. To give a rune a spell, inscribe spell parchment using the scribes table. Once the rune has cast the spell, it will become uncharged. An uncharged rune will charge itself from nearby source jars. Using Runic Chalk on a temporary rune will convert it to a permanent one.");
+        add("ars_nouveau.page.runic_chalk", "Runic chalk can be used to place permanent Runes on the ground that will cast spells on entities that walk over them. To give a rune a spell, inscribe spell parchment using the scribes table. Once the rune has cast the spell, it will become uncharged. An uncharged rune will charge itself from nearby source jars. Using Runic Chalk on a temporary rune will convert it to a permanent one. Using an essence on the rune will change its pattern.");
         add("ars_nouveau.wand.invalid", "Invalid spell. Wands accept Effects and Augments only.");
         add("ars_nouveau.gauntlet.invalid", "Invalid spell. Gauntlets accept Effects and Augments only.");
         add("item.ars_nouveau.wand", "Enchanter's Wand");
@@ -626,31 +626,48 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.alakarkinos_recipe.chance", "Chance: %s");
         add("ars_nouveau.enchanting_apparatus", "Enchanting Apparatus");
         add("ars_nouveau.armor_upgrade", "Magic Armor Upgrade");
-        add("ars_nouveau.page.apparatus_crafting", "Apparatus Crafting");
-        add("ars_nouveau.page1.apparatus_crafting", "The Enchanting Apparatus is used for crafting special machines, curios, and equipment used to progress in Ars Nouveau. Crafting with the Enchanting Apparatus requires up to eight Arcane Pedestals, an Arcane Core, and the Enchanting Apparatus block. Once you have setup your apparatus, you should craft your first Magebloom Seed.");
-        add("ars_nouveau.page.better_casting", "Better Casting");
-        add("ars_nouveau.page1.better_casting", "Your mana pool may be expanded with special mage armors, enchantments, learning new glyphs, or by drinking potions. Once you have acquired a Magebloom Seed you may craft a variety of configurable magic armors, altered using Threads.");
-        add("ars_nouveau.page.new_glyphs", "New Glyphs");
-        add("ars_nouveau.page1.new_glyphs", "Accessing new spells will require a small amount of setup, resources, and base building. New spells can be learned by obtaining Glyphs. Glyphs are created using the Scribe's Table with EXP and items. Once you have obtained a glyph, simply use it to memorize the glyph. Glyphs can be shared between players with an Annotated Codex. See the section on the Scribes Table for more information.");
-        add("ars_nouveau.page.source", "Source");
-        add("ars_nouveau.page1.source", "Source is a special resource that must be gathered using devices in the world. Source is used for powering devices like the Imbuement Chamber and Enchanting Apparatus. To begin gathering Source, you will need a Source Jar and a Sourcelink.");
-        add("ars_nouveau.page.spell_casting", "Spell Casting");
-        add("ars_nouveau.page1.spell_casting", "To begin spell casting, you will need to first obtain a spell book. A spell book will allow you to create, store, and cast spells using Mana. To craft your first spell, you must first select the Form that the spell will take on. A Form glyph must always be the first glyph in a spell recipe.");
-        add("ars_nouveau.page2.spell_casting", "Next, add any number of Effects to the chain. Effects refer to what the spell will do and they will resolve in the order they are placed in the book at the target or location the spell hits. An Augment can be used to modify the way an Effect or Form behaves. Augments may be placed after an Effect or Form. An Augment will only apply to the glyph to the left of it. Multiple augments may also be applied on the same Effect or Form by chaining Augments together.");
-        add("ars_nouveau.page3.spell_casting", "If you would like to set a spell to a different tab, select the tab from the right side and repeat the above process. Several keybindings are provided for using the spellbook, check settings for more information.");
-        add("ars_nouveau.page.spell_mana", "Spell Mana");
-        add("ars_nouveau.page1.spell_mana", "Mana is used to cast spells with a Spell Book. Your max mana and regeneration, may be increased by wearing special Mage Armor or by applying the Mana Boost or Mana Regen enchantments on your gear. Additionally, you will gain bonus mana and regeneration for each glyph unlocked in your spell book.");
-        add("ars_nouveau.page2.spell_mana", "Adding glyphs to your spell book will also increase your maximum amount of mana and mana regeneration. This bonus also scales with the tier of your spell book.");
-        add("ars_nouveau.page.starting_automation", "Starting Automation");
-        add("ars_nouveau.page1.starting_automation", "Spells may be used in Automation using Spell Turrets. Use these to create auto harvesters, tree farms, quarries, cake farms, glass factories, and more! For item transport, autocrafting, or resource generation, see the variety of magical entities that may be summoned using Charms.");
-        add("ars_nouveau.page.trinkets", "Trinkets");
-        add("ars_nouveau.page1.trinkets", "Items and curios can expand your casting and can provide unique buffs. For more casting, you may want to craft a Ring of Discount or an Amulet of Mana Regen. For travel, see the Belt of Levitation, or improve your mining efficiency with the Jar of Voiding.");
-        add("ars_nouveau.page.upgrades", "Upgrades");
-        add("ars_nouveau.page1.upgrades", "Tier 2 and 3 glyphs will require an Apprentice and Archmage spell book respectively. Higher tier books will allow you to cast higher tier spells, use them in automation, and provide additional mana and mana regeneration as a bonus. Once you are able to upgrade your book, upgrading your armor to the next tier of robes will also grant you another boost in casting.");
-        add("ars_nouveau.page.world_generation", "World Generation");
-        add("ars_nouveau.page1.world_generation", "Archwood trees come in several decorative variants and is needed to craft several important blocks. Archwood fruits may also spawn on these trees, used for potions. Source Berries, found in Taigas, are essential for crafting Mana Regeneration potions or powering a Mycelial Sourcelink. Various mobs will also spawn, but can be revealed by using a Dowsing Rod or Sense Magic with a Tier 2 spell book.");
+
         add("ars_nouveau.page.archwood", "Archwood Trees");
         add("ars_nouveau.page1.archwood", "Archwood Trees have a small chance to spawn in any biome, and come in four types. Rarely, you may stumble upon an Archwood Forest, a biome full of magical creatures, naturally spawning lights, and Archwood trees. Can be used as decoration, rituals, or for crafting wands. Archwood Trees also have a chance to spawn magical fruits that can be consumed or brewed into potions.");
+
+        add("ars_nouveau.page.spell_casting", "1 - Spells");
+        add("ars_nouveau.page1.spell_casting", "Ars Nouveau grants aspiring wizards the ability to craft powerful spells. Through creative spellcrafting, you can vanquish foes, reshape the world, automate tasks, create spectacles, and so much more!\n\nTo begin spellcasting, you will need to craft a Novice’s Spell Book which will allow you to create, store, and cast spells using Mana.");
+        add("ars_nouveau.page2.spell_casting", "Upgrading your Spell Book, learning new Glyphs, and crafting magical equipment will further enhance your ability to cast new and more powerful spells.");
+
+        add("ars_nouveau.page.introduction_to_glyphs", "2 - Glyphs");
+        add("ars_nouveau.page1.introduction_to_glyphs", "Glyphs are the building blocks that make up spells. A spell’s outcome is determined by which Glyphs are used and in what order they appear. They fall under three major categories: Forms, Effects, and Augments.\n\nForm Glyphs are the vessels that deliver the contents of a spell to the target. Every spell must begin with a Form, and only one Form may be present.");
+        add("ars_nouveau.page2.introduction_to_glyphs", "Effect Glyphs determine what a spell will do once it reaches its target. Spells can contain multiple Effects and will resolve in the order they are placed during spellcrafting.\n\nAugment Glyphs change the properties of the Form or Effect Glyph to their left as long as they are compatible. Multiple Augments may be chained together to modify the same Glyph. Augments have no effect on other Augments.");
+        add("ars_nouveau.page3.introduction_to_glyphs", "Glyphs fall into tiers of I, II, or III. The Novice’s Spell Book can only cast tier I Glyphs, but higher tiers will be available each time you upgrade your Spell Book.");
+
+        add("ars_nouveau.page.introduction_to_spellcrafting", "3 - Spellcrafting");
+        add("ars_nouveau.page1.introduction_to_spellcrafting", "Spellcrafting is accessed by pressing [C] while your Spell Book is selected on the inventory bar. Clicking Glyphs from the list will add them to the bottom of the page to represent they are part of the spell. Clicking Glyphs inside your spell will remove them.\n\nOnce satisfied, you may name the spell and click “Create” to save it. Spell Books may hold up to ten spells at once as");
+        add("ars_nouveau.page2.introduction_to_spellcrafting", "shown by the bookmarks on the right side of the book. Clicking one will swap the spell you are working on.");
+
+        add("ars_nouveau.page.spellcasting", "4 - Spellcasting");
+        add("ars_nouveau.page1.spellcasting", "To use a spell, select your Spell Book on the inventory bar and right-click to cast it.\n\nYour active spell is shown above your Mana bar. Press [X] to swap to your next spell and [Z] to swap your previous spell. Press [V] to open a radial menu that allows you to quickly swap between spells on your book. Each spell may also be hotkeyed individually via the Key Bind menu.");
+        add("ars_nouveau.page2.spellcasting", "If the spell fails to cast, check to make sure that:\n\nYou have enough Mana to cast the spell.\n\nThe spell begins with a Form Glyph and has at least one Effect Glyph.");
+
+        add("ars_nouveau.page.spell_mana", "5 - Mana");
+        add("ars_nouveau.page1.spell_mana", "Casting a spell consumes your Mana based on the total cost of all the Glyphs that make up the spell. Your current Mana stores can be seen on the bar in the bottom left corner of your screen.\n\nExpended Mana will regenerate over time. Mana may also be consumed or reserved by other things such as magical items or familiars.");
+        add("ars_nouveau.page2.spell_mana", "Each new Glyph you learn will give a small permanent boost to your Mana’s regeneration and maximum capacity. These boosts can also be gained by upgrading your spell book, equipping some pieces of magical gear, or drinking a Mana potion.");
+
+        add("ars_nouveau.page.learning_glyphs", "6 - Learning Glyphs");
+        add("ars_nouveau.page1.learning_glyphs", "New Glyphs may be created through the Scribe’s Table from certain items and paying EXP. Once crafted, the Glyph can be consumed to learn it, making it available during spellcrafting.\n\nPlayers can share their current Glyph knowledge with each other by crafting an Annotated Codex.");
+
+        add("ars_nouveau.page.important_resources", "7 - Important Resources");
+        add("ars_nouveau.page1.important_resources", "It's recommended to keep stock of certain resources as they will be used in many crafting recipes.\n\nWhile exploring, look for Iron Ore, Gold Ore, Amethyst Shards (or Lapis Lazuli), Diamond, Sourceberries, and Archwood Logs.\n\nDowsing Rods can help with locating Budding Amethyst Blocks and magical creatures.");
+
+        add("ars_nouveau.page.source", "8 - Source");
+        add("ars_nouveau.page1.source", "Source is a magical resource used for many purposes such as speeding up the Imbuement Chamber, fueling devices, powering magical helpers, creating portals, or fueling powerful Enchanting Apparatus recipes.\n\nSourcelinks are specialized artifacts that can collect and concentrate Source from the world into Source Jars. Source Relays can be used to transfer");
+        add("ars_nouveau.page2.source", "Source over large distances between jars.\n\nThe Agronomic and Mycelial Sourcelinks are good early options for building up your Source supply.");
+
+        add("ars_nouveau.page.magical_crafting", "9 - Magical Crafting");
+        add("ars_nouveau.page1.magical_crafting", "The Imbuement Chamber allows the conversion of Amethyst Shards or Lapis Lazuli into Source Gems. By placing three Arcane Pedestals bearing certain items adjacent to the chamber, Source Gems can be imbued further into Essences which are used in many Glyph recipes.\n\nPlacing an Enchanting Apparatus on top of an Arcane Core allows the crafting of");
+        add("ars_nouveau.page2.magical_crafting", "essentials such as Magebloom Seeds, magical equipment, and charms to summon magical helpers. It can also directly enchant your gear with enchantments of your choice.\n\nThe Alteration Table allows for slotting in various Threads into magical armor that grant special properties while worn.");
+
+        add("ars_nouveau.page.magical_automation", "10 - Magical Automation");
+        add("ars_nouveau.page1.magical_automation", "Ars Nouveau supports a wide variety of automation methods via Spell Turrets, magical helpers, and Rituals.\n\nUsing one or a combination of these options can achieve almost anything you want such as farming crops and trees, quarrying the earth, crafting and transporting items, smelting, and brewing potions.");
+
         add("ars_nouveau.page1.decorative", "Purely decorative blocks. To see the full list, place Arcane Stone in a Stonecutter.");
         add("ars_nouveau.wilden", "Wilden");
         add("ars_nouveau.page.decorative", "Decorative Blocks");
