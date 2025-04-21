@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.light.LightManager;
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -9,11 +9,12 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class PacketToggleLight extends AbstractPacket {
+public class PacketToggleDebug extends AbstractPacket {
+
     boolean enabled;
 
     //Decoder
-    public PacketToggleLight(RegistryFriendlyByteBuf buf) {
+    public PacketToggleDebug(RegistryFriendlyByteBuf buf) {
         enabled = buf.readBoolean();
     }
 
@@ -22,21 +23,23 @@ public class PacketToggleLight extends AbstractPacket {
         buf.writeBoolean(enabled);
     }
 
-    public PacketToggleLight(boolean stack) {
+    public PacketToggleDebug(boolean stack) {
         this.enabled = stack;
     }
 
     @Override
     public void onClientReceived(Minecraft minecraft, Player player) {
-        LightManager.toggleLightsAndConfig(enabled);
+        ArsNouveauAPI.ENABLE_DEBUG_NUMBERS = enabled;
     }
 
-    public static final Type<PacketToggleLight> TYPE = new Type<>(ArsNouveau.prefix("toggle_light"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, PacketToggleLight> CODEC = StreamCodec.ofMember(PacketToggleLight::toBytes, PacketToggleLight::new);
+    public static final Type<PacketToggleDebug> TYPE = new Type<>(ArsNouveau.prefix("toggle_debug"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketToggleDebug> CODEC = StreamCodec.ofMember(PacketToggleDebug::toBytes, PacketToggleDebug::new);
 
 
     @Override
     public @NotNull Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
+
+
 }
