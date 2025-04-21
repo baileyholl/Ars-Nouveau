@@ -19,13 +19,18 @@
       "description": "Linked inventories that are named will create a tab in the Storage Lectern, allowing you to view and manipulate all inventories that share that name. Unlike normal chests, Repositories will preserve their name when dropped. The Name Effect can also name inventories placed in the world."
     },
     {
+      "title": "Performance",
+      "description": "Repository Catalogs should be used when possible for large or frequent item automations involving the storage lectern. Repository catalogs are bound to a single location that exposes all connected repositories, and is optimized for server performance over other large slot inventories or chests."
+    },
+    {
       "recipe_1": "ars_nouveau:storage_lectern"
     },
     {
       "related": [
         "ars_nouveau:bookwyrm_charm",
         "ars_nouveau:item_detector",
-        "ars_nouveau:repository"
+        "ars_nouveau:repository",
+        "ars_nouveau:repository_controller"
       ]
     }
   ]

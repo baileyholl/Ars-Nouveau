@@ -7,7 +7,7 @@
   "pages": [
     {
       "title": "Enchanting Apparatus",
-      "description": "The Enchanting Apparatus utilizes pedestals and Source for crafting. To use the Enchanting Apparatus, place any number of Arcane Pedestals within 3 blocks with their items. Once you have filled the pedestals, use the middle item on the Enchanting Apparatus block. The Enchanting Apparatus requires an Arcane Core beneath it in order to work.",
+      "description": "The Enchanting Apparatus utilizes pedestals and Source for crafting. To use the Enchanting Apparatus, place any number of Arcane Pedestals within 3 blocks with their items. Once you have filled the pedestals, use the middle item on the Enchanting Apparatus block. The Enchanting Apparatus requires an Arcane Core next to its base in order to work.",
       "icon": "ars_nouveau:enchanting_apparatus"
     },
     {

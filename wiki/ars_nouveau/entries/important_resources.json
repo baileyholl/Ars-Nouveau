@@ -1,0 +1,21 @@
+{
+  "id": "ars_nouveau:important_resources",
+  "order": 7,
+  "icon": "minecraft:raw_gold",
+  "title": "7 - Important Resources",
+  "category": "ars_nouveau:getting_started",
+  "pages": [
+    {
+      "title": "7 - Important Resources",
+      "description": "It\u0027s recommended to keep stock of certain resources as they will be used in many crafting recipes.  While exploring, look for Iron Ore, Gold Ore, Amethyst Shards (or Lapis Lazuli), Diamond, Sourceberries, and Archwood Logs.  Dowsing Rods can help with locating Budding Amethyst Blocks and magical creatures.",
+      "icon": "minecraft:raw_gold"
+    },
+    {
+      "related": [
+        "ars_nouveau:sourceberry_bush",
+        "ars_nouveau:archwood",
+        "ars_nouveau:item.ars_nouveau.dowsing_rod"
+      ]
+    }
+  ]
+}
