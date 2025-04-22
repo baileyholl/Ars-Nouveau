@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
+import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -144,7 +145,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
                 Vec3 pos = from.add(dir.scale(0.5));
                 Vec3 motion = dir.scale(0.2);
                 level.addAlwaysVisibleParticle(
-                        ModParticles.BUBBLE_TYPE.get(),
+                        new PropertyParticleOptions(ModParticles.ALAKARK_BUBBLE_TYPE.get()),
                         pos.x, pos.y, pos.z,motion.x, motion.y * 0.05, motion.z
                 );
                 if (getRandom().nextInt(20) == 0) {
