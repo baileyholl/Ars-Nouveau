@@ -99,6 +99,12 @@ public class ParticleOverviewScreen extends BaseBook {
                 List<SubProperty> subProperties = property.subProperties();
                 allProps.addAll(subProperties);
             }
+            for(Property property : configuration.getProperties()) {
+                property.setChangedListener(this::addSelectedTimelineOptions);
+                allProps.add(property);
+                List<SubProperty> subProperties = property.subProperties();
+                allProps.addAll(subProperties);
+            }
             for(BaseProperty property : allProps){
                 PropertyButton propertyButton = buildPropertyButton(property, propertyOffset);
                 addLeftPageWidget(propertyButton);

@@ -1,10 +1,7 @@
 package com.hollingsworth.arsnouveau.api.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ColorProperty;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.IPropertyType;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.SimplePropertyType;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.*;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -23,5 +20,7 @@ public class ParticlePropertyRegistry {
 
     public static final DeferredHolder<IPropertyType<?>, IPropertyType<ColorProperty>> COLOR_PROPERTY = PROP_DF.register("color", () -> new SimplePropertyType<>(ColorProperty.CODEC, ColorProperty.STREAM_CODEC));
     public static final DeferredHolder<IPropertyType<?>, IPropertyType<ParticleTypeProperty>> TYPE_PROPERTY = PROP_DF.register("particle_type", () -> new SimplePropertyType<>(ParticleTypeProperty.CODEC, ParticleTypeProperty.STREAM_CODEC));
+
+    public static final DeferredHolder<IPropertyType<?>, IPropertyType<ParticleDensityProperty>> DENSITY_PROPERTY = PROP_DF.register("density", () -> new SimplePropertyType<>(ParticleDensityProperty.CODEC, ParticleDensityProperty.STREAM_CODEC));
 
 }

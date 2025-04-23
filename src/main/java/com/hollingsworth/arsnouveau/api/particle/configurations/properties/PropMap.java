@@ -90,8 +90,6 @@ public class PropMap{
     }
 
     public <T extends BaseProperty> void set(IPropertyType<T> type, T value) {
-        System.out.println("set " + type.getString() + " to " + value);
         properties.put(type, value);
     }
-
 }

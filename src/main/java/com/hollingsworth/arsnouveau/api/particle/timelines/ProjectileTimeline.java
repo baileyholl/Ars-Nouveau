@@ -36,6 +36,7 @@ public class ProjectileTimeline implements IParticleTimeline{
     public ProjectileTimeline(){
         this(new TimelineEntryData(new TrailMotion(), PropertyParticleOptions.defaultGlow()),
                 new TimelineEntryData(new BurstMotion(), PropertyParticleOptions.defaultGlow()));
+        System.out.println("creating default timeline");
     }
 
     public ProjectileTimeline(TimelineEntryData trailEffect, TimelineEntryData onResolvingEffect){
