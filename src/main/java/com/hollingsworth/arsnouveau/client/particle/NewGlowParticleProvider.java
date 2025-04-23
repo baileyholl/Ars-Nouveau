@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
+import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
@@ -17,6 +18,7 @@ public class NewGlowParticleProvider implements ParticleProvider<PropertyParticl
 
     @Override
     public @Nullable Particle createParticle(PropertyParticleOptions data, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-        return new ParticleGlow(level, x, y, z, xSpeed, ySpeed, zSpeed, data.color.getRed(), data.color.getGreen(), data.color.getBlue(), 1.0f, 0.25f, 36, this.sprite, false);
+        ParticleColor color = data.map.has(ParticlePropertyRegistry.COLOR_PROPERTY.get()) ? data.map.get(ParticlePropertyRegistry.COLOR_PROPERTY.get()).particleColor : ParticleColor.defaultParticleColor();
+        return new ParticleGlow(level, x, y, z, xSpeed, ySpeed, zSpeed, color.getRed(), color.getGreen(), color.getBlue(), 1.0f, 0.25f, 36, this.sprite, false);
     }
 }

@@ -1,16 +1,21 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations.properties;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
+import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collections;
@@ -26,24 +31,50 @@ public class ParticleTypeProperty extends Property {
         PARTICLE_TYPES.put(data.type, data);
     }
 
-    protected ParticleData selectedData;
 
-    public ParticleTypeProperty(PropertyHolder propertyHolder) {
-        super(propertyHolder);
-        this.selectedData = PARTICLE_TYPES.get(propertyHolder.defaultType);
+    public static MapCodec<ParticleTypeProperty> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            BuiltInRegistries.PARTICLE_TYPE.byNameCodec().fieldOf("particleType").forGetter(i -> i.type)
+    ).apply(instance, ParticleTypeProperty::new));
+
+    public static StreamCodec<RegistryFriendlyByteBuf, ParticleTypeProperty> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.registry(BuiltInRegistries.PARTICLE_TYPE.key()),
+            ParticleTypeProperty::type,
+            ParticleTypeProperty::new
+    );
+
+    protected ParticleData selectedData;
+    protected ParticleType<? extends PropertyParticleOptions> type;
+
+    public ParticleTypeProperty(ParticleType<?> type) {
+        super();
+        this.type = (ParticleType<? extends PropertyParticleOptions>) type;
+        selectedData = PARTICLE_TYPES.get(type);
         if (selectedData == null) {
-            System.out.println("UNREGISTERED PARTICLE TYPE FOR " + propertyHolder.defaultType);
+            System.out.println("UNREGISTERED PARTICLE TYPE FOR " + type);
             selectedData = new ParticleData(ModParticles.NEW_GLOW_TYPE.get(), false);
         }
     }
 
-    @Override
-    public ResourceLocation getId() {
-        return ArsNouveau.prefix("particle_type");
+    public ParticleTypeProperty(PropMap propMap) {
+        super(propMap);
+        if(!propMap.has(getType())){
+            System.out.println("NO PARTICLE TYPE IN PROP MAP");
+        }
+        this.type = propMap.getOrDefault(getType(), new ParticleTypeProperty(ModParticles.NEW_GLOW_TYPE.get())).type;
+        selectedData = PARTICLE_TYPES.get(type);
+        if (selectedData == null) {
+            System.out.println("UNREGISTERED PARTICLE TYPE FOR " + type);
+            selectedData = new ParticleData(ModParticles.NEW_GLOW_TYPE.get(), false);
+        }
+    }
+
+    public ParticleType<? extends PropertyParticleOptions> type() {
+        return type;
     }
 
     @Override
     public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height) {
+        ParticleTypeProperty self = this;
         return new ParticleConfigWidgetProvider(x, y, width, height) {
             @Override
             public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
@@ -58,8 +89,10 @@ public class ParticleTypeProperty extends Property {
                     widgets.add(new GuiImageButton(x + 24 * count, y + 20, 16, 16, getImagePath(particleType.getKey()), (b) -> {
                         var didHaveColor = selectedData.acceptsColor;
                         selectedData = particleType.getValue();
+                        type = particleType.getKey();
                         var nowHasColor = selectedData.acceptsColor;
-                        propertyHolder.onTextureChanged.accept(particleType.getKey());
+
+                        propertyHolder.set(getType(), self);
                         if(didHaveColor != nowHasColor && onDependenciesChanged != null){
                             onDependenciesChanged.run();
                         }
@@ -92,6 +125,11 @@ public class ParticleTypeProperty extends Property {
                 return Component.literal(getName().getString() + ": " + getTypeName(selectedData.type()).getString());
             }
         };
+    }
+
+    @Override
+    public IPropertyType<ParticleTypeProperty> getType() {
+        return ParticlePropertyRegistry.TYPE_PROPERTY.get();
     }
 
     @Override

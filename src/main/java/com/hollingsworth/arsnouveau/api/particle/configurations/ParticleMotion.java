@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
 import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.Property;
 import com.hollingsworth.arsnouveau.api.registry.ParticleConfigRegistry;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.particles.ParticleOptions;
@@ -8,6 +9,8 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
+
+import java.util.List;
 
 /**
  * Spawns particles via callbacks from the emitter
@@ -26,6 +29,10 @@ public abstract class ParticleMotion {
 
     public void tick(ParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
 
+    }
+
+    public List<Property> getProperties() {
+        return List.of();
     }
 
     public abstract IParticleMotionType<?> getType();

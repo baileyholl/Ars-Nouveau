@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.particle.behaviors;
 
 import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.mixin.ParticleAccessor;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
@@ -23,26 +24,26 @@ public class SpiralMovement implements IParticleMovement{
         centerX = particle.getPos().x;
         centerY = particle.getPos().y;
         angle = 0.0f;
-        radialVelocity = 0.05f;
+        radialVelocity = 0.5f;
         this.particle = particle;
         particleAccessor = (ParticleAccessor) particle;
     }
 
     @Override
     public void tick() {
-//        angle += angularVelocity * ClientInfo.partialTicks;
-//        // Calculate new position based on the updated angle
-//        double newX = centerX + radius * Math.cos(angle);
-//        double newZ = centerY + radius * Math.sin(angle);
-//        float delta = ClientInfo.partialTicks;
-//
-//        // Calculate radial velocity components (deltas)
-//        double deltaX = radialVelocity * Math.cos(angle) * delta;
-//        double deltaY = radialVelocity * Math.sin(angle) * delta;
-//        ParticleAccessor particleAccessor = (ParticleAccessor) particle;
-//        // Convert back to Cartesian coordinates
-//        particleAccessor.setXd(deltaX);
-//        particleAccessor.setYd(deltaY);
+        angle += angularVelocity * ClientInfo.partialTicks;
+        // Calculate new position based on the updated angle
+        double newX = centerX + radius * Math.cos(angle);
+        double newZ = centerY + radius * Math.sin(angle);
+        float delta = ClientInfo.partialTicks;
+
+        // Calculate radial velocity components (deltas)
+        double deltaX = radialVelocity * Math.cos(angle) * delta;
+        double deltaY = radialVelocity * Math.sin(angle) * delta;
+        ParticleAccessor particleAccessor = (ParticleAccessor) particle;
+        // Convert back to Cartesian coordinates
+        particleAccessor.setXd(deltaX);
+        particleAccessor.setYd(deltaY);
     }
 
     @Override

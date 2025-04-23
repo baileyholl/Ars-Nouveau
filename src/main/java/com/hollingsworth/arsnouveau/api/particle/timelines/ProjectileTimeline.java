@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.api.particle.configurations.BurstMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
 import com.hollingsworth.arsnouveau.api.particle.configurations.TrailMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropertyHolder;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -59,21 +58,7 @@ public class ProjectileTimeline implements IParticleTimeline{
 
     @Override
     public List<TimelineOption> getTimelineOptions() {
-        return List.of(new TimelineOption(ArsNouveau.prefix("trail"), this.trailEffect, ImmutableList.copyOf(TRAIL_OPTIONS)).withProperty(new ParticleTypeProperty(buildHolderForEffect(this.trailEffect))),
-                new TimelineOption(ArsNouveau.prefix("impact"), this.onResolvingEffect, ImmutableList.copyOf(RESOLVING_OPTIONS)).withProperty(new ParticleTypeProperty(buildHolderForEffect(this.onResolvingEffect))));
-    }
-
-    protected PropertyHolder buildHolderForEffect(TimelineEntryData timelineEntryData){
-
-        return new PropertyHolder(
-                (type) -> {
-                    var entry = ParticleTypeProperty.PARTICLE_TYPES.get(type);
-                    timelineEntryData.setOptions(entry.defaultOptions().get());
-                }, timelineEntryData.particleOptions().getType(),
-                (color) -> {
-                    if(timelineEntryData.particleOptions instanceof PropertyParticleOptions propertyParticleOptions){
-                        propertyParticleOptions.color = color;
-                    }
-                }, timelineEntryData.particleOptions.getColor());
+        return List.of(new TimelineOption(ArsNouveau.prefix("trail"), this.trailEffect, ImmutableList.copyOf(TRAIL_OPTIONS)).withProperty(new ParticleTypeProperty(this.trailEffect.particleOptions.map)),
+                new TimelineOption(ArsNouveau.prefix("impact"), this.onResolvingEffect, ImmutableList.copyOf(RESOLVING_OPTIONS)).withProperty(new ParticleTypeProperty(this.onResolvingEffect.particleOptions.map)));
     }
 }

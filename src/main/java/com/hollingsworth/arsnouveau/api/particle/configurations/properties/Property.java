@@ -7,8 +7,12 @@ public abstract class Property extends BaseProperty {
 
     public Runnable onDependenciesChanged;
 
-    public Property(PropertyHolder propertyHolder) {
-        super(propertyHolder);
+    public Property(PropMap propertyHolder) {
+        this.propertyHolder = propertyHolder;
+    }
+
+    public Property() {
+        this.propertyHolder = new PropMap();
     }
 
     public void setChangedListener(Runnable onDependenciesChanged) {

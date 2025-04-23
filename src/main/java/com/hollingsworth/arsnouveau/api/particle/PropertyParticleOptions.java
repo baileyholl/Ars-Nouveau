@@ -1,25 +1,23 @@
 package com.hollingsworth.arsnouveau.api.particle;
 
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.Property;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ColorProperty;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
+import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-import java.util.List;
-
-public class PropertyParticleOptions implements ParticleOptions, IConfigurableParticleOption {
+public class PropertyParticleOptions implements ParticleOptions {
 
 
     public static final MapCodec<PropertyParticleOptions> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                    BuiltInRegistries.PARTICLE_TYPE.byNameCodec().fieldOf("type").forGetter(PropertyParticleOptions::getType),
-            ParticleColor.CODEC.fieldOf("color").forGetter(d -> d.color)
+                    PropMap.CODEC.fieldOf("properties").forGetter(i -> i.map)
             )
             .apply(instance, PropertyParticleOptions::new));
 
@@ -28,43 +26,38 @@ public class PropertyParticleOptions implements ParticleOptions, IConfigurablePa
     );
 
     public static void toNetwork(RegistryFriendlyByteBuf buf, PropertyParticleOptions data) {
-        ByteBufCodecs.registry(BuiltInRegistries.PARTICLE_TYPE.key()).encode(buf, data.type);
-        ParticleColor.STREAM.encode(buf, data.color);
+        PropMap.STREAM_CODEC.encode(buf, data.map);
     }
 
     public static PropertyParticleOptions fromNetwork(RegistryFriendlyByteBuf buffer) {
-        ParticleType<?> type =  ByteBufCodecs.registry(BuiltInRegistries.PARTICLE_TYPE.key()).decode(buffer);
-        ParticleColor particleColor = ParticleColor.STREAM.decode(buffer);
-        return new PropertyParticleOptions(type, particleColor);
+        PropMap propMap = PropMap.STREAM_CODEC.decode(buffer);
+        return new PropertyParticleOptions(propMap);
     }
 
-    public ParticleColor color;
-    protected ParticleType<?> type;
+    public PropMap map;
 
-    public static PropertyParticleOptions defaultGlow(){
-        return new PropertyParticleOptions(ModParticles.NEW_GLOW_TYPE.get(), ParticleColor.defaultParticleColor());
+    public static PropertyParticleOptions defaultGlow() {
+        return new PropertyParticleOptions(defaultPropMap());
     }
 
-    public PropertyParticleOptions(ParticleType<?> type, ParticleColor color) {
-        this.type = type;
-        this.color = color;
+    public PropertyParticleOptions(PropMap propMap) {
+        this.map = propMap;
     }
 
     public PropertyParticleOptions(ParticleType<?> type) {
-        this(type, ParticleColor.defaultParticleColor());
+        this(new PropMap());
+        this.map.set(ParticlePropertyRegistry.TYPE_PROPERTY.get(), new ParticleTypeProperty(type));
+    }
+
+    public static PropMap defaultPropMap(){
+        PropMap propMap = new PropMap();
+        propMap.set(ParticlePropertyRegistry.TYPE_PROPERTY.get(), new ParticleTypeProperty(ModParticles.NEW_GLOW_TYPE.get()));
+        propMap.set(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty(ParticleColor.defaultParticleColor()));
+        return propMap;
     }
 
     @Override
     public ParticleType<?> getType() {
-        return type;
-    }
-
-    public ParticleColor getColor() {
-        return color;
-    }
-
-    @Override
-    public List<Property> getProperties() {
-        return List.of();
+        return map.getOptional(ParticlePropertyRegistry.TYPE_PROPERTY.get()).orElse(new ParticleTypeProperty(ModParticles.NEW_GLOW_TYPE.get())).type();
     }
 }
