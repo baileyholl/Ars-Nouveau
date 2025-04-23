@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.particle.configurations.properties.Prope
 import com.hollingsworth.arsnouveau.api.registry.ParticleConfigRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -18,28 +17,14 @@ import java.util.List;
 
 public class TrailMotion extends ParticleMotion {
 
-    public static MapCodec<TrailMotion> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            PropMap.CODEC.fieldOf("properties").forGetter(i -> i.propMap)
-    ).apply(instance, TrailMotion::new));
+    public static MapCodec<TrailMotion> CODEC = buildPropCodec(TrailMotion::new);
 
-    public static StreamCodec<RegistryFriendlyByteBuf, TrailMotion> STREAM = new StreamCodec<>() {
-        @Override
-        public TrailMotion decode(RegistryFriendlyByteBuf buffer) {
-            return new TrailMotion(PropMap.STREAM_CODEC.decode(buffer));
-        }
+    public static StreamCodec<RegistryFriendlyByteBuf, TrailMotion> STREAM = buildStreamCodec(TrailMotion::new);
 
-        @Override
-        public void encode(RegistryFriendlyByteBuf buffer, TrailMotion value) {
-            PropMap.STREAM_CODEC.encode(buffer, value.propMap);
-
-        }
-    };
-
-    public PropMap propMap;
     public int density;
 
     public TrailMotion(PropMap propMap){
-        this.propMap = propMap;
+        super(propMap);
         if(!propMap.has(ParticlePropertyRegistry.DENSITY_PROPERTY.get())){
             this.density = 5;
         } else {
@@ -48,9 +33,9 @@ public class TrailMotion extends ParticleMotion {
     }
 
     public TrailMotion() {
-        this.propMap = new PropMap();
+        super(new PropMap());
         this.density = 5;
-        propMap.set(ParticlePropertyRegistry.DENSITY_PROPERTY.get(), new ParticleDensityProperty(density));
+        propertyMap.set(ParticlePropertyRegistry.DENSITY_PROPERTY.get(), new ParticleDensityProperty(density));
     }
 
 
@@ -109,6 +94,6 @@ public class TrailMotion extends ParticleMotion {
 
     @Override
     public List<Property> getProperties() {
-        return List.of(new ParticleDensityProperty(propMap));
+        return List.of(new ParticleDensityProperty(propertyMap));
     }
 }

@@ -21,10 +21,11 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-public class ParticleTypeProperty extends Property {
+public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
     public static final Map<ParticleType<? extends PropertyParticleOptions>, ParticleData> PARTICLE_TYPES = new ConcurrentHashMap<>();
 
     public static void addType(ParticleData data) {
@@ -133,12 +134,29 @@ public class ParticleTypeProperty extends Property {
     }
 
     @Override
+    public ParticleTypeProperty copy() {
+        return new ParticleTypeProperty(type);
+    }
+
+    @Override
     public List<SubProperty> subProperties() {
         if (selectedData == null || !selectedData.acceptsColor) {
             return Collections.emptyList();
         }
 
         return List.of(new ColorProperty(propertyHolder));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        ParticleTypeProperty property = (ParticleTypeProperty) o;
+        return Objects.equals(type, property.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(type);
     }
 
     public record ParticleData(ParticleType<? extends PropertyParticleOptions> type, Supplier<PropertyParticleOptions> defaultOptions, boolean acceptsColor) {

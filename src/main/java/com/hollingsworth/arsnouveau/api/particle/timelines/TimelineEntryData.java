@@ -9,6 +9,8 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 
+import java.util.Objects;
+
 public class TimelineEntryData {
     public static final MapCodec<TimelineEntryData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ParticleMotion.CODEC.fieldOf("motion").forGetter(i -> i.motion),
@@ -48,5 +50,17 @@ public class TimelineEntryData {
 
     public void setOptions(PropertyParticleOptions particleOptions) {
         this.particleOptions = particleOptions;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        TimelineEntryData entryData = (TimelineEntryData) o;
+        return Objects.equals(motion, entryData.motion) && Objects.equals(particleOptions, entryData.particleOptions);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(motion, particleOptions);
     }
 }

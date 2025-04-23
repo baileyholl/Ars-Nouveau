@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
 import com.hollingsworth.arsnouveau.api.registry.ParticleConfigRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -33,16 +34,25 @@ public class SpiralMotion extends ParticleMotion {
 
 
     public SpiralMotion() {
+        super(new PropMap());
+        spiralRadius = 1f;
+        spiralSpeed = 1f;
+    }
+
+    public SpiralMotion(PropMap propMap) {
+        super(propMap);
         spiralRadius = 1f;
         spiralSpeed = 1f;
     }
 
     public SpiralMotion(double radius, double speed) {
+        super(new PropMap());
         spiralRadius = radius;
         spiralSpeed = speed;
     }
 
     public SpiralMotion(double radius, double angle, double angleSpeed, double radiusSpeed) {
+        super(new PropMap());
         this.spiralRadius = radius;
         this.spiralSpeed = angleSpeed;
     }

@@ -16,9 +16,10 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.Mth;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
-public class ParticleDensityProperty extends Property{
+public class ParticleDensityProperty extends Property<ParticleDensityProperty>{
     public static MapCodec<ParticleDensityProperty> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.INT.fieldOf("density").forGetter(i -> i.density)
     ).apply(instance, ParticleDensityProperty::new));
@@ -94,5 +95,22 @@ public class ParticleDensityProperty extends Property{
     @Override
     public IPropertyType<ParticleDensityProperty> getType() {
         return ParticlePropertyRegistry.DENSITY_PROPERTY.get();
+    }
+
+    @Override
+    public ParticleDensityProperty copy() {
+        return new ParticleDensityProperty(density);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        ParticleDensityProperty that = (ParticleDensityProperty) o;
+        return density == that.density;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(density);
     }
 }

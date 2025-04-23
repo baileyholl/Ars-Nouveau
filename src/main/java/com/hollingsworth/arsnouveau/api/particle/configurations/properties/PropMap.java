@@ -10,6 +10,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 public class PropMap{
@@ -91,5 +92,31 @@ public class PropMap{
 
     public <T extends BaseProperty> void set(IPropertyType<T> type, T value) {
         properties.put(type, value);
+    }
+
+    public PropMap copy(){
+        Map<IPropertyType<?>, Object> map = new Reference2ObjectArrayMap<>();
+        for (var entry : properties.entrySet()){
+            var key = entry.getKey();
+            var value = entry.getValue();
+            if (value instanceof BaseProperty baseProperty) {
+                map.put(key, baseProperty.copy());
+            } else {
+                throw new IllegalArgumentException("Value is not a BaseProperty: " + value);
+            }
+        }
+        return new PropMap(map);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        PropMap propMap = (PropMap) o;
+        return Objects.equals(properties, propMap.properties);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(properties);
     }
 }

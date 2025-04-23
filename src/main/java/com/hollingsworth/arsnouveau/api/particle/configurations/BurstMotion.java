@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
 import com.hollingsworth.arsnouveau.api.registry.ParticleConfigRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.mojang.serialization.MapCodec;
@@ -9,20 +10,18 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
 
 public class BurstMotion extends ParticleMotion {
-    public static BurstMotion INSTANCE = new BurstMotion();
-    public static MapCodec<BurstMotion> CODEC = MapCodec.unit(BurstMotion::new);
 
-    public static StreamCodec<RegistryFriendlyByteBuf, BurstMotion> STREAM = new StreamCodec<RegistryFriendlyByteBuf, BurstMotion>() {
-        @Override
-        public BurstMotion decode(RegistryFriendlyByteBuf buffer) {
-            return new BurstMotion();
-        }
+    public static MapCodec<BurstMotion> CODEC = buildPropCodec(BurstMotion::new);
 
-        @Override
-        public void encode(RegistryFriendlyByteBuf buffer, BurstMotion value) {
+    public static StreamCodec<RegistryFriendlyByteBuf, BurstMotion> STREAM =  buildStreamCodec(BurstMotion::new);
 
-        }
-    };
+    public BurstMotion() {
+        super(new PropMap());
+    }
+
+    public BurstMotion(PropMap propertyMap) {
+        super(propertyMap);
+    }
 
     @Override
     public IParticleMotionType<?> getType() {
