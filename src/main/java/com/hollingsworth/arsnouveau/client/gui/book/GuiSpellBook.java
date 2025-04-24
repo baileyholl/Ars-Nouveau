@@ -591,10 +591,17 @@ public class GuiSpellBook extends BaseBook {
         }
 
         if (!(keyCode >= GLFW.GLFW_KEY_LEFT_SHIFT && keyCode <= GLFW.GLFW_KEY_MENU) && !searchBar.isFocused() || !searchBar.active) {
+            var prevFocus = this.getFocused();
             this.clearFocus();
             this.setFocused(searchBar);
             searchBar.active = true;
-            return searchBar.keyPressed(keyCode, scanCode, modifiers);
+            if (!searchBar.keyPressed(keyCode, scanCode, modifiers)) {
+                searchBar.active = false;
+                this.clearFocus();
+                this.setFocused(prevFocus);
+                return false;
+            }
+            return true;
         }
 
         return false;
