@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.events;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.DynamicTooltipRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GenericRecipeRegistry;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.DocItemTooltipHandler;
 import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
@@ -141,6 +142,9 @@ public class ClientEvents {
     public static void onTooltip(final ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
         DynamicTooltipRegistry.appendTooltips(stack, event.getContext(), event.getToolTip()::add, event.getFlags());
+        for (var tooltip: ClientInfo.storageTooltip) {
+            event.getToolTip().add(tooltip);
+        }
     }
 
     public static Component localize(String key, Object... params) {
