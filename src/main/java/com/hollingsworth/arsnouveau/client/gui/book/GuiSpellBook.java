@@ -590,7 +590,7 @@ public class GuiSpellBook extends BaseBook {
             return true;
         }
 
-        if (!searchBar.isFocused() || !searchBar.active) {
+        if (!(keyCode >= GLFW.GLFW_KEY_LEFT_SHIFT && keyCode <= GLFW.GLFW_KEY_MENU) && !searchBar.isFocused() || !searchBar.active) {
             this.clearFocus();
             this.setFocused(searchBar);
             searchBar.active = true;
