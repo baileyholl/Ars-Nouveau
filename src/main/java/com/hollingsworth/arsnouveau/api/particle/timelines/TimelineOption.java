@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public record TimelineOption(ResourceLocation id,
                              TimelineEntryData entry,
@@ -31,5 +32,17 @@ public record TimelineOption(ResourceLocation id,
 
     public Component description(){
         return Component.translatable(id.getNamespace() + ".timeline." + id.getPath() + ".description");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        TimelineOption that = (TimelineOption) o;
+        return Objects.equals(id, that.id) && Objects.equals(entry, that.entry);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, entry);
     }
 }

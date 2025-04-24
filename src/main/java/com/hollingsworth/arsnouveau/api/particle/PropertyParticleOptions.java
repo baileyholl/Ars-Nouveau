@@ -13,6 +13,8 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 
+import java.util.Objects;
+
 public class PropertyParticleOptions implements ParticleOptions {
 
 
@@ -59,5 +61,17 @@ public class PropertyParticleOptions implements ParticleOptions {
     @Override
     public ParticleType<?> getType() {
         return map.getOptional(ParticlePropertyRegistry.TYPE_PROPERTY.get()).orElse(new ParticleTypeProperty(ModParticles.NEW_GLOW_TYPE.get())).type();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        PropertyParticleOptions that = (PropertyParticleOptions) o;
+        return Objects.equals(map, that.map);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(map);
     }
 }

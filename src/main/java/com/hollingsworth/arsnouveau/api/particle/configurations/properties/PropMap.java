@@ -6,6 +6,7 @@ import com.mojang.serialization.DataResult;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMaps;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 
@@ -52,26 +53,23 @@ public class PropMap{
     private static Codec<PropMap> makeCodecFromMap(Codec<Map<IPropertyType<?>, Object>> codec) {
         return codec.flatComapMap(PropMap::new, p_337448_ -> {
             int i = p_337448_.properties.size();
-            if (i == 0) {
-                return DataResult.success(Reference2ObjectMaps.emptyMap());
-            } else {
-                Reference2ObjectMap<IPropertyType<?>, Object> reference2objectmap = new Reference2ObjectArrayMap<>(i);
+            Reference2ObjectMap<IPropertyType<?>, Object> reference2objectmap = new Reference2ObjectArrayMap<>(i);
 
-                reference2objectmap.putAll(p_337448_.properties);
+            reference2objectmap.putAll(p_337448_.properties);
 
-                return DataResult.success(reference2objectmap);
-            }
+            return DataResult.success(reference2objectmap);
+
         });
     }
 
-    private Reference2ObjectArrayMap<IPropertyType<?>, Object> properties;
+    private Reference2ObjectOpenHashMap<IPropertyType<?>, Object> properties;
 
     public PropMap() {
-        this.properties = new Reference2ObjectArrayMap<>();
+        this.properties = new Reference2ObjectOpenHashMap<>();
     }
 
     public PropMap(Map<IPropertyType<?>, Object> map){
-        this.properties = new Reference2ObjectArrayMap<>(map);
+        this.properties = new Reference2ObjectOpenHashMap<>(map);
     }
 
     public <T extends BaseProperty> T get(IPropertyType<T> type) {
