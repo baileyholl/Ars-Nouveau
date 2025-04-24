@@ -55,9 +55,14 @@ public class Cinder extends EnchantedFallingBlock {
     }
 
     @Override
-    public void doPostHurtEffects(LivingEntity livingentity) {
-        super.doPostHurtEffects(livingentity);
-
+    public BlockPos groundBlock(boolean ignoreAir) {
+        BlockPos pos = super.groundBlock(ignoreAir);
+        if (pos == null) {
+            this.discard();
+            this.callOnBrokenAfterFall(this.blockState.getBlock(), this.blockPosition());
+            return null;
+        }
+        return pos;
     }
 
     @Override
