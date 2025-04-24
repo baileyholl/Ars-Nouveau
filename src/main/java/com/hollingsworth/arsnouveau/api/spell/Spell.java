@@ -257,12 +257,12 @@ public class Spell {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Spell spell = (Spell) o;
-        return Objects.equals(recipe, spell.recipe) && Objects.equals(name, spell.name) && Objects.equals(color, spell.color) && Objects.equals(sound, spell.sound);
+        return Objects.equals(recipe, spell.recipe) && Objects.equals(name, spell.name) && Objects.equals(color, spell.color) && Objects.equals(sound, spell.sound) && Objects.equals(particleTimeline, spell.particleTimeline);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(recipe, name, color, sound);
+        return Objects.hash(recipe, name, color, sound, particleTimeline);
     }
 
     public static class Mutable{

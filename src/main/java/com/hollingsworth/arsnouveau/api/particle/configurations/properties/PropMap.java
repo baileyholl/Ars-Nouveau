@@ -94,20 +94,6 @@ public class PropMap{
         properties.put(type, value);
     }
 
-    public PropMap copy(){
-        Map<IPropertyType<?>, Object> map = new Reference2ObjectArrayMap<>();
-        for (var entry : properties.entrySet()){
-            var key = entry.getKey();
-            var value = entry.getValue();
-            if (value instanceof BaseProperty baseProperty) {
-                map.put(key, baseProperty.copy());
-            } else {
-                throw new IllegalArgumentException("Value is not a BaseProperty: " + value);
-            }
-        }
-        return new PropMap(map);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

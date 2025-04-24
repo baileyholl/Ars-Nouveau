@@ -8,14 +8,13 @@ import net.minecraft.network.codec.StreamCodec;
 
 import java.util.List;
 
-public interface IParticleTimeline {
-    Codec<IParticleTimeline> CODEC = IParticleTimelineType.CODEC.dispatch(IParticleTimeline::getType, IParticleTimelineType::codec);
+public interface IParticleTimeline<T extends IParticleTimeline<T>> {
+    Codec<IParticleTimeline<?>> CODEC = IParticleTimelineType.CODEC.dispatch(IParticleTimeline::getType, IParticleTimelineType::codec);
 
-    StreamCodec<RegistryFriendlyByteBuf, IParticleTimeline> STREAM_CODEC = ByteBufCodecs.registry(ParticleTimelineRegistry.PARTICLE_TIMELINE_REGISTRY_KEY).dispatch(IParticleTimeline::getType, IParticleTimelineType::streamCodec);
+    StreamCodec<RegistryFriendlyByteBuf, IParticleTimeline<?>> STREAM_CODEC = ByteBufCodecs.registry(ParticleTimelineRegistry.PARTICLE_TIMELINE_REGISTRY_KEY).dispatch(IParticleTimeline::getType, IParticleTimelineType::streamCodec);
 
-    IParticleTimelineType<?> getType();
+    IParticleTimelineType<T> getType();
 
     List<TimelineOption> getTimelineOptions();
-
 
 }

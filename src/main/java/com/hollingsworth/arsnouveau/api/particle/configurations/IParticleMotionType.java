@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
 import com.hollingsworth.arsnouveau.api.registry.ParticleConfigRegistry;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -14,6 +15,8 @@ public interface IParticleMotionType<T extends ParticleMotion> {
     StreamCodec<RegistryFriendlyByteBuf, T> streamCodec();
 
     T create();
+
+    T create(PropMap propMap);
 
     default Component getName(){
         ResourceLocation key = ParticleConfigRegistry.PARTICLE_CONFIG_REGISTRY.getKey(this);

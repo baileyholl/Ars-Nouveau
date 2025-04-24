@@ -16,7 +16,7 @@ import net.minecraft.network.codec.StreamCodec;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class ProjectileTimeline implements IParticleTimeline{
+public class ProjectileTimeline implements IParticleTimeline<ProjectileTimeline>{
     public static final MapCodec<ProjectileTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             TimelineEntryData.CODEC.fieldOf("trailEffect").forGetter(i -> i.trailEffect),
             TimelineEntryData.CODEC.fieldOf("onResolvingEffect").forGetter(i -> i.onResolvingEffect)
@@ -36,7 +36,6 @@ public class ProjectileTimeline implements IParticleTimeline{
     public ProjectileTimeline(){
         this(new TimelineEntryData(new TrailMotion(), PropertyParticleOptions.defaultGlow()),
                 new TimelineEntryData(new BurstMotion(), PropertyParticleOptions.defaultGlow()));
-        System.out.println("creating default timeline");
     }
 
     public ProjectileTimeline(TimelineEntryData trailEffect, TimelineEntryData onResolvingEffect){
@@ -53,7 +52,7 @@ public class ProjectileTimeline implements IParticleTimeline{
     }
 
     @Override
-    public IParticleTimelineType<?> getType() {
+    public IParticleTimelineType<ProjectileTimeline> getType() {
         return ParticleTimelineRegistry.PROJECTILE_TIMELINE.get();
     }
 

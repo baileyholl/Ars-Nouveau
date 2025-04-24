@@ -6,7 +6,7 @@ import net.minecraft.network.codec.StreamCodec;
 
 import java.util.function.Supplier;
 
-public record SimpleParticleTimelineType <T extends IParticleTimeline>(MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec, Supplier<T> createDefault) implements IParticleTimelineType<T> {
+public record SimpleParticleTimelineType <T extends IParticleTimeline<T>>(MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec, Supplier<T> createDefault) implements IParticleTimelineType<T> {
     @Override
     public MapCodec<T> codec() {
         return codec;

@@ -67,7 +67,6 @@ public class ParticleOverviewScreen extends BaseBook {
         addRightPageWidget(new HeaderWidget(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, 20, timelineOption.name()));
         for(IParticleMotionType<?> type : timelineOption.options()){
             var widget = new GuiImageButton(bookLeft + RIGHT_PAGE_OFFSET + 10 + entryCount * 20, bookTop + 40, 14, 14, type.getIconLocation(), (button) -> {
-                System.out.println(type);
                 timelineOption.entry().setMotion(type.create());
                 addSelectedTimelineOptions();
 
@@ -79,7 +78,7 @@ public class ParticleOverviewScreen extends BaseBook {
 
     public void addSelectedTimelineOptions(){
         clearList(leftPageWidgets);
-        var configurableParticles = timeline.getOrCreate(selectedTimeline.getValue().get()).getTimelineOptions();
+        List<TimelineOption> configurableParticles = timeline.getOrCreate(selectedTimeline.getValue().get()).getTimelineOptions();
         int propertyOffset = 0;
         for(TimelineOption timelineOption : configurableParticles){
             TimelineEntryData entryData = timelineOption.entry();

@@ -28,6 +28,4 @@ public abstract class BaseProperty<T extends BaseProperty<T>> {
     abstract public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height);
 
     abstract public IPropertyType<T> getType();
-
-    public abstract T copy();
 }

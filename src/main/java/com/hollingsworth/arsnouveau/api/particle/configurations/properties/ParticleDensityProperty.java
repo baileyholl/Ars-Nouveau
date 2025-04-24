@@ -98,11 +98,6 @@ public class ParticleDensityProperty extends Property<ParticleDensityProperty>{
     }
 
     @Override
-    public ParticleDensityProperty copy() {
-        return new ParticleDensityProperty(density);
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ParticleDensityProperty that = (ParticleDensityProperty) o;

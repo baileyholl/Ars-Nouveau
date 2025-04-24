@@ -106,11 +106,6 @@ public class ColorProperty extends SubProperty<ColorProperty>{
     }
 
     @Override
-    public ColorProperty copy() {
-        return new ColorProperty(particleColor);
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ColorProperty property = (ColorProperty) o;
