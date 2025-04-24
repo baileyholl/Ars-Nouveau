@@ -585,6 +585,22 @@ public class GuiSpellBook extends BaseBook {
     }
 
     @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (super.keyPressed(keyCode, scanCode, modifiers)) {
+            return true;
+        }
+
+        if (!searchBar.isFocused() || !searchBar.active) {
+            this.clearFocus();
+            this.setFocused(searchBar);
+            searchBar.active = true;
+            return searchBar.keyPressed(keyCode, scanCode, modifiers);
+        }
+
+        return false;
+    }
+
+    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_3 && hoveredWidget instanceof CraftingButton craftingCell) {
             int idx = -1;
