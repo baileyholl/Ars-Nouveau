@@ -1,0 +1,53 @@
+package com.hollingsworth.arsnouveau.api.particle.configurations.properties;
+
+import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
+import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.phys.Vec2;
+
+import java.util.Objects;
+
+public class EmitterProperty extends Property<EmitterProperty>{
+
+    public static final MapCodec<EmitterProperty> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            ANCodecs.VEC2.fieldOf("rotation").forGetter(i -> i.rotation)
+    ).apply(instance, EmitterProperty::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, EmitterProperty> STREAM_CODEC = StreamCodec.composite(
+            ANCodecs.VEC2_STREAM,
+            i -> i.rotation,
+            EmitterProperty::new
+    );
+
+    public Vec2 rotation;
+
+    public EmitterProperty(Vec2 rotation) {
+        this.rotation = rotation;
+    }
+
+    @Override
+    public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height) {
+        throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public IPropertyType<EmitterProperty> getType() {
+        return ParticlePropertyRegistry.EMITTER_PROPERTY.get();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        EmitterProperty that = (EmitterProperty) o;
+        return Objects.equals(rotation, that.rotation);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(rotation);
+    }
+}

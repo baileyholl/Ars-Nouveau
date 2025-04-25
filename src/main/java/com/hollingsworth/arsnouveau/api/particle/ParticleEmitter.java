@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.api.particle;
 
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleMotion;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.EmitterProperty;
+import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
@@ -70,6 +72,10 @@ public class ParticleEmitter {
             this.previousPosition = this.getAdjustedPosition();
         }
         Vec3 pos = getAdjustedPosition();
+        if(particleOptions instanceof PropertyParticleOptions propertyParticleOptions){
+            Vec2 adjustedRotation = getAdjustedRotation();
+            propertyParticleOptions.map.set(ParticlePropertyRegistry.EMITTER_PROPERTY.get(), new EmitterProperty(new Vec2(adjustedRotation.x, adjustedRotation.y)));
+        }
         particleConfig.tick(particleOptions, level, pos.x, pos.y, pos.z, previousPosition.x, previousPosition.y, previousPosition.z);
         this.previousPosition = pos;
         this.age++;

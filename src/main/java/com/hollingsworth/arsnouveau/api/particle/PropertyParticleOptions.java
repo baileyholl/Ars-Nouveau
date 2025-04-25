@@ -12,11 +12,11 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.phys.Vec2;
 
 import java.util.Objects;
 
 public class PropertyParticleOptions implements ParticleOptions {
-
 
     public static final MapCodec<PropertyParticleOptions> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                     PropMap.CODEC.fieldOf("properties").forGetter(i -> i.map)
@@ -37,6 +37,8 @@ public class PropertyParticleOptions implements ParticleOptions {
     }
 
     public PropMap map;
+
+    public Vec2 emitterRotation;
 
     public static PropertyParticleOptions defaultGlow() {
         return new PropertyParticleOptions(defaultPropMap());

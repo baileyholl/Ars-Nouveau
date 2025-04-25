@@ -41,7 +41,7 @@ public abstract class ParticleMotion {
 
     }
 
-    public List<Property> getProperties() {
+    public List<Property<?>> getProperties() {
         return List.of();
     }
 

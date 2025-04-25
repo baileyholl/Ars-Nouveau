@@ -31,6 +31,7 @@ public class ModParticles {
     public static final DeferredHolder<ParticleType<?>, PropertyParticleType> SMOKE_TYPE = PARTICLES.register("smoke", PropertyParticleType::new);
     public static final DeferredHolder<ParticleType<?>, PropertyParticleType> SNOW_TYPE = PARTICLES.register("snow", PropertyParticleType::new);
     public static final DeferredHolder<ParticleType<?>, PropertyParticleType> NEW_GLOW_TYPE = PARTICLES.register("new_glow", PropertyParticleType::new);
+    public static final DeferredHolder<ParticleType<?>, PropertyParticleType> LEAF_TYPE = PARTICLES.register("leaf", PropertyParticleType::new);
 
     @SubscribeEvent
     public static void registerFactories(RegisterParticleProvidersEvent evt) {
@@ -45,11 +46,13 @@ public class ModParticles {
         evt.registerSpriteSet(SNOW_TYPE.get(), SnowParticle.Provider::new);
         evt.registerSpriteSet(NEW_GLOW_TYPE.get(), NewGlowParticleProvider::new);
         evt.registerSpriteSet(BUBBLE_CLONE_TYPE.get(), ANBubbleParticle.Provider::new);
+        evt.registerSpriteSet(LEAF_TYPE.get(), (sprites -> new PropParticle.Provider(LeafParticle::new, sprites)));
 
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(BUBBLE_CLONE_TYPE.get(), false));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SMOKE_TYPE.get(), false));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SNOW_TYPE.get(), false));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(NEW_GLOW_TYPE.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(CUSTOM_TYPE.get(), true));
+        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(LEAF_TYPE.get(), true));
     }
 }

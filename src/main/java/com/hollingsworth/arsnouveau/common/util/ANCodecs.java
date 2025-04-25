@@ -9,6 +9,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.phys.Vec2;
 
@@ -22,6 +24,14 @@ public class ANCodecs {
             Codec.FLOAT.fieldOf("x").forGetter(v -> v.x),
             Codec.FLOAT.fieldOf("y").forGetter(v -> v.y)
     ).apply(instance, Vec2::new));
+
+    public static StreamCodec<RegistryFriendlyByteBuf, Vec2> VEC2_STREAM = StreamCodec.composite(
+            ByteBufCodecs.FLOAT,
+            (i) -> i.x,
+            ByteBufCodecs.FLOAT,
+            i -> i.y,
+            Vec2::new
+    );
 
     public static <T> Tag encode(HolderLookup.Provider provider, Codec<T> codec, T value){
         return codec.encodeStart(provider.createSerializationContext(NbtOps.INSTANCE), value).getOrThrow();

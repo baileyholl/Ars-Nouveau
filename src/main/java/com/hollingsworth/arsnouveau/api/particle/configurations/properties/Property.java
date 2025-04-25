@@ -19,7 +19,7 @@ public abstract class Property<T extends Property<T>> extends BaseProperty<T> {
         this.onDependenciesChanged = onDependenciesChanged;
     }
 
-    public List<SubProperty> subProperties(){
+    public List<SubProperty<?>> subProperties(){
         return new ArrayList<>();
     }
 
