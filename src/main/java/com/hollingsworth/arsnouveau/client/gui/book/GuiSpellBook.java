@@ -569,19 +569,20 @@ public class GuiSpellBook extends BaseBook {
             }
         }
 
-        if (!super.charTyped(pCodePoint, pModifiers)) {
-            if ((!searchBar.isFocused() || !searchBar.active) && System.currentTimeMillis() - timeOpened > 30) {
-                this.clearFocus();
-                this.setFocused(searchBar);
-                searchBar.active = true;
-                this.searchBar.setValue("");
-                this.searchBar.onClear.apply("");
-                return searchBar.charTyped(pCodePoint, pModifiers);
-            }
-            return false;
+        if (super.charTyped(pCodePoint, pModifiers)) {
+            return true;
         }
 
-        return true;
+        if ((!searchBar.isFocused() || !searchBar.active) && System.currentTimeMillis() - timeOpened > 30) {
+            this.clearFocus();
+            this.setFocused(searchBar);
+            searchBar.active = true;
+            this.searchBar.setValue("");
+            this.searchBar.onClear.apply("");
+            return searchBar.charTyped(pCodePoint, pModifiers);
+        }
+
+        return false;
     }
 
     @Override
