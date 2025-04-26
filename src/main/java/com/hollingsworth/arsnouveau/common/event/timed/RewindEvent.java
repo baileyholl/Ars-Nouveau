@@ -1,12 +1,19 @@
 package com.hollingsworth.arsnouveau.common.event.timed;
 
+import com.hollingsworth.arsnouveau.api.event.EntityPreRemovalEvent;
 import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.common.spell.rewind.IRewindCallback;
 import com.hollingsworth.arsnouveau.common.spell.rewind.RewindAttachment;
 import com.hollingsworth.arsnouveau.common.spell.rewind.RewindEntityData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.EntityEvent;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -21,6 +28,7 @@ public class RewindEvent implements ITimedEvent {
     public @Nullable SpellContext context;
     public boolean serverSide;
     public long startGameTime;
+    public boolean registeredEvents;
 
     public RewindEvent(long gameTime, int ticksToRewind, @Nullable SpellContext spellContext){
         this.startGameTime = gameTime;
@@ -42,6 +50,12 @@ public class RewindEvent implements ITimedEvent {
     @Override
     public void tick(boolean serverSide) {
         this.serverSide = serverSide;
+        if (!this.registeredEvents && this.serverSide) {
+            if (entity instanceof ServerPlayer) {
+                NeoForge.EVENT_BUS.addListener(this::onEntityRemoved);
+            }
+            this.registeredEvents = true;
+        }
         long eventGameTime = startGameTime - this.rewindTicks;
         if(entity instanceof IRewindable rewindable){
             rewindable.setRewinding(true);
@@ -83,6 +97,18 @@ public class RewindEvent implements ITimedEvent {
     public void onServerStopping() {
         if(respectsGravity && entity != null){
             entity.setNoGravity(false);
+        }
+    }
+
+    public void onEntityRemoved(PlayerEvent.PlayerLoggedOutEvent event) {
+        if (entity == null) {
+            NeoForge.EVENT_BUS.unregister(this);
+            return;
+        }
+
+        if (entity == event.getEntity() && event.getEntity().isNoGravity()) {
+            event.getEntity().setNoGravity(false);
+            NeoForge.EVENT_BUS.unregister(this);
         }
     }
 
