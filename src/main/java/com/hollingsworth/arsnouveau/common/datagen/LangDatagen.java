@@ -1483,6 +1483,10 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.density_slider", "Particle Density: ");
         add("ars_nouveau.particle.property.density", "Particle Density");
         add("ars_nouveau.particle.leaf", "Leaf");
+        add("ars_nouveau.spawn.point", "Point");
+        add("ars_nouveau.spawn.interpolated_line", "Line");
+        add("ars_nouveau.radius_slider", "Radius: ");
+
     }
 
     public void addCategory(String key, String value) {

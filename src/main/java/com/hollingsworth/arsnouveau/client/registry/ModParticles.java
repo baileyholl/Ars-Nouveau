@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.registry;
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleType;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
 import com.hollingsworth.arsnouveau.client.particle.*;
+import net.minecraft.client.particle.DripParticle;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.api.distmarker.Dist;
@@ -32,6 +33,7 @@ public class ModParticles {
     public static final DeferredHolder<ParticleType<?>, PropertyParticleType> SNOW_TYPE = PARTICLES.register("snow", PropertyParticleType::new);
     public static final DeferredHolder<ParticleType<?>, PropertyParticleType> NEW_GLOW_TYPE = PARTICLES.register("new_glow", PropertyParticleType::new);
     public static final DeferredHolder<ParticleType<?>, PropertyParticleType> LEAF_TYPE = PARTICLES.register("leaf", PropertyParticleType::new);
+    public static final DeferredHolder<ParticleType<?>, PropertyParticleType> DRIPPING_WATER = PARTICLES.register("dripping_water", PropertyParticleType::new);
 
     @SubscribeEvent
     public static void registerFactories(RegisterParticleProvidersEvent evt) {
@@ -47,6 +49,7 @@ public class ModParticles {
         evt.registerSpriteSet(NEW_GLOW_TYPE.get(), NewGlowParticleProvider::new);
         evt.registerSpriteSet(BUBBLE_CLONE_TYPE.get(), ANBubbleParticle.Provider::new);
         evt.registerSpriteSet(LEAF_TYPE.get(), (sprites -> new PropParticle.Provider(LeafParticle::new, sprites)));
+        evt.registerSpriteSet(DRIPPING_WATER.get(),  (spites) -> new WrappedProvider(spites, (type, level, x, y, z, xSpeed, ySpeed, zSpeed) -> DripParticle.createDripstoneWaterFallParticle(null, level, x, y, z, xSpeed, ySpeed, zSpeed)));
 
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(BUBBLE_CLONE_TYPE.get(), false));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SMOKE_TYPE.get(), false));
@@ -54,5 +57,6 @@ public class ModParticles {
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(NEW_GLOW_TYPE.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(CUSTOM_TYPE.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(LEAF_TYPE.get(), true));
+        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(DRIPPING_WATER.get(), false));
     }
 }

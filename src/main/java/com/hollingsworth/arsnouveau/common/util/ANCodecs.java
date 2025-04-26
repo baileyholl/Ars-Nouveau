@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.*;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
@@ -32,6 +33,31 @@ public class ANCodecs {
             i -> i.y,
             Vec2::new
     );
+
+    public static <T extends Enum<T>> Codec<T> createEnumCodec(Class<T> enumClass) {
+        return Codec.STRING.flatXmap(
+                name -> {
+                    try {
+                        T e = Enum.valueOf(enumClass, name);
+                        return DataResult.success(e);
+                    } catch (IllegalArgumentException ignored) {
+                        return DataResult.error(() -> "Unknown enum name: '" + name + "' for enum class: " + enumClass);
+                    }
+                },
+                e -> {
+                    String name = e.name();
+                    return DataResult.success(name);
+                }
+        );
+    }
+
+    public static <T extends Enum<T>> StreamCodec<RegistryFriendlyByteBuf, T> createEnumStreamCodec(Class<T> enumClass) {
+        return StreamCodec.composite(
+                ByteBufCodecs.STRING_UTF8,
+                Enum::name,
+                stringName -> Enum.valueOf(enumClass, stringName)
+        );
+    }
 
     public static <T> Tag encode(HolderLookup.Provider provider, Codec<T> codec, T value){
         return codec.encodeStart(provider.createSerializationContext(NbtOps.INSTANCE), value).getOrThrow();

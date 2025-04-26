@@ -25,8 +25,9 @@ public class BookSlider extends ExtendedSlider {
         this.onValueChange = onValueChange;
     }
 
-    public BookSlider(int x, int y, int width, int height, Component prefix, Component suffix, double minValue, double maxValue, double currentValue, boolean drawString) {
+    public BookSlider(int x, int y, int width, int height, Component prefix, Component suffix, double minValue, double maxValue, double currentValue, boolean drawString, Consumer<Double> onValueChange) {
         super(x, y, width, height, prefix, suffix, minValue, maxValue, currentValue, drawString);
+        this.onValueChange = onValueChange;
     }
 
     @Override

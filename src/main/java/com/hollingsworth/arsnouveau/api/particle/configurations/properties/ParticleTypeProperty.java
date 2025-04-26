@@ -87,7 +87,7 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
                 var particleEntries = PARTICLE_TYPES.entrySet();
                 int count = 0;
                 for (var particleType : particleEntries) {
-                    widgets.add(new GuiImageButton(x + 24 * count, y + 20, 16, 16, getImagePath(particleType.getKey()), (b) -> {
+                    widgets.add(new GuiImageButton(x + 6 + 16 * count, y + 20, 14, 14, getImagePath(particleType.getKey()), (b) -> {
                         var didHaveColor = selectedData.acceptsColor;
                         selectedData = particleType.getValue();
                         type = particleType.getKey();

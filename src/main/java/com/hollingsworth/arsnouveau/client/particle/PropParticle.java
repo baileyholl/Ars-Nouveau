@@ -47,7 +47,6 @@ public abstract class PropParticle extends TextureSheetParticle {
         private final SpriteSet sprite;
         PropParticle.ParticleProvider<PropertyParticleOptions> particleConstructor;
 
-
         public Provider(PropParticle.ParticleProvider<PropertyParticleOptions> particleConstructor, SpriteSet pSprites) {
             this.sprite = pSprites;
             this.particleConstructor = particleConstructor;
