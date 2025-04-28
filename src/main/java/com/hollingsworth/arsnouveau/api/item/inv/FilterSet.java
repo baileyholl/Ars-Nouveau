@@ -16,6 +16,13 @@ import java.util.function.Function;
 
 public abstract class FilterSet {
 
+    public static final FilterSet EMPTY = new FilterSet() {
+        @Override
+        public ItemScroll.SortPref getHighestPreference(ItemStack stack) {
+            return ItemScroll.SortPref.LOW;
+        }
+    };
+
     /**
      * Returns the highest preference for a given item.
      * Invalid overrules all other preferences, as the user does NOT want that item to be inserted.

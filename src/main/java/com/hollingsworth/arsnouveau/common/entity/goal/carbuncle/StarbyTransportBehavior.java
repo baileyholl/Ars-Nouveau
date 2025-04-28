@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.IStateEvent;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.SimpleStateMachine;
+import com.hollingsworth.arsnouveau.common.entity.statemachine.starbuncle.BoundListChangedEvent;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.starbuncle.DecideStarbyActionState;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.starbuncle.StarbyState;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
@@ -38,7 +39,6 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -96,12 +96,14 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     public void addFromPos(BlockPos fromPos, Direction direction) {
         super.addFromPos(fromPos, direction);
         initHandlerLists();
+        stateMachine.onEvent(new BoundListChangedEvent());
     }
 
     @Override
     public void addToPos(BlockPos toPos, Direction direction) {
         super.addToPos(toPos, direction);
         initHandlerLists();
+        stateMachine.onEvent(new BoundListChangedEvent());
     }
 
     @Override
@@ -109,6 +111,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         var res = super.onClearConnections(playerEntity);
         this.itemScroll = ItemStack.EMPTY;
         initHandlerLists();
+        stateMachine.onEvent(new BoundListChangedEvent());
         return res;
     }
 
@@ -148,7 +151,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     public BlockPos getValidStorePos(ItemStack stack) {
         if (TO_LIST.isEmpty() || stack.isEmpty())
             return null;
-        var result = getFilterResult(stack);
+        var result = getInsertionPref(stack);
         if(result == null || result.handler() == null)
             return null;
         return result.handler().getPos().orElse(null);
@@ -157,6 +160,11 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     public InventoryManager getInvManager(boolean forInsertion) {
         List<HandlerPos> handlers = forInsertion ? TO_HANDLERS : FROM_HANDLERS;
 
+        List<FilterableItemHandler> itemHandlers = buildHandlerList(handlers, true);
+        return new InventoryManager(itemHandlers);
+    }
+
+    public List<FilterableItemHandler> buildHandlerList(List<HandlerPos> handlers, boolean withFilters){
         List<FilterableItemHandler> itemHandlers = new ArrayList<>();
         for (HandlerPos handler : handlers) {
             if (!level.isLoaded(handler.pos)
@@ -164,17 +172,17 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
                     || handler.handler.getCapability() == null) {
                 continue;
             }
-            itemHandlers.add(new FilterableItemHandler(handler.handler.getCapability(), FilterSet.forPosition(level, handler.pos)).withPosGetter(() -> handler.pos));
+            itemHandlers.add(new FilterableItemHandler(handler.handler.getCapability(), withFilters ? FilterSet.forPosition(level, handler.pos) : FilterSet.EMPTY).withPosGetter(() -> handler.pos));
         }
-        return new InventoryManager(itemHandlers);
+        return itemHandlers;
     }
 
-    public @Nullable InventoryManager.FilterablePreference getFilterResult(ItemStack stack) {
+    public @Nullable InventoryManager.FilterablePreference getInsertionPref(ItemStack stack) {
         if (stack == null || stack.isEmpty())
             return null;
 
         InventoryManager manager = getInvManager(true);
-        Collection<InventoryManager.FilterablePreference> preferredForStack = manager.preferredForStack(stack, false);
+        var preferredForStack = manager.preferredForStack(stack, false);
         if (preferredForStack.isEmpty()) {
             return null;
         }
@@ -194,15 +202,21 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         if (FROM_LIST.isEmpty())
             return null;
 
-        for (BlockPos p : FROM_LIST) {
-            if (isPositionValidTake(p))
-                return p;
+        for(FilterableItemHandler filterableItemHandler : buildHandlerList(FROM_HANDLERS, false)) {
+            IItemHandler handler = filterableItemHandler.getHandler();
+            if(handler == null)
+                continue;
+            for (int j = 0; j < handler.getSlots(); j++) {
+                ItemStack stack = handler.extractItem(j, 1, true);
+                if (!stack.isEmpty() && getValidStorePos(stack) != null) {
+                    return filterableItemHandler.getPos().orElse(null);
+                }
+            }
         }
         return null;
     }
 
     public boolean isPositionValidTake(BlockPos p) {
-
         if (p == null || !level.isLoaded(p)) return false;
         Direction face = FROM_DIRECTION_MAP.get(p.hashCode());
         IItemHandler iItemHandler = getItemCapFromTile(p, face);
@@ -212,6 +226,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
             ItemStack stack = iItemHandler.extractItem(j, 1, true);
             if (!stack.isEmpty() && getValidStorePos(stack) != null) {
                 return true;
+
             }
         }
         return false;

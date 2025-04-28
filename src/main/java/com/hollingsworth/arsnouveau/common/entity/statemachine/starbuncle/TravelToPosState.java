@@ -21,12 +21,6 @@ public class TravelToPosState extends StarbyState{
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        starbuncle.addGoalDebug(this, new DebugEvent("StartedGoal", "Started goal "));
-    }
-
-    @Override
     public @Nullable StarbyState tick() {
         if (this.ticksRunning % 100 == 0 && !isDestinationStillValid(targetPos)) {
             starbuncle.addDebugEvent(new DebugEvent("became_invalid", "Invalid position " + targetPos.toString()));

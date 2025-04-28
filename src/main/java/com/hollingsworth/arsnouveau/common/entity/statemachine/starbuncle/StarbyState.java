@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.statemachine.starbuncle;
 
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyTransportBehavior;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.IState;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.IStateEvent;
@@ -20,7 +21,7 @@ public class StarbyState implements IState<StarbyState> {
 
     @Override
     public void onStart() {
-
+        starbuncle.addGoalDebug(this, new DebugEvent("StartedGoal", "Started goal " + this.getClass().getSimpleName()));
     }
 
     @Override
