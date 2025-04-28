@@ -1,8 +1,10 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.item.inv.FilterSet;
+import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
+import com.hollingsworth.arsnouveau.api.item.inv.HandlerPos;
+import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.IStateEvent;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.SimpleStateMachine;
@@ -17,6 +19,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -28,26 +31,28 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class StarbyTransportBehavior extends StarbyListBehavior {
-    public static Cache<BlockPos, List<ItemEntity>> frameCache = CacheBuilder.newBuilder()
-            .expireAfterAccess(20, TimeUnit.SECONDS)
-            .build();
+
+    public List<HandlerPos> TO_HANDLERS = new ArrayList<>();
+    public List<HandlerPos> FROM_HANDLERS = new ArrayList<>();
 
     public static final ResourceLocation TRANSPORT_ID = ArsNouveau.prefix( "starby_transport");
 
     public ItemStack itemScroll = ItemStack.EMPTY;
 
     public SimpleStateMachine<StarbyState, IStateEvent> stateMachine;
-
+    public boolean firstLoaded = false;
     public int berryBackoff;
     public int nextBerryBackoff = 20;
     public int findItemBackoff;
@@ -68,6 +73,10 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         if (!this.starbuncle.isEffectiveAi()) {
             return;
         }
+        if (!firstLoaded) {
+            initHandlerLists();
+            firstLoaded = true;
+        }
 
         if(!level.isClientSide) {
             if(berryBackoff > 0){
@@ -81,6 +90,26 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
             }
             stateMachine.tick();
         }
+    }
+
+    @Override
+    public void addFromPos(BlockPos fromPos, Direction direction) {
+        super.addFromPos(fromPos, direction);
+        initHandlerLists();
+    }
+
+    @Override
+    public void addToPos(BlockPos toPos, Direction direction) {
+        super.addToPos(toPos, direction);
+        initHandlerLists();
+    }
+
+    @Override
+    public Result onClearConnections(Player playerEntity) {
+        var res = super.onClearConnections(playerEntity);
+        this.itemScroll = ItemStack.EMPTY;
+        initHandlerLists();
+        return res;
     }
 
     @Override
@@ -119,27 +148,38 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     public BlockPos getValidStorePos(ItemStack stack) {
         if (TO_LIST.isEmpty() || stack.isEmpty())
             return null;
-        BlockPos returnPos = null;
-        ItemScroll.SortPref foundPref = ItemScroll.SortPref.INVALID;
-
-        for (BlockPos b : TO_LIST) {
-            ItemScroll.SortPref pref = sortPrefForStack(b, stack);
-            // Pick our highest priority
-            if (pref.ordinal() > foundPref.ordinal()) {
-                foundPref = pref;
-                returnPos = b;
-                if (foundPref == ItemScroll.SortPref.HIGHEST) {
-                    return returnPos;
-                }
-            }
-        }
-        return returnPos;
+        var result = getFilterResult(stack);
+        if(result == null || result.handler() == null)
+            return null;
+        return result.handler().getPos().orElse(null);
     }
 
-    public ItemScroll.SortPref sortPrefForStack(@Nullable BlockPos b, ItemStack stack) {
-        if (stack == null || stack.isEmpty() || b == null || !level.isLoaded(b))
-            return ItemScroll.SortPref.INVALID;
-        return canDepositItem(b, stack);
+    public InventoryManager getInvManager(boolean forInsertion) {
+        List<HandlerPos> handlers = forInsertion ? TO_HANDLERS : FROM_HANDLERS;
+
+        List<FilterableItemHandler> itemHandlers = new ArrayList<>();
+        for (HandlerPos handler : handlers) {
+            if (!level.isLoaded(handler.pos)
+                    || handler.handler == null
+                    || handler.handler.getCapability() == null) {
+                continue;
+            }
+            itemHandlers.add(new FilterableItemHandler(handler.handler.getCapability(), FilterSet.forPosition(level, handler.pos)).withPosGetter(() -> handler.pos));
+        }
+        return new InventoryManager(itemHandlers);
+    }
+
+    public @Nullable InventoryManager.FilterablePreference getFilterResult(ItemStack stack) {
+        if (stack == null || stack.isEmpty())
+            return null;
+
+        InventoryManager manager = getInvManager(true);
+        Collection<InventoryManager.FilterablePreference> preferredForStack = manager.preferredForStack(stack, false);
+        if (preferredForStack.isEmpty()) {
+            return null;
+        }
+        var firstPref = preferredForStack.stream().findFirst().get();
+        return !ItemStack.matches(ItemHandlerHelper.insertItemStacked(firstPref.handler().getHandler(), stack.copy(), true), stack) ? firstPref : null;
     }
 
     public boolean isPickupDisabled() {
@@ -206,39 +246,6 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         return -1;
     }
 
-    private ItemScroll.SortPref canDepositItem(BlockPos pos, ItemStack stack) {
-        ItemScroll.SortPref pref = ItemScroll.SortPref.LOW;
-        if (pos == null || stack == null || stack.isEmpty())
-            return ItemScroll.SortPref.INVALID;
-
-        IItemHandler handler = getItemCapFromTile(pos, TO_DIRECTION_MAP.get(pos.hashCode()));
-        if (handler == null)
-            return ItemScroll.SortPref.INVALID;
-        for (ItemFrame i : level.getEntitiesOfClass(ItemFrame.class, new AABB(pos).inflate(1))) {
-            // Check if these frames are attached to the tile
-            BlockEntity adjTile = level.getBlockEntity(i.blockPosition().relative(i.getDirection().getOpposite()));
-            if (adjTile == null || !adjTile.equals(level.getBlockEntity(pos)) || i.getItem().isEmpty())
-                continue;
-
-
-            ItemStack stackInFrame = i.getItem();
-
-            if (stackInFrame.getItem() instanceof ItemScroll scrollItem) {
-                pref = scrollItem.getSortPref(stack, stackInFrame, handler);
-                // If our item frame just contains a normal item
-            } else if (i.getItem().getItem() != stack.getItem()) {
-                return ItemScroll.SortPref.INVALID;
-            } else if (i.getItem().getItem() == stack.getItem()) {
-                pref = ItemScroll.SortPref.HIGHEST;
-            }
-        }
-        if (itemScroll != null && itemScroll.getItem() instanceof ItemScroll scrollItem && scrollItem.getSortPref(stack, itemScroll,
-                handler) == ItemScroll.SortPref.INVALID) {
-            return ItemScroll.SortPref.INVALID;
-        }
-        return !ItemStack.matches(ItemHandlerHelper.insertItemStacked(handler, stack.copy(), true), stack) ? pref : ItemScroll.SortPref.INVALID;
-    }
-
     @Override
     public boolean canGoToBed() {
         return isBedPowered() || (getValidTakePos() == null && (starbuncle.getHeldStack().isEmpty() || getValidStorePos(starbuncle.getHeldStack()) == null));
@@ -269,10 +276,38 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         }
     }
 
-    @Override
-    public void onWanded(Player playerEntity) {
-        this.itemScroll = ItemStack.EMPTY;
-        super.onWanded(playerEntity);
+    @Deprecated(forRemoval = true) // Use getFilterResult instead
+    public ItemScroll.SortPref sortPrefForStack(@Nullable BlockPos pos, ItemStack stack) {
+        if (pos == null || stack == null || stack.isEmpty())
+            return ItemScroll.SortPref.INVALID;
+        ItemScroll.SortPref pref = ItemScroll.SortPref.LOW;
+
+        IItemHandler handler = getItemCapFromTile(pos, TO_DIRECTION_MAP.get(pos.hashCode()));
+        if (handler == null)
+            return ItemScroll.SortPref.INVALID;
+        for (ItemFrame i : level.getEntitiesOfClass(ItemFrame.class, new AABB(pos).inflate(1))) {
+            // Check if these frames are attached to the tile
+            BlockEntity adjTile = level.getBlockEntity(i.blockPosition().relative(i.getDirection().getOpposite()));
+            if (adjTile == null || !adjTile.equals(level.getBlockEntity(pos)) || i.getItem().isEmpty())
+                continue;
+
+
+            ItemStack stackInFrame = i.getItem();
+
+            if (stackInFrame.getItem() instanceof ItemScroll scrollItem) {
+                pref = scrollItem.getSortPref(stack, stackInFrame, handler);
+                // If our item frame just contains a normal item
+            } else if (i.getItem().getItem() != stack.getItem()) {
+                return ItemScroll.SortPref.INVALID;
+            } else if (i.getItem().getItem() == stack.getItem()) {
+                pref = ItemScroll.SortPref.HIGHEST;
+            }
+        }
+        if (itemScroll != null && itemScroll.getItem() instanceof ItemScroll scrollItem && scrollItem.getSortPref(stack, itemScroll,
+                handler) == ItemScroll.SortPref.INVALID) {
+            return ItemScroll.SortPref.INVALID;
+        }
+        return !ItemStack.matches(ItemHandlerHelper.insertItemStacked(handler, stack.copy(), true), stack) ? pref : ItemScroll.SortPref.INVALID;
     }
 
     @Override
@@ -291,6 +326,24 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         tooltip.accept(Component.translatable("ars_nouveau.starbuncle.taking", FROM_LIST.size()));
         if (!itemScroll.isEmpty()) {
             tooltip.accept(Component.translatable("ars_nouveau.filtering_with", itemScroll.getHoverName().getString()));
+        }
+    }
+
+    public void initHandlerLists(){
+        if(!(level instanceof ServerLevel serverLevel))
+            return;
+        TO_HANDLERS = new ArrayList<>();
+        FROM_HANDLERS = new ArrayList<>();
+        for(BlockPos pos : TO_LIST){
+            var cap = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, serverLevel, pos, TO_DIRECTION_MAP.get(pos.hashCode()), () -> !starbuncle.isRemoved(), () -> {});
+            HandlerPos handlerPos = new HandlerPos(pos, cap);
+            TO_HANDLERS.add(handlerPos);
+        }
+
+        for(BlockPos pos : FROM_LIST){
+            var cap = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, serverLevel, pos, FROM_DIRECTION_MAP.get(pos.hashCode()), () -> !starbuncle.isRemoved(), () -> {});
+            HandlerPos handlerPos = new HandlerPos(pos, cap);
+            FROM_HANDLERS.add(handlerPos);
         }
     }
 

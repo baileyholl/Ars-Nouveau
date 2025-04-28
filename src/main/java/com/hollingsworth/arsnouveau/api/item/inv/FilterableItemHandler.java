@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.item.inv;
 
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -9,7 +10,9 @@ import net.neoforged.neoforge.items.IItemHandler;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Represents an ItemHandler and its list of filters.
@@ -18,6 +21,7 @@ public class FilterableItemHandler {
     private SlotCache slotCache;
     private IItemHandler handler;
     public FilterSet filters;
+    protected Supplier<BlockPos> pos;
 
     public FilterableItemHandler(IItemHandler handler){
         this(handler, new FilterSet.ListSet());
@@ -33,9 +37,18 @@ public class FilterableItemHandler {
         this.slotCache = new SlotCache();
     }
 
+    public FilterableItemHandler withPosGetter(Supplier<BlockPos> posGetter){
+        this.pos = posGetter;
+        return this;
+    }
+
     public FilterableItemHandler withSlotCache(SlotCache cache){
         this.slotCache = cache;
         return this;
+    }
+
+    public Optional<BlockPos> getPos(){
+        return pos != null ? Optional.ofNullable(pos.get()) : Optional.empty();
     }
 
     /**

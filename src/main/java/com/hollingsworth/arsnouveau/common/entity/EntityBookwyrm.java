@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
+import com.hollingsworth.arsnouveau.api.item.inv.HandlerPos;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -171,7 +172,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
             if(tile == null || playerTooFar){
                 return null;
             }
-            List<BlockPos> targets = new ArrayList<>(tile.handlerPosList.stream().map(StorageLecternTile.HandlerPos::pos).toList());
+            List<BlockPos> targets = new ArrayList<>(tile.handlerPosList.stream().map(HandlerPos::pos).toList());
             targets.add(tile.getBlockPos());
             return targets.get(level.random.nextInt(targets.size())).above();
         }));
