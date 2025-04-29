@@ -10,18 +10,34 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 public class ExtractedStack extends SlotReference{
 
     public ItemStack stack;
+    public boolean simulate;
 
     protected ExtractedStack(ItemStack stack, IItemHandler handler, int slot) {
-        super(handler, slot);
-        this.stack = stack;
+        this(stack, handler, slot, false);
     }
 
+    protected ExtractedStack(ItemStack stack, IItemHandler handler, int slot, boolean simulate) {
+        super(handler, slot);
+        this.stack = stack;
+        this.simulate = simulate;
+    }
+
+    public static ExtractedStack from(IItemHandler handler, int slot, int amount, boolean simulate) {
+        return new ExtractedStack(handler.extractItem(slot, amount, simulate), handler, slot, simulate);
+    }
+
+    @Deprecated(forRemoval = true)
     public static ExtractedStack from(IItemHandler handler, int slot, int amount){
         return new ExtractedStack(handler.extractItem(slot, amount, false), handler, slot);
     }
 
+    @Deprecated(forRemoval = true)
     public static ExtractedStack from(SlotReference slotReference, int amount){
         return from(slotReference.getHandler(), slotReference.getSlot(), amount);
+    }
+
+    public static ExtractedStack from(SlotReference slotReference, int amount, boolean simulate){
+        return from(slotReference.getHandler(), slotReference.getSlot(), amount, simulate);
     }
 
     public static ExtractedStack empty(){
@@ -44,8 +60,11 @@ public class ExtractedStack extends SlotReference{
     public ItemStack returnStack(){
         if(isEmpty())
             return ItemStack.EMPTY;
-        ItemStack remainder = this.handler.insertItem(slot, stack, false);
-        remainder = ItemHandlerHelper.insertItemStacked(this.handler, remainder, false);
+        IItemHandler handlerVal = this.handler.get();
+        if(handlerVal == null)
+            return stack;
+        ItemStack remainder = handlerVal.insertItem(slot, stack, simulate);
+        remainder = ItemHandlerHelper.insertItemStacked(handlerVal, remainder, simulate);
         return remainder;
     }
 
@@ -58,7 +77,9 @@ public class ExtractedStack extends SlotReference{
             return;
         ItemStack remainder = returnStack();
         if(!remainder.isEmpty()){
-            level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, remainder.copy()));
+            if(!simulate) {
+                level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, remainder.copy()));
+            }
             this.stack = ItemStack.EMPTY;
         }
     }

@@ -1,10 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.item.inv.FilterSet;
-import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
-import com.hollingsworth.arsnouveau.api.item.inv.HandlerPos;
-import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
+import com.hollingsworth.arsnouveau.api.item.inv.*;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.IStateEvent;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.SimpleStateMachine;
@@ -157,10 +154,8 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         return result.handler().getPos().orElse(null);
     }
 
-    public InventoryManager getInvManager(boolean forInsertion) {
-        List<HandlerPos> handlers = forInsertion ? TO_HANDLERS : FROM_HANDLERS;
-
-        List<FilterableItemHandler> itemHandlers = buildHandlerList(handlers, true);
+    public InventoryManager getInvManager(List<HandlerPos> handlers, boolean withFilters) {
+        List<FilterableItemHandler> itemHandlers = buildHandlerList(handlers, withFilters);
         return new InventoryManager(itemHandlers);
     }
 
@@ -172,7 +167,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
                     || handler.handler.getCapability() == null) {
                 continue;
             }
-            itemHandlers.add(new FilterableItemHandler(handler.handler.getCapability(), withFilters ? FilterSet.forPosition(level, handler.pos) : FilterSet.EMPTY).withPosGetter(() -> handler.pos));
+            itemHandlers.add(new FilterableItemHandler(handler, withFilters ? FilterSet.forPosition(level, handler.pos) : FilterSet.EMPTY));
         }
         return itemHandlers;
     }
@@ -181,13 +176,17 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         if (stack == null || stack.isEmpty())
             return null;
 
-        InventoryManager manager = getInvManager(true);
+        InventoryManager manager = getInvManager(TO_HANDLERS, true);
         var preferredForStack = manager.preferredForStack(stack, false);
         if (preferredForStack.isEmpty()) {
             return null;
         }
-        var firstPref = preferredForStack.stream().findFirst().get();
-        return !ItemStack.matches(ItemHandlerHelper.insertItemStacked(firstPref.handler().getHandler(), stack.copy(), true), stack) ? firstPref : null;
+        for(var pref : preferredForStack){
+            if(!ItemStack.matches(ItemHandlerHelper.insertItemStacked(pref.handler().getHandler(), stack.copy(), true), stack)){
+                return pref;
+            }
+        }
+        return null;
     }
 
     public boolean isPickupDisabled() {
@@ -203,14 +202,9 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
             return null;
 
         for(FilterableItemHandler filterableItemHandler : buildHandlerList(FROM_HANDLERS, false)) {
-            IItemHandler handler = filterableItemHandler.getHandler();
-            if(handler == null)
-                continue;
-            for (int j = 0; j < handler.getSlots(); j++) {
-                ItemStack stack = handler.extractItem(j, 1, true);
-                if (!stack.isEmpty() && getValidStorePos(stack) != null) {
-                    return filterableItemHandler.getPos().orElse(null);
-                }
+            ExtractedStack stack = filterableItemHandler.findNonEmptyItem(item -> getValidStorePos(item.getDefaultInstance()) != null);
+            if(!stack.isEmpty()){
+                return filterableItemHandler.getPos().orElse(null);
             }
         }
         return null;
@@ -231,6 +225,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         }
         return false;
     }
+
 
     /**
      * Returns the maximum stack size an inventory can accept for a particular stack. Does all needed validity checks.

@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
@@ -35,6 +37,20 @@ public class FilterableItemHandler {
         this.handler = handler;
         this.filters = filters;
         this.slotCache = new SlotCache();
+    }
+
+    public FilterableItemHandler(HandlerPos handlerPos, Level level){
+        this.pos = () -> handlerPos.pos;
+        this.handler = handlerPos.handler.getCapability();
+        this.filters = FilterSet.forPosition(level, handlerPos.pos);
+        this.slotCache = handlerPos.slotCache;
+    }
+
+    public FilterableItemHandler(HandlerPos handlerPos, FilterSet filters){
+        this.pos = () -> handlerPos.pos;
+        this.handler = handlerPos.handler.getCapability();
+        this.filters = filters;
+        this.slotCache = handlerPos.slotCache;
     }
 
     public FilterableItemHandler withPosGetter(Supplier<BlockPos> posGetter){
@@ -86,6 +102,91 @@ public class FilterableItemHandler {
         return handler;
     }
 
+    public ExtractedStack findNonEmptyItem(){
+        return findNonEmptyItem(item -> true);
+    }
+
+    public ExtractedStack findNonEmptyItem(Predicate<Item> itemFilter){
+        ExtractedStack foundStack = ExtractedStack.empty();
+        for(Item item : slotCache.getKeys()){
+            Collection<Integer> slots = slotCache.getIfPresent(item);
+            if(slots == null || slots.isEmpty()){
+                continue;
+            }
+            if(!itemFilter.test(item)){
+                continue;
+            }
+            List<Integer> staleSlots = new ArrayList<>();
+            for(int slot : slots){
+                foundStack = ExtractedStack.from(handler, slot, 1, true);
+                if(!foundStack.isEmpty()){
+                    break;
+                }
+                staleSlots.add(slot);
+            }
+            if(foundStack.isEmpty() && !staleSlots.isEmpty()){
+                slotCache.removeAll(item, staleSlots);
+            }
+        }
+
+        if(!foundStack.isEmpty()){
+            return foundStack;
+        }
+
+        for(int i = 0; i < handler.getSlots(); i++){
+            ExtractedStack extractedStack = ExtractedStack.from(handler, i, 1, true);
+            if(!extractedStack.isEmpty()){
+                slotCache.addSlot(extractedStack.stack.getItem(), i);
+                return extractedStack;
+            }
+        }
+        return ExtractedStack.empty();
+    }
+
+    public SlotReference findItem(Item item){
+        return findItem(item, stack -> true);
+    }
+
+    public SlotReference findItem(Item item, Predicate<ItemStack> filter){
+        IItemHandler inventory = handler;
+        if (inventory == null)
+            return SlotReference.empty();
+        Collection<Integer> slotsForStack = slotCache.getOrCreateSlots(item);
+        int maxSize = inventory.getSlots();
+        List<Integer> staleSlots = new ArrayList<>();
+        // Check cache for slots
+        for(int slot : slotsForStack){
+            if(slot >= maxSize){
+                staleSlots.add(slot);
+                continue;
+            }
+
+            ItemStack stack = inventory.getStackInSlot(slot);
+            if(!stack.is(item)){
+                staleSlots.add(slot);
+                continue;
+            }
+            if(filter.test(stack)){
+                return new SlotReference(inventory, slot);
+            }
+        }
+
+        slotCache.removeAll(item, staleSlots);
+
+
+        for(int i = 0; i < maxSize; i++){
+            ItemStack stack = inventory.getStackInSlot(i);
+            if(stack.is(item)){
+                slotsForStack.add(i);
+                if(filter.test(stack)){
+                    return new SlotReference(inventory, i);
+                }
+            }
+        }
+
+        return SlotReference.empty();
+    }
+
     /**
      * Inserts the ItemStack into the inventory, filling up already present stacks first.
      * This is equivalent to the behaviour of a player picking up an item.
@@ -106,7 +207,8 @@ public class FilterableItemHandler {
         if(stack.isEmpty()){
             return stack;
         }
-        Collection<Integer> slotsForStack = slotCache.getOrCreateSlots(stack.getItem());
+        Item itemKey = stack.getItem();
+
         Collection<Integer> emptySlots = slotCache.getOrCreateSlots(Items.AIR);
         // Iterate all slots until our stack is empty, caching along the way
         for (int i = 0; i < sizeInventory; i++) {
@@ -115,7 +217,7 @@ public class FilterableItemHandler {
                 int count = stack.getCount();
                 stack = inventory.insertItem(i, stack, simulate);
                 if(stack.getCount() != count){
-                    slotsForStack.add(i);
+                    slotCache.addSlot(itemKey, i);
                 }
                 if (stack.isEmpty()) {
                     return stack;
@@ -138,10 +240,7 @@ public class FilterableItemHandler {
             }
         }
 
-        for(int slot : invalidSlots){
-            emptySlots.remove(slot);
-        }
-
+        slotCache.removeAll(Items.AIR, invalidSlots);
 
         return stack;
     }
@@ -172,8 +271,7 @@ public class FilterableItemHandler {
             int count = stack.getCount();
             stack = dest.insertItem(i, stack, simulate);
             if(stack.getCount() != count){
-                slotCache.getOrCreateSlots(item).add(i);
-
+                slotCache.addSlot(item, i);
             }
 
             if (stack.isEmpty()) {
@@ -181,7 +279,7 @@ public class FilterableItemHandler {
             }
             ItemStack targetStack = dest.getStackInSlot(i);
             if(targetStack.isEmpty()){
-                slotCache.getOrCreateSlots(Items.AIR).add(i);
+                slotCache.addSlot(Items.AIR, i);
             }
         }
 
@@ -230,9 +328,7 @@ public class FilterableItemHandler {
             }
         }
 
-        for(int slot : invalidSlots){
-            slots.remove(slot);
-        }
+        slotCache.removeAll(stack.getItem(), invalidSlots);
 
         return stack;
     }
