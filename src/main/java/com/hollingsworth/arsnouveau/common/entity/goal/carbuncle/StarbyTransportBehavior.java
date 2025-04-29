@@ -36,13 +36,16 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class StarbyTransportBehavior extends StarbyListBehavior {
 
     public List<HandlerPos> TO_HANDLERS = new ArrayList<>();
     public List<HandlerPos> FROM_HANDLERS = new ArrayList<>();
+    public Map<BlockPos, HandlerPos> HANDLER_MAP = new HashMap<>();
 
     public static final ResourceLocation TRANSPORT_ID = ArsNouveau.prefix( "starby_transport");
 
@@ -212,18 +215,13 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
 
     public boolean isPositionValidTake(BlockPos p) {
         if (p == null || !level.isLoaded(p)) return false;
-        Direction face = FROM_DIRECTION_MAP.get(p.hashCode());
-        IItemHandler iItemHandler = getItemCapFromTile(p, face);
-
-        if (iItemHandler == null) return false;
-        for (int j = 0; j < iItemHandler.getSlots(); j++) {
-            ItemStack stack = iItemHandler.extractItem(j, 1, true);
-            if (!stack.isEmpty() && getValidStorePos(stack) != null) {
-                return true;
-
-            }
+        HandlerPos handlerPos = HANDLER_MAP.get(p);
+        if(handlerPos == null || handlerPos.handler == null){
+            return false;
         }
-        return false;
+        FilterableItemHandler filterableItemHandler = new FilterableItemHandler(handlerPos, FilterSet.EMPTY);
+        ExtractedStack stack = filterableItemHandler.findNonEmptyItem(item -> getValidStorePos(item.getDefaultInstance()) != null);
+        return !stack.isEmpty();
     }
 
 
@@ -344,16 +342,19 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
             return;
         TO_HANDLERS = new ArrayList<>();
         FROM_HANDLERS = new ArrayList<>();
+        HANDLER_MAP = new HashMap<>();
         for(BlockPos pos : TO_LIST){
             var cap = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, serverLevel, pos, TO_DIRECTION_MAP.get(pos.hashCode()), () -> !starbuncle.isRemoved(), () -> {});
             HandlerPos handlerPos = new HandlerPos(pos, cap);
             TO_HANDLERS.add(handlerPos);
+            HANDLER_MAP.put(pos, handlerPos);
         }
 
         for(BlockPos pos : FROM_LIST){
             var cap = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, serverLevel, pos, FROM_DIRECTION_MAP.get(pos.hashCode()), () -> !starbuncle.isRemoved(), () -> {});
             HandlerPos handlerPos = new HandlerPos(pos, cap);
             FROM_HANDLERS.add(handlerPos);
+            HANDLER_MAP.put(pos, handlerPos);
         }
     }
 

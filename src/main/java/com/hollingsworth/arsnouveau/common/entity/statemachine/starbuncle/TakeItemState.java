@@ -31,6 +31,7 @@ public class TakeItemState extends TravelToPosState{
         giveStarbyStack(starbuncle, iItemHandler);
         if(starbuncle.getHeldStack().isEmpty()) {
             starbuncle.addGoalDebug(this, new DebugEvent("TakeFromChest", "No items to take? Cancelling goal."));
+            behavior.takeItemBackoff = 5 + starbuncle.getRandom().nextInt(10);
             return nextState;
         }
 
