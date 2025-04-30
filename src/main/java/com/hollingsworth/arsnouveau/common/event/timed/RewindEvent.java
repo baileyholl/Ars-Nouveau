@@ -1,18 +1,17 @@
 package com.hollingsworth.arsnouveau.common.event.timed;
 
-import com.hollingsworth.arsnouveau.api.event.EntityPreRemovalEvent;
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
+import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.common.spell.rewind.IRewindCallback;
 import com.hollingsworth.arsnouveau.common.spell.rewind.RewindAttachment;
 import com.hollingsworth.arsnouveau.common.spell.rewind.RewindEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.EntityEvent;
-import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 import javax.annotation.Nullable;
@@ -87,17 +86,13 @@ public class RewindEvent implements ITimedEvent {
         if(entity instanceof IRewindable rewindable){
             rewindable.setRewinding(false);
             entity.setDeltaMovement(Vec3.ZERO);
-            if(respectsGravity) {
-                entity.setNoGravity(false);
-            }
+            this.removeWeightlessness();
         }
     }
 
     @Override
     public void onServerStopping() {
-        if(respectsGravity && entity != null){
-            entity.setNoGravity(false);
-        }
+        this.removeWeightlessness();
     }
 
     public void onEntityRemoved(PlayerEvent.PlayerLoggedOutEvent event) {
@@ -106,9 +101,24 @@ public class RewindEvent implements ITimedEvent {
             return;
         }
 
-        if (entity == event.getEntity() && event.getEntity().isNoGravity()) {
-            event.getEntity().setNoGravity(false);
+        if (entity == event.getEntity()) {
+            this.removeWeightlessness();
             NeoForge.EVENT_BUS.unregister(this);
+        }
+    }
+
+    public void removeWeightlessness() {
+        if (!respectsGravity) {
+            return;
+        }
+
+        if (entity instanceof LivingEntity le) {
+            var weight = le.getAttribute(PerkAttributes.WEIGHT);
+            if (weight != null) {
+                weight.removeModifier(ArsNouveau.prefix("rewind"));
+            }
+        } else if (entity != null) {
+            entity.setNoGravity(false);
         }
     }
 
