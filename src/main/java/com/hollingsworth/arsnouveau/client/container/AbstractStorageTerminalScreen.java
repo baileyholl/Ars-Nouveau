@@ -564,7 +564,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			return true;
 		}
 
-		return (this.searchField.canConsumeInput() && this.searchField.keyPressed(keyCode, scanCode, modifiers)) || super.keyPressed(keyCode, scanCode, modifiers);
+		return this.searchField.canConsumeInput() && this.searchField.keyPressed(keyCode, scanCode, modifiers);
 	}
 
 	@Override
