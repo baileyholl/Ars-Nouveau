@@ -1,17 +1,19 @@
 package com.hollingsworth.arsnouveau.api.item.inv;
 
-import javax.annotation.Nullable;
 import net.neoforged.neoforge.items.IItemHandler;
+
+import javax.annotation.Nullable;
+import java.lang.ref.WeakReference;
 
 /**
  * References a slot in an inventory.
  */
 public class SlotReference {
-    protected IItemHandler handler;
+    protected WeakReference<IItemHandler> handler;
     protected int slot;
 
     public SlotReference(IItemHandler handler, int slot){
-        this.handler = handler;
+        this.handler = new WeakReference<>(handler);
         this.slot = slot;
     }
 
@@ -24,7 +26,7 @@ public class SlotReference {
     }
 
     public @Nullable IItemHandler getHandler(){
-        return handler;
+        return handler == null ? null : handler.get();
     }
 
     public int getSlot(){

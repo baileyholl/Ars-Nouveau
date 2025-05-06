@@ -63,14 +63,14 @@ public abstract class StarbyListBehavior extends StarbyBehavior {
     }
 
     @Override
-    public void onWanded(Player playerEntity) {
-        super.onWanded(playerEntity);
+    public Result onClearConnections(Player playerEntity) {
         FROM_LIST = new ArrayList<>();
         TO_LIST = new ArrayList<>();
         FROM_DIRECTION_MAP = new HashMap<>();
         TO_DIRECTION_MAP = new HashMap<>();
         PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.cleared"));
         syncTag();
+        return Result.SUCCESS;
     }
 
     @Override
@@ -83,7 +83,8 @@ public abstract class StarbyListBehavior extends StarbyBehavior {
         }
         return list;
     }
-
+    // todo: 1.21 remove and use below with nullable direction
+    @Deprecated(forRemoval = true)
     public void addFromPos(BlockPos fromPos) {
         if (!FROM_LIST.contains(fromPos)) {
             FROM_LIST.add(fromPos.immutable());
@@ -91,6 +92,7 @@ public abstract class StarbyListBehavior extends StarbyBehavior {
         }
     }
 
+    @Deprecated(forRemoval = true)
     public void addToPos(BlockPos toPos) {
         if (!TO_LIST.contains(toPos)) {
             TO_LIST.add(toPos.immutable());
