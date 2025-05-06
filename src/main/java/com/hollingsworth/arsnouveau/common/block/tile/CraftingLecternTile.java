@@ -217,22 +217,25 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 				craftMatrix.removeItemNoUpdate(i, 1);
 				currentStack = craftMatrix.getItem(i);
 			}
-			if(currentStack.isEmpty() && !oldItem.isEmpty()) {
-				StoredItemStack is = pullStack(new StoredItemStack(oldItem), 1, tab);
-				if(is == null) {
-					for(int j = 0;j<thePlayer.getInventory().getContainerSize();j++) {
-						ItemStack st = thePlayer.getInventory().getItem(j);
-						if(ItemStack.isSameItem(oldItem, st) && ItemStack.matches(oldItem, st)) {
-							st = thePlayer.getInventory().removeItem(j, 1);
-							if(!st.isEmpty()) {
-								is = new StoredItemStack(st, 1);
-								playerInvUpdate = true;
-								break;
-							}
+			if (currentStack.isEmpty() && !oldItem.isEmpty()) {
+				StoredItemStack is = null;
+				for (int j = 0; j < thePlayer.getInventory().items.size(); j++) {
+					ItemStack st = thePlayer.getInventory().getItem(j);
+					if (ItemStack.isSameItemSameComponents(oldItem, st)) {
+						st = thePlayer.getInventory().removeItem(j, 1);
+						if (!st.isEmpty()) {
+							is = new StoredItemStack(st, 1);
+							playerInvUpdate = true;
+							break;
 						}
 					}
 				}
-				if(is != null) {
+
+				if(is == null) {
+					is = pullStack(new StoredItemStack(oldItem), 1, tab);
+				}
+
+				if (is != null) {
 					craftMatrix.setItemNoUpdate(i, is.getActualStack());
 					currentStack = craftMatrix.getItem(i);
 				}

@@ -6,13 +6,10 @@ import com.hollingsworth.arsnouveau.api.documentation.DocPlayerData;
 import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import com.hollingsworth.arsnouveau.client.gui.SearchBar;
-import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
-import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.nuggets.client.gui.BaseButton;
 import com.hollingsworth.nuggets.client.gui.BaseScreen;
 import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
 import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -20,9 +17,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -61,27 +56,6 @@ public class BaseDocScreen extends BaseScreen {
     @Override
     public void init() {
         super.init();
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 22, 0, 0, 23, 20, 23, 20, "textures/gui/worn_book_bookmark.png", (b) -> {
-            if (ArsNouveau.patchouliLoaded) {
-                PatchouliHandler.openBookClient();
-                return;
-            }
-
-            ClickEvent clickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.curseforge.com/minecraft/mc-mods/patchouli");
-            Component clickText = Component.literal("[")
-                    .append(
-                            Component.translatable("ars_nouveau.dependency.install").withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD))
-                    )
-                    .append("]")
-                    .withStyle(Style.EMPTY.withClickEvent(clickEvent));
-
-            Component text = Component.translatable("ars_nouveau.patchouli.missing")
-                    .withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))
-                    .append(" ")
-                    .append(clickText);
-
-            ArsNouveau.proxy.getPlayer().sendSystemMessage(text);
-        }).withTooltip(Component.translatable("ars_nouveau.gui.notebook")));
         searchBar = new SearchBar(minecraft.font, bookRight - 130, bookTop - 3);
         searchBar.setResponder(this::onSearchChanged);
         addRenderableWidget(searchBar);
@@ -111,7 +85,7 @@ public class BaseDocScreen extends BaseScreen {
         if(!showRightArrow()){
             rightArrow.visible = false;
         }
-        addRenderableWidget(new NuggetImageButton(bookLeft - 15, bookTop + 138, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix("textures/gui/discord_tab.png"), (b) -> {
+        addRenderableWidget(new NuggetImageButton(bookLeft - 15, bookTop + 140, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix("textures/gui/discord_tab.png"), (b) -> {
             try {
                 Util.getPlatform().openUri(new URI("https://discord.com/invite/y7TMXZu"));
             } catch (URISyntaxException e) {

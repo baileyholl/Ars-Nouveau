@@ -281,7 +281,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
             if(simulate) {
                return stack.copy();
             }else{
-                return invWrapper.extractItem(slot, count, false);
+                return invWrapper.extractItem(slot, count, simulate);
             }
         }
         return ItemStack.EMPTY;

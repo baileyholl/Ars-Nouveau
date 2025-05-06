@@ -296,7 +296,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             handlerPosList.removeIf(handlerPos -> handlerPos.pos().equals(storedPos));
             this.invalidateCapabilities();
         } else {
-            if (this.handlerPosList.size() >= this.getMaxConnectedInventories()) {
+            if (!playerEntity.isCreative() && this.handlerPosList.size() >= this.getMaxConnectedInventories()) {
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.too_many"));
                 return;
             }

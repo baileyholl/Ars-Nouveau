@@ -21,7 +21,6 @@ import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.perk.EmptyPerk;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -298,7 +297,11 @@ public class Documentation {
                 .addConnectedSearch(BlockRegistry.BOMBEGRANTE_POD)
                 .addConnectedSearch(BlockRegistry.MENDOSTEEN_POD)
                 .addConnectedSearch(BlockRegistry.FROSTAYA_POD)
-                .addConnectedSearch(BlockRegistry.BASTION_POD));
+                .addConnectedSearch(BlockRegistry.BASTION_POD)
+                .addConnectedSearch(BlockRegistry.BLAZING_LOG)
+                .addConnectedSearch(BlockRegistry.CASCADING_LOG)
+                .addConnectedSearch(BlockRegistry.VEXING_LOG)
+                .addConnectedSearch(BlockRegistry.FLOURISHING_LOG));
 
 
         addPage(new DocEntryBuilder(RESOURCES, "decorative")
