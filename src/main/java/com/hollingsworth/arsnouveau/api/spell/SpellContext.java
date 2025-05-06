@@ -5,8 +5,12 @@ import com.hollingsworth.arsnouveau.api.event.DelayedSpellEvent;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -45,6 +49,24 @@ public class SpellContext implements Cloneable {
     private DelayedSpellEvent delayedSpellEvent;
 
     public Map<ResourceLocation, IContextAttachment> attachments = new HashMap<>();
+
+    public static final MapCodec<SpellContext> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Spell.CODEC.fieldOf("spell").forGetter(s -> s.spell)
+    ).apply(instance, SpellContext::dehydrated));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, SpellContext> STREAM = StreamCodec.of(
+            (buf, val) -> {
+                Spell.STREAM.encode(buf, val.spell);
+            },
+            buf -> {
+                Spell spell = Spell.STREAM.decode(buf);
+                return SpellContext.dehydrated(spell);
+            }
+    );
+
+    public static SpellContext dehydrated(Spell spell){
+        return new SpellContext(null, spell, null, null);
+    }
 
     public SpellContext(Level level,@NotNull Spell spell, @Nullable LivingEntity caster, IWrappedCaster wrappedCaster) {
         this.level = level;
