@@ -3,10 +3,7 @@ package com.hollingsworth.arsnouveau.setup.registry;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
-import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
-import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
-import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
-import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.SpellTier;
@@ -31,7 +28,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
@@ -43,7 +39,6 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -249,13 +244,13 @@ public class ItemsRegistry {
 
     public static void onItemRegistry(RegisterEvent.RegisterHelper<Item> helper) {
         ArsNouveauAPI api = ArsNouveauAPI.getInstance();
-        for (Map.Entry<ResourceLocation, Supplier<Glyph>> glyphEntry : GlyphRegistry.getGlyphItemMap().entrySet()) {
+        for (var glyphEntry : ANRegistries.GLYPH_ITEMS.entrySet()) {
             Glyph glyph = glyphEntry.getValue().get();
-            helper.register(glyphEntry.getKey(), glyph);
+            helper.register(glyphEntry.getKey().location(), glyph);
             glyph.spellPart.glyphItem = glyph;
         }
 
-        for (AbstractRitual ritual : RitualRegistry.getRitualMap().values()) {
+        for (AbstractRitual ritual : ANRegistries.RITUAL_TYPES) {
             RitualTablet tablet = new RitualTablet(ritual);
             helper.register(ritual.getRegistryName(), tablet);
             RitualRegistry.getRitualItemMap().put(ritual.getRegistryName(), tablet);
