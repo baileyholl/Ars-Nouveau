@@ -20,6 +20,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITextOutput{
@@ -51,14 +52,6 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
             return false;
         }
         return armorPerkHolder.getTier() == (tier - 1);
-    }
-
-    @Override
-    public boolean matches(ApparatusRecipeInput input, Level level, @org.jetbrains.annotations.Nullable Player player) {
-        if(this.pedestalItems().size() != input.pedestals().size()){
-            return false;
-        }
-        return this.doesReagentMatch(input, level, player);
     }
 
     @Override

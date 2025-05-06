@@ -49,10 +49,8 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
 
     @Override
     public boolean matches(ApparatusRecipeInput input, Level level, @Nullable Player player) {
-        if(this.pedestalItems.size() != input.pedestals().size()){
-            return false;
-        }
-        return doesReagentMatch(input, level, player) && doPedestalsMatch(input);
+        // Check pedestal match first as it is less costly than enchantment checks
+        return doPedestalsMatch(input) && doesReagentMatch(input, level, player);
     }
 
     public boolean doPedestalsMatch(ApparatusRecipeInput input){
