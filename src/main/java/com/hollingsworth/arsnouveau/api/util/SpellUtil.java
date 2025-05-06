@@ -1,8 +1,14 @@
 package com.hollingsworth.arsnouveau.api.util;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
+import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -21,10 +27,54 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.FakePlayer;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.*;
 import java.util.function.Predicate;
 
 public class SpellUtil {
+
+    public static String spellToJson(Spell spell) {
+        JsonElement json = Spell.CODEC.codec().encodeStart(JsonOps.INSTANCE, spell).getOrThrow();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(json);
+    }
+
+    public static String spellToBinaryBase64(Spell spell) {
+//        try{
+//            // Get the bytes and encode to Base64
+//            byte[] spellBytes = FriendlyByteBufUtil.writeCustomData(
+//                    buf -> Spell.STREAM.encode(buf, spell),
+//                    ArsNouveau.proxy.getPlayer().registryAccess()
+//            );
+//            String base64 = Base64.getEncoder().encodeToString(spellBytes);
+//            System.out.println("Spell fully encoded to Base64: " + base64);
+//            return base64;
+//        }catch (Exception e){
+//            System.out.println("Error writing spell to binary: " + e.getMessage());
+//        }
+        try {
+            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+            DataOutputStream out = new DataOutputStream(byteStream);
+
+            out.writeByte(2); // version
+            out.writeUTF(spell.name());
+            out.writeInt(spell.unsafeList().size());
+
+            for (AbstractSpellPart part : spell.recipe()) {
+                if (part != null) {
+                    out.writeUTF(part.getRegistryName().toString());
+                }
+            }
+
+            out.close();
+            return Base64.getEncoder().encodeToString(byteStream.toByteArray());
+        } catch (IOException e) {
+            System.out.println("Error writing spell to binary: " + e.getMessage());
+            return "";
+        }
+    }
 
     public static SpellCastEvent postEvent(SpellCastEvent e) {
         return NeoForge.EVENT_BUS.post(e);
