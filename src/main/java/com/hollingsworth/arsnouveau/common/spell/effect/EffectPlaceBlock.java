@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.item.inv.ExtractedStack;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.RuneCaster;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
@@ -49,10 +51,20 @@ public class EffectPlaceBlock extends AbstractEffect {
         Player fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world, shooter instanceof Player player ? player.getUUID() : null);
         var sensitiveCount = spellStats.getBuffCount(AugmentSensitive.INSTANCE);
         if (sensitiveCount > 0) {
-            fakePlayer.setPos(spellContext.getUnwrappedCaster().position);
+            var caster = spellContext.getCaster();
+            Vec3 pos = caster.getPosition();
+            var isBlock = caster instanceof TileCaster || caster instanceof RuneCaster;
+            if (isBlock) {
+                pos = pos.add(0.5, 0.5, 0.5);
+            }
+
+            fakePlayer.setPos(pos);
             var lookLoc = rayTraceResult.getLocation();
             if (sensitiveCount > 1) {
-                fakePlayer.setPos(fakePlayer.position.subtract(fakePlayer.position.subtract(lookLoc).scale(2)));
+                fakePlayer.setPos(lookLoc.scale(2).subtract(pos));
+                if (isBlock) {
+                    fakePlayer.setPos(fakePlayer.position.subtract(0, fakePlayer.eyeHeight, 0));
+                }
             }
             fakePlayer.lookAt(EntityAnchorArgument.Anchor.EYES, lookLoc);
         }
