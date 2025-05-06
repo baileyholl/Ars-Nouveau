@@ -1051,6 +1051,8 @@
   "ars_nouveau.perk.spell_damage.desc": "Increases the damage of your ars spells",
   "ars_nouveau.perk.warding": "Warding",
   "ars_nouveau.perk.warding.desc": "Reduces the amount of magic damage taken.",
+  "ars_nouveau.perk.weight": "Weight",
+  "ars_nouveau.perk.weight.desc": "Affects how much gravity is applied.",
   "ars_nouveau.perk.wixie": "Potion Duration",
   "ars_nouveau.perk.wixie.desc": "Increases the duration of potion effects.",
   "ars_nouveau.perk_desc.thread_amethyst_golem": "Grants 15%% knockback resistance per level.",

@@ -7,6 +7,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.BooleanAttribute;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -32,6 +33,8 @@ public class PerkAttributes {
 
     public static final DeferredHolder<Attribute, Attribute> FEATHER = registerAttribute("ars_nouveau.perk.feather", (id) -> new RangedAttribute(id, 0.0D, 0.0D, 1.0D).setSyncable(true), "ee3a4090-c5f5-4a26-a9c2-69837237b35f");
     //public static final DeferredHolder<Attribute, Attribute> TOUGHNESS = registerAttribute("ars_nouveau.perk.toughness", (id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true), "eb1ccdaf-38e3-4a1a-a5fb-b0dc698157ff");
+
+    public static final DeferredHolder<Attribute, Attribute> WEIGHT = registerAttribute("ars_nouveau.perk.weight", (id) -> new RangedAttribute(id, 1.0D, 0.0D, 100.0D).setSyncable(true), "24d1ae35-a7c7-4c85-9b56-c94de36faf91");
 
     public static DeferredHolder<Attribute, Attribute> registerAttribute(String name, Function<String, Attribute> attribute, String uuid) {
         return registerAttribute(name, attribute, UUID.fromString(uuid));
