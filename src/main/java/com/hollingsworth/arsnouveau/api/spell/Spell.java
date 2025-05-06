@@ -70,6 +70,13 @@ public class Spell {
         this.recipe = ImmutableList.copyOf(abstractSpellParts);
     }
 
+    public Spell(String name, ParticleColor color, ConfiguredSpellSound configuredSpellSound, ImmutableList<AbstractSpellPart> abstractSpellParts) {
+        this.name = name;
+        this.color = color;
+        this.sound = configuredSpellSound;
+        this.recipe = abstractSpellParts;
+    }
+
     public ConfiguredSpellSound sound(){
         return sound;
     }
@@ -119,6 +126,10 @@ public class Spell {
 
     public Spell setRecipe(@NotNull List<AbstractSpellPart> recipe) {
         return new Spell(name, color, sound, ImmutableList.copyOf(recipe));
+    }
+
+    public Spell setRecipe(@NotNull ImmutableList<AbstractSpellPart> recipe) {
+        return new Spell(name, color, sound, recipe);
     }
 
     public Spell withColor(@NotNull ParticleColor color) {

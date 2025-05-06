@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 
@@ -43,7 +44,7 @@ public class ArsEvents {
     @SubscribeEvent
     public static void spellResolve(SpellResolveEvent.Post e) {
         SpellSensorTile.onSpellResolve(e);
-        if (e.spell.unsafeList().contains(EffectInvisibility.INSTANCE) && e.rayTraceResult instanceof BlockHitResult blockHitResult) {
+        if (e.rayTraceResult instanceof BlockHitResult blockHitResult && blockHitResult.getType() != HitResult.Type.MISS && e.spell.unsafeList().contains(EffectInvisibility.INSTANCE)) {
             if (e.world.getBlockEntity(blockHitResult.getBlockPos()) instanceof GhostWeaveTile ghostWeaveTile) {
                 ghostWeaveTile.setVisibility(true);
             }
