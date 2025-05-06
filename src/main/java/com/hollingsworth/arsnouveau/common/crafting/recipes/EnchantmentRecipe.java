@@ -53,12 +53,6 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
         return true;
     }
 
-    @Override
-    public boolean matches(ApparatusRecipeInput input, Level level, @org.jetbrains.annotations.Nullable Player player) {
-        // Check pedestal match first as it is less costly than enchantment checks
-        return doPedestalsMatch(input) && doesReagentMatch(input, level, player);
-    }
-
     public Holder<Enchantment> holderFor(Level level){
         return level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(enchantmentKey);
     }
