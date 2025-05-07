@@ -47,13 +47,13 @@ public class PageHolderScreen extends BaseDocScreen{
     @Override
     public void initBookmarks() {
         super.initBookmarks();
-        List<ResourceLocation> screenmarks = DocPlayerData.bookmarks;
-        if(screenmarks.size() < 10){
-            var addBookmark = addRenderableWidget(new NuggetImageButton(screenLeft + 281, screenTop + 1 + 15 * (screenmarks.size() + 1), DocAssets.BOOKMARK.width(), DocAssets.BOOKMARK.height(), DocAssets.BOOKMARK.location(), (b) -> {
-                screenmarks.add(this.entry.id());
+        List<ResourceLocation> bookmarks = DocPlayerData.bookmarks;
+        if(bookmarks.size() < 10){
+            var addBookmark = addRenderableWidget(new NuggetImageButton(screenLeft + 281, screenTop + 1 + 15 * (bookmarks.size() + 1), DocAssets.BOOKMARK.width(), DocAssets.BOOKMARK.height(), DocAssets.BOOKMARK.location(), (b) -> {
+                bookmarks.add(this.entry.id());
                 initBookmarks();
-            }).withTooltip(Component.translatable("ars_nouveau.add_screenmark").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))));
-            this.screenmarkButtons.add(addBookmark);
+            }).withTooltip(Component.translatable("ars_nouveau.add_bookmark").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))));
+            this.bookmarkButtons.add(addBookmark);
         }
     }
 

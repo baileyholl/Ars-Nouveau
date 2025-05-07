@@ -42,7 +42,7 @@ public class BaseDocScreen extends BaseScreen {
     public BaseDocScreen previousScreen = null;
     SoundManager manager = Minecraft.getInstance().getSoundManager();
 
-    List<AbstractWidget> screenmarkButtons = new ArrayList<>();
+    List<AbstractWidget> bookmarkButtons = new ArrayList<>();
     public static final int LEFT_PAGE_OFFSET = 19;
     public static final int RIGHT_PAGE_OFFSET = 153;
     public static final int PAGE_TOP_OFFSET = 17;
@@ -124,32 +124,32 @@ public class BaseDocScreen extends BaseScreen {
     }
 
     public void initBookmarks(){
-        for(AbstractWidget button : screenmarkButtons){
+        for(AbstractWidget button : bookmarkButtons){
             removeWidget(button);
         }
-        screenmarkButtons.clear();
+        bookmarkButtons.clear();
 
-        List<ResourceLocation> screenmarks = DocPlayerData.bookmarks;
-        for (int i = 0; i < screenmarks.size(); i++) {
-            ResourceLocation entryId = screenmarks.get(i);
+        List<ResourceLocation> bookmarks = DocPlayerData.bookmarks;
+        for (int i = 0; i < bookmarks.size(); i++) {
+            ResourceLocation entryId = bookmarks.get(i);
             DocEntry entry = DocumentationRegistry.getEntry(entryId);
 
             BookmarkButton slot = addRenderableWidget(new BookmarkButton(screenLeft + 281, screenTop + 1 + 15 * (i + 1), entry, (b) ->{
                 if(entry == null) return;
                 boolean isShiftDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), Minecraft.getInstance().options.keyShift.getKey().getValue());
                 if(isShiftDown){
-                    screenmarks.remove(entryId);
+                    bookmarks.remove(entryId);
                     initBookmarks();
                 }else {
                     PageHolderScreen pageHolderScreen = new PageHolderScreen(entry);
-                    // Prevent screenmarks from transitioning to the same screen
+                    // Prevent bookmarks from transitioning to the same screen
                     if(Minecraft.getInstance().screen instanceof PageHolderScreen newPageHolder && newPageHolder.entry == entry){
                         return;
                     }
                     transition(pageHolderScreen);
                 }
             }));
-            this.screenmarkButtons.add(slot);
+            this.bookmarkButtons.add(slot);
         }
     }
 
