@@ -34,7 +34,7 @@ public class EntriesScreen extends BaseDocScreen{
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
         if(arrowIndex == 0) {
-            DocClientUtils.drawHeader(category.getTitle(), graphics, bookLeft + LEFT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, mouseX, mouseY, partialTicks);
+            DocClientUtils.drawHeader(category.getTitle(), graphics, screenLeft + LEFT_PAGE_OFFSET, screenTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, mouseX, mouseY, partialTicks);
         }
     }
 
@@ -65,7 +65,7 @@ public class EntriesScreen extends BaseDocScreen{
         boolean offset = to - from == 8;
         for(int i = 0; i < sliced.size(); i++){
             DocEntry entry = sliced.get(i);
-            var button = new DocEntryButton(bookLeft + LEFT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET + 3  +  (16 * i) + (offset ? 16 : 0), entry, (b) -> {
+            var button = new DocEntryButton(screenLeft + LEFT_PAGE_OFFSET, screenTop + PAGE_TOP_OFFSET + 3  +  (16 * i) + (offset ? 16 : 0), entry, (b) -> {
                 transition(new PageHolderScreen(entry));
             });
             addRenderableWidget(button);
@@ -80,7 +80,7 @@ public class EntriesScreen extends BaseDocScreen{
         List<DocEntry> sliced = entries.subList(from, Math.min(to, entries.size()));
         for(int i = 0; i < sliced.size(); i++){
             DocEntry entry = sliced.get(i);
-            var button = new DocEntryButton(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET + 3 + 16 * i, entry, (b) -> {
+            var button = new DocEntryButton(screenLeft + RIGHT_PAGE_OFFSET, screenTop + PAGE_TOP_OFFSET + 3 + 16 * i, entry, (b) -> {
                 transition(new PageHolderScreen(entry));
             });
             addRenderableWidget(button);
