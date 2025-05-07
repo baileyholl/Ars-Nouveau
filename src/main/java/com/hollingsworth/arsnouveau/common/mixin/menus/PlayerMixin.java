@@ -11,10 +11,6 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class PlayerMixin {
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/AbstractContainerMenu;stillValid(Lnet/minecraft/world/entity/player/Player;)Z"))
     public boolean validIfInteract(AbstractContainerMenu instance, Player player, Operation<Boolean> original) {
-        if (IAbstractContainerMenuExtension.wasOpenedWithInteract(instance)) {
-            return true;
-        }
-
-        return original.call(instance, player);
+        return IAbstractContainerMenuExtension.wasOpenedWithInteract(instance) || original.call(instance, player);
     }
 }
