@@ -7,10 +7,10 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.mixin.menus.IAbstractContainerMenuExtension;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
-import com.hollingsworth.arsnouveau.setup.registry.AttachmentsRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -157,9 +157,7 @@ public class EffectInteract extends AbstractEffect {
             player.interactOn(target, InteractionHand.MAIN_HAND);
         }
 
-        if (player.containerMenu.containerId != menuBefore) {
-            player.setData(AttachmentsRegistry.OPENED_CONTAINER_VIA_INTERACT.get(), player.containerMenu.containerId);
-        }
+        IAbstractContainerMenuExtension.setOpenedWithInteract(player.containerMenu, true);
     }
 
     public void useOnBlock(Player player, SpellStats spellStats, BlockPos blockpos, BlockState blockstate, Level pLevel, BlockHitResult pHitResult) {
@@ -190,9 +188,7 @@ public class EffectInteract extends AbstractEffect {
             }
         }
 
-        if (player.containerMenu.containerId != menuBefore) {
-            player.setData(AttachmentsRegistry.OPENED_CONTAINER_VIA_INTERACT.get(), player.containerMenu.containerId);
-        }
+        IAbstractContainerMenuExtension.setOpenedWithInteract(player.containerMenu, true);
     }
 
     @Override
