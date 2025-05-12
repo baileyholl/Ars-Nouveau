@@ -28,10 +28,10 @@ public class SearchScreen extends BaseDocScreen{
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
-        DocClientUtils.drawHeader(Component.translatable("ars_nouveau.doc.search_results"), graphics, bookLeft + LEFT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, mouseX, mouseY, partialTicks);
+        DocClientUtils.drawHeader(Component.translatable("ars_nouveau.doc.search_results"), graphics, screenLeft + LEFT_PAGE_OFFSET, screenTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, mouseX, mouseY, partialTicks);
 
-        DocClientUtils.blit(graphics, DocAssets.SEARCH_SPLASH, bookLeft + LEFT_PAGE_OFFSET + DocAssets.SEARCH_SPLASH.width() / 2 - 10, bookBottom - DocAssets.SEARCH_SPLASH.height() - 30);
-        DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.search_desc"), graphics, bookLeft + LEFT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET + 20, ONE_PAGE_WIDTH, mouseX, mouseY, partialTicks);
+        DocClientUtils.blit(graphics, DocAssets.SEARCH_SPLASH, screenLeft + LEFT_PAGE_OFFSET + DocAssets.SEARCH_SPLASH.width() / 2 - 10, screenBottom - DocAssets.SEARCH_SPLASH.height() - 30);
+        DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.search_desc"), graphics, screenLeft + LEFT_PAGE_OFFSET, screenTop + PAGE_TOP_OFFSET + 20, ONE_PAGE_WIDTH, mouseX, mouseY, partialTicks);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class SearchScreen extends BaseDocScreen{
         var slicedDocs = docs.subList(from, Math.min(to, docs.size()));
         for(int i = 0; i < Math.min(slicedDocs.size(), to); i++){
             var entry = slicedDocs.get(i);
-            var button = new DocEntryButton(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET  +  (16 * i), entry.entry(), entry.icon(), entry.displayTitle(), (b) -> {
+            var button = new DocEntryButton(screenLeft + RIGHT_PAGE_OFFSET, screenTop + PAGE_TOP_OFFSET  +  (16 * i), entry.entry(), entry.icon(), entry.displayTitle(), (b) -> {
                 previousScreen.transition(new PageHolderScreen(entry.entry()));
             });
             addRenderableWidget(button);
