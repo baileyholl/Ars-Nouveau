@@ -7,6 +7,8 @@ import com.hollingsworth.arsnouveau.common.entity.BubbleEntity;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectLight;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -70,5 +72,10 @@ public abstract class EntityMixin {
             }
 
         }
+    }
+
+    @WrapMethod(method = "getGravity")
+    public double wrapGravity(Operation<Double> original) {
+        return original.call();
     }
 }
