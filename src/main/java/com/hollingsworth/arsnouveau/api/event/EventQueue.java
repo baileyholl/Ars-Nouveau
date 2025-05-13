@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.client.Minecraft;
 import net.minecraft.server.ServerTickRateManager;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -95,6 +96,8 @@ public class EventQueue {
 
     @SubscribeEvent
     public static void clientTickEvent(ClientTickEvent.Post e) {
-        EventQueue.getClientQueue().tick(null);
+        if (!Minecraft.getInstance().isPaused()) {
+            EventQueue.getClientQueue().tick(null);
+        }
     }
 }

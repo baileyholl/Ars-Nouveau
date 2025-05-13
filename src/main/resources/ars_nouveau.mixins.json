@@ -23,6 +23,7 @@
     "DamageSourceMixin",
     "EntityMixin",
     "LivingAccessor",
+    "LivingEntityMixin",
     "MobAccessor",
     "ParticleAccessor",
     "PlayerListMixin",
