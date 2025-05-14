@@ -46,6 +46,13 @@ public class ParticleUtil {
         return new Vec3(x, y, z);
     }
 
+    public static Vec3 pointInCube() {
+        double x = inRange(-1, 1);
+        double y = inRange(-1, 1);
+        double z = inRange(-1, 1);
+        return new Vec3(x, y, z);
+    }
+
     public static void spawnFollowProjectile(Level world, BlockPos from, BlockPos to, ParticleColor color) {
         if (world instanceof ServerLevel serverLevel && world.isLoaded(to) && world.isLoaded(from)) {
             EntityFollowProjectile.spawn(serverLevel, from, to, color.getRedInt(), color.getGreenInt(), color.getBlueInt());

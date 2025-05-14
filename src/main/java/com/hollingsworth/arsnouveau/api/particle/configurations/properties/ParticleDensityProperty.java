@@ -57,7 +57,7 @@ public class ParticleDensityProperty extends Property<ParticleDensityProperty>{
         if(!propMap.has(getType())){
             this.density = 5;
             this.radius = 0.1f;
-            this.spawnType = ParticleMotion.SpawnType.INTERPOLATED_LINE;
+            this.spawnType = ParticleMotion.SpawnType.SPHERE;
         } else {
             ParticleDensityProperty densityProperty = propMap.get(getType());
             this.density = densityProperty.density;
@@ -92,11 +92,11 @@ public class ParticleDensityProperty extends Property<ParticleDensityProperty>{
 
             @Override
             public void addWidgets(List<AbstractWidget> widgets) {
-                densitySlider = buildSlider(x + 10, y + 30, 1, 10, 1, 1, Component.translatable("ars_nouveau.density_slider"), Component.empty(), 5, (value) -> {
+                densitySlider = buildSlider(x + 10, y + 30, 10, 500, 10, 1, Component.translatable("ars_nouveau.density_slider"), Component.empty(), 5, (value) -> {
                     density = densitySlider.getValueInt();
                     writeChanges();
                 });
-                densitySlider.setValue(Mth.clamp(density, 1, 10));
+                densitySlider.setValue(Mth.clamp(density, 10, 500));
 
                 radiusSlider = buildSlider(x + 10, y + 140, 0.05, 1, 0.05, 1, Component.translatable("ars_nouveau.radius_slider"), Component.empty(), 0.1,  (value) -> {
                     radius = radiusSlider.getValue();

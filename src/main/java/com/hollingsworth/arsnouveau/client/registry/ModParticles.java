@@ -49,7 +49,11 @@ public class ModParticles {
         evt.registerSpriteSet(NEW_GLOW_TYPE.get(), NewGlowParticleProvider::new);
         evt.registerSpriteSet(BUBBLE_CLONE_TYPE.get(), ANBubbleParticle.Provider::new);
         evt.registerSpriteSet(LEAF_TYPE.get(), (sprites -> new PropParticle.Provider(LeafParticle::new, sprites)));
-        evt.registerSpriteSet(DRIPPING_WATER.get(),  (spites) -> new WrappedProvider(spites, (type, level, x, y, z, xSpeed, ySpeed, zSpeed) -> DripParticle.createDripstoneWaterFallParticle(null, level, x, y, z, xSpeed, ySpeed, zSpeed)));
+        evt.registerSpriteSet(DRIPPING_WATER.get(),   (spites) -> new WrappedProvider(spites, (type, level, x, y, z, xSpeed, ySpeed, zSpeed) -> {
+            var particle = DripParticle.createDripstoneLavaFallParticle(null, level, x, y, z, xSpeed, ySpeed, zSpeed);
+            particle.pickSprite(spites);
+            return particle;
+        }));
 
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(BUBBLE_CLONE_TYPE.get(), false));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SMOKE_TYPE.get(), false));

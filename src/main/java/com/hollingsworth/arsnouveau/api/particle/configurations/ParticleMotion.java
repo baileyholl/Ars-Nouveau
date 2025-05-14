@@ -80,10 +80,10 @@ public abstract class ParticleMotion {
         return Objects.hashCode(propertyMap);
     }
 
-    public SpawnType spawnType;
 
     public enum SpawnType {
-        INTERPOLATED_LINE,
-        POINT
+        POINT,
+        SPHERE,
+        CUBE,
     }
 }
