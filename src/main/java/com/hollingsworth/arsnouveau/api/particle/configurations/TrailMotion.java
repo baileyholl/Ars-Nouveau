@@ -79,9 +79,9 @@ public class TrailMotion extends ParticleMotion {
                     point.x,
                     point.y,
                     point.z,
-                    0,
-                    0,
-                    0);
+                    0.0125f * (random.nextFloat() - 0.5f),
+                    0.0125f * (random.nextFloat() - 0.5f),
+                    0.0125f * (random.nextFloat() - 0.5f));
         }
     }
     /*

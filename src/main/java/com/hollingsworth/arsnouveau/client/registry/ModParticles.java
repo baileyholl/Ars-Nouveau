@@ -3,9 +3,11 @@ package com.hollingsworth.arsnouveau.client.registry;
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleType;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
 import com.hollingsworth.arsnouveau.client.particle.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.DripParticle;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -34,6 +36,10 @@ public class ModParticles {
     public static final DeferredHolder<ParticleType<?>, PropertyParticleType> LEAF_TYPE = PARTICLES.register("leaf", PropertyParticleType::new);
     public static final DeferredHolder<ParticleType<?>, PropertyParticleType> DRIPPING_WATER = PARTICLES.register("dripping_water", PropertyParticleType::new);
 
+    public static final DeferredHolder<ParticleType<?>, PropertyParticleType> DRIPPING_LAVA = PARTICLES.register("dripping_lava", PropertyParticleType::new);
+
+    public static final DeferredHolder<ParticleType<?>, PropertyParticleType> SPORE_BLOSSOM = PARTICLES.register("spore_blossom", PropertyParticleType::new);
+
     @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class Inner {
         @SubscribeEvent
@@ -51,8 +57,20 @@ public class ModParticles {
             evt.registerSpriteSet(BUBBLE_CLONE_TYPE.get(), ANBubbleParticle.Provider::new);
             evt.registerSpriteSet(LEAF_TYPE.get(), (sprites -> new PropParticle.Provider(LeafParticle::new, sprites)));
             evt.registerSpriteSet(DRIPPING_WATER.get(), (spites) -> new WrappedProvider(spites, (type, level, x, y, z, xSpeed, ySpeed, zSpeed) -> {
+                var particle = DripParticle.createDripstoneWaterFallParticle(null, level, x, y, z, xSpeed, ySpeed, zSpeed);
+                particle.pickSprite(Minecraft.getInstance().particleEngine.spriteSets.get(ResourceLocation.withDefaultNamespace("falling_water")));
+                return particle;
+            }));
+
+            evt.registerSpriteSet(DRIPPING_LAVA.get(), (spites) -> new WrappedProvider(spites, (type, level, x, y, z, xSpeed, ySpeed, zSpeed) -> {
                 var particle = DripParticle.createDripstoneLavaFallParticle(null, level, x, y, z, xSpeed, ySpeed, zSpeed);
-                particle.pickSprite(spites);
+                particle.pickSprite(Minecraft.getInstance().particleEngine.spriteSets.get(ResourceLocation.withDefaultNamespace("falling_lava")));
+                return particle;
+            }));
+
+            evt.registerSpriteSet(SPORE_BLOSSOM.get(), (spites) -> new WrappedProvider(spites, (type, level, x, y, z, xSpeed, ySpeed, zSpeed) -> {
+                var particle = DripParticle.createSporeBlossomFallParticle(null, level, x, y, z, xSpeed, ySpeed, zSpeed);
+                particle.pickSprite(Minecraft.getInstance().particleEngine.spriteSets.get(ResourceLocation.withDefaultNamespace("falling_spore_blossom")));
                 return particle;
             }));
 
@@ -63,6 +81,8 @@ public class ModParticles {
             ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(CUSTOM_TYPE.get(), true));
             ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(LEAF_TYPE.get(), true));
             ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(DRIPPING_WATER.get(), false));
+            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(DRIPPING_LAVA.get(), false));
+            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SPORE_BLOSSOM.get(), false));
         }
     }
 }
