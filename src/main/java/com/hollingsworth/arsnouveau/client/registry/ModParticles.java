@@ -16,7 +16,6 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
 
-@EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ModParticles {
 
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, MODID);
@@ -35,32 +34,35 @@ public class ModParticles {
     public static final DeferredHolder<ParticleType<?>, PropertyParticleType> LEAF_TYPE = PARTICLES.register("leaf", PropertyParticleType::new);
     public static final DeferredHolder<ParticleType<?>, PropertyParticleType> DRIPPING_WATER = PARTICLES.register("dripping_water", PropertyParticleType::new);
 
-    @SubscribeEvent
-    public static void registerFactories(RegisterParticleProvidersEvent evt) {
+    @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    public static class Inner {
+        @SubscribeEvent
+        public static void registerFactories(RegisterParticleProvidersEvent evt) {
 
-        evt.registerSpriteSet(GLOW_TYPE.get(), GlowParticleProvider::new);
-        evt.registerSpriteSet(LINE_TYPE.get(), LineParticleProvider::new);
-        evt.registerSpriteSet(SPARKLE_TYPE.get(), SparkleParticleProvider::new);
-        evt.registerSpriteSet(HELIX_TYPE.get(), HelixParticleData::new);
-        evt.registerSpriteSet(ALAKARK_BUBBLE_TYPE.get(), BubbleParticle.Provider::new);
-        evt.registerSpriteSet(CUSTOM_TYPE.get(), CustomParticle.Provider::new);
-        evt.registerSpriteSet(SMOKE_TYPE.get(), SmokeParticle.Provider::new);
-        evt.registerSpriteSet(SNOW_TYPE.get(), SnowParticle.Provider::new);
-        evt.registerSpriteSet(NEW_GLOW_TYPE.get(), NewGlowParticleProvider::new);
-        evt.registerSpriteSet(BUBBLE_CLONE_TYPE.get(), ANBubbleParticle.Provider::new);
-        evt.registerSpriteSet(LEAF_TYPE.get(), (sprites -> new PropParticle.Provider(LeafParticle::new, sprites)));
-        evt.registerSpriteSet(DRIPPING_WATER.get(),   (spites) -> new WrappedProvider(spites, (type, level, x, y, z, xSpeed, ySpeed, zSpeed) -> {
-            var particle = DripParticle.createDripstoneLavaFallParticle(null, level, x, y, z, xSpeed, ySpeed, zSpeed);
-            particle.pickSprite(spites);
-            return particle;
-        }));
+            evt.registerSpriteSet(GLOW_TYPE.get(), GlowParticleProvider::new);
+            evt.registerSpriteSet(LINE_TYPE.get(), LineParticleProvider::new);
+            evt.registerSpriteSet(SPARKLE_TYPE.get(), SparkleParticleProvider::new);
+            evt.registerSpriteSet(HELIX_TYPE.get(), HelixParticleData::new);
+            evt.registerSpriteSet(ALAKARK_BUBBLE_TYPE.get(), BubbleParticle.Provider::new);
+            evt.registerSpriteSet(CUSTOM_TYPE.get(), CustomParticle.Provider::new);
+            evt.registerSpriteSet(SMOKE_TYPE.get(), SmokeParticle.Provider::new);
+            evt.registerSpriteSet(SNOW_TYPE.get(), SnowParticle.Provider::new);
+            evt.registerSpriteSet(NEW_GLOW_TYPE.get(), NewGlowParticleProvider::new);
+            evt.registerSpriteSet(BUBBLE_CLONE_TYPE.get(), ANBubbleParticle.Provider::new);
+            evt.registerSpriteSet(LEAF_TYPE.get(), (sprites -> new PropParticle.Provider(LeafParticle::new, sprites)));
+            evt.registerSpriteSet(DRIPPING_WATER.get(), (spites) -> new WrappedProvider(spites, (type, level, x, y, z, xSpeed, ySpeed, zSpeed) -> {
+                var particle = DripParticle.createDripstoneLavaFallParticle(null, level, x, y, z, xSpeed, ySpeed, zSpeed);
+                particle.pickSprite(spites);
+                return particle;
+            }));
 
-        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(BUBBLE_CLONE_TYPE.get(), false));
-        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SMOKE_TYPE.get(), false));
-        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SNOW_TYPE.get(), false));
-        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(NEW_GLOW_TYPE.get(), true));
-        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(CUSTOM_TYPE.get(), true));
-        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(LEAF_TYPE.get(), true));
-        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(DRIPPING_WATER.get(), false));
+            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(BUBBLE_CLONE_TYPE.get(), false));
+            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SMOKE_TYPE.get(), false));
+            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SNOW_TYPE.get(), false));
+            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(NEW_GLOW_TYPE.get(), true));
+            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(CUSTOM_TYPE.get(), true));
+            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(LEAF_TYPE.get(), true));
+            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(DRIPPING_WATER.get(), false));
+        }
     }
 }
