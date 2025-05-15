@@ -29,6 +29,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
@@ -83,6 +84,19 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
             case WEST -> WEST;
             case EAST -> EAST;
         };
+    }
+
+    public Vector3f getItemOffset(BlockState pedestalState, BlockPos pos){
+        Direction direction = pedestalState.getValue(BlockStateProperties.FACING);
+        Vector3f dirVec = direction.step().mul( getOffsetScalar());
+        float x = pos.getX() + 0.5f + dirVec.x;
+        float y = pos.getY() + 0.5f + dirVec.y;
+        float z = pos.getZ() + 0.5f + dirVec.z;
+        return new Vector3f(x, y, z);
+    }
+
+    public float getOffsetScalar(){
+        return 0.6f;
     }
 
     @Override
