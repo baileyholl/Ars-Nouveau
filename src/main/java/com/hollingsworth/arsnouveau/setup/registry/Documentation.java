@@ -71,6 +71,12 @@ public class Documentation {
         DocCategory ENCHANTMENTS = DocumentationRegistry.ENCHANTING;
         DocCategory FAMILIARS = DocumentationRegistry.FAMILIARS;
         DocCategory MOD_NEWS = DocumentationRegistry.GETTING_STARTED;
+
+        addPage(new DocEntryBuilder(GETTING_STARTED, "spell_casting")
+                .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
+                .withSortNum(1)
+                .withIntroPage()
+                .withCraftingPages(ItemsRegistry.NOVICE_SPELLBOOK));
         for (AbstractSpellPart spellPart : GlyphRegistry.getSpellpartMap().values()) {
             ItemStack renderStack = spellPart.glyphItem.getDefaultInstance();
             var entry = new DocEntry(spellPart.getRegistryName(), renderStack, Component.literal(spellPart.getLocaleName()));
@@ -826,14 +832,14 @@ public class Documentation {
         return addPage(new DocEntryBuilder(category, stack.getDescriptionId())
                 .withIcon(item)
                 .withSortNum(order)
-                .withPage(TextEntry.create(Component.translatable(registryName.getNamespace() + ".page." + registryName.getPath()), stack.getItem().getDescription(), stack)).withCraftingPages(item));
+                .withIntroPageNoIncrement(registryName.getNamespace() + ".page." + registryName.getPath()).withCraftingPages(item));
     }
 
     public static DocEntry addBasicItem(ItemLike item, DocCategory category, ResourceLocation recipeId) {
         ResourceLocation registryName = getRegistryName(item.asItem());
         return addPage(new DocEntryBuilder(category, item.asItem().getDescriptionId())
                 .withIcon(item.asItem())
-                .withPage(TextEntry.create(Component.translatable(registryName.getNamespace() + ".page." + getRegistryName(item.asItem()).getPath())))
+                .withIntroPageNoIncrement(registryName.getNamespace() + ".page." + getRegistryName(item.asItem()).getPath())
                 .withPage(getRecipePages(recipeId)));
     }
 
