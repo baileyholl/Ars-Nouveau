@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
+import com.hollingsworth.arsnouveau.common.util.Log;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
@@ -164,8 +165,11 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider, IWand
             }
 
             var key = entity.getLootTable();
+            if(key == null){
+                Log.getLogger().warn("Entity is missing loot table, report to that mods author! : {}", entity.getType().getDescriptionId());
+                continue;
+            }
             LootTable loottable = serverLevel.getServer().reloadableRegistries().getLootTable(key);
-
             LootParams.Builder lootcontext$builder = (new LootParams.Builder((ServerLevel) this.level))
                     .withParameter(LootContextParams.THIS_ENTITY, entity).withParameter(LootContextParams.ORIGIN, entity.position())
                     .withParameter(LootContextParams.DAMAGE_SOURCE, damageSource)
