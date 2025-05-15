@@ -696,34 +696,28 @@ public class Documentation {
                 .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
                 .withSortNum(1)
                 .withIntroPage()
-                .withLocalizedText()
                 .withCraftingPages(ItemsRegistry.NOVICE_SPELLBOOK))
                 .withRelations(spellBooks);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "introduction_to_glyphs")
                 .withSortNum(2)
                 .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
-                .withIntroPage()
-                .withLocalizedText()
-                .withLocalizedText());
+                .withIntroPage());
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "introduction_to_spellcrafting")
                 .withSortNum(3)
                 .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
-                .withIntroPage()
-                .withLocalizedText());
+                .withIntroPage());
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "spellcasting")
                 .withSortNum(4)
                 .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
-                .withIntroPage()
-                .withLocalizedText());
+                .withIntroPage());
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "spell_mana")
                 .withSortNum(5)
                 .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
-                .withIntroPage()
-                .withLocalizedText());
+                .withIntroPage());
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "learning_glyphs")
                 .withSortNum(6)
@@ -740,15 +734,13 @@ public class Documentation {
         addPage(new DocEntryBuilder(GETTING_STARTED, "source")
                 .withSortNum(8)
                 .withIcon(BlockRegistry.SOURCE_JAR)
-                .withIntroPage()
-                .withLocalizedText())
+                .withIntroPage())
                 .withRelations(sourceJar, agronomic, mycelial, relay);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "magical_crafting")
                 .withSortNum(9)
                 .withIcon(BlockRegistry.IMBUEMENT_BLOCK)
-                .withIntroPage()
-                .withLocalizedText())
+                .withIntroPage())
                 .withRelations(imbuementChamber, enchantingApparatus, armorEntry, magebloom);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "magical_automation")

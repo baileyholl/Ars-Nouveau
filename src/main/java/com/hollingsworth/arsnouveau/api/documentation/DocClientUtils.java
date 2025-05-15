@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.documentation;
 
+import com.google.common.collect.Lists;
 import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
@@ -20,11 +21,11 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class DocClientUtils {
 
@@ -166,8 +167,22 @@ public class DocClientUtils {
     public static List<NuggetMultilLineLabel> splitToFitPageWithOffset(Component text, int firstMaxRows, int secondMaxRows){
 
         Font font = Minecraft.getInstance().font;
-
-        List<FormattedText> list = font.getSplitter().splitLines(text.getString(), PARAGRAPH_WIDTH,  Style.EMPTY.withFont(Minecraft.UNIFORM_FONT));
+        List<FormattedText> list = Lists.newArrayList();
+        String content = text.getString();
+        font.getSplitter().splitLines(content, PARAGRAPH_WIDTH,  Style.EMPTY.withFont(Minecraft.UNIFORM_FONT), true,  (style, currentPos, width) ->{
+            String s2 = content.substring(currentPos, width);
+            boolean addLine = false;
+            if(StringUtils.endsWith(s2, "\n")) {
+                s2 = StringUtils.stripEnd(s2, "\n").trim();
+                addLine = true;
+            }
+            if(!s2.isEmpty()) {
+                list.add(FormattedText.of(s2, style));
+                if(addLine){
+                    list.add(FormattedText.of(" ", style));
+                }
+            }
+        });
 
         List<NuggetMultilLineLabel> labels = new ArrayList<>();
 
@@ -180,6 +195,21 @@ public class DocClientUtils {
         for (int i = firstMaxRows; i < list.size(); i += secondMaxRows) {
             int end = Math.min(i + secondMaxRows, list.size());
             List<Component> sublist = formattedToComponent(list.subList(i, end));
+            // Removes empty lines at the start of the sublist and recalculates the end index so we have no gaps
+            while(true){
+                if(sublist.isEmpty()){
+                    break;
+                }
+                if(sublist.getFirst().getString().trim().isEmpty()){
+                    sublist.removeFirst();
+                    i++;
+                    end = Math.min(i + secondMaxRows, list.size());
+                    sublist = formattedToComponent(list.subList(i, end));
+                }else{
+                    break;
+                }
+            }
+
             NuggetMultilLineLabel label = NuggetMultilLineLabel.create(font, PARAGRAPH_WIDTH, sublist.toArray(new Component[0]));
             labels.add(label);
         }
@@ -187,7 +217,13 @@ public class DocClientUtils {
     }
 
     private static List<Component> formattedToComponent(List<FormattedText> list){
-        return list.stream().map(s -> Component.literal(s.getString()).withStyle(Style.EMPTY.withFont(Minecraft.UNIFORM_FONT))).collect(Collectors.toList());
+        List<Component> components = new ArrayList<>();
+        for (int i = 0, listSize = list.size(); i < listSize; i++) {
+            FormattedText formatted = list.get(i);
+            Component component = Component.literal(formatted.getString()).withStyle(Style.EMPTY.withFont(Minecraft.UNIFORM_FONT));
+            components.add(component);
+        }
+        return components;
     }
 
 }
