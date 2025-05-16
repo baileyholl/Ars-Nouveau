@@ -125,6 +125,20 @@ public class DocEntryBuilder {
         return this;
     }
 
+    public DocEntryBuilder withIntroPageNoIncrement(String key) {
+        List<NuggetMultilLineLabel> labels = DocClientUtils.splitToFitTitlePage(Component.translatable(key));
+        for(int i = 0; i < labels.size(); i++){
+            NuggetMultilLineLabel label = labels.get(i);
+            if(i == 0) {
+                pages.add(TextEntry.create(label, Component.translatable(titleKey), displayItem));
+            }else{
+                pages.add(TextEntry.create(label));
+            }
+        }
+        return this;
+    }
+
+
     public DocEntryBuilder withTextPage(String contents) {
         List<NuggetMultilLineLabel> multiLines = DocClientUtils.splitToFitFullPage(Component.translatable(contents));
         for (NuggetMultilLineLabel label : multiLines) {

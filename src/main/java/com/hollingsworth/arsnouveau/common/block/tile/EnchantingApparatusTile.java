@@ -2,8 +2,10 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
-import com.hollingsworth.arsnouveau.client.particle.*;
-import com.hollingsworth.arsnouveau.common.block.ArcanePlatform;
+import com.hollingsworth.arsnouveau.client.particle.ColorPos;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ApparatusRecipeInput;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IEnchantingRecipe;
@@ -50,12 +52,10 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
 
     @Override
     public void lightPedestal(Level level) {
-        if (level != null) {
-            for (BlockPos pos : pedestalList()) {
-                ParticleUtil.spawnOrb(level, ParticleColor.makeRandomColor(255, 255, 255, level.random), pos.relative(level.getBlockState(pos).getValue(BlockStateProperties.FACING)), 300);
-            }
-        }
+        spawnParticlesForPedestal(level, pedestalList());
     }
+
+
 
     @Override
     public void tick() {
@@ -76,12 +76,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
 
                 for (BlockPos p : pedestalList()) {
                     if (level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile && pedestalTile.getStack() != null && !pedestalTile.getStack().isEmpty()) {
-                        var pedestalState = level.getBlockState(p);
-                        var offset = pedestalState.getValue(BlockStateProperties.FACING).step().mul(pedestalState.getBlock() instanceof ArcanePlatform ? 0.6F : 1.3F);
-                        getLevel().addParticle(
-                                GlowParticleData.createData(new ParticleColor(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255))),
-                                p.getX() + 0.5 + ParticleUtil.inRange(-0.2, 0.2) + offset.x, p.getY() + 0.5 + ParticleUtil.inRange(-0.2, 0.2) + offset.y, p.getZ() + 0.5 + ParticleUtil.inRange(-0.2, 0.2) + offset.z,
-                                0, 0, 0);
+                        spawnParticlesForPedestal(level, p);
                     }
                 }
 
