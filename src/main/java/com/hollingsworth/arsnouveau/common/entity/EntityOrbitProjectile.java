@@ -165,15 +165,15 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
             if (entityHitResult.getEntity().equals(this.getOwner()) && !tracksGround){
                 return;
             }
-            if (this.spellResolver != null) {
-                this.spellResolver.getNewResolver(this.spellResolver.spellContext.clone().makeChildContext()).onResolveEffect(level, result);
+            if (this.resolver() != null) {
+                this.resolver().getNewResolver(this.resolver().spellContext.clone().makeChildContext()).onResolveEffect(level, result);
                 Networking.sendToNearbyClient(level, BlockPos.containing(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
                         BlockPos.containing(result.getLocation()), getParticleColor()));
                 attemptRemoval();
             }
         } else if (numSensitive > 0 && result instanceof BlockHitResult blockraytraceresult && !this.isRemoved()) {
-            if (this.spellResolver != null) {
-                this.spellResolver.getNewResolver(this.spellResolver.spellContext.clone().makeChildContext()).onResolveEffect(this.level, blockraytraceresult);
+            if (this.resolver() != null) {
+                this.resolver().getNewResolver(this.resolver().spellContext.clone().makeChildContext()).onResolveEffect(this.level, blockraytraceresult);
             }
             Networking.sendToNearbyClient(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
                     BlockPos.containing(result.getLocation()).below(), getParticleColor()));
