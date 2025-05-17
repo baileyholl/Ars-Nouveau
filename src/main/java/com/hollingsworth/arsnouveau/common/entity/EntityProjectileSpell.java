@@ -66,10 +66,13 @@ public class EntityProjectileSpell extends ColoredProjectile implements IAnimati
     public boolean isNoGravity = true;
     public boolean canTraversePortals = true;
     public int prismRedirect;
-    ParticleEmitter trailEmitter;
-    ParticleEmitter resolveEmitter;
+    public ParticleEmitter tickEmitter;
+    public ParticleEmitter resolveEmitter;
+
     public static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(EntityProjectileSpell.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<SpellResolver> SPELL_RESOLVER = SynchedEntityData.defineId(EntityProjectileSpell.class, DataSerializers.SPELL_RESOLVER.get());
+
+
     @Deprecated
     public int expireTime = 60 * 20;
 
@@ -234,16 +237,16 @@ public class EntityProjectileSpell extends ColoredProjectile implements IAnimati
         ProjectileTimeline projectileTimeline = timelineMap.get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
         TimelineEntryData trailConfig = projectileTimeline.trailEffect;
         TimelineEntryData resolveConfig = projectileTimeline.onResolvingEffect;
-        this.trailEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, trailConfig.motion(), trailConfig.particleOptions());
+        this.tickEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, trailConfig.motion(), trailConfig.particleOptions());
         this.resolveEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, resolveConfig.motion(), resolveConfig.particleOptions());
     }
 
     public void playParticles() {
-        if(trailEmitter == null && resolver() != null) {
+        if(tickEmitter == null && resolver() != null) {
             buildEmitters();
         }
-        if(this.trailEmitter != null) {
-            this.trailEmitter.tick(level);
+        if(this.tickEmitter != null) {
+            this.tickEmitter.tick(level);
         }
     }
 

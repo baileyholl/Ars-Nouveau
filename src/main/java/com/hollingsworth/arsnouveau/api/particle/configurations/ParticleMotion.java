@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.api.particle.configurations;
 import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.Property;
-import com.hollingsworth.arsnouveau.api.registry.ParticleConfigRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -21,9 +21,9 @@ import java.util.function.Function;
  * Spawns particles via callbacks from the emitter
  */
 public abstract class ParticleMotion {
-    public static Codec<ParticleMotion> CODEC = ParticleConfigRegistry.PARTICLE_CONFIG_REGISTRY.byNameCodec().dispatch(ParticleMotion::getType, IParticleMotionType::codec);
+    public static Codec<ParticleMotion> CODEC = ParticleMotionRegistry.PARTICLE_CONFIG_REGISTRY.byNameCodec().dispatch(ParticleMotion::getType, IParticleMotionType::codec);
 
-    public static StreamCodec<RegistryFriendlyByteBuf, ParticleMotion> STREAM_CODEC = ByteBufCodecs.registry(ParticleConfigRegistry.PARTICLE_CONFIG_REGISTRY_KEY).dispatch(ParticleMotion::getType, IParticleMotionType::streamCodec);
+    public static StreamCodec<RegistryFriendlyByteBuf, ParticleMotion> STREAM_CODEC = ByteBufCodecs.registry(ParticleMotionRegistry.PARTICLE_CONFIG_REGISTRY_KEY).dispatch(ParticleMotion::getType, IParticleMotionType::streamCodec);
 
     public ParticleEmitter emitter;
     public PropMap propertyMap;
@@ -37,9 +37,7 @@ public abstract class ParticleMotion {
         this.emitter = emitter;
     }
 
-    public void tick(ParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
-
-    }
+    public abstract void tick(ParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ);
 
     public List<Property<?>> getProperties() {
         return List.of();

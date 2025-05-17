@@ -1481,7 +1481,11 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.spawn.sphere", "Sphere");
         add("ars_nouveau.spawn.box", "Box");
         add("ars_nouveau.radius_slider", "Radius: ");
-
+        add("ars_nouveau.timeline.field", "Field");
+        add("ars_nouveau.particle_config.upward_wall", "Upward Wall");
+        add("ars_nouveau.particle.dripping_water", "Dripping Water");
+        add("ars_nouveau.particle.an_bubble", "Bubble");
+        add("ars_nouveau.particle.dripping_lava", "Dripping Lava");
     }
 
     public void addCategory(String key, String value) {

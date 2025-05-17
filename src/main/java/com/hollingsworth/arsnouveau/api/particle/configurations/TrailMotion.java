@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleDensityProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.Property;
-import com.hollingsworth.arsnouveau.api.registry.ParticleConfigRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.mojang.serialization.MapCodec;
@@ -26,6 +26,7 @@ public class TrailMotion extends ParticleMotion {
     public int density;
     public SpawnType spawnType;
     public double radius;
+
     public TrailMotion(PropMap propMap){
         super(propMap);
         if(!propMap.has(ParticlePropertyRegistry.DENSITY_PROPERTY.get())){
@@ -52,7 +53,7 @@ public class TrailMotion extends ParticleMotion {
 
     @Override
     public IParticleMotionType<?> getType() {
-        return ParticleConfigRegistry.TRAIL_TYPE.get();
+        return ParticleMotionRegistry.TRAIL_TYPE.get();
     }
 
     @Override

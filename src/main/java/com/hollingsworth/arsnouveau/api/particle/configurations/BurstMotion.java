@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.api.particle.configurations;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleDensityProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.Property;
-import com.hollingsworth.arsnouveau.api.registry.ParticleConfigRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.mojang.serialization.MapCodec;
@@ -36,7 +36,7 @@ public class BurstMotion extends ParticleMotion {
 
     @Override
     public IParticleMotionType<?> getType() {
-        return ParticleConfigRegistry.BURST_TYPE.get();
+        return ParticleMotionRegistry.BURST_TYPE.get();
     }
 
     @Override

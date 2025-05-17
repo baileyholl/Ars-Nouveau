@@ -1,7 +1,14 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
-import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
-import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.WallProperty;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
+import com.hollingsworth.arsnouveau.api.particle.timelines.WallTimeline;
+import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
@@ -11,7 +18,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -152,27 +158,16 @@ public class EntityWallSpell extends EntityProjectileSpell {
     }
 
     @Override
-    public void playParticles() {
-        BlockPos pos = getOnPos();
-        int range = Math.round(getAoe());
-        int chance = 5;
-        int numParticles = 20;
-        RandomSource rand = random;
-
-        BlockPos.betweenClosedStream(pos.offset(range * getDirection().getStepX(), 0, range * getDirection().getStepZ()), pos.offset(-range  * getDirection().getStepX(), range, -range * getDirection().getStepZ())).forEach(blockPos -> {
-            if (rand.nextInt(chance) == 0) {
-                for (int i = 0; i < rand.nextInt(numParticles); i++) {
-                    double x = blockPos.getX() + ParticleUtil.inRange(-growthFactor, growthFactor) + 0.5;
-                    double y = blockPos.getY() + ParticleUtil.inRange(-growthFactor, growthFactor);
-                    double z = blockPos.getZ() + ParticleUtil.inRange(-growthFactor, growthFactor) + 0.5;
-                    level.addAlwaysVisibleParticle(ParticleLineData.createData(getParticleColor()),
-                            true,
-                            x, y, z,
-                            x, y + ParticleUtil.inRange(0.5, 5), z);
-                }
-            }
-        });
-        ParticleUtil.spawnLight(level, getParticleColor(), position.add(0, 0.5, 0), 10);
+    public void buildEmitters() {
+        TimelineMap timelineMap = this.resolver().spell.particleTimeline();
+        WallTimeline projectileTimeline = timelineMap.get(ParticleTimelineRegistry.WALL_TIMELINE.get());
+        TimelineEntryData trailConfig = projectileTimeline.trailEffect;
+        TimelineEntryData resolveConfig = projectileTimeline.onResolvingEffect;
+        this.tickEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, trailConfig.motion(), trailConfig.particleOptions());
+        this.resolveEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, resolveConfig.motion(), resolveConfig.particleOptions());
+        if (this.tickEmitter.particleOptions instanceof PropertyParticleOptions propertyParticleOptions) {
+            propertyParticleOptions.map.set(ParticlePropertyRegistry.WALL_PROPERTY.get(), new WallProperty(Math.round(getAoe()), 5, 20, getDirection()));
+        }
     }
 
     @Override

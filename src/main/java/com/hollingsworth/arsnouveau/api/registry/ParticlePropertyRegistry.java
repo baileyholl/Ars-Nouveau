@@ -24,4 +24,8 @@ public class ParticlePropertyRegistry {
     public static final DeferredHolder<IPropertyType<?>, IPropertyType<ParticleDensityProperty>> DENSITY_PROPERTY = PROP_DF.register("density", () -> new SimplePropertyType<>(ParticleDensityProperty.CODEC, ParticleDensityProperty.STREAM_CODEC));
 
     public static final DeferredHolder<IPropertyType<?>, IPropertyType<EmitterProperty>> EMITTER_PROPERTY = PROP_DF.register("emitter", () -> new SimplePropertyType<>(EmitterProperty.CODEC, EmitterProperty.STREAM_CODEC));
+
+    public static final DeferredHolder<IPropertyType<?>, IPropertyType<WallProperty>> WALL_PROPERTY = PROP_DF.register("wall", () -> new SimplePropertyType<>(WallProperty.CODEC, WallProperty.STREAM_CODEC));
+
+
 }

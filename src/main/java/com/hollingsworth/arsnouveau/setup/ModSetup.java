@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
-import com.hollingsworth.arsnouveau.api.registry.ParticleConfigRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
@@ -54,13 +54,13 @@ public class ModSetup {
         CreativeTabRegistry.TABS.register(modEventBus);
         DataSerializers.DS.register(modEventBus);
         AttachmentsRegistry.ATTACHMENT_TYPES.register(modEventBus);
-        ParticleConfigRegistry.PARTICLE_CONFIG.register(modEventBus);
+        ParticleMotionRegistry.PARTICLE_CONFIG.register(modEventBus);
         ParticleTimelineRegistry.TIMELINE_DF.register(modEventBus);
         ParticlePropertyRegistry.PROP_DF.register(modEventBus);
     }
 
     public static void registerRegistries(NewRegistryEvent event) {
-        event.register(ParticleConfigRegistry.PARTICLE_CONFIG_REGISTRY);
+        event.register(ParticleMotionRegistry.PARTICLE_CONFIG_REGISTRY);
         event.register(ParticleTimelineRegistry.PARTICLE_TIMELINE_REGISTRY);
         event.register(ParticlePropertyRegistry.PARTICLE_PROPERTY_REGISTRY);
     }

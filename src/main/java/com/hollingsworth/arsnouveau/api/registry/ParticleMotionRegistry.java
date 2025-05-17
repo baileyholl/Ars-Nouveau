@@ -8,7 +8,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 
-public class ParticleConfigRegistry {
+public class ParticleMotionRegistry {
     public static final ResourceKey<Registry<IParticleMotionType<?>>> PARTICLE_CONFIG_REGISTRY_KEY = ResourceKey.createRegistryKey(ArsNouveau.prefix("particle_configs"));
 
     public static final Registry<IParticleMotionType<?>> PARTICLE_CONFIG_REGISTRY = new RegistryBuilder<>(PARTICLE_CONFIG_REGISTRY_KEY).sync(true).create();
@@ -20,4 +20,7 @@ public class ParticleConfigRegistry {
     public static final DeferredHolder<IParticleMotionType<?>, IParticleMotionType<SpiralMotion>> SPIRAL_TYPE = PARTICLE_CONFIG.register("spiral", () -> new SimpleParticleMotionType<>(SpiralMotion.CODEC, SpiralMotion.STREAM, SpiralMotion::new));
 
     public static final DeferredHolder<IParticleMotionType<?>, IParticleMotionType<HelixMotion>> HELIX_TYPE = PARTICLE_CONFIG.register("helix", () -> new SimpleParticleMotionType<>(HelixMotion.CODEC, HelixMotion.STREAM, HelixMotion::new));
+
+
+    public static final DeferredHolder<IParticleMotionType<?>, IParticleMotionType<UpwardsMotion>> UPWARD_WALL_TYPE = PARTICLE_CONFIG.register("upward_wall", () -> new SimpleParticleMotionType<>(UpwardsMotion.CODEC, UpwardsMotion.STREAM, UpwardsMotion::new));
 }

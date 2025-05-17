@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.BurstMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
-import com.hollingsworth.arsnouveau.api.particle.configurations.TrailMotion;
+import com.hollingsworth.arsnouveau.api.particle.configurations.UpwardsMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.mojang.serialization.MapCodec;
@@ -34,7 +34,7 @@ public class WallTimeline extends BaseTimeline<WallTimeline>{
     public TimelineEntryData onResolvingEffect;
 
     public WallTimeline(){
-        this(new TimelineEntryData(new TrailMotion(), PropertyParticleOptions.defaultGlow()),
+        this(new TimelineEntryData(new UpwardsMotion(), PropertyParticleOptions.defaultGlow()),
                 new TimelineEntryData(new BurstMotion(), PropertyParticleOptions.defaultGlow()));
     }
 
@@ -58,7 +58,7 @@ public class WallTimeline extends BaseTimeline<WallTimeline>{
 
     @Override
     public List<TimelineOption> getTimelineOptions() {
-        return List.of(new TimelineOption(ArsNouveau.prefix("trail"), this.trailEffect, ImmutableList.copyOf(TRAIL_OPTIONS)).withProperty(new ParticleTypeProperty(this.trailEffect.particleOptions.map)),
+        return List.of(new TimelineOption(ArsNouveau.prefix("field"), this.trailEffect, ImmutableList.copyOf(TRAIL_OPTIONS)).withProperty(new ParticleTypeProperty(this.trailEffect.particleOptions.map)),
                 new TimelineOption(ArsNouveau.prefix("impact"), this.onResolvingEffect, ImmutableList.copyOf(RESOLVING_OPTIONS)).withProperty(new ParticleTypeProperty(this.onResolvingEffect.particleOptions.map)));
     }
 }

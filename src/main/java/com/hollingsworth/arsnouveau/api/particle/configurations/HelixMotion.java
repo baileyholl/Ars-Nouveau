@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
-import com.hollingsworth.arsnouveau.api.registry.ParticleConfigRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -57,7 +57,7 @@ public class HelixMotion extends ParticleMotion {
 
     @Override
     public IParticleMotionType<?> getType() {
-        return ParticleConfigRegistry.HELIX_TYPE.get();
+        return ParticleMotionRegistry.HELIX_TYPE.get();
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
-import com.hollingsworth.arsnouveau.api.registry.ParticleConfigRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -59,7 +59,7 @@ public class SpiralMotion extends ParticleMotion {
 
     @Override
     public IParticleMotionType<?> getType() {
-        return ParticleConfigRegistry.SPIRAL_TYPE.get();
+        return ParticleMotionRegistry.SPIRAL_TYPE.get();
     }
     @Override
     public void tick(ParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
