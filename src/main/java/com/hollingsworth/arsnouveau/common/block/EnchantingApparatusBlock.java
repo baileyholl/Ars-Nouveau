@@ -83,7 +83,7 @@ public class EnchantingApparatusBlock extends TickableModBlock {
                 List<ColorPos> colorPos = new ArrayList<>();
                 for(BlockPos pedPos : tile.pedestalList()){
                     if(world.getBlockEntity(pedPos) instanceof ArcanePedestalTile pedestalTile){
-                        colorPos.add(new ColorPos(pedPos.getCenter().add(new Vec3(pedestalTile.getBlockState().getValue(BlockStateProperties.FACING).step()).scale(0.5))));
+                        colorPos.add(new ColorPos(pedPos.getCenter().add(new Vec3(pedestalTile.getBlockState().getValue(BlockStateProperties.FACING).step()).scale(0.25))));
                     }
                 }
 

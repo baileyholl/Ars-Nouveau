@@ -93,4 +93,9 @@ public class ArcanePlatform extends ArcanePedestal{
         }
         return UP;
     }
+
+
+    public float getOffsetScalar(){
+        return 0.1f;
+    }
 }

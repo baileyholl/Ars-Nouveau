@@ -78,7 +78,7 @@ runs {
       }
 
     server {
-        //programArgument '--nogui'
+        programArgument '--nogui'
         workingDirectory 'server'
     }
 
@@ -167,7 +167,7 @@ dependencies {
     compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
     implementation 'com.github.glitchfiend:TerraBlender-neoforge:1.21-4.0.0.0'
     implementation "curse.maven:jade-324717:5444008"
-    implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}+1.21"
+    implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}+1.21.1"
 
     localRuntime "dev.emi:emi-neoforge:${emi_version}"
     localRuntime 'curse.maven:ftb-teams-forge-404468:5631446'
@@ -175,16 +175,21 @@ dependencies {
     localRuntime 'curse.maven:ftb-library-forge-404465:5754910'
     localRuntime 'curse.maven:architectury-api-419699:5553800'
 //    localRuntime 'curse.maven:productivebees-377897:6154395'
-    implementation(jarJar(group: 'com.hollingsworth.nuggets', name: 'nuggets-neoforge-1.21', version:'[1.0.4,)'){
-        jarJar.pin(it, '1.0.4')
+    implementation(jarJar(group: 'com.hollingsworth.nuggets', name: 'nuggets-neoforge-1.21', version:'[1.0.6,)'){
+        jarJar.pin(it, '1.0.6')
     })
     localRuntime "maven.modrinth:cloth-config:15.0.140+neoforge"
+
+    // Apotheosis
+    localRuntime "curse.maven:apothic-attributes-898963:6430300"
+    localRuntime "curse.maven:placebo-283644:6446766"
   //localRuntime "curse.maven:immersive-portals-for-forge-355440:6013197"
     //implementation "curse.maven:ars-elemental-561470:6086122"
     shade 'org.apache.lucene:lucene-core:10.1.0'
     shade 'org.apache.lucene:lucene-analysis-common:10.1.0'
     shade 'org.apache.lucene:lucene-queryparser:10.1.0'
-
+//    implementation "curse.maven:immersive-engineering-231951:6506639"
+//    implementation 'com.hollingsworth.nuggets:nuggets-neoforge-1.21:1.0.4'
 }
 
 jar {

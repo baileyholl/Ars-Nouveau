@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.documentation;
 
+import com.google.common.collect.Lists;
 import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
@@ -15,12 +16,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DocClientUtils {
 
@@ -134,25 +139,91 @@ public class DocClientUtils {
     public static void drawParagraph(Component text, GuiGraphics guiGraphics, int x, int y, int width, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
         poseStack.pushPose();
-        float scale = 1f;
         poseStack.translate(x + 1, y, 0);
-        //poseStack.scale(scale, scale, 1);
         NuggetMultilLineLabel label = NuggetMultilLineLabel.create(Minecraft.getInstance().font, text.copy().withStyle(Style.EMPTY.withFont(Minecraft.UNIFORM_FONT)), width );
         int lineHeight = 9;
         label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, lineHeight, 0);
-
-//        float dist = 0.124F;
-//        for(int cycle = 0; cycle < 2; cycle++){
-//            poseStack.translate(-dist, 0F, 0F);
-//            label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, lineHeight, 0);
-//            poseStack.translate(dist, -dist, 0F);
-//            label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, lineHeight, 0);
-//            poseStack.translate(dist, 0F, 0F);
-//            label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, lineHeight, 0);
-//            poseStack.translate(-dist, dist, 0F);
-//
-//            dist = -dist;
-//        }
         poseStack.popPose();
     }
+    public static void drawParagraph(NuggetMultilLineLabel label, GuiGraphics guiGraphics, int x, int y, int width, int mouseX, int mouseY, float partialTick) {
+        int lineHeight = 9;
+        label.renderLeftAlignedNoShadow(guiGraphics, x + 1, y, lineHeight, 0);
+    }
+
+    public static final int ROWS_FOR_TITLE_PAGE = 14;
+    public static final int ROWS_FOR_NORMAL_PAGE = 17;
+
+    public static final int PARAGRAPH_WIDTH = 118;
+
+    public static List<NuggetMultilLineLabel> splitToFitFullPage(Component text){
+        return DocClientUtils.splitToFitPageWithOffset(text, ROWS_FOR_NORMAL_PAGE, ROWS_FOR_NORMAL_PAGE);
+    }
+
+    public static List<NuggetMultilLineLabel> splitToFitTitlePage(Component text){
+        return DocClientUtils.splitToFitPageWithOffset(text, ROWS_FOR_TITLE_PAGE, ROWS_FOR_NORMAL_PAGE);
+    }
+
+
+    public static List<NuggetMultilLineLabel> splitToFitPageWithOffset(Component text, int firstMaxRows, int secondMaxRows){
+
+        Font font = Minecraft.getInstance().font;
+        List<FormattedText> list = Lists.newArrayList();
+        String content = text.getString();
+        font.getSplitter().splitLines(content, PARAGRAPH_WIDTH,  Style.EMPTY.withFont(Minecraft.UNIFORM_FONT), true,  (style, currentPos, width) ->{
+            String s2 = content.substring(currentPos, width);
+            boolean addLine = false;
+            if(StringUtils.endsWith(s2, "\n")) {
+                s2 = StringUtils.stripEnd(s2, "\n").trim();
+                addLine = true;
+            }
+            if(!s2.isEmpty()) {
+                list.add(FormattedText.of(s2, style));
+                if(addLine){
+                    list.add(FormattedText.of(" ", style));
+                }
+            }
+        });
+
+        List<NuggetMultilLineLabel> labels = new ArrayList<>();
+
+        List<FormattedText> firstList = list.subList(0, Math.min(firstMaxRows, list.size()));
+        NuggetMultilLineLabel firstLabel = NuggetMultilLineLabel.create(font, PARAGRAPH_WIDTH, formattedToComponent(firstList).toArray(new Component[0]));
+
+        labels.add(firstLabel);
+
+        // Split list into sublists of size maxRows
+        for (int i = firstMaxRows; i < list.size(); i += secondMaxRows) {
+            int end = Math.min(i + secondMaxRows, list.size());
+            List<Component> sublist = formattedToComponent(list.subList(i, end));
+            // Removes empty lines at the start of the sublist and recalculates the end index so we have no gaps
+            while(true){
+                if(sublist.isEmpty()){
+                    break;
+                }
+                if(sublist.getFirst().getString().trim().isEmpty()){
+                    sublist.removeFirst();
+                    i++;
+                    end = Math.min(i + secondMaxRows, list.size());
+                    sublist = formattedToComponent(list.subList(i, end));
+                }else{
+                    break;
+                }
+            }
+
+            NuggetMultilLineLabel label = NuggetMultilLineLabel.create(font, PARAGRAPH_WIDTH, sublist.toArray(new Component[0]));
+            labels.add(label);
+        }
+        return labels;
+    }
+
+    private static List<Component> formattedToComponent(List<FormattedText> list){
+        List<Component> components = new ArrayList<>();
+        for (int i = 0, listSize = list.size(); i < listSize; i++) {
+            FormattedText formatted = list.get(i);
+            Component component = Component.literal(formatted.getString()).withStyle(Style.EMPTY.withFont(Minecraft.UNIFORM_FONT));
+            components.add(component);
+        }
+        return components;
+    }
+
 }

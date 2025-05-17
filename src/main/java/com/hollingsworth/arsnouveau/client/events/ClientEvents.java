@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.events;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.DynamicTooltipRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GenericRecipeRegistry;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.DocItemTooltipHandler;
 import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
@@ -22,6 +23,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -88,6 +90,22 @@ public class ClientEvents {
         DocItemTooltipHandler.onTooltip(e.getGraphics(), e.getItemStack(), e.getX(), e.getY());
     }
 
+    private static Slot slotUnderMouse = null;
+
+    @SubscribeEvent
+    public static void containerRenderBackground(ContainerScreenEvent.Render.Background e) {
+        var screen = e.getContainerScreen();
+        slotUnderMouse = screen.getSlotUnderMouse();
+    }
+
+    @SubscribeEvent
+    public static void containerRenderForeground(ContainerScreenEvent.Render.Foreground e) {
+        var screen = e.getContainerScreen();
+        if (slotUnderMouse != screen.getSlotUnderMouse()) {
+            DocItemTooltipHandler.resetLexiconLookupTime();
+        }
+    }
+
     @SubscribeEvent
     public static void addComponents(RenderTooltipEvent.GatherComponents event) {
         if (!Screen.hasShiftDown() && event.getItemStack().isEnchanted() && event.getItemStack().has(DataComponentRegistry.REACTIVE_CASTER)) {
@@ -124,6 +142,9 @@ public class ClientEvents {
     public static void onTooltip(final ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
         DynamicTooltipRegistry.appendTooltips(stack, event.getContext(), event.getToolTip()::add, event.getFlags());
+        for (var tooltip: ClientInfo.storageTooltip) {
+            event.getToolTip().add(tooltip);
+        }
     }
 
     public static Component localize(String key, Object... params) {

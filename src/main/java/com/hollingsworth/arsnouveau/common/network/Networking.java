@@ -78,7 +78,7 @@ public class Networking {
         reg.playToServer(PacketUpdateDominionWand.TYPE, PacketUpdateDominionWand.CODEC, Networking::handle);
         reg.playBidirectional(PacketSetAllies.TYPE, PacketSetAllies.CODEC, Networking::handle);
         reg.playToServer(PacketCastSpell.TYPE, PacketCastSpell.CODEC, Networking::handle);
-
+        reg.playToClient(PacketToggleDebug.TYPE, PacketToggleDebug.CODEC, Networking::handle);
     }
 
     public static <T extends AbstractPacket> void handle(T message, IPayloadContext ctx) {

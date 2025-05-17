@@ -21,7 +21,7 @@ public class MageBlockRenderer extends GeoEntityRenderer<EnchantedMageblock> {
 
     @Override
     public void actuallyRender(PoseStack poseStack, EnchantedMageblock animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
-        ParticleColor particleColor = animatable.getParticleColor();
+        ParticleColor particleColor = animatable.getColor();
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, particleColor.getColor());
     }
 

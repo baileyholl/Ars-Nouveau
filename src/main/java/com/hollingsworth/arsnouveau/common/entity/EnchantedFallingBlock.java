@@ -23,6 +23,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
@@ -54,6 +55,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -63,7 +65,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
-public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntity {
+public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntity, IEntityWithComplexSpawn {
 
     public BlockState blockState = Blocks.SAND.defaultBlockState();
     public int time;
@@ -73,8 +75,8 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
     private int fallDamageMax = 40;
     private float fallDamagePerDistance;
     public int knockback = 2;
-    @Nullable
-    public CompoundTag blockData;
+
+    public CompoundTag blockData = new CompoundTag();
     public SpellContext context;
     public float baseDamage;
     public SpellResolver resolver;
@@ -142,13 +144,14 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         if (level.getBlockEntity(pos) instanceof MageBlockTile tile) {
             fallingblockentity = new EnchantedMageblock(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, blockState.hasProperty(BlockStateProperties.WATERLOGGED) ? blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE) : blockState);
             fallingblockentity.resolver = resolver;
-            fallingblockentity.blockData = tile.saveWithoutMetadata(level.registryAccess());
             fallingblockentity.setColor(tile.color);
         } else if (level.getBlockEntity(pos) instanceof SkullBlockEntity tile) {
             fallingblockentity = new EnchantedSkull(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, blockState.hasProperty(BlockStateProperties.WATERLOGGED) ? blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE) : blockState);
-            fallingblockentity.blockData = tile.saveWithoutMetadata(level.registryAccess());
         } else {
             fallingblockentity = new EnchantedFallingBlock(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, blockState.hasProperty(BlockStateProperties.WATERLOGGED) ? blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE) : blockState, resolver);
+        }
+        if(level.getBlockEntity(pos) != null){
+            fallingblockentity.blockData = level.getBlockEntity(pos).saveWithoutMetadata(level.registryAccess());
         }
         level.addFreshEntity(fallingblockentity);
         fallingblockentity.setOwner(owner);
@@ -280,7 +283,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
                     }
                 }
                 if (this.level.getBlockEntity(blockpos) instanceof MageBlockTile mbt) {
-                    mbt.color = getParticleColor();
+                    mbt.color = getColor();
                     mbt.setChanged();
                 }
 
@@ -302,7 +305,6 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
             if (this.dropItem && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
                 this.callOnBrokenAfterFall(block, blockpos);
                 ItemStack itemstack = new ItemStack(block);
-                //todo: restore player head
                 if (this.blockData != null && this.getBlockState().is(Blocks.PLAYER_HEAD)) {
                     ResolvableProfile.CODEC
                             .parse(NbtOps.INSTANCE, blockData.get("profile"))
@@ -338,7 +340,6 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
 
         Entity owner = this.getOwner();
         DamageSource damagesource;
-        // TODO: check falling block sources
         damagesource = getDamageSource(owner, entity);
 
         boolean isEnderman = entity.getType() == EntityType.ENDERMAN;
@@ -477,7 +478,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         super.readAdditionalSaveData(pCompound);
         this.blockState = NbtUtils.readBlockState(this.level().holderLookup(Registries.BLOCK), pCompound.getCompound("BlockState"));
         this.time = pCompound.getInt("Time");
-        if (pCompound.contains("HurtEntities", 99)) {
+        if (pCompound.contains("HurtEntities")) {
             this.hurtEntities = pCompound.getBoolean("HurtEntities");
             this.fallDamagePerDistance = pCompound.getFloat("FallHurtAmount");
             this.fallDamageMax = pCompound.getInt("FallHurtMax");
@@ -485,11 +486,11 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
             this.hurtEntities = true;
         }
 
-        if (pCompound.contains("DropItem", 99)) {
+        if (pCompound.contains("DropItem")) {
             this.dropItem = pCompound.getBoolean("DropItem");
         }
 
-        if (pCompound.contains("TileEntityData", 10)) {
+        if (pCompound.contains("TileEntityData")) {
             this.blockData = pCompound.getCompound("TileEntityData");
         }
 
@@ -553,4 +554,15 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         return GeckoLibUtil.createInstanceCache(this);
     }
 
+    @Override
+    public void writeSpawnData(RegistryFriendlyByteBuf buffer) {
+        buffer.writeInt(Block.getId(blockState));
+        buffer.writeNbt(blockData);
+    }
+
+    @Override
+    public void readSpawnData(RegistryFriendlyByteBuf additionalData) {
+        blockState = Block.stateById(additionalData.readInt());
+        blockData = additionalData.readNbt();
+    }
 }

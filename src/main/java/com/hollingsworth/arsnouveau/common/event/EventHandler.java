@@ -33,7 +33,6 @@ import com.hollingsworth.arsnouveau.common.ritual.RitualFlight;
 import com.hollingsworth.arsnouveau.common.ritual.RitualGravity;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectWololo;
-import com.hollingsworth.arsnouveau.common.world.saved_data.AlliesSavedData;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
@@ -53,7 +52,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
@@ -94,12 +92,13 @@ public class EventHandler {
     public static void resourceLoadEvent(AddReloadListenerEvent event) {
         event.addListener(new SimplePreparableReloadListener<>() {
 
-            @SuppressWarnings("DataFlowIssue")
+            @SuppressWarnings({"NullableProblems", "DataFlowIssue", "DataFlowIssue"})
             @Override
             protected Object prepare(ResourceManager pResourceManager, ProfilerFiller pProfiler) {
                 return null;
             }
 
+            @SuppressWarnings("NullableProblems")
             @Override
             protected void apply(Object pObject, ResourceManager pResourceManager, ProfilerFiller pProfiler) {
                 MultiRecipeWrapper.RECIPE_CACHE = new HashMap<>();
@@ -340,6 +339,7 @@ public class EventHandler {
         LearnGlyphCommand.register(event.getDispatcher());
         AdoptCommand.register(event.getDispatcher());
         DroplessMobsCommand.register(event.getDispatcher());
+        DebugNumberCommand.register(event.getDispatcher());
         if(!FMLEnvironment.production){
             ExportDocsCommand.register(event.getDispatcher());
         }
