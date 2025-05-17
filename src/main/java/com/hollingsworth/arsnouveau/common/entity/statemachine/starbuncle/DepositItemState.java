@@ -4,15 +4,15 @@ import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyTransportBehavior;
+import com.hollingsworth.arsnouveau.common.entity.statemachine.IStateEvent;
 import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
+import org.jetbrains.annotations.Nullable;
 
 public class DepositItemState extends TravelToPosState {
     public DepositItemState(Starbuncle starbuncle, StarbyTransportBehavior behavior, BlockPos target) {
@@ -63,5 +63,15 @@ public class DepositItemState extends TravelToPosState {
     @Override
     public boolean isDestinationStillValid(BlockPos pos) {
         return behavior.sortPrefForStack(pos, starbuncle.getHeldStack()) != ItemScroll.SortPref.INVALID;
+    }
+
+    @Override
+    public @Nullable StarbyState onEvent(IStateEvent event) {
+        if(event instanceof BoundListChangedEvent boundListChangedEvent){
+            if(!behavior.TO_LIST.contains(targetPos)){
+                return new DecideStarbyActionState(starbuncle, behavior);
+            }
+        }
+        return super.onEvent(event);
     }
 }

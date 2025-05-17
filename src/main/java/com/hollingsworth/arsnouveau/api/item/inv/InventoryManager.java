@@ -78,11 +78,15 @@ public class InventoryManager {
     }
 
     public MultiInsertReference insertStackWithReference(ItemStack stack) {
+        return insertStackWithReference(stack, false);
+    }
+
+    public MultiInsertReference insertStackWithReference(ItemStack stack, boolean simulate) {
         List<SlotReference> references = new ArrayList<>();
         for (var filterPref : preferredForStack(stack, false)) {
             FilterableItemHandler filterable = filterPref.handler;
             int count = stack.getCount();
-            stack = filterable.insertItemStacked(stack, false);
+            stack = filterable.insertItemStacked(stack, simulate);
             if (count != stack.getCount()) {
                 references.add(new SlotReference(filterable.getHandler(), filterable.getHandler().getSlots()));
             }
@@ -93,6 +97,7 @@ public class InventoryManager {
         return new MultiInsertReference(stack, references);
     }
 
+
     /**
      * Extracts a stack from the highest preferred inventory that contains items that match the predicate.
      *
@@ -100,12 +105,17 @@ public class InventoryManager {
      */
     public ExtractedStack extractItem(Predicate<ItemStack> predicate, int count) {
         FilterableItemHandler highestHandler = highestPrefInventory(getInventory(), predicate, InteractType.EXTRACT);
-        return highestHandler == null ? ExtractedStack.empty() : extractItem(highestHandler, predicate, count);
+        return highestHandler == null ? ExtractedStack.empty() : extractItem(highestHandler, predicate, count, false);
     }
 
     public ExtractedStack extractItem(FilterableItemHandler filteredHandler, Predicate<ItemStack> stackPredicate, int count) {
         SlotReference slotRef = findItem(filteredHandler, stackPredicate, InteractType.EXTRACT);
-        return slotRef.isEmpty() ? ExtractedStack.empty() : ExtractedStack.from(slotRef, count);
+        return slotRef.isEmpty() ? ExtractedStack.empty() : ExtractedStack.from(slotRef, count, false);
+    }
+
+    public ExtractedStack extractItem(FilterableItemHandler filteredHandler, Predicate<ItemStack> stackPredicate, int count, boolean simulate) {
+        SlotReference slotRef = findItem(filteredHandler, stackPredicate, InteractType.EXTRACT);
+        return slotRef.isEmpty() ? ExtractedStack.empty() : ExtractedStack.from(slotRef, count, simulate);
     }
 
     /**
@@ -120,7 +130,7 @@ public class InventoryManager {
 
     public ExtractedStack extractRandomItem(FilterableItemHandler filteredHandler, Predicate<ItemStack> stackPredicate, int count) {
         SlotReference slotRef = findItemR(filteredHandler, stackPredicate, InteractType.EXTRACT);
-        return slotRef.isEmpty() ? ExtractedStack.empty() : ExtractedStack.from(slotRef, count);
+        return slotRef.isEmpty() ? ExtractedStack.empty() : ExtractedStack.from(slotRef, count, false);
     }
 
     /**
@@ -148,7 +158,7 @@ public class InventoryManager {
                 merged.grow(toExtract);
             }
             // actually extracts the stack
-            extractedStacks.add(ExtractedStack.from(filterableItemHandler.getHandler(), i, toExtract));
+            extractedStacks.add(ExtractedStack.from(filterableItemHandler.getHandler(), i, toExtract, false));
             if (remaining <= 0)
                 break;
         }
