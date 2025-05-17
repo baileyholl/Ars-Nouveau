@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.particle.timelines;
 
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
+import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -19,5 +20,7 @@ public interface IParticleTimelineType<T extends IParticleTimeline<T>> {
     StreamCodec<RegistryFriendlyByteBuf, T> streamCodec();
 
     T create();
+
+    AbstractSpellPart getSpellPart();
 
 }

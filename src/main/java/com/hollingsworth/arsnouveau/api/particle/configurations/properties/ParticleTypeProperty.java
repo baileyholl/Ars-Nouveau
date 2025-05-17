@@ -18,10 +18,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
@@ -84,21 +81,20 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
 
             @Override
             public void addWidgets(List<AbstractWidget> widgets) {
-                var particleEntries = PARTICLE_TYPES.entrySet();
-                int count = 0;
-                for (var particleType : particleEntries) {
-                    widgets.add(new GuiImageButton(x + 6 + 16 * count, y + 20, 14, 14, getImagePath(particleType.getKey()), (b) -> {
+                var particleEntries = new ArrayList<>(PARTICLE_TYPES.entrySet());
+                for (int i = 0; i < particleEntries.size(); i++) {
+                    var particleType = particleEntries.get(i);
+                    widgets.add(new GuiImageButton(x + 6 + 16 * (i % 7), y + 20 + 20*(i/7), 14, 14, getImagePath(particleType.getKey()), (b) -> {
                         var didHaveColor = selectedData.acceptsColor;
                         selectedData = particleType.getValue();
                         type = particleType.getKey();
                         var nowHasColor = selectedData.acceptsColor;
 
                         propertyHolder.set(getType(), self);
-                        if(didHaveColor != nowHasColor && onDependenciesChanged != null){
+                        if (didHaveColor != nowHasColor && onDependenciesChanged != null) {
                             onDependenciesChanged.run();
                         }
                     }).withTooltip(getTypeName(particleType.getKey())));
-                    count++;
                 }
             }
 

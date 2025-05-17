@@ -31,12 +31,12 @@ public class TrailMotion extends ParticleMotion {
         if(!propMap.has(ParticlePropertyRegistry.DENSITY_PROPERTY.get())){
             this.density = 100;
             this.radius = 0.1;
-            this.spawnType = SpawnType.POINT;
+            this.spawnType = SpawnType.SPHERE;
         } else {
             ParticleDensityProperty densityProperty = propMap.get(ParticlePropertyRegistry.DENSITY_PROPERTY.get());
-            this.radius = densityProperty.radius;
-            this.density = densityProperty.density;
-            this.spawnType = densityProperty.spawnType;
+            this.radius = densityProperty.radius();
+            this.density = densityProperty.density();
+            this.spawnType = densityProperty.spawnType().orElse(SpawnType.SPHERE);
 
         }
     }
@@ -45,7 +45,8 @@ public class TrailMotion extends ParticleMotion {
         super(new PropMap());
         this.density = 100;
         radius = 0.1;
-        propertyMap.set(ParticlePropertyRegistry.DENSITY_PROPERTY.get(), new ParticleDensityProperty(density, radius, SpawnType.POINT));
+        propertyMap.set(ParticlePropertyRegistry.DENSITY_PROPERTY.get(), new ParticleDensityProperty(density, radius, SpawnType.SPHERE));
+        spawnType = SpawnType.SPHERE;
     }
 
 
@@ -70,7 +71,6 @@ public class TrailMotion extends ParticleMotion {
             double pz = prevZ + deltaZ * t;
             Vec3 deltaVec =  new Vec3(px, py, pz);
             Vec3 point = switch (spawnType){
-                case POINT -> new Vec3(px, py, pz);
                 case SPHERE -> deltaVec.add(ParticleUtil.pointInSphere().scale(radius));
                 case CUBE -> deltaVec.add(ParticleUtil.pointInCube().scale(radius));
             };

@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.sounds.SoundManager;
@@ -16,6 +17,11 @@ public class GuiImageButton extends ANButton {
     public int u, v, image_width, image_height;
     public Component toolTip;
     public boolean soundDisabled = false;
+
+    public GuiImageButton(int x, int y, DocAssets.BlitInfo blitInfo, Button.OnPress onPress) {
+        this(x, y, blitInfo.width(), blitInfo.height(), blitInfo.location(), onPress);
+    }
+
 
     public GuiImageButton(int x, int y, int w, int h, ResourceLocation image, Button.OnPress onPress) {
         this(x, y, 0, 0, w, h, w, h, image, onPress);

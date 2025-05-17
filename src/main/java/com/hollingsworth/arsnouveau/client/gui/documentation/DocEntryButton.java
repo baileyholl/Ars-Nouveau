@@ -10,20 +10,18 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public class DocEntryButton extends NuggetImageButton {
-    public DocEntry docEntry;
     public ItemStack renderStack;
     public Component title;
 
 
-    public DocEntryButton(int x, int y, DocEntry docEntry, ItemStack renderStack, Component display, OnPress onPress) {
+    public DocEntryButton(int x, int y, ItemStack renderStack, Component display, OnPress onPress) {
         super(x, y, DocAssets.DOC_ENTRY_BUTTON.width(), DocAssets.DOC_ENTRY_BUTTON.height(), DocAssets.DOC_ENTRY_BUTTON.location(), onPress);
-        this.docEntry = docEntry;
         this.renderStack = renderStack;
         this.title = display;
     }
 
     public DocEntryButton(int x, int y, DocEntry docEntry, OnPress onPress) {
-        this(x, y, docEntry, docEntry.renderStack(), docEntry.entryTitle(), onPress);
+        this(x, y, docEntry.renderStack(), docEntry.entryTitle(), onPress);
     }
 
     @Override

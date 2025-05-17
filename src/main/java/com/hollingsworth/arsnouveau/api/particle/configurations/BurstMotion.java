@@ -30,7 +30,7 @@ public class BurstMotion extends ParticleMotion {
         if(!propertyMap.has(ParticlePropertyRegistry.DENSITY_PROPERTY.get())){
             this.density = 5;
         } else {
-            this.density = propertyMap.get(ParticlePropertyRegistry.DENSITY_PROPERTY.get()).density;
+            this.density = propertyMap.get(ParticlePropertyRegistry.DENSITY_PROPERTY.get()).density();
         }
     }
 

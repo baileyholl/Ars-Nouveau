@@ -304,8 +304,6 @@ public class APIRegistry {
         JarBehaviorRegistry.register(EntityType.SNIFFER, new SnifferBehavior());
         DynamicTooltipRegistry.register(DataComponentRegistry.REACTIVE_CASTER.get());
 
-        ParticleTimelineRegistry.registerGlyphTimeline(MethodProjectile.INSTANCE, ParticleTimelineRegistry.PROJECTILE_TIMELINE::get);
-
         List<IParticleMotionType<?>> PROJECTILE_OPTIONS = Arrays.asList(ParticleConfigRegistry.HELIX_TYPE.get(),
                 ParticleConfigRegistry.TRAIL_TYPE.get(),
                 ParticleConfigRegistry.SPIRAL_TYPE.get());

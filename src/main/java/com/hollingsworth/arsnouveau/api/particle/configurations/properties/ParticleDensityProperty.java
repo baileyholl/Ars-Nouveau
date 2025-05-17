@@ -21,13 +21,14 @@ import net.minecraft.util.Mth;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class ParticleDensityProperty extends Property<ParticleDensityProperty>{
     public static MapCodec<ParticleDensityProperty> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.INT.fieldOf("density").forGetter(i -> i.density),
             Codec.DOUBLE.fieldOf("radius").forGetter(i -> i.radius),
-            ANCodecs.createEnumCodec(ParticleMotion.SpawnType.class).fieldOf("spawnType").forGetter(i -> i.spawnType)
+            ANCodecs.createEnumCodec(ParticleMotion.SpawnType.class).optionalFieldOf("spawnType").forGetter(ParticleDensityProperty::spawnType)
     ).apply(instance, ParticleDensityProperty::new));
 
     public static StreamCodec<RegistryFriendlyByteBuf, ParticleDensityProperty> STREAM_CODEC = StreamCodec.composite(
@@ -35,21 +36,28 @@ public class ParticleDensityProperty extends Property<ParticleDensityProperty>{
             ParticleDensityProperty::density,
             ByteBufCodecs.DOUBLE,
             ParticleDensityProperty::radius,
-            ANCodecs.createEnumStreamCodec(ParticleMotion.SpawnType.class),
+            ByteBufCodecs.optional(ANCodecs.createEnumStreamCodec(ParticleMotion.SpawnType.class)),
             ParticleDensityProperty::spawnType,
             ParticleDensityProperty::new
     );
 
-    public int density;
-    public double radius;
+    private int density;
+    private double radius;
 
-    public ParticleMotion.SpawnType spawnType;
+    private ParticleMotion.SpawnType spawnType;
 
     public ParticleDensityProperty(int density, double radius, ParticleMotion.SpawnType spawnType) {
         super();
         this.density = density;
         this.radius = radius;
         this.spawnType = spawnType;
+    }
+
+    public ParticleDensityProperty(int density, double radius, Optional<ParticleMotion.SpawnType> spawnType) {
+        super();
+        this.density = density;
+        this.radius = radius;
+        this.spawnType = spawnType.orElse(ParticleMotion.SpawnType.SPHERE);
     }
 
     public ParticleDensityProperty(PropMap propMap){
@@ -61,7 +69,7 @@ public class ParticleDensityProperty extends Property<ParticleDensityProperty>{
         } else {
             ParticleDensityProperty densityProperty = propMap.get(getType());
             this.density = densityProperty.density;
-            this.spawnType = densityProperty.spawnType;
+            this.spawnType = densityProperty.spawnType().orElse(ParticleMotion.SpawnType.SPHERE);
             this.radius = densityProperty.radius;
         }
     }
@@ -70,8 +78,8 @@ public class ParticleDensityProperty extends Property<ParticleDensityProperty>{
         return density;
     }
 
-    public ParticleMotion.SpawnType spawnType() {
-        return spawnType;
+    public Optional<ParticleMotion.SpawnType> spawnType() {
+        return Optional.ofNullable(spawnType);
     }
 
     public double radius() {

@@ -82,7 +82,6 @@ public abstract class ParticleMotion {
 
 
     public enum SpawnType {
-        POINT,
         SPHERE,
         CUBE,
     }
