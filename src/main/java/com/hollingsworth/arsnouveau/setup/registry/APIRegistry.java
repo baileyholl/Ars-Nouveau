@@ -180,6 +180,7 @@ public class APIRegistry {
         registerPerk(KnockbackResistPerk.INSTANCE);
 
         ImbuementRecipeRegistry.INSTANCE.addRecipeType(RecipeRegistry.IMBUEMENT_TYPE);
+        ImbuementRecipeRegistry.INSTANCE.addRecipeType(RecipeRegistry.WARP_SCROLL_IMBUEMENT_TYPE);
     }
 
     //register things only in dev, safe from production

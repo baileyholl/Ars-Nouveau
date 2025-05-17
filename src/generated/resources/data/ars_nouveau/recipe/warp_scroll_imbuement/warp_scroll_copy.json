@@ -1,0 +1,13 @@
+{
+  "type": "ars_nouveau:imbuement_warp_scroll_copy",
+  "copyFrom": {
+    "id": "ars_nouveau:warp_scroll"
+  },
+  "input": {
+    "item": "ars_nouveau:warp_scroll"
+  },
+  "output": {
+    "id": "ars_nouveau:warp_scroll"
+  },
+  "source": 1000
+}
