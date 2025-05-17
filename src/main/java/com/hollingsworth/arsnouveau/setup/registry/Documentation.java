@@ -71,6 +71,12 @@ public class Documentation {
         DocCategory ENCHANTMENTS = DocumentationRegistry.ENCHANTING;
         DocCategory FAMILIARS = DocumentationRegistry.FAMILIARS;
         DocCategory MOD_NEWS = DocumentationRegistry.GETTING_STARTED;
+
+        addPage(new DocEntryBuilder(GETTING_STARTED, "spell_casting")
+                .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
+                .withSortNum(1)
+                .withIntroPage()
+                .withCraftingPages(ItemsRegistry.NOVICE_SPELLBOOK));
         for (AbstractSpellPart spellPart : GlyphRegistry.getSpellpartMap().values()) {
             ItemStack renderStack = spellPart.glyphItem.getDefaultInstance();
             var entry = new DocEntry(spellPart.getRegistryName(), renderStack, Component.literal(spellPart.getLocaleName()));
@@ -258,7 +264,7 @@ public class Documentation {
         addBasicItem(ItemsRegistry.SUMMONING_FOCUS, SPELL_CASTING);
         addBasicItem(ItemsRegistry.VOID_JAR, EQUIPMENT);
         addBasicItem(ItemsRegistry.WAND, SPELL_CASTING);
-        addPage(new DocEntryBuilder(AUTOMATION, ItemsRegistry.WHIRLISPRIG_CHARM)
+        var whirlisprig = addPage(new DocEntryBuilder(AUTOMATION, ItemsRegistry.WHIRLISPRIG_CHARM)
                 .withIntroPage()
                 .withCraftingPages(ItemsRegistry.WHIRLISPRIG_CHARM)
                 .withPage(EntityEntry.create(ModEntities.WHIRLISPRIG_TYPE.get(), getLangPath("whirlisprig_charm", 2)))
@@ -297,7 +303,11 @@ public class Documentation {
                 .addConnectedSearch(BlockRegistry.BOMBEGRANTE_POD)
                 .addConnectedSearch(BlockRegistry.MENDOSTEEN_POD)
                 .addConnectedSearch(BlockRegistry.FROSTAYA_POD)
-                .addConnectedSearch(BlockRegistry.BASTION_POD));
+                .addConnectedSearch(BlockRegistry.BASTION_POD)
+                .addConnectedSearch(BlockRegistry.BLAZING_LOG)
+                .addConnectedSearch(BlockRegistry.CASCADING_LOG)
+                .addConnectedSearch(BlockRegistry.VEXING_LOG)
+                .addConnectedSearch(BlockRegistry.FLOURISHING_LOG));
 
 
         addPage(new DocEntryBuilder(RESOURCES, "decorative")
@@ -692,69 +702,59 @@ public class Documentation {
                 .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
                 .withSortNum(1)
                 .withIntroPage()
-                .withLocalizedText()
-                .withLocalizedText()
-                .withCraftingPages(ItemsRegistry.NOVICE_SPELLBOOK));
-        addPage(new DocEntryBuilder(GETTING_STARTED, "spell_mana")
+                .withCraftingPages(ItemsRegistry.NOVICE_SPELLBOOK))
+                .withRelations(spellBooks);
+
+        addPage(new DocEntryBuilder(GETTING_STARTED, "introduction_to_glyphs")
                 .withSortNum(2)
                 .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
-                .withIntroPage()
-                .withLocalizedText());
+                .withIntroPage());
 
-        addPage(new DocEntryBuilder(GETTING_STARTED, "obtaining_gems")
-                .withIcon(BlockRegistry.IMBUEMENT_BLOCK)
+        addPage(new DocEntryBuilder(GETTING_STARTED, "introduction_to_spellcrafting")
                 .withSortNum(3)
-                .withIntroPage())
-                .withRelation(dowsingRod)
-                .withRelation(imbuementChamber);
+                .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
+                .withIntroPage());
 
-        addPage(new DocEntryBuilder(GETTING_STARTED, "new_glyphs")
-                .withIcon(ItemsRegistry.BLANK_GLYPH)
+        addPage(new DocEntryBuilder(GETTING_STARTED, "spellcasting")
                 .withSortNum(4)
+                .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
+                .withIntroPage());
+
+        addPage(new DocEntryBuilder(GETTING_STARTED, "spell_mana")
+                .withSortNum(5)
+                .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
+                .withIntroPage());
+
+        addPage(new DocEntryBuilder(GETTING_STARTED, "learning_glyphs")
+                .withSortNum(6)
+                .withIcon(BlockRegistry.SCRIBES_BLOCK)
                 .withIntroPage())
                 .withRelations(scribesTable, annotatedCodex);
 
+        addPage(new DocEntryBuilder(GETTING_STARTED, "important_resources")
+                .withSortNum(7)
+                .withIcon(Items.RAW_GOLD)
+                .withIntroPage())
+                .withRelations(sourceberry, archwood, dowsingRod);
+
         addPage(new DocEntryBuilder(GETTING_STARTED, "source")
-                .withSortNum(5)
+                .withSortNum(8)
                 .withIcon(BlockRegistry.SOURCE_JAR)
                 .withIntroPage())
-                .withRelations(sourceJar, agronomic, relay);
+                .withRelations(sourceJar, agronomic, mycelial, relay);
 
-        addPage(new DocEntryBuilder(GETTING_STARTED, "apparatus_crafting")
-                .withSortNum(6)
-                .withIcon(BlockRegistry.ENCHANTING_APP_BLOCK)
-                .withIntroPage())
-                .withRelations(enchantingApparatus, magebloom);
-
-        addPage(new DocEntryBuilder(GETTING_STARTED, "better_casting")
-                .withSortNum(7)
-                .withIcon(ItemsRegistry.SORCERER_ROBES)
-                .withIntroPage())
-                .withRelations(enchantingApparatus, armorEntry, armorUpgrade);
-
-        addPage(new DocEntryBuilder(GETTING_STARTED, "world_generation")
-                .withSortNum(8)
-                .withIcon(ItemsRegistry.SOURCE_GEM)
-                .withIntroPage())
-                .withRelations(imbuementChamber, archwood, sourceberry, dowsingRod);
-
-        addPage(new DocEntryBuilder(GETTING_STARTED, "upgrades")
+        addPage(new DocEntryBuilder(GETTING_STARTED, "magical_crafting")
                 .withSortNum(9)
-                .withIcon(ItemsRegistry.ARCHMAGE_SPELLBOOK)
+                .withIcon(BlockRegistry.IMBUEMENT_BLOCK)
                 .withIntroPage())
-                .withRelations(spellBooks, armorEntry);
+                .withRelations(imbuementChamber, enchantingApparatus, armorEntry, magebloom);
 
-        addPage(new DocEntryBuilder(GETTING_STARTED, "starting_automation")
+        addPage(new DocEntryBuilder(GETTING_STARTED, "magical_automation")
                 .withSortNum(10)
                 .withIcon(BlockRegistry.BASIC_SPELL_TURRET)
                 .withIntroPage())
-                .withRelations(turrets, prisms, starby, wixie, drygmyCharm);
+                .withRelations(turrets, starby, whirlisprig, drygmyCharm, wixie);
 
-        addPage(new DocEntryBuilder(GETTING_STARTED, "trinkets")
-                .withIcon(ItemsRegistry.WARP_SCROLL)
-                .withSortNum(11)
-                .withIntroPage())
-                .withRelations(jarOfLight, amuletOfRegen, discountRing, beltOfLevitation, stableScroll);
 
         var enchantmentRecipes = new ArrayList<>(manager.getAllRecipesFor(RecipeRegistry.ENCHANTMENT_TYPE.get()));
         enchantmentRecipes.sort(Comparator.comparingInt(a -> a.value() == null ? -1 : a.value().enchantLevel));
@@ -832,14 +832,14 @@ public class Documentation {
         return addPage(new DocEntryBuilder(category, stack.getDescriptionId())
                 .withIcon(item)
                 .withSortNum(order)
-                .withPage(TextEntry.create(Component.translatable(registryName.getNamespace() + ".page." + registryName.getPath()), stack.getItem().getDescription(), stack)).withCraftingPages(item));
+                .withIntroPageNoIncrement(registryName.getNamespace() + ".page." + registryName.getPath()).withCraftingPages(item));
     }
 
     public static DocEntry addBasicItem(ItemLike item, DocCategory category, ResourceLocation recipeId) {
         ResourceLocation registryName = getRegistryName(item.asItem());
         return addPage(new DocEntryBuilder(category, item.asItem().getDescriptionId())
                 .withIcon(item.asItem())
-                .withPage(TextEntry.create(Component.translatable(registryName.getNamespace() + ".page." + getRegistryName(item.asItem()).getPath())))
+                .withIntroPageNoIncrement(registryName.getNamespace() + ".page." + getRegistryName(item.asItem()).getPath())
                 .withPage(getRecipePages(recipeId)));
     }
 

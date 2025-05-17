@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:introduction_to_spellcrafting",
+  "order": 3,
+  "icon": "ars_nouveau:novice_spell_book",
+  "title": "3 - Spellcrafting",
+  "category": "ars_nouveau:getting_started",
+  "pages": [
+    {
+      "title": "3 - Spellcrafting",
+      "description": "Spellcrafting is accessed by pressing [C] while your Spell Book is selected on the inventory bar. Clicking Glyphs from the list will add them to the bottom of the page to represent they are part of the spell. Clicking Glyphs inside your spell will remove them.  Once satisfied, you may name the spell and click “Create” to save it. Spell Books may hold up to ten spells at once as",
+      "icon": "ars_nouveau:novice_spell_book"
+    },
+    {
+      "description": "shown by the bookmarks on the right side of the book. Clicking one will swap the spell you are working on."
+    }
+  ]
+}

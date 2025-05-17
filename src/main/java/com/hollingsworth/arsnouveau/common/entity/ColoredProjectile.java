@@ -40,11 +40,15 @@ public abstract class ColoredProjectile extends Projectile {
         setOwner(shooter);
     }
 
-    public ParticleColor getParticleColor() {
+    public ParticleColor getColor(){
         if (this.color == null) {
             this.color = ParticleColorRegistry.from(entityData.get(PARTICLE_TAG));
         }
-        return this.color.transition(tickCount*50);
+        return this.color;
+    }
+
+    public ParticleColor getParticleColor() {
+        return getColor().transition(tickCount*50);
     }
 
     @Deprecated(forRemoval = true)

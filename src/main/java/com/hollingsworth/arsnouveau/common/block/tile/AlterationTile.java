@@ -153,9 +153,11 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
     public void dropItems(){
         if(!armorStack.isEmpty()){
             level.addFreshEntity(new ItemEntity(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), armorStack.copy()));
+            armorStack = ItemStack.EMPTY;
         }
         for(ItemStack stack : perkList){
             level.addFreshEntity(new ItemEntity(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), stack.copy()));
+            stack.setCount(0);
         }
     }
 
@@ -169,7 +171,7 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
         tag.putInt("numPerks", perkList.size());
         int count = 0;
         for(ItemStack i : perkList){
-            Tag perkTag = i.save(pRegistries);
+            Tag perkTag = i.saveOptional(pRegistries);
             tag.put("perk" + count, perkTag);
             count++;
         }
@@ -185,7 +187,9 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
         for(int i = 0; i < count; i++){
             CompoundTag perkTag = compound.getCompound("perk" + i);
             ItemStack perk = ItemStack.parseOptional(pRegistries, perkTag);
-            perkList.add(perk);
+            if(!perk.isEmpty()) {
+                perkList.add(perk);
+            }
         }
         this.newPerkTimer = compound.getInt("newPerkTimer");
     }

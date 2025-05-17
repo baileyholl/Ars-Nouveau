@@ -45,10 +45,13 @@ public class ScribesBlock extends TableBlock {
         }
 
         if (state.getValue(ScribesBlock.PART) != ThreePartBlock.HEAD) {
-            BlockEntity tileEntity = world.getBlockEntity(pos.relative(ScribesBlock.getConnectedDirection(state)));
-            tile = tileEntity instanceof ScribesTile ? (ScribesTile) tileEntity : null;
-            if (tile == null)
-                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            BlockPos headPos = pos.relative(ScribesBlock.getConnectedDirection(state));
+            if (world.getBlockEntity(headPos) instanceof ScribesTile head) {
+                BlockState headState = head.getBlockState();
+                return headState.useItemOn(heldStack, world, player, handIn, hit.withPosition(headPos));
+            }
+
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
         if (!player.isShiftKeyDown()) {
@@ -106,8 +109,9 @@ public class ScribesBlock extends TableBlock {
     public BlockState tearDown(BlockState state, Direction direction, BlockState state2, LevelAccessor world, BlockPos pos, BlockPos pos2) {
         if (!world.isClientSide()) {
             BlockEntity entity = world.getBlockEntity(pos);
-            if (entity instanceof ScribesTile tile && ((ScribesTile) entity).getStack() != null) {
-                world.addFreshEntity(new ItemEntity((Level) world, pos.getX(), pos.getY(), pos.getZ(), ((ScribesTile) entity).getStack()));
+            if (entity instanceof ScribesTile tile && tile.getStack() != null) {
+                world.addFreshEntity(new ItemEntity((Level) world, pos.getX(), pos.getY(), pos.getZ(), tile.getStack()));
+                tile.setStack(ItemStack.EMPTY);
                 tile.refundConsumed();
             }
         }
@@ -127,7 +131,7 @@ public class ScribesBlock extends TableBlock {
             if(stack.getItem() instanceof DominionWand){
                 return;
             }
-            BlockRegistry.SCRIBES_BLOCK.get().useItemOn(stack, world.getBlockState(pos), world, pos, event.getEntity(), event.getHand(), null);
+            BlockRegistry.SCRIBES_BLOCK.get().useItemOn(stack, world.getBlockState(pos), world, pos, event.getEntity(), event.getHand(), event.getHitVec());
             event.setCanceled(true);
         }
     }

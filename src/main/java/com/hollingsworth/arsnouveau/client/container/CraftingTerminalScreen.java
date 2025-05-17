@@ -204,8 +204,8 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 	}
 
 	@Override
-	public boolean keyPressed(int code, int p_231046_2_, int p_231046_3_) {
-		if(code == GLFW.GLFW_KEY_S && hoveredSlot != null) {
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+		if(keyCode == GLFW.GLFW_KEY_S && hoveredSlot != null) {
 			ItemStack itemstack = null;
 
 			for (int i = 0; i < this.ghostRecipe.size(); ++i) {
@@ -222,6 +222,6 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 				return true;
 			}
 		}
-		return super.keyPressed(code, p_231046_2_, p_231046_3_);
+		return super.keyPressed(keyCode, scanCode, modifiers);
 	}
 }

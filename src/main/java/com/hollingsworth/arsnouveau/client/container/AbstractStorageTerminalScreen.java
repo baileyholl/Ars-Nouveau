@@ -176,6 +176,8 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		this.searchField.setBordered(false);
 		this.searchField.setVisible(true);
 		this.searchField.setValue(searchLast);
+		this.setFocused(this.searchField);
+		this.searchField.active = false;
 		searchLast = "";
 		addRenderableWidget(searchField);
 
@@ -542,19 +544,48 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	}
 
 	@Override
-	public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
-		if (p_keyPressed_1_ == 256) {
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+		if (keyCode == 256) {
 			this.onClose();
 			return true;
 		}
-		return this.searchField.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) || this.searchField.canConsumeInput() || super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
+
+		if (!(keyCode >= GLFW.GLFW_KEY_LEFT_SHIFT && keyCode <= GLFW.GLFW_KEY_MENU) && !searchField.isFocused() || !searchField.active) {
+			var prevFocus = this.getFocused();
+			this.clearFocus();
+			this.setFocused(searchField);
+			searchField.active = true;
+			if (!searchField.keyPressed(keyCode, scanCode, modifiers)) {
+				searchField.active = false;
+				this.clearFocus();
+				this.setFocused(prevFocus);
+				return false;
+			}
+			return true;
+		}
+
+		return this.searchField.canConsumeInput() && this.searchField.keyPressed(keyCode, scanCode, modifiers);
 	}
 
 	@Override
-	public boolean charTyped(char p_charTyped_1_, int p_charTyped_2_) {
-		if(searchField.charTyped(p_charTyped_1_, p_charTyped_2_))return true;
-		return super.charTyped(p_charTyped_1_, p_charTyped_2_);
-	}
+	public boolean charTyped(char codePoint, int modifiers) {
+		if (super.charTyped(codePoint, modifiers)) {
+			return true;
+		}
+		
+        if (!searchField.isFocused() || !searchField.active) {
+            this.clearFocus();
+            this.setFocused(searchField);
+            searchField.active = true;
+            this.searchField.setValue("");
+            if (this.searchField.onClear != null) {
+                this.searchField.onClear.apply("");
+            }
+            return searchField.charTyped(codePoint, modifiers);
+        }
+
+        return false;
+    }
 
 	@Override
 	public boolean mouseScrolled(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_, double scrollY) {

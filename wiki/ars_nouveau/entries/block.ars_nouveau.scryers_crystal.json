@@ -7,7 +7,7 @@
   "pages": [
     {
       "title": "Scry Crystal",
-      "description": "Can be used to look through as if you were standing there. Right click to enter the camera, or bind the camera to a Scryer\u0027s Scroll by using Blank Parchment on the block. A Scryer\u0027s Scroll will let you remotely access the block via a Scryer\u0027s Oculus. ",
+      "description": "Can be used to look through as if you were standing there. Right click to enter the camera, or bind the camera to a Scryer\u0027s Scroll by using Blank Parchment on the block. A Scryer\u0027s Scroll will let you remotely access the block via a Scryer\u0027s Oculus.",
       "icon": "ars_nouveau:scryers_crystal"
     },
     {
