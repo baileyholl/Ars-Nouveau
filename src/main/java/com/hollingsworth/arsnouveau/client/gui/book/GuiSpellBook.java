@@ -606,6 +606,22 @@ public class GuiSpellBook extends BaseBook {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+
+        // only react if ctrl is pressed
+        if (hasControlDown() && !spell_name.isFocused() && !searchBar.isFocused()) {
+            if (isCopy(keyCode)) {
+                onCopyOrExport(null);
+                return true;
+            } else if (isPaste(keyCode)) {
+                onPasteOrImport(null);
+                return true;
+            } else if (isCut(keyCode)) {
+                onCopyOrExport(null);
+                clear(null);
+                return true;
+            }
+        }
+
         if (super.keyPressed(keyCode, scanCode, modifiers)) {
             return true;
         }
@@ -992,24 +1008,7 @@ public class GuiSpellBook extends BaseBook {
         }
     }
 
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        // only react if ctrl is pressed
-        if (hasControlDown() && !spell_name.isFocused() && !searchBar.isFocused()) {
-            if (isCopy(keyCode)) {
-                onCopyOrExport(null);
-                return true;
-            } else if (isPaste(keyCode)) {
-                onPasteOrImport(null);
-                return true;
-            } else if (isCut(keyCode)) {
-                onCopyOrExport(null);
-                clear(null);
-                return true;
-            }
-        }
-        return super.keyPressed(keyCode, scanCode, modifiers);
-    }
+
 
     public Spell fetchCurrentSpell() {
         Player player = Minecraft.getInstance().player;
