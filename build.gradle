@@ -42,6 +42,25 @@ configurations {
     implementation.extendsFrom shade
 
 }
+
+// Credits to TwilightForest for the idea of using a secrets file to customize the in-dev uuid and username
+def secrets = new Properties()
+def secretsFile = file('secrets.properties')
+if (secretsFile.exists()) {
+    secretsFile.withInputStream {
+        stream -> secrets.load(stream)
+    }
+
+    fileTree("secrets").matching {
+        include "**/*.properties"
+    }.each {
+        File file ->
+            file.withInputStream {
+                stream -> secrets.load(stream)
+            }
+    }
+}
+
 runs {
     configureEach {
         systemProperty 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -54,11 +73,9 @@ runs {
         }
     }
 
-    clientAlt {
-        run 'client'
-
-        arguments '--username', 'Dev2'
-    }
+    client {
+        getArguments().addAll '--username', secrets.getProperty("username") ?: 'Dev', secrets.getProperty("uuid") ? '--uuid' : '', secrets.getProperty("uuid") ?: ''
+      }
 
     server {
         programArgument '--nogui'
@@ -66,7 +83,7 @@ runs {
     }
 
     data {
-        getArguments().addAll '--mod', mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        getArguments().addAll '--mod', mod_id as String, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
     }
 }
 
@@ -178,14 +195,14 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "Specification-Title": "ArsNouveau",
-                "Specification-Vendor": "baileyh",
-                "Specification-Version": "1", // We are version 1 of ourselves
-                "Implementation-Title": project.name,
-                "Implementation-Version": mod_version,
-                "Implementation-Vendor" :"baileyh",
+                "Specification-Title"     : "ArsNouveau",
+                "Specification-Vendor"    : "baileyh",
+                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : mod_version,
+                "Implementation-Vendor"   : "baileyh",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs": "ars_nouveau.mixins.json"
+                "MixinConfigs"            : "ars_nouveau.mixins.json"
         ])
     }
     finalizedBy shadowJar
