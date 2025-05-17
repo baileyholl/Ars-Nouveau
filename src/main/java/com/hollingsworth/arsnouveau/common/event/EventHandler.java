@@ -21,7 +21,6 @@ import com.hollingsworth.arsnouveau.common.crafting.recipes.DispelEntityRecipe;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
-import com.hollingsworth.arsnouveau.common.entity.debug.FixedStack;
 import com.hollingsworth.arsnouveau.common.items.EnchantersSword;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
@@ -103,7 +102,6 @@ public class EventHandler {
             @Override
             protected void apply(Object pObject, ResourceManager pResourceManager, ProfilerFiller pProfiler) {
                 MultiRecipeWrapper.RECIPE_CACHE = new HashMap<>();
-                EffectWololo.recipeCache = new FixedStack<>(EffectWololo.MAX_RECIPE_CACHE);
                 ArsNouveauAPI.getInstance().onResourceReload();
                 EventQueue.getServerInstance().addEvent(new ITimedEvent() {
                     boolean expired;
