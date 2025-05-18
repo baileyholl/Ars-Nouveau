@@ -93,8 +93,6 @@ public class EntityWallSpell extends EntityProjectileSpell {
     }
 
     public void castSpells() {
-        if(level.isClientSide)
-            return;
         float aoe = getAoe();
         int flatAoe = Math.round(aoe);
         BlockPos start = blockPosition().offset(flatAoe * getDirection().getStepX(), 0, flatAoe * getDirection().getStepZ());
@@ -104,8 +102,12 @@ public class EntityWallSpell extends EntityProjectileSpell {
                 return;
             for(BlockPos p : BlockPos.betweenClosed(start, end)){
                 p = p.immutable();
-                resolver().getNewResolver(resolver().spellContext.clone().makeChildContext()).onResolveEffect(level, new
-                        BlockHitResult(new Vec3(p.getX(), p.getY(), p.getZ()), Direction.UP, p, false));
+                if(!level.isClientSide) {
+                    resolver().getNewResolver(resolver().spellContext.clone().makeChildContext()).onResolveEffect(level, new
+                            BlockHitResult(new Vec3(p.getX(), p.getY(), p.getZ()), Direction.UP, p, false));
+                }
+                resolveEmitter.setPositionOffset(p.subtract(blockPosition()).getCenter());
+                resolveEmitter.tick(level);
             }
         }else{
             int i = 0;
@@ -127,13 +129,17 @@ public class EntityWallSpell extends EntityProjectileSpell {
                 }
                 Optional<EntityHit> hit = hitEntities.stream().filter(e -> e.entity.refersTo(entity)).findFirst();
                 boolean skipEntity = hit.isPresent();
-                if(hit.isPresent() && level.getGameTime() - hit.get().gameTime > 20){
+                if (hit.isPresent() && level.getGameTime() - hit.get().gameTime > 20) {
                     hitEntities.remove(hit.get());
                     skipEntity = false;
                 }
-                if(skipEntity)
+                if (skipEntity)
                     continue;
-                resolver().getNewResolver(resolver().spellContext.clone().makeChildContext()).onResolveEffect(level, new EntityHitResult(entity));
+                if (!level.isClientSide){
+                    resolver().getNewResolver(resolver().spellContext.clone().makeChildContext()).onResolveEffect(level, new EntityHitResult(entity));
+                }
+                resolveEmitter.setPositionOffset(entity.position.subtract(position));
+                resolveEmitter.tick(level);
                 i++;
                 if(hit.isEmpty()){
                     hitEntities.add(new EntityHit(entity));
