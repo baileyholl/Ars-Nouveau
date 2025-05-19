@@ -48,12 +48,16 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class EntityProjectileSpell extends ColoredProjectile implements IAnimationListener {
+public class EntityProjectileSpell extends ColoredProjectile implements IAnimationListener, GeoEntity {
 
     public int age;
     @Deprecated(forRemoval = true)
@@ -476,5 +480,15 @@ public class EntityProjectileSpell extends ColoredProjectile implements IAnimati
         if(this.resolveEmitter != null){
             this.resolveEmitter.tick(level);
         }
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {}
+
+    AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 }

@@ -103,8 +103,7 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.REDSTONE_RELAY_TILE.get(), RedstoneRelayRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.REPOSITORY_CONTROLLER_TILE.get(), (t) -> new GenericTileRenderer<>(t, new RepoControllerModel()));
 
-        event.registerEntityRenderer(ModEntities.SPELL_PROJ.get(),
-                renderManager -> new RenderSpell(renderManager, ArsNouveau.prefix("textures/entity/spell_proj.png")));
+        event.registerEntityRenderer(ModEntities.SPELL_PROJ.get(), StyledSpellRender::new);
         event.registerEntityRenderer(ModEntities.SPELL_PROJ_ARC.get(),
                 renderManager -> new RenderSpell(renderManager, ArsNouveau.prefix("textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.SPELL_PROJ_HOM.get(),

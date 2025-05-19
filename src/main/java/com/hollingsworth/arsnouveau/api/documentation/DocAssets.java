@@ -82,6 +82,10 @@ public class DocAssets {
     public static final BlitInfo BUTTON_DOWN_HOVER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_spellstyle_button_down_hover.png"), 15, 10);
     public static final BlitInfo BUTTON_UP = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_spellstyle_button_up.png"), 15, 10);
     public static final BlitInfo BUTTON_UP_HOVER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_spellstyle_button_up_hover.png"), 15, 10);
+    public static final BlitInfo SLIDER_BAR_FILLED = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_spellstyle_slider_bar_filled.png"), 113, 7);
+    public static final BlitInfo SLIDER_BAR = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_spellstyle_slider_bar.png"), 113, 7);
+    public static final BlitInfo SLIDER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_spellstyle_slider.png"), 5, 9);
+
 
     public record BlitInfo(ResourceLocation location, int u, int v, int width, int height) {
         public BlitInfo(ResourceLocation location, int width, int height){
