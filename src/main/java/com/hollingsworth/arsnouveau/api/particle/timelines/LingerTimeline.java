@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.BurstMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
-import com.hollingsworth.arsnouveau.api.particle.configurations.UpwardsWallMotion;
+import com.hollingsworth.arsnouveau.api.particle.configurations.UpwardsFieldMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.mojang.serialization.MapCodec;
@@ -16,16 +16,16 @@ import net.minecraft.network.codec.StreamCodec;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class WallTimeline extends BaseTimeline<WallTimeline>{
-    public static final MapCodec<WallTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+public class LingerTimeline extends BaseTimeline<LingerTimeline>{
+    public static final MapCodec<LingerTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             TimelineEntryData.CODEC.fieldOf("trailEffect").forGetter(i -> i.trailEffect),
             TimelineEntryData.CODEC.fieldOf("onResolvingEffect").forGetter(i -> i.onResolvingEffect)
-    ).apply(instance, WallTimeline::new));
+    ).apply(instance, LingerTimeline::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, WallTimeline> STREAM_CODEC = StreamCodec.composite(TimelineEntryData.STREAM, WallTimeline::trailEffect,
+    public static final StreamCodec<RegistryFriendlyByteBuf, LingerTimeline> STREAM_CODEC = StreamCodec.composite(TimelineEntryData.STREAM, LingerTimeline::trailEffect,
             TimelineEntryData.STREAM,
-            WallTimeline::onResolvingEffect,
-            WallTimeline::new);
+            LingerTimeline::onResolvingEffect,
+            LingerTimeline::new);
 
     public static final List<IParticleMotionType<?>> TRAIL_OPTIONS = new CopyOnWriteArrayList<>();
     public static final List<IParticleMotionType<?>> RESOLVING_OPTIONS = new CopyOnWriteArrayList<>();
@@ -33,12 +33,12 @@ public class WallTimeline extends BaseTimeline<WallTimeline>{
     public TimelineEntryData trailEffect;
     public TimelineEntryData onResolvingEffect;
 
-    public WallTimeline(){
-        this(new TimelineEntryData(new UpwardsWallMotion(), PropertyParticleOptions.defaultGlow()),
+    public LingerTimeline(){
+        this(new TimelineEntryData(new UpwardsFieldMotion(), PropertyParticleOptions.defaultGlow()),
                 new TimelineEntryData(new BurstMotion(), PropertyParticleOptions.defaultGlow()));
     }
 
-    public WallTimeline(TimelineEntryData trailEffect, TimelineEntryData onResolvingEffect){
+    public LingerTimeline(TimelineEntryData trailEffect, TimelineEntryData onResolvingEffect){
         this.trailEffect = trailEffect;
         this.onResolvingEffect = onResolvingEffect;
     }
@@ -52,8 +52,8 @@ public class WallTimeline extends BaseTimeline<WallTimeline>{
     }
 
     @Override
-    public IParticleTimelineType<WallTimeline> getType() {
-        return ParticleTimelineRegistry.WALL_TIMELINE.get();
+    public IParticleTimelineType<LingerTimeline> getType() {
+        return ParticleTimelineRegistry.LINGER_TIMELINE.get();
     }
 
     @Override

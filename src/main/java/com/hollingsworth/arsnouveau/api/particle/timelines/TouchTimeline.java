@@ -15,25 +15,25 @@ import net.minecraft.network.codec.StreamCodec;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class BurstTimeline extends BaseTimeline<BurstTimeline>{
-    public static final MapCodec<BurstTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+public class TouchTimeline extends BaseTimeline<TouchTimeline>{
+    public static final MapCodec<TouchTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             TimelineEntryData.CODEC.fieldOf("onResolvingEffect").forGetter(i -> i.onResolvingEffect)
-    ).apply(instance, BurstTimeline::new));
+    ).apply(instance, TouchTimeline::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, BurstTimeline> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, TouchTimeline> STREAM_CODEC = StreamCodec.composite(
             TimelineEntryData.STREAM,
-            BurstTimeline::onResolvingEffect,
-            BurstTimeline::new);
+            TouchTimeline::onResolvingEffect,
+            TouchTimeline::new);
 
     public static final List<IParticleMotionType<?>> RESOLVING_OPTIONS = new CopyOnWriteArrayList<>();
 
     public TimelineEntryData onResolvingEffect;
 
-    public BurstTimeline(){
+    public TouchTimeline(){
         this(new TimelineEntryData(new BurstMotion(), PropertyParticleOptions.defaultGlow()));
     }
 
-    public BurstTimeline(TimelineEntryData onResolvingEffect){
+    public TouchTimeline(TimelineEntryData onResolvingEffect){
         this.onResolvingEffect = onResolvingEffect;
     }
 
@@ -42,8 +42,8 @@ public class BurstTimeline extends BaseTimeline<BurstTimeline>{
     }
 
     @Override
-    public IParticleTimelineType<BurstTimeline> getType() {
-        return ParticleTimelineRegistry.BURST_TIMELINE.get();
+    public IParticleTimelineType<TouchTimeline> getType() {
+        return ParticleTimelineRegistry.TOUCH_TIMELINE.get();
     }
 
     @Override

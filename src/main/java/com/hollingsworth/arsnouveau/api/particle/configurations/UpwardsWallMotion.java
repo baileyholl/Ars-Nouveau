@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleDensityProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.Property;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.WallProperty;
 import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
@@ -15,20 +17,26 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 
-public class UpwardsMotion extends ParticleMotion{
-    public static MapCodec<UpwardsMotion> CODEC = buildPropCodec(UpwardsMotion::new);
+import java.util.List;
 
-    public static StreamCodec<RegistryFriendlyByteBuf, UpwardsMotion> STREAM = buildStreamCodec(UpwardsMotion::new);
+public class UpwardsWallMotion extends ParticleMotion{
+    public static MapCodec<UpwardsWallMotion> CODEC = buildPropCodec(UpwardsWallMotion::new);
+
+    public static StreamCodec<RegistryFriendlyByteBuf, UpwardsWallMotion> STREAM = buildStreamCodec(UpwardsWallMotion::new);
     WallProperty wallProperty;
-
-    public UpwardsMotion(PropMap propertyMap) {
+    ParticleDensityProperty density;
+    public UpwardsWallMotion(PropMap propertyMap) {
         super(propertyMap);
         wallProperty = propertyMap.getOrDefault(ParticlePropertyRegistry.WALL_PROPERTY.get(), new WallProperty(5, 5, 20, Direction.NORTH));
+        if(!propertyMap.has(ParticlePropertyRegistry.DENSITY_PROPERTY.get())){
+            density = new ParticleDensityProperty(5, 0, SpawnType.SPHERE);
+        } else {
+            density = propertyMap.get(ParticlePropertyRegistry.DENSITY_PROPERTY.get());
+        }
     }
 
-    public UpwardsMotion() {
-        super(new PropMap());
-        wallProperty = new WallProperty(5, 5, 20, Direction.NORTH);
+    public UpwardsWallMotion() {
+        this(new PropMap());
     }
 
     @Override
@@ -42,13 +50,11 @@ public class UpwardsMotion extends ParticleMotion{
         double growthFactor = 1.0f;
         Direction direction = wallProperty.direction;
 
-        int numParticles = 20;
-
         BlockPos pos = BlockPos.containing(x, y, z);
 
         BlockPos.betweenClosedStream(pos.offset(range * direction.getStepX(), 0, range * direction.getStepZ()), pos.offset(-range  * direction.getStepX(), range, -range * direction.getStepZ())).forEach(blockPos -> {
             if (rand.nextInt(chance) == 0) {
-                for (int i = 0; i < rand.nextInt(numParticles); i++) {
+                for (int i = 0; i < getNumParticles(particleOptions, density.density()); i++) {
                     double dx = blockPos.getX() + ParticleUtil.inRange(-growthFactor, growthFactor) + 0.5;
                     double dy = blockPos.getY() + ParticleUtil.inRange(-growthFactor, growthFactor) + 0.5;
                     double dz = blockPos.getZ() + ParticleUtil.inRange(-growthFactor, growthFactor) + 0.5;
@@ -64,5 +70,10 @@ public class UpwardsMotion extends ParticleMotion{
     @Override
     public IParticleMotionType<?> getType() {
         return ParticleMotionRegistry.UPWARD_WALL_TYPE.get();
+    }
+
+    @Override
+    public List<Property<?>> getProperties() {
+        return List.of(new ParticleDensityProperty(propertyMap, 20, 100, 10, false));
     }
 }

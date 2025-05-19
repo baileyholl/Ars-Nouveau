@@ -1,12 +1,10 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
-import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleDensityProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.Property;
 import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
-import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -59,7 +57,7 @@ public class TrailMotion extends ParticleMotion {
     @Override
     public void tick(ParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
         RandomSource random = level.random;
-        int totalParticles = getNumParticles(particleOptions);
+        int totalParticles = getNumParticles(particleOptions, density);
 
         double deltaX = x - prevX;
         double deltaY = y - prevY;
@@ -71,10 +69,7 @@ public class TrailMotion extends ParticleMotion {
             double py = prevY + deltaY * t;
             double pz = prevZ + deltaZ * t;
             Vec3 deltaVec =  new Vec3(px, py, pz);
-            Vec3 point = switch (spawnType){
-                case SPHERE -> deltaVec.add(ParticleUtil.pointInSphere().scale(radius));
-                case CUBE -> deltaVec.add(ParticleUtil.pointInCube().scale(radius));
-            };
+            Vec3 point = getMotionScaled(deltaVec, radius, spawnType);
             level.addParticle(
                     particleOptions,
                     point.x,
@@ -84,36 +79,6 @@ public class TrailMotion extends ParticleMotion {
                     0.0125f * (random.nextFloat() - 0.5f),
                     0.0125f * (random.nextFloat() - 0.5f));
         }
-    }
-    /*
-        Returns a random point of a sphere, evenly distributed over the sphere.
-        The sphere is centered at (x0,y0,z0) with the passed in radius.
-    */
-    public Vec3 randomSpherePoint(double x0,double y0, double z0, double radius){
-        double u = Math.random();
-        double v = Math.random();
-        double theta = 2 * Math.PI * u;
-        double phi = Math.acos(2 * v - 1);
-        double x = x0 + (radius * Math.sin(phi) * Math.cos(theta));
-        double y = y0 + (radius * Math.sin(phi) * Math.sin(theta));
-        double z = z0 + (radius * Math.cos(phi));
-        return new Vec3(x, y, z);
-    }
-
-    public int getNumParticles(ParticleOptions particleOptions){
-        if(!(particleOptions instanceof PropertyParticleOptions propertyParticleOptions)){
-            return 5;
-        }
-        double spawnRateTick = density * 0.05;
-
-        var modulo = Math.round(1/spawnRateTick);
-        float ceilFloor = propertyParticleOptions.map.getOptional(ParticlePropertyRegistry.EMITTER_PROPERTY.get()).get().age;
-        if (modulo != 0 && ceilFloor % modulo == 0) {
-            spawnRateTick = Math.ceil(spawnRateTick);
-        } else {
-            spawnRateTick = Math.floor(spawnRateTick);
-        }
-        return (int) spawnRateTick;
     }
 
     @Override

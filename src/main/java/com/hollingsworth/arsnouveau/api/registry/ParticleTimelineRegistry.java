@@ -3,8 +3,11 @@ package com.hollingsworth.arsnouveau.api.registry;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.particle.timelines.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectBurst;
+import com.hollingsworth.arsnouveau.common.spell.effect.EffectLinger;
+import com.hollingsworth.arsnouveau.common.spell.effect.EffectOrbit;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectWall;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -20,7 +23,13 @@ public class ParticleTimelineRegistry {
 
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<ProjectileTimeline>> PROJECTILE_TIMELINE = TIMELINE_DF.register("projectile", () -> new SimpleParticleTimelineType<>(MethodProjectile.INSTANCE, ProjectileTimeline.CODEC, ProjectileTimeline.STREAM_CODEC, ProjectileTimeline::new));
 
+    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<OrbitTimeline>> ORBIT_TIMELINE = TIMELINE_DF.register("orbit", () -> new SimpleParticleTimelineType<>(EffectOrbit.INSTANCE, OrbitTimeline.CODEC, OrbitTimeline.STREAM_CODEC, OrbitTimeline::new));
+
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<WallTimeline>> WALL_TIMELINE = TIMELINE_DF.register("wall", () -> new SimpleParticleTimelineType<>(EffectWall.INSTANCE, WallTimeline.CODEC, WallTimeline.STREAM_CODEC, WallTimeline::new));
+
+    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<LingerTimeline>> LINGER_TIMELINE = TIMELINE_DF.register("linger", () -> new SimpleParticleTimelineType<>(EffectLinger.INSTANCE, LingerTimeline.CODEC, LingerTimeline.STREAM_CODEC, LingerTimeline::new));
+
+    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<TouchTimeline>> TOUCH_TIMELINE = TIMELINE_DF.register("touch", () -> new SimpleParticleTimelineType<>(MethodTouch.INSTANCE, TouchTimeline.CODEC, TouchTimeline.STREAM_CODEC, TouchTimeline::new));
 
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<BurstTimeline>> BURST_TIMELINE = TIMELINE_DF.register("burst", () -> new SimpleParticleTimelineType<>(EffectBurst.INSTANCE, BurstTimeline.CODEC, BurstTimeline.STREAM_CODEC, BurstTimeline::new));
 

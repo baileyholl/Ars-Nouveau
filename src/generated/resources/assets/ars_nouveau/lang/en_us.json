@@ -1034,6 +1034,7 @@
   "ars_nouveau.particle_config.helix": "Helix",
   "ars_nouveau.particle_config.spiral": "Spiral",
   "ars_nouveau.particle_config.trail": "Line",
+  "ars_nouveau.particle_config.upward_field": "Field",
   "ars_nouveau.particle_config.upward_wall": "Upward Wall",
   "ars_nouveau.particle_timelines": "Configurable Particles",
   "ars_nouveau.patchouli.missing": "Patchouli missing: opening online wiki",

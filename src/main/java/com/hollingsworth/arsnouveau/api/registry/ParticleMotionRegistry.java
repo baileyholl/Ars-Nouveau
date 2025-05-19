@@ -22,5 +22,7 @@ public class ParticleMotionRegistry {
     public static final DeferredHolder<IParticleMotionType<?>, IParticleMotionType<HelixMotion>> HELIX_TYPE = PARTICLE_CONFIG.register("helix", () -> new SimpleParticleMotionType<>(HelixMotion.CODEC, HelixMotion.STREAM, HelixMotion::new));
 
 
-    public static final DeferredHolder<IParticleMotionType<?>, IParticleMotionType<UpwardsMotion>> UPWARD_WALL_TYPE = PARTICLE_CONFIG.register("upward_wall", () -> new SimpleParticleMotionType<>(UpwardsMotion.CODEC, UpwardsMotion.STREAM, UpwardsMotion::new));
+    public static final DeferredHolder<IParticleMotionType<?>, IParticleMotionType<UpwardsWallMotion>> UPWARD_WALL_TYPE = PARTICLE_CONFIG.register("upward_wall", () -> new SimpleParticleMotionType<>(UpwardsWallMotion.CODEC, UpwardsWallMotion.STREAM, UpwardsWallMotion::new));
+
+    public static final DeferredHolder<IParticleMotionType<?>, IParticleMotionType<UpwardsFieldMotion>> UPWARD_FIELD_TYPE = PARTICLE_CONFIG.register("upward_field", () -> new SimpleParticleMotionType<>(UpwardsFieldMotion.CODEC, UpwardsFieldMotion.STREAM, UpwardsFieldMotion::new));
 }

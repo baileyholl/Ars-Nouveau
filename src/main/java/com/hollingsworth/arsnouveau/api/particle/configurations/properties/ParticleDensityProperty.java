@@ -43,7 +43,10 @@ public class ParticleDensityProperty extends Property<ParticleDensityProperty>{
 
     private int density;
     private double radius;
-
+    private int maxDensity = 500;
+    private int minDensity = 10;
+    private int densityStepSize = 10;
+    private boolean supportsShapes = true;
     private ParticleMotion.SpawnType spawnType;
 
     public ParticleDensityProperty(int density, double radius, ParticleMotion.SpawnType spawnType) {
@@ -58,6 +61,14 @@ public class ParticleDensityProperty extends Property<ParticleDensityProperty>{
         this.density = density;
         this.radius = radius;
         this.spawnType = spawnType.orElse(ParticleMotion.SpawnType.SPHERE);
+    }
+
+    public ParticleDensityProperty(PropMap propMap, int densityMin, int densityMax, int stepSize, boolean supportsShapes){
+        this(propMap);
+        this.minDensity = densityMin;
+        this.maxDensity = densityMax;
+        this.supportsShapes = supportsShapes;
+        this.densityStepSize = stepSize;
     }
 
     public ParticleDensityProperty(PropMap propMap){
@@ -100,11 +111,11 @@ public class ParticleDensityProperty extends Property<ParticleDensityProperty>{
 
             @Override
             public void addWidgets(List<AbstractWidget> widgets) {
-                densitySlider = buildSlider(x + 10, y + 30, 10, 500, 10, 1, Component.translatable("ars_nouveau.density_slider"), Component.empty(), 5, (value) -> {
+                densitySlider = buildSlider(x + 10, y + 30, minDensity, maxDensity, densityStepSize, 1, Component.translatable("ars_nouveau.density_slider"), Component.empty(), Math.floor((maxDensity + minDensity) / 2.0), (value) -> {
                     density = densitySlider.getValueInt();
                     writeChanges();
                 });
-                densitySlider.setValue(Mth.clamp(density, 10, 500));
+                densitySlider.setValue(Mth.clamp(density, minDensity, maxDensity));
 
                 radiusSlider = buildSlider(x + 10, y + 140, 0.05, 1, 0.05, 1, Component.translatable("ars_nouveau.radius_slider"), Component.empty(), 0.1,  (value) -> {
                     radius = radiusSlider.getValue();
@@ -115,17 +126,16 @@ public class ParticleDensityProperty extends Property<ParticleDensityProperty>{
 
 
                 widgets.add(densitySlider);
-                widgets.add(radiusSlider);
-
                 GuiImageButton spawnTypeButton = new GuiImageButton(x + 10, y + 70, 20, 20, ArsNouveau.prefix("gui/particle_config/" + spawnType.name().toLowerCase() + ".png"), (button) -> {
                     GuiImageButton thisButton = (GuiImageButton) button;
                     spawnType = ParticleMotion.SpawnType.values()[(spawnType.ordinal() + 1) % ParticleMotion.SpawnType.values().length];
                     thisButton.image = ArsNouveau.prefix("gui/particle_config/" + spawnType.name().toLowerCase() + ".png");
                     writeChanges();
                 });
-
-                widgets.add(spawnTypeButton);
-
+                if(supportsShapes) {
+                    widgets.add(spawnTypeButton);
+                    widgets.add(radiusSlider);
+                }
             }
 
             public BookSlider buildSlider(int x, int y, double min, double max, double stepSize, int precision, Component prefix, Component suffix, double currentVal, Consumer<Double> onValueChange) {

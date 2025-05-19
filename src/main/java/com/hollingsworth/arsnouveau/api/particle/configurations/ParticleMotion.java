@@ -1,9 +1,12 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
 import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.Property;
 import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -12,6 +15,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 import java.util.Objects;
@@ -78,6 +82,29 @@ public abstract class ParticleMotion {
         return Objects.hashCode(propertyMap);
     }
 
+    public Vec3 getMotionScaled(Vec3 deltaVec, double radius, SpawnType spawnType){
+        return switch (spawnType){
+            case SPHERE -> deltaVec.add(ParticleUtil.pointInSphere().scale(radius));
+            case CUBE -> deltaVec.add(ParticleUtil.pointInCube().scale(radius));
+        };
+    }
+
+    public int getNumParticles(ParticleOptions particleOptions, int particlesSec){
+        if(!(particleOptions instanceof PropertyParticleOptions propertyParticleOptions)){
+            return 5;
+        }
+
+        double spawnRateTick = particlesSec * 0.05;
+
+        var modulo = Math.round(1/spawnRateTick);
+        float ceilFloor = propertyParticleOptions.map.getOptional(ParticlePropertyRegistry.EMITTER_PROPERTY.get()).get().age;
+        if (modulo != 0 && ceilFloor % modulo == 0) {
+            spawnRateTick = Math.ceil(spawnRateTick);
+        } else {
+            spawnRateTick = Math.floor(spawnRateTick);
+        }
+        return (int) spawnRateTick;
+    }
 
     public enum SpawnType {
         SPHERE,

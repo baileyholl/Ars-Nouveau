@@ -1486,6 +1486,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.particle.dripping_water", "Dripping Water");
         add("ars_nouveau.particle.an_bubble", "Bubble");
         add("ars_nouveau.particle.dripping_lava", "Dripping Lava");
+        add("ars_nouveau.particle_config.upward_field", "Field");
     }
 
     public void addCategory(String key, String value) {

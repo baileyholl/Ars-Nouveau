@@ -144,10 +144,11 @@ public class ParticleOverviewScreen extends BaseBook {
 
     public void addTimelinePage() {
         clearRightPage();
-        int entryCount = 0;
         rightPageWidgets.add(addRenderableWidget(new HeaderWidget(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, 20, Component.translatable("ars_nouveau.particle_timelines"))));
-        for (var entry : ParticleTimelineRegistry.PARTICLE_TIMELINE_REGISTRY.entrySet()) {
-            var widget = new GlyphButton(bookLeft + RIGHT_PAGE_OFFSET + 10 + entryCount * 20, bookTop + 40, entry.getValue().getSpellPart(), (button) -> {
+        var timelineList = new ArrayList<>(ParticleTimelineRegistry.PARTICLE_TIMELINE_REGISTRY.entrySet());
+        for (int i = 0; i < timelineList.size(); i++) {
+            var entry = timelineList.get(i);
+            var widget = new GlyphButton(bookLeft + RIGHT_PAGE_OFFSET + 2 + 20 * (i % 7), bookTop + 40 + 20*(i/7), entry.getValue().getSpellPart(), (button) -> {
                 selectedTimeline = entry.getValue();
                 AbstractSpellPart spellPart = selectedTimeline.getSpellPart();
                 timelineButton.title = Component.translatable(spellPart.getLocaleName());
@@ -156,7 +157,6 @@ public class ParticleOverviewScreen extends BaseBook {
             });
             rightPageWidgets.add(widget);
             addRenderableWidget(widget);
-            entryCount++;
         }
     }
 

@@ -11,6 +11,7 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
@@ -20,17 +21,18 @@ public class BurstMotion extends ParticleMotion {
 
     public static StreamCodec<RegistryFriendlyByteBuf, BurstMotion> STREAM =  buildStreamCodec(BurstMotion::new);
 
+    ParticleDensityProperty density;
+
     public BurstMotion() {
-        super(new PropMap());
+        this(new PropMap());
     }
-    int density = 5;
 
     public BurstMotion(PropMap propertyMap) {
         super(propertyMap);
         if(!propertyMap.has(ParticlePropertyRegistry.DENSITY_PROPERTY.get())){
-            this.density = 5;
+            this.density = new ParticleDensityProperty(5, 0.1, SpawnType.SPHERE);
         } else {
-            this.density = propertyMap.get(ParticlePropertyRegistry.DENSITY_PROPERTY.get()).density();
+            this.density = propertyMap.get(ParticlePropertyRegistry.DENSITY_PROPERTY.get());
         }
     }
 
@@ -41,11 +43,9 @@ public class BurstMotion extends ParticleMotion {
 
     @Override
     public void tick(ParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
-        for (int i = 0; i < density; i++) {
-            double d0 = x;
-            double d1 = y;
-            double d2 = z;
-            level.addParticle(particleOptions, d0, d1, d2,
+        Vec3 adjustedVec = getMotionScaled(new Vec3(x, y, z), density.radius(), density.spawnType().orElse(SpawnType.SPHERE));
+        for (int i = 0; i < density.density(); i++) {
+            level.addParticle(particleOptions, adjustedVec.x, adjustedVec.y, adjustedVec.z,
                     ParticleUtil.inRange(-0.05, 0.05),
                     ParticleUtil.inRange(0, 0.05),
                     ParticleUtil.inRange(-0.05, 0.05));
@@ -54,6 +54,6 @@ public class BurstMotion extends ParticleMotion {
 
     @Override
     public List<Property<?>> getProperties() {
-        return List.of(new ParticleDensityProperty(propertyMap));
+        return List.of(new ParticleDensityProperty(propertyMap, 5, 20, 1, true));
     }
 }

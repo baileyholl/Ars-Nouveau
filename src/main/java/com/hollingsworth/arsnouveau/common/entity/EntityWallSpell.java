@@ -47,7 +47,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
     public float growthFactor = 1.0f;
 
     public EntityWallSpell(EntityType<? extends EntityProjectileSpell> type, Level worldIn) {
-        super(ModEntities.WALL_SPELL.get(), worldIn);
+        super(type, worldIn);
     }
 
     public EntityWallSpell(Level worldIn, double x, double y, double z) {

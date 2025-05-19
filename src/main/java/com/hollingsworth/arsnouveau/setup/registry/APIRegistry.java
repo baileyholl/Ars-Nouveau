@@ -4,8 +4,7 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
 import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
-import com.hollingsworth.arsnouveau.api.particle.timelines.ProjectileTimeline;
-import com.hollingsworth.arsnouveau.api.particle.timelines.WallTimeline;
+import com.hollingsworth.arsnouveau.api.particle.timelines.*;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import com.hollingsworth.arsnouveau.api.registry.*;
@@ -316,6 +315,14 @@ public class APIRegistry {
 
         WallTimeline.TRAIL_OPTIONS.add(ParticleMotionRegistry.UPWARD_WALL_TYPE.get());
         WallTimeline.RESOLVING_OPTIONS.addAll(RESOLVE_OPTIONS);
+
+        LingerTimeline.TRAIL_OPTIONS.add(ParticleMotionRegistry.UPWARD_FIELD_TYPE.get());
+        LingerTimeline.RESOLVING_OPTIONS.addAll(RESOLVE_OPTIONS);
+
+        OrbitTimeline.TRAIL_OPTIONS.addAll(PROJECTILE_OPTIONS);
+        OrbitTimeline.RESOLVING_OPTIONS.addAll(RESOLVE_OPTIONS);
+
+        TouchTimeline.RESOLVING_OPTIONS.addAll(RESOLVE_OPTIONS);
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {
