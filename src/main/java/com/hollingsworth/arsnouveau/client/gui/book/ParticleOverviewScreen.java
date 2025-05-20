@@ -23,9 +23,13 @@ import com.hollingsworth.arsnouveau.client.gui.buttons.PropertyButton;
 import com.hollingsworth.arsnouveau.client.gui.documentation.DocEntryButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateParticleTimeline;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 
 import java.util.ArrayList;
@@ -47,6 +51,8 @@ public class ParticleOverviewScreen extends BaseBook {
     AbstractCaster<?> caster;
 
     int rowOffset = 0;
+    boolean hasMoreElements = false;
+    boolean hasPreviousElements = false;
 
     public ParticleOverviewScreen(AbstractCaster<?> caster,  int slot, InteractionHand stackHand) {
         this.slot = slot;
@@ -76,8 +82,25 @@ public class ParticleOverviewScreen extends BaseBook {
             addTimelinePage();
         }));
         addTimelinePage();
-        addSelectedTimelineOptions();
+        initLeftSideButtons();
     }
+
+    @Override
+    public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
+        SoundManager manager = Minecraft.getInstance().getSoundManager();
+        if (pScrollY < 0 && hasMoreElements) {
+            rowOffset = rowOffset + 1;
+            initLeftSideButtons();
+            manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
+        } else if (pScrollY > 0 && hasPreviousElements) {
+            rowOffset = rowOffset - 1;
+            initLeftSideButtons();
+            manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
+        }
+
+        return true;
+    }
+
 
     public void addParticleMotionOptions(TimelineOption timelineOption) {
         clearRightPage();
@@ -86,7 +109,7 @@ public class ParticleOverviewScreen extends BaseBook {
         for (IParticleMotionType<?> type : timelineOption.options()) {
             var widget = new GuiImageButton(bookLeft + RIGHT_PAGE_OFFSET + 10 + entryCount * 20, bookTop + 40, 14, 14, type.getIconLocation(), (button) -> {
                 timelineOption.entry().setMotion(type.create());
-                addSelectedTimelineOptions();
+                initLeftSideButtons();
 
             }).withTooltip(type.getName());
             addRightPageWidget(widget);
@@ -94,7 +117,7 @@ public class ParticleOverviewScreen extends BaseBook {
         }
     }
 
-    public void addSelectedTimelineOptions() {
+    public void initLeftSideButtons() {
         clearList(leftPageWidgets);
         List<TimelineOption> configurableParticles = timeline.getOrCreate(selectedTimeline).getTimelineOptions();
         int propertyOffset = 0;
@@ -112,13 +135,13 @@ public class ParticleOverviewScreen extends BaseBook {
             propertyOffset++;
             List<BaseProperty> allProps = new ArrayList<>();
             for (Property property : timelineOption.properties()) {
-                property.setChangedListener(this::addSelectedTimelineOptions);
+                property.setChangedListener(this::initLeftSideButtons);
                 allProps.add(property);
                 List<SubProperty> subProperties = property.subProperties();
                 allProps.addAll(subProperties);
             }
             for (Property property : configuration.getProperties()) {
-                property.setChangedListener(this::addSelectedTimelineOptions);
+                property.setChangedListener(this::initLeftSideButtons);
                 allProps.add(property);
                 List<SubProperty> subProperties = property.subProperties();
                 allProps.addAll(subProperties);
@@ -134,26 +157,27 @@ public class ParticleOverviewScreen extends BaseBook {
             rowOffset = 0;
         }
         List<AbstractWidget> slicedWidgets = widgets.subList(rowOffset, widgets.size());
-
-        for (int i = 0; i < Math.min(slicedWidgets.size(), 7); i++) {
+        int LEFT_PAGE_SLICE = 7;
+        for (int i = 0; i < Math.min(slicedWidgets.size(), LEFT_PAGE_SLICE); i++) {
             AbstractWidget widget = slicedWidgets.get(i);
             widget.y = bookTop + 51 + 15 * i;
             addLeftPageWidget(widget);
         }
-        if(rowOffset > 0){
+        hasMoreElements = rowOffset + LEFT_PAGE_SLICE < widgets.size();
+        hasPreviousElements = rowOffset > 0;
+        if(hasPreviousElements){
             addLeftPageWidget(new GuiImageButton(bookLeft + LEFT_PAGE_OFFSET + 80, bookBottom - 30, DocAssets.BUTTON_UP, (button) -> {
                 rowOffset = Math.max(rowOffset - 1, 0);
-                addSelectedTimelineOptions();
+                initLeftSideButtons();
             }).withHoverImage(DocAssets.BUTTON_UP_HOVER));
         }
 
-        if(rowOffset + 7 < widgets.size()){
+        if(hasMoreElements){
             addLeftPageWidget(new GuiImageButton(bookLeft + LEFT_PAGE_OFFSET + 100, bookBottom - 30, DocAssets.BUTTON_DOWN, (button) -> {
                 rowOffset = rowOffset + 1;
-                addSelectedTimelineOptions();
+                initLeftSideButtons();
             }).withHoverImage(DocAssets.BUTTON_DOWN_HOVER));
         }
-
     }
 
     public PropertyButton buildPropertyButton(BaseProperty property, int yOffset) {
@@ -182,7 +206,7 @@ public class ParticleOverviewScreen extends BaseBook {
                 AbstractSpellPart spellPart = selectedTimeline.getSpellPart();
                 timelineButton.title = Component.translatable(spellPart.getLocaleName());
                 timelineButton.renderStack = (spellPart.glyphItem.getDefaultInstance());
-                addSelectedTimelineOptions();
+                initLeftSideButtons();
             });
             rightPageWidgets.add(widget);
             addRenderableWidget(widget);
