@@ -35,6 +35,7 @@ public class StyledSpellRender extends GeoEntityRenderer<EntityProjectileSpell> 
             return;
         }
         modelProp = modelProperty;
+        packedLight = LightTexture.FULL_BRIGHT;
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
     }
 

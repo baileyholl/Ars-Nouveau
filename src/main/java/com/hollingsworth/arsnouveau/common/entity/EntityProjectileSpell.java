@@ -437,6 +437,14 @@ public class EntityProjectileSpell extends ColoredProjectile implements IAnimati
     }
 
     @Override
+    public void load(CompoundTag compound) {
+        super.load(compound);
+        if(resolver() != null){
+            resolver().spellContext.level = this.level;
+        }
+    }
+
+    @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.spellResolver = null;
