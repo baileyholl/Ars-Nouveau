@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations.properties;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
@@ -15,42 +16,55 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ModelProperty extends Property<ModelProperty>{
 
     public static MapCodec<ModelProperty> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("resource").forGetter(i -> i.selectedResource)
+            ResourceLocation.CODEC.fieldOf("resource").forGetter(i -> i.selectedResource.resourceLocation),
+            PropMap.CODEC.fieldOf("subPropMap").forGetter(i -> i.subPropMap)
     ).apply(instance, ModelProperty::new));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, ModelProperty> STREAM_CODEC = StreamCodec.composite(ResourceLocation.STREAM_CODEC, i -> i.selectedResource, ModelProperty::new);
+    public static StreamCodec<RegistryFriendlyByteBuf, ModelProperty> STREAM_CODEC = StreamCodec.composite(ResourceLocation.STREAM_CODEC, i -> i.selectedResource.resourceLocation,
+            PropMap.STREAM_CODEC, i -> i.subPropMap, ModelProperty::new);
 
-    public ResourceLocation selectedResource;
+    public Model selectedResource;
+    public PropMap subPropMap;
 
-    public static final ResourceLocation NONE = ArsNouveau.prefix("empty");
+    public static final Model NONE = new Model(ArsNouveau.prefix("empty"), DocAssets.STYLE_ICON_NONE, false);
+    public static Model CUBE_BODY = new Model(ArsNouveau.prefix("cube"), DocAssets.STYLE_ICON_BLOCK, true);
 
-    public static final List<ResourceLocation> resources = new CopyOnWriteArrayList<>();
+    public static final List<Model> resources = new CopyOnWriteArrayList<>();
+
+    static {
+        resources.add(NONE);
+        resources.add(CUBE_BODY);
+    }
 
     public ModelProperty(PropMap propMap){
         super(propMap);
         if(propMap.has(ParticlePropertyRegistry.MODEL_PROPERTY.get())){
-            selectedResource = propMap.get(ParticlePropertyRegistry.MODEL_PROPERTY.get()).selectedResource;
+            ModelProperty modelProperty = propMap.get(ParticlePropertyRegistry.MODEL_PROPERTY.get());
+            selectedResource = modelProperty.selectedResource;
+            subPropMap = propMap.get(ParticlePropertyRegistry.MODEL_PROPERTY.get()).subPropMap;
         } else {
             selectedResource = NONE;
+            subPropMap = new PropMap();
         }
+
     }
 
-    public ModelProperty(ResourceLocation resourceLocation) {
+    public ModelProperty(ResourceLocation resourceLocation, PropMap subPropMap) {
         this(new PropMap());
-        this.selectedResource = resourceLocation;
-        if(!resources.contains(resourceLocation)){
-            selectedResource = NONE;
-        }
+        this.selectedResource = resources.stream().filter(res -> res.resourceLocation.equals(resourceLocation)).findFirst().orElse(NONE);
+        this.subPropMap = subPropMap;
     }
 
 
     @Override
     public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height) {
+        ModelProperty self = this;
         return new ParticleConfigWidgetProvider(x, y, width, height) {
             @Override
             public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
@@ -60,23 +74,22 @@ public class ModelProperty extends Property<ModelProperty>{
             @Override
             public void addWidgets(List<AbstractWidget> widgets) {
                 for (int i = 0; i < resources.size(); i++) {
-                    var particleType = resources.get(i);
-                    widgets.add(new GuiImageButton(x + 6 + 16 * (i % 7), y + 20 + 20* (i / 7), 14, 14, getImagePath(selectedResource), (b) -> {
-//                        var didHaveColor = selectedData.acceptsColor;
-//                        selectedData = particleType.getValue();
-//                        type = particleType.getKey();
-//                        var nowHasColor = selectedData.acceptsColor;
-//
-//                        propertyHolder.set(getType(), self);
-//                        if (didHaveColor != nowHasColor && onDependenciesChanged != null) {
-//                            onDependenciesChanged.run();
-//                        }
-                    }).withTooltip(getTypeName(selectedResource)));
+                    var resource = resources.get(i);
+                    widgets.add(new GuiImageButton(x + 6 + 16 * (i % 7), y + 20 + 20* (i / 7), 14, 14, getImagePath(resource), (b) -> {
+                        var didHaveColor = selectedResource.supportsColor;
+                        selectedResource = resource;
+                        var nowHasColor = selectedResource.supportsColor;
+
+                        propertyHolder.set(getType(), self);
+                        if (didHaveColor != nowHasColor && onDependenciesChanged != null) {
+                            onDependenciesChanged.run();
+                        }
+                    }).withTooltip(getTypeName(resource.resourceLocation)));
                 }
             }
 
-            private ResourceLocation getImagePath(ResourceLocation location) {
-                return ResourceLocation.fromNamespaceAndPath(location.getNamespace(), "textures/entity/" + location.getPath() + ".png");
+            private ResourceLocation getImagePath(Model location) {
+                return location.blitInfo.location();
             }
 
             private Component getTypeName(ResourceLocation location) {
@@ -90,13 +103,49 @@ public class ModelProperty extends Property<ModelProperty>{
 
             @Override
             public Component getButtonTitle() {
-                return Component.literal(getName().getString() + ": " + getTypeName(selectedResource).getString());
+                return Component.literal(getName().getString() + ": " + getTypeName(selectedResource.resourceLocation).getString());
             }
         };
     }
 
     @Override
+    public List<SubProperty<?>> subProperties() {
+        if(selectedResource.supportsColor){
+            return List.of(new ColorProperty(subPropMap));
+        } else {
+            return List.of();
+        }
+    }
+
+    @Override
     public IPropertyType<ModelProperty> getType() {
         return ParticlePropertyRegistry.MODEL_PROPERTY.get();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        ModelProperty that = (ModelProperty) o;
+        return Objects.equals(selectedResource, that.selectedResource) && Objects.equals(subPropMap, that.subPropMap);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(selectedResource, subPropMap);
+    }
+
+    public record Model(ResourceLocation resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor){
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || getClass() != o.getClass()) return false;
+            Model model = (Model) o;
+            return Objects.equals(resourceLocation, model.resourceLocation);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(resourceLocation);
+        }
     }
 }

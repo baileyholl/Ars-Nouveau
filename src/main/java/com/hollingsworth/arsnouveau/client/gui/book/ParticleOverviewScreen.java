@@ -45,6 +45,9 @@ public class ParticleOverviewScreen extends BaseBook {
     ParticleConfigWidgetProvider propertyWidgetProvider;
     DocEntryButton timelineButton;
     AbstractCaster<?> caster;
+
+    int rowOffset = 0;
+
     public ParticleOverviewScreen(AbstractCaster<?> caster,  int slot, InteractionHand stackHand) {
         this.slot = slot;
         this.stackHand = stackHand;
@@ -95,7 +98,9 @@ public class ParticleOverviewScreen extends BaseBook {
         clearList(leftPageWidgets);
         List<TimelineOption> configurableParticles = timeline.getOrCreate(selectedTimeline).getTimelineOptions();
         int propertyOffset = 0;
-        for (TimelineOption timelineOption : configurableParticles) {
+        List<AbstractWidget> widgets = new ArrayList<>();
+        for (int i = 0; i < configurableParticles.size(); i++) {
+            TimelineOption timelineOption = configurableParticles.get(i);
             TimelineEntryData entryData = timelineOption.entry();
             ParticleMotion configuration = entryData.motion();
             IParticleMotionType<?> motionType = configuration.getType();
@@ -103,8 +108,7 @@ public class ParticleOverviewScreen extends BaseBook {
             DropdownParticleButton dropdownParticleButton = new DropdownParticleButton(bookLeft + LEFT_PAGE_OFFSET + 13, bookTop + 51 + 15 * (propertyOffset), name, DocAssets.NESTED_ENTRY_BUTTON, motionType.getIconLocation(), (button) -> {
                 addParticleMotionOptions(timelineOption);
             });
-            addLeftPageWidget(dropdownParticleButton);
-
+            widgets.add(dropdownParticleButton);
             propertyOffset++;
             List<BaseProperty> allProps = new ArrayList<>();
             for (Property property : timelineOption.properties()) {
@@ -121,10 +125,35 @@ public class ParticleOverviewScreen extends BaseBook {
             }
             for (BaseProperty property : allProps) {
                 PropertyButton propertyButton = buildPropertyButton(property, propertyOffset);
-                addLeftPageWidget(propertyButton);
+                widgets.add(propertyButton);
                 propertyOffset++;
             }
         }
+
+        if(rowOffset >= widgets.size()){
+            rowOffset = 0;
+        }
+        List<AbstractWidget> slicedWidgets = widgets.subList(rowOffset, widgets.size());
+
+        for (int i = 0; i < Math.min(slicedWidgets.size(), 7); i++) {
+            AbstractWidget widget = slicedWidgets.get(i);
+            widget.y = bookTop + 51 + 15 * i;
+            addLeftPageWidget(widget);
+        }
+        if(rowOffset > 0){
+            addLeftPageWidget(new GuiImageButton(bookLeft + LEFT_PAGE_OFFSET + 80, bookBottom - 30, DocAssets.BUTTON_UP, (button) -> {
+                rowOffset = Math.max(rowOffset - 1, 0);
+                addSelectedTimelineOptions();
+            }).withHoverImage(DocAssets.BUTTON_UP_HOVER));
+        }
+
+        if(rowOffset + 7 < widgets.size()){
+            addLeftPageWidget(new GuiImageButton(bookLeft + LEFT_PAGE_OFFSET + 100, bookBottom - 30, DocAssets.BUTTON_DOWN, (button) -> {
+                rowOffset = rowOffset + 1;
+                addSelectedTimelineOptions();
+            }).withHoverImage(DocAssets.BUTTON_DOWN_HOVER));
+        }
+
     }
 
     public PropertyButton buildPropertyButton(BaseProperty property, int yOffset) {
