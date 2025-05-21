@@ -1,10 +1,8 @@
 package com.hollingsworth.arsnouveau.api.particle;
 
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ColorProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
-import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -12,7 +10,6 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.phys.Vec2;
 
 import java.util.Objects;
 
@@ -38,8 +35,6 @@ public class PropertyParticleOptions implements ParticleOptions {
 
     public PropMap map;
 
-    public Vec2 emitterRotation;
-
     public static PropertyParticleOptions defaultGlow() {
         return new PropertyParticleOptions(defaultPropMap());
     }
@@ -50,19 +45,18 @@ public class PropertyParticleOptions implements ParticleOptions {
 
     public PropertyParticleOptions(ParticleType<?> type) {
         this(new PropMap());
-        this.map.set(ParticlePropertyRegistry.TYPE_PROPERTY.get(), new ParticleTypeProperty(type));
+        this.map.set(ParticlePropertyRegistry.TYPE_PROPERTY.get(), new ParticleTypeProperty(type, new PropMap()));
     }
 
     public static PropMap defaultPropMap(){
         PropMap propMap = new PropMap();
-        propMap.set(ParticlePropertyRegistry.TYPE_PROPERTY.get(), new ParticleTypeProperty(ModParticles.NEW_GLOW_TYPE.get()));
-        propMap.set(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty(ParticleColor.defaultParticleColor()));
+        propMap.set(ParticlePropertyRegistry.TYPE_PROPERTY.get(), new ParticleTypeProperty(ModParticles.NEW_GLOW_TYPE.get(), new PropMap()));
         return propMap;
     }
 
     @Override
     public ParticleType<?> getType() {
-        return map.getOptional(ParticlePropertyRegistry.TYPE_PROPERTY.get()).orElse(new ParticleTypeProperty(ModParticles.NEW_GLOW_TYPE.get())).type();
+        return map.getOptional(ParticlePropertyRegistry.TYPE_PROPERTY.get()).orElse(new ParticleTypeProperty(ModParticles.NEW_GLOW_TYPE.get(), new PropMap())).type();
     }
 
     @Override

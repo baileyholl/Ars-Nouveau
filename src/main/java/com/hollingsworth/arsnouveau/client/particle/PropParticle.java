@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ColorProperty;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
@@ -26,8 +26,8 @@ public abstract class PropParticle extends TextureSheetParticle {
     }
 
     public void setColorFromProps(){
-        ColorProperty property = options.map.get(ParticlePropertyRegistry.COLOR_PROPERTY.get());
-        ParticleColor color = property != null ? property.particleColor : ParticleColor.WHITE;
+        ParticleTypeProperty property = options.map.get(ParticlePropertyRegistry.TYPE_PROPERTY.get());
+        ParticleColor color = property != null ? property.getColor().particleColor : ParticleColor.WHITE;
         float colorR = color.getRed();
         float colorG = color.getGreen();
         float colorB = color.getBlue();

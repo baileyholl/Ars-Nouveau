@@ -31,20 +31,25 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
 
 
     public static MapCodec<ParticleTypeProperty> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BuiltInRegistries.PARTICLE_TYPE.byNameCodec().fieldOf("particleType").forGetter(i -> i.type)
+            BuiltInRegistries.PARTICLE_TYPE.byNameCodec().fieldOf("particleType").forGetter(i -> i.type),
+            PropMap.CODEC.fieldOf("subProperties").forGetter(i -> i.subProperties)
     ).apply(instance, ParticleTypeProperty::new));
 
     public static StreamCodec<RegistryFriendlyByteBuf, ParticleTypeProperty> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.registry(BuiltInRegistries.PARTICLE_TYPE.key()),
             ParticleTypeProperty::type,
+            PropMap.STREAM_CODEC,
+            (i) -> i.subProperties,
             ParticleTypeProperty::new
     );
 
     protected ParticleData selectedData;
+    protected PropMap subProperties;
     protected ParticleType<? extends PropertyParticleOptions> type;
 
-    public ParticleTypeProperty(ParticleType<?> type) {
+    public ParticleTypeProperty(ParticleType<?> type, PropMap subProperties) {
         super();
+        this.subProperties = subProperties;;
         this.type = (ParticleType<? extends PropertyParticleOptions>) type;
         selectedData = PARTICLE_TYPES.get(type);
         if (selectedData == null) {
@@ -55,10 +60,9 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
 
     public ParticleTypeProperty(PropMap propMap) {
         super(propMap);
-        if(!propMap.has(getType())){
-            System.out.println("NO PARTICLE TYPE IN PROP MAP");
-        }
-        this.type = propMap.getOrDefault(getType(), new ParticleTypeProperty(ModParticles.NEW_GLOW_TYPE.get())).type;
+        ParticleTypeProperty property = propMap.getOrDefault(getType(), new ParticleTypeProperty(ModParticles.NEW_GLOW_TYPE.get(), new PropMap()));
+        this.type = property.type;
+        this.subProperties = property.subProperties;
         selectedData = PARTICLE_TYPES.get(type);
         if (selectedData == null) {
             System.out.println("UNREGISTERED PARTICLE TYPE FOR " + type);
@@ -68,6 +72,10 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
 
     public ParticleType<? extends PropertyParticleOptions> type() {
         return type;
+    }
+
+    public ColorProperty getColor(){
+        return subProperties.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty(new PropMap()));
     }
 
     @Override
@@ -135,19 +143,19 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
             return Collections.emptyList();
         }
 
-        return List.of(new ColorProperty(propertyHolder));
+        return List.of(new ColorProperty(subProperties));
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ParticleTypeProperty property = (ParticleTypeProperty) o;
-        return Objects.equals(type, property.type);
+        return Objects.equals(type, property.type) && Objects.equals(subProperties, property.subProperties);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(type);
+        return Objects.hash(type, subProperties);
     }
 
     public record ParticleData(ParticleType<? extends PropertyParticleOptions> type, Supplier<PropertyParticleOptions> defaultOptions, boolean acceptsColor) {

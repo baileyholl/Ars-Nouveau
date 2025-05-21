@@ -87,6 +87,9 @@ public class DocAssets {
     public static final BlitInfo SLIDER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_spellstyle_slider.png"), 5, 9);
     public static final BlitInfo STYLE_ICON_BLOCK = new BlitInfo(ArsNouveau.prefix("textures/gui/doc_spellstyle_icon_block.png"), 14, 14);
     public static final BlitInfo STYLE_ICON_NONE = new BlitInfo(ArsNouveau.prefix("textures/gui/doc_spellstyle_icon_none.png"), 14, 14);
+    public static final BlitInfo STYLE_ICON_CUBE = new BlitInfo(ArsNouveau.prefix("textures/gui/doc_spellstyle_icon_cube.png"), 14, 14);
+    public static final BlitInfo STYLE_ICON_SPHERE = new BlitInfo(ArsNouveau.prefix("textures/gui/doc_spellstyle_icon_sphere.png"), 14, 14);
+    public static final BlitInfo SPELLSTYLE_SELECTED_FRAME = new BlitInfo(ArsNouveau.prefix("textures/gui/spellstyle_selected.png"), 16, 16);
 
     public record BlitInfo(ResourceLocation location, int u, int v, int width, int height) {
         public BlitInfo(ResourceLocation location, int width, int height){

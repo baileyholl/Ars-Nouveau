@@ -1474,22 +1474,24 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.particle.snow", "Snow");
         add("ars_nouveau.particle.smoke", "Smoke");
         add("ars_nouveau.gui.spell_style", "Spell Style");
-        add("ars_nouveau.density_slider", "Particles/Sec: ");
-        add("ars_nouveau.particle.property.density", "Particle Density");
+        add("ars_nouveau.density_slider", "Particles/Sec: %s");
+        add("ars_nouveau.particle.property.density", "Particle Spawning");
         add("ars_nouveau.particle.leaf", "Leaf");
         add("ars_nouveau.spawn.point", "Point");
         add("ars_nouveau.spawn.sphere", "Sphere");
         add("ars_nouveau.spawn.box", "Box");
-        add("ars_nouveau.radius_slider", "Radius: ");
+        add("ars_nouveau.radius_slider", "Radius: %s");
         add("ars_nouveau.timeline.field", "Field");
         add("ars_nouveau.particle_config.upward_wall", "Upward Wall");
-        add("ars_nouveau.particle.dripping_water", "Dripping Water");
+        add("ars_nouveau.particle.dripping_water", "Water");
         add("ars_nouveau.particle.an_bubble", "Bubble");
-        add("ars_nouveau.particle.dripping_lava", "Dripping Lava");
+        add("ars_nouveau.particle.dripping_lava", "Lava");
         add("ars_nouveau.particle_config.upward_field", "Field");
         add("ars_nouveau.particle.property.model", "Body");
         add("ars_nouveau.model.empty", "None");
         add("ars_nouveau.model.cube", "Cube");
+        add("ars_nouveau.spawn_header", "Spawn Shape: %s");
+        add("ars_nouveau.spawn.cube", "Cube");
     }
 
     public void addCategory(String key, String value) {
