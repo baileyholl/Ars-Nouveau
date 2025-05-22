@@ -3,8 +3,7 @@ package com.hollingsworth.arsnouveau.api.particle.configurations.properties;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
-import com.hollingsworth.arsnouveau.client.gui.BookSlider;
-import com.hollingsworth.arsnouveau.client.gui.Color;
+import com.hollingsworth.arsnouveau.client.gui.*;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -28,6 +27,7 @@ public class ColorProperty extends SubProperty<ColorProperty>{
     public static StreamCodec<RegistryFriendlyByteBuf, ColorProperty> STREAM_CODEC = StreamCodec.composite(ParticleColor.STREAM, ColorProperty::color, ColorProperty::new);
 
     public ParticleColor particleColor;
+    public boolean isLegacyRGB = false;
 
     public ColorProperty(PropMap propertyHolder) {
         super(propertyHolder);
@@ -50,7 +50,9 @@ public class ColorProperty extends SubProperty<ColorProperty>{
             BookSlider redW;
             BookSlider greenW;
             BookSlider blueW;
-
+            HueSlider hueSlider;
+            SatLumSlider saturation;
+            SatLumSlider lightness;
             @Override
             public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
                 DocClientUtils.drawHeader(getName(), graphics, x, y, width, mouseX, mouseY, partialTicks);
@@ -71,16 +73,44 @@ public class ColorProperty extends SubProperty<ColorProperty>{
                 redW = buildSlider(x + 10, y + 30, Component.translatable("ars_nouveau.color_gui.red_slider"), Component.empty(), 255, colorChanged);
                 greenW = buildSlider(x + 10, y + 70, Component.translatable("ars_nouveau.color_gui.green_slider"), Component.empty(), 25, colorChanged);
                 blueW = buildSlider(x + 10, y + 110, Component.translatable("ars_nouveau.color_gui.blue_slider"), Component.empty(), 180, colorChanged);
+
+                hueSlider = new HueSlider(x + 4, y + 30, true, () -> HSLColor.hsl(hueSlider.getValueInt(), saturation.getValue(), lightness.getValue()), (val) ->{
+                    updateParticleColor();
+                });
+                saturation = new SatLumSlider(x + 4, y + 70, true, false, () -> HSLColor.hsl(hueSlider.getValueInt(), saturation.getValue(), lightness.getValue()), (val) -> {
+                    updateParticleColor();
+                });
+                lightness = new SatLumSlider(x + 4, y + 110, true, true, () -> HSLColor.hsl(hueSlider.getValueInt(), saturation.getValue(), lightness.getValue()), (val) -> {
+                    updateParticleColor();
+                });
+
                 setFromPreset(particleColor);
-                widgets.add(redW);
-                widgets.add(greenW);
-                widgets.add(blueW);
+
+
+                if(isLegacyRGB) {
+                    widgets.add(redW);
+                    widgets.add(greenW);
+                    widgets.add(blueW);
+                }else{
+                    widgets.add(hueSlider);
+                    widgets.add(saturation);
+                    widgets.add(lightness);
+                }
+            }
+
+            public void updateParticleColor(){
+                particleColor = HSLColor.hsl(hueSlider.getValueInt(), saturation.getValue(), lightness.getValue()).toColor().toParticle();
+                propertyHolder.set(getType(), property);
             }
 
             public void setFromPreset(ParticleColor preset) {
                 redW.setValue(Mth.clamp(preset.getRed() * 255.0, 1, 255));
                 greenW.setValue(Mth.clamp(preset.getGreen() * 255.0, 1, 255));
                 blueW.setValue(Mth.clamp(preset.getBlue() * 255.0, 1, 255));
+                HSLColor color = HSLColor.rgb(preset.getRedInt(), preset.getGreenInt(), preset.getBlueInt());
+                hueSlider.setValue(color.getHue());
+                saturation.setValue(color.getSaturation());
+                lightness.setValue(color.getLightness());
             }
 
             public BookSlider buildSlider(int x, int y, Component prefix, Component suffix, double currentVal, Consumer<Double> onValueChange) {

@@ -14,7 +14,7 @@ public abstract class BaseProperty<T extends BaseProperty<T>> {
     }
 
     public BaseProperty(){
-
+        this.propertyHolder = new PropMap();
     }
 
     public ResourceLocation getId(){
