@@ -16,10 +16,7 @@ import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.client.gui.HeaderWidget;
-import com.hollingsworth.arsnouveau.client.gui.buttons.DropdownParticleButton;
-import com.hollingsworth.arsnouveau.client.gui.buttons.GlyphButton;
-import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
-import com.hollingsworth.arsnouveau.client.gui.buttons.PropertyButton;
+import com.hollingsworth.arsnouveau.client.gui.buttons.*;
 import com.hollingsworth.arsnouveau.client.gui.documentation.DocEntryButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateParticleTimeline;
@@ -79,9 +76,9 @@ public class ParticleOverviewScreen extends BaseBook {
         super.init();
         addSaveButton((b) -> Networking.sendToServer(new PacketUpdateParticleTimeline(slot, timeline.immutable(), this.stackHand == InteractionHand.MAIN_HAND)));
         timelineButton = addRenderableWidget(new DocEntryButton(bookLeft + LEFT_PAGE_OFFSET, bookTop + 36, selectedTimeline.getSpellPart().glyphItem.getDefaultInstance(), Component.translatable(selectedTimeline.getSpellPart().getLocaleName()), (button) -> {
-            addTimelinePage();
+            addTimelineSelectionWidgets();
         }));
-        addTimelinePage();
+        addTimelineSelectionWidgets();
         initLeftSideButtons();
     }
 
@@ -101,17 +98,27 @@ public class ParticleOverviewScreen extends BaseBook {
         return true;
     }
 
+    SelectedParticleButton selectedParticleButton;
 
     public void addParticleMotionOptions(TimelineOption timelineOption) {
         clearRightPage();
         int entryCount = 0;
         addRightPageWidget(new HeaderWidget(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, 20, timelineOption.name()));
         for (IParticleMotionType<?> type : timelineOption.options()) {
-            var widget = new GuiImageButton(bookLeft + RIGHT_PAGE_OFFSET + 10 + entryCount * 20, bookTop + 40, 14, 14, type.getIconLocation(), (button) -> {
+            SelectedParticleButton widget = new SelectedParticleButton(bookLeft + RIGHT_PAGE_OFFSET + 10 + entryCount * 20, bookTop + 40, 14, 14, type.getIconLocation(), (button) -> {
                 timelineOption.entry().setMotion(type.create());
                 initLeftSideButtons();
-
-            }).withTooltip(type.getName());
+                if(selectedParticleButton != null){
+                    selectedParticleButton.selected = false;
+                }
+                selectedParticleButton = (SelectedParticleButton) button;
+                selectedParticleButton.selected = true;
+            });
+            widget.withTooltip(type.getName());
+            if(timelineOption.entry().motion().getType() == type){
+                widget.selected = true;
+                selectedParticleButton = widget;
+            }
             addRightPageWidget(widget);
             entryCount++;
         }
@@ -195,7 +202,7 @@ public class ParticleOverviewScreen extends BaseBook {
         });
     }
 
-    public void addTimelinePage() {
+    public void addTimelineSelectionWidgets() {
         clearRightPage();
         rightPageWidgets.add(addRenderableWidget(new HeaderWidget(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, 20, Component.translatable("ars_nouveau.particle_timelines"))));
         var timelineList = new ArrayList<>(ParticleTimelineRegistry.PARTICLE_TIMELINE_REGISTRY.entrySet());

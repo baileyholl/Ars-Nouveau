@@ -25,6 +25,8 @@ public class SelectedParticleButton extends NuggetImageButton {
 
     public SelectedParticleButton(int x, int y, int w, int h, ResourceLocation image, OnPress onPress) {
         super(x, y, w, h, image, onPress);
+        xOffset = (DocAssets.SPELLSTYLE_SELECTED_FRAME.width() - w)/2;
+        yOffset = (DocAssets.SPELLSTYLE_SELECTED_FRAME.height() - h)/2;
     }
 
     public SelectedParticleButton(int x, int y, int w, int h, ResourceLocation image, ResourceLocation hoveredImage, OnPress onPress) {

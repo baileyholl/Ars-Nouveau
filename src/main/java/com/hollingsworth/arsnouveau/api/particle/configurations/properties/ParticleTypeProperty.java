@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
-import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
+import com.hollingsworth.arsnouveau.client.gui.buttons.SelectedParticleButton;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -82,6 +82,7 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
     public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height) {
         ParticleTypeProperty self = this;
         return new ParticleConfigWidgetProvider(x, y, width, height) {
+            SelectedParticleButton selectedParticleButton;
             @Override
             public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
                 DocClientUtils.drawHeader(getName(), graphics, x, y, width, mouseX, mouseY, partialTicks);
@@ -92,7 +93,7 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
                 var particleEntries = new ArrayList<>(PARTICLE_TYPES.entrySet());
                 for (int i = 0; i < particleEntries.size(); i++) {
                     var particleType = particleEntries.get(i);
-                    widgets.add(new GuiImageButton(x + 6 + 16 * (i % 7), y + 20 + 20*(i/7), 14, 14, getImagePath(particleType.getKey()), (b) -> {
+                    SelectedParticleButton button = new SelectedParticleButton(x + 6 + 16 * (i % 7), y + 20 + 20*(i/7), 14, 14, getImagePath(particleType.getKey()), (b) -> {
                         var didHaveColor = selectedData.acceptsColor;
                         selectedData = particleType.getValue();
                         type = particleType.getKey();
@@ -102,7 +103,19 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
                         if (didHaveColor != nowHasColor && onDependenciesChanged != null) {
                             onDependenciesChanged.run();
                         }
-                    }).withTooltip(getTypeName(particleType.getKey())));
+                        
+                        selectedParticleButton.selected = false;
+                        if(b instanceof SelectedParticleButton selectedParticleButton1){
+                            selectedParticleButton1.selected = true;
+                            selectedParticleButton = selectedParticleButton1;
+                        }
+                    });
+                    button.withTooltip(getTypeName(particleType.getKey()));
+                    widgets.add(button);
+                    if(selectedData.type == particleType.getKey()) {
+                        this.selectedParticleButton = button;
+                        selectedParticleButton.selected = true;
+                    }
                 }
             }
 

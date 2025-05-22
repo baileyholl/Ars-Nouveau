@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
-import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
+import com.hollingsworth.arsnouveau.client.gui.buttons.SelectedParticleButton;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
@@ -66,6 +66,8 @@ public class ModelProperty extends Property<ModelProperty>{
     public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height) {
         ModelProperty self = this;
         return new ParticleConfigWidgetProvider(x, y, width, height) {
+            SelectedParticleButton selectedButton;
+
             @Override
             public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
                 DocClientUtils.drawHeader(getName(), graphics, x, y, width, mouseX, mouseY, partialTicks);
@@ -75,7 +77,7 @@ public class ModelProperty extends Property<ModelProperty>{
             public void addWidgets(List<AbstractWidget> widgets) {
                 for (int i = 0; i < resources.size(); i++) {
                     var resource = resources.get(i);
-                    widgets.add(new GuiImageButton(x + 6 + 16 * (i % 7), y + 20 + 20* (i / 7), 14, 14, getImagePath(resource), (b) -> {
+                    SelectedParticleButton selectedParticleButton = new SelectedParticleButton(x + 6 + 16 * (i % 7), y + 20 + 20* (i / 7), 14, 14, getImagePath(resource), (b) -> {
                         var didHaveColor = selectedResource.supportsColor;
                         selectedResource = resource;
                         var nowHasColor = selectedResource.supportsColor;
@@ -84,7 +86,18 @@ public class ModelProperty extends Property<ModelProperty>{
                         if (didHaveColor != nowHasColor && onDependenciesChanged != null) {
                             onDependenciesChanged.run();
                         }
-                    }).withTooltip(getTypeName(resource.resourceLocation)));
+                        selectedButton.selected = false;
+                        if(b instanceof SelectedParticleButton selectedParticleButton1){
+                            selectedParticleButton1.selected = true;
+                            selectedButton = selectedParticleButton1;
+                        }
+                    });
+                    selectedParticleButton.withTooltip(getTypeName(resource.resourceLocation));
+                    widgets.add(selectedParticleButton);
+                    if (selectedResource == resource) {
+                        selectedButton = selectedParticleButton;
+                        selectedButton.selected = true;
+                    }
                 }
             }
 
