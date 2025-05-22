@@ -143,7 +143,7 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
             return Collections.emptyList();
         }
 
-        return List.of(new ColorProperty(subProperties));
+        return List.of(new ColorProperty(subProperties, selectedData.useLegacyRGB()));
     }
 
     @Override
@@ -158,9 +158,13 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
         return Objects.hash(type, subProperties);
     }
 
-    public record ParticleData(ParticleType<? extends PropertyParticleOptions> type, Supplier<PropertyParticleOptions> defaultOptions, boolean acceptsColor) {
+    public record ParticleData(ParticleType<? extends PropertyParticleOptions> type, Supplier<PropertyParticleOptions> defaultOptions, boolean acceptsColor, boolean useLegacyRGB) {
         public ParticleData(ParticleType<? extends PropertyParticleOptions> type, boolean acceptsColor) {
-            this(type, () -> new PropertyParticleOptions(type), acceptsColor);
+            this(type, () -> new PropertyParticleOptions(type), acceptsColor, false);
+        }
+
+        public ParticleData(ParticleType<? extends PropertyParticleOptions> type, boolean acceptsColor, boolean useLegacyRGB) {
+            this(type, () -> new PropertyParticleOptions(type), acceptsColor, useLegacyRGB);
         }
     }
 }

@@ -111,7 +111,7 @@ public class ModelProperty extends Property<ModelProperty>{
     @Override
     public List<SubProperty<?>> subProperties() {
         if(selectedResource.supportsColor){
-            return List.of(new ColorProperty(subPropMap));
+            return List.of(new ColorProperty(subPropMap, false));
         } else {
             return List.of();
         }

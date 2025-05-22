@@ -29,6 +29,11 @@ public class ColorProperty extends SubProperty<ColorProperty>{
     public ParticleColor particleColor;
     public boolean isLegacyRGB = false;
 
+    public ColorProperty(PropMap propertyHolder, boolean legacyRGB) {
+        this(propertyHolder);
+        this.isLegacyRGB = legacyRGB;
+    }
+
     public ColorProperty(PropMap propertyHolder) {
         super(propertyHolder);
         this.particleColor = propertyHolder.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty(ParticleColor.defaultParticleColor())).particleColor;
@@ -61,6 +66,12 @@ public class ColorProperty extends SubProperty<ColorProperty>{
                 int yOffset = y + 130;
                 int size = 16;
                 graphics.fill(xOffset, yOffset, xOffset + size,  yOffset + size, color.getRGB());
+
+                if(!isLegacyRGB){
+                    DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.hue"), graphics, x, y + 20, width, mouseX, mouseY, partialTicks);
+                    DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.sat"), graphics, x, y + 60, width, mouseX, mouseY, partialTicks);
+                    DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.lightness"), graphics, x, y + 100, width, mouseX, mouseY, partialTicks);
+                }
             }
 
             @Override
@@ -74,13 +85,13 @@ public class ColorProperty extends SubProperty<ColorProperty>{
                 greenW = buildSlider(x + 10, y + 70, Component.translatable("ars_nouveau.color_gui.green_slider"), Component.empty(), 25, colorChanged);
                 blueW = buildSlider(x + 10, y + 110, Component.translatable("ars_nouveau.color_gui.blue_slider"), Component.empty(), 180, colorChanged);
 
-                hueSlider = new HueSlider(x + 4, y + 30, true, () -> HSLColor.hsl(hueSlider.getValueInt(), saturation.getValue(), lightness.getValue()), (val) ->{
+                hueSlider = new HueSlider(x + 4, y + 30, false, () -> HSLColor.hsl(hueSlider.getValueInt(), saturation.getValue(), lightness.getValue()), (val) ->{
                     updateParticleColor();
                 });
-                saturation = new SatLumSlider(x + 4, y + 70, true, false, () -> HSLColor.hsl(hueSlider.getValueInt(), saturation.getValue(), lightness.getValue()), (val) -> {
+                saturation = new SatLumSlider(x + 4, y + 70, false, false, () -> HSLColor.hsl(hueSlider.getValueInt(), saturation.getValue(), lightness.getValue()), (val) -> {
                     updateParticleColor();
                 });
-                lightness = new SatLumSlider(x + 4, y + 110, true, true, () -> HSLColor.hsl(hueSlider.getValueInt(), saturation.getValue(), lightness.getValue()), (val) -> {
+                lightness = new SatLumSlider(x + 4, y + 110, false, true, () -> HSLColor.hsl(hueSlider.getValueInt(), saturation.getValue(), lightness.getValue()), (val) -> {
                     updateParticleColor();
                 });
 

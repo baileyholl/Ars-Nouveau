@@ -1492,6 +1492,9 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.model.cube", "Cube");
         add("ars_nouveau.spawn_header", "Spawn Shape: %s");
         add("ars_nouveau.spawn.cube", "Cube");
+        add("ars_nouveau.hue", "Hue");
+        add("ars_nouveau.sat", "Saturation");
+        add("ars_nouveau.lightness", "Lightness");
     }
 
     public void addCategory(String key, String value) {

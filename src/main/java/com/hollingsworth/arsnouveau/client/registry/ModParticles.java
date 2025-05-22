@@ -77,7 +77,7 @@ public class ModParticles {
             ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(BUBBLE_CLONE_TYPE.get(), false));
             ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SMOKE_TYPE.get(), false));
             ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SNOW_TYPE.get(), false));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(NEW_GLOW_TYPE.get(), true));
+            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(NEW_GLOW_TYPE.get(), true, true));
             ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(CUSTOM_TYPE.get(), true));
             ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(LEAF_TYPE.get(), true));
             ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(DRIPPING_WATER.get(), false));
