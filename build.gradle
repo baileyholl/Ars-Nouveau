@@ -167,7 +167,7 @@ dependencies {
     localRuntime "curse.maven:apothic-attributes-898963:6430300"
     localRuntime "curse.maven:placebo-283644:6446766"
   //localRuntime "curse.maven:immersive-portals-for-forge-355440:6013197"
-    //implementation "curse.maven:ars-elemental-561470:6086122"
+//    implementation "curse.maven:ars-elemental-561470:6419081"
     shade 'org.apache.lucene:lucene-core:10.1.0'
     shade 'org.apache.lucene:lucene-analysis-common:10.1.0'
     shade 'org.apache.lucene:lucene-queryparser:10.1.0'
