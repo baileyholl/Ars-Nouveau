@@ -8,6 +8,8 @@ import net.minecraft.client.particle.DripParticle;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.material.Fluids;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -56,8 +58,10 @@ public class ModParticles {
             evt.registerSpriteSet(NEW_GLOW_TYPE.get(), NewGlowParticleProvider::new);
             evt.registerSpriteSet(BUBBLE_CLONE_TYPE.get(), ANBubbleParticle.Provider::new);
             evt.registerSpriteSet(LEAF_TYPE.get(), (sprites -> new PropParticle.Provider(LeafParticle::new, sprites)));
-            evt.registerSpriteSet(DRIPPING_WATER.get(), (spites) -> new WrappedProvider(spites, (type, level, x, y, z, xSpeed, ySpeed, zSpeed) -> {
-                var particle = DripParticle.createDripstoneWaterFallParticle(null, level, x, y, z, xSpeed, ySpeed, zSpeed);
+            evt.registerSpriteSet(DRIPPING_WATER.get(), (spites) -> new PropParticle.Provider(null, (type, level, x, y, z, xSpeed, ySpeed, zSpeed) -> {
+                var particle = new FallingParticle(type, level, x, y, z, xSpeed, ySpeed, zSpeed);
+                particle.type = Fluids.WATER;
+                particle.landingSound = SoundEvents.AMETHYST_BLOCK_CHIME;
                 particle.pickSprite(Minecraft.getInstance().particleEngine.spriteSets.get(ResourceLocation.withDefaultNamespace("falling_water")));
                 return particle;
             }));
@@ -80,9 +84,8 @@ public class ModParticles {
             ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(NEW_GLOW_TYPE.get(), true, true));
             ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(CUSTOM_TYPE.get(), true));
             ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(LEAF_TYPE.get(), true));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(DRIPPING_WATER.get(), false));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(DRIPPING_LAVA.get(), false));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SPORE_BLOSSOM.get(), false));
+            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(DRIPPING_WATER.get(), true));
+            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(DRIPPING_LAVA.get(), true));
         }
     }
 }

@@ -52,6 +52,11 @@ public abstract class PropParticle extends TextureSheetParticle {
             this.particleConstructor = particleConstructor;
         }
 
+        public Provider(SpriteSet pSprites, PropParticle.ParticleProvider<PropertyParticleOptions> particleConstructor) {
+            this.sprite = pSprites;
+            this.particleConstructor = particleConstructor;
+        }
+
         public TextureSheetParticle createParticle(
                 PropertyParticleOptions pType,
                 ClientLevel pLevel,
@@ -63,7 +68,9 @@ public abstract class PropParticle extends TextureSheetParticle {
                 double pZSpeed
         ) {
             TextureSheetParticle particle = this.particleConstructor.createParticle(pType, pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed);
-            particle.pickSprite(this.sprite);
+            if(this.sprite != null) {
+                particle.pickSprite(this.sprite);
+            }
             return particle;
         }
     }
