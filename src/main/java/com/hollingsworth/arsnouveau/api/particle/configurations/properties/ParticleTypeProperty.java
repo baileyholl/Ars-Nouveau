@@ -91,6 +91,12 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
             @Override
             public void addWidgets(List<AbstractWidget> widgets) {
                 var particleEntries = new ArrayList<>(PARTICLE_TYPES.entrySet());
+                particleEntries.sort((o1, o2) ->{
+                    if(o1.getKey() == ModParticles.NEW_GLOW_TYPE.get()){
+                        return -1;
+                    }
+                    return getTypeName(o1.getKey()).getString().compareTo(getTypeName(o2.getKey()).getString());
+                });
                 for (int i = 0; i < particleEntries.size(); i++) {
                     var particleType = particleEntries.get(i);
                     SelectedParticleButton button = new SelectedParticleButton(x + 6 + 16 * (i % 7), y + 20 + 20*(i/7), 14, 14, getImagePath(particleType.getKey()), (b) -> {
@@ -103,7 +109,7 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
                         if (didHaveColor != nowHasColor && onDependenciesChanged != null) {
                             onDependenciesChanged.run();
                         }
-                        
+
                         selectedParticleButton.selected = false;
                         if(b instanceof SelectedParticleButton selectedParticleButton1){
                             selectedParticleButton1.selected = true;
