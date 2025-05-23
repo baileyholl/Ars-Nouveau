@@ -69,11 +69,11 @@ public class SpellPrismBlock extends ModBlock implements IPrismaticBlock {
         if(spell.prismRedirect >= 3){
             ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.PRISMATIC.get(), world, pos, 10);
         }
-        if (spell.spellResolver == null) {
+        if (spell.resolver() == null) {
             spell.remove(Entity.RemovalReason.DISCARDED);
             return;
         }
-        float acceleration = (spell.spellResolver.spell.getBuffsAtIndex(0, null, AugmentAccelerate.INSTANCE) - spell.spellResolver.spell.getBuffsAtIndex(0, null, AugmentDecelerate.INSTANCE) * 0.5F);
+        float acceleration = (spell.resolver().spell.getBuffsAtIndex(0, null, AugmentAccelerate.INSTANCE) - spell.resolver().spell.getBuffsAtIndex(0, null, AugmentDecelerate.INSTANCE) * 0.5F);
         float velocity = Math.max(0.1f, 0.5f + 0.1f * Math.min(2, acceleration));
 
         spell.shoot(direction.getStepX(), (direction.getStepY()), direction.getStepZ(), velocity, 0);

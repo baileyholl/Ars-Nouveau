@@ -68,7 +68,28 @@ public class DocAssets {
 
     public static final BlitInfo SEARCH_SPLASH = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_search_results.png"), 70, 85);
 
+    public static final BlitInfo CHAPTER_BUTTON_FRAME = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_section.png"), 118, 27);
+
+
     public static final BlitInfo POTION_RECIPE = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_brewing_stand.png"), 112, 58);
+
+    public static final BlitInfo DOC_ENTRY_BUTTON = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_chapter.png"), 118, 14);
+    public static final BlitInfo NESTED_ENTRY_BUTTON = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_chapter2.png"), 105, 14);
+    public static final BlitInfo DOUBLE_NESTED_ENTRY_BUTTON = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_chapter3.png"), 92, 14);
+    public static final BlitInfo TRIPLE_NESTED_ENTRY_BUTTON = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_chapter4.png"), 79, 14);
+    public static final BlitInfo SAVE_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_save_bar.png"), 56, 15);
+    public static final BlitInfo BUTTON_DOWN = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_spellstyle_button_down.png"), 15, 10);
+    public static final BlitInfo BUTTON_DOWN_HOVER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_spellstyle_button_down_hover.png"), 15, 10);
+    public static final BlitInfo BUTTON_UP = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_spellstyle_button_up.png"), 15, 10);
+    public static final BlitInfo BUTTON_UP_HOVER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_spellstyle_button_up_hover.png"), 15, 10);
+    public static final BlitInfo SLIDER_BAR_FILLED = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_spellstyle_slider_bar_filled.png"), 113, 7);
+    public static final BlitInfo SLIDER_BAR = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_spellstyle_slider_bar.png"), 113, 7);
+    public static final BlitInfo SLIDER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_spellstyle_slider.png"), 5, 9);
+    public static final BlitInfo STYLE_ICON_BLOCK = new BlitInfo(ArsNouveau.prefix("textures/gui/doc_spellstyle_icon_block.png"), 14, 14);
+    public static final BlitInfo STYLE_ICON_NONE = new BlitInfo(ArsNouveau.prefix("textures/gui/doc_spellstyle_icon_none.png"), 14, 14);
+    public static final BlitInfo STYLE_ICON_CUBE = new BlitInfo(ArsNouveau.prefix("textures/gui/doc_spellstyle_icon_cube.png"), 14, 14);
+    public static final BlitInfo STYLE_ICON_SPHERE = new BlitInfo(ArsNouveau.prefix("textures/gui/doc_spellstyle_icon_sphere.png"), 14, 14);
+    public static final BlitInfo SPELLSTYLE_SELECTED_FRAME = new BlitInfo(ArsNouveau.prefix("textures/gui/spellstyle_selected.png"), 16, 16);
 
     public record BlitInfo(ResourceLocation location, int u, int v, int width, int height) {
         public BlitInfo(ResourceLocation location, int width, int height){

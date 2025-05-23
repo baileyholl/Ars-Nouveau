@@ -1,0 +1,64 @@
+package com.hollingsworth.arsnouveau.api.particle.timelines;
+
+import com.google.common.collect.ImmutableList;
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
+import com.hollingsworth.arsnouveau.api.particle.configurations.BurstMotion;
+import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
+import com.hollingsworth.arsnouveau.api.particle.configurations.UpwardsFieldMotion;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+public class LingerTimeline extends BaseTimeline<LingerTimeline>{
+    public static final MapCodec<LingerTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            TimelineEntryData.CODEC.fieldOf("trailEffect").forGetter(i -> i.trailEffect),
+            TimelineEntryData.CODEC.fieldOf("onResolvingEffect").forGetter(i -> i.onResolvingEffect)
+    ).apply(instance, LingerTimeline::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, LingerTimeline> STREAM_CODEC = StreamCodec.composite(TimelineEntryData.STREAM, LingerTimeline::trailEffect,
+            TimelineEntryData.STREAM,
+            LingerTimeline::onResolvingEffect,
+            LingerTimeline::new);
+
+    public static final List<IParticleMotionType<?>> TRAIL_OPTIONS = new CopyOnWriteArrayList<>();
+    public static final List<IParticleMotionType<?>> RESOLVING_OPTIONS = new CopyOnWriteArrayList<>();
+
+    public TimelineEntryData trailEffect;
+    public TimelineEntryData onResolvingEffect;
+
+    public LingerTimeline(){
+        this(new TimelineEntryData(new UpwardsFieldMotion(), PropertyParticleOptions.defaultGlow()),
+                new TimelineEntryData(new BurstMotion(), PropertyParticleOptions.defaultGlow()));
+    }
+
+    public LingerTimeline(TimelineEntryData trailEffect, TimelineEntryData onResolvingEffect){
+        this.trailEffect = trailEffect;
+        this.onResolvingEffect = onResolvingEffect;
+    }
+
+    public TimelineEntryData trailEffect(){
+        return trailEffect;
+    }
+
+    public TimelineEntryData onResolvingEffect(){
+        return onResolvingEffect;
+    }
+
+    @Override
+    public IParticleTimelineType<LingerTimeline> getType() {
+        return ParticleTimelineRegistry.LINGER_TIMELINE.get();
+    }
+
+    @Override
+    public List<TimelineOption> getTimelineOptions() {
+        return List.of(new TimelineOption(ArsNouveau.prefix("field"), this.trailEffect, ImmutableList.copyOf(TRAIL_OPTIONS)).withProperty(new ParticleTypeProperty(this.trailEffect.particleOptions.map)),
+                new TimelineOption(ArsNouveau.prefix("impact"), this.onResolvingEffect, ImmutableList.copyOf(RESOLVING_OPTIONS)).withProperty(new ParticleTypeProperty(this.onResolvingEffect.particleOptions.map)));
+    }
+}
