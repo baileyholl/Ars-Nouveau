@@ -30,4 +30,6 @@ public abstract class ParticleConfigWidgetProvider {
     public abstract void renderIcon(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float partialTicks);
 
     public abstract Component getButtonTitle();
+
+    public void tick(){}
 }

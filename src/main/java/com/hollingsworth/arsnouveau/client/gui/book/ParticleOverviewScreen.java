@@ -241,6 +241,14 @@ public class ParticleOverviewScreen extends BaseBook {
         }
     }
 
+    @Override
+    public void tick() {
+        super.tick();
+        if (propertyWidgetProvider != null) {
+            propertyWidgetProvider.tick();
+        }
+    }
+
     public void addLeftPageWidget(AbstractWidget widget) {
         leftPageWidgets.add(widget);
         addRenderableWidget(widget);

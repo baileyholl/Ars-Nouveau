@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.particle;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -52,6 +53,14 @@ public class PropertyParticleOptions implements ParticleOptions {
         PropMap propMap = new PropMap();
         propMap.set(ParticlePropertyRegistry.TYPE_PROPERTY.get(), new ParticleTypeProperty(ModParticles.NEW_GLOW_TYPE.get(), new PropMap()));
         return propMap;
+    }
+
+    public ParticleColor getColor() {
+        ParticleTypeProperty typeProperty = map.get(ParticlePropertyRegistry.TYPE_PROPERTY.get());
+        if (typeProperty != null) {
+            return typeProperty.getColor().particleColor;
+        }
+        return ParticleColor.DEFAULT;
     }
 
     @Override

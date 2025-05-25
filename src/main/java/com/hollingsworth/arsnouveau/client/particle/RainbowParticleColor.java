@@ -10,7 +10,7 @@ public class RainbowParticleColor extends ParticleColor{
 
     public static final ResourceLocation ID = ArsNouveau.prefix( "rainbow");
 
-    public final int tickOffset;
+    public int tickOffset;
 
     public RainbowParticleColor(int r, int g, int b){
         super(r, g, b);
@@ -23,8 +23,16 @@ public class RainbowParticleColor extends ParticleColor{
     }
 
     @Override
-    public ParticleColor transition(int ticks) {
+    public ParticleColor nextColor(int ticks) {
         return Color.rainbowColor(ticks).toParticle();
+    }
+
+    @Override
+    public ParticleColor transition(int ticks) {
+        Color color = Color.rainbowColor(ticks);
+        RainbowParticleColor color1 = new RainbowParticleColor(color.getRed(), color.getGreen(), color.getBlue());
+        color1.tickOffset = this.tickOffset;
+        return color1;
     }
 
     @Override

@@ -26,19 +26,19 @@ public class HueSlider extends HorizontalSlider {
         Font font = minecraft.font;
         DocClientUtils.blit(guiGraphics, sliderAsset, x, y);
 
-        int drawWidth = this.width - 4;
-        int drawX = this.x + 2;
+        int drawWidth = this.width - 6;
+        int drawX = this.x + 3;
 
         HSLColor baseColor = this.baseColor.get();
 
         HSLColor leftColor = HSLColor.hsl(1, baseColor.getSaturation(), baseColor.getLightness(), baseColor.getOpacity());
 
-        guiGraphics.vLine(drawX - 1, y+1, y + 5, leftColor.toInt());
+        guiGraphics.vLine(drawX - 1, y+2, y + 4, leftColor.toInt());
         HSLColor rightColor = HSLColor.hsl(359, baseColor.getSaturation(), baseColor.getLightness(),baseColor.getOpacity());
-        guiGraphics.vLine(x + width - 2, y+1, y + 5, rightColor.toInt());
+        guiGraphics.vLine(x + width - 3, y+2, y + 4, rightColor.toInt());
         for(int i = 0; i < drawWidth; i++) {
             HSLColor color1 = HSLColor.hsl((double) (i * 360) / drawWidth, baseColor.getSaturation(), baseColor.getLightness(), baseColor.getOpacity());
-            guiGraphics.vLine(drawX + i, y, y + 6, color1.toInt());
+            guiGraphics.vLine(drawX + i, y  + 1, y + 5, color1.toInt());
         }
         DocClientUtils.blit(guiGraphics, knobAsset, this.x + (int) (this.value * (double) (this.width - this.knobAsset.width())), this.y - 1);
         int j = 10526880;
