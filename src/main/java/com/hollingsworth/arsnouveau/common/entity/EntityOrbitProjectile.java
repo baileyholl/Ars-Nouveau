@@ -7,11 +7,8 @@ import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.setup.registry.DataSerializers;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -183,16 +180,14 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
             }
             if (this.resolver() != null) {
                 this.resolver().getNewResolver(this.resolver().spellContext.clone().makeChildContext()).onResolveEffect(level, result);
-                Networking.sendToNearbyClient(level, BlockPos.containing(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                        BlockPos.containing(result.getLocation()), getParticleColor()));
+                resolveEmitter.tick(level);
                 attemptRemoval();
             }
         } else if (numSensitive > 0 && result instanceof BlockHitResult blockraytraceresult && !this.isRemoved()) {
             if (this.resolver() != null) {
                 this.resolver().getNewResolver(this.resolver().spellContext.clone().makeChildContext()).onResolveEffect(this.level, blockraytraceresult);
+                resolveEmitter.tick(level);
             }
-            Networking.sendToNearbyClient(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                    BlockPos.containing(result.getLocation()).below(), getParticleColor()));
             attemptRemoval();
         }
     }

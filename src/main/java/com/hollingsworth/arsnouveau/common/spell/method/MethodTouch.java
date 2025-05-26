@@ -1,9 +1,11 @@
 package com.hollingsworth.arsnouveau.common.spell.method;
 
+import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.network.PacketAddFadingLight;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.core.BlockPos;
@@ -15,6 +17,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -42,8 +45,8 @@ public class MethodTouch extends AbstractCastMethod {
         Level world = context.getLevel();
         BlockHitResult res = new BlockHitResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), false);
         resolver.onResolveEffect(world, res);
-        Networking.sendToNearbyClient(context.getLevel(), context.getPlayer(),
-                new PacketANEffect(PacketANEffect.EffectType.BURST, res.getBlockPos(), spellContext.getColors()));
+        ParticleEmitter particleEmitter = resolveEmitter(spellContext, res.getLocation());
+        particleEmitter.tick(world);
         addFadingLight(context.getLevel(), res.getBlockPos().getX() + 0.5, res.getBlockPos().getY() + 0.5, res.getBlockPos().getZ() + 0.5);
         return CastResolveType.SUCCESS;
     }
@@ -51,7 +54,8 @@ public class MethodTouch extends AbstractCastMethod {
     @Override
     public CastResolveType onCastOnBlock(BlockHitResult res, LivingEntity caster, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         resolver.onResolveEffect(caster.getCommandSenderWorld(), res);
-        Networking.sendToNearbyClient(caster.level, caster, new PacketANEffect(PacketANEffect.EffectType.BURST, res.getBlockPos(), spellContext.getColors()));
+        ParticleEmitter particleEmitter = resolveEmitter(spellContext, res.getLocation());
+        particleEmitter.tick(caster.level);
         addFadingLight(caster.level(), res.getBlockPos().getX() + 0.5, res.getBlockPos().getY() + 0.5, res.getBlockPos().getZ() + 0.5);
         return CastResolveType.SUCCESS;
     }
@@ -59,9 +63,15 @@ public class MethodTouch extends AbstractCastMethod {
     @Override
     public CastResolveType onCastOnEntity(ItemStack stack, LivingEntity caster, Entity target, InteractionHand hand, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         resolver.onResolveEffect(caster.getCommandSenderWorld(), new EntityHitResult(target));
-        Networking.sendToNearbyClient(caster.level, caster, new PacketANEffect(PacketANEffect.EffectType.BURST, target.blockPosition(), spellContext.getColors()));
+        ParticleEmitter particleEmitter = resolveEmitter(spellContext, target.position);
+        particleEmitter.tick(caster.level);
         addFadingLight(caster.level(), target.blockPosition().getX() + 0.5, target.blockPosition().getY() + 0.5, target.blockPosition().getZ() + 0.5);
         return spellContext.getCaster().getCasterType() != SpellContext.CasterType.RUNE ? CastResolveType.SUCCESS : CastResolveType.SUCCESS_NO_EXPEND;
+    }
+
+    public ParticleEmitter resolveEmitter(SpellContext spellContext, Vec3 position) {
+        TimelineEntryData entryData = spellContext.getParticleTimeline(ParticleTimelineRegistry.TOUCH_TIMELINE.get()).onResolvingEffect;
+        return createStaticEmitter(entryData, position);
     }
 
     public void addFadingLight(Level level, double x, double y, double z) {

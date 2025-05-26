@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
+import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.util.SpellPartConfigUtil;
@@ -10,6 +12,8 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
@@ -314,6 +318,10 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     }
 
     public abstract Component getTypeName();
+
+    public ParticleEmitter createStaticEmitter(TimelineEntryData timelineEntryData, Vec3 position){
+        return new ParticleEmitter(() -> position, () -> new Vec2(0, 0), timelineEntryData.motion(), timelineEntryData.particleOptions());
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -107,7 +107,9 @@ public class EntityWallSpell extends EntityProjectileSpell {
                             BlockHitResult(new Vec3(p.getX(), p.getY(), p.getZ()), Direction.UP, p, false));
                 }
                 resolveEmitter.setPositionOffset(p.subtract(blockPosition()).getCenter());
-                resolveEmitter.tick(level);
+                if(level.isClientSide) {
+                    resolveEmitter.tick(level);
+                }
             }
         }else{
             int i = 0;
@@ -138,8 +140,10 @@ public class EntityWallSpell extends EntityProjectileSpell {
                 if (!level.isClientSide){
                     resolver().getNewResolver(resolver().spellContext.clone().makeChildContext()).onResolveEffect(level, new EntityHitResult(entity));
                 }
-                resolveEmitter.setPositionOffset(entity.position.subtract(position));
-                resolveEmitter.tick(level);
+                resolveEmitter.setPositionOffset(entity.position.subtract(position).add(0, entity.getBbHeight() / 2.0, 0));
+                if(level.isClientSide) {
+                    resolveEmitter.tick(level);
+                }
                 i++;
                 if(hit.isEmpty()){
                     hitEntities.add(new EntityHit(entity));
