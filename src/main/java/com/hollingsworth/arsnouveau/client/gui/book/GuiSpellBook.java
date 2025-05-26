@@ -193,8 +193,11 @@ public class GuiSpellBook extends BaseBook {
 
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 22, 0, 0, 23, 20, 23, 20, "textures/gui/worn_book_bookmark.png", this::onDocumentationClick)
                 .withTooltip(Component.translatable("ars_nouveau.gui.notebook")));
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 44, 0, 0, 23, 20, 23, 20, "textures/gui/color_wheel_bookmark.png", this::onColorClick)
-                .withTooltip(Component.translatable("ars_nouveau.gui.color")));
+
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 44, 0, 0, 23, 20, 23, 20, "textures/gui/color_wheel_bookmark.png", (b) ->{
+            AbstractCaster<?> caster = SpellCasterRegistry.from(bookStack);
+            Minecraft.getInstance().setScreen(new ParticleOverviewScreen(caster, selectedSpellSlot, this.hand));
+        }).withTooltip(Component.translatable("ars_nouveau.gui.spell_style")));
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 68, 0, 0, 23, 20, 23, 20, "textures/gui/summon_circle_bookmark.png", this::onFamiliarClick)
                 .withTooltip(Component.translatable("ars_nouveau.gui.familiar")));
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 92, 0, 0, 23, 20, 23, 20, "textures/gui/sounds_tab.png", this::onSoundsClick)
@@ -211,10 +214,6 @@ public class GuiSpellBook extends BaseBook {
             }
         }).withTooltip(Component.translatable("ars_nouveau.gui.discord")));
 
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 164, 0, 0, 23, 20, 23, 20, "textures/gui/color_wheel_bookmark.png", (b) ->{
-            AbstractCaster<?> caster = SpellCasterRegistry.from(bookStack);
-            Minecraft.getInstance().setScreen(new ParticleOverviewScreen(caster, selectedSpellSlot, this.hand));
-        }).withTooltip(Component.translatable("ars_nouveau.gui.spell_style")));
 
         this.nextButton = addRenderableWidget(new PageButton(bookRight - 20, bookBottom - 6, true, this::onPageIncrease, true));
         this.previousButton = addRenderableWidget(new PageButton(bookLeft - 5, bookBottom - 6, false, this::onPageDec, true));

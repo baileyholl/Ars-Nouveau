@@ -40,6 +40,7 @@ public class LeafParticle extends PropParticle {
             this.remove();
             return;
         }
+        setColorFromProps();
 
         // --- Local leaf flutter settings ---
         double gravity = 0.005;              // very gentle fall

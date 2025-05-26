@@ -101,12 +101,13 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
                     var particleType = particleEntries.get(i);
                     SelectedParticleButton button = new SelectedParticleButton(x + 6 + 16 * (i % 7), y + 20 + 20*(i/7), 14, 14, getImagePath(particleType.getKey()), (b) -> {
                         var didHaveColor = selectedData.acceptsColor;
+                        var wasLegacyRGB = selectedData.useLegacyRGB();
                         selectedData = particleType.getValue();
                         type = particleType.getKey();
                         var nowHasColor = selectedData.acceptsColor;
-
+                        var useLegacyRGB = selectedData.useLegacyRGB();
                         propertyHolder.set(getType(), self);
-                        if (didHaveColor != nowHasColor && onDependenciesChanged != null) {
+                        if ((useLegacyRGB != wasLegacyRGB || didHaveColor != nowHasColor) && onDependenciesChanged != null) {
                             onDependenciesChanged.run();
                         }
 

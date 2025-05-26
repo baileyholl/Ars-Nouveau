@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ColorProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ModelProperty;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
 import com.hollingsworth.arsnouveau.api.particle.timelines.ProjectileTimeline;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
@@ -51,7 +53,7 @@ public class StyledSpellRender extends GeoEntityRenderer<EntityProjectileSpell> 
         }
 
         if(modelProp.selectedResource.supportsColor()){
-            colour = modelProp.subPropMap.get(ParticlePropertyRegistry.COLOR_PROPERTY.get()).particleColor.getColor();
+            colour = modelProp.subPropMap.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty(new PropMap())).particleColor.getColor();
         }
 
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);

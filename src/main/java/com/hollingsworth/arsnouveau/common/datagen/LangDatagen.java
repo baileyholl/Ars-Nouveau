@@ -345,9 +345,9 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.spell_book_gui.augment", "Augment");
         add("ars_nouveau.spell_book_gui.create", "Create");
         add("ars_nouveau.spell_book_gui.clear", "Clear");
-        add("ars_nouveau.color_gui.red_slider", "Red: ");
-        add("ars_nouveau.color_gui.green_slider", "Green: ");
-        add("ars_nouveau.color_gui.blue_slider", "Blue: ");
+        add("ars_nouveau.color_gui.red_slider", "Red: %s");
+        add("ars_nouveau.color_gui.green_slider", "Green: %s");
+        add("ars_nouveau.color_gui.blue_slider", "Blue: %s");
         add("ars_nouveau.color_gui.title", "Spell Color");
         add("ars_nouveau.color_gui.presets", "Presets");
         add("ars_nouveau.color_gui.default", "Default");
@@ -1495,26 +1495,6 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.hue", "Hue");
         add("ars_nouveau.sat", "Saturation");
         add("ars_nouveau.lightness", "Lightness");
-
-//        evt.registerSpriteSet(END_ROD.get(), (spites) -> new WrappedProvider(ParticleTypes.END_ROD, EndRodParticle.Provider::new));
-//
-//        evt.registerSpriteSet(GLOW_SQUID.get(), (spites) -> new WrappedProvider(ParticleTypes.GLOW,  GlowParticle.GlowSquidProvider::new));
-//
-//        evt.registerSpriteSet(GLOW_INK.get(), (spites) -> new WrappedProvider(ParticleTypes.GLOW_SQUID_INK, SquidInkParticle.GlowInkProvider::new));
-//        evt.registerSpriteSet(CRIT.get(), (spites) -> new WrappedProvider(ParticleTypes.CRIT, CritParticle.Provider::new));
-//        evt.registerSpriteSet(ENCHANT.get(), (spites) -> new WrappedProvider(ParticleTypes.ENCHANT, FlyTowardsPositionParticle.EnchantProvider::new));
-//        evt.registerSpriteSet(SPIT.get(), (spites) -> new WrappedProvider(ParticleTypes.SPIT, SpitParticle.Provider::new));
-//        evt.registerSpriteSet(DUST_PLUME.get(), (spites) -> new WrappedProvider(ParticleTypes.DUST_PLUME, DustPlumeParticle.Provider::new));
-//        evt.registerSpriteSet(SMALL_GUST.get(), (spites) -> new WrappedProvider(ParticleTypes.SMALL_GUST, GustParticle.SmallProvider::new));
-//        evt.registerSpriteSet(BIG_GUST.get(), (spites) -> new WrappedProvider(ParticleTypes.GUST, GustParticle.Provider::new));
-//        evt.registerSpriteSet(DRAGON_BREATH.get(), (spites) -> new WrappedProvider(ParticleTypes.DRAGON_BREATH, DragonBreathParticle.Provider::new));
-//        evt.registerSpriteSet(ENCHANTED_HIT.get(), (spites) -> new WrappedProvider(ParticleTypes.ENCHANTED_HIT, CritParticle.MagicProvider::new));
-//        evt.registerSpriteSet(SONIC_BOOM.get(), (spites) -> new WrappedProvider(ParticleTypes.SONIC_BOOM, SonicBoomParticle.Provider::new));
-//        evt.registerSpriteSet(FIREWORK.get(), (spites) -> new WrappedProvider(ParticleTypes.FIREWORK, FireworkParticles.SparkProvider::new));
-//        evt.registerSpriteSet(FLAME.get(), (spites) -> new WrappedProvider(ParticleTypes.FLAME, FlameParticle.Provider::new));
-//        evt.registerSpriteSet(INFESTED.get(), (spites) -> new WrappedProvider(ParticleTypes.INFESTED, SpellParticle.Provider::new));
-//        evt.registerSpriteSet(SCULK_SOUL.get(), (spites) -> new WrappedProvider(ParticleTypes.SCULK_SOUL, SoulParticle.EmissiveProvider::new));
-//        evt.registerSpriteSet(SOUL_FIRE_FLAME.get(), (spites) -> new WrappedProvider(ParticleTypes.SOUL_FIRE_FLAME, FlameParticle.Provider::new));
         add("ars_nouveau.particle.end_rod", "End Rod");
         add("ars_nouveau.particle.glow_squid", "Glow Squid");
         add("ars_nouveau.particle.glow_ink", "Glow Ink");
@@ -1532,6 +1512,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.particle.infested", "Infested");
         add("ars_nouveau.particle.sculk_soul", "Sculk Soul");
         add("ars_nouveau.particle.soul_fire_flame", "Soul Fire Flame");
+        add("ars_nouveau.color_rainbow", "Rainbow");
+        add("ars_nouveau.color_none", "No Tinting");
 
     }
 

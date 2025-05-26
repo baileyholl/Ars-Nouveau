@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.EmitterProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -25,9 +26,20 @@ public abstract class PropParticle extends TextureSheetParticle {
         }
     }
 
+    @Override
+    public void tick() {
+        super.tick();
+        setColorFromProps();
+    }
+
     public void setColorFromProps(){
+        EmitterProperty emitterProp = options.map.get(ParticlePropertyRegistry.EMITTER_PROPERTY.get());
         ParticleTypeProperty property = options.map.get(ParticlePropertyRegistry.TYPE_PROPERTY.get());
+        if(property != null && property.getColor().isTintDisabled()){
+            return;
+        }
         ParticleColor color = property != null ? property.getColor().particleColor : ParticleColor.WHITE;
+        color = color.transition(emitterProp.age + age * 50);
         float colorR = color.getRed();
         float colorG = color.getGreen();
         float colorB = color.getBlue();
