@@ -54,7 +54,7 @@ public class Spell {
 
 
     public Spell() {
-        this("", ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, ImmutableList.of());
+        this("", ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, ImmutableList.of(), new TimelineMap());
     }
 
     public Spell(AbstractSpellPart... spellParts) {
@@ -62,9 +62,10 @@ public class Spell {
     }
 
     public Spell(List<AbstractSpellPart> recipe) {
-        this("", ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, recipe);
+        this("", ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, recipe, new TimelineMap());
     }
 
+    @Deprecated(forRemoval = true)
     public Spell(String name, ParticleColor color, ConfiguredSpellSound configuredSpellSound, List<AbstractSpellPart> abstractSpellParts) {
         this(name, color, configuredSpellSound, abstractSpellParts, new TimelineMap());
     }
