@@ -5,6 +5,7 @@ plugins {
     id 'maven-publish'
     id 'net.neoforged.gradle.userdev' version '7.0.+'
     id 'io.github.goooler.shadow' version '8.1.7'
+    id("io.github.0ffz.github-packages") version "1.2.1"
 }
 
 version = mod_version
@@ -74,7 +75,9 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 minecraft.accessTransformers.files(
         file('src/main/resources/META-INF/accesstransformer.cfg')
+
 )
+accessTransformers {}
 
 repositories {
     mavenLocal()
@@ -129,6 +132,10 @@ repositories {
             includeGroup 'dev.emi'
         }
     }
+    maven {
+        name "upcraftReleases"
+        url "https://maven.uuid.gg/releases"
+    }
 }
 
 jarJar.enable()
@@ -161,6 +168,20 @@ dependencies {
     implementation(jarJar(group: 'com.hollingsworth.nuggets', name: 'nuggets-neoforge-1.21', version:'[1.0.6,)'){
         jarJar.pin(it, '1.0.6')
     })
+    implementation(jarJar(group: 'dev.compactmods.gander', name: 'core', version:'[0.2.31,)'){
+        jarJar.pin(it, '0.2.31')
+    })
+    implementation(jarJar(group: 'dev.compactmods.gander', name: 'ui', version:'[0.2.31,)'){
+        jarJar.pin(it, '0.2.31')
+    })
+    implementation(jarJar(group: 'dev.compactmods.gander', name: 'levels', version:'[0.2.31,)'){
+        jarJar.pin(it, '0.2.31')
+    })
+    implementation(jarJar(group: 'dev.compactmods.gander', name: 'rendering', version:'[0.2.31,)'){
+        jarJar.pin(it, '0.2.31')
+    })
+//    accessTransformer("dev.compactmods.gander:rendering:0.2.31")
+//    additionalRuntimeClasspath("dev.compactmods.gander:rendering:0.2.31")
     localRuntime "maven.modrinth:cloth-config:15.0.140+neoforge"
 
     // Apotheosis

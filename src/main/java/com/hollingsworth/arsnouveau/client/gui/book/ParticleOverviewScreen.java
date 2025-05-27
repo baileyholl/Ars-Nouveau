@@ -15,22 +15,28 @@ import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineOption;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.client.gui.ANGanderRender;
 import com.hollingsworth.arsnouveau.client.gui.HeaderWidget;
 import com.hollingsworth.arsnouveau.client.gui.buttons.*;
 import com.hollingsworth.arsnouveau.client.gui.documentation.DocEntryButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateParticleTimeline;
+import dev.compactmods.gander.level.VirtualLevel;
+import dev.compactmods.gander.render.geometry.BakedLevel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.AABB;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class ParticleOverviewScreen extends BaseBook {
     int slot;
@@ -50,6 +56,7 @@ public class ParticleOverviewScreen extends BaseBook {
     int rowOffset = 0;
     boolean hasMoreElements = false;
     boolean hasPreviousElements = false;
+    AABB bounds = new AABB(BlockPos.ZERO).inflate(5);
 
     public ParticleOverviewScreen(AbstractCaster<?> caster,  int slot, InteractionHand stackHand) {
         this.slot = slot;
@@ -69,17 +76,85 @@ public class ParticleOverviewScreen extends BaseBook {
         if(selectedTimeline == null){
             selectedTimeline = ParticleTimelineRegistry.PROJECTILE_TIMELINE.get();
         }
+
+
+    }
+    ANGanderRender renderer;
+    AABB renderSize;
+    boolean isLoadingRoomPreview = false;
+    public void updateScene(BakedLevel bakedLevel){
+        if (this.renderer != null) {
+            renderables.remove(renderer);
+        }
+
+        this.renderer = addRenderableOnly(new ANGanderRender(bakedLevel, 0, 0, 100, 100));
+
+        this.renderSize = bakedLevel.blockBoundaries();
+
+        System.out.println(renderer.camera().getPosition());
+        renderer.camera().zoom(calculateZoomForRoom(this.renderSize));
+        renderer.camera().lookUp(3 / 12f);
+        renderer.shouldRenderCompass(true);
+        this.isLoadingRoomPreview = false;
     }
 
+
+    private static float calculateZoomForRoom(AABB internalSize) {
+        boolean tallRoom = Math.max(internalSize.getXsize(), internalSize.getZsize()) < internalSize.getYsize();
+        boolean sidesEqual = internalSize.getXsize() == internalSize.getZsize();
+        boolean isCube = sidesEqual && internalSize.getZsize() == internalSize.getYsize();
+
+        // All sides equal, simple zoom algo
+        if (isCube) {
+            return -1.0f * (float) Math.sqrt(Math.pow(internalSize.getXsize(), 2) * 3);
+        }
+
+        if (sidesEqual) {
+            final var cSquared = Math.sqrt(
+                    (Math.pow(internalSize.getXsize(), 2) * 2) +
+                            Math.pow(internalSize.getYsize(), 2)
+            );
+
+            return (float) (-1.0f * cSquared);
+        }
+
+        final var cSquared = Math.sqrt(
+                Math.pow(internalSize.getXsize(), 2) +
+                        Math.pow(internalSize.getYsize(), 2) +
+                        Math.pow(internalSize.getZsize(), 2)
+        );
+
+        return (float) (-1.0f * cSquared);
+    }
+
+    public void updateSceneRenderer(CompletableFuture<BakedLevel> future) {
+        this.isLoadingRoomPreview = true;
+        future.thenAcceptAsync(this::updateScene);
+    }
+    VirtualLevel virtualLevel;
     @Override
     public void init() {
         super.init();
+
         addSaveButton((b) -> Networking.sendToServer(new PacketUpdateParticleTimeline(slot, timeline.immutable(), this.stackHand == InteractionHand.MAIN_HAND)));
         timelineButton = addRenderableWidget(new DocEntryButton(bookLeft + LEFT_PAGE_OFFSET, bookTop + 36, selectedTimeline.getSpellPart().glyphItem.getDefaultInstance(), Component.translatable(selectedTimeline.getSpellPart().getLocaleName()), (button) -> {
             addTimelineSelectionWidgets();
         }));
         addTimelineSelectionWidgets();
         initLeftSideButtons();
+//        virtualLevel = new VirtualLevel(Minecraft.getInstance().level.registryAccess(), true, level -> {
+//            level.refreshBlockEntityModels();
+//            var bakedLevel = LevelBakery.bakeVertices(level, bounds, new Vector3f());
+//            updateScene(bakedLevel);
+//        });
+//        virtualLevel.setBounds(new AABB(BlockPos.ZERO).inflate(60));
+//        for(BlockPos pos : BlockPos.withinManhattan(BlockPos.ZERO, 5, 5, 5)) {
+//            virtualLevel.setBlockAndUpdate(pos, Blocks.DIRT.defaultBlockState());
+//        }
+
+//        Vec3 pos = Minecraft.getInstance().player.position;
+//        var bakedLevel = LevelBakery.bakeVertices(Minecraft.getInstance().level, new AABB(BlockPos.containing(pos)).inflate(5), new Vector3f());
+//        this.updateScene(bakedLevel);
     }
 
     @Override
@@ -239,6 +314,7 @@ public class ParticleOverviewScreen extends BaseBook {
         if (propertyWidgetProvider != null) {
             propertyWidgetProvider.render(graphics, mouseX, mouseY, partialTicks);
         }
+//        renderer.recalculateTranslucency();
     }
 
     @Override
