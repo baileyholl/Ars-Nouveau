@@ -21,6 +21,7 @@ import com.hollingsworth.arsnouveau.client.gui.buttons.*;
 import com.hollingsworth.arsnouveau.client.gui.documentation.DocEntryButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateParticleTimeline;
+import com.hollingsworth.nuggets.client.gui.GuiHelpers;
 import dev.compactmods.gander.level.VirtualLevel;
 import dev.compactmods.gander.render.geometry.BakedLevel;
 import net.minecraft.client.Minecraft;
@@ -159,6 +160,13 @@ public class ParticleOverviewScreen extends BaseBook {
 
     @Override
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
+
+        if(propertyWidgetProvider != null && GuiHelpers.isMouseInRelativeRange((int) pMouseX, (int) pMouseY, propertyWidgetProvider.x,
+                propertyWidgetProvider.y, propertyWidgetProvider.width, propertyWidgetProvider.height)){
+            if(propertyWidgetProvider.mouseScrolled(pMouseX, pMouseY, pScrollX, pScrollY)){
+                return true;
+            }
+        }
         SoundManager manager = Minecraft.getInstance().getSoundManager();
         if (pScrollY < 0 && hasMoreElements) {
             rowOffset = rowOffset + 1;

@@ -57,6 +57,9 @@ public class GuiImageButton extends ANButton {
 
     @Override
     protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        if(!this.visible){
+            return;
+        }
         if(hoverImage != null && GuiUtils.isMouseInRelativeRange(pMouseX, pMouseY, this)) {
             graphics.blit(hoverImage, x, y, u, v, width, height, image_width, image_height);
         }else{

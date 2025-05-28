@@ -23,6 +23,13 @@ public abstract class ParticleConfigWidgetProvider {
         this.height = height;
     }
 
+    /**
+     * Called when the user scrolls on this side of the UX. Returning True will prevent the scroll from propagating to the parent.
+     */
+    public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
+        return false;
+    }
+
     public abstract void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks);
 
     public abstract void addWidgets(List<AbstractWidget> widgets);
