@@ -72,6 +72,8 @@ public class EntityProjectileSpell extends ColoredProjectile implements IAnimati
     public int prismRedirect;
     public ParticleEmitter tickEmitter;
     public ParticleEmitter resolveEmitter;
+    public ParticleEmitter onSpawnEmitter;
+    public ParticleEmitter flairEmitter;
 
     public static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(EntityProjectileSpell.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<SpellResolver> SPELL_RESOLVER = SynchedEntityData.defineId(EntityProjectileSpell.class, DataSerializers.SPELL_RESOLVER.get());
@@ -151,7 +153,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements IAnimati
         traceAnyHit(getHitResult(), thisPosition, nextPosition);
         tickNextPosition();
 
-        if (level.isClientSide && this.age > getParticleDelay()) {
+        if (level.isClientSide && this.age >= getParticleDelay()) {
             playParticles();
         }
     }
@@ -241,8 +243,13 @@ public class EntityProjectileSpell extends ColoredProjectile implements IAnimati
         ProjectileTimeline projectileTimeline = timelineMap.get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
         TimelineEntryData trailConfig = projectileTimeline.trailEffect;
         TimelineEntryData resolveConfig = projectileTimeline.onResolvingEffect;
-        this.tickEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, trailConfig.motion(), trailConfig.particleOptions());
-        this.resolveEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, resolveConfig.motion(), resolveConfig.particleOptions());
+        TimelineEntryData spawnConfig = projectileTimeline.onSpawnEffect;
+        TimelineEntryData flairConfig = projectileTimeline.flairEffect;
+
+        this.tickEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, trailConfig);
+        this.resolveEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, resolveConfig);
+        this.onSpawnEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, spawnConfig);
+        this.flairEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, flairConfig);
     }
 
     public void playParticles() {
@@ -251,6 +258,14 @@ public class EntityProjectileSpell extends ColoredProjectile implements IAnimati
         }
         if(this.tickEmitter != null) {
             this.tickEmitter.tick(level);
+        }
+
+        if(flairEmitter != null) {
+            this.flairEmitter.tick(level);
+        }
+
+        if(age == 1 && onSpawnEmitter != null){
+            this.onSpawnEmitter.tick(level);
         }
     }
 

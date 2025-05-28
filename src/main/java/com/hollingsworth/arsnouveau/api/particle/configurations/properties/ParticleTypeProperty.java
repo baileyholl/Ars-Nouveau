@@ -116,22 +116,10 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
                 for (int i = 0; i < particleEntries.size(); i++) {
                     var particleType = particleEntries.get(i);
                     DocEntryButton button = new DocEntryButton(x + 6,  y + 20 + 15*i, ItemStack.EMPTY, getTypeName(particleType.getKey()), (b) -> {
-                        var didHaveColor = selectedData.acceptsColor;
-                        var wasLegacyRGB = selectedData.useLegacyRGB();
                         selectedData = particleType.getValue();
                         type = particleType.getKey();
-                        var nowHasColor = selectedData.acceptsColor;
-                        var useLegacyRGB = selectedData.useLegacyRGB();
                         propertyHolder.set(getType(), self);
-                        if ((useLegacyRGB != wasLegacyRGB || didHaveColor != nowHasColor) && onDependenciesChanged != null) {
-                            onDependenciesChanged.run();
-                        }
-
-//                        selectedParticleButton.selected = false;
-//                        if(b instanceof SelectedParticleButton selectedParticleButton1){
-//                            selectedParticleButton1.selected = true;
-//                            selectedParticleButton = selectedParticleButton1;
-//                        }
+                        onDependenciesChanged.run();
                     });
                     buttons.add(button);
                     widgets.add(button);
@@ -174,6 +162,7 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
                 for(var button : buttons){
                     button.active = false;
                     button.visible = false;
+                    button.setPosition(-100, -100);
                 }
                 var sublist = buttons.subList(pageOffset, Math.min(particleEntries.size(), pageOffset + 8));
                 for (int i = 0; i < sublist.size(); i++) {
@@ -192,8 +181,6 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
                 downButton.active = hasMore;
                 downButton.visible = hasMore;
             }
-
-
 
             private ResourceLocation getImagePath(ParticleType<?> type) {
                 ResourceLocation location = getKey(type);

@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.particle;
 
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.EmitterProperty;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.TickEmitterPacket;
@@ -64,6 +65,10 @@ public class ParticleEmitter {
         this.rotationOffset = Vec2.ZERO;
         this.particleOptions = particleOptions;
         particleConfig.init(this);
+    }
+
+    public ParticleEmitter(Supplier<Vec3> getPosition, Supplier<Vec2> rot, TimelineEntryData entryData) {
+        this(getPosition, rot, entryData.motion(), entryData.particleOptions());
     }
 
     public void setPositionOffset(Vec3 offset){

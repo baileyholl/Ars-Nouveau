@@ -25,4 +25,6 @@ public class ParticleMotionRegistry {
     public static final DeferredHolder<IParticleMotionType<?>, IParticleMotionType<UpwardsWallMotion>> UPWARD_WALL_TYPE = PARTICLE_CONFIG.register("upward_wall", () -> new SimpleParticleMotionType<>(UpwardsWallMotion.CODEC, UpwardsWallMotion.STREAM, UpwardsWallMotion::new));
 
     public static final DeferredHolder<IParticleMotionType<?>, IParticleMotionType<UpwardsFieldMotion>> UPWARD_FIELD_TYPE = PARTICLE_CONFIG.register("upward_field", () -> new SimpleParticleMotionType<>(UpwardsFieldMotion.CODEC, UpwardsFieldMotion.STREAM, UpwardsFieldMotion::new));
+
+    public static final DeferredHolder<IParticleMotionType<?>, IParticleMotionType<NoneMotion>> NONE_TYPE = PARTICLE_CONFIG.register("none", () -> new SimpleParticleMotionType<>(NoneMotion.CODEC, NoneMotion.STREAM, NoneMotion::new));
 }
