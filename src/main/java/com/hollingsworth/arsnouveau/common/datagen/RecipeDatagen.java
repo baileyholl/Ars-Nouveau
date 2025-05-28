@@ -790,7 +790,7 @@ public class RecipeDatagen extends RecipeProvider {
             clearBuilder(ItemsRegistry.AMETHYST_GOLEM_CHARM).save(consumer, ArsNouveau.prefix("clear_amethyst_golem_charm"));
             clearBuilder(ItemsRegistry.ALAKARKINOS_CHARM).save(consumer, ArsNouveau.prefix("clear_alakarkinos_charm"));
 
-            shapelessBuilder(ItemsRegistry.ARS_STENCIL.get()).requires(ItemsRegistry.ABJURATION_ESSENCE.get()).requires(Items.PAPER).save(consumer);
+            shapelessBuilder(ItemsRegistry.ARS_STENCIL.get()).requires(Items.PAPER).requires(ItemsRegistry.ABJURATION_ESSENCE.get()).save(consumer);
             shapelessBuilder(BlockRegistry.REPOSITORY_CONTROLLER.asItem()).requires(ItemsRegistry.MAGE_FIBER).requires(BlockRegistry.REPOSITORY).save(consumer);
         }
     }
