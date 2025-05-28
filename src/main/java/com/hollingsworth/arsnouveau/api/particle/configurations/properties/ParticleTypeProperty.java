@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.SelectedParticleButton;
 import com.hollingsworth.arsnouveau.client.gui.documentation.DocEntryButton;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
-import com.hollingsworth.nuggets.client.gui.GuiHelpers;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.Minecraft;
@@ -153,19 +152,16 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
 
             @Override
             public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
-                if(GuiHelpers.isMouseInRelativeRange((int) pMouseX, (int) pMouseY, x, y, width, height)) {
-                    SoundManager manager = Minecraft.getInstance().getSoundManager();
-                    if (pScrollY < 0) {
-                        onScroll(1);
-                        manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
-                    } else if (pScrollY > 0) {
-                        onScroll(-1);
-                        manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
-                    }
-
-                    return true;
+                SoundManager manager = Minecraft.getInstance().getSoundManager();
+                if (pScrollY < 0) {
+                    onScroll(1);
+                    manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
+                } else if (pScrollY > 0) {
+                    onScroll(-1);
+                    manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
                 }
-                return super.mouseScrolled(pMouseX, pMouseY, pScrollX, pScrollY);
+
+                return true;
             }
 
             public void onScroll(int offset) {
@@ -188,6 +184,13 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
                     button.active = true;
                     button.setPosition(x, y);
                 }
+
+                boolean hasMore = pageOffset + 8 < maxEntries;
+                boolean hasFewer = pageOffset > 0;
+                upButton.visible = hasFewer;
+                upButton.active = hasFewer;
+                downButton.active = hasMore;
+                downButton.visible = hasMore;
             }
 
 
