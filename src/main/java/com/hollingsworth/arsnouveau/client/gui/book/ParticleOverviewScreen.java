@@ -275,7 +275,7 @@ public class ParticleOverviewScreen extends BaseBook {
         var widgetProvider = property.buildWidgets(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, ONE_PAGE_HEIGHT);
         return new PropertyButton(bookLeft + LEFT_PAGE_OFFSET + 26 + (isSubProperty ? 13 : 0), bookTop + 51 + 15 * (yOffset), isSubProperty ? DocAssets.TRIPLE_NESTED_ENTRY_BUTTON : DocAssets.DOUBLE_NESTED_ENTRY_BUTTON, widgetProvider, (button) -> {
             clearRightPage();
-            propertyWidgetProvider = widgetProvider;
+            propertyWidgetProvider = property.buildWidgets(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, ONE_PAGE_HEIGHT);
             List<AbstractWidget> propertyWidgets = new ArrayList<>();
             propertyWidgetProvider.addWidgets(propertyWidgets);
 
