@@ -50,7 +50,7 @@ public class ColorProperty extends SubProperty<ColorProperty>{
 
     public ColorProperty(PropMap propertyHolder) {
         super(propertyHolder);
-        ColorProperty colorProperty = propertyHolder.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty(ParticleColor.defaultParticleColor(), false));
+        ColorProperty colorProperty = propertyHolder.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty(ParticleColor.defaultParticleColor(), true));
         this.particleColor = colorProperty.particleColor;
         this.tintDisabled = colorProperty.tintDisabled;
         this.displayColor = particleColor;
@@ -158,6 +158,7 @@ public class ColorProperty extends SubProperty<ColorProperty>{
                 rainbowButton = new SelectedParticleButton(x + xOffset + (size % numPerRow) * 18, y + 100 + (size / numPerRow) * 18, DocAssets.SPELLSTYLE_RAINBOW, (button) ->{
                     particleColor = new RainbowParticleColor(particleColor.getRedInt(), particleColor.getGreenInt(), particleColor.getBlueInt());
                     displayColor = particleColor;
+                    tintDisabled = false;
                     propertyHolder.set(getType(), property);
                     updateSelected();
                 }){

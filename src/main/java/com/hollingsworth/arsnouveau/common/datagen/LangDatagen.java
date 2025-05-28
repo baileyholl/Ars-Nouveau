@@ -1514,7 +1514,9 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.particle.soul_fire_flame", "Soul Fire Flame");
         add("ars_nouveau.color_rainbow", "Rainbow");
         add("ars_nouveau.color_none", "No Tinting");
-
+        add("ars_nouveau.timeline.spawn", "On Spawn");
+        add("ars_nouveau.timeline.flair", "Flair");
+        add("ars_nouveau.particle_config.none", "None");
     }
 
     public void addCategory(String key, String value) {

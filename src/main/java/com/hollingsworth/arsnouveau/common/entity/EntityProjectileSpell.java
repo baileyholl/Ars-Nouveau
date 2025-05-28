@@ -60,6 +60,8 @@ import java.util.Set;
 public class EntityProjectileSpell extends ColoredProjectile implements IAnimationListener, GeoEntity {
 
     public int age;
+    protected boolean playedSpawnParticle;
+
     @Deprecated(forRemoval = true)
     public SpellResolver spellResolver;
     public int pierceLeft;
@@ -264,8 +266,9 @@ public class EntityProjectileSpell extends ColoredProjectile implements IAnimati
             this.flairEmitter.tick(level);
         }
 
-        if(age == 1 && onSpawnEmitter != null){
+        if(!playedSpawnParticle && onSpawnEmitter != null){
             this.onSpawnEmitter.tick(level);
+            playedSpawnParticle = true;
         }
     }
 

@@ -62,7 +62,7 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
         selectedData = PARTICLE_TYPES.get(type);
         if (selectedData == null) {
             System.out.println("UNREGISTERED PARTICLE TYPE FOR " + type);
-            selectedData = new ParticleData(ModParticles.NEW_GLOW_TYPE.get(), false);
+            selectedData = PARTICLE_TYPES.get(ModParticles.NEW_GLOW_TYPE.get());
         }
     }
 
@@ -73,8 +73,7 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
         this.subProperties = property.subProperties;
         selectedData = PARTICLE_TYPES.get(type);
         if (selectedData == null) {
-            System.out.println("UNREGISTERED PARTICLE TYPE FOR " + type);
-            selectedData = new ParticleData(ModParticles.NEW_GLOW_TYPE.get(), false);
+            selectedData = PARTICLE_TYPES.get(ModParticles.NEW_GLOW_TYPE.get());
         }
     }
 
