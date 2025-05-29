@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.common.block.SourceBerryBush;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyTransportBehavior;
+import com.hollingsworth.arsnouveau.common.entity.statemachine.IStateEvent;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,5 +63,13 @@ public class HarvestBerryState extends TravelToPosState{
             }
         }
         return posList.isEmpty() ? null : posList.get(world.random.nextInt(posList.size()));
+    }
+
+    @Override
+    public @Nullable StarbyState onEvent(IStateEvent event) {
+        if(event instanceof BoundListChangedEvent){
+            return new DecideStarbyActionState(starbuncle, behavior);
+        }
+        return super.onEvent(event);
     }
 }

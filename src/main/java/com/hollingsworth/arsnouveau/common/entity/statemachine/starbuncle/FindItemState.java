@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity.statemachine.starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyTransportBehavior;
+import com.hollingsworth.arsnouveau.common.entity.statemachine.IStateEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -107,5 +108,13 @@ public class FindItemState extends StarbyState{
         starbuncle.getNavigation().moveTo(dest, 1.4d);
         starbuncle.addGoalDebug(this, new DebugEvent("PathTo", "Pathing to " + dest));
         return super.tick();
+    }
+
+    @Override
+    public @Nullable StarbyState onEvent(IStateEvent event) {
+        if(event instanceof BoundListChangedEvent boundListChangedEvent){
+            return new DecideStarbyActionState(starbuncle, behavior);
+        }
+        return super.onEvent(event);
     }
 }
