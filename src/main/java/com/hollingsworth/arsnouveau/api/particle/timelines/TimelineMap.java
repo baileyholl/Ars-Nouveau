@@ -1,21 +1,23 @@
 package com.hollingsworth.arsnouveau.api.particle.timelines;
 
 import com.google.common.collect.ImmutableMap;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JavaOps;
 import net.minecraft.Util;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public record TimelineMap(Map<IParticleTimelineType<?>, IParticleTimeline<? extends IParticleTimeline<?>>> timelines) {
+public record TimelineMap(Map<IParticleTimelineType<?>, IParticleTimeline<?>> timelines) {
 
-    public static Codec<TimelineMap> CODEC = Codec.unboundedMap(IParticleTimelineType.CODEC, IParticleTimeline.CODEC).xmap(
-            TimelineMap::new,
+    public static Codec<TimelineMap> CODEC = Codec.unboundedMap(IParticleTimelineType.CODEC, IParticleTimeline.CODEC).<TimelineMap>xmap(
+        TimelineMap::new,
             (timelineMap) -> timelineMap.timelines
     );
 
@@ -72,6 +74,17 @@ public record TimelineMap(Map<IParticleTimelineType<?>, IParticleTimeline<? exte
     public int hashCode() {
         return Objects.hashCode(timelines);
     }
+
+    // Call on both sides to inspect the mismatched timeline hashcodes
+    public void debugPrintHash(Spell spell, Level level){
+        System.out.println(level);
+        TimelineMap timelineMap = spell.particleTimeline();
+        for(IParticleTimelineType<?> data : timelineMap.timelines().keySet()) {
+            System.out.println(timelineMap.get(data).hashCode() + " : " + data);
+        }
+        System.out.println("HELLO");
+    }
+
 
     public static class MutableTimelineMap {
         private final Map<IParticleTimelineType<?>, IParticleTimeline<? extends IParticleTimeline<?>>> timelines;
