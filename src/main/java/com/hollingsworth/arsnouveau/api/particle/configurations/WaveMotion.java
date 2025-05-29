@@ -47,7 +47,7 @@ public class WaveMotion extends ParticleMotion{
     }
 
     @Override
-    public IParticleMotionType<WaveMotion> getType() {
+    public IParticleMotionType<?> getType() {
         return ParticleMotionRegistry.WAVE_TYPE.get();
     }
 }
