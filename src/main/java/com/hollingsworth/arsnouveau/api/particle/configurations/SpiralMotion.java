@@ -37,6 +37,7 @@ public class SpiralMotion extends ParticleMotion {
     public IParticleMotionType<?> getType() {
         return ParticleMotionRegistry.SPIRAL_TYPE.get();
     }
+
     @Override
     public void tick(ParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
         double distance = Math.sqrt(Math.pow(x - prevX, 2) + Math.pow(y - prevY, 2) + Math.pow(z - prevZ, 2));

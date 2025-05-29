@@ -54,7 +54,7 @@ public class UpwardsWallMotion extends ParticleMotion{
 
         BlockPos.betweenClosedStream(pos.offset(range * direction.getStepX(), 0, range * direction.getStepZ()), pos.offset(-range  * direction.getStepX(), range, -range * direction.getStepZ())).forEach(blockPos -> {
             if (rand.nextInt(chance) == 0) {
-                for (int i = 0; i < getNumParticles(particleOptions, density.density()); i++) {
+                for (int i = 0; i < getNumParticles(density.density()); i++) {
                     double dx = blockPos.getX() + ParticleUtil.inRange(-growthFactor, growthFactor) + 0.5;
                     double dy = blockPos.getY() + ParticleUtil.inRange(-growthFactor, growthFactor) + 0.5;
                     double dz = blockPos.getZ() + ParticleUtil.inRange(-growthFactor, growthFactor) + 0.5;

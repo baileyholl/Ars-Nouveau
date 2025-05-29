@@ -1,11 +1,9 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
 import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
-import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.Property;
 import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
-import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -89,15 +87,10 @@ public abstract class ParticleMotion {
         };
     }
 
-    public int getNumParticles(ParticleOptions particleOptions, int particlesSec){
-        if(!(particleOptions instanceof PropertyParticleOptions propertyParticleOptions)){
-            return 5;
-        }
-
+    public int getNumParticles(int particlesSec){
         double spawnRateTick = particlesSec * 0.05;
-
-        var modulo = Math.round(1/spawnRateTick);
-        float ceilFloor = propertyParticleOptions.map.getOptional(ParticlePropertyRegistry.EMITTER_PROPERTY.get()).get().age;
+        var modulo = Math.round(1/Math.max(1, spawnRateTick));
+        float ceilFloor = this.emitter.age;
         if (modulo != 0 && ceilFloor % modulo == 0) {
             spawnRateTick = Math.ceil(spawnRateTick);
         } else {

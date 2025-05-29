@@ -57,14 +57,14 @@ public class TrailMotion extends ParticleMotion {
     @Override
     public void tick(ParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
         RandomSource random = level.random;
-        int totalParticles = getNumParticles(particleOptions, density);
+        int totalParticles = getNumParticles(density);
 
         double deltaX = x - prevX;
         double deltaY = y - prevY;
         double deltaZ = z - prevZ;
 
         for (int i = 0; i < totalParticles; i++) {
-            double t = (double) i / Math.max(1, totalParticles - 1); // evenly spaced 0..1
+            double t = (double) i / Math.max(1, totalParticles - 1);
             double px = prevX + deltaX * t;
             double py = prevY + deltaY * t;
             double pz = prevZ + deltaZ * t;

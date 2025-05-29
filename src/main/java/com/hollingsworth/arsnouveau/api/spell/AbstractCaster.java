@@ -146,6 +146,7 @@ public abstract class AbstractCaster<T extends AbstractCaster<T>> implements Too
         return build(this.slot, flavorText, isHidden, hiddenText, maxSlots, this.spells.put(slot, new Spell(spell.name(), spell.color(), sound, new ArrayList<>(spell.unsafeList()), spell.particleTimeline())));
     }
 
+    @Deprecated(forRemoval = true)
     public T setColor(ParticleColor color, int slot) {
         var spell = this.getSpell(slot);
         return build(this.slot, flavorText, isHidden, hiddenText, maxSlots, this.spells.put(slot, new Spell(spell.name(), color, spell.sound(), new ArrayList<>(spell.unsafeList()), spell.particleTimeline())));
@@ -185,6 +186,7 @@ public abstract class AbstractCaster<T extends AbstractCaster<T>> implements Too
         return slot;
     }
 
+    @Deprecated(forRemoval = true)
     public ParticleColor getColor(int slot) {
         return this.getSpell(slot).color();
     }
@@ -197,7 +199,6 @@ public abstract class AbstractCaster<T extends AbstractCaster<T>> implements Too
         return isHidden;
     }
 
-
     public String getHiddenRecipe() {
         return hiddenText;
     }
@@ -205,7 +206,6 @@ public abstract class AbstractCaster<T extends AbstractCaster<T>> implements Too
     public String getFlavorText() {
         return flavorText == null ? "" : flavorText;
     }
-
 
     @NotNull
     public ConfiguredSpellSound getSound(int slot) {
@@ -237,14 +237,15 @@ public abstract class AbstractCaster<T extends AbstractCaster<T>> implements Too
 
 
     @NotNull
+    @Deprecated(forRemoval = true)
     public ParticleColor getColor() {
         return getColor(getCurrentSlot());
     }
 
+    @Deprecated(forRemoval = true)
     public T setColor(ParticleColor color) {
         return setColor(color, getCurrentSlot());
     }
-
 
     public T setSound(ConfiguredSpellSound sound) {
         return setSound(sound, getCurrentSlot());

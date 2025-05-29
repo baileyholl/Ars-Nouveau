@@ -52,7 +52,7 @@ public class UpwardsFieldMotion extends ParticleMotion{
 
         BlockPos.betweenClosedStream(pos.offset(range, 0, range), pos.offset(-range, 0, -range)).forEach(blockPos -> {
             if (rand.nextInt(chance) == 0) {
-                for (int i = 0; i < getNumParticles(particleOptions, density.density()); i++) {
+                for (int i = 0; i < getNumParticles(density.density()); i++) {
                     double dx = blockPos.getX() + ParticleUtil.inRange(-0.5, 0.5) + 0.5;
                     double dy = blockPos.getY() + ParticleUtil.inRange(-0.01, 0.25);
                     double dz = blockPos.getZ() + ParticleUtil.inRange(-0.5, 0.5) + 0.5;
