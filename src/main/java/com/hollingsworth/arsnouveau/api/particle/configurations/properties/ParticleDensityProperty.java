@@ -47,6 +47,7 @@ public class ParticleDensityProperty extends Property<ParticleDensityProperty>{
     private int minDensity = 10;
     private int densityStepSize = 10;
     private boolean supportsShapes = true;
+    private boolean supportsRadius = true;
     private ParticleMotion.SpawnType spawnType;
 
     public ParticleDensityProperty(int density, double radius, ParticleMotion.SpawnType spawnType) {
@@ -64,10 +65,15 @@ public class ParticleDensityProperty extends Property<ParticleDensityProperty>{
     }
 
     public ParticleDensityProperty(PropMap propMap, int densityMin, int densityMax, int stepSize, boolean supportsShapes){
+        this(propMap, densityMin, densityMax, stepSize, supportsShapes, supportsShapes);
+    }
+
+    public ParticleDensityProperty(PropMap propMap, int densityMin, int densityMax, int stepSize, boolean supportsShapes, boolean supportsRadius){
         this(propMap);
         this.minDensity = densityMin;
         this.maxDensity = densityMax;
         this.supportsShapes = supportsShapes;
+        this.supportsRadius = supportsRadius;
         this.densityStepSize = stepSize;
     }
 
@@ -106,22 +112,32 @@ public class ParticleDensityProperty extends Property<ParticleDensityProperty>{
             @Override
             public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
                 DocClientUtils.drawHeader(getName(), graphics, x, y, width, mouseX, mouseY, partialTicks);
+                int yOffset = 20;
                 if(supportsShapes) {
-                    DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.density_slider", densitySlider.getValueString()), graphics, x, y + 52, width, mouseX, mouseY, partialTicks);
-                    DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.spawn_header", Component.translatable("ars_nouveau.spawn." + spawnType.name().toLowerCase())), graphics, x, y + 20, width, mouseX, mouseY, partialTicks);
-                    DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.radius_slider", radiusSlider.getValueString()), graphics, x, y + 82, width, mouseX, mouseY, partialTicks);
+                    DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.spawn_header", Component.translatable("ars_nouveau.spawn." + spawnType.name().toLowerCase())), graphics, x, y + yOffset, width, mouseX, mouseY, partialTicks);
+
+                    yOffset += 32;
+
+                    DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.density_slider", densitySlider.getValueString()), graphics, x, y + yOffset, width, mouseX, mouseY, partialTicks);
                 }else{
-                    DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.density_slider", densitySlider.getValueString()), graphics, x, y + 22, width, mouseX, mouseY, partialTicks);
+                    yOffset += 2;
+                    DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.density_slider", densitySlider.getValueString()), graphics, x, y + yOffset, width, mouseX, mouseY, partialTicks);
+                }
+
+                if(supportsRadius){
+                    yOffset +=  32;
+                    DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.radius_slider", radiusSlider.getValueString()), graphics, x, y + yOffset, width, mouseX, mouseY, partialTicks);
                 }
             }
 
             @Override
             public void addWidgets(List<AbstractWidget> widgets) {
                 ParticleMotion.SpawnType[] values = ParticleMotion.SpawnType.values();
+                int yOffset = 30;
                 if(supportsShapes) {
                     for (int i = 0; i < values.length; i++) {
                         ParticleMotion.SpawnType spawnType1 = values[i];
-                        SelectedParticleButton spawnTypeButton = new SelectedParticleButton(x + 10 + 20 * i, y + 30, fromShape(spawnType1), (button) -> {
+                        SelectedParticleButton spawnTypeButton = new SelectedParticleButton(x + 10 + 20 * i, y + yOffset, fromShape(spawnType1), (button) -> {
                             spawnType = spawnType1;
                             if(button instanceof SelectedParticleButton selectedParticleButton) {
                                 if(selectedButton != null){
@@ -139,23 +155,26 @@ public class ParticleDensityProperty extends Property<ParticleDensityProperty>{
                         }
                         widgets.add(spawnTypeButton);
                     }
-                }
 
-                densitySlider = buildSlider(x + 4, y + (supportsShapes ? 64 : 34), minDensity, maxDensity, densityStepSize, 1, Component.translatable("ars_nouveau.density_slider"), Component.empty(), Math.floor((maxDensity + minDensity) / 2.0), (value) -> {
+                    yOffset += 30;
+                }
+                yOffset += 4;
+                densitySlider = buildSlider(x + 4, y + yOffset, minDensity, maxDensity, densityStepSize, 1, Component.translatable("ars_nouveau.density_slider"), Component.empty(), Math.floor((maxDensity + minDensity) / 2.0), (value) -> {
                     density = densitySlider.getValueInt();
                     writeChanges();
                 });
+                yOffset += 30;
 
                 densitySlider.setValue(Mth.clamp(density, minDensity, maxDensity));
                 widgets.add(densitySlider);
 
-                radiusSlider = buildSlider(x + 4, y + 94, 0.05, 1, 0.05, 1, Component.translatable("ars_nouveau.radius_slider"), Component.empty(), 0.1,  (value) -> {
+                radiusSlider = buildSlider(x + 4, y + yOffset, 0.05, 1, 0.05, 1, Component.translatable("ars_nouveau.radius_slider"), Component.empty(), 0.1,  (value) -> {
                     radius = radiusSlider.getValue();
                     writeChanges();
                 });
                 radiusSlider.setValue(radius);
 
-                if(supportsShapes) {
+                if(supportsRadius) {
                     widgets.add(radiusSlider);
                 }
             }

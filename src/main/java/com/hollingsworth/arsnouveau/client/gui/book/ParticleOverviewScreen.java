@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
+import com.hollingsworth.arsnouveau.api.particle.configurations.NoneMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
@@ -58,24 +59,28 @@ public class ParticleOverviewScreen extends BaseBook {
     boolean hasMoreElements = false;
     boolean hasPreviousElements = false;
     AABB bounds = new AABB(BlockPos.ZERO).inflate(5);
+    public static IParticleTimelineType<?> LAST_SELECTED_PART = null;
 
     public ParticleOverviewScreen(AbstractCaster<?> caster,  int slot, InteractionHand stackHand) {
         this.slot = slot;
         this.stackHand = stackHand;
         this.caster = caster;
         this.timeline = caster.getParticles().mutable();
-
-        for(AbstractSpellPart spellPart : caster.getSpell(slot).recipe()){
-            var allTimelines = ParticleTimelineRegistry.PARTICLE_TIMELINE_REGISTRY.entrySet();
-            for (var entry : allTimelines) {
-                if (entry.getValue().getSpellPart() == spellPart) {
-                    selectedTimeline = entry.getValue();
-                    break;
+        if(LAST_SELECTED_PART == null) {
+            for (AbstractSpellPart spellPart : caster.getSpell(slot).recipe()) {
+                var allTimelines = ParticleTimelineRegistry.PARTICLE_TIMELINE_REGISTRY.entrySet();
+                for (var entry : allTimelines) {
+                    if (entry.getValue().getSpellPart() == spellPart) {
+                        selectedTimeline = entry.getValue();
+                        break;
+                    }
                 }
             }
-        }
-        if(selectedTimeline == null){
-            selectedTimeline = ParticleTimelineRegistry.PROJECTILE_TIMELINE.get();
+            if (selectedTimeline == null) {
+                selectedTimeline = ParticleTimelineRegistry.PROJECTILE_TIMELINE.get();
+            }
+        }else{
+            selectedTimeline = LAST_SELECTED_PART;
         }
 
 
@@ -215,8 +220,8 @@ public class ParticleOverviewScreen extends BaseBook {
         for (int i = 0; i < configurableParticles.size(); i++) {
             TimelineOption timelineOption = configurableParticles.get(i);
             TimelineEntryData entryData = timelineOption.entry();
-            ParticleMotion configuration = entryData.motion();
-            IParticleMotionType<?> motionType = configuration.getType();
+            ParticleMotion motion = entryData.motion();
+            IParticleMotionType<?> motionType = motion.getType();
             Component name = Component.literal(timelineOption.name().getString() + ": " + motionType.getName().getString());
             DropdownParticleButton dropdownParticleButton = new DropdownParticleButton(bookLeft + LEFT_PAGE_OFFSET + 13, bookTop + 51 + 15 * (propertyOffset), name, DocAssets.NESTED_ENTRY_BUTTON, motionType.getIconLocation(), (button) -> {
                 addParticleMotionOptions(timelineOption);
@@ -224,18 +229,20 @@ public class ParticleOverviewScreen extends BaseBook {
             widgets.add(dropdownParticleButton);
             propertyOffset++;
             List<BaseProperty> allProps = new ArrayList<>();
-            for (Property property : timelineOption.properties()) {
-                property.setChangedListener(this::initLeftSideButtons);
-                allProps.add(property);
-                List<SubProperty> subProperties = property.subProperties();
-                allProps.addAll(subProperties);
+            if(!(motion instanceof NoneMotion)) {
+                for (Property property : timelineOption.properties()) {
+                    property.setChangedListener(this::initLeftSideButtons);
+                    allProps.add(property);
+                    List<SubProperty> subProperties = property.subProperties();
+                    allProps.addAll(subProperties);
+                }
             }
-            for (Property property : configuration.getProperties()) {
-                property.setChangedListener(this::initLeftSideButtons);
-                allProps.add(property);
-                List<SubProperty> subProperties = property.subProperties();
-                allProps.addAll(subProperties);
-            }
+                for (Property property : motion.getProperties()) {
+                    property.setChangedListener(this::initLeftSideButtons);
+                    allProps.add(property);
+                    List<SubProperty> subProperties = property.subProperties();
+                    allProps.addAll(subProperties);
+                }
             for (BaseProperty property : allProps) {
                 PropertyButton propertyButton = buildPropertyButton(property, propertyOffset);
                 widgets.add(propertyButton);
@@ -297,6 +304,7 @@ public class ParticleOverviewScreen extends BaseBook {
             var entry = timelineList.get(i);
             var widget = new GlyphButton(bookLeft + RIGHT_PAGE_OFFSET + 2 + 20 * (i % 7), bookTop + 40 + 20*(i/7), entry.getValue().getSpellPart(), (button) -> {
                 selectedTimeline = entry.getValue();
+                LAST_SELECTED_PART = selectedTimeline;
                 AbstractSpellPart spellPart = selectedTimeline.getSpellPart();
                 timelineButton.title = Component.translatable(spellPart.getLocaleName());
                 timelineButton.renderStack = (spellPart.glyphItem.getDefaultInstance());

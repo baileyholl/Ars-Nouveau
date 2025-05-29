@@ -104,7 +104,7 @@ public class ModParticles {
             evt.registerSpriteSet(DRIPPING_WATER.get(), (spites) -> new PropParticle.Provider(null, (type, level, x, y, z, xSpeed, ySpeed, zSpeed) -> {
                 var particle = new FallingParticle(type, level, x, y, z, xSpeed, ySpeed, zSpeed);
                 particle.type = Fluids.WATER;
-                particle.landingSound = SoundEvents.AMETHYST_BLOCK_CHIME;
+                particle.landingSound = SoundEvents.POINTED_DRIPSTONE_DRIP_WATER;
                 particle.pickSprite(Minecraft.getInstance().particleEngine.spriteSets.get(ResourceLocation.withDefaultNamespace("falling_water")));
                 return particle;
             }));

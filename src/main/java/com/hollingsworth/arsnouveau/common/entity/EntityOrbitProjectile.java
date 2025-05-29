@@ -149,8 +149,12 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
         OrbitTimeline projectileTimeline = timelineMap.get(ParticleTimelineRegistry.ORBIT_TIMELINE.get());
         TimelineEntryData trailConfig = projectileTimeline.trailEffect;
         TimelineEntryData resolveConfig = projectileTimeline.onResolvingEffect;
+        TimelineEntryData spawnConfig = projectileTimeline.onSpawnEffect;
+        TimelineEntryData flairConfig = projectileTimeline.flairEffect;
         this.tickEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, trailConfig.motion(), trailConfig.particleOptions());
         this.resolveEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, resolveConfig.motion(), resolveConfig.particleOptions());
+        this.onSpawnEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, spawnConfig);
+        this.flairEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, flairConfig);
     }
 
     @Nullable
