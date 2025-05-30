@@ -3,6 +3,8 @@ package com.hollingsworth.arsnouveau.setup.registry;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
+import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
+import com.hollingsworth.arsnouveau.api.particle.timelines.*;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import com.hollingsworth.arsnouveau.api.registry.*;
@@ -301,6 +303,36 @@ public class APIRegistry {
         JarBehaviorRegistry.register(EntityType.BREEZE, new BreezeBehavior());
         JarBehaviorRegistry.register(EntityType.SNIFFER, new SnifferBehavior());
         DynamicTooltipRegistry.register(DataComponentRegistry.REACTIVE_CASTER.get());
+
+        List<IParticleMotionType<?>> PROJECTILE_OPTIONS = Arrays.asList(
+                ParticleMotionRegistry.TRAIL_TYPE.get(),
+                ParticleMotionRegistry.SPIRAL_TYPE.get(),
+                ParticleMotionRegistry.HELIX_TYPE.get(),
+                ParticleMotionRegistry.WAVE_TYPE.get());
+
+        List<IParticleMotionType<?>> RESOLVE_OPTIONS = Arrays.asList(ParticleMotionRegistry.BURST_TYPE.get());
+
+        List<IParticleMotionType<?>> ON_SPAWN_OPTIONS = Arrays.asList(ParticleMotionRegistry.NONE_TYPE.get(),
+                ParticleMotionRegistry.BURST_TYPE.get());
+        List<IParticleMotionType<?>> FLAIR_OPTIONS = Arrays.asList(ParticleMotionRegistry.NONE_TYPE.get(),
+                ParticleMotionRegistry.SPIRAL_TYPE.get(), ParticleMotionRegistry.TRAIL_TYPE.get(), ParticleMotionRegistry.HELIX_TYPE.get(), ParticleMotionRegistry.WAVE_TYPE.get());
+
+        ProjectileTimeline.TRAIL_OPTIONS.addAll(PROJECTILE_OPTIONS);
+        ProjectileTimeline.RESOLVING_OPTIONS.addAll(RESOLVE_OPTIONS);
+        ProjectileTimeline.FLAIR_OPTIONS.addAll(FLAIR_OPTIONS);
+        ProjectileTimeline.SPAWN_OPTIONS.addAll(ON_SPAWN_OPTIONS);
+
+        WallTimeline.TRAIL_OPTIONS.add(ParticleMotionRegistry.UPWARD_WALL_TYPE.get());
+        WallTimeline.RESOLVING_OPTIONS.addAll(RESOLVE_OPTIONS);
+
+        LingerTimeline.TRAIL_OPTIONS.add(ParticleMotionRegistry.UPWARD_FIELD_TYPE.get());
+        LingerTimeline.RESOLVING_OPTIONS.addAll(RESOLVE_OPTIONS);
+
+        OrbitTimeline.TRAIL_OPTIONS.addAll(PROJECTILE_OPTIONS);
+        OrbitTimeline.RESOLVING_OPTIONS.addAll(RESOLVE_OPTIONS);
+
+        TouchTimeline.RESOLVING_OPTIONS.addAll(RESOLVE_OPTIONS);
+
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {
