@@ -94,6 +94,7 @@ public class DocAssets {
     public static final BlitInfo SPELLSTYLE_COLOR_PREVIEW = new BlitInfo(ArsNouveau.prefix("textures/gui/spellstyle_preview_color.png"), 106, 16);
     public static final BlitInfo SPELLSTYLE_RAINBOW = new BlitInfo(ArsNouveau.prefix("textures/gui/doc_spellstyle_rainbow.png"), 16, 16);
     public static final BlitInfo SPELLSTYLE_BUTTON_BIG = new BlitInfo(ArsNouveau.prefix("textures/gui/spellstyle_button_big.png"), 16, 16);
+    public static final BlitInfo PARTICLES_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/particles_icon.png"), 14, 14);
     public record BlitInfo(ResourceLocation location, int u, int v, int width, int height) {
         public BlitInfo(ResourceLocation location, int width, int height){
             this(location, 0, 0, width, height);

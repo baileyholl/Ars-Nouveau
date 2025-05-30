@@ -195,8 +195,7 @@ public class GuiSpellBook extends BaseBook {
                 .withTooltip(Component.translatable("ars_nouveau.gui.notebook")));
 
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 44, 0, 0, 23, 20, 23, 20, "textures/gui/color_wheel_bookmark.png", (b) ->{
-            AbstractCaster<?> caster = SpellCasterRegistry.from(bookStack);
-            Minecraft.getInstance().setScreen(new ParticleOverviewScreen(caster, selectedSpellSlot, this.hand));
+            ParticleOverviewScreen.openScreen(bookStack, selectedSpellSlot, this.hand);
         }).withTooltip(Component.translatable("ars_nouveau.gui.spell_style")));
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 68, 0, 0, 23, 20, 23, 20, "textures/gui/summon_circle_bookmark.png", this::onFamiliarClick)
                 .withTooltip(Component.translatable("ars_nouveau.gui.familiar")));

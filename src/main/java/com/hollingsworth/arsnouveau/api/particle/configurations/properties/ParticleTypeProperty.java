@@ -197,7 +197,7 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
 
             @Override
             public void renderIcon(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float partialTicks) {
-                graphics.blit(getImagePath(selectedData.type()), x, y, 0, 0, 14, 14, 14, 14);
+                DocClientUtils.blit(graphics, DocAssets.PARTICLES_ICON, x, y);
             }
 
             @Override

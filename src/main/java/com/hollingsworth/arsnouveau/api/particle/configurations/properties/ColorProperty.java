@@ -234,6 +234,7 @@ public class ColorProperty extends SubProperty<ColorProperty>{
                 hueSlider.setValue(color.getHue());
                 saturation.setValue(color.getSaturation());
                 lightness.setValue(color.getLightness());
+                tintDisabled = false;
             }
 
             public BookSlider buildSlider(int x, int y, Component prefix, Component suffix, double currentVal, Consumer<Double> onValueChange) {
@@ -242,7 +243,7 @@ public class ColorProperty extends SubProperty<ColorProperty>{
 
             @Override
             public void renderIcon(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float partialTicks) {
-                if(tintDisabled){
+                if(!isLegacyRGB && tintDisabled){
                     DocClientUtils.blit(graphics, DocAssets.STYLE_ICON_NONE, x, y );
                     return;
                 }

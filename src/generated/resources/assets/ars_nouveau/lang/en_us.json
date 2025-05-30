@@ -1061,6 +1061,8 @@
   "ars_nouveau.particle_config.trail": "Line",
   "ars_nouveau.particle_config.upward_field": "Field",
   "ars_nouveau.particle_config.upward_wall": "Upward Wall",
+  "ars_nouveau.particle_config.wave": "Wave",
+  "ars_nouveau.particle_config.zigzag": "Zigzag",
   "ars_nouveau.particle_timelines": "Configurable Particles",
   "ars_nouveau.patchouli.missing": "Patchouli missing: opening online wiki",
   "ars_nouveau.pathing": "Pathing",
