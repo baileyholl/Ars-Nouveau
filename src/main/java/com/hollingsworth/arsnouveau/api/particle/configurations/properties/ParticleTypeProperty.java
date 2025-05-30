@@ -112,9 +112,8 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
                     }
                     return getTypeName(o1.getKey()).getString().compareTo(getTypeName(o2.getKey()).getString());
                 });
-                for (int i = 0; i < particleEntries.size(); i++) {
-                    var particleType = particleEntries.get(i);
-                    DocEntryButton button = new DocEntryButton(x + 6,  y + 20 + 15*i, ItemStack.EMPTY, getTypeName(particleType.getKey()), (b) -> {
+                for (Map.Entry<ParticleType<? extends PropertyParticleOptions>, ParticleData> particleType : particleEntries) {
+                    DocEntryButton button = new DocEntryButton(0, 0, ItemStack.EMPTY, getTypeName(particleType.getKey()), (b) -> {
                         selectedData = particleType.getValue();
                         type = particleType.getKey();
                         propertyHolder.set(getType(), self);
@@ -165,7 +164,7 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
                 }
                 var sublist = buttons.subList(pageOffset, Math.min(particleEntries.size(), pageOffset + 8));
                 for (int i = 0; i < sublist.size(); i++) {
-                    int x = this.x + 6;
+                    int x = this.x;
                     int y = this.y + 20 + 15 * (i % 8);
                     DocEntryButton button = sublist.get(i);
                     button.visible = true;

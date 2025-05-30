@@ -65,7 +65,7 @@ public class ParticleOverviewScreen extends BaseBook {
     public static ParticleOverviewScreen lastScreen;
     BaseProperty selectedProperty;
     SelectedParticleButton selectedParticleButton;
-    
+
     public ParticleOverviewScreen(AbstractCaster<?> caster,  int slot, InteractionHand stackHand) {
         this.slot = slot;
         this.stackHand = stackHand;
