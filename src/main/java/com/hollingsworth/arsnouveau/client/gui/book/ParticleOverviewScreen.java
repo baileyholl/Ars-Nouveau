@@ -110,6 +110,9 @@ public class ParticleOverviewScreen extends BaseBook {
     @Override
     public void removed() {
         super.removed();
+        AbstractCaster<?> caster = SpellCasterRegistry.from(Minecraft.getInstance().player.getItemInHand(stackHand));
+        int hash = caster.getSpell(slot).particleTimeline().hashCode();
+        ParticleOverviewScreen.lastOpenedHash = hash;;
         ParticleOverviewScreen.lastScreen = this;
     }
 

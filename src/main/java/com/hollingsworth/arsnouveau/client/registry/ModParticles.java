@@ -64,26 +64,7 @@ public class ModParticles {
     public static final DeferredHolder<ParticleType<?>, PropertyParticleType> SCULK_CHARGE = PARTICLES.register("sculk_charge", PropertyParticleType::new);
     public static final DeferredHolder<ParticleType<?>, PropertyParticleType> SOUL = PARTICLES.register("soul", PropertyParticleType::new);
     public static final DeferredHolder<ParticleType<?>, PropertyParticleType> SOUL_FIRE_FLAME = PARTICLES.register("soul_fire_flame", PropertyParticleType::new);
-    // End rod
-    // glow
-    // glow ink
-    // crit
-    // enchant
-    // spit
-    // dust plume -- plume option for resolve, normal colorable dust for trails
-    // small gust
-    // big gust for resolve option
-    // dragon breath
-    // enchanted hit
-    // sonic boom
-    // firework
-    // flame
-    // infested
-    // sculk soul
-    // sculk charge pop
-    // sculk charge?
-    // soul
-    // soul fire flame
+
 
     @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class Inner {
