@@ -2,17 +2,16 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
-import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-public class DropdownParticleButton extends NuggetImageButton {
+public class DropdownParticleButton extends SelectableButton {
     Component title;
     ResourceLocation icon;
 
-    public DropdownParticleButton(int x, int y, Component component, DocAssets.BlitInfo asset, ResourceLocation icon, OnPress onPress) {
-        super(x, y, asset.width(), asset.height(), asset.location(), onPress);
+    public DropdownParticleButton(int x, int y, Component component, DocAssets.BlitInfo asset, DocAssets.BlitInfo asset2, ResourceLocation icon, OnPress onPress) {
+        super(x, y, asset, asset2, onPress);
         this.title = component;
         this.icon = icon;
     }

@@ -3,14 +3,13 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
-import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
 import net.minecraft.client.gui.GuiGraphics;
 
-public class PropertyButton extends NuggetImageButton {
+public class PropertyButton extends SelectableButton {
     public ParticleConfigWidgetProvider widgetProvider;
 
-    public PropertyButton(int x, int y, DocAssets.BlitInfo asset, ParticleConfigWidgetProvider widgetProvider, OnPress onPress) {
-        super(x, y, asset.width(), asset.height(), asset.location(), onPress);
+    public PropertyButton(int x, int y, DocAssets.BlitInfo asset,  DocAssets.BlitInfo selectedAsset, ParticleConfigWidgetProvider widgetProvider, OnPress onPress) {
+        super(x, y, asset, selectedAsset, onPress);
         this.widgetProvider = widgetProvider;
     }
 

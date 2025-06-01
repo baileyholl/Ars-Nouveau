@@ -3,19 +3,18 @@ package com.hollingsworth.arsnouveau.client.gui.documentation;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
-import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
+import com.hollingsworth.arsnouveau.client.gui.buttons.SelectableButton;
 import com.hollingsworth.nuggets.client.rendering.RenderHelpers;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-public class DocEntryButton extends NuggetImageButton {
+public class DocEntryButton extends SelectableButton {
     public ItemStack renderStack;
     public Component title;
 
-
     public DocEntryButton(int x, int y, ItemStack renderStack, Component display, OnPress onPress) {
-        super(x, y, DocAssets.DOC_ENTRY_BUTTON.width(), DocAssets.DOC_ENTRY_BUTTON.height(), DocAssets.DOC_ENTRY_BUTTON.location(), onPress);
+        super(x, y, DocAssets.DOC_ENTRY_BUTTON, DocAssets.DOC_ENTRY_BUTTON_SELECTED, onPress);
         this.renderStack = renderStack;
         this.title = display;
     }
