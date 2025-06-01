@@ -308,14 +308,17 @@ public class APIRegistry {
                 ParticleMotionRegistry.TRAIL_TYPE.get(),
                 ParticleMotionRegistry.SPIRAL_TYPE.get(),
                 ParticleMotionRegistry.HELIX_TYPE.get(),
-                ParticleMotionRegistry.WAVE_TYPE.get());
+                ParticleMotionRegistry.WAVE_TYPE.get(),
+                ParticleMotionRegistry.ZIGZAG_TYPE.get());
 
         List<IParticleMotionType<?>> RESOLVE_OPTIONS = Arrays.asList(ParticleMotionRegistry.BURST_TYPE.get());
 
         List<IParticleMotionType<?>> ON_SPAWN_OPTIONS = Arrays.asList(ParticleMotionRegistry.NONE_TYPE.get(),
                 ParticleMotionRegistry.BURST_TYPE.get());
         List<IParticleMotionType<?>> FLAIR_OPTIONS = Arrays.asList(ParticleMotionRegistry.NONE_TYPE.get(),
-                ParticleMotionRegistry.SPIRAL_TYPE.get(), ParticleMotionRegistry.TRAIL_TYPE.get(), ParticleMotionRegistry.HELIX_TYPE.get(), ParticleMotionRegistry.WAVE_TYPE.get());
+                ParticleMotionRegistry.SPIRAL_TYPE.get(), ParticleMotionRegistry.TRAIL_TYPE.get(), ParticleMotionRegistry.HELIX_TYPE.get(),
+                ParticleMotionRegistry.WAVE_TYPE.get(),
+                ParticleMotionRegistry.ZIGZAG_TYPE.get());
 
         ProjectileTimeline.TRAIL_OPTIONS.addAll(PROJECTILE_OPTIONS);
         ProjectileTimeline.RESOLVING_OPTIONS.addAll(RESOLVE_OPTIONS);

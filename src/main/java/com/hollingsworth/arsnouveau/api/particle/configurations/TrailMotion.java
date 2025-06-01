@@ -83,6 +83,6 @@ public class TrailMotion extends ParticleMotion {
 
     @Override
     public List<Property<?>> getProperties() {
-        return List.of(new ParticleDensityProperty(propertyMap));
+        return List.of(new ParticleDensityProperty(propertyMap, 100, 0.1f));
     }
 }

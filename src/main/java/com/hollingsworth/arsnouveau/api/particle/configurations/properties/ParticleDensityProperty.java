@@ -45,10 +45,20 @@ public class ParticleDensityProperty extends Property<ParticleDensityProperty>{
     private double radius;
     private int maxDensity = 500;
     private int minDensity = 10;
+    private double minRadius = 0.05;
+    private double maxRadius = 1.0;
+    private double initialRadius = 0.1f;
     private int densityStepSize = 10;
     private boolean supportsShapes = true;
     private boolean supportsRadius = true;
     private ParticleMotion.SpawnType spawnType;
+
+    public ParticleDensityProperty(){
+        super();
+        this.density = 50;
+        this.radius = 0.3f;
+        this.spawnType = ParticleMotion.SpawnType.SPHERE;
+    }
 
     public ParticleDensityProperty(int density, double radius, ParticleMotion.SpawnType spawnType) {
         super();
@@ -69,7 +79,7 @@ public class ParticleDensityProperty extends Property<ParticleDensityProperty>{
     }
 
     public ParticleDensityProperty(PropMap propMap, int densityMin, int densityMax, int stepSize, boolean supportsShapes, boolean supportsRadius){
-        this(propMap);
+        this(propMap, (densityMax / 2), 0.3);
         this.minDensity = densityMin;
         this.maxDensity = densityMax;
         this.supportsShapes = supportsShapes;
@@ -77,11 +87,11 @@ public class ParticleDensityProperty extends Property<ParticleDensityProperty>{
         this.densityStepSize = stepSize;
     }
 
-    public ParticleDensityProperty(PropMap propMap){
+    public ParticleDensityProperty(PropMap propMap, int defaultDensity, double initialRadius){
         super(propMap);
         if(!propMap.has(getType())){
-            this.density = 5;
-            this.radius = 0.1f;
+            this.density = defaultDensity;
+            this.radius = initialRadius;
             this.spawnType = ParticleMotion.SpawnType.SPHERE;
         } else {
             ParticleDensityProperty densityProperty = propMap.get(getType());
@@ -89,6 +99,41 @@ public class ParticleDensityProperty extends Property<ParticleDensityProperty>{
             this.spawnType = densityProperty.spawnType().orElse(ParticleMotion.SpawnType.SPHERE);
             this.radius = densityProperty.radius;
         }
+    }
+
+    public ParticleDensityProperty minDensity(int minDensity) {
+        this.minDensity = minDensity;
+        return this;
+    }
+
+    public ParticleDensityProperty maxDensity(int maxDensity) {
+        this.maxDensity = maxDensity;
+        return this;
+    }
+
+    public ParticleDensityProperty densityStepSize(int stepSize) {
+        this.densityStepSize = stepSize;
+        return this;
+    }
+
+    public ParticleDensityProperty supportsShapes(boolean supportsShapes) {
+        this.supportsShapes = supportsShapes;
+        return this;
+    }
+
+    public ParticleDensityProperty supportsRadius(boolean supportsRadius) {
+        this.supportsRadius = supportsRadius;
+        return this;
+    }
+
+    public ParticleDensityProperty minRadius(double minRadius) {
+        this.minRadius = minRadius;
+        return this;
+    }
+
+    public ParticleDensityProperty maxRadius(double maxRadius) {
+        this.maxRadius = maxRadius;
+        return this;
     }
 
     public int density() {
@@ -168,7 +213,7 @@ public class ParticleDensityProperty extends Property<ParticleDensityProperty>{
                 densitySlider.setValue(Mth.clamp(density, minDensity, maxDensity));
                 widgets.add(densitySlider);
 
-                radiusSlider = buildSlider(x + 4, y + yOffset, 0.05, 1, 0.05, 1, Component.translatable("ars_nouveau.radius_slider"), Component.empty(), 0.1,  (value) -> {
+                radiusSlider = buildSlider(x + 4, y + yOffset, minRadius, maxRadius, 0.05, 1, Component.translatable("ars_nouveau.radius_slider"), Component.empty(),  initialRadius,  (value) -> {
                     radius = radiusSlider.getValue();
                     writeChanges();
                 });

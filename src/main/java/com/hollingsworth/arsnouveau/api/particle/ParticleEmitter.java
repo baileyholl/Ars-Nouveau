@@ -32,6 +32,9 @@ public class ParticleEmitter {
         ByteBufCodecs.INT.encode(buf, val.age);
         ParticleMotion.STREAM_CODEC.encode(buf, val.particleConfig);
         ParticleTypes.STREAM_CODEC.encode(buf, val.particleOptions);
+        ByteBufCodecs.DOUBLE.encode(buf, val.rand1);
+        ByteBufCodecs.DOUBLE.encode(buf, val.rand2);
+        ByteBufCodecs.DOUBLE.encode(buf, val.rand3);
 
     }, (buf) ->{
         Vector3f position = ByteBufCodecs.VECTOR3F.decode(buf);
@@ -42,9 +45,15 @@ public class ParticleEmitter {
         ParticleOptions particleOptions = ParticleTypes.STREAM_CODEC.decode(buf);
         Supplier<Vec3> positionSupplier = () -> new Vec3(position.x, position.y, position.z);
         Supplier<Vec2> rotationSupplier = () -> new Vec2(rotation.x, rotation.y);
+        double rand1 = ByteBufCodecs.DOUBLE.decode(buf);
+        double rand2 = ByteBufCodecs.DOUBLE.decode(buf);
+        double rand3 = ByteBufCodecs.DOUBLE.decode(buf);
         ParticleEmitter emitter = new ParticleEmitter(positionSupplier, rotationSupplier, particleConfig, particleOptions);
         emitter.age = age;
         emitter.previousPosition = new Vec3(previousPosition.x, previousPosition.y, previousPosition.z);
+        emitter.rand1 = rand1;
+        emitter.rand2 = rand2;
+        emitter.rand3 = rand3;
         return emitter;
     });
 
@@ -56,6 +65,9 @@ public class ParticleEmitter {
     public Supplier<Vec2> rotation;
     public Vec2 rotationOffset;
     public ParticleOptions particleOptions;
+    public double rand1;
+    public double rand2;
+    public double rand3;
 
     public ParticleEmitter(Supplier<Vec3> getPosition, Supplier<Vec2> rot, ParticleMotion particleConfig, ParticleOptions particleOptions) {
         this.position = getPosition;
@@ -64,6 +76,9 @@ public class ParticleEmitter {
         this.rotation = rot;
         this.rotationOffset = Vec2.ZERO;
         this.particleOptions = particleOptions;
+        this.rand1 = Math.random();
+        this.rand2 = Math.random();
+        this.rand3 = Math.random();
         particleConfig.init(this);
     }
 

@@ -14,6 +14,8 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Objects;
@@ -97,6 +99,20 @@ public abstract class ParticleMotion {
             spawnRateTick = Math.floor(spawnRateTick);
         }
         return (int) spawnRateTick;
+    }
+
+    public Vector3f toEmitterSpace(float x, float y, float z, float localX, float localY, float localZ) {
+        float xRotRadians = (float) Math.toRadians(this.emitter.getRotation().x);
+        float yRotRadians = (float) Math.toRadians(this.emitter.getRotation().y);
+        Matrix4f transform = new Matrix4f();
+        transform.identity()
+                .translate(new Vector3f(x, y, z))
+                .rotateY(yRotRadians)
+                .rotateX(-xRotRadians);
+
+        Vector3f localPos = new Vector3f(localX, localY, localZ);
+        transform.transformPosition(localPos);
+        return localPos;
     }
 
     public enum SpawnType {
