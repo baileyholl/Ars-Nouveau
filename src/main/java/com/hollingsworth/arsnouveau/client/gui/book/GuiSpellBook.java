@@ -123,7 +123,6 @@ public class GuiSpellBook extends BaseBook {
                 bonusSlots = caster.getBonusGlyphSlots();
             }
         }
-        this.bookStack = heldStack;
         this.unlockedSpells = parts;
         this.displayedGlyphs = new ArrayList<>(this.unlockedSpells);
         this.validationErrors = new LinkedList<>();
@@ -131,11 +130,7 @@ public class GuiSpellBook extends BaseBook {
                 ArsNouveauAPI.getInstance().getSpellCraftingSpellValidator(),
                 new GlyphMaxTierValidator(tier)
         );
-        caster = SpellCasterRegistry.from(bookStack);
-        this.selectedSpellSlot = caster.getCurrentSlot();
-        this.spellname = caster.getSpellName(caster.getCurrentSlot());
-        List<AbstractSpellPart> recipe = SpellCasterRegistry.from(bookStack).getSpell(selectedSpellSlot).mutable().recipe;
-        spell = new ArrayList<>(recipe);
+        onBookstackUpdated(heldStack);
     }
 
     public void onBookstackUpdated(ItemStack stack) {
@@ -143,7 +138,16 @@ public class GuiSpellBook extends BaseBook {
         this.caster = SpellCasterRegistry.from(stack);
         if (caster == null) {
             Minecraft.getInstance().setScreen(null);
+        }else{
+            onSetCaster();
         }
+    }
+
+    public void onSetCaster(){
+        this.selectedSpellSlot = caster.getCurrentSlot();
+        this.spellname = caster.getSpellName(caster.getCurrentSlot());
+        List<AbstractSpellPart> recipe = SpellCasterRegistry.from(bookStack).getSpell(selectedSpellSlot).mutable().recipe;
+        spell = new ArrayList<>(recipe);
     }
 
     @Override

@@ -70,7 +70,7 @@ public class ParticleOverviewScreen extends BaseBook {
         this.slot = slot;
         this.stackHand = stackHand;
         this.caster = caster;
-        this.timeline = caster.getParticles().mutable();
+        this.timeline = caster.getParticles(slot).mutable();
         if(LAST_SELECTED_PART == null) {
             for (AbstractSpellPart spellPart : caster.getSpell(slot).recipe()) {
                 var allTimelines = ParticleTimelineRegistry.PARTICLE_TIMELINE_REGISTRY.entrySet();
@@ -93,8 +93,9 @@ public class ParticleOverviewScreen extends BaseBook {
         AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
         int hash = caster.getSpell(slot).particleTimeline().hashCode();
         if(ParticleOverviewScreen.lastOpenedHash != hash || ParticleOverviewScreen.lastScreen == null){
-            Minecraft.getInstance().setScreen(new ParticleOverviewScreen(caster, slot, stackHand));
+            LAST_SELECTED_PART = null;
             ParticleOverviewScreen.lastOpenedHash = hash;
+            Minecraft.getInstance().setScreen(new ParticleOverviewScreen(caster, slot, stackHand));
         }else{
             ParticleOverviewScreen.lastScreen.slot = slot;
             Minecraft.getInstance().setScreen(ParticleOverviewScreen.lastScreen);
