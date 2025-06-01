@@ -96,6 +96,7 @@ public class ParticleOverviewScreen extends BaseBook {
             Minecraft.getInstance().setScreen(new ParticleOverviewScreen(caster, slot, stackHand));
             ParticleOverviewScreen.lastOpenedHash = hash;
         }else{
+            ParticleOverviewScreen.lastScreen.slot = slot;
             Minecraft.getInstance().setScreen(ParticleOverviewScreen.lastScreen);
         }
     }
