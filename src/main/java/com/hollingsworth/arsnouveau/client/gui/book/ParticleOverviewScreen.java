@@ -108,6 +108,12 @@ public class ParticleOverviewScreen extends BaseBook {
     }
 
     @Override
+    public void removed() {
+        super.removed();
+        ParticleOverviewScreen.lastScreen = this;
+    }
+
+    @Override
     public void init() {
         super.init();
 
