@@ -66,7 +66,8 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-
+//        var caster2 = SpellCasterRegistry.from(stack);
+//        caster2.getSpell().particleTimeline().debugPrintHash(caster2.getSpell(), worldIn);
         if (playerIn instanceof ServerPlayer) {
             if (tier != SpellTier.CREATIVE) {
                 var iMana = CapabilityRegistry.getMana(playerIn);

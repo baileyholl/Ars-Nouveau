@@ -82,7 +82,6 @@ public record TimelineMap(Map<IParticleTimelineType<?>, IParticleTimeline<?>> ti
         for(IParticleTimelineType<?> data : timelineMap.timelines().keySet()) {
             System.out.println(timelineMap.get(data).hashCode() + " : " + data);
         }
-        System.out.println("HELLO");
     }
 
 
