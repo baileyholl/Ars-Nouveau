@@ -79,7 +79,7 @@ public abstract class ParticleMotion {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(propertyMap);
+        return Objects.hash(ParticleMotionRegistry.PARTICLE_CONFIG_REGISTRY.getKey(getType()), propertyMap);
     }
 
     public Vec3 getMotionScaled(Vec3 deltaVec, double radius, SpawnType spawnType){

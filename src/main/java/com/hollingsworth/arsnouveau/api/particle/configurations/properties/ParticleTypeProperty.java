@@ -57,11 +57,12 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
 
     public ParticleTypeProperty(ParticleType<?> type, PropMap subProperties) {
         super();
-        this.subProperties = subProperties;;
+        this.subProperties = subProperties;
         this.type = (ParticleType<? extends PropertyParticleOptions>) type;
         selectedData = PARTICLE_TYPES.get(type);
         if (selectedData == null) {
             System.out.println("UNREGISTERED PARTICLE TYPE FOR " + type);
+            System.out.println(BuiltInRegistries.PARTICLE_TYPE.getKey(type));
             selectedData = PARTICLE_TYPES.get(ModParticles.NEW_GLOW_TYPE.get());
         }
     }

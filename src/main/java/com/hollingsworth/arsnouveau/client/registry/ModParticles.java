@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.client.registry;
 
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleType;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
 import com.hollingsworth.arsnouveau.client.particle.*;
 import com.hollingsworth.arsnouveau.client.particle.BubbleParticle;
 import com.hollingsworth.arsnouveau.client.particle.SmokeParticle;
@@ -110,39 +109,6 @@ public class ModParticles {
             evt.registerSpriteSet(SCULK_SOUL.get(), (spites) -> new WrappedProvider(ParticleTypes.SCULK_SOUL, SoulParticle.EmissiveProvider::new));
             evt.registerSpriteSet(SOUL_FIRE_FLAME.get(), (spites) -> new WrappedProvider(ParticleTypes.SOUL_FIRE_FLAME, FlameParticle.Provider::new));
             evt.registerSpriteSet(SOUL.get(), (spites) -> new WrappedProvider(ParticleTypes.SOUL, SoulParticle.Provider::new));
-
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(BUBBLE_CLONE_TYPE.get(), false));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SMOKE_TYPE.get(), false));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SNOW_TYPE.get(), false));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(NEW_GLOW_TYPE.get(), true, true));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(CUSTOM_TYPE.get(), true));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(LEAF_TYPE.get(), true));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(DRIPPING_WATER.get(), true));
-//            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(DRIPPING_LAVA.get(), true));
-//            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SPORE_BLOSSOM.get(), true));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(END_ROD.get(), true));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(GLOW_SQUID.get(), true));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(GLOW_INK.get(), true));
-
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(CRIT.get(), true));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ENCHANT.get(), true));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SPIT.get(), true));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(DUST_PLUME.get(), true));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SMALL_GUST.get(), true));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(BIG_GUST.get(), true));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(DRAGON_BREATH.get(), true));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ENCHANTED_HIT.get(), true));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SONIC_BOOM.get(), true));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(FIREWORK.get(), true));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(FLAME.get(), false));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(INFESTED.get(), true));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SCULK_SOUL.get(), false));
-//            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SCULK_CHARGE_POP.get(), false));
-//            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SCULK_CHARGE.get(), false));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SOUL.get(), true));
-            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(SOUL_FIRE_FLAME.get(), false));
-
-
         }
     }
 }

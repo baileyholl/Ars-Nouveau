@@ -50,11 +50,11 @@ public class EmitterProperty extends Property<EmitterProperty>{
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         EmitterProperty that = (EmitterProperty) o;
-        return Objects.equals(rotation, that.rotation);
+        return Float.compare(rotation.x, that.rotation.x) == 0 && Float.compare(rotation.y, that.rotation.y) == 0 && age == that.age;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(rotation);
+        return Objects.hash(rotation.x, rotation.y, age);
     }
 }
