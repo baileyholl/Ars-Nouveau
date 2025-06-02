@@ -336,6 +336,8 @@ public class APIRegistry {
 
         TouchTimeline.RESOLVING_OPTIONS.addAll(RESOLVE_OPTIONS);
 
+        LightTimeline.TICKING_OPTIONS.add(ParticleMotionRegistry.LIGHT_BLOB.get());
+
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {

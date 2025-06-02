@@ -23,6 +23,7 @@ import com.hollingsworth.arsnouveau.client.gui.buttons.*;
 import com.hollingsworth.arsnouveau.client.gui.documentation.DocEntryButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateParticleTimeline;
+import com.hollingsworth.arsnouveau.setup.registry.CreativeTabRegistry;
 import com.hollingsworth.nuggets.client.gui.GuiHelpers;
 import dev.compactmods.gander.level.VirtualLevel;
 import dev.compactmods.gander.render.geometry.BakedLevel;
@@ -306,9 +307,10 @@ public class ParticleOverviewScreen extends BaseBook {
         clearRightPage();
         rightPageWidgets.add(addRenderableWidget(new HeaderWidget(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, 20, Component.translatable("ars_nouveau.particle_timelines"))));
         var timelineList = new ArrayList<>(ParticleTimelineRegistry.PARTICLE_TIMELINE_REGISTRY.entrySet());
+        timelineList.sort((o1, o2) -> CreativeTabRegistry.COMPARE_SPELL_TYPE_NAME.compare(o1.getValue().getSpellPart(), o2.getValue().getSpellPart()));
         for (int i = 0; i < timelineList.size(); i++) {
             var entry = timelineList.get(i);
-            var widget = new GlyphButton(bookLeft + RIGHT_PAGE_OFFSET + 2 + 20 * (i % 7), bookTop + 40 + 20*(i/7), entry.getValue().getSpellPart(), (button) -> {
+            var widget = new GlyphButton(bookLeft + RIGHT_PAGE_OFFSET + 2 + 20 * (i % 6), bookTop + 40 + 20*(i/6), entry.getValue().getSpellPart(), (button) -> {
                 selectedTimeline = entry.getValue();
                 LAST_SELECTED_PART = selectedTimeline;
                 AbstractSpellPart spellPart = selectedTimeline.getSpellPart();
