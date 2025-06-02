@@ -86,7 +86,7 @@ public class EffectLight extends AbstractEffect implements IPotionEffect {
             BlockState lightBlockState = (spellStats.getDurationMultiplier() != 0 ? BlockRegistry.T_LIGHT_BLOCK.get() : BlockRegistry.LIGHT_BLOCK.get()).defaultBlockState().setValue(WATERLOGGED, world.getFluidState(pos).getType() == Fluids.WATER);
             world.setBlockAndUpdate(pos, lightBlockState.setValue(SconceBlock.LIGHT_LEVEL, Math.max(0, Math.min(15, 14 + (int) spellStats.getAmpMultiplier()))));
             if (world.getBlockEntity(pos) instanceof LightTile tile) {
-                tile.timeline = spellContext.getParticleTimeline(ParticleTimelineRegistry.LIGHT_TIMELINE.get());
+                tile.setTimeline(spellContext.getParticleTimeline(ParticleTimelineRegistry.LIGHT_TIMELINE.get()));
                 if (tile instanceof TempLightTile tempLightTile)
                     tempLightTile.lengthModifier = spellStats.getDurationMultiplier();
             }
