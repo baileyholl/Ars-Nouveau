@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.util.HolderHelper;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -70,6 +71,19 @@ public class EffectBreak extends AbstractEffect {
         if (numSilkTouch > 0 && stack.getEnchantmentLevel(HolderHelper.unwrap(world,Enchantments.SILK_TOUCH)) < numSilkTouch) {
             stack.enchant(HolderHelper.unwrap(world,Enchantments.SILK_TOUCH), numSilkTouch);
         }
+
+        if (isNotFakePlayer(shooter)) {
+            Spell remainder = spellContext.getRemainingSpell();
+            for (AbstractSpellPart part : remainder.recipe()) {
+                if (part instanceof AbstractEffect effect) {
+                    if (effect instanceof EffectPickup) {
+                        stack.set(DataComponentRegistry.PICKUP_TRACKER, shooter.getUUID());
+                    }
+                    break;
+                }
+            }
+        }
+
         for (BlockPos pos1 : posList) {
             if (world.isOutsideBuildHeight(pos1) || world.random.nextFloat() < spellStats.getBuffCount(AugmentRandomize.INSTANCE) * 0.25F) {
                 continue;

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
@@ -25,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static net.neoforged.neoforge.event.entity.player.PlayerXpEvent.*;
+
 public class EffectPickup extends AbstractEffect {
     public static EffectPickup INSTANCE = new EffectPickup();
 
@@ -39,30 +42,42 @@ public class EffectPickup extends AbstractEffect {
         Vec3 posVec = new Vec3(pos.getX(), pos.getY(), pos.getZ());
 
         Level world = spellContext.level;
-        List<ItemEntity> entityList = world.getEntitiesOfClass(ItemEntity.class, new AABB(
-                posVec.add(expansion, expansion, expansion), posVec.subtract(expansion, expansion, expansion)));
+
         InventoryManager manager = spellContext.getCaster().getInvManager().extractSlotMax(-1);
-        for (ItemEntity i : entityList) {
+        List<Entity> entities = world.getEntities(shooter, new AABB(posVec.add(expansion, expansion, expansion), posVec.subtract(expansion, expansion, expansion)), e -> e instanceof ItemEntity || e instanceof ExperienceOrb);
+        for (Entity entity : entities) {
+            tryPickup(entity, shooter, (ServerLevel) world, manager, spellContext.castingTile != null);
+        }
+    }
+
+    public static boolean tryPickup(Entity entity, LivingEntity shooter, ServerLevel world, InventoryManager manager) {
+        return tryPickup(entity, shooter, world, manager, false);
+    }
+
+    public static boolean tryPickup(Entity entity, LivingEntity shooter, ServerLevel world, InventoryManager manager, boolean isCastingTile) {
+        if (entity instanceof ItemEntity i) {
+            Player player = shooter instanceof Player p ? p : ANFakePlayer.getPlayer(world, entity.getUUID());
             i.setPickUpDelay(0); // Fixes backpack mods respecting pickup delay
-            var pickupPre = NeoForge.EVENT_BUS.post(new ItemEntityPickupEvent.Pre(getPlayer(shooter, (ServerLevel) world), i));
+            var pickupPre = NeoForge.EVENT_BUS.post(new ItemEntityPickupEvent.Pre(player, i));
             ItemStack stack = i.getItem();
-            if (stack.isEmpty() || pickupPre.canPickup().isFalse())
-                continue;
+            if (stack.isEmpty() || pickupPre.canPickup().isFalse()) {
+                return false;
+            }
             stack = manager.insertStack(stack);
             i.setItem(stack);
-            NeoForge.EVENT_BUS.post(new ItemEntityPickupEvent.Post(getPlayer(shooter, (ServerLevel) casterWorld), i, stack));
+            NeoForge.EVENT_BUS.post(new ItemEntityPickupEvent.Post(player, i, stack));
+            return true;
         }
-        List<ExperienceOrb> orbList = world.getEntitiesOfClass(ExperienceOrb.class, new AABB(
-                posVec.add(expansion, expansion, expansion), posVec.subtract(expansion, expansion, expansion)));
-        for (ExperienceOrb i : orbList) {
-            if (shooter instanceof Player player && isNotFakePlayer(player) && spellContext.castingTile == null) {
-                var expPickup = NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.entity.player.PlayerXpEvent.PickupXp(player, i));
-                if (expPickup.isCanceled())
-                    continue;
-                player.giveExperiencePoints(i.value);
-                i.remove(Entity.RemovalReason.DISCARDED);
+        if (entity instanceof ExperienceOrb o && shooter instanceof Player player && !(player instanceof ANFakePlayer) && !isCastingTile) {
+            var expPickup = NeoForge.EVENT_BUS.post(new PickupXp(player, o));
+            if (expPickup.isCanceled()) {
+                return false;
             }
+            player.giveExperiencePoints(o.value);
+            o.remove(Entity.RemovalReason.DISCARDED);
+            return true;
         }
+        return false;
     }
 
    @NotNull
