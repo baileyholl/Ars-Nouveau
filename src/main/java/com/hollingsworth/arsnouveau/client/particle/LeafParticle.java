@@ -18,7 +18,6 @@ public class LeafParticle extends PropParticle {
         this.zd = zd + (this.random.nextDouble() - 0.5) * 0.005;
         this.rotSpeed = ((float)Math.random() - 0.5F) * 0.1F;
         this.roll = (float)Math.random() * (float) (Math.PI * 2);
-//        hasPhysics = false;
     }
 
     @Override
@@ -45,35 +44,34 @@ public class LeafParticle extends PropParticle {
         if(onGround){
             return;
         }
-        // --- Local leaf flutter settings ---
-        double gravity = 0.005;              // very gentle fall
-        double swayFrequency = 0.05;          // slow horizontal wiggle
-        double swayAmplitude = 0.01;         // subtle flutter (smaller than before)
-        double bobFrequency = 0.15;
-        double bobAmplitude = 0.0015;        // barely noticeable vertical bob
-        double horizontalDrag = 0.79;        // keep most of projectile velocity
-        double verticalDrag = 0.89;
 
-        // Get a consistent random per-particle phase
-        double phase = (this.hashCode() % 6283) / 1000.0;
+        float gravity = 0.005f;
+        float swayFrequency = 0.05f;
+        float swayAmplitude = 0.01f;
+        float bobFrequency = 0.15f;
+        float bobAmplitude = 0.0015f;
+        float horizontalDrag = 0.79f;
+        float verticalDrag = 0.89f;
 
-        // Sway gently sideways relative to projectile direction
-        double swayX = Math.sin(this.age * swayFrequency + phase) * swayAmplitude;
-        double swayZ = Math.cos(this.age * swayFrequency + phase + Math.PI / 2) * swayAmplitude;
-        double bobY = Math.sin(this.age * bobFrequency + phase) * bobAmplitude;
 
-        // Apply soft drift
+        float phase = (this.hashCode() % 6283) / 1000.0f;
+
+
+        double swayX = Mth.sin(this.age * swayFrequency + phase) * swayAmplitude;
+        double swayZ = Mth.cos(this.age * swayFrequency + phase + ((float) Math.PI / 2.0f)) * swayAmplitude;
+        double bobY = Mth.sin(this.age * bobFrequency + phase) * bobAmplitude;
+
+
         this.yd -= gravity;
         this.yd += bobY;
         this.xd += swayX;
         this.zd += swayZ;
 
-        // Drag to slowly detach from projectile's momentum
+
         this.xd *= horizontalDrag;
         this.yd *= verticalDrag;
         this.zd *= horizontalDrag;
 
-        // Move
         this.move(this.xd, this.yd, this.zd);
 
         if (this.onGround) {
@@ -82,10 +80,14 @@ public class LeafParticle extends PropParticle {
         }
 
         this.oRoll = this.roll;
-        double rollFrequency = 0.1;           // lower = slower swaying
-        double rollAmplitude = 0.4;           // max angle in radians (~23 degrees)
-        double motionMagnitude = Math.sqrt(this.xd * this.xd + this.yd * this.yd + this.zd * this.zd);
-        double dynamicAmplitude = Mth.clamp(motionMagnitude * 2.5, 0.1, 0.6); // faster = bigger flip
-        this.roll = (float)(Math.sin(this.age * rollFrequency + phase) * dynamicAmplitude) * 10f;
+        float rollFrequency = 0.1f;
+        float motionMagnitude = Mth.sqrt((float) (this.xd * this.xd + this.yd * this.yd + this.zd * this.zd));
+        float dynamicAmplitude = (float) Mth.clamp(motionMagnitude * 2.5, 0.1, 0.6);
+        this.roll = (Mth.sin(this.age * rollFrequency + phase) * dynamicAmplitude) * 10f;
+    }
+
+    @Override
+    public ParticleColor getDefaultColor() {
+        return ParticleColor.GREEN;
     }
 }

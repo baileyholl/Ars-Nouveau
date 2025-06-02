@@ -33,17 +33,36 @@ public abstract class PropParticle extends TextureSheetParticle {
     }
 
     public void setColorFromProps(){
-        EmitterProperty emitterProp = options.map.get(ParticlePropertyRegistry.EMITTER_PROPERTY.get());
-        ParticleTypeProperty property = options.map.get(ParticlePropertyRegistry.TYPE_PROPERTY.get());
-        if(property != null && property.getColor().isTintDisabled()){
+        ParticleColor particleColor = getPropColor();
+        if(particleColor == null){
             return;
         }
-        ParticleColor color = property != null ? property.getColor().particleColor : ParticleColor.WHITE;
+        setColorFromParticleColor(particleColor);
+    }
+
+    public @Nullable ParticleColor getPropColor(){
+        ParticleTypeProperty property = options.map.get(ParticlePropertyRegistry.TYPE_PROPERTY.get());
+        if(property != null && property.getColor().isTintDisabled()){
+            return getDefaultColor();
+        } else {
+            return property != null ? property.getColor().particleColor : getDefaultColor();
+        }
+    }
+
+    public void setColorFromParticleColor(ParticleColor color){
+        if(color == null){
+            return;
+        }
+        EmitterProperty emitterProp = options.map.get(ParticlePropertyRegistry.EMITTER_PROPERTY.get());
         color = color.transition(emitterProp.age + age * 50);
         float colorR = color.getRed();
         float colorG = color.getGreen();
         float colorB = color.getBlue();
         this.setColor(colorR, colorG, colorB);
+    }
+
+    public @Nullable ParticleColor getDefaultColor(){
+        return null;
     }
 
     @Override

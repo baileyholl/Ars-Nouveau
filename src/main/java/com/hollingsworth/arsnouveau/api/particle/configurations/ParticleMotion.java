@@ -90,8 +90,10 @@ public abstract class ParticleMotion {
     }
 
     public int getNumParticles(int particlesSec){
+        if(particlesSec == 0)
+            return 0;
         double spawnRateTick = particlesSec * 0.05;
-        var modulo = Math.round(1/Math.max(1, spawnRateTick));
+        var modulo = Math.round(1/ spawnRateTick);
         float ceilFloor = this.emitter.age;
         if (modulo != 0 && ceilFloor % modulo == 0) {
             spawnRateTick = Math.ceil(spawnRateTick);
