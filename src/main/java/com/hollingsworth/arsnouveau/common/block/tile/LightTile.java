@@ -25,7 +25,7 @@ import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.NotNull;
 
 public class LightTile extends ModdedTile implements ITickable, IWololoable {
-    public LightTimeline timeline = new LightTimeline();
+    protected LightTimeline timeline = new LightTimeline();
     public ParticleColor color = ParticleColor.defaultParticleColor();
     public static RandomSource random = RandomSource.createNewThreadLocalInstance();
     public ParticleEmitter particleEmitter;
@@ -55,12 +55,6 @@ public class LightTile extends ModdedTile implements ITickable, IWololoable {
     }
 
     @Override
-    public void onLoad() {
-        super.onLoad();
-        particleEmitter = new ParticleEmitter(() -> this.getBlockPos().getCenter(), () -> new Vec2(0, 0), timeline.onTickEffect);
-    }
-
-    @Override
     protected void loadAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider pRegistries) {
         super.loadAdditional(compound, pRegistries);
         this.color = ParticleColorRegistry.from(compound.getCompound("color"));
@@ -74,6 +68,7 @@ public class LightTile extends ModdedTile implements ITickable, IWololoable {
             particleOptions.map.set(ParticlePropertyRegistry.COLOR_PROPERTY.get(), colorProperty);
             timeline.onTickEffect = new TimelineEntryData(new LightBlobMotion(), particleOptions);
         }
+        particleEmitter = new ParticleEmitter(() -> this.getBlockPos().getCenter(), () -> new Vec2(0, 0), timeline.onTickEffect);
     }
 
     @Override
@@ -81,6 +76,12 @@ public class LightTile extends ModdedTile implements ITickable, IWololoable {
         super.saveAdditional(tag, pRegistries);
         tag.put("color", color.serialize());
         tag.put("timeline", ANCodecs.encode(LightTimeline.CODEC.codec(), timeline));
+    }
+
+    public void setTimeline(LightTimeline timeline) {
+        this.timeline = timeline;
+        this.particleEmitter = new ParticleEmitter(() -> this.getBlockPos().getCenter(), () -> new Vec2(0, 0), timeline.onTickEffect);
+        updateBlock();
     }
 
     @Override

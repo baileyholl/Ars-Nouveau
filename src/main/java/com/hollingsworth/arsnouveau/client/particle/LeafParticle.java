@@ -18,6 +18,7 @@ public class LeafParticle extends PropParticle {
         this.zd = zd + (this.random.nextDouble() - 0.5) * 0.005;
         this.rotSpeed = ((float)Math.random() - 0.5F) * 0.1F;
         this.roll = (float)Math.random() * (float) (Math.PI * 2);
+//        hasPhysics = false;
     }
 
     @Override
@@ -41,7 +42,9 @@ public class LeafParticle extends PropParticle {
             return;
         }
         setColorFromProps();
-
+        if(onGround){
+            return;
+        }
         // --- Local leaf flutter settings ---
         double gravity = 0.005;              // very gentle fall
         double swayFrequency = 0.05;          // slow horizontal wiggle
