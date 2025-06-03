@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.ritual;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.IConfigurable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
@@ -14,13 +15,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
-public abstract class AbstractRitual {
+public abstract class AbstractRitual implements IConfigurable {
 
     public RitualBrazierTile tile;
 
@@ -147,7 +149,19 @@ public abstract class AbstractRitual {
         return getRegistryName().getNamespace() + ".ritual_desc." + getRegistryName().getPath();
     }
 
+    /**
+     * Gets the source cost for this ritual.
+     * Override this method to provide a custom source cost.
+     * If you want to make the cost configurable, use the config system in buildConfig()
+     * and return the configured value here.
+     * 
+     * @return The amount of source this ritual consumes per tick
+     */
     public int getSourceCost() {
+        return COST != null ? COST.get() : getDefaultSourceCost();
+    }
+
+    public int getDefaultSourceCost() {
         return 0;
     }
 
@@ -229,4 +243,34 @@ public abstract class AbstractRitual {
     public void onStatusChanged(boolean status) {}
 
     public void modifyTooltips(List<Component> tooltips) {}
+
+    // IConfigurable implementation
+    @Nullable
+    private ModConfigSpec config;
+    @Nullable
+    private ModConfigSpec.IntValue COST;
+
+    @Override
+    public void buildConfig(ModConfigSpec.Builder builder) {
+        int cost = getDefaultSourceCost();
+        if (cost > 0) {
+            COST = builder
+                    .comment("The amount of source this ritual consumes per operation. Set to 0 to disable source consumption.")
+                    .defineInRange("source_cost", getDefaultSourceCost(), 0, Integer.MAX_VALUE);
+        }
+    }
+
+    @Override
+    public @Nullable ModConfigSpec getConfigSpec() {
+        return config;
+    }
+    
+    @Override
+    public void setConfigSpec(@Nullable ModConfigSpec config) {
+        this.config = config;
+    }
+
+    public String getSubFolder() {
+        return "rituals";
+    }
 }

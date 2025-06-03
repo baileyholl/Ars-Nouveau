@@ -139,7 +139,7 @@ public abstract class StructureRitual extends AbstractRitual {
     }
 
     @Override
-    public int getSourceCost() {
+    public int getDefaultSourceCost() {
         return sourceRequired;
     }
 

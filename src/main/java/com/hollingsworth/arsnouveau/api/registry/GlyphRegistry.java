@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.registry;
 
+import com.hollingsworth.arsnouveau.api.IConfigurable;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectBreak;
@@ -35,13 +36,8 @@ public class GlyphRegistry {
     public static AbstractSpellPart registerSpell(AbstractSpellPart part) {
         glyphItemMap.put(part.getRegistryName(), part::getGlyph);
 
-        //register the spell part's config in
-        ModConfigSpec spec;
-        ModConfigSpec.Builder spellBuilder = new ModConfigSpec.Builder();
-        part.buildConfig(spellBuilder);
-        spec = spellBuilder.build();
-        part.CONFIG = spec;
-        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.SERVER, spec, part.getRegistryName().getNamespace() + "/" + part.getRegistryName().getPath() + ".toml");
+        IConfigurable.register(part);
+
         return spellpartMap.put(part.getRegistryName(), part);
     }
 

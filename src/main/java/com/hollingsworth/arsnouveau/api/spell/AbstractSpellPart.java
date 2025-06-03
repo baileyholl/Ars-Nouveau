@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.loading.FMLEnvironment;
+import com.hollingsworth.arsnouveau.api.IConfigurable;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,7 +23,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart> {
+public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>, IConfigurable {
     public static final Codec<AbstractSpellPart> CODEC = ResourceLocation.CODEC.xmap(GlyphRegistry::getSpellPartOrDefault, AbstractSpellPart::getRegistryName);
     public static final StreamCodec<RegistryFriendlyByteBuf, AbstractSpellPart> STREAM = StreamCodec.of(
             (buf, val) -> buf.writeResourceLocation(val.getRegistryName()),
@@ -56,6 +57,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     public abstract Integer getTypeIndex();
 
     /*ID for NBT data and SpellManager#spellList*/
+    @Override
     public ResourceLocation getRegistryName() {
         return this.registryName;
     }
@@ -210,7 +212,18 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     public @Nullable ModConfigSpec.IntValue PER_SPELL_LIMIT;
     public @Nullable ModConfigSpec.IntValue GLYPH_TIER;
 
+    @Override
+    @Nullable
+    public ModConfigSpec getConfigSpec() {
+        return CONFIG;
+    }
 
+    @Override
+    public void setConfigSpec(@Nullable ModConfigSpec config) {
+        this.CONFIG = config;
+    }
+
+    @Override
     public void buildConfig(ModConfigSpec.Builder builder) {
         builder.comment("General settings").push("general");
         ENABLED = builder.comment("Is Enabled?").define("enabled", true);

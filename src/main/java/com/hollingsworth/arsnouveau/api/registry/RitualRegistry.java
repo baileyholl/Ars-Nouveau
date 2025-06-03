@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.registry;
 
+import com.hollingsworth.arsnouveau.api.IConfigurable;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import net.minecraft.resources.ResourceLocation;
@@ -34,6 +35,7 @@ public class RitualRegistry {
     }
 
     public static AbstractRitual registerRitual(AbstractRitual ritual) {
+        IConfigurable.register(ritual);
         return ritualMap.put(ritual.getRegistryName(), ritual);
     }
 }

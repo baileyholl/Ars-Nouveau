@@ -26,29 +26,33 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.entity.PartEntity;
 
+
 public class RitualMobCapture extends AbstractRitual {
+    public ModConfigSpec.IntValue JAR_RANGE;
+    public ModConfigSpec.IntValue ENTITY_RANGE;
     @Override
     protected void tick() {
         Level world = getWorld();
-        int radius = 3;
         if (world.isClientSide) {
             BlockPos pos = getPos();
-            ParticleUtil.spawnRitualAreaEffect(getPos(), getWorld(), rand, getCenterColor(), radius);
+            ParticleUtil.spawnRitualAreaEffect(getPos(), getWorld(), rand, getCenterColor(), getJarRange());
         }
         if (!getWorld().isClientSide && world.getGameTime() % 60 == 0) {
             boolean didWorkOnce = false;
             Level level = getWorld();
             BlockPos pos = getPos();
             //Get nearby source jars
-            for(BlockPos blockPos : BlockPos.betweenClosed(pos.offset(-radius, -radius, -radius), pos.offset(radius, radius, radius))){
+            int jarRange = getJarRange();
+            for(BlockPos blockPos : BlockPos.betweenClosed(pos.offset(-jarRange, -jarRange, -jarRange), pos.offset(jarRange, jarRange, jarRange))){
                 if (level.getBlockState(blockPos).getBlock() instanceof MobJar) {
                     MobJarTile tile = (MobJarTile) level.getBlockEntity(blockPos);
                     if(tile == null || tile.getEntity() != null){
                         continue;
                     }
-                    for(Entity e : level.getEntities((Entity)null, new AABB(tile.getBlockPos()).inflate(5), this::canJar)){
+                    for(Entity e : level.getEntities((Entity)null, new AABB(tile.getBlockPos()).inflate(getEntityRange()), this::canJar)){
                         for (var passenger : e.getPassengers()) {
                             passenger.stopRiding();
                         }
@@ -105,7 +109,26 @@ public class RitualMobCapture extends AbstractRitual {
     }
 
     @Override
-    public int getSourceCost() {
+    public void buildConfig(ModConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        JAR_RANGE = builder
+                .comment("The range in blocks around the ritual to search for containment jars")
+                .defineInRange("jar_range", 3, 1, 20);
+        ENTITY_RANGE = builder
+                .comment("The range in blocks around each jar to search for entities to capture")
+                .defineInRange("entity_range", 5, 1, 20);
+    }
+
+    private int getJarRange() {
+        return JAR_RANGE.get();
+    }
+    
+    private int getEntityRange() {
+        return ENTITY_RANGE.get();
+    }
+
+    @Override
+    public int getDefaultSourceCost() {
         return 500;
     }
 

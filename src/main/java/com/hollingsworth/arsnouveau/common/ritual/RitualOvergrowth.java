@@ -18,10 +18,14 @@ import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.common.ModConfigSpec;
+
 
 import java.util.List;
 
 public class RitualOvergrowth extends AbstractRitual {
+    public ModConfigSpec.IntValue ANIMAL_RANGE;
+    public ModConfigSpec.IntValue CROP_RANGE;
     @Override
     protected void tick() {
         Level world = getWorld();
@@ -35,7 +39,7 @@ public class RitualOvergrowth extends AbstractRitual {
                 return;
 
             if (isAnimalGrowth()) {
-                List<AgeableMob> animals = getWorld().getEntitiesOfClass(AgeableMob.class, new AABB(getPos()).inflate(5));
+                List<AgeableMob> animals = getWorld().getEntitiesOfClass(AgeableMob.class, new AABB(getPos()).inflate(getAnimalRange()));
                 boolean didWorkOnce = false;
                 for (AgeableMob a : animals) {
                     if (a.isBaby()) {
@@ -46,14 +50,13 @@ public class RitualOvergrowth extends AbstractRitual {
                 if (didWorkOnce)
                     setNeedsSource(true);
             } else {
-                int range = 5;
+                int range = getCropRange();
                 boolean didWorkOnce = false;
                 for (BlockPos b : BlockPos.betweenClosed(pos.offset(range, -1, range), pos.offset(-range, 1, -range))) {
                     BlockState state = world.getBlockState(b);
 
                     if (state.getBlock() instanceof FarmBlock || world.getBlockState(b.above()).getBlock() instanceof BonemealableBlock) {
                         b = b.above();
-                        state = world.getBlockState(b);
                     }
 
                     if (rand.nextInt(25) == 0)
@@ -73,7 +76,26 @@ public class RitualOvergrowth extends AbstractRitual {
     }
 
     @Override
-    public int getSourceCost() {
+    public void buildConfig(ModConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        ANIMAL_RANGE = builder
+                .comment("The range in blocks around the ritual where baby animals will grow faster")
+                .defineInRange("animal_range", 5, 1, 20);
+        CROP_RANGE = builder
+                .comment("The range in blocks around the ritual where crops will be bone-mealed")
+                .defineInRange("crop_range", 5, 1, 20);
+    }
+
+    private int getAnimalRange() {
+        return ANIMAL_RANGE.get();
+    }
+    
+    private int getCropRange() {
+        return CROP_RANGE.get();
+    }
+    
+    @Override
+    public int getDefaultSourceCost() {
         return 500;
     }
 
