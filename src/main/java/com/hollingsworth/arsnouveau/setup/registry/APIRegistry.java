@@ -338,7 +338,9 @@ public class APIRegistry {
 
         TouchTimeline.RESOLVING_OPTIONS.addAll(RESOLVE_OPTIONS);
 
-        LightTimeline.TICKING_OPTIONS.add(ParticleMotionRegistry.LIGHT_BLOB.get());
+
+        List<IParticleMotionType<?>> LIGHT_OPTIONS = Arrays.asList(ParticleMotionRegistry.LIGHT_BLOB.get());
+        LightTimeline.TICKING_OPTIONS.addAll(LIGHT_OPTIONS);
 
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.BUBBLE_CLONE_TYPE.get(), false));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SMOKE_TYPE.get(), false));

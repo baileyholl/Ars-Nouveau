@@ -6,6 +6,8 @@ import com.hollingsworth.arsnouveau.client.gui.Color;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.Objects;
+
 public class RainbowParticleColor extends ParticleColor{
 
     public static final ResourceLocation ID = ArsNouveau.prefix( "rainbow");
@@ -73,5 +75,17 @@ public class RainbowParticleColor extends ParticleColor{
     @Override
     public ResourceLocation getRegistryName() {
         return ID;
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getRegistryName());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return this == o || (o instanceof RainbowParticleColor color &&
+                this.getRegistryName().equals(color.getRegistryName()));
     }
 }

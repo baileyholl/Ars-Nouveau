@@ -108,6 +108,8 @@ public class ParticleOverviewScreen extends BaseBook {
     @Override
     public void onClose() {
         super.onClose();
+        int hash = timeline.immutable().hashCode();
+        ParticleOverviewScreen.lastOpenedHash = hash;
         ParticleOverviewScreen.lastScreen = this;
     }
 
