@@ -294,10 +294,10 @@ public class GuiSpellBook extends BaseBook {
                 }
                 nextPage = true;
                 adjustedXPlaced = 0;
-                adjustedRowsPlaced = 0;
+                adjustedRowsPlaced = (adjustedRowsPlaced - 1) % MAX_ROWS;
             }
-            int xOffset = 20 * ((adjustedXPlaced) % PER_ROW) + (nextPage ? 134 : 0);
-            int yPlace = adjustedRowsPlaced * 18 + yStart + (nextPage && !foundForms ? 18 : 0);
+            int xOffset = 20 * (adjustedXPlaced % PER_ROW) + (nextPage ? 134 : 0);
+            int yPlace = adjustedRowsPlaced * 18 + yStart;
 
             GlyphButton cell = new GlyphButton(xStart + xOffset, yPlace, part, this::onGlyphClick);
             addRenderableWidget(cell);
@@ -737,7 +737,7 @@ public class GuiSpellBook extends BaseBook {
         }
 
         if (effectTextRow >= 1) {
-            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.effect").getString(), effectTextRow > 6 ? 154 : 20, 5 + 18 * (effectTextRow + formOffset), -8355712, false);
+            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.effect").getString(), effectTextRow > 6 ? 154 : 20, 5 + 18 * (effectTextRow % 7 + formOffset), -8355712, false);
         }
         if (augmentTextRow >= 1) {
             graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.augment").getString(), augmentTextRow > 6 ? 154 : 20, 5 + 18 * (augmentTextRow + formOffset), -8355712, false);
