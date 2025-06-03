@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.api;
+package com.hollingsworth.arsnouveau.api.config;
 
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.ModLoadingContext;
@@ -53,10 +53,10 @@ public interface IConfigurable {
 
     /**
      * Gets the ModConfigSpec for this configurable object.
+     *
      * @return The ModConfigSpec instance, or null if not built yet
      */
-    @Nullable
-    ModConfigSpec getConfigSpec();
+    @Nullable ModConfigSpec getConfigSpec();
 
     /**
      * Sets the ModConfigSpec for this configurable object.

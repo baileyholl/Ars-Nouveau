@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.api.ritual;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.IConfigurable;
+import com.hollingsworth.arsnouveau.api.config.IConfigurable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
@@ -170,6 +170,7 @@ public abstract class AbstractRitual implements IConfigurable {
     }
 
     public void setNeedsSource(boolean needMana) {
+        if (!consumesSource()) return;
         getContext().needsSourceToRun = needMana;
         BlockUtil.safelyUpdateState(getWorld(), tile.getBlockPos());
     }

@@ -1,14 +1,11 @@
 package com.hollingsworth.arsnouveau.api.registry;
 
-import com.hollingsworth.arsnouveau.api.IConfigurable;
+import com.hollingsworth.arsnouveau.api.config.IConfigurable;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectBreak;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.fml.ModLoadingContext;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
