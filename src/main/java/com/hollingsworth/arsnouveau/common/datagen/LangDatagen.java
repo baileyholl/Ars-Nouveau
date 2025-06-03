@@ -1521,6 +1521,44 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.particle_config.zigzag", "Zigzag");
         add("ars_nouveau.timeline.tick", "On Tick");
         add("ars_nouveau.particle_config.light", "Light");
+        add("ars_nouveau.particle.heart", "Heart");
+        add("ars_nouveau.particle.instant_effect", "Instant Effect");
+        add("ars_nouveau.particle.cobweb", "Cobweb");
+        add("ars_nouveau.particle.large_smoke", "Large Smoke");
+        add("ars_nouveau.particle.lava", "Lava");
+        add("ars_nouveau.particle.mycelium", "Mycelium");
+        add("ars_nouveau.particle.note", "Note");
+        add("ars_nouveau.particle.poof", "Poof");
+        add("ars_nouveau.particle.splash", "Splash");
+        add("ars_nouveau.particle.minecraft_smoke", "Smoke (MC)");
+        add("ars_nouveau.particle.white_smoke", "White Smoke");
+        add("ars_nouveau.particle.sneeze", "Sneeze");
+        add("ars_nouveau.particle.squid_ink", "Squid Ink");
+        add("ars_nouveau.particle.sweep_attack", "Sweep Attack");
+        add("ars_nouveau.particle.totem_of_undying", "Totem of Undying");
+        add("ars_nouveau.particle.witch", "Witch");
+        add("ars_nouveau.particle.bubble_pop", "Bubble Pop");
+        add("ars_nouveau.particle.nautilus", "Nautilus");
+        add("ars_nouveau.particle.campfire_cosy_smoke", "Campfire Cosy Smoke");
+        add("ars_nouveau.particle.campfire_signal_smoke", "Campfire Signal Smoke");
+        add("ars_nouveau.particle.ash", "Ash");
+        add("ars_nouveau.particle.crimson_spore", "Crimson Spore");
+        add("ars_nouveau.particle.warped_spore", "Warped Spore");
+        add("ars_nouveau.particle.reverse_portal", "Reverse Portal");
+        add("ars_nouveau.particle.white_ash", "White Ash");
+        add("ars_nouveau.particle.small_flame", "Small Flame");
+        add("ars_nouveau.particle.snowflake", "Snowflake");
+        add("ars_nouveau.particle.electric_spark", "Electric Spark");
+        add("ars_nouveau.particle.scrape", "Scrape");
+        add("ars_nouveau.particle.wax", "Wax");
+        add("ars_nouveau.particle.trial_spawner", "Trial Spawner");
+        add("ars_nouveau.particle.ominous_spawning", "Ominous Spawning");
+        add("ars_nouveau.particle.raid_omen", "Raid Omen");
+        add("ars_nouveau.particle.composter", "Composter");
+        add("ars_nouveau.particle.item_cobweb", "Item Cobweb");
+        add("ars_nouveau.particle.soul", "Soul");
+        add("ars_nouveau.particle.happy_villager", "Happy Villager");
+
     }
 
     public void addCategory(String key, String value) {

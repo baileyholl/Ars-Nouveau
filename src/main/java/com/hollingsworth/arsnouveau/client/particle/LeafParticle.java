@@ -7,7 +7,6 @@ import net.minecraft.util.Mth;
 
 public class LeafParticle extends PropParticle {
 
-    public double swayOffset;
     float rotSpeed;
 
     public LeafParticle(PropertyParticleOptions propertyParticleOptions, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
