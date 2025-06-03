@@ -181,7 +181,7 @@ public class GuiSpellBook extends BaseBook {
         addRenderableWidget(spell_name);
         addRenderableWidget(searchBar);
         // Add spell slots
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < caster.getMaxSlots(); i++) {
             String name = caster.getSpellName(i);
             GuiSpellSlot slot = new GuiSpellSlot(bookLeft + 281, bookTop - 1 + 15 * (i + 1), i, name, this::onSlotChange);
             if (i == selectedSpellSlot) {
