@@ -136,8 +136,7 @@ public class BaseDocScreen extends BaseScreen {
 
             BookmarkButton slot = addRenderableWidget(new BookmarkButton(screenLeft + 281, screenTop + 1 + 15 * (i + 1), entry, (b) ->{
                 if(entry == null) return;
-                boolean isShiftDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), Minecraft.getInstance().options.keyShift.getKey().getValue());
-                if(isShiftDown){
+                if(isShiftDown()){
                     bookmarks.remove(entryId);
                     initBookmarks();
                 }else {

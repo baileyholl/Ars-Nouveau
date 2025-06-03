@@ -8,7 +8,6 @@ import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
-import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -91,10 +90,10 @@ public class Glyph extends ModItem {
                 tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_unknown").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_RED)));
             }
         }
-        if (InputConstants.isKeyDown(ArsNouveau.proxy.getMinecraft().getWindow().getWindow(),ArsNouveau.proxy.getMinecraft().options.keyShift.getKey().getValue())) {
+        if (flagIn.hasShiftDown()) {
             tooltip2.add(spellPart.getBookDescLang());
         } else {
-            tooltip2.add(Component.translatable("tooltip.ars_nouveau.hold_shift", ArsNouveau.proxy.getMinecraft().options.keyShift.getKey().getDisplayName()));
+            tooltip2.add(Component.translatable("tooltip.ars_nouveau.hold_shift", Component.keybind("key.sneak")));
         }
     }
 
