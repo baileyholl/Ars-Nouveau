@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class ColorProperty extends SubProperty<ColorProperty>{
+public class ColorProperty extends BaseProperty<ColorProperty> {
 
     public static MapCodec<ColorProperty> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ParticleColor.CODEC.fieldOf("particleColor").forGetter(i -> i.particleColor),

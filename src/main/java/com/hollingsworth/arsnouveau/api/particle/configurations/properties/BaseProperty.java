@@ -5,6 +5,8 @@ import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public abstract class BaseProperty<T extends BaseProperty<T>> {
@@ -36,6 +38,9 @@ public abstract class BaseProperty<T extends BaseProperty<T>> {
         this.onDependenciesChanged = onDependenciesChanged;
     }
 
+    public List<BaseProperty<?>> subProperties(){
+        return new ArrayList<>();
+    }
 
     public void writeChanges(){
         if(propertyHolder != null){

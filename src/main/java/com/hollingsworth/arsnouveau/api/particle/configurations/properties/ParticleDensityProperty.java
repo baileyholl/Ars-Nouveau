@@ -24,7 +24,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class ParticleDensityProperty extends Property<ParticleDensityProperty>{
+public class ParticleDensityProperty extends BaseProperty<ParticleDensityProperty>{
     public static MapCodec<ParticleDensityProperty> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.INT.fieldOf("density").forGetter(i -> i.density),
             Codec.DOUBLE.fieldOf("radius").forGetter(i -> i.radius),

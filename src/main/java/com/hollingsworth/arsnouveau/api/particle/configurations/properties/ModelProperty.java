@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class ModelProperty extends Property<ModelProperty>{
+public class ModelProperty extends BaseProperty<ModelProperty>{
 
     public static MapCodec<ModelProperty> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("resource").forGetter(i -> i.selectedResource.resourceLocation),

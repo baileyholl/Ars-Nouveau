@@ -13,7 +13,7 @@ import net.minecraft.world.phys.Vec2;
 
 import java.util.Objects;
 
-public class EmitterProperty extends Property<EmitterProperty>{
+public class EmitterProperty extends BaseProperty<EmitterProperty>{
 
     public static final MapCodec<EmitterProperty> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ANCodecs.VEC2.fieldOf("rotation").forGetter(i -> i.rotation),

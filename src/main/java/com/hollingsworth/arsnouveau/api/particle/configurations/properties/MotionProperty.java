@@ -19,7 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.List;
 import java.util.Objects;
 
-public class MotionProperty extends Property<MotionProperty>{
+public class MotionProperty extends BaseProperty<MotionProperty>{
     private static MotionProperty instance = new MotionProperty();
     public static MapCodec<MotionProperty> CODEC = MapCodec.unit(instance);
 

@@ -30,7 +30,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
+public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
     public static final Map<ParticleType<? extends PropertyParticleOptions>, ParticleData> PARTICLE_TYPES = new ConcurrentHashMap<>();
 
     public static void addType(ParticleData data) {

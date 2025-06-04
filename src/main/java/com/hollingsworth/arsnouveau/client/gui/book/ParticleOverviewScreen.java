@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.Property;
 import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimeline;
 import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimelineType;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
@@ -241,9 +240,7 @@ public class ParticleOverviewScreen extends BaseBook {
             property.setChangedListener(this::initLeftSideButtons);
             PropertyButton propertyButton = buildPropertyButton(property, buttons.size(), depth);
             buttons.add(propertyButton);
-            if(property instanceof Property parentProp) {
-                getPropButtons(parentProp.subProperties(), buttons, depth + 1);
-            }
+            getPropButtons(property.subProperties(), buttons, depth + 1);
         }
         return buttons;
     }
