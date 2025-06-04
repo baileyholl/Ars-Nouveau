@@ -108,7 +108,6 @@ public class EntityProjectileSpell extends ColoredProjectile implements IAnimati
         setResolver(resolver);
         this.pierceLeft = resolver.spell.getBuffsAtIndex(0, resolver.spellContext.getUnwrappedCaster(), AugmentPierce.INSTANCE);
         this.numSensitive = resolver.spell.getBuffsAtIndex(0, resolver.spellContext.getUnwrappedCaster(), AugmentSensitive.INSTANCE);
-        setColor(resolver.spellContext.getColors());
     }
 
     public EntityProjectileSpell(Level world, SpellResolver resolver) {

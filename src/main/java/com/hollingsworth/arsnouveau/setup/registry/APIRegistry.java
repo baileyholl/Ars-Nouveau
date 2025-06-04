@@ -342,6 +342,8 @@ public class APIRegistry {
         List<IParticleMotionType<?>> LIGHT_OPTIONS = Arrays.asList(ParticleMotionRegistry.LIGHT_BLOB.get());
         LightTimeline.TICKING_OPTIONS.addAll(LIGHT_OPTIONS);
 
+        SelfTimeline.RESOLVING_OPTIONS.add(ParticleMotionRegistry.BURST_TYPE.get());
+
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.BUBBLE_CLONE_TYPE.get(), false));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SMOKE_TYPE.get(), false));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SNOW_TYPE.get(), false));
@@ -349,8 +351,6 @@ public class APIRegistry {
 
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.LEAF_TYPE.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.DRIPPING_WATER.get(), true));
-//            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticlModParticles.eData(DRIPPING_LAVA.get(), true));
-//            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticlModParticles.eData(SPORE_BLOSSOM.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.END_ROD.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.GLOW_SQUID.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.GLOW_INK.get(), true));

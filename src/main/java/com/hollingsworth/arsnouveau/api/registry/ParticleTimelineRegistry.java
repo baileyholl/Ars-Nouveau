@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.particle.timelines.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodPantomime;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -36,9 +37,12 @@ public class ParticleTimelineRegistry {
 
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<RuneTimeline>> RUNE_TIMELINE = TIMELINE_DF.register("rune", () -> new SimpleParticleTimelineType<>(EffectRune.INSTANCE, RuneTimeline.CODEC, RuneTimeline.STREAM_CODEC, RuneTimeline::new));
 
-
-
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<PantomimeTimeline>> PANTOMIME_TIMELINE = TIMELINE_DF.register("pantomime", () -> new SimpleParticleTimelineType<>(MethodPantomime.INSTANCE, PantomimeTimeline.CODEC, PantomimeTimeline.STREAM_CODEC, PantomimeTimeline::new));
 
+    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<WololoTimeline>> WOLOLO_TIMELINE = TIMELINE_DF.register("wololo", () -> new SimpleParticleTimelineType<>(EffectWololo.INSTANCE, WololoTimeline.CODEC, WololoTimeline.STREAM_CODEC, WololoTimeline::new));
+
+    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<MageBlockTimeline>> MAGEBLOCK_TIMELINE = TIMELINE_DF.register("mageblock", () -> new SimpleParticleTimelineType<>(EffectPhantomBlock.INSTANCE, MageBlockTimeline.CODEC, MageBlockTimeline.STREAM_CODEC, MageBlockTimeline::new));
+
+    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<SelfTimeline>> SELF_TIMELINE = TIMELINE_DF.register("self", () -> new SimpleParticleTimelineType<>(MethodSelf.INSTANCE, SelfTimeline.CODEC, SelfTimeline.STREAM_CODEC, SelfTimeline::new));
 
 }
