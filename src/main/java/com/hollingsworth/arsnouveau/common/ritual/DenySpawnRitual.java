@@ -7,18 +7,18 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.ai.village.VillageSiege;
 import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.event.village.VillageSiegeEvent;
 import org.jetbrains.annotations.Nullable;
 
 public class DenySpawnRitual extends RangeRitual {
-    public int radius = 32;
+    public @Nullable ModConfigSpec.IntValue RADIUS;
+    public int radius;
     public boolean deniedSpawn;
 
     public boolean denySpawn(FinalizeSpawnEvent checkSpawn){
@@ -48,6 +48,7 @@ public class DenySpawnRitual extends RangeRitual {
         if(getWorld().isClientSide){
             return;
         }
+        radius = RADIUS != null ? RADIUS.get() : 32;
         for(ItemStack i : getConsumedItems()){
             if(i.is(Items.ROTTEN_FLESH)) {
                 radius += i.getCount();
@@ -73,8 +74,16 @@ public class DenySpawnRitual extends RangeRitual {
     }
 
     @Override
-    public int getSourceCost() {
+    public int getDefaultSourceCost() {
         return 500;
+    }
+
+    @Override
+    public void buildConfig(ModConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        RADIUS = builder
+                .comment("The radius in blocks around the ritual where mob spawns are prevented")
+                .defineInRange("radius", 32, 1, 128);
     }
 
     @Override

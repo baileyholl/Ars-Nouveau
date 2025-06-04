@@ -19,11 +19,14 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
+import net.neoforged.neoforge.common.ModConfigSpec;
+
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
 public class RitualHarvest extends AbstractRitual {
+    public ModConfigSpec.IntValue HARVEST_RANGE;
 
 
     @Override
@@ -36,7 +39,7 @@ public class RitualHarvest extends AbstractRitual {
         }
         if (world == null || pos == null || world.getGameTime() % 200 != 0)
             return;
-        int range = 4;
+        int range = getHarvestRange();
         boolean hasPlayedSound = false;
         for (BlockPos blockpos : BlockPos.betweenClosed(pos.offset(range, -1, range), pos.offset(-range, 1, -range))) {
             BlockState state = world.getBlockState(blockpos);
@@ -140,7 +143,19 @@ public class RitualHarvest extends AbstractRitual {
     }
 
     @Override
-    public int getSourceCost() {
+    public void buildConfig(ModConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        HARVEST_RANGE = builder
+                .comment("The range in blocks around the ritual where crops will be harvested")
+                .defineInRange("harvest_range", 4, 1, 20);
+    }
+
+    private int getHarvestRange() {
+        return HARVEST_RANGE.get();
+    }
+
+    @Override
+    public int getDefaultSourceCost() {
         return 100;
     }
 

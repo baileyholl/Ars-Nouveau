@@ -7,12 +7,15 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.phys.AABB;
 
 import java.util.List;
+import org.jetbrains.annotations.Nullable;
 
 public class RitualBreed extends AbstractRitual {
+    public @Nullable ModConfigSpec.IntValue MAX_ANIMALS;
     long lastTick = -1;
     boolean tooManyAnimals = false;
 
@@ -23,7 +26,8 @@ public class RitualBreed extends AbstractRitual {
         } else {
             if (getWorld().getGameTime() % 200 == 0) {
                 List<Animal> animals = getWorld().getEntitiesOfClass(Animal.class, new AABB(getPos()).inflate(5));
-                if (animals.size() >= 20) {
+                int maxAnimals = MAX_ANIMALS != null ? MAX_ANIMALS.get() : 20;
+                if (animals.size() >= maxAnimals) {
                     return;
                 }
                 boolean didWorkOnce = false;
@@ -44,12 +48,21 @@ public class RitualBreed extends AbstractRitual {
         var lastCheck = getWorld().getGameTime();
         if (lastCheck != lastTick && lastCheck  % 20 == 0) {
             List<Animal> animals = getWorld().getEntitiesOfClass(Animal.class, new AABB(getPos()).inflate(5));
-            tooManyAnimals = animals.size() >= 20;
+            int maxAnimals = MAX_ANIMALS != null ? MAX_ANIMALS.get() : 20;
+            tooManyAnimals = animals.size() >= maxAnimals;
             lastTick = lastCheck;
         }
         if (tooManyAnimals) {
             tooltips.add(Component.translatable("ars_nouveau.tooltip.too_many_animals"));
         }
+    }
+
+    @Override
+    public void buildConfig(ModConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        MAX_ANIMALS = builder
+                .comment("The maximum number of animals allowed before the ritual stops breeding")
+                .defineInRange("max_animals", 20, 1, 100);
     }
 
     @Override
@@ -68,7 +81,7 @@ public class RitualBreed extends AbstractRitual {
     }
 
     @Override
-    public int getSourceCost() {
+    public int getDefaultSourceCost() {
         return 500;
     }
 

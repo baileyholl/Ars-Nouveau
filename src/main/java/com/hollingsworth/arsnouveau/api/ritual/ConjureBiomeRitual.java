@@ -12,12 +12,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class ConjureBiomeRitual extends AbstractRitual {
-    public int radius = 7;
+    public int radius;
     public int blocksPlaced;
-    public int blocksBeforeSourceNeeded = 5;
     public ResourceKey<Biome> biome;
     public ManhattenTracker tracker;
 
@@ -32,6 +32,7 @@ public abstract class ConjureBiomeRitual extends AbstractRitual {
         if(getWorld().isClientSide){
             return;
         }
+        radius = DEFAULT_RADIUS != null ? DEFAULT_RADIUS.get() : 7;
         for(ItemStack i : getConsumedItems()){
             if(i.is(ItemTagProvider.SOURCE_GEM_TAG)) {
                 radius += i.getCount();
@@ -62,7 +63,7 @@ public abstract class ConjureBiomeRitual extends AbstractRitual {
                 RitualUtil.changeBiome(getWorld(), nextPos, biome);
                 getWorld().playSound(null, nextPos, state.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 1.0f, 1.0f);
                 blocksPlaced++;
-                if (blocksPlaced >= blocksBeforeSourceNeeded){
+                if (blocksPlaced >= (BLOCKS_PER_SOURCE != null ? BLOCKS_PER_SOURCE.get() : 5)) {
                     blocksPlaced = 0;
                     setNeedsSource(true);
                 }
@@ -77,7 +78,7 @@ public abstract class ConjureBiomeRitual extends AbstractRitual {
     }
 
     @Override
-    public int getSourceCost() {
+    public int getDefaultSourceCost() {
         return 50;
     }
 
@@ -103,5 +104,15 @@ public abstract class ConjureBiomeRitual extends AbstractRitual {
             tag.put("tracker", tracker.serialize(new CompoundTag()));
         }
         tag.putInt("radius", radius);
+    }
+
+    public @Nullable ModConfigSpec.IntValue DEFAULT_RADIUS;
+    public @Nullable ModConfigSpec.IntValue BLOCKS_PER_SOURCE;
+
+    @Override
+    public void buildConfig(ModConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        DEFAULT_RADIUS = builder.comment("The default radius of the ritual").defineInRange("radius", 7, 1, 128);
+        BLOCKS_PER_SOURCE = builder.comment("The number of blocks to place before needing source").defineInRange("blocks_per_source", 5, 1, Integer.MAX_VALUE);
     }
 }

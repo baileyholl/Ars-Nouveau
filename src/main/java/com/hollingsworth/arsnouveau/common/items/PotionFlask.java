@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.config.IItemConfigurable;
 import com.hollingsworth.arsnouveau.api.potion.IPotionProvider;
 import com.hollingsworth.arsnouveau.api.registry.PotionProviderRegistry;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
@@ -8,8 +9,10 @@ import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -20,11 +23,37 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.neoforged.fml.config.IConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class PotionFlask extends ModItem {
+public abstract class PotionFlask extends ModItem implements IItemConfigurable {
+    private ModConfigSpec.IntValue CHARGES;
+    private ModConfigSpec.IntValue AMOUNT;
+    private @Nullable ModConfigSpec SPEC;
+
+    @Override
+    public void setConfigSpec(@Nullable ModConfigSpec config) {
+        this.SPEC = config;
+    }
+
+    @Nullable
+    public ModConfigSpec getConfigSpec() {
+        return this.SPEC;
+    }
+
+    @Override
+    public void buildConfig(ModConfigSpec.Builder builder) {
+        CHARGES = builder
+                .comment("The amount of charges the potion flask should have.")
+                .defineInRange("max_charges", 8, 1, 20);
+        AMOUNT = builder
+                .comment("The amount of potion in one charge.")
+                .defineInRange("potion_amount", 100, 1, 1000);
+    }
 
     public PotionFlask() {
         this(ItemsRegistry.defaultItemProperties()
@@ -33,8 +62,18 @@ public abstract class PotionFlask extends ModItem {
                 .component(DataComponentRegistry.MULTI_POTION, new MultiPotionContents(0, PotionContents.EMPTY, 8)));
     }
 
-    public PotionFlask(Item.Properties props) {
+    @Override
+    public void verifyComponentsAfterLoad(ItemStack stack) {
+        IItemConfigurable.updateComponent(SPEC, DataComponents.MAX_DAMAGE, stack, 8, (comp) -> CHARGES.get());
+        IItemConfigurable.updateComponent(SPEC, DataComponentRegistry.MULTI_POTION, stack, new MultiPotionContents(0, PotionContents.EMPTY, 8), (comp) -> comp.withMaxUses(CHARGES.get()));
+    }
+
+    public PotionFlask(Properties props) {
         super(props);
+    }
+
+    public int getPotionAmount() {
+        return AMOUNT.get();
     }
 
     @Override
@@ -53,19 +92,19 @@ public abstract class PotionFlask extends ModItem {
         int usesRemaining = data.usesRemaining(thisStack);
         int maxUses = data.maxUses(thisStack);
 
-        if (playerEntity.isShiftKeyDown() && usesRemaining > 0 && jarTile.getMaxFill() - jarTile.getAmount() >= 0 && jarTile.canAccept(contents, 100)) {
-            jarTile.add(contents, 100);
+        if (playerEntity.isShiftKeyDown() && usesRemaining > 0 && jarTile.getMaxFill() - jarTile.getAmount() >= 0 && jarTile.canAccept(contents, getPotionAmount())) {
+            jarTile.add(contents, getPotionAmount());
             var newContents = new MultiPotionContents(usesRemaining - 1, contents, maxUses);
             thisStack.set(DataComponentRegistry.MULTI_POTION, newContents);
-        }else if (!playerEntity.isShiftKeyDown() && usesRemaining < maxUses && jarTile.getAmount() >= 100) {
+        }else if (!playerEntity.isShiftKeyDown() && usesRemaining < maxUses && jarTile.getAmount() >= getPotionAmount()) {
             if (PotionUtil.arePotionContentsEqual(contents, jarTile.getData())) {
                 var newContents = new MultiPotionContents(usesRemaining + 1, contents, maxUses);
-                jarTile.remove(100);
+                jarTile.remove(getPotionAmount());
                 thisStack.set(DataComponentRegistry.MULTI_POTION, newContents);
             }else if (usesRemaining == 0){
                 var newContents = new MultiPotionContents(1, jarTile.getData(), maxUses);
                 thisStack.set(DataComponentRegistry.MULTI_POTION, newContents);
-                jarTile.remove(100);
+                jarTile.remove(getPotionAmount());
             }
         }
         return super.useOn(context);
@@ -144,8 +183,9 @@ public abstract class PotionFlask extends ModItem {
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip, flagIn);
         MultiPotionContents data = stack.getOrDefault(DataComponentRegistry.MULTI_POTION, new MultiPotionContents(0, PotionContents.EMPTY, 8));
+        tooltip.add(Component.translatable("tooltip.potion_flask", data.maxUses()));
+        super.appendHoverText(stack, context, tooltip, flagIn);
         tooltip.add(Component.translatable("ars_nouveau.flask.charges", data.charges()).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
         PotionContents.addPotionTooltip(data.contents().getAllEffects(), tooltip::add, 1.0F, context.tickRate());
     }

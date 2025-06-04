@@ -20,10 +20,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class RitualDisintegration extends AbstractRitual {
+    public @Nullable ModConfigSpec.DoubleValue RADIUS;
 
     @Override
     protected void tick() {
@@ -42,7 +45,8 @@ public class RitualDisintegration extends AbstractRitual {
 
         if (!world.isClientSide && world.getGameTime() % 60 == 0) {
             boolean didWorkOnce = false;
-            List<LivingEntity> entityList = world.getEntitiesOfClass(LivingEntity.class, new AABB(getPos()).inflate(5.0),
+            double radius = RADIUS != null ? RADIUS.get() : 5.0;
+            List<LivingEntity> entityList = world.getEntitiesOfClass(LivingEntity.class, new AABB(getPos()).inflate(radius),
                     (m) -> (m.getClassification(false).equals(MobCategory.MONSTER) || m.getType().is(EntityTags.DISINTEGRATION_WHITELIST)) && !(m instanceof Player));
             for (LivingEntity m : entityList) {
                 if (m.getType().is(EntityTags.DISINTEGRATION_BLACKLIST)) {
@@ -74,7 +78,15 @@ public class RitualDisintegration extends AbstractRitual {
     }
 
     @Override
-    public int getSourceCost() {
+    public void buildConfig(ModConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        RADIUS = builder
+                .comment("The radius in blocks around the ritual where monsters will be disintegrated")
+                .defineInRange("radius", 5.0, 1.0, 20.0);
+    }
+
+    @Override
+    public int getDefaultSourceCost() {
         return 300;
     }
 

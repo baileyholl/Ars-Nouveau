@@ -28,7 +28,7 @@ public class RitualGravity extends RangeEffectRitual {
     }
 
     @Override
-    public int getSourceCost() {
+    public int getDefaultSourceCost() {
         return 200;
     }
 
