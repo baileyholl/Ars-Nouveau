@@ -1559,6 +1559,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.particle.soul", "Soul");
         add("ars_nouveau.particle.happy_villager", "Happy Villager");
         add("ars_nouveau.particle.property.motion", "Motion");
+        add("ars_nouveau.particle.property.rune", "Texture");
+        add("ars_nouveau.default", "Default");
     }
 
     public void addCategory(String key, String value) {

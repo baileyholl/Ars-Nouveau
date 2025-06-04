@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.particle.timelines;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ColorProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.RuneTextureProperty;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -38,6 +39,10 @@ public class RuneTimeline extends BaseTimeline<RuneTimeline>{
         return propMap.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty(propMap)).particleColor;
     }
 
+    public String getTexture(){
+        return propMap.getOrDefault(ParticlePropertyRegistry.RUNE_PROPERTY.get(), new RuneTextureProperty(propMap)).runeTexture.pattern();
+    }
+
     @Override
     public IParticleTimelineType<RuneTimeline> getType() {
         return ParticleTimelineRegistry.RUNE_TIMELINE.get();
@@ -45,6 +50,6 @@ public class RuneTimeline extends BaseTimeline<RuneTimeline>{
 
     @Override
     public List<BaseProperty<?>> getProperties() {
-        return List.of(new ColorProperty(propMap));
+        return List.of(new ColorProperty(propMap), new RuneTextureProperty(propMap));
     }
 }

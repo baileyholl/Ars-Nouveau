@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
 import com.hollingsworth.arsnouveau.common.block.BasicSpellTurret;
 import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
@@ -27,8 +29,13 @@ public class RuneRenderer extends ArsGeoBlockRenderer<RuneTile> {
 
         @Override
         public ResourceLocation getTextureResource(RuneTile rune) {
-            if (rune == null || rune.pattern.isBlank()) return super.getTextureResource(rune);
-            return ArsNouveau.prefix("textures/block/runes/rune_" + rune.pattern + ".png");
+            if (rune == null) return super.getTextureResource(rune);
+            Spell spell = rune.spell;
+            if (spell == null) {
+                return super.getTextureResource(rune);
+            }
+            String pattern = spell.particleTimeline().get(ParticleTimelineRegistry.RUNE_TIMELINE.get()).getTexture();
+            return ArsNouveau.prefix("textures/block/runes/" + pattern + ".png");
         }
     }
 

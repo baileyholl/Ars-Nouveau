@@ -31,4 +31,6 @@ public class ParticlePropertyRegistry {
 
     public static final DeferredHolder<IPropertyType<?>, IPropertyType<MotionProperty>> MOTION_PROPERTY = PROP_DF.register("motion", () -> new SimplePropertyType<>(MotionProperty.CODEC, MotionProperty.STREAM_CODEC));
 
+    public static final DeferredHolder<IPropertyType<?>, IPropertyType<RuneTextureProperty>> RUNE_PROPERTY = PROP_DF.register("rune", () -> new SimplePropertyType<>(RuneTextureProperty.CODEC, RuneTextureProperty.STREAM_CODEC));
+
 }

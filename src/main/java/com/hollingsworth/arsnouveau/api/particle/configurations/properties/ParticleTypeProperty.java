@@ -181,11 +181,6 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
                 downButton.visible = hasMore;
             }
 
-            private ResourceLocation getImagePath(ParticleType<?> type) {
-                ResourceLocation location = getKey(type);
-                return ResourceLocation.fromNamespaceAndPath(location.getNamespace(), "textures/particle_config/" + location.getPath() + ".png");
-            }
-
             private ResourceLocation getKey(ParticleType<?> type) {
                 return BuiltInRegistries.PARTICLE_TYPE.getKey(type);
             }
