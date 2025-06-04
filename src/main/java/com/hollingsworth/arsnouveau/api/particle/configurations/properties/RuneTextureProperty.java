@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations.properties;
 
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
+import com.hollingsworth.arsnouveau.api.particle.configurations.ListParticleWidgetProvider;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.gui.documentation.DocEntryButton;
@@ -10,13 +11,14 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -67,25 +69,23 @@ public class RuneTextureProperty extends BaseProperty<RuneTextureProperty>{
 
     @Override
     public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height) {
-        return new ParticleConfigWidgetProvider(x, y, width, height) {
+        List<Button> buttons = new ArrayList<>();
+        for (int i = 0; i < TEXTURES.size(); i++) {
+            RuneTexture texture = TEXTURES.get(i);
+            boolean isDefault = texture.renderStack.get().is(ItemsRegistry.RUNIC_CHALK.asItem());
+            DocEntryButton button = new DocEntryButton(x, y + 20 + 15 * i, texture.renderStack.get(), isDefault ? Component.translatable("ars_nouveau.default") : texture.renderStack.get().getHoverName(), (b) -> {
+                runeTexture = texture;
+                writeChanges();
+                onDependenciesChanged.run();
+            });
+            buttons.add(button);
+        }
+
+
+        return new ListParticleWidgetProvider(x, y, width, height, buttons) {
             @Override
             public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
                 DocClientUtils.drawHeader(getName(), graphics, x, y, width, mouseX, mouseY, partialTicks);
-            }
-
-            @Override
-            public void addWidgets(List<AbstractWidget> widgets) {
-                for (int i = 0; i < TEXTURES.size(); i++) {
-                    RuneTexture texture = TEXTURES.get(i);
-                    boolean isDefault = texture.renderStack.get().is(ItemsRegistry.RUNIC_CHALK.asItem());
-                    DocEntryButton button = new DocEntryButton(x, y + 20 + 15 * i, texture.renderStack.get(), isDefault ? Component.translatable("ars_nouveau.default") : texture.renderStack.get().getHoverName(), (b) -> {
-                        runeTexture = texture;
-                        writeChanges();
-                        onDependenciesChanged.run();
-                    });
-                    widgets.add(button);
-                }
-
             }
 
             @Override
@@ -95,7 +95,7 @@ public class RuneTextureProperty extends BaseProperty<RuneTextureProperty>{
 
             @Override
             public Component getButtonTitle() {
-                if( runeTexture == null || runeTexture.renderStack.get().is(ItemsRegistry.RUNIC_CHALK.asItem())) {
+                if(runeTexture == null || runeTexture.renderStack.get().is(ItemsRegistry.RUNIC_CHALK.asItem())) {
                     return Component.literal(getName().getString() + ": " +  Component.translatable("ars_nouveau.default").getString());
                 }
                 return Component.literal(getName().getString() + ": " + runeTexture.renderStack.get().getHoverName().getString());
