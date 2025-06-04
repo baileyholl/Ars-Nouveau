@@ -2,8 +2,8 @@ package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.renderer.tile.*;
-import com.hollingsworth.arsnouveau.common.block.LightBlock;
 import com.hollingsworth.arsnouveau.common.block.*;
+import com.hollingsworth.arsnouveau.common.block.LightBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.*;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.items.MobJarItem;
@@ -44,10 +44,12 @@ import java.util.function.Supplier;
 
 import static com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry.ITEMS;
 import static com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry.defaultItemProperties;
+import static net.minecraft.world.level.block.state.properties.WoodType.register;
 
 public class BlockRegistry {
 
     public static Block.Properties woodProp = BlockBehaviour.Properties.of().strength(2.0F, 3.0F).ignitedByLava().mapColor(MapColor.WOOD).sound(SoundType.WOOD);
+    public static final WoodType ARCHWOOD = register(new WoodType("ars_nouveau:archwood", BlockSetType.OAK));
 
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(BuiltInRegistries.BLOCK, ArsNouveau.MODID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, ArsNouveau.MODID);
@@ -144,7 +146,7 @@ public class BlockRegistry {
     public static BlockEntityTypeRegistryWrapper<WixieCauldronTile> WIXIE_CAULDRON_TYPE = registerTile(LibBlockNames.WIXIE_CAULDRON, WixieCauldronTile::new, WIXIE_CAULDRON);
     public static BlockRegistryWrapper<CreativeSourceJar> CREATIVE_SOURCE_JAR = registerBlockAndItem(LibBlockNames.CREATIVE_SOURCE_JAR, CreativeSourceJar::new);
     public static BlockEntityTypeRegistryWrapper<CreativeSourceJarTile> CREATIVE_SOURCE_JAR_TILE = registerTile(LibBlockNames.CREATIVE_SOURCE_JAR, CreativeSourceJarTile::new, CREATIVE_SOURCE_JAR);
-    public static BlockRegistryWrapper<StrippableLog> CASCADING_LOG = registerBlockAndItem(LibBlockNames.CASCADING_LOG, () ->  new StrippableLog(LOG_PROP, BlockRegistry.STRIPPED_AWLOG_BLUE));
+    public static BlockRegistryWrapper<StrippableLog> CASCADING_LOG = registerBlockAndItem(LibBlockNames.CASCADING_LOG, () -> new StrippableLog(LOG_PROP, BlockRegistry.STRIPPED_AWLOG_BLUE));
     public static BlockRegistryWrapper<MagicLeaves> CASCADING_LEAVE = registerBlockAndItem(LibBlockNames.CASCADING_LEAVES, () -> createLeavesBlock(MapColor.COLOR_BLUE));
     public static BlockRegistryWrapper<SaplingBlock> CASCADING_SAPLING = registerBlockAndItem(LibBlockNames.CASCADING_SAPLING, () -> new SaplingBlock(MagicTree.getGrower("cascading_tree", WorldgenRegistry.CONFIGURED_CASCADING_TREE), SAP_PROP));
     public static BlockRegistryWrapper<StrippableLog> CASCADING_WOOD = registerBlockAndItem(LibBlockNames.CASCADING_WOOD, () -> new StrippableLog(LOG_PROP, BlockRegistry.STRIPPED_AWWOOD_BLUE));
@@ -163,10 +165,10 @@ public class BlockRegistry {
     public static BlockRegistryWrapper<StrippableLog> FLOURISHING_WOOD = registerBlockAndItem(LibBlockNames.FLOURISHING_WOOD, () -> new StrippableLog(LOG_PROP, BlockRegistry.STRIPPED_AWWOOD_GREEN));
     public static BlockRegistryWrapper<ModBlock> ARCHWOOD_PLANK = registerBlockAndItem(LibBlockNames.ARCHWOOD_PLANK, () -> new ModBlock(LOG_PROP));
     public static BlockRegistryWrapper<ButtonBlock> ARCHWOOD_BUTTON = registerBlockAndItem(LibBlockNames.ARCHWOOD_BUTTON, () -> new ButtonBlock(BlockSetType.OAK, 30, BlockBehaviour.Properties.of().noCollission().strength(0.5F).sound(SoundType.WOOD)));
-    public static BlockRegistryWrapper<StairBlock> ARCHWOOD_STAIRS = registerBlockAndItem(LibBlockNames.ARCHWOOD_STAIRS, () ->  new StairBlock(ARCHWOOD_PLANK.defaultBlockState(), woodProp));
+    public static BlockRegistryWrapper<StairBlock> ARCHWOOD_STAIRS = registerBlockAndItem(LibBlockNames.ARCHWOOD_STAIRS, () -> new StairBlock(ARCHWOOD_PLANK.defaultBlockState(), woodProp));
     public static BlockRegistryWrapper<SlabBlock> ARCHWOOD_SLABS = registerBlockAndItem(LibBlockNames.ARCHWOOD_SLABS, () -> new SlabBlock(woodProp));
-    public static BlockRegistryWrapper<FenceGateBlock> ARCHWOOD_FENCE_GATE = registerBlockAndItem(LibBlockNames.ARCHWOOD_FENCE_GATE, () -> new FenceGateBlock(WoodType.OAK, woodProp));
-    public static BlockRegistryWrapper<TrapDoorBlock> ARCHWOOD_TRAPDOOR = registerBlockAndItem(LibBlockNames.ARCHWOOD_TRAPDOOR, () ->  new TrapDoorBlock(BlockSetType.OAK, woodProp));
+    public static BlockRegistryWrapper<FenceGateBlock> ARCHWOOD_FENCE_GATE = registerBlockAndItem(LibBlockNames.ARCHWOOD_FENCE_GATE, () -> new FenceGateBlock(ARCHWOOD, woodProp));
+    public static BlockRegistryWrapper<TrapDoorBlock> ARCHWOOD_TRAPDOOR = registerBlockAndItem(LibBlockNames.ARCHWOOD_TRAPDOOR, () -> new TrapDoorBlock(BlockSetType.OAK, woodProp));
 
     public static BlockRegistryWrapper<PressurePlateBlock> ARCHWOOD_PPlate = registerBlockAndItem(LibBlockNames.ARCHWOOD_PRESSURE_PLATE, () -> new PressurePlateBlock(BlockSetType.OAK, woodProp));
     public static BlockRegistryWrapper<FenceBlock> ARCHWOOD_FENCE = registerBlockAndItem(LibBlockNames.ARCHWOOD_FENCE, () -> new FenceBlock(woodProp));
@@ -223,7 +225,7 @@ public class BlockRegistry {
     public static BlockEntityTypeRegistryWrapper<RelayWarpTile> RELAY_WARP_TILE = registerTile(LibBlockNames.RELAY_WARP, RelayWarpTile::new, RELAY_WARP);
 
 
-    public static BlockRegistryWrapper<BasicSpellTurret> BASIC_SPELL_TURRET = registerBlockAndItem(LibBlockNames.BASIC_SPELL_TURRET, BasicSpellTurret::new, (reg) ->new RendererBlockItem(reg, defaultItemProperties()) {
+    public static BlockRegistryWrapper<BasicSpellTurret> BASIC_SPELL_TURRET = registerBlockAndItem(LibBlockNames.BASIC_SPELL_TURRET, BasicSpellTurret::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
         @Override
         public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
             return BasicTurretRenderer::getISTER;
@@ -265,7 +267,7 @@ public class BlockRegistry {
     public static BlockRegistryWrapper<RepositoryCatalog> REPOSITORY_CONTROLLER = registerBlockAndItem(LibBlockNames.REPOSITORY_CATALOG, RepositoryCatalog::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
         @Override
         public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-            return  GenericTileRenderer.getISTER(new RepoControllerModel());
+            return GenericTileRenderer.getISTER(new RepoControllerModel());
         }
     });
 
@@ -309,7 +311,7 @@ public class BlockRegistry {
     public static BlockRegistryWrapper<GhostWeave> GHOST_WEAVE = registerBlockAndItem(LibBlockNames.GHOST_WEAVE, GhostWeave::new);
     public static BlockEntityTypeRegistryWrapper<GhostWeaveTile> GHOST_WEAVE_TILE = registerTile(LibBlockNames.GHOST_WEAVE, GhostWeaveTile::new, GHOST_WEAVE);
     public static BlockRegistryWrapper<ModBlock> MAGEBLOOM_BLOCK = registerBlockAndItem(LibBlockNames.MAGEBLOOM_BLOCK, () -> new ModBlock(BlockBehaviour.Properties.of().strength(0.1F).sound(SoundType.WOOL)));
-    public static final BlockRegistryWrapper<Block> ROTATING_TURRET = registerBlockAndItem(LibBlockNames.ROTATING_SPELL_TURRET, RotatingSpellTurret::new, (reg) ->  new RendererBlockItem(reg, defaultItemProperties()) {
+    public static final BlockRegistryWrapper<Block> ROTATING_TURRET = registerBlockAndItem(LibBlockNames.ROTATING_SPELL_TURRET, RotatingSpellTurret::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
         @Override
         public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
             return BasicTurretRenderer::getISTER;
@@ -344,6 +346,10 @@ public class BlockRegistry {
         }
     });
     public static final BlockRegistryWrapper<ModBlock> SOURCEBERRY_SACK = registerBlockAndItem(LibBlockNames.SOURCEBERRY_SACK, () -> new ModBlock(BlockBehaviour.Properties.of().strength(0.1F).sound(SoundType.WOOL)));
+    public static final BlockRegistryWrapper<StandingSignBlock> ARCHWOOD_SIGN = registerBlock(LibBlockNames.ARCHWOOD_SIGN, () -> new StandingSignBlock(ARCHWOOD, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SIGN)));
+    public static final BlockRegistryWrapper<CeilingHangingSignBlock> ARCHWOOD_HANGING_SIGN = registerBlock(LibBlockNames.ARCHWOOD_HANGING_SIGN, () -> new CeilingHangingSignBlock(ARCHWOOD, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_HANGING_SIGN)));
+    public static final BlockRegistryWrapper<WallSignBlock> ARCHWOOD_WALL_SIGN = registerBlock(LibBlockNames.ARCHWOOD_WALL_SIGN, () -> new WallSignBlock(ARCHWOOD, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WALL_SIGN)));
+    public static final BlockRegistryWrapper<WallHangingSignBlock> ARCHWOOD_HANGING_WALL_SIGN = registerBlock(LibBlockNames.ARCHWOOD_HANGING_WALL_SIGN, () -> new WallHangingSignBlock(ARCHWOOD, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WALL_HANGING_SIGN)));
 
     public static final BlockEntityTypeRegistryWrapper<RitualBrazierTile> RITUAL_TILE = registerTile(LibBlockNames.RITUAL_BRAZIER, RitualBrazierTile::new, RITUAL_BLOCK);
     public static final BlockEntityTypeRegistryWrapper<BrazierRelayTile> BRAZIER_RELAY_TILE = registerTile(LibBlockNames.BRAZIER_RELAY, BrazierRelayTile::new, BRAZIER_RELAY);
@@ -363,11 +369,11 @@ public class BlockRegistry {
                 BLOCKS.register(s, () -> new ModBlock());
             }
         }
-        for(String s : LibBlockNames.DECORATIVE_SLABS){
+        for (String s : LibBlockNames.DECORATIVE_SLABS) {
             BLOCKS.register(s, () -> new SlabBlock(BlockBehaviour.Properties.of().strength(1.5F, 6.0F).sound(SoundType.STONE)));
         }
-        for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
-            BLOCKS.register(s + "_stairs", () -> new StairBlock(BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( s)).defaultBlockState(), BlockBehaviour.Properties.of().strength(1.5F, 6.0F).sound(SoundType.STONE)));
+        for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
+            BLOCKS.register(s + "_stairs", () -> new StairBlock(BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(s)).defaultBlockState(), BlockBehaviour.Properties.of().strength(1.5F, 6.0F).sound(SoundType.STONE)));
         }
         BLOCKS.register(LibBlockNames.Pot(LibBlockNames.MAGE_BLOOM), () -> createPottedBlock(() -> MAGE_BLOOM_CROP.get()));
         BLOCKS.register(LibBlockNames.Pot(LibBlockNames.BLAZING_SAPLING), () -> createPottedBlock(() -> BLAZING_SAPLING.get()));
@@ -385,15 +391,15 @@ public class BlockRegistry {
 
     public static void onBlockItemsRegistry() {
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
-            ITEMS.register(s, () -> getDefaultBlockItem(BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( s))));
+            ITEMS.register(s, () -> getDefaultBlockItem(BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(s))));
         }
 
         for (String s : LibBlockNames.DECORATIVE_STAIRS) {
-            ITEMS.register(s, () -> getDefaultBlockItem(BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( s))));
+            ITEMS.register(s, () -> getDefaultBlockItem(BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(s))));
         }
 
         for (String s : LibBlockNames.DECORATIVE_SLABS) {
-            ITEMS.register(s, () -> getDefaultBlockItem(BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( s))));
+            ITEMS.register(s, () -> getDefaultBlockItem(BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(s))));
         }
     }
 
@@ -411,7 +417,7 @@ public class BlockRegistry {
 
 
     public static Block getBlock(String s) {
-        return BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( s));
+        return BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(s));
     }
 
     public static <T extends Block> BlockRegistryWrapper<T> registerBlock(String name, Supplier<T> blockSupp) {
@@ -433,12 +439,12 @@ public class BlockRegistry {
     public static final Map<Supplier<ResourceLocation>, FlowerPotBlock> flowerPots = new HashMap<>();
 
     public static FlowerPotBlock createPottedBlock(Supplier<? extends Block> block) {
-        FlowerPotBlock pot = new FlowerPotBlock(() -> (FlowerPotBlock)Blocks.FLOWER_POT, block, BlockBehaviour.Properties.of().instabreak().noOcclusion());
+        FlowerPotBlock pot = new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, block, BlockBehaviour.Properties.of().instabreak().noOcclusion());
         flowerPots.put(() -> BuiltInRegistries.BLOCK.getKey(block.get()), pot);
         return pot;
     }
 
-    public static <T extends BlockEntity> BlockEntityTypeRegistryWrapper<T> registerTile(String regName, BlockEntityType.BlockEntitySupplier<T> tile, BlockRegistryWrapper<? extends Block> block){
+    public static <T extends BlockEntity> BlockEntityTypeRegistryWrapper<T> registerTile(String regName, BlockEntityType.BlockEntitySupplier<T> tile, BlockRegistryWrapper<? extends Block> block) {
         return new BlockEntityTypeRegistryWrapper<>(BLOCK_ENTITIES.register(regName, () -> BlockEntityType.Builder.of(tile, block.get()).build(null)));
     }
 }

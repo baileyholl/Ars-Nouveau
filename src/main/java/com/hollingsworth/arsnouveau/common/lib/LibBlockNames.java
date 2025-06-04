@@ -56,7 +56,10 @@ public class LibBlockNames {
     public final static String RITUAL_BRAZIER = "ritual_brazier";
     public final static String ARCHWOOD_STAIRS = "archwood_stairs";
     public final static String ARCHWOOD_SLABS = "archwood_slab";
-    public final static String ARCHWOOD_SIGN = "archwood_wall_sign";
+    public final static String ARCHWOOD_SIGN = "archwood_sign";
+    public final static String ARCHWOOD_WALL_SIGN = "archwood_wall_sign";
+    public final static String ARCHWOOD_HANGING_SIGN = "archwood_hanging_sign";
+    public final static String ARCHWOOD_HANGING_WALL_SIGN = "archwood_hanging_wall_sign";
     public final static String ARCHWOOD_TRAPDOOR = "archwood_trapdoor";
     public final static String ARCHWOOD_PRESSURE_PLATE = "archwood_pressure_plate";
     public final static String ARCHWOOD_FENCE_GATE = "archwood_fence_gate";
