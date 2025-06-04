@@ -1,8 +1,9 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleDensityProperty;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.Property;
 import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -76,8 +77,8 @@ public class ZigZagMotion extends ParticleMotion{
     }
 
     @Override
-    public List<Property<?>> getProperties() {
-        return  List.of(new ParticleDensityProperty(propertyMap, 100, 0.3f)
+    public List<BaseProperty<?>> getProperties(PropMap propMap) {
+        return  List.of(new ParticleTypeProperty(propMap), new ParticleDensityProperty(propertyMap, 100, 0.3f)
                 .maxDensity(200)
                 .minDensity(20)
                 .densityStepSize(5)

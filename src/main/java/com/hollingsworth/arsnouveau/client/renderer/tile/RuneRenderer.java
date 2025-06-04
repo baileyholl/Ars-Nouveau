@@ -94,7 +94,7 @@ public class RuneRenderer extends ArsGeoBlockRenderer<RuneTile> {
 
     @Override
     public Color getRenderColor(RuneTile animatable, float partialTick, int packedLight) {
-        var color = animatable.spell.color();
+        var color = animatable.getColor();
         return animatable.isCharged ? Color.ofOpaque(color.getColor()) : super.getRenderColor(animatable, partialTick, packedLight);
     }
 

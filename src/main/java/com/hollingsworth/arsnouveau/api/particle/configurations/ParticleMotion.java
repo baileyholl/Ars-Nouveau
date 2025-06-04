@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
 import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.Property;
 import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.mojang.serialization.Codec;
@@ -43,7 +43,7 @@ public abstract class ParticleMotion {
 
     public abstract void tick(ParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ);
 
-    public List<Property<?>> getProperties() {
+    public List<BaseProperty<?>> getProperties(PropMap propMap) {
         return List.of();
     }
 

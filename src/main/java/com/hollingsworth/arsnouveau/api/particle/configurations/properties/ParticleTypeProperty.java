@@ -213,7 +213,7 @@ public class ParticleTypeProperty extends Property<ParticleTypeProperty> {
     }
 
     @Override
-    public List<SubProperty<?>> subProperties() {
+    public List<BaseProperty<?>> subProperties() {
         if (selectedData == null || !selectedData.acceptsColor) {
             return Collections.emptyList();
         }

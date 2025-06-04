@@ -1,10 +1,7 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleDensityProperty;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.Property;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.WallProperty;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.*;
 import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -73,7 +70,7 @@ public class UpwardsWallMotion extends ParticleMotion{
     }
 
     @Override
-    public List<Property<?>> getProperties() {
-        return List.of(new ParticleDensityProperty(propertyMap, 20, 100, 10, false));
+    public List<BaseProperty<?>> getProperties(PropMap propMap) {
+        return List.of(new ParticleTypeProperty(propMap), new ParticleDensityProperty(propertyMap, 20, 100, 10, false));
     }
 }

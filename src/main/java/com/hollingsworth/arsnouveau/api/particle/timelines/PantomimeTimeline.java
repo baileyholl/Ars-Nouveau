@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.BurstMotion;
-import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.MotionProperty;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
@@ -14,27 +13,25 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-public class BurstTimeline extends BaseTimeline<BurstTimeline>{
-    public static final MapCodec<BurstTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+public class PantomimeTimeline extends BaseTimeline<PantomimeTimeline>{
+    public static final MapCodec<PantomimeTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             TimelineEntryData.CODEC.fieldOf("onResolvingEffect").forGetter(i -> i.onResolvingEffect)
-    ).apply(instance, BurstTimeline::new));
+    ).apply(instance, PantomimeTimeline::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, BurstTimeline> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, PantomimeTimeline> STREAM_CODEC = StreamCodec.composite(
             TimelineEntryData.STREAM,
-            BurstTimeline::onResolvingEffect,
-            BurstTimeline::new);
+            PantomimeTimeline::onResolvingEffect,
+            PantomimeTimeline::new);
 
-    public static final List<IParticleMotionType<?>> RESOLVING_OPTIONS = new CopyOnWriteArrayList<>();
 
     public TimelineEntryData onResolvingEffect;
 
-    public BurstTimeline(){
+    public PantomimeTimeline(){
         this(new TimelineEntryData(new BurstMotion(), PropertyParticleOptions.defaultGlow()));
     }
 
-    public BurstTimeline(TimelineEntryData onResolvingEffect){
+    public PantomimeTimeline(TimelineEntryData onResolvingEffect){
         this.onResolvingEffect = onResolvingEffect;
     }
 
@@ -43,12 +40,14 @@ public class BurstTimeline extends BaseTimeline<BurstTimeline>{
     }
 
     @Override
-    public IParticleTimelineType<BurstTimeline> getType() {
-        return ParticleTimelineRegistry.BURST_TIMELINE.get();
+    public IParticleTimelineType<PantomimeTimeline> getType() {
+        return ParticleTimelineRegistry.PANTOMIME_TIMELINE.get();
     }
 
     @Override
     public List<BaseProperty<?>> getProperties() {
-        return List.of(new MotionProperty(new TimelineOption(ArsNouveau.prefix("impact"), this.onResolvingEffect, ImmutableList.copyOf(RESOLVING_OPTIONS))));
+        return List.of(
+                new MotionProperty(new TimelineOption(ArsNouveau.prefix("impact"), this.onResolvingEffect, ImmutableList.copyOf(TouchTimeline.RESOLVING_OPTIONS)))
+        );
     }
 }

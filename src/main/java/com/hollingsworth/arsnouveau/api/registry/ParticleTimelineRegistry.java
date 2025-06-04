@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.registry;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.particle.timelines.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodPantomime;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import net.minecraft.core.Registry;
@@ -31,5 +32,13 @@ public class ParticleTimelineRegistry {
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<BurstTimeline>> BURST_TIMELINE = TIMELINE_DF.register("burst", () -> new SimpleParticleTimelineType<>(EffectBurst.INSTANCE, BurstTimeline.CODEC, BurstTimeline.STREAM_CODEC, BurstTimeline::new));
 
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<LightTimeline>> LIGHT_TIMELINE = TIMELINE_DF.register("light", () -> new SimpleParticleTimelineType<>(EffectLight.INSTANCE, LightTimeline.CODEC, LightTimeline.STREAM_CODEC, LightTimeline::new));
+
+
+    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<RuneTimeline>> RUNE_TIMELINE = TIMELINE_DF.register("rune", () -> new SimpleParticleTimelineType<>(EffectRune.INSTANCE, RuneTimeline.CODEC, RuneTimeline.STREAM_CODEC, RuneTimeline::new));
+
+
+
+    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<PantomimeTimeline>> PANTOMIME_TIMELINE = TIMELINE_DF.register("pantomime", () -> new SimpleParticleTimelineType<>(MethodPantomime.INSTANCE, PantomimeTimeline.CODEC, PantomimeTimeline.STREAM_CODEC, PantomimeTimeline::new));
+
 
 }

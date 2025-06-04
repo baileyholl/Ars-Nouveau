@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
 import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
 import com.mojang.serialization.Codec;
@@ -12,6 +14,8 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+
+import java.util.List;
 
 public class HelixMotion extends ParticleMotion {
 
@@ -91,5 +95,10 @@ public class HelixMotion extends ParticleMotion {
             transform.transformPosition(opposite);
             level.addParticle(particleOptions, opposite.x, opposite.y, opposite.z, 0, 0, 0);
         }
+    }
+
+    @Override
+    public List<BaseProperty<?>> getProperties(PropMap propMap) {
+        return List.of(new ParticleTypeProperty(propMap));
     }
 }

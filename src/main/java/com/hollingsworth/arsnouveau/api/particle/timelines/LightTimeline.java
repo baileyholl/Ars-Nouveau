@@ -5,7 +5,8 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
 import com.hollingsworth.arsnouveau.api.particle.configurations.LightBlobMotion;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.MotionProperty;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -47,7 +48,9 @@ public class LightTimeline extends BaseTimeline<LightTimeline>{
     }
 
     @Override
-    public List<TimelineOption> getTimelineOptions() {
-        return List.of(new TimelineOption(ArsNouveau.prefix("tick"), this.onTickEffect, ImmutableList.copyOf(TICKING_OPTIONS)).withProperty(new ParticleTypeProperty(this.onTickEffect.particleOptions.map)));
+    public List<BaseProperty<?>> getProperties() {
+        return List.of(
+                new MotionProperty(new TimelineOption(ArsNouveau.prefix("tick"), this.onTickEffect, ImmutableList.copyOf(TICKING_OPTIONS)))
+        );
     }
 }

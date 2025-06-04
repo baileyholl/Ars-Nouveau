@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public record TimelineMap(Map<IParticleTimelineType<?>, IParticleTimeline<?>> timelines) {
 
@@ -47,6 +48,11 @@ public record TimelineMap(Map<IParticleTimelineType<?>, IParticleTimeline<?>> ti
     @NotNull
     public <T extends IParticleTimeline<T>> T get(IParticleTimelineType<T> type) {
         return timelines.containsKey(type) ? (T) timelines.get(type) : type.create();
+    }
+
+    @NotNull
+    public <T extends IParticleTimeline<T>> T get(Supplier<IParticleTimelineType<T>> type) {
+        return this.get(type.get());
     }
 
     public <T extends IParticleTimeline<T>> TimelineMap put(IParticleTimelineType<T> type, T value){

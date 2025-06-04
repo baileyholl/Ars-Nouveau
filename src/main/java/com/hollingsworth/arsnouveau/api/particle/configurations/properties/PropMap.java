@@ -13,6 +13,7 @@ import net.minecraft.network.codec.StreamCodec;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public class PropMap{
     public static final Codec<Map<IPropertyType<?>, Object>> VALUE_MAP_CODEC = Codec.dispatchedMap(ParticlePropertyRegistry.CODEC, IPropertyType::normalCodec);
@@ -74,6 +75,10 @@ public class PropMap{
 
     public <T extends BaseProperty> T get(IPropertyType<T> type) {
         return (T) properties.get(type);
+    }
+
+    public <T extends BaseProperty> T get(Supplier<IPropertyType<T>> type) {
+        return this.get(type.get());
     }
 
     public <T extends BaseProperty> Optional<T> getOptional(IPropertyType<T> type) {

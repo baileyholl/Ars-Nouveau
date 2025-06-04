@@ -6,7 +6,8 @@ import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.BurstMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
 import com.hollingsworth.arsnouveau.api.particle.configurations.UpwardsFieldMotion;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.MotionProperty;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -57,8 +58,10 @@ public class LingerTimeline extends BaseTimeline<LingerTimeline>{
     }
 
     @Override
-    public List<TimelineOption> getTimelineOptions() {
-        return List.of(new TimelineOption(ArsNouveau.prefix("field"), this.trailEffect, ImmutableList.copyOf(TRAIL_OPTIONS)).withProperty(new ParticleTypeProperty(this.trailEffect.particleOptions.map)),
-                new TimelineOption(ArsNouveau.prefix("impact"), this.onResolvingEffect, ImmutableList.copyOf(RESOLVING_OPTIONS)).withProperty(new ParticleTypeProperty(this.onResolvingEffect.particleOptions.map)));
+    public List<BaseProperty<?>> getProperties() {
+        return List.of(
+                new MotionProperty(new TimelineOption(ArsNouveau.prefix("field"), this.trailEffect, ImmutableList.copyOf(TRAIL_OPTIONS))),
+                new MotionProperty(new TimelineOption(ArsNouveau.prefix("impact"), this.onResolvingEffect, ImmutableList.copyOf(RESOLVING_OPTIONS)))
+        );
     }
 }

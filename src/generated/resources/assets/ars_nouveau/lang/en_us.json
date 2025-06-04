@@ -1066,6 +1066,7 @@
   "ars_nouveau.particle.property.color": "Color",
   "ars_nouveau.particle.property.density": "Particle Spawning",
   "ars_nouveau.particle.property.model": "Body",
+  "ars_nouveau.particle.property.motion": "Motion",
   "ars_nouveau.particle.property.particle_type": "Particle",
   "ars_nouveau.particle.raid_omen": "Raid Omen",
   "ars_nouveau.particle.reverse_portal": "Reverse Portal",

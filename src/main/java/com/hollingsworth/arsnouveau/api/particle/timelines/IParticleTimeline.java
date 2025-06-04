@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.particle.timelines;
 
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.mojang.serialization.Codec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -15,6 +16,7 @@ public interface IParticleTimeline<T extends IParticleTimeline<T>> {
 
     IParticleTimelineType<T> getType();
 
-    List<TimelineOption> getTimelineOptions();
-
+    default List<BaseProperty<?>> getProperties() {
+        return List.of();
+    }
 }

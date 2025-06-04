@@ -300,6 +300,7 @@ public class SpellContext implements Cloneable {
             clone.wrappedCaster = this.wrappedCaster;
             clone.previousContext = this.previousContext == null ? null : this.previousContext.clone();
             clone.attachments = attachments.isEmpty() ? new HashMap<>() : new HashMap<>(attachments);
+
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();

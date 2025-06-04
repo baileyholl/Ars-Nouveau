@@ -3,21 +3,17 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
-import com.hollingsworth.arsnouveau.api.particle.configurations.NoneMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
-import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.Property;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.SubProperty;
+import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimeline;
 import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimelineType;
-import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineOption;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.client.gui.ANGanderRender;
 import com.hollingsworth.arsnouveau.client.gui.HeaderWidget;
 import com.hollingsworth.arsnouveau.client.gui.buttons.*;
 import com.hollingsworth.arsnouveau.client.gui.documentation.DocEntryButton;
@@ -25,28 +21,23 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateParticleTimeline;
 import com.hollingsworth.arsnouveau.setup.registry.CreativeTabRegistry;
 import com.hollingsworth.nuggets.client.gui.GuiHelpers;
-import dev.compactmods.gander.level.VirtualLevel;
-import dev.compactmods.gander.render.geometry.BakedLevel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.AABB;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class ParticleOverviewScreen extends BaseBook {
     int slot;
     InteractionHand stackHand;
-    TimelineMap.MutableTimelineMap timeline;
+    TimelineMap.MutableTimelineMap timelineMap;
 
     public IParticleTimelineType<?> selectedTimeline = null;
 
@@ -72,7 +63,7 @@ public class ParticleOverviewScreen extends BaseBook {
         this.slot = slot;
         this.stackHand = stackHand;
         this.caster = caster;
-        this.timeline = caster.getParticles(slot).mutable();
+        this.timelineMap = caster.getParticles(slot).mutable();
         if(LAST_SELECTED_PART == null) {
             for (AbstractSpellPart spellPart : caster.getSpell(slot).recipe()) {
                 var allTimelines = ParticleTimelineRegistry.PARTICLE_TIMELINE_REGISTRY.entrySet();
@@ -108,7 +99,7 @@ public class ParticleOverviewScreen extends BaseBook {
     @Override
     public void onClose() {
         super.onClose();
-        int hash = timeline.immutable().hashCode();
+        int hash = timelineMap.immutable().hashCode();
         ParticleOverviewScreen.lastOpenedHash = hash;
         ParticleOverviewScreen.lastScreen = this;
     }
@@ -116,7 +107,7 @@ public class ParticleOverviewScreen extends BaseBook {
     @Override
     public void removed() {
         super.removed();
-        int hash = timeline.immutable().hashCode();
+        int hash = timelineMap.immutable().hashCode();
         ParticleOverviewScreen.lastOpenedHash = hash;
         ParticleOverviewScreen.lastScreen = this;
     }
@@ -125,7 +116,7 @@ public class ParticleOverviewScreen extends BaseBook {
     public void init() {
         super.init();
 
-        addSaveButton((b) -> Networking.sendToServer(new PacketUpdateParticleTimeline(slot, timeline.immutable(), this.stackHand == InteractionHand.MAIN_HAND)));
+        addSaveButton((b) -> Networking.sendToServer(new PacketUpdateParticleTimeline(slot, timelineMap.immutable(), this.stackHand == InteractionHand.MAIN_HAND)));
         timelineButton = addRenderableWidget(new DocEntryButton(bookLeft + LEFT_PAGE_OFFSET, bookTop + 36, selectedTimeline.getSpellPart().glyphItem.getDefaultInstance(), Component.translatable(selectedTimeline.getSpellPart().getLocaleName()), (button) -> {
             addTimelineSelectionWidgets();
             setSelectedButton(timelineButton);
@@ -211,44 +202,9 @@ public class ParticleOverviewScreen extends BaseBook {
 
     public void initLeftSideButtons() {
         clearList(leftPageWidgets);
-        List<TimelineOption> configurableParticles = timeline.getOrCreate(selectedTimeline).getTimelineOptions();
-        int propertyOffset = 0;
+        IParticleTimeline<?> timeline = timelineMap.getOrCreate(selectedTimeline);
         List<AbstractWidget> widgets = new ArrayList<>();
-        for (int i = 0; i < configurableParticles.size(); i++) {
-            TimelineOption timelineOption = configurableParticles.get(i);
-            TimelineEntryData entryData = timelineOption.entry();
-            ParticleMotion motion = entryData.motion();
-            IParticleMotionType<?> motionType = motion.getType();
-            Component name = Component.literal(timelineOption.name().getString() + ": " + motionType.getName().getString());
-            DropdownParticleButton dropdownParticleButton = new DropdownParticleButton(bookLeft + LEFT_PAGE_OFFSET + 13, bookTop + 51 + 15 * (propertyOffset), name, DocAssets.NESTED_ENTRY_BUTTON, DocAssets.NESTED_ENTRY_BUTTON_SELECTED, motionType.getIconLocation(), (button) -> {
-                addParticleMotionOptions(timelineOption);
-                if(button instanceof SelectableButton selectableButton) {
-                    setSelectedButton(selectableButton);
-                }
-            });
-            widgets.add(dropdownParticleButton);
-            propertyOffset++;
-            List<BaseProperty> allProps = new ArrayList<>();
-            if(!(motion instanceof NoneMotion)) {
-                for (Property property : timelineOption.properties()) {
-                    property.setChangedListener(this::initLeftSideButtons);
-                    allProps.add(property);
-                    List<SubProperty> subProperties = property.subProperties();
-                    allProps.addAll(subProperties);
-                }
-            }
-                for (Property property : motion.getProperties()) {
-                    property.setChangedListener(this::initLeftSideButtons);
-                    allProps.add(property);
-                    List<SubProperty> subProperties = property.subProperties();
-                    allProps.addAll(subProperties);
-                }
-            for (BaseProperty property : allProps) {
-                PropertyButton propertyButton = buildPropertyButton(property, propertyOffset);
-                widgets.add(propertyButton);
-                propertyOffset++;
-            }
-        }
+        widgets.addAll(getPropButtons(timeline.getProperties(), new ArrayList<>(), 0));
 
         if(rowOffset >= widgets.size()){
             rowOffset = 0;
@@ -277,13 +233,46 @@ public class ParticleOverviewScreen extends BaseBook {
         }
     }
 
-    public PropertyButton buildPropertyButton(BaseProperty property, int yOffset) {
-        boolean isSubProperty = property instanceof SubProperty;
+    public List<PropertyButton> getPropButtons(List<BaseProperty<?>> props, List<PropertyButton> buttons, int depth){
+        if(depth > 3) {
+            return buttons;
+        }
+        for (BaseProperty property : props) {
+            property.setChangedListener(this::initLeftSideButtons);
+            PropertyButton propertyButton = buildPropertyButton(property, buttons.size(), depth);
+            buttons.add(propertyButton);
+            if(property instanceof Property parentProp) {
+                getPropButtons(parentProp.subProperties(), buttons, depth + 1);
+            }
+        }
+        return buttons;
+    }
+
+    public PropertyButton buildPropertyButton(BaseProperty property, int yOffset, int nestLevel) {
+        DocAssets.BlitInfo texture = DocAssets.DOUBLE_NESTED_ENTRY_BUTTON;
+        DocAssets.BlitInfo selectedTexture = DocAssets.DOUBLE_NESTED_ENTRY_BUTTON_SELECTED;
+        int xOffset = 26;
+        switch (nestLevel){
+            case 0 ->{
+                texture = DocAssets.NESTED_ENTRY_BUTTON;
+                selectedTexture = DocAssets.NESTED_ENTRY_BUTTON_SELECTED;
+                xOffset = 13;
+            }
+            case 1 -> {
+                texture = DocAssets.DOUBLE_NESTED_ENTRY_BUTTON;
+                selectedTexture = DocAssets.DOUBLE_NESTED_ENTRY_BUTTON_SELECTED;
+                xOffset = 26;
+            }
+            case 2 -> {
+                texture = DocAssets.TRIPLE_NESTED_ENTRY_BUTTON;
+                selectedTexture = DocAssets.TRIPLE_NESTED_ENTRY_BUTTON_SELECTED;
+                xOffset = 39;
+            }
+            default -> {
+            }
+        }
         var widgetProvider = property.buildWidgets(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, ONE_PAGE_HEIGHT);
-        return new PropertyButton(bookLeft + LEFT_PAGE_OFFSET + 26 + (isSubProperty ? 13 : 0), bookTop + 51 + 15 * (yOffset),
-                isSubProperty ? DocAssets.TRIPLE_NESTED_ENTRY_BUTTON : DocAssets.DOUBLE_NESTED_ENTRY_BUTTON,
-                isSubProperty ? DocAssets.TRIPLE_NESTED_ENTRY_BUTTON_SELECTED : DocAssets.DOUBLE_NESTED_ENTRY_BUTTON_SELECTED,
-                widgetProvider, (button) -> {
+        return new PropertyButton(bookLeft + LEFT_PAGE_OFFSET + xOffset, bookTop + 51 + 15 * (yOffset), texture, selectedTexture, widgetProvider, (button) -> {
             onPropertySelected(property);
             if(button instanceof PropertyButton propertyButton){
                 propertyButton.widgetProvider = propertyWidgetProvider;
@@ -344,7 +333,6 @@ public class ParticleOverviewScreen extends BaseBook {
         if (propertyWidgetProvider != null) {
             propertyWidgetProvider.render(graphics, mouseX, mouseY, partialTicks);
         }
-//        renderer.recalculateTranslucency();
     }
 
     @Override
@@ -364,59 +352,4 @@ public class ParticleOverviewScreen extends BaseBook {
         rightPageWidgets.add(widget);
         addRenderableWidget(widget);
     }
-
-    ANGanderRender renderer;
-    AABB renderSize;
-    boolean isLoadingRoomPreview = false;
-    AABB bounds = new AABB(BlockPos.ZERO).inflate(5);
-    public void updateScene(BakedLevel bakedLevel){
-        if (this.renderer != null) {
-            renderables.remove(renderer);
-        }
-
-        this.renderer = addRenderableOnly(new ANGanderRender(bakedLevel, 0, 0, 100, 100));
-
-        this.renderSize = bakedLevel.blockBoundaries();
-
-        System.out.println(renderer.camera().getPosition());
-        renderer.camera().zoom(calculateZoomForRoom(this.renderSize));
-        renderer.camera().lookUp(3 / 12f);
-        renderer.shouldRenderCompass(true);
-        this.isLoadingRoomPreview = false;
-    }
-
-
-    private static float calculateZoomForRoom(AABB internalSize) {
-        boolean tallRoom = Math.max(internalSize.getXsize(), internalSize.getZsize()) < internalSize.getYsize();
-        boolean sidesEqual = internalSize.getXsize() == internalSize.getZsize();
-        boolean isCube = sidesEqual && internalSize.getZsize() == internalSize.getYsize();
-
-        // All sides equal, simple zoom algo
-        if (isCube) {
-            return -1.0f * (float) Math.sqrt(Math.pow(internalSize.getXsize(), 2) * 3);
-        }
-
-        if (sidesEqual) {
-            final var cSquared = Math.sqrt(
-                    (Math.pow(internalSize.getXsize(), 2) * 2) +
-                            Math.pow(internalSize.getYsize(), 2)
-            );
-
-            return (float) (-1.0f * cSquared);
-        }
-
-        final var cSquared = Math.sqrt(
-                Math.pow(internalSize.getXsize(), 2) +
-                        Math.pow(internalSize.getYsize(), 2) +
-                        Math.pow(internalSize.getZsize(), 2)
-        );
-
-        return (float) (-1.0f * cSquared);
-    }
-
-    public void updateSceneRenderer(CompletableFuture<BakedLevel> future) {
-        this.isLoadingRoomPreview = true;
-        future.thenAcceptAsync(this::updateScene);
-    }
-    VirtualLevel virtualLevel;
 }
