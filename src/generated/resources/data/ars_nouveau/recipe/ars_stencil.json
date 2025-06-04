@@ -3,10 +3,10 @@
   "category": "misc",
   "ingredients": [
     {
-      "item": "ars_nouveau:abjuration_essence"
+      "item": "minecraft:paper"
     },
     {
-      "item": "minecraft:paper"
+      "item": "ars_nouveau:abjuration_essence"
     }
   ],
   "result": {
