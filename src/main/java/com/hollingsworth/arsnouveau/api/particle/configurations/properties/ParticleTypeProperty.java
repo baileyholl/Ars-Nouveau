@@ -86,6 +86,12 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
         ParticleTypeProperty self = this;
         List<Button> buttons = new ArrayList<>();
         var particleEntries = new ArrayList<>(PARTICLE_TYPES.entrySet());
+        particleEntries.sort((o1, o2) ->{
+            if(o1.getKey() == ModParticles.NEW_GLOW_TYPE.get()){
+                return -1;
+            }
+            return getTypeName(o1.getKey()).getString().compareTo(getTypeName(o2.getKey()).getString());
+        });
         for (var particleType : particleEntries) {
             DocEntryButton button = new DocEntryButton(0, 0, ItemStack.EMPTY, getTypeName(particleType.getKey()), (b) -> {
                 selectedData = particleType.getValue();

@@ -12,9 +12,6 @@ import net.minecraft.sounds.SoundEvents;
 
 import java.util.List;
 
-/**
- * Provides a renderable page that is used in the book for configuring particles.
- */
 public abstract class ListParticleWidgetProvider extends ParticleConfigWidgetProvider{
 
     List<Button> buttons;
@@ -29,9 +26,6 @@ public abstract class ListParticleWidgetProvider extends ParticleConfigWidgetPro
         maxEntries = buttons.size();
     }
 
-    /**
-     * Called when the user scrolls on this side of the UX. Returning True will prevent the scroll from propagating to the parent.
-     */
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
         SoundManager manager = Minecraft.getInstance().getSoundManager();
         if (pScrollY < 0) {
