@@ -1562,7 +1562,14 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.particle.happy_villager", "Happy Villager");
         add("ars_nouveau.particle.property.motion", "Motion");
         add("ars_nouveau.particle.property.rune", "Texture");
-        add("ars_nouveau.default", "Default");
+        add("ars_nouveau.rune.rune", "Default");
+        add("ars_nouveau.rune.rune_abjuration", "Abjuration");
+        add("ars_nouveau.rune.rune_conjuration", "Conjuration");
+        add("ars_nouveau.rune.rune_manipulation", "Manipulation");
+        add("ars_nouveau.rune.rune_fire", "Fire");
+        add("ars_nouveau.rune.rune_water", "Water");
+        add("ars_nouveau.rune.rune_air", "Air");
+        add("ars_nouveau.rune.rune_earth", "Earth");
     }
 
     public void addCategory(String key, String value) {

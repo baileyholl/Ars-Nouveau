@@ -40,7 +40,7 @@ public class RuneTimeline extends BaseTimeline<RuneTimeline>{
     }
 
     public String getTexture(){
-        return propMap.getOrDefault(ParticlePropertyRegistry.RUNE_PROPERTY.get(), new RuneTextureProperty(propMap)).runeTexture.pattern();
+        return propMap.getOrDefault(ParticlePropertyRegistry.RUNE_PROPERTY.get(), new RuneTextureProperty(propMap)).runeTexture;
     }
 
     @Override
