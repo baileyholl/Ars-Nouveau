@@ -44,7 +44,7 @@ public class RuneTextureProperty extends BaseProperty<RuneTextureProperty>{
         TEXTURES.add("rune_air");
         TEXTURES.add("rune_earth");
         TEXTURES.add("rune_fire");
-        TEXTURES.add( "rune_water");
+        TEXTURES.add("rune_water");
         TEXTURES.add("rune_manipulation");
     }
 

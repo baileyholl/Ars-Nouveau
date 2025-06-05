@@ -41,7 +41,7 @@ public class WrappedProvider implements ParticleProvider<PropertyParticleOptions
         Particle particle = particleProvider.createParticle(originalType, level, x, y, z, xSpeed, ySpeed, zSpeed);
         var particleData = ParticleTypeProperty.PARTICLE_TYPES.get(data.getType());
         if(particleData != null && particleData.acceptsColor()){
-            ColorProperty colorProperty = data.getColor();
+            ColorProperty colorProperty = data.colorProp();
             if(!colorProperty.isTintDisabled()) {
                 ParticleColor color = colorProperty.particleColor;
                 particle.setColor(color.getRed(), color.getGreen(), color.getBlue());

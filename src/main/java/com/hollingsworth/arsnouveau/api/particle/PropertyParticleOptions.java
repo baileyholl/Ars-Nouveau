@@ -55,7 +55,7 @@ public class PropertyParticleOptions implements ParticleOptions {
         return propMap;
     }
 
-    public ColorProperty getColor() {
+    public ColorProperty colorProp() {
         ParticleTypeProperty typeProperty = map.get(ParticlePropertyRegistry.TYPE_PROPERTY.get());
         if (typeProperty != null) {
             return typeProperty.getColor();
