@@ -5,6 +5,9 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.block.tile.BasicSpellTurretTile;
 import com.hollingsworth.arsnouveau.common.block.tile.RotatingTurretTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodPantomime;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -98,9 +101,20 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
                     LivingEntity entity = entityList.get(serverLevel.random.nextInt(entityList.size()));
                     resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);
                 } else {
-                    Vec3 hitVec = new Vec3(touchPos.getX() + facingDir.getStepX() * 0.5, touchPos.getY() + facingDir.getStepY() * 0.5, touchPos.getZ() + facingDir.getStepZ() * 0.5);
-                    resolver.onCastOnBlock(new BlockHitResult(hitVec, facingDir.getOpposite(), new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), true));
+                    resolver.onCastOnBlock(new BlockHitResult(touchPos.getCenter(), facingDir.getOpposite(), touchPos, true));
                 }
+            }
+        });
+
+        TURRET_BEHAVIOR_MAP.put(MethodPantomime.INSTANCE, new ITurretBehavior() {
+            @Override
+            public void onCast(SpellResolver resolver, ServerLevel serverLevel, BlockPos pos, Player fakePlayer, Position dispensePosition, Direction facingDir) {
+                SpellStats stats = resolver.getCastStats();
+                int distance = stats.getBuffCount(AugmentDampen.INSTANCE) > 0 ? 0 : 1 + stats.getBuffCount(AugmentAmplify.INSTANCE);
+                BlockPos touchPos = pos.relative(facingDir, distance);
+
+                resolver.hitResult = new BlockHitResult(touchPos.getCenter(), facingDir.getOpposite(), touchPos, true);
+                resolver.resume(serverLevel);
             }
         });
     }
