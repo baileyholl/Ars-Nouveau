@@ -1,12 +1,13 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations.properties;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ListParticleWidgetProvider;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.gui.documentation.DocEntryButton;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
-import com.hollingsworth.nuggets.client.rendering.RenderHelpers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -73,11 +74,11 @@ public class RuneTextureProperty extends BaseProperty<RuneTextureProperty>{
         for (int i = 0; i < TEXTURES.size(); i++) {
             RuneTexture texture = TEXTURES.get(i);
             boolean isDefault = texture.renderStack.get().is(ItemsRegistry.RUNIC_CHALK.asItem());
-            DocEntryButton button = new DocEntryButton(x, y + 20 + 15 * i, texture.renderStack.get(), isDefault ? Component.translatable("ars_nouveau.default") : texture.renderStack.get().getHoverName(), (b) -> {
+            DocEntryButton button = new DocEntryButton(x, y + 20 + 15 * i, ItemStack.EMPTY, isDefault ? Component.translatable("ars_nouveau.default") : texture.renderStack.get().getHoverName(), (b) -> {
                 runeTexture = texture;
                 writeChanges();
                 onDependenciesChanged.run();
-            });
+            }).withStaticIcon(new DocAssets.BlitInfo(ArsNouveau.prefix("textures/block/runes/" + texture.pattern + ".png"), 16, 16));
             buttons.add(button);
         }
 
@@ -90,7 +91,7 @@ public class RuneTextureProperty extends BaseProperty<RuneTextureProperty>{
 
             @Override
             public void renderIcon(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float partialTicks) {
-                RenderHelpers.drawItemAsIcon(runeTexture.renderStack.get(), graphics, x - 1, y - 1, 10, false);
+                graphics.blit(ArsNouveau.prefix("textures/block/runes/" + runeTexture.pattern + ".png"), x + 1, y + 1, 0, 0, 12, 12, 12, 12);
             }
 
             @Override
