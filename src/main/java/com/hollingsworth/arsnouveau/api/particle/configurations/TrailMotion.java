@@ -37,7 +37,7 @@ public class TrailMotion extends ParticleMotion {
 
     @Override
     public void tick(PropertyParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
-        ParticleDensityProperty densityProp = getDensity(particleOptions);
+        ParticleDensityProperty densityProp = getDensity(particleOptions, 100, 0.1f);
         int density = densityProp.density();
         double radius = densityProp.radius();
         SpawnType spawnType = densityProp.spawnType().orElse(SpawnType.SPHERE);

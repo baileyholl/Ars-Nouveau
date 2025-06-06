@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.particle.configurations.properties.Parti
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
 import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -33,9 +34,16 @@ public class HelixMotion extends ParticleMotion {
 
     @Override
     public void tick(PropertyParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
-        ParticleDensityProperty densityProperty = getDensity(particleOptions);
+        ParticleDensityProperty densityProperty = getDensity(particleOptions, 100, 0.3f);
         double radius = densityProperty.radius();
         int totalParticles = getNumParticles(densityProperty.density());
+        PropertyParticleOptions particle2;
+        var secondType = propertyMap.get(ParticlePropertyRegistry.TYPE_PROPERTY.get());
+        if(secondType != null){
+            particle2 = new PropertyParticleOptions(propertyMap);
+        }else{
+            particle2 = new PropertyParticleOptions(PropertyParticleOptions.defaultPropMap());
+        }
         for (int step = 0; step <= totalParticles; step++) {
             double t = (double) step / totalParticles;
             double interpolatedX = prevX + t * (x - prevX);
@@ -52,12 +60,14 @@ public class HelixMotion extends ParticleMotion {
             Vector3f spiralOne = toEmitterSpace((float) interpolatedX, (float) interpolatedY, (float) interpolatedZ, localX, localY, localZ);
             Vector3f opposite = toEmitterSpace((float) interpolatedX, (float) interpolatedY, (float) interpolatedZ, -localX, -localY, -localZ);
             level.addParticle(particleOptions, spiralOne.x, spiralOne.y, spiralOne.z, 0, 0, 0);
-            level.addParticle(particleOptions, opposite.x, opposite.y, opposite.z, 0, 0, 0);
+            level.addParticle(particle2, opposite.x, opposite.y, opposite.z, 0, 0, 0);
         }
     }
 
     @Override
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
-        return List.of(new ParticleTypeProperty(propMap), new ParticleDensityProperty(propMap, 100, 0.3f));
+        ParticleTypeProperty secondParticle = new ParticleTypeProperty(propertyMap);
+        secondParticle.writeChanges();
+        return List.of(new ParticleTypeProperty(propMap), secondParticle, new ParticleDensityProperty(propMap, 100, 0.3f));
     }
 }

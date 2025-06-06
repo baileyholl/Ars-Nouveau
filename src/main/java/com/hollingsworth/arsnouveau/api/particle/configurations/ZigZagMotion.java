@@ -31,9 +31,9 @@ public class ZigZagMotion extends ParticleMotion{
         int age = emitter.age;
         if(age == 0)
             return;
-        ParticleDensityProperty density = getDensity(particleOptions);
+        ParticleDensityProperty density = getDensity(particleOptions, 100, 0.3f);
         int totalParticles = getNumParticles(density.density());
-        float randomScale = 0.03f;
+        float randomScale = 0.00f;
         double radius = density.radius();
         for (int step = 0; step <= totalParticles; step++) {
             double t = (double) step / totalParticles;
@@ -43,7 +43,7 @@ public class ZigZagMotion extends ParticleMotion{
             double motionProgress = age + t;
             Vec3 local = getZigzag3D(motionProgress, 8, radius, 12, radius - radius * 0.3, 0.1);
             Vector3f transformed = toEmitterSpace((float) interpolatedX, (float) interpolatedY, (float) interpolatedZ,
-                    (float) local.x(), (float) local.y(), (float) local.z());
+                    (float) local.x(), (float) local.y(), (float) local.z);
 
             level.addParticle(particleOptions, transformed.x, transformed.y, transformed.z,
                     ParticleUtil.inRange(-randomScale, randomScale),
@@ -54,12 +54,10 @@ public class ZigZagMotion extends ParticleMotion{
 
     public Vec3 getZigzag3D(double age, double freqXZ, double ampXZ, double freqY, double ampY, double forwardSpeed) {
         double t = age * forwardSpeed;
-
         double offsetX = Math.sin(t * freqXZ) * ampXZ;
         double offsetY = Math.sin(t * freqY) * ampY;
-        double offsetZ = t;
 
-        return new Vec3(offsetX, offsetY, offsetZ);
+        return new Vec3(offsetX, offsetY, 0);
     }
 
     @Override

@@ -36,7 +36,7 @@ public class BurstMotion extends ParticleMotion {
 
     @Override
     public void tick(PropertyParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
-        ParticleDensityProperty density = getDensity(particleOptions);
+        ParticleDensityProperty density = getDensity(particleOptions, 5, 0.1f);
         Vec3 adjustedVec = getMotionScaled(new Vec3(x, y, z), density.radius(), density.spawnType().orElse(SpawnType.SPHERE));
         for (int i = 0; i < density.density(); i++) {
             level.addParticle(particleOptions, adjustedVec.x, adjustedVec.y, adjustedVec.z,

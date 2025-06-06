@@ -2,13 +2,11 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
-import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
 import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimeline;
 import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimelineType;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
-import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineOption;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
@@ -129,19 +127,6 @@ public class ParticleOverviewScreen extends BaseBook {
             onPropertySelected(selectedProperty);
         }
         initLeftSideButtons();
-//        virtualLevel = new VirtualLevel(Minecraft.getInstance().level.registryAccess(), true, level -> {
-//            level.refreshBlockEntityModels();
-//            var bakedLevel = LevelBakery.bakeVertices(level, bounds, new Vector3f());
-//            updateScene(bakedLevel);
-//        });
-//        virtualLevel.setBounds(new AABB(BlockPos.ZERO).inflate(60));
-//        for(BlockPos pos : BlockPos.withinManhattan(BlockPos.ZERO, 5, 5, 5)) {
-//            virtualLevel.setBlockAndUpdate(pos, Blocks.DIRT.defaultBlockState());
-//        }
-
-//        Vec3 pos = Minecraft.getInstance().player.position;
-//        var bakedLevel = LevelBakery.bakeVertices(Minecraft.getInstance().level, new AABB(BlockPos.containing(pos)).inflate(5), new Vector3f());
-//        this.updateScene(bakedLevel);
     }
 
     public void setSelectedButton(SelectableButton selectedButton) {
@@ -173,30 +158,6 @@ public class ParticleOverviewScreen extends BaseBook {
         }
 
         return true;
-    }
-
-    public void addParticleMotionOptions(TimelineOption timelineOption) {
-        clearRightPage();
-        int entryCount = 0;
-        addRightPageWidget(new HeaderWidget(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, 20, timelineOption.name()));
-        for (IParticleMotionType<?> type : timelineOption.options()) {
-            SelectedParticleButton widget = new SelectedParticleButton(bookLeft + RIGHT_PAGE_OFFSET + 10 + entryCount * 20, bookTop + 40, 14, 14, type.getIconLocation(), (button) -> {
-                timelineOption.entry().setMotion(type.create());
-                initLeftSideButtons();
-                if(selectedParticleButton != null){
-                    selectedParticleButton.selected = false;
-                }
-                selectedParticleButton = (SelectedParticleButton) button;
-                selectedParticleButton.selected = true;
-            });
-            widget.withTooltip(type.getName());
-            if(timelineOption.entry().motion().getType() == type){
-                widget.selected = true;
-                selectedParticleButton = widget;
-            }
-            addRightPageWidget(widget);
-            entryCount++;
-        }
     }
 
     public void initLeftSideButtons() {

@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 
-import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.core.particles.SimpleParticleType;
 
 public class BubbleParticle extends TextureSheetParticle {
 
@@ -24,7 +24,7 @@ public class BubbleParticle extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
-    public static class Provider implements ParticleProvider<PropertyParticleOptions> {
+    public static class Provider implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet sprite;
 
         public Provider(SpriteSet pSprites) {
@@ -32,7 +32,7 @@ public class BubbleParticle extends TextureSheetParticle {
         }
 
         public Particle createParticle(
-                PropertyParticleOptions pType,
+                SimpleParticleType pType,
                 ClientLevel pLevel,
                 double pX,
                 double pY,

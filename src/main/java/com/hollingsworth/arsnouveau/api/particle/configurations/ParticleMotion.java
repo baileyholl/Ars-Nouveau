@@ -119,7 +119,11 @@ public abstract class ParticleMotion {
         return localPos;
     }
 
-    protected ParticleDensityProperty getDensity(PropertyParticleOptions particleOptions){
+    protected ParticleDensityProperty getDensity(PropertyParticleOptions particleOptions, int defaultDensity, float defaultRadius) {
+        return particleOptions.map.getOrDefault(ParticlePropertyRegistry.DENSITY_PROPERTY.get(), new ParticleDensityProperty(defaultDensity, defaultRadius, SpawnType.SPHERE));
+    }
+
+    protected ParticleDensityProperty getDensity(PropertyParticleOptions particleOptions) {
         return particleOptions.map.getOrDefault(ParticlePropertyRegistry.DENSITY_PROPERTY.get(), new ParticleDensityProperty());
     }
 

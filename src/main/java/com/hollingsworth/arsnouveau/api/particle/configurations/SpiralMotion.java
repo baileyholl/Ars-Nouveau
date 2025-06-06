@@ -32,7 +32,7 @@ public class SpiralMotion extends ParticleMotion {
 
     @Override
     public void tick(PropertyParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
-        ParticleDensityProperty density = getDensity(particleOptions);
+        ParticleDensityProperty density = getDensity(particleOptions, 100, 0.3f);
         double spiralRadius = density.radius();
         int totalParticles = getNumParticles(density.density());
         for (int step = 0; step <= totalParticles; step++) {

@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -30,7 +31,7 @@ public class ModParticles {
     public static final DeferredHolder<ParticleType<?>, ParticleType<ColoredDynamicTypeData>> SPARKLE_TYPE = PARTICLES.register("sparkle", SparkleParticleType::new);
     public static final DeferredHolder<ParticleType<?>, ParticleType<HelixParticleTypeData>> HELIX_TYPE = PARTICLES.register(HelixParticleData.NAME, HelixParticleType::new);
 
-    public static final DeferredHolder<ParticleType<?>, PropertyParticleType> ALAKARK_BUBBLE_TYPE = PARTICLES.register("bubble", PropertyParticleType::new);
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> ALAKARK_BUBBLE_TYPE = PARTICLES.register("bubble",  () -> new SimpleParticleType(false));
     public static final DeferredHolder<ParticleType<?>, PropertyParticleType> BUBBLE_CLONE_TYPE = PARTICLES.register("an_bubble", PropertyParticleType::new);
 
     public static final DeferredHolder<ParticleType<?>, PropertyParticleType> SMOKE_TYPE = PARTICLES.register("smoke", PropertyParticleType::new);

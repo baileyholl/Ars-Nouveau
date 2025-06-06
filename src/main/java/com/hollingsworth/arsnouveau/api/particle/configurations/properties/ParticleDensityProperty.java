@@ -55,7 +55,7 @@ public class ParticleDensityProperty extends BaseProperty<ParticleDensityPropert
 
     public ParticleDensityProperty(){
         super();
-        this.density = 50;
+        this.density = 10;
         this.radius = 0.3f;
         this.spawnType = ParticleMotion.SpawnType.SPHERE;
     }

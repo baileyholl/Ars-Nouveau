@@ -26,7 +26,7 @@ public class WaveMotion extends ParticleMotion{
 
     @Override
     public void tick(PropertyParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
-        ParticleDensityProperty density = getDensity(particleOptions);
+        ParticleDensityProperty density = getDensity(particleOptions, 100, 0.3f);
         int age = emitter.age;
         if(age == 0)
             return;
