@@ -1,12 +1,8 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.item.IRadialProvider;
-import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimeline;
-import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
@@ -24,7 +20,6 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetCasterSlot;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
-import com.mojang.serialization.JsonOps;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -74,10 +69,10 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
         var caster2 = SpellCasterRegistry.from(stack);
 //        caster2.getSpell().particleTimeline().debugPrintHash(caster2.getSpell(), worldIn);
 //        .CODEC.encodeStart(JsonOps.INSTANCE, g.toData()).getOrThrow()
-        var timeline = caster2.getSpell().particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
-        var element = IParticleTimeline.CODEC.encodeStart(JsonOps.INSTANCE, timeline);
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        System.out.println(gson.toJson(element.result().get()));
+//        var timeline = caster2.getSpell().particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
+//        var element = IParticleTimeline.CODEC.encodeStart(JsonOps.INSTANCE, timeline);
+//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//        System.out.println(gson.toJson(element.result().get()));
         if (playerIn instanceof ServerPlayer) {
             if (tier != SpellTier.CREATIVE) {
                 var iMana = CapabilityRegistry.getMana(playerIn);

@@ -35,8 +35,6 @@ public class SpiralMotion extends ParticleMotion {
         ParticleDensityProperty density = getDensity(particleOptions);
         double spiralRadius = density.radius();
         int totalParticles = getNumParticles(density.density());
-        System.out.println(density.density());
-        double spiralSpeed = 1.0f;
         for (int step = 0; step <= totalParticles; step++) {
             double t = (double) step / totalParticles;
             double interpolatedX = prevX + t * (x - prevX);
@@ -44,8 +42,7 @@ public class SpiralMotion extends ParticleMotion {
             double interpolatedZ = prevZ + t * (z - prevZ);
 
             // Interpolate the angle for the current step
-            double interpolatedAge = this.emitter.age + t;
-            double angle = interpolatedAge * spiralSpeed;
+            double angle = this.emitter.age + t;
             float localX = (float) (Math.cos(angle) * spiralRadius);
             float localZ = 0;
             float localY = (float) (Math.sin(angle) * spiralRadius);
