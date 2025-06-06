@@ -39,7 +39,7 @@ public class ModelProperty extends BaseProperty<ModelProperty>{
 
     static {
         resources.add(NONE);
-//        resources.add(CUBE_BODY);
+        resources.add(CUBE_BODY);
     }
 
     public ModelProperty(PropMap propMap){

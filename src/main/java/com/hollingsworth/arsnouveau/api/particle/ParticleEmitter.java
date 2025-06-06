@@ -64,7 +64,7 @@ public class ParticleEmitter {
     public int age;
     public Supplier<Vec2> rotation;
     public Vec2 rotationOffset;
-    public ParticleOptions particleOptions;
+    public PropertyParticleOptions particleOptions;
     public double rand1;
     public double rand2;
     public double rand3;
@@ -75,7 +75,7 @@ public class ParticleEmitter {
         this.particleConfig = particleConfig;
         this.rotation = rot;
         this.rotationOffset = Vec2.ZERO;
-        this.particleOptions = particleOptions;
+        this.particleOptions = particleOptions instanceof PropertyParticleOptions propertyParticleOptions ? propertyParticleOptions : new PropertyParticleOptions(particleOptions.getType());
         this.rand1 = Math.random();
         this.rand2 = Math.random();
         this.rand3 = Math.random();
@@ -100,6 +100,10 @@ public class ParticleEmitter {
 
     public Vec3 getPosition(){
         return position.get();
+    }
+
+    public void setPosition(Vec3 position){
+        this.position = () -> position;
     }
 
     public Vec3 getAdjustedPosition(){
@@ -127,10 +131,9 @@ public class ParticleEmitter {
             this.previousPosition = this.getAdjustedPosition();
         }
         Vec3 pos = getAdjustedPosition();
-        if(particleOptions instanceof PropertyParticleOptions propertyParticleOptions){
-            Vec2 adjustedRotation = getAdjustedRotation();
-            propertyParticleOptions.map.set(ParticlePropertyRegistry.EMITTER_PROPERTY.get(), new EmitterProperty(new Vec2(adjustedRotation.x, adjustedRotation.y), age));
-        }
+
+        Vec2 adjustedRotation = getAdjustedRotation();
+        particleOptions.map.set(ParticlePropertyRegistry.EMITTER_PROPERTY.get(), new EmitterProperty(new Vec2(adjustedRotation.x, adjustedRotation.y), age));
         if(level instanceof ServerLevel serverLevel){
             Networking.sendToNearbyClient(serverLevel, BlockPos.containing(pos), new TickEmitterPacket(this));
         }else {

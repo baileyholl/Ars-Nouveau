@@ -32,7 +32,7 @@ public class StyledSpellRender extends GeoEntityRenderer<EntityProjectileSpell> 
     @Override
     public void render(EntityProjectileSpell entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         ProjectileTimeline timeline = entity.resolver().spell.particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
-        ModelProperty modelProperty = timeline.trailEffect.particleOptions().map.get(ParticlePropertyRegistry.MODEL_PROPERTY.get());
+        ModelProperty modelProperty = timeline.trailEffect.motion().propertyMap.get(ParticlePropertyRegistry.MODEL_PROPERTY.get());
         if(modelProperty == null || modelProperty.selectedResource == ModelProperty.NONE){
             return;
         }

@@ -8,7 +8,7 @@ import net.minecraft.client.particle.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SmokeParticle extends TextureSheetParticle {
+public class ANSmokeParticle extends TextureSheetParticle {
     public SpriteSet spriteSet;
     public static List<ColorPoint> gradients = new ArrayList<>(){
         {add(new ColorPoint(0, new Color(215, 193, 47)));}
@@ -18,7 +18,7 @@ public class SmokeParticle extends TextureSheetParticle {
         {add(new ColorPoint(1.0, new Color(31, 31, 31)));}
     };
     ColorGradientInterpolator gradient;
-    protected SmokeParticle(ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, SpriteSet spriteSet) {
+    protected ANSmokeParticle(ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, SpriteSet spriteSet) {
         super(level, x, y, z, xSpeed, ySpeed, zSpeed);
         this.spriteSet = spriteSet;
         this.setSpriteFromAge(spriteSet);
@@ -76,7 +76,7 @@ public class SmokeParticle extends TextureSheetParticle {
                 double pYSpeed,
                 double pZSpeed
         ) {
-            SmokeParticle bubblecolumnupparticle = new SmokeParticle(
+            ANSmokeParticle bubblecolumnupparticle = new ANSmokeParticle(
                     pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, sprite
             );
             bubblecolumnupparticle.pickSprite(this.sprite);

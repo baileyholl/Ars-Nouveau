@@ -86,8 +86,8 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
         LingerTimeline projectileTimeline = timelineMap.get(ParticleTimelineRegistry.LINGER_TIMELINE.get());
         TimelineEntryData trailConfig = projectileTimeline.trailEffect;
         TimelineEntryData resolveConfig = projectileTimeline.onResolvingEffect;
-        this.tickEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, trailConfig.motion(), trailConfig.particleOptions());
-        this.resolveEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, resolveConfig.motion(), resolveConfig.particleOptions());
+        this.tickEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, trailConfig);
+        this.resolveEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, resolveConfig);
         if (this.tickEmitter.particleOptions instanceof PropertyParticleOptions propertyParticleOptions) {
             propertyParticleOptions.map.set(ParticlePropertyRegistry.WALL_PROPERTY.get(), new WallProperty(Math.round(getAoe()), 5, 20, getDirection()));
         }

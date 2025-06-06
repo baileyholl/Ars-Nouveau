@@ -1,14 +1,13 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
+import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleDensityProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
 import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
-import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.mojang.serialization.MapCodec;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
@@ -22,19 +21,12 @@ public class BurstMotion extends ParticleMotion {
 
     public static StreamCodec<RegistryFriendlyByteBuf, BurstMotion> STREAM =  buildStreamCodec(BurstMotion::new);
 
-    ParticleDensityProperty density;
-
     public BurstMotion() {
         this(new PropMap());
     }
 
     public BurstMotion(PropMap propertyMap) {
         super(propertyMap);
-        if(!propertyMap.has(ParticlePropertyRegistry.DENSITY_PROPERTY.get())){
-            this.density = new ParticleDensityProperty(5, 0.1, SpawnType.SPHERE);
-        } else {
-            this.density = propertyMap.get(ParticlePropertyRegistry.DENSITY_PROPERTY.get());
-        }
     }
 
     @Override
@@ -43,7 +35,8 @@ public class BurstMotion extends ParticleMotion {
     }
 
     @Override
-    public void tick(ParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
+    public void tick(PropertyParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
+        ParticleDensityProperty density = getDensity(particleOptions);
         Vec3 adjustedVec = getMotionScaled(new Vec3(x, y, z), density.radius(), density.spawnType().orElse(SpawnType.SPHERE));
         for (int i = 0; i < density.density(); i++) {
             level.addParticle(particleOptions, adjustedVec.x, adjustedVec.y, adjustedVec.z,

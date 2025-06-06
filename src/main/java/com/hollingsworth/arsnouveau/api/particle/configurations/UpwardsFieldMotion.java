@@ -8,7 +8,6 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
@@ -20,16 +19,9 @@ public class UpwardsFieldMotion extends ParticleMotion{
     public static MapCodec<UpwardsFieldMotion> CODEC = buildPropCodec(UpwardsFieldMotion::new);
 
     public static StreamCodec<RegistryFriendlyByteBuf, UpwardsFieldMotion> STREAM = buildStreamCodec(UpwardsFieldMotion::new);
-    WallProperty wallProperty;
-    ParticleDensityProperty density;
+
     public UpwardsFieldMotion(PropMap propertyMap) {
         super(propertyMap);
-        wallProperty = propertyMap.getOrDefault(ParticlePropertyRegistry.WALL_PROPERTY.get(), new WallProperty(5, 5, 20, Direction.NORTH));
-        if(!propertyMap.has(ParticlePropertyRegistry.DENSITY_PROPERTY.get())){
-            density = new ParticleDensityProperty(5, 0, SpawnType.SPHERE);
-        } else {
-            density = propertyMap.get(ParticlePropertyRegistry.DENSITY_PROPERTY.get());
-        }
     }
 
     public UpwardsFieldMotion() {
@@ -37,10 +29,9 @@ public class UpwardsFieldMotion extends ParticleMotion{
     }
 
     @Override
-    public void tick(ParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
-        if(particleOptions instanceof PropertyParticleOptions propertyParticleOptions) {
-            wallProperty = propertyParticleOptions.map.getOrDefault(ParticlePropertyRegistry.WALL_PROPERTY.get(), new WallProperty(5, 5, 20, Direction.NORTH));
-        }
+    public void tick(PropertyParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
+        WallProperty wallProperty = particleOptions.map.getOrDefault(ParticlePropertyRegistry.WALL_PROPERTY.get(), new WallProperty(5, 5, 20, Direction.NORTH));
+        ParticleDensityProperty density = getDensity(particleOptions);
         RandomSource rand = level.random;
         int chance = wallProperty.chance;
         int range = wallProperty.range;
@@ -66,6 +57,6 @@ public class UpwardsFieldMotion extends ParticleMotion{
 
     @Override
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
-        return List.of(new ParticleTypeProperty(propMap), new ParticleDensityProperty(propertyMap, 20, 100, 10,false));
+        return List.of(new ParticleTypeProperty(propMap), new ParticleDensityProperty(propMap, 20, 100, 10,false));
     }
 }

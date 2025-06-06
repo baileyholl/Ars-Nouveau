@@ -1,14 +1,13 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
+import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleDensityProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
 import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
-import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.mojang.serialization.MapCodec;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
@@ -23,25 +22,17 @@ public class ZigZagMotion extends ParticleMotion{
 
     public static StreamCodec<RegistryFriendlyByteBuf, ZigZagMotion> STREAM = buildStreamCodec(ZigZagMotion::new);
 
-    ParticleDensityProperty density;
-
-
     public ZigZagMotion(PropMap propMap) {
         super(propMap);
-        if(!propertyMap.has(ParticlePropertyRegistry.DENSITY_PROPERTY.get())){
-            this.density = new ParticleDensityProperty(100, 0.3f, SpawnType.SPHERE);
-        } else {
-            this.density = propertyMap.get(ParticlePropertyRegistry.DENSITY_PROPERTY.get());
-        }
     }
 
     @Override
-    public void tick(ParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
+    public void tick(PropertyParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
         int age = emitter.age;
         if(age == 0)
             return;
+        ParticleDensityProperty density = getDensity(particleOptions);
         int totalParticles = getNumParticles(density.density());
-
         float randomScale = 0.03f;
         double radius = density.radius();
         for (int step = 0; step <= totalParticles; step++) {
@@ -78,7 +69,7 @@ public class ZigZagMotion extends ParticleMotion{
 
     @Override
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
-        return  List.of(new ParticleTypeProperty(propMap), new ParticleDensityProperty(propertyMap, 100, 0.3f)
+        return  List.of(new ParticleTypeProperty(propMap), new ParticleDensityProperty(propMap, 100, 0.3f)
                 .maxDensity(200)
                 .minDensity(20)
                 .densityStepSize(5)

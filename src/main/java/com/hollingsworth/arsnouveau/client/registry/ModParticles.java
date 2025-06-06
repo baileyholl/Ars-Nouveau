@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.client.registry;
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleType;
 import com.hollingsworth.arsnouveau.client.particle.*;
 import com.hollingsworth.arsnouveau.client.particle.BubbleParticle;
-import com.hollingsworth.arsnouveau.client.particle.SmokeParticle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.ParticleType;
@@ -107,7 +106,7 @@ public class ModParticles {
             evt.registerSpriteSet(SPARKLE_TYPE.get(), SparkleParticleProvider::new);
             evt.registerSpriteSet(HELIX_TYPE.get(), HelixParticleData::new);
             evt.registerSpriteSet(ALAKARK_BUBBLE_TYPE.get(), BubbleParticle.Provider::new);
-            evt.registerSpriteSet(SMOKE_TYPE.get(), SmokeParticle.Provider::new);
+            evt.registerSpriteSet(SMOKE_TYPE.get(), ANSmokeParticle.Provider::new);
             evt.registerSpriteSet(SNOW_TYPE.get(), SnowParticle.Provider::new);
             evt.registerSpriteSet(NEW_GLOW_TYPE.get(), NewGlowParticleProvider::new);
             evt.registerSpriteSet(BUBBLE_CLONE_TYPE.get(), ANBubbleParticle.Provider::new);

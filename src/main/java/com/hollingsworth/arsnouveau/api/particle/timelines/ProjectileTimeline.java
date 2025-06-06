@@ -83,7 +83,7 @@ public class ProjectileTimeline extends BaseTimeline<ProjectileTimeline>{
 
     @Override
     public List<BaseProperty<?>> getProperties() {
-        return List.of(new ModelProperty(this.trailEffect.particleOptions.map),
+        return List.of(new ModelProperty(this.trailEffect.motion().propertyMap),
                 new MotionProperty(new TimelineOption(ArsNouveau.prefix("trail"), trailEffect, ImmutableList.copyOf(TRAIL_OPTIONS))),
                 new MotionProperty(new TimelineOption(ArsNouveau.prefix("impact"), onResolvingEffect, ImmutableList.copyOf(RESOLVING_OPTIONS))),
                 new MotionProperty(new TimelineOption(ArsNouveau.prefix("spawn"), onSpawnEffect, ImmutableList.copyOf(SPAWN_OPTIONS))),

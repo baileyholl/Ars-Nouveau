@@ -1,13 +1,12 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
+import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleDensityProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
 import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
-import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.mojang.serialization.MapCodec;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
@@ -22,31 +21,12 @@ public class TrailMotion extends ParticleMotion {
 
     public static StreamCodec<RegistryFriendlyByteBuf, TrailMotion> STREAM = buildStreamCodec(TrailMotion::new);
 
-    public int density;
-    public SpawnType spawnType;
-    public double radius;
-
     public TrailMotion(PropMap propMap){
         super(propMap);
-        if(!propMap.has(ParticlePropertyRegistry.DENSITY_PROPERTY.get())){
-            this.density = 100;
-            this.radius = 0.1;
-            this.spawnType = SpawnType.SPHERE;
-        } else {
-            ParticleDensityProperty densityProperty = propMap.get(ParticlePropertyRegistry.DENSITY_PROPERTY.get());
-            this.radius = densityProperty.radius();
-            this.density = densityProperty.density();
-            this.spawnType = densityProperty.spawnType().orElse(SpawnType.SPHERE);
-
-        }
     }
 
     public TrailMotion() {
         super(new PropMap());
-        this.density = 100;
-        radius = 0.1;
-        propertyMap.set(ParticlePropertyRegistry.DENSITY_PROPERTY.get(), new ParticleDensityProperty(density, radius, SpawnType.SPHERE));
-        spawnType = SpawnType.SPHERE;
     }
 
 
@@ -56,10 +36,13 @@ public class TrailMotion extends ParticleMotion {
     }
 
     @Override
-    public void tick(ParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
+    public void tick(PropertyParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
+        ParticleDensityProperty densityProp = getDensity(particleOptions);
+        int density = densityProp.density();
+        double radius = densityProp.radius();
+        SpawnType spawnType = densityProp.spawnType().orElse(SpawnType.SPHERE);
         RandomSource random = level.random;
         int totalParticles = getNumParticles(density);
-
         double deltaX = x - prevX;
         double deltaY = y - prevY;
         double deltaZ = z - prevZ;

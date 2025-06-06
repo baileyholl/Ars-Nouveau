@@ -17,7 +17,6 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,7 +26,6 @@ import org.jetbrains.annotations.NotNull;
 public class LightTile extends ModdedTile implements ITickable, IWololoable {
     protected LightTimeline timeline = new LightTimeline();
     public ParticleColor color = ParticleColor.defaultParticleColor();
-    public static RandomSource random = RandomSource.createNewThreadLocalInstance();
     public ParticleEmitter particleEmitter;
     public LightTile(BlockPos pos, BlockState state) {
         this(BlockRegistry.LIGHT_TILE.get(), pos, state);
@@ -40,14 +38,6 @@ public class LightTile extends ModdedTile implements ITickable, IWololoable {
     @Override
     public void tick(Level level, BlockState state, BlockPos pos) {
         if (level.isClientSide) {
-
-//            //don't spawn particles with 1/1/1 color, they would be invisible anyway
-//            if (this.color.getColor() == 65793) return;
-//            level.addAlwaysVisibleParticle(
-//                    GlowParticleData.createData(this.color.nextColor((int) (level.getGameTime() * 20)), 0.25f, 0.9f, 36),
-//                    true, pos.getX() + 0.5 + ParticleUtil.inRange(-0.1, 0.1), pos.getY() + 0.5 + ParticleUtil.inRange(-0.1, 0.1), pos.getZ() + 0.5 + ParticleUtil.inRange(-0.1, 0.1),
-//                    0, 0, 0);
-
             if(particleEmitter != null){
                 particleEmitter.tick(level);
             }

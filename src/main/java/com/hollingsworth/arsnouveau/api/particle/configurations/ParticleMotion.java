@@ -1,14 +1,16 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
 import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleDensityProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
 import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -41,7 +43,7 @@ public abstract class ParticleMotion {
         this.emitter = emitter;
     }
 
-    public abstract void tick(ParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ);
+    public abstract void tick(PropertyParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ);
 
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
         return List.of();
@@ -115,6 +117,10 @@ public abstract class ParticleMotion {
         Vector3f localPos = new Vector3f(localX, localY, localZ);
         transform.transformPosition(localPos);
         return localPos;
+    }
+
+    protected ParticleDensityProperty getDensity(PropertyParticleOptions particleOptions){
+        return particleOptions.map.getOrDefault(ParticlePropertyRegistry.DENSITY_PROPERTY.get(), new ParticleDensityProperty());
     }
 
     public enum SpawnType {

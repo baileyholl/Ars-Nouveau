@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.event.DelayedSpellEvent;
 import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimeline;
 import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimelineType;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -309,7 +310,7 @@ public class SpellContext implements Cloneable {
 
     @Deprecated(forRemoval = true)
     public ParticleColor getColors() {
-        return colors.clone();
+        return spell.particleTimeline().get(ParticleTimelineRegistry.LIGHT_TIMELINE.get()).onTickEffect.particleOptions().colorProp().particleColor.clone();
     }
 
     @Deprecated(forRemoval = true)

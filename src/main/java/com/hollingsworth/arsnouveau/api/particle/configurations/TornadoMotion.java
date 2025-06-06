@@ -1,12 +1,11 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
+import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleDensityProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
 import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
-import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.mojang.serialization.MapCodec;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
@@ -16,19 +15,14 @@ public class TornadoMotion extends ParticleMotion{
 
     public static StreamCodec<RegistryFriendlyByteBuf, TornadoMotion> STREAM =  buildStreamCodec(TornadoMotion::new);
 
-    ParticleDensityProperty density;
 
     public TornadoMotion(PropMap propMap) {
         super(propMap);
-        if(!propertyMap.has(ParticlePropertyRegistry.DENSITY_PROPERTY.get())){
-            this.density = new ParticleDensityProperty(100, 0.3f, SpawnType.SPHERE);
-        } else {
-            this.density = propertyMap.get(ParticlePropertyRegistry.DENSITY_PROPERTY.get());
-        }
     }
 
     @Override
-    public void tick(ParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
+    public void tick(PropertyParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
+        ParticleDensityProperty density = getDensity(particleOptions);
         int spiralLayers = 10;
         int pointsPerLayer = 3;
         double swirlRadius = 2;
