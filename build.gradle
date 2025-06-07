@@ -134,6 +134,8 @@ repositories {
 }
 
 dependencies {
+    compileOnly('org.jetbrains:annotations:26.0.2')
+
     implementation "software.bernie.geckolib:geckolib-neoforge-1.21.1:${geckolib_version}"
     compileOnly('vazkii.patchouli:Patchouli:1.21-87-NEOFORGE')
 
