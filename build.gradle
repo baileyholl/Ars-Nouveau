@@ -184,6 +184,7 @@ jar {
                     "MixinConfigs"            : "ars_nouveau.mixins.json"])
     }
 
+    finalizedBy shadowJar
 }
 
 shadowJar {
@@ -194,6 +195,7 @@ shadowJar {
     ['org.apache.lucene'].forEach {
         relocate it, "${it}.ars_nouveau"
     }
+    finalizedBy jarJar
     mergeServiceFiles()
 }
 
