@@ -6,11 +6,14 @@ import com.hollingsworth.arsnouveau.api.event.DispelEvent;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
 import com.hollingsworth.arsnouveau.api.event.SuccessfulTreeGrowthEvent;
+import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
+import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.recipe.MultiRecipeWrapper;
 import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.ritual.RitualEventQueue;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.PlayerCaster;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
@@ -35,6 +38,7 @@ import com.hollingsworth.arsnouveau.common.ritual.DenySpawnRitual;
 import com.hollingsworth.arsnouveau.common.ritual.RitualFlight;
 import com.hollingsworth.arsnouveau.common.ritual.RitualGravity;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
+import com.hollingsworth.arsnouveau.common.spell.effect.EffectPickup;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectWololo;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.*;
@@ -78,11 +82,14 @@ import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.village.VillageSiegeEvent;
 import net.neoforged.neoforge.event.village.VillagerTradesEvent;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.wrapper.PlayerInvWrapper;
+import net.neoforged.neoforge.items.wrapper.PlayerMainInvWrapper;
 
 import java.util.*;
 
@@ -133,6 +140,18 @@ public class EventHandler {
                 });
             }
         });
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void handleBlockDrops(BlockDropsEvent event) {
+        ItemStack tool = event.getTool();
+        UUID uuid = tool.get(DataComponentRegistry.PICKUP_TRACKER);
+        if (uuid == null) return;
+
+        Player player = event.getLevel().getServer().getPlayerList().getPlayer(uuid);
+
+        PlayerCaster caster = new PlayerCaster(player);
+        event.getDrops().removeIf(drop -> EffectPickup.tryPickup(drop, player, event.getLevel(), caster.getInvManager().extractSlotMax(-1)));
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

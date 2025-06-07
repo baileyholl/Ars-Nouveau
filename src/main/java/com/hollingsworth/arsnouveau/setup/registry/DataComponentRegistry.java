@@ -3,10 +3,13 @@ package com.hollingsworth.arsnouveau.setup.registry;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.common.items.data.*;
 import com.mojang.serialization.Codec;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.UUID;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
@@ -55,4 +58,6 @@ public class DataComponentRegistry {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<PotionJarData>> POTION_JAR = DATA.register("potion_jar", () -> DataComponentType.<PotionJarData>builder().persistent(PotionJarData.CODEC).networkSynchronized(PotionJarData.STREAM).build());
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> UNBREAKING = DATA.register("unbreaking", () -> DataComponentType.<Boolean>builder().persistent(Codec.BOOL).build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<UUID>> PICKUP_TRACKER = DATA.register("pickup_tracker", () -> DataComponentType.<UUID>builder().persistent(UUIDUtil.LENIENT_CODEC).build());
 }
