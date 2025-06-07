@@ -1,16 +1,14 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleDensityProperty;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.*;
 import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import java.util.List;
@@ -59,8 +57,14 @@ public class HelixMotion extends ParticleMotion {
 
             Vector3f spiralOne = toEmitterSpace((float) interpolatedX, (float) interpolatedY, (float) interpolatedZ, localX, localY, localZ);
             Vector3f opposite = toEmitterSpace((float) interpolatedX, (float) interpolatedY, (float) interpolatedZ, -localX, -localY, -localZ);
-            level.addParticle(particleOptions, spiralOne.x, spiralOne.y, spiralOne.z, 0, 0, 0);
-            level.addParticle(particle2, opposite.x, opposite.y, opposite.z, 0, 0, 0);
+            Vec3 speedOne = randomSpeed(particleOptions);
+            Vec3 speedTwo = randomSpeed(particle2);
+            Vector3f realSpeed = toEmitterSpace((float) 0, (float) 0, (float) 0, (float) speedOne.x, (float) speedOne.y, 0);
+            Vector3f realSpeed2 = toEmitterSpace((float) 0, (float) 0, (float) 0, (float) speedTwo.x, (float) speedTwo.y, 0);
+            level.addParticle(particleOptions, spiralOne.x, spiralOne.y, spiralOne.z,
+                    realSpeed.x, realSpeed.y, realSpeed.z);
+            level.addParticle(particle2, opposite.x, opposite.y, opposite.z,
+                    realSpeed2.x, realSpeed2.y, realSpeed2.z);
         }
     }
 
@@ -68,6 +72,6 @@ public class HelixMotion extends ParticleMotion {
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
         ParticleTypeProperty secondParticle = new ParticleTypeProperty(propertyMap);
         secondParticle.writeChanges();
-        return List.of(new ParticleTypeProperty(propMap), secondParticle, new ParticleDensityProperty(propMap, 100, 0.3f));
+        return List.of(new ParticleTypeProperty(propMap), secondParticle, new ParticleDensityProperty(propMap, 100, 0.3f), new SpeedProperty(propMap));
     }
 }

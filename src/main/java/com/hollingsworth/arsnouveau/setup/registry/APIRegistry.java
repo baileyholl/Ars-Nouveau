@@ -339,7 +339,7 @@ public class APIRegistry {
         TouchTimeline.RESOLVING_OPTIONS.addAll(RESOLVE_OPTIONS);
 
 
-        List<IParticleMotionType<?>> LIGHT_OPTIONS = Arrays.asList(ParticleMotionRegistry.LIGHT_BLOB.get());
+        List<IParticleMotionType<?>> LIGHT_OPTIONS = Arrays.asList(ParticleMotionRegistry.LIGHT_BLOB.get(), ParticleMotionRegistry.BRAZIER_TYPE.get());
         LightTimeline.TICKING_OPTIONS.addAll(LIGHT_OPTIONS);
 
         SelfTimeline.RESOLVING_OPTIONS.add(ParticleMotionRegistry.BURST_TYPE.get());

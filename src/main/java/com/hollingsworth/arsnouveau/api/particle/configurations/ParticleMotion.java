@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleDensityProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.SpeedProperty;
 import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -121,6 +122,23 @@ public abstract class ParticleMotion {
 
     protected ParticleDensityProperty getDensity(PropertyParticleOptions particleOptions, int defaultDensity, float defaultRadius) {
         return particleOptions.map.getOrDefault(ParticlePropertyRegistry.DENSITY_PROPERTY.get(), new ParticleDensityProperty(defaultDensity, defaultRadius, SpawnType.SPHERE));
+    }
+
+    protected SpeedProperty getSpeed(PropertyParticleOptions particleOptions) {
+        return particleOptions.map.getOrDefault(ParticlePropertyRegistry.SPEED_PROPERTY.get(), new SpeedProperty());
+    }
+
+    protected Vec3 randomSpeed(PropertyParticleOptions particleOptions) {
+        SpeedProperty speedProperty = getSpeed(particleOptions);
+        double minXSpeed = speedProperty.minXZ() * 0.25f;
+        double minYSpeed = speedProperty.minY() * 0.25f;
+        double maxXSpeed = speedProperty.maxXZ() * 0.25f;
+        double maxYSpeed = speedProperty.maxY() * 0.25f;
+        return new Vec3(
+                ParticleUtil.inRange(minXSpeed, maxXSpeed),
+                ParticleUtil.inRange(minYSpeed, maxYSpeed),
+                ParticleUtil.inRange(minXSpeed, maxXSpeed)
+        );
     }
 
     protected ParticleDensityProperty getDensity(PropertyParticleOptions particleOptions) {

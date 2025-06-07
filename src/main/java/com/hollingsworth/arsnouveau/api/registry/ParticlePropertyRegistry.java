@@ -33,4 +33,6 @@ public class ParticlePropertyRegistry {
 
     public static final DeferredHolder<IPropertyType<?>, IPropertyType<RuneTextureProperty>> RUNE_PROPERTY = PROP_DF.register("rune", () -> new SimplePropertyType<>(RuneTextureProperty.CODEC, RuneTextureProperty.STREAM_CODEC));
 
+    public static final DeferredHolder<IPropertyType<?>, IPropertyType<SpeedProperty>> SPEED_PROPERTY = PROP_DF.register("speed", () -> new SimplePropertyType<>(SpeedProperty.CODEC, SpeedProperty.STREAM_CODEC));
+
 }

@@ -22,7 +22,11 @@ public class ParticleUtil {
     public static Random r = new Random();
 
     public static double inRange(double min, double max) {
-        if (min >= max) {
+        if(min == max) {
+            return min;
+        }
+
+        if (min > max) {
             return 0;
         }
         return ThreadLocalRandom.current().nextDouble(min, max);

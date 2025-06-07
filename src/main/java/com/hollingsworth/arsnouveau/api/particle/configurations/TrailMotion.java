@@ -1,15 +1,12 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations;
 
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleDensityProperty;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.*;
 import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -38,15 +35,20 @@ public class TrailMotion extends ParticleMotion {
     @Override
     public void tick(PropertyParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
         ParticleDensityProperty densityProp = getDensity(particleOptions, 100, 0.1f);
+        SpeedProperty speedProperty = getSpeed(particleOptions);
+        double minXSpeed = speedProperty.minXZ() * 0.25f;
+        double minYSpeed = speedProperty.minY() * 0.25f;
+        double maxXSpeed = speedProperty.maxXZ() * 0.25f;
+        double maxYSpeed = speedProperty.maxY() * 0.25f;
+
         int density = densityProp.density();
         double radius = densityProp.radius();
         SpawnType spawnType = densityProp.spawnType().orElse(SpawnType.SPHERE);
-        RandomSource random = level.random;
+
         int totalParticles = getNumParticles(density);
         double deltaX = x - prevX;
         double deltaY = y - prevY;
         double deltaZ = z - prevZ;
-
         for (int i = 0; i < totalParticles; i++) {
             double t = (double) i / Math.max(1, totalParticles - 1);
             double px = prevX + deltaX * t;
@@ -59,9 +61,9 @@ public class TrailMotion extends ParticleMotion {
                     point.x,
                     point.y,
                     point.z,
-                    0.0125f * (random.nextFloat() - 0.5f),
-                    0.0125f * (random.nextFloat() - 0.5f),
-                    0.0125f * (random.nextFloat() - 0.5f));
+                    ParticleUtil.inRange(minXSpeed, maxXSpeed),
+                    ParticleUtil.inRange(minYSpeed, maxYSpeed),
+                    ParticleUtil.inRange(minXSpeed, maxXSpeed));
         }
     }
 

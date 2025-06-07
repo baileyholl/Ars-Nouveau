@@ -3,40 +3,49 @@ package com.hollingsworth.arsnouveau.api.particle.configurations;
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.*;
 import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
-public class LightBlobMotion extends ParticleMotion {
+public class BrazierMotion extends ParticleMotion {
 
-    public static MapCodec<LightBlobMotion> CODEC = buildPropCodec(LightBlobMotion::new);
+    public static MapCodec<BrazierMotion> CODEC = buildPropCodec(BrazierMotion::new);
 
-    public static StreamCodec<RegistryFriendlyByteBuf, LightBlobMotion> STREAM =  buildStreamCodec(LightBlobMotion::new);
+    public static StreamCodec<RegistryFriendlyByteBuf, BrazierMotion> STREAM =  buildStreamCodec(BrazierMotion::new);
 
-    public LightBlobMotion() {
+    public BrazierMotion() {
         this(new PropMap());
     }
 
-    public LightBlobMotion(PropMap propertyMap) {
+    public BrazierMotion(PropMap propertyMap) {
         super(propertyMap);
     }
 
     @Override
     public IParticleMotionType<?> getType() {
-        return ParticleMotionRegistry.LIGHT_BLOB.get();
+        return ParticleMotionRegistry.BRAZIER_TYPE.get();
     }
 
     @Override
     public void tick(PropertyParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
         ParticleDensityProperty density = getDensity(particleOptions, 20, 0.1f);
-        for(int i = 0; i < getNumParticles(density.density()); i++) {
-            Vec3 speed = randomSpeed(particleOptions);
-            Vec3 adjustedVec = getMotionScaled(new Vec3(x, y, z), density.radius(), density.spawnType().orElse(SpawnType.SPHERE));
-            level.addAlwaysVisibleParticle(particleOptions, true, adjustedVec.x, adjustedVec.y, adjustedVec.z, speed.x, speed.y, speed.z);
+        double xzOffset = 0.25;
+        int intensity = 5;
+        for (int i = 0; i < intensity; i++) {
+            level.addParticle(
+                    particleOptions,
+                    x + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2), y + ParticleUtil.inRange(-0.05, 0.2), z + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2),
+                    0, ParticleUtil.inRange(0.0, 0.05f), 0);
+        }
+        for (int i = 0; i < intensity; i++) {
+            level.addParticle(
+                    particleOptions,
+                    x + ParticleUtil.inRange(-xzOffset, xzOffset), y + ParticleUtil.inRange(0, 0.7), z + ParticleUtil.inRange(-xzOffset, xzOffset),
+                    0, ParticleUtil.inRange(0.0, 0.05f), 0);
         }
     }
 

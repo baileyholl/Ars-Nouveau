@@ -154,6 +154,7 @@ public class ParticleDensityProperty extends BaseProperty<ParticleDensityPropert
             HorizontalSlider densitySlider;
             HorizontalSlider radiusSlider;
             SelectedParticleButton selectedButton;
+
             @Override
             public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
                 DocClientUtils.drawHeader(getName(), graphics, x, y, width, mouseX, mouseY, partialTicks);
@@ -168,9 +169,9 @@ public class ParticleDensityProperty extends BaseProperty<ParticleDensityPropert
                     yOffset += 2;
                     DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.density_slider", densitySlider.getValueString()), graphics, x, y + yOffset, width, mouseX, mouseY, partialTicks);
                 }
-
+                int sliderSpacing = 25;
                 if(supportsRadius){
-                    yOffset +=  32;
+                    yOffset +=  sliderSpacing;
                     DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.radius_slider", radiusSlider.getValueString()), graphics, x, y + yOffset, width, mouseX, mouseY, partialTicks);
                 }
             }
@@ -203,24 +204,28 @@ public class ParticleDensityProperty extends BaseProperty<ParticleDensityPropert
 
                     yOffset += 30;
                 }
+                int xSliderOffset = x + 4;
                 yOffset += 4;
-                densitySlider = buildSlider(x + 4, y + yOffset, minDensity, maxDensity, densityStepSize, 1, Component.translatable("ars_nouveau.density_slider"), Component.empty(), Math.floor((maxDensity + minDensity) / 2.0), (value) -> {
+                densitySlider = buildSlider(xSliderOffset, y + yOffset, minDensity, maxDensity, densityStepSize, 1, Component.translatable("ars_nouveau.density_slider"), Component.empty(), Math.floor((maxDensity + minDensity) / 2.0), (value) -> {
                     density = densitySlider.getValueInt();
                     writeChanges();
                 });
-                yOffset += 30;
+                int sliderSpacing = 25;
+                yOffset += sliderSpacing;
 
                 densitySlider.setValue(Mth.clamp(density, minDensity, maxDensity));
                 widgets.add(densitySlider);
 
-                radiusSlider = buildSlider(x + 4, y + yOffset, minRadius, maxRadius, 0.05, 1, Component.translatable("ars_nouveau.radius_slider"), Component.empty(),  initialRadius,  (value) -> {
+                radiusSlider = buildSlider(xSliderOffset, y + yOffset, minRadius, maxRadius, 0.05, 1, Component.translatable("ars_nouveau.radius_slider"), Component.empty(),  initialRadius,  (value) -> {
                     radius = radiusSlider.getValue();
                     writeChanges();
                 });
                 radiusSlider.setValue(radius);
 
+
                 if(supportsRadius) {
                     widgets.add(radiusSlider);
+                    yOffset += sliderSpacing;
                 }
             }
 

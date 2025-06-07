@@ -1570,6 +1570,11 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.rune.rune_water", "Water");
         add("ars_nouveau.rune.rune_air", "Air");
         add("ars_nouveau.rune.rune_earth", "Earth");
+        add("ars_nouveau.yspeed_slider", "Min Y Speed: %s");
+        add("ars_nouveau.ymaxspeed_slider", "Max Y Speed: %s");
+
+        add("ars_nouveau.xzspeed_slider", "Min XZ Speed: %s");
+        add("ars_nouveau.xzmaxspeed_slider", "Max XZ Speed: %s");
     }
 
     public void addCategory(String key, String value) {
