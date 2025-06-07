@@ -1,13 +1,16 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.BookSlider;
 import com.hollingsworth.arsnouveau.client.gui.ModdedScreen;
 import com.hollingsworth.arsnouveau.client.gui.buttons.ANButton;
+import com.hollingsworth.arsnouveau.client.gui.buttons.SaveButton;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -16,15 +19,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BaseBook extends ModdedScreen {
-
+    public static final int FONT_COLOR = -8355712;
     public static final int FULL_WIDTH = 290;
     public static final int FULL_HEIGHT = 188;
+    public static final int LEFT_PAGE_OFFSET = 19;
+    public static final int RIGHT_PAGE_OFFSET = 153;
+    public static final int PAGE_TOP_OFFSET = 17;
+    public static final int ONE_PAGE_WIDTH = 118;
+    public static final int ONE_PAGE_HEIGHT = 146;
+
     public static ResourceLocation background = ArsNouveau.prefix( "textures/gui/spell_book_template.png");
     public int bookLeft;
     public int bookTop;
     public int bookRight;
     public int bookBottom;
     public List<SpellValidationError> validationErrors = new ArrayList<>();
+    public SaveButton saveButton;
 
     public BaseBook() {
         super(Component.literal(""));
@@ -37,6 +47,10 @@ public class BaseBook extends ModdedScreen {
         bookTop = height / 2 - FULL_HEIGHT / 2;
         bookRight = width / 2 + FULL_WIDTH / 2;
         bookBottom = height / 2 + FULL_HEIGHT / 2;
+    }
+
+    public void addSaveButton(Button.OnPress onPress) {
+        saveButton = addRenderableWidget(new SaveButton(bookRight - DocAssets.SAVE_ICON.width() - 18, bookBottom - DocAssets.SAVE_ICON.height() + 2, onPress));
     }
 
     @Override

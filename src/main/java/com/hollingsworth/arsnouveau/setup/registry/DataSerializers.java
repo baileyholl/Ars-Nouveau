@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.world.phys.Vec3;
@@ -19,6 +20,15 @@ public class DataSerializers {
                     pBuffer.writeDouble(pValue.z);
                 },
                 pBuffer -> new Vec3(pBuffer.readDouble(), pBuffer.readDouble(), pBuffer.readDouble())
+            )
+        )
+    );
+
+    public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<SpellResolver>> SPELL_RESOLVER = DS.register("spell_resolver",
+        () -> EntityDataSerializer.forValueType(
+            StreamCodec.of(
+                    SpellResolver.STREAM,
+                    SpellResolver.STREAM
             )
         )
     );

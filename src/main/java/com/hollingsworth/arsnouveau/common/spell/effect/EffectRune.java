@@ -49,8 +49,8 @@ public class EffectRune extends AbstractEffect {
                 Spell newSpell = newContext.getSpell();
                 var mutable = newSpell.mutable();
                 mutable.recipe.add(0, MethodTouch.INSTANCE);
-                runeTile.spell = mutable.immutable();
                 runeTile.isSensitive = spellStats.isSensitive();
+                runeTile.setSpell(mutable.immutable());
             }
         }
     }

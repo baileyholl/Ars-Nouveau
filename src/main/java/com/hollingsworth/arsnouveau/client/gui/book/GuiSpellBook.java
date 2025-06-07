@@ -123,7 +123,6 @@ public class GuiSpellBook extends BaseBook {
                 bonusSlots = caster.getBonusGlyphSlots();
             }
         }
-        this.bookStack = heldStack;
         this.unlockedSpells = parts;
         this.displayedGlyphs = new ArrayList<>(this.unlockedSpells);
         this.validationErrors = new LinkedList<>();
@@ -131,11 +130,7 @@ public class GuiSpellBook extends BaseBook {
                 ArsNouveauAPI.getInstance().getSpellCraftingSpellValidator(),
                 new GlyphMaxTierValidator(tier)
         );
-        caster = SpellCasterRegistry.from(bookStack);
-        this.selectedSpellSlot = caster.getCurrentSlot();
-        this.spellname = caster.getSpellName(caster.getCurrentSlot());
-        List<AbstractSpellPart> recipe = SpellCasterRegistry.from(bookStack).getSpell(selectedSpellSlot).mutable().recipe;
-        spell = new ArrayList<>(recipe);
+        onBookstackUpdated(heldStack);
     }
 
     public void onBookstackUpdated(ItemStack stack) {
@@ -143,7 +138,16 @@ public class GuiSpellBook extends BaseBook {
         this.caster = SpellCasterRegistry.from(stack);
         if (caster == null) {
             Minecraft.getInstance().setScreen(null);
+        }else{
+            onSetCaster();
         }
+    }
+
+    public void onSetCaster(){
+        this.selectedSpellSlot = caster.getCurrentSlot();
+        this.spellname = caster.getSpellName(caster.getCurrentSlot());
+        List<AbstractSpellPart> recipe = SpellCasterRegistry.from(bookStack).getSpell(selectedSpellSlot).mutable().recipe;
+        spell = new ArrayList<>(recipe);
     }
 
     @Override
@@ -193,8 +197,10 @@ public class GuiSpellBook extends BaseBook {
 
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 22, 0, 0, 23, 20, 23, 20, "textures/gui/worn_book_bookmark.png", this::onDocumentationClick)
                 .withTooltip(Component.translatable("ars_nouveau.gui.notebook")));
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 44, 0, 0, 23, 20, 23, 20, "textures/gui/color_wheel_bookmark.png", this::onColorClick)
-                .withTooltip(Component.translatable("ars_nouveau.gui.color")));
+
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 44, 0, 0, 23, 20, 23, 20, "textures/gui/color_wheel_bookmark.png", (b) ->{
+            ParticleOverviewScreen.openScreen(bookStack, selectedSpellSlot, this.hand);
+        }).withTooltip(Component.translatable("ars_nouveau.gui.spell_style")));
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 68, 0, 0, 23, 20, 23, 20, "textures/gui/summon_circle_bookmark.png", this::onFamiliarClick)
                 .withTooltip(Component.translatable("ars_nouveau.gui.familiar")));
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 92, 0, 0, 23, 20, 23, 20, "textures/gui/sounds_tab.png", this::onSoundsClick)
@@ -210,6 +216,7 @@ public class GuiSpellBook extends BaseBook {
                 throw new RuntimeException(e);
             }
         }).withTooltip(Component.translatable("ars_nouveau.gui.discord")));
+
 
         this.nextButton = addRenderableWidget(new PageButton(bookRight - 20, bookBottom - 6, true, this::onPageIncrease, true));
         this.previousButton = addRenderableWidget(new PageButton(bookLeft - 5, bookBottom - 6, false, this::onPageDec, true));

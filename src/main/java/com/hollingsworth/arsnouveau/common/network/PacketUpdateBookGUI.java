@@ -32,6 +32,7 @@ public class PacketUpdateBookGUI extends AbstractPacket{
     public void onClientReceived(Minecraft minecraft, Player player) {
         if (minecraft.screen instanceof GuiSpellBook guiSpellBook) {
             guiSpellBook.onBookstackUpdated(bookStack);
+            guiSpellBook.init();
         }
     }
 

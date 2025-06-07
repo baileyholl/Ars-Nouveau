@@ -41,8 +41,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -315,7 +315,6 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
     public void performRangedAttack(LivingEntity entity, float p_82196_2_) {
         EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(level, spell, this, new LivingCaster(this)).withColors(color));
         EntityProjectileSpell projectileSpell = new EntityProjectileSpell(level, resolver);
-        projectileSpell.setColor(color);
         projectileSpell.shoot(this, this.getXRot(), this.getYRot(), 0.0F, 1.0f, 0.8f);
         level.addFreshEntity(projectileSpell);
         this.castCooldown = 40;
