@@ -1,9 +1,6 @@
 package com.hollingsworth.arsnouveau;
 
-import com.hollingsworth.arsnouveau.api.registry.BuddingConversionRegistry;
-import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
-import com.hollingsworth.arsnouveau.api.registry.GenericRecipeRegistry;
-import com.hollingsworth.arsnouveau.api.registry.ScryRitualRegistry;
+import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.registry.ClientHandler;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
@@ -142,6 +139,7 @@ public class ArsNouveau {
             GenericRecipeRegistry.reloadAll(e.getServer().getRecipeManager());
             CasterTomeRegistry.reloadTomeData(e.getServer().getRecipeManager(), e.getServer().registryAccess());
             BuddingConversionRegistry.reloadBuddingConversionRecipes(e.getServer().getRecipeManager());
+            AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(e.getServer().getRecipeManager());
             ScryRitualRegistry.reloadScryRitualRecipes(e.getServer().getRecipeManager());
         });
 
