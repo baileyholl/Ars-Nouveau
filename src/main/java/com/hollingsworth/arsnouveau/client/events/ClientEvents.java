@@ -164,6 +164,6 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onClientResourcesReload(RecipesUpdatedEvent event) {
-        recipeChangeListeners.removeIf(addReloadListenerEventPredicate -> !addReloadListenerEventPredicate.test(event));
+        recipeChangeListeners.removeIf(p -> !p.test(event));
     }
 }

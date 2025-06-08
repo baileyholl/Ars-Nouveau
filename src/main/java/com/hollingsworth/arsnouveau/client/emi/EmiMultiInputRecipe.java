@@ -84,7 +84,7 @@ public abstract class EmiMultiInputRecipe<T> implements EmiRecipe {
         }
     }
 
-    List<EmiIngredient> inputs = null;
+    List<EmiIngredient> cachedInputs = null;
 
     /**
      * Returns cached inputs generated once from {@link EmiMultiInputRecipe#generateInputs}.
@@ -95,15 +95,15 @@ public abstract class EmiMultiInputRecipe<T> implements EmiRecipe {
      */
     @Override
     public final List<EmiIngredient> getInputs() {
-        if (this.inputs == null) {
-            this.inputs = this.generateInputs();
+        if (this.cachedInputs == null) {
+            this.cachedInputs = this.generateInputs();
             ClientEvents.recipeChangeListeners.add(e -> {
-                this.inputs = null;
+                this.cachedInputs = null;
                 return false;
             });
         }
 
-        return this.inputs;
+        return this.cachedInputs;
     }
 
     protected List<EmiIngredient> generateInputs() {
