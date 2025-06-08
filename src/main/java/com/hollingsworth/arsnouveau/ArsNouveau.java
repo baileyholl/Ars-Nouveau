@@ -139,7 +139,8 @@ public class ArsNouveau {
             GenericRecipeRegistry.reloadAll(e.getServer().getRecipeManager());
             CasterTomeRegistry.reloadTomeData(e.getServer().getRecipeManager(), e.getServer().registryAccess());
             BuddingConversionRegistry.reloadBuddingConversionRecipes(e.getServer().getRecipeManager());
-            AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(e.getServer().getRecipeManager());
+            AlakarkinosConversionRegistry.initLootParams(e.getServer().overworld());
+            AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(e.getServer().getRecipeManager(), e.getServer().reloadableRegistries());
             ScryRitualRegistry.reloadScryRitualRecipes(e.getServer().getRecipeManager());
         });
 
