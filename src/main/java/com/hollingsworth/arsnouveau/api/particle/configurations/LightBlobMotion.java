@@ -45,6 +45,6 @@ public class LightBlobMotion extends ParticleMotion {
         return List.of(new ParticleTypeProperty(propMap), new ParticleDensityProperty(propMap, 20, 0.1)
                 .minDensity(1)
                 .maxDensity(200)
-                .densityStepSize(1), new SpeedProperty(propMap));
+                .densityStepSize(1), new SpeedProperty(propMap, 0, 0, 0, 0));
     }
 }

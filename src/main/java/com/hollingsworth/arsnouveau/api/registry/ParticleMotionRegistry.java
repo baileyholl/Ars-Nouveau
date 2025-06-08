@@ -36,4 +36,6 @@ public class ParticleMotionRegistry {
     public static final DeferredHolder<IParticleMotionType<?>, IParticleMotionType<TornadoMotion>> TORNADO_TYPE = PARTICLE_CONFIG.register("tornado", () -> new SimpleParticleMotionType<>(TornadoMotion.CODEC, TornadoMotion.STREAM, TornadoMotion::new));
 
     public static final DeferredHolder<IParticleMotionType<?>, IParticleMotionType<BrazierMotion>> BRAZIER_TYPE = PARTICLE_CONFIG.register("brazier", () -> new SimpleParticleMotionType<>(BrazierMotion.CODEC, BrazierMotion.STREAM, BrazierMotion::new));
+
+    public static final DeferredHolder<IParticleMotionType<?>, IParticleMotionType<WispMotion>> WISP_TYPE = PARTICLE_CONFIG.register("wisp", () -> new SimpleParticleMotionType<>(WispMotion.CODEC, WispMotion.STREAM, WispMotion::new));
 }

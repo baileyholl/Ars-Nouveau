@@ -47,7 +47,7 @@ public class SpiralMotion extends ParticleMotion {
             float localZ = 0;
             float localY = (float) (Math.sin(angle) * spiralRadius);
             Vector3f localPos = toEmitterSpace((float) interpolatedX, (float) interpolatedY, (float) interpolatedZ, localX, localY, localZ);
-            level.addParticle(particleOptions, localPos.x, localPos.y, localPos.z, ParticleUtil.inRange(-0.05, 0.05),
+            level.addAlwaysVisibleParticle(particleOptions, true, localPos.x, localPos.y, localPos.z, ParticleUtil.inRange(-0.05, 0.05),
                     ParticleUtil.inRange(-0.05, 0.05),
                     ParticleUtil.inRange(-0.05, 0.05));
         }

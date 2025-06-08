@@ -130,16 +130,30 @@ public abstract class ParticleMotion {
 
     protected Vec3 randomSpeed(PropertyParticleOptions particleOptions) {
         SpeedProperty speedProperty = getSpeed(particleOptions);
-        double minXSpeed = speedProperty.minXZ() * 0.25f;
-        double minYSpeed = speedProperty.minY() * 0.25f;
-        double maxXSpeed = speedProperty.maxXZ() * 0.25f;
-        double maxYSpeed = speedProperty.maxY() * 0.25f;
+        double minXSpeed = speedProperty.minXZ();
+        double minYSpeed = speedProperty.minY();
+        double maxXSpeed = speedProperty.maxXZ();
+        double maxYSpeed = speedProperty.maxY();
         return new Vec3(
                 ParticleUtil.inRange(minXSpeed, maxXSpeed),
                 ParticleUtil.inRange(minYSpeed, maxYSpeed),
                 ParticleUtil.inRange(minXSpeed, maxXSpeed)
         );
     }
+
+
+    protected Vec3 randomSpeed(PropertyParticleOptions particleOptions, double defaultMinXZ, double defaultMaxXZ,  double defaultMinY, double defaultMaxY) {
+        if(particleOptions.map.has(ParticlePropertyRegistry.SPEED_PROPERTY.get())){
+            return randomSpeed(particleOptions);
+        }else{
+            return new Vec3(
+                    ParticleUtil.inRange(defaultMinXZ, defaultMaxXZ),
+                    ParticleUtil.inRange(defaultMinY, defaultMaxY),
+                    ParticleUtil.inRange(defaultMinXZ, defaultMaxXZ)
+            );
+        }
+    }
+
 
     protected ParticleDensityProperty getDensity(PropertyParticleOptions particleOptions) {
         return particleOptions.map.getOrDefault(ParticlePropertyRegistry.DENSITY_PROPERTY.get(), new ParticleDensityProperty());

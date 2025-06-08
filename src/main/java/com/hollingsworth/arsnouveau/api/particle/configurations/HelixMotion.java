@@ -61,9 +61,9 @@ public class HelixMotion extends ParticleMotion {
             Vec3 speedTwo = randomSpeed(particle2);
             Vector3f realSpeed = toEmitterSpace((float) 0, (float) 0, (float) 0, (float) speedOne.x, (float) speedOne.y, 0);
             Vector3f realSpeed2 = toEmitterSpace((float) 0, (float) 0, (float) 0, (float) speedTwo.x, (float) speedTwo.y, 0);
-            level.addParticle(particleOptions, spiralOne.x, spiralOne.y, spiralOne.z,
+            level.addAlwaysVisibleParticle(particleOptions, true, spiralOne.x, spiralOne.y, spiralOne.z,
                     realSpeed.x, realSpeed.y, realSpeed.z);
-            level.addParticle(particle2, opposite.x, opposite.y, opposite.z,
+            level.addAlwaysVisibleParticle(particle2, true, opposite.x, opposite.y, opposite.z,
                     realSpeed2.x, realSpeed2.y, realSpeed2.z);
         }
     }

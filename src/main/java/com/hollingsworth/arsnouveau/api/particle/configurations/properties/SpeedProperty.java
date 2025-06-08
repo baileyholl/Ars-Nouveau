@@ -59,15 +59,30 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
         this.xzMaxSpeed = xzMaxSpeed;
     }
 
-    public SpeedProperty(PropMap propMap){
+    public SpeedProperty(PropMap propMap) {
+        super(propMap);
+        if(propMap.has(getType())){
+            SpeedProperty speedProp = propMap.get(getType());
+            this.yMinSpeed = speedProp.yMinSpeed;
+            this.xzMinSpeed = speedProp.xzMinSpeed;
+            this.yMaxSpeed = speedProp.yMaxSpeed;
+            this.xzMaxSpeed = speedProp.xzMaxSpeed;
+        }
+    }
+
+    public SpeedProperty(PropMap propMap, double yMinSpeed, double yMaxSpeed, double minXZ, double xzMaxSpeed){
         super(propMap);
         if(!propMap.has(getType())){
+            this.yMinSpeed = yMinSpeed;
+            this.xzMinSpeed = minXZ;
+            this.yMaxSpeed = yMaxSpeed;
+            this.xzMaxSpeed = xzMaxSpeed;
         } else {
-            SpeedProperty densityProperty = propMap.get(getType());
-            this.yMinSpeed = densityProperty.yMinSpeed;
-            this.xzMinSpeed = densityProperty.xzMinSpeed;
-            this.yMaxSpeed = densityProperty.yMaxSpeed;
-            this.xzMaxSpeed = densityProperty.xzMaxSpeed;
+            SpeedProperty speedProp = propMap.get(getType());
+            this.yMinSpeed = speedProp.yMinSpeed;
+            this.xzMinSpeed = speedProp.xzMinSpeed;
+            this.yMaxSpeed = speedProp.yMaxSpeed;
+            this.xzMaxSpeed = speedProp.xzMaxSpeed;
         }
     }
 
@@ -118,7 +133,10 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
                 int xSliderOffset = x + 4;
                 yOffset += 4;
                 int sliderSpacing = 25;
-                minYSpeedSlider = buildSlider(xSliderOffset, y + yOffset, -1.0, 1.0, 0.05, 1, Component.translatable("ars_nouveau.yspeed_slider"), Component.empty(), 0.0, (value) ->{
+                double min = -0.20;
+                double max = 0.20;
+                double stepSize = 0.02;
+                minYSpeedSlider = buildSlider(xSliderOffset, y + yOffset, min, max, stepSize, 1, Component.translatable("ars_nouveau.yspeed_slider"), Component.empty(), 0.0, (value) ->{
                     yMinSpeed = minYSpeedSlider.getValue();
                     yMaxSpeed = Math.max(yMaxSpeed, yMinSpeed);
                     clampSliders();
@@ -126,7 +144,7 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
                 });
                 yOffset += sliderSpacing;
 
-                yMaxSpeedSlider = buildSlider(xSliderOffset, y + yOffset, -1.0, 1.0, 0.05, 1, Component.translatable("ars_nouveau.ymaxspeed_slider"), Component.empty(), 0.0, (value) ->{
+                yMaxSpeedSlider = buildSlider(xSliderOffset, y + yOffset,  min, max, stepSize, 1, Component.translatable("ars_nouveau.ymaxspeed_slider"), Component.empty(), 0.0, (value) ->{
                     yMaxSpeed = yMaxSpeedSlider.getValue();
                     yMinSpeed = Math.min(yMaxSpeed, yMinSpeed);
                     clampSliders();
@@ -134,7 +152,7 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
                 });
                 yOffset += sliderSpacing;
 
-                xzSpeedSlider = buildSlider(xSliderOffset, y + yOffset, -1.0, 1.0, 0.05, 1, Component.translatable("ars_nouveau.xzspeed_slider"), Component.empty(), 0.0, (value) ->{
+                xzSpeedSlider = buildSlider(xSliderOffset, y + yOffset,  min, max, stepSize, 1, Component.translatable("ars_nouveau.xzspeed_slider"), Component.empty(), 0.0, (value) ->{
                     xzMinSpeed = xzSpeedSlider.getValue();
                     xzMaxSpeed = Math.max(xzMaxSpeed, xzMinSpeed);
                     clampSliders();
@@ -142,7 +160,7 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
                 });
                 yOffset += sliderSpacing;
 
-                xzMaxSpeedSlider = buildSlider(xSliderOffset, y + yOffset, -1.0, 1.0, 0.05, 1, Component.translatable("ars_nouveau.xzmaxspeed_slider"), Component.empty(), 0.0, (value) ->{
+                xzMaxSpeedSlider = buildSlider(xSliderOffset, y + yOffset,  min, max, stepSize, 1, Component.translatable("ars_nouveau.xzmaxspeed_slider"), Component.empty(), 0.0, (value) ->{
                     xzMaxSpeed = xzMaxSpeedSlider.getValue();
                     xzMinSpeed = Math.min(xzMaxSpeed, xzMinSpeed);
                     clampSliders();

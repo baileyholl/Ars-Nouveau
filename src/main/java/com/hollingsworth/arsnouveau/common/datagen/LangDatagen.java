@@ -1575,6 +1575,9 @@ public class LangDatagen extends LanguageProvider {
 
         add("ars_nouveau.xzspeed_slider", "Min XZ Speed: %s");
         add("ars_nouveau.xzmaxspeed_slider", "Max XZ Speed: %s");
+        add("ars_nouveau.particle.property.speed", "Particle Speed");
+        add("ars_nouveau.particle_config.brazier", "Brazier");
+        add("ars_nouveau.particle_config.wisp", "Wisp");
     }
 
     public void addCategory(String key, String value) {

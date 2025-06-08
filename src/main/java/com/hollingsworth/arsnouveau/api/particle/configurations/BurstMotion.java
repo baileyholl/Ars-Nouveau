@@ -39,7 +39,7 @@ public class BurstMotion extends ParticleMotion {
         ParticleDensityProperty density = getDensity(particleOptions, 5, 0.1f);
         Vec3 adjustedVec = getMotionScaled(new Vec3(x, y, z), density.radius(), density.spawnType().orElse(SpawnType.SPHERE));
         for (int i = 0; i < density.density(); i++) {
-            level.addParticle(particleOptions, adjustedVec.x, adjustedVec.y, adjustedVec.z,
+            level.addAlwaysVisibleParticle(particleOptions, true, adjustedVec.x, adjustedVec.y, adjustedVec.z,
                     ParticleUtil.inRange(-0.05, 0.05),
                     ParticleUtil.inRange(0, 0.05),
                     ParticleUtil.inRange(-0.05, 0.05));

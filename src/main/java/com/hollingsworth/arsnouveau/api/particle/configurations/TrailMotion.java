@@ -58,6 +58,7 @@ public class TrailMotion extends ParticleMotion {
             Vec3 point = getMotionScaled(deltaVec, radius, spawnType);
             level.addAlwaysVisibleParticle(
                     particleOptions,
+                    true,
                     point.x,
                     point.y,
                     point.z,
