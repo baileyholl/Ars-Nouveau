@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.emi;
 
 import com.google.common.collect.AbstractIterator;
+import com.google.errorprone.annotations.DoNotCall;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
@@ -9,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.phys.Vec2;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -83,8 +85,25 @@ public abstract class EmiMultiInputRecipe<T> implements EmiRecipe {
         }
     }
 
+    List<EmiIngredient> inputs = null;
+
+    /**
+     * Returns cached inputs generated once from {@link EmiMultiInputRecipe#generateInputs}.
+     * Do not call from {@link EmiMultiInputRecipe#generateInputs} as it will result in a stack overflow.
+     *
+     * @return A list of ingredients required for the recipe.
+     * 	Inputs will consider this recipe a use when exploring recipes.
+     */
     @Override
-    public List<EmiIngredient> getInputs() {
+    public final List<EmiIngredient> getInputs() {
+        if (this.inputs == null) {
+            this.inputs = this.generateInputs();
+        }
+
+        return this.inputs;
+    }
+
+    protected List<EmiIngredient> generateInputs() {
         int size = this.multiProvider.input.size();
         if (this.multiProvider.hasCenter()) {
             size += 1;

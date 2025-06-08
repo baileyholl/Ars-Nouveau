@@ -52,14 +52,18 @@ public class EmiAlakarkinosRecipe implements EmiRecipe {
         return List.of(EmiStack.of(this.recipe.input()));
     }
 
+    List<EmiStack> outputs = null;
+
     @Override
     public List<EmiStack> getOutputs() {
         if (this.recipe.drops().isPresent()) {
-            List<EmiStack> out = new ArrayList<>();
-            for (var drop : this.recipe.drops().get().list()) {
-                out.add(EmiStack.of(drop.item()));
+            if (this.outputs == null) {
+                this.outputs = new ArrayList<>();
+                for (var drop : this.recipe.drops().get().list()) {
+                    this.outputs.add(EmiStack.of(drop.item()));
+                }
             }
-            return out;
+            return this.outputs;
         }
 
         return List.of();
