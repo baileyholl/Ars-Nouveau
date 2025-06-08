@@ -23,16 +23,12 @@ public class EmiEnchantingApparatusRecipe<T extends EnchantingApparatusRecipe> e
         return EmiArsNouveauPlugin.ENCHANTING_APPARATUS_CATEGORY;
     }
 
-    List<EmiIngredient> inputs = null;
-
     @Override
     protected List<EmiIngredient> generateInputs() {
-        if (inputs == null) {
-            inputs = new ArrayList<>(1 + this.recipe.pedestalItems().size());
-            inputs.add(EmiIngredient.of(this.recipe.reagent()));
-            for (Ingredient ingredient : this.recipe.pedestalItems()) {
-                inputs.add(EmiIngredient.of(ingredient));
-            }
+        List<EmiIngredient> inputs = new ArrayList<>(1 + this.recipe.pedestalItems().size());
+        inputs.add(EmiIngredient.of(this.recipe.reagent()));
+        for (Ingredient ingredient : this.recipe.pedestalItems()) {
+            inputs.add(EmiIngredient.of(ingredient));
         }
 
         return inputs;
