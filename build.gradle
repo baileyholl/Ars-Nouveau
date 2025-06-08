@@ -197,7 +197,6 @@ shadowJar {
     ['org.apache.lucene'].forEach {
         relocate it, "${it}.ars_nouveau"
     }
-    finalizedBy jarJar
     mergeServiceFiles()
 }
 
