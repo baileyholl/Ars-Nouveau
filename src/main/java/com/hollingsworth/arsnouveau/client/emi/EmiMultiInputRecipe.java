@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.emi;
 
 import com.google.common.collect.AbstractIterator;
-import com.google.errorprone.annotations.DoNotCall;
+import com.hollingsworth.arsnouveau.common.event.EventHandler;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
@@ -10,7 +10,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.phys.Vec2;
-import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -98,6 +97,10 @@ public abstract class EmiMultiInputRecipe<T> implements EmiRecipe {
     public final List<EmiIngredient> getInputs() {
         if (this.inputs == null) {
             this.inputs = this.generateInputs();
+            EventHandler.reloadListeners.add(e -> {
+                this.inputs = null;
+                return false;
+            });
         }
 
         return this.inputs;
