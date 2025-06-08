@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.client.emi;
 
 import com.hollingsworth.arsnouveau.api.registry.AlakarkinosConversionRegistry;
+import com.hollingsworth.arsnouveau.client.events.ClientEvents;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.AlakarkinosRecipe;
-import com.hollingsworth.arsnouveau.common.event.EventHandler;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -63,7 +63,7 @@ public class EmiAlakarkinosRecipe implements EmiRecipe {
                 for (var drop : this.recipe.drops().get().list()) {
                     this.cachedOutputs.add(EmiStack.of(drop.item()));
                 }
-                EventHandler.reloadListeners.add(e -> {
+                ClientEvents.recipeChangeListeners.add(e -> {
                     this.cachedOutputs = null;
                     return false;
                 });

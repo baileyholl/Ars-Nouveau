@@ -39,6 +39,10 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+
 
 @EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
 public class ClientEvents {
@@ -156,4 +160,10 @@ public class ClientEvents {
         return Component.translatable(key, params);
     }
 
+    public static final List<Predicate<RecipesUpdatedEvent>> recipeChangeListeners = new ArrayList<>();
+
+    @SubscribeEvent
+    public static void onClientResourcesReload(RecipesUpdatedEvent event) {
+        recipeChangeListeners.removeIf(addReloadListenerEventPredicate -> !addReloadListenerEventPredicate.test(event));
+    }
 }

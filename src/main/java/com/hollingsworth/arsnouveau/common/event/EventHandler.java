@@ -85,13 +85,10 @@ import net.neoforged.neoforge.event.village.VillagerTradesEvent;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import java.util.*;
-import java.util.function.Predicate;
 
 
 @EventBusSubscriber(modid = ArsNouveau.MODID)
 public class EventHandler {
-    public static final List<Predicate<AddReloadListenerEvent>> reloadListeners = new ArrayList<>();
-
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void resourceLoadEvent(AddReloadListenerEvent event) {
         event.addListener(new SimplePreparableReloadListener<>() {
@@ -107,7 +104,6 @@ public class EventHandler {
                 MultiRecipeWrapper.RECIPE_CACHE = new HashMap<>();
                 EffectWololo.recipeCache = new FixedStack<>(EffectWololo.MAX_RECIPE_CACHE);
                 ArsNouveauAPI.getInstance().onResourceReload();
-                reloadListeners.removeIf(addReloadListenerEventPredicate -> !addReloadListenerEventPredicate.test(event));
                 EventQueue.getServerInstance().addEvent(new ITimedEvent() {
                     boolean expired;
 
