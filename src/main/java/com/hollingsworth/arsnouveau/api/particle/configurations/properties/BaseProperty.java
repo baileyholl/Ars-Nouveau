@@ -14,12 +14,12 @@ public abstract class BaseProperty<T extends BaseProperty<T>> {
     public PropMap propertyHolder;
     public Runnable onDependenciesChanged;
 
-    public BaseProperty(PropMap propertyHolder) {
-        this.propertyHolder = propertyHolder;
+    public BaseProperty(){
+        this(new PropMap());
     }
 
-    public BaseProperty(){
-        this.propertyHolder = new PropMap();
+    public BaseProperty(PropMap propertyHolder) {
+        this.propertyHolder = propertyHolder;
     }
 
     public ResourceLocation getId(){

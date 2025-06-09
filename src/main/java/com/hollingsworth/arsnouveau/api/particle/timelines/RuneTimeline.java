@@ -36,11 +36,11 @@ public class RuneTimeline extends BaseTimeline<RuneTimeline>{
     }
 
     public ParticleColor getColor(){
-        return propMap.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty(propMap)).particleColor;
+        return propMap.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty()).particleColor;
     }
 
     public String getTexture(){
-        return propMap.getOrDefault(ParticlePropertyRegistry.RUNE_PROPERTY.get(), new RuneTextureProperty(propMap)).runeTexture;
+        return propMap.getOrDefault(ParticlePropertyRegistry.RUNE_PROPERTY.get(), new RuneTextureProperty()).runeTexture;
     }
 
     @Override
@@ -50,6 +50,6 @@ public class RuneTimeline extends BaseTimeline<RuneTimeline>{
 
     @Override
     public List<BaseProperty<?>> getProperties() {
-        return List.of(new ColorProperty(propMap), new RuneTextureProperty(propMap));
+        return List.of(propMap.createIfMissing(new ColorProperty()), propMap.createIfMissing(new RuneTextureProperty()));
     }
 }

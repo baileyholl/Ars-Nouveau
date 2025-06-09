@@ -59,33 +59,6 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
         this.xzMaxSpeed = xzMaxSpeed;
     }
 
-    public SpeedProperty(PropMap propMap) {
-        super(propMap);
-        if(propMap.has(getType())){
-            SpeedProperty speedProp = propMap.get(getType());
-            this.yMinSpeed = speedProp.yMinSpeed;
-            this.xzMinSpeed = speedProp.xzMinSpeed;
-            this.yMaxSpeed = speedProp.yMaxSpeed;
-            this.xzMaxSpeed = speedProp.xzMaxSpeed;
-        }
-    }
-
-    public SpeedProperty(PropMap propMap, double yMinSpeed, double yMaxSpeed, double minXZ, double xzMaxSpeed){
-        super(propMap);
-        if(!propMap.has(getType())){
-            this.yMinSpeed = yMinSpeed;
-            this.xzMinSpeed = minXZ;
-            this.yMaxSpeed = yMaxSpeed;
-            this.xzMaxSpeed = xzMaxSpeed;
-        } else {
-            SpeedProperty speedProp = propMap.get(getType());
-            this.yMinSpeed = speedProp.yMinSpeed;
-            this.xzMinSpeed = speedProp.xzMinSpeed;
-            this.yMaxSpeed = speedProp.yMaxSpeed;
-            this.xzMaxSpeed = speedProp.xzMaxSpeed;
-        }
-    }
-
     public double minY() {
         return yMinSpeed;
     }

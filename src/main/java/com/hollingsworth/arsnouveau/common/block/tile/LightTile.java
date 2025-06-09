@@ -4,13 +4,13 @@ import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.LightBlobMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ColorProperty;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
 import com.hollingsworth.arsnouveau.api.particle.timelines.LightTimeline;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
 import com.hollingsworth.arsnouveau.api.registry.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.api.util.IWololoable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -52,8 +52,8 @@ public class LightTile extends ModdedTile implements ITickable, IWololoable {
             this.timeline = ANCodecs.decode(LightTimeline.CODEC.codec(), compound.getCompound("timeline"));
         }else{
             this.timeline = new LightTimeline();
-            PropertyParticleOptions particleOptions = new PropertyParticleOptions(new PropMap());
-            ColorProperty colorProperty = new ColorProperty(new PropMap());
+            PropertyParticleOptions particleOptions = new PropertyParticleOptions(ModParticles.NEW_GLOW_TYPE.get());
+            ColorProperty colorProperty = new ColorProperty();
             colorProperty.particleColor = color;
             particleOptions.map.set(ParticlePropertyRegistry.COLOR_PROPERTY.get(), colorProperty);
             timeline.onTickEffect = new TimelineEntryData(new LightBlobMotion(), particleOptions);

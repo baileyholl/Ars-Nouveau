@@ -44,6 +44,7 @@ public class WispMotion extends ParticleMotion {
         double noiseScale = 0.1;
         double flicker = 0.65;
         float randomScale = 0.01f;
+        double yDrift = 1.0; // Can be between 0, 1
         for (int i = 0; i < numParticles; i++) {
             double t = (double) i / numParticles;
             double interpX = prevX + x * t;
@@ -53,7 +54,7 @@ public class WispMotion extends ParticleMotion {
             double flameBaseT = (emitter.age + t) * noiseScale;
             double flickerX = noise.noise(flameBaseT, 100, 0) * flicker;
             double flickerZ = noise.noise(flameBaseT + 50, 200, 0) * flicker;
-            double localY = noise.noise(flameBaseT + 100, 300, 0) * 1; // in range ~[0,1]
+            double localY = noise.noise(flameBaseT + 100, 300, 0) * yDrift;
 
             Vec3 local = new Vec3(flickerX, localY * 0.5, flickerZ);
 
@@ -71,11 +72,9 @@ public class WispMotion extends ParticleMotion {
 
     @Override
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
-        ParticleTypeProperty secondParticle = new ParticleTypeProperty(propertyMap);
-        secondParticle.writeChanges();
-        return List.of(new ParticleTypeProperty(propMap), secondParticle, new ParticleDensityProperty(propMap, 20, 0.1)
+        return List.of(propMap.createIfMissing(new ParticleTypeProperty()), propertyMap.createIfMissing(new ParticleTypeProperty()), propMap.createIfMissing(new ParticleDensityProperty(20, 0.1, SpawnType.SPHERE)
                 .minDensity(1)
                 .maxDensity(200)
-                .densityStepSize(1), new SpeedProperty(propMap));
+                .densityStepSize(1)), propMap.createIfMissing(new SpeedProperty()));
     }
 }

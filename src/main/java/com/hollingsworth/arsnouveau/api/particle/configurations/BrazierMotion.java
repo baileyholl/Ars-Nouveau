@@ -19,9 +19,6 @@ public class BrazierMotion extends ParticleMotion {
 
     public static StreamCodec<RegistryFriendlyByteBuf, BrazierMotion> STREAM =  buildStreamCodec(BrazierMotion::new);
 
-    public BrazierMotion() {
-        this(new PropMap());
-    }
 
     public BrazierMotion(PropMap propertyMap) {
         super(propertyMap);
@@ -65,13 +62,13 @@ public class BrazierMotion extends ParticleMotion {
 
     @Override
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
-        ParticleTypeProperty secondParticle = new ParticleTypeProperty(propertyMap);
-        secondParticle.writeChanges();
-        return List.of(new ParticleTypeProperty(propMap), secondParticle, new ParticleDensityProperty(propMap, 100, 0.25)
+        return List.of(propMap.createIfMissing(new ParticleTypeProperty()),
+                propertyMap.createIfMissing(new ParticleTypeProperty()),
+                propMap.createIfMissing(new ParticleDensityProperty(100, 0.25, SpawnType.SPHERE)
                         .supportsShapes(false)
-                .minDensity(1)
-                .maxDensity(200)
-                .densityStepSize(1),
-                new SpeedProperty(propMap, 0.0f, 0.05f, 0.0f, 0.0f));
+                        .minDensity(1)
+                        .maxDensity(200)
+                        .densityStepSize(1)),
+                propMap.createIfMissing(new SpeedProperty(0.0f, 0.05f, 0.0f, 0.0f)));
     }
 }

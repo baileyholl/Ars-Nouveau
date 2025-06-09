@@ -48,6 +48,9 @@ public class BurstMotion extends ParticleMotion {
 
     @Override
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
-        return List.of(new ParticleTypeProperty(propMap), new ParticleDensityProperty(propMap, 5, 20, 1, true));
+        return List.of(propMap.createIfMissing(new ParticleTypeProperty()), propMap.createIfMissing(new ParticleDensityProperty(5, 0.1f, SpawnType.SPHERE)
+                .minDensity(5)
+                .maxDensity(20)
+                .supportsShapes(true)));
     }
 }

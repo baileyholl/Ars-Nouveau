@@ -74,33 +74,6 @@ public class ParticleDensityProperty extends BaseProperty<ParticleDensityPropert
         this.spawnType = spawnType.orElse(ParticleMotion.SpawnType.SPHERE);
     }
 
-    public ParticleDensityProperty(PropMap propMap, int densityMin, int densityMax, int stepSize, boolean supportsShapes){
-        this(propMap, densityMin, densityMax, stepSize, supportsShapes, supportsShapes);
-    }
-
-    public ParticleDensityProperty(PropMap propMap, int densityMin, int densityMax, int stepSize, boolean supportsShapes, boolean supportsRadius){
-        this(propMap, (densityMax / 2), 0.3);
-        this.minDensity = densityMin;
-        this.maxDensity = densityMax;
-        this.supportsShapes = supportsShapes;
-        this.supportsRadius = supportsRadius;
-        this.densityStepSize = stepSize;
-    }
-
-    public ParticleDensityProperty(PropMap propMap, int defaultDensity, double initialRadius){
-        super(propMap);
-        if(!propMap.has(getType())){
-            this.density = defaultDensity;
-            this.radius = initialRadius;
-            this.spawnType = ParticleMotion.SpawnType.SPHERE;
-        } else {
-            ParticleDensityProperty densityProperty = propMap.get(getType());
-            this.density = densityProperty.density;
-            this.spawnType = densityProperty.spawnType().orElse(ParticleMotion.SpawnType.SPHERE);
-            this.radius = densityProperty.radius;
-        }
-    }
-
     public ParticleDensityProperty minDensity(int minDensity) {
         this.minDensity = minDensity;
         return this;

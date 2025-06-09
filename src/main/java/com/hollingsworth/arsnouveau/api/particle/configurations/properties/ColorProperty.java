@@ -34,7 +34,7 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
     ).apply(instance, ColorProperty::new));
 
     public static StreamCodec<RegistryFriendlyByteBuf, ColorProperty> STREAM_CODEC = StreamCodec.composite(ParticleColor.STREAM,
-            ColorProperty::color,
+            (i) -> i.particleColor,
             ByteBufCodecs.BOOL,
             ColorProperty::isTintDisabled,
             ColorProperty::new);
@@ -43,24 +43,20 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
     public boolean isLegacyRGB = false;
     boolean tintDisabled = false;
 
-    public ColorProperty(PropMap propertyHolder, boolean legacyRGB) {
-        this(propertyHolder);
-        this.isLegacyRGB = legacyRGB;
-    }
-
-    public ColorProperty(PropMap propertyHolder) {
-        super(propertyHolder);
-        ColorProperty colorProperty = propertyHolder.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty(ParticleColor.defaultParticleColor(), true));
-        this.particleColor = colorProperty.particleColor;
-        this.tintDisabled = colorProperty.tintDisabled;
-        this.displayColor = particleColor;
-    }
-
     public ColorProperty(ParticleColor property, boolean tintDisabled) {
         super();
         this.particleColor = property;
         this.tintDisabled = tintDisabled;
         this.displayColor = particleColor;
+    }
+
+    public ColorProperty(){
+        this(ParticleColor.defaultParticleColor(), true);
+    }
+
+    public ColorProperty usesLegacyRGB(boolean legacyRGB) {
+        this.isLegacyRGB = legacyRGB;
+        return this;
     }
 
     public ParticleColor color(){

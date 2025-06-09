@@ -61,11 +61,6 @@ public class RuneTextureProperty extends BaseProperty<RuneTextureProperty>{
         this.runeTexture = TEXTURES.get(0);
     }
 
-    public RuneTextureProperty(PropMap propMap){
-        super(propMap);
-        this.runeTexture = propMap.getOrDefault(ParticlePropertyRegistry.RUNE_PROPERTY.get(), new RuneTextureProperty()).runeTexture;
-    }
-
     @Override
     public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height) {
         List<Button> buttons = new ArrayList<>();

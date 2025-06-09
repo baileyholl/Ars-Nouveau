@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.particle.configurations.ListParticleWidg
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.gui.documentation.DocEntryButton;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -58,6 +59,10 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
     protected PropMap subProperties;
     protected ParticleType<? extends PropertyParticleOptions> type;
 
+    public ParticleTypeProperty() {
+        this(ModParticles.NEW_GLOW_TYPE.get(), new PropMap());
+    }
+
     public ParticleTypeProperty(ParticleType<?> type, PropMap subProperties) {
         super();
         this.subProperties = subProperties;
@@ -68,17 +73,9 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
             System.out.println(BuiltInRegistries.PARTICLE_TYPE.getKey(type));
             selectedData = PARTICLE_TYPES.get(ModParticles.NEW_GLOW_TYPE.get());
         }
-    }
-
-    public ParticleTypeProperty(PropMap propMap) {
-        super(propMap);
-        ParticleTypeProperty property = propMap.getOrDefault(getType(), new ParticleTypeProperty(ModParticles.NEW_GLOW_TYPE.get(), new PropMap()));
-        this.type = property.type;
-        this.subProperties = property.subProperties;
-        selectedData = PARTICLE_TYPES.get(type);
-        if (selectedData == null) {
-            selectedData = PARTICLE_TYPES.get(ModParticles.NEW_GLOW_TYPE.get());
-        }
+        subProperties.getOrCreate(ParticlePropertyRegistry.COLOR_PROPERTY.get(), () ->{
+            return new ColorProperty(ParticleColor.defaultParticleColor(), true);
+        });
     }
 
     public ParticleType<? extends PropertyParticleOptions> type() {
@@ -86,7 +83,7 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
     }
 
     public ColorProperty getColor(){
-        return subProperties.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty(new PropMap()));
+        return subProperties.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty());
     }
 
     @Override
@@ -150,8 +147,9 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
         if (selectedData == null || !selectedData.acceptsColor) {
             return Collections.emptyList();
         }
-
-        return List.of(new ColorProperty(subProperties, selectedData.useLegacyRGB()));
+        ColorProperty colorProperty = subProperties.getOrCreate(ParticlePropertyRegistry.COLOR_PROPERTY.get(), () -> new ColorProperty(ParticleColor.defaultParticleColor(), true));
+        colorProperty.isLegacyRGB = selectedData.useLegacyRGB;
+        return List.of(colorProperty);
     }
 
     @Override

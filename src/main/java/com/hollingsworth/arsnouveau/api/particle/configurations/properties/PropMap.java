@@ -97,6 +97,14 @@ public class PropMap{
         properties.put(type, value);
     }
 
+    public <T extends BaseProperty> T getOrCreate(IPropertyType<T> type, Supplier<T> defaultValueSupplier) {
+        return (T) properties.computeIfAbsent(type, k -> defaultValueSupplier.get());
+    }
+
+    public <T extends BaseProperty> T createIfMissing(T defaultValue) {
+        return (T) properties.computeIfAbsent(defaultValue.getType(), k -> defaultValue);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

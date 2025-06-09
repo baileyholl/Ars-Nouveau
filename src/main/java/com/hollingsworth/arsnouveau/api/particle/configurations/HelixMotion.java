@@ -23,6 +23,7 @@ public class HelixMotion extends ParticleMotion {
 
     public HelixMotion(PropMap propMap) {
         super(propMap);
+        propMap.createIfMissing(new ParticleTypeProperty());
     }
 
     @Override
@@ -70,8 +71,9 @@ public class HelixMotion extends ParticleMotion {
 
     @Override
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
-        ParticleTypeProperty secondParticle = new ParticleTypeProperty(propertyMap);
-        secondParticle.writeChanges();
-        return List.of(new ParticleTypeProperty(propMap), secondParticle, new ParticleDensityProperty(propMap, 100, 0.3f), new SpeedProperty(propMap));
+        return List.of(propMap.createIfMissing(new ParticleTypeProperty()),
+                propertyMap.createIfMissing(new ParticleTypeProperty()),
+                propMap.createIfMissing(new ParticleDensityProperty(100, 0.3f, SpawnType.SPHERE)),
+                propMap.createIfMissing(new SpeedProperty()));
     }
 }

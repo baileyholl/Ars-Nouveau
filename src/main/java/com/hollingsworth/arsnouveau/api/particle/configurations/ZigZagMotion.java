@@ -67,11 +67,11 @@ public class ZigZagMotion extends ParticleMotion{
 
     @Override
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
-        return  List.of(new ParticleTypeProperty(propMap), new ParticleDensityProperty(propMap, 100, 0.3f)
+        return  List.of(propMap.createIfMissing(new ParticleTypeProperty()), propMap.createIfMissing(new ParticleDensityProperty(100, 0.3f, SpawnType.SPHERE)
                 .maxDensity(200)
                 .minDensity(20)
                 .densityStepSize(5)
                 .supportsShapes(false)
-                .supportsRadius(true));
+                .supportsRadius(true)));
     }
 }

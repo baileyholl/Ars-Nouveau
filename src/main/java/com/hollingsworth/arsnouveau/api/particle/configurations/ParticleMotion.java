@@ -39,7 +39,6 @@ public abstract class ParticleMotion {
         this.propertyMap = propertyMap;
     }
 
-
     public void init(ParticleEmitter emitter) {
         this.emitter = emitter;
     }

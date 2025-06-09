@@ -60,7 +60,7 @@ public class PropertyParticleOptions implements ParticleOptions {
         if (typeProperty != null) {
             return typeProperty.getColor();
         }
-        return new ColorProperty(new PropMap());
+        return new ColorProperty();
     }
 
     @Override

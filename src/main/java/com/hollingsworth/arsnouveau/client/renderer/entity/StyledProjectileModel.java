@@ -33,7 +33,7 @@ public class StyledProjectileModel extends GeoModel<EntityProjectileSpell> {
 
     public ResourceLocation getModelRes(EntityProjectileSpell projectileSpell){
         ProjectileTimeline timeline = projectileSpell.resolver().spell.particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
-        ModelProperty modelProperty = timeline.trailEffect.particleOptions().map.get(ParticlePropertyRegistry.MODEL_PROPERTY.get());
+        ModelProperty modelProperty = timeline.trailEffect.motion().propertyMap.get(ParticlePropertyRegistry.MODEL_PROPERTY.get());
         ResourceLocation resourceLocation = modelProperty.selectedResource.resourceLocation();
         return resourceLocation;
     }

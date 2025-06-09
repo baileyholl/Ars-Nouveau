@@ -62,6 +62,12 @@ public class UpwardsWallMotion extends ParticleMotion{
 
     @Override
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
-        return List.of(new ParticleTypeProperty(propMap), new ParticleDensityProperty(propMap, 20, 100, 10, false));
+        return List.of(propMap.createIfMissing(new ParticleTypeProperty()),
+                propMap.createIfMissing(new ParticleDensityProperty()
+                        .minDensity(20)
+                        .maxDensity(100)
+                        .densityStepSize(10)
+                        .supportsShapes(false))
+        );
     }
 }

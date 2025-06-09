@@ -35,7 +35,7 @@ public class WololoTimeline extends BaseTimeline<WololoTimeline>{
     }
 
     public ParticleColor getColor(){
-        return propMap.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty(propMap)).particleColor;
+        return propMap.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty()).particleColor;
     }
 
     @Override
@@ -45,6 +45,6 @@ public class WololoTimeline extends BaseTimeline<WololoTimeline>{
 
     @Override
     public List<BaseProperty<?>> getProperties() {
-        return List.of(new ColorProperty(propMap));
+        return List.of(propMap.createIfMissing(new ColorProperty()));
     }
 }
