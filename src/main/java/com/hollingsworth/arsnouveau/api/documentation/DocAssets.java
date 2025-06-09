@@ -102,7 +102,7 @@ public class DocAssets {
     public static final BlitInfo SPELLSTYLE_BUTTON_BIG = new BlitInfo(ArsNouveau.prefix("textures/gui/spellstyle_button_big.png"), 16, 16);
     public static final BlitInfo PARTICLES_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/particles_icon.png"), 14, 14);
     public static final BlitInfo CHAPTER_BUTTON_NO_ITEM = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_chapter_text_only.png"), 118, 14);
-
+    public static final BlitInfo SPEED_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/speed_icon.png"), 14, 14);
 
 
     public record BlitInfo(ResourceLocation location, int u, int v, int width, int height) {

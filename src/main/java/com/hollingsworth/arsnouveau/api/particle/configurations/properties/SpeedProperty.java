@@ -161,7 +161,7 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
 
             @Override
             public void renderIcon(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float partialTicks) {
-//                DocClientUtils.blit(graphics, fromShape(spawnType), x, y);
+                DocClientUtils.blit(graphics, DocAssets.SPEED_ICON, x, y);
             }
 
             @Override
