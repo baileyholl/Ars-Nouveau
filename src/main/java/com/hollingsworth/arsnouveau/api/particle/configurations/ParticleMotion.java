@@ -106,8 +106,8 @@ public abstract class ParticleMotion {
     }
 
     public Vector3f toEmitterSpace(float x, float y, float z, float localX, float localY, float localZ) {
-        float xRotRadians = (float) Math.toRadians(this.emitter.getRotation().x);
-        float yRotRadians = (float) Math.toRadians(this.emitter.getRotation().y);
+        float xRotRadians = (float) Math.toRadians(this.emitter.getAdjustedRotation().x);
+        float yRotRadians = (float) Math.toRadians(this.emitter.getAdjustedRotation().y);
         Matrix4f transform = new Matrix4f();
         transform.identity()
                 .translate(new Vector3f(x, y, z))

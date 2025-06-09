@@ -8,6 +8,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 import java.util.List;
 
@@ -36,7 +37,8 @@ public class LightBlobMotion extends ParticleMotion {
         for(int i = 0; i < getNumParticles(density.density()); i++) {
             Vec3 speed = randomSpeed(particleOptions, 0.0, 0.0, 0.0 ,0.01);
             Vec3 adjustedVec = getMotionScaled(new Vec3(x, y, z), density.radius(), density.spawnType().orElse(SpawnType.SPHERE));
-            level.addAlwaysVisibleParticle(particleOptions, true, adjustedVec.x, adjustedVec.y, adjustedVec.z, speed.x, speed.y, speed.z);
+            Vector3f worldSpaceSpeed = toEmitterSpace( 0, 0,0, (float) speed.x, (float) speed.y, (float) speed.z);
+            level.addAlwaysVisibleParticle(particleOptions, true, adjustedVec.x, adjustedVec.y, adjustedVec.z, worldSpaceSpeed.x, worldSpaceSpeed.y, worldSpaceSpeed.z);
         }
     }
 
