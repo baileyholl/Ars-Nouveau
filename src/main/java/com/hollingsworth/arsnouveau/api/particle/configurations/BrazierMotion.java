@@ -40,7 +40,7 @@ public class BrazierMotion extends ParticleMotion {
         if(secondType != null){
             particle2 = new PropertyParticleOptions(propertyMap);
         }else{
-            particle2 = new PropertyParticleOptions(PropertyParticleOptions.defaultPropMap());
+            particle2 = new PropertyParticleOptions();
         }
 
         for (int i = 0; i < numParticles ; i++) {
@@ -69,6 +69,6 @@ public class BrazierMotion extends ParticleMotion {
                         .minDensity(1)
                         .maxDensity(200)
                         .densityStepSize(1)),
-                propMap.createIfMissing(new SpeedProperty(0.0f, 0.05f, 0.0f, 0.0f)));
+                propMap.createIfMissing(new SpeedProperty().yRange(0, 0.05)));
     }
 }

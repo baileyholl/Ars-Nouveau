@@ -35,8 +35,8 @@ public class LingerTimeline extends BaseTimeline<LingerTimeline>{
     public TimelineEntryData onResolvingEffect;
 
     public LingerTimeline(){
-        this(new TimelineEntryData(new UpwardsFieldMotion(), PropertyParticleOptions.defaultGlow()),
-                new TimelineEntryData(new BurstMotion(), PropertyParticleOptions.defaultGlow()));
+        this(new TimelineEntryData(new UpwardsFieldMotion(), new PropertyParticleOptions()),
+                new TimelineEntryData(new BurstMotion(), new PropertyParticleOptions()));
     }
 
     public LingerTimeline(TimelineEntryData trailEffect, TimelineEntryData onResolvingEffect){

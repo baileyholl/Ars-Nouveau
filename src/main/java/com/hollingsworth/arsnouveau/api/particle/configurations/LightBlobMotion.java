@@ -34,7 +34,7 @@ public class LightBlobMotion extends ParticleMotion {
     public void tick(PropertyParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
         ParticleDensityProperty density = getDensity(particleOptions, 20, 0.1f);
         for(int i = 0; i < getNumParticles(density.density()); i++) {
-            Vec3 speed = randomSpeed(particleOptions);
+            Vec3 speed = randomSpeed(particleOptions, 0.0, 0.0, 0.0 ,0.01);
             Vec3 adjustedVec = getMotionScaled(new Vec3(x, y, z), density.radius(), density.spawnType().orElse(SpawnType.SPHERE));
             level.addAlwaysVisibleParticle(particleOptions, true, adjustedVec.x, adjustedVec.y, adjustedVec.z, speed.x, speed.y, speed.z);
         }
@@ -47,6 +47,6 @@ public class LightBlobMotion extends ParticleMotion {
                         .minDensity(1)
                         .maxDensity(200)
                         .densityStepSize(1)),
-                propMap.createIfMissing(new SpeedProperty(0, 0, 0, 0)));
+                propMap.createIfMissing(new SpeedProperty(0, 0.01, 0, 0)));
     }
 }

@@ -31,7 +31,7 @@ public class BurstTimeline extends BaseTimeline<BurstTimeline>{
     public TimelineEntryData onResolvingEffect;
 
     public BurstTimeline(){
-        this(new TimelineEntryData(new BurstMotion(), PropertyParticleOptions.defaultGlow()));
+        this(new TimelineEntryData(new BurstMotion(), new PropertyParticleOptions()));
     }
 
     public BurstTimeline(TimelineEntryData onResolvingEffect){

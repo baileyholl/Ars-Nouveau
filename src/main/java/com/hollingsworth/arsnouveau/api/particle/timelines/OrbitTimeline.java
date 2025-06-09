@@ -45,8 +45,8 @@ public class OrbitTimeline extends BaseTimeline<OrbitTimeline>{
     public TimelineEntryData onSpawnEffect;
     public TimelineEntryData flairEffect;
     public OrbitTimeline(){
-        this(new TimelineEntryData(new TrailMotion(), PropertyParticleOptions.defaultGlow()),
-                new TimelineEntryData(new BurstMotion(), PropertyParticleOptions.defaultGlow()),
+        this(new TimelineEntryData(new TrailMotion(), new PropertyParticleOptions()),
+                new TimelineEntryData(new BurstMotion(), new PropertyParticleOptions()),
                 new TimelineEntryData(),
                 new TimelineEntryData());
     }

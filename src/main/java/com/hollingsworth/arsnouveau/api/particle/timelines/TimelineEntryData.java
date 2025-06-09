@@ -38,12 +38,12 @@ public class TimelineEntryData {
     }
 
     public TimelineEntryData(ParticleMotion motion) {
-        this(motion, PropertyParticleOptions.defaultGlow());
+        this(motion, new PropertyParticleOptions());
     }
 
     public TimelineEntryData() {
         this.motion = new NoneMotion();
-        this.particleOptions = PropertyParticleOptions.defaultGlow();
+        this.particleOptions = new PropertyParticleOptions();
     }
 
     public ParticleMotion motion(){

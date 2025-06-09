@@ -31,7 +31,7 @@ public class SelfTimeline extends BaseTimeline<SelfTimeline>{
     public TimelineEntryData onResolvingEffect;
 
     public SelfTimeline(){
-        this(new TimelineEntryData(new BurstMotion(), PropertyParticleOptions.defaultGlow()));
+        this(new TimelineEntryData(new BurstMotion(), new PropertyParticleOptions()));
     }
 
     public SelfTimeline(TimelineEntryData onResolvingEffect){

@@ -41,7 +41,7 @@ public class HelixMotion extends ParticleMotion {
         if(secondType != null){
             particle2 = new PropertyParticleOptions(propertyMap);
         }else{
-            particle2 = new PropertyParticleOptions(PropertyParticleOptions.defaultPropMap());
+            particle2 = new PropertyParticleOptions();
         }
         for (int step = 0; step <= totalParticles; step++) {
             double t = (double) step / totalParticles;

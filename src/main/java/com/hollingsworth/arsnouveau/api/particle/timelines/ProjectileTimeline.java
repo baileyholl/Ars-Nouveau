@@ -46,8 +46,8 @@ public class ProjectileTimeline extends BaseTimeline<ProjectileTimeline>{
     public TimelineEntryData flairEffect;
 
     public ProjectileTimeline(){
-        this(new TimelineEntryData(new TrailMotion(), PropertyParticleOptions.defaultGlow()),
-                new TimelineEntryData(new BurstMotion(), PropertyParticleOptions.defaultGlow()),
+        this(new TimelineEntryData(new TrailMotion(), new PropertyParticleOptions()),
+                new TimelineEntryData(new BurstMotion(), new PropertyParticleOptions()),
                 new TimelineEntryData(),
                 new TimelineEntryData());
     }

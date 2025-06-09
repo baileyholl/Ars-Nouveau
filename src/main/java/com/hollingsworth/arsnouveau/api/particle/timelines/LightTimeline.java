@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.api.particle.timelines;
 
 import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
 import com.hollingsworth.arsnouveau.api.particle.configurations.LightBlobMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
@@ -31,7 +30,7 @@ public class LightTimeline extends BaseTimeline<LightTimeline>{
     public TimelineEntryData onTickEffect;
 
     public LightTimeline(){
-        this(new TimelineEntryData(new LightBlobMotion(), PropertyParticleOptions.defaultGlow()));
+        this(new TimelineEntryData(new LightBlobMotion()));
     }
 
     public LightTimeline(TimelineEntryData onTickEffect){

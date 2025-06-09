@@ -35,8 +35,8 @@ public class WallTimeline extends BaseTimeline<WallTimeline>{
     public TimelineEntryData onResolvingEffect;
 
     public WallTimeline(){
-        this(new TimelineEntryData(new UpwardsWallMotion(), PropertyParticleOptions.defaultGlow()),
-                new TimelineEntryData(new BurstMotion(), PropertyParticleOptions.defaultGlow()));
+        this(new TimelineEntryData(new UpwardsWallMotion(), new PropertyParticleOptions()),
+                new TimelineEntryData(new BurstMotion(), new PropertyParticleOptions()));
     }
 
     public WallTimeline(TimelineEntryData trailEffect, TimelineEntryData onResolvingEffect){

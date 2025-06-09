@@ -59,6 +59,18 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
         this.xzMaxSpeed = xzMaxSpeed;
     }
 
+    public SpeedProperty yRange(double yMinSpeed, double yMaxSpeed) {
+        this.yMinSpeed = yMinSpeed;
+        this.yMaxSpeed = yMaxSpeed;
+        return this;
+    }
+
+    public SpeedProperty xzRange(double xzMinSpeed, double xzMaxSpeed) {
+        this.xzMinSpeed = xzMinSpeed;
+        this.xzMaxSpeed = xzMaxSpeed;
+        return this;
+    }
+
     public double minY() {
         return yMinSpeed;
     }

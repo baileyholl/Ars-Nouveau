@@ -28,7 +28,7 @@ public class PantomimeTimeline extends BaseTimeline<PantomimeTimeline>{
     public TimelineEntryData onResolvingEffect;
 
     public PantomimeTimeline(){
-        this(new TimelineEntryData(new BurstMotion(), PropertyParticleOptions.defaultGlow()));
+        this(new TimelineEntryData(new BurstMotion(), new PropertyParticleOptions()));
     }
 
     public PantomimeTimeline(TimelineEntryData onResolvingEffect){

@@ -31,7 +31,7 @@ public class TouchTimeline extends BaseTimeline<TouchTimeline>{
     public TimelineEntryData onResolvingEffect;
 
     public TouchTimeline(){
-        this(new TimelineEntryData(new BurstMotion(), PropertyParticleOptions.defaultGlow()));
+        this(new TimelineEntryData(new BurstMotion(), new PropertyParticleOptions()));
     }
 
     public TouchTimeline(TimelineEntryData onResolvingEffect){
