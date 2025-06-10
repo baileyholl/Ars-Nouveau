@@ -41,15 +41,16 @@ public abstract class ListParticleWidgetProvider extends ParticleConfigWidgetPro
 
 
     public void onScroll(int offset) {
-        pageOffset += offset;
-        pageOffset = Math.max(0, Math.min(pageOffset, maxEntries - 8));
+        int numPerPage = 8;
+        pageOffset += numPerPage * offset;
+        pageOffset = Math.max(0, Math.min(pageOffset, maxEntries - numPerPage));
 
         for(var button : buttons){
             button.active = false;
             button.visible = false;
             button.setPosition(-100, -100);
         }
-        var sublist = buttons.subList(pageOffset, Math.min(buttons.size(), pageOffset + 8));
+        var sublist = buttons.subList(pageOffset, Math.min(buttons.size(), pageOffset + numPerPage));
         for (int i = 0; i < sublist.size(); i++) {
             int x = this.x;
             int y = this.y + 20 + 15 * (i % 8);
@@ -59,7 +60,7 @@ public abstract class ListParticleWidgetProvider extends ParticleConfigWidgetPro
             button.setPosition(x, y);
         }
 
-        boolean hasMore = pageOffset + 8 < maxEntries;
+        boolean hasMore = pageOffset + numPerPage < maxEntries;
         boolean hasFewer = pageOffset > 0;
         upButton.visible = hasFewer;
         upButton.active = hasFewer;
