@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.*;
 import com.hollingsworth.arsnouveau.api.registry.ParticleMotionRegistry;
 import com.hollingsworth.arsnouveau.api.util.NoiseGenerator;
-import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -41,22 +40,24 @@ public class WispMotion extends ParticleMotion {
         }
         ParticleDensityProperty density = getDensity(particleOptions, 20, 0.1f);
         int numParticles = getNumParticles(density.density());
-        double noiseScale = 0.1;
         double flicker = 0.65;
-        float randomScale = 0.01f;
+        double randomScale = density.radius() * 0.03;
         double yDrift = 1.0; // Can be between 0, 1
+        double xzDrift = 0.1f;
         for (int i = 0; i < numParticles; i++) {
             double t = (double) i / numParticles;
             double interpX = prevX + x * t;
             double interpY = prevY + y * t;
             double interpZ = prevZ + z * t;
 
-            double flameBaseT = (emitter.age + t) * noiseScale;
+            double flameBaseT = (emitter.age + t) * xzDrift;
             double flickerX = noise.noise(flameBaseT, 100, 0) * flicker;
             double flickerZ = noise.noise(flameBaseT + 50, 200, 0) * flicker;
             double localY = noise.noise(flameBaseT + 100, 300, 0) * yDrift;
 
             Vec3 local = new Vec3(flickerX, localY * 0.5, flickerZ);
+
+            Vec3 speed = randomSpeed(particleOptions);
 
             Vector3f pos = toEmitterSpace(
                     (float) interpX, (float) interpY, (float) interpZ,
@@ -64,17 +65,18 @@ public class WispMotion extends ParticleMotion {
             );
 
             level.addParticle(particleOptions, pos.x, pos.y, pos.z,
-                    ParticleUtil.inRange(-randomScale, randomScale),
-                    ParticleUtil.inRange(0.01f, 0.02f),
-                    ParticleUtil.inRange(-randomScale, randomScale));
+                   speed.x,
+                   speed.y,
+                    speed.z);
         }
     }
 
     @Override
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
-        return List.of(propMap.createIfMissing(new ParticleTypeProperty()), propertyMap.createIfMissing(new ParticleTypeProperty()), propMap.createIfMissing(new ParticleDensityProperty(20, 0.1, SpawnType.SPHERE)
+        return List.of(propMap.createIfMissing(new ParticleTypeProperty()), propMap.createIfMissing(new ParticleDensityProperty(20, 0.1, SpawnType.SPHERE)
                 .minDensity(1)
                 .maxDensity(200)
-                .densityStepSize(1)), propMap.createIfMissing(new SpeedProperty()));
+                .densityStepSize(1)),
+                propMap.createIfMissing(new SpeedProperty().yRange(0.01, 0.02)));
     }
 }
