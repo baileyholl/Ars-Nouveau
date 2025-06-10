@@ -230,7 +230,7 @@ public class ParticleOverviewScreen extends BaseBook {
             }
         }
         var widgetProvider = property.buildWidgets(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, ONE_PAGE_HEIGHT);
-        return new PropertyButton(bookLeft + LEFT_PAGE_OFFSET + xOffset, bookTop + 51 + 15 * (yOffset), texture, selectedTexture, widgetProvider, (button) -> {
+        return new PropertyButton(bookLeft + LEFT_PAGE_OFFSET + xOffset, bookTop + 51 + 15 * (yOffset), texture, selectedTexture, widgetProvider, nestLevel, (button) -> {
             onPropertySelected(property);
             if(button instanceof PropertyButton propertyButton){
                 propertyButton.widgetProvider = propertyWidgetProvider;
