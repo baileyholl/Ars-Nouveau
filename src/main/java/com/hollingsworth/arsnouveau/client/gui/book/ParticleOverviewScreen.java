@@ -79,6 +79,31 @@ public class ParticleOverviewScreen extends BaseBook {
         }
     }
 
+    @Override
+    public void init() {
+        super.init();
+
+        addSaveButton((b) ->{
+            int hash = timelineMap.immutable().hashCode();
+            ParticleOverviewScreen.lastOpenedHash = hash;
+            Networking.sendToServer(new PacketUpdateParticleTimeline(slot, timelineMap.immutable(), this.stackHand == InteractionHand.MAIN_HAND));
+        });
+        timelineButton = addRenderableWidget(new DocEntryButton(bookLeft + LEFT_PAGE_OFFSET, bookTop + 36, selectedTimeline.getSpellPart().glyphItem.getDefaultInstance(), Component.translatable(selectedTimeline.getSpellPart().getLocaleName()), (button) -> {
+            addTimelineSelectionWidgets();
+            setSelectedButton(timelineButton);
+            selectedProperty = null;
+        }));
+        if(currentlySelectedButton == null){
+            setSelectedButton(timelineButton);
+        }
+        if(selectedProperty == null) {
+            addTimelineSelectionWidgets();
+        }else{
+            onPropertySelected(selectedProperty);
+        }
+        initLeftSideButtons();
+    }
+
     public static void openScreen(ItemStack stack, int slot, InteractionHand stackHand) {
         AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
         int hash = caster.getSpell(slot).particleTimeline().hashCode();
@@ -96,37 +121,13 @@ public class ParticleOverviewScreen extends BaseBook {
     @Override
     public void onClose() {
         super.onClose();
-        int hash = timelineMap.immutable().hashCode();
-        ParticleOverviewScreen.lastOpenedHash = hash;
         ParticleOverviewScreen.lastScreen = this;
     }
 
     @Override
     public void removed() {
         super.removed();
-        int hash = timelineMap.immutable().hashCode();
-        ParticleOverviewScreen.lastOpenedHash = hash;
         ParticleOverviewScreen.lastScreen = this;
-    }
-
-    @Override
-    public void init() {
-        super.init();
-
-        addSaveButton((b) -> Networking.sendToServer(new PacketUpdateParticleTimeline(slot, timelineMap.immutable(), this.stackHand == InteractionHand.MAIN_HAND)));
-        timelineButton = addRenderableWidget(new DocEntryButton(bookLeft + LEFT_PAGE_OFFSET, bookTop + 36, selectedTimeline.getSpellPart().glyphItem.getDefaultInstance(), Component.translatable(selectedTimeline.getSpellPart().getLocaleName()), (button) -> {
-            addTimelineSelectionWidgets();
-            setSelectedButton(timelineButton);
-        }));
-        if(currentlySelectedButton == null){
-            setSelectedButton(timelineButton);
-        }
-        if(selectedProperty == null) {
-            addTimelineSelectionWidgets();
-        }else{
-            onPropertySelected(selectedProperty);
-        }
-        initLeftSideButtons();
     }
 
     public void setSelectedButton(SelectableButton selectedButton) {

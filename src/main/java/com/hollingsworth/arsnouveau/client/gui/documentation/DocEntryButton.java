@@ -22,7 +22,6 @@ public class DocEntryButton extends SelectableButton {
         this.renderStack = renderStack;
         this.title = display;
         int length = 25;
-        display = Component.literal(display.getString() + display.getString());
         String displayString = display.getString();
         if(display.getString().length() > length + 3) {
             this.fullTitle = display;
