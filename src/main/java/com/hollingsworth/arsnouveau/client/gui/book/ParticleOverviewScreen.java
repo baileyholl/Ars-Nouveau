@@ -18,6 +18,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateParticleTimeline;
 import com.hollingsworth.arsnouveau.setup.registry.CreativeTabRegistry;
 import com.hollingsworth.nuggets.client.gui.GuiHelpers;
+import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -80,12 +81,16 @@ public class ParticleOverviewScreen extends BaseBook {
         }else{
             selectedTimeline = LAST_SELECTED_PART;
         }
+        LAST_SELECTED_PART = selectedTimeline;
     }
 
     @Override
     public void init() {
         super.init();
-
+        var backButton = new NuggetImageButton(bookLeft + 6, bookTop + 6, DocAssets.ARROW_BACK_HOVER.width(), DocAssets.ARROW_BACK_HOVER.height(), DocAssets.ARROW_BACK.location(), DocAssets.ARROW_BACK_HOVER.location(), (b) -> {
+            Minecraft.getInstance().setScreen(previousScreen);
+        });
+        addRenderableWidget(backButton);
         addSaveButton((b) ->{
             int hash = timelineMap.immutable().hashCode();
             ParticleOverviewScreen.lastOpenedHash = hash;
@@ -104,6 +109,8 @@ public class ParticleOverviewScreen extends BaseBook {
         }else{
             if(propertyWidgetProvider != null){
                 List<AbstractWidget> propertyWidgets = new ArrayList<>();
+                propertyWidgetProvider.x = bookLeft + RIGHT_PAGE_OFFSET;
+                propertyWidgetProvider.y = bookTop + PAGE_TOP_OFFSET;
                 propertyWidgetProvider.addWidgets(propertyWidgets);
 
                 for (AbstractWidget widget : propertyWidgets) {
@@ -124,8 +131,10 @@ public class ParticleOverviewScreen extends BaseBook {
             ParticleOverviewScreen.lastOpenedHash = hash;
             Minecraft.getInstance().setScreen(new ParticleOverviewScreen(parentScreen, caster, slot, stackHand));
         }else{
-            ParticleOverviewScreen.lastScreen.slot = slot;
-            Minecraft.getInstance().setScreen(ParticleOverviewScreen.lastScreen);
+            ParticleOverviewScreen screen = ParticleOverviewScreen.lastScreen;
+            screen.slot = slot;
+            parentScreen.selectedSpellSlot = slot;
+            Minecraft.getInstance().setScreen(screen);
         }
     }
 

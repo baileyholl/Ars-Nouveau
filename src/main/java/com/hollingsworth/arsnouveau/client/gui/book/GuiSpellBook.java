@@ -94,6 +94,7 @@ public class GuiSpellBook extends BaseBook {
 
     public long timeOpened;
 
+
     public GuiSpellBook(InteractionHand hand) {
         super();
         this.hand = hand;
@@ -735,7 +736,15 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public static void open(InteractionHand hand) {
-        Minecraft.getInstance().setScreen(new GuiSpellBook(hand));
+        ItemStack stack = Minecraft.getInstance().player.getItemInHand(hand);
+        var caster = SpellCasterRegistry.from(Minecraft.getInstance().player.getItemInHand(hand));
+        if(lastOpenedScreen == null) {
+            Minecraft.getInstance().setScreen(new GuiSpellBook(hand));
+        }else if(lastOpenedScreen instanceof ParticleOverviewScreen particleOverviewScreen){
+            ParticleOverviewScreen.openScreen(new GuiSpellBook(hand), stack,caster.getCurrentSlot(), hand);
+        }else{
+            Minecraft.getInstance().setScreen(new GuiSpellBook(hand));
+        }
     }
 
     public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {

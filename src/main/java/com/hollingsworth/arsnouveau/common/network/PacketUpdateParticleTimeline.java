@@ -45,7 +45,7 @@ public class PacketUpdateParticleTimeline extends AbstractPacket{
         if (stack.getItem() instanceof SpellBook) {
             AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
             if(caster != null) {
-                caster.setParticles(color, castSlot).setCurrentSlot(castSlot).saveToStack(stack);
+                caster.setParticles(color, castSlot).saveToStack(stack);
             }
         }
     }

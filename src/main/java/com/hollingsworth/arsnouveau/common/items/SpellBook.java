@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenuSlot;
+import com.hollingsworth.arsnouveau.client.gui.radial_menu.SecondaryIconPosition;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.client.jei.AliasProvider;
 import com.hollingsworth.arsnouveau.client.registry.ModKeyBindings;
@@ -151,8 +152,8 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
         if (hand == null) {
             return;
         }
-        if(ArsNouveau.proxy.isClientSide()) {
-            ArsNouveau.proxy.getMinecraft().setScreen(new GuiSpellBook(hand));
+        if(player.level.isClientSide) {
+            GuiSpellBook.open(hand);
         }
     }
 
@@ -173,6 +174,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
             Networking.sendToServer(new PacketSetCasterSlot(slot));
         },
                 getRadialMenuSlotsForSpellpart(itemStack),
+                SecondaryIconPosition.NORTH,
                 RenderUtils::drawSpellPart,
                 0);
     }

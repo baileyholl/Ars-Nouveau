@@ -35,7 +35,7 @@ public class BaseBook extends ModdedScreen {
     public int bookBottom;
     public List<SpellValidationError> validationErrors = new ArrayList<>();
     public SaveButton saveButton;
-
+    public static BaseBook lastOpenedScreen = null;
     public BaseBook() {
         super(Component.literal(""));
     }
@@ -43,6 +43,7 @@ public class BaseBook extends ModdedScreen {
     @Override
     public void init() {
         super.init();
+        BaseBook.lastOpenedScreen = this;
         bookLeft = width / 2 - FULL_WIDTH / 2;
         bookTop = height / 2 - FULL_HEIGHT / 2;
         bookRight = width / 2 + FULL_WIDTH / 2;
