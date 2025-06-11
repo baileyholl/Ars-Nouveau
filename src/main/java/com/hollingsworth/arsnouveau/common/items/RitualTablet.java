@@ -3,9 +3,7 @@ package com.hollingsworth.arsnouveau.common.items;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
-import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.InteractionResult;
@@ -49,10 +47,10 @@ public class RitualTablet extends ModItem {
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
         tooltip2.add(Component.translatable("tooltip.ars_nouveau.tablet"));
-        if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), Minecraft.getInstance().options.keyShift.getKey().getValue())) {
+        if (flagIn.hasShiftDown()) {
             tooltip2.add(Component.translatable(ritual.getDescriptionKey()));
         } else {
-            tooltip2.add(Component.translatable("tooltip.ars_nouveau.hold_shift", Minecraft.getInstance().options.keyShift.getKey().getDisplayName()).withStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+            tooltip2.add(Component.translatable("tooltip.ars_nouveau.hold_shift", Component.keybind("key.sneak")).withStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
         }
     }
 
