@@ -116,7 +116,7 @@ public class ParticleOverviewScreen extends BaseBook {
     public static void openScreen(ItemStack stack, int slot, InteractionHand stackHand) {
         AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
         int hash = caster.getSpell(slot).particleTimeline().hashCode();
-        if(ParticleOverviewScreen.lastOpenedHash != hash || ParticleOverviewScreen.lastScreen == null){
+        if(LAST_SELECTED_PART == null || ParticleOverviewScreen.lastOpenedHash != hash || ParticleOverviewScreen.lastScreen == null){
             LAST_SELECTED_PART = null;
             ParticleOverviewScreen.lastOpenedHash = hash;
             Minecraft.getInstance().setScreen(new ParticleOverviewScreen(caster, slot, stackHand));
