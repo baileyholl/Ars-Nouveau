@@ -55,8 +55,11 @@ public class ParticleOverviewScreen extends BaseBook {
     BaseProperty selectedProperty;
     SelectedParticleButton selectedParticleButton;
     SelectableButton currentlySelectedButton;
+    GuiSpellBook previousScreen;
 
-    public ParticleOverviewScreen(AbstractCaster<?> caster,  int slot, InteractionHand stackHand) {
+
+    public ParticleOverviewScreen(GuiSpellBook previousScreen, AbstractCaster<?> caster,  int slot, InteractionHand stackHand) {
+        this.previousScreen = previousScreen;
         this.slot = slot;
         this.stackHand = stackHand;
         this.caster = caster;
@@ -113,13 +116,13 @@ public class ParticleOverviewScreen extends BaseBook {
         initLeftSideButtons();
     }
 
-    public static void openScreen(ItemStack stack, int slot, InteractionHand stackHand) {
+    public static void openScreen(GuiSpellBook parentScreen, ItemStack stack, int slot, InteractionHand stackHand) {
         AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
         int hash = caster.getSpell(slot).particleTimeline().hashCode();
         if(LAST_SELECTED_PART == null || ParticleOverviewScreen.lastOpenedHash != hash || ParticleOverviewScreen.lastScreen == null){
             LAST_SELECTED_PART = null;
             ParticleOverviewScreen.lastOpenedHash = hash;
-            Minecraft.getInstance().setScreen(new ParticleOverviewScreen(caster, slot, stackHand));
+            Minecraft.getInstance().setScreen(new ParticleOverviewScreen(parentScreen, caster, slot, stackHand));
         }else{
             ParticleOverviewScreen.lastScreen.slot = slot;
             Minecraft.getInstance().setScreen(ParticleOverviewScreen.lastScreen);

@@ -80,7 +80,7 @@ public class KeyHandler {
 
 
         if (key == ModKeyBindings.OPEN_BOOK.getKey().getValue()) {
-            if (MINECRAFT.screen instanceof GuiSpellBook && !((GuiSpellBook) MINECRAFT.screen).spell_name.isFocused()) {
+            if (MINECRAFT.screen instanceof GuiSpellBook && !((GuiSpellBook) MINECRAFT.screen).spellNameBox.isFocused()) {
                 MINECRAFT.player.closeContainer();
                 return;
             }

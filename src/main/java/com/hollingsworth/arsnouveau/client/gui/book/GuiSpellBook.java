@@ -15,7 +15,6 @@ import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
 import com.hollingsworth.arsnouveau.client.gui.buttons.*;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
-import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -61,9 +60,9 @@ public class GuiSpellBook extends BaseBook {
     public int numLinks = 10;
 
     public int selectedSpellSlot = 0;
-    public EditBox spell_name;
+    public EditBox spellNameBox;
     public NoShadowTextField searchBar;
-    public GuiSpellSlot selected_slot;
+    public GuiSpellSlot selectedSlotButton;
     public List<CraftingButton> craftingCells = new ArrayList<>();
     public List<AbstractSpellPart> unlockedSpells;
     public List<AbstractSpellPart> displayedGlyphs;
@@ -94,7 +93,6 @@ public class GuiSpellBook extends BaseBook {
     public PageButton prevGlyphButton;
     public int spellWindowOffset = 0;
     public int bonusSlots = 0;
-    public String spellname = "";
     public AbstractCaster<?> caster;
 
     public long timeOpened;
@@ -130,7 +128,10 @@ public class GuiSpellBook extends BaseBook {
                 ArsNouveauAPI.getInstance().getSpellCraftingSpellValidator(),
                 new GlyphMaxTierValidator(tier)
         );
-        onBookstackUpdated(heldStack);
+        this.bookStack = heldStack;
+        this.caster = SpellCasterRegistry.from(heldStack);
+        selectedSpellSlot = caster.getCurrentSlot();
+        spell = SpellCasterRegistry.from(bookStack).getSpell(selectedSpellSlot).mutable().recipe;
     }
 
     public void onBookstackUpdated(ItemStack stack) {
@@ -139,15 +140,15 @@ public class GuiSpellBook extends BaseBook {
         if (caster == null) {
             Minecraft.getInstance().setScreen(null);
         }else{
-            onSetCaster();
+            onSetCaster(selectedSpellSlot);
+            rebuildWidgets();
         }
     }
 
-    public void onSetCaster(){
-        this.selectedSpellSlot = caster.getCurrentSlot();
-        this.spellname = caster.getSpellName(caster.getCurrentSlot());
-        List<AbstractSpellPart> recipe = SpellCasterRegistry.from(bookStack).getSpell(selectedSpellSlot).mutable().recipe;
-        spell = new ArrayList<>(recipe);
+    public void onSetCaster(int slot){
+        this.selectedSpellSlot = slot;
+        this.spellNameBox.setValue(caster.getSpellName(slot));
+        spell = SpellCasterRegistry.from(bookStack).getSpell(selectedSpellSlot).mutable().recipe;
     }
 
     @Override
@@ -161,10 +162,15 @@ public class GuiSpellBook extends BaseBook {
         createSpellButton = addRenderableWidget(new CreateSpellButton(bookRight - 71, bookBottom - 11, this::onCreateClick, () -> !this.validationErrors.isEmpty()));
         addRenderableWidget(new GuiImageButton(bookRight - 126, bookBottom - 11, 0, 0, 41, 12, 41, 12, "textures/gui/clear_icon.png", this::clear));
 
-        spell_name = new NoShadowTextField(minecraft.font, bookLeft + 32, bookBottom - 9,
+        String previousSearch = "";
+        if(searchBar != null){
+            previousSearch = searchBar.getValue();
+        }
+
+        spellNameBox = new NoShadowTextField(minecraft.font, bookLeft + 32, bookBottom - 9,
                 88, 12, null, Component.translatable("ars_nouveau.spell_book_gui.spell_name"));
-        spell_name.setBordered(false);
-        spell_name.setTextColor(12694931);
+        spellNameBox.setBordered(false);
+        spellNameBox.setTextColor(12694931);
 
         searchBar = new NoShadowTextField(minecraft.font, bookRight - 73, bookTop,
                 54, 12, null, Component.translatable("ars_nouveau.spell_book_gui.search"));
@@ -175,22 +181,38 @@ public class GuiSpellBook extends BaseBook {
             return null;
         };
 
-        spell_name.setValue(spellname);
-        if (spell_name.getValue().isEmpty())
-            spell_name.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.spell_name").getString());
+        searchBar.setValue(previousSearch);
 
-        if (searchBar.getValue().isEmpty())
-            searchBar.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.search").getString());
+        spellNameBox.setValue(caster.getSpellName(selectedSpellSlot));
+        spellNameBox.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.spell_name").getString());
+
+        searchBar.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.search").getString());
         searchBar.setResponder(this::onSearchChanged);
-        addRenderableWidget(spell_name);
+
+        addRenderableWidget(spellNameBox);
         addRenderableWidget(searchBar);
         // Add spell slots
         for (int i = 0; i < caster.getMaxSlots(); i++) {
             String name = caster.getSpellName(i);
-            GuiSpellSlot slot = new GuiSpellSlot(bookLeft + 281, bookTop - 1 + 15 * (i + 1), i, name, this::onSlotChange);
+            GuiSpellSlot slot = new GuiSpellSlot(bookLeft + 281, bookTop - 1 + 15 * (i + 1), i, name, (b) ->{
+                if(!(b instanceof GuiSpellSlot button)) {
+                    return;
+                }
+                this.selectedSlotButton.isSelected = false;
+                this.selectedSlotButton = button;
+                button.isSelected = true;
+                this.selectedSpellSlot = this.selectedSlotButton.slotNum;
+                onSetCaster(selectedSpellSlot);
+                resetCraftingCells();
+                updateWindowOffset(0); //includes validation
+                rebuildWidgets();
+            });
+
             if (i == selectedSpellSlot) {
-                selected_slot = slot;
+                selectedSlotButton = slot;
                 slot.isSelected = true;
+            }else{
+                slot.isSelected = false;
             }
             addRenderableWidget(slot);
         }
@@ -199,7 +221,7 @@ public class GuiSpellBook extends BaseBook {
                 .withTooltip(Component.translatable("ars_nouveau.gui.notebook")));
 
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 44, 0, 0, 23, 20, 23, 20, "textures/gui/color_wheel_bookmark.png", (b) ->{
-            ParticleOverviewScreen.openScreen(bookStack, selectedSpellSlot, this.hand);
+            ParticleOverviewScreen.openScreen(this, bookStack, selectedSpellSlot, this.hand);
         }).withTooltip(Component.translatable("ars_nouveau.gui.spell_style")));
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 68, 0, 0, 23, 20, 23, 20, "textures/gui/summon_circle_bookmark.png", this::onFamiliarClick)
                 .withTooltip(Component.translatable("ars_nouveau.gui.familiar")));
@@ -430,11 +452,6 @@ public class GuiSpellBook extends BaseBook {
         GuiUtils.openWiki(ArsNouveau.proxy.getPlayer());
     }
 
-    public void onColorClick(Button button) {
-        ParticleColor.IntWrapper color = SpellCasterRegistry.from(bookStack).getColor(selectedSpellSlot).toWrapper();
-        Minecraft.getInstance().setScreen(new GuiColorScreen(color.r, color.g, color.b, selectedSpellSlot, this.hand));
-    }
-
     public void onSoundsClick(Button button) {
         ConfiguredSpellSound spellSound = SpellCasterRegistry.from(bookStack).getSound(selectedSpellSlot);
         Minecraft.getInstance().setScreen(new SoundScreen(spellSound, selectedSpellSlot, this.hand));
@@ -498,18 +515,6 @@ public class GuiSpellBook extends BaseBook {
             nextGlyphButton.active = true;
             nextGlyphButton.visible = true;
         }
-    }
-
-    public void onSlotChange(Button button) {
-        this.selected_slot.isSelected = false;
-        this.selected_slot = (GuiSpellSlot) button;
-        this.selected_slot.isSelected = true;
-        this.selectedSpellSlot = this.selected_slot.slotNum;
-        this.spellname = caster.getSpellName(selectedSpellSlot);
-        spell_name.setValue(spellname);
-        this.spell = new ArrayList<>(caster.getSpell(selectedSpellSlot).unsafeList());
-        resetCraftingCells();
-        updateWindowOffset(0); //includes validation
     }
 
     @Override
@@ -713,7 +718,7 @@ public class GuiSpellBook extends BaseBook {
         boolean allWereEmpty = spell.isEmpty();
         spell.clear();
 
-        if (allWereEmpty) spell_name.setValue("");
+        if (allWereEmpty) spellNameBox.setValue("");
 
         validate();
     }
@@ -727,7 +732,7 @@ public class GuiSpellBook extends BaseBook {
                     spell.add(spellPart);
                 }
             }
-            Networking.sendToServer(new PacketUpdateCaster(spell.immutable(), this.selectedSpellSlot, this.spell_name.getValue(), hand == InteractionHand.MAIN_HAND));
+            Networking.sendToServer(new PacketUpdateCaster(spell.immutable(), this.selectedSpellSlot, this.spellNameBox.getValue(), hand == InteractionHand.MAIN_HAND));
             ParticleOverviewScreen.LAST_SELECTED_PART = null;
         }
     }
@@ -896,7 +901,7 @@ public class GuiSpellBook extends BaseBook {
                 break;
             }
         }
-        spell_name.setSuggestion(spell_name.getValue().isEmpty() ? Component.translatable("ars_nouveau.spell_book_gui.spell_name").getString() : "");
+//        spellNameBox.setSuggestion(spellNameBox.getValue().isEmpty() ? Component.translatable("ars_nouveau.spell_book_gui.spell_name").getString() : "");
     }
 
     @Override
