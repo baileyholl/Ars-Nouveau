@@ -244,4 +244,9 @@ public class ParticleDensityProperty extends BaseProperty<ParticleDensityPropert
     public int hashCode() {
         return Objects.hash(density, spawnType, radius);
     }
+
+    @Override
+    public boolean survivesMotionChange() {
+        return false;
+    }
 }

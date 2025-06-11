@@ -48,6 +48,13 @@ public abstract class BaseProperty<T extends BaseProperty<T>> {
         }
     }
 
+    /**
+     * If this property should be removed when the selected motion changes.
+     */
+    public boolean survivesMotionChange(){
+        return true;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(getId(), propertyHolder);

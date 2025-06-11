@@ -200,4 +200,9 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
     public int hashCode() {
         return Objects.hash(yMinSpeed, xzMinSpeed, yMaxSpeed, xzMaxSpeed);
     }
+
+    @Override
+    public boolean survivesMotionChange() {
+        return false;
+    }
 }

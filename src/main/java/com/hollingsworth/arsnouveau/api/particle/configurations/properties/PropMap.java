@@ -10,9 +10,7 @@ import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class PropMap{
@@ -104,6 +102,23 @@ public class PropMap{
     public <T extends BaseProperty> T createIfMissing(T defaultValue) {
         return (T) properties.computeIfAbsent(defaultValue.getType(), k -> defaultValue);
     }
+
+    public void removePropsOnMotionChange(){
+        Set<PropMap> visitedMaps = new HashSet<>();
+        removePropsOnMotionChange(visitedMaps);
+    }
+
+    public void removePropsOnMotionChange(Set<PropMap> visitedMaps){
+        properties.entrySet().removeIf(entry -> {
+            BaseProperty<?> property = (BaseProperty<?>) entry.getValue();
+            if(!visitedMaps.contains(property.propertyHolder)){
+                visitedMaps.add(property.propertyHolder);
+                property.propertyHolder.removePropsOnMotionChange(visitedMaps);
+            }
+            return !property.survivesMotionChange();
+        });
+    }
+
 
     @Override
     public boolean equals(Object o) {

@@ -51,7 +51,10 @@ public class MotionProperty extends BaseProperty<MotionProperty>{
                 for (int i = 0; i < options.size(); i++) {
                     IParticleMotionType<?> type = options.get(i);
                     SelectedParticleButton widget = new SelectedParticleButton(x + 5 + (i % 7) * 16, y + 20 + 18 * (i / 7), 14, 14, type.getIconLocation(), (button) -> {
-                        timelineOption.entry().setMotion(type.create(timelineOption.entry().motion().propertyMap));
+                        PropMap motionMap = timelineOption.entry().motion().propertyMap;
+                        motionMap.removePropsOnMotionChange();
+                        timelineOption.entry().particleOptions().map.removePropsOnMotionChange();
+                        timelineOption.entry().setMotion(type.create(motionMap));
                         if (onDependenciesChanged != null) {
                             onDependenciesChanged.run();
                         }
