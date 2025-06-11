@@ -728,6 +728,7 @@ public class GuiSpellBook extends BaseBook {
                 }
             }
             Networking.sendToServer(new PacketUpdateCaster(spell.immutable(), this.selectedSpellSlot, this.spell_name.getValue(), hand == InteractionHand.MAIN_HAND));
+            ParticleOverviewScreen.LAST_SELECTED_PART = null;
         }
     }
 
