@@ -42,8 +42,8 @@ public class ModdedScreen extends Screen {
                 if(GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)){
                     if(renderable instanceof ITooltipProvider tooltipProvider) {
                         tooltipProvider.getTooltip(tooltip);
-                    }else if(renderable instanceof ITooltipRenderer nuggerProvider){
-                        nuggerProvider.gatherTooltips(tooltip);
+                    }else if(renderable instanceof ITooltipRenderer nuggetProvider){
+                        nuggetProvider.gatherTooltips(tooltip);
                     }
                     break;
                 }

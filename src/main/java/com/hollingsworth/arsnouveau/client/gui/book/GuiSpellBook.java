@@ -9,10 +9,7 @@ import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
-import com.hollingsworth.arsnouveau.client.gui.Color;
-import com.hollingsworth.arsnouveau.client.gui.GuiUtils;
-import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
-import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
+import com.hollingsworth.arsnouveau.client.gui.*;
 import com.hollingsworth.arsnouveau.client.gui.buttons.*;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
@@ -901,7 +898,7 @@ public class GuiSpellBook extends BaseBook {
                 break;
             }
         }
-//        spellNameBox.setSuggestion(spellNameBox.getValue().isEmpty() ? Component.translatable("ars_nouveau.spell_book_gui.spell_name").getString() : "");
+
     }
 
     @Override
@@ -939,10 +936,18 @@ public class GuiSpellBook extends BaseBook {
 
     protected TooltipComponent collectComponent(int mouseX, int mouseY) {
         for (Renderable renderable : renderables) {
+
+            if(renderable instanceof AbstractWidget widget && !GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)){
+                continue;
+            }
+
             if (renderable instanceof GlyphButton widget) {
-                if (GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)) {
-                    return widget.abstractSpellPart.spellSchools.isEmpty() ? null : new SchoolTooltip(widget.abstractSpellPart);
+                return widget.abstractSpellPart.spellSchools.isEmpty() ? null : new SchoolTooltip(widget.abstractSpellPart);
+            }else if(renderable instanceof GuiSpellSlot spellSlot){
+                if(spellSlot.isSelected){
+                    return new SpellTooltip(new Spell(spell), false);
                 }
+                return new SpellTooltip(caster.getSpell(spellSlot.slotNum), false);
             }
         }
         return null;
