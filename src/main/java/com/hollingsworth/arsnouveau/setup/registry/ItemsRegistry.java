@@ -20,6 +20,7 @@ import com.hollingsworth.arsnouveau.common.items.itemscrolls.AllowItemScroll;
 import com.hollingsworth.arsnouveau.common.items.itemscrolls.DenyItemScroll;
 import com.hollingsworth.arsnouveau.common.items.itemscrolls.MimicItemScroll;
 import com.hollingsworth.arsnouveau.common.items.summon_charms.*;
+import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.perk.EmptyPerk;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
@@ -238,6 +239,9 @@ public class ItemsRegistry {
     public static final DeferredHolder<Item, BannerPatternItem> ARS_STENCIL = createPatternItem("ars_stencil", Rarity.UNCOMMON);
     public static final ItemRegistryWrapper<Item> ENCHANTERS_GAUNTLET = register(LibItemNames.ENCHANTERS_GAUNTLET, EnchantersGauntlet::new);
     public static final ItemRegistryWrapper<Item> ENCHANTERS_FISHING_ROD = register(LibItemNames.ENCHANTERS_ROD, EnchantersFishingRod::new);
+
+    public static final ItemRegistryWrapper<SignItem> ARCHWOOD_SIGN = register(LibBlockNames.ARCHWOOD_SIGN, () -> new SignItem(defaultItemProperties().stacksTo(16), BlockRegistry.ARCHWOOD_SIGN.get(), BlockRegistry.ARCHWOOD_WALL_SIGN.get()));
+    public static final ItemRegistryWrapper<HangingSignItem> ARCHWOOD_HANGING_SIGN = register(LibBlockNames.ARCHWOOD_HANGING_SIGN, () -> new HangingSignItem(BlockRegistry.ARCHWOOD_HANGING_SIGN.get(), BlockRegistry.ARCHWOOD_HANGING_WALL_SIGN.get(), defaultItemProperties().stacksTo(16)));
 
     public static <T extends Item> ItemRegistryWrapper<T> register(String name, Supplier<T> item) {
         return new ItemRegistryWrapper<>(ITEMS.register(name, item));

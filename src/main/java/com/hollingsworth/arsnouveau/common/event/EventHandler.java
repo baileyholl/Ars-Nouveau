@@ -121,6 +121,11 @@ public class EventHandler {
 
                     @Override
                     public void tick(ServerTickEvent serverTickEvent) {
+                        GenericRecipeRegistry.reloadAll(serverTickEvent.getServer().getRecipeManager());
+                        CasterTomeRegistry.reloadTomeData(serverTickEvent.getServer().getRecipeManager(), serverTickEvent.getServer().registryAccess());
+                        BuddingConversionRegistry.reloadBuddingConversionRecipes(serverTickEvent.getServer().getRecipeManager());
+                        AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(serverTickEvent.getServer().getRecipeManager());
+                        ScryRitualRegistry.reloadScryRitualRecipes(serverTickEvent.getServer().getRecipeManager());
                         for(ServerPlayer player : serverTickEvent.getServer().getPlayerList().getPlayers()) {
                             Networking.sendToPlayerClient(new PacketInitDocs(), player);
                         }
@@ -345,7 +350,7 @@ public class EventHandler {
         AdoptCommand.register(event.getDispatcher());
         DroplessMobsCommand.register(event.getDispatcher());
         DebugNumberCommand.register(event.getDispatcher());
-        if(!FMLEnvironment.production){
+        if (!FMLEnvironment.production) {
             ExportDocsCommand.register(event.getDispatcher());
         }
     }
@@ -403,14 +408,6 @@ public class EventHandler {
         return new VillagerTrades.EmeraldForItems(itemLike.asItem(), cost, uses, exp).getOffer(trader, trader.getRandom());
     }
 
-    //TODO: restore looting level event
-
-//    @SubscribeEvent
-//    public static void onLootingEvent(LootingLevelEvent event) {
-//        if (event.getDamageSource() != null && event.getDamageSource().getEntity() instanceof LivingEntity living) {
-//            event.setLootingLevel(event.getLootingLevel() + Math.round(PerkUtil.countForPerk(LootingPerk.INSTANCE, living)));
-//        }
-//    }
 
     @SubscribeEvent
     public static void onPotionAdd(MobEffectEvent.Added event) {
