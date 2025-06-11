@@ -45,6 +45,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePrope
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -138,6 +139,8 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.STRIPPED_AWLOG_PURPLE);
             registerDropSelf(BlockRegistry.STRIPPED_AWWOOD_PURPLE);
             registerDropDoor(BlockRegistry.ARCHWOOD_DOOR.get());
+            registerDropSelf(BlockRegistry.ARCHWOOD_SIGN);
+            registerDropSelf(BlockRegistry.ARCHWOOD_HANGING_SIGN);
             registerDropSelf(BlockRegistry.SOURCE_GEM_BLOCK);
 
             registerDropSelf(BlockRegistry.POTION_MELDER);
@@ -299,13 +302,13 @@ public class DefaultTableProvider extends LootTableProvider {
         }
 
         @Override
-        protected void add(Block pBlock, LootTable.Builder pBuilder) {
+        protected void add(@NotNull Block pBlock, LootTable.@NotNull Builder pBuilder) {
             list.add(pBlock);
             super.add(pBlock, pBuilder);
         }
 
         @Override
-        protected void add(Block pBlock, Function<Block, LootTable.Builder> pFactory) {
+        protected void add(@NotNull Block pBlock, @NotNull Function<Block, LootTable.Builder> pFactory) {
             list.add(pBlock);
             super.add(pBlock, pFactory);
         }
@@ -350,7 +353,7 @@ public class DefaultTableProvider extends LootTableProvider {
 
 
         @Override
-        public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> pGenerator) {
+        public void generate(@NotNull BiConsumer<ResourceKey<LootTable>, LootTable.Builder> pGenerator) {
             this.generate();
             Set<ResourceKey<LootTable>> set = new HashSet<>();
 
@@ -400,7 +403,7 @@ public class DefaultTableProvider extends LootTableProvider {
         }
 
         @Override
-        protected Iterable<Block> getKnownBlocks() {
+        protected @NotNull Iterable<Block> getKnownBlocks() {
             return BuiltInRegistries.BLOCK.stream().filter(block -> BuiltInRegistries.BLOCK.getKey(block).getNamespace().equals(ArsNouveau.MODID)).collect(Collectors.toList());
         }
 
@@ -437,13 +440,13 @@ public class DefaultTableProvider extends LootTableProvider {
         }
 
         @Override
-        protected void add(EntityType<?> pEntityType, LootTable.Builder pBuilder) {
+        protected void add(@NotNull EntityType<?> pEntityType, LootTable.@NotNull Builder pBuilder) {
             super.add(pEntityType, pBuilder);
             this.map.put(pEntityType, ImmutableMap.of(pEntityType.getDefaultLootTable(), pBuilder));
         }
 
         @Override
-        protected void add(EntityType<?> pEntityType, ResourceKey<LootTable> pLootTableLocation, LootTable.Builder pBuilder) {
+        protected void add(@NotNull EntityType<?> pEntityType, @NotNull ResourceKey<LootTable> pLootTableLocation, LootTable.@NotNull Builder pBuilder) {
             super.add(pEntityType, pLootTableLocation, pBuilder);
             this.map.computeIfAbsent(pEntityType, (p_249004_) -> {
                 return Maps.newHashMap();
@@ -451,7 +454,7 @@ public class DefaultTableProvider extends LootTableProvider {
         }
 
         @Override
-        public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> pGenerator) {
+        public void generate(@NotNull BiConsumer<ResourceKey<LootTable>, LootTable.Builder> pGenerator) {
             this.generate();
             Set<ResourceKey<LootTable>> set = Sets.newHashSet();
             this.getKnownEntityTypes().map(EntityType::builtInRegistryHolder).forEach((p_249003_) -> {
@@ -479,13 +482,13 @@ public class DefaultTableProvider extends LootTableProvider {
         }
 
         @Override
-        protected Stream<EntityType<?>> getKnownEntityTypes() {
+        protected @NotNull Stream<EntityType<?>> getKnownEntityTypes() {
             return BuiltInRegistries.ENTITY_TYPE.stream().filter(block -> BuiltInRegistries.ENTITY_TYPE.getKey(block).getNamespace().equals(ArsNouveau.MODID)).toList().stream();
         }
     }
 
     @Override
-    protected void validate(WritableRegistry<LootTable> writableregistry, ValidationContext validationcontext, ProblemReporter.Collector problemreporter$collector) {
+    protected void validate(@NotNull WritableRegistry<LootTable> writableregistry, @NotNull ValidationContext validationcontext, ProblemReporter.@NotNull Collector problemreporter$collector) {
 
     }
 }
