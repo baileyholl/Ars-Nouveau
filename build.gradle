@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.+'
+    id 'net.neoforged.gradle.userdev' version '7.0.184'
     id 'io.github.goooler.shadow' version '8.1.7'
 }
 
@@ -158,8 +158,8 @@ dependencies {
     localRuntime 'curse.maven:ftb-library-forge-404465:5754910'
     localRuntime 'curse.maven:architectury-api-419699:5553800'
 //    localRuntime 'curse.maven:productivebees-377897:6154395'
-    implementation(jarJar(group: 'com.hollingsworth.nuggets', name: 'nuggets-neoforge-1.21', version:'[1.0.6,)'){
-        jarJar.pin(it, '1.0.6')
+    implementation(jarJar(group: 'com.hollingsworth.nuggets', name: 'nuggets-neoforge-1.21', version:'[1.0.7,)'){
+        jarJar.pin(it, '1.0.7')
     })
     localRuntime "maven.modrinth:cloth-config:15.0.140+neoforge"
 

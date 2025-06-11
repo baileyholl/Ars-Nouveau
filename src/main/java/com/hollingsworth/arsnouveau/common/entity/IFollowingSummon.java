@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
@@ -28,7 +29,11 @@ public interface IFollowingSummon {
          */
         public boolean canUse() {
             if (!(this.mob instanceof IFollowingSummon summon)) return false;
-            return summon.getSummoner() != null && summon.getSummoner().getLastHurtMob() != null;
+            LivingEntity summoner = summon.getSummoner();
+            if (summoner == null) return false;
+            var lastHurtMob = summoner.getLastHurtMob();
+
+            return lastHurtMob != null && summoner != lastHurtMob && !(lastHurtMob instanceof ISummon summon2 && summon2.getOwnerAlt() == summoner);
         }
 
         /**
