@@ -13,18 +13,22 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import java.util.List;
 import java.util.Optional;
 
 public class RitualHealing extends AbstractRitual {
+    public ModConfigSpec.DoubleValue RANGE;
+    public ModConfigSpec.DoubleValue HEAL_AMOUNT;
+    public ModConfigSpec.DoubleValue HARM_AMOUNT;
     @Override
     protected void tick() {
         if (getWorld().isClientSide) {
             ParticleUtil.spawnRitualAreaEffect(getPos(), getWorld(), rand, getCenterColor(), 5);
         } else {
             if (getWorld().getGameTime() % 100 == 0) {
-                List<LivingEntity> entities = getWorld().getEntitiesOfClass(LivingEntity.class, new AABB(getPos()).inflate(5));
+                List<LivingEntity> entities = getWorld().getEntitiesOfClass(LivingEntity.class, new AABB(getPos()).inflate(getRange()));
                 Optional<LivingEntity> player = entities.stream().filter(e -> e instanceof Player).findFirst();
 
                 boolean didWorkOnce = false;
@@ -38,9 +42,9 @@ public class RitualHealing extends AbstractRitual {
                     if (a.getHealth() < a.getMaxHealth() || a.isInvertedHealAndHarm()) {
                         if (a.isInvertedHealAndHarm()) {
                             FakePlayer player1 = ANFakePlayer.getPlayer((ServerLevel) getWorld());
-                            a.hurt(getWorld().damageSources().playerAttack(player1), 10.0f);
+                            a.hurt(getWorld().damageSources().playerAttack(player1), getHarmAmount());
                         } else {
-                            a.heal(10.0f);
+                            a.heal(getHealAmount());
                         }
                         didWorkOnce = true;
                     }
@@ -72,7 +76,33 @@ public class RitualHealing extends AbstractRitual {
     }
 
     @Override
-    public int getSourceCost() {
+    public void buildConfig(ModConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        RANGE = builder
+                .comment("The range in blocks around the ritual where entities will be affected")
+                .defineInRange("range", 5.0, 1.0, 30.0);
+        HEAL_AMOUNT = builder
+                .comment("The amount of health to restore to living entities")
+                .defineInRange("heal_amount", 10.0, 0.5, 100.0);
+        HARM_AMOUNT = builder
+                .comment("The amount of damage to deal to undead entities")
+                .defineInRange("harm_amount", 10.0, 0.5, 100.0);
+    }
+
+    private double getRange() {
+        return RANGE.get();
+    }
+    
+    private float getHealAmount() {
+        return HEAL_AMOUNT.get().floatValue();
+    }
+    
+    private float getHarmAmount() {
+        return HARM_AMOUNT.get().floatValue();
+    }
+
+    @Override
+    public int getDefaultSourceCost() {
         return 200;
     }
 }

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.config.IConfigurable;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
@@ -134,22 +135,28 @@ public class ItemsRegistry {
     public static final ItemRegistryWrapper<ModItem> WILDEN_HORN = register(LibItemNames.WILDEN_HORN, () -> new ModItem().withTooltip(Component.translatable("tooltip.wilden_horn")));
     public static final ItemRegistryWrapper<ModItem> WILDEN_SPIKE = register(LibItemNames.WILDEN_SPIKE, () -> new ModItem().withTooltip(Component.translatable("tooltip.wilden_spike")));
     public static final ItemRegistryWrapper<ModItem> WILDEN_WING = register(LibItemNames.WILDEN_WING, () -> new ModItem().withTooltip(Component.translatable("tooltip.wilden_wing")));
-    public static final ItemRegistryWrapper<PotionFlask> POTION_FLASK = register(LibItemNames.POTION_FLASK, () -> {
-        PotionFlask flask = new PotionFlask() {
-            @NotNull
-            @Override
-            public MobEffectInstance getEffectInstance(MobEffectInstance effectInstance) {
-                return effectInstance;
-            }
-        };
-        flask.withTooltip(Component.translatable("tooltip.potion_flask"));
-        return flask;
+    public static final ItemRegistryWrapper<PotionFlask> POTION_FLASK = register(LibItemNames.POTION_FLASK, () -> new PotionFlask() {
+        @NotNull
+        @Override
+        public MobEffectInstance getEffectInstance(MobEffectInstance effectInstance) {
+            return effectInstance;
+        }
+
+        @Override
+        public ResourceLocation getRegistryName() {
+            return ItemsRegistry.POTION_FLASK.getResourceLocation();
+        }
     });
     public static ItemRegistryWrapper<PotionFlask> POTION_FLASK_AMPLIFY = register(LibItemNames.POTION_FLASK_AMPLIFY, () -> {
         PotionFlask flask = new PotionFlask() {
             @Override
             public @NotNull MobEffectInstance getEffectInstance(MobEffectInstance effectInstance) {
                 return new MobEffectInstance(effectInstance.getEffect(), effectInstance.getDuration() / 2, Math.min(Config.ENCHANTED_FLASK_CAP.get(), effectInstance.getAmplifier() + 1));
+            }
+
+            @Override
+            public ResourceLocation getRegistryName() {
+                return ItemsRegistry.POTION_FLASK_AMPLIFY.getResourceLocation();
             }
         };
         flask.withTooltip(Component.translatable("tooltip.potion_flask_amplify"));
@@ -160,6 +167,11 @@ public class ItemsRegistry {
             @Override
             public @NotNull MobEffectInstance getEffectInstance(MobEffectInstance effectInstance) {
                 return new MobEffectInstance(effectInstance.getEffect(), effectInstance.getDuration() + effectInstance.getDuration() / 2, effectInstance.getAmplifier());
+            }
+
+            @Override
+            public ResourceLocation getRegistryName() {
+                return ItemsRegistry.POTION_FLASK_EXTEND_TIME.getResourceLocation();
             }
         };
         flask.withTooltip(Component.translatable("tooltip.potion_flask_extend_time"));
@@ -240,7 +252,13 @@ public class ItemsRegistry {
     public static final ItemRegistryWrapper<Item> ENCHANTERS_FISHING_ROD = register(LibItemNames.ENCHANTERS_ROD, EnchantersFishingRod::new);
 
     public static <T extends Item> ItemRegistryWrapper<T> register(String name, Supplier<T> item) {
-        return new ItemRegistryWrapper<>(ITEMS.register(name, item));
+        return new ItemRegistryWrapper<>(ITEMS.register(name, () -> {
+            T val = item.get();
+            if (val instanceof IConfigurable configurable) {
+                IConfigurable.register(configurable);
+            }
+            return val;
+        }));
     }
 
     public static ItemRegistryWrapper<ModItem> register(String name) {

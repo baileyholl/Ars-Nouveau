@@ -1979,7 +1979,7 @@
   "tooltip.drygmy_shard2": "A tribute to what once was.",
   "tooltip.item_scroll": "Use with an item in the offhand to add to the scroll, or scribe on the Scribes table.",
   "tooltip.magebloom": "Crafted using the Enchanting Apparatus",
-  "tooltip.potion_flask": "Holds 8 charges of potion.",
+  "tooltip.potion_flask": "Holds %s charges of potion.",
   "tooltip.potion_flask_amplify": "Increases the level of potions, but reduces their duration.",
   "tooltip.potion_flask_extend_time": "Increases the duration of potions by 50%.",
   "tooltip.source_gem": "Obtained by placing lapis or amethyst in an Imbuement Chamber.",

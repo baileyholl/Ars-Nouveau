@@ -18,11 +18,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
+
 
 import java.util.List;
 
 public class RitualWarp extends AbstractRitual {
+    public ModConfigSpec.IntValue WARP_RANGE;
     @Override
     protected void tick() {
         Level world = getWorld();
@@ -40,7 +43,8 @@ public class RitualWarp extends AbstractRitual {
         if (!world.isClientSide && world.getGameTime() % 20 == 0) {
             incrementProgress();
             if (getProgress() >= 3) {
-                List<Entity> entities = getWorld().getEntitiesOfClass(Entity.class, new AABB(getPos()).inflate(5));
+                int range = getWarpRange();
+                List<Entity> entities = getWorld().getEntitiesOfClass(Entity.class, new AABB(getPos()).inflate(range));
 
                 ItemStack i = getConsumedItems().get(0);
                 WarpScrollData data = i.get(DataComponentRegistry.WARP_SCROLL);
@@ -77,6 +81,18 @@ public class RitualWarp extends AbstractRitual {
     @Override
     public boolean canStart(@Nullable Player player) {
         return !getConsumedItems().isEmpty();
+    }
+
+    private int getWarpRange() {
+        return WARP_RANGE.get();
+    }
+
+    @Override
+    public void buildConfig(ModConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        WARP_RANGE = builder
+                .comment("The range in blocks around the ritual where entities will be warped")
+                .defineInRange("warp_range", 5, 1, 32);
     }
 
     @Override
