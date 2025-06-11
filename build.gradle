@@ -155,10 +155,11 @@ dependencies {
     localRuntime 'curse.maven:ftb-library-forge-404465:5754910'
     localRuntime 'curse.maven:architectury-api-419699:5553800'
 //    localRuntime 'curse.maven:productivebees-377897:6154395'
+
     jarJar(implementation('com.hollingsworth.nuggets:nuggets-neoforge-1.21') {
         version {
-            strictly '[1.0.6,)'
-            prefer '1.0.6.37'
+            strictly '[1.0.7,)'
+            prefer '1.0.7.38'
         }
     })
     localRuntime "maven.modrinth:cloth-config:15.0.140+neoforge"
