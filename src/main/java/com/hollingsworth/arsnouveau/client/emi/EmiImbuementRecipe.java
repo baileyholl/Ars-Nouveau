@@ -29,8 +29,8 @@ public class EmiImbuementRecipe extends EmiMultiInputRecipe<ImbuementRecipe> {
     }
 
     @Override
-    public List<EmiIngredient> getInputs() {
-        var inputs = super.getInputs();
+    protected List<EmiIngredient> generateInputs() {
+        var inputs = super.generateInputs();
         for (int i = 1; i < inputs.size(); i++) {
             var ingredient = inputs.get(i);
             if (ingredient.getEmiStacks().size() == 1 && ingredient.getEmiStacks().get(0) instanceof EmiStack stack) {

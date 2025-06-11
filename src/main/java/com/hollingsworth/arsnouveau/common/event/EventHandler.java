@@ -89,7 +89,6 @@ import java.util.*;
 
 @EventBusSubscriber(modid = ArsNouveau.MODID)
 public class EventHandler {
-
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void resourceLoadEvent(AddReloadListenerEvent event) {
         event.addListener(new SimplePreparableReloadListener<>() {

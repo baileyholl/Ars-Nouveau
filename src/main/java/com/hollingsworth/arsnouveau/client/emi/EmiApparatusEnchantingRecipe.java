@@ -86,8 +86,8 @@ public class EmiApparatusEnchantingRecipe extends EmiEnchantingApparatusRecipe<E
     }
 
     @Override
-    public List<EmiIngredient> getInputs() {
-        var inputs = super.getInputs();
+    protected List<EmiIngredient> generateInputs() {
+        var inputs = super.generateInputs();
         if (!inputs.isEmpty()) {
             inputs.set(0, EmiIngredient.of(this.getEnchantable().stream().map(EmiStack::of).toList()));
         }
