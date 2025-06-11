@@ -99,7 +99,16 @@ public class ParticleOverviewScreen extends BaseBook {
         if(selectedProperty == null) {
             addTimelineSelectionWidgets();
         }else{
-            onPropertySelected(selectedProperty);
+            if(propertyWidgetProvider != null){
+                List<AbstractWidget> propertyWidgets = new ArrayList<>();
+                propertyWidgetProvider.addWidgets(propertyWidgets);
+
+                for (AbstractWidget widget : propertyWidgets) {
+                    addRightPageWidget(widget);
+                }
+            }else {
+                onPropertySelected(selectedProperty);
+            }
         }
         initLeftSideButtons();
     }

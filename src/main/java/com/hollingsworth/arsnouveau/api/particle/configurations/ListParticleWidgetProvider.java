@@ -19,7 +19,7 @@ public abstract class ListParticleWidgetProvider extends ParticleConfigWidgetPro
     GuiImageButton downButton;
     int pageOffset;
     int maxEntries;
-
+    int numPerPage = 8;
     public ListParticleWidgetProvider(int x, int y, int width, int height, List<Button> buttons) {
         super(x, y, width, height);
         this.buttons = buttons;
@@ -41,10 +41,12 @@ public abstract class ListParticleWidgetProvider extends ParticleConfigWidgetPro
 
 
     public void onScroll(int offset) {
-        int numPerPage = 8;
         pageOffset += numPerPage * offset;
         pageOffset = Math.max(0, Math.min(pageOffset, maxEntries - numPerPage));
+        updateButtons();
+    }
 
+    protected void updateButtons(){
         for(var button : buttons){
             button.active = false;
             button.visible = false;
@@ -85,6 +87,6 @@ public abstract class ListParticleWidgetProvider extends ParticleConfigWidgetPro
 
         widgets.add(upButton);
         widgets.add(downButton);
-        onScroll(pageOffset);
+        updateButtons();
     }
 }
