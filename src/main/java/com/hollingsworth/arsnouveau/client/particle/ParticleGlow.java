@@ -75,9 +75,4 @@ public class ParticleGlow extends TextureSheetParticle {
         this.oRoll = roll;
         roll += 1.0f;
     }
-
-    @Override
-    public boolean isAlive() {
-        return this.age < this.lifetime;
-    }
 }

@@ -9,8 +9,10 @@ import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.event.BlockEntityTypeAddBlocksEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
@@ -54,9 +56,12 @@ public class ModSetup {
         CreativeTabRegistry.TABS.register(modEventBus);
         DataSerializers.DS.register(modEventBus);
         AttachmentsRegistry.ATTACHMENT_TYPES.register(modEventBus);
+
         ParticleMotionRegistry.PARTICLE_CONFIG.register(modEventBus);
         ParticleTimelineRegistry.TIMELINE_DF.register(modEventBus);
         ParticlePropertyRegistry.PROP_DF.register(modEventBus);
+        modEventBus.addListener(ModSetup::addBlocksToTile);
+
     }
 
     public static void registerRegistries(NewRegistryEvent event) {
@@ -66,12 +71,18 @@ public class ModSetup {
     }
 
     public static void registerEvents(RegisterEvent event) {
-        event.register(Registries.BLOCK, helper ->{
+        event.register(Registries.BLOCK, helper -> {
             BlockRegistry.onBlocksRegistry();
         });
-        event.register(Registries.ITEM, helper ->{
+        event.register(Registries.ITEM, helper -> {
             BlockRegistry.onBlockItemsRegistry();
             ItemsRegistry.onItemRegistry(helper);
         });
     }
+
+    public static void addBlocksToTile(BlockEntityTypeAddBlocksEvent event) {
+        event.modify(BlockEntityType.SIGN, BlockRegistry.ARCHWOOD_SIGN.get(), BlockRegistry.ARCHWOOD_WALL_SIGN.get());
+        event.modify(BlockEntityType.HANGING_SIGN, BlockRegistry.ARCHWOOD_HANGING_SIGN.get(), BlockRegistry.ARCHWOOD_HANGING_WALL_SIGN.get());
+    }
+
 }
