@@ -31,9 +31,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParticleOverviewScreen extends BaseBook {
-    int slot;
-    InteractionHand stackHand;
+public class ParticleOverviewScreen extends SpellSlottedScreen {
     TimelineMap.MutableTimelineMap timelineMap;
 
     public IParticleTimelineType<?> selectedTimeline = null;
@@ -44,8 +42,6 @@ public class ParticleOverviewScreen extends BaseBook {
 
     ParticleConfigWidgetProvider propertyWidgetProvider;
     DocEntryButton timelineButton;
-    AbstractCaster<?> caster;
-
     int rowOffset = 0;
     boolean hasMoreElements = false;
     boolean hasPreviousElements = false;
@@ -58,45 +54,57 @@ public class ParticleOverviewScreen extends BaseBook {
     GuiSpellBook previousScreen;
 
 
-    public ParticleOverviewScreen(GuiSpellBook previousScreen, AbstractCaster<?> caster,  int slot, InteractionHand stackHand) {
+    public ParticleOverviewScreen(GuiSpellBook previousScreen, int slot, InteractionHand stackHand) {
+        super(stackHand);
         this.previousScreen = previousScreen;
-        this.slot = slot;
-        this.stackHand = stackHand;
-        this.caster = caster;
+        this.selectedSpellSlot = slot;
         this.timelineMap = caster.getParticles(slot).mutable();
-        if(LAST_SELECTED_PART == null) {
-            for (AbstractSpellPart spellPart : caster.getSpell(slot).recipe()) {
-                var allTimelines = ParticleTimelineRegistry.PARTICLE_TIMELINE_REGISTRY.entrySet();
-                for (var entry : allTimelines) {
-                    if (entry.getValue().getSpellPart() == spellPart) {
-                        selectedTimeline = entry.getValue();
-                        break;
-                    }
+        selectedTimeline = LAST_SELECTED_PART == null ? findTimelineFromSlot() : LAST_SELECTED_PART;
+        LAST_SELECTED_PART = selectedTimeline;
+    }
+
+    public IParticleTimelineType<?> findTimelineFromSlot(){
+        IParticleTimelineType<?> timeline = null;
+        for (AbstractSpellPart spellPart : caster.getSpell(selectedSpellSlot).recipe()) {
+            var allTimelines = ParticleTimelineRegistry.PARTICLE_TIMELINE_REGISTRY.entrySet();
+            for (var entry : allTimelines) {
+                if (entry.getValue().getSpellPart() == spellPart) {
+                    timeline = entry.getValue();
                 }
             }
-            if (selectedTimeline == null) {
-                selectedTimeline = ParticleTimelineRegistry.PROJECTILE_TIMELINE.get();
+            if(timeline != null) {
+                break;
             }
-        }else{
-            selectedTimeline = LAST_SELECTED_PART;
         }
+        if (timeline == null) {
+            timeline = ParticleTimelineRegistry.PROJECTILE_TIMELINE.get();
+        }
+        return timeline;
+    }
+
+    public void initSlotChange(){
+        this.timelineMap = caster.getParticles(selectedSpellSlot).mutable();
+        selectedTimeline = findTimelineFromSlot();
         LAST_SELECTED_PART = selectedTimeline;
+        rowOffset = 0;
+        onTimelineSelectorHit();
     }
 
     @Override
     public void init() {
         super.init();
-        addBackButton(previousScreen);
+        addBackButton(previousScreen, b ->{
+            if(this.previousScreen instanceof GuiSpellBook guiSpellBook){
+                guiSpellBook.selectedSpellSlot = selectedSpellSlot;
+                guiSpellBook.onBookstackUpdated(bookStack);
+            }
+        });
         addSaveButton((b) ->{
             int hash = timelineMap.immutable().hashCode();
             ParticleOverviewScreen.lastOpenedHash = hash;
-            Networking.sendToServer(new PacketUpdateParticleTimeline(slot, timelineMap.immutable(), this.stackHand == InteractionHand.MAIN_HAND));
+            Networking.sendToServer(new PacketUpdateParticleTimeline(selectedSpellSlot, timelineMap.immutable(), this.hand == InteractionHand.MAIN_HAND));
         });
-        timelineButton = addRenderableWidget(new DocEntryButton(bookLeft + LEFT_PAGE_OFFSET, bookTop + 36, selectedTimeline.getSpellPart().glyphItem.getDefaultInstance(), Component.translatable(selectedTimeline.getSpellPart().getLocaleName()), (button) -> {
-            addTimelineSelectionWidgets();
-            setSelectedButton(timelineButton);
-            selectedProperty = null;
-        }));
+        timelineButton = addRenderableWidget(new DocEntryButton(bookLeft + LEFT_PAGE_OFFSET, bookTop + 36, selectedTimeline.getSpellPart().glyphItem.getDefaultInstance(), Component.translatable(selectedTimeline.getSpellPart().getLocaleName()), (b) -> onTimelineSelectorHit()));
         if(currentlySelectedButton == null){
             setSelectedButton(timelineButton);
         }
@@ -117,6 +125,17 @@ public class ParticleOverviewScreen extends BaseBook {
             }
         }
         initLeftSideButtons();
+
+        initSpellSlots((slotButton) ->{
+            initSlotChange();
+            rebuildWidgets();
+        });
+    }
+
+    public void onTimelineSelectorHit(){
+        addTimelineSelectionWidgets();
+        setSelectedButton(timelineButton);
+        selectedProperty = null;
     }
 
     public static void openScreen(GuiSpellBook parentScreen, ItemStack stack, int slot, InteractionHand stackHand) {
@@ -125,10 +144,13 @@ public class ParticleOverviewScreen extends BaseBook {
         if(LAST_SELECTED_PART == null || ParticleOverviewScreen.lastOpenedHash != hash || ParticleOverviewScreen.lastScreen == null){
             LAST_SELECTED_PART = null;
             ParticleOverviewScreen.lastOpenedHash = hash;
-            Minecraft.getInstance().setScreen(new ParticleOverviewScreen(parentScreen, caster, slot, stackHand));
+            Minecraft.getInstance().setScreen(new ParticleOverviewScreen(parentScreen, slot, stackHand));
         }else{
             ParticleOverviewScreen screen = ParticleOverviewScreen.lastScreen;
-            screen.slot = slot;
+            if(screen.selectedSpellSlot != slot){
+                screen.selectedSpellSlot = slot;
+                screen.initSlotChange();
+            }
             parentScreen.selectedSpellSlot = slot;
             Minecraft.getInstance().setScreen(screen);
         }

@@ -20,6 +20,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class BaseBook extends ModdedScreen {
     public static final int FONT_COLOR = -8355712;
@@ -54,7 +55,15 @@ public class BaseBook extends ModdedScreen {
     }
 
     public void addBackButton(Screen parentScreen){
+        addBackButton(parentScreen,(b) ->{});
+    }
+
+
+    public void addBackButton(Screen parentScreen, Consumer<Button> onPress){
         addRenderableWidget(new NuggetImageButton(bookLeft + 6, bookTop + 6, DocAssets.ARROW_BACK_HOVER.width(), DocAssets.ARROW_BACK_HOVER.height(), DocAssets.ARROW_BACK.location(), DocAssets.ARROW_BACK_HOVER.location(), (b) -> {
+            if (onPress != null) {
+                onPress.accept(b);
+            }
             Minecraft.getInstance().setScreen(parentScreen);
         }));
     }

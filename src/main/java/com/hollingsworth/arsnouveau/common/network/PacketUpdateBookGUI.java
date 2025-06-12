@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
+import com.hollingsworth.arsnouveau.client.gui.book.SpellSlottedScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -30,7 +30,7 @@ public class PacketUpdateBookGUI extends AbstractPacket{
 
     @Override
     public void onClientReceived(Minecraft minecraft, Player player) {
-        if (minecraft.screen instanceof GuiSpellBook guiSpellBook) {
+        if (minecraft.screen instanceof SpellSlottedScreen guiSpellBook) {
             guiSpellBook.onBookstackUpdated(bookStack);
         }
     }

@@ -37,7 +37,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
@@ -49,14 +48,12 @@ import java.util.stream.Collectors;
 
 import static com.hollingsworth.arsnouveau.api.util.ManaUtil.getPlayerDiscounts;
 
-public class GuiSpellBook extends BaseBook {
+public class GuiSpellBook extends SpellSlottedScreen {
 
     public int numLinks = 10;
 
-    public int selectedSpellSlot = 0;
     public EnterTextField spellNameBox;
     public SearchBar searchBar;
-    public GuiSpellSlot selectedSlotButton;
     public List<CraftingButton> craftingCells = new ArrayList<>();
     public List<AbstractSpellPart> unlockedSpells;
     public List<AbstractSpellPart> displayedGlyphs;
@@ -67,13 +64,11 @@ public class GuiSpellBook extends BaseBook {
     public PageButton previousButton;
     public ISpellValidator spellValidator;
     public String previousString = "";
-    public ItemStack bookStack;
 
     public int formTextRow = 0;
     public int augmentTextRow = 0;
     public int effectTextRow = 0;
     public int glyphsPerPage = 58;
-    public InteractionHand hand;
 
     public int maxManaCache = 0;
     int currentCostCache = 0;
@@ -86,31 +81,24 @@ public class GuiSpellBook extends BaseBook {
     public PageButton prevGlyphButton;
     public int spellWindowOffset = 0;
     public int bonusSlots = 0;
-    public AbstractCaster<?> caster;
 
     public long timeOpened;
 
 
     public GuiSpellBook(InteractionHand hand) {
-        super();
-        this.hand = hand;
-        Minecraft mc = Minecraft.getInstance();
-        Player player = mc.player;
-
-        IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(player);
-        ItemStack heldStack = player.getItemInHand(hand);
-        List<AbstractSpellPart> parts = cap == null ? new ArrayList<>() : new ArrayList<>(cap.getKnownGlyphs().stream().filter(AbstractSpellPart::shouldShowInSpellBook).toList());
+        super(hand);
+        List<AbstractSpellPart> parts = playerCap == null ? new ArrayList<>() : new ArrayList<>(playerCap.getKnownGlyphs().stream().filter(AbstractSpellPart::shouldShowInSpellBook).toList());
         maxManaCache = ManaUtil.getMaxMana(player);
         parts.addAll(GlyphRegistry.getDefaultStartingSpells());
         int tier = 1;
-        if (heldStack.getItem() instanceof SpellBook book) {
+        if (bookStack.getItem() instanceof SpellBook book) {
             tier = book.getTier().value;
             if (book.getTier() == SpellTier.CREATIVE) {
                 parts = new ArrayList<>(GlyphRegistry.getSpellpartMap().values().stream().filter(AbstractSpellPart::shouldShowInSpellBook).toList());
             }
         }
-        if (SpellCasterRegistry.hasCaster(heldStack)) {
-            AbstractCaster<?> caster = SpellCasterRegistry.from(heldStack);
+        if (SpellCasterRegistry.hasCaster(bookStack)) {
+            AbstractCaster<?> caster = SpellCasterRegistry.from(bookStack);
             if (caster != null) {
                 bonusSlots = caster.getBonusGlyphSlots();
             }
@@ -122,26 +110,20 @@ public class GuiSpellBook extends BaseBook {
                 ArsNouveauAPI.getInstance().getSpellCraftingSpellValidator(),
                 new GlyphMaxTierValidator(tier)
         );
-        this.bookStack = heldStack;
-        this.caster = SpellCasterRegistry.from(heldStack);
-        selectedSpellSlot = caster.getCurrentSlot();
         spell = SpellCasterRegistry.from(bookStack).getSpell(selectedSpellSlot).mutable().recipe;
     }
 
     public void onBookstackUpdated(ItemStack stack) {
-        this.bookStack = stack;
-        this.caster = SpellCasterRegistry.from(stack);
-        if (caster == null) {
-            Minecraft.getInstance().setScreen(null);
-        }else{
-            onSetCaster(selectedSpellSlot);
-            rebuildWidgets();
-        }
+        super.onBookstackUpdated(stack);
+        onSetCaster(selectedSpellSlot);
+        rebuildWidgets();
     }
 
-    public void onSetCaster(int slot){
+    private void onSetCaster(int slot){
         this.selectedSpellSlot = slot;
-        this.spellNameBox.setValue(caster.getSpellName(slot));
+        if(spellNameBox != null) {
+            this.spellNameBox.setValue(caster.getSpellName(slot));
+        }
         spell = SpellCasterRegistry.from(bookStack).getSpell(selectedSpellSlot).mutable().recipe;
     }
 
@@ -176,31 +158,13 @@ public class GuiSpellBook extends BaseBook {
         spellNameBox.setValue(caster.getSpellName(selectedSpellSlot));
         addRenderableWidget(spellNameBox);
         addRenderableWidget(searchBar);
-        // Add spell slots
-        for (int i = 0; i < caster.getMaxSlots(); i++) {
-            String name = caster.getSpellName(i);
-            GuiSpellSlot slot = new GuiSpellSlot(bookLeft + 281, bookTop - 1 + 15 * (i + 1), i, name, (b) ->{
-                if(!(b instanceof GuiSpellSlot button)) {
-                    return;
-                }
-                this.selectedSlotButton.isSelected = false;
-                this.selectedSlotButton = button;
-                button.isSelected = true;
-                this.selectedSpellSlot = this.selectedSlotButton.slotNum;
-                onSetCaster(selectedSpellSlot);
-                resetCraftingCells();
-                updateWindowOffset(0); //includes validation
-                rebuildWidgets();
-            });
 
-            if (i == selectedSpellSlot) {
-                selectedSlotButton = slot;
-                slot.isSelected = true;
-            }else{
-                slot.isSelected = false;
-            }
-            addRenderableWidget(slot);
-        }
+        initSpellSlots((slotButton) ->{
+            onSetCaster(selectedSpellSlot);
+            resetCraftingCells();
+            updateWindowOffset(0); //includes validation
+            rebuildWidgets();
+        });
 
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 22, 0, 0, 23, 20, 23, 20, "textures/gui/worn_book_bookmark.png", this::onDocumentationClick)
                 .withTooltip(Component.translatable("ars_nouveau.gui.notebook")));
@@ -728,7 +692,7 @@ public class GuiSpellBook extends BaseBook {
         if(lastOpenedScreen == null) {
             Minecraft.getInstance().setScreen(new GuiSpellBook(hand));
         }else if(lastOpenedScreen instanceof ParticleOverviewScreen particleOverviewScreen){
-            ParticleOverviewScreen.openScreen(new GuiSpellBook(hand), stack,caster.getCurrentSlot(), hand);
+            ParticleOverviewScreen.openScreen(particleOverviewScreen.previousScreen, stack, caster.getCurrentSlot(), hand);
         }else{
             Minecraft.getInstance().setScreen(new GuiSpellBook(hand));
         }
@@ -883,14 +847,6 @@ public class GuiSpellBook extends BaseBook {
 
     }
 
-    public void drawTooltip(GuiGraphics stack, int mouseX, int mouseY) {
-        List<Component> tooltip = new ArrayList<>();
-        collectTooltips(stack, mouseX, mouseY, tooltip);
-        if (!tooltip.isEmpty()) {
-            stack.renderTooltip(font, tooltip, Optional.ofNullable(collectComponent(mouseX, mouseY)), mouseX, mouseY);
-        }
-    }
-
     protected TooltipComponent collectComponent(int mouseX, int mouseY) {
         for (Renderable renderable : renderables) {
 
@@ -902,9 +858,16 @@ public class GuiSpellBook extends BaseBook {
                 return widget.abstractSpellPart.spellSchools.isEmpty() ? null : new SchoolTooltip(widget.abstractSpellPart);
             }else if(renderable instanceof GuiSpellSlot spellSlot){
                 if(spellSlot.isSelected){
+                    if(spell.isEmpty()){
+                        return null;
+                    }
                     return new SpellTooltip(new Spell(spell), false);
                 }
-                return new SpellTooltip(caster.getSpell(spellSlot.slotNum), false);
+
+                Spell spellInSlot = caster.getSpell(spellSlot.slotNum);
+                if(spellInSlot.isEmpty())
+                    return null;
+                return new SpellTooltip(spellInSlot, false);
             }
         }
         return null;

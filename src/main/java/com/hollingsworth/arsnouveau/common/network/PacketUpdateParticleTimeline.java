@@ -46,6 +46,7 @@ public class PacketUpdateParticleTimeline extends AbstractPacket{
             AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
             if(caster != null) {
                 caster.setParticles(color, castSlot).saveToStack(stack);
+                Networking.sendToPlayerClient(new PacketUpdateBookGUI(stack), player);
             }
         }
     }
