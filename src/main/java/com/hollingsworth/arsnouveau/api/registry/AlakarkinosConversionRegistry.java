@@ -41,11 +41,6 @@ public class AlakarkinosConversionRegistry {
 
     public static LootParams LOOT_PARAMS = null;
 
-    @Deprecated
-    public static void reloadAlakarkinosRecipes(RecipeManager recipeManager) {
-        reloadAlakarkinosRecipes(recipeManager, ServerLifecycleHooks.getCurrentServer().reloadableRegistries());
-    }
-
     public static void reloadAlakarkinosRecipes(RecipeManager recipeManager, ReloadableServerRegistries.Holder registries) {
         if (LOOT_PARAMS == null) {
             return;

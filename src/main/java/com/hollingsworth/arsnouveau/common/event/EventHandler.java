@@ -40,7 +40,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.ReloadableServerRegistries;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -106,27 +106,21 @@ public class EventHandler {
             protected void apply(Object pObject, ResourceManager pResourceManager, ProfilerFiller pProfiler) {
                 ArsNouveauAPI.getInstance().onResourceReload();
 
-                RecipeManager recipeManager = event.getServerResources().getRecipeManager();
-                RegistryAccess registryAccess = event.getRegistryAccess();
-                ReloadableServerRegistries.Holder registries = event.getServerResources().fullRegistries();
-
-                GenericRecipeRegistry.reloadAll(recipeManager);
-                CasterTomeRegistry.reloadTomeData(recipeManager, registryAccess);
-                BuddingConversionRegistry.reloadBuddingConversionRecipes(recipeManager);
-                AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(recipeManager, registries);
-                ScryRitualRegistry.reloadScryRitualRecipes(recipeManager);
-
                 EventQueue.getServerInstance().addEvent(new ITimedEvent() {
                     boolean expired;
 
                     @Override
                     public void tick(ServerTickEvent serverTickEvent) {
-                        GenericRecipeRegistry.reloadAll(serverTickEvent.getServer().getRecipeManager());
-                        CasterTomeRegistry.reloadTomeData(serverTickEvent.getServer().getRecipeManager(), serverTickEvent.getServer().registryAccess());
-                        BuddingConversionRegistry.reloadBuddingConversionRecipes(serverTickEvent.getServer().getRecipeManager());
-                        AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(serverTickEvent.getServer().getRecipeManager());
-                        ScryRitualRegistry.reloadScryRitualRecipes(serverTickEvent.getServer().getRecipeManager());
-                        for(ServerPlayer player : serverTickEvent.getServer().getPlayerList().getPlayers()) {
+                        MinecraftServer server = serverTickEvent.getServer();
+                        RecipeManager recipeManager = server.getRecipeManager();
+                        RegistryAccess access = server.registryAccess();
+
+                        GenericRecipeRegistry.reloadAll(recipeManager);
+                        CasterTomeRegistry.reloadTomeData(recipeManager, access);
+                        BuddingConversionRegistry.reloadBuddingConversionRecipes(recipeManager);
+                        AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(recipeManager, server.reloadableRegistries());
+                        ScryRitualRegistry.reloadScryRitualRecipes(recipeManager);
+                        for(ServerPlayer player : server.getPlayerList().getPlayers()) {
                             Networking.sendToPlayerClient(new PacketInitDocs(), player);
                         }
                         expired = true;
