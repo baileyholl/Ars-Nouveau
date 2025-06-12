@@ -1,9 +1,8 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
+import com.hollingsworth.arsnouveau.client.gui.buttons.ClearButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.FamiliarButton;
-import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketDispelFamiliars;
 import com.hollingsworth.arsnouveau.common.network.PacketSummonFamiliar;
@@ -28,6 +27,7 @@ public class GuiFamiliarScreen extends BaseBook {
     @Override
     public void init() {
         super.init();
+        addBackButton(parent);
         int xStart = bookLeft + 20;
         int yStart = bookTop + 34;
         final int PER_ROW = 6;
@@ -39,23 +39,20 @@ public class GuiFamiliarScreen extends BaseBook {
             FamiliarButton cell = new FamiliarButton(xStart + xOffset, yStart + yOffset, part, this::onFamiliarClicked);
             addRenderableWidget(cell);
         }
-        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 13, 0, 0, 41, 12, 41, 12, "textures/gui/clear_icon.png", (e) -> {
-            Minecraft.getInstance().setScreen(parent);
+
+        addRenderableWidget(new ClearButton(bookRight - 71, bookBottom - 13, Component.translatable("ars_nouveau.spell_book_gui.dispel"), (e) -> {
+            Networking.sendToServer(new PacketDispelFamiliars());
         }));
 
-        addRenderableWidget(new GuiImageButton(bookRight - 131, bookBottom - 13, 0, 0, 41, 12, 41, 12, "textures/gui/clear_icon.png", (e) -> {
-            Networking.sendToServer(new PacketDispelFamiliars());
+        addRenderableWidget(new ClearButton(bookRight - 131, bookBottom - 13, Component.translatable("ars_nouveau.spell_book_gui.close"), (e) -> {
+            Minecraft.getInstance().setScreen(null);
         }));
     }
 
     @Override
     public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
-        graphics.blit(ArsNouveau.prefix( "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15);
-        graphics.blit(ArsNouveau.prefix( "textures/gui/create_paper.png"), 156, 179, 0, 0, 56, 15, 56, 15);
         graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.familiar").getString(), 20, 24, -8355712, false);
-        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.close"), 232, 183, -8355712, false);
-        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.dispel"), 172, 183, -8355712, false);
     }
 
     public void onFamiliarClicked(Button button) {

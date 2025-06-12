@@ -18,7 +18,6 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateParticleTimeline;
 import com.hollingsworth.arsnouveau.setup.registry.CreativeTabRegistry;
 import com.hollingsworth.nuggets.client.gui.GuiHelpers;
-import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -87,10 +86,7 @@ public class ParticleOverviewScreen extends BaseBook {
     @Override
     public void init() {
         super.init();
-        var backButton = new NuggetImageButton(bookLeft + 6, bookTop + 6, DocAssets.ARROW_BACK_HOVER.width(), DocAssets.ARROW_BACK_HOVER.height(), DocAssets.ARROW_BACK.location(), DocAssets.ARROW_BACK_HOVER.location(), (b) -> {
-            Minecraft.getInstance().setScreen(previousScreen);
-        });
-        addRenderableWidget(backButton);
+        addBackButton(previousScreen);
         addSaveButton((b) ->{
             int hash = timelineMap.immutable().hashCode();
             ParticleOverviewScreen.lastOpenedHash = hash;

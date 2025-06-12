@@ -7,11 +7,14 @@ import com.hollingsworth.arsnouveau.client.gui.BookSlider;
 import com.hollingsworth.arsnouveau.client.gui.ModdedScreen;
 import com.hollingsworth.arsnouveau.client.gui.buttons.ANButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.SaveButton;
+import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -48,6 +51,12 @@ public class BaseBook extends ModdedScreen {
         bookTop = height / 2 - FULL_HEIGHT / 2;
         bookRight = width / 2 + FULL_WIDTH / 2;
         bookBottom = height / 2 + FULL_HEIGHT / 2;
+    }
+
+    public void addBackButton(Screen parentScreen){
+        addRenderableWidget(new NuggetImageButton(bookLeft + 6, bookTop + 6, DocAssets.ARROW_BACK_HOVER.width(), DocAssets.ARROW_BACK_HOVER.height(), DocAssets.ARROW_BACK.location(), DocAssets.ARROW_BACK_HOVER.location(), (b) -> {
+            Minecraft.getInstance().setScreen(parentScreen);
+        }));
     }
 
     public void addSaveButton(Button.OnPress onPress) {

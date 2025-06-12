@@ -57,6 +57,8 @@ public class DocAssets {
     public static final BlitInfo BACKGROUND = new BlitInfo(ArsNouveau.prefix("textures/gui/spell_book_template.png"), 290, 188);
 
     public static final BlitInfo SEARCH_PAPER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_search_bar.png"), 110, 15);
+    public static final BlitInfo SAVE_BUTTON = new BlitInfo(ArsNouveau.prefix("textures/gui/save_bar.png"), 56, 15);
+    public static final BlitInfo CLEAR_BUTTON = new BlitInfo(ArsNouveau.prefix("textures/gui/clear_bar.png"), 47, 15);
 
     public static final BlitInfo THREAD_FRAME = new BlitInfo(ArsNouveau.prefix( "textures/gui/documentation/doc_frame_threads.png"),98, 130);
 
@@ -105,7 +107,7 @@ public class DocAssets {
     public static final BlitInfo SPEED_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/speed_icon.png"), 14, 14);
     public static final BlitInfo SPELL_TAB_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/spell_tab.png"), 18, 13);
     public static final BlitInfo SPELL_TAB_ICON_SELECTED = new BlitInfo(ArsNouveau.prefix("textures/gui/spell_tab_selected.png"), 18, 13);
-
+    public static final BlitInfo ENTER_TEXT_PAPER = new BlitInfo(ArsNouveau.prefix("textures/gui/spell_name_paper.png"), 109, 15);
 
     public record BlitInfo(ResourceLocation location, int u, int v, int width, int height) {
         public BlitInfo(ResourceLocation location, int width, int height){

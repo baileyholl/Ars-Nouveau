@@ -23,19 +23,16 @@ import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.inventory.PageButton;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -57,8 +54,8 @@ public class GuiSpellBook extends BaseBook {
     public int numLinks = 10;
 
     public int selectedSpellSlot = 0;
-    public EditBox spellNameBox;
-    public NoShadowTextField searchBar;
+    public EnterTextField spellNameBox;
+    public SearchBar searchBar;
     public GuiSpellSlot selectedSlotButton;
     public List<CraftingButton> craftingCells = new ArrayList<>();
     public List<AbstractSpellPart> unlockedSpells;
@@ -81,7 +78,6 @@ public class GuiSpellBook extends BaseBook {
     public int maxManaCache = 0;
     int currentCostCache = 0;
 
-    public CreateSpellButton createSpellButton;
 
     public Renderable hoveredWidget = null;
 
@@ -157,36 +153,27 @@ public class GuiSpellBook extends BaseBook {
         resetCraftingCells();
 
         layoutAllGlyphs(page);
-        createSpellButton = addRenderableWidget(new CreateSpellButton(bookRight - 71, bookBottom - 11, this::onCreateClick, () -> !this.validationErrors.isEmpty()));
-        addRenderableWidget(new GuiImageButton(bookRight - 126, bookBottom - 11, 0, 0, 41, 12, 41, 12, "textures/gui/clear_icon.png", this::clear));
+        addRenderableWidget(new CreateSpellButton(bookRight - 74, bookBottom - 13, this::onCreateClick, () -> this.validationErrors));
+        addRenderableWidget(new ClearButton(bookRight - 129, bookBottom - 13, Component.translatable("ars_nouveau.spell_book_gui.clear"), this::clear));
 
         String previousSearch = "";
         if(searchBar != null){
             previousSearch = searchBar.getValue();
         }
 
-        spellNameBox = new NoShadowTextField(minecraft.font, bookLeft + 32, bookBottom - 9,
-                88, 12, null, Component.translatable("ars_nouveau.spell_book_gui.spell_name"));
-        spellNameBox.setBordered(false);
-        spellNameBox.setTextColor(12694931);
-
-        searchBar = new NoShadowTextField(minecraft.font, bookRight - 73, bookTop,
-                54, 12, null, Component.translatable("ars_nouveau.spell_book_gui.search"));
-        searchBar.setBordered(false);
-        searchBar.setTextColor(12694931);
+        searchBar = new SearchBar(Minecraft.getInstance().font, bookRight - 130, bookTop - 3);
         searchBar.onClear = (val) -> {
             this.onSearchChanged("");
             return null;
         };
 
         searchBar.setValue(previousSearch);
-
-        spellNameBox.setValue(caster.getSpellName(selectedSpellSlot));
-        spellNameBox.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.spell_name").getString());
-
         searchBar.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.search").getString());
         searchBar.setResponder(this::onSearchChanged);
 
+        spellNameBox = new EnterTextField(minecraft.font, bookLeft + 16, bookBottom - 13);
+
+        spellNameBox.setValue(caster.getSpellName(selectedSpellSlot));
         addRenderableWidget(spellNameBox);
         addRenderableWidget(searchBar);
         // Add spell slots
@@ -761,25 +748,10 @@ public class GuiSpellBook extends BaseBook {
         if (augmentTextRow >= 1) {
             graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.augment").getString(), augmentTextRow > 6 ? 154 : 20, 5 + 18 * (augmentTextRow + formOffset), -8355712, false);
         }
-        graphics.blit(ArsNouveau.prefix("textures/gui/spell_name_paper.png"), 16, 175, 0, 0, 109, 15, 109, 15);
-        graphics.blit(ArsNouveau.prefix("textures/gui/search_paper.png"), 203, -3, 0, 0, 72, 15, 72, 15);
-        graphics.blit(ArsNouveau.prefix("textures/gui/clear_paper.png"), 161, 175, 0, 0, 47, 15, 47, 15);
-        graphics.blit(ArsNouveau.prefix("textures/gui/create_paper.png"), 216, 175, 0, 0, 56, 15, 56, 15);
-        if (validationErrors.isEmpty()) {
-            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.create"), 233, 179, -8355712, false);
-        } else {
-            // Color code chosen to match GL11.glColor4f(1.0F, 0.7F, 0.7F, 1.0F);
-            Component textComponent = Component.translatable("ars_nouveau.spell_book_gui.create")
-                    .withStyle(s -> s.withStrikethrough(true).withColor(TextColor.parseColor("#FFB2B2").getOrThrow()));
-            // The final argument to draw desaturates the above color from the text component
-            graphics.drawString(font, textComponent, 233, 183, -8355712, false);
-        }
-        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.clear").getString(), 177, 179, -8355712, false);
 
-        //manabar
         int manaLength = 96;
         if (maxManaCache > 0) {
-            //keep the mana bar lenght between -1 and 96 to avoid over/underflow
+            //keep the mana bar length between -1 and 96 to avoid over/underflow
             manaLength = (int) Mth.clamp(manaLength * ((float) (maxManaCache - currentCostCache) / maxManaCache), -1, 96);
         } else manaLength = 0;
 
@@ -846,6 +818,7 @@ public class GuiSpellBook extends BaseBook {
             CraftingButton b = craftingCells.get(ve.getPosition());
             b.validationErrors.add(ve);
         }
+
         this.validationErrors = errors;
 
         for (CraftingButton craftingButton : craftingCells) {
@@ -908,31 +881,6 @@ public class GuiSpellBook extends BaseBook {
             }
         }
 
-    }
-
-    @Override
-    public void collectTooltips(GuiGraphics stack, int mouseX, int mouseY, List<Component> tooltip) {
-        if (GuiUtils.isMouseInRelativeRange(mouseX, mouseY, createSpellButton)) {
-            if (!validationErrors.isEmpty()) {
-                boolean foundGlyphErrors = false;
-                tooltip.add(Component.translatable("ars_nouveau.spell.validation.crafting.invalid").withStyle(ChatFormatting.RED));
-
-                // Add any spell-wide errors
-                for (SpellValidationError error : validationErrors) {
-                    if (error.getPosition() < 0) {
-                        tooltip.add(error.makeTextComponentExisting());
-                    } else {
-                        foundGlyphErrors = true;
-                    }
-                }
-                // Show a single placeholder for all the per-glyph errors
-                if (foundGlyphErrors) {
-                    tooltip.add(Component.translatable("ars_nouveau.spell.validation.crafting.invalid_glyphs"));
-                }
-            }
-        } else {
-            super.collectTooltips(stack, mouseX, mouseY, tooltip);
-        }
     }
 
     public void drawTooltip(GuiGraphics stack, int mouseX, int mouseY) {

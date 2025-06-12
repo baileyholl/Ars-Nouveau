@@ -1,10 +1,8 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations.properties;
 
-import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
-import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineOption;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.gui.buttons.SelectedParticleButton;
@@ -27,9 +25,7 @@ public class MotionProperty extends BaseProperty<MotionProperty>{
 
     TimelineOption timelineOption;
 
-    private MotionProperty(){
-        timelineOption = new TimelineOption(ResourceLocation.fromNamespaceAndPath("ars_nouveau", "default"), new TimelineEntryData(), ImmutableList.of());
-    }
+    private MotionProperty(){}
 
     public MotionProperty(TimelineOption timelineOption){
         super(timelineOption.entry().particleOptions().map);
