@@ -10,12 +10,16 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import oshi.util.tuples.Pair;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PerkUtil {
 
@@ -48,19 +52,44 @@ public class PerkUtil {
     }
 
     public static List<PerkInstance> getPerksFromItem(ItemStack stack){
-        List<PerkInstance> perkInstances = new ArrayList<>();
         var data = stack.get(DataComponentRegistry.ARMOR_PERKS);
         if(data == null){
-            return perkInstances;
+            return new ArrayList<>();
         }
-        perkInstances.addAll(data.getPerkInstances(stack));
-        return perkInstances;
+        return data.getPerkInstances(stack);
     }
 
-    public static List<PerkInstance> getPerksFromLiving(LivingEntity player){
-        List<PerkInstance> perkInstances = new ArrayList<>();
-        for(ItemStack stack : player.getArmorSlots()){
-            perkInstances.addAll(getPerksFromItem(stack));
+    public static final Map<LivingEntity, List<PerkInstance>> LIVING_CACHE = new HashMap<>();
+
+    public static List<PerkInstance> getPerksFromLiving(LivingEntity entity) {
+        return LIVING_CACHE.computeIfAbsent(entity, e -> {
+            List<PerkInstance> perkInstances = new ArrayList<>();
+            if (entity instanceof Player player) {
+                for (ItemStack stack : player.inventory.armor) {
+                    perkInstances = addItemPerkInstances(perkInstances, stack);
+                }
+            } else {
+                for (ItemStack stack : entity.getArmorSlots()) {
+                    perkInstances = addItemPerkInstances(perkInstances, stack);
+                }
+            }
+            return perkInstances;
+        });
+    }
+
+    @NotNull
+    private static List<PerkInstance> addItemPerkInstances(List<PerkInstance> perkInstances, ItemStack stack) {
+        var newPerks = getPerksFromItem(stack);
+        if (newPerks.isEmpty()) {
+            return perkInstances;
+        }
+        if (perkInstances.isEmpty()) {
+            perkInstances = newPerks;
+            return perkInstances;
+        }
+        for (PerkInstance perk : newPerks) {
+            //noinspection UseBulkOperation
+            perkInstances.add(perk);
         }
         return perkInstances;
     }
