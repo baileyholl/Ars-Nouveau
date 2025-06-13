@@ -671,32 +671,4 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         return lecternTile.lecternInvWrapper;
     }
 
-    public static class HandlerPos {
-
-        public BlockPos pos;
-        public BlockCapabilityCache<? extends IItemHandler, Direction> handler;
-        public SlotCache slotCache;
-
-        public HandlerPos(BlockPos pos, BlockCapabilityCache<? extends IItemHandler, Direction> handler) {
-            this.pos = pos;
-            this.handler = handler;
-            this.slotCache = new SlotCache();
-        }
-
-        public BlockPos pos() {
-            return pos;
-        }
-
-        public BlockCapabilityCache<? extends IItemHandler, Direction> handler() {
-            return handler;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj instanceof HandlerPos handlerPos) {
-                return this.pos.equals(handlerPos.pos);
-            }
-            return false;
-        }
-    }
 }

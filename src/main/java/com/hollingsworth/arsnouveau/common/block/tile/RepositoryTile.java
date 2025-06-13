@@ -118,7 +118,6 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
         Item newItem = getItem(pIndex).getItem();
         if(extracted.getItem() != newItem){
             slotCache.replaceSlotWithItem(extracted.getItem(), newItem, pIndex);
-            System.out.println("replacing slots!");
         }
         return extracted;
     }

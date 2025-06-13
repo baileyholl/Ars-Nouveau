@@ -4,15 +4,15 @@ import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyTransportBehavior;
+import com.hollingsworth.arsnouveau.common.entity.statemachine.IStateEvent;
 import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.IItemHandler;
+import org.jetbrains.annotations.Nullable;
 
 
 public class TakeItemState extends TravelToPosState{
@@ -31,6 +31,7 @@ public class TakeItemState extends TravelToPosState{
         giveStarbyStack(starbuncle, iItemHandler);
         if(starbuncle.getHeldStack().isEmpty()) {
             starbuncle.addGoalDebug(this, new DebugEvent("TakeFromChest", "No items to take? Cancelling goal."));
+            behavior.takeItemBackoff = 5 + starbuncle.getRandom().nextInt(10);
             return nextState;
         }
 
@@ -72,5 +73,15 @@ public class TakeItemState extends TravelToPosState{
     @Override
     public boolean isDestinationStillValid(BlockPos pos) {
         return behavior.isPositionValidTake(pos);
+    }
+
+    @Override
+    public @Nullable StarbyState onEvent(IStateEvent event) {
+        if(event instanceof BoundListChangedEvent){
+            if(!behavior.FROM_LIST.contains(targetPos)){
+                return new DecideStarbyActionState(starbuncle, behavior);
+            }
+        }
+        return super.onEvent(event);
     }
 }
