@@ -186,8 +186,6 @@ jar {
                     "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
                     "MixinConfigs"            : "ars_nouveau.mixins.json"])
     }
-
-    finalizedBy shadowJar
 }
 
 shadowJar {
@@ -198,6 +196,7 @@ shadowJar {
     ['org.apache.lucene'].forEach {
         relocate it, "${it}.ars_nouveau"
     }
+    finalizedBy('jarJar')
     mergeServiceFiles()
 }
 
