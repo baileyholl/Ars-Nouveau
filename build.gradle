@@ -4,7 +4,7 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'net.neoforged.moddev' version '2.0.91'
-    id 'com.gradleup.shadow' version '8.3.6'
+    id 'com.gradleup.shadow' version '9.0.0-beta15'
 }
 
 version = mod_version
@@ -189,14 +189,11 @@ jar {
 }
 
 shadowJar {
-    from sourceSets.main.output.classesDirs
-    from sourceSets.main.output.resourcesDir
+    from(tasks.jarJar)
     configurations = [project.configurations.shade] // <- Tell shadowJar to shade dependencies from 'shade'
     archiveClassifier = ''
-    ['org.apache.lucene'].forEach {
-        relocate it, "${it}.ars_nouveau"
-    }
-    finalizedBy('jarJar')
+    relocate 'org.apache.lucene', 'org.apache.lucene.ars_nouveau'
+    archiveClassifier = null
     mergeServiceFiles()
 }
 
