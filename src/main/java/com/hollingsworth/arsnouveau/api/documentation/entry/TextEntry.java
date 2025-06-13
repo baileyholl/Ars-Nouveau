@@ -58,6 +58,10 @@ public class TextEntry extends SinglePageWidget {
         return (parent, x, y, width, height) -> new TextEntry(body, title, renderStack, parent, x, y, width, height);
     }
 
+    public static SinglePageCtor create(NuggetMultilLineLabel body, Component title){
+        return (parent, x, y, width, height) -> new TextEntry(body, title, null, parent, x, y, width, height);
+    }
+
     public static SinglePageCtor create(Component body, Component title){
         return (parent, x, y, width, height) -> new TextEntry(body, title, null, parent, x, y, width, height);
     }

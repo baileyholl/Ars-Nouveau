@@ -3,12 +3,11 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.+'
-    id 'io.github.goooler.shadow' version '8.1.7'
+    id 'net.neoforged.moddev' version '2.0.91'
+    id 'com.gradleup.shadow' version '9.0.0-beta15'
 }
 
 version = mod_version
-
 
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
@@ -23,24 +22,60 @@ base {
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 java.withSourcesJar()
 
-subsystems {
-    parchment {
-        minecraftVersion = "1.21.1"
-        mappingsVersion = project.parchment_version
-    }
-}
-
 configurations {
     libraries
-    // This will make sure that all dependencies that you add to the libraries configuration will also be added to the implementation configuration
-    // This way, you only need one dependency declaration for both runtime and compile dependencies
     shade
+
     implementation.extendsFrom libraries
     runtimeClasspath.extendsFrom localRuntime
-
-    shade
     implementation.extendsFrom shade
+}
 
+neoForge {
+    version = project.neo_version
+    validateAccessTransformers = true
+
+    runs {
+        configureEach {
+            systemProperty 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            systemProperty 'forge.logging.console.level', 'debug'
+        }
+
+        client {
+            client()
+            gameDirectory = project.file('runs/client')
+            programArguments.addAll '--username', secrets.getProperty("username") ?: 'Dev', secrets.getProperty("uuid") ? '--uuid' : '', secrets.getProperty("uuid") ?: ''
+        }
+
+
+        clientAlt {
+            client()
+            gameDirectory = project.file('runs/client')
+            programArguments.addAll('--username', 'Dev2')
+        }
+
+        data {
+            data()
+            gameDirectory = project.file('runs/data')
+            programArguments.addAll('--mod', mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath())
+        }
+
+        server {
+            server()
+            gameDirectory = project.file('server')
+        }
+    }
+
+    mods {
+        testproject {
+            sourceSet sourceSets.main
+        }
+    }
+
+    parchment {
+        minecraftVersion = project.minecraft_version
+        mappingsVersion = project.parchment_version
+    }
 }
 
 // Credits to TwilightForest for the idea of using a secrets file to customize the in-dev uuid and username
@@ -61,37 +96,7 @@ if (secretsFile.exists()) {
     }
 }
 
-runs {
-    configureEach {
-        systemProperty 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-        systemProperty 'forge.logging.console.level', 'debug'
-
-        modSource sourceSets.main
-        dependencies {
-            runtime project.configurations.libraries
-            runtime project.configurations.shade
-        }
-    }
-
-    client {
-        getArguments().addAll '--username', secrets.getProperty("username") ?: 'Dev', secrets.getProperty("uuid") ? '--uuid' : '', secrets.getProperty("uuid") ?: ''
-      }
-
-    server {
-        programArgument '--nogui'
-        workingDirectory 'server'
-    }
-
-    data {
-        getArguments().addAll '--mod', mod_id as String, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
-    }
-}
-
 sourceSets.main.resources { srcDir 'src/generated/resources' }
-
-minecraft.accessTransformers.files(
-        file('src/main/resources/META-INF/accesstransformer.cfg')
-)
 
 repositories {
     mavenLocal()
@@ -148,13 +153,8 @@ repositories {
     }
 }
 
-jarJar.enable()
-
-tasks.named('jarJar') {}
-
-
 dependencies {
-    implementation "net.neoforged:neoforge:${neo_version}"
+    compileOnly('org.jetbrains:annotations:26.0.2')
 
     implementation "software.bernie.geckolib:geckolib-neoforge-1.21.1:${geckolib_version}"
     compileOnly('vazkii.patchouli:Patchouli:1.21-87-NEOFORGE')
@@ -175,48 +175,49 @@ dependencies {
     localRuntime 'curse.maven:ftb-library-forge-404465:5754910'
     localRuntime 'curse.maven:architectury-api-419699:5553800'
 //    localRuntime 'curse.maven:productivebees-377897:6154395'
-    implementation(jarJar(group: 'com.hollingsworth.nuggets', name: 'nuggets-neoforge-1.21', version:'[1.0.6,)'){
-        jarJar.pin(it, '1.0.6')
+
+    jarJar(implementation('com.hollingsworth.nuggets:nuggets-neoforge-1.21') {
+        version {
+            strictly '[1.0.7,)'
+            prefer '1.0.7.38'
+        }
     })
     localRuntime "maven.modrinth:cloth-config:15.0.140+neoforge"
 
     // Apotheosis
     localRuntime "curse.maven:apothic-attributes-898963:6430300"
     localRuntime "curse.maven:placebo-283644:6446766"
-  //localRuntime "curse.maven:immersive-portals-for-forge-355440:6013197"
-    //implementation "curse.maven:ars-elemental-561470:6086122"
-    shade 'org.apache.lucene:lucene-core:10.1.0'
-    shade 'org.apache.lucene:lucene-analysis-common:10.1.0'
-    shade 'org.apache.lucene:lucene-queryparser:10.1.0'
+    //localRuntime "curse.maven:immersive-portals-for-forge-355440:6013197"
+//    implementation "curse.maven:ars-elemental-561470:6419081"
+    additionalRuntimeClasspath(shade('org.apache.lucene:lucene-core:10.1.0'))
+    additionalRuntimeClasspath(shade('org.apache.lucene:lucene-analysis-common:10.1.0'))
+    additionalRuntimeClasspath(shade('org.apache.lucene:lucene-queryparser:10.1.0'))
 //    implementation "curse.maven:immersive-engineering-231951:6506639"
-//    implementation 'com.hollingsworth.nuggets:nuggets-neoforge-1.21:1.0.4'
 }
 
 jar {
     manifest {
-        attributes([
-                "Specification-Title"     : "ArsNouveau",
-                "Specification-Vendor"    : "baileyh",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : mod_version,
-                "Implementation-Vendor"   : "baileyh",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs"            : "ars_nouveau.mixins.json"
-        ])
+        attributes(["Specification-Title"     : "ArsNouveau",
+                    "Specification-Vendor"    : "baileyh",
+                    "Specification-Version"   : "1", // We are version 1 of ourselves
+                    "Implementation-Title"    : project.name,
+                    "Implementation-Version"  : mod_version,
+                    "Implementation-Vendor"   : "baileyh",
+                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                    "MixinConfigs"            : "ars_nouveau.mixins.json"])
     }
-    finalizedBy shadowJar
 }
+
 shadowJar {
-    from sourceSets.main.output.classesDirs
-    from sourceSets.main.output.resourcesDir
+    from(tasks.jarJar)
     configurations = [project.configurations.shade] // <- Tell shadowJar to shade dependencies from 'shade'
+    archiveClassifier = ''
     relocate 'org.apache.lucene', 'org.apache.lucene.ars_nouveau'
-    finalizedBy('jarJar')
     archiveClassifier = null
     mergeServiceFiles()
 }
 
+assemble.dependsOn(shadowJar)
 
 publishing {
     publications {
@@ -232,6 +233,11 @@ publishing {
             url "file://" + System.getenv("local_maven")
         }
     }
+}
+
+tasks.withType(PluginUnderTestMetadata).configureEach {
+    it.pluginClasspath.setFrom tasks.shadowJar, configurations.runtimeClasspath
+    it.inputs.file(shadowJar.archiveFile)
 }
 
 tasks.withType(JavaCompile).configureEach {

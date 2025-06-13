@@ -53,8 +53,8 @@ public class EmiArmorUpgradeRecipe extends EmiEnchantingApparatusRecipe<ArmorUpg
     }
 
     @Override
-    public List<EmiIngredient> getInputs() {
-        var inputs = super.getInputs();
+    protected List<EmiIngredient> generateInputs() {
+        var inputs = super.generateInputs();
         if (!inputs.isEmpty()) {
             inputs.set(0, EmiIngredient.of(this.getUpgradable().from));
         }

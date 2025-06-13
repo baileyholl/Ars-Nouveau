@@ -8,7 +8,6 @@ import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
 import com.hollingsworth.arsnouveau.api.event.SuccessfulTreeGrowthEvent;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
-import com.hollingsworth.arsnouveau.api.recipe.MultiRecipeWrapper;
 import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.ritual.RitualEventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
@@ -21,7 +20,6 @@ import com.hollingsworth.arsnouveau.common.crafting.recipes.DispelEntityRecipe;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
-import com.hollingsworth.arsnouveau.common.entity.debug.FixedStack;
 import com.hollingsworth.arsnouveau.common.items.EnchantersSword;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
@@ -32,13 +30,14 @@ import com.hollingsworth.arsnouveau.common.ritual.DenySpawnRitual;
 import com.hollingsworth.arsnouveau.common.ritual.RitualFlight;
 import com.hollingsworth.arsnouveau.common.ritual.RitualGravity;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
-import com.hollingsworth.arsnouveau.common.spell.effect.EffectWololo;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -59,6 +58,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.ItemLike;
@@ -81,13 +81,15 @@ import net.neoforged.neoforge.event.village.VillageSiegeEvent;
 import net.neoforged.neoforge.event.village.VillagerTradesEvent;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 
 @SuppressWarnings("NullableProblems")
 @EventBusSubscriber(modid = ArsNouveau.MODID)
 public class EventHandler {
-
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void resourceLoadEvent(AddReloadListenerEvent event) {
         event.addListener(new SimplePreparableReloadListener<>() {
@@ -101,20 +103,24 @@ public class EventHandler {
             @SuppressWarnings("NullableProblems")
             @Override
             protected void apply(Object pObject, ResourceManager pResourceManager, ProfilerFiller pProfiler) {
-                MultiRecipeWrapper.RECIPE_CACHE = new HashMap<>();
-                EffectWololo.recipeCache = new FixedStack<>(EffectWololo.MAX_RECIPE_CACHE);
                 ArsNouveauAPI.getInstance().onResourceReload();
+
                 EventQueue.getServerInstance().addEvent(new ITimedEvent() {
                     boolean expired;
 
                     @Override
                     public void tick(ServerTickEvent serverTickEvent) {
-                        GenericRecipeRegistry.reloadAll(serverTickEvent.getServer().getRecipeManager());
-                        CasterTomeRegistry.reloadTomeData(serverTickEvent.getServer().getRecipeManager(), serverTickEvent.getServer().registryAccess());
-                        BuddingConversionRegistry.reloadBuddingConversionRecipes(serverTickEvent.getServer().getRecipeManager());
-                        AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(serverTickEvent.getServer().getRecipeManager());
-                        ScryRitualRegistry.reloadScryRitualRecipes(serverTickEvent.getServer().getRecipeManager());
-                        for (ServerPlayer player : serverTickEvent.getServer().getPlayerList().getPlayers()) {
+
+                        MinecraftServer server = serverTickEvent.getServer();
+                        RecipeManager recipeManager = server.getRecipeManager();
+                        RegistryAccess access = server.registryAccess();
+
+                        GenericRecipeRegistry.reloadAll(recipeManager);
+                        CasterTomeRegistry.reloadTomeData(recipeManager, access);
+                        BuddingConversionRegistry.reloadBuddingConversionRecipes(recipeManager);
+                        AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(recipeManager, server.reloadableRegistries());
+                        ScryRitualRegistry.reloadScryRitualRecipes(recipeManager);
+                        for(ServerPlayer player : server.getPlayerList().getPlayers()) {
                             Networking.sendToPlayerClient(new PacketInitDocs(), player);
                         }
                         expired = true;
@@ -340,7 +346,7 @@ public class EventHandler {
         AdoptCommand.register(event.getDispatcher());
         DroplessMobsCommand.register(event.getDispatcher());
         DebugNumberCommand.register(event.getDispatcher());
-        if(!FMLEnvironment.production){
+        if (!FMLEnvironment.production) {
             ExportDocsCommand.register(event.getDispatcher());
         }
     }
@@ -398,14 +404,6 @@ public class EventHandler {
         return new VillagerTrades.EmeraldForItems(itemLike.asItem(), cost, uses, exp).getOffer(trader, trader.getRandom());
     }
 
-    //TODO: restore looting level event
-
-//    @SubscribeEvent
-//    public static void onLootingEvent(LootingLevelEvent event) {
-//        if (event.getDamageSource() != null && event.getDamageSource().getEntity() instanceof LivingEntity living) {
-//            event.setLootingLevel(event.getLootingLevel() + Math.round(PerkUtil.countForPerk(LootingPerk.INSTANCE, living)));
-//        }
-//    }
 
     @SubscribeEvent
     public static void onPotionAdd(MobEffectEvent.Added event) {

@@ -24,6 +24,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import java.util.function.Supplier;
 
+import static com.hollingsworth.arsnouveau.ArsNouveau.prefix;
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
 public class ItemModelGenerator extends ItemModelProvider {
@@ -174,7 +175,7 @@ public class ItemModelGenerator extends ItemModelProvider {
     }
 
     private ResourceLocation itemTexture(String item) {
-        return ArsNouveau.prefix( "item" + "/" + item);
+        return prefix("item" + "/" + item);
     }
 
     private ResourceLocation itemTexture(final Item item) {
