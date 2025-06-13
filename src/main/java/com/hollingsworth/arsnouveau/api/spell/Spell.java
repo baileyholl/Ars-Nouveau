@@ -82,6 +82,7 @@ public class Spell {
         this(name, color, configuredSpellSound, abstractSpellParts, particleTimeline.orElseGet(TimelineMap::new));
     }
 
+    @Deprecated(forRemoval = true)
     public ConfiguredSpellSound sound(){
         return sound;
     }

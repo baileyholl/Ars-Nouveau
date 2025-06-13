@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,9 +28,16 @@ public class MotionProperty extends BaseProperty<MotionProperty>{
 
     private MotionProperty(){}
 
+    List<BaseProperty<?>> nestedProps;
+
     public MotionProperty(TimelineOption timelineOption){
+        this(timelineOption, new ArrayList<>());
+    }
+
+    public MotionProperty(TimelineOption timelineOption, List<BaseProperty<?>> props){
         super(timelineOption.entry().particleOptions().map);
         this.timelineOption = timelineOption;
+        nestedProps = props;
     }
 
     @Override
@@ -82,18 +90,20 @@ public class MotionProperty extends BaseProperty<MotionProperty>{
 
     @Override
     public List<BaseProperty<?>> subProperties() {
-        return timelineOption.entry().motion().getProperties(propertyHolder);
+        List<BaseProperty<?>> allProps = new ArrayList<>(nestedProps);
+        allProps.addAll(timelineOption.entry().motion().getProperties(propertyHolder));
+        return allProps;
     }
 
     @Override
     public boolean equals(Object obj) {
         return obj instanceof MotionProperty that &&
                 this.timelineOption.equals(that.timelineOption) &&
-                this.propertyHolder.equals(that.propertyHolder);
+                this.propertyHolder.equals(that.propertyHolder) && nestedProps.equals(that.nestedProps);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timelineOption, propertyHolder);
+        return Objects.hash(timelineOption, propertyHolder, nestedProps);
     }
 }

@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.api.particle.configurations.TrailMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ModelProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.MotionProperty;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.SoundProperty;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -23,7 +24,9 @@ public class ProjectileTimeline extends BaseTimeline<ProjectileTimeline>{
             TimelineEntryData.CODEC.fieldOf("trailEffect").forGetter(i -> i.trailEffect),
             TimelineEntryData.CODEC.fieldOf("onResolvingEffect").forGetter(i -> i.onResolvingEffect),
             TimelineEntryData.CODEC.fieldOf("onSpawnEffect").forGetter(i -> i.onSpawnEffect),
-            TimelineEntryData.CODEC.fieldOf("flairEffect").forGetter(i -> i.flairEffect)
+            TimelineEntryData.CODEC.fieldOf("flairEffect").forGetter(i -> i.flairEffect),
+            SoundProperty.CODEC.fieldOf("castSound").forGetter(i -> i.castSound),
+            SoundProperty.CODEC.fieldOf("resolveSound").forGetter(i -> i.resolveSound)
     ).apply(instance, ProjectileTimeline::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ProjectileTimeline> STREAM_CODEC = StreamCodec.composite(TimelineEntryData.STREAM, ProjectileTimeline::trailEffect,
@@ -33,6 +36,10 @@ public class ProjectileTimeline extends BaseTimeline<ProjectileTimeline>{
             ProjectileTimeline::onSpawnEffect,
             TimelineEntryData.STREAM,
             ProjectileTimeline::flairEffect,
+            SoundProperty.STREAM_CODEC,
+            i -> i.castSound,
+            SoundProperty.STREAM_CODEC,
+            i -> i.resolveSound,
             ProjectileTimeline::new);
 
     public static final List<IParticleMotionType<?>> TRAIL_OPTIONS = new CopyOnWriteArrayList<>();
@@ -45,19 +52,26 @@ public class ProjectileTimeline extends BaseTimeline<ProjectileTimeline>{
     public TimelineEntryData onResolvingEffect;
     public TimelineEntryData flairEffect;
 
+    public SoundProperty castSound = new SoundProperty();
+    public SoundProperty resolveSound = new SoundProperty();
+
     public ProjectileTimeline(){
         this(new TimelineEntryData(new TrailMotion(), new PropertyParticleOptions()),
                 new TimelineEntryData(new BurstMotion(), new PropertyParticleOptions()),
                 new TimelineEntryData(),
-                new TimelineEntryData());
+                new TimelineEntryData(),
+                new SoundProperty(),
+                new SoundProperty());
     }
 
     public ProjectileTimeline(TimelineEntryData trailEffect, TimelineEntryData onResolvingEffect,
-                              TimelineEntryData onSpawnEffect, TimelineEntryData flairEffect){
+                              TimelineEntryData onSpawnEffect, TimelineEntryData flairEffect, SoundProperty castSound, SoundProperty resolveSound){
         this.trailEffect = trailEffect;
         this.onResolvingEffect = onResolvingEffect;
         this.onSpawnEffect = onSpawnEffect;
         this.flairEffect = flairEffect;
+        this.castSound = castSound;
+        this.resolveSound = resolveSound;
     }
 
     public TimelineEntryData trailEffect(){
@@ -83,10 +97,10 @@ public class ProjectileTimeline extends BaseTimeline<ProjectileTimeline>{
 
     @Override
     public List<BaseProperty<?>> getProperties() {
-        return List.of(new ModelProperty(this.trailEffect.motion().propertyMap),
+        return List.of(this.trailEffect.motion().propertyMap.createIfMissing(new ModelProperty()),
                 new MotionProperty(new TimelineOption(ArsNouveau.prefix("trail"), trailEffect, ImmutableList.copyOf(TRAIL_OPTIONS))),
-                new MotionProperty(new TimelineOption(ArsNouveau.prefix("impact"), onResolvingEffect, ImmutableList.copyOf(RESOLVING_OPTIONS))),
-                new MotionProperty(new TimelineOption(ArsNouveau.prefix("spawn"), onSpawnEffect, ImmutableList.copyOf(SPAWN_OPTIONS))),
+                new MotionProperty(new TimelineOption(ArsNouveau.prefix("impact"), onResolvingEffect, ImmutableList.copyOf(RESOLVING_OPTIONS)), List.of(resolveSound)),
+                new MotionProperty(new TimelineOption(ArsNouveau.prefix("spawn"), onSpawnEffect, ImmutableList.copyOf(SPAWN_OPTIONS)), List.of(castSound)),
                 new MotionProperty(new TimelineOption(ArsNouveau.prefix("flair"), flairEffect, ImmutableList.copyOf(FLAIR_OPTIONS))));
     }
 }

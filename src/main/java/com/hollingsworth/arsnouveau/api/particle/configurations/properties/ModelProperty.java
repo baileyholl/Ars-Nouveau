@@ -55,6 +55,11 @@ public class ModelProperty extends BaseProperty<ModelProperty>{
 
     }
 
+    public ModelProperty(){
+        selectedResource = NONE;
+        subPropMap = new PropMap();
+    }
+
     public ModelProperty(ResourceLocation resourceLocation, PropMap subPropMap) {
         this(new PropMap());
         this.selectedResource = resources.stream().filter(res -> res.resourceLocation.equals(resourceLocation)).findFirst().orElse(NONE);

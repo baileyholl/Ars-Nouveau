@@ -849,8 +849,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page.relay_collector", "Operates similar to the Source Relay, but will automatically take from jars it is not linked to within 5 blocks. See the instructions on the Source Relay for use.");
         add("block.ars_nouveau.relay_collector", "Source Relay: Collector");
         add("ars_nouveau.page2.relay", "A redstone signal will disable the relay.");
-        add("ars_nouveau.sounds.pitch", "Pitch: ");
-        add("ars_nouveau.sounds.volume", "Volume: ");
+        add("ars_nouveau.sounds.pitch", "Pitch: %s");
+        add("ars_nouveau.sounds.volume", "Volume: %s");
         add("ars_nouveau.gui.sounds", "Sounds");
         add("ars_nouveau.sounds.title", "Spell Sound");
         add("ars_nouveau.sound.empty", "No Sound");
@@ -1117,10 +1117,10 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.perks.duplicated", "You have equipped armor that contains a perk you already have. You will only receive the effect of the perk once.");
         add("ars_nouveau.totem_perk.trigger", "Thread of Undying will reactive the next time you sleep.");
         add("ars_nouveau.totem_perk.active", "Thread of Undying is now active.");
-        add("ars_nouveau.sound.fire_family", "Fire Family");
+        add("ars_nouveau.sound.fire_family", "Fire");
         add("ars_nouveau.sound.default_family", "Default");
-        add("ars_nouveau.sound.tempestry_family", "Tempestry Family");
-        add("ars_nouveau.sound.gaia_family", "Gaia Family");
+        add("ars_nouveau.sound.tempestry_family", "Tempestry");
+        add("ars_nouveau.sound.gaia_family", "Gaia");
         add("block.ars_nouveau.mob_jar", "Containment Jar");
         add("ars_nouveau.page.mob_jar", "Containment Jar");
         add("ars_nouveau.page1.mob_jar", "Allows you to capture and store mobs for transportation or decoration. To capture a mob, you must perform a Ritual of Containment. See the Ritual of Containment for more info. To release a mob, cast Dispel on the jar and the mob will be released above the jar. Note Blocks placed above a jar will play an ambient sound of the mob inside.");
@@ -1584,6 +1584,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.particle.property.speed", "Particle Speed");
         add("ars_nouveau.particle_config.brazier", "Brazier");
         add("ars_nouveau.particle_config.wisp", "Wisp");
+        add("ars_nouveau.particle.property.sound", "Sound");
+        add("ars_nouveau.sound.pyro", "Pyro");
     }
 
     public void addCategory(String key, String value) {

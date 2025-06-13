@@ -208,6 +208,7 @@ public abstract class AbstractCaster<T extends AbstractCaster<T>> implements Too
     }
 
     @NotNull
+    @Deprecated(forRemoval = true)
     public ConfiguredSpellSound getSound(int slot) {
         return this.getSpell(slot).sound();
     }
@@ -247,10 +248,12 @@ public abstract class AbstractCaster<T extends AbstractCaster<T>> implements Too
         return setColor(color, getCurrentSlot());
     }
 
+    @Deprecated(forRemoval = true)
     public T setSound(ConfiguredSpellSound sound) {
         return setSound(sound, getCurrentSlot());
     }
 
+    @Deprecated(forRemoval = true)
     public ConfiguredSpellSound getCurrentSound() {
         return getSound(getCurrentSlot());
     }
@@ -302,24 +305,21 @@ public abstract class AbstractCaster<T extends AbstractCaster<T>> implements Too
         }
 
         if (result instanceof EntityHitResult entityHitResult && entityHitResult.getEntity() instanceof LivingEntity) {
-            if (resolver.onCastOnEntity(stack, entityHitResult.getEntity(), handIn))
-                playSound(entity.getOnPos(), worldIn, entity, getCurrentSound(), SoundSource.PLAYERS);
+            resolver.onCastOnEntity(stack, entityHitResult.getEntity(), handIn);
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
 
         if (result instanceof BlockHitResult blockHitResult && (result.getType() == HitResult.Type.BLOCK || isSensitive)) {
             if (entity instanceof Player) {
                 UseOnContext context = new UseOnContext(player, handIn, (BlockHitResult) result);
-                if (resolver.onCastOnBlock(context))
-                    playSound(entity.getOnPos(), worldIn, entity, getCurrentSound(), SoundSource.PLAYERS);
-            } else if (resolver.onCastOnBlock(blockHitResult)) {
-                playSound(entity.getOnPos(), worldIn, entity, getCurrentSound(), SoundSource.NEUTRAL);
+                resolver.onCastOnBlock(context);
+            } else {
+                resolver.onCastOnBlock(blockHitResult);
             }
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
 
-        if (resolver.onCast(stack, worldIn))
-            playSound(entity.getOnPos(), worldIn, entity, getCurrentSound(), SoundSource.PLAYERS);
+        resolver.onCast(stack, worldIn);
         return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
     }
 
@@ -343,6 +343,7 @@ public abstract class AbstractCaster<T extends AbstractCaster<T>> implements Too
         return new SpellResolver(context);
     }
 
+    @Deprecated(forRemoval = true)
     public void playSound(BlockPos pos, Level worldIn, @Nullable Entity playerIn, ConfiguredSpellSound configuredSound, SoundSource source) {
         if (configuredSound == null || configuredSound.getSound() == null || configuredSound.getSound().getSoundEvent() == null || configuredSound.equals(ConfiguredSpellSound.EMPTY))
             return;

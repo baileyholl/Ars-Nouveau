@@ -20,10 +20,16 @@ public abstract class ListParticleWidgetProvider extends ParticleConfigWidgetPro
     int pageOffset;
     int maxEntries;
     int numPerPage = 8;
+
     public ListParticleWidgetProvider(int x, int y, int width, int height, List<Button> buttons) {
+        this(x, y, width, height, buttons, 8);
+    }
+
+    public ListParticleWidgetProvider(int x, int y, int width, int height, List<Button> buttons, int numPerPage) {
         super(x, y, width, height);
         this.buttons = buttons;
         maxEntries = buttons.size();
+        this.numPerPage = numPerPage;
     }
 
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
@@ -76,12 +82,12 @@ public abstract class ListParticleWidgetProvider extends ParticleConfigWidgetPro
         for (Button button : buttons) {
             widgets.add(button);
         }
-
-        upButton = new GuiImageButton(x + 80, y + height - 5, DocAssets.BUTTON_UP, (button) -> {
+        int arrowY = y + height - 5 - (8 - numPerPage) * 15;
+        upButton = new GuiImageButton(x + 80, arrowY, DocAssets.BUTTON_UP, (button) -> {
             onScroll(-1);
         }).withHoverImage(DocAssets.BUTTON_UP_HOVER);
 
-        downButton = new GuiImageButton(x + 100, y + height - 5, DocAssets.BUTTON_DOWN, (button) -> {
+        downButton = new GuiImageButton(x + 100, arrowY, DocAssets.BUTTON_DOWN, (button) -> {
             onScroll(1);
         }).withHoverImage(DocAssets.BUTTON_DOWN_HOVER);
 

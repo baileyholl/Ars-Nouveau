@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.particle.timelines.ProjectileTimeline;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
+import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
@@ -31,6 +32,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -76,6 +78,8 @@ public class EntityProjectileSpell extends ColoredProjectile implements IAnimati
     public ParticleEmitter resolveEmitter;
     public ParticleEmitter onSpawnEmitter;
     public ParticleEmitter flairEmitter;
+    public ConfiguredSpellSound castSound;
+    public ConfiguredSpellSound resolveSound;
 
     public static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(EntityProjectileSpell.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<SpellResolver> SPELL_RESOLVER = SynchedEntityData.defineId(EntityProjectileSpell.class, DataSerializers.SPELL_RESOLVER.get());
@@ -125,7 +129,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements IAnimati
     public void setResolver(SpellResolver resolver){
         this.entityData.set(SPELL_RESOLVER, resolver);
         this.spellResolver = resolver;
-        buildEmitters();
+        buildEmitters();//
     }
 
     @Override
@@ -136,6 +140,9 @@ public class EntityProjectileSpell extends ColoredProjectile implements IAnimati
     @Override
     public void tick() {
         super.tick();
+        if(age == 0 && castSound != null && !level.isClientSide){
+            level.playSound(null, getX(), getY(), getZ(), castSound.getSound().getSoundEvent().value(), SoundSource.NEUTRAL, castSound.getVolume(), castSound.getPitch());
+        }
         age++;
 
         if ((!level.isClientSide && this.age > getExpirationTime()) || (!level.isClientSide && resolver() == null)) {
@@ -251,6 +258,8 @@ public class EntityProjectileSpell extends ColoredProjectile implements IAnimati
         this.resolveEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, resolveConfig);
         this.onSpawnEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, spawnConfig);
         this.flairEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, flairConfig);
+        this.castSound = projectileTimeline.castSound.sound;
+        this.resolveSound = projectileTimeline.resolveSound.sound;
     }
 
     public void playParticles() {

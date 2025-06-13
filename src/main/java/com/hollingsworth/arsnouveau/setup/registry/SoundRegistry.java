@@ -38,11 +38,11 @@ public class SoundRegistry {
     public static DeferredHolder<SoundEvent, SoundEvent> DOMINION_WAND_SELECT = SOUND_REG.register("dominion_wand_select", () -> makeSound("dominion_wand_select"));
     public static DeferredHolder<SoundEvent, SoundEvent> DOMINION_WAND_CLEAR = SOUND_REG.register("dominion_wand_clear", () -> makeSound("dominion_wand_clear"));
 
-    public static SpellSound DEFAULT_SPELL_SOUND = new SpellSound(SoundRegistry.DEFAULT_FAMILY, Component.translatable("ars_nouveau.sound.default_family"), ArsNouveau.prefix(DEFAULT_SOUND_LIB));
+    public static SpellSound DEFAULT_SPELL_SOUND = new SpellSound(SoundRegistry.DEFAULT_FAMILY, Component.translatable("ars_nouveau.sound.fire_family"), ArsNouveau.prefix(DEFAULT_SOUND_LIB));
     public static SpellSound EMPTY_SPELL_SOUND = new SpellSound(SoundRegistry.EMPTY_SOUND_FAMILY, Component.translatable("ars_nouveau.sound.empty"), ArsNouveau.prefix(NO_SOUND_LIB));
     public static SpellSound GAIA_SPELL_SOUND = new SpellSound(SoundRegistry.GAIA_FAMILY, Component.translatable("ars_nouveau.sound.gaia_family"), ArsNouveau.prefix(GAIA_SOUND_LIB));
     public static SpellSound TEMPESTRY_SPELL_SOUND = new SpellSound(SoundRegistry.TEMPESTRY_FAMILY, Component.translatable("ars_nouveau.sound.tempestry_family"), ArsNouveau.prefix(TEMPESTRY_SOUND_LIB));
-    public static SpellSound FIRE_SPELL_SOUND = new SpellSound(SoundRegistry.FIRE_FAMILY, Component.translatable("ars_nouveau.sound.fire_family"), ArsNouveau.prefix(FIRE_SOUND_LIB));
+    public static SpellSound FIRE_SPELL_SOUND = new SpellSound(SoundRegistry.FIRE_FAMILY, Component.translatable("ars_nouveau.sound.pyro"), ArsNouveau.prefix(FIRE_SOUND_LIB));
 
     static SoundEvent makeSound(String name) {
         return SoundEvent.createVariableRangeEvent(ArsNouveau.prefix( name));

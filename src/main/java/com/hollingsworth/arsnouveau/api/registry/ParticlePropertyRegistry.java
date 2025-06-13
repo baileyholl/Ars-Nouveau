@@ -35,4 +35,6 @@ public class ParticlePropertyRegistry {
 
     public static final DeferredHolder<IPropertyType<?>, IPropertyType<SpeedProperty>> SPEED_PROPERTY = PROP_DF.register("speed", () -> new SimplePropertyType<>(SpeedProperty.CODEC, SpeedProperty.STREAM_CODEC));
 
+    public static final DeferredHolder<IPropertyType<?>, IPropertyType<SoundProperty>> SOUND_PROPERTY = PROP_DF.register("sound", () -> new SimplePropertyType<>(SoundProperty.CODEC, SoundProperty.STREAM_CODEC));
+
 }
