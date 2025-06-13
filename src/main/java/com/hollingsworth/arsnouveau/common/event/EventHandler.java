@@ -24,10 +24,7 @@ import com.hollingsworth.arsnouveau.common.items.EnchantersSword;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
 import com.hollingsworth.arsnouveau.common.lib.PotionEffectTags;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketInitDocs;
-import com.hollingsworth.arsnouveau.common.network.PacketJoinedServer;
-import com.hollingsworth.arsnouveau.common.network.PotionSyncPacket;
+import com.hollingsworth.arsnouveau.common.network.*;
 import com.hollingsworth.arsnouveau.common.perk.JumpHeightPerk;
 import com.hollingsworth.arsnouveau.common.ritual.DenySpawnRitual;
 import com.hollingsworth.arsnouveau.common.ritual.RitualFlight;
@@ -90,12 +87,14 @@ import java.util.Set;
 import java.util.UUID;
 
 
+@SuppressWarnings("NullableProblems")
 @EventBusSubscriber(modid = ArsNouveau.MODID)
 public class EventHandler {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void resourceLoadEvent(AddReloadListenerEvent event) {
         event.addListener(new SimplePreparableReloadListener<>() {
-            @SuppressWarnings({"NullableProblems", "DataFlowIssue"})
+
+            @SuppressWarnings({"NullableProblems", "DataFlowIssue", "DataFlowIssue"})
             @Override
             protected Object prepare(ResourceManager pResourceManager, ProfilerFiller pProfiler) {
                 return null;
@@ -111,6 +110,7 @@ public class EventHandler {
 
                     @Override
                     public void tick(ServerTickEvent serverTickEvent) {
+
                         MinecraftServer server = serverTickEvent.getServer();
                         RecipeManager recipeManager = server.getRecipeManager();
                         RegistryAccess access = server.registryAccess();
@@ -187,10 +187,8 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void jumpEvent(LivingEvent.LivingJumpEvent e) {
-        e.getEntity();
         if (e.getEntity().hasEffect(ModPotions.SNARE_EFFECT)) {
             e.getEntity().setDeltaMovement(0, 0, 0);
-            return;
         }
     }
 
@@ -203,6 +201,10 @@ public class EventHandler {
             boolean isContributor = Rewards.CONTRIBUTORS.contains(serverPlayer.getUUID());
             if (isContributor) {
                 Networking.sendToPlayerClient(new PacketJoinedServer(true), serverPlayer);
+            }
+            if (e.getEntity().getCommandSenderWorld() instanceof ServerLevel level) {
+                Set<UUID> allies = AlliesSavedData.getAllies(level, e.getEntity().getUUID());
+                Networking.sendToPlayerClient(new PacketSetAllies(serverPlayer.getUUID(), allies), serverPlayer);
             }
         }
         CompoundTag tag = e.getEntity().getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
@@ -223,9 +225,9 @@ public class EventHandler {
         }
 
         if (player.hasEffect(ModPotions.FLIGHT_EFFECT)
-                && player.level.getGameTime() % 20 == 0
-                && player.getEffect(ModPotions.FLIGHT_EFFECT).getDuration() <= 30 * 20
-                && player instanceof ServerPlayer serverPlayer) {
+            && player.level.getGameTime() % 20 == 0
+            && player.getEffect(ModPotions.FLIGHT_EFFECT).getDuration() <= 30 * 20
+            && player instanceof ServerPlayer serverPlayer) {
             RitualEventQueue.getRitual(player.level, RitualFlight.class, flight -> flight.attemptRefresh(serverPlayer));
         }
 
@@ -261,7 +263,7 @@ public class EventHandler {
         }
         LivingEntity entity = e.getEntity();
         if (entity.hasEffect(ModPotions.HEX_EFFECT)
-                && (entity.hasEffect(MobEffects.POISON)
+            && (entity.hasEffect(MobEffects.POISON)
                 || entity.hasEffect(MobEffects.WITHER)
                 || entity.isOnFire()
                 || entity.hasEffect(ModPotions.SHOCKED_EFFECT)

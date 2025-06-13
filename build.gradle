@@ -44,7 +44,9 @@ neoForge {
         client {
             client()
             gameDirectory = project.file('runs/client')
+            programArguments.addAll '--username', secrets.getProperty("username") ?: 'Dev', secrets.getProperty("uuid") ? '--uuid' : '', secrets.getProperty("uuid") ?: ''
         }
+
 
         clientAlt {
             client()
@@ -73,6 +75,24 @@ neoForge {
     parchment {
         minecraftVersion = project.minecraft_version
         mappingsVersion = project.parchment_version
+    }
+}
+
+// Credits to TwilightForest for the idea of using a secrets file to customize the in-dev uuid and username
+def secrets = new Properties()
+def secretsFile = file('secrets.properties')
+if (secretsFile.exists()) {
+    secretsFile.withInputStream {
+        stream -> secrets.load(stream)
+    }
+
+    fileTree("secrets").matching {
+        include "**/*.properties"
+    }.each {
+        File file ->
+            file.withInputStream {
+                stream -> secrets.load(stream)
+            }
     }
 }
 

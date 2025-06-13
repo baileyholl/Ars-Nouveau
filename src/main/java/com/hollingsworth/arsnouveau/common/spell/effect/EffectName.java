@@ -31,6 +31,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.Set;
 
+import static net.minecraft.world.level.block.entity.SkullBlockEntity.CHECKED_MAIN_THREAD_EXECUTOR;
+
 public class EffectName extends AbstractEffect {
 
     public static EffectName INSTANCE = new EffectName();
@@ -68,7 +70,8 @@ public class EffectName extends AbstractEffect {
             ItemStack stack = StackUtil.getHeldCasterToolOrEmpty(shooter);
             if (stack != ItemStack.EMPTY) {
                 AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
-                newName = Component.literal(caster.getSpellName());
+                if (caster != null)
+                    newName = Component.literal(caster.getSpellName());
             }
         }
         return newName;
@@ -82,10 +85,15 @@ public class EffectName extends AbstractEffect {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof SkullBlockEntity head) {
             head.setOwner(new ResolvableProfile(Optional.of(name.getString()), Optional.empty(), new PropertyMap()));
-            // TODO AT this
-            // head.updateOwnerProfile();
             world.sendBlockUpdated(pos, state, state, 3);
-            head.setChanged();
+            if (head.getOwnerProfile() != null && !head.getOwnerProfile().isResolved()) {
+                head.getOwnerProfile().resolve().thenAcceptAsync(profile -> {
+                    head.setOwner(profile);
+                    head.setChanged();
+                }, CHECKED_MAIN_THREAD_EXECUTOR);
+            } else {
+                head.setChanged();
+            }
             return;
         }
         if (blockEntity instanceof BaseContainerBlockEntity nameable) {
