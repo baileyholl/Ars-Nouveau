@@ -12,10 +12,7 @@ import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
-import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
@@ -32,7 +29,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -59,7 +55,7 @@ import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class EntityProjectileSpell extends ColoredProjectile implements IAnimationListener, GeoEntity {
+public class EntityProjectileSpell extends ColoredProjectile implements GeoEntity {
 
     public int age;
     protected boolean playedSpawnParticle;
@@ -141,7 +137,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements IAnimati
     public void tick() {
         super.tick();
         if(age == 0 && castSound != null && !level.isClientSide){
-            level.playSound(null, getX(), getY(), getZ(), castSound.getSound().getSoundEvent().value(), SoundSource.NEUTRAL, castSound.getVolume(), castSound.getPitch());
+            castSound.playSound(level, getX(), getY(), getZ());
         }
         age++;
 
@@ -423,7 +419,10 @@ public class EntityProjectileSpell extends ColoredProjectile implements IAnimati
     }
 
     public void sendResolveParticles(){
-        Networking.sendToNearbyClient(level, this.blockPosition(), new PacketAnimEntity(this));
+        this.resolveEmitter.tick(level);
+        if(!level.isClientSide && resolveSound != null){
+            resolveSound.playSound(level, getX(), getY(), getZ());
+        }
     }
 
     @Override
@@ -507,13 +506,6 @@ public class EntityProjectileSpell extends ColoredProjectile implements IAnimati
         spell.age = this.age;
         spell.numSensitive = this.numSensitive;
         return changed;
-    }
-
-    @Override
-    public void startAnimation(int arg) {
-        if(this.resolveEmitter != null){
-            this.resolveEmitter.tick(level);
-        }
     }
 
     @Override
