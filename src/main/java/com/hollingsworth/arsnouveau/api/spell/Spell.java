@@ -1,9 +1,12 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gson.JsonParser;
+import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.Util;
@@ -14,10 +17,10 @@ import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.util.*;
 
 public class Spell {
 
@@ -59,6 +62,10 @@ public class Spell {
         this(Arrays.asList(spellParts));
     }
 
+    public Spell(List<AbstractSpellPart> recipe, String name) {
+        this(name, ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, recipe);
+    }
+
     public Spell(List<AbstractSpellPart> recipe) {
         this("", ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, recipe);
     }
@@ -70,11 +77,80 @@ public class Spell {
         this.recipe = ImmutableList.copyOf(abstractSpellParts);
     }
 
-    public ConfiguredSpellSound sound(){
+    public static Spell fromJson(String jsonString) {
+
+        try {
+            Spell spell = CODEC.codec().parse(JsonOps.INSTANCE, JsonParser.parseString(jsonString)).getOrThrow();
+            System.out.println("About to read full spell from JSON: " + jsonString);
+            System.out.println("Full decoded spell: " + spell);
+            return spell;
+        } catch (Exception e) {
+            System.out.println("Failed to read spell from JSON: " + e.getMessage());
+        }
+
+        return new Spell();
+
+    }
+
+    public static Spell fromBinaryBase64(String base64) {
+
+//        try{
+//            byte[] data = Base64.getDecoder().decode(base64);
+//            FriendlyByteBuf baseBuf = new FriendlyByteBuf(Unpooled.wrappedBuffer(data));
+//            RegistryFriendlyByteBuf buf = new RegistryFriendlyByteBuf(baseBuf, ArsNouveau.proxy.getPlayer().registryAccess(), ConnectionType.NEOFORGE);
+//
+//            Spell spell = Spell.STREAM.decode(buf);
+//
+//            System.out.println("About to read full spell from binary base64: " + base64);
+//            System.out.println("Full decoded spell: " + spell);
+//            return spell;
+//        }catch (Exception e) {
+//            System.out.println("Failed to read spell from binary base64: " + e.getMessage());
+//        }
+
+        try {
+            byte[] bytes = Base64.getDecoder().decode(base64);
+            DataInputStream in = new DataInputStream(new ByteArrayInputStream(bytes));
+
+            int version = in.readByte();
+            if (version != 2) {
+                throw new IllegalArgumentException("Unsupported spell version: " + version);
+            }
+
+            System.out.println("About to read spell from binary base64: " + base64);
+
+            String name = in.readUTF();
+            System.out.println("Spell name: " + name);
+            int partCount = in.readInt();
+            System.out.println("Part count: " + partCount);
+            List<AbstractSpellPart> recipe = new ArrayList<>();
+
+            for (int i = 0; i < partCount; i++) {
+                String partId = in.readUTF();
+                System.out.println("Part ID: " + partId);
+                AbstractSpellPart part = GlyphRegistry.getSpellpartMap()
+                        .getOrDefault(ResourceLocation.tryParse(partId), null);
+                if (part != null) {
+                    recipe.add(part);
+                }
+            }
+
+            return new Spell(name, ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, recipe);
+
+        } catch (IOException | NullPointerException e) {
+            System.out.println("Failed to read spell from binary base64: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.out.println("String format not valid.");
+        }
+        return new Spell();
+    }
+
+
+    public ConfiguredSpellSound sound() {
         return sound;
     }
 
-    public Iterable<AbstractSpellPart> recipe(){
+    public Iterable<AbstractSpellPart> recipe() {
         return recipe;
     }
 
@@ -82,19 +158,19 @@ public class Spell {
      * DO NOT MUTATE.
      * See {@link Spell#mutable()} for a mutable version.
      */
-    public List<AbstractSpellPart> unsafeList(){
+    public List<AbstractSpellPart> unsafeList() {
         return recipe;
     }
 
-    public AbstractSpellPart get(int index){
+    public AbstractSpellPart get(int index) {
         return recipe.get(index);
     }
 
-    public int size(){
+    public int size() {
         return recipe.size();
     }
 
-    public int indexOf(AbstractSpellPart part){
+    public int indexOf(AbstractSpellPart part) {
         return recipe.indexOf(part);
     }
 
@@ -125,22 +201,22 @@ public class Spell {
         return new Spell(name, color, sound, recipe);
     }
 
-    public Spell withSound(@NotNull ConfiguredSpellSound sound){
+    public Spell withSound(@NotNull ConfiguredSpellSound sound) {
         return new Spell(name, color, sound, recipe);
     }
 
-    public ParticleColor color(){
+    public ParticleColor color() {
         return color;
     }
 
-    public String name(){
+    public String name() {
         return name;
     }
 
     public @Nullable AbstractCastMethod getCastMethod() {
         if (this.recipe == null || this.recipe.isEmpty())
             return null;
-        return this.recipe.get(0) instanceof AbstractCastMethod ? (AbstractCastMethod) recipe.get(0) : null;
+        return this.recipe.getFirst() instanceof AbstractCastMethod ? (AbstractCastMethod) recipe.getFirst() : null;
     }
 
     public List<AbstractAugment> getAugments(int startPosition, @Nullable LivingEntity caster) {
@@ -172,18 +248,18 @@ public class Spell {
         return (int) getAugments(startPosition, caster).stream().filter(a -> a.equals(augment)).count();
     }
 
-    public int getCost(){
+    public int getCost() {
         int cost = 0;
         AbstractSpellPart augmentedPart = null;
-        for(AbstractSpellPart part : recipe){
-            if(part == null)
+        for (AbstractSpellPart part : recipe) {
+            if (part == null)
                 continue;
-            if(!(part instanceof AbstractAugment))
+            if (!(part instanceof AbstractAugment))
                 augmentedPart = part;
 
-            if(augmentedPart != null && part instanceof AbstractAugment augment) {
+            if (augmentedPart != null && part instanceof AbstractAugment augment) {
                 cost += augment.getCostForPart(augmentedPart);
-            }else {
+            } else {
                 cost += part.getCastingCost();
             }
         }
@@ -223,17 +299,22 @@ public class Spell {
         return !this.isEmpty();
     }
 
+    /**
+     * @deprecated Use {@link Mutable#add(AbstractSpellPart, int, int)} or {@link Mutable#add(AbstractSpellPart)} instead.
+     * This method will be removed in a future version as it's backed by an immutable list.
+     */
+    @Deprecated(forRemoval = true)
     public Spell add(AbstractSpellPart spellPart, int count, int index) {
         for (int i = 0; i < count; i++)
             recipe.add(index, spellPart);
         return this;
     }
 
-    public List<ResourceLocation> serializeRecipe(){
+    public List<ResourceLocation> serializeRecipe() {
         return this.recipe.stream().map(AbstractSpellPart::getRegistryName).toList();
     }
 
-    public Mutable mutable(){
+    public Mutable mutable() {
         return new Mutable(new ArrayList<>(recipe), name, color, sound);
     }
 
@@ -250,7 +331,7 @@ public class Spell {
         return Objects.hash(recipe, name, color, sound);
     }
 
-    public static class Mutable{
+    public static class Mutable {
         public List<AbstractSpellPart> recipe;
         public String name;
         public ParticleColor color;
@@ -278,12 +359,18 @@ public class Spell {
             return this;
         }
 
+        public Mutable add(AbstractSpellPart spellPart, int count, int index) {
+            for (int i = 0; i < count; i++)
+                recipe.add(index, spellPart);
+            return this;
+        }
+
         public Mutable setRecipe(@NotNull List<AbstractSpellPart> recipe) {
             this.recipe = recipe;
             return this;
         }
 
-        public Spell immutable(){
+        public Spell immutable() {
             return new Spell(name, color, sound, recipe);
         }
     }
