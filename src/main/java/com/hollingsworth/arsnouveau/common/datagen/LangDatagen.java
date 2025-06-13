@@ -131,6 +131,14 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.amulet_of_mana_regen", "Amulet of Mana Regen");
         add("item.ars_nouveau.dominion_wand", "Dominion Wand");
         add("item.ars_nouveau.dominion_wand.strict", "Dominion Wand (Strict Mode)");
+        add("item.ars_nouveau.ars_stencil", "Banner Pattern");
+        add("item.ars_nouveau.ars_stencil.desc", "Nouveau");
+        add("item.ars_nouveau.archwood_sign", "Archwood Sign");
+        add("item.ars_nouveau.archwood_hanging_sign", "Archwood Hanging Sign");
+        add("block.ars_nouveau.archwood_sign", "Archwood Sign");
+        add("block.ars_nouveau.archwood_hanging_sign", "Archwood Hanging Sign");
+        add("block.ars_nouveau.archwood_wall_sign", "Archwood Sign");
+        add("block.ars_nouveau.archwood_hanging_wall_sign", "Archwood Hanging Sign");
         add("block.ars_nouveau.scribes_table", "Scribe's Table");
         add("block.ars_nouveau.light_block", "Magelight");
         add("block.ars_nouveau.temporary_light_block", "Temporary Magelight");

@@ -24,8 +24,8 @@ public class EmiEnchantingApparatusRecipe<T extends EnchantingApparatusRecipe> e
     }
 
     @Override
-    public List<EmiIngredient> getInputs() {
-        ArrayList<EmiIngredient> inputs = new ArrayList<>(1 + this.recipe.pedestalItems().size());
+    protected List<EmiIngredient> generateInputs() {
+        List<EmiIngredient> inputs = new ArrayList<>(1 + this.recipe.pedestalItems().size());
         inputs.add(EmiIngredient.of(this.recipe.reagent()));
         for (Ingredient ingredient : this.recipe.pedestalItems()) {
             inputs.add(EmiIngredient.of(ingredient));

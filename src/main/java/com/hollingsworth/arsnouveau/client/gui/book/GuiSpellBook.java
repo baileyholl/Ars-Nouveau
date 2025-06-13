@@ -198,7 +198,7 @@ public class GuiSpellBook extends BaseBook {
         addRenderableWidget(new PasteButton(this).withTooltip(Component.translatable("ars_nouveau.spell_book_gui.paste")));
 
         // Add spell slots
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < caster.getMaxSlots(); i++) {
             String name = caster.getSpellName(i);
             GuiSpellSlot slot = new GuiSpellSlot(bookLeft + 281, bookTop - 1 + 15 * (i + 1), i, name, this::onSlotChange);
             if (i == selectedSpellSlot) {
@@ -312,10 +312,11 @@ public class GuiSpellBook extends BaseBook {
                 }
                 nextPage = true;
                 adjustedXPlaced = 0;
-                adjustedRowsPlaced = 0;
+                adjustedRowsPlaced = (adjustedRowsPlaced - 1) % MAX_ROWS;
             }
             int xOffset = 20 * (adjustedXPlaced % PER_ROW) + (nextPage ? 134 : 0);
-            int yPlace = adjustedRowsPlaced * 18 + yStart + (nextPage && !foundForms ? 18 : 0);
+
+            int yPlace = adjustedRowsPlaced * 18 + yStart;
 
             GlyphButton cell = new GlyphButton(xStart + xOffset, yPlace, part, this::onGlyphClick);
             addRenderableWidget(cell);
@@ -772,7 +773,7 @@ public class GuiSpellBook extends BaseBook {
         }
 
         if (effectTextRow >= 1) {
-            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.effect").getString(), effectTextRow > 6 ? 154 : 20, 5 + 18 * (effectTextRow + formOffset), -8355712, false);
+            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.effect").getString(), effectTextRow > 6 ? 154 : 20, 5 + 18 * (effectTextRow % 7 + formOffset), -8355712, false);
         }
         if (augmentTextRow >= 1) {
             graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.augment").getString(), augmentTextRow > 6 ? 154 : 20, 5 + 18 * (augmentTextRow + formOffset), -8355712, false);

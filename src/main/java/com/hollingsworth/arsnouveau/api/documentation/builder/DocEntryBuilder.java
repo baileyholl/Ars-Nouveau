@@ -81,6 +81,11 @@ public class DocEntryBuilder {
         return this;
     }
 
+    public DocEntryBuilder withTitle(Component title){
+        this.title = title;
+        return this;
+    }
+
     public DocEntryBuilder withSortNum(int num) {
         sortNum = num;
         return this;
@@ -98,7 +103,11 @@ public class DocEntryBuilder {
     }
 
     public DocEntryBuilder withIcon(ItemLike item) {
-        displayItem = item.asItem().getDefaultInstance();
+        return withIcon(item.asItem().getDefaultInstance());
+    }
+
+    public DocEntryBuilder withIcon(ItemStack item) {
+        displayItem = item;
         return this;
     }
 
@@ -126,11 +135,19 @@ public class DocEntryBuilder {
     }
 
     public DocEntryBuilder withIntroPageNoIncrement(String key) {
-        List<NuggetMultilLineLabel> labels = DocClientUtils.splitToFitTitlePage(Component.translatable(key));
+        return withIntroPageNoIncrement(key, titleKey, displayItem);
+    }
+
+    public DocEntryBuilder withIntroPageNoIncrement(String contents, String titleKey, ItemStack displayItem) {
+        return withIntroPageNoIncrement(Component.translatable(contents), Component.translatable(titleKey), displayItem);
+    }
+
+    public DocEntryBuilder withIntroPageNoIncrement(Component contents, Component titleKey, ItemStack displayItem) {
+        List<NuggetMultilLineLabel> labels = DocClientUtils.splitToFitTitlePage(contents);
         for(int i = 0; i < labels.size(); i++){
             NuggetMultilLineLabel label = labels.get(i);
             if(i == 0) {
-                pages.add(TextEntry.create(label, Component.translatable(titleKey), displayItem));
+                pages.add(TextEntry.create(label, titleKey, displayItem));
             }else{
                 pages.add(TextEntry.create(label));
             }
@@ -140,12 +157,36 @@ public class DocEntryBuilder {
 
 
     public DocEntryBuilder withTextPage(String contents) {
-        List<NuggetMultilLineLabel> multiLines = DocClientUtils.splitToFitFullPage(Component.translatable(contents));
+        return withTextPage(Component.translatable(contents));
+    }
+
+    public DocEntryBuilder withTextPage(Component contents) {
+        List<NuggetMultilLineLabel> multiLines = DocClientUtils.splitToFitFullPage(contents);
         for (NuggetMultilLineLabel label : multiLines) {
             pages.add(TextEntry.create(label));
         }
         return this;
     }
+
+
+
+    public DocEntryBuilder withHeaderPage(String contents, String titleKey){
+        return withHeaderPage(Component.translatable(contents), Component.translatable(titleKey));
+    }
+
+    public DocEntryBuilder withHeaderPage(Component contents, Component titleKey){
+        List<NuggetMultilLineLabel> multiLines = DocClientUtils.splitToFitTitlePage(contents);
+        for (int i = 0; i < multiLines.size(); i++) {
+            NuggetMultilLineLabel label = multiLines.get(i);
+            if(i == 0) {
+                pages.add(TextEntry.create(label, titleKey));
+            }else{
+                pages.add(TextEntry.create(label));
+            }
+        }
+        return this;
+    }
+
 
     public DocEntryBuilder withLocalizedText(String id) {
         textCounter++;

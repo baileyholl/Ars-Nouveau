@@ -54,14 +54,6 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
     }
 
     @Override
-    public boolean matches(ApparatusRecipeInput input, Level level, @org.jetbrains.annotations.Nullable Player player) {
-        if(this.pedestalItems().size() != input.pedestals().size()){
-            return false;
-        }
-        return this.doesReagentMatch(input, level, player);
-    }
-
-    @Override
     public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider pRegistries) {
         return ItemStack.EMPTY;
     }

@@ -60,7 +60,7 @@ jobs:
           modrinth-id: TKB6INcv
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          name: Ars Nouveau ${{ env.VERSION }} for ${{ env.MC_MAX_VER }}
+          name: ars_nouveau-${{ env.MC_MAX_VER }}-${{ inputs.version }}
           version: ${{ inputs.version }}
           version-type: ${{ inputs.version_type }}
           java: ${{ env.JAVA_VERSION }}

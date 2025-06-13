@@ -3,12 +3,15 @@ package com.hollingsworth.arsnouveau.api.registry;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.AlakarkinosRecipe;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import it.unimi.dsi.fastutil.Hash;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMaps;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenCustomHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.ReloadableServerRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.WeightedEntry;
@@ -36,7 +39,13 @@ public class AlakarkinosConversionRegistry {
         return Collections.unmodifiableList(RECIPES);
     }
 
-    public static void reloadAlakarkinosRecipes(RecipeManager recipeManager){
+    public static LootParams LOOT_PARAMS = null;
+
+    public static void reloadAlakarkinosRecipes(RecipeManager recipeManager, ReloadableServerRegistries.Holder registries) {
+        if (LOOT_PARAMS == null) {
+            return;
+        }
+
         RECIPES = new ArrayList<>();
         List<AlakarkinosRecipe> recipes = recipeManager.getAllRecipesFor(RecipeRegistry.ALAKARKINOS_RECIPE_TYPE.get()).stream().map(RecipeHolder::value).toList();
         RECIPES.addAll(recipes);
@@ -55,8 +64,17 @@ public class AlakarkinosConversionRegistry {
 
         LootDrop.DROPS.clear();
         for (AlakarkinosRecipe recipe : RECIPES) {
-            LootDrop.computeLootDrops(recipe);
+            LootDrop.computeLootDrops(registries, recipe);
         }
+    }
+
+    public static void initLootParams(ServerLevel level) {
+        ANFakePlayer player = ANFakePlayer.getPlayer(level);
+        LOOT_PARAMS = new LootParams.Builder(level)
+                .withParameter(LootContextParams.ORIGIN, BlockPos.ZERO.getCenter())
+                .withLuck(1.0f)
+                .withParameter(LootContextParams.THIS_ENTITY, player)
+                .create(LootContextParamSets.CHEST);
     }
 
     public static boolean isConvertable(Block block) {
@@ -95,38 +113,50 @@ public class AlakarkinosConversionRegistry {
             return DROPS.get(resourceKey);
         }
 
+        @Deprecated
         public static LootDrops computeLootDrops(AlakarkinosRecipe recipe) {
+            return computeLootDrops(ServerLifecycleHooks.getCurrentServer().reloadableRegistries(), recipe);
+        }
+
+        public static LootDrops computeLootDrops(ReloadableServerRegistries.Holder registries, AlakarkinosRecipe recipe) {
             return DROPS.computeIfAbsent(recipe.table(), key -> {
-                MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-                LootTable lootTable = server.reloadableRegistries().getLootTable(key);
+                LootTable lootTable = registries.getLootTable(key);
 
                 if (lootTable.equals(LootTable.EMPTY)) {
                     return null;
                 }
 
-                ServerLevel level = server.overworld();
-                ANFakePlayer player = ANFakePlayer.getPlayer(level);
-                LootParams params = new LootParams.Builder(level)
-                        .withParameter(LootContextParams.ORIGIN, BlockPos.ZERO.getCenter())
-                        .withLuck(1.0f)
-                        .withParameter(LootContextParams.THIS_ENTITY, player)
-                        .create(LootContextParamSets.CHEST);
+                Object2IntMap<ItemStack> drops = new Object2IntOpenCustomHashMap<>(new Hash.Strategy<>() {
+                    @Override
+                    public int hashCode(ItemStack o) {
+                        return ItemStack.hashItemAndComponents(o);
+                    }
 
-                HashMap<Integer, Pair<ItemStack, Integer>> drops = new HashMap<>();
+                    @Override
+                    public boolean equals(ItemStack a, ItemStack b) {
+                        return (a == null && b == null) || (a != null && b != null && ItemStack.isSameItemSameComponents(a, b));
+                    }
+                });
+
                 for (int i = 0; i < 600; i++) {
-                    for (ItemStack random : lootTable.getRandomItems(params)) {
-                        drops.compute(ItemStack.hashItemAndComponents(random), (k, v) -> {
-                            if (v == null) return Pair.of(random, 1);
-                            return v.mapSecond(count -> count + 1);
-                        });
+                    for (ItemStack random : lootTable.getRandomItems(LOOT_PARAMS)) {
+                        drops.put(random, drops.getInt(random) + random.getCount());
                     }
                 }
 
-                int totalDrops = drops.values().stream().mapToInt(Pair::getSecond).sum();
+                int totalDrops = 0;
 
-                List<LootDrop> lootDrops = new ArrayList<>();
-                for (Pair<ItemStack, Integer> entry : drops.values()) {
-                    LootDrop drop = new LootDrop(entry.getFirst(), (float) entry.getSecond() / totalDrops);
+                var iter = Object2IntMaps.fastIterator(drops);
+                while (iter.hasNext()) {
+                    var entry = iter.next();
+                    totalDrops += entry.getIntValue();
+                }
+
+                List<LootDrop> lootDrops = new ArrayList<>(drops.size());
+                iter = Object2IntMaps.fastIterator(drops);
+                while (iter.hasNext()) {
+                    var entry = iter.next();
+                    LootDrop drop = new LootDrop(entry.getKey(), (float) entry.getIntValue() / totalDrops);
                     lootDrops.add(drop);
                 }
 
