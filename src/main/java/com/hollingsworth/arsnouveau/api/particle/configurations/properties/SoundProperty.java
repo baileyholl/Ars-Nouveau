@@ -73,7 +73,7 @@ public class SoundProperty extends BaseProperty<SoundProperty>{
             public void addWidgets(List<AbstractWidget> widgets) {
                 super.addWidgets(widgets);
 
-                int yOffset = 105;
+                int yOffset = 103;
                 int xSliderOffset = x + 4;
                 volumeSlider = buildSlider(xSliderOffset, y + yOffset,  5, 200, 5, 1, Component.translatable("ars_nouveau.xzmaxspeed_slider"), Component.empty(), 0.0, (value) ->{
                     sound = new ConfiguredSpellSound(sound.getSound(), (float) (volumeSlider.getValue() / 100f), sound.getPitch());
@@ -99,14 +99,12 @@ public class SoundProperty extends BaseProperty<SoundProperty>{
             @Override
             public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
                 DocClientUtils.drawHeader(getName(), graphics, x, y, width, mouseX, mouseY, partialTicks);
-                int yOffset = 95;
+                int yOffset = 93;
                 int sliderSpacing = 25;
                 DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.sounds.volume", volumeSlider.getValueString()), graphics, x, y + yOffset, width, mouseX, mouseY, partialTicks);
 
                 yOffset += sliderSpacing;
                 DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.sounds.pitch", pitchSlider.getValueString()), graphics, x, y + yOffset, width, mouseX, mouseY, partialTicks);
-
-
             }
 
             @Override

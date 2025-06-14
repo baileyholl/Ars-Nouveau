@@ -98,9 +98,9 @@ public class ProjectileTimeline extends BaseTimeline<ProjectileTimeline>{
     @Override
     public List<BaseProperty<?>> getProperties() {
         return List.of(this.trailEffect.motion().propertyMap.createIfMissing(new ModelProperty()),
+                new MotionProperty(new TimelineOption(ArsNouveau.prefix("spawn"), onSpawnEffect, ImmutableList.copyOf(SPAWN_OPTIONS)), List.of(castSound)),
                 new MotionProperty(new TimelineOption(ArsNouveau.prefix("trail"), trailEffect, ImmutableList.copyOf(TRAIL_OPTIONS))),
                 new MotionProperty(new TimelineOption(ArsNouveau.prefix("impact"), onResolvingEffect, ImmutableList.copyOf(RESOLVING_OPTIONS)), List.of(resolveSound)),
-                new MotionProperty(new TimelineOption(ArsNouveau.prefix("spawn"), onSpawnEffect, ImmutableList.copyOf(SPAWN_OPTIONS)), List.of(castSound)),
                 new MotionProperty(new TimelineOption(ArsNouveau.prefix("flair"), flairEffect, ImmutableList.copyOf(FLAIR_OPTIONS))));
     }
 }

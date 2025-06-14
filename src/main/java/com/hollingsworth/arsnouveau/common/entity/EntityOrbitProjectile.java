@@ -155,6 +155,8 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
         this.resolveEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, resolveConfig.motion(), resolveConfig.particleOptions());
         this.onSpawnEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, spawnConfig);
         this.flairEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, flairConfig);
+        this.castSound = projectileTimeline.spawnSound.sound;
+        this.resolveSound = projectileTimeline.resolveSound.sound;
     }
 
     @Nullable
@@ -185,12 +187,14 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
             if (this.resolver() != null) {
                 this.resolver().getNewResolver(this.resolver().spellContext.clone().makeChildContext()).onResolveEffect(level, result);
                 resolveEmitter.tick(level);
-                attemptRemoval();
+                this.resolveSound.playSound(level, result.getLocation().x, result.getLocation().y, result.getLocation().z);
             }
+            attemptRemoval();
         } else if (numSensitive > 0 && result instanceof BlockHitResult blockraytraceresult && !this.isRemoved()) {
             if (this.resolver() != null) {
                 this.resolver().getNewResolver(this.resolver().spellContext.clone().makeChildContext()).onResolveEffect(this.level, blockraytraceresult);
                 resolveEmitter.tick(level);
+                this.resolveSound.playSound(level, blockraytraceresult.getLocation().x, blockraytraceresult.getLocation().y, blockraytraceresult.getLocation().z);
             }
             attemptRemoval();
         }

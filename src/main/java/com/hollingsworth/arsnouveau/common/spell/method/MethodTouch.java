@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.method;
 
 import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.SoundProperty;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
@@ -47,6 +48,7 @@ public class MethodTouch extends AbstractCastMethod {
         resolver.onResolveEffect(world, res);
         ParticleEmitter particleEmitter = resolveEmitter(spellContext, res.getLocation());
         particleEmitter.tick(world);
+        playResolveSound(spellContext, world, res.getLocation());
         addFadingLight(context.getLevel(), res.getBlockPos().getX() + 0.5, res.getBlockPos().getY() + 0.5, res.getBlockPos().getZ() + 0.5);
         return CastResolveType.SUCCESS;
     }
@@ -56,6 +58,7 @@ public class MethodTouch extends AbstractCastMethod {
         resolver.onResolveEffect(caster.getCommandSenderWorld(), res);
         ParticleEmitter particleEmitter = resolveEmitter(spellContext, res.getLocation());
         particleEmitter.tick(caster.level);
+        playResolveSound(spellContext, caster.level(), res.getLocation());
         addFadingLight(caster.level(), res.getBlockPos().getX() + 0.5, res.getBlockPos().getY() + 0.5, res.getBlockPos().getZ() + 0.5);
         return CastResolveType.SUCCESS;
     }
@@ -65,6 +68,7 @@ public class MethodTouch extends AbstractCastMethod {
         resolver.onResolveEffect(caster.getCommandSenderWorld(), new EntityHitResult(target));
         ParticleEmitter particleEmitter = resolveEmitter(spellContext, target.position);
         particleEmitter.tick(caster.level);
+        playResolveSound(spellContext, caster.level(), target.position());
         addFadingLight(caster.level(), target.blockPosition().getX() + 0.5, target.blockPosition().getY() + 0.5, target.blockPosition().getZ() + 0.5);
         return spellContext.getCaster().getCasterType() != SpellContext.CasterType.RUNE ? CastResolveType.SUCCESS : CastResolveType.SUCCESS_NO_EXPEND;
     }
@@ -72,6 +76,11 @@ public class MethodTouch extends AbstractCastMethod {
     public ParticleEmitter resolveEmitter(SpellContext spellContext, Vec3 position) {
         TimelineEntryData entryData = spellContext.getParticleTimeline(ParticleTimelineRegistry.TOUCH_TIMELINE.get()).onResolvingEffect;
         return createStaticEmitter(entryData, position);
+    }
+
+    public void playResolveSound(SpellContext spellContext, Level level, Vec3 position){
+        SoundProperty soundProperty = spellContext.getParticleTimeline(ParticleTimelineRegistry.TOUCH_TIMELINE.get()).resolveSound;
+        soundProperty.sound.playSound(level, position.x, position.y, position.z);
     }
 
     public void addFadingLight(Level level, double x, double y, double z) {

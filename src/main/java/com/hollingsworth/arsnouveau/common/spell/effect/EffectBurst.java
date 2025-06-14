@@ -80,13 +80,17 @@ public class EffectBurst extends AbstractEffect {
                 }
             }
         }
-
+        playResolveSound(spellContext, world, center.getCenter());
         spellContext.setCanceled(true);
     }
 
     public ParticleEmitter resolveEmitter(SpellContext spellContext, Vec3 position) {
         TimelineEntryData entryData = spellContext.getParticleTimeline(ParticleTimelineRegistry.BURST_TIMELINE.get()).onResolvingEffect;
         return createStaticEmitter(entryData, position);
+    }
+
+    public void playResolveSound(SpellContext spellContext, Level level, Vec3 position) {
+        spellContext.getParticleTimeline(ParticleTimelineRegistry.BURST_TIMELINE.get()).resolveSound.sound.playSound(level, position.x, position.y, position.z);
     }
 
 
