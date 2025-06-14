@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
@@ -49,10 +50,10 @@ public class EffectPhantomBlock extends AbstractEffect {
 
                 world.setBlockAndUpdate(pos, BlockRegistry.MAGE_BLOCK.get().defaultBlockState().setValue(MageBlock.TEMPORARY, !spellStats.hasBuff(AugmentAmplify.INSTANCE)));
                 if (world.getBlockEntity(pos) instanceof MageBlockTile tile) {
-                    tile.color = spellContext.getColors();
+                    tile.setColor(spellContext.getParticleTimeline(ParticleTimelineRegistry.MAGEBLOCK_TIMELINE.get()).getColor());
                     tile.lengthModifier = spellStats.getDurationMultiplier();
                     tile.isPermanent = spellStats.hasBuff(AugmentAmplify.INSTANCE);
-                    world.sendBlockUpdated(pos, world.getBlockState(pos), world.getBlockState(pos), 2);
+                    tile.updateBlock();
                     ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5),
                             rayTraceResult.getDirection(), pos, false), world, shooter, spellContext, resolver);
                 }

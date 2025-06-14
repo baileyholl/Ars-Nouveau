@@ -5,7 +5,6 @@ import com.google.common.hash.Hashing;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 import java.util.function.UnaryOperator;
@@ -259,17 +258,6 @@ public class Color {
         return this;
     }
 
-    // ********* //
-
-    public static Color mixColors(@NotNull Color c1,@NotNull Color c2, float w) {
-        return new Color(
-                (int) (c1.getRed() + (c2.getRed() - c1.getRed()) * w),
-                (int) (c1.getGreen() + (c2.getGreen() - c1.getGreen()) * w),
-                (int) (c1.getBlue() + (c2.getBlue() - c1.getBlue()) * w),
-                (int) (c1.getAlpha() + (c2.getAlpha() - c1.getAlpha()) * w)
-        );
-    }
-
     public static int mixColors(int color1, int color2, float w) {
         int a1 = (color1 >> 24);
         int r1 = (color1 >> 16) & 0xFF;
@@ -312,6 +300,16 @@ public class Color {
     public static Color generateFromLong(long l) {
         return rainbowColor(Hashing.crc32().hashLong(l).asInt())
                 .mixWith(WHITE, 0.5f);
+    }
+
+
+    public static Color interpolate(Color a, Color b, double progress) {
+        return new Color(
+                (int) (a.getRed() + (b.getRed() - a.getRed()) * progress),
+                (int) (a.getGreen() + (b.getGreen() - a.getGreen()) * progress),
+                (int) (a.getBlue() + (b.getBlue() - a.getBlue()) * progress),
+                (int) (a.getAlpha() + (b.getAlpha() - a.getAlpha()) * progress)
+        );
     }
 
 }

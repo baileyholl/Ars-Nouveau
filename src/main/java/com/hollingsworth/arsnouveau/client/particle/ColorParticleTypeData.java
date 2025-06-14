@@ -18,9 +18,7 @@ public class ColorParticleTypeData implements ParticleOptions {
 
     protected ParticleType<? extends ColorParticleTypeData> type;
     public static final MapCodec<ColorParticleTypeData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                    Codec.FLOAT.fieldOf("r").forGetter(d -> d.color.getRed()),
-                    Codec.FLOAT.fieldOf("g").forGetter(d -> d.color.getGreen()),
-                    Codec.FLOAT.fieldOf("b").forGetter(d -> d.color.getBlue()),
+                    ParticleColor.CODEC.fieldOf("color").forGetter(d -> d.color),
                     Codec.BOOL.fieldOf("disableDepthTest").forGetter(d -> d.disableDepthTest),
                     Codec.FLOAT.fieldOf("size").forGetter(d -> d.size),
                     Codec.FLOAT.fieldOf("alpha").forGetter(d -> d.alpha),
@@ -33,9 +31,7 @@ public class ColorParticleTypeData implements ParticleOptions {
     );
 
     public static void toNetwork(RegistryFriendlyByteBuf buf, ColorParticleTypeData data) {
-        buf.writeFloat(data.color.getRed());
-        buf.writeFloat(data.color.getGreen());
-        buf.writeFloat(data.color.getBlue());
+        ParticleColor.STREAM.encode(buf, data.color);
         buf.writeBoolean(data.disableDepthTest);
         buf.writeFloat(data.size);
         buf.writeFloat(data.alpha);
@@ -43,14 +39,12 @@ public class ColorParticleTypeData implements ParticleOptions {
     }
 
     public static ColorParticleTypeData fromNetwork(RegistryFriendlyByteBuf buffer) {
-        float r = buffer.readFloat();
-        float g = buffer.readFloat();
-        float b = buffer.readFloat();
+        ParticleColor particleColor = ParticleColor.STREAM.decode(buffer);
         boolean disableDepthTest = buffer.readBoolean();
         float size = buffer.readFloat();
         float alpha = buffer.readFloat();
         int age = buffer.readInt();
-        return new ColorParticleTypeData(r, g, b, disableDepthTest, size, alpha, age);
+        return new ColorParticleTypeData(particleColor, disableDepthTest, size, alpha, age);
     }
 
     public ParticleColor color;

@@ -2,11 +2,18 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.event.DelayedSpellEvent;
+import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimeline;
+import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimelineType;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -46,7 +53,25 @@ public class SpellContext implements Cloneable {
 
     public Map<ResourceLocation, IContextAttachment> attachments = new HashMap<>();
 
-    public SpellContext(Level level,@NotNull Spell spell, @Nullable LivingEntity caster, IWrappedCaster wrappedCaster) {
+    public static final MapCodec<SpellContext> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Spell.CODEC.fieldOf("spell").forGetter(s -> s.spell)
+    ).apply(instance, SpellContext::dehydrated));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, SpellContext> STREAM = StreamCodec.of(
+            (buf, val) -> {
+                Spell.STREAM.encode(buf, val.spell);
+            },
+            buf -> {
+                Spell spell = Spell.STREAM.decode(buf);
+                return SpellContext.dehydrated(spell);
+            }
+    );
+
+    public static SpellContext dehydrated(Spell spell) {
+        return new SpellContext(null, spell, null, null);
+    }
+
+    public SpellContext(Level level, @NotNull Spell spell, @Nullable LivingEntity caster, IWrappedCaster wrappedCaster) {
         this.level = level;
         this.spell = spell;
         this.caster = caster;
@@ -54,33 +79,37 @@ public class SpellContext implements Cloneable {
         this.wrappedCaster = wrappedCaster;
     }
 
-    public SpellContext(Level level,@NotNull Spell spell, @Nullable LivingEntity caster, IWrappedCaster wrappedCaster, ItemStack casterTool) {
+    public SpellContext(Level level, @NotNull Spell spell, @Nullable LivingEntity caster, IWrappedCaster wrappedCaster, ItemStack casterTool) {
         this(level, spell, caster, wrappedCaster);
         this.casterTool = casterTool.copy();
     }
 
-    public static SpellContext fromEntity(@NotNull Spell spell, @NotNull LivingEntity caster, ItemStack castingTool){
+    public static SpellContext fromEntity(@NotNull Spell spell, @NotNull LivingEntity caster, ItemStack castingTool) {
         return new SpellContext(caster.level(), spell, caster, LivingCaster.from(caster), castingTool);
     }
 
-    public SpellContext withWrappedCaster(IWrappedCaster caster){
+    public SpellContext withWrappedCaster(IWrappedCaster caster) {
         this.wrappedCaster = caster;
-        if(caster instanceof LivingCaster livingCaster){
+        if (caster instanceof LivingCaster livingCaster) {
             this.caster = livingCaster.livingEntity;
         }
         return this;
     }
 
-    public SpellContext withParent(SpellContext parent){
+    public SpellContext withParent(SpellContext parent) {
         this.previousContext = parent;
         return this;
     }
 
-    public <T extends IContextAttachment> T getOrCreateAttachment(ResourceLocation id, T attachment){
+    public <T extends IParticleTimeline<T>> T getParticleTimeline(IParticleTimelineType<T> type) {
+        return spell.particleTimeline().get(type);
+    }
+
+    public <T extends IContextAttachment> T getOrCreateAttachment(ResourceLocation id, T attachment) {
         return (T) attachments.computeIfAbsent(id, k -> attachment);
     }
 
-    public @Nullable <T extends IContextAttachment> T getAttachment(ResourceLocation id){
+    public @Nullable <T extends IContextAttachment> T getAttachment(ResourceLocation id) {
         return (T) attachments.get(id);
     }
 
@@ -110,11 +139,11 @@ public class SpellContext implements Cloneable {
      */
     public @NotNull SpellContext makeChildContext() {
         Spell remainder = getRemainingSpell();
-        for(AbstractSpellPart spellPart : remainder.recipe()){
-            if(spellPart instanceof IContextManipulator manipulator){
+        for (AbstractSpellPart spellPart : remainder.recipe()) {
+            if (spellPart instanceof IContextManipulator manipulator) {
                 boolean shouldPush = manipulator.shouldPushContext(this);
                 SpellContext newContext = manipulator.manipulate(this);
-                if(newContext != null && shouldPush){
+                if (newContext != null && shouldPush) {
                     newContext.withParent(this);
                     return newContext;
                 }
@@ -152,7 +181,7 @@ public class SpellContext implements Cloneable {
      * This should always default to a fake player if an actual entity did not cast the spell.
      * Generally tiles would set the caster in this context, but casters can be nullable.
      */
-    public@NotNull LivingEntity getUnwrappedCaster() {
+    public @NotNull LivingEntity getUnwrappedCaster() {
         LivingEntity shooter = this.caster;
         if (shooter == null && this.castingTile != null) {
             shooter = ANFakePlayer.getPlayer((ServerLevel) level);
@@ -163,11 +192,13 @@ public class SpellContext implements Cloneable {
         return shooter;
     }
 
-    public @NotNull IWrappedCaster getCaster(){
+    public @NotNull IWrappedCaster getCaster() {
         return wrappedCaster;
     }
-    
-    public ItemStack getCasterTool(){ return casterTool;}
+
+    public ItemStack getCasterTool() {
+        return casterTool;
+    }
 
     @Deprecated(forRemoval = true, since = "3.4.0")
     public CasterType getType() {
@@ -189,19 +220,20 @@ public class SpellContext implements Cloneable {
         return isCanceled;
     }
 
-    public void setCanceled(boolean canceled){
+    public void setCanceled(boolean canceled) {
         setCanceled(canceled, CancelReason.NEW_CONTEXT);
     }
 
     /**
      * Sets isCanceled calls {@link AbstractSpellPart#onContextCanceled(SpellContext)} for all remaining spell parts if canceled is true.
+     *
      * @param canceled The new canceled state.
      * @return The new canceled state after the spell parts have been notified if canceled was true.
      */
     public boolean setCanceled(boolean canceled, @Nullable CancelReason cancelReason) {
         isCanceled = canceled;
         this.cancelReason = cancelReason;
-        if(isCanceled) {
+        if (isCanceled) {
             Spell remainder = getRemainingSpell();
             for (AbstractSpellPart spellPart : remainder.recipe()) {
                 boolean keepChecking = spellPart.contextCanceled(this);
@@ -217,20 +249,20 @@ public class SpellContext implements Cloneable {
      * Sets isCanceled to true without the side effects of {@link SpellContext#setCanceled(boolean)}.
      * This is used for abrupt termination of a spell. setCanceled should be used whenever possible.
      */
-    public void stop(){
+    public void stop() {
         this.isCanceled = true;
         cancelReason = CancelReason.TERMINATED;
     }
 
-    public void delay(DelayedSpellEvent spellEvent){
+    public void delay(DelayedSpellEvent spellEvent) {
         this.delayedSpellEvent = spellEvent;
     }
 
-    public DelayedSpellEvent getDelayedSpellEvent(){
+    public DelayedSpellEvent getDelayedSpellEvent() {
         return delayedSpellEvent;
     }
 
-    public boolean isDelayed(){
+    public boolean isDelayed() {
         return delayedSpellEvent != null && delayedSpellEvent.duration > 0;
     }
 
@@ -250,7 +282,7 @@ public class SpellContext implements Cloneable {
         return remainder.setRecipe(new ArrayList<>(spell.recipe.subList(getCurrentIndex(), spell.recipe.size()))).immutable();
     }
 
-    public @Nullable SpellContext getPreviousContext(){
+    public @Nullable SpellContext getPreviousContext() {
         return previousContext;
     }
 
@@ -268,17 +300,20 @@ public class SpellContext implements Cloneable {
             clone.level = this.level;
             clone.wrappedCaster = this.wrappedCaster;
             clone.previousContext = this.previousContext == null ? null : this.previousContext.clone();
-            clone.attachments = attachments.isEmpty() ? new HashMap<>() :new HashMap<>(attachments);
+            clone.attachments = attachments.isEmpty() ? new HashMap<>() : new HashMap<>(attachments);
+
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
     }
 
+    @Deprecated(forRemoval = true)
     public ParticleColor getColors() {
-        return colors.clone();
+        return spell.particleTimeline().get(ParticleTimelineRegistry.LIGHT_TIMELINE.get()).onTickEffect.particleOptions().colorProp().particleColor.clone();
     }
 
+    @Deprecated(forRemoval = true)
     public void setColors(ParticleColor colors) {
         this.colors = colors;
     }

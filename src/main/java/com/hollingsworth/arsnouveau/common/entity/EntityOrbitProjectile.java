@@ -1,11 +1,14 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.api.particle.timelines.OrbitTimeline;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.setup.registry.DataSerializers;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -140,6 +143,22 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
         return lastVec;
     }
 
+    @Override
+    public void buildEmitters() {
+        TimelineMap timelineMap = this.resolver().spell.particleTimeline();
+        OrbitTimeline projectileTimeline = timelineMap.get(ParticleTimelineRegistry.ORBIT_TIMELINE.get());
+        TimelineEntryData trailConfig = projectileTimeline.trailEffect;
+        TimelineEntryData resolveConfig = projectileTimeline.onResolvingEffect;
+        TimelineEntryData spawnConfig = projectileTimeline.onSpawnEffect;
+        TimelineEntryData flairConfig = projectileTimeline.flairEffect;
+        this.tickEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, trailConfig.motion(), trailConfig.particleOptions());
+        this.resolveEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, resolveConfig.motion(), resolveConfig.particleOptions());
+        this.onSpawnEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, spawnConfig);
+        this.flairEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, flairConfig);
+        this.castSound = projectileTimeline.spawnSound.sound;
+        this.resolveSound = projectileTimeline.resolveSound.sound;
+    }
+
     @Nullable
     @Override
     public Entity getOwner() {
@@ -165,18 +184,18 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
             if (entityHitResult.getEntity().equals(this.getOwner()) && !tracksGround){
                 return;
             }
-            if (this.spellResolver != null) {
-                this.spellResolver.getNewResolver(this.spellResolver.spellContext.clone().makeChildContext()).onResolveEffect(level, result);
-                Networking.sendToNearbyClient(level, BlockPos.containing(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                        BlockPos.containing(result.getLocation()), getParticleColor()));
-                attemptRemoval();
+            if (this.resolver() != null) {
+                this.resolver().getNewResolver(this.resolver().spellContext.clone().makeChildContext()).onResolveEffect(level, result);
+                resolveEmitter.tick(level);
+                this.resolveSound.playSound(level, result.getLocation().x, result.getLocation().y, result.getLocation().z);
             }
+            attemptRemoval();
         } else if (numSensitive > 0 && result instanceof BlockHitResult blockraytraceresult && !this.isRemoved()) {
-            if (this.spellResolver != null) {
-                this.spellResolver.getNewResolver(this.spellResolver.spellContext.clone().makeChildContext()).onResolveEffect(this.level, blockraytraceresult);
+            if (this.resolver() != null) {
+                this.resolver().getNewResolver(this.resolver().spellContext.clone().makeChildContext()).onResolveEffect(this.level, blockraytraceresult);
+                resolveEmitter.tick(level);
+                this.resolveSound.playSound(level, blockraytraceresult.getLocation().x, blockraytraceresult.getLocation().y, blockraytraceresult.getLocation().z);
             }
-            Networking.sendToNearbyClient(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                    BlockPos.containing(result.getLocation()).below(), getParticleColor()));
             attemptRemoval();
         }
     }

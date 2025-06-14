@@ -36,7 +36,6 @@ public class EffectOrbit extends AbstractEffect {
             wardProjectile.setAoe((float) stats.getAoeMultiplier());
             wardProjectile.extendTimes = (int) stats.getDurationMultiplier();
             wardProjectile.setTotal(total);
-            wardProjectile.setColor(resolver.spellContext.getColors());
             world.addFreshEntity(wardProjectile);
         }
     }
@@ -55,7 +54,6 @@ public class EffectOrbit extends AbstractEffect {
             wardProjectile.setAoe((float) stats.getAoeMultiplier());
             wardProjectile.extendTimes = (int) stats.getDurationMultiplier();
             wardProjectile.setTotal(total);
-            wardProjectile.setColor(resolver.spellContext.getColors());
             world.addFreshEntity(wardProjectile);
         }
     }

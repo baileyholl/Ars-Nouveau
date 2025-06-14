@@ -108,13 +108,13 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
         intensity = isWeakFire ? intensity / 2 : intensity;
         for (int i = 0; i < intensity; i++) {
             world.addParticle(
-                    GlowParticleData.createData(centerColor.transition((int) level.getGameTime() * 10)),
+                    GlowParticleData.createData(centerColor.nextColor((int) level.getGameTime() * 10)),
                     pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2), pos.getY() + 1 + ParticleUtil.inRange(-0.05, centerYMax), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2),
                     0, ParticleUtil.inRange(0.0, ySpeed), 0);
         }
         for (int i = 0; i < intensity; i++) {
             world.addParticle(
-                    GlowParticleData.createData(outerColor.transition((int) level.getGameTime() * 10)),
+                    GlowParticleData.createData(outerColor.nextColor((int) level.getGameTime() * 10)),
                     pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset), pos.getY() + 1 + ParticleUtil.inRange(0, outerYMax), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset),
                     0, ParticleUtil.inRange(0.0, ySpeed), 0);
         }
@@ -126,7 +126,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
     @Override
     public void tick() {
         if (isDecorative && level.isClientSide) {
-            makeParticle(color.transition((int) level.getGameTime() * 20), color.transition((int) level.getGameTime() * 20 + 200), 10);
+            makeParticle(color.nextColor((int) level.getGameTime() * 20), color.nextColor((int) level.getGameTime() * 20 + 200), 10);
             return;
         }
 
