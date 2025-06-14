@@ -109,7 +109,7 @@ public class SoundProperty extends BaseProperty<SoundProperty>{
 
             @Override
             public void renderIcon(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float partialTicks) {
-
+                DocClientUtils.blit(graphics, DocAssets.SOUND_ICON, x, y);
             }
 
             @Override
