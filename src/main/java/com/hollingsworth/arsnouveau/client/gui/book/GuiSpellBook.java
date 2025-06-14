@@ -174,13 +174,11 @@ public class GuiSpellBook extends SpellSlottedScreen {
         }).withTooltip(Component.translatable("ars_nouveau.gui.spell_style")));
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 68, 0, 0, 23, 20, 23, 20, "textures/gui/summon_circle_bookmark.png", this::onFamiliarClick)
                 .withTooltip(Component.translatable("ars_nouveau.gui.familiar")));
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 92, 0, 0, 23, 20, 23, 20, "textures/gui/sounds_tab.png", this::onSoundsClick)
-                .withTooltip(Component.translatable("ars_nouveau.gui.sounds")));
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 116, 0, 0, 23, 20, 23, 20, "textures/gui/settings_tab.png", (b) -> {
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 92, 0, 0, 23, 20, 23, 20, "textures/gui/settings_tab.png", (b) -> {
             Minecraft.getInstance().setScreen(new GuiSettingsScreen(this));
         }).withTooltip(Component.translatable("ars_nouveau.gui.settings")));
 
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 140, 0, 0, 23, 20, 23, 20, "textures/gui/discord_tab.png", (b) -> {
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 116, 0, 0, 23, 20, 23, 20, "textures/gui/discord_tab.png", (b) -> {
             try {
                 Util.getPlatform().openUri(new URI("https://discord.com/invite/y7TMXZu"));
             } catch (URISyntaxException e) {
