@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.item.inv.InteractType;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.item.inv.SlotReference;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.api.util.IWololoable;
@@ -210,7 +211,7 @@ public class EffectWololo extends AbstractEffect {
     }
 
     private static DyeItem getDyeItemFromSpell(SpellContext spellContext) {
-        ParticleColor spellColor = spellContext.getSpell().color();
+        ParticleColor spellColor = spellContext.getSpell().particleTimeline().get(ParticleTimelineRegistry.WOLOLO_TIMELINE).getColor();
 
         ParticleColor targetColor = vanillaColors.keySet().stream().min(Comparator.comparingDouble(d -> d.euclideanDistance(spellColor))).orElse(ParticleColor.WHITE);
         return (DyeItem) vanillaColors.get(targetColor);

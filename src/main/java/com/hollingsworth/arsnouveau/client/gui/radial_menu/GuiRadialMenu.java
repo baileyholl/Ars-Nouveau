@@ -178,14 +178,13 @@ public class GuiRadialMenu<T> extends Screen {
             float posY = centerOfScreenY - 8 + itemRadius * (float) Math.sin(angle1);
             RenderSystem.disableDepthTest();
 
-//            graphics.renderItem(new ItemStack(Items.DIAMOND_PICKAXE), (int) posX, (int) posY);
             T primarySlotIcon = radialMenuSlots.get(i).primarySlotIcon();
             List<T> secondarySlotIcons = radialMenuSlots.get(i).secondarySlotIcons();
             if (primarySlotIcon != null) {
                 radialMenu.drawIcon(primarySlotIcon, graphics, (int) posX, (int) posY, 16);
-                if (secondarySlotIcons != null && !secondarySlotIcons.isEmpty()) {
-                    drawSecondaryIcons(graphics, (int) posX, (int) posY, secondarySlotIcons);
-                }
+            }
+            if (secondarySlotIcons != null && !secondarySlotIcons.isEmpty()) {
+                drawSecondaryIcons(graphics, (int) posX, (int) posY, secondarySlotIcons);
             }
             ms.pushPose();
             ms.translate(0, 0, 9999);

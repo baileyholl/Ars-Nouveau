@@ -374,7 +374,7 @@ public class GlyphUnlockMenu extends BaseBook {
 
     public void drawTooltip(GuiGraphics stack, int mouseX, int mouseY) {
         List<Component> tooltip = new ArrayList<>();
-        super.collectTooltips(stack, mouseX, mouseY, tooltip);
+        super.collectTooltips(mouseX, mouseY, tooltip);
         if (hoveredRecipe != null) {
             MutableComponent component = Component.translatable("ars_nouveau.levels_required", ScribesTile.getLevelsFromExp(hoveredRecipe.value().exp)).withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN));
             tooltip.add(component);

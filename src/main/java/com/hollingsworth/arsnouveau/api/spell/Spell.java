@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.google.common.collect.ImmutableList;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.mojang.serialization.Codec;
@@ -14,10 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Spell {
 
@@ -25,7 +23,8 @@ public class Spell {
             Codec.STRING.fieldOf("name").forGetter(s -> s.name),
             ParticleColor.CODEC.fieldOf("color").forGetter(s -> s.color),
             ConfiguredSpellSound.CODEC.fieldOf("sound").forGetter(s -> s.sound),
-            Codec.list(AbstractSpellPart.CODEC).fieldOf("recipe").forGetter(s -> s.recipe)
+            Codec.list(AbstractSpellPart.CODEC).fieldOf("recipe").forGetter(s -> s.recipe),
+            TimelineMap.CODEC.optionalFieldOf("particleTimeline").forGetter(s -> Optional.ofNullable(s.particleTimeline))
     ).apply(instance, Spell::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Spell> STREAM = StreamCodec.of(
@@ -34,13 +33,15 @@ public class Spell {
                 ParticleColor.STREAM.encode(buf, val.color);
                 ConfiguredSpellSound.STREAM.encode(buf, val.sound);
                 AbstractSpellPart.STREAM_LIST.encode(buf, val.recipe);
+                TimelineMap.STREAM.encode(buf, val.particleTimeline);
             },
             buf -> {
                 String name = buf.readUtf();
                 ParticleColor color = ParticleColor.STREAM.decode(buf);
                 ConfiguredSpellSound sound = ConfiguredSpellSound.STREAM.decode(buf);
                 List<AbstractSpellPart> recipe = AbstractSpellPart.STREAM_LIST.decode(buf);
-                return new Spell(name, color, sound, recipe);
+                TimelineMap particleTimeline = TimelineMap.STREAM.decode(buf);
+                return new Spell(name, color, sound, recipe, particleTimeline);
             }
     );
 
@@ -49,10 +50,11 @@ public class Spell {
     private final String name;
     private final ParticleColor color;
     private final ConfiguredSpellSound sound;
+    private final TimelineMap particleTimeline;
 
 
     public Spell() {
-        this("", ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, ImmutableList.of());
+        this("", ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, ImmutableList.of(), new TimelineMap());
     }
 
     public Spell(AbstractSpellPart... spellParts) {
@@ -60,16 +62,27 @@ public class Spell {
     }
 
     public Spell(List<AbstractSpellPart> recipe) {
-        this("", ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, recipe);
+        this("", ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, recipe, new TimelineMap());
     }
 
+    @Deprecated(forRemoval = true)
     public Spell(String name, ParticleColor color, ConfiguredSpellSound configuredSpellSound, List<AbstractSpellPart> abstractSpellParts) {
+        this(name, color, configuredSpellSound, abstractSpellParts, new TimelineMap());
+    }
+
+    public Spell(String name, ParticleColor color, ConfiguredSpellSound configuredSpellSound, List<AbstractSpellPart> abstractSpellParts, TimelineMap particleTimeline) {
         this.name = name;
         this.color = color;
         this.sound = configuredSpellSound;
         this.recipe = ImmutableList.copyOf(abstractSpellParts);
+        this.particleTimeline = particleTimeline;
     }
 
+    public Spell(String name, ParticleColor color, ConfiguredSpellSound configuredSpellSound, List<AbstractSpellPart> abstractSpellParts, Optional<TimelineMap> particleTimeline) {
+        this(name, color, configuredSpellSound, abstractSpellParts, particleTimeline.orElseGet(TimelineMap::new));
+    }
+
+    @Deprecated(forRemoval = true)
     public ConfiguredSpellSound sound(){
         return sound;
     }
@@ -99,7 +112,7 @@ public class Spell {
     }
 
     public Spell add(AbstractSpellPart spellPart) {
-        return new Spell(name, color, sound, Util.copyAndAdd(recipe, spellPart));
+        return new Spell(name, color, sound, Util.copyAndAdd(recipe, spellPart), particleTimeline);
     }
 
     public Spell add(AbstractSpellPart... spellParts) {
@@ -118,17 +131,26 @@ public class Spell {
     }
 
     public Spell setRecipe(@NotNull List<AbstractSpellPart> recipe) {
-        return new Spell(name, color, sound, ImmutableList.copyOf(recipe));
+        return new Spell(name, color, sound, ImmutableList.copyOf(recipe), particleTimeline);
     }
 
     public Spell withColor(@NotNull ParticleColor color) {
-        return new Spell(name, color, sound, recipe);
+        return new Spell(name, color, sound, recipe, particleTimeline);
     }
 
     public Spell withSound(@NotNull ConfiguredSpellSound sound){
-        return new Spell(name, color, sound, recipe);
+        return new Spell(name, color, sound, recipe, particleTimeline);
     }
 
+    public Spell withTimeline(@NotNull TimelineMap timeline) {
+        return new Spell(name, color, sound, recipe, timeline);
+    }
+
+    public Spell withName(String name) {
+        return new Spell(name, color, sound, recipe, particleTimeline);
+    }
+
+    @Deprecated(forRemoval = true)
     public ParticleColor color(){
         return color;
     }
@@ -137,10 +159,15 @@ public class Spell {
         return name;
     }
 
+
+    public TimelineMap particleTimeline(){
+        return particleTimeline;
+    }
+
     public @Nullable AbstractCastMethod getCastMethod() {
         if (this.recipe == null || this.recipe.isEmpty())
             return null;
-        return this.recipe.get(0) instanceof AbstractCastMethod ? (AbstractCastMethod) recipe.get(0) : null;
+        return this.recipe.getFirst() instanceof AbstractCastMethod ? (AbstractCastMethod) recipe.getFirst() : null;
     }
 
     public List<AbstractAugment> getAugments(int startPosition, @Nullable LivingEntity caster) {
@@ -234,7 +261,7 @@ public class Spell {
     }
 
     public Mutable mutable(){
-        return new Mutable(new ArrayList<>(recipe), name, color, sound);
+        return new Mutable(new ArrayList<>(recipe), name, color, sound, particleTimeline);
     }
 
     @Override
@@ -242,12 +269,12 @@ public class Spell {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Spell spell = (Spell) o;
-        return Objects.equals(recipe, spell.recipe) && Objects.equals(name, spell.name) && Objects.equals(color, spell.color) && Objects.equals(sound, spell.sound);
+        return Objects.equals(recipe, spell.recipe) && Objects.equals(name, spell.name) && Objects.equals(color, spell.color) && Objects.equals(sound, spell.sound) && Objects.equals(particleTimeline, spell.particleTimeline);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(recipe, name, color, sound);
+        return Objects.hash(recipe, name, color, sound, particleTimeline);
     }
 
     public static class Mutable{
@@ -255,12 +282,18 @@ public class Spell {
         public String name;
         public ParticleColor color;
         public ConfiguredSpellSound sound;
+        public TimelineMap particleTimeline;
 
-        public Mutable(List<AbstractSpellPart> recipe, String name, ParticleColor color, ConfiguredSpellSound spellSound) {
+        public Mutable(List<AbstractSpellPart> recipe, String name, ParticleColor color, ConfiguredSpellSound spellSound, TimelineMap timeline) {
             this.recipe = recipe;
             this.name = name;
             this.color = color;
             this.sound = spellSound;
+            this.particleTimeline = timeline;
+        }
+
+        public Mutable(List<AbstractSpellPart> recipe, String name, ParticleColor color, ConfiguredSpellSound spellSound) {
+            this(recipe, name, color, spellSound, new TimelineMap());
         }
 
         public Mutable add(AbstractSpellPart spellPart) {
@@ -283,8 +316,9 @@ public class Spell {
             return this;
         }
 
+
         public Spell immutable(){
-            return new Spell(name, color, sound, recipe);
+            return new Spell(name, color, sound, recipe, particleTimeline);
         }
     }
 }

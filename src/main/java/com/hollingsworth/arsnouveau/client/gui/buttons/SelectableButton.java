@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.gui.buttons;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.resources.ResourceLocation;
@@ -13,6 +14,10 @@ public class SelectableButton extends GuiImageButton {
         super(x, y, u, v, w, h, image_width, image_height, resource_image.getPath(), onPress);
         this.secondImage = secondImage;
         this.originalImage = resource_image;
+    }
+
+    public SelectableButton(int x, int y, DocAssets.BlitInfo asset, DocAssets.BlitInfo secondAsset, Button.OnPress onPress) {
+        this(x, y, asset.u(), asset.v(), asset.width(), asset.height(), asset.width(), asset.height(), asset.location(), secondAsset.location(), onPress);
     }
 
     @Override

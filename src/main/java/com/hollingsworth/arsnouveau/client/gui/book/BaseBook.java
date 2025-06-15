@@ -1,31 +1,45 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.BookSlider;
 import com.hollingsworth.arsnouveau.client.gui.ModdedScreen;
 import com.hollingsworth.arsnouveau.client.gui.buttons.ANButton;
+import com.hollingsworth.arsnouveau.client.gui.buttons.SaveButton;
+import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class BaseBook extends ModdedScreen {
-
+    public static final int FONT_COLOR = -8355712;
     public static final int FULL_WIDTH = 290;
     public static final int FULL_HEIGHT = 188;
+    public static final int LEFT_PAGE_OFFSET = 19;
+    public static final int RIGHT_PAGE_OFFSET = 153;
+    public static final int PAGE_TOP_OFFSET = 17;
+    public static final int ONE_PAGE_WIDTH = 118;
+    public static final int ONE_PAGE_HEIGHT = 146;
+
     public static ResourceLocation background = ArsNouveau.prefix( "textures/gui/spell_book_template.png");
     public int bookLeft;
     public int bookTop;
     public int bookRight;
     public int bookBottom;
     public List<SpellValidationError> validationErrors = new ArrayList<>();
-
+    public SaveButton saveButton;
+    public static BaseBook lastOpenedScreen = null;
     public BaseBook() {
         super(Component.literal(""));
     }
@@ -33,10 +47,29 @@ public class BaseBook extends ModdedScreen {
     @Override
     public void init() {
         super.init();
+        BaseBook.lastOpenedScreen = this;
         bookLeft = width / 2 - FULL_WIDTH / 2;
         bookTop = height / 2 - FULL_HEIGHT / 2;
         bookRight = width / 2 + FULL_WIDTH / 2;
         bookBottom = height / 2 + FULL_HEIGHT / 2;
+    }
+
+    public void addBackButton(Screen parentScreen){
+        addBackButton(parentScreen,(b) ->{});
+    }
+
+
+    public void addBackButton(Screen parentScreen, Consumer<Button> onPress){
+        addRenderableWidget(new NuggetImageButton(bookLeft + 6, bookTop + 6, DocAssets.ARROW_BACK_HOVER.width(), DocAssets.ARROW_BACK_HOVER.height(), DocAssets.ARROW_BACK.location(), DocAssets.ARROW_BACK_HOVER.location(), (b) -> {
+            if (onPress != null) {
+                onPress.accept(b);
+            }
+            Minecraft.getInstance().setScreen(parentScreen);
+        }));
+    }
+
+    public void addSaveButton(Button.OnPress onPress) {
+        saveButton = addRenderableWidget(new SaveButton(bookRight - DocAssets.SAVE_ICON.width() - 18, bookBottom - DocAssets.SAVE_ICON.height() + 2, onPress));
     }
 
     @Override

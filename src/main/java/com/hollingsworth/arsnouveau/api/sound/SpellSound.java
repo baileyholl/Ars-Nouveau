@@ -29,7 +29,7 @@ public class SpellSound {
 
     private Component soundName;
     private ResourceLocation id;
-
+    private int sortNum = 10;
     public SpellSound(Holder<SoundEvent> soundEvent, Component soundName, ResourceLocation id) {
         this.soundEvent = soundEvent;
         this.soundName = soundName;
@@ -51,6 +51,15 @@ public class SpellSound {
 
     public ResourceLocation getTexturePath() {
         return ResourceLocation.fromNamespaceAndPath(this.getId().getNamespace(), "textures/sounds/" + this.getId().getPath() + ".png");
+    }
+
+    public SpellSound withSortNum(int num){
+        this.sortNum = num;
+        return this;
+    }
+
+    public int sortNum(){
+        return sortNum;
     }
 
     @Override
