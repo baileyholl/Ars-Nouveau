@@ -9,6 +9,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import org.jetbrains.annotations.Nullable;
 
 public class FallingParticle extends PropParticle{
     public Fluid type;
@@ -27,6 +28,11 @@ public class FallingParticle extends PropParticle{
         this.setSize(0.01F, 0.01F);
         this.gravity = 0.03F;
         this.lifetime = 20;
+    }
+
+    @Override
+    public @Nullable ParticleColor getDefaultColor() {
+        return ParticleColor.BLUE;
     }
 
     @Override
