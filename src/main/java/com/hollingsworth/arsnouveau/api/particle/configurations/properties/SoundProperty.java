@@ -26,9 +26,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class SoundProperty extends BaseProperty<SoundProperty>{
@@ -57,7 +55,8 @@ public class SoundProperty extends BaseProperty<SoundProperty>{
     @Override
     public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height) {
         List<Button> buttons = new ArrayList<>();
-        List<SpellSound> spellSounds = SpellSoundRegistry.getSpellSounds();
+        List<SpellSound> spellSounds = new ArrayList<>(SpellSoundRegistry.getSpellSounds());
+        spellSounds.sort(Comparator.comparingInt(SpellSound::sortNum).thenComparing(o -> o.getSoundName().getString().toLowerCase(Locale.ROOT)));
         for (SpellSound spellSound : spellSounds) {
             DocEntryButton button = new DocEntryButton(0, 0, ItemStack.EMPTY, spellSound.getSoundName(), (b) -> {
                 this.sound = new ConfiguredSpellSound(spellSound, sound.getVolume(), sound.getPitch());
