@@ -24,7 +24,6 @@ public class GuiImageButton extends ANButton {
         this(x, y, blitInfo.width(), blitInfo.height(), blitInfo.location(), onPress);
     }
 
-
     public GuiImageButton(int x, int y, int w, int h, ResourceLocation image, Button.OnPress onPress) {
         this(x, y, 0, 0, w, h, w, h, image, onPress);
     }

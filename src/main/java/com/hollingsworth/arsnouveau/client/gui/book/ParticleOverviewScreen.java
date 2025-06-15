@@ -335,6 +335,11 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
     }
 
     @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
     public void tick() {
         super.tick();
         if (propertyWidgetProvider != null) {

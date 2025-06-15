@@ -109,6 +109,8 @@ public class DocAssets {
     public static final BlitInfo SPELL_TAB_ICON_SELECTED = new BlitInfo(ArsNouveau.prefix("textures/gui/spell_tab_selected.png"), 18, 13);
     public static final BlitInfo ENTER_TEXT_PAPER = new BlitInfo(ArsNouveau.prefix("textures/gui/spell_name_paper.png"), 109, 15);
     public static final BlitInfo SOUND_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/sound_icon.png"), 14, 14);
+    public static final BlitInfo FAVORITE_ICON_HOVER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/favorite_icon_hover.png"), 7, 6);
+    public static final BlitInfo FAVORITE_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/favorite_icon.png"), 7, 6);
 
     public record BlitInfo(ResourceLocation location, int u, int v, int width, int height) {
         public BlitInfo(ResourceLocation location, int width, int height){

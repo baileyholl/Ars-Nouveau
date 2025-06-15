@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.documentation;
 
+import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import net.minecraft.resources.ResourceLocation;
 
@@ -13,6 +14,6 @@ public class DocPlayerData {
     public static BaseDocScreen previousScreen = null;
 
     public static List<ResourceLocation> bookmarks = new ArrayList<>();
-
+    public static List<SpellSound> favoriteSounds = new ArrayList<>();
 
 }

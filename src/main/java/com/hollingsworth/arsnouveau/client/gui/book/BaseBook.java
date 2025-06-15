@@ -1,28 +1,34 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.BookSlider;
-import com.hollingsworth.arsnouveau.client.gui.ModdedScreen;
+import com.hollingsworth.arsnouveau.client.gui.GuiUtils;
 import com.hollingsworth.arsnouveau.client.gui.buttons.ANButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.SaveButton;
+import com.hollingsworth.nuggets.client.gui.BaseScreen;
+import com.hollingsworth.nuggets.client.gui.ITooltipRenderer;
 import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class BaseBook extends ModdedScreen {
+public class BaseBook extends BaseScreen {
     public static final int FONT_COLOR = -8355712;
     public static final int FULL_WIDTH = 290;
     public static final int FULL_HEIGHT = 188;
@@ -40,8 +46,9 @@ public class BaseBook extends ModdedScreen {
     public List<SpellValidationError> validationErrors = new ArrayList<>();
     public SaveButton saveButton;
     public static BaseBook lastOpenedScreen = null;
+
     public BaseBook() {
-        super(Component.literal(""));
+        super(Component.literal(""), DocAssets.BACKGROUND.width(), DocAssets.BACKGROUND.height(), DocAssets.BACKGROUND.location());
     }
 
     @Override
@@ -114,6 +121,52 @@ public class BaseBook extends ModdedScreen {
             renderable.render(graphics, mouseX, mouseY, partialTicks);
         }
         drawTooltip(graphics, mouseX, mouseY);
+    }
+
+    @Override
+    public void collectTooltips(GuiGraphics stack, int mouseX, int mouseY, List<Component> tooltip) {
+        super.collectTooltips(stack, mouseX, mouseY, tooltip);
+
+        // TODO: 1.22 remove along with ITooltipProvider from ars
+        for(Renderable renderable : renderables) {
+            if (renderable instanceof AbstractWidget widget) {
+                if (GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)) {
+                    if (renderable instanceof ITooltipProvider tooltipProvider) {
+                        tooltipProvider.getTooltip(tooltip);
+                    }
+                }
+            }
+        }
+    }
+
+    public void collectTooltips(int mouseX, int mouseY, List<Component> tooltip){
+        for(Renderable renderable : renderables){
+            if(renderable instanceof AbstractWidget widget){
+                if(GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)){
+                    if(renderable instanceof ITooltipProvider tooltipProvider) {
+                        tooltipProvider.getTooltip(tooltip);
+                    }else if(renderable instanceof ITooltipRenderer nuggetProvider){
+                        nuggetProvider.gatherTooltips(tooltip);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    protected TooltipComponent collectComponent(int mouseX, int mouseY) {
+        return null;
+    }
+
+    public @Nullable Renderable getHoveredRenderable(int mouseX, int mouseY){
+        for(Renderable renderable : renderables){
+            if(renderable instanceof AbstractWidget widget){
+                if(GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)){
+                    return renderable;
+                }
+            }
+        }
+        return null;
     }
 
     public BookSlider buildSlider(int x, int y, Component prefix, Component suffix, double currentVal) {

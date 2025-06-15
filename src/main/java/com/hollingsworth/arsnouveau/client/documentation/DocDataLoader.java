@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.hollingsworth.arsnouveau.api.documentation.DocPlayerData;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
+import com.hollingsworth.arsnouveau.api.registry.SpellSoundRegistry;
+import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import net.minecraft.resources.ResourceLocation;
 
 import java.nio.charset.StandardCharsets;
@@ -18,6 +20,7 @@ public class DocDataLoader {
     public static final Path DOC_DATA_PATH = Path.of(DATA_FOLDER + "doc_data.json");
     public static void writeBookmarks(){
         List<ResourceLocation> bookmarks = DocPlayerData.bookmarks;
+        List<SpellSound> spellSounds = DocPlayerData.favoriteSounds;
         try {
             Files.createDirectories(Path.of(DATA_FOLDER));
             JsonObject element = new JsonObject();
@@ -25,6 +28,10 @@ public class DocDataLoader {
             JsonArray bookmarksArray = new JsonArray();
             bookmarks.forEach(e -> bookmarksArray.add(e.toString()));
             element.add("bookmarks", bookmarksArray);
+
+            JsonArray soundsArray = new JsonArray();
+            spellSounds.forEach(e -> soundsArray.add(e.getId().toString()));
+            element.add("sounds", soundsArray);
             if(!Files.exists(DOC_DATA_PATH)) {
                 Files.createFile(DOC_DATA_PATH);
             }
@@ -34,7 +41,7 @@ public class DocDataLoader {
         }
     }
 
-    public static List<ResourceLocation> loadBookmarks(){
+    public static void loadBookmarks(){
         List<ResourceLocation> bookmarks = new ArrayList<>();
         try {
             Files.createDirectories(Path.of(DATA_FOLDER));
@@ -51,9 +58,19 @@ public class DocDataLoader {
                 }
                 bookmarks.removeAll(toRemove);
             }
+
+            if(element.has("sounds")){
+                element.getAsJsonArray("sounds").forEach(e ->{
+                    SpellSound spellSound = SpellSoundRegistry.get(ResourceLocation.tryParse(e.getAsString()));
+                    if(spellSound != null) {
+                        DocPlayerData.favoriteSounds.add(spellSound);
+                    }
+                });
+
+            }
         } catch (Exception e){
             e.printStackTrace();
         }
-        return bookmarks;
+        DocPlayerData.bookmarks = bookmarks;
     }
 }

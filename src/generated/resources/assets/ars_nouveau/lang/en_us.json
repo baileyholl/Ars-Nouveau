@@ -1181,6 +1181,7 @@
   "ars_nouveau.resources": "Resources and Decoration",
   "ars_nouveau.resources_desc": "Resources found in the world.",
   "ars_nouveau.rewards.enabled": "Ars Nouveau supporter rewards enabled, thank you! Rewards can be accessed in the Settings page of the spell book.",
+  "ars_nouveau.right_click_sound": "Right-Click to preview",
   "ars_nouveau.ritual.no_start": "Start the current ritual or break the block to remove it.",
   "ars_nouveau.ritual_desc.ritual_animal_summon": "Summon a random variety of wild animals native to the biome it's in.",
   "ars_nouveau.ritual_desc.ritual_awakening": "Awakens nearby Archwood trees into Weald Walkers and Budding Amethyst into Amethyst Golems. Weald Walkers can be given a position in the world to guard against hostile mobs. They will heal over time, and turn into Weald Waddlers if they die. To create a Weald Walker, perform this ritual near the base of an Archwood Tree. Augmenting with Book and Quills will create Bookwyrm Charms.",

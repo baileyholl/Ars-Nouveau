@@ -1741,7 +1741,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.sound.apply_effect_bad_omen", "Apply Effect Bad Omen");
         add("ars_nouveau.sound.apply_effect_trial_omen", "Apply Effect Trial Omen");
         add("ars_nouveau.sound.apply_effect_raid_omen", "Apply Effect Raid Omen");
-
+        add("ars_nouveau.right_click_sound", "Right-Click to preview");
     }
 
     public void addCategory(String key, String value) {

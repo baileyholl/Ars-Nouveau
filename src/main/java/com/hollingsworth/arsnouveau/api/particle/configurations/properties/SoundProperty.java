@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.particle.configurations.properties;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
+import com.hollingsworth.arsnouveau.api.documentation.DocPlayerData;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ListParticleWidgetProvider;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
@@ -56,11 +57,26 @@ public class SoundProperty extends BaseProperty<SoundProperty>{
     public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height) {
         List<Button> buttons = new ArrayList<>();
         List<SpellSound> spellSounds = new ArrayList<>(SpellSoundRegistry.getSpellSounds());
-        spellSounds.sort(Comparator.comparingInt(SpellSound::sortNum).thenComparing(o -> o.getSoundName().getString().toLowerCase(Locale.ROOT)));
+
+        spellSounds.sort(Comparator.<SpellSound>comparingInt(o -> DocPlayerData.favoriteSounds.contains(o) ? -1 : 1).thenComparingInt(SpellSound::sortNum).thenComparing(o -> o.getSoundName().getString().toLowerCase(Locale.ROOT)));
         for (SpellSound spellSound : spellSounds) {
             DocEntryButton button = new DocEntryButton(0, 0, ItemStack.EMPTY, spellSound.getSoundName(), (b) -> {
                 this.sound = new ConfiguredSpellSound(spellSound, sound.getVolume(), sound.getPitch());
+            }).setFavoritable(() -> DocPlayerData.favoriteSounds.contains(spellSound), (b) ->{
+                if(DocPlayerData.favoriteSounds.contains(spellSound)) {
+                    DocPlayerData.favoriteSounds.remove(spellSound);
+                } else {
+                    DocPlayerData.favoriteSounds.add(spellSound);
+                }
             });
+            button.onClickFunction = ((xPos, yPos, buttonNum) -> {
+                if (buttonNum == 1) {
+                    playTestSound(new ConfiguredSpellSound(spellSound, sound.getVolume(), sound.getPitch()));
+                    return true;
+                }
+                return false;
+            });
+            button.withTooltip(Component.translatable("ars_nouveau.right_click_sound"));
             buttons.add(button);
         }
 
@@ -83,9 +99,7 @@ public class SoundProperty extends BaseProperty<SoundProperty>{
                 });
                 yOffset += 10;
                 GuiImageButton testButton = new GuiImageButton(xSliderOffset, y + yOffset, 37, 12, ArsNouveau.prefix("textures/gui/sound_test_icon.png"), (b) ->{
-                    LocalPlayer localPlayer = Minecraft.getInstance().player;
-                    Vec3 pos = localPlayer.position().add(0, 2, 0);
-                    localPlayer.level.playLocalSound(pos.x(), pos.y(), pos.z(), sound.getSound().getSoundEvent().value(), SoundSource.PLAYERS, (float) sound.getVolume(), sound.getPitch(), false);
+                    playTestSound(sound);
                 });
                 testButton.soundDisabled = true;
                 volumeSlider.setValue(sound.getVolume() * 100f);
@@ -120,6 +134,12 @@ public class SoundProperty extends BaseProperty<SoundProperty>{
                 return new HorizontalSlider(x, y, DocAssets.SLIDER_BAR_FILLED, DocAssets.SLIDER, prefix, suffix, min, max, currentVal, stepSize, precision, false, onValueChange);
             }
         };
+    }
+
+    public void playTestSound(ConfiguredSpellSound sound){
+        LocalPlayer localPlayer = Minecraft.getInstance().player;
+        Vec3 pos = localPlayer.position().add(0, 2, 0);
+        localPlayer.level.playLocalSound(pos.x(), pos.y(), pos.z(), sound.getSound().getSoundEvent().value(), SoundSource.PLAYERS, (float) sound.getVolume(), sound.getPitch(), false);
     }
 
     @Override

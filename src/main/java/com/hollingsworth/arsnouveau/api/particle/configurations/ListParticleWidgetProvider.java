@@ -14,12 +14,12 @@ import java.util.List;
 
 public abstract class ListParticleWidgetProvider extends ParticleConfigWidgetProvider{
 
-    List<Button> buttons;
-    GuiImageButton upButton;
-    GuiImageButton downButton;
-    int pageOffset;
-    int maxEntries;
-    int numPerPage = 8;
+    public List<Button> buttons;
+    public GuiImageButton upButton;
+    public GuiImageButton downButton;
+    public int pageOffset;
+    public int maxEntries;
+    public int numPerPage = 8;
 
     public ListParticleWidgetProvider(int x, int y, int width, int height, List<Button> buttons) {
         this(x, y, width, height, buttons, 8);
