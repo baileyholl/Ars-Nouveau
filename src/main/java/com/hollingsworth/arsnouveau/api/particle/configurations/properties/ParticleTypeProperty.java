@@ -2,10 +2,12 @@ package com.hollingsworth.arsnouveau.api.particle.configurations.properties;
 
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
+import com.hollingsworth.arsnouveau.api.documentation.DocPlayerData;
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ListParticleWidgetProvider;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
+import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.client.gui.documentation.DocEntryButton;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
@@ -91,20 +93,27 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
         ParticleTypeProperty self = this;
         List<Button> buttons = new ArrayList<>();
         var particleEntries = new ArrayList<>(PARTICLE_TYPES.entrySet());
-        particleEntries.sort((o1, o2) ->{
+        particleEntries.sort(Comparator.<Map.Entry<ParticleType<? extends PropertyParticleOptions>, ParticleData>>comparingInt(o -> DocPlayerData.favoriteParticles.contains(o.getKey()) ? -1 : 1).thenComparing((o1, o2) ->{
             if(o1.getKey() == ModParticles.NEW_GLOW_TYPE.get()){
                 return -3;
             }else if(o2.getKey() == ModParticles.NEW_GLOW_TYPE.get()){
                 return 3;
             }
             return getTypeName(o1.getKey()).getString().compareTo(getTypeName(o2.getKey()).getString());
-        });
+        }));
         for (var particleType : particleEntries) {
-            DocEntryButton button = new DocEntryButton(0, 0, ItemStack.EMPTY, getTypeName(particleType.getKey()), (b) -> {
+            ParticleType key = particleType.getKey();
+            DocEntryButton button = new DocEntryButton(0, 0, ItemStack.EMPTY, getTypeName(key), (b) -> {
                 selectedData = particleType.getValue();
-                type = particleType.getKey();
+                type = key;
                 writeChanges();
                 onDependenciesChanged.run();
+            }).setFavoritable(() -> DocPlayerData.favoriteParticles.contains(key), (b) ->{
+                if(DocPlayerData.favoriteParticles.contains(key)) {
+                    DocPlayerData.favoriteParticles.remove(key);
+                } else {
+                    DocPlayerData.favoriteParticles.add(key);
+                }
             });
             buttons.add(button);
         }
