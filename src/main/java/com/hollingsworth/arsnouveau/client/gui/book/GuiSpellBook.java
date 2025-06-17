@@ -393,7 +393,7 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public int getExtraGlyphSlots() {
-        return (ServerConfig.INFINITE_SPELLS.get() ? ServerConfig.NOT_SO_INFINITE_SPELLS.get() : 0) + bonusSlots;
+        return (ServerConfig.INFINITE_SPELLS.get() ? ServerConfig.INF_SPELLS_LENGHT_MODIFIER.get() : 0) + bonusSlots;
     }
 
     @Override
