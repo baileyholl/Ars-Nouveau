@@ -7,10 +7,12 @@ import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ListParticleWidgetProvider;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
+import com.hollingsworth.arsnouveau.api.registry.SpellSoundRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.client.gui.documentation.DocEntryButton;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
+import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
@@ -90,7 +92,6 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
 
     @Override
     public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height) {
-        ParticleTypeProperty self = this;
         List<Button> buttons = new ArrayList<>();
         var particleEntries = new ArrayList<>(PARTICLE_TYPES.entrySet());
         particleEntries.sort(Comparator.<Map.Entry<ParticleType<? extends PropertyParticleOptions>, ParticleData>>comparingInt(o -> DocPlayerData.favoriteParticles.contains(o.getKey()) ? -1 : 1).thenComparing((o1, o2) ->{
@@ -152,12 +153,7 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
 
     @Override
     public List<BaseProperty<?>> subProperties() {
-        if (selectedData == null || !selectedData.acceptsColor) {
-            return Collections.emptyList();
-        }
-        ColorProperty colorProperty = subProperties.getOrCreate(ParticlePropertyRegistry.COLOR_PROPERTY.get(), () -> new ColorProperty(ParticleColor.defaultParticleColor(), true));
-        colorProperty.isLegacyRGB = selectedData.useLegacyRGB;
-        return List.of(colorProperty);
+       return selectedData.getProperties(this);
     }
 
     @Override
@@ -172,9 +168,33 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
         return Objects.hash(getType(), type, subProperties);
     }
 
-    public record ParticleData(ParticleType<? extends PropertyParticleOptions> type, boolean acceptsColor, boolean useLegacyRGB) {
+    public record ParticleData(ParticleType<? extends PropertyParticleOptions> type, boolean acceptsColor, boolean useLegacyRGB, boolean supportsSound) {
+
+        public ParticleData(ParticleType<? extends PropertyParticleOptions> type, boolean acceptsColor, boolean useLegacyRGB){
+            this(type, acceptsColor, useLegacyRGB, false);
+        }
+
         public ParticleData(ParticleType<? extends PropertyParticleOptions> type, boolean acceptsColor) {
             this(type, acceptsColor, false);
+        }
+
+        public ParticleData withSound(){
+            return new ParticleData(type, acceptsColor, useLegacyRGB, true);
+        }
+
+        public List<BaseProperty<?>> getProperties(ParticleTypeProperty forProp){
+            List<BaseProperty<?>> properties = new ArrayList<>();
+            PropMap subPropMap = forProp.subProperties;
+            if(acceptsColor){
+                ColorProperty colorProperty = subPropMap.createIfMissing(new ColorProperty(ParticleColor.defaultParticleColor(), true));
+                colorProperty.isLegacyRGB = useLegacyRGB;
+                properties.add(colorProperty);
+            }
+            if(supportsSound){
+                properties.add(subPropMap.createIfMissing(new SoundProperty(new ConfiguredSpellSound(SoundRegistry.POINTED_DRIPSTONE_WATER))));
+            }
+
+            return properties;
         }
     }
 }

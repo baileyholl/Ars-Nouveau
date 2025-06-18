@@ -1392,6 +1392,8 @@
   "ars_nouveau.sound.piston_extend": "Piston Extend",
   "ars_nouveau.sound.player_attack_crit": "Player Attack Crit",
   "ars_nouveau.sound.player_levelup": "Player Levelup",
+  "ars_nouveau.sound.pointed_dripstone_drip_lava": "Dripping Lava",
+  "ars_nouveau.sound.pointed_dripstone_drip_water": "Dripping Water",
   "ars_nouveau.sound.portal_trigger": "Portal Trigger",
   "ars_nouveau.sound.puffer_fish_blow_out": "Puffer Fish Blow Out",
   "ars_nouveau.sound.puffer_fish_blow_up": "Puffer Fish Blow Up",

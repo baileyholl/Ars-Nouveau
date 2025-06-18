@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.registry;
 
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleType;
+import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.particle.*;
 import com.hollingsworth.arsnouveau.client.particle.BubbleParticle;
 import net.minecraft.client.Minecraft;
@@ -116,6 +117,9 @@ public class ModParticles {
                 var particle = new FallingParticle(type, level, x, y, z, xSpeed, ySpeed, zSpeed);
                 particle.type = Fluids.WATER;
                 particle.landingSound = SoundEvents.POINTED_DRIPSTONE_DRIP_WATER;
+                if(type.map.has(ParticlePropertyRegistry.SOUND_PROPERTY.get())){
+                    particle.landingSound = type.map.get(ParticlePropertyRegistry.SOUND_PROPERTY.get()).sound.getSound().getSoundEvent().value();
+                }
                 particle.pickSprite(Minecraft.getInstance().particleEngine.spriteSets.get(ResourceLocation.withDefaultNamespace("falling_water")));
                 return particle;
             }));

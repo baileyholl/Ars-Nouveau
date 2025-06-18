@@ -312,6 +312,8 @@ public class SoundRegistry {
     public static SpellSound PLAYER_ATTACK_CRIT = register(SoundEvents.PLAYER_ATTACK_CRIT, "player_attack_crit");
     public static SpellSound PLAYER_LEVELUP = register(SoundEvents.PLAYER_LEVELUP, "player_levelup");
     public static SpellSound PORTAL_TRIGGER = register(SoundEvents.PORTAL_TRIGGER, "portal_trigger");
+    public static SpellSound POINTED_DRIPSTONE_WATER = register(SoundEvents.POINTED_DRIPSTONE_DRIP_WATER, "pointed_dripstone_drip_water");
+    public static SpellSound POINTED_DRIPSTONE_LAVA = register(SoundEvents.POINTED_DRIPSTONE_DRIP_LAVA, "pointed_dripstone_drip_lava");
     public static SpellSound PUFFER_FISH_BLOW_OUT = register(SoundEvents.PUFFER_FISH_BLOW_OUT, "puffer_fish_blow_out");
     public static SpellSound PUFFER_FISH_BLOW_UP = register(SoundEvents.PUFFER_FISH_BLOW_UP, "puffer_fish_blow_up");
     public static SpellSound PUFFER_FISH_STING = register(SoundEvents.PUFFER_FISH_STING, "puffer_fish_sting");

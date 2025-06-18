@@ -15,7 +15,8 @@ public class SpellSoundRegistry {
     }
 
     public static SpellSound registerSpellSound(SpellSound sound) {
-        return spellSoundsRegistry.put(sound.getId(), sound);
+        spellSoundsRegistry.put(sound.getId(), sound);
+        return sound;
     }
 
     public static SpellSound get(ResourceLocation loc) {
