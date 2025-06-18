@@ -106,7 +106,6 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
             DocEntryButton button = new DocEntryButton(0, 0, ItemStack.EMPTY, getTypeName(key), (b) -> {
                 selectedData = particleType.getValue();
                 type = key;
-                writeChanges();
                 onDependenciesChanged.run();
             }).setFavoritable(() -> DocPlayerData.favoriteParticles.contains(key), (b) ->{
                 if(DocPlayerData.favoriteParticles.contains(key)) {

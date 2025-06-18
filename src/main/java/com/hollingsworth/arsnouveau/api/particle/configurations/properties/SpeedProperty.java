@@ -125,7 +125,6 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
                     yMinSpeed = minYSpeedSlider.getValue();
                     yMaxSpeed = Math.max(yMaxSpeed, yMinSpeed);
                     clampSliders();
-                    writeChanges();
                 });
                 yOffset += sliderSpacing;
 
@@ -133,7 +132,6 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
                     yMaxSpeed = yMaxSpeedSlider.getValue();
                     yMinSpeed = Math.min(yMaxSpeed, yMinSpeed);
                     clampSliders();
-                    writeChanges();
                 });
                 yOffset += sliderSpacing;
 
@@ -141,7 +139,6 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
                     xzMinSpeed = xzSpeedSlider.getValue();
                     xzMaxSpeed = Math.max(xzMaxSpeed, xzMinSpeed);
                     clampSliders();
-                    writeChanges();
                 });
                 yOffset += sliderSpacing;
 
@@ -149,7 +146,6 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
                     xzMaxSpeed = xzMaxSpeedSlider.getValue();
                     xzMinSpeed = Math.min(xzMaxSpeed, xzMinSpeed);
                     clampSliders();
-                    writeChanges();
                 });
 
                 clampSliders();

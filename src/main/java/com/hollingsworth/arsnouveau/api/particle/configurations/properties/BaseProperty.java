@@ -42,12 +42,6 @@ public abstract class BaseProperty<T extends BaseProperty<T>> {
         return new ArrayList<>();
     }
 
-    public void writeChanges(){
-        if(propertyHolder != null){
-            propertyHolder.set(getType(), (T) this);
-        }
-    }
-
     /**
      * If this property should be removed when the selected motion changes.
      */

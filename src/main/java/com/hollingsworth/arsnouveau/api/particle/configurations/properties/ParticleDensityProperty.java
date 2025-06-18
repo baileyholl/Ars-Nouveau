@@ -165,7 +165,6 @@ public class ParticleDensityProperty extends BaseProperty<ParticleDensityPropert
                                 selectedButton = selectedParticleButton;
                                 selectedParticleButton.selected = true;
                             }
-                            writeChanges();
                         });
                         spawnTypeButton.withTooltip(Component.translatable("ars_nouveau.spawn." + spawnType1.name().toLowerCase()));
                         if(spawnType == spawnType1){
@@ -181,7 +180,6 @@ public class ParticleDensityProperty extends BaseProperty<ParticleDensityPropert
                 yOffset += 4;
                 densitySlider = buildSlider(xSliderOffset, y + yOffset, minDensity, maxDensity, densityStepSize, 1, Component.translatable("ars_nouveau.density_slider"), Component.empty(), Math.floor((maxDensity + minDensity) / 2.0), (value) -> {
                     density = densitySlider.getValueInt();
-                    writeChanges();
                 });
                 int sliderSpacing = 25;
                 yOffset += sliderSpacing;
@@ -191,7 +189,6 @@ public class ParticleDensityProperty extends BaseProperty<ParticleDensityPropert
 
                 radiusSlider = buildSlider(xSliderOffset, y + yOffset, minRadius, maxRadius, 0.05, 1, Component.translatable("ars_nouveau.radius_slider"), Component.empty(),  initialRadius,  (value) -> {
                     radius = radiusSlider.getValue();
-                    writeChanges();
                 });
                 radiusSlider.setValue(radius);
 

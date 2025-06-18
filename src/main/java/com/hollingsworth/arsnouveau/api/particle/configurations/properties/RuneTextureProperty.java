@@ -68,7 +68,6 @@ public class RuneTextureProperty extends BaseProperty<RuneTextureProperty>{
             String texture = TEXTURES.get(i);
             DocEntryButton button = new DocEntryButton(x, y + 20 + 15 * i, ItemStack.EMPTY, getPatternName(texture), (b) -> {
                 runeTexture = texture;
-                writeChanges();
                 onDependenciesChanged.run();
             }).withStaticIcon(new DocAssets.BlitInfo(ArsNouveau.prefix("textures/block/runes/" + texture + ".png"), 16, 16));
             buttons.add(button);
