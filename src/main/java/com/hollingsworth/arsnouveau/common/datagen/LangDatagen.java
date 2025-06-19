@@ -1744,6 +1744,17 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.right_click_sound", "Right-Click to preview");
         add("ars_nouveau.sound.pointed_dripstone_drip_water", "Dripping Water");
         add("ars_nouveau.sound.pointed_dripstone_drip_lava", "Dripping Lava");
+        add("ars_nouveau.model_tooltip", "Projectile Model");
+        add("ars_nouveau.particle_type_tooltip", "Particle Texture");
+        add("ars_nouveau.speed_tooltip", "Initial Particle Speed");
+        add("ars_nouveau.density_tooltip", "Amount and shape of particles spawned over time");
+        add("ars_nouveau.timeline.spawn.tooltip", "Sound and particles created when spawned or cast");
+        add("ars_nouveau.timeline.trail.tooltip", "Creates particles that follow the projectile");
+        add("ars_nouveau.timeline.impact.tooltip", "Creates particles and sound where the spell resolves");
+        add("ars_nouveau.timeline.flair.tooltip", "Additional particles that play on the projectile's path");
+        add("ars_nouveau.timeline.tick.tooltip", "Creates particles every tick");
+        add("ars_nouveau.timeline.field.tooltip", "Creates particles where this effect lands.");
+
     }
 
     public void addCategory(String key, String value) {

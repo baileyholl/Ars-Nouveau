@@ -10,7 +10,6 @@ import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -36,27 +35,32 @@ public class StyledSpellRender extends GeoEntityRenderer<EntityProjectileSpell> 
             return;
         }
         modelProp = modelProperty;
-        packedLight = LightTexture.FULL_BRIGHT;
+//        packedLight = LightTexture.FULL_BRIGHT;
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
     }
 
     @Override
     public void actuallyRender(PoseStack poseStack, EntityProjectileSpell animatable, BakedGeoModel model, @Nullable RenderType renderType, MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         poseStack.pushPose();
-        if(modelProp.selectedResource == ModelProperty.CUBE_BODY){
-            packedLight = LightTexture.FULL_BRIGHT;
-            poseStack.translate(0, -0.25, 0);
-            poseStack.scale(0.5f, 0.5f, 0.5f);
-            poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTick, animatable.yRotO, animatable.yRot) - 90.0F));
-            poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot())));
-        }
+//        if(modelProp.selectedResource == ModelProperty.CUBE_BODY){
+//            packedLight = LightTexture.FULL_BRIGHT;
+//            poseStack.translate(0, -0.25, 0);
+//            poseStack.scale(0.5f, 0.5f, 0.5f);
+            poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot())));
+//            poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot())));
+//        }
+
+//        matrixStackIn.pushPose();
+//        matrixStackIn.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, entityIn.yRotO, entityIn.yRot) - 90.0F));
+//        matrixStackIn.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTicks, entityIn.xRotO, entityIn.getXRot())));
+
 
         if(modelProp.selectedResource.supportsColor()){
             colour = modelProp.subPropMap.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty()).particleColor.getColor();
         }
+        poseStack.popPose();
 
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
-        poseStack.popPose();
     }
 
     @Override

@@ -19,6 +19,10 @@ public record TimelineOption(ResourceLocation id,
         return Component.translatable(id.getNamespace() + ".timeline." + id.getPath() + ".description");
     }
 
+    public Component tooltip(){
+        return Component.translatable(id.getNamespace() + ".timeline." + id.getPath() + ".tooltip");
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

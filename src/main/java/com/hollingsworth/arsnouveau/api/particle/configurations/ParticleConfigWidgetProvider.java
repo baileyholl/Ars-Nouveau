@@ -38,5 +38,9 @@ public abstract class ParticleConfigWidgetProvider {
 
     public abstract Component getButtonTitle();
 
+    public void getButtonTooltips(List<Component> tooltip){
+
+    }
+
     public void tick(){}
 }

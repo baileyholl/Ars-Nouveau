@@ -44,6 +44,7 @@ public class PropertyButton extends SelectableButton {
         if(fullTitle != null){
             tooltip.add(fullTitle);
         }
+        widgetProvider.getButtonTooltips(tooltip);
         super.getTooltip(tooltip);
 
     }

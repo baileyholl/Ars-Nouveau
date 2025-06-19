@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ListParticleWidgetProvider;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
-import com.hollingsworth.arsnouveau.api.registry.SpellSoundRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.client.gui.documentation.DocEntryButton;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -132,6 +131,12 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
             @Override
             public Component getButtonTitle() {
                 return Component.literal(getName().getString() + ": " + getTypeName(selectedData.type()).getString());
+            }
+
+            @Override
+            public void getButtonTooltips(List<Component> tooltip) {
+                super.getButtonTooltips(tooltip);
+                tooltip.add(Component.translatable("ars_nouveau.particle_type_tooltip"));
             }
         };
     }

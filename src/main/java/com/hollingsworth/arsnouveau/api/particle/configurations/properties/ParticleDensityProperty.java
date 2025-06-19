@@ -222,6 +222,12 @@ public class ParticleDensityProperty extends BaseProperty<ParticleDensityPropert
             public Component getButtonTitle() {
                 return getName();
             }
+
+            @Override
+            public void getButtonTooltips(List<Component> tooltip) {
+                super.getButtonTooltips(tooltip);
+                tooltip.add(Component.translatable("ars_nouveau.density_tooltip"));
+            }
         };
     }
 

@@ -22,13 +22,18 @@ public class StyledProjectileModel extends GeoModel<EntityProjectileSpell> {
 
     @Override
     public ResourceLocation getTextureResource(EntityProjectileSpell animatable) {
-        ResourceLocation resourceLocation = getModelRes(animatable);
-        return ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), "textures/entity/" + resourceLocation.getPath() + ".png");
+        return getModelProp(animatable).selectedResource.getTexture().apply(animatable);
     }
 
     @Override
     public ResourceLocation getAnimationResource(EntityProjectileSpell animatable) {
         return ANIMATIONS;
+    }
+
+    public ModelProperty getModelProp(EntityProjectileSpell projectileSpell){
+        ProjectileTimeline timeline = projectileSpell.resolver().spell.particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
+        ModelProperty modelProperty = timeline.trailEffect.motion().propertyMap.get(ParticlePropertyRegistry.MODEL_PROPERTY.get());
+        return modelProperty;
     }
 
     public ResourceLocation getModelRes(EntityProjectileSpell projectileSpell){

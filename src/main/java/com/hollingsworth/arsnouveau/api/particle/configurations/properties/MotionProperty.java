@@ -80,6 +80,12 @@ public class MotionProperty extends BaseProperty<MotionProperty>{
             public Component getButtonTitle() {
                 return Component.literal(timelineName().getString() + ": " + timelineOption.entry().motion().getType().getName().getString());
             }
+
+            @Override
+            public void getButtonTooltips(List<Component> tooltip) {
+                super.getButtonTooltips(tooltip);
+                tooltip.add(timelineOption.tooltip());
+            }
         };
     }
 

@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.gui.buttons.SelectedParticleButton;
+import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
@@ -18,6 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Function;
 
 public class ModelProperty extends BaseProperty<ModelProperty>{
 
@@ -33,7 +35,9 @@ public class ModelProperty extends BaseProperty<ModelProperty>{
     public PropMap subPropMap;
 
     public static final Model NONE = new Model(ArsNouveau.prefix("empty"), DocAssets.STYLE_ICON_NONE, false);
-    public static Model CUBE_BODY = new Model(ArsNouveau.prefix("cube"), DocAssets.STYLE_ICON_BLOCK, true);
+    public static final Model CUBE_BODY = new Model(ArsNouveau.prefix("cube"), DocAssets.STYLE_ICON_BLOCK, true, (spell) ->{
+        return ArsNouveau.prefix("textures/particle/" + "projectile_" + (spell.age / 5) % 4 + ".png");
+    });
 
     public static final List<Model> resources = new CopyOnWriteArrayList<>();
 
@@ -123,6 +127,11 @@ public class ModelProperty extends BaseProperty<ModelProperty>{
             public Component getButtonTitle() {
                 return Component.literal(getName().getString() + ": " + getTypeName(selectedResource.resourceLocation).getString());
             }
+
+            @Override
+            public void getButtonTooltips(List<Component> tooltip) {
+                tooltip.add(Component.translatable("ars_nouveau.model_tooltip"));
+            }
         };
     }
 
@@ -152,7 +161,11 @@ public class ModelProperty extends BaseProperty<ModelProperty>{
         return Objects.hash(selectedResource, subPropMap);
     }
 
-    public record Model(ResourceLocation resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor){
+    public record Model(ResourceLocation resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor, Function<EntityProjectileSpell, ResourceLocation> getTexture){
+        public Model(ResourceLocation resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor){
+            this(resourceLocation, blitInfo, supportsColor, spell -> ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), "textures/entity/" + resourceLocation.getPath() + ".png"));
+        }
+
 
         @Override
         public boolean equals(Object o) {
