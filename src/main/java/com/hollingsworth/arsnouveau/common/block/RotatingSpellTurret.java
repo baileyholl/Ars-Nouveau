@@ -83,7 +83,7 @@ public class RotatingSpellTurret extends BasicSpellTurret {
                 if(world.getBlockEntity(pos) instanceof RotatingTurretTile rotatingTurretTile) {
                     EntityProjectileSpell spell = new EntityProjectileSpell(world, resolver);
                     spell.setOwner(fakePlayer);
-                    spell.setPos(iposition.x(), iposition.y(), iposition.z());
+                    spell.setPos(iposition.x(), iposition.y() - 0.25, iposition.z());
                     Vec3 vec3d = rotatingTurretTile.getShootAngle().normalize();
                     SpellStats stats = resolver.getCastStats();
                     float velocity = Math.max(0.1f, 0.75f + stats.getAccMultiplier() / 2);

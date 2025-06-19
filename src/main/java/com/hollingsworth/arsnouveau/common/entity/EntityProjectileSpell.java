@@ -118,11 +118,11 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
         this(ModEntities.SPELL_PROJ.get(), world, shooter);
     }
 
-    public SpellResolver resolver(){
+    public SpellResolver resolver() {
         return this.entityData.get(SPELL_RESOLVER);
     }
 
-    public void setResolver(SpellResolver resolver){
+    public void setResolver(SpellResolver resolver) {
         this.entityData.set(SPELL_RESOLVER, resolver);
         this.spellResolver = resolver;
         buildEmitters();//
@@ -136,7 +136,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     @Override
     public void tick() {
         super.tick();
-        if(age == 0 && castSound != null && !level.isClientSide){
+        if (age == 0 && castSound != null && !level.isClientSide) {
             castSound.playSound(level, getX(), getY(), getZ());
         }
         age++;
@@ -173,7 +173,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
         super.defineSynchedData(pBuilder);
         pBuilder.define(OWNER_ID, -1);
-        pBuilder.define(SPELL_RESOLVER,  new SpellResolver(new SpellContext(level, new Spell(), null, null)));
+        pBuilder.define(SPELL_RESOLVER, new SpellResolver(new SpellContext(level, new Spell(), null, null)));
     }
 
     /**
@@ -197,7 +197,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
             this.hasImpulse = true;
         }
         if (raytraceresult != null && raytraceresult.getType() == HitResult.Type.MISS && raytraceresult instanceof BlockHitResult blockHitResult
-            && canTraversePortals()) {
+                && canTraversePortals()) {
             BlockRegistry.PORTAL_BLOCK.get().onProjectileHit(level, level.getBlockState(BlockPos.containing(raytraceresult.getLocation())),
                     blockHitResult, this);
 
@@ -242,7 +242,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
         return 2;
     }
 
-    public void buildEmitters(){
+    public void buildEmitters() {
         TimelineMap timelineMap = this.resolver().spell.particleTimeline();
         ProjectileTimeline projectileTimeline = timelineMap.get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
         TimelineEntryData trailConfig = projectileTimeline.trailEffect;
@@ -254,23 +254,30 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
         this.resolveEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, resolveConfig);
         this.onSpawnEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, spawnConfig);
         this.flairEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, flairConfig);
+
+        Vec3 center = this.getDimensions(getPose()).makeBoundingBox(0, 0, 0).getCenter();
+        this.tickEmitter.setPositionOffset(center);
+        this.resolveEmitter.setPositionOffset(center);
+        this.onSpawnEmitter.setPositionOffset(center);
+        this.flairEmitter.setPositionOffset(center);
+
         this.castSound = projectileTimeline.castSound.sound;
         this.resolveSound = projectileTimeline.resolveSound.sound;
     }
 
     public void playParticles() {
-        if(tickEmitter == null && resolver() != null) {
+        if (tickEmitter == null && resolver() != null) {
             buildEmitters();
         }
-        if(this.tickEmitter != null) {
+        if (this.tickEmitter != null) {
             this.tickEmitter.tick(level);
         }
 
-        if(flairEmitter != null) {
+        if (flairEmitter != null) {
             this.flairEmitter.tick(level);
         }
 
-        if(!playedSpawnParticle && onSpawnEmitter != null){
+        if (!playedSpawnParticle && onSpawnEmitter != null) {
             this.onSpawnEmitter.tick(level);
             playedSpawnParticle = true;
         }
@@ -418,9 +425,9 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
         }
     }
 
-    public void sendResolveParticles(){
+    public void sendResolveParticles() {
         this.resolveEmitter.tick(level);
-        if(!level.isClientSide && resolveSound != null){
+        if (!level.isClientSide && resolveSound != null) {
             resolveSound.playSound(level, getX(), getY(), getZ());
         }
     }
@@ -454,9 +461,9 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     @Override
     public void setOwner(@org.jetbrains.annotations.Nullable Entity pOwner) {
         super.setOwner(pOwner);
-        if(pOwner != null) {
+        if (pOwner != null) {
             this.entityData.set(OWNER_ID, pOwner.getId());
-        }else{
+        } else {
             this.entityData.set(OWNER_ID, -1);
         }
     }
@@ -464,7 +471,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        if(resolver() != null){
+        if (resolver() != null) {
             resolver().spellContext.level = this.level;
         }
     }
@@ -478,7 +485,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
         }
         isNoGravity = tag.getBoolean("gravity");
         this.entityData.set(OWNER_ID, tag.getInt("ownerId"));
-        if(tag.contains("resolver")) {
+        if (tag.contains("resolver")) {
             setResolver(ANCodecs.decode(SpellResolver.CODEC.codec(), tag.get("resolver")));
         }
     }
@@ -489,7 +496,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
         tag.putInt("pierce", this.pierceLeft);
         tag.putBoolean("gravity", isNoGravity);
         tag.putInt("ownerId", this.entityData.get(OWNER_ID));
-        if(this.resolver() != null) {
+        if (this.resolver() != null) {
             tag.put("resolver", ANCodecs.encode(SpellResolver.CODEC.codec(), this.resolver()));
         }
     }
@@ -509,7 +516,8 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {}
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+    }
 
     AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
