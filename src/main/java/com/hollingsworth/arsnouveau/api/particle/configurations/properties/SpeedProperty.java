@@ -93,7 +93,7 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
             HorizontalSlider minYSpeedSlider;
             HorizontalSlider yMaxSpeedSlider;
 
-            HorizontalSlider xzSpeedSlider;
+//            HorizontalSlider xzSpeedSlider;
             HorizontalSlider xzMaxSpeedSlider;
             @Override
             public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
@@ -105,8 +105,8 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
                 yOffset += sliderSpacing;
                 DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.ymaxspeed_slider", yMaxSpeedSlider.getValueString()), graphics, x, y + yOffset, width, mouseX, mouseY, partialTicks);
 
-                yOffset += sliderSpacing;
-                DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.xzspeed_slider", xzSpeedSlider.getValueString()), graphics, x, y + yOffset, width, mouseX, mouseY, partialTicks);
+//                yOffset += sliderSpacing;
+//                DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.xzspeed_slider", xzSpeedSlider.getValueString()), graphics, x, y + yOffset, width, mouseX, mouseY, partialTicks);
 
                 yOffset += sliderSpacing;
                 DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.xzmaxspeed_slider", xzMaxSpeedSlider.getValueString()), graphics, x, y + yOffset, width, mouseX, mouseY, partialTicks);
@@ -135,16 +135,16 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
                 });
                 yOffset += sliderSpacing;
 
-                xzSpeedSlider = buildSlider(xSliderOffset, y + yOffset,  min, max, stepSize, 1, Component.translatable("ars_nouveau.xzspeed_slider"), Component.empty(), 0.0, (value) ->{
-                    xzMinSpeed = xzSpeedSlider.getValue();
-                    xzMaxSpeed = Math.max(xzMaxSpeed, xzMinSpeed);
-                    clampSliders();
-                });
-                yOffset += sliderSpacing;
+//                xzSpeedSlider = buildSlider(xSliderOffset, y + yOffset,  min, max, stepSize, 1, Component.translatable("ars_nouveau.xzspeed_slider"), Component.empty(), 0.0, (value) ->{
+//                    xzMinSpeed = xzSpeedSlider.getValue();
+//                    xzMaxSpeed = Math.max(xzMaxSpeed, xzMinSpeed);
+//                    clampSliders();
+//                });
+//                yOffset += sliderSpacing;
 
-                xzMaxSpeedSlider = buildSlider(xSliderOffset, y + yOffset,  min, max, stepSize, 1, Component.translatable("ars_nouveau.xzmaxspeed_slider"), Component.empty(), 0.0, (value) ->{
+                xzMaxSpeedSlider = buildSlider(xSliderOffset, y + yOffset,  0, max, stepSize, 1, Component.translatable("ars_nouveau.xzmaxspeed_slider"), Component.empty(), 0.0, (value) ->{
                     xzMaxSpeed = xzMaxSpeedSlider.getValue();
-                    xzMinSpeed = Math.min(xzMaxSpeed, xzMinSpeed);
+                    xzMinSpeed = -xzMaxSpeedSlider.getValue();//Math.min(xzMaxSpeed, xzMinSpeed);
                     clampSliders();
                 });
 
@@ -152,14 +152,14 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
 
                 widgets.add(minYSpeedSlider);
                 widgets.add(yMaxSpeedSlider);
-                widgets.add(xzSpeedSlider);
+//                widgets.add(xzSpeedSlider);
                 widgets.add(xzMaxSpeedSlider);
             }
 
             private void clampSliders() {
                 yMaxSpeedSlider.setValue(yMaxSpeed);
                 minYSpeedSlider.setValue(yMinSpeed);
-                xzSpeedSlider.setValue(xzMinSpeed);
+//                xzSpeedSlider.setValue(xzMinSpeed);
                 xzMaxSpeedSlider.setValue(xzMaxSpeed);
             }
 

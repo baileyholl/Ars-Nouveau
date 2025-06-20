@@ -68,7 +68,7 @@ public class ParticleColor implements IParticleColor, Cloneable {
 
     // all 16 colors in rainbow order
     public static final List<ParticleColor> PRESET_COLORS = List.of(
-            RED, ORANGE, YELLOW,LIME, GREEN, CYAN, LIGHT_BLUE, BLUE, PINK, PURPLE, MAGENTA, GRAY, BROWN, LIGHT_GRAY, BLACK, WHITE
+          BROWN, RED, ORANGE, YELLOW, LIME, GREEN, CYAN, LIGHT_BLUE, BLUE, PURPLE, MAGENTA, PINK, WHITE, LIGHT_GRAY, GRAY, BLACK
     );
 
     public static final ParticleColor TO_HIGHLIGHT = RED;
