@@ -10,20 +10,31 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 
+import java.util.function.Consumer;
+
 public class BookSlider extends ExtendedSlider {
 
 
+    Consumer<Double> onValueChange;
     public BookSlider(int x, int y, int width, int height, Component prefix, Component suffix, double minValue, double maxValue, double currentValue, double stepSize, int precision, boolean drawString) {
         super(x, y, width, height, prefix, suffix, minValue, maxValue, currentValue, stepSize, precision, drawString);
     }
 
-    public BookSlider(int x, int y, int width, int height, Component prefix, Component suffix, double minValue, double maxValue, double currentValue, boolean drawString) {
+    public BookSlider(int x, int y, int width, int height, Component prefix, Component suffix, double minValue, double maxValue, double currentValue, double stepSize, int precision, boolean drawString, Consumer<Double> onValueChange) {
+        super(x, y, width, height, prefix, suffix, minValue, maxValue, currentValue, stepSize, precision, drawString);
+        this.onValueChange = onValueChange;
+    }
+
+    public BookSlider(int x, int y, int width, int height, Component prefix, Component suffix, double minValue, double maxValue, double currentValue, boolean drawString, Consumer<Double> onValueChange) {
         super(x, y, width, height, prefix, suffix, minValue, maxValue, currentValue, drawString);
+        this.onValueChange = onValueChange;
     }
 
     @Override
     protected void applyValue() {
-
+        if (this.onValueChange != null) {
+            this.onValueChange.accept(this.value);
+        }
     }
 
     @Override

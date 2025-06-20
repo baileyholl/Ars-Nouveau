@@ -63,6 +63,10 @@ public class Glyph extends ModItem {
         return Component.translatable("ars_nouveau.glyph_of", this.spellPart.getLocaleName());
     }
 
+    public @NotNull Component getName() {
+        return getName(ItemStack.EMPTY);
+    }
+
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         if (spellPart == null)

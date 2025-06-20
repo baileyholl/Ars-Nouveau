@@ -113,8 +113,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
 
     public EntitySpellArrow buildSpellArrow(Level worldIn, Player playerentity, AbstractCaster<?> caster, boolean isSpellArrow, ItemStack bowStack, ItemStack arrowStack) {
         EntitySpellArrow spellArrow = new EntitySpellArrow(worldIn, playerentity, arrowStack, bowStack);
-        spellArrow.spellResolver = new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerentity, new PlayerCaster(playerentity), bowStack)).withSilent(true);
-        spellArrow.setColors(caster.getColor());
+        spellArrow.setResolver(new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerentity, new PlayerCaster(playerentity), bowStack)).withSilent(true));
         if (isSpellArrow)
             spellArrow.setBaseDamage(0);
         return spellArrow;
@@ -177,7 +176,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
                 if (caster.getSpell().isValid() && didCastSpell) {
                     int numSplits = caster.getSpell().getBuffsAtIndex(0, playerentity, AugmentSplit.INSTANCE);
                     if (abstractarrowentity instanceof EntitySpellArrow arrow) {
-                        numSplits = arrow.spellResolver.spell.getBuffsAtIndex(0, playerentity, AugmentSplit.INSTANCE);
+                        numSplits = arrow.resolver().spell.getBuffsAtIndex(0, playerentity, AugmentSplit.INSTANCE);
                     }
 
                     for (int i = 0; i < numSplits; i++) {

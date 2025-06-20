@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.renderer.item;
 
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -42,7 +43,8 @@ public class SpellBowRenderer extends GeoItemRenderer<SpellBow> {
         ParticleColor color = ParticleColor.defaultParticleColor();
         var caster = SpellCasterRegistry.from(currentItemStack);
         if (caster != null){
-            color = caster.getColor();
+            var timeline = caster.getSpell().particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
+            color = timeline.trailEffect.particleOptions().colorProp().color();
         }
         return Color.ofRGBA(color.getRed(), color.getGreen(), color.getBlue(), 0.75f);
     }

@@ -31,6 +31,7 @@ public class GlyphLib {
     public static final String EffectSummonVexID = prependGlyph("summon_vex");
     public static final String EffectHarvestID = prependGlyph("harvest");
     public static final String EffectLeapID = prependGlyph("leap");
+    public static final String EffectPrestidigitation = prependGlyph("prestidigitation");
     public static final String AugmentAccelerateID = prependGlyph("accelerate");
     public static final String AugmentDecelerateID = prependGlyph("decelerate");
     public static final String AugmentExtendTimeID = prependGlyph("extend_time");

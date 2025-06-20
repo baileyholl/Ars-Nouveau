@@ -6,6 +6,8 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -49,6 +51,10 @@ public class ConfiguredSpellSound implements Cloneable{
         this.pitch = pitch;
     }
 
+    public void playSound(Level level, double x, double y, double z){
+        level.playSound(null, x, y, z, sound.getSoundEvent().value(), SoundSource.NEUTRAL, volume, pitch);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -75,7 +81,6 @@ public class ConfiguredSpellSound implements Cloneable{
     public ConfiguredSpellSound clone() {
         try {
             ConfiguredSpellSound clone = (ConfiguredSpellSound) super.clone();
-            // TODO: copy mutable state here, so the clone can't change the internals of the original
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();

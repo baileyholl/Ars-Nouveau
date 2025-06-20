@@ -1,6 +1,13 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
-import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.WallProperty;
+import com.hollingsworth.arsnouveau.api.particle.timelines.LingerTimeline;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
+import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
@@ -62,7 +69,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
 
     @Override
     public void tickNextPosition() {
-        if(!shouldFall())
+        if (!shouldFall())
             return;
         if (!getLanded()) {
             this.setDeltaMovement(0, -0.2, 0);
@@ -72,22 +79,50 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
         super.tickNextPosition();
     }
 
+    @Override
+    public void buildEmitters() {
+        TimelineMap timelineMap = this.resolver().spell.particleTimeline();
+        LingerTimeline projectileTimeline = timelineMap.get(ParticleTimelineRegistry.LINGER_TIMELINE.get());
+        TimelineEntryData trailConfig = projectileTimeline.trailEffect;
+        TimelineEntryData resolveConfig = projectileTimeline.onResolvingEffect;
+        this.tickEmitter = new ParticleEmitter(() -> this.position().add(0, 0.2, 0), this::getRotationVector, trailConfig);
+        this.resolveEmitter = new ParticleEmitter(() -> this.position, this::getRotationVector, resolveConfig);
+        if (this.tickEmitter.particleOptions instanceof PropertyParticleOptions propertyParticleOptions) {
+            propertyParticleOptions.map.set(ParticlePropertyRegistry.WALL_PROPERTY.get(), new WallProperty(Math.round(getAoe()), 5, 20, getDirection()));
+        }
+        this.resolveSound = projectileTimeline.resolveSound.sound;
+    }
+
     public void castSpells() {
         float aoe = getAoe();
         int flatAoe = Math.round(aoe);
-        if (!level.isClientSide && age % (Math.max(1,20 - 2 * getAccelerates())) == 0) {
+        if (age % (Math.max(1, 20 - 2 * getAccelerates())) == 0) {
             if (isSensitive()) {
                 for (BlockPos p : BlockPos.betweenClosed(blockPosition().east(flatAoe).north(flatAoe), blockPosition().west(flatAoe).south(flatAoe))) {
                     p = p.immutable();
-                    spellResolver.getNewResolver(spellResolver.spellContext.clone().makeChildContext()).onResolveEffect(level, new
-                            BlockHitResult(new Vec3(p.getX(), p.getY(), p.getZ()), Direction.UP, p, false));
+                    if (!level.isClientSide) {
+                        resolver().getNewResolver(resolver().spellContext.clone().makeChildContext()).onResolveEffect(level, new
+                                BlockHitResult(new Vec3(p.getX(), p.getY(), p.getZ()), Direction.UP, p, false));
+                    } else {
+                        resolveEmitter.setPositionOffset(p.subtract(getOnPos()).getCenter());
+                        resolveEmitter.tick(level);
+                    }
+                }
+                if(!level.isClientSide) {
+                    resolveSound.playSound(level, getX(), getY(), getZ());
                 }
             } else {
                 int i = 0;
                 for (Entity entity : level.getEntities(null, new AABB(this.blockPosition()).inflate(getAoe()))) {
                     if (entity.equals(this) || entity.getType().is(EntityTags.LINGERING_BLACKLIST))
                         continue;
-                    spellResolver.getNewResolver(spellResolver.spellContext.clone().makeChildContext()).onResolveEffect(level, new EntityHitResult(entity));
+                    if (!level.isClientSide) {
+                        resolver().getNewResolver(resolver().spellContext.clone().makeChildContext()).onResolveEffect(level, new EntityHitResult(entity));
+                        resolveSound.playSound(level, getX(), getY(), getZ());
+                    } else {
+                        resolveEmitter.setPositionOffset(entity.position.subtract(position));
+                        resolveEmitter.tick(level);
+                    }
                     i++;
                     if (i > 5)
                         break;
@@ -108,12 +143,6 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
     @Override
     public int getParticleDelay() {
         return 0;
-    }
-
-    @Override
-    public void playParticles() {
-        ParticleUtil.spawnRitualAreaEffect(getOnPos(), level, random, getParticleColor(), Math.round(getAoe()), 5, 20);
-        ParticleUtil.spawnLight(level, getParticleColor(), position.add(0, 0.5, 0), 10);
     }
 
     @Override

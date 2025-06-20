@@ -144,7 +144,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
                 Vec3 pos = from.add(dir.scale(0.5));
                 Vec3 motion = dir.scale(0.2);
                 level.addAlwaysVisibleParticle(
-                        ModParticles.BUBBLE_TYPE.get(),
+                        ModParticles.ALAKARK_BUBBLE_TYPE.get(),
                         pos.x, pos.y, pos.z,motion.x, motion.y * 0.05, motion.z
                 );
                 if (getRandom().nextInt(20) == 0) {

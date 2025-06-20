@@ -27,7 +27,9 @@ public class ClientPlayerEvent {
 
     @SubscribeEvent
     public static void playerLogout(ClientPlayerNetworkEvent.LoggingOut e) {
-        DocDataLoader.writeBookmarks();
+        if(e.getConnection() != null) {
+            DocDataLoader.writeBookmarks();
+        }
     }
 
 }

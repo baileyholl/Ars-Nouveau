@@ -64,6 +64,7 @@ public class DocClientUtils {
         poseStack.popPose();
     }
 
+
     public static void drawHeader(NuggetMultilLineLabel title, GuiGraphics graphics, int x, int y){
         title.renderCenteredNoShadow(graphics, x, y + (title.getLineCount() > 1 ? 3 : 7), 8, 0);
     }

@@ -14,7 +14,6 @@ import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
@@ -151,10 +150,5 @@ public class BuildPortalEvent implements ITimedEvent {
     @Override
     public boolean isExpired() {
         return portalPos.isEmpty() && framePos.isEmpty();
-    }
-
-    @Override
-    public CompoundTag serialize(CompoundTag tag) {
-        return ITimedEvent.super.serialize(tag);
     }
 }

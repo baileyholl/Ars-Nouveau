@@ -53,7 +53,7 @@ public class SearchScreen extends BaseDocScreen{
         var slicedDocs = docs.subList(from, Math.min(to, docs.size()));
         for(int i = 0; i < Math.min(slicedDocs.size(), to); i++){
             var entry = slicedDocs.get(i);
-            var button = new DocEntryButton(screenLeft + RIGHT_PAGE_OFFSET, screenTop + PAGE_TOP_OFFSET  +  (16 * i), entry.entry(), entry.icon(), entry.displayTitle(), (b) -> {
+            var button = new DocEntryButton(screenLeft + RIGHT_PAGE_OFFSET, screenTop + PAGE_TOP_OFFSET  +  (16 * i), entry.entry(), (b) -> {
                 previousScreen.transition(new PageHolderScreen(entry.entry()));
             });
             addRenderableWidget(button);

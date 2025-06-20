@@ -169,7 +169,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
                 ((EntitySpellArrow) projectile).pierceLeft += EnchantmentHelper.getTagEnchantmentLevel(worldIn.holderOrThrow(Enchantments.PIERCING), pCrossbowStack);
             } else if (pAmmoStack.getItem() instanceof SpellArrow && projectile instanceof EntitySpellArrow spellArrow) {
                 spellArrow.pierceLeft += EnchantmentHelper.getTagEnchantmentLevel(worldIn.holderOrThrow(Enchantments.PIERCING), pCrossbowStack);
-                spellArrow.setColors(resolver.spell.color());
+                spellArrow.setResolver(resolver);
             }
 
             Vec3 vec31 = pShooter.getUpVector(1.0F);
@@ -233,8 +233,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
 
     public EntitySpellArrow buildSpellArrow(Level worldIn, LivingEntity playerentity, AbstractCaster<?> caster, ItemStack bowStack, ItemStack arrowStack) {
         EntitySpellArrow spellArrow = new EntitySpellArrow(worldIn, playerentity, arrowStack, bowStack);
-        spellArrow.spellResolver = new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerentity, LivingCaster.from(playerentity), playerentity.getMainHandItem())).withSilent(true);
-        spellArrow.setColors(caster.getColor());
+        spellArrow.setResolver(new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerentity, LivingCaster.from(playerentity), playerentity.getMainHandItem())).withSilent(true));
         return spellArrow;
     }
 

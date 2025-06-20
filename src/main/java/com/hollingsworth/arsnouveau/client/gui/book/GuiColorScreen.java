@@ -133,7 +133,8 @@ public class GuiColorScreen extends BaseBook {
 
 
     public void onSaveClick(Button button) {
-        Networking.sendToServer(new PacketUpdateSpellColors(slot, new ParticleColor(redW.getValue(), greenW.getValue(), blueW.getValue()), this.stackHand == InteractionHand.MAIN_HAND));
+        ParticleColor particleColor = new ParticleColor(redW.getValue(), greenW.getValue(), blueW.getValue());
+        Networking.sendToServer(new PacketUpdateSpellColors(slot, particleColor, this.stackHand == InteractionHand.MAIN_HAND));
     }
 
     public void onSaveAllClick(Button button) {

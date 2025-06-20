@@ -76,8 +76,11 @@ public class Networking {
         reg.playToClient(UpdateStorageItemsPacket.TYPE, UpdateStorageItemsPacket.CODEC, Networking::handle);
         reg.playToClient(PacketUpdateGlowColor.TYPE, PacketUpdateGlowColor.CODEC, Networking::handle);
         reg.playToServer(PacketUpdateDominionWand.TYPE, PacketUpdateDominionWand.CODEC, Networking::handle);
+        reg.playToServer(PacketUpdateParticleTimeline.TYPE, PacketUpdateParticleTimeline.CODEC, Networking::handle);
         reg.playToServer(PacketCastSpell.TYPE, PacketCastSpell.CODEC, Networking::handle);
         reg.playToClient(PacketToggleDebug.TYPE, PacketToggleDebug.CODEC, Networking::handle);
+        reg.playToClient(TickEmitterPacket.TYPE, TickEmitterPacket.CODEC, Networking::handle);
+        reg.playToClient(PacketPrestidigitation.TYPE, PacketPrestidigitation.CODEC, Networking::handle);
     }
 
     public static <T extends AbstractPacket> void handle(T message, IPayloadContext ctx) {

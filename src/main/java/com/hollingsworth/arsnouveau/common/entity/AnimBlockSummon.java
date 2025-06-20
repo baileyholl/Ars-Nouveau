@@ -160,10 +160,9 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
         if(hasConverted || blockState == null)
             return;
         hasConverted = true;
-        EnchantedFallingBlock fallingBlock = new EnchantedFallingBlock(level, blockPosition(), blockState);
+        EnchantedFallingBlock fallingBlock = new EnchantedFallingBlock(level, blockPosition(), blockState, null);
         fallingBlock.setOwner(this.getOwner());
         fallingBlock.setDeltaMovement(this.getDeltaMovement());
-        fallingBlock.setColor(ParticleColor.fromInt(color));
         fallingBlock.dropItem = this.dropItem;
         if (blockState.getBlock() instanceof MageBlock) {
             fallingBlock.dropItem = false;

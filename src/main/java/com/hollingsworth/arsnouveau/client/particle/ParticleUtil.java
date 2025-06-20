@@ -22,6 +22,13 @@ public class ParticleUtil {
     public static Random r = new Random();
 
     public static double inRange(double min, double max) {
+        if(min == max) {
+            return min;
+        }
+
+        if (min > max) {
+            return 0;
+        }
         return ThreadLocalRandom.current().nextDouble(min, max);
     }
 
@@ -43,6 +50,13 @@ public class ParticleUtil {
         double x = r * sinPhi * cosTheta;
         double y = r * sinPhi * sinTheta;
         double z = r * cosPhi;
+        return new Vec3(x, y, z);
+    }
+
+    public static Vec3 pointInCube() {
+        double x = inRange(-1, 1);
+        double y = inRange(-1, 1);
+        double z = inRange(-1, 1);
         return new Vec3(x, y, z);
     }
 

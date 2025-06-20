@@ -179,6 +179,7 @@ public class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<EntityOrbitProjectile>> ORBIT_SPELL = registerEntity(
             LibEntityNames.ORBIT_PROJECTILE,
             EntityType.Builder.<EntityOrbitProjectile>of(EntityOrbitProjectile::new, MobCategory.MISC).sized(0.5f, 0.5f).fireImmune()
+                    .noSave()
                     .clientTrackingRange(20).setShouldReceiveVelocityUpdates(true));
     public static final DeferredHolder<EntityType<?>, EntityType<EntityChimeraProjectile>> ENTITY_CHIMERA_SPIKE = registerEntity(
             LibEntityNames.CHIMERA_SPIKE,

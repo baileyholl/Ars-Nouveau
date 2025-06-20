@@ -38,7 +38,7 @@ public class BreezeEvent implements ITimedEvent {
 
         if(age == 45){
             this.orbitProjectile.remove(Entity.RemovalReason.DISCARDED);
-            EntityProjectileSpell projectileSpell = new EntityProjectileSpell(breeze.level, new SpellResolver(SpellContext.fromEntity(orbitProjectile.spellResolver.spell, breeze, ItemStack.EMPTY)));
+            EntityProjectileSpell projectileSpell = new EntityProjectileSpell(breeze.level, new SpellResolver(SpellContext.fromEntity(orbitProjectile.resolver().spell, breeze, ItemStack.EMPTY)));
             // Aim the projectile at the player
             projectileSpell.shoot(target.getX() - breeze.getX(), target.getY() - breeze.getY(), target.getZ() - breeze.getZ(), 1.0F, 0.0F);
             breeze.level.addFreshEntity(projectileSpell);

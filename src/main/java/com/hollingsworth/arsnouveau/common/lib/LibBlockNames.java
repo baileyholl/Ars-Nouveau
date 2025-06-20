@@ -9,6 +9,7 @@ public class LibBlockNames {
 
     public final static String MAGE_BLOCK = "mage_block";
     public final static String LIGHT_BLOCK = "light_block";
+    public final static String PARTICLE_BLOCK = "particle_block";
     public static final String T_LIGHT_BLOCK = "temporary_light_block";
 
     public final static String ENCHANTING_APPARATUS = "enchanting_apparatus";

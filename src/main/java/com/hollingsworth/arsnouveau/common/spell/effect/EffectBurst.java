@@ -1,5 +1,8 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
@@ -63,6 +66,8 @@ public class EffectBurst extends AbstractEffect {
                     SpellResolver resolver1 = resolver.getNewResolver(spellContext.clone().makeChildContext());
                     //TODO it needs a direction, UP as a dummy for now
                     resolver1.onResolveEffect(world, new BlockHitResult(new Vec3(pos.getX(), pos.getY(), pos.getZ()), Direction.UP, pos, false));
+                    ParticleEmitter emitter = resolveEmitter(spellContext, pos.getCenter());
+                    emitter.tick(world);
                 }
             }
         } else {
@@ -70,12 +75,24 @@ public class EffectBurst extends AbstractEffect {
                 if ((entity instanceof LivingEntity || entity.getType().is(EntityTags.BURST_WHITELIST)) && sphere.test(BlockUtil.distanceFromCenter(entity.blockPosition(), center))) {
                     SpellResolver resolver1 = resolver.getNewResolver(spellContext.clone().makeChildContext());
                     resolver1.onResolveEffect(world, new EntityHitResult(entity));
+                    ParticleEmitter emitter = resolveEmitter(spellContext, entity.position.add(0, entity.getBbHeight() / 2.0, 0));
+                    emitter.tick(world);
                 }
             }
         }
-
+        playResolveSound(spellContext, world, center.getCenter());
         spellContext.setCanceled(true);
     }
+
+    public ParticleEmitter resolveEmitter(SpellContext spellContext, Vec3 position) {
+        TimelineEntryData entryData = spellContext.getParticleTimeline(ParticleTimelineRegistry.BURST_TIMELINE.get()).onResolvingEffect;
+        return createStaticEmitter(entryData, position);
+    }
+
+    public void playResolveSound(SpellContext spellContext, Level level, Vec3 position) {
+        spellContext.getParticleTimeline(ParticleTimelineRegistry.BURST_TIMELINE.get()).resolveSound.sound.playSound(level, position.x, position.y, position.z);
+    }
+
 
     @Override
     public void buildConfig(ModConfigSpec.Builder builder) {
