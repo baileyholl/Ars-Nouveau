@@ -845,7 +845,8 @@ public class GuiSpellBook extends SpellSlottedScreen {
 
     }
 
-    protected TooltipComponent collectComponent(int mouseX, int mouseY) {
+    @Override
+    protected TooltipComponent getClientImageTooltip(int mouseX, int mouseY) {
         for (Renderable renderable : renderables) {
 
             if(renderable instanceof AbstractWidget widget && !GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)){

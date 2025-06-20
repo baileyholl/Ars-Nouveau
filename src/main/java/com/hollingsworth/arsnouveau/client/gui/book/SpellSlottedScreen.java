@@ -75,7 +75,7 @@ public class SpellSlottedScreen extends BaseBook{
     }
 
     @Override
-    protected TooltipComponent collectComponent(int mouseX, int mouseY) {
+    protected TooltipComponent getClientImageTooltip(int mouseX, int mouseY) {
         for (Renderable renderable : renderables) {
             if(renderable instanceof AbstractWidget widget && !GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)){
                 continue;
@@ -88,6 +88,6 @@ public class SpellSlottedScreen extends BaseBook{
                 return new SpellTooltip(spell, false);
             }
         }
-        return super.collectComponent(mouseX, mouseY);
+        return super.getClientImageTooltip(mouseX, mouseY);
     }
 }
