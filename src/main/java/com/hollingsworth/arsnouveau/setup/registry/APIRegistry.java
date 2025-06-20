@@ -348,6 +348,9 @@ public class APIRegistry {
         List<IParticleMotionType<?>> PRESTIDIGITATION_OPTIONS = Arrays.asList(ParticleMotionRegistry.LIGHT_BLOB.get(), ParticleMotionRegistry.BRAZIER_TYPE.get(), ParticleMotionRegistry.WISP_TYPE.get(), ParticleMotionRegistry.UPWARD_FIELD_TYPE.get());
         PrestidigitationTimeline.TICKING_OPTIONS.addAll(PRESTIDIGITATION_OPTIONS);
 
+        List<IParticleMotionType<?>> DELAY_OPTIONS = Arrays.asList(ParticleMotionRegistry.LIGHT_BLOB.get(), ParticleMotionRegistry.BRAZIER_TYPE.get(), ParticleMotionRegistry.UPWARD_FIELD_TYPE.get());
+        DelayTimeline.TICKING_OPTIONS.addAll(DELAY_OPTIONS);
+
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.BUBBLE_CLONE_TYPE.get(), false));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SMOKE_TYPE.get(), false));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SNOW_TYPE.get(), false));
