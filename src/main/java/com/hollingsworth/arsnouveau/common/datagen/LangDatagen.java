@@ -1754,6 +1754,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.timeline.flair.tooltip", "Additional particles that play on the projectile's path");
         add("ars_nouveau.timeline.tick.tooltip", "Creates particles every tick");
         add("ars_nouveau.timeline.field.tooltip", "Creates particles where this effect lands.");
+        add("block.ars_nouveau.particle_block", "Prestidigitation Block");
 
     }
 
