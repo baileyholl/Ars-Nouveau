@@ -25,6 +25,9 @@ public class ParticleEmitter {
     public static StreamCodec<RegistryFriendlyByteBuf, ParticleEmitter> STREAM = StreamCodec.ofMember((val, buf) -> {
         Vec3 pos = val.getAdjustedPosition();
         ByteBufCodecs.VECTOR3F.encode(buf, pos.toVector3f());
+        if(val.previousPosition == null){
+            val.previousPosition = val.getAdjustedPosition();
+        }
         ByteBufCodecs.VECTOR3F.encode(buf, val.previousPosition.toVector3f());
         Vec2 rotation = val.getAdjustedRotation();
         ByteBufCodecs.VECTOR3F.encode(buf, new Vector3f(rotation.x, rotation.y, 0));

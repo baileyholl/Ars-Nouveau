@@ -45,4 +45,6 @@ public class ParticleTimelineRegistry {
 
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<SelfTimeline>> SELF_TIMELINE = TIMELINE_DF.register("self", () -> new SimpleParticleTimelineType<>(MethodSelf.INSTANCE, SelfTimeline.CODEC, SelfTimeline.STREAM_CODEC, SelfTimeline::new));
 
+    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<PrestidigitationTimeline>> PRESTIDIGITATION_TIMELINE = TIMELINE_DF.register("prestidigitation", () -> new SimpleParticleTimelineType<>(EffectPrestidigitation.INSTANCE, PrestidigitationTimeline.CODEC, PrestidigitationTimeline.STREAM_CODEC, PrestidigitationTimeline::new));
+
 }

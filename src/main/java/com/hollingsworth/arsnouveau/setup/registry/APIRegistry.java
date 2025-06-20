@@ -125,6 +125,7 @@ public class APIRegistry {
         registerSpell(EffectRewind.INSTANCE);
         registerSpell(EffectBubble.INSTANCE);
         registerSpell(EffectWindburst.INSTANCE);
+        registerSpell(EffectPrestidigitation.INSTANCE);
 
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());
@@ -343,6 +344,9 @@ public class APIRegistry {
         LightTimeline.TICKING_OPTIONS.addAll(LIGHT_OPTIONS);
 
         SelfTimeline.RESOLVING_OPTIONS.add(ParticleMotionRegistry.BURST_TYPE.get());
+
+        List<IParticleMotionType<?>> PRESTIDIGITATION_OPTIONS = Arrays.asList(ParticleMotionRegistry.LIGHT_BLOB.get(), ParticleMotionRegistry.BRAZIER_TYPE.get(), ParticleMotionRegistry.WISP_TYPE.get(), ParticleMotionRegistry.UPWARD_FIELD_TYPE.get());
+        PrestidigitationTimeline.TICKING_OPTIONS.addAll(PRESTIDIGITATION_OPTIONS);
 
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.BUBBLE_CLONE_TYPE.get(), false));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SMOKE_TYPE.get(), false));

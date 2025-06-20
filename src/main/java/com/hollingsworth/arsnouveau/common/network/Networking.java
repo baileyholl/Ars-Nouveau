@@ -80,6 +80,7 @@ public class Networking {
         reg.playToServer(PacketCastSpell.TYPE, PacketCastSpell.CODEC, Networking::handle);
         reg.playToClient(PacketToggleDebug.TYPE, PacketToggleDebug.CODEC, Networking::handle);
         reg.playToClient(TickEmitterPacket.TYPE, TickEmitterPacket.CODEC, Networking::handle);
+        reg.playToClient(PacketPrestidigitation.TYPE, PacketPrestidigitation.CODEC, Networking::handle);
     }
 
     public static <T extends AbstractPacket> void handle(T message, IPayloadContext ctx) {

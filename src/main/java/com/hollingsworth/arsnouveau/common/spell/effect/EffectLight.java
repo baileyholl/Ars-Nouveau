@@ -131,7 +131,7 @@ public class EffectLight extends AbstractEffect implements IPotionEffect {
 
     @Override
     public String getBookDescription() {
-        return "If cast on a block, a permanent light source is created. May be amplified up to Glowstone brightness, or Dampened for a lower light level. When cast on yourself, you will receive night vision. When cast on other entities or with Sensitive, they will receive Night Vision and Glowing. If Sensitive, Glowing will use the spell color.";
+        return "If cast on a block, a permanent light source is created. May be amplified up to Glowstone brightness, or Dampened for a lower light level. When cast on yourself, you will receive night vision. When cast on other entities or with Sensitive, they will receive Night Vision and Glowing. If Sensitive, Glowing will use the spell color. Particles can be configured from the Spell Style menu in the spellbook.";
     }
 
     @NotNull

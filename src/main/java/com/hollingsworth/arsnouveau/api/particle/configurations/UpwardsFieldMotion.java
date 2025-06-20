@@ -36,17 +36,16 @@ public class UpwardsFieldMotion extends ParticleMotion{
         int chance = wallProperty.chance;
         int range = wallProperty.range;
 
-        BlockPos pos = BlockPos.containing(x, y + 1, z);
 
-        BlockPos.betweenClosedStream(pos.offset(range, 0, range), pos.offset(-range, 0, -range)).forEach(blockPos -> {
-            if (rand.nextInt(chance) == 0) {
+        BlockPos.betweenClosedStream(BlockPos.ZERO.offset(range, 0, range), BlockPos.ZERO.offset(-range, 0, -range)).forEach(blockPos -> {
                 for (int i = 0; i < getNumParticles(density.density()); i++) {
-                    double dx = blockPos.getX() + ParticleUtil.inRange(-0.5, 0.5) + 0.5;
-                    double dy = blockPos.getY() + ParticleUtil.inRange(-0.01, 0.25);
-                    double dz = blockPos.getZ() + ParticleUtil.inRange(-0.5, 0.5) + 0.5;
-                    level.addAlwaysVisibleParticle(particleOptions, true, dx, dy, dz, 0, ParticleUtil.inRange(0.01, 0.08), 0);
+                    if (rand.nextInt(chance) == 0) {
+                        double dx = x + blockPos.getX() + ParticleUtil.inRange(-0.5, 0.5) + 0.5;
+                        double dy = y + ParticleUtil.inRange(-0.01, 0.25);
+                        double dz = z + blockPos.getZ() + ParticleUtil.inRange(-0.5, 0.5) + 0.5;
+                        level.addAlwaysVisibleParticle(particleOptions, true, dx, dy, dz, 0, ParticleUtil.inRange(0.01, 0.03), 0);
+                    }
                 }
-            }
         });
     }
 
