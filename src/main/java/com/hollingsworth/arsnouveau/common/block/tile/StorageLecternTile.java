@@ -70,6 +70,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     public boolean invalidateNextTick;
     public Queue<TransferTask> transferTasks = EvictingQueue.create(10);
     IItemHandler lecternInvWrapper;
+    public boolean powered;
 
 
     public StorageLecternTile(BlockPos pos, BlockState state) {
@@ -350,7 +351,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         if (backoffTicks > 0) {
             backoffTicks--;
         }
-        if (backoffTicks <= 0 && level.getGameTime() % 20 == 0) {
+        if (!powered && backoffTicks <= 0 && level.getGameTime() % 20 == 0) {
             insertNearbyItems();
         }
         if (checkPlayerRangeTicks > 0) {
@@ -559,6 +560,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             bookwyrmList.add(NbtUtils.createUUID(uuid));
         }
         compound.put("bookwyrmUUIDs", bookwyrmList);
+        compound.putBoolean("powered", powered);
     }
 
     @Override
@@ -585,6 +587,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             }
         }
         updateItems = true;
+        powered = compound.getBoolean("powered");
     }
 
     @Override

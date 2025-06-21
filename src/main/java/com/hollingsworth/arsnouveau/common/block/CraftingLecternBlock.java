@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
 import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
 import com.hollingsworth.arsnouveau.common.block.tile.TransientCustomContainer;
@@ -102,6 +103,15 @@ public class CraftingLecternBlock extends TickableModBlock {
     @Override
     protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         return false;
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
+        if (!world.isClientSide() && world.getBlockEntity(pos) instanceof StorageLecternTile tile) {
+            tile.powered = world.hasNeighborSignal(pos);
+            BlockUtil.safelyUpdateState(world, pos);
+        }
     }
 
     @SuppressWarnings("deprecation")
