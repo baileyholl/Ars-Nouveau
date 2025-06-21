@@ -37,7 +37,7 @@ public class BaseBook extends BaseScreen {
     public static final int ONE_PAGE_WIDTH = 118;
     public static final int ONE_PAGE_HEIGHT = 146;
 
-    public static ResourceLocation background = ArsNouveau.prefix( "textures/gui/spell_book_template.png");
+    public static ResourceLocation background = ArsNouveau.prefix("textures/gui/spell_book_template.png");
     public int bookLeft;
     public int bookTop;
     public int bookRight;
@@ -60,12 +60,13 @@ public class BaseBook extends BaseScreen {
         bookBottom = height / 2 + FULL_HEIGHT / 2;
     }
 
-    public void addBackButton(Screen parentScreen){
-        addBackButton(parentScreen,(b) ->{});
+    public void addBackButton(Screen parentScreen) {
+        addBackButton(parentScreen, (b) -> {
+        });
     }
 
 
-    public void addBackButton(Screen parentScreen, Consumer<Button> onPress){
+    public void addBackButton(Screen parentScreen, Consumer<Button> onPress) {
         addRenderableWidget(new NuggetImageButton(bookLeft + 6, bookTop + 6, DocAssets.ARROW_BACK_HOVER.width(), DocAssets.ARROW_BACK_HOVER.height(), DocAssets.ARROW_BACK.location(), DocAssets.ARROW_BACK_HOVER.location(), (b) -> {
             if (onPress != null) {
                 onPress.accept(b);
@@ -125,12 +126,12 @@ public class BaseBook extends BaseScreen {
     @Override
     public void collectTooltips(GuiGraphics stack, int mouseX, int mouseY, List<Component> tooltip) {
         // TODO: 1.22 remove along with ITooltipProvider from ars
-        for(Renderable renderable : renderables) {
+        for (Renderable renderable : renderables) {
             if (renderable instanceof AbstractWidget widget) {
                 if (GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)) {
                     if (renderable instanceof ITooltipProvider tooltipProvider) {
                         tooltipProvider.getTooltip(tooltip);
-                    }else if(renderable instanceof ITooltipRenderer nuggetProvider){
+                    } else if (renderable instanceof ITooltipRenderer nuggetProvider) {
                         nuggetProvider.gatherTooltips(tooltip);
                     }
                 }
@@ -138,10 +139,10 @@ public class BaseBook extends BaseScreen {
         }
     }
 
-    public @Nullable Renderable getHoveredRenderable(int mouseX, int mouseY){
-        for(Renderable renderable : renderables){
-            if(renderable instanceof AbstractWidget widget){
-                if(GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)){
+    public @Nullable Renderable getHoveredRenderable(int mouseX, int mouseY) {
+        for (Renderable renderable : renderables) {
+            if (renderable instanceof AbstractWidget widget) {
+                if (GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)) {
                     return renderable;
                 }
             }

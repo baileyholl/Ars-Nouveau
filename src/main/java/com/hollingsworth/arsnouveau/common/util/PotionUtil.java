@@ -26,8 +26,8 @@ public class PotionUtil {
         return stack;
     }
 
-    public static boolean arePotionContentsEqual(PotionContents pot1, PotionContents pot2){
-        if(pot1 == null || pot2 == null){
+    public static boolean arePotionContentsEqual(PotionContents pot1, PotionContents pot2) {
+        if (pot1 == null || pot2 == null) {
             return false;
         }
         Set<MobEffectInstance> pot1Effects = new HashSet<>();
@@ -45,16 +45,16 @@ public class PotionUtil {
                         || potionContents.is(Potions.AWKWARD));
     }
 
-    public static @NotNull PotionContents getContents(ItemStack stack){
+    public static @NotNull PotionContents getContents(ItemStack stack) {
         IPotionProvider provider = PotionProviderRegistry.from(stack);
-        if(provider != null){
+        if (provider != null) {
             return provider.getPotionData(stack);
         }
         return stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
     }
 
-    public static void applyContents(PotionContents contents, @NotNull LivingEntity target, @Nullable LivingEntity source, @Nullable LivingEntity indirect){
-        contents.forEachEffect(instance ->  {
+    public static void applyContents(PotionContents contents, @NotNull LivingEntity target, @Nullable LivingEntity source, @Nullable LivingEntity indirect) {
+        contents.forEachEffect(instance -> {
             if (instance.getEffect().value().isInstantenous()) {
                 instance.getEffect().value().applyInstantenousEffect(source, indirect, target, instance.getAmplifier(), 1.0);
             } else {
@@ -63,17 +63,17 @@ public class PotionUtil {
         });
     }
 
-    public static PotionContents merge(PotionContents contents1, PotionContents contents2){
-        if(arePotionContentsEqual(contents1, contents2))
+    public static PotionContents merge(PotionContents contents1, PotionContents contents2) {
+        if (arePotionContentsEqual(contents1, contents2))
             return new PotionContents(contents1.potion(), contents1.customColor(), contents1.customEffects());
         Set<MobEffectInstance> set = new HashSet<>();
-        for(MobEffectInstance effect : contents1.getAllEffects()){
+        for (MobEffectInstance effect : contents1.getAllEffects()) {
             set.add(new MobEffectInstance(effect));
         }
-        for(MobEffectInstance effect : contents2.getAllEffects()){
+        for (MobEffectInstance effect : contents2.getAllEffects()) {
             set.add(new MobEffectInstance(effect));
         }
-        if(contents1.potion().isPresent()) {
+        if (contents1.potion().isPresent()) {
             contents1.potion().get().value().getEffects().forEach(set::remove);
         }
         return new PotionContents(contents1.potion(), contents1.customColor(), new ArrayList<>(set));

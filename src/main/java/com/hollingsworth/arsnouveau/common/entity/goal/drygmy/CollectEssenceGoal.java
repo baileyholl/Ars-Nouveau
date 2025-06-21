@@ -61,7 +61,7 @@ public class CollectEssenceGoal extends Goal {
         if (complete || target == null)
             return;
 
-        if(approached) {
+        if (approached) {
             drygmy.setChannelingEntity(target.getId());
             drygmy.getLookControl().setLookAt(target, 10.0F, (float) drygmy.getMaxHeadXRot());
             drygmy.getNavigation().stop();
@@ -79,28 +79,28 @@ public class CollectEssenceGoal extends Goal {
                     targetPos = targetPos.above(homePos.getY() - targetPos.getY());
                 }
                 EntityFlyingItem.spawn(homePos, (ServerLevel) drygmy.level,
-                            targetPos, homePos,
-                            50,
-                            255,
-                            20);
+                        targetPos, homePos,
+                        50,
+                        255,
+                        20);
 
                 drygmy.channelCooldown = 100;
                 drygmy.getHome().giveProgress();
             }
-        }else{
-            if(timePathing > 20 * 8){
+        } else {
+            if (timePathing > 20 * 8) {
                 approached = true;
                 drygmy.getNavigation().stop();
             }
-            if(BlockUtil.distanceFrom(drygmy.position, target.position) <= 2.3){
+            if (BlockUtil.distanceFrom(drygmy.position, target.position) <= 2.3) {
                 approached = true;
-            }else{
+            } else {
                 timePathing++;
                 Path path = drygmy.getNavigation().createPath(target.getX(), target.getY(), target.getZ(), 1);
                 if (path == null || !path.canReach()) {
                     approached = true;
                     drygmy.getNavigation().stop();
-                }else {
+                } else {
                     drygmy.getNavigation().moveTo(path, 1.0);
                 }
             }

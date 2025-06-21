@@ -11,7 +11,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
 
-public class FallingParticle extends PropParticle{
+public class FallingParticle extends PropParticle {
     public Fluid type;
     public SoundEvent landingSound;
 
@@ -42,7 +42,7 @@ public class FallingParticle extends PropParticle{
         this.zo = this.z;
 
         if (!this.removed) {
-            this.yd = this.yd - (double)this.gravity;
+            this.yd = this.yd - (double) this.gravity;
             this.move(this.xd, this.yd, this.zd);
             this.postMoveUpdate();
             if (!this.removed) {
@@ -52,7 +52,7 @@ public class FallingParticle extends PropParticle{
                 if (this.type != Fluids.EMPTY) {
                     BlockPos blockpos = BlockPos.containing(this.x, this.y, this.z);
                     FluidState fluidstate = this.level.getFluidState(blockpos);
-                    if (fluidstate.getType() == this.type && this.y < (double)((float)blockpos.getY() + fluidstate.getHeight(this.level, blockpos))) {
+                    if (fluidstate.getType() == this.type && this.y < (double) ((float) blockpos.getY() + fluidstate.getHeight(this.level, blockpos))) {
                         this.remove();
                     }
                 }
@@ -63,7 +63,7 @@ public class FallingParticle extends PropParticle{
     protected void postMoveUpdate() {
         if (this.onGround && landingSound != null) {
             this.remove();
-            if(this.random.nextDouble() > 0.5f) {
+            if (this.random.nextDouble() > 0.5f) {
                 float f = Mth.randomBetween(this.random, 0.3F, 1.0F);
                 level.playLocalSound(x, y, z, landingSound, SoundSource.NEUTRAL, f, 1.0F, false);
             }

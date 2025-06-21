@@ -44,7 +44,7 @@ public class ParticleColor implements IParticleColor, Cloneable {
             }
     );
 
-    public static final ResourceLocation ID = ArsNouveau.prefix( "constant");
+    public static final ResourceLocation ID = ArsNouveau.prefix("constant");
 
     public static final ParticleColor DEFAULT = new ParticleColor(255, 25, 180);
     public static final ParticleColor WHITE = new ParticleColor(255, 255, 255);
@@ -68,7 +68,7 @@ public class ParticleColor implements IParticleColor, Cloneable {
 
     // all 16 colors in rainbow order
     public static final List<ParticleColor> PRESET_COLORS = List.of(
-          BROWN, RED, ORANGE, YELLOW, LIME, GREEN, CYAN, LIGHT_BLUE, BLUE, PURPLE, MAGENTA, PINK, WHITE, LIGHT_GRAY, GRAY, BLACK
+            BROWN, RED, ORANGE, YELLOW, LIME, GREEN, CYAN, LIGHT_BLUE, BLUE, PURPLE, MAGENTA, PINK, WHITE, LIGHT_GRAY, GRAY, BLACK
     );
 
     public static final ParticleColor TO_HIGHLIGHT = RED;
@@ -99,7 +99,7 @@ public class ParticleColor implements IParticleColor, Cloneable {
         this((int) r, (int) g, (int) b);
     }
 
-    public ParticleColor(CompoundTag compoundTag){
+    public ParticleColor(CompoundTag compoundTag) {
         this(compoundTag.getInt("r"), compoundTag.getInt("g"), compoundTag.getInt("b"));
     }
 
@@ -213,8 +213,8 @@ public class ParticleColor implements IParticleColor, Cloneable {
 
         public IntWrapper(ParticleColor color) {
             this.r = Math.max(1, (int) (color.getRed() * 255.0));
-            this.g = Math.max(1,(int) (color.getGreen() * 255.0));
-            this.b = Math.max(1,(int) (color.getBlue() * 255.0));
+            this.g = Math.max(1, (int) (color.getGreen() * 255.0));
+            this.b = Math.max(1, (int) (color.getBlue() * 255.0));
         }
 
         public ParticleColor toParticleColor() {

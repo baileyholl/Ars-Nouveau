@@ -127,7 +127,7 @@ public class WildenChimera extends Monster implements GeoEntity {
     protected void registerGoals() {
         super.registerGoals();
 
-        this.goalSelector.addGoal(5, new ConditionalMeleeGoal(this, 1.2d, true, ()-> !this.isHowling() && !this.isFlying() && !this.isDefensive() && !this.isDiving() && !this.getPhaseSwapping() && !isRamming() && !isRamPrep()));
+        this.goalSelector.addGoal(5, new ConditionalMeleeGoal(this, 1.2d, true, () -> !this.isHowling() && !this.isFlying() && !this.isDefensive() && !this.isDiving() && !this.getPhaseSwapping() && !isRamming() && !isRamPrep()));
         this.goalSelector.addGoal(3, new ChimeraSummonGoal(this));
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, true));
         this.goalSelector.addGoal(1, new ChimeraRageGoal(this));
@@ -151,8 +151,8 @@ public class WildenChimera extends Monster implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
-        animatableManager.add(new AnimationController<>(this, "walkController", 1, e ->{
-            if (!isDefensive() && e.isMoving() && !isFlying() && !isHowling() && !isSwimming() && !isRamPrep() && !isRamming()){
+        animatableManager.add(new AnimationController<>(this, "walkController", 1, e -> {
+            if (!isDefensive() && e.isMoving() && !isFlying() && !isHowling() && !isSwimming() && !isRamPrep() && !isRamming()) {
                 e.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
                 return PlayState.CONTINUE;
             }
@@ -160,7 +160,7 @@ public class WildenChimera extends Monster implements GeoEntity {
             return PlayState.STOP;
         }));
         crouchController = new AnimationController<>(this, "crouchController", 1, event -> {
-            if (isDefensive() && !isFlying() && !this.isHowling()){
+            if (isDefensive() && !isFlying() && !this.isHowling()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("defending"));
                 return PlayState.CONTINUE;
             }
@@ -168,28 +168,28 @@ public class WildenChimera extends Monster implements GeoEntity {
         });
 
         animatableManager.add(crouchController);
-        animatableManager.add(new AnimationController<>(this, "idleController", 1, (event ->{
-            if(!event.isMoving() && !isDefensive() && !isFlying() && !isHowling() && !isRamPrep() && !isRamming()){
+        animatableManager.add(new AnimationController<>(this, "idleController", 1, (event -> {
+            if (!event.isMoving() && !isDefensive() && !isFlying() && !isHowling() && !isRamPrep() && !isRamming()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         })));
-        animatableManager.add(new AnimationController<>(this, "flyController", 1, (event) ->{
-            if(isFlying() && !isDiving()){
+        animatableManager.add(new AnimationController<>(this, "flyController", 1, (event) -> {
+            if (isFlying() && !isDiving()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("fly_rising"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        animatableManager.add(new AnimationController<>(this, "diveController", 1, (event) ->{
-            if(isDiving()){
+        animatableManager.add(new AnimationController<>(this, "diveController", 1, (event) -> {
+            if (isDiving()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("dive"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        animatableManager.add(new AnimationController<>(this, "howlController", 1, e ->{
+        animatableManager.add(new AnimationController<>(this, "howlController", 1, e -> {
             if (isHowling()) {
                 e.getController().setAnimation(RawAnimation.begin().thenPlay("roar"));
                 return PlayState.CONTINUE;
@@ -197,8 +197,8 @@ public class WildenChimera extends Monster implements GeoEntity {
             e.getController().forceAnimationReset();
             return PlayState.STOP;
         }));
-        animatableManager.add(new AnimationController<>(this, "swimController", 1, e ->{
-            if (!isDefensive() && e.isMoving() && !isFlying() && !isHowling() && isSwimming()){
+        animatableManager.add(new AnimationController<>(this, "swimController", 1, e -> {
+            if (!isDefensive() && e.isMoving() && !isFlying() && !isHowling() && isSwimming()) {
                 e.getController().setAnimation(RawAnimation.begin().thenPlay("swim"));
                 return PlayState.CONTINUE;
             }
@@ -206,8 +206,8 @@ public class WildenChimera extends Monster implements GeoEntity {
             return PlayState.STOP;
         }));
         animatableManager.add(new AnimationController<>(this, "ramController", 1, (event -> {
-            if(isRamming() && !isRamPrep()){
-                if(!this.hasWings()){
+            if (isRamming() && !isRamPrep()) {
+                if (!this.hasWings()) {
                     event.getController().setAnimation(RawAnimation.begin().thenPlay("charge"));
                 }
                 return PlayState.CONTINUE;
@@ -215,10 +215,10 @@ public class WildenChimera extends Monster implements GeoEntity {
             return PlayState.STOP;
         })));
         animatableManager.add(new AnimationController<>(this, "ramPrep", 1, (event -> {
-            if(isRamPrep() && !isRamming()){
-                if(this.hasWings()){
+            if (isRamPrep() && !isRamming()) {
+                if (this.hasWings()) {
                     event.getController().setAnimation(RawAnimation.begin().thenPlay("wing_charge_prep"));
-                }else{
+                } else {
                     event.getController().setAnimation(RawAnimation.begin().thenPlay("charge_prep"));
                 }
                 return PlayState.CONTINUE;
@@ -244,13 +244,13 @@ public class WildenChimera extends Monster implements GeoEntity {
     @Override
     public void tick() {
         super.tick();
-        if(level.isClientSide && !initMusic){
+        if (level.isClientSide && !initMusic) {
             initMusic = true;
             ((Runnable) () -> ChimeraMusic.play(WildenChimera.this)).run();
         }
 
         //   this.goalSelector.getRunningGoals().forEach(g -> System.out.println(g.getGoal().toString()));
-        if (!level.isClientSide && isDefensive()){
+        if (!level.isClientSide && isDefensive()) {
             this.getNavigation().stop();
         }
         if (level.isClientSide && isFlying() && random.nextInt(18) == 0) {
@@ -389,7 +389,7 @@ public class WildenChimera extends Monster implements GeoEntity {
     }
 
     public boolean canRam(boolean withWings) {
-        if(withWings != hasWings()){
+        if (withWings != hasWings()) {
             return false;
         }
         return !isRamGoal && ramCooldown <= 0 && hasHorns() && !getPhaseSwapping() && !isFlying() && !isDefensive() && getTarget() != null && getTarget().onGround() && this.onGround();
@@ -438,7 +438,7 @@ public class WildenChimera extends Monster implements GeoEntity {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source.is(DamageTypes.CACTUS) || source.is(DamageTypes.SWEET_BERRY_BUSH) || source.is(DamageTypes.IN_WALL)  || source.is(DamageTypes.LAVA) || source.is(DamageTypes.DROWN))
+        if (source.is(DamageTypes.CACTUS) || source.is(DamageTypes.SWEET_BERRY_BUSH) || source.is(DamageTypes.IN_WALL) || source.is(DamageTypes.LAVA) || source.is(DamageTypes.DROWN))
             return false;
         if (source.type().msgId().equals("cold"))
             amount = amount / 2;
@@ -637,7 +637,7 @@ public class WildenChimera extends Monster implements GeoEntity {
         entityData.set(IS_RAMMING, ramming);
     }
 
-    public boolean isRamPrep(){
+    public boolean isRamPrep() {
         return entityData.get(RAM_PREP);
     }
 
@@ -687,7 +687,7 @@ public class WildenChimera extends Monster implements GeoEntity {
         this.fallDistance = Math.min(fallDistance, 10);
     }
 
-    public boolean wantsToSwim(){
+    public boolean wantsToSwim() {
         LivingEntity livingentity = this.getTarget();
         return livingentity != null && livingentity.isInWater();
     }
@@ -727,7 +727,7 @@ public class WildenChimera extends Monster implements GeoEntity {
                 } else {
                     flyTick();
                 }
-            }else if(this.chimera.wantsToSwim() && this.chimera.isInWater()){
+            } else if (this.chimera.wantsToSwim() && this.chimera.isInWater()) {
                 swimTick();
             } else {
                 super.tick();
@@ -735,7 +735,7 @@ public class WildenChimera extends Monster implements GeoEntity {
         }
 
         // Drowned movement
-        public void swimTick(){
+        public void swimTick() {
             LivingEntity livingentity = this.chimera.getTarget();
             if (livingentity != null && livingentity.getY() > this.chimera.getY()) {
                 this.chimera.setDeltaMovement(this.chimera.getDeltaMovement().add(0.0D, 0.02D, 0.0D));
@@ -751,13 +751,13 @@ public class WildenChimera extends Monster implements GeoEntity {
             double d2 = this.wantedZ - this.chimera.getZ();
             double d3 = Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
             d1 /= d3;
-            float f = (float)(Mth.atan2(d2, d0) * (double)(180F / (float)Math.PI)) - 90.0F;
+            float f = (float) (Mth.atan2(d2, d0) * (double) (180F / (float) Math.PI)) - 90.0F;
             this.chimera.setYRot(this.rotlerp(this.chimera.getYRot(), f, 90.0F));
             this.chimera.yBodyRot = this.chimera.getYRot();
-            float f1 = (float)(this.speedModifier * this.chimera.getAttributeValue(Attributes.MOVEMENT_SPEED));
+            float f1 = (float) (this.speedModifier * this.chimera.getAttributeValue(Attributes.MOVEMENT_SPEED));
             float f2 = Mth.lerp(0.25F, this.chimera.getSpeed(), f1);
             this.chimera.setSpeed(f2);
-            this.chimera.setDeltaMovement(this.chimera.getDeltaMovement().add((double)f2 * d0 * 0.08, (double)f2 * d1 * 0.13D, (double)f2 * d2 * 0.08));
+            this.chimera.setDeltaMovement(this.chimera.getDeltaMovement().add((double) f2 * d0 * 0.08, (double) f2 * d1 * 0.13D, (double) f2 * d2 * 0.08));
 
         }
 
@@ -897,7 +897,7 @@ public class WildenChimera extends Monster implements GeoEntity {
         public void tick() {
             if (!chimera.isAlive()) {
                 stop();
-            }else{
+            } else {
                 this.x = chimera.getX();
                 this.y = chimera.getY();
                 this.z = chimera.getZ();

@@ -38,11 +38,10 @@ public class RotatingSpellTurret extends BasicSpellTurret {
     public static Position getDispensePosition(BlockPos coords, RotatingTurretTile tile) {
         Vec3 direction = tile.getShootAngle().normalize();
         double d0 = coords.getX() + 0.5 + 0.5D * direction.x();
-        double d1 = coords.getY()  + 0.5 + 0.5D * direction.y();
-        double d2 = coords.getZ()  + 0.5 + 0.5D * direction.z();
+        double d1 = coords.getY() + 0.5 + 0.5D * direction.y();
+        double d2 = coords.getZ() + 0.5 + 0.5D * direction.z();
         return new Vec3(d0, d1, d2);
     }
-
 
 
     @Override
@@ -80,7 +79,7 @@ public class RotatingSpellTurret extends BasicSpellTurret {
         ROT_TURRET_BEHAVIOR_MAP.put(MethodProjectile.INSTANCE, new ITurretBehavior() {
             @Override
             public void onCast(SpellResolver resolver, ServerLevel world, BlockPos pos, Player fakePlayer, Position iposition, Direction direction) {
-                if(world.getBlockEntity(pos) instanceof RotatingTurretTile rotatingTurretTile) {
+                if (world.getBlockEntity(pos) instanceof RotatingTurretTile rotatingTurretTile) {
                     EntityProjectileSpell spell = new EntityProjectileSpell(world, resolver);
                     spell.setOwner(fakePlayer);
                     spell.setPos(iposition.x(), iposition.y() - 0.25, iposition.z());
@@ -99,7 +98,7 @@ public class RotatingSpellTurret extends BasicSpellTurret {
             public void onCast(SpellResolver resolver, ServerLevel serverLevel, BlockPos pos, Player fakePlayer, Position dispensePosition, Direction facingDir) {
                 BlockPos touchPos = pos.relative(facingDir);
 
-                if(!(serverLevel.getBlockEntity(pos) instanceof RotatingTurretTile rotatingTurretTile)) {
+                if (!(serverLevel.getBlockEntity(pos) instanceof RotatingTurretTile rotatingTurretTile)) {
                     return;
                 }
                 Vec3 aimVec = rotatingTurretTile.getShootAngle().add(rotatingTurretTile.getX() + 0.5, rotatingTurretTile.getY() + 0.5, rotatingTurretTile.getZ() + 0.5);
@@ -108,11 +107,11 @@ public class RotatingSpellTurret extends BasicSpellTurret {
                     LivingEntity entity = entityList.get(serverLevel.random.nextInt(entityList.size()));
                     resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);
                 } else {
-                   resolver.onCastOnBlock(new BlockHitResult(aimVec, facingDir, BlockPos.containing(aimVec.x(), aimVec.y(), aimVec.z()), true));
+                    resolver.onCastOnBlock(new BlockHitResult(aimVec, facingDir, BlockPos.containing(aimVec.x(), aimVec.y(), aimVec.z()), true));
                 }
             }
         });
 
     }
-    
+
 }

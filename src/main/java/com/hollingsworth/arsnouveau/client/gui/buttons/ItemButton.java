@@ -19,8 +19,10 @@ import java.util.List;
 public class ItemButton extends GuiImageButton {
     public Ingredient ingredient = Ingredient.of();
     public GlyphUnlockMenu parent;
+
     public ItemButton(GlyphUnlockMenu parent, int x, int y) {
-        super(x, y, 0, 0, 22, 20, 22, 20, "textures/gui/spell_glyph_slot.png", (b) -> {});
+        super(x, y, 0, 0, 22, 20, 22, 20, "textures/gui/spell_glyph_slot.png", (b) -> {
+        });
         this.parent = parent;
     }
 

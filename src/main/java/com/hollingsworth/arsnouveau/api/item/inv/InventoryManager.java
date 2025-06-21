@@ -133,7 +133,7 @@ public class InventoryManager {
         IItemHandler itemHandler = filterableItemHandler.getHandler();
         for (int i = 0; i < itemHandler.getSlots(); i++) {
             ItemStack stack = itemHandler.extractItem(i, remaining, true);
-            if(stack.isEmpty()){
+            if (stack.isEmpty()) {
                 continue;
             }
             if (!(ItemStack.isSameItem(stack, desiredStack) && ItemStack.isSameItemSameComponents(stack, desiredStack))) {
@@ -219,7 +219,7 @@ public class InventoryManager {
                 validSlots.add(slot);
             }
         }
-        if(validSlots.isEmpty()){
+        if (validSlots.isEmpty()) {
             return SlotReference.empty();
         }
         //apply uniform chance if there are any valid slots
@@ -237,9 +237,9 @@ public class InventoryManager {
             ItemScroll.SortPref pref2 = o2.pref();
             return pref2.ordinal() - pref1.ordinal();
         });
-        for(FilterableItemHandler filterableItemHandler : getInventory()){
+        for (FilterableItemHandler filterableItemHandler : getInventory()) {
             ItemScroll.SortPref sortPref = filterableItemHandler.getHighestPreference(stack);
-            if(includeInvalid || sortPref != ItemScroll.SortPref.INVALID){
+            if (includeInvalid || sortPref != ItemScroll.SortPref.INVALID) {
                 filtered.add(new FilterablePreference(filterableItemHandler, sortPref));
             }
         }

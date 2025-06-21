@@ -19,7 +19,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DispelEntityProvider extends SimpleDataProvider{
+public class DispelEntityProvider extends SimpleDataProvider {
 
     public List<Wrapper> recipes = new ArrayList<>();
 
@@ -46,7 +46,7 @@ public class DispelEntityProvider extends SimpleDataProvider{
         })));
     }
 
-    public record Wrapper(ResourceLocation location, DispelEntityRecipe recipe){
+    public record Wrapper(ResourceLocation location, DispelEntityRecipe recipe) {
 
     }
 

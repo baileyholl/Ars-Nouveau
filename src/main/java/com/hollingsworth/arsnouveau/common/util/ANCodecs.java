@@ -59,35 +59,35 @@ public class ANCodecs {
         );
     }
 
-    public static <T> Tag encode(HolderLookup.Provider provider, Codec<T> codec, T value){
+    public static <T> Tag encode(HolderLookup.Provider provider, Codec<T> codec, T value) {
         return codec.encodeStart(provider.createSerializationContext(NbtOps.INSTANCE), value).getOrThrow();
     }
 
-    public static <T> Tag encode(Codec<T> codec, T value){
+    public static <T> Tag encode(Codec<T> codec, T value) {
         return codec.encodeStart(NbtOps.INSTANCE, value).getOrThrow();
     }
 
-    public static <T> T decode(Codec<T> codec, Tag tag){
+    public static <T> T decode(Codec<T> codec, Tag tag) {
         return codec.parse(NbtOps.INSTANCE, tag).getOrThrow();
     }
 
-    public static <T> T decode(HolderLookup.Provider provider, Codec<T> codec, Tag tag){
+    public static <T> T decode(HolderLookup.Provider provider, Codec<T> codec, Tag tag) {
         return codec.parse(provider.createSerializationContext(NbtOps.INSTANCE), tag).getOrThrow();
     }
 
-    public static <T> Optional<T> decodeOptional(Codec<T> codec, Tag tag){
+    public static <T> Optional<T> decodeOptional(Codec<T> codec, Tag tag) {
         return codec.parse(NbtOps.INSTANCE, tag).result();
     }
 
-    public static <T> JsonElement toJson(Codec<T> codec, T value){
+    public static <T> JsonElement toJson(Codec<T> codec, T value) {
         return codec.encodeStart(JsonOps.INSTANCE, value).getOrThrow();
     }
 
     /**
      * Creates an unbounded map codec that uses integer keys.
      */
-    public static <MapVal, Obj> Codec<Obj> intMap(Codec<MapVal> codec, Function<Map<Integer, MapVal>, Obj> constructor, Function<Obj, Map<Integer, MapVal>> intMap){
-        return Codec.unboundedMap(Codec.STRING, codec).xmap((stringMap) ->{
+    public static <MapVal, Obj> Codec<Obj> intMap(Codec<MapVal> codec, Function<Map<Integer, MapVal>, Obj> constructor, Function<Obj, Map<Integer, MapVal>> intMap) {
+        return Codec.unboundedMap(Codec.STRING, codec).xmap((stringMap) -> {
             var builder = ImmutableMap.<Integer, MapVal>builder();
             stringMap.forEach((key, value) -> builder.put(Integer.parseInt(key), value));
             return constructor.apply(builder.build());

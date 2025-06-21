@@ -15,7 +15,7 @@ public class FMLEventHandler {
         EventQueue.getClientQueue().clear();
     }
 
-    public static void onPlayerLoggedOut(final ClientPlayerNetworkEvent.LoggingOut loggingOut){
+    public static void onPlayerLoggedOut(final ClientPlayerNetworkEvent.LoggingOut loggingOut) {
         EventQueue.getServerInstance().clear();
         EventQueue.getClientQueue().clear();
     }

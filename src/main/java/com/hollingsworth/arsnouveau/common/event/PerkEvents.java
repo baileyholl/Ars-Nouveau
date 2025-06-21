@@ -25,7 +25,10 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @EventBusSubscriber(modid = ArsNouveau.MODID)
@@ -83,7 +86,7 @@ public class PerkEvents {
     }
 
     @SubscribeEvent
-    public static void onSpellCast(SpellCastEvent spellCastEvent){
+    public static void onSpellCast(SpellCastEvent spellCastEvent) {
         PerkUtil.getPerksFromLiving(spellCastEvent.getEntity()).forEach(perkInstance -> {
             IPerk perk = perkInstance.getPerk();
             if (perk instanceof IEffectResolvePerk) {
@@ -93,7 +96,7 @@ public class PerkEvents {
     }
 
     @SubscribeEvent
-    public static void preSpellResolve(final SpellResolveEvent.Pre event){
+    public static void preSpellResolve(final SpellResolveEvent.Pre event) {
         PerkUtil.getPerksFromLiving(event.shooter).forEach(perkInstance -> {
             IPerk perk = perkInstance.getPerk();
             if (perk instanceof IEffectResolvePerk) {
@@ -103,7 +106,7 @@ public class PerkEvents {
     }
 
     @SubscribeEvent
-    public static void postSpellResolve(final SpellResolveEvent.Post event){
+    public static void postSpellResolve(final SpellResolveEvent.Post event) {
         PerkUtil.getPerksFromLiving(event.shooter).forEach(perkInstance -> {
             IPerk perk = perkInstance.getPerk();
             if (perk instanceof IEffectResolvePerk) {
@@ -113,7 +116,7 @@ public class PerkEvents {
     }
 
     @SubscribeEvent
-    public static void preEffectResolve(final EffectResolveEvent.Pre event){
+    public static void preEffectResolve(final EffectResolveEvent.Pre event) {
         PerkUtil.getPerksFromLiving(event.shooter).forEach(perkInstance -> {
             IPerk perk = perkInstance.getPerk();
             if (perk instanceof IEffectResolvePerk) {
@@ -123,7 +126,7 @@ public class PerkEvents {
     }
 
     @SubscribeEvent
-    public static void postEffectResolve(final EffectResolveEvent.Post event){
+    public static void postEffectResolve(final EffectResolveEvent.Post event) {
         PerkUtil.getPerksFromLiving(event.shooter).forEach(perkInstance -> {
             IPerk perk = perkInstance.getPerk();
             if (perk instanceof IEffectResolvePerk) {
@@ -155,7 +158,7 @@ public class PerkEvents {
     @SubscribeEvent
     public static void totemEvent(final LivingDeathEvent event) {
         LivingEntity entity = event.getEntity();
-        if(!(entity instanceof Player player))
+        if (!(entity instanceof Player player))
             return;
         var holder = PerkUtil.getHolderForPerk(TotemPerk.INSTANCE, entity);
         if (holder == null)
@@ -183,7 +186,7 @@ public class PerkEvents {
             if (holder == null)
                 continue;
             CompoundTag tag = holder.getB().getTagForPerk(TotemPerk.INSTANCE);
-            if(tag != null){
+            if (tag != null) {
                 tag.putBoolean("isActive", true);
                 holder.getA().set(DataComponentRegistry.ARMOR_PERKS, holder.getB().setTagForPerk(TotemPerk.INSTANCE, tag));
             }

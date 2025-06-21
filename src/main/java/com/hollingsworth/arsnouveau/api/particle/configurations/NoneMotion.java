@@ -12,6 +12,7 @@ public class NoneMotion extends ParticleMotion {
     public static MapCodec<NoneMotion> CODEC = buildPropCodec(NoneMotion::new);
 
     public static StreamCodec<RegistryFriendlyByteBuf, NoneMotion> STREAM = buildStreamCodec(NoneMotion::new);
+
     public NoneMotion(PropMap propertyMap) {
         super(propertyMap);
     }

@@ -90,18 +90,18 @@ public class WorldgenRegistry {
 
     public static void bootstrapConfiguredFeatures(BootstrapContext<ConfiguredFeature<?, ?>> context) {
         HolderGetter<PlacedFeature> placed = context.lookup(Registries.PLACED_FEATURE);
-        context.register(CONFIGURED_CASCADING_TREE,new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.CASCADING_LEAVES, LibBlockNames.CASCADING_LOG, false, ArsNouveau.prefix( LibBlockNames.FROSTAYA_POD))));
-        context.register(CONFIGURED_BLAZING_TREE,new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.BLAZING_LEAVES, LibBlockNames.BLAZING_LOG, false, ArsNouveau.prefix( LibBlockNames.BOMBEGRANATE_POD))));
-        context.register(CONFIGURED_VEXING_TREE,new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.VEXING_LEAVES, LibBlockNames.VEXING_LOG, false, ArsNouveau.prefix( LibBlockNames.BASTION_POD))));
-        context.register(CONFIGURED_FLOURISHING_TREE,new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.FLOURISHING_LEAVES, LibBlockNames.FLOURISHING_LOG, false, ArsNouveau.prefix( LibBlockNames.MENDOSTEEN_POD))));
+        context.register(CONFIGURED_CASCADING_TREE, new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.CASCADING_LEAVES, LibBlockNames.CASCADING_LOG, false, ArsNouveau.prefix(LibBlockNames.FROSTAYA_POD))));
+        context.register(CONFIGURED_BLAZING_TREE, new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.BLAZING_LEAVES, LibBlockNames.BLAZING_LOG, false, ArsNouveau.prefix(LibBlockNames.BOMBEGRANATE_POD))));
+        context.register(CONFIGURED_VEXING_TREE, new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.VEXING_LEAVES, LibBlockNames.VEXING_LOG, false, ArsNouveau.prefix(LibBlockNames.BASTION_POD))));
+        context.register(CONFIGURED_FLOURISHING_TREE, new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.FLOURISHING_LEAVES, LibBlockNames.FLOURISHING_LOG, false, ArsNouveau.prefix(LibBlockNames.MENDOSTEEN_POD))));
 
-        context.register(NATURAL_CONFIGURED_CASCADING_TREE,new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.CASCADING_LEAVES, LibBlockNames.CASCADING_LOG, true, ArsNouveau.prefix( LibBlockNames.FROSTAYA_POD))));
-        context.register(NATURAL_CONFIGURED_BLAZING_TREE,new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.BLAZING_LEAVES, LibBlockNames.BLAZING_LOG, true, ArsNouveau.prefix( LibBlockNames.BOMBEGRANATE_POD))));
-        context.register(NATURAL_CONFIGURED_VEXING_TREE,new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.VEXING_LEAVES, LibBlockNames.VEXING_LOG, true, ArsNouveau.prefix( LibBlockNames.BASTION_POD))));
-        context.register(NATURAL_CONFIGURED_FLOURISHING_TREE,new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.FLOURISHING_LEAVES, LibBlockNames.FLOURISHING_LOG, true, ArsNouveau.prefix( LibBlockNames.MENDOSTEEN_POD))));
-        context.register(PATCH_BERRY_BUSH, new ConfiguredFeature<>(Feature.RANDOM_PATCH, FeatureUtils.simplePatchConfiguration(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(BlockStateProvider.simple(BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( LibBlockNames.SOURCEBERRY_BUSH)).defaultBlockState().setValue(SourceBerryBush.AGE, 3))), List.of(Blocks.GRASS_BLOCK))));
+        context.register(NATURAL_CONFIGURED_CASCADING_TREE, new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.CASCADING_LEAVES, LibBlockNames.CASCADING_LOG, true, ArsNouveau.prefix(LibBlockNames.FROSTAYA_POD))));
+        context.register(NATURAL_CONFIGURED_BLAZING_TREE, new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.BLAZING_LEAVES, LibBlockNames.BLAZING_LOG, true, ArsNouveau.prefix(LibBlockNames.BOMBEGRANATE_POD))));
+        context.register(NATURAL_CONFIGURED_VEXING_TREE, new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.VEXING_LEAVES, LibBlockNames.VEXING_LOG, true, ArsNouveau.prefix(LibBlockNames.BASTION_POD))));
+        context.register(NATURAL_CONFIGURED_FLOURISHING_TREE, new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.FLOURISHING_LEAVES, LibBlockNames.FLOURISHING_LOG, true, ArsNouveau.prefix(LibBlockNames.MENDOSTEEN_POD))));
+        context.register(PATCH_BERRY_BUSH, new ConfiguredFeature<>(Feature.RANDOM_PATCH, FeatureUtils.simplePatchConfiguration(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(BlockStateProvider.simple(BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(LibBlockNames.SOURCEBERRY_BUSH)).defaultBlockState().setValue(SourceBerryBush.AGE, 3))), List.of(Blocks.GRASS_BLOCK))));
         context.register(MIXED_ARCHWOODS, new ConfiguredFeature<>(Feature.SIMPLE_RANDOM_SELECTOR, new SimpleRandomFeatureConfiguration(HolderSet.direct(placed.getOrThrow(PLACED_NATURAL_CASCADING_TREE), placed.getOrThrow(PLACED_NATURAL_BLAZING_TREE), placed.getOrThrow(PLACED_NATURAL_VEXING_TREE), placed.getOrThrow(PLACED_NATURAL_FLOURISHING_TREE)))));
-        context.register(CONFIGURED_LIGHTS, new ConfiguredFeature<>(WorldgenRegistry.LIGHT_FEATURE.get(),  new BlockStateConfiguration(BlockRegistry.LIGHT_BLOCK.get().defaultBlockState())));
+        context.register(CONFIGURED_LIGHTS, new ConfiguredFeature<>(WorldgenRegistry.LIGHT_FEATURE.get(), new BlockStateConfiguration(BlockRegistry.LIGHT_BLOCK.get().defaultBlockState())));
     }
 
     public static void bootstrapPlacedFeatures(BootstrapContext<PlacedFeature> context) {
@@ -112,7 +112,7 @@ public class WorldgenRegistry {
         context.register(PLACED_NATURAL_VEXING_TREE, new PlacedFeature(features.get(NATURAL_CONFIGURED_VEXING_TREE).get(), List.of(PlacementUtils.filteredByBlockSurvival(BlockRegistry.VEXING_SAPLING.get()))));
         context.register(PLACED_NATURAL_FLOURISHING_TREE, new PlacedFeature(features.get(NATURAL_CONFIGURED_FLOURISHING_TREE).get(), List.of(PlacementUtils.filteredByBlockSurvival(BlockRegistry.FLOURISHING_SAPLING.get()))));
         context.register(PLACED_MIX_ARCHWOODS, new PlacedFeature(features.get(MIXED_ARCHWOODS).get(), VegetationPlacements.treePlacement(RarityFilter.onAverageOnceEvery(Config.TREE_SPAWN_RATE))));
-        context.register(PLACED_MOJANK_GRASS, new PlacedFeature(features.get(VegetationFeatures.PATCH_GRASS).get(),worldSurfaceSquaredWithCount(2)));
+        context.register(PLACED_MOJANK_GRASS, new PlacedFeature(features.get(VegetationFeatures.PATCH_GRASS).get(), worldSurfaceSquaredWithCount(2)));
         context.register(PLACED_MOJANK_FLOWERS, new PlacedFeature(features.get(VegetationFeatures.FLOWER_DEFAULT).get(), List.of(RarityFilter.onAverageOnceEvery(32), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP, BiomeFilter.biome())));
         context.register(PLACED_LIGHTS, new PlacedFeature(features.get(CONFIGURED_LIGHTS).get(), VegetationPlacements.worldSurfaceSquaredWithCount(1)));
         context.register(PLACED_DENSE_ARCHWOODS, new PlacedFeature(features.get(MIXED_ARCHWOODS).get(), VegetationPlacements.treePlacement(PlacementUtils.countExtra(7, 0.01f, 1))));

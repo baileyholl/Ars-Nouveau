@@ -18,12 +18,12 @@ public interface IParticleMotionType<T extends ParticleMotion> {
 
     T create(PropMap propMap);
 
-    default Component getName(){
+    default Component getName() {
         ResourceLocation key = ParticleMotionRegistry.PARTICLE_CONFIG_REGISTRY.getKey(this);
         return Component.translatable(key.getNamespace() + ".particle_config." + key.getPath());
     }
 
-    default ResourceLocation getIconLocation(){
+    default ResourceLocation getIconLocation() {
         ResourceLocation key = ParticleMotionRegistry.PARTICLE_CONFIG_REGISTRY.getKey(this);
         return ResourceLocation.fromNamespaceAndPath(key.getNamespace(), "textures/particle_config/" + key.getPath() + ".png");
     }

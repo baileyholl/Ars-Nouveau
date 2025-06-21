@@ -56,9 +56,9 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable, IDi
         super.loadAdditional(compound, pRegistries);
         this.color = ParticleColorRegistry.from(compound.getCompound("color"));
         lit = compound.getBoolean("lit");
-        if(compound.contains("timeline")) {
+        if (compound.contains("timeline")) {
             this.timeline = ANCodecs.decode(LightTimeline.CODEC.codec(), compound.getCompound("timeline"));
-        }else{
+        } else {
             this.timeline = new LightTimeline();
             PropertyParticleOptions particleOptions = new PropertyParticleOptions(ModParticles.NEW_GLOW_TYPE.get());
             ColorProperty colorProperty = new ColorProperty();
@@ -122,7 +122,7 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable, IDi
             centerX += 0.8;
             centerZ += 0.5;
         }
-        if(particleEmitter != null) {
+        if (particleEmitter != null) {
             particleEmitter.setPosition(new Vec3(centerX, pos.getY() + 0.9 + ParticleUtil.inRange(-0.00, 0.1), centerZ));
             particleEmitter.tick(level);
         }

@@ -158,6 +158,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     public void addPotionConfig(ModConfigSpec.Builder builder, int defaultTime) {
         POTION_TIME = builder.comment("Potion duration, in seconds").defineInRange("potion_time", defaultTime, 0, Integer.MAX_VALUE);
     }
+
     public void addExtendTimeConfig(ModConfigSpec.Builder builder, int defaultTime) {
         EXTEND_TIME = builder.comment("Extend time duration, in seconds").defineInRange("extend_time", defaultTime, 0, Integer.MAX_VALUE);
     }
@@ -182,10 +183,10 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     @Override
     public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
         super.addAugmentDescriptions(map);
-        if(this instanceof IPotionEffect){
+        if (this instanceof IPotionEffect) {
             addPotionAugmentDescriptions(map);
         }
-        if(this instanceof IDamageEffect){
+        if (this instanceof IDamageEffect) {
             addDamageAugmentDescriptions(map);
         }
     }
@@ -200,7 +201,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
                 AugmentAmplify.INSTANCE);
     }
 
-    protected void addBlockAoeAugmentDescriptions(Map<AbstractAugment, String> map){
+    protected void addBlockAoeAugmentDescriptions(Map<AbstractAugment, String> map) {
         map.put(AugmentAOE.INSTANCE, "Increases the radius of targeted blocks.");
         map.put(AugmentPierce.INSTANCE, "Increases the depth of targeted blocks.");
         map.put(AugmentRandomize.INSTANCE, "Adds a chance to not target a block.");
@@ -208,14 +209,14 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         map.put(AugmentExtract.INSTANCE, "Applies silk touch when breaking a block.");
     }
 
-    protected void addDamageAugmentDescriptions(Map<AbstractAugment, String> map){
+    protected void addDamageAugmentDescriptions(Map<AbstractAugment, String> map) {
         map.put(AugmentAmplify.INSTANCE, "Increases damage dealt.");
         map.put(AugmentDampen.INSTANCE, "Reduces damage dealt.");
         map.put(AugmentFortune.INSTANCE, "Applies looting when killing a mob.");
         map.put(AugmentRandomize.INSTANCE, "Randomizes the damage dealt.");
     }
 
-    protected void addPotionAugmentDescriptions(Map<AbstractAugment, String> map){
+    protected void addPotionAugmentDescriptions(Map<AbstractAugment, String> map) {
         map.put(AugmentExtendTime.INSTANCE, "Extends the duration of the effect.");
         map.put(AugmentDurationDown.INSTANCE, "Reduces the duration of the effect.");
         map.put(AugmentAmplify.INSTANCE, "Increases the level of the effect.");
@@ -225,7 +226,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
     }
 
-    protected void addSummonAugmentDescriptions(Map<AbstractAugment, String> map){
+    protected void addSummonAugmentDescriptions(Map<AbstractAugment, String> map) {
         map.put(AugmentExtendTime.INSTANCE, "Extends the duration of the summon.");
         map.put(AugmentDurationDown.INSTANCE, "Reduces the duration of the summon.");
     }

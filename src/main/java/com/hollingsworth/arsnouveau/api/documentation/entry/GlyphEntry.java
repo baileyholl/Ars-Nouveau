@@ -30,11 +30,11 @@ public class GlyphEntry extends TextEntry {
         this.spellPart = spellPart;
     }
 
-    public static SinglePageCtor create(AbstractSpellPart spellPart){
+    public static SinglePageCtor create(AbstractSpellPart spellPart) {
         return (parent, x, y, width, height) -> new GlyphEntry(spellPart, parent, x, y, width, height);
     }
 
-    public int drawTitle(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks){
+    public int drawTitle(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         Font font = Minecraft.getInstance().font;
         DocClientUtils.blit(guiGraphics, DocAssets.HEADER_WITH_ITEM, x, y);
         setTooltipIfHovered(DocClientUtils.renderItemStack(guiGraphics, x + 3, y + 3, mouseX, mouseY, renderStack));
@@ -48,25 +48,29 @@ public class GlyphEntry extends TextEntry {
         List<AbstractWidget> extras = super.getExtras();
         List<SpellSchool> schoolList = spellPart.spellSchools;
         SpellSchool firstSchool = schoolList.isEmpty() ? null : schoolList.getFirst();
-        DocAssets.BlitInfo schoolImage =  firstSchool == null ? DocAssets.NA_ICON : firstSchool.getIcon();
-        BaseButton schoolButton = new NuggetImageButton(x + 2, y + 25, schoolImage.width(), schoolImage.height(), schoolImage.location(), (b) -> {}).setPlaySound(false);
-        if(firstSchool != null) {
+        DocAssets.BlitInfo schoolImage = firstSchool == null ? DocAssets.NA_ICON : firstSchool.getIcon();
+        BaseButton schoolButton = new NuggetImageButton(x + 2, y + 25, schoolImage.width(), schoolImage.height(), schoolImage.location(), (b) -> {
+        }).setPlaySound(false);
+        if (firstSchool != null) {
             schoolButton.withTooltip(firstSchool.getTextComponent());
         }
         extras.add(schoolButton);
 
         DocAssets.BlitInfo type = spellPart.getTypeIcon();
-        extras.add(new NuggetImageButton(x + 15, y + 25, type.width(), type.height(), type.location(), (b) -> {}).setPlaySound(false).withTooltip(spellPart.getTypeName()));
+        extras.add(new NuggetImageButton(x + 15, y + 25, type.width(), type.height(), type.location(), (b) -> {
+        }).setPlaySound(false).withTooltip(spellPart.getTypeName()));
 
         SpellTier tier = spellPart.getConfigTier();
         DocAssets.BlitInfo tierAsset = tier.docInfo.get();
-        extras.add(new NuggetImageButton(x + 26, y + 25, tierAsset.width(), tierAsset.height(), tierAsset.location(), (b) -> {})
+        extras.add(new NuggetImageButton(x + 26, y + 25, tierAsset.width(), tierAsset.height(), tierAsset.location(), (b) -> {
+        })
                 .setPlaySound(false)
                 .withTooltip(Component.translatable(tier.id.getNamespace() + ".tier." + tier.id.getPath())));
 
         int augmentCount = 0;
-        for(AbstractSpellPart spellPart1 : spellPart.compatibleAugments){
-            extras.add(new AugmentIcon(spellPart, x + 33 + (augmentCount * 11), y + 22, 10, 10, Component.empty(), (b) -> {},  spellPart1.glyphItem.getDefaultInstance(), parent)
+        for (AbstractSpellPart spellPart1 : spellPart.compatibleAugments) {
+            extras.add(new AugmentIcon(spellPart, x + 33 + (augmentCount * 11), y + 22, 10, 10, Component.empty(), (b) -> {
+            }, spellPart1.glyphItem.getDefaultInstance(), parent)
                     .withScale(10).setPlaySound(false));
             augmentCount++;
         }
@@ -76,7 +80,7 @@ public class GlyphEntry extends TextEntry {
     @Override
     public void addExportProperties(JsonObject object) {
         super.addExportProperties(object);
-        if(this.spellPart != null){
+        if (this.spellPart != null) {
             object.addProperty(DocExporter.TIER_PROPERTY, this.spellPart.getConfigTier().value);
         }
     }

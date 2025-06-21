@@ -120,7 +120,7 @@ public class EventHandler {
                         BuddingConversionRegistry.reloadBuddingConversionRecipes(recipeManager);
                         AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(recipeManager, server.reloadableRegistries());
                         ScryRitualRegistry.reloadScryRitualRecipes(recipeManager);
-                        for(ServerPlayer player : server.getPlayerList().getPlayers()) {
+                        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                             Networking.sendToPlayerClient(new PacketInitDocs(), player);
                         }
                         expired = true;

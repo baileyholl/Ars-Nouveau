@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.mixin.jar;
 
 import net.minecraft.world.level.block.DispenserBlock;
 import org.spongepowered.asm.mixin.Mixin;
+
 @Mixin(DispenserBlock.class)
 public abstract class DispenserMixin {
 // todo: reenable jar dispenser mixin

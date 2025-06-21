@@ -17,23 +17,23 @@ public interface IParticleColor extends ITagSerializable, Cloneable {
     /**
      * Generates a new color within the max range of the given color.
      */
-    default ParticleColor nextColor(int ticks){
+    default ParticleColor nextColor(int ticks) {
         return (ParticleColor) this;
     }
 
-    default ParticleColor transition(int ticks){
+    default ParticleColor transition(int ticks) {
         return (ParticleColor) this;
     }
 
-    default int getRedInt(){
+    default int getRedInt() {
         return (int) (getRed() * 255.0F);
     }
 
-    default int getGreenInt(){
+    default int getGreenInt() {
         return (int) (getGreen() * 255.0F);
     }
 
-    default int getBlueInt(){
+    default int getBlueInt() {
         return (int) (getBlue() * 255.0F);
     }
 

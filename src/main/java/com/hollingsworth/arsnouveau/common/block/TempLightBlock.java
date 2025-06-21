@@ -5,7 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class TempLightBlock extends LightBlock{
+public class TempLightBlock extends LightBlock {
 
 
     @Override

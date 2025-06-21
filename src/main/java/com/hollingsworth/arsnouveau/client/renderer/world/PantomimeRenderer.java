@@ -29,7 +29,7 @@ public class PantomimeRenderer {
         if (!(player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof ICasterTool)) return;
 
         var caster = SpellCasterRegistry.from(heldItem);
-        if(caster == null)
+        if (caster == null)
             return;
         Spell selectedSpell = caster.getSpell();
 
@@ -38,7 +38,7 @@ public class PantomimeRenderer {
                 .setAugments(selectedSpell.getAugments(0, player))
                 .addItemsFromEntity(player)
                 .build(MethodPantomime.INSTANCE, null, player.level, player, SpellContext.fromEntity(selectedSpell, player, heldItem));
-        if(!stats.isSensitive()){
+        if (!stats.isSensitive()) {
             return;
         }
         BlockPos pos = pantomime.findPosition(player, stats).getBlockPos();

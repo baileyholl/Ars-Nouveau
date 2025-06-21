@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.Set;
+
 //todo: 1.22 rename this to EffectConjureMageBlock
 public class EffectPhantomBlock extends AbstractEffect {
     public static EffectPhantomBlock INSTANCE = new EffectPhantomBlock();
@@ -41,7 +42,7 @@ public class EffectPhantomBlock extends AbstractEffect {
         ANFakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
         for (BlockPos pos : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats)) {
             pos = rayTraceResult.isInside() ? pos : pos.relative((rayTraceResult).getDirection());
-            if(!world.isInWorldBounds(pos))
+            if (!world.isInWorldBounds(pos))
                 continue;
             if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos))
                 continue;
@@ -64,7 +65,7 @@ public class EffectPhantomBlock extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         var entity = rayTraceResult.getEntity();
-        onResolveBlock( new BlockHitResult(entity.position, Direction.DOWN, entity.blockPosition().below(), true), world, shooter, spellStats, spellContext, resolver);
+        onResolveBlock(new BlockHitResult(entity.position, Direction.DOWN, entity.blockPosition().below(), true), world, shooter, spellStats, spellContext, resolver);
     }
 
     @Override
@@ -77,7 +78,7 @@ public class EffectPhantomBlock extends AbstractEffect {
         return 5;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentAmplify.INSTANCE, AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
@@ -97,7 +98,7 @@ public class EffectPhantomBlock extends AbstractEffect {
         return "Creates a temporary block that will disappear after a short time. Amplify will cause the block to be permanent. Dispelling this block will destroy it instantly. Casting on an entity will create blocks around them in the upwards direction.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.CONJURATION);

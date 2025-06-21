@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class RuneTextureProperty extends BaseProperty<RuneTextureProperty>{
+public class RuneTextureProperty extends BaseProperty<RuneTextureProperty> {
     public static final List<String> TEXTURES = new CopyOnWriteArrayList<>();
 
     public String runeTexture;
@@ -37,6 +37,7 @@ public class RuneTextureProperty extends BaseProperty<RuneTextureProperty>{
             (i) -> i.runeTexture,
             RuneTextureProperty::new
     );
+
     static {
         TEXTURES.add("rune");
         TEXTURES.add("rune_abjuration");
@@ -48,7 +49,7 @@ public class RuneTextureProperty extends BaseProperty<RuneTextureProperty>{
         TEXTURES.add("rune_manipulation");
     }
 
-    public RuneTextureProperty(String string){
+    public RuneTextureProperty(String string) {
         super(new PropMap());
         this.runeTexture = TEXTURES.stream()
                 .filter(r -> r.equals(string))
@@ -56,7 +57,7 @@ public class RuneTextureProperty extends BaseProperty<RuneTextureProperty>{
                 .orElse(TEXTURES.get(0));
     }
 
-    public RuneTextureProperty(){
+    public RuneTextureProperty() {
         super(new PropMap());
         this.runeTexture = TEXTURES.get(0);
     }
@@ -92,7 +93,7 @@ public class RuneTextureProperty extends BaseProperty<RuneTextureProperty>{
         };
     }
 
-    private Component getPatternName(String pattern){
+    private Component getPatternName(String pattern) {
         return Component.translatable("ars_nouveau.rune." + pattern);
     }
 

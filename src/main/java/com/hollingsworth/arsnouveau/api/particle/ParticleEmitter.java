@@ -25,7 +25,7 @@ public class ParticleEmitter {
     public static StreamCodec<RegistryFriendlyByteBuf, ParticleEmitter> STREAM = StreamCodec.ofMember((val, buf) -> {
         Vec3 pos = val.getAdjustedPosition();
         ByteBufCodecs.VECTOR3F.encode(buf, pos.toVector3f());
-        if(val.previousPosition == null){
+        if (val.previousPosition == null) {
             val.previousPosition = val.getAdjustedPosition();
         }
         ByteBufCodecs.VECTOR3F.encode(buf, val.previousPosition.toVector3f());
@@ -39,7 +39,7 @@ public class ParticleEmitter {
         ByteBufCodecs.DOUBLE.encode(buf, val.rand2);
         ByteBufCodecs.DOUBLE.encode(buf, val.rand3);
 
-    }, (buf) ->{
+    }, (buf) -> {
         Vector3f position = ByteBufCodecs.VECTOR3F.decode(buf);
         Vector3f previousPosition = ByteBufCodecs.VECTOR3F.decode(buf);
         Vector3f rotation = ByteBufCodecs.VECTOR3F.decode(buf);
@@ -89,57 +89,57 @@ public class ParticleEmitter {
         this(getPosition, rot, entryData.motion(), entryData.particleOptions());
     }
 
-    public void setPositionOffset(Vec3 offset){
+    public void setPositionOffset(Vec3 offset) {
         this.offset = offset;
     }
 
-    public void setPositionOffset(double x, double y, double z){
+    public void setPositionOffset(double x, double y, double z) {
         this.offset = new Vec3(x, y, z);
     }
 
-    public Vec3 getPositionOffset(){
+    public Vec3 getPositionOffset() {
         return offset;
     }
 
-    public Vec3 getPosition(){
+    public Vec3 getPosition() {
         return position.get();
     }
 
-    public void setPosition(Vec3 position){
+    public void setPosition(Vec3 position) {
         this.position = () -> position;
     }
 
-    public Vec3 getAdjustedPosition(){
+    public Vec3 getAdjustedPosition() {
         return position.get().add(offset);
     }
 
-    public Vec2 getRotation(){
+    public Vec2 getRotation() {
         return rotation.get();
     }
 
-    public Vec2 getAdjustedRotation(){
+    public Vec2 getAdjustedRotation() {
         return rotation.get().add(rotationOffset);
     }
 
-    public void setRotationOffset(Vec2 offset){
+    public void setRotationOffset(Vec2 offset) {
         this.rotationOffset = offset;
     }
 
-    public void setRotationOffset(float x, float y){
+    public void setRotationOffset(float x, float y) {
         this.rotationOffset = new Vec2(x, y);
     }
 
-    public void tick(Level level){
-        if(this.previousPosition == null){
+    public void tick(Level level) {
+        if (this.previousPosition == null) {
             this.previousPosition = this.getAdjustedPosition();
         }
         Vec3 pos = getAdjustedPosition();
 
         Vec2 adjustedRotation = getAdjustedRotation();
         particleOptions.map.set(ParticlePropertyRegistry.EMITTER_PROPERTY.get(), new EmitterProperty(new Vec2(adjustedRotation.x, adjustedRotation.y), age));
-        if(level instanceof ServerLevel serverLevel){
+        if (level instanceof ServerLevel serverLevel) {
             Networking.sendToNearbyClient(serverLevel, BlockPos.containing(pos), new TickEmitterPacket(this));
-        }else {
+        } else {
             particleConfig.tick(particleOptions, level, pos.x, pos.y, pos.z, previousPosition.x, previousPosition.y, previousPosition.z);
         }
         this.previousPosition = pos;

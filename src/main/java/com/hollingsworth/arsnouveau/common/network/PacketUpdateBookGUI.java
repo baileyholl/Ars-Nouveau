@@ -9,14 +9,14 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public class PacketUpdateBookGUI extends AbstractPacket{
+public class PacketUpdateBookGUI extends AbstractPacket {
     public static final Type<PacketUpdateBookGUI> TYPE = new Type<>(ArsNouveau.prefix("update_book_gui"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketUpdateBookGUI> CODEC = StreamCodec.ofMember(PacketUpdateBookGUI::toBytes, PacketUpdateBookGUI::new);
     public ItemStack bookStack;
 
     //Decoder
     public PacketUpdateBookGUI(RegistryFriendlyByteBuf buf) {
-        bookStack =  ItemStack.STREAM_CODEC.decode(buf);
+        bookStack = ItemStack.STREAM_CODEC.decode(buf);
     }
 
     //Encoder

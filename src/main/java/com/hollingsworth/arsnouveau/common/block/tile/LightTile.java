@@ -27,6 +27,7 @@ public class LightTile extends ModdedTile implements ITickable, IWololoable {
     protected LightTimeline timeline = new LightTimeline();
     public ParticleColor color = ParticleColor.defaultParticleColor();
     public ParticleEmitter particleEmitter;
+
     public LightTile(BlockPos pos, BlockState state) {
         this(BlockRegistry.LIGHT_TILE.get(), pos, state);
     }
@@ -38,7 +39,7 @@ public class LightTile extends ModdedTile implements ITickable, IWololoable {
     @Override
     public void tick(Level level, BlockState state, BlockPos pos) {
         if (level.isClientSide) {
-            if(particleEmitter != null){
+            if (particleEmitter != null) {
                 particleEmitter.tick(level);
             }
         }
@@ -48,9 +49,9 @@ public class LightTile extends ModdedTile implements ITickable, IWololoable {
     protected void loadAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider pRegistries) {
         super.loadAdditional(compound, pRegistries);
         this.color = ParticleColorRegistry.from(compound.getCompound("color"));
-        if(compound.contains("timeline")) {
+        if (compound.contains("timeline")) {
             this.timeline = ANCodecs.decode(LightTimeline.CODEC.codec(), compound.getCompound("timeline"));
-        }else{
+        } else {
             this.timeline = new LightTimeline();
             PropertyParticleOptions particleOptions = new PropertyParticleOptions(ModParticles.NEW_GLOW_TYPE.get());
             ColorProperty colorProperty = new ColorProperty();

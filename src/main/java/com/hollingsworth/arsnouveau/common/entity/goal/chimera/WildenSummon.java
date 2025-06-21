@@ -51,7 +51,7 @@ public class WildenSummon extends Goal {
     public void tick() {
         super.tick();
         ticksSummoning++;
-        if(ticksSummoning == 20){
+        if (ticksSummoning == 20) {
             SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF.get(), entity.level);
             wolf.ticksLeft = 400;
             wolf.setPos(entity.getRandomX(1), entity.getY(), entity.getRandomZ(1));
@@ -69,7 +69,7 @@ public class WildenSummon extends Goal {
             entity.level.addFreshEntity(wolf);
             entity.level.addFreshEntity(wolf2);
         }
-        if(ticksSummoning >= maxSummoning){
+        if (ticksSummoning >= maxSummoning) {
             this.entity.getEntityData().set(WildenHunter.ANIM_STATE, WildenHunter.Animations.IDLE.name());
         }
     }

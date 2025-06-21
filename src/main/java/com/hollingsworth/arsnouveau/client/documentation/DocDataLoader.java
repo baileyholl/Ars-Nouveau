@@ -20,7 +20,8 @@ import java.util.List;
 public class DocDataLoader {
     public static final String DATA_FOLDER = "./config/ars_nouveau/";
     public static final Path DOC_DATA_PATH = Path.of(DATA_FOLDER + "doc_data.json");
-    public static void writeBookmarks(){
+
+    public static void writeBookmarks() {
         List<ResourceLocation> bookmarks = DocPlayerData.bookmarks;
         List<SpellSound> spellSounds = DocPlayerData.favoriteSounds;
         try {
@@ -38,16 +39,16 @@ public class DocDataLoader {
             JsonArray particlesArray = new JsonArray();
             DocPlayerData.favoriteParticles.forEach(e -> particlesArray.add(BuiltInRegistries.PARTICLE_TYPE.getKeyOrNull(e).toString()));
             element.add("particles", particlesArray);
-            if(!Files.exists(DOC_DATA_PATH)) {
+            if (!Files.exists(DOC_DATA_PATH)) {
                 Files.createFile(DOC_DATA_PATH);
             }
             Files.writeString(DOC_DATA_PATH, element.toString(), StandardCharsets.UTF_8);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void loadBookmarks(){
+    public static void loadBookmarks() {
         List<ResourceLocation> bookmarks = new ArrayList<>();
         List<SpellSound> sounds = new ArrayList<>();
         List<ParticleType<?>> particles = new ArrayList<>();
@@ -55,35 +56,35 @@ public class DocDataLoader {
             Files.createDirectories(Path.of(DATA_FOLDER));
             String content = Files.readString(Path.of(DATA_FOLDER + "doc_data.json"), StandardCharsets.UTF_8);
             JsonObject element = JsonParser.parseString(content).getAsJsonObject();
-            if(element.has("bookmarks")){
+            if (element.has("bookmarks")) {
                 element.getAsJsonArray("bookmarks").forEach(e -> bookmarks.add(ResourceLocation.tryParse(e.getAsString())));
 
                 List<ResourceLocation> toRemove = new ArrayList<>();
-                for(ResourceLocation loc : bookmarks){
-                    if(loc == null || DocumentationRegistry.getEntry(loc) == null){
+                for (ResourceLocation loc : bookmarks) {
+                    if (loc == null || DocumentationRegistry.getEntry(loc) == null) {
                         toRemove.add(loc);
                     }
                 }
                 bookmarks.removeAll(toRemove);
             }
 
-            if(element.has("sounds")){
-                element.getAsJsonArray("sounds").forEach(e ->{
+            if (element.has("sounds")) {
+                element.getAsJsonArray("sounds").forEach(e -> {
                     SpellSound spellSound = SpellSoundRegistry.get(ResourceLocation.tryParse(e.getAsString()));
-                    if(spellSound != null) {
+                    if (spellSound != null) {
                         sounds.add(spellSound);
                     }
                 });
             }
-            if(element.has("particles")){
-                element.getAsJsonArray("particles").forEach(e ->{
+            if (element.has("particles")) {
+                element.getAsJsonArray("particles").forEach(e -> {
                     ParticleType<?> particle = BuiltInRegistries.PARTICLE_TYPE.get(ResourceLocation.tryParse(e.getAsString()));
-                    if(particle != null) {
+                    if (particle != null) {
                         particles.add(particle);
                     }
                 });
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         DocPlayerData.bookmarks = bookmarks;

@@ -408,7 +408,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             itemsByTab.computeIfAbsent(tabName, (key) -> new HashMap<>()).clear();
             for (FilterableItemHandler filterableItemHandler : mappedFilterables.get(tabName)) {
                 IItemHandler handler = filterableItemHandler.getHandler();
-                if(handler == null)
+                if (handler == null)
                     continue;
                 for (int i = 0; i < handler.getSlots(); i++) {
                     ItemStack stack = handler.getStackInSlot(i);

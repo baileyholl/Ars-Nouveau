@@ -113,7 +113,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     @Override
     public void appendHoverText(final @NotNull ItemStack stack, final @NotNull TooltipContext world, final @NotNull List<Component> tooltip, final @NotNull TooltipFlag flag) {
         super.appendHoverText(stack, world, tooltip, flag);
-        if(ArsNouveau.proxy.isClientSide()) {
+        if (ArsNouveau.proxy.isClientSide()) {
             tooltip.add(Component.translatable("ars_nouveau.spell_book.select", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_RADIAL_HUD.getName()).get()));
             tooltip.add(Component.translatable("ars_nouveau.spell_book.craft", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_BOOK.getName()).get()));
             tooltip.add(Component.translatable("tooltip.ars_nouveau.caster_level", getTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
@@ -152,7 +152,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
         if (hand == null) {
             return;
         }
-        if(player.level.isClientSide) {
+        if (player.level.isClientSide) {
             GuiSpellBook.open(hand);
         }
     }
@@ -160,7 +160,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     @Override
     @OnlyIn(Dist.CLIENT)
     public void onRadialKeyPressed(ItemStack stack, Player player) {
-        if(ArsNouveau.proxy.isClientSide()) {
+        if (ArsNouveau.proxy.isClientSide()) {
             ArsNouveau.proxy.getMinecraft().setScreen(new GuiRadialMenu<>(getRadialMenuProviderForSpellpart(stack)));
         }
     }

@@ -150,7 +150,7 @@ public class ANAdvancementBuilder implements IAdvancementBuilderExtension {
     }
 
     public AdvancementHolder save(Consumer<AdvancementHolder> pConsumer, ResourceLocation pId) {
-        var adv =  this.build();
+        var adv = this.build();
         AdvancementHolder advancement = new AdvancementHolder(pId, adv);
         pConsumer.accept(advancement);
         return advancement;

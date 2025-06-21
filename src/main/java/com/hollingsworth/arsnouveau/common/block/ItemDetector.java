@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +21,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class ItemDetector extends TickableModBlock{
+public class ItemDetector extends TickableModBlock {
 
     public static final VoxelShape shape = Shapes.join(Block.box(3, 0, 3, 13, 2, 13), Block.box(4, 2, 4, 12, 14, 12), BooleanOp.OR);
 
@@ -43,14 +42,14 @@ public class ItemDetector extends TickableModBlock{
     @Override
     public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (handIn == InteractionHand.MAIN_HAND) {
-            if(worldIn.isClientSide){
+            if (worldIn.isClientSide) {
                 return ItemInteractionResult.SUCCESS;
             }
             if ((stack.getItem() instanceof DominionWand) || !(worldIn.getBlockEntity(pos) instanceof ItemDetectorTile itemDetector))
                 return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
             if (stack.isEmpty()) {
                 itemDetector.addCount(player.isShiftKeyDown() ? 8 : 1);
-            }else if(!stack.isEmpty()){
+            } else if (!stack.isEmpty()) {
                 itemDetector.setFilterStack(stack.copy());
             }
         }
@@ -70,7 +69,7 @@ public class ItemDetector extends TickableModBlock{
     }
 
     public int getSignal(BlockState pBlockState, BlockGetter pBlockAccess, BlockPos pPos, Direction pSide) {
-        if(pBlockAccess.getBlockEntity(pPos) instanceof ItemDetectorTile detectorTile){
+        if (pBlockAccess.getBlockEntity(pPos) instanceof ItemDetectorTile detectorTile) {
             return detectorTile.getPoweredState() ? 15 : 0;
         }
         return 0;

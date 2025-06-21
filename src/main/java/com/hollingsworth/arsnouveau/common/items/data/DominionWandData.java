@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.items.data;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -13,9 +12,10 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.Optional;
 
-public record DominionWandData(Optional<GlobalPos> storedPos, Optional<Direction> face, boolean strict, int storedEntityId) {
+public record DominionWandData(Optional<GlobalPos> storedPos, Optional<Direction> face, boolean strict,
+                               int storedEntityId) {
 
-    public DominionWandData(){
+    public DominionWandData() {
         this(Optional.empty(), Optional.empty(), false, NULL_ENTITY);
     }
 
@@ -40,32 +40,32 @@ public record DominionWandData(Optional<GlobalPos> storedPos, Optional<Direction
             DominionWandData::new
     );
 
-    public boolean hasStoredData(){
+    public boolean hasStoredData() {
         return storedPos.isPresent() || storedEntityId != -1;
     }
 
-    public @Nullable GlobalPos getValidPos(){
+    public @Nullable GlobalPos getValidPos() {
         return storedPos.orElse(null);
     }
 
-    public int getStoredEntity(){
+    public int getStoredEntity() {
         return storedEntityId == 0 || storedEntityId == NULL_ENTITY ? NULL_ENTITY : storedEntityId;
     }
 
-    public DominionWandData storePos(@Nullable GlobalPos pos){
+    public DominionWandData storePos(@Nullable GlobalPos pos) {
         return new DominionWandData(pos == null ? Optional.empty() : Optional.of(new GlobalPos(pos.dimension(), pos.pos().immutable())), face, strict, storedEntityId);
     }
 
-    public DominionWandData storeEntity(int entityId){
+    public DominionWandData storeEntity(int entityId) {
         return new DominionWandData(storedPos, face, strict, entityId);
     }
 
-    public DominionWandData setFace(@Nullable Direction face){
+    public DominionWandData setFace(@Nullable Direction face) {
         return new DominionWandData(storedPos, Optional.ofNullable(face), strict, storedEntityId);
     }
 
     @Deprecated(forRemoval = true)
-    public DominionWandData toggleMode(){
+    public DominionWandData toggleMode() {
         return new DominionWandData(storedPos, face, !strict, storedEntityId);
     }
 

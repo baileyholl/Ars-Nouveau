@@ -60,8 +60,8 @@ public class AlakarkinosCharm extends AbstractSummonCharm implements AliasProvid
     @Override
     public Collection<Alias> getAliases() {
         return List.of(
-            new Alias("archaeology", "Archaeology"),
-            new Alias("sherd", "Sherd")
+                new Alias("archaeology", "Archaeology"),
+                new Alias("sherd", "Sherd")
         );
     }
 }

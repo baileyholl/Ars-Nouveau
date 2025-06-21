@@ -8,8 +8,8 @@ import net.minecraft.world.item.ItemDisplayContext;
 import org.jetbrains.annotations.Nullable;
 
 public class SpellBookModel extends TransformAnimatedModel<SpellBook> {
-    public static final ResourceLocation OPEN = ArsNouveau.prefix( "geo/spellbook_open.geo.json");
-    public static final ResourceLocation CLOSED = ArsNouveau.prefix( "geo/spellbook_closed.geo.json");
+    public static final ResourceLocation OPEN = ArsNouveau.prefix("geo/spellbook_open.geo.json");
+    public static final ResourceLocation CLOSED = ArsNouveau.prefix("geo/spellbook_closed.geo.json");
 
     public ResourceLocation modelLoc;
 
@@ -33,12 +33,12 @@ public class SpellBookModel extends TransformAnimatedModel<SpellBook> {
 
     @Override
     public ResourceLocation getTextureResource(SpellBook object) {
-        return ArsNouveau.prefix( "textures/item/spellbook_purple.png");
+        return ArsNouveau.prefix("textures/item/spellbook_purple.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(SpellBook animatable) {
-        return ArsNouveau.prefix( "animations/empty.json");
+        return ArsNouveau.prefix("animations/empty.json");
     }
 
     @Override

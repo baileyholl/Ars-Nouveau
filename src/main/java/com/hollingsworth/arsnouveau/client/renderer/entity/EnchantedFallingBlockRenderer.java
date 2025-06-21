@@ -20,6 +20,7 @@ import net.neoforged.neoforge.client.model.data.ModelData;
 
 public class EnchantedFallingBlockRenderer<T extends EnchantedFallingBlock> extends EntityRenderer<T> {
     private final BlockRenderDispatcher dispatcher;
+
     public EnchantedFallingBlockRenderer(EntityRendererProvider.Context p_174112_) {
         super(p_174112_);
         this.shadowRadius = 0.5F;
@@ -40,7 +41,7 @@ public class EnchantedFallingBlockRenderer<T extends EnchantedFallingBlock> exte
                 pMatrixStack.popPose();
                 super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             // We typically don't render non-models like this, so catch our shenanigans.
         }
 

@@ -119,9 +119,9 @@ public class GuiSpellBook extends SpellSlottedScreen {
         rebuildWidgets();
     }
 
-    private void onSetCaster(int slot){
+    private void onSetCaster(int slot) {
         this.selectedSpellSlot = slot;
-        if(spellNameBox != null) {
+        if (spellNameBox != null) {
             this.spellNameBox.setValue(caster.getSpellName(slot));
         }
         spell = SpellCasterRegistry.from(bookStack).getSpell(selectedSpellSlot).mutable().recipe;
@@ -139,7 +139,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
         addRenderableWidget(new ClearButton(bookRight - 129, bookBottom - 13, Component.translatable("ars_nouveau.spell_book_gui.clear"), this::clear));
 
         String previousSearch = "";
-        if(searchBar != null){
+        if (searchBar != null) {
             previousSearch = searchBar.getValue();
         }
 
@@ -159,7 +159,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
         addRenderableWidget(spellNameBox);
         addRenderableWidget(searchBar);
 
-        initSpellSlots((slotButton) ->{
+        initSpellSlots((slotButton) -> {
             onSetCaster(selectedSpellSlot);
             resetCraftingCells();
             updateWindowOffset(0); //includes validation
@@ -169,7 +169,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 22, 0, 0, 23, 20, 23, 20, "textures/gui/worn_book_bookmark.png", this::onDocumentationClick)
                 .withTooltip(Component.translatable("ars_nouveau.gui.notebook")));
 
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 44, 0, 0, 23, 20, 23, 20, "textures/gui/color_wheel_bookmark.png", (b) ->{
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 44, 0, 0, 23, 20, 23, 20, "textures/gui/color_wheel_bookmark.png", (b) -> {
             ParticleOverviewScreen.openScreen(this, bookStack, selectedSpellSlot, this.hand);
         }).withTooltip(Component.translatable("ars_nouveau.gui.spell_style")));
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 68, 0, 0, 23, 20, 23, 20, "textures/gui/summon_circle_bookmark.png", this::onFamiliarClick)
@@ -524,7 +524,8 @@ public class GuiSpellBook extends SpellSlottedScreen {
 
                     return true;
                 }
-                case null, default -> {}
+                case null, default -> {
+                }
             }
         }
 
@@ -687,11 +688,11 @@ public class GuiSpellBook extends SpellSlottedScreen {
     public static void open(InteractionHand hand) {
         ItemStack stack = Minecraft.getInstance().player.getItemInHand(hand);
         var caster = SpellCasterRegistry.from(Minecraft.getInstance().player.getItemInHand(hand));
-        if(lastOpenedScreen == null) {
+        if (lastOpenedScreen == null) {
             Minecraft.getInstance().setScreen(new GuiSpellBook(hand));
-        }else if(lastOpenedScreen instanceof ParticleOverviewScreen particleOverviewScreen){
+        } else if (lastOpenedScreen instanceof ParticleOverviewScreen particleOverviewScreen) {
             ParticleOverviewScreen.openScreen(particleOverviewScreen.previousScreen, stack, caster.getCurrentSlot(), hand);
-        }else{
+        } else {
             Minecraft.getInstance().setScreen(new GuiSpellBook(hand));
         }
     }
@@ -849,22 +850,22 @@ public class GuiSpellBook extends SpellSlottedScreen {
     protected TooltipComponent getClientImageTooltip(int mouseX, int mouseY) {
         for (Renderable renderable : renderables) {
 
-            if(renderable instanceof AbstractWidget widget && !GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)){
+            if (renderable instanceof AbstractWidget widget && !GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)) {
                 continue;
             }
 
             if (renderable instanceof GlyphButton widget) {
                 return widget.abstractSpellPart.spellSchools.isEmpty() ? null : new SchoolTooltip(widget.abstractSpellPart);
-            }else if(renderable instanceof GuiSpellSlot spellSlot){
-                if(spellSlot.isSelected){
-                    if(spell.isEmpty()){
+            } else if (renderable instanceof GuiSpellSlot spellSlot) {
+                if (spellSlot.isSelected) {
+                    if (spell.isEmpty()) {
                         return null;
                     }
                     return new SpellTooltip(new Spell(spell), false);
                 }
 
                 Spell spellInSlot = caster.getSpell(spellSlot.slotNum);
-                if(spellInSlot.isEmpty())
+                if (spellInSlot.isEmpty())
                     return null;
                 return new SpellTooltip(spellInSlot, false);
             }

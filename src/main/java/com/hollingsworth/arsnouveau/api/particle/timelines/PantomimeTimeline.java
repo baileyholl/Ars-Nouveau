@@ -15,7 +15,7 @@ import net.minecraft.network.codec.StreamCodec;
 
 import java.util.List;
 
-public class PantomimeTimeline extends BaseTimeline<PantomimeTimeline>{
+public class PantomimeTimeline extends BaseTimeline<PantomimeTimeline> {
     public static final MapCodec<PantomimeTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             TimelineEntryData.CODEC.fieldOf("onResolvingEffect").forGetter(i -> i.onResolvingEffect),
             SoundProperty.CODEC.fieldOf("resolveSound").forGetter(i -> i.resolveSound)
@@ -32,16 +32,16 @@ public class PantomimeTimeline extends BaseTimeline<PantomimeTimeline>{
     public TimelineEntryData onResolvingEffect;
     public SoundProperty resolveSound = new SoundProperty();
 
-    public PantomimeTimeline(){
+    public PantomimeTimeline() {
         this(new TimelineEntryData(new BurstMotion(), new PropertyParticleOptions()), new SoundProperty());
     }
 
-    public PantomimeTimeline(TimelineEntryData onResolvingEffect, SoundProperty resolveSound){
+    public PantomimeTimeline(TimelineEntryData onResolvingEffect, SoundProperty resolveSound) {
         this.onResolvingEffect = onResolvingEffect;
         this.resolveSound = resolveSound;
     }
 
-    public TimelineEntryData onResolvingEffect(){
+    public TimelineEntryData onResolvingEffect() {
         return onResolvingEffect;
     }
 

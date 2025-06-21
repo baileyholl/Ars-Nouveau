@@ -37,7 +37,8 @@ public class EffectSummonSteed extends AbstractEffect {
             return;
 
         int ticks = (int) (20 * (GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier()));
-        if (ticks <= 0) ticks = 20; //leave at least one second of life, since summon sick doesn't depend on it and short life horses can be useful (?)
+        if (ticks <= 0)
+            ticks = 20; //leave at least one second of life, since summon sick doesn't depend on it and short life horses can be useful (?)
         Vec3 hit = rayTraceResult.getLocation();
         for (int i = 0; i < 1 + Math.round(spellStats.getAoeMultiplier()); i++) {
             SummonHorse horse = new SummonHorse(ModEntities.SUMMON_HORSE.get(), world);
@@ -70,7 +71,7 @@ public class EffectSummonSteed extends AbstractEffect {
         return SpellTier.ONE;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
@@ -90,7 +91,7 @@ public class EffectSummonSteed extends AbstractEffect {
         return "Summons a saddled horse that will vanish after a few minutes. AOE will increase the amount summoned, while Extend Time will increase the duration of the summon. Applies Summoning Sickness to the caster, and cannot be cast while afflicted by this Sickness.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.CONJURATION);

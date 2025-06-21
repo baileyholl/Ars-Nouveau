@@ -23,7 +23,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Entity.class)
 public abstract class EntityMixin {
 
-    @Shadow public Level level;
+    @Shadow
+    public Level level;
 
     @Shadow
     public abstract boolean isCurrentlyGlowing();
@@ -49,7 +50,7 @@ public abstract class EntityMixin {
         NeoForge.EVENT_BUS.post(new EntityPreRemovalEvent(this.level, (Entity) (Object) this));
     }
 
-    private static boolean isWet(LivingEntity livingEntity){
+    private static boolean isWet(LivingEntity livingEntity) {
         return livingEntity.hasEffect(ModPotions.SOAKED_EFFECT) || livingEntity.getVehicle() instanceof BubbleEntity;
     }
 

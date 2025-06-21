@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 
-public class ModelProperty extends BaseProperty<ModelProperty>{
+public class ModelProperty extends BaseProperty<ModelProperty> {
 
     public static MapCodec<ModelProperty> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("resource").forGetter(i -> i.selectedResource.resourceLocation),
@@ -35,7 +35,7 @@ public class ModelProperty extends BaseProperty<ModelProperty>{
     public PropMap subPropMap;
 
     public static final Model NONE = new Model(ArsNouveau.prefix("empty"), DocAssets.STYLE_ICON_NONE, false);
-    public static final Model CUBE_BODY = new Model(ArsNouveau.prefix("cube"), DocAssets.STYLE_ICON_BLOCK, true, (spell) ->{
+    public static final Model CUBE_BODY = new Model(ArsNouveau.prefix("cube"), DocAssets.STYLE_ICON_BLOCK, true, (spell) -> {
         return ArsNouveau.prefix("textures/particle/" + "projectile_" + (spell.age / 5) % 4 + ".png");
     });
 
@@ -46,9 +46,9 @@ public class ModelProperty extends BaseProperty<ModelProperty>{
         resources.add(CUBE_BODY);
     }
 
-    public ModelProperty(PropMap propMap){
+    public ModelProperty(PropMap propMap) {
         super(propMap);
-        if(propMap.has(ParticlePropertyRegistry.MODEL_PROPERTY.get())){
+        if (propMap.has(ParticlePropertyRegistry.MODEL_PROPERTY.get())) {
             ModelProperty modelProperty = propMap.get(ParticlePropertyRegistry.MODEL_PROPERTY.get());
             selectedResource = modelProperty.selectedResource;
             subPropMap = propMap.get(ParticlePropertyRegistry.MODEL_PROPERTY.get()).subPropMap;
@@ -59,7 +59,7 @@ public class ModelProperty extends BaseProperty<ModelProperty>{
 
     }
 
-    public ModelProperty(){
+    public ModelProperty() {
         selectedResource = NONE;
         subPropMap = new PropMap();
     }
@@ -86,7 +86,7 @@ public class ModelProperty extends BaseProperty<ModelProperty>{
             public void addWidgets(List<AbstractWidget> widgets) {
                 for (int i = 0; i < resources.size(); i++) {
                     var resource = resources.get(i);
-                    SelectedParticleButton selectedParticleButton = new SelectedParticleButton(x + 6 + 16 * (i % 7), y + 20 + 20* (i / 7), 14, 14, getImagePath(resource), (b) -> {
+                    SelectedParticleButton selectedParticleButton = new SelectedParticleButton(x + 6 + 16 * (i % 7), y + 20 + 20 * (i / 7), 14, 14, getImagePath(resource), (b) -> {
                         var didHaveColor = selectedResource.supportsColor;
                         selectedResource = resource;
                         var nowHasColor = selectedResource.supportsColor;
@@ -96,7 +96,7 @@ public class ModelProperty extends BaseProperty<ModelProperty>{
                             onDependenciesChanged.run();
                         }
                         selectedButton.selected = false;
-                        if(b instanceof SelectedParticleButton selectedParticleButton1){
+                        if (b instanceof SelectedParticleButton selectedParticleButton1) {
                             selectedParticleButton1.selected = true;
                             selectedButton = selectedParticleButton1;
                         }
@@ -137,7 +137,7 @@ public class ModelProperty extends BaseProperty<ModelProperty>{
 
     @Override
     public List<BaseProperty<?>> subProperties() {
-        if(selectedResource.supportsColor){
+        if (selectedResource.supportsColor) {
             return List.of(subPropMap.createIfMissing(new ColorProperty()));
         } else {
             return List.of();
@@ -161,8 +161,9 @@ public class ModelProperty extends BaseProperty<ModelProperty>{
         return Objects.hash(selectedResource, subPropMap);
     }
 
-    public record Model(ResourceLocation resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor, Function<EntityProjectileSpell, ResourceLocation> getTexture){
-        public Model(ResourceLocation resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor){
+    public record Model(ResourceLocation resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor,
+                        Function<EntityProjectileSpell, ResourceLocation> getTexture) {
+        public Model(ResourceLocation resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor) {
             this(resourceLocation, blitInfo, supportsColor, spell -> ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), "textures/entity/" + resourceLocation.getPath() + ".png"));
         }
 

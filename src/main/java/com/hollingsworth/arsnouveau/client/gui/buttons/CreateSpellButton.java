@@ -18,7 +18,7 @@ public class CreateSpellButton extends GuiImageButton {
     public Supplier<List<SpellValidationError>> errors;
 
     public CreateSpellButton(int x, int y, Button.OnPress onPress, Supplier<List<SpellValidationError>> errors) {
-        super(x, y,  DocAssets.SAVE_BUTTON, onPress);
+        super(x, y, DocAssets.SAVE_BUTTON, onPress);
         this.errors = errors;
     }
 

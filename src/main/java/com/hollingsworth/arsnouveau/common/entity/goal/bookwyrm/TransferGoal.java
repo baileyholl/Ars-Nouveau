@@ -41,7 +41,7 @@ public class TransferGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if(bookwyrm.level.getGameTime() % 2 != 0 && bookwyrm.getRandom().nextInt(10) != 0){
+        if (bookwyrm.level.getGameTime() % 2 != 0 && bookwyrm.getRandom().nextInt(10) != 0) {
             return false;
         }
         this.task = bookwyrm.getTransferTask();
@@ -56,15 +56,15 @@ public class TransferGoal extends Goal {
     @Override
     public void tick() {
         time++;
-        if(task == null || isDone || time > 20 * 10){
+        if (task == null || isDone || time > 20 * 10) {
             isDone = true;
             bookwyrm.setHeldStack(ItemStack.EMPTY);
             return;
         }
-        if(!reachedFrom) {
+        if (!reachedFrom) {
             if (BlockUtil.distanceFrom(bookwyrm.position(), new Vec3(task.from.x, task.from.y(), task.from.z())) <= 1.5) {
                 reachedFrom = true;
-                if(task != null){
+                if (task != null) {
                     bookwyrm.setHeldStack(task.stack);
                     bookwyrm.level.playSound(null, bookwyrm.getX(), bookwyrm.getY(), bookwyrm.getZ(),
                             SoundEvents.ITEM_PICKUP, bookwyrm.getSoundSource(), 0.3f + (float) ParticleUtil.inRange(-0.1, 0.1), 1.0F + (float) ParticleUtil.inRange(-0.1, 0.1));
@@ -73,17 +73,17 @@ public class TransferGoal extends Goal {
                         event.open();
                         EventQueue.getServerInstance().addEvent(event);
                     }
-                    if(bookwyrm.level.getBlockEntity(task.fromPos) instanceof RepositoryCatalogTile controllerTile){
+                    if (bookwyrm.level.getBlockEntity(task.fromPos) instanceof RepositoryCatalogTile controllerTile) {
                         controllerTile.openRandomDrawer();
                     }
                 }
             } else {
                 bookwyrm.getNavigation().moveTo(task.from.x(), task.from.y(), task.from.z(), 1.3d);
-                if(bookwyrm.getNavigation().getPath() == null){
+                if (bookwyrm.getNavigation().getPath() == null) {
                     isDone = true;
                 }
             }
-        }else{
+        } else {
             if (BlockUtil.distanceFrom(bookwyrm.position(), new Vec3(task.to.x(), task.to.y(), task.to.z())) <= 1.5) {
                 isDone = true;
                 bookwyrm.setHeldStack(ItemStack.EMPTY);
@@ -92,12 +92,12 @@ public class TransferGoal extends Goal {
                     event.open();
                     EventQueue.getServerInstance().addEvent(event);
                 }
-                if(bookwyrm.level.getBlockEntity(task.toPos) instanceof RepositoryCatalogTile controllerTile){
+                if (bookwyrm.level.getBlockEntity(task.toPos) instanceof RepositoryCatalogTile controllerTile) {
                     controllerTile.openRandomDrawer();
                 }
             } else {
                 bookwyrm.getNavigation().moveTo(task.to.x(), task.to.y(), task.to.z(), 1.3d);
-                if(bookwyrm.getNavigation().getPath() == null){
+                if (bookwyrm.getNavigation().getPath() == null) {
                     isDone = true;
                 }
             }

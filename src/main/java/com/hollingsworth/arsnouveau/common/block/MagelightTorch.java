@@ -31,7 +31,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-public class MagelightTorch extends TickableModBlock{
+public class MagelightTorch extends TickableModBlock {
     public static final BooleanProperty FLOOR = BooleanProperty.create("floor");
     public static final BooleanProperty ROOF = BooleanProperty.create("roof");
     public static final VoxelShape UP = makeShape();
@@ -47,17 +47,18 @@ public class MagelightTorch extends TickableModBlock{
             Maps.newEnumMap(Map.of(
                     Direction.NORTH, VoxelShapeUtils.rotateX(UP, 180),
                     Direction.WEST, VoxelShapeUtils.rotateY(VoxelShapeUtils.rotateX(UP, 90), 90),
-                    Direction.EAST,  VoxelShapeUtils.rotateY(VoxelShapeUtils.rotateX(UP, 90), 270),
+                    Direction.EAST, VoxelShapeUtils.rotateY(VoxelShapeUtils.rotateX(UP, 90), 270),
                     Direction.SOUTH, VoxelShapeUtils.rotateX(FLOOR_AABB.get(Direction.SOUTH), 90))
             );
 
     private static final Map<Direction, VoxelShape> ROOF_AABB = Maps.newEnumMap(Map.of(
-            Direction.NORTH,VoxelShapeUtils.rotateY(VoxelShapeUtils.rotate(UP, Direction.UP), 180),
+            Direction.NORTH, VoxelShapeUtils.rotateY(VoxelShapeUtils.rotate(UP, Direction.UP), 180),
             Direction.WEST, VoxelShapeUtils.rotateY(UP, 90),
-            Direction.EAST,   VoxelShapeUtils.rotateY(VoxelShapeUtils.rotate(UP, Direction.UP), 90),
+            Direction.EAST, VoxelShapeUtils.rotateY(VoxelShapeUtils.rotate(UP, Direction.UP), 90),
             Direction.SOUTH, VoxelShapeUtils.rotateX(FLOOR_AABB.get(Direction.SOUTH), 90))
     );
-    public static VoxelShape makeShape(){
+
+    public static VoxelShape makeShape() {
         VoxelShape shape = Shapes.empty();
         shape = Shapes.join(shape, Shapes.box(0.375, 0, 0.375, 0.625, 0.25, 0.625), BooleanOp.OR);
         shape = Shapes.join(shape, Shapes.box(0.625, 0.125, 0.4375, 0.75, 0.25, 0.5625), BooleanOp.OR);
@@ -72,7 +73,7 @@ public class MagelightTorch extends TickableModBlock{
         return shape;
     }
 
-    public MagelightTorch(){
+    public MagelightTorch() {
         super(BlockBehaviour.Properties.of().sound(SoundType.STONE).strength(2.0f, 3.0f).noOcclusion().noCollission().lightLevel((b) -> b.getValue(SconceBlock.LIGHT_LEVEL)));
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.FACING, Direction.NORTH).setValue(FLOOR, true).setValue(ROOF, false));
     }
@@ -82,22 +83,22 @@ public class MagelightTorch extends TickableModBlock{
         Direction facing = state.getValue(BlockStateProperties.FACING);
         boolean onFloor = state.hasProperty(MagelightTorch.FLOOR) && state.getValue(MagelightTorch.FLOOR);
         boolean onRoof = state.hasProperty(MagelightTorch.ROOF) && state.getValue(MagelightTorch.ROOF);
-        if(onFloor) {
+        if (onFloor) {
             return FLOOR_AABB.getOrDefault(facing, UP);
-        }else if(onRoof) {
+        } else if (onRoof) {
             return ROOF_AABB.getOrDefault(facing, UP);
-        }else{
+        } else {
             return WALL_AABB.getOrDefault(facing, UP);
         }
     }
 
     @Override
     public ItemInteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if(pLevel.isClientSide){
+        if (pLevel.isClientSide) {
             return ItemInteractionResult.SUCCESS;
         }
         BlockEntity tile = pLevel.getBlockEntity(pPos);
-        if(tile instanceof MagelightTorchTile torchTile){
+        if (tile instanceof MagelightTorchTile torchTile) {
             torchTile.setHorizontalFire(!torchTile.isHorizontalFire());
         }
         return super.useItemOn(stack, pState, pLevel, pPos, pPlayer, pHand, pHit);
@@ -107,17 +108,17 @@ public class MagelightTorch extends TickableModBlock{
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction clickedDirection = context.getClickedFace();
-        if(clickedDirection == Direction.UP){
+        if (clickedDirection == Direction.UP) {
             return this.defaultBlockState().setValue(BlockStateProperties.FACING, context.getNearestLookingDirection().getOpposite()).setValue(FLOOR, Boolean.TRUE);
-        }else if(clickedDirection == Direction.DOWN){
+        } else if (clickedDirection == Direction.DOWN) {
             Direction direction = context.getHorizontalDirection();
-            if(direction == Direction.SOUTH){
+            if (direction == Direction.SOUTH) {
                 direction = Direction.NORTH;
             }
-            if(direction == Direction.WEST){
+            if (direction == Direction.WEST) {
                 direction = Direction.EAST;
             }
-            if(direction == Direction.DOWN){
+            if (direction == Direction.DOWN) {
                 direction = Direction.EAST;
             }
             return this.defaultBlockState().setValue(BlockStateProperties.FACING, direction).setValue(ROOF, Boolean.TRUE).setValue(FLOOR, false);

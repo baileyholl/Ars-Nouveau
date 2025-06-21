@@ -59,14 +59,15 @@ public class ArsNouveau {
 
     public static List<String> postLoadWarnings = new ArrayList<>();
 
-    public static TicketController ticketController = new TicketController(ArsNouveau.prefix("ticket_controller"),  (level, ticketHelper) -> {
+    public static TicketController ticketController = new TicketController(ArsNouveau.prefix("ticket_controller"), (level, ticketHelper) -> {
         ticketHelper.getEntityTickets().forEach(((uuid, chunk) -> {
             if (level.getEntity(uuid) == null)
                 ticketHelper.removeAllTickets(uuid);
         }));
     });
     public static boolean isDebug = false && !FMLEnvironment.production;
-    public ArsNouveau(IEventBus modEventBus, ModContainer modContainer){
+
+    public ArsNouveau(IEventBus modEventBus, ModContainer modContainer) {
         NeoForge.EVENT_BUS.addListener(FMLEventHandler::onServerStopped);
         NeoForge.EVENT_BUS.addListener(FMLEventHandler::onPlayerLoggedOut);
         caelusLoaded = ModList.get().isLoaded("caelus");
@@ -90,7 +91,7 @@ public class ArsNouveau {
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::postModLoadEvent);
         modEventBus.addListener(this::clientSetup);
-        modEventBus.addListener((RegisterTicketControllersEvent e) ->{
+        modEventBus.addListener((RegisterTicketControllersEvent e) -> {
             e.register(ticketController);
         });
         NeoForge.EVENT_BUS.addListener(BubbleEntity::onAttacked);
@@ -98,7 +99,7 @@ public class ArsNouveau {
         NeoForge.EVENT_BUS.addListener(BubbleEntity::preEntityRemoval);
         NeoForge.EVENT_BUS.addListener(BreezeEvent::onSpellResolve);
 
-        NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post e) ->{
+        NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post e) -> {
             ClientInfo.endClientTick();
         });
 
@@ -114,17 +115,17 @@ public class ArsNouveau {
             Thread thread = new Thread(Rewards::init);
             thread.setDaemon(true);
             thread.start();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        if(FMLEnvironment.dist.isClient()){
+        if (FMLEnvironment.dist.isClient()) {
             ArsNouveau.proxy = new Supplier<IProxy>() {
                 @Override
                 public IProxy get() {
                     return new ClientProxy();
                 }
             }.get();
-        }else{
+        } else {
             ArsNouveau.proxy = new ServerProxy();
         }
     }
@@ -155,23 +156,23 @@ public class ArsNouveau {
             ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.SOURCEBERRY_BUSH.asItem(), 0.3f);
             ComposterBlock.COMPOSTABLES.putIfAbsent(ItemsRegistry.MAGE_BLOOM.get(), 0.65F);
             ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.MAGE_BLOOM_CROP.asItem(), 0.65F);
-            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.BOMBEGRANTE_POD.asItem(),0.65f);
-            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.MENDOSTEEN_POD.asItem(),0.65f);
-            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.FROSTAYA_POD.asItem(),0.65f);
-            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.BASTION_POD.asItem(),0.65f);
-            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.FLOURISHING_LEAVES.asItem(),0.3f);
-            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.VEXING_LEAVES.asItem(),0.3f);
-            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.CASCADING_LEAVE.asItem(),0.3f);
-            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.BLAZING_LEAVES.asItem(),0.3f);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.BOMBEGRANTE_POD.asItem(), 0.65f);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.MENDOSTEEN_POD.asItem(), 0.65f);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.FROSTAYA_POD.asItem(), 0.65f);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.BASTION_POD.asItem(), 0.65f);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.FLOURISHING_LEAVES.asItem(), 0.3f);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.VEXING_LEAVES.asItem(), 0.3f);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.CASCADING_LEAVE.asItem(), 0.3f);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.BLAZING_LEAVES.asItem(), 0.3f);
 
             FlowerPotBlock flowerPot = (FlowerPotBlock) Blocks.FLOWER_POT;
-            for (var pot : BlockRegistry.flowerPots.entrySet()){
+            for (var pot : BlockRegistry.flowerPots.entrySet()) {
                 flowerPot.addPlant(pot.getKey().get(), pot::getValue);
             }
 
             DispenserBehaviorRegistry.register();
         });
-        for(String warning : postLoadWarnings){
+        for (String warning : postLoadWarnings) {
             Log.getLogger().error(warning);
         }
     }

@@ -17,7 +17,7 @@ public class FalseWeave extends MirrorWeave {
         super(properties);
     }
 
-    public FalseWeave(){
+    public FalseWeave() {
         super();
     }
 

@@ -6,7 +6,7 @@ import net.minecraft.world.item.ItemStack;
 
 public interface IDyeable {
 
-    default void onDye(ItemStack stack, DyeColor dyeColor){
+    default void onDye(ItemStack stack, DyeColor dyeColor) {
         stack.set(DataComponents.BASE_COLOR, dyeColor);
     }
 

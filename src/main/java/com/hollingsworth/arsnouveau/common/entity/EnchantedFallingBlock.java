@@ -150,7 +150,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         } else {
             fallingblockentity = new EnchantedFallingBlock(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, blockState.hasProperty(BlockStateProperties.WATERLOGGED) ? blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE) : blockState, resolver);
         }
-        if(level.getBlockEntity(pos) != null){
+        if (level.getBlockEntity(pos) != null) {
             fallingblockentity.blockData = level.getBlockEntity(pos).saveWithoutMetadata(level.registryAccess());
         }
         level.addFreshEntity(fallingblockentity);
@@ -283,7 +283,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
                     }
                 }
                 if (this.level.getBlockEntity(blockpos) instanceof MageBlockTile mbt) {
-                    if(context != null) {
+                    if (context != null) {
                         mbt.color = context.getSpell().particleTimeline().get(ParticleTimelineRegistry.MAGEBLOCK_TIMELINE.get()).getColor();
                     }
                     mbt.setChanged();

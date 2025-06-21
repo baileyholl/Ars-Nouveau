@@ -22,7 +22,7 @@ import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 
 import java.util.Optional;
 
-public class WildenGuardianDen extends WildenDen{
+public class WildenGuardianDen extends WildenDen {
 
     public static final MapCodec<WildenGuardianDen> CODEC = RecordCodecBuilder.<WildenGuardianDen>mapCodec(instance ->
             instance.group(WildenGuardianDen.settingsCodec(instance),

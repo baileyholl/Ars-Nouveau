@@ -23,6 +23,7 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 public class StyledSpellRender extends GeoEntityRenderer<EntityProjectileSpell> {
 
     ModelProperty modelProp;
+
     public StyledSpellRender(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new StyledProjectileModel());
     }
@@ -31,7 +32,7 @@ public class StyledSpellRender extends GeoEntityRenderer<EntityProjectileSpell> 
     public void render(EntityProjectileSpell entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         ProjectileTimeline timeline = entity.resolver().spell.particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
         ModelProperty modelProperty = timeline.trailEffect.motion().propertyMap.get(ParticlePropertyRegistry.MODEL_PROPERTY.get());
-        if(modelProperty == null || modelProperty.selectedResource == ModelProperty.NONE){
+        if (modelProperty == null || modelProperty.selectedResource == ModelProperty.NONE) {
             return;
         }
         modelProp = modelProperty;
@@ -47,8 +48,8 @@ public class StyledSpellRender extends GeoEntityRenderer<EntityProjectileSpell> 
 //            poseStack.translate(0, -0.25, 0);
 //            poseStack.scale(0.5f, 0.5f, 0.5f);
 
-            poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot()) - 90f));
-            poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot())));
+        poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot()) - 90f));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot())));
 //        poseStack.mulPose(Axis.XP.rotationDegrees(90f));
 //        }
 
@@ -57,7 +58,7 @@ public class StyledSpellRender extends GeoEntityRenderer<EntityProjectileSpell> 
 //        matrixStackIn.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTicks, entityIn.xRotO, entityIn.getXRot())));
 
 
-        if(modelProp.selectedResource.supportsColor()){
+        if (modelProp.selectedResource.supportsColor()) {
             colour = modelProp.subPropMap.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty()).particleColor.getColor();
         }
 

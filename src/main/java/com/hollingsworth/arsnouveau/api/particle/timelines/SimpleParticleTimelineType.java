@@ -7,7 +7,9 @@ import net.minecraft.network.codec.StreamCodec;
 
 import java.util.function.Supplier;
 
-public record SimpleParticleTimelineType <T extends IParticleTimeline<T>>(AbstractSpellPart spellPart, MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec, Supplier<T> createDefault) implements IParticleTimelineType<T> {
+public record SimpleParticleTimelineType<T extends IParticleTimeline<T>>(AbstractSpellPart spellPart, MapCodec<T> codec,
+                                                                         StreamCodec<RegistryFriendlyByteBuf, T> streamCodec,
+                                                                         Supplier<T> createDefault) implements IParticleTimelineType<T> {
     @Override
     public MapCodec<T> codec() {
         return codec;
@@ -19,7 +21,7 @@ public record SimpleParticleTimelineType <T extends IParticleTimeline<T>>(Abstra
     }
 
     @Override
-    public T create(){
+    public T create() {
         return createDefault.get();
     }
 

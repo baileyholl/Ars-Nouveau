@@ -19,7 +19,7 @@ import net.minecraft.network.codec.StreamCodec;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class ProjectileTimeline extends BaseTimeline<ProjectileTimeline>{
+public class ProjectileTimeline extends BaseTimeline<ProjectileTimeline> {
     public static final MapCodec<ProjectileTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             TimelineEntryData.CODEC.fieldOf("trailEffect").forGetter(i -> i.trailEffect),
             TimelineEntryData.CODEC.fieldOf("onResolvingEffect").forGetter(i -> i.onResolvingEffect),
@@ -55,7 +55,7 @@ public class ProjectileTimeline extends BaseTimeline<ProjectileTimeline>{
     public SoundProperty castSound = new SoundProperty();
     public SoundProperty resolveSound = new SoundProperty();
 
-    public ProjectileTimeline(){
+    public ProjectileTimeline() {
         this(new TimelineEntryData(new TrailMotion(), new PropertyParticleOptions()),
                 new TimelineEntryData(new BurstMotion(), new PropertyParticleOptions()),
                 new TimelineEntryData(),
@@ -65,7 +65,7 @@ public class ProjectileTimeline extends BaseTimeline<ProjectileTimeline>{
     }
 
     public ProjectileTimeline(TimelineEntryData trailEffect, TimelineEntryData onResolvingEffect,
-                              TimelineEntryData onSpawnEffect, TimelineEntryData flairEffect, SoundProperty castSound, SoundProperty resolveSound){
+                              TimelineEntryData onSpawnEffect, TimelineEntryData flairEffect, SoundProperty castSound, SoundProperty resolveSound) {
         this.trailEffect = trailEffect;
         this.onResolvingEffect = onResolvingEffect;
         this.onSpawnEffect = onSpawnEffect;
@@ -74,11 +74,11 @@ public class ProjectileTimeline extends BaseTimeline<ProjectileTimeline>{
         this.resolveSound = resolveSound;
     }
 
-    public TimelineEntryData trailEffect(){
+    public TimelineEntryData trailEffect() {
         return trailEffect;
     }
 
-    public TimelineEntryData onResolvingEffect(){
+    public TimelineEntryData onResolvingEffect() {
         return onResolvingEffect;
     }
 

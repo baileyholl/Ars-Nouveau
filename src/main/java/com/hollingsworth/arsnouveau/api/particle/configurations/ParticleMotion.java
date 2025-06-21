@@ -35,7 +35,7 @@ public abstract class ParticleMotion {
     public ParticleEmitter emitter;
     public PropMap propertyMap;
 
-    public ParticleMotion(PropMap propertyMap){
+    public ParticleMotion(PropMap propertyMap) {
         this.propertyMap = propertyMap;
     }
 
@@ -57,7 +57,7 @@ public abstract class ParticleMotion {
         ).apply(instance, constructor));
     }
 
-    protected static <T extends ParticleMotion> StreamCodec<RegistryFriendlyByteBuf, T> buildStreamCodec(Function<PropMap, T> constructor){
+    protected static <T extends ParticleMotion> StreamCodec<RegistryFriendlyByteBuf, T> buildStreamCodec(Function<PropMap, T> constructor) {
         return new StreamCodec<>() {
             @Override
             public T decode(RegistryFriendlyByteBuf buffer) {
@@ -84,18 +84,18 @@ public abstract class ParticleMotion {
         return Objects.hash(ParticleMotionRegistry.PARTICLE_CONFIG_REGISTRY.getKey(getType()), propertyMap);
     }
 
-    public Vec3 getMotionScaled(Vec3 deltaVec, double radius, SpawnType spawnType){
-        return switch (spawnType){
+    public Vec3 getMotionScaled(Vec3 deltaVec, double radius, SpawnType spawnType) {
+        return switch (spawnType) {
             case SPHERE -> deltaVec.add(ParticleUtil.pointInSphere().scale(radius));
             case CUBE -> deltaVec.add(ParticleUtil.pointInCube().scale(radius));
         };
     }
 
-    public int getNumParticles(int particlesSec){
-        if(particlesSec == 0)
+    public int getNumParticles(int particlesSec) {
+        if (particlesSec == 0)
             return 0;
         double spawnRateTick = particlesSec * 0.05;
-        var modulo = Math.round(1/ spawnRateTick);
+        var modulo = Math.round(1 / spawnRateTick);
         float ceilFloor = this.emitter.age;
         if (modulo != 0 && ceilFloor % modulo == 0) {
             spawnRateTick = Math.ceil(spawnRateTick);
@@ -141,10 +141,10 @@ public abstract class ParticleMotion {
     }
 
 
-    protected Vec3 randomSpeed(PropertyParticleOptions particleOptions, double defaultMinXZ, double defaultMaxXZ,  double defaultMinY, double defaultMaxY) {
-        if(particleOptions.map.has(ParticlePropertyRegistry.SPEED_PROPERTY.get())){
+    protected Vec3 randomSpeed(PropertyParticleOptions particleOptions, double defaultMinXZ, double defaultMaxXZ, double defaultMinY, double defaultMaxY) {
+        if (particleOptions.map.has(ParticlePropertyRegistry.SPEED_PROPERTY.get())) {
             return randomSpeed(particleOptions);
-        }else{
+        } else {
             return new Vec3(
                     ParticleUtil.inRange(defaultMinXZ, defaultMaxXZ),
                     ParticleUtil.inRange(defaultMinY, defaultMaxY),

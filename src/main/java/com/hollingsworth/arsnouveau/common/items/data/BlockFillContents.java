@@ -13,7 +13,7 @@ public record BlockFillContents(int amount) {
     public static final Codec<BlockFillContents> CODEC = Codec.INT.xmap(BlockFillContents::new, BlockFillContents::amount);
     public static final StreamCodec<RegistryFriendlyByteBuf, BlockFillContents> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.INT, BlockFillContents::amount, BlockFillContents::new);
 
-    public static int get(ItemStack stack){
+    public static int get(ItemStack stack) {
         return stack.getOrDefault(DataComponentRegistry.BLOCK_FILL_CONTENTS, new BlockFillContents(0)).amount;
     }
 

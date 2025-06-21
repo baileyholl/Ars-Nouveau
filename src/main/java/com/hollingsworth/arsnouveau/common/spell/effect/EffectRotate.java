@@ -48,16 +48,16 @@ public class EffectRotate extends AbstractEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
         boolean sensitive = spellStats.isSensitive();
-        int ampMod = (int)spellStats.getAmpMultiplier();
+        int ampMod = (int) spellStats.getAmpMultiplier();
         boolean counterClockwise = ampMod < 0;
         for (int i = 0; i < 1 + Math.abs(ampMod); i++) {
             float angle = entity.rotate(counterClockwise ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90);
-            if (sensitive){
+            if (sensitive) {
                 entity.lookAt(EntityAnchorArgument.Anchor.FEET, entity.position.add(entity.getLookAngle().yRot(angle)));
-            }else {
+            } else {
                 entity.setYRot(angle);
             }
-            if(entity instanceof Projectile projectile){
+            if (entity instanceof Projectile projectile) {
                 Vec3 vec3d = projectile.getDeltaMovement();
                 projectile.setDeltaMovement(rotateVec(vec3d, counterClockwise ? -90 : 90));
             }
@@ -78,15 +78,15 @@ public class EffectRotate extends AbstractEffect {
         boolean swapAxis = spellStats.isSensitive();
         for (BlockPos pos : posList) {
             BlockState state = world.getBlockState(pos);
-            int ampMod = (int)spellStats.getAmpMultiplier();
+            int ampMod = (int) spellStats.getAmpMultiplier();
             boolean counterClockwise = ampMod < 0;
             for (int i = 0; i < (counterClockwise ? 0 : 1) + Math.abs(ampMod); i++) {
                 if (swapAxis) {
                     if (state.hasProperty(BlockStateProperties.AXIS)) {
                         state = state.setValue(BlockStateProperties.AXIS, switch (state.getValue(BlockStateProperties.AXIS)) {
                             case X -> counterClockwise ? Axis.Z : Axis.Y;
-                            case Y -> counterClockwise ? Axis.X :Axis.Z;
-                            case Z -> counterClockwise ? Axis.Y :Axis.X;
+                            case Y -> counterClockwise ? Axis.X : Axis.Z;
+                            case Z -> counterClockwise ? Axis.Y : Axis.X;
                         });
                     } else if (state.hasProperty(BlockStateProperties.FACING)) {
                         Direction curr = state.getValue(BlockStateProperties.FACING);

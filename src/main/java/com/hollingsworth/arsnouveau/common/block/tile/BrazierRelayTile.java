@@ -21,7 +21,7 @@ import java.util.List;
 
 import static com.hollingsworth.arsnouveau.common.block.RitualBrazierBlock.LIT;
 
-public class BrazierRelayTile extends RitualBrazierTile{
+public class BrazierRelayTile extends RitualBrazierTile {
 
     int ticksToLightOff = 0;
     public BlockPos brazierPos;
@@ -42,15 +42,15 @@ public class BrazierRelayTile extends RitualBrazierTile{
             makeParticle(color.nextColor((int) level.getGameTime() * 10), color.nextColor((int) level.getGameTime() * 10), 5);
         }
 
-        if(!level.isClientSide){
+        if (!level.isClientSide) {
             ticksToLightOff--;
-            if(ticksToLightOff <= 0){
+            if (ticksToLightOff <= 0) {
                 ticksToLightOff = 0;
-                if(!this.isDecorative && level.getBlockState(worldPosition).getValue(LIT)) {
+                if (!this.isDecorative && level.getBlockState(worldPosition).getValue(LIT)) {
                     level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(LIT, false));
                 }
             }
-            if( !level.getBlockState(worldPosition).getValue(LIT) && ticksToLightOff > 0){
+            if (!level.getBlockState(worldPosition).getValue(LIT) && ticksToLightOff > 0) {
                 level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(LIT, true));
             }
         }

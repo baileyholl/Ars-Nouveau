@@ -57,7 +57,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
                 && dimID != null
                 && PortalTile.teleportEntityTo(e, getServerLevel(dimID, serverLevel), this.warpPos, rotationVec) != null) {
             ServerLevel serverWorld = getServerLevel(dimID, serverLevel);
-            if(serverWorld == null){
+            if (serverWorld == null) {
                 return;
             }
             Vec3 vec3 = e.position;
@@ -69,7 +69,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
         }
     }
 
-    public void setFromScroll(WarpScrollData scrollData){
+    public void setFromScroll(WarpScrollData scrollData) {
         this.warpPos = scrollData.pos().orElse(null);
         this.dimID = scrollData.dimension();
         this.rotationVec = scrollData.rotation();
@@ -92,7 +92,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
         if (this.warpPos != null) {
             NBTUtil.storeBlockPos(compound, "warp", this.warpPos);
         }
-        if(this.dimID != null) {
+        if (this.dimID != null) {
             compound.putString("dim", this.dimID);
         }
         if (rotationVec != null) {
@@ -113,7 +113,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
                 for (Entity e : entities) {
                     if (e instanceof EntityFollowProjectile)
                         continue;
-                    if(dimID != null && PortalTile.teleportEntityTo(e, getServerLevel(dimID, serverLevel), this.warpPos, rotationVec) != null){
+                    if (dimID != null && PortalTile.teleportEntityTo(e, getServerLevel(dimID, serverLevel), this.warpPos, rotationVec) != null) {
                         level.playSound(null, warpPos, SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1.0f, 1.0f);
                         serverLevel.sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
                                 4, (this.level.random.nextDouble() - 0.5D) * 2.0D, -this.level.random.nextDouble(), (this.level.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
@@ -124,8 +124,8 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
         }
     }
 
-    public static @Nullable ServerLevel getServerLevel(String dimID, ServerLevel level){
-        if(dimID != null && level != null){
+    public static @Nullable ServerLevel getServerLevel(String dimID, ServerLevel level) {
+        if (dimID != null && level != null) {
             ResourceKey<Level> resourcekey = ResourceKey.create(Registries.DIMENSION, ResourceLocation.tryParse(dimID));
             return level.getServer().getLevel(resourcekey);
         }
@@ -134,17 +134,17 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
 
     @Nullable
     public static Entity teleportEntityTo(Entity entity, @Nullable Level targetWorld, BlockPos target, Vec2 rotationVec) {
-        if(targetWorld == null){
+        if (targetWorld == null) {
             return entity;
         }
         if (entity.getCommandSenderWorld().dimension() == targetWorld.dimension()) {
             // Check if the target block is a portal, if so, don't teleport
-            if((targetWorld.getBlockState(target).getBlock() instanceof PortalBlock)){
+            if ((targetWorld.getBlockState(target).getBlock() instanceof PortalBlock)) {
                 return entity;
             }
             var rotX = rotationVec != null ? rotationVec.x : entity.getXRot();
             var rotY = rotationVec != null ? rotationVec.y : entity.getYRot();
-            Networking.sendToNearbyClient(targetWorld, entity, new PacketWarpPosition(entity.getId(),target.getX() + 0.5, target.getY(), target.getZ() + 0.5, rotX, rotY));
+            Networking.sendToNearbyClient(targetWorld, entity, new PacketWarpPosition(entity.getId(), target.getX() + 0.5, target.getY(), target.getZ() + 0.5, rotX, rotY));
             entity.teleportTo(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
             entity.setXRot(rotX);
             entity.setYRot(rotY);
@@ -167,7 +167,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
         Vec3 destination = new Vec3(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
         //Note: We grab the passengers here instead of in placeEntity as changeDimension starts by removing any passengers
         List<Entity> passengers = entity.getPassengers();
-        return entity.changeDimension(new DimensionTransition ((ServerLevel) targetWorld, destination, new Vec3(0,0,0),rotationVec.y, rotationVec.x, false, DimensionTransition.DO_NOTHING));
+        return entity.changeDimension(new DimensionTransition((ServerLevel) targetWorld, destination, new Vec3(0, 0, 0), rotationVec.y, rotationVec.x, false, DimensionTransition.DO_NOTHING));
     }
 
     @Override

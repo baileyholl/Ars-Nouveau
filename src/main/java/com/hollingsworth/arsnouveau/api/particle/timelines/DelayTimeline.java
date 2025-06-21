@@ -15,7 +15,7 @@ import net.minecraft.network.codec.StreamCodec;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class DelayTimeline extends BaseTimeline<DelayTimeline>{
+public class DelayTimeline extends BaseTimeline<DelayTimeline> {
     public static final MapCodec<DelayTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             TimelineEntryData.CODEC.fieldOf("onResolvingEffect").forGetter(i -> i.onTickEffect)
     ).apply(instance, DelayTimeline::new));
@@ -29,15 +29,15 @@ public class DelayTimeline extends BaseTimeline<DelayTimeline>{
 
     public TimelineEntryData onTickEffect;
 
-    public DelayTimeline(){
+    public DelayTimeline() {
         this(new TimelineEntryData(new LightBlobMotion()));
     }
 
-    public DelayTimeline(TimelineEntryData onTickEffect){
+    public DelayTimeline(TimelineEntryData onTickEffect) {
         this.onTickEffect = onTickEffect;
     }
 
-    public TimelineEntryData tickingEffect(){
+    public TimelineEntryData tickingEffect() {
         return onTickEffect;
     }
 

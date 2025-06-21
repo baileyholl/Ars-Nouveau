@@ -79,14 +79,14 @@ public class GuiRadialMenu<T> extends Screen {
 
     @Override
     public void tick() {
-        if (totalTime != OPEN_ANIMATION_LENGTH){
+        if (totalTime != OPEN_ANIMATION_LENGTH) {
             extraTick++;
         }
 
-        if(holdToOpenGUI){
+        if (holdToOpenGUI) {
             int openRadialKey = ModKeyBindings.OPEN_RADIAL_HUD.getKey().getValue();
             boolean radialKeyIsDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), openRadialKey);
-            if(!radialKeyIsDown){
+            if (!radialKeyIsDown) {
                 if (this.selectedItem != -1) {
                     radialMenu.setCurrentSlot(selectedItem);
                 }
@@ -102,7 +102,7 @@ public class GuiRadialMenu<T> extends Screen {
         float openAnimation = closing ? 1.0f - totalTime / OPEN_ANIMATION_LENGTH : totalTime / OPEN_ANIMATION_LENGTH;
 
         float currTick = ClientInfo.partialTicks;
-        totalTime += (currTick + extraTick - prevTick)/20f;
+        totalTime += (currTick + extraTick - prevTick) / 20f;
         extraTick = 0;
         prevTick = currTick;
 

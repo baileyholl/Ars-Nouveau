@@ -14,7 +14,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
-public class PacketUpdateSpellColors extends AbstractPacket{
+public class PacketUpdateSpellColors extends AbstractPacket {
 
     int castSlot;
     ParticleColor color;
@@ -47,7 +47,7 @@ public class PacketUpdateSpellColors extends AbstractPacket{
             AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
             caster.setColor(color, castSlot).setCurrentSlot(castSlot).saveToStack(stack);
             Networking.sendToPlayerClient(new PacketUpdateBookGUI(stack), player);
-            Networking.sendToPlayerClient( new PacketOpenSpellBook(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND), player);
+            Networking.sendToPlayerClient(new PacketOpenSpellBook(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND), player);
         }
     }
 

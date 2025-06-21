@@ -16,7 +16,7 @@ import org.joml.Vector3f;
 
 import java.util.List;
 
-public class ZigZagMotion extends ParticleMotion{
+public class ZigZagMotion extends ParticleMotion {
 
     public static MapCodec<ZigZagMotion> CODEC = buildPropCodec(ZigZagMotion::new);
 
@@ -29,7 +29,7 @@ public class ZigZagMotion extends ParticleMotion{
     @Override
     public void tick(PropertyParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
         int age = emitter.age;
-        if(age == 0)
+        if (age == 0)
             return;
         ParticleDensityProperty density = getDensity(particleOptions, 100, 0.3f);
         int totalParticles = getNumParticles(density.density());
@@ -67,7 +67,7 @@ public class ZigZagMotion extends ParticleMotion{
 
     @Override
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
-        return  List.of(propMap.createIfMissing(new ParticleTypeProperty()), propMap.createIfMissing(new ParticleDensityProperty(100, 0.3f, SpawnType.SPHERE)
+        return List.of(propMap.createIfMissing(new ParticleTypeProperty()), propMap.createIfMissing(new ParticleDensityProperty(100, 0.3f, SpawnType.SPHERE)
                 .maxDensity(200)
                 .minDensity(20)
                 .densityStepSize(5)

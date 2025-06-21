@@ -10,7 +10,7 @@ public interface ITimedEvent {
 
     void tick(boolean serverSide);
 
-    default void tick(ServerTickEvent serverTickEvent){
+    default void tick(ServerTickEvent serverTickEvent) {
         tick(true);
     }
 
@@ -38,7 +38,7 @@ public interface ITimedEvent {
         return "";
     }
 
-    default void onServerStopping(){
+    default void onServerStopping() {
 
     }
 }

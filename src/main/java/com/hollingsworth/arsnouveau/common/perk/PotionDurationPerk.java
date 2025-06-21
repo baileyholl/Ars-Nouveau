@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class PotionDurationPerk extends Perk {
 
-    public static final PotionDurationPerk INSTANCE = new PotionDurationPerk(ArsNouveau.prefix( "thread_wixie"));
+    public static final PotionDurationPerk INSTANCE = new PotionDurationPerk(ArsNouveau.prefix("thread_wixie"));
 
     public PotionDurationPerk(ResourceLocation key) {
         super(key);

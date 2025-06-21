@@ -37,14 +37,14 @@ public class StackUtil {
         return getHeldCasterTool(player, (tool) -> true);
     }
 
-    public static @Nullable InteractionHand getHeldCasterTool(Player player, Predicate<AbstractCaster<?>> filter){
+    public static @Nullable InteractionHand getHeldCasterTool(Player player, Predicate<AbstractCaster<?>> filter) {
         var mainStack = player.getMainHandItem();
         var offStack = player.getOffhandItem();
         var mainCaster = SpellCasterRegistry.from(mainStack);
         var offCaster = SpellCasterRegistry.from(offStack);
-        if(mainCaster != null && filter.test(mainCaster))
+        if (mainCaster != null && filter.test(mainCaster))
             return InteractionHand.MAIN_HAND;
-        if(offCaster != null && filter.test(offCaster))
+        if (offCaster != null && filter.test(offCaster))
             return InteractionHand.OFF_HAND;
         return null;
     }
@@ -61,9 +61,9 @@ public class StackUtil {
 
     public static ItemStack getHeldCasterToolOrEmpty(LivingEntity entity) {
         ItemStack stack = ItemStack.EMPTY;
-        if (entity.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof ICasterTool){
+        if (entity.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof ICasterTool) {
             stack = entity.getItemInHand(InteractionHand.MAIN_HAND);
-        }else if (entity.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof ICasterTool){
+        } else if (entity.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof ICasterTool) {
             stack = entity.getItemInHand(InteractionHand.OFF_HAND);
         }
         return stack;

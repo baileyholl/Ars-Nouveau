@@ -17,10 +17,12 @@ public interface IState<T extends IState<?>> {
     /**
      * Returns a new state if the state is finished, otherwise returns null.
      */
-    @Nullable T tick();
+    @Nullable
+    T tick();
 
     /**
      * Returns a new state if applicable, otherwise returns null.
      */
-    @Nullable T onEvent(IStateEvent event);
+    @Nullable
+    T onEvent(IStateEvent event);
 }

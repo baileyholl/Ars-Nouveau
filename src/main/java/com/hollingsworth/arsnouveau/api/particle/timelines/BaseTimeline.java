@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class BaseTimeline<T extends IParticleTimeline<T>> implements IParticleTimeline<T>{
+public abstract class BaseTimeline<T extends IParticleTimeline<T>> implements IParticleTimeline<T> {
 
     @Override
     public boolean equals(Object o) {

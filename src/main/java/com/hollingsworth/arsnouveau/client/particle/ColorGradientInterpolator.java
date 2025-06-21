@@ -13,7 +13,7 @@ public class ColorGradientInterpolator {
     public ColorGradientInterpolator(Supplier<Double> getProgress, List<ColorPoint> timeline) {
         this.timeline = timeline;
         this.getProgress = getProgress;
-        if(timeline.size() < 2) {
+        if (timeline.size() < 2) {
             throw new IllegalArgumentException("Color gradient must have at least 2 colors");
         }
     }
@@ -24,8 +24,8 @@ public class ColorGradientInterpolator {
         Color c1 = null;
         Color c2 = null;
         double currentProgress = getProgress.get();
-        for(var entry : timeline) {
-            if(entry.time() <= currentProgress) {
+        for (var entry : timeline) {
+            if (entry.time() <= currentProgress) {
                 t1 = entry.time();
                 c1 = entry.color();
             } else {
@@ -34,10 +34,10 @@ public class ColorGradientInterpolator {
                 break;
             }
         }
-        if(c1 == null){
+        if (c1 == null) {
             return c2;
         }
-        if(c2 == null){
+        if (c2 == null) {
             return c1;
         }
         double progress = (currentProgress - t1) / (t2 - t1);

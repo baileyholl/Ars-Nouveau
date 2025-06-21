@@ -184,7 +184,7 @@ public class SpellResolver implements Cloneable {
     /**
      * Attempts to resolve the remaining effects of the SpellContext without restarting.
      */
-    public void resume(Level world){
+    public void resume(Level world) {
         LivingEntity shooter = spellContext.getUnwrappedCaster();
         SpellResolveEvent.Pre spellResolveEvent = new SpellResolveEvent.Pre(world, shooter, this.hitResult, spell, spellContext, this);
         NeoForge.EVENT_BUS.post(spellResolveEvent);
@@ -212,15 +212,15 @@ public class SpellResolver implements Cloneable {
             if (preEvent.isCanceled())
                 continue;
             effect.onResolve(this.hitResult, world, shooter, stats, spellContext, this);
-            if(hitPos != null){
+            if (hitPos != null) {
                 var resolveListener = world.getCapability(CapabilityRegistry.BLOCK_SPELL_RESOLVE_CAP, hitPos);
-                if(resolveListener != null)
+                if (resolveListener != null)
                     resolveListener.onResolve(world, shooter, this.hitResult, spell, spellContext, effect, stats, this);
             }
 
-            if(hitEntity != null){
+            if (hitEntity != null) {
                 var resolveListener = hitEntity.getCapability(CapabilityRegistry.ENTITY_SPELL_RESOLVE_CAP);
-                if(resolveListener != null)
+                if (resolveListener != null)
                     resolveListener.onResolve(world, shooter, this.hitResult, spell, spellContext, effect, stats, this);
             }
             NeoForge.EVENT_BUS.post(new EffectResolveEvent.Post(world, shooter, this.hitResult, spell, spellContext, effect, stats, this));

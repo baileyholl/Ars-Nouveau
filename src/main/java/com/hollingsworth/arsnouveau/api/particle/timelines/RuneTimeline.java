@@ -14,7 +14,7 @@ import net.minecraft.network.codec.StreamCodec;
 
 import java.util.List;
 
-public class RuneTimeline extends BaseTimeline<RuneTimeline>{
+public class RuneTimeline extends BaseTimeline<RuneTimeline> {
     public static final MapCodec<RuneTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             PropMap.CODEC.fieldOf("propMap").forGetter(i -> i.propMap)
     ).apply(instance, RuneTimeline::new));
@@ -27,19 +27,19 @@ public class RuneTimeline extends BaseTimeline<RuneTimeline>{
 
     public PropMap propMap;
 
-    public RuneTimeline(){
+    public RuneTimeline() {
         this(new PropMap());
     }
 
-    public RuneTimeline(PropMap propMap){
+    public RuneTimeline(PropMap propMap) {
         this.propMap = propMap;
     }
 
-    public ParticleColor getColor(){
+    public ParticleColor getColor() {
         return propMap.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty()).particleColor;
     }
 
-    public String getTexture(){
+    public String getTexture() {
         return propMap.getOrDefault(ParticlePropertyRegistry.RUNE_PROPERTY.get(), new RuneTextureProperty()).runeTexture;
     }
 

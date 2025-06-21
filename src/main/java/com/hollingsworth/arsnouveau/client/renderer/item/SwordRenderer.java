@@ -49,7 +49,7 @@ public class SwordRenderer extends GeoItemRenderer<EnchantersSword> {
     public Color getRenderColor(EnchantersSword animatable, float partialTick, int packedLight) {
         ParticleColor color = ParticleColor.defaultParticleColor();
         var caster = SpellCasterRegistry.from(currentItemStack);
-        if (caster != null){
+        if (caster != null) {
             var timeline = caster.getSpell().particleTimeline().get(ParticleTimelineRegistry.TOUCH_TIMELINE.get());
             color = timeline.onResolvingEffect.particleOptions().colorProp().color();
         }

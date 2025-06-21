@@ -6,7 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class JumpHeightPerk extends Perk {
 
-    public static final JumpHeightPerk INSTANCE = new JumpHeightPerk(ArsNouveau.prefix( "thread_heights"));
+    public static final JumpHeightPerk INSTANCE = new JumpHeightPerk(ArsNouveau.prefix("thread_heights"));
 
     public JumpHeightPerk(ResourceLocation key) {
         super(key);

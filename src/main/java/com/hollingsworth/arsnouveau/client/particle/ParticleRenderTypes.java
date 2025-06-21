@@ -43,12 +43,11 @@ public class ParticleRenderTypes {
         @Override
         public BufferBuilder begin(Tesselator buffer, TextureManager textureManager) {
             Minecraft.getInstance().gameRenderer.lightTexture().turnOnLightLayer();
-            if(Config.DISABLE_TRANSLUCENT_PARTICLES.get()) {
+            if (Config.DISABLE_TRANSLUCENT_PARTICLES.get()) {
                 RenderSystem.disableBlend();
                 RenderSystem.depthMask(true);
                 RenderSystem.setShader(GameRenderer::getParticleShader);
-            }
-            else {
+            } else {
                 RenderSystem.enableBlend();
                 RenderSystem.depthMask(false);
                 RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.DestFactor.ONE.value);
@@ -68,15 +67,13 @@ public class ParticleRenderTypes {
     static final ParticleRenderType EMBER_RENDER_NO_MASK = new ParticleRenderType() {
 
 
-
         @Override
         public BufferBuilder begin(Tesselator buffer, TextureManager textureManager) {
-            if(Config.DISABLE_TRANSLUCENT_PARTICLES.get()) {
+            if (Config.DISABLE_TRANSLUCENT_PARTICLES.get()) {
                 RenderSystem.disableBlend();
                 RenderSystem.depthMask(true);
                 RenderSystem.setShader(GameRenderer::getParticleShader);
-            }
-            else {
+            } else {
                 RenderSystem.enableBlend();
                 RenderSystem.depthMask(false);
                 RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.DestFactor.ONE.value);

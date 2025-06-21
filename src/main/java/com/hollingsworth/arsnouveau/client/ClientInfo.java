@@ -38,16 +38,17 @@ public class ClientInfo {
     public static boolean isSupporter = false;
 
     public static Component[] storageTooltip = new Component[0];
+
     public static void setTooltip(Component... string) {
         storageTooltip = string;
     }
 
-    public static void highlightPosition(List<ColorPos> colorPos, int ticks){
+    public static void highlightPosition(List<ColorPos> colorPos, int ticks) {
         highlightPositions = colorPos;
         highlightTicks = ticks;
     }
 
-    private static void calcDelta(){
+    private static void calcDelta() {
         float oldTotal = ClientInfo.totalTicks;
         totalTicks = ClientInfo.totalTicks + ClientInfo.partialTicks;
         deltaTicks = totalTicks - oldTotal;
@@ -61,7 +62,7 @@ public class ClientInfo {
         calcDelta();
     }
 
-    public static void endClientTick(){
+    public static void endClientTick() {
         ClientInfo.ticksInGame++;
         partialTicks = 0f;
         if (ClientInfo.redTicks()) {

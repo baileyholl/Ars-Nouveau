@@ -10,6 +10,7 @@ public interface IRadialProvider {
 
     /**
      * The key press this radial provider responds to
+     *
      * @return the key code
      */
     @OnlyIn(Dist.CLIENT)

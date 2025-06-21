@@ -78,15 +78,15 @@ public class SpellCrossbowRenderer extends GeoItemRenderer<SpellCrossbow> {
             Vec3 down = right.cross(forward);
             int timeHeld = 72000 - Minecraft.getInstance().player.getUseItemRemainingTicks();
             //These are used to calculate where the particles are going. We want them going into the laser, so we move the destination right, down, and forward a bit.
-            if(timeHeld > 72000){
+            if (timeHeld > 72000) {
                 right = right.scale(0.1 - player.attackAnim);
                 forward = forward.scale(0.25f);
                 down = down.scale(-0.1 - player.attackAnim);
-            }else if(SpellCrossbow.isCharged(itemStack)){
+            } else if (SpellCrossbow.isCharged(itemStack)) {
                 right = right.scale(-0.05 - player.attackAnim);
                 forward = forward.scale(0.35f);
                 down = down.scale(-0.2 - player.attackAnim);
-            }else {
+            } else {
                 right = right.scale(-player.attackAnim);
                 forward = forward.scale(0.45f);
                 down = down.scale(-0.3 - player.attackAnim);
@@ -117,7 +117,7 @@ public class SpellCrossbowRenderer extends GeoItemRenderer<SpellCrossbow> {
     public Color getRenderColor(SpellCrossbow animatable, float partialTick, int packedLight) {
         ParticleColor color = ParticleColor.defaultParticleColor();
         var caster = SpellCasterRegistry.from(currentItemStack);
-        if (caster != null){
+        if (caster != null) {
             var timeline = caster.getSpell().particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
             color = timeline.trailEffect.particleOptions().colorProp().color();
         }

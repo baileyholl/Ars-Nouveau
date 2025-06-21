@@ -10,9 +10,9 @@ import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 
 public class StyledProjectileModel extends GeoModel<EntityProjectileSpell> {
-    private static final ResourceLocation TEXTURE = ArsNouveau.prefix( "textures/entity/projectile.png");
-    public static final ResourceLocation NORMAL_MODEL = ArsNouveau.prefix( "geo/cube.geo.json");
-    public static final ResourceLocation ANIMATIONS = ArsNouveau.prefix( "animations/empty.json");
+    private static final ResourceLocation TEXTURE = ArsNouveau.prefix("textures/entity/projectile.png");
+    public static final ResourceLocation NORMAL_MODEL = ArsNouveau.prefix("geo/cube.geo.json");
+    public static final ResourceLocation ANIMATIONS = ArsNouveau.prefix("animations/empty.json");
 
     @Override
     public ResourceLocation getModelResource(EntityProjectileSpell animatable) {
@@ -30,13 +30,13 @@ public class StyledProjectileModel extends GeoModel<EntityProjectileSpell> {
         return ANIMATIONS;
     }
 
-    public ModelProperty getModelProp(EntityProjectileSpell projectileSpell){
+    public ModelProperty getModelProp(EntityProjectileSpell projectileSpell) {
         ProjectileTimeline timeline = projectileSpell.resolver().spell.particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
         ModelProperty modelProperty = timeline.trailEffect.motion().propertyMap.get(ParticlePropertyRegistry.MODEL_PROPERTY.get());
         return modelProperty;
     }
 
-    public ResourceLocation getModelRes(EntityProjectileSpell projectileSpell){
+    public ResourceLocation getModelRes(EntityProjectileSpell projectileSpell) {
         ProjectileTimeline timeline = projectileSpell.resolver().spell.particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
         ModelProperty modelProperty = timeline.trailEffect.motion().propertyMap.get(ParticlePropertyRegistry.MODEL_PROPERTY.get());
         ResourceLocation resourceLocation = modelProperty.selectedResource.resourceLocation();

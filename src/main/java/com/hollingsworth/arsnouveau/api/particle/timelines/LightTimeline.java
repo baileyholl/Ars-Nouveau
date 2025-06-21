@@ -15,7 +15,7 @@ import net.minecraft.network.codec.StreamCodec;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class LightTimeline extends BaseTimeline<LightTimeline>{
+public class LightTimeline extends BaseTimeline<LightTimeline> {
     public static final MapCodec<LightTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             TimelineEntryData.CODEC.fieldOf("onResolvingEffect").forGetter(i -> i.onTickEffect)
     ).apply(instance, LightTimeline::new));
@@ -29,15 +29,15 @@ public class LightTimeline extends BaseTimeline<LightTimeline>{
 
     public TimelineEntryData onTickEffect;
 
-    public LightTimeline(){
+    public LightTimeline() {
         this(new TimelineEntryData(new LightBlobMotion()));
     }
 
-    public LightTimeline(TimelineEntryData onTickEffect){
+    public LightTimeline(TimelineEntryData onTickEffect) {
         this.onTickEffect = onTickEffect;
     }
 
-    public TimelineEntryData tickingEffect(){
+    public TimelineEntryData tickingEffect() {
         return onTickEffect;
     }
 

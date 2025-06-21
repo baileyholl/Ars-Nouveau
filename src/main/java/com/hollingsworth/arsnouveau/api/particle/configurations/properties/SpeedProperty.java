@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class SpeedProperty extends BaseProperty<SpeedProperty>{
+public class SpeedProperty extends BaseProperty<SpeedProperty> {
     public static MapCodec<SpeedProperty> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.DOUBLE.fieldOf("yMinSpeed").forGetter(i -> i.yMinSpeed),
             Codec.DOUBLE.fieldOf("yMaxSpeed").forGetter(i -> i.yMaxSpeed),
@@ -46,7 +46,7 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
     private double yMaxSpeed = 0.0;
     private double xzMaxSpeed = 0.0;
 
-    public SpeedProperty(){
+    public SpeedProperty() {
         super();
 
     }
@@ -79,11 +79,11 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
         return xzMinSpeed;
     }
 
-    public double maxY(){
+    public double maxY() {
         return yMaxSpeed;
     }
 
-    public double maxXZ(){
+    public double maxXZ() {
         return xzMaxSpeed;
     }
 
@@ -93,8 +93,9 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
             HorizontalSlider minYSpeedSlider;
             HorizontalSlider yMaxSpeedSlider;
 
-//            HorizontalSlider xzSpeedSlider;
+            //            HorizontalSlider xzSpeedSlider;
             HorizontalSlider xzMaxSpeedSlider;
+
             @Override
             public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
                 DocClientUtils.drawHeader(getName(), graphics, x, y, width, mouseX, mouseY, partialTicks);
@@ -121,14 +122,14 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
                 double min = -0.20;
                 double max = 0.20;
                 double stepSize = 0.02;
-                minYSpeedSlider = buildSlider(xSliderOffset, y + yOffset, min, max, stepSize, 1, Component.translatable("ars_nouveau.yspeed_slider"), Component.empty(), 0.0, (value) ->{
+                minYSpeedSlider = buildSlider(xSliderOffset, y + yOffset, min, max, stepSize, 1, Component.translatable("ars_nouveau.yspeed_slider"), Component.empty(), 0.0, (value) -> {
                     yMinSpeed = minYSpeedSlider.getValue();
                     yMaxSpeed = Math.max(yMaxSpeed, yMinSpeed);
                     clampSliders();
                 });
                 yOffset += sliderSpacing;
 
-                yMaxSpeedSlider = buildSlider(xSliderOffset, y + yOffset,  min, max, stepSize, 1, Component.translatable("ars_nouveau.ymaxspeed_slider"), Component.empty(), 0.0, (value) ->{
+                yMaxSpeedSlider = buildSlider(xSliderOffset, y + yOffset, min, max, stepSize, 1, Component.translatable("ars_nouveau.ymaxspeed_slider"), Component.empty(), 0.0, (value) -> {
                     yMaxSpeed = yMaxSpeedSlider.getValue();
                     yMinSpeed = Math.min(yMaxSpeed, yMinSpeed);
                     clampSliders();
@@ -142,7 +143,7 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
 //                });
 //                yOffset += sliderSpacing;
 
-                xzMaxSpeedSlider = buildSlider(xSliderOffset, y + yOffset,  0, max, stepSize, 1, Component.translatable("ars_nouveau.xzmaxspeed_slider"), Component.empty(), 0.0, (value) ->{
+                xzMaxSpeedSlider = buildSlider(xSliderOffset, y + yOffset, 0, max, stepSize, 1, Component.translatable("ars_nouveau.xzmaxspeed_slider"), Component.empty(), 0.0, (value) -> {
                     xzMaxSpeed = xzMaxSpeedSlider.getValue();
                     xzMinSpeed = -xzMaxSpeedSlider.getValue();//Math.min(xzMaxSpeed, xzMinSpeed);
                     clampSliders();
@@ -195,7 +196,7 @@ public class SpeedProperty extends BaseProperty<SpeedProperty>{
         if (o == null || getClass() != o.getClass()) return false;
         SpeedProperty that = (SpeedProperty) o;
         return Double.compare(that.yMinSpeed, yMinSpeed) == 0 && Double.compare(that.xzMinSpeed, xzMinSpeed) == 0 &&
-               Double.compare(that.yMaxSpeed, yMaxSpeed) == 0 && Double.compare(that.xzMaxSpeed, xzMaxSpeed) == 0;
+                Double.compare(that.yMaxSpeed, yMaxSpeed) == 0 && Double.compare(that.xzMaxSpeed, xzMaxSpeed) == 0;
     }
 
     @Override

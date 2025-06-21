@@ -18,7 +18,7 @@ import net.minecraft.network.codec.StreamCodec;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class WallTimeline extends BaseTimeline<WallTimeline>{
+public class WallTimeline extends BaseTimeline<WallTimeline> {
     public static final MapCodec<WallTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             TimelineEntryData.CODEC.fieldOf("trailEffect").forGetter(i -> i.trailEffect),
             TimelineEntryData.CODEC.fieldOf("onResolvingEffect").forGetter(i -> i.onResolvingEffect),
@@ -39,22 +39,22 @@ public class WallTimeline extends BaseTimeline<WallTimeline>{
     public TimelineEntryData onResolvingEffect;
     public SoundProperty resolveSound = new SoundProperty();
 
-    public WallTimeline(){
+    public WallTimeline() {
         this(new TimelineEntryData(new UpwardsFieldMotion(), new PropertyParticleOptions()),
                 new TimelineEntryData(new BurstMotion(), new PropertyParticleOptions()), new SoundProperty());
     }
 
-    public WallTimeline(TimelineEntryData trailEffect, TimelineEntryData onResolvingEffect, SoundProperty resolveSound){
+    public WallTimeline(TimelineEntryData trailEffect, TimelineEntryData onResolvingEffect, SoundProperty resolveSound) {
         this.trailEffect = trailEffect;
         this.onResolvingEffect = onResolvingEffect;
         this.resolveSound = resolveSound;
     }
 
-    public TimelineEntryData trailEffect(){
+    public TimelineEntryData trailEffect() {
         return trailEffect;
     }
 
-    public TimelineEntryData onResolvingEffect(){
+    public TimelineEntryData onResolvingEffect() {
         return onResolvingEffect;
     }
 

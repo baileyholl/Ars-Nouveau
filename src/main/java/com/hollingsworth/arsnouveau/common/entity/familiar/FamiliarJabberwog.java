@@ -35,7 +35,6 @@ public class FamiliarJabberwog extends FlyingFamiliarEntity {
     }
 
 
-
     @Override
     public @NotNull EntityType<?> getType() {
         return null;

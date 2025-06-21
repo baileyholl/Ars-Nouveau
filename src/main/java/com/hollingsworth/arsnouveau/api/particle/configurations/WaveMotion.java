@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class WaveMotion extends ParticleMotion{
+public class WaveMotion extends ParticleMotion {
 
     public static MapCodec<WaveMotion> CODEC = buildPropCodec(WaveMotion::new);
 
@@ -28,7 +28,7 @@ public class WaveMotion extends ParticleMotion{
     public void tick(PropertyParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
         ParticleDensityProperty density = getDensity(particleOptions, 100, 0.3f);
         int age = emitter.age;
-        if(age == 0)
+        if (age == 0)
             return;
 
         double amplitude = density.radius();
@@ -60,7 +60,7 @@ public class WaveMotion extends ParticleMotion{
 
     @Override
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
-        return  List.of(propMap.createIfMissing(new ParticleTypeProperty()), propMap.createIfMissing(new ParticleDensityProperty(100, 0.3f, SpawnType.SPHERE)
+        return List.of(propMap.createIfMissing(new ParticleTypeProperty()), propMap.createIfMissing(new ParticleDensityProperty(100, 0.3f, SpawnType.SPHERE)
                 .maxDensity(200)
                 .minDensity(20)
                 .minRadius(0.1f)

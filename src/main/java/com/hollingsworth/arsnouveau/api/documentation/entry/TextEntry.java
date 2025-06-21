@@ -28,10 +28,11 @@ public class TextEntry extends SinglePageWidget {
 
     public TextEntry(Component body, Component title, ItemStack renderStack, BaseDocScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
-        this.body = NuggetMultilLineLabel.create(Minecraft.getInstance().font, body.copy().withStyle(Style.EMPTY.withFont(Minecraft.UNIFORM_FONT)), width );;
+        this.body = NuggetMultilLineLabel.create(Minecraft.getInstance().font, body.copy().withStyle(Style.EMPTY.withFont(Minecraft.UNIFORM_FONT)), width);
+        ;
         this.title = title;
         this.renderStack = renderStack;
-        if(title != null){
+        if (title != null) {
             this.titleLabel = NuggetMultilLineLabel.create(Minecraft.getInstance().font, title, TITLE_WIDTH);
         }
     }
@@ -41,54 +42,54 @@ public class TextEntry extends SinglePageWidget {
         this.body = body;
         this.title = title;
         this.renderStack = renderStack;
-        if(title != null){
+        if (title != null) {
             this.titleLabel = NuggetMultilLineLabel.create(Minecraft.getInstance().font, title, TITLE_WIDTH);
         }
     }
 
-    public static SinglePageCtor create(Component body, Component title, ItemStack renderStack){
+    public static SinglePageCtor create(Component body, Component title, ItemStack renderStack) {
         return (parent, x, y, width, height) -> new TextEntry(body, title, renderStack, parent, x, y, width, height);
     }
 
-    public static SinglePageCtor create(Component body, Component title, ItemLike renderStack){
+    public static SinglePageCtor create(Component body, Component title, ItemLike renderStack) {
         return (parent, x, y, width, height) -> new TextEntry(body, title, renderStack.asItem().getDefaultInstance(), parent, x, y, width, height);
     }
 
-    public static SinglePageCtor create(NuggetMultilLineLabel body, Component title, ItemStack renderStack){
+    public static SinglePageCtor create(NuggetMultilLineLabel body, Component title, ItemStack renderStack) {
         return (parent, x, y, width, height) -> new TextEntry(body, title, renderStack, parent, x, y, width, height);
     }
 
-    public static SinglePageCtor create(NuggetMultilLineLabel body, Component title){
+    public static SinglePageCtor create(NuggetMultilLineLabel body, Component title) {
         return (parent, x, y, width, height) -> new TextEntry(body, title, null, parent, x, y, width, height);
     }
 
-    public static SinglePageCtor create(Component body, Component title){
+    public static SinglePageCtor create(Component body, Component title) {
         return (parent, x, y, width, height) -> new TextEntry(body, title, null, parent, x, y, width, height);
     }
 
-    public static SinglePageCtor create(Component body){
+    public static SinglePageCtor create(Component body) {
         return (parent, x, y, width, height) -> new TextEntry(body, null, null, parent, x, y, width, height);
     }
 
-    public static SinglePageCtor create(NuggetMultilLineLabel body){
+    public static SinglePageCtor create(NuggetMultilLineLabel body) {
         return (parent, x, y, width, height) -> new TextEntry(body, null, null, parent, x, y, width, height);
     }
 
-    public static SinglePageCtor create(String body){
+    public static SinglePageCtor create(String body) {
         return (parent, x, y, width, height) -> new TextEntry(Component.translatable(body), null, null, parent, x, y, width, height);
     }
 
-    public static SinglePageCtor create(String body, String title){
+    public static SinglePageCtor create(String body, String title) {
         return (parent, x, y, width, height) -> new TextEntry(Component.translatable(body), Component.translatable(title), null, parent, x, y, width, height);
     }
 
-    public int drawTitle(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks){
-        if(renderStack != null){
-            DocClientUtils.blit(guiGraphics, DocAssets.HEADER_WITH_ITEM, x , y - 1);
+    public int drawTitle(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        if (renderStack != null) {
+            DocClientUtils.blit(guiGraphics, DocAssets.HEADER_WITH_ITEM, x, y - 1);
             setTooltipIfHovered(DocClientUtils.renderItemStack(guiGraphics, x + 3, y + 2, mouseX, mouseY, renderStack));
             DocClientUtils.drawHeader(titleLabel, guiGraphics, x + 70, y - 1);
             return 24;
-        }else{
+        } else {
             DocClientUtils.drawHeader(title, guiGraphics, x, y, width, mouseX, mouseY, partialTicks);
         }
         return 20;
@@ -99,8 +100,8 @@ public class TextEntry extends SinglePageWidget {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
         boolean hasTitle = title != null;
         int yOffset = -3;
-        if(hasTitle){
-           yOffset = drawTitle(guiGraphics, mouseX, mouseY, partialTick);
+        if (hasTitle) {
+            yOffset = drawTitle(guiGraphics, mouseX, mouseY, partialTick);
         }
         DocClientUtils.drawParagraph(body, guiGraphics, x, y + yOffset, width, mouseX, mouseY, partialTick);
     }
@@ -112,12 +113,12 @@ public class TextEntry extends SinglePageWidget {
 
     @Override
     public void addExportProperties(JsonObject object) {
-        if(title != null){
+        if (title != null) {
             object.addProperty(DocExporter.TITLE_PROPERTY, title.getString());
         }
 
         object.addProperty(DocExporter.DESCRIPTION_PROPERTY, body.getString());
-        if(renderStack != null && !renderStack.isEmpty()) {
+        if (renderStack != null && !renderStack.isEmpty()) {
             object.addProperty(DocExporter.ICON_PROPERTY, BuiltInRegistries.ITEM.getKey(renderStack.getItem()).toString());
         }
     }

@@ -9,7 +9,7 @@ import net.minecraft.network.chat.Component;
 
 public class EnterTextField extends NoShadowTextField {
     public EnterTextField(Font font, int x, int y) {
-        super(font, x, y,  DocAssets.ENTER_TEXT_PAPER.width(),  DocAssets.ENTER_TEXT_PAPER.height(), null, Component.empty());
+        super(font, x, y, DocAssets.ENTER_TEXT_PAPER.width(), DocAssets.ENTER_TEXT_PAPER.height(), null, Component.empty());
         setTextColor(12694931);
         setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.spell_name").getString());
     }

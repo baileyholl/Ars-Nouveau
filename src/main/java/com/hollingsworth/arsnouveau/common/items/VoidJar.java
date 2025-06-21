@@ -44,13 +44,13 @@ public class VoidJar extends ModItem implements IScribeable {
                 return voidJar.voidStack(player, jar, pickingUp);
             }
         }
-        if (player.getOffhandItem().getItem() instanceof  VoidJar voidJar) {
+        if (player.getOffhandItem().getItem() instanceof VoidJar voidJar) {
             return voidJar.voidStack(player, player.getOffhandItem(), pickingUp);
         }
         return false;
     }
 
-    public boolean voidStack(Player player, ItemStack jarStack, ItemStack stackToVoid){
+    public boolean voidStack(Player player, ItemStack jarStack, ItemStack stackToVoid) {
         VoidJarData jarData = jarStack.getOrDefault(DataComponentRegistry.VOID_JAR, new VoidJarData());
         if (jarData.active() && jarData.scrollData().containsStack(stackToVoid)) {
             int amount = stackToVoid.getCount();
@@ -62,8 +62,8 @@ public class VoidJar extends ModItem implements IScribeable {
     }
 
     public void preConsume(Player player, ItemStack jar, ItemStack voided, int amount) {
-        var mana =  CapabilityRegistry.getMana(player);
-        if(mana == null){
+        var mana = CapabilityRegistry.getMana(player);
+        if (mana == null) {
             return;
         }
         mana.addMana(5.0 * amount);

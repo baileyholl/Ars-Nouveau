@@ -43,13 +43,13 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe {
     @Override
     public boolean matches(ApparatusRecipeInput input, Level level, @org.jetbrains.annotations.Nullable Player player) {
         ItemStack parchment = getParchment(input.pedestals());
-        if(parchment.isEmpty() || SpellCasterRegistry.from(parchment).getSpell().isEmpty()){
+        if (parchment.isEmpty() || SpellCasterRegistry.from(parchment).getSpell().isEmpty()) {
             return false;
         }
         return super.matches(input, level, player);
     }
 
-    public static@NotNull ItemStack getParchment(List<ItemStack> pedestalItems) {
+    public static @NotNull ItemStack getParchment(List<ItemStack> pedestalItems) {
         for (ItemStack stack : pedestalItems) {
             if (stack.getItem() instanceof SpellParchment) {
                 return stack;

@@ -363,16 +363,16 @@ public class SoundRegistry {
     public static SpellSound APPLY_EFFECT_RAID_OMEN = register(SoundEvents.APPLY_EFFECT_RAID_OMEN, "apply_effect_raid_omen");
 
 
-    public static SpellSound register(Holder<SoundEvent> soundEvent, String name){
+    public static SpellSound register(Holder<SoundEvent> soundEvent, String name) {
         return SpellSoundRegistry.registerSpellSound(new SpellSound(soundEvent, Component.translatable("ars_nouveau.sound." + name), ArsNouveau.prefix(name)));
     }
 
-    public static SpellSound register(SoundEvent soundEvent, String name){
+    public static SpellSound register(SoundEvent soundEvent, String name) {
         return SpellSoundRegistry.registerSpellSound(new SpellSound(Holder.direct(soundEvent), Component.translatable("ars_nouveau.sound." + name), ArsNouveau.prefix(name)));
     }
 
     static SoundEvent makeSound(String name) {
-        return SoundEvent.createVariableRangeEvent(ArsNouveau.prefix( name));
+        return SoundEvent.createVariableRangeEvent(ArsNouveau.prefix(name));
     }
 
 }

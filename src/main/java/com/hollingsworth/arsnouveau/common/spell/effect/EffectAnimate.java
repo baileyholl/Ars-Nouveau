@@ -94,6 +94,7 @@ public class EffectAnimate extends AbstractEffect {
     public String getBookDescription() {
         return "Animates a block to fight for you. The animated block will convert to a falling block when it dies. Costs a large amount of mana, but does not grant Summoning Sickness";
     }
+
     @Override
     protected @NotNull Set<AbstractAugment> getCompatibleAugments() {
         return getSummonAugments();

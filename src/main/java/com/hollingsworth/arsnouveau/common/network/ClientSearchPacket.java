@@ -9,7 +9,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
-public class ClientSearchPacket extends AbstractPacket{
+public class ClientSearchPacket extends AbstractPacket {
 
     public static final Type<ClientSearchPacket> TYPE = new Type<>(ArsNouveau.prefix("storage_search_packet"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientSearchPacket> CODEC = StreamCodec.ofMember(ClientSearchPacket::toBytes, ClientSearchPacket::new);
@@ -30,7 +30,7 @@ public class ClientSearchPacket extends AbstractPacket{
 
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer sender) {
-        if (sender.containerMenu instanceof StorageTerminalMenu terminalScreen){
+        if (sender.containerMenu instanceof StorageTerminalMenu terminalScreen) {
             terminalScreen.receiveClientSearch(sender, string);
         }
     }

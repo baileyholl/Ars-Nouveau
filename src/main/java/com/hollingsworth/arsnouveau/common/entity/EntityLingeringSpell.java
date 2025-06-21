@@ -108,7 +108,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
                         resolveEmitter.tick(level);
                     }
                 }
-                if(!level.isClientSide) {
+                if (!level.isClientSide) {
                     resolveSound.playSound(level, getX(), getY(), getZ());
                 }
             } else {

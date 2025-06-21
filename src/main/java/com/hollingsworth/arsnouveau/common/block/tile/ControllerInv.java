@@ -18,8 +18,7 @@ import java.util.function.Predicate;
 public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
     public RepositoryCatalogTile controllerTile;
 
-    public ControllerInv(RepositoryCatalogTile controllerTile, IItemHandler... itemHandler)
-    {
+    public ControllerInv(RepositoryCatalogTile controllerTile, IItemHandler... itemHandler) {
         super(itemHandler);
         this.controllerTile = controllerTile;
     }
@@ -28,11 +27,11 @@ public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
     public ItemStack insertStack(ItemStack stack, boolean simulate) {
         var validRepositories = preferredForStack(stack, false);
         // Prefer inserting into existing stacks first, splitting across as many inventories as needed
-        for(SortResult connectedRepository : validRepositories){
+        for (SortResult connectedRepository : validRepositories) {
             IMapInventory connected = connectedRepository.mapInventory();
-            if(connected != null && connected.hasExistingSlotsForInsertion(stack)){
+            if (connected != null && connected.hasExistingSlotsForInsertion(stack)) {
                 ItemStack remainder = connected.insertStack(stack, simulate);
-                if(remainder.isEmpty()){
+                if (remainder.isEmpty()) {
                     return ItemStack.EMPTY;
                 }
                 stack = remainder;
@@ -40,11 +39,11 @@ public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
         }
 
         // Fall back to inserting into any empty slots.
-        for(SortResult connectedRepository : validRepositories){
+        for (SortResult connectedRepository : validRepositories) {
             IMapInventory connected = connectedRepository.mapInventory();
-            if(connected != null && connected.hasExistingSlotsForInsertion(ItemStack.EMPTY)){
+            if (connected != null && connected.hasExistingSlotsForInsertion(ItemStack.EMPTY)) {
                 ItemStack remainder = connected.insertStack(stack, simulate);
-                if(remainder.isEmpty()){
+                if (remainder.isEmpty()) {
                     return ItemStack.EMPTY;
                 }
                 stack = remainder;
@@ -56,9 +55,9 @@ public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
 
     @Override
     public boolean hasExistingSlotsForInsertion(ItemStack stack) {
-        for(RepositoryCatalogTile.ConnectedRepository connectedRepository : controllerTile.connectedRepositories){
+        for (RepositoryCatalogTile.ConnectedRepository connectedRepository : controllerTile.connectedRepositories) {
             IMapInventory connected = connectedRepository.capability.getCapability();
-            if(connected != null && connected.hasExistingSlotsForInsertion(stack)){
+            if (connected != null && connected.hasExistingSlotsForInsertion(stack)) {
                 return true;
             }
         }
@@ -67,11 +66,11 @@ public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
 
     @Override
     public ItemStack extractByItem(Item item, int count, boolean simulate, Predicate<ItemStack> filter) {
-        for(RepositoryCatalogTile.ConnectedRepository connectedRepository : controllerTile.connectedRepositories){
+        for (RepositoryCatalogTile.ConnectedRepository connectedRepository : controllerTile.connectedRepositories) {
             IMapInventory connected = connectedRepository.capability.getCapability();
-            if(connected != null){
+            if (connected != null) {
                 ItemStack extracted = connected.extractByItem(item, count, simulate, filter);
-                if(!extracted.isEmpty()){
+                if (!extracted.isEmpty()) {
                     return extracted;
                 }
             }
@@ -87,7 +86,7 @@ public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
     @Override
     public ItemScroll.SortPref getInsertionPreference(ItemStack stack) {
         PriorityQueue<SortResult> validRepositories = preferredForStack(stack, false);
-        if(validRepositories.isEmpty())
+        if (validRepositories.isEmpty())
             return ItemScroll.SortPref.INVALID;
         return validRepositories.peek().mapInventory().getInsertionPreference(stack);
     }
@@ -99,22 +98,22 @@ public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
 
     public PriorityQueue<SortResult> preferredForStack(ItemStack stack, boolean includeInvalid) {
         PriorityQueue<SortResult> filtered = new PriorityQueue<>(SortResult.comparator);
-        if(!allowedByFilter(stack))
+        if (!allowedByFilter(stack))
             return filtered;
-        for(var connectedRepository : controllerTile.connectedRepositories){
+        for (var connectedRepository : controllerTile.connectedRepositories) {
             var cap = connectedRepository.capability;
-            if(cap == null || cap.getCapability() == null)
+            if (cap == null || cap.getCapability() == null)
                 continue;
             ItemScroll.SortPref sortPref = cap.getCapability().getInsertionPreference(stack);
-            if(includeInvalid || (sortPref != ItemScroll.SortPref.INVALID)){
+            if (includeInvalid || (sortPref != ItemScroll.SortPref.INVALID)) {
                 filtered.add(new SortResult(sortPref, connectedRepository));
             }
         }
         return filtered;
     }
 
-    public boolean allowedByFilter(ItemStack stack){
-        if(controllerTile.scrollStack.isEmpty() || stack.isEmpty()){
+    public boolean allowedByFilter(ItemStack stack) {
+        if (controllerTile.scrollStack.isEmpty() || stack.isEmpty()) {
             return true;
         }
         var set = new FilterSet.ListSet();
@@ -122,17 +121,18 @@ public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
         return set.getHighestPreference(stack) != ItemScroll.SortPref.INVALID;
     }
 
-    public record SortResult(ItemScroll.SortPref sortPref, @NotNull RepositoryCatalogTile.ConnectedRepository connectedRepository){
+    public record SortResult(ItemScroll.SortPref sortPref,
+                             @NotNull RepositoryCatalogTile.ConnectedRepository connectedRepository) {
         /**
          * Comparator for sorting SortResult by their sort preference in descending order, i.e. higher preferences come first.
          */
         public static Comparator<SortResult> comparator = Comparator.comparing(SortResult::sortPref, ItemScroll.sortPrefComparator.reversed());
 
-        public BlockCapabilityCache<IMapInventory, Direction> capability(){
+        public BlockCapabilityCache<IMapInventory, Direction> capability() {
             return connectedRepository.capability;
         }
 
-        public IMapInventory mapInventory(){
+        public IMapInventory mapInventory() {
             return connectedRepository.capability.getCapability();
         }
     }

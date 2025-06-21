@@ -12,7 +12,7 @@ import net.minecraft.network.codec.StreamCodec;
 
 import java.util.Objects;
 
-public class WallProperty extends BaseProperty<WallProperty>{
+public class WallProperty extends BaseProperty<WallProperty> {
     public int range;
     public int chance;
     public int numParticles;

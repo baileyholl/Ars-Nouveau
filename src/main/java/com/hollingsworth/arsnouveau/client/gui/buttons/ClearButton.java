@@ -6,9 +6,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
-public class ClearButton extends GuiImageButton{
+public class ClearButton extends GuiImageButton {
 
     public Component message;
+
     public ClearButton(int x, int y, Component message, OnPress onPress) {
         super(x, y, DocAssets.CLEAR_BUTTON, onPress);
         this.message = message;

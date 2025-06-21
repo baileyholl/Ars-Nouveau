@@ -9,7 +9,9 @@ import net.minecraft.world.effect.MobEffectInstance;
 public abstract class RangeEffectRitual extends RangeRitual {
 
     abstract public Holder<MobEffect> getEffect();
+
     abstract public int getRange();
+
     abstract public int getDuration();
 
     public boolean shouldApply(ServerPlayer player) {

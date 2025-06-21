@@ -48,6 +48,6 @@ public class ImbuementRecipeCategory extends MultiInputCategory<ImbuementRecipe>
     @Override
     public void draw(ImbuementRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         Font renderer = Minecraft.getInstance().font;
-        guiGraphics.drawString(renderer,  Component.translatable("ars_nouveau.source", recipe.source), 0, 100, 10,false);
+        guiGraphics.drawString(renderer, Component.translatable("ars_nouveau.source", recipe.source), 0, 100, 10, false);
     }
 }

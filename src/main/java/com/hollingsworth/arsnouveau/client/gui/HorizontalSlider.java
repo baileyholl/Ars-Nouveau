@@ -61,7 +61,7 @@ public class HorizontalSlider extends ExtendedSlider {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         DocClientUtils.blit(guiGraphics, knobAsset, this.x + (int) (this.value * (double) (this.width - this.knobAsset.width())), this.y - 1);
         int j = 10526880;
-        if(this.drawString) {
+        if (this.drawString) {
             guiGraphics.drawString(font, this.getMessage(), this.x + this.width / 4, this.y + (this.height - 32) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24, false);
         }
     }

@@ -13,10 +13,9 @@ import javax.annotation.Nullable;
 
 public class WildenChimeraModel extends GeoModel<WildenChimera> {
 
-    private static final ResourceLocation TEXTURE = ArsNouveau.prefix( "textures/entity/wilden_chimera.png");
-    public static final ResourceLocation NORMAL_MODEL = ArsNouveau.prefix( "geo/wilden_chimera.geo.json");
-    public static final ResourceLocation ANIMATIONS = ArsNouveau.prefix( "animations/wilden_chimera_animations.json");
-
+    private static final ResourceLocation TEXTURE = ArsNouveau.prefix("textures/entity/wilden_chimera.png");
+    public static final ResourceLocation NORMAL_MODEL = ArsNouveau.prefix("geo/wilden_chimera.geo.json");
+    public static final ResourceLocation ANIMATIONS = ArsNouveau.prefix("animations/wilden_chimera_animations.json");
 
 
     @Override
@@ -25,7 +24,7 @@ public class WildenChimeraModel extends GeoModel<WildenChimera> {
 
         GeoBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraData().get(DataTickets.ENTITY_MODEL_DATA);
-        if(!entity.isFlying()){
+        if (!entity.isFlying()) {
             head.setRotY(extraData.netHeadYaw() * 0.012453292F);
             head.setRotX(extraData.headPitch() * 0.037453292F);
         }

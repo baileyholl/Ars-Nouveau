@@ -4,7 +4,8 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 
-public record SimplePropertyType<T extends BaseProperty>(MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) implements IPropertyType<T>{
+public record SimplePropertyType<T extends BaseProperty>(MapCodec<T> codec,
+                                                         StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) implements IPropertyType<T> {
     @Override
     public MapCodec<T> codec() {
         return codec;

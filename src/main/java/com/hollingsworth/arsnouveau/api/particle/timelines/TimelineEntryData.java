@@ -32,7 +32,7 @@ public class TimelineEntryData {
         this.particleOptions = (PropertyParticleOptions) particleOptions;
     }
 
-    public TimelineEntryData(ParticleMotion motion, PropertyParticleOptions particleOptions){
+    public TimelineEntryData(ParticleMotion motion, PropertyParticleOptions particleOptions) {
         this.motion = motion;
         this.particleOptions = particleOptions;
     }
@@ -46,11 +46,11 @@ public class TimelineEntryData {
         this.particleOptions = new PropertyParticleOptions();
     }
 
-    public ParticleMotion motion(){
+    public ParticleMotion motion() {
         return motion;
     }
 
-    public PropertyParticleOptions particleOptions(){
+    public PropertyParticleOptions particleOptions() {
         return particleOptions;
     }
 

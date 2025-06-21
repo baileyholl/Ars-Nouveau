@@ -13,9 +13,12 @@ import javax.annotation.Nullable;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends EntityMixin {
-    @Shadow public abstract double getAttributeValue(Holder<Attribute> attribute);
+    @Shadow
+    public abstract double getAttributeValue(Holder<Attribute> attribute);
 
-    @Shadow @Nullable public abstract AttributeInstance getAttribute(Holder<Attribute> attribute);
+    @Shadow
+    @Nullable
+    public abstract AttributeInstance getAttribute(Holder<Attribute> attribute);
 
     @Override
     public double wrapGravity(Operation<Double> original) {

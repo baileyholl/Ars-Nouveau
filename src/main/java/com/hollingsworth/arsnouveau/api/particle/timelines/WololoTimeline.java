@@ -13,7 +13,7 @@ import net.minecraft.network.codec.StreamCodec;
 
 import java.util.List;
 
-public class WololoTimeline extends BaseTimeline<WololoTimeline>{
+public class WololoTimeline extends BaseTimeline<WololoTimeline> {
     public static final MapCodec<WololoTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             PropMap.CODEC.fieldOf("propMap").forGetter(i -> i.propMap)
     ).apply(instance, WololoTimeline::new));
@@ -26,15 +26,15 @@ public class WololoTimeline extends BaseTimeline<WololoTimeline>{
 
     public PropMap propMap;
 
-    public WololoTimeline(){
+    public WololoTimeline() {
         this(new PropMap());
     }
 
-    public WololoTimeline(PropMap propMap){
+    public WololoTimeline(PropMap propMap) {
         this.propMap = propMap;
     }
 
-    public ParticleColor getColor(){
+    public ParticleColor getColor() {
         return propMap.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty()).particleColor;
     }
 

@@ -19,8 +19,8 @@ public class InvalidCombinationValidator extends ScanningSpellValidator<Map<Reso
 
     @Override
     protected void digestSpellPart(Map<ResourceLocation, Integer> partCounts, int position, AbstractSpellPart spellPart, List<SpellValidationError> validationErrors) {
-        if(spellPart instanceof IContextManipulator manipulator){
-            for(AbstractSpellPart resettable : manipulator.bypassCombinationLimitsFor()){
+        if (spellPart instanceof IContextManipulator manipulator) {
+            for (AbstractSpellPart resettable : manipulator.bypassCombinationLimitsFor()) {
                 partCounts.remove(resettable.getRegistryName());
             }
         }
@@ -31,30 +31,30 @@ public class InvalidCombinationValidator extends ScanningSpellValidator<Map<Reso
             partCounts.put(spellPart.getRegistryName(), 1);
         }
 
-        for(ResourceLocation invalidPart : spellPart.invalidCombinations.parseComboLimits()){
+        for (ResourceLocation invalidPart : spellPart.invalidCombinations.parseComboLimits()) {
             AbstractSpellPart offendingPart = GlyphRegistry.getSpellPart(invalidPart);
-            if(offendingPart == null)
+            if (offendingPart == null)
                 continue;
-            if(partCounts.containsKey(invalidPart)){
-                if(EffectReset.RESET_LIMITS.contains(spellPart)) {
+            if (partCounts.containsKey(invalidPart)) {
+                if (EffectReset.RESET_LIMITS.contains(spellPart)) {
                     validationErrors.add(new InvalidCombinationValidator.ResetableInvalidCombinationValidatorError(position, spellPart, offendingPart));
                 } else {
                     validationErrors.add(new InvalidCombinationValidator.InvalidCombinationValidatorError(position, spellPart, offendingPart));
                 }
-            }else if(offendingPart.invalidCombinations.contains(spellPart.getRegistryName())){
-                if(EffectReset.RESET_LIMITS.contains(spellPart)) {
+            } else if (offendingPart.invalidCombinations.contains(spellPart.getRegistryName())) {
+                if (EffectReset.RESET_LIMITS.contains(spellPart)) {
                     validationErrors.add(new InvalidCombinationValidator.ResetableInvalidCombinationValidatorError(position, offendingPart, spellPart));
                 } else {
                     validationErrors.add(new InvalidCombinationValidator.InvalidCombinationValidatorError(position, offendingPart, spellPart));
                 }
             }
         }
-        for(ResourceLocation location : partCounts.keySet()){
+        for (ResourceLocation location : partCounts.keySet()) {
             AbstractSpellPart part = GlyphRegistry.getSpellPart(location);
-            if(part == null)
+            if (part == null)
                 return;
-            if(part.invalidCombinations.contains(spellPart.getRegistryName())){
-                if(EffectReset.RESET_LIMITS.contains(spellPart)) {
+            if (part.invalidCombinations.contains(spellPart.getRegistryName())) {
+                if (EffectReset.RESET_LIMITS.contains(spellPart)) {
                     validationErrors.add(new InvalidCombinationValidator.ResetableInvalidCombinationValidatorError(position, part, spellPart));
                 } else {
                     validationErrors.add(new InvalidCombinationValidator.InvalidCombinationValidatorError(position, part, spellPart));

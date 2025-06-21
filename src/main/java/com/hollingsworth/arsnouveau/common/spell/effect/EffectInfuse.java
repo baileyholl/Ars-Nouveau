@@ -39,16 +39,16 @@ public class EffectInfuse extends AbstractEffect {
 
     @Override
     public void onResolve(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if(spellStats.getAoeMultiplier() > 0 || spellStats.getDurationMultiplier() > 0){
+        if (spellStats.getAoeMultiplier() > 0 || spellStats.getDurationMultiplier() > 0) {
             this.spawnPotionEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
         } else {
             super.onResolve(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
         }
     }
 
-    public void spawnPotionEntity(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
+    public void spawnPotionEntity(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         PotionContents potionData = getPotionData(world, shooter, spellContext);
-        if(potionData == null){
+        if (potionData == null) {
             return;
         }
         Item potionItem = spellStats.getAoeMultiplier() > 0 ? Items.SPLASH_POTION : Items.LINGERING_POTION;
@@ -62,17 +62,17 @@ public class EffectInfuse extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if(!(rayTraceResult.getEntity() instanceof LivingEntity livingEntity)){
+        if (!(rayTraceResult.getEntity() instanceof LivingEntity livingEntity)) {
             return;
         }
         PotionContents potionData = getPotionData(world, shooter, spellContext);
-        if(potionData == null){
+        if (potionData == null) {
             return;
         }
         PotionUtil.applyContents(potionData, livingEntity, shooter, shooter);
     }
 
-    public @Nullable PotionContents getPotionData(Level world, @NotNull LivingEntity shooter, SpellContext spellContext){
+    public @Nullable PotionContents getPotionData(Level world, @NotNull LivingEntity shooter, SpellContext spellContext) {
         PotionContents potionData = null;
         InventoryManager manager = spellContext.getCaster().getInvManager();
         ExtractedStack extractedFlask = manager.extractItem(i -> {
@@ -82,7 +82,7 @@ public class EffectInfuse extends AbstractEffect {
         if (!extractedFlask.isEmpty()) {
             IPotionProvider provider = PotionProviderRegistry.from(extractedFlask.stack);
             potionData = provider.getPotionData(extractedFlask.stack);
-            provider.consumeUses(extractedFlask.stack, 1,  shooter);
+            provider.consumeUses(extractedFlask.stack, 1, shooter);
             extractedFlask.returnOrDrop(world, shooter.getOnPos());
         } else {
             ExtractedStack potion = manager.extractItem(i -> i.getItem() instanceof PotionItem, 1);
@@ -96,9 +96,9 @@ public class EffectInfuse extends AbstractEffect {
             }
         }
 
-        if(potionData == null){
+        if (potionData == null) {
             BlockEntity jarEntity = spellContext.getCaster().getNearbyBlockEntity(i -> i instanceof PotionJarTile jar && jar.getAmount() > 100);
-            if(jarEntity instanceof PotionJarTile jar){
+            if (jarEntity instanceof PotionJarTile jar) {
                 potionData = jar.getData();
                 jar.remove(100);
             }

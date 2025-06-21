@@ -19,13 +19,13 @@ import java.util.List;
 import java.util.function.Function;
 
 public class InvUtil {
-    public static List<FilterableItemHandler> adjacentInventories(Level level, BlockPos pos){
+    public static List<FilterableItemHandler> adjacentInventories(Level level, BlockPos pos) {
         List<FilterableItemHandler> inventories = new ArrayList<>();
         for (Direction d : Direction.values()) {
             BlockPos relativePos = pos.relative(d);
 
             IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, relativePos, level.getBlockState(relativePos), null, d.getOpposite());
-            if(handler == null)
+            if (handler == null)
                 continue;
             inventories.add(new FilterableItemHandler(handler, FilterSet.forPosition(level, relativePos)));
         }
@@ -34,18 +34,18 @@ public class InvUtil {
 
     // Use FilterSet
     @Deprecated(forRemoval = true)
-    public static List<Function<ItemStack, ItemScroll.SortPref>> filtersOnTile(@Nullable BlockEntity thisTile){
-        if(thisTile == null){
+    public static List<Function<ItemStack, ItemScroll.SortPref>> filtersOnTile(@Nullable BlockEntity thisTile) {
+        if (thisTile == null) {
             return new ArrayList<>();
         }
         FilterSet filterSet = FilterSet.forPosition(thisTile.getLevel(), thisTile.getBlockPos());
-        if(filterSet instanceof FilterSet.ListSet listSet){
+        if (filterSet instanceof FilterSet.ListSet listSet) {
             return listSet.filters;
         }
         return new ArrayList<>();
     }
 
-    public static List<FilterableItemHandler> fromPlayer(Player player){
+    public static List<FilterableItemHandler> fromPlayer(Player player) {
         List<FilterableItemHandler> list = new ArrayList<>();
         list.add(new FilterableItemHandler(new PlayerMainInvWrapper(player.inventory), new ArrayList<>()));
         return list;

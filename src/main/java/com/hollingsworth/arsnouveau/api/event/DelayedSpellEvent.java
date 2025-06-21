@@ -16,6 +16,7 @@ public class DelayedSpellEvent implements ITimedEvent {
     public final Level world;
     public final boolean showParticles;
     public ParticleEmitter emitter;
+
     public DelayedSpellEvent(int delay, HitResult result, Level world, SpellResolver resolver) {
         this(delay, result, world, resolver, true);
     }
@@ -34,11 +35,11 @@ public class DelayedSpellEvent implements ITimedEvent {
         if (duration <= 0 && serverSide) {
             resolveSpell();
         } else if (!serverSide && result != null) {
-            if(emitter == null){
+            if (emitter == null) {
                 DelayTimeline delayTimeline = resolver.spell.particleTimeline().get(ParticleTimelineRegistry.DELAY_TIMELINE.get());
                 emitter = new ParticleEmitter(result::getLocation, () -> new Vec2(0, 0), delayTimeline.onTickEffect);
             }
-            if(showParticles){
+            if (showParticles) {
                 emitter.tick(world);
             }
         }

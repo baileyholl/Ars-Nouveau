@@ -42,6 +42,7 @@ public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILigh
     public boolean renderInvalid = true;
     protected boolean[] renderDirections = new boolean[6];
     public boolean disableRender = false;
+
     public MirrorWeaveTile(BlockEntityType type, BlockPos pos, BlockState state) {
         super(type, pos, state);
         this.mimicState = getDefaultBlockState();
@@ -52,7 +53,8 @@ public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILigh
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar data) {}
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+    }
 
     AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
@@ -64,17 +66,17 @@ public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILigh
     @Override
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
-        tag.put("mimic_state",  NbtUtils.writeBlockState(mimicState));
+        tag.put("mimic_state", NbtUtils.writeBlockState(mimicState));
     }
 
     @Override
     protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(pTag, pRegistries);
         renderInvalid = true;
-        if(pTag.contains("mimic_state")) {
+        if (pTag.contains("mimic_state")) {
             HolderGetter<Block> holdergetter = this.level != null ? this.level.holderLookup(Registries.BLOCK) : BuiltInRegistries.BLOCK.asLookup();
             mimicState = NbtUtils.readBlockState(holdergetter, pTag.getCompound("mimic_state"));
-        }else{
+        } else {
             mimicState = getDefaultBlockState();
         }
     }
@@ -101,7 +103,7 @@ public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILigh
                         object2bytelinkedopenhashmap.removeLastByte();
                     }
 
-                    object2bytelinkedopenhashmap.putAndMoveToFirst(block$blockstatepairkey, (byte)(flag ? 1 : 0));
+                    object2bytelinkedopenhashmap.putAndMoveToFirst(block$blockstatepairkey, (byte) (flag ? 1 : 0));
                     return flag;
                 }
             }
@@ -110,15 +112,15 @@ public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILigh
         }
     }
 
-    public BlockState getDefaultBlockState(){
+    public BlockState getDefaultBlockState() {
         return BlockRegistry.MIRROR_WEAVE.defaultBlockState();
     }
 
     /**
      * Which state should be used for culling renderable sides
      */
-    public BlockState getStateForCulling(){
-        if(this.mimicState.is(BlockTagProvider.FALSE_OCCLUSION)){
+    public BlockState getStateForCulling() {
+        if (this.mimicState.is(BlockTagProvider.FALSE_OCCLUSION)) {
             return Blocks.COBBLESTONE.defaultBlockState();
         }
         return mimicState;
@@ -135,11 +137,11 @@ public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILigh
         updateBlock();
     }
 
-    public void setRenderDirection(Direction direction, boolean render){
+    public void setRenderDirection(Direction direction, boolean render) {
         renderDirections[direction.ordinal()] = render;
     }
 
-    public boolean shouldRenderDirection(Direction direction){
+    public boolean shouldRenderDirection(Direction direction) {
         return renderDirections[direction.ordinal()];
     }
 
@@ -150,10 +152,10 @@ public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILigh
 
     @Override
     public boolean onDispel(@NotNull LivingEntity caster) {
-        if(this.mimicState.getBlock() == this.getDefaultBlockState().getBlock()){
+        if (this.mimicState.getBlock() == this.getDefaultBlockState().getBlock()) {
             return false;
         }
-        if(level.getBlockState(worldPosition).getBlock() instanceof MirrorWeave mirrorWeave){
+        if (level.getBlockState(worldPosition).getBlock() instanceof MirrorWeave mirrorWeave) {
             this.nextState = this.getDefaultBlockState();
             mirrorWeave.setMimicState(level, worldPosition, true);
         }

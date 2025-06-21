@@ -77,7 +77,7 @@ public class ArsNouveauAPI {
                 if (ib instanceof BrewingRecipe brewingRecipe)
                     brewingRecipes.add(brewingRecipe);
             });
-            for(PotionBrewing.Mix<Potion> mix : world.potionBrewing().potionMixes){
+            for (PotionBrewing.Mix<Potion> mix : world.potionBrewing().potionMixes) {
                 brewingRecipes.add(new BrewingRecipe(
                         PotionIngredient.fromPotion(mix.from()),
                         mix.ingredient(),
@@ -118,7 +118,7 @@ public class ArsNouveauAPI {
         return true;
     }
 
-    public void onResourceReload(){
+    public void onResourceReload() {
         this.brewingRecipes = new ArrayList<>();
         MultiRecipeWrapper.RECIPE_CACHE = new HashMap<>();
         EffectWololo.recipeCache = new FixedStack<>(EffectWololo.MAX_RECIPE_CACHE);

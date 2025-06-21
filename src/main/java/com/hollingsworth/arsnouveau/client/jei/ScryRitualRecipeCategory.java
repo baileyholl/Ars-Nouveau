@@ -72,7 +72,7 @@ public class ScryRitualRecipeCategory implements IRecipeCategory<ScryRitualRecip
             items.add(blockHolder.value().asItem().getDefaultInstance());
         }
         ItemStack[] stacks = items.toArray(new ItemStack[]{});
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 120-16-6, 4).addIngredients(Ingredient.of(stacks));
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 120 - 16 - 6, 4).addIngredients(Ingredient.of(stacks));
         builder.addSlot(RecipeIngredientRole.INPUT, 6, 4).addIngredients(Ingredient.of(recipe.augment()));
     }
 }

@@ -10,14 +10,14 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
-public class PacketAnimEntity extends AbstractPacket{
+public class PacketAnimEntity extends AbstractPacket {
     public static final Type<PacketAnimEntity> TYPE = new Type<>(ArsNouveau.prefix("anim_entity"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketAnimEntity> CODEC = StreamCodec.ofMember(PacketAnimEntity::toBytes, PacketAnimEntity::new);
 
     int entityID;
     int anim;
 
-    public PacketAnimEntity(Entity entity){
+    public PacketAnimEntity(Entity entity) {
         this.entityID = entity.getId();
         this.anim = 0;
     }

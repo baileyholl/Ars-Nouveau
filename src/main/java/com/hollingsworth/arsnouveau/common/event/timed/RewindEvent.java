@@ -29,7 +29,7 @@ public class RewindEvent implements ITimedEvent {
     public long startGameTime;
     public boolean registeredEvents;
 
-    public RewindEvent(long gameTime, int ticksToRewind, @Nullable SpellContext spellContext){
+    public RewindEvent(long gameTime, int ticksToRewind, @Nullable SpellContext spellContext) {
         this.startGameTime = gameTime;
         this.ticksToRewind = ticksToRewind;
         this.context = spellContext;
@@ -41,7 +41,7 @@ public class RewindEvent implements ITimedEvent {
         respectsGravity = entity != null && !entity.isNoGravity();
     }
 
-    public RewindEvent(@Nullable Entity entity, long gameTime, int ticksToRewind, @Nullable SpellContext context){
+    public RewindEvent(@Nullable Entity entity, long gameTime, int ticksToRewind, @Nullable SpellContext context) {
         this(entity, gameTime, ticksToRewind);
         this.context = context;
     }
@@ -56,34 +56,34 @@ public class RewindEvent implements ITimedEvent {
             this.registeredEvents = true;
         }
         long eventGameTime = startGameTime - this.rewindTicks;
-        if(entity instanceof IRewindable rewindable){
+        if (entity instanceof IRewindable rewindable) {
             rewindable.setRewinding(true);
-            if(!rewindable.getMotions().empty()){
+            if (!rewindable.getMotions().empty()) {
                 RewindEntityData data = rewindable.getMotions().pop();
                 data.onRewind(this);
             }
         }
-        if(context != null){
+        if (context != null) {
             RewindAttachment rewindAttachment = RewindAttachment.get(context);
             List<IRewindCallback> contextData = rewindAttachment.getForTime(eventGameTime);
             // Lock and prevent adding rewind events for the current tick. Otherwise you get CME or infinte loops
             rewindAttachment.setLockedTime(eventGameTime);
-            if(contextData != null){
-                for(IRewindCallback callback : contextData){
+            if (contextData != null) {
+                for (IRewindCallback callback : contextData) {
                     callback.onRewind(this);
                 }
             }
             rewindAttachment.setLockedTime(-1);
         }
         rewindTicks++;
-        if(rewindTicks >= ticksToRewind){
+        if (rewindTicks >= ticksToRewind) {
             stop();
         }
     }
 
-    public void stop(){
+    public void stop() {
         doneRewinding = true;
-        if(entity instanceof IRewindable rewindable){
+        if (entity instanceof IRewindable rewindable) {
             rewindable.setRewinding(false);
             entity.setDeltaMovement(Vec3.ZERO);
             this.removeWeightlessness();

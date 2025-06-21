@@ -83,11 +83,11 @@ public class Spell {
     }
 
     @Deprecated(forRemoval = true)
-    public ConfiguredSpellSound sound(){
+    public ConfiguredSpellSound sound() {
         return sound;
     }
 
-    public Iterable<AbstractSpellPart> recipe(){
+    public Iterable<AbstractSpellPart> recipe() {
         return recipe;
     }
 
@@ -95,19 +95,19 @@ public class Spell {
      * DO NOT MUTATE.
      * See {@link Spell#mutable()} for a mutable version.
      */
-    public List<AbstractSpellPart> unsafeList(){
+    public List<AbstractSpellPart> unsafeList() {
         return recipe;
     }
 
-    public AbstractSpellPart get(int index){
+    public AbstractSpellPart get(int index) {
         return recipe.get(index);
     }
 
-    public int size(){
+    public int size() {
         return recipe.size();
     }
 
-    public int indexOf(AbstractSpellPart part){
+    public int indexOf(AbstractSpellPart part) {
         return recipe.indexOf(part);
     }
 
@@ -138,7 +138,7 @@ public class Spell {
         return new Spell(name, color, sound, recipe, particleTimeline);
     }
 
-    public Spell withSound(@NotNull ConfiguredSpellSound sound){
+    public Spell withSound(@NotNull ConfiguredSpellSound sound) {
         return new Spell(name, color, sound, recipe, particleTimeline);
     }
 
@@ -151,16 +151,16 @@ public class Spell {
     }
 
     @Deprecated(forRemoval = true)
-    public ParticleColor color(){
+    public ParticleColor color() {
         return color;
     }
 
-    public String name(){
+    public String name() {
         return name;
     }
 
 
-    public TimelineMap particleTimeline(){
+    public TimelineMap particleTimeline() {
         return particleTimeline;
     }
 
@@ -199,18 +199,18 @@ public class Spell {
         return (int) getAugments(startPosition, caster).stream().filter(a -> a.equals(augment)).count();
     }
 
-    public int getCost(){
+    public int getCost() {
         int cost = 0;
         AbstractSpellPart augmentedPart = null;
-        for(AbstractSpellPart part : recipe){
-            if(part == null)
+        for (AbstractSpellPart part : recipe) {
+            if (part == null)
                 continue;
-            if(!(part instanceof AbstractAugment))
+            if (!(part instanceof AbstractAugment))
                 augmentedPart = part;
 
-            if(augmentedPart != null && part instanceof AbstractAugment augment) {
+            if (augmentedPart != null && part instanceof AbstractAugment augment) {
                 cost += augment.getCostForPart(augmentedPart);
-            }else {
+            } else {
                 cost += part.getCastingCost();
             }
         }
@@ -256,11 +256,11 @@ public class Spell {
         return this;
     }
 
-    public List<ResourceLocation> serializeRecipe(){
+    public List<ResourceLocation> serializeRecipe() {
         return this.recipe.stream().map(AbstractSpellPart::getRegistryName).toList();
     }
 
-    public Mutable mutable(){
+    public Mutable mutable() {
         return new Mutable(new ArrayList<>(recipe), name, color, sound, particleTimeline);
     }
 
@@ -277,7 +277,7 @@ public class Spell {
         return Objects.hash(recipe, name, color, sound, particleTimeline);
     }
 
-    public static class Mutable{
+    public static class Mutable {
         public List<AbstractSpellPart> recipe;
         public String name;
         public ParticleColor color;
@@ -317,7 +317,7 @@ public class Spell {
         }
 
 
-        public Spell immutable(){
+        public Spell immutable() {
             return new Spell(name, color, sound, recipe, particleTimeline);
         }
     }

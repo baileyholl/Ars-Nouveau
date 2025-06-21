@@ -7,7 +7,7 @@ import net.minecraft.world.entity.player.Player;
 
 public class GuiUtils {
 
-    public static boolean isMouseInRelativeRange(int mouseX, int mouseY, AbstractWidget widget){
+    public static boolean isMouseInRelativeRange(int mouseX, int mouseY, AbstractWidget widget) {
         return isMouseInRelativeRange(mouseX, mouseY, widget.x, widget.y, widget.getWidth(), widget.getHeight());
     }
 

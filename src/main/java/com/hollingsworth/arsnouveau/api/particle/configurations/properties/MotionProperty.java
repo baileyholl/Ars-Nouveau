@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class MotionProperty extends BaseProperty<MotionProperty>{
+public class MotionProperty extends BaseProperty<MotionProperty> {
     private static MotionProperty instance = new MotionProperty();
     public static MapCodec<MotionProperty> CODEC = MapCodec.unit(instance);
 
@@ -26,15 +26,16 @@ public class MotionProperty extends BaseProperty<MotionProperty>{
 
     TimelineOption timelineOption;
 
-    private MotionProperty(){}
+    private MotionProperty() {
+    }
 
     List<BaseProperty<?>> nestedProps;
 
-    public MotionProperty(TimelineOption timelineOption){
+    public MotionProperty(TimelineOption timelineOption) {
         this(timelineOption, new ArrayList<>());
     }
 
-    public MotionProperty(TimelineOption timelineOption, List<BaseProperty<?>> props){
+    public MotionProperty(TimelineOption timelineOption, List<BaseProperty<?>> props) {
         super(timelineOption.entry().particleOptions().map);
         this.timelineOption = timelineOption;
         nestedProps = props;
@@ -70,12 +71,14 @@ public class MotionProperty extends BaseProperty<MotionProperty>{
 
             @Override
             public void renderIcon(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float partialTicks) {
-                graphics.blit(timelineOption.entry().motion().getType().getIconLocation(), x, y, 0, 0, 14 , 14, 14, 14, 14);
+                graphics.blit(timelineOption.entry().motion().getType().getIconLocation(), x, y, 0, 0, 14, 14, 14, 14, 14);
             }
-            public Component timelineName(){
+
+            public Component timelineName() {
                 ResourceLocation id = timelineOption.id();
                 return Component.translatable(id.getNamespace() + ".timeline." + id.getPath());
             }
+
             @Override
             public Component getButtonTitle() {
                 return Component.literal(timelineName().getString() + ": " + timelineOption.entry().motion().getType().getName().getString());

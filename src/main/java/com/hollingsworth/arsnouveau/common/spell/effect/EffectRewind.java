@@ -39,11 +39,11 @@ public class EffectRewind extends AbstractEffect {
         super.onResolveEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
         int ticksToRewind = getRewindTicks(spellStats);
         Entity entity = rayTraceResult.getEntity();
-        if(!entity.getType().is(EntityTags.REWIND_BLACKLIST) && entity instanceof IRewindable rewindable && !rewindable.isRewinding()){
+        if (!entity.getType().is(EntityTags.REWIND_BLACKLIST) && entity instanceof IRewindable rewindable && !rewindable.isRewinding()) {
             var delayEvent = new DelayedSpellEvent(ticksToRewind, rayTraceResult, world, resolver);
             spellContext.delay(delayEvent);
             EventQueue.getServerInstance().addEvent(new RewindEvent(entity, world.getGameTime(), ticksToRewind, spellContext));
-            if(rewindable instanceof Player player){
+            if (rewindable instanceof Player player) {
                 Networking.sendToNearbyClient(world, player, new PacketClientRewindEffect(ticksToRewind, player));
             }
 
@@ -62,26 +62,26 @@ public class EffectRewind extends AbstractEffect {
         EventQueue.getServerInstance().addEvent(delayEvent);
     }
 
-    public int getRewindTicks(SpellStats spellStats){
+    public int getRewindTicks(SpellStats spellStats) {
         double multiplier = spellStats.getDurationMultiplier();
         int ticksToRewind = BASE_REWIND_TIME.get();
-        if(multiplier > 0){
+        if (multiplier > 0) {
             ticksToRewind = (int) (ticksToRewind + EXTEND_TIME.get() * multiplier);
-        }else if(multiplier < 0){
+        } else if (multiplier < 0) {
             ticksToRewind = (int) (ticksToRewind - DURATION_DOWN_TIME.get() * Math.abs(multiplier));
         }
         return ticksToRewind;
     }
 
-    public static boolean shouldAllowMovement(IRewindable rewindable){
+    public static boolean shouldAllowMovement(IRewindable rewindable) {
         return !rewindable.isRewinding();
     }
 
-    public static boolean shouldRecordData(Entity entity, IRewindable rewindable){
-        if(entity.level.isClientSide && !(entity instanceof Player)){
+    public static boolean shouldRecordData(Entity entity, IRewindable rewindable) {
+        if (entity.level.isClientSide && !(entity instanceof Player)) {
             return false;
         }
-        if(!EffectRewind.INSTANCE.isEnabled() || entity.getType().is(EntityTags.REWIND_BLACKLIST)){
+        if (!EffectRewind.INSTANCE.isEnabled() || entity.getType().is(EntityTags.REWIND_BLACKLIST)) {
             return false;
         }
         return !rewindable.isRewinding();
@@ -112,7 +112,7 @@ public class EffectRewind extends AbstractEffect {
         map.put(AugmentDurationDown.INSTANCE, "Decreases the duration to rewind.");
     }
 
-    public int getEntityMaxTrackingTicks(){
+    public int getEntityMaxTrackingTicks() {
         return GENERIC_INT.get();
     }
 
@@ -136,7 +136,6 @@ public class EffectRewind extends AbstractEffect {
     protected @NotNull Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
     }
-
 
 
     @Override

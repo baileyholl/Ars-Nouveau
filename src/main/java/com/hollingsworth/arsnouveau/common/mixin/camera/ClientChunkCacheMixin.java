@@ -115,8 +115,7 @@ public abstract class ClientChunkCacheMixin implements ANIChunkStorageProvider {
                 chunk = new LevelChunk(level, chunkPos);
                 chunk.replaceWithPacketData(buffer, chunkTag, tagOutputConsumer);
                 cameraStorage.replace(index, chunk);
-            }
-            else
+            } else
                 chunk.replaceWithPacketData(buffer, chunkTag, tagOutputConsumer);
 
             level.onChunkLoaded(chunkPos);

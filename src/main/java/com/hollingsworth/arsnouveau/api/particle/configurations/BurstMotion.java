@@ -19,7 +19,7 @@ public class BurstMotion extends ParticleMotion {
 
     public static MapCodec<BurstMotion> CODEC = buildPropCodec(BurstMotion::new);
 
-    public static StreamCodec<RegistryFriendlyByteBuf, BurstMotion> STREAM =  buildStreamCodec(BurstMotion::new);
+    public static StreamCodec<RegistryFriendlyByteBuf, BurstMotion> STREAM = buildStreamCodec(BurstMotion::new);
 
     public BurstMotion() {
         this(new PropMap());

@@ -23,7 +23,7 @@ public class ConjureDesertRitual extends ConjureBiomeRitual {
     @Override
     public void onStart(@Nullable Player player) {
         super.onStart(player);
-        if(getConsumedItems().stream().anyMatch(i -> i.is(ItemTags.TERRACOTTA))){
+        if (getConsumedItems().stream().anyMatch(i -> i.is(ItemTags.TERRACOTTA))) {
             biome = Biomes.BADLANDS;
         }
     }
@@ -31,13 +31,13 @@ public class ConjureDesertRitual extends ConjureBiomeRitual {
     @Override
     public BlockState stateForPos(BlockPos placePos) {
         boolean isBadlands = getConsumedItems().stream().anyMatch(i -> i.is(ItemTags.TERRACOTTA));
-        if(isBadlands){
+        if (isBadlands) {
             int depth = getPos().getY() - placePos.getY();
-            if(depth == 1){
+            if (depth == 1) {
                 return Blocks.RED_SAND.defaultBlockState();
-            }else if(depth == 2){
+            } else if (depth == 2) {
                 return Blocks.ORANGE_TERRACOTTA.defaultBlockState();
-            }else if(depth == 3 || depth == 4){
+            } else if (depth == 3 || depth == 4) {
                 return Blocks.RED_TERRACOTTA.defaultBlockState();
             }
             return Blocks.TERRACOTTA.defaultBlockState();
@@ -63,14 +63,14 @@ public class ConjureDesertRitual extends ConjureBiomeRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( RitualLib.DESERT);
+        return ArsNouveau.prefix(RitualLib.DESERT);
     }
 
     @Override
-    public void read(HolderLookup.Provider provider,  CompoundTag tag) {
+    public void read(HolderLookup.Provider provider, CompoundTag tag) {
         super.read(provider, tag);
         boolean isBadlands = getConsumedItems().stream().anyMatch(i -> i.is(ItemTags.TERRACOTTA));
-        if(isBadlands){
+        if (isBadlands) {
             biome = Biomes.BADLANDS;
         }
     }

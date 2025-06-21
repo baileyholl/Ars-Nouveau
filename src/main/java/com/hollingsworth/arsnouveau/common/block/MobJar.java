@@ -79,7 +79,7 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
                 return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
             }
         }
-        
+
         var jarEntity = tile.getEntity();
         if (jarEntity == null && !pLevel.isClientSide) {
             if (stack.getItem() instanceof SpawnEggItem spawnEggItem) {
@@ -101,9 +101,9 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
             }
         }
         if (jarEntity != null
-            && !(jarEntity instanceof PlayerRideable)
-            && !JarBehaviorRegistry.containsEntity(jarEntity)
-            && !(jarEntity instanceof ContainerEntity)) {
+                && !(jarEntity instanceof PlayerRideable)
+                && !JarBehaviorRegistry.containsEntity(jarEntity)
+                && !(jarEntity instanceof ContainerEntity)) {
             pPlayer.interactOn(jarEntity, pHand);
             if (!jarEntity.isAlive() || jarEntity.isRemoved()) {
                 tile.removeEntity();

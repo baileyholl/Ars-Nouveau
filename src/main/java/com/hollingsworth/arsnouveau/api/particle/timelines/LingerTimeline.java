@@ -18,7 +18,7 @@ import net.minecraft.network.codec.StreamCodec;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class LingerTimeline extends BaseTimeline<LingerTimeline>{
+public class LingerTimeline extends BaseTimeline<LingerTimeline> {
     public static final MapCodec<LingerTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             TimelineEntryData.CODEC.fieldOf("trailEffect").forGetter(i -> i.trailEffect),
             TimelineEntryData.CODEC.fieldOf("onResolvingEffect").forGetter(i -> i.onResolvingEffect),
@@ -39,22 +39,22 @@ public class LingerTimeline extends BaseTimeline<LingerTimeline>{
     public TimelineEntryData onResolvingEffect;
     public SoundProperty resolveSound = new SoundProperty();
 
-    public LingerTimeline(){
+    public LingerTimeline() {
         this(new TimelineEntryData(new UpwardsFieldMotion(), new PropertyParticleOptions()),
                 new TimelineEntryData(new BurstMotion(), new PropertyParticleOptions()), new SoundProperty());
     }
 
-    public LingerTimeline(TimelineEntryData trailEffect, TimelineEntryData onResolvingEffect, SoundProperty resolveSound){
+    public LingerTimeline(TimelineEntryData trailEffect, TimelineEntryData onResolvingEffect, SoundProperty resolveSound) {
         this.trailEffect = trailEffect;
         this.onResolvingEffect = onResolvingEffect;
         this.resolveSound = resolveSound;
     }
 
-    public TimelineEntryData trailEffect(){
+    public TimelineEntryData trailEffect() {
         return trailEffect;
     }
 
-    public TimelineEntryData onResolvingEffect(){
+    public TimelineEntryData onResolvingEffect() {
         return onResolvingEffect;
     }
 

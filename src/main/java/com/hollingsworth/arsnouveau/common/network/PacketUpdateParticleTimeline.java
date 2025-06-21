@@ -13,7 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
-public class PacketUpdateParticleTimeline extends AbstractPacket{
+public class PacketUpdateParticleTimeline extends AbstractPacket {
 
     int castSlot;
     TimelineMap color;
@@ -44,7 +44,7 @@ public class PacketUpdateParticleTimeline extends AbstractPacket{
         ItemStack stack = player.getItemInHand(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND);
         if (stack.getItem() instanceof SpellBook) {
             AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
-            if(caster != null) {
+            if (caster != null) {
                 caster.setParticles(color, castSlot).saveToStack(stack);
                 Networking.sendToPlayerClient(new PacketUpdateBookGUI(stack), player);
             }

@@ -66,11 +66,11 @@ public class EntitySpellArrow extends Arrow {
     }
 
 
-    public SpellResolver resolver(){
+    public SpellResolver resolver() {
         return this.entityData.get(SPELL_RESOLVER);
     }
 
-    public void setResolver(SpellResolver resolver){
+    public void setResolver(SpellResolver resolver) {
         this.entityData.set(SPELL_RESOLVER, resolver);
         buildEmitters();
     }
@@ -217,7 +217,7 @@ public class EntitySpellArrow extends Arrow {
         this.checkInsideBlocks();
 
         if (level.isClientSide && tickCount > 1) {
-           playParticles();
+            playParticles();
         }
     }
 
@@ -256,19 +256,19 @@ public class EntitySpellArrow extends Arrow {
     protected void onHitEntity(EntityHitResult p_213868_1_) {
         super.onHitEntity(p_213868_1_);
         Entity entity = p_213868_1_.getEntity();
-        float f = (float)this.getDeltaMovement().length();
+        float f = (float) this.getDeltaMovement().length();
         double d0 = this.getBaseDamage();
         Entity entity1 = this.getOwner();
         DamageSource damagesource = this.damageSources().arrow(this, entity1 != null ? entity1 : this);
         if (level instanceof ServerLevel serverlevel) {
-            d0 = EnchantmentHelper.modifyDamage(serverlevel, this.getWeaponItem(), entity, damagesource, (float)d0);
+            d0 = EnchantmentHelper.modifyDamage(serverlevel, this.getWeaponItem(), entity, damagesource, (float) d0);
         }
 
-        int j = Mth.ceil(Mth.clamp((double)f * d0, 0.0, 2.147483647E9));
+        int j = Mth.ceil(Mth.clamp((double) f * d0, 0.0, 2.147483647E9));
 
         if (this.isCritArrow()) {
-            long k = (long)this.random.nextInt(j / 2 + 2);
-            j = (int)Math.min(k + (long)j, 2147483647L);
+            long k = (long) this.random.nextInt(j / 2 + 2);
+            j = (int) Math.min(k + (long) j, 2147483647L);
         }
 
         if (entity1 instanceof LivingEntity livingentity1) {
@@ -281,7 +281,7 @@ public class EntitySpellArrow extends Arrow {
             entity.igniteForSeconds(5.0F);
         }
 
-        if (entity.hurt(damagesource, (float)j)) {
+        if (entity.hurt(damagesource, (float) j)) {
             if (flag) {
                 return;
             }
@@ -349,7 +349,7 @@ public class EntitySpellArrow extends Arrow {
 
     public void playResolve() {
         this.playSound(this.getDefaultHitGroundSoundEvent(), 1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
-        if(this.resolveEmitter != null){
+        if (this.resolveEmitter != null) {
             this.resolveEmitter.tick(level);
         }
     }

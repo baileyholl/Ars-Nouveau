@@ -163,7 +163,8 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar data) {}
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+    }
 
     AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 

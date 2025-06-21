@@ -15,7 +15,7 @@ public class RepoControllerModel extends GenericModel<RepositoryCatalogTile> {
 
     @Override
     public ResourceLocation getTextureResource(RepositoryCatalogTile animatable) {
-        if(animatable == null){
+        if (animatable == null) {
             return EMPTY;
         }
         return animatable.scrollStack.isEmpty() ? EMPTY : FILLED;

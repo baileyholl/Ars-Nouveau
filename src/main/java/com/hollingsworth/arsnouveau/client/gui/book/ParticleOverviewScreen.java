@@ -63,7 +63,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
         LAST_SELECTED_PART = selectedTimeline;
     }
 
-    public IParticleTimelineType<?> findTimelineFromSlot(){
+    public IParticleTimelineType<?> findTimelineFromSlot() {
         IParticleTimelineType<?> timeline = null;
         for (AbstractSpellPart spellPart : caster.getSpell(selectedSpellSlot).recipe()) {
             var allTimelines = ParticleTimelineRegistry.PARTICLE_TIMELINE_REGISTRY.entrySet();
@@ -72,7 +72,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
                     timeline = entry.getValue();
                 }
             }
-            if(timeline != null) {
+            if (timeline != null) {
                 break;
             }
         }
@@ -82,7 +82,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
         return timeline;
     }
 
-    public void initSlotChange(){
+    public void initSlotChange() {
         this.timelineMap = caster.getParticles(selectedSpellSlot).mutable();
         selectedTimeline = findTimelineFromSlot();
         LAST_SELECTED_PART = selectedTimeline;
@@ -93,25 +93,25 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
     @Override
     public void init() {
         super.init();
-        addBackButton(previousScreen, b ->{
-            if(this.previousScreen instanceof GuiSpellBook guiSpellBook){
+        addBackButton(previousScreen, b -> {
+            if (this.previousScreen instanceof GuiSpellBook guiSpellBook) {
                 guiSpellBook.selectedSpellSlot = selectedSpellSlot;
                 guiSpellBook.onBookstackUpdated(bookStack);
             }
         });
-        addSaveButton((b) ->{
+        addSaveButton((b) -> {
             int hash = timelineMap.immutable().hashCode();
             ParticleOverviewScreen.lastOpenedHash = hash;
             Networking.sendToServer(new PacketUpdateParticleTimeline(selectedSpellSlot, timelineMap.immutable(), this.hand == InteractionHand.MAIN_HAND));
         });
         timelineButton = addRenderableWidget(new DocEntryButton(bookLeft + LEFT_PAGE_OFFSET, bookTop + 36, selectedTimeline.getSpellPart().glyphItem.getDefaultInstance(), Component.translatable(selectedTimeline.getSpellPart().getLocaleName()), (b) -> onTimelineSelectorHit()));
-        if(currentlySelectedButton == null){
+        if (currentlySelectedButton == null) {
             setSelectedButton(timelineButton);
         }
-        if(selectedProperty == null) {
+        if (selectedProperty == null) {
             addTimelineSelectionWidgets();
-        }else{
-            if(propertyWidgetProvider != null){
+        } else {
+            if (propertyWidgetProvider != null) {
                 List<AbstractWidget> propertyWidgets = new ArrayList<>();
                 propertyWidgetProvider.x = bookLeft + RIGHT_PAGE_OFFSET;
                 propertyWidgetProvider.y = bookTop + PAGE_TOP_OFFSET;
@@ -120,19 +120,19 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
                 for (AbstractWidget widget : propertyWidgets) {
                     addRightPageWidget(widget);
                 }
-            }else {
+            } else {
                 onPropertySelected(selectedProperty);
             }
         }
         initLeftSideButtons();
 
-        initSpellSlots((slotButton) ->{
+        initSpellSlots((slotButton) -> {
             initSlotChange();
             rebuildWidgets();
         });
     }
 
-    public void onTimelineSelectorHit(){
+    public void onTimelineSelectorHit() {
         addTimelineSelectionWidgets();
         setSelectedButton(timelineButton);
         selectedProperty = null;
@@ -141,13 +141,13 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
     public static void openScreen(GuiSpellBook parentScreen, ItemStack stack, int slot, InteractionHand stackHand) {
         AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
         int hash = caster.getSpell(slot).particleTimeline().hashCode();
-        if(LAST_SELECTED_PART == null || ParticleOverviewScreen.lastOpenedHash != hash || ParticleOverviewScreen.lastScreen == null){
+        if (LAST_SELECTED_PART == null || ParticleOverviewScreen.lastOpenedHash != hash || ParticleOverviewScreen.lastScreen == null) {
             LAST_SELECTED_PART = null;
             ParticleOverviewScreen.lastOpenedHash = hash;
             Minecraft.getInstance().setScreen(new ParticleOverviewScreen(parentScreen, slot, stackHand));
-        }else{
+        } else {
             ParticleOverviewScreen screen = ParticleOverviewScreen.lastScreen;
-            if(screen.selectedSpellSlot != slot){
+            if (screen.selectedSpellSlot != slot) {
                 screen.selectedSpellSlot = slot;
                 screen.initSlotChange();
             }
@@ -180,9 +180,9 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
     @Override
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
 
-        if(propertyWidgetProvider != null && GuiHelpers.isMouseInRelativeRange((int) pMouseX, (int) pMouseY, propertyWidgetProvider.x,
-                propertyWidgetProvider.y, propertyWidgetProvider.width, propertyWidgetProvider.height)){
-            if(propertyWidgetProvider.mouseScrolled(pMouseX, pMouseY, pScrollX, pScrollY)){
+        if (propertyWidgetProvider != null && GuiHelpers.isMouseInRelativeRange((int) pMouseX, (int) pMouseY, propertyWidgetProvider.x,
+                propertyWidgetProvider.y, propertyWidgetProvider.width, propertyWidgetProvider.height)) {
+            if (propertyWidgetProvider.mouseScrolled(pMouseX, pMouseY, pScrollX, pScrollY)) {
                 return true;
             }
         }
@@ -206,7 +206,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
         List<AbstractWidget> widgets = new ArrayList<>();
         widgets.addAll(getPropButtons(timeline.getProperties(), new ArrayList<>(), 0));
 
-        if(rowOffset >= widgets.size()){
+        if (rowOffset >= widgets.size()) {
             rowOffset = 0;
         }
         List<AbstractWidget> slicedWidgets = widgets.subList(rowOffset, widgets.size());
@@ -218,14 +218,14 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
         }
         hasMoreElements = rowOffset + LEFT_PAGE_SLICE < widgets.size();
         hasPreviousElements = rowOffset > 0;
-        if(hasPreviousElements){
+        if (hasPreviousElements) {
             addLeftPageWidget(new GuiImageButton(bookLeft + LEFT_PAGE_OFFSET + 87, bookBottom - 30, DocAssets.BUTTON_UP, (button) -> {
                 rowOffset = Math.max(rowOffset - 1, 0);
                 initLeftSideButtons();
             }).withHoverImage(DocAssets.BUTTON_UP_HOVER));
         }
 
-        if(hasMoreElements){
+        if (hasMoreElements) {
             addLeftPageWidget(new GuiImageButton(bookLeft + LEFT_PAGE_OFFSET + 103, bookBottom - 30, DocAssets.BUTTON_DOWN, (button) -> {
                 rowOffset = rowOffset + 1;
                 initLeftSideButtons();
@@ -233,8 +233,8 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
         }
     }
 
-    public List<PropertyButton> getPropButtons(List<BaseProperty<?>> props, List<PropertyButton> buttons, int depth){
-        if(depth > 3) {
+    public List<PropertyButton> getPropButtons(List<BaseProperty<?>> props, List<PropertyButton> buttons, int depth) {
+        if (depth > 3) {
             return buttons;
         }
         for (BaseProperty property : props) {
@@ -250,8 +250,8 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
         DocAssets.BlitInfo texture = DocAssets.DOUBLE_NESTED_ENTRY_BUTTON;
         DocAssets.BlitInfo selectedTexture = DocAssets.DOUBLE_NESTED_ENTRY_BUTTON_SELECTED;
         int xOffset = 26;
-        switch (nestLevel){
-            case 0 ->{
+        switch (nestLevel) {
+            case 0 -> {
                 texture = DocAssets.NESTED_ENTRY_BUTTON;
                 selectedTexture = DocAssets.NESTED_ENTRY_BUTTON_SELECTED;
                 xOffset = 13;
@@ -272,7 +272,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
         var widgetProvider = property.buildWidgets(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, ONE_PAGE_HEIGHT);
         return new PropertyButton(bookLeft + LEFT_PAGE_OFFSET + xOffset, bookTop + 51 + 15 * (yOffset), texture, selectedTexture, widgetProvider, nestLevel, (button) -> {
             onPropertySelected(property);
-            if(button instanceof PropertyButton propertyButton){
+            if (button instanceof PropertyButton propertyButton) {
                 propertyButton.widgetProvider = propertyWidgetProvider;
                 setSelectedButton(propertyButton);
             }
@@ -299,7 +299,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
         timelineList.sort((o1, o2) -> CreativeTabRegistry.COMPARE_SPELL_TYPE_NAME.compare(o1.getValue().getSpellPart(), o2.getValue().getSpellPart()));
         for (int i = 0; i < timelineList.size(); i++) {
             var entry = timelineList.get(i);
-            var widget = new GlyphButton(bookLeft + RIGHT_PAGE_OFFSET + 2 + 20 * (i % 6), bookTop + 40 + 20*(i/6), entry.getValue().getSpellPart(), (button) -> {
+            var widget = new GlyphButton(bookLeft + RIGHT_PAGE_OFFSET + 2 + 20 * (i % 6), bookTop + 40 + 20 * (i / 6), entry.getValue().getSpellPart(), (button) -> {
                 selectedTimeline = entry.getValue();
                 rowOffset = 0;
                 LAST_SELECTED_PART = selectedTimeline;

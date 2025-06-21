@@ -8,18 +8,18 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.Objects;
 
-public class RainbowParticleColor extends ParticleColor{
+public class RainbowParticleColor extends ParticleColor {
 
-    public static final ResourceLocation ID = ArsNouveau.prefix( "rainbow");
+    public static final ResourceLocation ID = ArsNouveau.prefix("rainbow");
 
     public int tickOffset;
 
-    public RainbowParticleColor(int r, int g, int b){
+    public RainbowParticleColor(int r, int g, int b) {
         super(r, g, b);
         this.tickOffset = random.nextInt(1536);
     }
 
-    public RainbowParticleColor(CompoundTag compoundTag){
+    public RainbowParticleColor(CompoundTag compoundTag) {
         super(compoundTag);
         tickOffset = compoundTag.getInt("tickOffset");
     }

@@ -30,7 +30,7 @@ public class ParticleTile extends ModdedTile implements ITickable {
 
     @Override
     public void tick(Level level, BlockState state, BlockPos pos) {
-        if(!level.isClientSide && isTemporary){
+        if (!level.isClientSide && isTemporary) {
             if (ticksRemaining <= 0) {
                 level.removeBlock(pos, false);
                 return;
@@ -38,13 +38,13 @@ public class ParticleTile extends ModdedTile implements ITickable {
             ticksRemaining--;
         }
         if (level.isClientSide) {
-            if(particleEmitter != null){
+            if (particleEmitter != null) {
                 particleEmitter.tick(level);
             }
         }
     }
 
-    public void playSound(){
+    public void playSound() {
         if (this.timeline.randomSound != null && this.timeline.randomSound.sound != null) {
             this.timeline.randomSound.sound.playSound(level, this.getX(), this.getY(), this.getZ());
         }

@@ -8,28 +8,28 @@ import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantingApparatusR
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
-public class ApparatusEntry extends PedestalRecipeEntry{
+public class ApparatusEntry extends PedestalRecipeEntry {
     RecipeHolder<? extends EnchantingApparatusRecipe> apparatusRecipe;
 
     public ApparatusEntry(RecipeHolder<? extends EnchantingApparatusRecipe> recipe, BaseDocScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
         this.apparatusRecipe = recipe;
         this.title = Component.translatable("block.ars_nouveau.enchanting_apparatus");
-        if(recipe != null && recipe.value() != null) {
+        if (recipe != null && recipe.value() != null) {
             this.outputStack = recipe.value().result();
             this.ingredients = recipe.value().pedestalItems();
             this.reagentStack = recipe.value().reagent();
         }
     }
 
-    public static SinglePageCtor create(RecipeHolder<? extends EnchantingApparatusRecipe> recipe){
+    public static SinglePageCtor create(RecipeHolder<? extends EnchantingApparatusRecipe> recipe) {
         return (parent, x, y, width, height) -> new ApparatusEntry(recipe, parent, x, y, width, height);
     }
 
     @Override
     public void addExportProperties(JsonObject object) {
         super.addExportProperties(object);
-        if(apparatusRecipe != null) {
+        if (apparatusRecipe != null) {
             object.addProperty(DocExporter.RECIPE_PROPERTY, apparatusRecipe.id().toString());
         }
     }

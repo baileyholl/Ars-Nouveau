@@ -23,7 +23,7 @@ public class EffectSlowfall extends AbstractEffect implements IPotionEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult.getEntity() instanceof LivingEntity living) {
-            ((IPotionEffect)this).applyConfigPotion(living, MobEffects.SLOW_FALLING, spellStats);
+            ((IPotionEffect) this).applyConfigPotion(living, MobEffects.SLOW_FALLING, spellStats);
         }
     }
 
@@ -44,7 +44,7 @@ public class EffectSlowfall extends AbstractEffect implements IPotionEffect {
         return SpellTier.TWO;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return setOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
@@ -55,7 +55,7 @@ public class EffectSlowfall extends AbstractEffect implements IPotionEffect {
         return "Applies the Slow Fall buff.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_AIR);

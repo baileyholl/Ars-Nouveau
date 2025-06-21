@@ -73,8 +73,8 @@ public class CraftingButton extends GuiImageButton {
             for (SpellValidationError ve : validationErrors) {
                 tip.add(ve.makeTextComponentExisting().withStyle(ChatFormatting.RED));
             }
-            if(abstractSpellPart instanceof AbstractAugment augment && augmentedParent != null) {
-                if(validationErrors != null && !validationErrors.isEmpty()){
+            if (abstractSpellPart instanceof AbstractAugment augment && augmentedParent != null) {
+                if (validationErrors != null && !validationErrors.isEmpty()) {
                     return;
                 }
                 Component augmentDescription = augmentedParent.augmentDescriptions.get(augment);

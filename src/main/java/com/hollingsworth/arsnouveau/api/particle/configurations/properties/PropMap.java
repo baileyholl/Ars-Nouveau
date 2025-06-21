@@ -13,7 +13,7 @@ import net.minecraft.network.codec.StreamCodec;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class PropMap{
+public class PropMap {
     public static final Codec<Map<IPropertyType<?>, Object>> VALUE_MAP_CODEC = Codec.dispatchedMap(ParticlePropertyRegistry.CODEC, IPropertyType::normalCodec);
 
 
@@ -67,7 +67,7 @@ public class PropMap{
         this.properties = new Reference2ObjectOpenHashMap<>();
     }
 
-    public PropMap(Map<IPropertyType<?>, Object> map){
+    public PropMap(Map<IPropertyType<?>, Object> map) {
         this.properties = new Reference2ObjectOpenHashMap<>(map);
     }
 
@@ -103,15 +103,15 @@ public class PropMap{
         return (T) properties.computeIfAbsent(defaultValue.getType(), k -> defaultValue);
     }
 
-    public void removePropsOnMotionChange(){
+    public void removePropsOnMotionChange() {
         Set<PropMap> visitedMaps = new HashSet<>();
         removePropsOnMotionChange(visitedMaps);
     }
 
-    public void removePropsOnMotionChange(Set<PropMap> visitedMaps){
+    public void removePropsOnMotionChange(Set<PropMap> visitedMaps) {
         properties.entrySet().removeIf(entry -> {
             BaseProperty<?> property = (BaseProperty<?>) entry.getValue();
-            if(!visitedMaps.contains(property.propertyHolder)){
+            if (!visitedMaps.contains(property.propertyHolder)) {
                 visitedMaps.add(property.propertyHolder);
                 property.propertyHolder.removePropsOnMotionChange(visitedMaps);
             }

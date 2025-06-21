@@ -156,7 +156,7 @@ public interface IWandable {
         return null;
     }
 
-    enum Result{
+    enum Result {
         SUCCESS,
         SELECT,
         FAIL,

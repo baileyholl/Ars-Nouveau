@@ -11,15 +11,15 @@ public record TimelineOption(ResourceLocation id,
                              TimelineEntryData entry,
                              ImmutableList<IParticleMotionType<?>> options) {
 
-    public Component name(){
+    public Component name() {
         return Component.translatable(id.getNamespace() + ".timeline." + id.getPath());
     }
 
-    public Component description(){
+    public Component description() {
         return Component.translatable(id.getNamespace() + ".timeline." + id.getPath() + ".description");
     }
 
-    public Component tooltip(){
+    public Component tooltip() {
         return Component.translatable(id.getNamespace() + ".timeline." + id.getPath() + ".tooltip");
     }
 

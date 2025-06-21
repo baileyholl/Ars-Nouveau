@@ -16,7 +16,7 @@ import software.bernie.geckolib.util.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RedstoneRelayRenderer extends ArsGeoBlockRenderer<RedstoneRelayTile>{
+public class RedstoneRelayRenderer extends ArsGeoBlockRenderer<RedstoneRelayTile> {
 
     public RedstoneRelayRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         super(rendererDispatcherIn, new GenericModel<>("redstone_relay"));
@@ -50,10 +50,10 @@ public class RedstoneRelayRenderer extends ArsGeoBlockRenderer<RedstoneRelayTile
     }
 
     public static GenericItemBlockRenderer getISTER() {
-        return new GenericItemBlockRenderer(new GenericModel<>("redstone_relay")){
+        return new GenericItemBlockRenderer(new GenericModel<>("redstone_relay")) {
 
             @Override
-            public void renderRecursively(PoseStack poseStack, AnimBlockItem animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay,int color) {
+            public void renderRecursively(PoseStack poseStack, AnimBlockItem animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
                 ArrayList<String> strings = new ArrayList<>(List.of(new String[]{
                         "framework_input",
                         "bone",

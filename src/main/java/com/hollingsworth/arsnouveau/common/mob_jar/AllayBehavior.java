@@ -38,7 +38,7 @@ public class AllayBehavior extends JarBehavior<Allay> {
     @Override
     public void tick(MobJarTile tile) {
         super.tick(tile);
-        if(tile.getLevel().isClientSide){
+        if (tile.getLevel().isClientSide) {
             Allay allay = entityFromJar(tile);
             allay.tickCount++;
             allay.holdingItemAnimationTicks0 = allay.holdingItemAnimationTicks;
@@ -63,29 +63,29 @@ public class AllayBehavior extends JarBehavior<Allay> {
                 allay.spinningAnimationTicks = 0.0F;
                 allay.spinningAnimationTicks0 = 0.0F;
             }
-        }else{
+        } else {
             Level level = tile.getLevel();
-            if(level.getGameTime() % 40 == 0){
+            if (level.getGameTime() % 40 == 0) {
                 Allay allay = entityFromJar(tile);
                 ItemStack heldStack = allay.getItemInHand(InteractionHand.MAIN_HAND);
                 List<FilterableItemHandler> inventories = InvUtil.adjacentInventories(level, tile.getBlockPos());
-                if(inventories.isEmpty()){
+                if (inventories.isEmpty()) {
                     return;
                 }
 
-                if(heldStack.getItem() instanceof ItemScroll){
-                    for(FilterableItemHandler filterableItemHandler : inventories) {
-                        if(filterableItemHandler.filters instanceof FilterSet.ListSet listSet){
+                if (heldStack.getItem() instanceof ItemScroll) {
+                    for (FilterableItemHandler filterableItemHandler : inventories) {
+                        if (filterableItemHandler.filters instanceof FilterSet.ListSet listSet) {
                             listSet.addFilterScroll(heldStack, filterableItemHandler.getHandler());
                         }
                     }
                 }
                 InventoryManager manager = new InventoryManager(inventories);
-                for(ItemEntity entity : level.getEntitiesOfClass(ItemEntity.class, new AABB(tile.getBlockPos()).inflate(5.0D))){
-                    if(entity.isAlive() && !entity.getItem().isEmpty()){
+                for (ItemEntity entity : level.getEntitiesOfClass(ItemEntity.class, new AABB(tile.getBlockPos()).inflate(5.0D))) {
+                    if (entity.isAlive() && !entity.getItem().isEmpty()) {
                         if (heldStack.isEmpty() || heldStack.getItem() instanceof ItemScroll || ItemStack.isSameItem(entity.getItem(), heldStack)) {
                             MultiInsertReference reference = manager.insertStackWithReference(entity.getItem());
-                            if(!reference.isEmpty()) {
+                            if (!reference.isEmpty()) {
                                 ItemStack remainder = reference.getRemainder();
                                 entity.setItem(remainder);
                                 level.playSound(null, tile.getBlockPos(), SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.8F, 1.0F);
@@ -112,7 +112,7 @@ public class AllayBehavior extends JarBehavior<Allay> {
     public void getTooltip(MobJarTile tile, List<Component> tooltips) {
         super.getTooltip(tile, tooltips);
         Allay allay = entityFromJar(tile);
-        if(allay.getMainHandItem().getItem() instanceof ItemScroll scroll){
+        if (allay.getMainHandItem().getItem() instanceof ItemScroll scroll) {
             scroll.appendHoverText(allay.getMainHandItem(), Item.TooltipContext.of(tile.getLevel()), tooltips, TooltipFlag.Default.NORMAL);
         }
     }

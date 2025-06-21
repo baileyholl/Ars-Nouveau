@@ -84,7 +84,7 @@ public class TatteredTomeRenderer extends GeoItemRenderer<WornNotebook> {
 
         this.preRender(poseStack, animatable, model, bufferSource, buffer, false, partialTick, packedLight, packedOverlay, packedColor);
         if (this.firePreRenderEvent(poseStack, model, bufferSource, partialTick, packedLight)) {
-            this.preApplyRenderLayers(poseStack, animatable, model, renderType, bufferSource, buffer, (float)packedLight, packedLight, packedOverlay);
+            this.preApplyRenderLayers(poseStack, animatable, model, renderType, bufferSource, buffer, (float) packedLight, packedLight, packedOverlay);
             this.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, false, partialTick, packedLight, packedOverlay, packedColor);
             this.applyRenderLayers(poseStack, animatable, model, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
             this.postRender(poseStack, animatable, model, bufferSource, buffer, false, partialTick, packedLight, packedOverlay, packedColor);
@@ -98,7 +98,7 @@ public class TatteredTomeRenderer extends GeoItemRenderer<WornNotebook> {
 
     @Override
     public ResourceLocation getTextureLocation(WornNotebook o) {
-        return ArsNouveau.prefix( "textures/item/tattered_tome.png");
+        return ArsNouveau.prefix("textures/item/tattered_tome.png");
     }
 
     @Override

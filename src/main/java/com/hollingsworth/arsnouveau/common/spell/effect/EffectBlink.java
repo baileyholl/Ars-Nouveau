@@ -46,7 +46,7 @@ public class EffectBlink extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Vec3 vec = safelyGetHitPos(rayTraceResult);
-        if(rayTraceResult.getEntity().getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED)){
+        if (rayTraceResult.getEntity().getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED)) {
             return;
         }
         double distance = GENERIC_INT.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
@@ -81,16 +81,16 @@ public class EffectBlink extends AbstractEffect {
         }
     }
 
-    public static void warpEntity(Entity entity, WarpScrollData warpScrollData){
+    public static void warpEntity(Entity entity, WarpScrollData warpScrollData) {
         if (entity == null) return;
         var pos = warpScrollData.pos().get();
-        if (entity instanceof LivingEntity living){
+        if (entity instanceof LivingEntity living) {
 
-            EntityTeleportEvent. EnderEntity event = EventHooks.onEnderTeleport(living, pos.getX(),  pos.getY(),  pos.getZ());
+            EntityTeleportEvent.EnderEntity event = EventHooks.onEnderTeleport(living, pos.getX(), pos.getY(), pos.getZ());
             if (event.isCanceled()) return;
         }
         ServerLevel dimension = PortalTile.getServerLevel(warpScrollData.dimension(), (ServerLevel) entity.level);
-        if(dimension == null)
+        if (dimension == null)
             return;
         PortalTile.teleportEntityTo(entity, dimension, pos, warpScrollData.rotation());
 
@@ -100,7 +100,7 @@ public class EffectBlink extends AbstractEffect {
         if (entity == null || !(level instanceof ServerLevel serverLevel)) return;
 
         Level world = entity.level;
-        if (entity instanceof LivingEntity living){
+        if (entity instanceof LivingEntity living) {
             EntityTeleportEvent.EnderEntity event = EventHooks.onEnderTeleport(living, warpPos.getX(), warpPos.getY(), warpPos.getZ());
             if (event.isCanceled()) return;
         }
@@ -181,7 +181,7 @@ public class EffectBlink extends AbstractEffect {
         return SpellTier.THREE;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE);
@@ -199,7 +199,7 @@ public class EffectBlink extends AbstractEffect {
         return "Teleports the caster to a location. If an entity is hit and the caster is holding a Warp Scroll in the offhand, the entity will be warped to the location on the Warp Scroll. When used on Self, the caster blinks forward. Spell Turrets and Runes can warp entities using Warp Scrolls from adjacent inventories without consuming the scroll.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);

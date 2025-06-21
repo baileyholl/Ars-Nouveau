@@ -47,10 +47,10 @@ public class WarpScroll extends ModItem implements AliasProvider {
         String displayName = stack.get(DataComponents.CUSTOM_NAME) != null ? stack.getHoverName().getString() : null;
         WarpScrollData data = stack.get(DataComponentRegistry.WARP_SCROLL);
         if (data.isValid()
-            && data.canTeleportWithDim(entity.getCommandSenderWorld().dimension().location().toString())
-            && SourceUtil.hasSourceNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
-            && BlockRegistry.PORTAL_BLOCK.get().trySpawnPortal(entity.getCommandSenderWorld(), entity.blockPosition(), data, displayName)
-            && SourceUtil.takeSourceMultipleWithParticles(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null) {
+                && data.canTeleportWithDim(entity.getCommandSenderWorld().dimension().location().toString())
+                && SourceUtil.hasSourceNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
+                && BlockRegistry.PORTAL_BLOCK.get().trySpawnPortal(entity.getCommandSenderWorld(), entity.blockPosition(), data, displayName)
+                && SourceUtil.takeSourceMultipleWithParticles(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null) {
             BlockPos pos = entity.blockPosition();
             ServerLevel world = (ServerLevel) entity.getCommandSenderWorld();
             world.sendParticles(ParticleTypes.PORTAL, pos.getX(), pos.getY() + 1.0, pos.getZ(),
@@ -82,7 +82,7 @@ public class WarpScroll extends ModItem implements AliasProvider {
             BlockPos pos = data.pos().get();
             Vec2 rotation = data.rotation();
             Vec3 vec3 = player.position;
-            Networking.sendToNearbyClient(world, player, new PacketWarpPosition(player.getId(),pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, rotation.x, rotation.y));
+            Networking.sendToNearbyClient(world, player, new PacketWarpPosition(player.getId(), pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, rotation.x, rotation.y));
             player.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
             player.level().gameEvent(GameEvent.TELEPORT, vec3, GameEvent.Context.of(player));
             player.setXRot(rotation.x);

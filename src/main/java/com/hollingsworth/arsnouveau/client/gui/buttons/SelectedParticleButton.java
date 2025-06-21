@@ -14,8 +14,8 @@ public class SelectedParticleButton extends NuggetImageButton {
 
     public SelectedParticleButton(int x, int y, DocAssets.BlitInfo blitInfo, Button.OnPress onPress) {
         this(x, y, blitInfo.width(), blitInfo.height(), blitInfo.location(), onPress);
-        xOffset = (DocAssets.SPELLSTYLE_SELECTED_FRAME.width() - blitInfo.width())/2;
-        yOffset = (DocAssets.SPELLSTYLE_SELECTED_FRAME.height() - blitInfo.height())/2;
+        xOffset = (DocAssets.SPELLSTYLE_SELECTED_FRAME.width() - blitInfo.width()) / 2;
+        yOffset = (DocAssets.SPELLSTYLE_SELECTED_FRAME.height() - blitInfo.height()) / 2;
     }
 
 
@@ -25,8 +25,8 @@ public class SelectedParticleButton extends NuggetImageButton {
 
     public SelectedParticleButton(int x, int y, int w, int h, ResourceLocation image, OnPress onPress) {
         super(x, y, w, h, image, onPress);
-        xOffset = (DocAssets.SPELLSTYLE_SELECTED_FRAME.width() - w)/2;
-        yOffset = (DocAssets.SPELLSTYLE_SELECTED_FRAME.height() - h)/2;
+        xOffset = (DocAssets.SPELLSTYLE_SELECTED_FRAME.width() - w) / 2;
+        yOffset = (DocAssets.SPELLSTYLE_SELECTED_FRAME.height() - h) / 2;
     }
 
     public SelectedParticleButton(int x, int y, int w, int h, ResourceLocation image, ResourceLocation hoveredImage, OnPress onPress) {
@@ -43,7 +43,7 @@ public class SelectedParticleButton extends NuggetImageButton {
 
     @Override
     protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        if(selected){
+        if (selected) {
             DocClientUtils.blit(graphics, DocAssets.SPELLSTYLE_SELECTED_FRAME, x, y);
         }
         super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);

@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITextOutput{
+public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITextOutput {
 
     public int tier; // 0 indexed
 
@@ -35,7 +35,7 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
         this.tier = tier;
     }
 
-    public int tier(){
+    public int tier() {
         return tier;
     }
 
@@ -47,7 +47,7 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
     @Override
     public boolean doesReagentMatch(ApparatusRecipeInput input, Level level, @org.jetbrains.annotations.Nullable Player player) {
         IPerkHolder perkHolder = PerkUtil.getPerkHolder(input.catalyst());
-        if(!(perkHolder instanceof ArmorPerkHolder armorPerkHolder)){
+        if (!(perkHolder instanceof ArmorPerkHolder armorPerkHolder)) {
             return false;
         }
         return armorPerkHolder.getTier() == (tier - 1);
@@ -62,7 +62,7 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
     public @NotNull ItemStack assemble(ApparatusRecipeInput input, HolderLookup.@NotNull Provider p_346030_) {
         ItemStack reagent = input.catalyst();
         ArmorPerkHolder perkHolder = PerkUtil.getPerkHolder(reagent);
-        if(!(perkHolder instanceof ArmorPerkHolder armorPerkHolder)){
+        if (!(perkHolder instanceof ArmorPerkHolder armorPerkHolder)) {
             return reagent.copy();
         }
         reagent.set(DataComponentRegistry.ARMOR_PERKS, armorPerkHolder.setTier(tier));

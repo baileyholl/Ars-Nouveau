@@ -76,7 +76,7 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
             System.out.println(BuiltInRegistries.PARTICLE_TYPE.getKey(type));
             selectedData = PARTICLE_TYPES.get(ModParticles.NEW_GLOW_TYPE.get());
         }
-        subProperties.getOrCreate(ParticlePropertyRegistry.COLOR_PROPERTY.get(), () ->{
+        subProperties.getOrCreate(ParticlePropertyRegistry.COLOR_PROPERTY.get(), () -> {
             return new ColorProperty(ParticleColor.defaultParticleColor(), true);
         });
     }
@@ -85,7 +85,7 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
         return type;
     }
 
-    public ColorProperty getColor(){
+    public ColorProperty getColor() {
         return subProperties.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty());
     }
 
@@ -93,10 +93,10 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
     public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height) {
         List<Button> buttons = new ArrayList<>();
         var particleEntries = new ArrayList<>(PARTICLE_TYPES.entrySet());
-        particleEntries.sort(Comparator.<Map.Entry<ParticleType<? extends PropertyParticleOptions>, ParticleData>>comparingInt(o -> DocPlayerData.favoriteParticles.contains(o.getKey()) ? -1 : 1).thenComparing((o1, o2) ->{
-            if(o1.getKey() == ModParticles.NEW_GLOW_TYPE.get()){
+        particleEntries.sort(Comparator.<Map.Entry<ParticleType<? extends PropertyParticleOptions>, ParticleData>>comparingInt(o -> DocPlayerData.favoriteParticles.contains(o.getKey()) ? -1 : 1).thenComparing((o1, o2) -> {
+            if (o1.getKey() == ModParticles.NEW_GLOW_TYPE.get()) {
                 return -3;
-            }else if(o2.getKey() == ModParticles.NEW_GLOW_TYPE.get()){
+            } else if (o2.getKey() == ModParticles.NEW_GLOW_TYPE.get()) {
                 return 3;
             }
             return getTypeName(o1.getKey()).getString().compareTo(getTypeName(o2.getKey()).getString());
@@ -107,8 +107,8 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
                 selectedData = particleType.getValue();
                 type = key;
                 onDependenciesChanged.run();
-            }).setFavoritable(() -> DocPlayerData.favoriteParticles.contains(key), (b) ->{
-                if(DocPlayerData.favoriteParticles.contains(key)) {
+            }).setFavoritable(() -> DocPlayerData.favoriteParticles.contains(key), (b) -> {
+                if (DocPlayerData.favoriteParticles.contains(key)) {
                     DocPlayerData.favoriteParticles.remove(key);
                 } else {
                     DocPlayerData.favoriteParticles.add(key);
@@ -158,7 +158,7 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
 
     @Override
     public List<BaseProperty<?>> subProperties() {
-       return selectedData.getProperties(this);
+        return selectedData.getProperties(this);
     }
 
     @Override
@@ -173,9 +173,10 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
         return Objects.hash(getType(), type, subProperties);
     }
 
-    public record ParticleData(ParticleType<? extends PropertyParticleOptions> type, boolean acceptsColor, boolean useLegacyRGB, boolean supportsSound) {
+    public record ParticleData(ParticleType<? extends PropertyParticleOptions> type, boolean acceptsColor,
+                               boolean useLegacyRGB, boolean supportsSound) {
 
-        public ParticleData(ParticleType<? extends PropertyParticleOptions> type, boolean acceptsColor, boolean useLegacyRGB){
+        public ParticleData(ParticleType<? extends PropertyParticleOptions> type, boolean acceptsColor, boolean useLegacyRGB) {
             this(type, acceptsColor, useLegacyRGB, false);
         }
 
@@ -183,19 +184,19 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
             this(type, acceptsColor, false);
         }
 
-        public ParticleData withSound(){
+        public ParticleData withSound() {
             return new ParticleData(type, acceptsColor, useLegacyRGB, true);
         }
 
-        public List<BaseProperty<?>> getProperties(ParticleTypeProperty forProp){
+        public List<BaseProperty<?>> getProperties(ParticleTypeProperty forProp) {
             List<BaseProperty<?>> properties = new ArrayList<>();
             PropMap subPropMap = forProp.subProperties;
-            if(acceptsColor){
+            if (acceptsColor) {
                 ColorProperty colorProperty = subPropMap.createIfMissing(new ColorProperty(ParticleColor.defaultParticleColor(), true));
                 colorProperty.isLegacyRGB = useLegacyRGB;
                 properties.add(colorProperty);
             }
-            if(supportsSound){
+            if (supportsSound) {
                 properties.add(subPropMap.createIfMissing(new SoundProperty(new ConfiguredSpellSound(SoundRegistry.POINTED_DRIPSTONE_WATER))));
             }
 

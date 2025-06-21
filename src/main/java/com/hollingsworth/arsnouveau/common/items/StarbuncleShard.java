@@ -12,9 +12,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class StarbuncleShard extends ModItem{
+public class StarbuncleShard extends ModItem {
 
-    public StarbuncleShard(){
+    public StarbuncleShard() {
         super();
         withTooltip(Component.translatable("tooltip.starbuncle_shard"));
         withTooltip(Component.translatable("tooltip.starbuncle_shard2").withStyle(ItemsRegistry.LORE_STYLE));
@@ -23,15 +23,15 @@ public class StarbuncleShard extends ModItem{
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         StarbuncleCharmData data = stack.get(DataComponentRegistry.STARBUNCLE_DATA);
-        if(data != null){
+        if (data != null) {
             data.getName().ifPresent(tooltip2::add);
-            if(data.getAdopter() != null && !data.getAdopter().isEmpty()){
+            if (data.getAdopter() != null && !data.getAdopter().isEmpty()) {
                 tooltip2.add(Component.translatable("ars_nouveau.adopter", data.getAdopter()).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
             }
-            if(data.getBio() != null && !data.getBio().isEmpty()){
+            if (data.getBio() != null && !data.getBio().isEmpty()) {
                 tooltip2.add(Component.literal(data.getBio()).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE)));
             }
-        }else{
+        } else {
             super.appendHoverText(stack, context, tooltip2, flagIn);
         }
     }

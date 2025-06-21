@@ -68,7 +68,7 @@ public class BounceEffect extends MobEffect {
         if (!isPlayer) {
             return;
         }
-        if(source.is(DamageTypes.FLY_INTO_WALL)){
+        if (source.is(DamageTypes.FLY_INTO_WALL)) {
             container.setNewDamage(0);
             Vec3 lookAngle = entity.getLookAngle();
 

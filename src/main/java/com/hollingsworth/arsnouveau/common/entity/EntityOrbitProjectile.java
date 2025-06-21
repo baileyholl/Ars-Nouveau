@@ -108,7 +108,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
     @Override
     public void tick() {
         super.tick();
-        if(getOwner() == null){
+        if (getOwner() == null) {
             this.tracksGround = true;
         }
     }
@@ -127,7 +127,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
         double rotateSpeed = getRotateSpeed();
         double radiusMultiplier = getRadiusMultiplier();
         Entity owner = getOwner();
-        if(owner == null || owner.isRemoved() || tracksGround){
+        if (owner == null || owner.isRemoved() || tracksGround) {
             Vec3 lastVec = entityData.get(LAST_POS);
             return new Vec3(
                     lastVec.x() - radiusMultiplier * Math.sin(nextTick / rotateSpeed + getOffset()),
@@ -181,7 +181,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
             return;
 
         if (result instanceof EntityHitResult entityHitResult) {
-            if (entityHitResult.getEntity().equals(this.getOwner()) && !tracksGround){
+            if (entityHitResult.getEntity().equals(this.getOwner()) && !tracksGround) {
                 return;
             }
             if (this.resolver() != null) {

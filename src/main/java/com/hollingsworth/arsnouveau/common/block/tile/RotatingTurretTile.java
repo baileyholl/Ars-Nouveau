@@ -50,59 +50,60 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
     // Step between current and needed rotation on the client each tick, smoothly animate with partials between
     public float clientNeededX;
     public float clientNeededY;
+
     @Override
     public void tick() {
         super.tick();
         // Animated in the renderer
-        if(level.isClientSide){
-            if(clientNeededX != neededRotationX){
+        if (level.isClientSide) {
+            if (clientNeededX != neededRotationX) {
                 float diff = neededRotationX - clientNeededX;
-                if(Math.abs(diff) < 0.1){
+                if (Math.abs(diff) < 0.1) {
                     clientNeededX = neededRotationX;
-                }else{
+                } else {
                     clientNeededX += diff * 0.1f;
                 }
             }
-            if(clientNeededY != neededRotationY){
+            if (clientNeededY != neededRotationY) {
                 float diff = neededRotationY - clientNeededY;
-                if(Math.abs(diff) < 0.1){
+                if (Math.abs(diff) < 0.1) {
                     clientNeededY = neededRotationY;
-                }else{
+                } else {
                     clientNeededY += diff * 0.1f;
                 }
             }
-            if(rotationX != clientNeededX){
+            if (rotationX != clientNeededX) {
                 float diff = clientNeededX - rotationX;
-                if(Math.abs(diff) < 0.1){
+                if (Math.abs(diff) < 0.1) {
                     rotationX = clientNeededX;
-                }else{
+                } else {
                     rotationX += diff * 0.1f;
                 }
             }
-            if(rotationY != clientNeededY){
+            if (rotationY != clientNeededY) {
                 float diff = clientNeededY - rotationY;
-                if(Math.abs(diff) < 0.1){
+                if (Math.abs(diff) < 0.1) {
                     rotationY = clientNeededY;
-                }else{
+                } else {
                     rotationY += diff * 0.1f;
                 }
             }
             return;
         }
-        if(rotationX != neededRotationX){
+        if (rotationX != neededRotationX) {
             float diff = neededRotationX - rotationX;
-            if(Math.abs(diff) < 0.1){
+            if (Math.abs(diff) < 0.1) {
                 setRotationX(neededRotationX);
-            }else{
+            } else {
                 setRotationX(rotationX + diff * 0.1f);
             }
             setChanged();
         }
-        if(rotationY != neededRotationY){
+        if (rotationY != neededRotationY) {
             float diff = neededRotationY - rotationY;
-            if(Math.abs(diff) < 0.1){
+            if (Math.abs(diff) < 0.1) {
                 setRotationY(neededRotationY);
-            }else{
+            } else {
                 setRotationY(rotationY + diff * 0.1f);
             }
             setChanged();
@@ -127,7 +128,7 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
         neededRotationX = angle + 90f;
 
         rotVec = new Vec3(diffVec.x, 0, diffVec.z);
-        angle = (float) (angleBetween(diffVec, rotVec) * 180F / (float)Math.PI);
+        angle = (float) (angleBetween(diffVec, rotVec) * 180F / (float) Math.PI);
         if (blockVec.y < thisVec.y) {
             angle = -angle;
         }

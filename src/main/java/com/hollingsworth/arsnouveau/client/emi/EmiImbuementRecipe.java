@@ -47,6 +47,6 @@ public class EmiImbuementRecipe extends EmiMultiInputRecipe<ImbuementRecipe> {
     @Override
     public void addWidgets(WidgetHolder widgets) {
         super.addWidgets(widgets);
-        widgets.addText(Component.translatable("ars_nouveau.source", recipe.source), 0, this.getDisplayHeight() - 10, 10,false);
+        widgets.addText(Component.translatable("ars_nouveau.source", recipe.source), 0, this.getDisplayHeight() - 10, 10, false);
     }
 }

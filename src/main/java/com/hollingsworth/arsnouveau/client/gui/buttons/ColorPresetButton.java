@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiGraphics;
 
 public class ColorPresetButton extends SelectedParticleButton {
     public ParticleColor particleColor;
+
     public ColorPresetButton(int x, int y, ParticleColor color, OnPress onPress) {
         super(x, y, DocAssets.SPELLSTYLE_FRAME, onPress);
         this.particleColor = color;
@@ -16,10 +17,10 @@ public class ColorPresetButton extends SelectedParticleButton {
     @Override
     protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         Color color = new Color(particleColor.getColor(), false);
-        graphics.fill(x + 3, y + 2, x + 13,  y + 14, color.getRGB());
-        graphics.fill(x + 2, y + 3, x + 14,  y + 13, color.getRGB());
-        if(!selected){
-            DocClientUtils.blit(graphics, DocAssets.SPELLSTYLE_BUTTON_BIG, x , y );
+        graphics.fill(x + 3, y + 2, x + 13, y + 14, color.getRGB());
+        graphics.fill(x + 2, y + 3, x + 14, y + 13, color.getRGB());
+        if (!selected) {
+            DocClientUtils.blit(graphics, DocAssets.SPELLSTYLE_BUTTON_BIG, x, y);
         } else {
             super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
         }

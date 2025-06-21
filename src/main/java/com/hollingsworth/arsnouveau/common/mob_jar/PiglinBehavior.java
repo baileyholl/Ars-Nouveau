@@ -30,12 +30,12 @@ public class PiglinBehavior extends JarBehavior<Piglin> {
 
     @Override
     public void use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit, MobJarTile tile) {
-        if(world.isClientSide)
+        if (world.isClientSide)
             return;
         ItemStack heldStack = player.getItemInHand(handIn);
         Piglin piglin = entityFromJar(tile);
         boolean hasCurrency = piglin.getOffhandItem().isPiglinCurrency();
-        if(heldStack.isPiglinCurrency() && !hasCurrency && piglin.isAdult()){
+        if (heldStack.isPiglinCurrency() && !hasCurrency && piglin.isAdult()) {
             piglin.setItemInHand(InteractionHand.OFF_HAND, player.getItemInHand(handIn).split(1));
             tile.updateBlock();
         }
@@ -43,17 +43,17 @@ public class PiglinBehavior extends JarBehavior<Piglin> {
 
     @Override
     public void tick(MobJarTile tile) {
-        if(tile.getLevel().isClientSide){
-           return;
+        if (tile.getLevel().isClientSide) {
+            return;
         }
         ExtraData data = new ExtraData(tile.getExtraDataTag());
         Piglin piglin = entityFromJar(tile);
         boolean hasCurrency = piglin.getOffhandItem().isPiglinCurrency();
-        if(!hasCurrency && piglin.isAdult() && tile.getLevel().getRandom().nextInt(20) == 0){
+        if (!hasCurrency && piglin.isAdult() && tile.getLevel().getRandom().nextInt(20) == 0) {
             List<ItemEntity> itemEntities = piglin.level.getEntitiesOfClass(ItemEntity.class, new AABB(tile.getBlockPos()).inflate(3), ItemEntity::isAlive);
-            if(!itemEntities.isEmpty()){
+            if (!itemEntities.isEmpty()) {
                 ItemEntity itemEntity = itemEntities.stream().filter(item -> item.getItem().isPiglinCurrency()).findFirst().orElse(null);
-                if(itemEntity != null){
+                if (itemEntity != null) {
                     piglin.setItemInHand(InteractionHand.OFF_HAND, itemEntity.getItem().split(1));
                     tile.updateBlock();
                 }
@@ -61,9 +61,9 @@ public class PiglinBehavior extends JarBehavior<Piglin> {
         }
 
         boolean isAdmiring = piglin.isAdult() && piglin.getOffhandItem().isPiglinCurrency();
-        if(isAdmiring){
+        if (isAdmiring) {
             data.ticksWithCurrency++;
-            if(data.ticksWithCurrency >= 60){
+            if (data.ticksWithCurrency >= 60) {
                 data.ticksWithCurrency = 0;
                 throwItems(piglin, getBarterResponseItems(piglin));
                 piglin.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
@@ -77,7 +77,7 @@ public class PiglinBehavior extends JarBehavior<Piglin> {
 
     private static List<ItemStack> getBarterResponseItems(Piglin pPiglin) {
         LootTable loottable = pPiglin.level().getServer().reloadableRegistries().getLootTable(BuiltInLootTables.PIGLIN_BARTERING);
-        List<ItemStack> list = loottable.getRandomItems((new LootParams.Builder((ServerLevel)pPiglin.level())).withParameter(LootContextParams.THIS_ENTITY, pPiglin).create(LootContextParamSets.PIGLIN_BARTER));
+        List<ItemStack> list = loottable.getRandomItems((new LootParams.Builder((ServerLevel) pPiglin.level())).withParameter(LootContextParams.THIS_ENTITY, pPiglin).create(LootContextParamSets.PIGLIN_BARTER));
         return list;
     }
 
@@ -109,7 +109,7 @@ public class PiglinBehavior extends JarBehavior<Piglin> {
         if (!pStacks.isEmpty()) {
             pPiglin.swing(InteractionHand.OFF_HAND);
 
-            for(ItemStack itemstack : pStacks) {
+            for (ItemStack itemstack : pStacks) {
                 BehaviorUtils.throwItem(pPiglin, itemstack, pPos.add(0.0D, 0.0D, 0.0D));
             }
         }
@@ -117,7 +117,7 @@ public class PiglinBehavior extends JarBehavior<Piglin> {
     }
 
 
-    public static class ExtraData extends AbstractData{
+    public static class ExtraData extends AbstractData {
         boolean hasCurrency;
         int ticksWithCurrency;
 

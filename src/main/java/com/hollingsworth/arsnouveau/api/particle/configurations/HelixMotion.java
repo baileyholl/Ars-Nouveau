@@ -38,9 +38,9 @@ public class HelixMotion extends ParticleMotion {
         int totalParticles = getNumParticles(densityProperty.density());
         PropertyParticleOptions particle2;
         var secondType = propertyMap.get(ParticlePropertyRegistry.TYPE_PROPERTY.get());
-        if(secondType != null){
+        if (secondType != null) {
             particle2 = new PropertyParticleOptions(propertyMap);
-        }else{
+        } else {
             particle2 = new PropertyParticleOptions();
         }
         for (int step = 0; step <= totalParticles; step++) {

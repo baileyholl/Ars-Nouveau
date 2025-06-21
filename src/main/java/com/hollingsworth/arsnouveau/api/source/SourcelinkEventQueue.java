@@ -32,7 +32,7 @@ public class SourcelinkEventQueue {
                 stalePos.add(p);
                 continue;
             }
-            if (entity.getClass().equals(tileType) &&  sourcelinkTile.eventInRange(sourcePos, event) && sourcelinkTile.canAcceptSource()) {
+            if (entity.getClass().equals(tileType) && sourcelinkTile.eventInRange(sourcePos, event) && sourcelinkTile.canAcceptSource()) {
                 sourcelinkTile.getManaEvent(sourcePos, amount);
                 break;
             }

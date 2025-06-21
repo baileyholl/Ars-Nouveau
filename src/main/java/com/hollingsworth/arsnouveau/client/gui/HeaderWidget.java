@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 public class HeaderWidget extends AbstractWidget {
 
     Component component;
+
     public HeaderWidget(int x, int y, int width, int height, Component message) {
         super(x, y, width, height, message);
         this.component = message;

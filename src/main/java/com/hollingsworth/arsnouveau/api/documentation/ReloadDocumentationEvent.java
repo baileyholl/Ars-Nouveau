@@ -17,13 +17,15 @@ public class ReloadDocumentationEvent extends Event {
      * Modifications to entries should only be made in the Post event.
      */
     public static class AddEntries extends ReloadDocumentationEvent {
-        public AddEntries() {}
+        public AddEntries() {
+        }
     }
 
     /**
      * Fired immediately after AddEntries.
      */
     public static class Post extends ReloadDocumentationEvent {
-        public Post() {}
+        public Post() {
+        }
     }
 }

@@ -7,14 +7,14 @@ import net.minecraft.world.level.Level;
 /**
  * Invalidates the mirrorweave renderer after all nearby neighbors have been updated.
  */
-public class InvalidateMirrorweaveRender implements ITimedEvent{
+public class InvalidateMirrorweaveRender implements ITimedEvent {
 
     int ticks;
     BlockPos pos;
     Level level;
     boolean expired;
 
-    public InvalidateMirrorweaveRender(BlockPos pos, Level level){
+    public InvalidateMirrorweaveRender(BlockPos pos, Level level) {
         this.pos = pos;
         this.level = level;
     }
@@ -22,7 +22,7 @@ public class InvalidateMirrorweaveRender implements ITimedEvent{
     @Override
     public void tick(boolean serverSide) {
         ticks++;
-        if(!expired && serverSide && ticks > 10 &&  level.isLoaded(pos) && level.getBlockEntity(pos) instanceof MirrorWeaveTile tile){
+        if (!expired && serverSide && ticks > 10 && level.isLoaded(pos) && level.getBlockEntity(pos) instanceof MirrorWeaveTile tile) {
             tile.renderInvalid = true;
             tile.updateBlock();
             expired = true;

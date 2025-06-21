@@ -1525,7 +1525,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.timeline.spawn", "On Spawn");
         add("ars_nouveau.timeline.flair", "Flair");
         add("ars_nouveau.particle_config.none", "None");
-        add("ars_nouveau.particle_config.wave","Wave");
+        add("ars_nouveau.particle_config.wave", "Wave");
         add("ars_nouveau.particle_config.zigzag", "Zigzag");
         add("ars_nouveau.timeline.tick", "On Tick");
         add("ars_nouveau.particle_config.light", "Light");

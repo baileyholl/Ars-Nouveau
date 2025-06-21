@@ -14,6 +14,7 @@ public interface IMapInventory extends IItemHandler {
      * Implementers are expected to utilize a cache or map to optimize performance.
      * Expected operation for Dirt:
      * Insert in any existing slots for Dirt, then insert the remainder into any empty slots.
+     *
      * @return the remainder
      */
     ItemStack insertStack(ItemStack stack, boolean simulate);
@@ -25,7 +26,7 @@ public interface IMapInventory extends IItemHandler {
      */
     boolean hasExistingSlotsForInsertion(ItemStack stack);
 
-    default ItemStack extractByItem(Item item, int count, boolean simulate){
+    default ItemStack extractByItem(Item item, int count, boolean simulate) {
         return extractByItem(item, count, simulate, stack -> true);
     }
 
@@ -34,7 +35,7 @@ public interface IMapInventory extends IItemHandler {
     ItemScroll.SortPref getInsertionPreference(ItemStack stack);
 
     @Override
-    default ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
+    default ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
         return insertStack(stack, simulate);
     }
 

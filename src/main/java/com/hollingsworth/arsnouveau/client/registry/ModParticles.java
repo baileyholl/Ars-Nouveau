@@ -32,7 +32,7 @@ public class ModParticles {
     public static final DeferredHolder<ParticleType<?>, ParticleType<ColoredDynamicTypeData>> SPARKLE_TYPE = PARTICLES.register("sparkle", SparkleParticleType::new);
     public static final DeferredHolder<ParticleType<?>, ParticleType<HelixParticleTypeData>> HELIX_TYPE = PARTICLES.register(HelixParticleData.NAME, HelixParticleType::new);
 
-    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> ALAKARK_BUBBLE_TYPE = PARTICLES.register("bubble",  () -> new SimpleParticleType(false));
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> ALAKARK_BUBBLE_TYPE = PARTICLES.register("bubble", () -> new SimpleParticleType(false));
     public static final DeferredHolder<ParticleType<?>, PropertyParticleType> BUBBLE_CLONE_TYPE = PARTICLES.register("an_bubble", PropertyParticleType::new);
 
     public static final DeferredHolder<ParticleType<?>, PropertyParticleType> SMOKE_TYPE = PARTICLES.register("smoke", PropertyParticleType::new);
@@ -117,7 +117,7 @@ public class ModParticles {
                 var particle = new FallingParticle(type, level, x, y, z, xSpeed, ySpeed, zSpeed);
                 particle.type = Fluids.WATER;
                 particle.landingSound = SoundEvents.POINTED_DRIPSTONE_DRIP_WATER;
-                if(type.map.has(ParticlePropertyRegistry.SOUND_PROPERTY.get())){
+                if (type.map.has(ParticlePropertyRegistry.SOUND_PROPERTY.get())) {
                     particle.landingSound = type.map.get(ParticlePropertyRegistry.SOUND_PROPERTY.get()).sound.getSound().getSoundEvent().value();
                 }
                 particle.pickSprite(Minecraft.getInstance().particleEngine.spriteSets.get(ResourceLocation.withDefaultNamespace("falling_water")));
@@ -126,7 +126,7 @@ public class ModParticles {
 
             evt.registerSpriteSet(END_ROD.get(), (spites) -> new WrappedProvider(ParticleTypes.END_ROD, EndRodParticle.Provider::new));
 
-            evt.registerSpriteSet(GLOW_SQUID.get(), (spites) -> new WrappedProvider(ParticleTypes.GLOW,  GlowParticle.GlowSquidProvider::new));
+            evt.registerSpriteSet(GLOW_SQUID.get(), (spites) -> new WrappedProvider(ParticleTypes.GLOW, GlowParticle.GlowSquidProvider::new));
 
             evt.registerSpriteSet(GLOW_INK.get(), (spites) -> new WrappedProvider(ParticleTypes.GLOW_SQUID_INK, SquidInkParticle.GlowInkProvider::new));
             evt.registerSpriteSet(CRIT.get(), (spites) -> new WrappedProvider(ParticleTypes.CRIT, CritParticle.Provider::new));
@@ -153,7 +153,7 @@ public class ModParticles {
             evt.registerSpriteSet(ITEM_COBWEB.get(), (spites) -> new WrappedProvider(ParticleTypes.ITEM_COBWEB, new BreakingItemParticle.CobwebProvider()));
             evt.registerSpriteSet(LARGE_SMOKE.get(), (spites) -> new WrappedProvider(ParticleTypes.LARGE_SMOKE, LargeSmokeParticle.Provider::new));
             evt.registerSpriteSet(LAVA.get(), (spites) -> new WrappedProvider(ParticleTypes.LAVA, LavaParticle.Provider::new));
-            evt.registerSpriteSet(MYCELIUM.get(), (spites) -> new WrappedProvider(ParticleTypes.MYCELIUM,  SuspendedTownParticle.Provider::new));
+            evt.registerSpriteSet(MYCELIUM.get(), (spites) -> new WrappedProvider(ParticleTypes.MYCELIUM, SuspendedTownParticle.Provider::new));
             evt.registerSpriteSet(NOTE.get(), (spites) -> new WrappedProvider(ParticleTypes.NOTE, NoteParticle.Provider::new));
             evt.registerSpriteSet(POOF.get(), (spites) -> new WrappedProvider(ParticleTypes.POOF, ExplodeParticle.Provider::new));
             evt.registerSpriteSet(SPLASH.get(), (spites) -> new WrappedProvider(ParticleTypes.SPLASH, SplashParticle.Provider::new));
@@ -166,14 +166,14 @@ public class ModParticles {
             evt.registerSpriteSet(WITCH.get(), (spites) -> new WrappedProvider(ParticleTypes.WITCH, SpellParticle.WitchProvider::new));
             evt.registerSpriteSet(BUBBLE_POP.get(), (spites) -> new WrappedProvider(ParticleTypes.BUBBLE_POP, BubblePopParticle.Provider::new));
             evt.registerSpriteSet(NAUTILUS.get(), (spites) -> new WrappedProvider(ParticleTypes.NAUTILUS, FlyTowardsPositionParticle.NautilusProvider::new));
-            evt.registerSpriteSet(CAMPFIRE_COSY_SMOKE.get(), (spites) -> new WrappedProvider(ParticleTypes.CAMPFIRE_COSY_SMOKE,  CampfireSmokeParticle.CosyProvider::new));
+            evt.registerSpriteSet(CAMPFIRE_COSY_SMOKE.get(), (spites) -> new WrappedProvider(ParticleTypes.CAMPFIRE_COSY_SMOKE, CampfireSmokeParticle.CosyProvider::new));
             evt.registerSpriteSet(CAMPFIRE_SIGNAL_SMOKE.get(), (spites) -> new WrappedProvider(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, CampfireSmokeParticle.SignalProvider::new));
             evt.registerSpriteSet(ASH.get(), (spites) -> new WrappedProvider(ParticleTypes.ASH, AshParticle.Provider::new));
-            evt.registerSpriteSet(CRIMSON_SPORE.get(), (spites) -> new WrappedProvider(ParticleTypes.CRIMSON_SPORE,  SuspendedParticle.CrimsonSporeProvider::new));
+            evt.registerSpriteSet(CRIMSON_SPORE.get(), (spites) -> new WrappedProvider(ParticleTypes.CRIMSON_SPORE, SuspendedParticle.CrimsonSporeProvider::new));
             evt.registerSpriteSet(WARPED_SPORE.get(), (spites) -> new WrappedProvider(ParticleTypes.WARPED_SPORE, SuspendedParticle.WarpedSporeProvider::new));
             evt.registerSpriteSet(REVERSE_PORTAL.get(), (spites) -> new WrappedProvider(ParticleTypes.REVERSE_PORTAL, ReversePortalParticle.Provider::new));
             evt.registerSpriteSet(WHITE_ASH.get(), (spites) -> new WrappedProvider(ParticleTypes.WHITE_ASH, WhiteAshParticle.Provider::new));
-            evt.registerSpriteSet(SMALL_FLAME.get(), (spites) -> new WrappedProvider(ParticleTypes.SMALL_FLAME,  FlameParticle.SmallFlameProvider::new));
+            evt.registerSpriteSet(SMALL_FLAME.get(), (spites) -> new WrappedProvider(ParticleTypes.SMALL_FLAME, FlameParticle.SmallFlameProvider::new));
             evt.registerSpriteSet(SNOWFLAKE.get(), (spites) -> new WrappedProvider(ParticleTypes.SNOWFLAKE, SnowflakeParticle.Provider::new));
             evt.registerSpriteSet(ELECTRIC_SPARK.get(), (spites) -> new WrappedProvider(ParticleTypes.ELECTRIC_SPARK, GlowParticle.ElectricSparkProvider::new));
             evt.registerSpriteSet(SCRAPE.get(), (spites) -> new WrappedProvider(ParticleTypes.SCRAPE, GlowParticle.ScrapeProvider::new));

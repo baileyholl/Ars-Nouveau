@@ -65,7 +65,7 @@ public class EffectPrestidigitation extends AbstractEffect {
             world.setBlockAndUpdate(pos, lightBlockState);
             if (world.getBlockEntity(pos) instanceof ParticleTile tile) {
                 tile.setTimeline(spellContext.getParticleTimeline(ParticleTimelineRegistry.PRESTIDIGITATION_TIMELINE.get()));
-                if(!spellStats.hasBuff(AugmentAmplify.INSTANCE)){
+                if (!spellStats.hasBuff(AugmentAmplify.INSTANCE)) {
                     tile.isTemporary = true;
                     tile.ticksRemaining = (int) ((5 + 3 * spellStats.getDurationMultiplier()) * 20);
                 }

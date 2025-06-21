@@ -25,7 +25,7 @@ public class Color {
     protected boolean mutable = true;
     protected int value;
 
-    public ParticleColor toParticle(){
+    public ParticleColor toParticle() {
         return ParticleColor.fromInt(this.getRGB());
     }
 
@@ -36,7 +36,7 @@ public class Color {
     public Color(int r, int g, int b, int a) {
         value = ((a & 0xff) << 24) |
                 ((r & 0xff) << 16) |
-                ((g & 0xff) << 8)  |
+                ((g & 0xff) << 8) |
                 ((b & 0xff));
     }
 
@@ -144,6 +144,7 @@ public class Color {
     /**
      * Returns the RGB value representing this color
      * (Bits 24-31 are alpha, 16-23 are red, 8-15 are green, 0-7 are blue).
+     *
      * @return the RGB value of the color
      */
     public int getRGB() {

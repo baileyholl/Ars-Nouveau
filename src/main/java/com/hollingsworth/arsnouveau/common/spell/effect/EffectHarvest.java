@@ -81,7 +81,7 @@ public class EffectHarvest extends AbstractEffect {
                 state = world.getBlockState(blockpos);
             }
 
-            if (state.getBlock() instanceof CocoaBlock){
+            if (state.getBlock() instanceof CocoaBlock) {
                 harvestPods(blockpos, state, world, shooter, spellStats, spellContext);
                 continue;
             }

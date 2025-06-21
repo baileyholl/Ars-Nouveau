@@ -18,7 +18,7 @@ public class RandomStorageVisitGoal extends Goal {
     public EntityBookwyrm bookwyrm;
     public Supplier<BlockPos> getTarget;
 
-    public RandomStorageVisitGoal(EntityBookwyrm bookwyrm, Supplier<BlockPos> getTarget){
+    public RandomStorageVisitGoal(EntityBookwyrm bookwyrm, Supplier<BlockPos> getTarget) {
         this.bookwyrm = bookwyrm;
         this.getTarget = getTarget;
 
@@ -37,18 +37,18 @@ public class RandomStorageVisitGoal extends Goal {
 
     @Override
     public void tick() {
-        if(target == null){
+        if (target == null) {
             return;
         }
         ticksRunning++;
-        if(!arrived) {
-            if (BlockUtil.distanceFrom(bookwyrm.position, new Vec3(target.getX() + 0.5, target.getY()+ 0.5, target.getZ() + 0.5)) < 1.5) {
+        if (!arrived) {
+            if (BlockUtil.distanceFrom(bookwyrm.position, new Vec3(target.getX() + 0.5, target.getY() + 0.5, target.getZ() + 0.5)) < 1.5) {
                 arrived = true;
             }
-            bookwyrm.getNavigation().moveTo(target.getX() + 0.5, target.getY()+ 0.5, target.getZ()+ 0.5, 1.2d);
-        }else{
+            bookwyrm.getNavigation().moveTo(target.getX() + 0.5, target.getY() + 0.5, target.getZ() + 0.5, 1.2d);
+        } else {
             arrivedTicks++;
-            if(arrivedTicks > 100){
+            if (arrivedTicks > 100) {
                 isDone = true;
             }
         }

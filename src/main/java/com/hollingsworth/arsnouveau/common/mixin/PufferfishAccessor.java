@@ -20,7 +20,7 @@ public interface PufferfishAccessor {
     void setDeflateTimer(int deflateTimer);
 
     @Accessor("targetingConditions")
-    static TargetingConditions targetConditions(){
+    static TargetingConditions targetConditions() {
         throw new AssertionError();
     }
 

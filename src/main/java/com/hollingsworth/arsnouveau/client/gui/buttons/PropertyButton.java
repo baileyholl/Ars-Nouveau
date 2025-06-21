@@ -13,7 +13,8 @@ public class PropertyButton extends SelectableButton {
 
     public int nestLevel = 0;
     public Component fullTitle;
-    public PropertyButton(int x, int y, DocAssets.BlitInfo asset,  DocAssets.BlitInfo selectedAsset, ParticleConfigWidgetProvider widgetProvider, int nestLevel, OnPress onPress) {
+
+    public PropertyButton(int x, int y, DocAssets.BlitInfo asset, DocAssets.BlitInfo selectedAsset, ParticleConfigWidgetProvider widgetProvider, int nestLevel, OnPress onPress) {
         super(x, y, asset, selectedAsset, onPress);
         this.widgetProvider = widgetProvider;
         this.nestLevel = nestLevel;
@@ -25,12 +26,12 @@ public class PropertyButton extends SelectableButton {
 
         widgetProvider.renderIcon(graphics, x, y, pMouseX, pMouseY, pPartialTick);
         String titleString = widgetProvider.getButtonTitle().getString();
-        int maxLength = switch (nestLevel){
+        int maxLength = switch (nestLevel) {
             case 1 -> 17;
             case 2 -> 12;
             default -> 20;
         };
-        if(titleString.length() > maxLength + 3) {
+        if (titleString.length() > maxLength + 3) {
             fullTitle = Component.literal(titleString);
             titleString = titleString.substring(0, maxLength + 1).trim() + "...";
         } else {
@@ -41,7 +42,7 @@ public class PropertyButton extends SelectableButton {
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if(fullTitle != null){
+        if (fullTitle != null) {
             tooltip.add(fullTitle);
         }
         widgetProvider.getButtonTooltips(tooltip);

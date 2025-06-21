@@ -79,7 +79,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
 
     @Override
     public double getAttributeValue(Holder<Attribute> pAttribute) {
-        if(pAttribute.is(Attributes.ATTACK_DAMAGE)){
+        if (pAttribute.is(Attributes.ATTACK_DAMAGE)) {
             return super.getAttributeValue(pAttribute) + getStateDamageBonus();
         }
         return super.getAttributeValue(pAttribute);
@@ -118,7 +118,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     public boolean doHurtTarget(Entity pEntity) {
         if (getOwner() != null && pEntity.isAlliedTo(getOwner())) return false;
         boolean result = super.doHurtTarget(pEntity);
-        if (result) ticksLeft -= 20*20;
+        if (result) ticksLeft -= 20 * 20;
         return result;
     }
 
@@ -144,7 +144,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
         if (!level.isClientSide) {
             ticksLeft--;
             this.entityData.set(AGE, this.entityData.get(AGE) + 1);
-            if(this.entityData.get(AGE) > 20) {
+            if (this.entityData.get(AGE) > 20) {
                 this.entityData.set(CAN_WALK, true);
             }
             if (ticksLeft <= 0 && !isDeadOrDying()) {
@@ -157,7 +157,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     public void returnToFallingBlock(BlockState blockState) {
-        if(hasConverted || blockState == null)
+        if (hasConverted || blockState == null)
             return;
         hasConverted = true;
         EnchantedFallingBlock fallingBlock = new EnchantedFallingBlock(level, blockPosition(), blockState, null);
@@ -291,7 +291,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
         this.setPos(d0, d1, d2);
     }
 
-    public void setColor(int color){
+    public void setColor(int color) {
         this.color = color;
         this.getEntityData().set(COLOR, color);
     }
@@ -333,7 +333,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     public int getColor() {
-        if (color == 0){
+        if (color == 0) {
             color = entityData.get(COLOR);
         }
         return color;

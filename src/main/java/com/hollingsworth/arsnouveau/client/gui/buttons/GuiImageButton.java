@@ -29,7 +29,7 @@ public class GuiImageButton extends ANButton {
     }
 
     public GuiImageButton(int x, int y, int u, int v, int w, int h, int image_width, int image_height, String resource_image, Button.OnPress onPress) {
-        this(x, y, u, v, w, h, image_width, image_height, ArsNouveau.prefix( resource_image), onPress);
+        this(x, y, u, v, w, h, image_width, image_height, ArsNouveau.prefix(resource_image), onPress);
     }
 
     public GuiImageButton(int x, int y, int u, int v, int w, int h, int image_width, int image_height, ResourceLocation image, Button.OnPress onPress) {
@@ -43,7 +43,7 @@ public class GuiImageButton extends ANButton {
         this.image = image;
     }
 
-    public GuiImageButton withHoverImage(DocAssets.BlitInfo blitInfo){
+    public GuiImageButton withHoverImage(DocAssets.BlitInfo blitInfo) {
         this.hoverImage = blitInfo.location();
         return this;
     }
@@ -56,12 +56,12 @@ public class GuiImageButton extends ANButton {
 
     @Override
     protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        if(!this.visible){
+        if (!this.visible) {
             return;
         }
-        if(hoverImage != null && GuiUtils.isMouseInRelativeRange(pMouseX, pMouseY, this)) {
+        if (hoverImage != null && GuiUtils.isMouseInRelativeRange(pMouseX, pMouseY, this)) {
             graphics.blit(hoverImage, x, y, u, v, width, height, image_width, image_height);
-        }else{
+        } else {
             graphics.blit(image, x, y, u, v, width, height, image_width, image_height);
         }
     }

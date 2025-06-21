@@ -34,7 +34,7 @@ public class TimerSpellTurret extends BasicSpellTurret {
     public @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack stack, @NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
         if (handIn == InteractionHand.MAIN_HAND) {
             if ((stack.getItem() instanceof ICasterTool) || worldIn.isClientSide)
-                return super.useItemOn(stack,state, worldIn, pos, player, handIn, hit);
+                return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
             if (worldIn.getBlockEntity(pos) instanceof TimerSpellTurretTile timerSpellTurretTile) {
                 if (timerSpellTurretTile.isLocked)
                     return ItemInteractionResult.SUCCESS;

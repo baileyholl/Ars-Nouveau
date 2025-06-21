@@ -21,7 +21,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import static com.hollingsworth.arsnouveau.api.particle.timelines.ProjectileTimeline.FLAIR_OPTIONS;
 import static com.hollingsworth.arsnouveau.api.particle.timelines.ProjectileTimeline.SPAWN_OPTIONS;
 
-public class OrbitTimeline extends BaseTimeline<OrbitTimeline>{
+public class OrbitTimeline extends BaseTimeline<OrbitTimeline> {
     public static final MapCodec<OrbitTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             TimelineEntryData.CODEC.fieldOf("trailEffect").forGetter(i -> i.trailEffect),
             TimelineEntryData.CODEC.fieldOf("onResolvingEffect").forGetter(i -> i.onResolvingEffect),
@@ -54,7 +54,7 @@ public class OrbitTimeline extends BaseTimeline<OrbitTimeline>{
     public SoundProperty resolveSound = new SoundProperty();
     public SoundProperty spawnSound = new SoundProperty();
 
-    public OrbitTimeline(){
+    public OrbitTimeline() {
         this(new TimelineEntryData(new TrailMotion(), new PropertyParticleOptions()),
                 new TimelineEntryData(new BurstMotion(), new PropertyParticleOptions()),
                 new TimelineEntryData(),
@@ -62,7 +62,7 @@ public class OrbitTimeline extends BaseTimeline<OrbitTimeline>{
     }
 
     public OrbitTimeline(TimelineEntryData trailEffect, TimelineEntryData onResolvingEffect,
-                              TimelineEntryData onSpawnEffect, TimelineEntryData flairEffect, SoundProperty spawnSound, SoundProperty resolveSound){
+                         TimelineEntryData onSpawnEffect, TimelineEntryData flairEffect, SoundProperty spawnSound, SoundProperty resolveSound) {
         this.trailEffect = trailEffect;
         this.onResolvingEffect = onResolvingEffect;
         this.onSpawnEffect = onSpawnEffect;
@@ -71,11 +71,11 @@ public class OrbitTimeline extends BaseTimeline<OrbitTimeline>{
         this.resolveSound = resolveSound;
     }
 
-    public TimelineEntryData trailEffect(){
+    public TimelineEntryData trailEffect() {
         return trailEffect;
     }
 
-    public TimelineEntryData onResolvingEffect(){
+    public TimelineEntryData onResolvingEffect() {
         return onResolvingEffect;
     }
 
@@ -86,6 +86,7 @@ public class OrbitTimeline extends BaseTimeline<OrbitTimeline>{
     public TimelineEntryData flairEffect() {
         return flairEffect;
     }
+
     @Override
     public IParticleTimelineType<OrbitTimeline> getType() {
         return ParticleTimelineRegistry.ORBIT_TIMELINE.get();

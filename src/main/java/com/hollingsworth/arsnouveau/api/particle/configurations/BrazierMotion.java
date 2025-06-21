@@ -17,7 +17,7 @@ public class BrazierMotion extends ParticleMotion {
 
     public static MapCodec<BrazierMotion> CODEC = buildPropCodec(BrazierMotion::new);
 
-    public static StreamCodec<RegistryFriendlyByteBuf, BrazierMotion> STREAM =  buildStreamCodec(BrazierMotion::new);
+    public static StreamCodec<RegistryFriendlyByteBuf, BrazierMotion> STREAM = buildStreamCodec(BrazierMotion::new);
 
 
     public BrazierMotion(PropMap propertyMap) {
@@ -37,13 +37,13 @@ public class BrazierMotion extends ParticleMotion {
 
         PropertyParticleOptions particle2;
         var secondType = propertyMap.get(ParticlePropertyRegistry.TYPE_PROPERTY.get());
-        if(secondType != null){
+        if (secondType != null) {
             particle2 = new PropertyParticleOptions(propertyMap);
-        }else{
+        } else {
             particle2 = new PropertyParticleOptions();
         }
 
-        for (int i = 0; i < numParticles ; i++) {
+        for (int i = 0; i < numParticles; i++) {
             Vec3 speed = randomSpeed(particleOptions, 0.0f, 0.0f, 0.0f, 0.05f);
             level.addAlwaysVisibleParticle(
                     particleOptions,

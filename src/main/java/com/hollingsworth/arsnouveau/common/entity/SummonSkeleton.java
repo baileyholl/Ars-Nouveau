@@ -107,7 +107,9 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     }
 
     @Override
-    protected boolean shouldDropLoot() {return false;}
+    protected boolean shouldDropLoot() {
+        return false;
+    }
 
     @Override
     protected void dropCustomDeathLoot(ServerLevel p_348477_, DamageSource p_33574_, boolean p_33576_) {
@@ -115,7 +117,8 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     }
 
     @Override
-    protected void dropEquipment() {}
+    protected void dropEquipment() {
+    }
 
     @Override
     protected void registerGoals() {
@@ -124,10 +127,10 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
         this.goalSelector.addGoal(2, new FollowSummonerGoal(this, this.owner, 1.0, 9.0f, 3.0f));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.targetSelector.addGoal(2, new HurtByTargetGoal(this, SummonSkeleton.class){
+        this.targetSelector.addGoal(2, new HurtByTargetGoal(this, SummonSkeleton.class) {
             @Override
             protected boolean canAttack(@Nullable LivingEntity pPotentialTarget, TargetingConditions pTargetPredicate) {
-                return pPotentialTarget != null && super.canAttack(pPotentialTarget, pTargetPredicate) && !pPotentialTarget.getUUID().equals(getOwnerUUID()) ;
+                return pPotentialTarget != null && super.canAttack(pPotentialTarget, pTargetPredicate) && !pPotentialTarget.getUUID().equals(getOwnerUUID());
             }
         });
         this.targetSelector.addGoal(1, new CopyOwnerTargetGoal<>(this));
@@ -164,7 +167,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        if (pSource.is(DamageTypes.MOB_ATTACK) && pSource.getEntity() instanceof ISummon summon){
+        if (pSource.is(DamageTypes.MOB_ATTACK) && pSource.getEntity() instanceof ISummon summon) {
             if (summon.getOwnerUUID() != null && summon.getOwnerUUID().equals(this.getOwnerUUID())) return false;
         }
         return super.hurt(pSource, pAmount);
@@ -194,7 +197,8 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
         LivingEntity summoner = this.getSummoner();
 
         if (summoner != null) {
-            if (pEntity instanceof ISummon summon && summon.getOwnerUUID() != null && summon.getOwnerUUID().equals(this.getOwnerUUID())) return true;
+            if (pEntity instanceof ISummon summon && summon.getOwnerUUID() != null && summon.getOwnerUUID().equals(this.getOwnerUUID()))
+                return true;
             return pEntity == summoner || summoner.isAlliedTo(pEntity);
         }
         return super.isAlliedTo(pEntity);

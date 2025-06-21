@@ -50,7 +50,7 @@ public class ScryCasterRenderer extends GeoItemRenderer<ScryCaster> {
     public Color getRenderColor(ScryCaster animatable, float partialTick, int packedLight) {
         ParticleColor color = ParticleColor.defaultParticleColor();
         var caster = SpellCasterRegistry.from(currentItemStack);
-        if (caster != null){
+        if (caster != null) {
             var timeline = caster.getSpell().particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
             color = timeline.trailEffect.particleOptions().colorProp().color();
         }

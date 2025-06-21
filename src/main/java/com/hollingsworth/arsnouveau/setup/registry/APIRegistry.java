@@ -249,7 +249,7 @@ public class APIRegistry {
                 Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
         ));
 
-        PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_ROBES,Arrays.asList(
+        PerkRegistry.registerPerkProvider(ItemsRegistry.SORCERER_ROBES, Arrays.asList(
                 Arrays.asList(PerkSlot.TWO),
                 Arrays.asList(PerkSlot.TWO, PerkSlot.THREE),
                 Arrays.asList(PerkSlot.TWO, PerkSlot.TWO, PerkSlot.THREE)
@@ -426,11 +426,11 @@ public class APIRegistry {
         GlyphRegistry.registerSpell(spellPart);
     }
 
-    public static void registerPerk(IPerk perk){
+    public static void registerPerk(IPerk perk) {
         PerkRegistry.registerPerk(perk);
     }
 
-    public static void registerScryer(IScryer scryer){
+    public static void registerScryer(IScryer scryer) {
         ArsNouveauAPI.getInstance().registerScryer(scryer);
     }
 

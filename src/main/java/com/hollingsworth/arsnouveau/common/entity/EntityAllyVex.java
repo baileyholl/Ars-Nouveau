@@ -94,7 +94,7 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
         this.targetSelector.addGoal(1, new CopyOwnerTargetGoal<>(this));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 10, false, true,
                 (entity) -> (entity instanceof Mob mob && mob.getTarget() != null &&
-                             mob.getTarget().equals(this.owner)) || (entity != null && entity.getKillCredit() != null && entity.getKillCredit().equals(this.owner))
+                        mob.getTarget().equals(this.owner)) || (entity != null && entity.getKillCredit() != null && entity.getKillCredit().equals(this.owner))
         ));
     }
 

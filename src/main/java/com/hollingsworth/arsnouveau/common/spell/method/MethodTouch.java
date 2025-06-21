@@ -78,7 +78,7 @@ public class MethodTouch extends AbstractCastMethod {
         return createStaticEmitter(entryData, position);
     }
 
-    public void playResolveSound(SpellContext spellContext, Level level, Vec3 position){
+    public void playResolveSound(SpellContext spellContext, Level level, Vec3 position) {
         SoundProperty soundProperty = spellContext.getParticleTimeline(ParticleTimelineRegistry.TOUCH_TIMELINE.get()).resolveSound;
         soundProperty.sound.playSound(level, position.x, position.y, position.z);
     }

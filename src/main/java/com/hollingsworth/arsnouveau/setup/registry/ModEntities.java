@@ -207,7 +207,7 @@ public class ModEntities {
                     .setTrackingRange(20)
                     .setShouldReceiveVelocityUpdates(true)
                     .noSave()
-                    );
+    );
     public static final DeferredHolder<EntityType<?>, EntityType<EntityWallSpell>> WALL_SPELL = registerEntity(
             LibEntityNames.WALL,
             EntityType.Builder.<EntityWallSpell>of(EntityWallSpell::new, MobCategory.MISC)
@@ -215,7 +215,7 @@ public class ModEntities {
                     .setTrackingRange(20)
                     .setShouldReceiveVelocityUpdates(true)
                     .noSave()
-                    );
+    );
     public static final DeferredHolder<EntityType<?>, EntityType<WealdWalker>> ENTITY_CASCADING_WEALD = registerEntity(LibEntityNames.CASCADING_WEALD_WALKER, EntityType.Builder.<WealdWalker>of((type, world) -> {
                 WealdWalker walker = new WealdWalker(type, world);
                 walker.spell = new Spell(MethodProjectile.INSTANCE, EffectFreeze.INSTANCE, EffectColdSnap.INSTANCE);
@@ -328,7 +328,7 @@ public class ModEntities {
 
     public static boolean wildenSpawnRules(EntityType<? extends Monster> type, ServerLevelAccessor worldIn, MobSpawnType reason, BlockPos pos, RandomSource randomIn) {
         return worldIn.getDifficulty() != Difficulty.PEACEFUL && Monster.checkMonsterSpawnRules(type, worldIn, reason, pos, randomIn)
-               && !Config.DIMENSION_BLACKLIST.get().contains(worldIn.getLevel().dimension().location().toString());
+                && !Config.DIMENSION_BLACKLIST.get().contains(worldIn.getLevel().dimension().location().toString());
     }
 
     @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD)

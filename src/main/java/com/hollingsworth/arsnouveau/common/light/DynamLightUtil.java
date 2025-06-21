@@ -22,20 +22,20 @@ public class DynamLightUtil {
     }
 
 
-    private static int getLuminance(Entity entity){
-        if(entity.isOnFire() || entity.isCurrentlyGlowing()) {
+    private static int getLuminance(Entity entity) {
+        if (entity.isOnFire() || entity.isCurrentlyGlowing()) {
             return 15;
         }
-        if(Config.ENTITY_LIGHT_MAP.containsKey(keyFor(entity)))
+        if (Config.ENTITY_LIGHT_MAP.containsKey(keyFor(entity)))
             return Config.ENTITY_LIGHT_MAP.get(keyFor(entity));
         return Math.min(15, LightManager.getValue(entity));
     }
 
-    public static boolean couldGiveLight(Entity entity){
+    public static boolean couldGiveLight(Entity entity) {
         return LightManager.getLightRegistry().containsKey(entity.getType()) || Config.ENTITY_LIGHT_MAP.containsKey(keyFor(entity)) || (entity instanceof Player player && getPlayerLight(player) > 0) || entity.isOnFire() || entity.isCurrentlyGlowing();
     }
 
-    public static int getPlayerLight(Player player){
+    public static int getPlayerLight(Player player) {
         int max = 0;
         for (ItemStack item : player.getAllSlots()) {
             if (item.isEmpty()) continue;
@@ -44,15 +44,15 @@ public class DynamLightUtil {
         return max;
     }
 
-    public static int lightForEntity(Entity entity){
+    public static int lightForEntity(Entity entity) {
         int light = 0;
-        if(entity instanceof Player player){
+        if (entity instanceof Player player) {
             light = getPlayerLight(player);
         }
-        if(entity.isOnFire() || entity.isCurrentlyGlowing()){
+        if (entity.isOnFire() || entity.isCurrentlyGlowing()) {
             return 15;
         }
-        if(light < 15 && LightManager.containsEntity(entity.getType())) {
+        if (light < 15 && LightManager.containsEntity(entity.getType())) {
             int entityLuminance = getLuminance(entity);
             return Math.max(entityLuminance, light);
         }
@@ -60,15 +60,15 @@ public class DynamLightUtil {
         return Math.min(15, light);
     }
 
-    public static int fromItemLike(ItemLike itemLike){
+    public static int fromItemLike(ItemLike itemLike) {
         return Config.ITEM_LIGHTMAP.getOrDefault(keyFor(itemLike), 0);
     }
 
-    public static ResourceLocation keyFor(Entity entity){
+    public static ResourceLocation keyFor(Entity entity) {
         return BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
     }
 
-    public static ResourceLocation keyFor(ItemLike itemLike){
+    public static ResourceLocation keyFor(ItemLike itemLike) {
         return BuiltInRegistries.ITEM.getKey(itemLike.asItem());
     }
 

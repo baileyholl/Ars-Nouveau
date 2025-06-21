@@ -11,7 +11,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
-public class PacketPrestidigitation extends AbstractPacket{
+public class PacketPrestidigitation extends AbstractPacket {
 
     int entityId;
     int ticks;
@@ -37,7 +37,7 @@ public class PacketPrestidigitation extends AbstractPacket{
 
     @Override
     public void onClientReceived(Minecraft minecraft, Player player) {
-        if(player.level.getEntity(this.entityId) instanceof Entity entity) {
+        if (player.level.getEntity(this.entityId) instanceof Entity entity) {
             emitter.position = () -> entity.getBoundingBox().getCenter();
             EventQueue.getClientQueue().addEvent(new ParticleTimelineEvent(player.level, emitter, ticks));
         }

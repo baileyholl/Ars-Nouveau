@@ -16,7 +16,7 @@ public class LightBlobMotion extends ParticleMotion {
 
     public static MapCodec<LightBlobMotion> CODEC = buildPropCodec(LightBlobMotion::new);
 
-    public static StreamCodec<RegistryFriendlyByteBuf, LightBlobMotion> STREAM =  buildStreamCodec(LightBlobMotion::new);
+    public static StreamCodec<RegistryFriendlyByteBuf, LightBlobMotion> STREAM = buildStreamCodec(LightBlobMotion::new);
 
     public LightBlobMotion() {
         this(new PropMap());
@@ -34,10 +34,10 @@ public class LightBlobMotion extends ParticleMotion {
     @Override
     public void tick(PropertyParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
         ParticleDensityProperty density = getDensity(particleOptions, 20, 0.1f);
-        for(int i = 0; i < getNumParticles(density.density()); i++) {
-            Vec3 speed = randomSpeed(particleOptions, 0.0, 0.0, 0.0 ,0.01);
+        for (int i = 0; i < getNumParticles(density.density()); i++) {
+            Vec3 speed = randomSpeed(particleOptions, 0.0, 0.0, 0.0, 0.01);
             Vec3 adjustedVec = getMotionScaled(new Vec3(x, y, z), density.radius(), density.spawnType().orElse(SpawnType.SPHERE));
-            Vector3f worldSpaceSpeed = toEmitterSpace( 0, 0,0, (float) speed.x, (float) speed.y, (float) speed.z);
+            Vector3f worldSpaceSpeed = toEmitterSpace(0, 0, 0, (float) speed.x, (float) speed.y, (float) speed.z);
             level.addAlwaysVisibleParticle(particleOptions, true, adjustedVec.x, adjustedVec.y, adjustedVec.z, worldSpaceSpeed.x, worldSpaceSpeed.y, worldSpaceSpeed.z);
         }
     }

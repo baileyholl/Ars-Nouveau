@@ -16,11 +16,12 @@ import java.util.List;
 
 public abstract class SnowstormParticle extends TextureSheetParticle {
     public static final float TIME_SCALE = 1.0f / 20f;
-    private Vector3f acceleration = new Vector3f(0,0,0);
-    private Vector3f speed = new Vector3f(0,0,0);
-    private Vector3f position = new Vector3f(0,0,0);
+    private Vector3f acceleration = new Vector3f(0, 0, 0);
+    private Vector3f speed = new Vector3f(0, 0, 0);
+    private Vector3f position = new Vector3f(0, 0, 0);
     protected PropertyParticleOptions propertyParticleOptions;
     float phase = (float) Math.random() * 2 * (float) Math.PI;
+
     protected SnowstormParticle(PropertyParticleOptions propertyParticleOptions, ClientLevel level, double x, double y, double z) {
         this(propertyParticleOptions, level, x, y, z, 0, 0, 0);
     }
@@ -31,8 +32,8 @@ public abstract class SnowstormParticle extends TextureSheetParticle {
         this.setPos(x + pointOffset.x, y + pointOffset.y, z + pointOffset.z);
         this.propertyParticleOptions = propertyParticleOptions;
         position.set(x, y, z);
-        var dir = Direction.NORTH.step().rotateX(90* Mth.DEG_TO_RAD).rotateY(180* Mth.DEG_TO_RAD);
-        if(propertyParticleOptions.map.has(ParticlePropertyRegistry.EMITTER_PROPERTY.get())){
+        var dir = Direction.NORTH.step().rotateX(90 * Mth.DEG_TO_RAD).rotateY(180 * Mth.DEG_TO_RAD);
+        if (propertyParticleOptions.map.has(ParticlePropertyRegistry.EMITTER_PROPERTY.get())) {
             Vec2 rotation = propertyParticleOptions.map.get(ParticlePropertyRegistry.EMITTER_PROPERTY.get()).rotation;
             dir = Direction.NORTH.step().rotateX(rotation.x * Mth.DEG_TO_RAD).rotateY(rotation.y * Mth.DEG_TO_RAD);
         }
@@ -49,13 +50,13 @@ public abstract class SnowstormParticle extends TextureSheetParticle {
     @Override
     public void tick() {
         age += 1;
-        if(this.age > lifetime){
+        if (this.age > lifetime) {
             this.remove();
         }
         xo = this.position.x;
         yo = this.position.y;
         zo = this.position.z;
-        Vector3f thisTickAccel = new Vector3f(0,0,0);// this.getAcceleration();
+        Vector3f thisTickAccel = new Vector3f(0, 0, 0);// this.getAcceleration();
         this.acceleration.x = thisTickAccel.x;
         this.acceleration.y = thisTickAccel.y;
         this.acceleration.z = thisTickAccel.z;
@@ -63,21 +64,21 @@ public abstract class SnowstormParticle extends TextureSheetParticle {
 //
         this.acceleration.add(this.speed.x * -dragCoefficient, this.speed.y * -dragCoefficient, this.speed.z * -dragCoefficient);
         this.speed.add(this.acceleration.x * TIME_SCALE, this.acceleration.y * TIME_SCALE, this.acceleration.z * TIME_SCALE);
-        this.position.add(this.speed.x * TIME_SCALE, this.speed.y * TIME_SCALE, this.speed.z* TIME_SCALE);
+        this.position.add(this.speed.x * TIME_SCALE, this.speed.y * TIME_SCALE, this.speed.z * TIME_SCALE);
 
         this.move(this.speed.x * TIME_SCALE, this.speed.y * TIME_SCALE, this.speed.z * TIME_SCALE);
-        float swirlSpeed      = 2.0f / 20f;    // revolutions per second
-        float baseRadius      = 1.0f;    // overall radius of swirl
+        float swirlSpeed = 2.0f / 20f;    // revolutions per second
+        float baseRadius = 1.0f;    // overall radius of swirl
         float radiusWobbleAmp = 0.3f / 20f;    // how much radius oscillates
-        float radiusWobbleFreq= 1.5f / 20f;    // cycles of wobble per second
+        float radiusWobbleFreq = 1.5f / 20f;    // cycles of wobble per second
 
         // vertical drift parameters
-        float fallSpeed       = 1.0f / 20f;    // blocks per second downward
+        float fallSpeed = 1.0f / 20f;    // blocks per second downward
         float verticalWobbleAmp = 0.2f;  // little up/down bobbing
-        float verticalWobbleFreq= 3.0f / 20f;  // cycles per second
+        float verticalWobbleFreq = 3.0f / 20f;  // cycles per second
 
         // jitter—small random shake to break up perfect sine waves
-        float jitterAmp       = 0.05f;
+        float jitterAmp = 0.05f;
 
         // 1) compute swirling angle (in radians)
         double angle = 2.0 * Math.PI * swirlSpeed * age + phase;
@@ -147,11 +148,11 @@ public abstract class SnowstormParticle extends TextureSheetParticle {
         }
     }
 
-    public boolean expireOnCollide(){
+    public boolean expireOnCollide() {
         return false;
     }
 
-    public float collisionDrag(){
+    public float collisionDrag() {
         return 0f;
     }
 
@@ -159,11 +160,11 @@ public abstract class SnowstormParticle extends TextureSheetParticle {
         return 0f;
     }
 
-    public int ageSeconds(){
+    public int ageSeconds() {
         return this.age * 20;
     }
 
-    public Vec3 getPointSpawnOffset(){
+    public Vec3 getPointSpawnOffset() {
         return new Vec3(0, 0, 0);
     }
 }

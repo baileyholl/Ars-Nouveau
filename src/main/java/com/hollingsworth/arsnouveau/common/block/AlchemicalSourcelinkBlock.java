@@ -23,19 +23,19 @@ public class AlchemicalSourcelinkBlock extends SourcelinkBlock {
                     Block.box(7, 3, 2, 9, 9, 3)
             ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(),
             Stream.of(
-            Block.box(2, 9, 7, 6, 14, 9),
-            Block.box(2, 0, 7, 5, 3, 9),
-            Block.box(2, 3, 7, 3, 9, 9)
+                    Block.box(2, 9, 7, 6, 14, 9),
+                    Block.box(2, 0, 7, 5, 3, 9),
+                    Block.box(2, 3, 7, 3, 9, 9)
             ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(),
             Stream.of(
-            Block.box(7, 9, 10, 9, 14, 14),
-            Block.box(7, 0, 11, 9, 3, 14),
-            Block.box(7, 3, 13, 9, 9, 14)
+                    Block.box(7, 9, 10, 9, 14, 14),
+                    Block.box(7, 0, 11, 9, 3, 14),
+                    Block.box(7, 3, 13, 9, 9, 14)
             ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(),
             Stream.of(
-            Block.box(10, 9, 7, 14, 14, 9),
-            Block.box(11, 0, 7, 14, 3, 9),
-            Block.box(13, 3, 7, 14, 9, 9)
+                    Block.box(10, 9, 7, 14, 14, 9),
+                    Block.box(11, 0, 7, 14, 3, 9),
+                    Block.box(13, 3, 7, 14, 9, 9)
             ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get()).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     public AlchemicalSourcelinkBlock() {

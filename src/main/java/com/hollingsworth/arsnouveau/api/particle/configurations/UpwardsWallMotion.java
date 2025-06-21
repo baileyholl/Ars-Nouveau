@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class UpwardsWallMotion extends ParticleMotion{
+public class UpwardsWallMotion extends ParticleMotion {
     public static MapCodec<UpwardsWallMotion> CODEC = buildPropCodec(UpwardsWallMotion::new);
 
     public static StreamCodec<RegistryFriendlyByteBuf, UpwardsWallMotion> STREAM = buildStreamCodec(UpwardsWallMotion::new);
@@ -40,7 +40,7 @@ public class UpwardsWallMotion extends ParticleMotion{
 
         BlockPos pos = BlockPos.containing(x, y, z);
 
-        BlockPos.betweenClosedStream(pos.offset(range * direction.getStepX(), 0, range * direction.getStepZ()), pos.offset(-range  * direction.getStepX(), range, -range * direction.getStepZ())).forEach(blockPos -> {
+        BlockPos.betweenClosedStream(pos.offset(range * direction.getStepX(), 0, range * direction.getStepZ()), pos.offset(-range * direction.getStepX(), range, -range * direction.getStepZ())).forEach(blockPos -> {
             if (rand.nextInt(chance) == 0) {
                 for (int i = 0; i < getNumParticles(density.density()); i++) {
                     double dx = blockPos.getX() + ParticleUtil.inRange(-growthFactor, growthFactor) + 0.5;

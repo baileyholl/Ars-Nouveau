@@ -24,7 +24,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class ParticleDensityProperty extends BaseProperty<ParticleDensityProperty>{
+public class ParticleDensityProperty extends BaseProperty<ParticleDensityProperty> {
     public static MapCodec<ParticleDensityProperty> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.INT.fieldOf("density").forGetter(i -> i.density),
             Codec.DOUBLE.fieldOf("radius").forGetter(i -> i.radius),
@@ -53,7 +53,7 @@ public class ParticleDensityProperty extends BaseProperty<ParticleDensityPropert
     private boolean supportsRadius = true;
     private ParticleMotion.SpawnType spawnType;
 
-    public ParticleDensityProperty(){
+    public ParticleDensityProperty() {
         super();
         this.density = 10;
         this.radius = 0.3f;
@@ -132,19 +132,19 @@ public class ParticleDensityProperty extends BaseProperty<ParticleDensityPropert
             public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
                 DocClientUtils.drawHeader(getName(), graphics, x, y, width, mouseX, mouseY, partialTicks);
                 int yOffset = 20;
-                if(supportsShapes) {
+                if (supportsShapes) {
                     DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.spawn_header", Component.translatable("ars_nouveau.spawn." + spawnType.name().toLowerCase())), graphics, x, y + yOffset, width, mouseX, mouseY, partialTicks);
 
                     yOffset += 32;
 
                     DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.density_slider", densitySlider.getValueString()), graphics, x, y + yOffset, width, mouseX, mouseY, partialTicks);
-                }else{
+                } else {
                     yOffset += 2;
                     DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.density_slider", densitySlider.getValueString()), graphics, x, y + yOffset, width, mouseX, mouseY, partialTicks);
                 }
                 int sliderSpacing = 25;
-                if(supportsRadius){
-                    yOffset +=  sliderSpacing;
+                if (supportsRadius) {
+                    yOffset += sliderSpacing;
                     DocClientUtils.drawHeaderNoUnderline(Component.translatable("ars_nouveau.radius_slider", radiusSlider.getValueString()), graphics, x, y + yOffset, width, mouseX, mouseY, partialTicks);
                 }
             }
@@ -153,13 +153,13 @@ public class ParticleDensityProperty extends BaseProperty<ParticleDensityPropert
             public void addWidgets(List<AbstractWidget> widgets) {
                 ParticleMotion.SpawnType[] values = ParticleMotion.SpawnType.values();
                 int yOffset = 30;
-                if(supportsShapes) {
+                if (supportsShapes) {
                     for (int i = 0; i < values.length; i++) {
                         ParticleMotion.SpawnType spawnType1 = values[i];
                         SelectedParticleButton spawnTypeButton = new SelectedParticleButton(x + 10 + 20 * i, y + yOffset, fromShape(spawnType1), (button) -> {
                             spawnType = spawnType1;
-                            if(button instanceof SelectedParticleButton selectedParticleButton) {
-                                if(selectedButton != null){
+                            if (button instanceof SelectedParticleButton selectedParticleButton) {
+                                if (selectedButton != null) {
                                     selectedButton.selected = false;
                                 }
                                 selectedButton = selectedParticleButton;
@@ -167,7 +167,7 @@ public class ParticleDensityProperty extends BaseProperty<ParticleDensityPropert
                             }
                         });
                         spawnTypeButton.withTooltip(Component.translatable("ars_nouveau.spawn." + spawnType1.name().toLowerCase()));
-                        if(spawnType == spawnType1){
+                        if (spawnType == spawnType1) {
                             spawnTypeButton.selected = true;
                             selectedButton = spawnTypeButton;
                         }
@@ -187,13 +187,13 @@ public class ParticleDensityProperty extends BaseProperty<ParticleDensityPropert
                 densitySlider.setValue(Mth.clamp(density, minDensity, maxDensity));
                 widgets.add(densitySlider);
 
-                radiusSlider = buildSlider(xSliderOffset, y + yOffset, minRadius, maxRadius, 0.05, 1, Component.translatable("ars_nouveau.radius_slider"), Component.empty(),  initialRadius,  (value) -> {
+                radiusSlider = buildSlider(xSliderOffset, y + yOffset, minRadius, maxRadius, 0.05, 1, Component.translatable("ars_nouveau.radius_slider"), Component.empty(), initialRadius, (value) -> {
                     radius = radiusSlider.getValue();
                 });
                 radiusSlider.setValue(radius);
 
 
-                if(supportsRadius) {
+                if (supportsRadius) {
                     widgets.add(radiusSlider);
                     yOffset += sliderSpacing;
                 }
@@ -208,11 +208,11 @@ public class ParticleDensityProperty extends BaseProperty<ParticleDensityPropert
                 DocClientUtils.blit(graphics, fromShape(spawnType), x, y);
             }
 
-            public DocAssets.BlitInfo fromShape(ParticleMotion.SpawnType spawnType){
-                if(spawnType == null){
+            public DocAssets.BlitInfo fromShape(ParticleMotion.SpawnType spawnType) {
+                if (spawnType == null) {
                     return DocAssets.STYLE_ICON_SPHERE;
                 }
-                return switch (spawnType){
+                return switch (spawnType) {
                     case SPHERE -> DocAssets.STYLE_ICON_SPHERE;
                     case CUBE -> DocAssets.STYLE_ICON_CUBE;
                 };

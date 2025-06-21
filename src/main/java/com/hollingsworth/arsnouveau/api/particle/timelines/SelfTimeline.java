@@ -17,7 +17,7 @@ import net.minecraft.network.codec.StreamCodec;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class SelfTimeline extends BaseTimeline<SelfTimeline>{
+public class SelfTimeline extends BaseTimeline<SelfTimeline> {
     public static final MapCodec<SelfTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             TimelineEntryData.CODEC.fieldOf("onResolvingEffect").forGetter(i -> i.onResolvingEffect),
             SoundProperty.CODEC.fieldOf("resolveSound").forGetter(i -> i.resolveSound)
@@ -35,16 +35,16 @@ public class SelfTimeline extends BaseTimeline<SelfTimeline>{
     public TimelineEntryData onResolvingEffect;
     public SoundProperty resolveSound = new SoundProperty();
 
-    public SelfTimeline(){
+    public SelfTimeline() {
         this(new TimelineEntryData(new BurstMotion(), new PropertyParticleOptions()), new SoundProperty());
     }
 
-    public SelfTimeline(TimelineEntryData onResolvingEffect, SoundProperty resolveSound){
+    public SelfTimeline(TimelineEntryData onResolvingEffect, SoundProperty resolveSound) {
         this.onResolvingEffect = onResolvingEffect;
         this.resolveSound = resolveSound;
     }
 
-    public TimelineEntryData onResolvingEffect(){
+    public TimelineEntryData onResolvingEffect() {
         return onResolvingEffect;
     }
 

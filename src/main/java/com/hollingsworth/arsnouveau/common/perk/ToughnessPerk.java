@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ToughnessPerk extends Perk {
 
-    public static final ToughnessPerk INSTANCE = new ToughnessPerk(ArsNouveau.prefix( "thread_toughness"));
+    public static final ToughnessPerk INSTANCE = new ToughnessPerk(ArsNouveau.prefix("thread_toughness"));
 
     public ToughnessPerk(ResourceLocation key) {
         super(key);

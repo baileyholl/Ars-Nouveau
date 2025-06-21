@@ -34,19 +34,19 @@ public class ModdedScreen extends Screen {
         List<Component> tooltip = new ArrayList<>();
         collectTooltips(mouseX, mouseY, tooltip);
         Optional<TooltipComponent> image = Optional.ofNullable(collectComponent(mouseX, mouseY));
-        if(image.isPresent() && tooltip.isEmpty()){
+        if (image.isPresent() && tooltip.isEmpty()) {
             tooltip.add(Component.empty());
         }
         stack.renderTooltip(font, tooltip, image, mouseX, mouseY);
     }
 
-    public void collectTooltips(int mouseX, int mouseY, List<Component> tooltip){
-        for(Renderable renderable : renderables){
-            if(renderable instanceof AbstractWidget widget){
-                if(GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)){
-                    if(renderable instanceof ITooltipProvider tooltipProvider) {
+    public void collectTooltips(int mouseX, int mouseY, List<Component> tooltip) {
+        for (Renderable renderable : renderables) {
+            if (renderable instanceof AbstractWidget widget) {
+                if (GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)) {
+                    if (renderable instanceof ITooltipProvider tooltipProvider) {
                         tooltipProvider.getTooltip(tooltip);
-                    }else if(renderable instanceof ITooltipRenderer nuggetProvider){
+                    } else if (renderable instanceof ITooltipRenderer nuggetProvider) {
                         nuggetProvider.gatherTooltips(tooltip);
                     }
                     break;
@@ -59,10 +59,10 @@ public class ModdedScreen extends Screen {
         return null;
     }
 
-    public @Nullable Renderable getHoveredRenderable(int mouseX, int mouseY){
-        for(Renderable renderable : renderables){
-            if(renderable instanceof AbstractWidget widget){
-                if(GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)){
+    public @Nullable Renderable getHoveredRenderable(int mouseX, int mouseY) {
+        for (Renderable renderable : renderables) {
+            if (renderable instanceof AbstractWidget widget) {
+                if (GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)) {
                     return renderable;
                 }
             }

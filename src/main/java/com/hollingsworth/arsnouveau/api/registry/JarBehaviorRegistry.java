@@ -20,14 +20,14 @@ public class JarBehaviorRegistry {
         BEHAVIOR_REGISTRY.get(type).add(jarBehavior);
     }
 
-    public static void forEach(Entity entity, Consumer<JarBehavior<? extends Entity>> consumer){
+    public static void forEach(Entity entity, Consumer<JarBehavior<? extends Entity>> consumer) {
         List<JarBehavior<?>> jarBehaviors = BEHAVIOR_REGISTRY.getOrDefault(entity.getType(), DEFAULT_BEHAVIOR);
-        for(JarBehavior<?> jarBehavior : jarBehaviors){
+        for (JarBehavior<?> jarBehavior : jarBehaviors) {
             consumer.accept(jarBehavior);
         }
     }
 
-    public static boolean containsEntity(Entity entity){
+    public static boolean containsEntity(Entity entity) {
         return BEHAVIOR_REGISTRY.containsKey(entity.getType());
     }
 }

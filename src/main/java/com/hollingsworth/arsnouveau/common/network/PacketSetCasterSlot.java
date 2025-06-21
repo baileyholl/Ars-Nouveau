@@ -12,7 +12,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
-public class PacketSetCasterSlot extends AbstractPacket{
+public class PacketSetCasterSlot extends AbstractPacket {
     public static final Type<PacketSetCasterSlot> TYPE = new Type<>(ArsNouveau.prefix("set_book_mode"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketSetCasterSlot> CODEC = StreamCodec.composite(
             ByteBufCodecs.INT,
@@ -30,7 +30,7 @@ public class PacketSetCasterSlot extends AbstractPacket{
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
         ItemStack stack = StackUtil.getHeldSpellbook(player);
         AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
-        if(caster != null){
+        if (caster != null) {
             caster.setCurrentSlot(slot).saveToStack(stack);
         }
     }

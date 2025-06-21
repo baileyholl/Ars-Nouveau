@@ -34,7 +34,7 @@ public class EventQueue {
             if (event.isExpired()) {
                 stale.add(event);
             } else {
-                if(e == null)
+                if (e == null)
                     event.tick(false);
                 else
                     event.tick(e);
@@ -62,7 +62,7 @@ public class EventQueue {
 
     // Tear down on world unload
     public void clear() {
-        for(ITimedEvent event : events){
+        for (ITimedEvent event : events) {
             event.onServerStopping();
         }
         this.events = new ObjectArrayList<>();

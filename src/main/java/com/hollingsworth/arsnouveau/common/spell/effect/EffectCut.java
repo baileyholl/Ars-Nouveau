@@ -44,7 +44,7 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
         if (entity instanceof IShearable shearable) {
             ItemStack shears = new ItemStack(Items.SHEARS);
@@ -61,22 +61,22 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         for (BlockPos p : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE))) {
-            if(spellStats.getBuffCount(AugmentAmplify.INSTANCE) > 0){
+            if (spellStats.getBuffCount(AugmentAmplify.INSTANCE) > 0) {
                 doStrip(p, rayTraceResult, world, shooter, spellStats, spellContext, resolver);
-            }else{
+            } else {
                 doShear(p, rayTraceResult, world, shooter, spellStats, spellContext, resolver);
             }
         }
     }
 
-    private boolean dupeCheck(Level world, BlockPos pos){
+    private boolean dupeCheck(Level world, BlockPos pos) {
         BlockEntity be = world.getBlockEntity(pos);
         return be != null && (world.getCapability(Capabilities.ItemHandler.BLOCK, pos, null) != null || be instanceof Container);
     }
 
-    public void doStrip(BlockPos p, BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
+    public void doStrip(BlockPos p, BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         ItemStack axe = new ItemStack(Items.DIAMOND_AXE);
         applyEnchantments(world, spellStats, axe);
         Player entity = ANFakePlayer.getPlayer((ServerLevel) world);
@@ -88,7 +88,7 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
         axe.useOn(new UseOnContext(entity, InteractionHand.MAIN_HAND, rayTraceResult));
     }
 
-    public void doShear(BlockPos p, BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
+    public void doShear(BlockPos p, BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         ItemStack shears = new ItemStack(Items.SHEARS);
         applyEnchantments(world, spellStats, shears);
         if (world.getBlockState(p).getBlock() instanceof IShearable shearable && shearable.isShearable(getPlayer(shooter, (ServerLevel) world), shears, world, p)) {
@@ -144,7 +144,7 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
         return 0;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);

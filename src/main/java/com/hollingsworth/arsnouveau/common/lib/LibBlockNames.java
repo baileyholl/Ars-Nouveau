@@ -188,11 +188,12 @@ public class LibBlockNames {
 
     public static final List<String> DECORATIVE_STAIRS = new ArrayList<>(DECORATIVE_SOURCESTONE.length);
     public static final List<String> DECORATIVE_SLABS = new ArrayList<>(DECORATIVE_SOURCESTONE.length);
+
     static {
-        for(String s : DECORATIVE_SOURCESTONE) {
+        for (String s : DECORATIVE_SOURCESTONE) {
             DECORATIVE_STAIRS.add(s + "_stairs");
         }
-        for(String s : DECORATIVE_SOURCESTONE) {
+        for (String s : DECORATIVE_SOURCESTONE) {
             DECORATIVE_SLABS.add(s + "_slab");
         }
     }

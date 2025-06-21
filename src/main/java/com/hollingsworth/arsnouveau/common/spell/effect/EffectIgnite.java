@@ -42,7 +42,7 @@ public class EffectIgnite extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (spellStats.isSensitive()) {
             BlockPos target = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
-            if(world.getBlockState(target).canBeReplaced()) {
+            if (world.getBlockState(target).canBeReplaced()) {
                 world.setBlock(target, BlockRegistry.MAGIC_FIRE.get().getStateForPlacement(world, target), 3);
             }
             return;
@@ -98,7 +98,7 @@ public class EffectIgnite extends AbstractEffect {
         return SpellTier.ONE;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentDurationDown.INSTANCE, AugmentSensitive.INSTANCE);
@@ -109,7 +109,7 @@ public class EffectIgnite extends AbstractEffect {
         return "Sets blocks and mobs on fire for a short time. Sensitive will summon Mage Fire, a shorter lived fire that will not spread or destroy blocks.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_FIRE);

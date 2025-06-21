@@ -15,8 +15,8 @@ public class LeafParticle extends PropParticle {
         this.yd = yd * 0.7 - 0.015; // slightly down from projectile
         this.xd = xd + (this.random.nextDouble() - 0.5) * 0.005;
         this.zd = zd + (this.random.nextDouble() - 0.5) * 0.005;
-        this.rotSpeed = ((float)Math.random() - 0.5F) * 0.1F;
-        this.roll = (float)Math.random() * (float) (Math.PI * 2);
+        this.rotSpeed = ((float) Math.random() - 0.5F) * 0.1F;
+        this.roll = (float) Math.random() * (float) (Math.PI * 2);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class LeafParticle extends PropParticle {
             return;
         }
         setColorFromProps();
-        if(onGround){
+        if (onGround) {
             return;
         }
 

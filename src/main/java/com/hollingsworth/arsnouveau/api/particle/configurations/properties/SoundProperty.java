@@ -30,7 +30,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class SoundProperty extends BaseProperty<SoundProperty>{
+public class SoundProperty extends BaseProperty<SoundProperty> {
 
     public ConfiguredSpellSound sound;
 
@@ -44,12 +44,12 @@ public class SoundProperty extends BaseProperty<SoundProperty>{
             SoundProperty::new
     );
 
-    public SoundProperty(ConfiguredSpellSound sound){
+    public SoundProperty(ConfiguredSpellSound sound) {
         super();
         this.sound = sound;
     }
 
-    public SoundProperty(){
+    public SoundProperty() {
         this(ConfiguredSpellSound.DEFAULT);
     }
 
@@ -62,8 +62,8 @@ public class SoundProperty extends BaseProperty<SoundProperty>{
         for (SpellSound spellSound : spellSounds) {
             DocEntryButton button = new DocEntryButton(0, 0, ItemStack.EMPTY, spellSound.getSoundName(), (b) -> {
                 this.sound = new ConfiguredSpellSound(spellSound, sound.getVolume(), sound.getPitch());
-            }).setFavoritable(() -> DocPlayerData.favoriteSounds.contains(spellSound), (b) ->{
-                if(DocPlayerData.favoriteSounds.contains(spellSound)) {
+            }).setFavoritable(() -> DocPlayerData.favoriteSounds.contains(spellSound), (b) -> {
+                if (DocPlayerData.favoriteSounds.contains(spellSound)) {
                     DocPlayerData.favoriteSounds.remove(spellSound);
                 } else {
                     DocPlayerData.favoriteSounds.add(spellSound);
@@ -84,21 +84,22 @@ public class SoundProperty extends BaseProperty<SoundProperty>{
         return new ListParticleWidgetProvider(x, y, width, height, buttons, 4) {
             HorizontalSlider volumeSlider;
             HorizontalSlider pitchSlider;
+
             @Override
             public void addWidgets(List<AbstractWidget> widgets) {
                 super.addWidgets(widgets);
 
                 int yOffset = 103;
                 int xSliderOffset = x + 4;
-                volumeSlider = buildSlider(xSliderOffset, y + yOffset,  5, 200, 5, 1, Component.translatable("ars_nouveau.xzmaxspeed_slider"), Component.empty(), 0.0, (value) ->{
+                volumeSlider = buildSlider(xSliderOffset, y + yOffset, 5, 200, 5, 1, Component.translatable("ars_nouveau.xzmaxspeed_slider"), Component.empty(), 0.0, (value) -> {
                     sound = new ConfiguredSpellSound(sound.getSound(), (float) (volumeSlider.getValue() / 100f), sound.getPitch());
                 });
                 yOffset += 25;
-                pitchSlider = buildSlider(xSliderOffset, y + yOffset,  5, 200, 5, 1, Component.translatable("ars_nouveau.xzmaxspeed_slider"), Component.empty(), 0.0, (value) ->{
+                pitchSlider = buildSlider(xSliderOffset, y + yOffset, 5, 200, 5, 1, Component.translatable("ars_nouveau.xzmaxspeed_slider"), Component.empty(), 0.0, (value) -> {
                     sound = new ConfiguredSpellSound(sound.getSound(), sound.getVolume(), (float) pitchSlider.getValue() / 100f);
                 });
                 yOffset += 10;
-                GuiImageButton testButton = new GuiImageButton(xSliderOffset, y + yOffset, 37, 12, ArsNouveau.prefix("textures/gui/sound_test_icon.png"), (b) ->{
+                GuiImageButton testButton = new GuiImageButton(xSliderOffset, y + yOffset, 37, 12, ArsNouveau.prefix("textures/gui/sound_test_icon.png"), (b) -> {
                     playTestSound(sound);
                 });
                 testButton.soundDisabled = true;
@@ -136,7 +137,7 @@ public class SoundProperty extends BaseProperty<SoundProperty>{
         };
     }
 
-    public void playTestSound(ConfiguredSpellSound sound){
+    public void playTestSound(ConfiguredSpellSound sound) {
         LocalPlayer localPlayer = Minecraft.getInstance().player;
         Vec3 pos = localPlayer.position().add(0, 2, 0);
         localPlayer.level.playLocalSound(pos.x(), pos.y(), pos.z(), sound.getSound().getSoundEvent().value(), SoundSource.PLAYERS, (float) sound.getVolume(), sound.getPitch(), false);

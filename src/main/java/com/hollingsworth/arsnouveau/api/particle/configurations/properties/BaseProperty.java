@@ -14,7 +14,7 @@ public abstract class BaseProperty<T extends BaseProperty<T>> {
     public PropMap propertyHolder;
     public Runnable onDependenciesChanged;
 
-    public BaseProperty(){
+    public BaseProperty() {
         this(new PropMap());
     }
 
@@ -22,11 +22,11 @@ public abstract class BaseProperty<T extends BaseProperty<T>> {
         this.propertyHolder = propertyHolder;
     }
 
-    public ResourceLocation getId(){
+    public ResourceLocation getId() {
         return ParticlePropertyRegistry.PARTICLE_PROPERTY_REGISTRY.getKey(getType());
     }
 
-    public Component getName(){
+    public Component getName() {
         return Component.translatable(getId().getNamespace() + ".particle.property." + getId().getPath());
     }
 
@@ -38,14 +38,14 @@ public abstract class BaseProperty<T extends BaseProperty<T>> {
         this.onDependenciesChanged = onDependenciesChanged;
     }
 
-    public List<BaseProperty<?>> subProperties(){
+    public List<BaseProperty<?>> subProperties() {
         return new ArrayList<>();
     }
 
     /**
      * If this property should be removed when the selected motion changes.
      */
-    public boolean survivesMotionChange(){
+    public boolean survivesMotionChange() {
         return true;
     }
 

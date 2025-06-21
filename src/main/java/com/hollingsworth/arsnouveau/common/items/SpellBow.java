@@ -167,7 +167,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
                         resolver.expendMana();
                         didCastSpell = true;
                     }
-                }else if (resolver.withSilent(true).canCast(playerentity)) {
+                } else if (resolver.withSilent(true).canCast(playerentity)) {
                     abstractarrowentity = buildSpellArrow(worldIn, playerentity, caster, isSpellArrow, bowStack, arrowStack);
                     resolver.expendMana();
                     didCastSpell = true;
@@ -193,7 +193,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
                     if (f >= 1.0F) {
                         arr.setCritArrow(true);
                     }
-                    if(isArrowInfinite && use == 0){
+                    if (isArrowInfinite && use == 0) {
                         arrowStack = arrowStack.copyWithCount(1);
                         arrowStack.set(DataComponents.INTANGIBLE_PROJECTILE, Unit.INSTANCE);
                     }

@@ -7,9 +7,9 @@ import software.bernie.geckolib.model.GeoModel;
 
 public class PotionMelderModel extends GeoModel<PotionMelderTile> {
 
-    public static final ResourceLocation model = ArsNouveau.prefix( "geo/potion_stirrer.geo.json");
-    public static final ResourceLocation texture = ArsNouveau.prefix( "textures/block/potion_stirrer.png");
-    public static final ResourceLocation anim = ArsNouveau.prefix( "animations/potion_melder_animation.json");
+    public static final ResourceLocation model = ArsNouveau.prefix("geo/potion_stirrer.geo.json");
+    public static final ResourceLocation texture = ArsNouveau.prefix("textures/block/potion_stirrer.png");
+    public static final ResourceLocation anim = ArsNouveau.prefix("animations/potion_melder_animation.json");
 
     @Override
     public ResourceLocation getModelResource(PotionMelderTile volcanicTile) {

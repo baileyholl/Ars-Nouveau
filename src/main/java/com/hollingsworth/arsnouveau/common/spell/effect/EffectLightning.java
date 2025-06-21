@@ -74,7 +74,7 @@ public class EffectLightning extends AbstractEffect {
         return SpellTier.THREE;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
@@ -89,7 +89,7 @@ public class EffectLightning extends AbstractEffect {
                 "Can be augmented with Amplify, Dampen, and Extend Time.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_AIR);

@@ -13,10 +13,10 @@ public class ANBubbleParticle extends TextureSheetParticle {
         super(pLevel, pX, pY, pZ);
         this.setSize(0.02F, 0.02F);
         this.quadSize *= this.random.nextFloat() * 0.6F + 0.2F;
-        this.xd = xSpeed * (double)0.2F + (Math.random() * (double)2.0F - (double)1.0F) * (double)0.02F;
-        this.yd = ySpeed * (double)0.2F + (Math.random() * (double)2.0F - (double)1.0F) * (double)0.02F;
-        this.zd = zSpeed * (double)0.2F + (Math.random() * (double)2.0F - (double)1.0F) * (double)0.02F;
-        this.lifetime = (int)((double)8.0F / (Math.random() * 0.8 + 0.2));
+        this.xd = xSpeed * (double) 0.2F + (Math.random() * (double) 2.0F - (double) 1.0F) * (double) 0.02F;
+        this.yd = ySpeed * (double) 0.2F + (Math.random() * (double) 2.0F - (double) 1.0F) * (double) 0.02F;
+        this.zd = zSpeed * (double) 0.2F + (Math.random() * (double) 2.0F - (double) 1.0F) * (double) 0.02F;
+        this.lifetime = (int) ((double) 8.0F / (Math.random() * 0.8 + 0.2));
     }
 
     @Override

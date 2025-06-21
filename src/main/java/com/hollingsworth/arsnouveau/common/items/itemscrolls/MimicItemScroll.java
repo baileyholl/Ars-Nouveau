@@ -28,7 +28,7 @@ public class MimicItemScroll extends ItemScroll {
     public SortPref getSortPref(ItemStack stackToStore, ItemStack scrollStack, IItemHandler inventory) {
         for (int i = 0; i < inventory.getSlots(); i++) {
             ItemStack inventoryStack = inventory.getStackInSlot(i);
-            if(inventoryStack.isEmpty())
+            if (inventoryStack.isEmpty())
                 continue;
             if (ItemStack.isSameItem(inventory.getStackInSlot(i), stackToStore)) {
                 return SortPref.HIGHEST;

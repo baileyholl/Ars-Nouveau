@@ -17,7 +17,7 @@ public class WispMotion extends ParticleMotion {
 
     public static MapCodec<WispMotion> CODEC = buildPropCodec(WispMotion::new);
 
-    public static StreamCodec<RegistryFriendlyByteBuf, WispMotion> STREAM =  buildStreamCodec(WispMotion::new);
+    public static StreamCodec<RegistryFriendlyByteBuf, WispMotion> STREAM = buildStreamCodec(WispMotion::new);
 
     public WispMotion() {
         this(new PropMap());
@@ -31,11 +31,12 @@ public class WispMotion extends ParticleMotion {
     public IParticleMotionType<?> getType() {
         return ParticleMotionRegistry.WISP_TYPE.get();
     }
+
     NoiseGenerator noise;
 
     @Override
     public void tick(PropertyParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
-        if(noise == null){
+        if (noise == null) {
             noise = new NoiseGenerator();
         }
         ParticleDensityProperty density = getDensity(particleOptions, 20, 0.1f);
@@ -65,8 +66,8 @@ public class WispMotion extends ParticleMotion {
             );
 
             level.addParticle(particleOptions, pos.x, pos.y, pos.z,
-                   speed.x,
-                   speed.y,
+                    speed.x,
+                    speed.y,
                     speed.z);
         }
     }
@@ -74,9 +75,9 @@ public class WispMotion extends ParticleMotion {
     @Override
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
         return List.of(propMap.createIfMissing(new ParticleTypeProperty()), propMap.createIfMissing(new ParticleDensityProperty(20, 0.1, SpawnType.SPHERE)
-                .minDensity(1)
-                .maxDensity(200)
-                .densityStepSize(1)),
+                        .minDensity(1)
+                        .maxDensity(200)
+                        .densityStepSize(1)),
                 propMap.createIfMissing(new SpeedProperty().yRange(0.01, 0.02)));
     }
 }

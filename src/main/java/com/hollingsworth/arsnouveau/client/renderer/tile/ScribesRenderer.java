@@ -78,7 +78,7 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
         Direction direction = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.FACING);
         stack.pushPose();
         stack.translate(-0.5, 0, 0.5);
-         if (direction == Direction.NORTH) {
+        if (direction == Direction.NORTH) {
             stack.mulPose(Axis.YP.rotationDegrees(-90));
             stack.translate(1, 0, -1);
         }
@@ -164,7 +164,7 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
                 Ingredient ingredient = inputs.get(i);
                 ItemStack stack = ingredient.getItems()[(ClientInfo.ticksInGame / 20) % ingredient.getItems().length];
                 matrixStack.pushPose();
-                matrixStack.translate(0,2, 0);
+                matrixStack.translate(0, 2, 0);
                 matrixStack.translate(translationOffset.x, translationOffset.y, translationOffset.z);
                 matrixStack.scale(0.25f, 0.25f, 0.25f);
                 // This spaces them out from each other
@@ -173,7 +173,7 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
                 matrixStack.translate(distanceVec.x(), distanceVec.y() + ((i % 2 == 0 ? -i : i) * Mth.sin(ticks / 60) * 0.0625), distanceVec.z());
                 // This rotates the individual stacks, with every 2nd stack rotating a different direction
                 matrixStack.mulPose((i % 2 == 0 ? Axis.ZP : Axis.XP).rotationDegrees(ticks));
-                Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, packedLight, packedOverlay, matrixStack,  Minecraft.getInstance().renderBuffers().bufferSource(),  tile.getLevel(), (int) tile.getBlockPos().asLong());
+                Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, packedLight, packedOverlay, matrixStack, Minecraft.getInstance().renderBuffers().bufferSource(), tile.getLevel(), (int) tile.getBlockPos().asLong());
                 matrixStack.popPose();
 
             }

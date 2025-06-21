@@ -33,7 +33,7 @@ public class PacketUnsummonDog extends AbstractPacket {
 
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
-        if(dogType == PacketSummonDog.DogType.NOOK){
+        if (dogType == PacketSummonDog.DogType.NOOK) {
             ServerLevel level = (ServerLevel) player.level();
             UUID nookUuid = Nook.ownerNookMap.get(player.getUUID());
             if (nookUuid != null) {
@@ -42,7 +42,7 @@ public class PacketUnsummonDog extends AbstractPacket {
                     nook.remove(Entity.RemovalReason.DISCARDED);
                 }
             }
-        }else {
+        } else {
             ServerLevel level = (ServerLevel) player.level();
             UUID lilyUuid = Lily.ownerLilyMap.get(player.getUUID());
             if (lilyUuid != null) {

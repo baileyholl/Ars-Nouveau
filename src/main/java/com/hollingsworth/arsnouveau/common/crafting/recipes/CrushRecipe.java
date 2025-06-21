@@ -17,7 +17,8 @@ import net.minecraft.world.level.Level;
 import java.util.ArrayList;
 import java.util.List;
 
-public record CrushRecipe(Ingredient input, List<CrushOutput> outputs, boolean skipBlockPlace) implements SpecialSingleInputRecipe {
+public record CrushRecipe(Ingredient input, List<CrushOutput> outputs,
+                          boolean skipBlockPlace) implements SpecialSingleInputRecipe {
 
     public CrushRecipe(Ingredient input, List<CrushOutput> outputs) {
         this(input, outputs, false);
@@ -27,13 +28,13 @@ public record CrushRecipe(Ingredient input, List<CrushOutput> outputs, boolean s
         List<ItemStack> finalOutputs = new ArrayList<>();
         for (CrushOutput crushRoll : outputs) {
             if (random.nextDouble() <= crushRoll.chance) {
-                if(crushRoll.maxRange > 1){
+                if (crushRoll.maxRange > 1) {
                     // get a number between 1 and max
                     int num = random.nextInt(crushRoll.maxRange) + 1;
-                    for(int i = 0; i < num; i++){
+                    for (int i = 0; i < num; i++) {
                         finalOutputs.add(crushRoll.stack.copy());
                     }
-                }else {
+                } else {
                     finalOutputs.add(crushRoll.stack.copy());
                 }
             }

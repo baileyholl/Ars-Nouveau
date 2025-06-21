@@ -105,6 +105,7 @@ public class Wand extends ModItem implements GeoItem, ICasterTool {
     public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
         consumer.accept(new GeoRenderProvider() {
             final WandRenderer renderer = new WandRenderer();
+
             @Override
             public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
                 return renderer;

@@ -59,7 +59,7 @@ public class RepositoryBlock extends ModBlock implements EntityBlock {
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         super.tick(state, level, pos, random);
-        if(!level.isClientSide && level.getBlockEntity(pos) instanceof RepositoryTile repositoryTile){
+        if (!level.isClientSide && level.getBlockEntity(pos) instanceof RepositoryTile repositoryTile) {
             repositoryTile.attachFilters();
         }
     }
@@ -105,8 +105,8 @@ public class RepositoryBlock extends ModBlock implements EntityBlock {
     public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
         super.onNeighborChange(state, level, pos, neighbor);
         // ItemFrames call this method with AIR when placed or updated nearby.
-        if(level.getBlockState(neighbor).isAir()){
-            if(level.getBlockEntity(pos) instanceof RepositoryTile repositoryTile){
+        if (level.getBlockState(neighbor).isAir()) {
+            if (level.getBlockEntity(pos) instanceof RepositoryTile repositoryTile) {
                 repositoryTile.attachFilters();
             }
         }

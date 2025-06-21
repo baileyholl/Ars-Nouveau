@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class MagicCapacityPerk extends Perk {
 
-    public static final MagicCapacityPerk INSTANCE = new MagicCapacityPerk(ArsNouveau.prefix( "thread_magic_capacity"));
+    public static final MagicCapacityPerk INSTANCE = new MagicCapacityPerk(ArsNouveau.prefix("thread_magic_capacity"));
 
     public MagicCapacityPerk(ResourceLocation key) {
         super(key);

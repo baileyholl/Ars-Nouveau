@@ -13,7 +13,7 @@ public class SourceProvider implements ISpecialSourceProvider {
         this.isValid = tile != null;
     }
 
-    public SourceProvider(ISpecialSourceProvider specialSourceProvider){
+    public SourceProvider(ISpecialSourceProvider specialSourceProvider) {
         this.tile = specialSourceProvider.getSource();
         this.pos = specialSourceProvider.getCurrentPos();
         isValid = specialSourceProvider.isValid();

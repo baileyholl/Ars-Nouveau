@@ -14,7 +14,7 @@ public class FamiliarButton extends ANButton {
     public AbstractFamiliarHolder familiarHolder;
 
     public FamiliarButton(int x, int y, AbstractFamiliarHolder familiar, OnPress onPress) {
-        super(x, y, 16, 16,  onPress);
+        super(x, y, 16, 16, onPress);
         this.x = x;
         this.y = y;
         this.width = 16;

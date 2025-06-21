@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Consumer;
 
-public class SpellSlottedScreen extends BaseBook{
+public class SpellSlottedScreen extends BaseBook {
     public AbstractCaster<?> caster;
     public GuiSpellSlot selectedSlotButton;
     public int selectedSpellSlot = 0;
@@ -50,11 +50,11 @@ public class SpellSlottedScreen extends BaseBook{
         this.caster = SpellCasterRegistry.from(stack);
     }
 
-    public void initSpellSlots(Consumer<GuiSpellSlot> onSlotChanged){
+    public void initSpellSlots(Consumer<GuiSpellSlot> onSlotChanged) {
         for (int i = 0; i < caster.getMaxSlots(); i++) {
             String name = caster.getSpellName(i);
-            GuiSpellSlot slot = new GuiSpellSlot(bookLeft + 281, bookTop - 1 + 15 * (i + 1), i, name, (b) ->{
-                if(!(b instanceof GuiSpellSlot button) || this.selectedSpellSlot == button.slotNum) {
+            GuiSpellSlot slot = new GuiSpellSlot(bookLeft + 281, bookTop - 1 + 15 * (i + 1), i, name, (b) -> {
+                if (!(b instanceof GuiSpellSlot button) || this.selectedSpellSlot == button.slotNum) {
                     return;
                 }
                 this.selectedSlotButton.isSelected = false;
@@ -67,7 +67,7 @@ public class SpellSlottedScreen extends BaseBook{
             if (i == selectedSpellSlot) {
                 selectedSlotButton = slot;
                 slot.isSelected = true;
-            }else{
+            } else {
                 slot.isSelected = false;
             }
             addRenderableWidget(slot);
@@ -77,12 +77,12 @@ public class SpellSlottedScreen extends BaseBook{
     @Override
     protected TooltipComponent getClientImageTooltip(int mouseX, int mouseY) {
         for (Renderable renderable : renderables) {
-            if(renderable instanceof AbstractWidget widget && !GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)){
+            if (renderable instanceof AbstractWidget widget && !GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)) {
                 continue;
             }
-            if(renderable instanceof GuiSpellSlot spellSlot){
+            if (renderable instanceof GuiSpellSlot spellSlot) {
                 Spell spell = caster.getSpell(spellSlot.slotNum);
-                if(spell.isEmpty()){
+                if (spell.isEmpty()) {
                     return null;
                 }
                 return new SpellTooltip(spell, false);

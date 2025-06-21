@@ -38,7 +38,7 @@ public class EffectDispel extends AbstractEffect {
             Collection<MobEffectInstance> effects = entity.getActiveEffects();
             MobEffectInstance[] array = effects.toArray(new MobEffectInstance[0]);
             Optional<HolderSet.Named<MobEffect>> blacklist = world.registryAccess().registryOrThrow(Registries.MOB_EFFECT).getTag(PotionEffectTags.DISPEL_DENY);
-            Optional<HolderSet.Named<MobEffect>> whitelist =  world.registryAccess().registryOrThrow(Registries.MOB_EFFECT).getTag(PotionEffectTags.DISPEL_ALLOW);
+            Optional<HolderSet.Named<MobEffect>> whitelist = world.registryAccess().registryOrThrow(Registries.MOB_EFFECT).getTag(PotionEffectTags.DISPEL_ALLOW);
             for (MobEffectInstance e : array) {
                 if (e.getCures().contains(EffectCures.MILK)) {
                     if (blacklist.isPresent() && blacklist.get().stream().anyMatch(effect -> effect.value() == e.getEffect()))

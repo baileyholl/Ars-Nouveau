@@ -12,7 +12,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 
-public class PacketMountCamera extends AbstractPacket{
+public class PacketMountCamera extends AbstractPacket {
     public static final Type<PacketMountCamera> TYPE = new Type<>(ArsNouveau.prefix("mount_camera"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketMountCamera> CODEC = StreamCodec.ofMember(PacketMountCamera::encode, PacketMountCamera::decode);
     private BlockPos pos;

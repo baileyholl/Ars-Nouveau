@@ -102,6 +102,7 @@ public class RuneBlock extends TickableModBlock {
     public @NotNull BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(BlockStateProperties.FACING)));
     }
+
     @Override
     public void tick(@NotNull BlockState state, @NotNull ServerLevel worldIn, @NotNull BlockPos pos, @NotNull RandomSource rand) {
         super.tick(state, worldIn, pos, rand);
@@ -121,8 +122,8 @@ public class RuneBlock extends TickableModBlock {
         if (!entities.isEmpty() && worldIn.getBlockEntity(pos) instanceof RuneTile rune) {
             if (rune.spell != null) {
                 for (AbstractSpellPart part : rune.spell.recipe()) {
-                    if ( part instanceof IFilter filter) {
-                        if (!filter.shouldResolveOnEntity(entityIn,worldIn)) {
+                    if (part instanceof IFilter filter) {
+                        if (!filter.shouldResolveOnEntity(entityIn, worldIn)) {
                             return;
                         }
                     } else break;

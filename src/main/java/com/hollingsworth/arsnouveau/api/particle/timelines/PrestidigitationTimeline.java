@@ -17,7 +17,7 @@ import net.minecraft.network.codec.StreamCodec;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class PrestidigitationTimeline extends BaseTimeline<PrestidigitationTimeline>{
+public class PrestidigitationTimeline extends BaseTimeline<PrestidigitationTimeline> {
     public static final MapCodec<PrestidigitationTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             TimelineEntryData.CODEC.fieldOf("onResolvingEffect").forGetter(i -> i.onTickEffect),
             SoundProperty.CODEC.fieldOf("randomSound").forGetter(i -> i.randomSound)
@@ -35,20 +35,20 @@ public class PrestidigitationTimeline extends BaseTimeline<PrestidigitationTimel
     public TimelineEntryData onTickEffect;
     public SoundProperty randomSound = new SoundProperty();
 
-    public PrestidigitationTimeline(){
+    public PrestidigitationTimeline() {
         this(new TimelineEntryData(new LightBlobMotion()), new SoundProperty(ConfiguredSpellSound.EMPTY));
     }
 
-    public PrestidigitationTimeline(TimelineEntryData onTickEffect, SoundProperty randomSound){
+    public PrestidigitationTimeline(TimelineEntryData onTickEffect, SoundProperty randomSound) {
         this.onTickEffect = onTickEffect;
         this.randomSound = randomSound;
     }
 
-    public TimelineEntryData tickingEffect(){
+    public TimelineEntryData tickingEffect() {
         return onTickEffect;
     }
 
-    public SoundProperty randomSound(){
+    public SoundProperty randomSound() {
         return randomSound;
     }
 

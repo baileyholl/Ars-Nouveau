@@ -18,6 +18,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class MagelightTorchTile extends SconceTile {
     private boolean horizontalFire;
+
     public MagelightTorchTile(BlockPos pPos, BlockState pBlockState) {
         super(BlockRegistry.MAGELIGHT_TORCH_TILE.get(), pPos, pBlockState);
     }
@@ -64,14 +65,14 @@ public class MagelightTorchTile extends SconceTile {
             default:
                 break;
         }
-        if(onRoof){
+        if (onRoof) {
             xRot = 180;
             yRot = 180;
-        }else if(onFloor){
+        } else if (onFloor) {
             xRot = 0;
             yRot = 0;
         }
-        if(particleEmitter != null) {
+        if (particleEmitter != null) {
             particleEmitter.setPosition(new Vec3(centerX, pos.getY() + yOffset + ParticleUtil.inRange(-0.00, 0.1), centerZ));
             particleEmitter.setRotationOffset(xRot, yRot);
             particleEmitter.tick(level);

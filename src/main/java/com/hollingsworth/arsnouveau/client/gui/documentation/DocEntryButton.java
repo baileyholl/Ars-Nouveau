@@ -34,7 +34,7 @@ public class DocEntryButton extends SelectableButton implements NestedWidgets {
         this.title = display;
         int length = 25;
         String displayString = display.getString();
-        if(display.getString().length() > length + 3) {
+        if (display.getString().length() > length + 3) {
             this.fullTitle = display;
             displayString = display.getString().substring(0, length + 1).trim() + "...";
         }
@@ -52,13 +52,13 @@ public class DocEntryButton extends SelectableButton implements NestedWidgets {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if(favoriteButton != null) {
-            if(!visible || !active) {
+        if (favoriteButton != null) {
+            if (!visible || !active) {
                 favoriteButton.visible = true;
                 favoriteButton.active = true;
                 favoriteButton.x = -999999;
                 favoriteButton.y = -999999;
-            }else{
+            } else {
                 if (isFavorited.get() || this.isHovered()) {
                     favoriteButton.visible = true;
                     favoriteButton.active = true;
@@ -80,16 +80,16 @@ public class DocEntryButton extends SelectableButton implements NestedWidgets {
     protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
 
         int xOffset = 14;
-        if(renderStack.isEmpty() && icon == null){
+        if (renderStack.isEmpty() && icon == null) {
             xOffset = 2;
             DocClientUtils.blit(graphics, DocAssets.CHAPTER_BUTTON_NO_ITEM, x, y);
-        }else {
+        } else {
             super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
         }
-        if(icon != null) {
+        if (icon != null) {
             graphics.blit(icon.location(), x + 1, y + 1, 0, 0, 12, 12, 12, 12);
         }
-        RenderHelpers.drawItemAsIcon(renderStack, graphics, x - 1, y - 1 , 10, false);
+        RenderHelpers.drawItemAsIcon(renderStack, graphics, x - 1, y - 1, 10, false);
         DocClientUtils.drawStringScaled(graphics, title, x + xOffset, y + 3, 0, 0.8f, false);
     }
 
@@ -101,7 +101,7 @@ public class DocEntryButton extends SelectableButton implements NestedWidgets {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if(onClickFunction != null && onClickFunction.apply(mouseX, mouseY, button)) {
+        if (onClickFunction != null && onClickFunction.apply(mouseX, mouseY, button)) {
             return true;
         }
         return super.mouseReleased(mouseX, mouseY, button);
@@ -109,7 +109,7 @@ public class DocEntryButton extends SelectableButton implements NestedWidgets {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if(onClickFunction != null && onClickFunction.apply(mouseX, mouseY, button)) {
+        if (onClickFunction != null && onClickFunction.apply(mouseX, mouseY, button)) {
             return true;
         }
         return super.mouseClicked(mouseX, mouseY, button);
@@ -124,7 +124,7 @@ public class DocEntryButton extends SelectableButton implements NestedWidgets {
 
     @Override
     public void addBeforeParent(List<AbstractWidget> widgets) {
-        if(onFavorited != null) {
+        if (onFavorited != null) {
             favoriteButton = new SelectableButton(0, 0, DocAssets.FAVORITE_ICON_HOVER, DocAssets.FAVORITE_ICON, (b) -> {
                 onFavorited.onPress(b);
                 favoriteButton.isSelected = isFavorited.get();
@@ -134,7 +134,7 @@ public class DocEntryButton extends SelectableButton implements NestedWidgets {
         }
     }
 
-    public DocEntryButton setFavoritable(Supplier<Boolean> isFavorited, Button.OnPress onFavorited){
+    public DocEntryButton setFavoritable(Supplier<Boolean> isFavorited, Button.OnPress onFavorited) {
         this.onFavorited = onFavorited;
         this.isFavorited = isFavorited;
         return this;
@@ -142,7 +142,7 @@ public class DocEntryButton extends SelectableButton implements NestedWidgets {
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if(fullTitle != null){
+        if (fullTitle != null) {
             tooltip.add(fullTitle);
         }
         super.getTooltip(tooltip);

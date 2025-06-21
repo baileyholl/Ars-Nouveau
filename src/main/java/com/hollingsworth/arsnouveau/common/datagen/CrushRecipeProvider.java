@@ -64,13 +64,15 @@ public class CrushRecipeProvider extends SimpleDataProvider {
         }
     }
 
-    public static class CrushWrapper{
+    public static class CrushWrapper {
         public ResourceLocation path;
         public Ingredient ing;
-        public CrushWrapper(String string, Ingredient ingredient){
+
+        public CrushWrapper(String string, Ingredient ingredient) {
             this.path = ArsNouveau.prefix(string);
             this.ing = ingredient;
         }
+
         List<CrushRecipe.CrushOutput> outputs = new ArrayList<>();
 
         public CrushWrapper withItems(ItemStack output, float chance) {

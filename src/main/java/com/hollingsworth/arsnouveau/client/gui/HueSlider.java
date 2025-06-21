@@ -33,16 +33,16 @@ public class HueSlider extends HorizontalSlider {
 
         HSLColor leftColor = HSLColor.hsl(1, baseColor.getSaturation(), baseColor.getLightness(), baseColor.getOpacity());
 
-        guiGraphics.vLine(drawX - 1, y+2, y + 4, leftColor.toInt());
-        HSLColor rightColor = HSLColor.hsl(359, baseColor.getSaturation(), baseColor.getLightness(),baseColor.getOpacity());
-        guiGraphics.vLine(x + width - 3, y+2, y + 4, rightColor.toInt());
-        for(int i = 0; i < drawWidth; i++) {
+        guiGraphics.vLine(drawX - 1, y + 2, y + 4, leftColor.toInt());
+        HSLColor rightColor = HSLColor.hsl(359, baseColor.getSaturation(), baseColor.getLightness(), baseColor.getOpacity());
+        guiGraphics.vLine(x + width - 3, y + 2, y + 4, rightColor.toInt());
+        for (int i = 0; i < drawWidth; i++) {
             HSLColor color1 = HSLColor.hsl((double) (i * 360) / drawWidth, baseColor.getSaturation(), baseColor.getLightness(), baseColor.getOpacity());
-            guiGraphics.vLine(drawX + i, y  + 1, y + 5, color1.toInt());
+            guiGraphics.vLine(drawX + i, y + 1, y + 5, color1.toInt());
         }
         DocClientUtils.blit(guiGraphics, knobAsset, this.x + (int) (this.value * (double) (this.width - this.knobAsset.width())), this.y - 1);
         int j = 10526880;
-        if(this.drawString) {
+        if (this.drawString) {
             guiGraphics.drawString(font, this.getMessage(), this.x + this.width / 4, this.y + (this.height - 32) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24, false);
         }
     }

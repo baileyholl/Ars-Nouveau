@@ -61,7 +61,8 @@ public class EmiArmorUpgradeRecipe extends EmiEnchantingApparatusRecipe<ArmorUpg
         return inputs;
     }
 
-    protected record Upgrades(List<EmiStack> from, List<EmiStack> to) {}
+    protected record Upgrades(List<EmiStack> from, List<EmiStack> to) {
+    }
 
     protected Upgrades upgradableCache = null;
 

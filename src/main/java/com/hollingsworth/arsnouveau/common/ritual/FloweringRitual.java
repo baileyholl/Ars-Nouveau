@@ -31,10 +31,10 @@ public class FloweringRitual extends FeaturePlacementRitual {
     @Override
     public void addFeatures(List<IPlaceableFeature> features) {
         boolean isDesert = getConsumedItems().stream().anyMatch(i -> i.is(ItemTags.SAND));
-        if(!isDesert) {
+        if (!isDesert) {
             features.add(new PlaceBlockFeature(1.5, 0.8, () -> flowers.get(getWorld().random.nextInt(flowers.size())).defaultBlockState()));
             features.add(new BonemealFeature(5, 0.8));
-        }else{
+        } else {
             features.add(new PlaceBlockFeature(3, 0.04, Blocks.CACTUS::defaultBlockState));
             features.add(new PlaceBlockFeature(1.5, 0.1, Blocks.DEAD_BUSH::defaultBlockState));
         }
@@ -48,7 +48,7 @@ public class FloweringRitual extends FeaturePlacementRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( RitualLib.FLOWERING);
+        return ArsNouveau.prefix(RitualLib.FLOWERING);
     }
 
     @Override

@@ -28,7 +28,7 @@ public class ParticleBlock extends ModBlock implements ITickableBlock, SimpleWat
     protected static final VoxelShape SHAPE = Block.box(4.0D, 4.0D, 4.0D, 12.0D, 12.0D, 12.0D);
 
     public ParticleBlock() {
-        super(defaultProperties().noCollission().noOcclusion().dynamicShape().strength(0f,0f));
+        super(defaultProperties().noCollission().noOcclusion().dynamicShape().strength(0f, 0f));
         registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
     }
 

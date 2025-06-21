@@ -49,7 +49,7 @@ public class WhirlisprigCharm extends AbstractSummonCharm implements AliasProvid
     @Override
     public Collection<Alias> getAliases() {
         return List.of(
-            new Alias("crop_farm", "Crop Farm")
+                new Alias("crop_farm", "Crop Farm")
         );
     }
 }

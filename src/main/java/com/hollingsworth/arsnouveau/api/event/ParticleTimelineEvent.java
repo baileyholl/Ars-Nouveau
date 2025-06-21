@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.api.event;
 import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
 import net.minecraft.world.level.Level;
 
-public class ParticleTimelineEvent implements ITimedEvent{
+public class ParticleTimelineEvent implements ITimedEvent {
 
     public ParticleEmitter emitter;
     public int ticks;

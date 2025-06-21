@@ -22,7 +22,7 @@ public class ParticleUtil {
     public static Random r = new Random();
 
     public static double inRange(double min, double max) {
-        if(min == max) {
+        if (min == max) {
             return min;
         }
 
@@ -192,7 +192,7 @@ public class ParticleUtil {
     }
 
     public static void spawnFallingSkyEffect(AbstractRitual ritual, BlockEntity tileEntity, RandomSource rand, ParticleColor.IntWrapper color) {
-        if(ritual == null){
+        if (ritual == null) {
             return;
         }
         int scalar = 20;

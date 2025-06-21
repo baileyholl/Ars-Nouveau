@@ -17,7 +17,7 @@ import net.minecraft.network.codec.StreamCodec;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class TouchTimeline extends BaseTimeline<TouchTimeline>{
+public class TouchTimeline extends BaseTimeline<TouchTimeline> {
     public static final MapCodec<TouchTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             TimelineEntryData.CODEC.fieldOf("onResolvingEffect").forGetter(i -> i.onResolvingEffect),
             SoundProperty.CODEC.fieldOf("resolveSound").forGetter(i -> i.resolveSound)
@@ -35,16 +35,16 @@ public class TouchTimeline extends BaseTimeline<TouchTimeline>{
     public TimelineEntryData onResolvingEffect;
     public SoundProperty resolveSound = new SoundProperty();
 
-    public TouchTimeline(){
+    public TouchTimeline() {
         this(new TimelineEntryData(new BurstMotion(), new PropertyParticleOptions()), new SoundProperty());
     }
 
-    public TouchTimeline(TimelineEntryData onResolvingEffect, SoundProperty soundProperty){
+    public TouchTimeline(TimelineEntryData onResolvingEffect, SoundProperty soundProperty) {
         this.onResolvingEffect = onResolvingEffect;
         this.resolveSound = soundProperty;
     }
 
-    public TimelineEntryData onResolvingEffect(){
+    public TimelineEntryData onResolvingEffect() {
         return onResolvingEffect;
     }
 

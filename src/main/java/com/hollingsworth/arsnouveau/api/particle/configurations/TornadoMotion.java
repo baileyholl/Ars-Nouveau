@@ -10,10 +10,10 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
 
-public class TornadoMotion extends ParticleMotion{
+public class TornadoMotion extends ParticleMotion {
     public static MapCodec<TornadoMotion> CODEC = buildPropCodec(TornadoMotion::new);
 
-    public static StreamCodec<RegistryFriendlyByteBuf, TornadoMotion> STREAM =  buildStreamCodec(TornadoMotion::new);
+    public static StreamCodec<RegistryFriendlyByteBuf, TornadoMotion> STREAM = buildStreamCodec(TornadoMotion::new);
 
 
     public TornadoMotion(PropMap propMap) {
@@ -39,7 +39,7 @@ public class TornadoMotion extends ParticleMotion{
             for (int point = 0; point < pointsPerLayer; point++) {
                 double baseAngle = 2 * Math.PI * point / pointsPerLayer;
                 double angle = baseAngle + spinOffset;
-                level.addParticle(particleOptions,  x + Math.cos(angle) * radius, y + progress * coneHeight, z + Math.sin(angle) * radius,
+                level.addParticle(particleOptions, x + Math.cos(angle) * radius, y + progress * coneHeight, z + Math.sin(angle) * radius,
                         ParticleUtil.inRange(-randomScale, randomScale),
                         ParticleUtil.inRange(-randomScale, randomScale),
                         ParticleUtil.inRange(-randomScale, randomScale));

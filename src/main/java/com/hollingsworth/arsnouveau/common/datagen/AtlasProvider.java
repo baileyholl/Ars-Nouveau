@@ -27,6 +27,7 @@ public class AtlasProvider extends SpriteSourceProvider {
         builder.put(BlockRegistry.ARCHWOOD_CHEST.get(), chestMaterial("archwood"));
         MATERIALS = builder.build();
     }
+
     public AtlasProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, ExistingFileHelper helper) {
         super(output, provider, ArsNouveau.MODID, helper);
     }
@@ -34,9 +35,9 @@ public class AtlasProvider extends SpriteSourceProvider {
     private static EnumMap<ChestType, Material> chestMaterial(String type) {
         EnumMap<ChestType, Material> map = new EnumMap<>(ChestType.class);
 
-        map.put(ChestType.SINGLE, new Material(Sheets.CHEST_SHEET, ArsNouveau.prefix( "model/chest/" + type + "/" + type)));
-        map.put(ChestType.LEFT, new Material(Sheets.CHEST_SHEET, ArsNouveau.prefix( "model/chest/" + type + "/left")));
-        map.put(ChestType.RIGHT, new Material(Sheets.CHEST_SHEET, ArsNouveau.prefix( "model/chest/" + type + "/right")));
+        map.put(ChestType.SINGLE, new Material(Sheets.CHEST_SHEET, ArsNouveau.prefix("model/chest/" + type + "/" + type)));
+        map.put(ChestType.LEFT, new Material(Sheets.CHEST_SHEET, ArsNouveau.prefix("model/chest/" + type + "/left")));
+        map.put(ChestType.RIGHT, new Material(Sheets.CHEST_SHEET, ArsNouveau.prefix("model/chest/" + type + "/right")));
 
         return map;
     }

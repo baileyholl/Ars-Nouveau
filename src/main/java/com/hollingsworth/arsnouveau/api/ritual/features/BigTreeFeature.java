@@ -14,7 +14,7 @@ public class BigTreeFeature implements IPlaceableFeature {
     double distance;
     double chance;
 
-    public BigTreeFeature(BlockState tree, double distance, double chance){
+    public BigTreeFeature(BlockState tree, double distance, double chance) {
         this.tree = tree;
         this.distance = distance;
         this.chance = chance;
@@ -27,19 +27,19 @@ public class BigTreeFeature implements IPlaceableFeature {
 
     @Override
     public boolean onPlace(Level level, BlockPos pos, FeaturePlacementRitual placementRitual, RitualBrazierTile brazierTile) {
-        if(level.random.nextFloat() < chance && validPos(level, pos)
-        && validPos(level, pos.north())
-        && validPos(level, pos.north().east())
-        && validPos(level, pos.east())){
+        if (level.random.nextFloat() < chance && validPos(level, pos)
+                && validPos(level, pos.north())
+                && validPos(level, pos.north().east())
+                && validPos(level, pos.east())) {
             level.setBlock(pos, tree, 2);
             level.setBlock(pos.north(), tree, 2);
             level.setBlock(pos.north().east(), tree, 2);
             level.setBlock(pos.east(), tree, 2);
-            if(level.getBlockState(pos).getBlock() instanceof SaplingBlock saplingBlock){
+            if (level.getBlockState(pos).getBlock() instanceof SaplingBlock saplingBlock) {
                 saplingBlock.advanceTree((ServerLevel) level, pos, level.getBlockState(pos), level.random);
             }
             // Try twice to grow the tree
-            if(level.getBlockState(pos).getBlock() instanceof SaplingBlock saplingBlock){
+            if (level.getBlockState(pos).getBlock() instanceof SaplingBlock saplingBlock) {
                 saplingBlock.advanceTree((ServerLevel) level, pos, level.getBlockState(pos), level.random);
             }
             return true;
@@ -47,7 +47,7 @@ public class BigTreeFeature implements IPlaceableFeature {
         return false;
     }
 
-    public boolean validPos(Level level, BlockPos pos){
+    public boolean validPos(Level level, BlockPos pos) {
         return level.getBlockState(pos).canBeReplaced() && tree.canSurvive(level, pos);
     }
 

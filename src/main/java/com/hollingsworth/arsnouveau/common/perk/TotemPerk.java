@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 public class TotemPerk extends Perk {
-    public static TotemPerk INSTANCE = new TotemPerk(ArsNouveau.prefix( "thread_undying"));
+    public static TotemPerk INSTANCE = new TotemPerk(ArsNouveau.prefix("thread_undying"));
 
     public TotemPerk(ResourceLocation key) {
         super(key);

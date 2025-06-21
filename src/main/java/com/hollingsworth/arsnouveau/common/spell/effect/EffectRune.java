@@ -37,7 +37,7 @@ public class EffectRune extends AbstractEffect {
         SpellContext newContext = spellContext.makeChildContext();
         spellContext.setCanceled(true);
         if (world.getBlockState(pos).canBeReplaced()) {
-            if(!world.isInWorldBounds(pos))
+            if (!world.isInWorldBounds(pos))
                 return;
             BlockState placementState = BlockRegistry.RUNE_BLOCK.get().getStateForPlacement(new BlockPlaceContext(getPlayer(shooter, (ServerLevel) world), InteractionHand.MAIN_HAND, ItemStack.EMPTY, rayTraceResult));
             world.setBlockAndUpdate(pos, placementState);
@@ -84,7 +84,7 @@ public class EffectRune extends AbstractEffect {
         return setOf(SpellSchools.MANIPULATION);
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return setOf(AugmentSensitive.INSTANCE);

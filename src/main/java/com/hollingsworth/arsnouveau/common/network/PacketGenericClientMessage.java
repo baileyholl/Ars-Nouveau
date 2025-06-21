@@ -8,18 +8,20 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
-public class PacketGenericClientMessage extends AbstractPacket{
+public class PacketGenericClientMessage extends AbstractPacket {
     public static final Type<PacketGenericClientMessage> TYPE = new Type<>(ArsNouveau.prefix("generic_client_message"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketGenericClientMessage> CODEC = StreamCodec.ofMember(PacketGenericClientMessage::toBytes, PacketGenericClientMessage::new);
-    public enum Action{
+
+    public enum Action {
         JUMP_RING
     }
 
     Action action;
 
-    public PacketGenericClientMessage(Action action){
+    public PacketGenericClientMessage(Action action) {
         this.action = action;
     }
+
     //Decoder
     public PacketGenericClientMessage(RegistryFriendlyByteBuf buf) {
         this.action = Action.valueOf(buf.readUtf());
@@ -32,7 +34,7 @@ public class PacketGenericClientMessage extends AbstractPacket{
 
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
-        if(action == Action.JUMP_RING){
+        if (action == Action.JUMP_RING) {
             JumpingRing.doJump(player);
         }
     }

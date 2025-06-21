@@ -70,7 +70,7 @@ public class MethodSelf extends AbstractCastMethod {
         return createStaticEmitter(entryData, position);
     }
 
-    public void playResolveSound(SpellContext spellContext, Level level, Vec3 position){
+    public void playResolveSound(SpellContext spellContext, Level level, Vec3 position) {
         SoundProperty soundProperty = spellContext.getParticleTimeline(ParticleTimelineRegistry.SELF_TIMELINE.get()).resolveSound;
         soundProperty.sound.playSound(level, position.x, position.y, position.z);
     }
@@ -80,7 +80,7 @@ public class MethodSelf extends AbstractCastMethod {
         return 10;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf();

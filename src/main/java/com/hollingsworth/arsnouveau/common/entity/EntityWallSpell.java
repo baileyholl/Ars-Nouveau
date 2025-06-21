@@ -66,7 +66,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
     @Override
     public void tick() {
         if (!level.isClientSide) {
-            if(resolver() == null)
+            if (resolver() == null)
                 return;
             boolean isOnGround = level.getBlockState(blockPosition()).blocksMotion();
 
@@ -82,7 +82,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
 
     @Override
     public void tickNextPosition() {
-        if(!shouldFall())
+        if (!shouldFall())
             return;
         if (!getLanded()) {
             this.setDeltaMovement(0, -0.2, 0);
@@ -96,36 +96,36 @@ public class EntityWallSpell extends EntityProjectileSpell {
         float aoe = getAoe();
         int flatAoe = Math.round(aoe);
         BlockPos start = blockPosition().offset(flatAoe * getDirection().getStepX(), 0, flatAoe * getDirection().getStepZ());
-        BlockPos end = blockPosition().offset(-flatAoe  * getDirection().getStepX(), flatAoe, -flatAoe * getDirection().getStepZ());
+        BlockPos end = blockPosition().offset(-flatAoe * getDirection().getStepX(), flatAoe, -flatAoe * getDirection().getStepZ());
         if (isSensitive()) {
-            if(age % (Math.max(1,20 - 2 * getAccelerates())) != 0 && age != 1)
+            if (age % (Math.max(1, 20 - 2 * getAccelerates())) != 0 && age != 1)
                 return;
-            for(BlockPos p : BlockPos.betweenClosed(start, end)){
+            for (BlockPos p : BlockPos.betweenClosed(start, end)) {
                 p = p.immutable();
-                if(!level.isClientSide) {
+                if (!level.isClientSide) {
                     resolver().getNewResolver(resolver().spellContext.clone().makeChildContext()).onResolveEffect(level, new
                             BlockHitResult(new Vec3(p.getX(), p.getY(), p.getZ()), Direction.UP, p, false));
                 }
                 resolveEmitter.setPositionOffset(p.subtract(blockPosition()).getCenter());
-                if(level.isClientSide) {
+                if (level.isClientSide) {
                     resolveEmitter.tick(level);
                 }
             }
-            if(!level.isClientSide) {
+            if (!level.isClientSide) {
                 resolveSound.playSound(level, getX(), getY(), getZ());
             }
-        }else{
+        } else {
             int i = 0;
             // Expand the axis if start and end are equal
 
             AABB aabb = AABB.encapsulatingFullBlocks(start, end);
-            if(aabb.maxX == aabb.minX){
+            if (aabb.maxX == aabb.minX) {
                 aabb = aabb.inflate(growthFactor, 0, 0);
             }
-            if(aabb.maxY == aabb.minY){
+            if (aabb.maxY == aabb.minY) {
                 aabb = aabb.inflate(0, growthFactor, 0);
             }
-            if(aabb.maxZ == aabb.minZ){
+            if (aabb.maxZ == aabb.minZ) {
                 aabb = aabb.inflate(0, 0, growthFactor);
             }
             for (Entity entity : level.getEntities(null, aabb)) {
@@ -140,20 +140,20 @@ public class EntityWallSpell extends EntityProjectileSpell {
                 }
                 if (skipEntity)
                     continue;
-                if (!level.isClientSide){
+                if (!level.isClientSide) {
                     resolver().getNewResolver(resolver().spellContext.clone().makeChildContext()).onResolveEffect(level, new EntityHitResult(entity));
                 }
                 resolveEmitter.setPositionOffset(entity.position.subtract(position).add(0, entity.getBbHeight() / 2.0, 0));
-                if(level.isClientSide) {
+                if (level.isClientSide) {
                     resolveEmitter.tick(level);
                 }
                 i++;
-                if(hit.isEmpty()){
+                if (hit.isEmpty()) {
                     hitEntities.add(new EntityHit(entity));
                 }
                 if (i > 5)
                     break;
-                if(!level.isClientSide) {
+                if (!level.isClientSide) {
                     resolveSound.playSound(level, getX(), getY(), getZ());
                 }
             }
@@ -274,10 +274,12 @@ public class EntityWallSpell extends EntityProjectileSpell {
         setDirection(Direction.valueOf(compound.getString("direction")));
         setShouldFall(compound.getBoolean("should_fall"));
     }
-    public static class EntityHit{
+
+    public static class EntityHit {
         long gameTime;
         WeakReference<Entity> entity;
-        public EntityHit(Entity entity){
+
+        public EntityHit(Entity entity) {
             this.entity = new WeakReference<>(entity);
             gameTime = entity.level.getGameTime();
         }

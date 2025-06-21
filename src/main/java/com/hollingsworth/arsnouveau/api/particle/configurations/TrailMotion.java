@@ -18,7 +18,7 @@ public class TrailMotion extends ParticleMotion {
 
     public static StreamCodec<RegistryFriendlyByteBuf, TrailMotion> STREAM = buildStreamCodec(TrailMotion::new);
 
-    public TrailMotion(PropMap propMap){
+    public TrailMotion(PropMap propMap) {
         super(propMap);
     }
 
@@ -54,7 +54,7 @@ public class TrailMotion extends ParticleMotion {
             double px = prevX + deltaX * t;
             double py = prevY + deltaY * t;
             double pz = prevZ + deltaZ * t;
-            Vec3 deltaVec =  new Vec3(px, py, pz);
+            Vec3 deltaVec = new Vec3(px, py, pz);
             Vec3 point = getMotionScaled(deltaVec, radius, spawnType);
             level.addAlwaysVisibleParticle(
                     particleOptions,

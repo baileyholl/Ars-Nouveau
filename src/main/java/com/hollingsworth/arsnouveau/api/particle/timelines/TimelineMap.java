@@ -18,11 +18,11 @@ import java.util.function.Supplier;
 public record TimelineMap(Map<IParticleTimelineType<?>, IParticleTimeline<?>> timelines) {
 
     public static Codec<TimelineMap> CODEC = Codec.unboundedMap(IParticleTimelineType.CODEC, IParticleTimeline.CODEC).<TimelineMap>xmap(
-        TimelineMap::new,
+            TimelineMap::new,
             (timelineMap) -> timelineMap.timelines
     );
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, TimelineMap> STREAM = StreamCodec.ofMember((val, buf) ->{
+    public static final StreamCodec<RegistryFriendlyByteBuf, TimelineMap> STREAM = StreamCodec.ofMember((val, buf) -> {
         var entries = val.timelines.entrySet();
         buf.writeInt(entries.size());
 
@@ -41,7 +41,7 @@ public record TimelineMap(Map<IParticleTimelineType<?>, IParticleTimeline<?>> ti
         return new TimelineMap(immutableMap.build());
     });
 
-    public TimelineMap(){
+    public TimelineMap() {
         this(ImmutableMap.of());
     }
 
@@ -55,15 +55,15 @@ public record TimelineMap(Map<IParticleTimelineType<?>, IParticleTimeline<?>> ti
         return this.get(type.get());
     }
 
-    public <T extends IParticleTimeline<T>> TimelineMap put(IParticleTimelineType<T> type, T value){
+    public <T extends IParticleTimeline<T>> TimelineMap put(IParticleTimelineType<T> type, T value) {
         return new TimelineMap(Util.copyAndPut(timelines, type, value));
     }
 
     private static <T extends IParticleTimeline<T>> void encodeTimeline(RegistryFriendlyByteBuf buffer, IParticleTimelineType<T> component, Object value) {
-        component.streamCodec().encode(buffer, (T)value);
+        component.streamCodec().encode(buffer, (T) value);
     }
 
-    public MutableTimelineMap mutable(){
+    public MutableTimelineMap mutable() {
         Object copyMap = TimelineMap.CODEC.encodeStart(JavaOps.INSTANCE, this).getOrThrow();
         TimelineMap copyTimeline = CODEC.decode(JavaOps.INSTANCE, copyMap).getOrThrow().getFirst();
         return new MutableTimelineMap(copyTimeline.timelines);
@@ -82,10 +82,10 @@ public record TimelineMap(Map<IParticleTimelineType<?>, IParticleTimeline<?>> ti
     }
 
     // Call on both sides to inspect the mismatched timeline hashcodes
-    public void debugPrintHash(Spell spell, Level level){
+    public void debugPrintHash(Spell spell, Level level) {
         System.out.println(level);
         TimelineMap timelineMap = spell.particleTimeline();
-        for(IParticleTimelineType<?> data : timelineMap.timelines().keySet()) {
+        for (IParticleTimelineType<?> data : timelineMap.timelines().keySet()) {
             System.out.println(timelineMap.get(data).hashCode() + " : " + data);
         }
     }
@@ -96,20 +96,20 @@ public record TimelineMap(Map<IParticleTimelineType<?>, IParticleTimeline<?>> ti
 
         public MutableTimelineMap(Map<IParticleTimelineType<?>, IParticleTimeline<? extends IParticleTimeline<?>>> map) {
             timelines = new HashMap<>();
-            for(var entry : map.entrySet()){
+            for (var entry : map.entrySet()) {
                 timelines.put(entry.getKey(), entry.getValue());
             }
         }
 
         public <T extends IParticleTimeline<T>> T getOrCreate(IParticleTimelineType<T> type) {
-            return (T) timelines.computeIfAbsent(type, (key) ->  type.create());
+            return (T) timelines.computeIfAbsent(type, (key) -> type.create());
         }
 
         public <T extends IParticleTimeline<T>> IParticleTimeline put(IParticleTimelineType<T> type, T value) {
             return timelines.put(type, value);
         }
 
-        public TimelineMap immutable(){
+        public TimelineMap immutable() {
             TimelineMap createdMap = new TimelineMap(timelines);
             Object copyMap = TimelineMap.CODEC.encodeStart(JavaOps.INSTANCE, createdMap).getOrThrow();
             TimelineMap copyTimeline = CODEC.decode(JavaOps.INSTANCE, copyMap).getOrThrow().getFirst();

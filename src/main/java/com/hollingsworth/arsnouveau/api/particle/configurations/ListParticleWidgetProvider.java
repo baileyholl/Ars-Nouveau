@@ -12,7 +12,7 @@ import net.minecraft.sounds.SoundEvents;
 
 import java.util.List;
 
-public abstract class ListParticleWidgetProvider extends ParticleConfigWidgetProvider{
+public abstract class ListParticleWidgetProvider extends ParticleConfigWidgetProvider {
 
     public List<Button> buttons;
     public GuiImageButton upButton;
@@ -52,8 +52,8 @@ public abstract class ListParticleWidgetProvider extends ParticleConfigWidgetPro
         updateButtons();
     }
 
-    protected void updateButtons(){
-        for(var button : buttons){
+    protected void updateButtons() {
+        for (var button : buttons) {
             button.active = false;
             button.visible = false;
             button.setPosition(-100, -100);
@@ -78,7 +78,7 @@ public abstract class ListParticleWidgetProvider extends ParticleConfigWidgetPro
 
     public abstract void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks);
 
-    public void addWidgets(List<AbstractWidget> widgets){
+    public void addWidgets(List<AbstractWidget> widgets) {
         for (Button button : buttons) {
             widgets.add(button);
         }

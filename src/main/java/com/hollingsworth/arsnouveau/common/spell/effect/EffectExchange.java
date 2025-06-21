@@ -51,7 +51,7 @@ public class EffectExchange extends AbstractEffect {
         Vec3 origLoc = shooter.position;
 
         Level shooterLevel = shooter.level;
-        if(entity.getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED)){
+        if (entity.getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED)) {
             return;
         }
         if (!EventHooks.onEnderTeleport(shooter, entity.getX(), entity.getY(), entity.getZ()).isCanceled())
@@ -76,8 +76,8 @@ public class EffectExchange extends AbstractEffect {
             BlockState state = world.getBlockState(pos1);
 
             if (!canBlockBeHarvested(spellStats, world, pos1) || origState.getBlock() != state.getBlock()
-                || !world.getBlockState(pos1).isAir() && world.getBlockState(pos1).getBlock() instanceof IntangibleAirBlock
-                || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1)) {
+                    || !world.getBlockState(pos1).isAir() && world.getBlockState(pos1).getBlock() instanceof IntangibleAirBlock
+                    || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1)) {
                 continue;
             }
             Block finalFirstBlock = firstBlock;
@@ -157,7 +157,7 @@ public class EffectExchange extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "When used on blocks, exchanges the blocks in the players hotbar for the blocks hit as if they were mined with silk touch. Can be augmented with AOE, and Amplify is required for swapping blocks of higher hardness. "
-               + "When used on entities, the locations of the caster and the entity hit are swapped.";
+                + "When used on entities, the locations of the caster and the entity hit are swapped.";
     }
 
     @Override

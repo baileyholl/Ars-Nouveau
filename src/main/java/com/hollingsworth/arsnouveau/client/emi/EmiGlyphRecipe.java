@@ -30,6 +30,6 @@ public class EmiGlyphRecipe extends EmiMultiInputRecipe<GlyphRecipe> {
     @Override
     public void addWidgets(WidgetHolder widgets) {
         super.addWidgets(widgets);
-        widgets.addText(Component.translatable("ars_nouveau.exp", ScribesTile.getLevelsFromExp(recipe.exp)), 0, 100, 10,false);
+        widgets.addText(Component.translatable("ars_nouveau.exp", ScribesTile.getLevelsFromExp(recipe.exp)), 0, 100, 10, false);
     }
 }

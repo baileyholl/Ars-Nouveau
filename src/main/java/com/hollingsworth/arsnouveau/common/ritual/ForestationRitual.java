@@ -23,14 +23,14 @@ public class ForestationRitual extends FeaturePlacementRitual {
     public void addFeatures(List<IPlaceableFeature> features) {
         boolean isTaiga = getConsumedItems().stream().anyMatch(i -> i.getItem() == Items.BROWN_MUSHROOM);
         boolean isJungle = getConsumedItems().stream().anyMatch(i -> i.getItem() == Items.GLOW_BERRIES);
-        if(isTaiga){
+        if (isTaiga) {
             features.add(new RandomTreeFeature(List.of(Blocks.SPRUCE_SAPLING.defaultBlockState()), 8, 0.8));
-            features.add(new ConvertBlockFeature(0, 0.8, state -> state.is(BlockTags.DIRT) || state.getBlock() == Blocks.GRASS_BLOCK, state -> Blocks.PODZOL.defaultBlockState(), new Pair<>(new BlockPos(0,-1,0), BlockPos.ZERO)));
+            features.add(new ConvertBlockFeature(0, 0.8, state -> state.is(BlockTags.DIRT) || state.getBlock() == Blocks.GRASS_BLOCK, state -> Blocks.PODZOL.defaultBlockState(), new Pair<>(new BlockPos(0, -1, 0), BlockPos.ZERO)));
             features.add(new PlaceBlockFeature(0, 0.1, () -> getWorld().random.nextFloat() < 0.3 ? Blocks.LARGE_FERN.defaultBlockState() : Blocks.FERN.defaultBlockState()));
             features.add(new PlaceBlockFeature(0, 0.1, Blocks.BROWN_MUSHROOM::defaultBlockState));
             features.add(new PlaceBlockFeature(0, 0.1, Blocks.GRASS_BLOCK::defaultBlockState));
             features.add(new PlaceBlockFeature(0, 0.01, () -> Blocks.SWEET_BERRY_BUSH.defaultBlockState().setValue(SweetBerryBushBlock.AGE, getWorld().random.nextInt(4))));
-        }else if(isJungle){
+        } else if (isJungle) {
             features.add(new BigTreeFeature(Blocks.JUNGLE_SAPLING.defaultBlockState(), 12, 0.3));
             features.add(new RandomTreeFeature(List.of(Blocks.JUNGLE_SAPLING.defaultBlockState()), 6, 0.95));
             features.add(new CocoaFeature(6, 0.4));
@@ -45,7 +45,7 @@ public class ForestationRitual extends FeaturePlacementRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( RitualLib.FORESTATION);
+        return ArsNouveau.prefix(RitualLib.FORESTATION);
     }
 
     @Override

@@ -386,11 +386,11 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
             tile.getTooltip(tooltip);
             return;
         }
-        if(recipe != null){
+        if (recipe != null) {
             tooltip.add(Component.translatable("ars_nouveau.crafting", recipe.value().output.getHoverName()));
             tooltip.add(Component.translatable("ars_nouveau.scribes_table.throw_items").withStyle(ChatFormatting.GOLD));
         }
-        if(!autoYoink){
+        if (!autoYoink) {
             tooltip.add(Component.translatable("ars_nouveau.scribes_table.auto_take_disabled").withStyle(ChatFormatting.GOLD));
         }
     }

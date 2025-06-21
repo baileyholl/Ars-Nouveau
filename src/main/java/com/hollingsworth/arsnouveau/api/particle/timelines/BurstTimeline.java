@@ -17,7 +17,7 @@ import net.minecraft.network.codec.StreamCodec;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class BurstTimeline extends BaseTimeline<BurstTimeline>{
+public class BurstTimeline extends BaseTimeline<BurstTimeline> {
     public static final MapCodec<BurstTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             TimelineEntryData.CODEC.fieldOf("onResolvingEffect").forGetter(i -> i.onResolvingEffect),
             SoundProperty.CODEC.fieldOf("resolveSound").forGetter(i -> i.resolveSound)
@@ -35,16 +35,16 @@ public class BurstTimeline extends BaseTimeline<BurstTimeline>{
     public TimelineEntryData onResolvingEffect;
     public SoundProperty resolveSound = new SoundProperty();
 
-    public BurstTimeline(){
+    public BurstTimeline() {
         this(new TimelineEntryData(new BurstMotion(), new PropertyParticleOptions()), new SoundProperty());
     }
 
-    public BurstTimeline(TimelineEntryData onResolvingEffect, SoundProperty soundProperty){
+    public BurstTimeline(TimelineEntryData onResolvingEffect, SoundProperty soundProperty) {
         this.onResolvingEffect = onResolvingEffect;
         this.resolveSound = soundProperty;
     }
 
-    public TimelineEntryData onResolvingEffect(){
+    public TimelineEntryData onResolvingEffect() {
         return onResolvingEffect;
     }
 

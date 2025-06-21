@@ -84,7 +84,7 @@ public class Glyph extends ModItem {
             }
         }
         var player = ArsNouveau.proxy.getPlayer();
-        if (player == null )
+        if (player == null)
             return;
         IPlayerCap playerDataCap = CapabilityRegistry.getPlayerDataCap(player);
         if (playerDataCap != null) {

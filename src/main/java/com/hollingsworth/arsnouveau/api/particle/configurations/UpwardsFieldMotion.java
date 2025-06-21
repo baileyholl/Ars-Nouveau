@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class UpwardsFieldMotion extends ParticleMotion{
+public class UpwardsFieldMotion extends ParticleMotion {
     public static MapCodec<UpwardsFieldMotion> CODEC = buildPropCodec(UpwardsFieldMotion::new);
 
     public static StreamCodec<RegistryFriendlyByteBuf, UpwardsFieldMotion> STREAM = buildStreamCodec(UpwardsFieldMotion::new);
@@ -38,14 +38,14 @@ public class UpwardsFieldMotion extends ParticleMotion{
 
 
         BlockPos.betweenClosedStream(BlockPos.ZERO.offset(range, 0, range), BlockPos.ZERO.offset(-range, 0, -range)).forEach(blockPos -> {
-                for (int i = 0; i < getNumParticles(density.density()); i++) {
-                    if (rand.nextInt(chance) == 0) {
-                        double dx = x + blockPos.getX() + ParticleUtil.inRange(-0.5, 0.5) + 0.5;
-                        double dy = y + ParticleUtil.inRange(-0.01, 0.25);
-                        double dz = z + blockPos.getZ() + ParticleUtil.inRange(-0.5, 0.5) + 0.5;
-                        level.addAlwaysVisibleParticle(particleOptions, true, dx, dy, dz, 0, ParticleUtil.inRange(0.01, 0.03), 0);
-                    }
+            for (int i = 0; i < getNumParticles(density.density()); i++) {
+                if (rand.nextInt(chance) == 0) {
+                    double dx = x + blockPos.getX() + ParticleUtil.inRange(-0.5, 0.5) + 0.5;
+                    double dy = y + ParticleUtil.inRange(-0.01, 0.25);
+                    double dz = z + blockPos.getZ() + ParticleUtil.inRange(-0.5, 0.5) + 0.5;
+                    level.addAlwaysVisibleParticle(particleOptions, true, dx, dy, dz, 0, ParticleUtil.inRange(0.01, 0.03), 0);
                 }
+            }
         });
     }
 

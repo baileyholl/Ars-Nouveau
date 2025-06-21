@@ -7,11 +7,11 @@ import software.bernie.geckolib.model.GeoModel;
 
 public class ChimeraProjectileModel extends GeoModel<EntityChimeraProjectile> {
 
-    private static final ResourceLocation TEXTURE = ArsNouveau.prefix( "textures/entity/spike.png");
+    private static final ResourceLocation TEXTURE = ArsNouveau.prefix("textures/entity/spike.png");
 
-    public static final ResourceLocation NORMAL_MODEL = ArsNouveau.prefix( "geo/spike.geo.json");
+    public static final ResourceLocation NORMAL_MODEL = ArsNouveau.prefix("geo/spike.geo.json");
 
-    public static final ResourceLocation ANIMATIONS = ArsNouveau.prefix( "animations/spike_animations.json");
+    public static final ResourceLocation ANIMATIONS = ArsNouveau.prefix("animations/spike_animations.json");
 
     @Override
     public ResourceLocation getModelResource(EntityChimeraProjectile object) {

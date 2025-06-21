@@ -27,8 +27,8 @@ public class DocAssets {
     public static final BlitInfo CRAFTING_ENTRY_1 = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_crafting_table.png"), 105, 64);
     public static final BlitInfo SMELTING_ENTRY = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_smelting.png"), 64, 46);
     public static final BlitInfo DOC_ICON_HELP = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_help.png"), 7, 9);
-    public static final BlitInfo DOC_ICON_SHAPELESS = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_shapeless_recipe.png"), 10,11 );
-    
+    public static final BlitInfo DOC_ICON_SHAPELESS = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_shapeless_recipe.png"), 10, 11);
+
     public static final BlitInfo GLYPH_DETAILS = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_frame_glyph_attributes.png"), 118, 14);
 
     public static final BlitInfo FIRE_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_fire.png"), 10, 10);
@@ -60,13 +60,13 @@ public class DocAssets {
     public static final BlitInfo SAVE_BUTTON = new BlitInfo(ArsNouveau.prefix("textures/gui/save_bar.png"), 56, 15);
     public static final BlitInfo CLEAR_BUTTON = new BlitInfo(ArsNouveau.prefix("textures/gui/clear_bar.png"), 47, 15);
 
-    public static final BlitInfo THREAD_FRAME = new BlitInfo(ArsNouveau.prefix( "textures/gui/documentation/doc_frame_threads.png"),98, 130);
+    public static final BlitInfo THREAD_FRAME = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_frame_threads.png"), 98, 130);
 
-    public static final BlitInfo ICON_THREAD_TIER3 = new BlitInfo(ArsNouveau.prefix( "textures/gui/documentation/doc_icon_thread_tier3.png"),7, 7);
+    public static final BlitInfo ICON_THREAD_TIER3 = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_thread_tier3.png"), 7, 7);
 
-    public static final BlitInfo ICON_THREAD_TIER2 = new BlitInfo(ArsNouveau.prefix( "textures/gui/documentation/doc_icon_thread_tier2.png"),7, 7);
+    public static final BlitInfo ICON_THREAD_TIER2 = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_thread_tier2.png"), 7, 7);
 
-    public static final BlitInfo ICON_THREAD_TIER1 = new BlitInfo(ArsNouveau.prefix( "textures/gui/documentation/doc_icon_thread_tier1.png"),7, 7);
+    public static final BlitInfo ICON_THREAD_TIER1 = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_thread_tier1.png"), 7, 7);
 
     public static final BlitInfo SEARCH_SPLASH = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_detail_search_results.png"), 70, 85);
 
@@ -113,7 +113,7 @@ public class DocAssets {
     public static final BlitInfo FAVORITE_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/favorite_icon.png"), 7, 6);
 
     public record BlitInfo(ResourceLocation location, int u, int v, int width, int height) {
-        public BlitInfo(ResourceLocation location, int width, int height){
+        public BlitInfo(ResourceLocation location, int width, int height) {
             this(location, 0, 0, width, height);
         }
     }

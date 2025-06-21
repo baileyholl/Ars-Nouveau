@@ -13,7 +13,7 @@ import net.minecraft.network.codec.StreamCodec;
 
 import java.util.List;
 
-public class MageBlockTimeline extends BaseTimeline<MageBlockTimeline>{
+public class MageBlockTimeline extends BaseTimeline<MageBlockTimeline> {
     public static final MapCodec<MageBlockTimeline> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             PropMap.CODEC.fieldOf("propMap").forGetter(i -> i.propMap)
     ).apply(instance, MageBlockTimeline::new));
@@ -26,15 +26,15 @@ public class MageBlockTimeline extends BaseTimeline<MageBlockTimeline>{
 
     public PropMap propMap;
 
-    public MageBlockTimeline(){
+    public MageBlockTimeline() {
         this(new PropMap());
     }
 
-    public MageBlockTimeline(PropMap propMap){
+    public MageBlockTimeline(PropMap propMap) {
         this.propMap = propMap;
     }
 
-    public ParticleColor getColor(){
+    public ParticleColor getColor() {
         return propMap.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty(ParticleColor.defaultParticleColor(), true)).particleColor;
     }
 

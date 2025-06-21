@@ -8,7 +8,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 
-public class TickEmitterPacket extends AbstractPacket{
+public class TickEmitterPacket extends AbstractPacket {
     public static final Type<TickEmitterPacket> TYPE = new Type<>(ArsNouveau.prefix("tick_emitter"));
     public static final StreamCodec<RegistryFriendlyByteBuf, TickEmitterPacket> CODEC = StreamCodec.ofMember(TickEmitterPacket::toBytes, TickEmitterPacket::new);
 

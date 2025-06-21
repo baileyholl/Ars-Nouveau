@@ -14,7 +14,7 @@ public class LookAtTarget extends Goal {
     Supplier<Vec3> lookAtPosition;
 
 
-    public LookAtTarget(Mob pMob,  float pLookDistance, Supplier<Vec3> pLookAtPosition) {
+    public LookAtTarget(Mob pMob, float pLookDistance, Supplier<Vec3> pLookAtPosition) {
         this.mob = pMob;
         this.lookDistance = pLookDistance;
         this.lookAtPosition = pLookAtPosition;

@@ -11,7 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-public class GhostWeaveTile extends MirrorWeaveTile{
+public class GhostWeaveTile extends MirrorWeaveTile {
 
     private boolean invisible;
 
@@ -20,16 +20,16 @@ public class GhostWeaveTile extends MirrorWeaveTile{
     }
 
 
-    public void setVisibility(boolean invisible){
-        if(this.invisible == invisible){
+    public void setVisibility(boolean invisible) {
+        if (this.invisible == invisible) {
             return;
         }
 
         int ticks = 1;
-        for(Direction d : Direction.values()){
+        for (Direction d : Direction.values()) {
             BlockPos offset = getBlockPos().relative(d);
-            if(level.getBlockEntity(offset) instanceof GhostWeaveTile neighbor){
-                if(this.isInvisible() == neighbor.isInvisible()) {
+            if (level.getBlockEntity(offset) instanceof GhostWeaveTile neighbor) {
+                if (this.isInvisible() == neighbor.isInvisible()) {
                     ticks++;
                     EventQueue.getServerInstance().addEvent(new GhostweaveVisibilityEvent(neighbor, ticks, invisible));
                 }
@@ -39,7 +39,7 @@ public class GhostWeaveTile extends MirrorWeaveTile{
         this.updateBlock();
     }
 
-    public boolean isInvisible(){
+    public boolean isInvisible() {
         return invisible;
     }
 

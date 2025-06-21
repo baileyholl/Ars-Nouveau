@@ -17,7 +17,7 @@ import net.neoforged.neoforge.common.Tags;
 import java.nio.file.Path;
 import java.util.List;
 
-public class OneOffRecipesProvider extends SimpleDataProvider{
+public class OneOffRecipesProvider extends SimpleDataProvider {
 
     public OneOffRecipesProvider(DataGenerator generatorIn) {
         super(generatorIn);
@@ -31,7 +31,7 @@ public class OneOffRecipesProvider extends SimpleDataProvider{
                 ItemsRegistry.POTION_FLASK_AMPLIFY.get()
         };
 
-        for(int i = 0; i < flasks.length; i++){
+        for (int i = 0; i < flasks.length; i++) {
             var flaskRecipe = new PotionFlaskRecipe("", flasks[i].getDefaultInstance(), flasks[i].getDefaultInstance());
             saveStable(pOutput, PotionFlaskRecipe.CODEC.encodeStart(JsonOps.INSTANCE, flaskRecipe).getOrThrow(), getRecipePath(output, "fill_potion_flask_" + i));
         }
@@ -47,7 +47,7 @@ public class OneOffRecipesProvider extends SimpleDataProvider{
                         Ingredient.of(Items.QUARTZ_BLOCK),
                         Ingredient.of(Tags.Items.RODS_BLAZE),
                         Ingredient.of(Tags.Items.RODS_BLAZE)
-                        )));
+                )));
 
         BookUpgradeRecipe archmage = new BookUpgradeRecipe("", CraftingBookCategory.MISC, ItemsRegistry.ARCHMAGE_SPELLBOOK.get().getDefaultInstance(),
                 NonNullList.copyOf(List.of(
@@ -65,7 +65,6 @@ public class OneOffRecipesProvider extends SimpleDataProvider{
 
         saveStable(pOutput, BookUpgradeRecipe.CODEC.encodeStart(JsonOps.INSTANCE, archmage).getOrThrow(), getRecipePath(output, "archmage_book_upgrade"));
     }
-
 
 
     protected static Path getRecipePath(Path path, String id) {

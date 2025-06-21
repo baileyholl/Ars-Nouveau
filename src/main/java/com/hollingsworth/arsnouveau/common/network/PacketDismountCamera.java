@@ -9,16 +9,19 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 // https://github.com/Geforce132/SecurityCraft/blob/1.18.2/src/main/java/net/geforcemods/securitycraft/network/server/DismountCamera.java
-public class PacketDismountCamera extends AbstractPacket{
+public class PacketDismountCamera extends AbstractPacket {
     public static final Type<PacketDismountCamera> TYPE = new Type<>(ArsNouveau.prefix("dismount_camera"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketDismountCamera> CODEC = StreamCodec.ofMember(PacketDismountCamera::toBytes, PacketDismountCamera::new);
 
-    public PacketDismountCamera(){}
+    public PacketDismountCamera() {
+    }
 
-    public PacketDismountCamera(RegistryFriendlyByteBuf buf) {}
+    public PacketDismountCamera(RegistryFriendlyByteBuf buf) {
+    }
 
     @Override
-    public void toBytes(RegistryFriendlyByteBuf buf) {}
+    public void toBytes(RegistryFriendlyByteBuf buf) {
+    }
 
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {

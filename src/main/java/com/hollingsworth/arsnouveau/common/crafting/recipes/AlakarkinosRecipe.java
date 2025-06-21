@@ -23,7 +23,8 @@ import java.util.Optional;
 
 import static com.hollingsworth.arsnouveau.api.registry.AlakarkinosConversionRegistry.LootDrops;
 
-public record AlakarkinosRecipe(Block input, ResourceKey<LootTable> table, int weight, Optional<LootDrops> drops) implements SpecialSingleInputRecipe {
+public record AlakarkinosRecipe(Block input, ResourceKey<LootTable> table, int weight,
+                                Optional<LootDrops> drops) implements SpecialSingleInputRecipe {
     public AlakarkinosRecipe(Block input, ResourceKey<LootTable> table, int weight) {
         this(input, table, weight, Optional.empty());
     }

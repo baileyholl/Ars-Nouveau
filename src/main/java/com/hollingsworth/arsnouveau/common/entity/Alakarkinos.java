@@ -82,6 +82,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     public SimpleStateMachine stateMachine = new SimpleStateMachine(new DecideCrabActionState(this));
     int ticksBlowingAnim;
     int tamedTicks;
+
     public Alakarkinos(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         reloadGoals();
@@ -112,7 +113,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         if (!tamed && this.getMainHandItem().is(ItemTags.DECORATED_POT_SHERDS)) {
             tamedTicks++;
         }
-        if(tamedTicks > 60 && !level.isClientSide && !isRemoved() && !isDeadOrDying()){
+        if (tamedTicks > 60 && !level.isClientSide && !isRemoved() && !isDeadOrDying()) {
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             ItemStack stack = new ItemStack(ItemsRegistry.ALAKARKINOS_SHARD);
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
@@ -128,7 +129,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
 
             if (blowingBubbles()) {
                 ticksBlowingAnim++;
-                if(ticksBlowingAnim < 10){
+                if (ticksBlowingAnim < 10) {
                     return;
                 }
                 var optPos = this.entityData.get(BLOWING_AT);
@@ -145,7 +146,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
                 Vec3 motion = dir.scale(0.2);
                 level.addAlwaysVisibleParticle(
                         ModParticles.ALAKARK_BUBBLE_TYPE.get(),
-                        pos.x, pos.y, pos.z,motion.x, motion.y * 0.05, motion.z
+                        pos.x, pos.y, pos.z, motion.x, motion.y * 0.05, motion.z
                 );
                 if (getRandom().nextInt(20) == 0) {
                     level.playLocalSound(
@@ -159,11 +160,12 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
                             false
                     );
                 }
-            }else{
+            } else {
                 ticksBlowingAnim = 0;
             }
         }
     }
+
     @Override
     protected void pickUpItem(ItemEntity itemEntity) {
         if (!tamed && !beingTamed && itemEntity.getItem().is(ItemTags.DECORATED_POT_SHERDS)) {
@@ -191,7 +193,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         setCustomName(data.name());
     }
 
-    public String getColor(){
+    public String getColor() {
         return "red";
     }
 
@@ -211,9 +213,9 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         list.add(new WrappedGoal(0, new FloatGoal(this)));
         if (tamed) {
             list.add(new WrappedGoal(4, new ConditionalLookAtMob(this, Player.class, 3.0F, 0.02F, () -> this.lookAt == null)));
-            list.add(new WrappedGoal(4, new ConditionalLookAtMob(this, Mob.class, 8.0F,  () -> this.lookAt == null)));
+            list.add(new WrappedGoal(4, new ConditionalLookAtMob(this, Mob.class, 8.0F, () -> this.lookAt == null)));
             list.add(new WrappedGoal(4, new LookAtTarget(this, 8.0f, () -> this.lookAt)));
-        }else{
+        } else {
             list.add(new WrappedGoal(1, new UntamedFindItemGoal(this, () -> this.getMainHandItem().isEmpty(), (e) -> e.getItem().is(ItemTags.DECORATED_POT_SHERDS))));
             list.add(new WrappedGoal(4, new LookAtPlayerGoal(this, Player.class, 3.0F, 0.02F)));
             list.add(new WrappedGoal(4, new LookAtPlayerGoal(this, Mob.class, 8.0F)));
@@ -267,7 +269,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if(this.tamed && this.needSource()){
+        if (this.tamed && this.needSource()) {
             tooltip.add(Component.translatable("ars_nouveau.wixie.need_mana"));
         }
     }
@@ -284,7 +286,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     public boolean onDispel(@NotNull LivingEntity caster) {
         if (this.isRemoved())
             return false;
-        if(!level.isClientSide && tamed){
+        if (!level.isClientSide && tamed) {
             ItemStack stack = new ItemStack(ItemsRegistry.ALAKARKINOS_CHARM);
             stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
@@ -392,7 +394,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
             this.reloadGoals();
             setBehaviors = true;
         }
-        if(pCompound.contains("hasHat")){
+        if (pCompound.contains("hasHat")) {
             this.setHat(pCompound.getBoolean("hasHat"));
         }
     }
@@ -417,7 +419,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
             }
             placeHat.forceAnimationReset();
             placeHat.setAnimation(RawAnimation.begin().thenPlay("bubble_blow"));
-        }else if(arg == Animations.PICKUP_HAT.ordinal()){
+        } else if (arg == Animations.PICKUP_HAT.ordinal()) {
             if (placeHat == null) {
                 return;
             }

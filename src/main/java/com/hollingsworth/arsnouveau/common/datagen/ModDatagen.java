@@ -16,6 +16,7 @@ import java.util.concurrent.CompletableFuture;
 public class ModDatagen {
     public static CompletableFuture<HolderLookup.Provider> registries;
     public static PackOutput output;
+
     @SubscribeEvent
     public static void datagen(GatherDataEvent event) {
         APIRegistry.postInit();

@@ -66,7 +66,7 @@ public class SpellPrismBlock extends ModBlock implements IPrismaticBlock {
         Position iposition = getDispensePosition(pos, direction);
         spell.setPos(iposition.x(), iposition.y(), iposition.z());
         spell.prismRedirect++;
-        if(spell.prismRedirect >= 3){
+        if (spell.prismRedirect >= 3) {
             ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.PRISMATIC.get(), world, pos, 10);
         }
         if (spell.resolver() == null) {

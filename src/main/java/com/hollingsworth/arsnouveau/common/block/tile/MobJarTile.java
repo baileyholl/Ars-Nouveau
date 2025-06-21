@@ -79,7 +79,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
                         }
 
                         if (Double.isFinite(aabb.minX) && Double.isFinite(aabb.minY) && Double.isFinite(aabb.minZ)
-                            && Double.isFinite(aabb.maxX) && Double.isFinite(aabb.maxY) && Double.isFinite(aabb.maxZ)) {
+                                && Double.isFinite(aabb.maxX) && Double.isFinite(aabb.maxY) && Double.isFinite(aabb.maxZ)) {
                             for (var endPos : new Vec3[]{
                                     new Vec3(aabb.minX, aabb.minY, aabb.minZ),
                                     new Vec3(aabb.minX, aabb.minY, aabb.maxZ),
@@ -230,7 +230,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
                     if (tag.getCompound("entityTag").contains("id")) {
                         tag.putString("entityId", tag.getCompound("entityTag").getString("id"));
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
