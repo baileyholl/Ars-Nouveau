@@ -3,9 +3,11 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PropertyButton extends SelectableButton {
@@ -13,11 +15,15 @@ public class PropertyButton extends SelectableButton {
 
     public int nestLevel = 0;
     public Component fullTitle;
+    public List<PropertyButton> children = new ArrayList<>();
+    public int index;
+    public BaseProperty<?> property;
 
-    public PropertyButton(int x, int y, DocAssets.BlitInfo asset, DocAssets.BlitInfo selectedAsset, ParticleConfigWidgetProvider widgetProvider, int nestLevel, OnPress onPress) {
+    public PropertyButton(int x, int y, DocAssets.BlitInfo asset, DocAssets.BlitInfo selectedAsset, BaseProperty<?> property, ParticleConfigWidgetProvider widgetProvider, int nestLevel, OnPress onPress) {
         super(x, y, asset, selectedAsset, onPress);
         this.widgetProvider = widgetProvider;
         this.nestLevel = nestLevel;
+        this.property = property;
     }
 
     @Override

@@ -12,7 +12,10 @@ import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.client.gui.HeaderWidget;
-import com.hollingsworth.arsnouveau.client.gui.buttons.*;
+import com.hollingsworth.arsnouveau.client.gui.buttons.GlyphButton;
+import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
+import com.hollingsworth.arsnouveau.client.gui.buttons.PropertyButton;
+import com.hollingsworth.arsnouveau.client.gui.buttons.SelectableButton;
 import com.hollingsworth.arsnouveau.client.gui.documentation.DocEntryButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateParticleTimeline;
@@ -49,10 +52,11 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
     public static int lastOpenedHash;
     public static ParticleOverviewScreen lastScreen;
     BaseProperty selectedProperty;
-    SelectedParticleButton selectedParticleButton;
+
     SelectableButton currentlySelectedButton;
     GuiSpellBook previousScreen;
-
+    GuiImageButton upButton;
+    GuiImageButton downButton;
 
     public ParticleOverviewScreen(GuiSpellBook previousScreen, int slot, InteractionHand stackHand) {
         super(stackHand);
@@ -124,6 +128,18 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
                 onPropertySelected(selectedProperty);
             }
         }
+        upButton = new GuiImageButton(bookLeft + LEFT_PAGE_OFFSET + 87, bookBottom - 30, DocAssets.BUTTON_UP, (button) -> {
+            rowOffset = Math.max(rowOffset - 1, 0);
+            layoutLeftPage();
+        }).withHoverImage(DocAssets.BUTTON_UP_HOVER);
+        downButton = new GuiImageButton(bookLeft + LEFT_PAGE_OFFSET + 103, bookBottom - 30, DocAssets.BUTTON_DOWN, (button) -> {
+            rowOffset = rowOffset + 1;
+            layoutLeftPage();
+        }).withHoverImage(DocAssets.BUTTON_DOWN_HOVER);
+
+        addRenderableWidget(upButton);
+        addRenderableWidget(downButton);
+
         initLeftSideButtons();
 
         initSpellSlots((slotButton) -> {
@@ -189,11 +205,11 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
         SoundManager manager = Minecraft.getInstance().getSoundManager();
         if (pScrollY < 0 && hasMoreElements) {
             rowOffset = rowOffset + 1;
-            initLeftSideButtons();
+            layoutLeftPage();
             manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
         } else if (pScrollY > 0 && hasPreviousElements) {
             rowOffset = rowOffset - 1;
-            initLeftSideButtons();
+            layoutLeftPage();
             manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
         }
 
@@ -202,75 +218,107 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
 
     public void initLeftSideButtons() {
         clearList(leftPageWidgets);
-        IParticleTimeline<?> timeline = timelineMap.getOrCreate(selectedTimeline);
-        List<AbstractWidget> widgets = new ArrayList<>();
-        widgets.addAll(getPropButtons(timeline.getProperties(), new ArrayList<>(), 0));
 
-        if (rowOffset >= widgets.size()) {
+        IParticleTimeline<?> timeline = timelineMap.getOrCreate(selectedTimeline);
+        List<PropertyButton> propertyButtons = getPropButtons(timeline.getProperties(), 0);
+        for (AbstractWidget widget : propertyButtons) {
+            addLeftPageWidget(widget);
+        }
+
+        layoutLeftPage();
+    }
+
+    public void layoutLeftPage() {
+        if (rowOffset >= leftPageWidgets.size()) {
             rowOffset = 0;
         }
-        List<AbstractWidget> slicedWidgets = widgets.subList(rowOffset, widgets.size());
+        int propIndex = 0;
+        for (AbstractWidget widget : leftPageWidgets) {
+            widget.active = false;
+            widget.visible = false;
+//            widget.y = -1000;
+            if (widget instanceof PropertyButton button) {
+                button.index = propIndex;
+                propIndex++;
+            }
+        }
+        List<AbstractWidget> slicedWidgets = leftPageWidgets.subList(rowOffset, leftPageWidgets.size());
         int LEFT_PAGE_SLICE = 7;
         for (int i = 0; i < Math.min(slicedWidgets.size(), LEFT_PAGE_SLICE); i++) {
             AbstractWidget widget = slicedWidgets.get(i);
             widget.y = bookTop + 51 + 15 * i;
-            addLeftPageWidget(widget);
+            widget.active = true;
+            widget.visible = true;
         }
-        hasMoreElements = rowOffset + LEFT_PAGE_SLICE < widgets.size();
+        hasMoreElements = rowOffset + LEFT_PAGE_SLICE < leftPageWidgets.size();
         hasPreviousElements = rowOffset > 0;
-        if (hasPreviousElements) {
-            addLeftPageWidget(new GuiImageButton(bookLeft + LEFT_PAGE_OFFSET + 87, bookBottom - 30, DocAssets.BUTTON_UP, (button) -> {
-                rowOffset = Math.max(rowOffset - 1, 0);
-                initLeftSideButtons();
-            }).withHoverImage(DocAssets.BUTTON_UP_HOVER));
-        }
 
-        if (hasMoreElements) {
-            addLeftPageWidget(new GuiImageButton(bookLeft + LEFT_PAGE_OFFSET + 103, bookBottom - 30, DocAssets.BUTTON_DOWN, (button) -> {
-                rowOffset = rowOffset + 1;
-                initLeftSideButtons();
-            }).withHoverImage(DocAssets.BUTTON_DOWN_HOVER));
-        }
+        upButton.visible = hasPreviousElements;
+        upButton.active = hasPreviousElements;
+        downButton.active = hasMoreElements;
+        downButton.visible = hasMoreElements;
     }
 
-    public List<PropertyButton> getPropButtons(List<BaseProperty<?>> props, List<PropertyButton> buttons, int depth) {
+    public List<PropertyButton> getPropButtons(List<BaseProperty<?>> props, int depth) {
+        List<PropertyButton> buttons = new ArrayList<>();
         if (depth > 3) {
             return buttons;
         }
-        for (BaseProperty property : props) {
-            property.setChangedListener(this::initLeftSideButtons);
-            PropertyButton propertyButton = buildPropertyButton(property, buttons.size(), depth);
+        for (BaseProperty<?> property : props) {
+            PropertyButton propertyButton = buildPropertyButton(property, depth);
             buttons.add(propertyButton);
-            getPropButtons(property.subProperties(), buttons, depth + 1);
+            List<PropertyButton> childrenButtons = getPropButtons(property.subProperties(), depth + 1);
+            propertyButton.children = new ArrayList<>(childrenButtons);
+            buttons.addAll(childrenButtons);
+        }
+
+        for (int i = 0; i < buttons.size(); i++) {
+            PropertyButton propButton = buttons.get(i);
+            int finalI = i;
+            propButton.index = i;
+            propButton.property.setChangedListener(() -> {
+                List<AbstractWidget> toRemove = new ArrayList<>();
+                for (PropertyButton widget : propButton.children) {
+                    toRemove.add(leftPageWidgets.get(widget.index));
+                }
+                for (AbstractWidget widget : toRemove) {
+                    leftPageWidgets.remove(widget);
+                    removeWidget(widget);
+                }
+                propButton.children = getPropButtons(propButton.property.subProperties(), propButton.nestLevel + 1);
+                if (!propButton.children.isEmpty()) {
+                    leftPageWidgets.addAll(propButton.index + 1, propButton.children);
+                    for (PropertyButton button : propButton.children) {
+                        addRenderableWidget(button);
+                    }
+                }
+                layoutLeftPage();
+            });
         }
         return buttons;
     }
 
-    public PropertyButton buildPropertyButton(BaseProperty property, int yOffset, int nestLevel) {
+    public PropertyButton buildPropertyButton(BaseProperty<?> property, int nestLevel) {
         DocAssets.BlitInfo texture = DocAssets.DOUBLE_NESTED_ENTRY_BUTTON;
         DocAssets.BlitInfo selectedTexture = DocAssets.DOUBLE_NESTED_ENTRY_BUTTON_SELECTED;
-        int xOffset = 26;
         switch (nestLevel) {
             case 0 -> {
                 texture = DocAssets.NESTED_ENTRY_BUTTON;
                 selectedTexture = DocAssets.NESTED_ENTRY_BUTTON_SELECTED;
-                xOffset = 13;
             }
             case 1 -> {
                 texture = DocAssets.DOUBLE_NESTED_ENTRY_BUTTON;
                 selectedTexture = DocAssets.DOUBLE_NESTED_ENTRY_BUTTON_SELECTED;
-                xOffset = 26;
             }
             case 2 -> {
                 texture = DocAssets.TRIPLE_NESTED_ENTRY_BUTTON;
                 selectedTexture = DocAssets.TRIPLE_NESTED_ENTRY_BUTTON_SELECTED;
-                xOffset = 39;
             }
             default -> {
             }
         }
         var widgetProvider = property.buildWidgets(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, ONE_PAGE_HEIGHT);
-        return new PropertyButton(bookLeft + LEFT_PAGE_OFFSET + xOffset, bookTop + 51 + 15 * (yOffset), texture, selectedTexture, widgetProvider, nestLevel, (button) -> {
+        PropertyButton propButton = new PropertyButton(bookLeft + LEFT_PAGE_OFFSET + 13 + nestLevel * 13, 0, texture, selectedTexture, property, widgetProvider, nestLevel, (button) -> {
             onPropertySelected(property);
             if (button instanceof PropertyButton propertyButton) {
                 propertyButton.widgetProvider = propertyWidgetProvider;
@@ -278,6 +326,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
             }
             selectedProperty = property;
         });
+        return propButton;
     }
 
     public void onPropertySelected(BaseProperty property) {
@@ -318,7 +367,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
         propertyWidgetProvider = null;
     }
 
-    private void clearList(List<AbstractWidget> list) {
+    private void clearList(List<? extends AbstractWidget> list) {
         for (AbstractWidget widget : list) {
             this.removeWidget(widget);
         }
@@ -332,11 +381,6 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
         if (propertyWidgetProvider != null) {
             propertyWidgetProvider.render(graphics, mouseX, mouseY, partialTicks);
         }
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
