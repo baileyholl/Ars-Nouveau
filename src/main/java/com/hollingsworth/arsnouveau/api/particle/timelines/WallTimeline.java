@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.BurstMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
-import com.hollingsworth.arsnouveau.api.particle.configurations.UpwardsFieldMotion;
+import com.hollingsworth.arsnouveau.api.particle.configurations.UpwardsWallMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.MotionProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.SoundProperty;
@@ -40,7 +40,7 @@ public class WallTimeline extends BaseTimeline<WallTimeline> {
     public SoundProperty resolveSound = new SoundProperty();
 
     public WallTimeline() {
-        this(new TimelineEntryData(new UpwardsFieldMotion(), new PropertyParticleOptions()),
+        this(new TimelineEntryData(new UpwardsWallMotion(), new PropertyParticleOptions()),
                 new TimelineEntryData(new BurstMotion(), new PropertyParticleOptions()), new SoundProperty());
     }
 
