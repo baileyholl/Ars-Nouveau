@@ -15,15 +15,55 @@ public class PropertyButton extends SelectableButton {
 
     public int nestLevel = 0;
     public Component fullTitle;
-    public List<PropertyButton> children = new ArrayList<>();
+    private List<PropertyButton> children = new ArrayList<>();
     public int index;
     public BaseProperty<?> property;
+    public PropertyButton parent;
+    private boolean expanded = false;
+    public boolean showMarkers = true;
 
     public PropertyButton(int x, int y, DocAssets.BlitInfo asset, DocAssets.BlitInfo selectedAsset, BaseProperty<?> property, ParticleConfigWidgetProvider widgetProvider, int nestLevel, OnPress onPress) {
         super(x, y, asset, selectedAsset, onPress);
         this.widgetProvider = widgetProvider;
         this.nestLevel = nestLevel;
         this.property = property;
+    }
+
+    public void setChildren(List<PropertyButton> children) {
+        this.children = children;
+        for (PropertyButton child : children) {
+            child.parent = this;
+        }
+    }
+
+    public List<PropertyButton> getChildren() {
+        return children;
+    }
+
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
+        for (PropertyButton child : children) {
+            if (child.expanded != expanded) {
+                child.setExpanded(expanded);
+            }
+        }
+        if (parent != null && parent.expanded != expanded) {
+            parent.setExpanded(expanded);
+        }
+    }
+
+    public boolean isExpanded() {
+        return expanded;
+    }
+
+    public boolean childOf(PropertyButton parent) {
+        if (this.parent == null) {
+            return false;
+        }
+        if (this.parent == parent) {
+            return true;
+        }
+        return this.parent.childOf(parent);
     }
 
     @Override
@@ -44,6 +84,14 @@ public class PropertyButton extends SelectableButton {
             fullTitle = null;
         }
         DocClientUtils.drawStringScaled(graphics, Component.literal(titleString), x + 14, y + 3, 0, 0.8f, false);
+
+        if (showMarkers && nestLevel == 0 && !children.isEmpty()) {
+            if (expanded) {
+                DocClientUtils.blit(graphics, DocAssets.EXPAND_MARKER, x - 7, y + 6);
+            } else {
+                DocClientUtils.blit(graphics, DocAssets.COLLAPSE_MARKER, x - 6, y + 4);
+            }
+        }
     }
 
     @Override
@@ -53,6 +101,5 @@ public class PropertyButton extends SelectableButton {
         }
         widgetProvider.getButtonTooltips(tooltip);
         super.getTooltip(tooltip);
-
     }
 }

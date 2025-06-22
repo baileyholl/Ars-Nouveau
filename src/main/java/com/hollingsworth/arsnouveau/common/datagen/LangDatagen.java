@@ -1755,6 +1755,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.timeline.tick.tooltip", "Creates particles every tick");
         add("ars_nouveau.timeline.field.tooltip", "Creates particles where this effect lands.");
         add("block.ars_nouveau.particle_block", "Prestidigitation Block");
+        add("ars_nouveau.expand_button", "Toggle Expanded View");
 
     }
 

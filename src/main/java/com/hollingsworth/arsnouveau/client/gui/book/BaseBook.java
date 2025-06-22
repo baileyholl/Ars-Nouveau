@@ -128,7 +128,7 @@ public class BaseBook extends BaseScreen {
         // TODO: 1.22 remove along with ITooltipProvider from ars
         for (Renderable renderable : renderables) {
             if (renderable instanceof AbstractWidget widget) {
-                if (GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)) {
+                if (widget.visible && GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)) {
                     if (renderable instanceof ITooltipProvider tooltipProvider) {
                         tooltipProvider.getTooltip(tooltip);
                     } else if (renderable instanceof ITooltipRenderer nuggetProvider) {
