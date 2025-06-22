@@ -56,16 +56,6 @@ public class PropertyButton extends SelectableButton {
         return expanded;
     }
 
-    public boolean childOf(PropertyButton parent) {
-        if (this.parent == null) {
-            return false;
-        }
-        if (this.parent == parent) {
-            return true;
-        }
-        return this.parent.childOf(parent);
-    }
-
     @Override
     protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
