@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.arsnouveau.client.gui.buttons.SelectableButton;
+import com.hollingsworth.nuggets.client.gui.GuiHelpers;
 import com.hollingsworth.nuggets.client.gui.NestedWidgets;
 import com.hollingsworth.nuggets.client.rendering.RenderHelpers;
 import net.minecraft.client.gui.GuiGraphics;
@@ -101,7 +102,7 @@ public class DocEntryButton extends SelectableButton implements NestedWidgets {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (visible && active && onClickFunction != null && onClickFunction.apply(mouseX, mouseY, button)) {
+        if (GuiHelpers.isMouseInRelativeRange(mouseX, mouseY, this) && visible && active && onClickFunction != null && onClickFunction.apply(mouseX, mouseY, button)) {
             return true;
         }
         return super.mouseReleased(mouseX, mouseY, button);
@@ -109,7 +110,7 @@ public class DocEntryButton extends SelectableButton implements NestedWidgets {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (visible && active && onClickFunction != null && onClickFunction.apply(mouseX, mouseY, button)) {
+        if (GuiHelpers.isMouseInRelativeRange(mouseX, mouseY, this) && visible && active && onClickFunction != null && onClickFunction.apply(mouseX, mouseY, button)) {
             return true;
         }
         return super.mouseClicked(mouseX, mouseY, button);
@@ -117,7 +118,7 @@ public class DocEntryButton extends SelectableButton implements NestedWidgets {
 
     @Override
     public void onClick(double mouseX, double mouseY, int button) {
-        if (visible && active && (onClickFunction == null || !onClickFunction.apply(mouseX, mouseY, button))) {
+        if (GuiHelpers.isMouseInRelativeRange(mouseX, mouseY, this) && visible && active && (onClickFunction == null || !onClickFunction.apply(mouseX, mouseY, button))) {
             super.onClick(mouseX, mouseY, button);
         }
     }
