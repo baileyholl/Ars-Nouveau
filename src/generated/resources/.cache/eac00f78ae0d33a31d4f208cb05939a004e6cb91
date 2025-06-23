@@ -1,4 +1,4 @@
-// 1.20.1	2025-06-23T13:54:25.3787614	AN tags
+// 1.20.1	2025-06-23T13:58:51.730372	AN tags
 939cde8f97e4e8d7ea8445415522f703b2b927d4 data/ars_nouveau/tags/blocks/an_decorative.json
 de95bc21249101b079255a1a00274f60d55e0602 data/ars_nouveau/tags/blocks/blazing_logs.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/blocks/break_blacklist.json
@@ -14,6 +14,7 @@ df87c9e82c58b24ac8e979c73fc3be68bf25b4b0 data/ars_nouveau/tags/blocks/harvest/fo
 7d78d30b1cc01fb43cfb8364ed31026ee0640387 data/ars_nouveau/tags/blocks/harvest/stems.json
 5efa96a28ef2e2290cc0a0f827844a96bd9f94f2 data/ars_nouveau/tags/blocks/ignore_tile.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/blocks/interact_blacklist.json
+35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/blocks/lectern_blacklist.json
 bf1a44f8a79b447f1e7b6541e8c3d93e4ef6f71f data/ars_nouveau/tags/blocks/magic_plants.json
 ce9ccf92ade8cd330c990516ee0f8a30c35adea9 data/ars_nouveau/tags/blocks/magic_saplings.json
 6429b3e3e4f89e7bb44af0c2ab98368717674afc data/ars_nouveau/tags/blocks/no_break_drop.json

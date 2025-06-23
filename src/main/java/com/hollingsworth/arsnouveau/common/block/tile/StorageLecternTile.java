@@ -261,7 +261,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         if (tile instanceof StorageLecternTile) {
             return;
         }
-        if (tile == null) {
+        if (tile == null || !isValidInv(storedPos)) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.no_tile"));
             return;
         }
@@ -364,7 +364,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         itemsByTab.put(TAB_ALL, new HashMap<>());
         for (BlockPos pos : connectedInventories) {
             BlockEntity invTile = level.getBlockEntity(pos);
-            if (invTile == null) {
+            if (invTile == null || !isValidInv(pos)) {
                 continue;
             }
             IItemHandler handler = invTile.getCapability(ForgeCapabilities.ITEM_HANDLER, null).orElse(null);
@@ -424,7 +424,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 			return;
 		for(Direction dir : Direction.values()){
 			BlockPos pos = this.worldPosition.relative(dir);
-			if(level.getBlockState(pos).is(BlockTagProvider.AUTOPULL_DISABLED)){
+			if(level.getBlockState(pos).is(BlockTagProvider.AUTOPULL_DISABLED) || !isValidInv(pos)){
 				continue;
 			}
 			BlockEntity tile = this.level.getBlockEntity(pos);
@@ -504,6 +504,10 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         bookwyrmUUIDs.add(bookwyrm.getUUID());
         updateBlock();
         return bookwyrm;
+    }
+
+    public boolean isValidInv(BlockPos pos) {
+        return !(level.getBlockEntity(pos) instanceof StorageLecternTile) && !level.getBlockState(pos).is(BlockTagProvider.LECTERN_BLACKLIST);
     }
 
     @Override

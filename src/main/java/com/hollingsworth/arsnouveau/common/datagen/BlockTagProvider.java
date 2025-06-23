@@ -45,6 +45,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     public static TagKey<Block> BLAZING_LOGS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "blazing_logs"));
     public static TagKey<Block> DOWSING_ROD = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "dowsing_rod"));
     public static TagKey<Block> BUSHES = BlockTags.create(new ResourceLocation("forge", "bushes"));
+    public static TagKey<Block> LECTERN_BLACKLIST = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "lectern_blacklist"));
 
     public BlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
         super(output, Registries.BLOCK, future, block -> block.builtInRegistryHolder().key(), ArsNouveau.MODID, helper);
@@ -53,6 +54,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
         this.tag(INTERACT_BLACKLIST);
+        this.tag(LECTERN_BLACKLIST);
         this.tag(BlockTags.FIRE).add(BlockRegistry.MAGIC_FIRE.get());
         this.tag(OCCLUDES_SPELL_SENSOR).add(BlockRegistry.MAGEBLOOM_BLOCK.get());
         this.tag(RELOCATION_NOT_SUPPORTED);
