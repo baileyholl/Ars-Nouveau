@@ -351,10 +351,10 @@ public class APIRegistry {
         List<IParticleMotionType<?>> DELAY_OPTIONS = Arrays.asList(ParticleMotionRegistry.LIGHT_BLOB.get(), ParticleMotionRegistry.BRAZIER_TYPE.get(), ParticleMotionRegistry.UPWARD_FIELD_TYPE.get());
         DelayTimeline.TICKING_OPTIONS.addAll(DELAY_OPTIONS);
 
-        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.BUBBLE_CLONE_TYPE.get(), false));
-        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SMOKE_TYPE.get(), false));
-        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SNOW_TYPE.get(), false));
-        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.NEW_GLOW_TYPE.get(), true, true));
+        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.BUBBLE_CLONE_TYPE.get(), true));
+        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SMOKE_TYPE.get(), true));
+        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SNOW_TYPE.get(), true));
+        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.NEW_GLOW_TYPE.get(), true));
 
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.LEAF_TYPE.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.DRIPPING_WATER.get(), true).withSound());
@@ -373,7 +373,7 @@ public class APIRegistry {
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.FIREWORK.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.FLAME.get(), false));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.INFESTED.get(), true));
-        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SCULK_SOUL.get(), false));
+        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SCULK_SOUL.get(), true));
 //            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticlModParticles.eData(SCULK_CHARGE_POP.get(), false));
 //            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticlModParticles.eData(SCULK_CHARGE.get(), false));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SOUL.get(), true));

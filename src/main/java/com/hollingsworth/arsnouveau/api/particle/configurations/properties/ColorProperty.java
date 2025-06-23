@@ -54,11 +54,6 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
         this(ParticleColor.defaultParticleColor(), true);
     }
 
-    public ColorProperty usesLegacyRGB(boolean legacyRGB) {
-        this.isLegacyRGB = legacyRGB;
-        return this;
-    }
-
     public ParticleColor color() {
         return tintDisabled ? ParticleColor.WHITE : particleColor;
     }
@@ -156,7 +151,6 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
                     displayColor = particleColor;
                     tintDisabled = false;
                     propertyHolder.set(getType(), property);
-                    updateSelected();
                 }) {
                     @Override
                     protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
@@ -170,7 +164,6 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
                     particleColor = ParticleColor.WHITE;
                     displayColor = particleColor;
                     propertyHolder.set(getType(), property);
-                    updateSelected();
                 });
                 rainbowButton.withTooltip(Component.translatable("ars_nouveau.color_rainbow"));
                 noneButton.withTooltip(Component.translatable("ars_nouveau.color_none"));
@@ -189,37 +182,11 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
                 }
             }
 
-            public void updateSelected() {
-//                for(SelectedParticleButton selectedParticleButton : selectableButtons){
-//                    selectedParticleButton.selected = false;
-//                }
-//
-//                if(tintDisabled){
-//                    noneButton.selected = true;
-//                }else{
-//                    for(SelectedParticleButton selectedParticleButton : selectableButtons){
-//                        if(selectedParticleButton instanceof ColorPresetButton presetButton){
-//                            if(presetButton.particleColor.equals(particleColor)){
-//                                selectedParticleButton.selected = true;
-//                                break;
-//                            }
-//                        } else if(selectedParticleButton == rainbowButton && particleColor instanceof RainbowParticleColor){
-//                            selectedParticleButton.selected = true;
-//                            break;
-//                        } else if(selectedParticleButton == noneButton && tintDisabled){
-//                            selectedParticleButton.selected = true;
-//                            break;
-//                        }
-//                    }
-//                }
-            }
-
             public void updateParticleColor() {
                 tintDisabled = false;
                 particleColor = HSLColor.hsl(hueSlider.getValueInt(), saturation.getValue(), lightness.getValue()).toColor().toParticle();
                 displayColor = particleColor;
                 propertyHolder.set(getType(), property);
-                updateSelected();
             }
 
             public void setFromPreset(ParticleColor preset) {
