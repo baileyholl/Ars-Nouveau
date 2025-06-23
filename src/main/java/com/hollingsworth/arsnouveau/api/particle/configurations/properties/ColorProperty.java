@@ -91,15 +91,15 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
 
                 DocClientUtils.blit(graphics, DocAssets.SPELLSTYLE_COLOR_PREVIEW, xOffset, yOffset);
                 int hueOffset = 35;
-                if (!isLegacyRGB) {
-                    DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.hue"), graphics, x + 8, y + hueOffset, width, mouseX, mouseY, partialTicks);
-                    DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.sat"), graphics, x + 8, y + hueOffset + 20, width, mouseX, mouseY, partialTicks);
-                    DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.lightness"), graphics, x + 8, y + hueOffset + 40, width, mouseX, mouseY, partialTicks);
-                } else {
-                    DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.color_gui.red_slider", redW.getValueInt()), graphics, x + 8, y + hueOffset, width, mouseX, mouseY, partialTicks);
-                    DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.color_gui.green_slider", greenW.getValueInt()), graphics, x + 8, y + hueOffset + 20, width, mouseX, mouseY, partialTicks);
-                    DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.color_gui.blue_slider", blueW.getValueInt()), graphics, x + 8, y + hueOffset + 41, width, mouseX, mouseY, partialTicks);
-                }
+//                if (!isLegacyRGB) {
+                DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.hue"), graphics, x + 8, y + hueOffset, width, mouseX, mouseY, partialTicks);
+                DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.sat"), graphics, x + 8, y + hueOffset + 20, width, mouseX, mouseY, partialTicks);
+                DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.lightness"), graphics, x + 8, y + hueOffset + 40, width, mouseX, mouseY, partialTicks);
+//                } else {
+//                    DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.color_gui.red_slider", redW.getValueInt()), graphics, x + 8, y + hueOffset, width, mouseX, mouseY, partialTicks);
+//                    DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.color_gui.green_slider", greenW.getValueInt()), graphics, x + 8, y + hueOffset + 20, width, mouseX, mouseY, partialTicks);
+//                    DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.color_gui.blue_slider", blueW.getValueInt()), graphics, x + 8, y + hueOffset + 41, width, mouseX, mouseY, partialTicks);
+//                }
             }
 
             @Override
@@ -170,14 +170,15 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
                 selectableButtons.add(noneButton);
                 selectableButtons.add(rainbowButton);
                 widgets.add(rainbowButton);
-                if (isLegacyRGB) {
-                    widgets.add(redW);
-                    widgets.add(greenW);
-                    widgets.add(blueW);
-                } else {
-                    widgets.add(hueSlider);
-                    widgets.add(saturation);
-                    widgets.add(lightness);
+//                if (isLegacyRGB) {
+//                    widgets.add(redW);
+//                    widgets.add(greenW);
+//                    widgets.add(blueW);
+//                } else {
+                widgets.add(hueSlider);
+                widgets.add(saturation);
+                widgets.add(lightness);
+                if (!isLegacyRGB) {
                     widgets.add(noneButton);
                 }
             }

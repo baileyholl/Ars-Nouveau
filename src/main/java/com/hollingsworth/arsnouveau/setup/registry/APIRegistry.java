@@ -354,7 +354,7 @@ public class APIRegistry {
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.BUBBLE_CLONE_TYPE.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SMOKE_TYPE.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SNOW_TYPE.get(), true));
-        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.NEW_GLOW_TYPE.get(), true));
+        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.NEW_GLOW_TYPE.get(), true, true));
 
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.LEAF_TYPE.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.DRIPPING_WATER.get(), true).withSound());
