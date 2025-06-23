@@ -167,7 +167,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
 
         if (iItemHandler == null) return false;
         for (int j = 0; j < iItemHandler.getSlots(); j++) {
-            ItemStack stack = iItemHandler.getStackInSlot(j);
+            ItemStack stack = iItemHandler.extractItem(j, 1, true);
             if (!stack.isEmpty() && getValidStorePos(stack) != null) {
                 return true;
             }
