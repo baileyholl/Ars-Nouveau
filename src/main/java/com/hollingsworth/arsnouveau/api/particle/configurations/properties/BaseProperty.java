@@ -5,14 +5,17 @@ import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public abstract class BaseProperty<T extends BaseProperty<T>> {
 
     public PropMap propertyHolder;
     public Runnable onDependenciesChanged;
+    /**
+     * Only used by the client to store data that is not saved in properties.
+     * This should not be used for anything that needs to be saved or synced with the server or item data.
+     */
+    protected Map<String, Object> providerData = new HashMap<>();
 
     public BaseProperty() {
         this(new PropMap());

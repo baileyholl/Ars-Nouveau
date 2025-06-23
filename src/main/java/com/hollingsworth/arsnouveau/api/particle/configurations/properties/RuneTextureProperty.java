@@ -11,7 +11,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -62,9 +61,10 @@ public class RuneTextureProperty extends BaseProperty<RuneTextureProperty> {
         this.runeTexture = TEXTURES.get(0);
     }
 
+
     @Override
     public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height) {
-        List<Button> buttons = new ArrayList<>();
+        List<DocEntryButton> buttons = new ArrayList<>();
         for (int i = 0; i < TEXTURES.size(); i++) {
             String texture = TEXTURES.get(i);
             DocEntryButton button = new DocEntryButton(x, y + 20 + 15 * i, ItemStack.EMPTY, getPatternName(texture), (b) -> {
@@ -74,8 +74,7 @@ public class RuneTextureProperty extends BaseProperty<RuneTextureProperty> {
             buttons.add(button);
         }
 
-
-        return new ListParticleWidgetProvider(x, y, width, height, buttons) {
+        return new ListParticleWidgetProvider(x, y, width, height, buttons, 8, () -> providerData) {
             @Override
             public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
                 DocClientUtils.drawHeader(getName(), graphics, x, y, width, mouseX, mouseY, partialTicks);
