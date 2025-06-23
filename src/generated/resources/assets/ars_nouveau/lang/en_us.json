@@ -806,6 +806,7 @@
   "ars_nouveau.mod_news_desc": "The latest releases and news",
   "ars_nouveau.model.cube": "Cube",
   "ars_nouveau.model.empty": "None",
+  "ars_nouveau.model.spike": "Spike",
   "ars_nouveau.model_tooltip": "Projectile Model",
   "ars_nouveau.no_stack_crafting": "No valid craft nearby.",
   "ars_nouveau.nook": "Patrons may summon Nook, a faithfulish tail wagging companion.",

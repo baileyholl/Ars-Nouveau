@@ -1757,6 +1757,8 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.particle_block", "Prestidigitation Block");
         add("ars_nouveau.expand_button", "Toggle Expanded View");
 
+        add("ars_nouveau.model.spike", "Spike");
+
     }
 
     public void addCategory(String key, String value) {

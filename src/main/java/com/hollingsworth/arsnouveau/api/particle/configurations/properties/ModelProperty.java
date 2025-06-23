@@ -39,11 +39,15 @@ public class ModelProperty extends BaseProperty<ModelProperty> {
         return ArsNouveau.prefix("textures/particle/" + "projectile_" + (spell.age / 5) % 4 + ".png");
     });
 
+    public static final Model SPIKE_BODY = new Model(ArsNouveau.prefix("spike"), DocAssets.STYLE_ICON_SPIKE, true);
+
+
     public static final List<Model> resources = new CopyOnWriteArrayList<>();
 
     static {
         resources.add(NONE);
         resources.add(CUBE_BODY);
+        resources.add(SPIKE_BODY);
     }
 
     public ModelProperty(PropMap propMap) {
