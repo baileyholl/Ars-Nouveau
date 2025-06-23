@@ -43,6 +43,9 @@ public abstract class ListParticleWidgetProvider extends ParticleConfigWidgetPro
             if (data.containsKey("pageOffset")) {
                 pageOffset = (int) data.get("pageOffset");
             }
+            if (data.containsKey("maxEntries")) {
+                maxEntries = (int) data.get("maxEntries");
+            }
         }
     }
 
@@ -63,6 +66,7 @@ public abstract class ListParticleWidgetProvider extends ParticleConfigWidgetPro
     public void onScroll(int offset) {
         pageOffset += numPerPage * offset;
         pageOffset = Math.max(0, Math.min(pageOffset, maxEntries - numPerPage));
+        preservedData.get().put("pageOffset", pageOffset);
         updateButtons();
     }
 
@@ -80,6 +84,7 @@ public abstract class ListParticleWidgetProvider extends ParticleConfigWidgetPro
     protected void updateButtons() {
         List<DocEntryButton> filteredButtons = filter(searchBar.value);
         maxEntries = filteredButtons.size();
+        preservedData.get().put("maxEntries", maxEntries);
         for (var button : buttons) {
             button.active = false;
             button.visible = false;
