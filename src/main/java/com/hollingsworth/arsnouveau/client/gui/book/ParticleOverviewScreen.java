@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
 import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimeline;
 import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimelineType;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
@@ -51,9 +50,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
     public static IParticleTimelineType<?> LAST_SELECTED_PART = null;
     public static int lastOpenedHash;
     public static ParticleOverviewScreen lastScreen;
-    BaseProperty selectedProperty;
 
-    SelectableButton currentlySelectedButton;
     GuiSpellBook previousScreen;
     GuiImageButton upButton;
     GuiImageButton downButton;
@@ -121,14 +118,12 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
             }
         });
         addSaveButton((b) -> {
-            int hash = timelineMap.immutable().hashCode();
-            ParticleOverviewScreen.lastOpenedHash = hash;
+            ParticleOverviewScreen.lastOpenedHash = timelineMap.immutable().hashCode();
             Networking.sendToServer(new PacketUpdateParticleTimeline(selectedSpellSlot, timelineMap.immutable(), this.hand == InteractionHand.MAIN_HAND));
         });
         timelineButton = addRenderableWidget(new DocEntryButton(bookLeft + LEFT_PAGE_OFFSET, bookTop + 36, selectedTimeline.getSpellPart().glyphItem.getDefaultInstance(), Component.translatable(selectedTimeline.getSpellPart().getLocaleName()), (b) -> onTimelineSelectorHit()));
-        if (currentlySelectedButton == null) {
-            setSelectedButton(timelineButton);
-        }
+
+        timelineButton.isSelected = true;
 
         initLeftSideButtons();
 
@@ -162,9 +157,9 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
     }
 
     public void onTimelineSelectorHit() {
+        timelineButton.isSelected = true;
+        propWidgetList.resetSelected();
         addTimelineSelectionWidgets();
-        setSelectedButton(timelineButton);
-        selectedProperty = null;
     }
 
     public static void openScreen(GuiSpellBook parentScreen, ItemStack stack, int slot, InteractionHand stackHand) {
@@ -196,14 +191,6 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
     public void removed() {
         super.removed();
         ParticleOverviewScreen.lastScreen = this;
-    }
-
-    public void setSelectedButton(SelectableButton selectedButton) {
-        if (currentlySelectedButton != null) {
-            currentlySelectedButton.isSelected = false;
-        }
-        currentlySelectedButton = selectedButton;
-        currentlySelectedButton.isSelected = true;
     }
 
     @Override
@@ -282,6 +269,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
 
     public void onPropertySelected(PropertyButton propertyButton) {
         clearRightPage();
+        timelineButton.isSelected = false;
         propertyWidgetProvider = propertyButton.property.buildWidgets(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, ONE_PAGE_HEIGHT);
 
         List<AbstractWidget> propertyWidgets = new ArrayList<>();
@@ -308,7 +296,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
                 timelineButton.title = Component.translatable(spellPart.getLocaleName());
                 timelineButton.renderStack = (spellPart.glyphItem.getDefaultInstance());
                 clearList(propWidgetList.allButtons);
-                propWidgetList.reset();
+                propWidgetList.resetSelected();
                 initLeftSideButtons();
             });
             rightPageWidgets.add(widget);

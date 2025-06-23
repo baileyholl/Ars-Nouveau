@@ -34,8 +34,7 @@ public class PropWidgetList {
         }
     }
 
-    public void reset() {
-        this.allButtons.clear();
+    public void resetSelected() {
         this.topSelectedIndex = -1;
     }
 
@@ -43,8 +42,10 @@ public class PropWidgetList {
         this.allButtons = getPropButtons(props, 0);
         if (topSelectedIndex != -1 && topSelectedIndex < allButtons.size()) {
             PropertyButton selectedButton = allButtons.get(topSelectedIndex);
-            if (selectedButton != null)
+            if (selectedButton != null) {
                 selectedButton.setExpanded(true);
+                selectedButton.isSelected = true;
+            }
         }
     }
 
@@ -82,7 +83,7 @@ public class PropWidgetList {
         return buttons;
     }
 
-    public PropertyButton buildPropertyButton(BaseProperty<?> property, int nestLevel) {
+    private PropertyButton buildPropertyButton(BaseProperty<?> property, int nestLevel) {
         DocAssets.BlitInfo texture = DocAssets.DOUBLE_NESTED_ENTRY_BUTTON;
         DocAssets.BlitInfo selectedTexture = DocAssets.DOUBLE_NESTED_ENTRY_BUTTON_SELECTED;
         switch (nestLevel) {
@@ -110,9 +111,11 @@ public class PropWidgetList {
         for (AbstractWidget widget : allButtons) {
             if (widget instanceof PropertyButton button) {
                 button.setExpanded(false);
+                button.isSelected = false;
             }
         }
         propertyButton.setExpanded(true);
+        propertyButton.isSelected = true;
         this.topSelectedIndex = propertyButton.index;
         onPropertySelected.accept(propertyButton);
     }
