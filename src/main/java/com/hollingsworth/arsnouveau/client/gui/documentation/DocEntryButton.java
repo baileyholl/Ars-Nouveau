@@ -101,7 +101,7 @@ public class DocEntryButton extends SelectableButton implements NestedWidgets {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (onClickFunction != null && onClickFunction.apply(mouseX, mouseY, button)) {
+        if (visible && active && onClickFunction != null && onClickFunction.apply(mouseX, mouseY, button)) {
             return true;
         }
         return super.mouseReleased(mouseX, mouseY, button);
@@ -109,7 +109,7 @@ public class DocEntryButton extends SelectableButton implements NestedWidgets {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (onClickFunction != null && onClickFunction.apply(mouseX, mouseY, button)) {
+        if (visible && active && onClickFunction != null && onClickFunction.apply(mouseX, mouseY, button)) {
             return true;
         }
         return super.mouseClicked(mouseX, mouseY, button);
@@ -117,7 +117,7 @@ public class DocEntryButton extends SelectableButton implements NestedWidgets {
 
     @Override
     public void onClick(double mouseX, double mouseY, int button) {
-        if (onClickFunction == null || !onClickFunction.apply(mouseX, mouseY, button)) {
+        if (visible && active && (onClickFunction == null || !onClickFunction.apply(mouseX, mouseY, button))) {
             super.onClick(mouseX, mouseY, button);
         }
     }

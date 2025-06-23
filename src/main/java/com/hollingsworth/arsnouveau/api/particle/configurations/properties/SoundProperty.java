@@ -13,6 +13,7 @@ import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.client.gui.HorizontalSlider;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.client.gui.documentation.DocEntryButton;
+import com.hollingsworth.nuggets.client.gui.GuiHelpers;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.Minecraft;
@@ -70,7 +71,7 @@ public class SoundProperty extends BaseProperty<SoundProperty> {
                 }
             });
             button.onClickFunction = ((xPos, yPos, buttonNum) -> {
-                if (buttonNum == 1) {
+                if (GuiHelpers.isMouseInRelativeRange(xPos.intValue(), yPos.intValue(), button) && button.active && button.visible && buttonNum == 1) {
                     playTestSound(new ConfiguredSpellSound(spellSound, sound.getVolume(), sound.getPitch()));
                     return true;
                 }
