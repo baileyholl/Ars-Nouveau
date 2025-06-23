@@ -184,7 +184,8 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 Blocks.CACTUS,
                 Blocks.SUGAR_CANE,
                 Blocks.CHORUS_FLOWER,
-                Blocks.CHORUS_PLANT);
+                Blocks.CHORUS_PLANT,
+                Blocks.SPORE_BLOSSOM);
         this.tag(WHIRLISPRIG_KINDA_LIKES);
 
         this.tag(MAGIC_SAPLINGS).add(
