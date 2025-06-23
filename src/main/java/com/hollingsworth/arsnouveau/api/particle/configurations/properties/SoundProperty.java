@@ -19,7 +19,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -56,7 +55,7 @@ public class SoundProperty extends BaseProperty<SoundProperty> {
 
     @Override
     public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height) {
-        List<Button> buttons = new ArrayList<>();
+        List<DocEntryButton> buttons = new ArrayList<>();
         List<SpellSound> spellSounds = new ArrayList<>(SpellSoundRegistry.getSpellSounds());
 
         spellSounds.sort(Comparator.<SpellSound>comparingInt(o -> DocPlayerData.favoriteSounds.contains(o) ? -1 : 1).thenComparingInt(SpellSound::sortNum).thenComparing(o -> o.getSoundName().getString().toLowerCase(Locale.ROOT)));
@@ -81,8 +80,7 @@ public class SoundProperty extends BaseProperty<SoundProperty> {
             buttons.add(button);
         }
 
-
-        return new ListParticleWidgetProvider(x, y, width, height, buttons, 4) {
+        return new ListParticleWidgetProvider(x, y, width, height, buttons, 4, () -> providerData) {
             HorizontalSlider volumeSlider;
             HorizontalSlider pitchSlider;
 

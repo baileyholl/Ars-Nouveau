@@ -15,7 +15,6 @@ import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -91,7 +90,7 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
 
     @Override
     public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height) {
-        List<Button> buttons = new ArrayList<>();
+        List<DocEntryButton> buttons = new ArrayList<>();
         var particleEntries = new ArrayList<>(PARTICLE_TYPES.entrySet());
         particleEntries.sort(Comparator.<Map.Entry<ParticleType<? extends PropertyParticleOptions>, ParticleData>>comparingInt(o -> DocPlayerData.favoriteParticles.contains(o.getKey()) ? -1 : 1).thenComparing((o1, o2) -> {
             if (o1.getKey() == ModParticles.NEW_GLOW_TYPE.get()) {
@@ -117,7 +116,7 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
             buttons.add(button);
         }
 
-        return new ListParticleWidgetProvider(x, y, width, height, buttons) {
+        return new ListParticleWidgetProvider(x, y, width, height, buttons, 8, () -> providerData) {
             @Override
             public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
                 DocClientUtils.drawHeader(getName(), graphics, x, y, width, mouseX, mouseY, partialTicks);
