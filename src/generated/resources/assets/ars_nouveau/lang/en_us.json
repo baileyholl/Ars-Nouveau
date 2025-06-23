@@ -542,6 +542,7 @@
   "ars_nouveau.equipment": "Magical Equipment",
   "ars_nouveau.equipment_desc": "Magical Equipment",
   "ars_nouveau.exp": "EXP levels required: %s",
+  "ars_nouveau.expand_button": "Toggle Expanded View",
   "ars_nouveau.false": "false",
   "ars_nouveau.familiar.owned": "You already own this familiar.",
   "ars_nouveau.familiar.script": "Used for obtaining familiars. Obtained from the Ritual of Binding.",
