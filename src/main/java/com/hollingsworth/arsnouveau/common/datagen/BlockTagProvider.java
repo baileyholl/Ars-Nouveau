@@ -205,6 +205,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 Blocks.MELON_STEM,
                 Blocks.PUMPKIN_STEM,
                 Blocks.ATTACHED_PUMPKIN_STEM,
+                Blocks.SPORE_BLOSSOM,
                 Blocks.ATTACHED_MELON_STEM);
         this.tag(WHIRLISPRIG_KINDA_LIKES);
 
