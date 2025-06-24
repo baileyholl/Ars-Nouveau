@@ -2,8 +2,8 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonParser;
-import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
+import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.mojang.serialization.Codec;
@@ -21,7 +21,6 @@ import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.*;
 import java.util.*;
 
 public class Spell {
@@ -97,8 +96,8 @@ public class Spell {
     public static Spell fromJson(String jsonString) {
 
         try {
-            Spell spell = CODEC.codec().parse(JsonOps.INSTANCE, JsonParser.parseString(jsonString)).getOrThrow();
             System.out.println("About to read full spell from JSON: " + jsonString);
+            Spell spell = CODEC.codec().parse(JsonOps.INSTANCE, JsonParser.parseString(jsonString)).getOrThrow();
             System.out.println("Full decoded spell: " + spell);
             return spell;
         } catch (Exception e) {

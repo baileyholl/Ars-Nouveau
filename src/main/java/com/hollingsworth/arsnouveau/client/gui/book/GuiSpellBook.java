@@ -2,8 +2,8 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
+import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
@@ -11,9 +11,6 @@ import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
-import com.hollingsworth.arsnouveau.client.gui.Color;
-import com.hollingsworth.arsnouveau.client.gui.GuiUtils;
-import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.*;
 import com.hollingsworth.arsnouveau.client.gui.buttons.*;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
@@ -29,6 +26,7 @@ import com.hollingsworth.arsnouveau.common.spell.validation.GlyphKnownValidator;
 import com.hollingsworth.arsnouveau.common.spell.validation.GlyphMaxTierValidator;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -126,7 +124,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
         this.spellValidator = new CombinedSpellValidator(
                 ArsNouveauAPI.getInstance().getSpellCraftingSpellValidator(),
                 new GlyphMaxTierValidator(tier),
-                new GlyphKnownValidator(player.isCreative() ? null : cap)
+                new GlyphKnownValidator(player.isCreative() || bookStack.is(ItemsRegistry.CREATIVE_SPELLBOOK.asItem()) ? null : playerCap)
         );
         spell = SpellCasterRegistry.from(bookStack).getSpell(selectedSpellSlot).mutable().recipe;
     }
@@ -183,17 +181,6 @@ public class GuiSpellBook extends SpellSlottedScreen {
         );
         addRenderableWidget(new CopyButton(this).withTooltip(Component.translatable("ars_nouveau.spell_book_gui.copy")));
         addRenderableWidget(new PasteButton(this).withTooltip(Component.translatable("ars_nouveau.spell_book_gui.paste")));
-
-        // Add spell slots
-        for (int i = 0; i < caster.getMaxSlots(); i++) {
-            String name = caster.getSpellName(i);
-            GuiSpellSlot slot = new GuiSpellSlot(bookLeft + 281, bookTop - 1 + 15 * (i + 1), i, name, this::onSlotChange);
-            if (i == selectedSpellSlot) {
-                selected_slot = slot;
-                slot.isSelected = true;
-            }
-            addRenderableWidget(slot);
-        }
 
         initSpellSlots((slotButton) -> {
             onSetCaster(selectedSpellSlot);
@@ -592,7 +579,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 
         // only react if ctrl is pressed
-        if (hasControlDown() && !spell_name.isFocused() && !searchBar.isFocused()) {
+        if (hasControlDown() && !spellNameBox.isFocused() && !searchBar.isFocused()) {
             if (isCopy(keyCode)) {
                 onCopyOrExport(null);
                 return true;
@@ -937,7 +924,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
         if (hasShiftDown() && clipboard != null && !clipboard.isEmpty()) {
             // copy the spell to the clipboard
             Spell spell = fetchCurrentSpell();
-            getMinecraft().keyboardHandler.setClipboard(hasAltDown() ? spellToJson(spell) : spellToBinaryBase64(spell));
+            getMinecraft().keyboardHandler.setClipboard(hasAltDown() ? spellToBinaryBase64(spell) : spellToJson(spell));
         } else if (spell != null && !spell.isEmpty()) {
             clipboard = fetchCurrentSpell();
             clipboardW.setClipboard(clipboard.mutable());
@@ -948,10 +935,10 @@ public class GuiSpellBook extends SpellSlottedScreen {
         if (Screen.hasShiftDown()) {
             String clipboardString = Minecraft.getInstance().keyboardHandler.getClipboard();
             if (!clipboardString.isEmpty()) {
-                Spell spell = hasAltDown() ? Spell.fromJson(clipboardString) : Spell.fromBinaryBase64(clipboardString);
+                Spell spell = hasAltDown() ? Spell.fromBinaryBase64(clipboardString) : Spell.fromJson(clipboardString);
                 if (spell.isValid()) {
                     clipboard = spell;
-                    spell_name.setValue(spell.name());
+                    spellNameBox.setValue(spell.name());
                     clipboardW.setClipboard(clipboard.mutable());
                 }
             }
@@ -974,7 +961,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
                     Networking.sendToServer(new PacketUpdateSpellColors(this.selectedSpellSlot, clipboard.color(), this.hand == InteractionHand.MAIN_HAND));
                 if (clipboard.sound() != ConfiguredSpellSound.DEFAULT) // if sound is default, it's likely absent, keep the old one
                     Networking.sendToServer(new PacketSetSound(this.selectedSpellSlot, clipboard.sound(), this.hand == InteractionHand.MAIN_HAND));
-                Networking.sendToServer(new PacketUpdateCaster(new Spell(spell), this.selectedSpellSlot, this.spell_name.getValue(), hand == InteractionHand.MAIN_HAND));
+                Networking.sendToServer(new PacketUpdateCaster(new Spell(spell), this.selectedSpellSlot, this.spellNameBox.getValue(), hand == InteractionHand.MAIN_HAND));
             } else {
                 // if the spell is invalid, set the spell back to the old one
                 spell = oldSpell.mutable().recipe;
