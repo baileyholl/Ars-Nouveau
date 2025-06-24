@@ -101,14 +101,6 @@ public class DocEntryButton extends SelectableButton implements NestedWidgets {
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (GuiHelpers.isMouseInRelativeRange(mouseX, mouseY, this) && visible && active && onClickFunction != null && onClickFunction.apply(mouseX, mouseY, button)) {
-            return true;
-        }
-        return super.mouseReleased(mouseX, mouseY, button);
-    }
-
-    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (GuiHelpers.isMouseInRelativeRange(mouseX, mouseY, this) && visible && active && onClickFunction != null && onClickFunction.apply(mouseX, mouseY, button)) {
             return true;

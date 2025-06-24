@@ -88,6 +88,10 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
         return subProperties.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty());
     }
 
+    public SoundProperty getSound() {
+        return subProperties.getOrDefault(ParticlePropertyRegistry.SOUND_PROPERTY.get(), new SoundProperty(new ConfiguredSpellSound(SoundRegistry.POINTED_DRIPSTONE_WATER)));
+    }
+
     @Override
     public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height) {
         List<DocEntryButton> buttons = new ArrayList<>();

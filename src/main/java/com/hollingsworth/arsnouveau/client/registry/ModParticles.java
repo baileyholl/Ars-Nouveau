@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.client.registry;
 
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleType;
-import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.particle.*;
 import com.hollingsworth.arsnouveau.client.particle.BubbleParticle;
 import net.minecraft.client.Minecraft;
@@ -11,7 +10,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -116,10 +114,7 @@ public class ModParticles {
             evt.registerSpriteSet(DRIPPING_WATER.get(), (spites) -> new PropParticle.Provider(null, (type, level, x, y, z, xSpeed, ySpeed, zSpeed) -> {
                 var particle = new FallingParticle(type, level, x, y, z, xSpeed, ySpeed, zSpeed);
                 particle.type = Fluids.WATER;
-                particle.landingSound = SoundEvents.POINTED_DRIPSTONE_DRIP_WATER;
-                if (type.map.has(ParticlePropertyRegistry.SOUND_PROPERTY.get())) {
-                    particle.landingSound = type.map.get(ParticlePropertyRegistry.SOUND_PROPERTY.get()).sound.getSound().getSoundEvent().value();
-                }
+                particle.landingSound = type.soundProperty().sound.getSound().getSoundEvent().value();
                 particle.pickSprite(Minecraft.getInstance().particleEngine.spriteSets.get(ResourceLocation.withDefaultNamespace("falling_water")));
                 return particle;
             }));

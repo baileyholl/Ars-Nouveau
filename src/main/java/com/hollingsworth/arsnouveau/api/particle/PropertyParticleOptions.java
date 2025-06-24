@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.particle;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ColorProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.SoundProperty;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.mojang.serialization.MapCodec;
@@ -56,6 +57,14 @@ public class PropertyParticleOptions implements ParticleOptions {
             return typeProperty.getColor();
         }
         return new ColorProperty();
+    }
+
+    public SoundProperty soundProperty() {
+        ParticleTypeProperty typeProperty = map.get(ParticlePropertyRegistry.TYPE_PROPERTY.get());
+        if (typeProperty != null) {
+            return typeProperty.getSound();
+        }
+        return new SoundProperty();
     }
 
     @Override
