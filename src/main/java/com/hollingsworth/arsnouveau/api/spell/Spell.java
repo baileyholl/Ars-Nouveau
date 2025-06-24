@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.api.spell;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonParser;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
-import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.mojang.serialization.Codec;
@@ -110,49 +109,10 @@ public class Spell {
 
     public static Spell fromBinaryBase64(String base64) {
 
-//        try{
-//            byte[] data = Base64.getDecoder().decode(base64);
-//            FriendlyByteBuf baseBuf = new FriendlyByteBuf(Unpooled.wrappedBuffer(data));
-//            RegistryFriendlyByteBuf buf = new RegistryFriendlyByteBuf(baseBuf, ArsNouveau.proxy.getPlayer().registryAccess(), ConnectionType.NEOFORGE);
-//
-//            Spell spell = Spell.STREAM.decode(buf);
-//
-//            System.out.println("About to read full spell from binary base64: " + base64);
-//            System.out.println("Full decoded spell: " + spell);
-//            return spell;
-//        }catch (Exception e) {
-//            System.out.println("Failed to read spell from binary base64: " + e.getMessage());
-//        }
-
         try {
             byte[] bytes = Base64.getDecoder().decode(base64);
-            DataInputStream in = new DataInputStream(new ByteArrayInputStream(bytes));
-
-            int version = in.readByte();
-            if (version != 2) {
-                throw new IllegalArgumentException("Unsupported spell version: " + version);
-            }
-
-            System.out.println("About to read spell from binary base64: " + base64);
-
-            String name = in.readUTF();
-            System.out.println("Spell name: " + name);
-            int partCount = in.readInt();
-            System.out.println("Part count: " + partCount);
-            List<AbstractSpellPart> recipe = new ArrayList<>();
-
-            for (int i = 0; i < partCount; i++) {
-                String partId = in.readUTF();
-                System.out.println("Part ID: " + partId);
-                AbstractSpellPart part = GlyphRegistry.getSpellpartMap()
-                        .getOrDefault(ResourceLocation.tryParse(partId), null);
-                if (part != null) {
-                    recipe.add(part);
-                }
-            }
-
-            return new Spell(name, ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, recipe);
-
+            String jsonString = new DataInputStream(new ByteArrayInputStream(bytes)).readUTF();
+            return fromJson(jsonString);
         } catch (IOException | NullPointerException e) {
             System.out.println("Failed to read spell from binary base64: " + e.getMessage());
         } catch (IllegalArgumentException e) {

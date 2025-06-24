@@ -17,7 +17,7 @@ public class ClipboardWidget extends AbstractWidget {
     private final GuiSpellBook spellbook;
     public ResourceLocation image = ArsNouveau.prefix("textures/gui/clipboard.png");
     private Spell clipboard = new Spell();
-
+    boolean render = true;
     static int image_width = 80;
     static int image_height = 60;
 
@@ -27,7 +27,8 @@ public class ClipboardWidget extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+    protected void renderWidget(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        if (!render) return;
         graphics.blit(image, x, spellbook.bookTop, image_width, 0, image_width, 20, image_width, image_height);
         // render the clipboard glyphs
         int clipboardSize = Math.max(2, Mth.ceil(clipboard.size() / 3F));

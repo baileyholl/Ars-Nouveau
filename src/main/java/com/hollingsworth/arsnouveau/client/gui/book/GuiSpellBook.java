@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
-import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
@@ -17,10 +16,7 @@ import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketSetSound;
-import com.hollingsworth.arsnouveau.common.network.PacketUpdateCaster;
-import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellColors;
+import com.hollingsworth.arsnouveau.common.network.*;
 import com.hollingsworth.arsnouveau.common.spell.validation.CombinedSpellValidator;
 import com.hollingsworth.arsnouveau.common.spell.validation.GlyphKnownValidator;
 import com.hollingsworth.arsnouveau.common.spell.validation.GlyphMaxTierValidator;
@@ -45,7 +41,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
@@ -424,16 +419,6 @@ public class GuiSpellBook extends SpellSlottedScreen {
         GuiUtils.openWiki(ArsNouveau.proxy.getPlayer());
     }
 
-    public void onColorClick(Button button) {
-        ParticleColor color = SpellCasterRegistry.from(bookStack).getColor(selectedSpellSlot);
-        Minecraft.getInstance().setScreen(new GuiColorScreen(color.getRedInt(), color.getGreenInt(), color.getBlueInt(), selectedSpellSlot, this.hand));
-    }
-
-    public void onSoundsClick(Button button) {
-        ConfiguredSpellSound spellSound = SpellCasterRegistry.from(bookStack).getSound(selectedSpellSlot);
-        Minecraft.getInstance().setScreen(new SoundScreen(spellSound, selectedSpellSlot, this.hand));
-    }
-
     public void onFamiliarClick(Button button) {
         Collection<ResourceLocation> familiarHolders = new ArrayList<>();
         IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(ArsNouveau.proxy.getPlayer());
@@ -448,7 +433,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
         if (button instanceof CraftingButton craftingButton) {
             craftingButton.clear();
             if (craftingButton.slotNum < spell.size()) {
-                spell.set(((CraftingButton) button).slotNum, null);
+                spell.set(craftingButton.slotNum, null);
             }
         }
         //sanitize the spell if manually cleared
@@ -861,7 +846,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
 
 
         List<AbstractSpellPart> slicedSpell = spell.subList(0, spell.isEmpty() ? 0 : lastGlyphNoGap + 1);
-        // Set validation errors on all of the glyph buttons
+        // Set validation errors on all the glyph buttons
         for (GlyphButton glyphButton : glyphButtons) {
             glyphButton.validationErrors.clear();
             glyphButton.augmentingParent = lastEffect;
@@ -961,6 +946,9 @@ public class GuiSpellBook extends SpellSlottedScreen {
                     Networking.sendToServer(new PacketUpdateSpellColors(this.selectedSpellSlot, clipboard.color(), this.hand == InteractionHand.MAIN_HAND));
                 if (clipboard.sound() != ConfiguredSpellSound.DEFAULT) // if sound is default, it's likely absent, keep the old one
                     Networking.sendToServer(new PacketSetSound(this.selectedSpellSlot, clipboard.sound(), this.hand == InteractionHand.MAIN_HAND));
+                if (!clipboard.particleTimeline().timelines().isEmpty()) {
+                    Networking.sendToServer(new PacketUpdateParticleTimeline(this.selectedSpellSlot, clipboard.particleTimeline(), this.hand == InteractionHand.MAIN_HAND));
+                }
                 Networking.sendToServer(new PacketUpdateCaster(new Spell(spell), this.selectedSpellSlot, this.spellNameBox.getValue(), hand == InteractionHand.MAIN_HAND));
             } else {
                 // if the spell is invalid, set the spell back to the old one
@@ -970,14 +958,9 @@ public class GuiSpellBook extends SpellSlottedScreen {
     }
 
 
-
     public Spell fetchCurrentSpell() {
-        Player player = Minecraft.getInstance().player;
-        if (player != null && player.getItemInHand(hand).getItem() instanceof ICasterTool tool) {
-            AbstractCaster<?> caster = tool.getSpellCaster(player.getItemInHand(hand));
-            if (caster != null) {
-                return caster.getSpell(selectedSpellSlot);
-            }
+        if (caster != null) {
+            return caster.getSpell(selectedSpellSlot);
         }
         return new Spell(spell, spellname);
     }

@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
@@ -42,31 +41,13 @@ public class SpellUtil {
     }
 
     public static String spellToBinaryBase64(Spell spell) {
-//        try{
-//            // Get the bytes and encode to Base64
-//            byte[] spellBytes = FriendlyByteBufUtil.writeCustomData(
-//                    buf -> Spell.STREAM.encode(buf, spell),
-//                    ArsNouveau.proxy.getPlayer().registryAccess()
-//            );
-//            String base64 = Base64.getEncoder().encodeToString(spellBytes);
-//            System.out.println("Spell fully encoded to Base64: " + base64);
-//            return base64;
-//        }catch (Exception e){
-//            System.out.println("Error writing spell to binary: " + e.getMessage());
-//        }
         try {
             ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
             DataOutputStream out = new DataOutputStream(byteStream);
 
-            out.writeByte(2); // version
-            out.writeUTF(spell.name());
-            out.writeInt(spell.unsafeList().size());
+            String json = spellToJson(spell);
 
-            for (AbstractSpellPart part : spell.recipe()) {
-                if (part != null) {
-                    out.writeUTF(part.getRegistryName().toString());
-                }
-            }
+            out.writeUTF(json);
 
             out.close();
             return Base64.getEncoder().encodeToString(byteStream.toByteArray());
