@@ -205,8 +205,6 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
             }
 
             worldIn.playSound(null, playerentity.getX(), playerentity.getY(), playerentity.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (worldIn.random.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
-            if (didCastSpell)
-                caster.playSound(playerentity.getOnPos(), playerentity.level, playerentity, caster.getCurrentSound(), SoundSource.PLAYERS);
         }
     }
 

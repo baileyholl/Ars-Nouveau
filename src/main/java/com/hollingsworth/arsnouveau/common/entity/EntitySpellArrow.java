@@ -219,6 +219,9 @@ public class EntitySpellArrow extends Arrow {
         if (level.isClientSide && tickCount > 1) {
             playParticles();
         }
+        if (!level.isClientSide && tickCount == 1) {
+            castSound.playSound(level, position);
+        }
     }
 
     protected void attemptRemoval() {
