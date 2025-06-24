@@ -116,6 +116,11 @@ public class DocAssets {
     public static final BlitInfo EXPAND_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/expand.png"), 15, 10);
     public static final BlitInfo EXPAND_MARKER = new BlitInfo(ArsNouveau.prefix("textures/gui/expanded_marker.png"), 6, 3);
     public static final BlitInfo COLLAPSE_MARKER = new BlitInfo(ArsNouveau.prefix("textures/gui/collapsed_marker.png"), 3, 6);
+    public static final BlitInfo SPELL_STYLE_TAB = new BlitInfo(ArsNouveau.prefix("textures/gui/spell_style_tab.png"), 23, 20);
+    public static final BlitInfo FAMILIAR_TAB = new BlitInfo(ArsNouveau.prefix("textures/gui/familiar_tab.png"), 23, 20);
+    public static final BlitInfo DOCUMENTATION_TAB = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation_tab.png"), 23, 20);
+    public static final BlitInfo SETTINGS_TAB = new BlitInfo(ArsNouveau.prefix("textures/gui/settings_tab.png"), 23, 20);
+    public static final BlitInfo DISCORD_TAB = new BlitInfo(ArsNouveau.prefix("textures/gui/discord_tab.png"), 23, 20);
 
     public record BlitInfo(ResourceLocation location, int u, int v, int width, int height) {
         public BlitInfo(ResourceLocation location, int width, int height) {

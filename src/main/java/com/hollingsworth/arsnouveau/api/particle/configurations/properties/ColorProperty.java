@@ -212,7 +212,9 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
                     return;
                 }
                 Color color = new Color(displayColor.getColor(), false);
-                graphics.fill(x + 2, y + 2, x + 12, y + 12, color.getRGB());
+                graphics.fill(x + 3, y + 2, x + 11, y + 3, color.getRGB());
+                graphics.fill(x + 2, y + 3, x + 12, y + 11, color.getRGB());
+                graphics.fill(x + 3, y + 11, x + 11, y + 12, color.getRGB());
             }
 
             @Override

@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
@@ -166,19 +167,19 @@ public class GuiSpellBook extends SpellSlottedScreen {
             rebuildWidgets();
         });
 
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 22, 0, 0, 23, 20, 23, 20, "textures/gui/worn_book_bookmark.png", this::onDocumentationClick)
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 22, DocAssets.DOCUMENTATION_TAB, this::onDocumentationClick)
                 .withTooltip(Component.translatable("ars_nouveau.gui.notebook")));
 
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 44, 0, 0, 23, 20, 23, 20, "textures/gui/color_wheel_bookmark.png", (b) -> {
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 44, DocAssets.SPELL_STYLE_TAB, (b) -> {
             ParticleOverviewScreen.openScreen(this, bookStack, selectedSpellSlot, this.hand);
         }).withTooltip(Component.translatable("ars_nouveau.gui.spell_style")));
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 68, 0, 0, 23, 20, 23, 20, "textures/gui/summon_circle_bookmark.png", this::onFamiliarClick)
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 68, DocAssets.FAMILIAR_TAB, this::onFamiliarClick)
                 .withTooltip(Component.translatable("ars_nouveau.gui.familiar")));
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 92, 0, 0, 23, 20, 23, 20, "textures/gui/settings_tab.png", (b) -> {
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 92, DocAssets.SETTINGS_TAB, (b) -> {
             Minecraft.getInstance().setScreen(new GuiSettingsScreen(this));
         }).withTooltip(Component.translatable("ars_nouveau.gui.settings")));
 
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 116, 0, 0, 23, 20, 23, 20, "textures/gui/discord_tab.png", (b) -> {
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 116, DocAssets.DISCORD_TAB, (b) -> {
             try {
                 Util.getPlatform().openUri(new URI("https://discord.com/invite/y7TMXZu"));
             } catch (URISyntaxException e) {
