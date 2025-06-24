@@ -46,164 +46,6 @@ public class SoundRegistry {
     public static SpellSound GAIA_SPELL_SOUND = new SpellSound(SoundRegistry.GAIA_FAMILY, Component.translatable("ars_nouveau.sound.gaia_family"), ArsNouveau.prefix(GAIA_SOUND_LIB)).withSortNum(5);
     public static SpellSound TEMPESTRY_SPELL_SOUND = new SpellSound(SoundRegistry.TEMPESTRY_FAMILY, Component.translatable("ars_nouveau.sound.tempestry_family"), ArsNouveau.prefix(TEMPESTRY_SOUND_LIB)).withSortNum(5);
     public static SpellSound FIRE_SPELL_SOUND = new SpellSound(SoundRegistry.FIRE_FAMILY, Component.translatable("ars_nouveau.sound.pyro"), ArsNouveau.prefix(FIRE_SOUND_LIB)).withSortNum(5);
-
-    // ALLAY_AMBIENT_WITH_ITEM
-    // ALLAY_AMBIENT_WITHOUT_ITEM
-    // ALLAY_DEATH
-    // ALLAY_HURT
-    // AMBIENT_UNDERWATER_ENTER
-    // AMETHYST_BLOCK_BREAK
-    // AMETHYST_BLOCK_CHIME
-    // ANVIL_LAND
-    // ARROW_HIT
-    // ARROW_SHOOT
-    // AXE_STRIP
-    // AXE_SCRAPE
-    // BAMBOO_FALL
-    // BAT_AMBIENT
-    // BEACON_ACTIVATE
-    // BEACON_DEACTIVATE
-    // BEACON_POWER_SELECT
-    // BEE_STING
-    // BEEHIVE_WORK
-    // BELL_BLOCK
-    // BELL_RESONATE
-    // BLAZE_BURN
-    // BLAZE_SHOOT
-
-    // BOGGED_AMBIENT
-    // BOGGED_HURT
-    // BONE_MEAL_USE
-    // BOTTLE_EMPTY
-    // BOTTLE_FILL
-    // BOTTLE_FILL_DRAGONBREATH
-    // BREEZE_CHARGE
-    // BREEZE_DEFLECT
-    // BREEZE_SHOOT
-    // BREEZE_JUMP
-    // BREEZE_WIND_CHARGE_BURST
-    // BREWING_STAND_BREW
-    // BUBBLE_COLUMN_UPWARDS_INSIDE
-    // BUCKET_EMPTY
-    // BUCKET_FILL
-    // CAT_AMBIENT
-    // CAT_HISS
-    // CHAIN_BREAK
-    // CHAIN_FALL
-    // CHICKEN_EGG
-    // CHICKEN_AMBIENT
-    // CHORUS_FRUIT_TELEPORT
-    // COMPARATOR_CLICK
-    // COW_AMBIENT
-    // CREEPER_PRIMED
-    // DOLPHIN_AMBIENT
-    // DOLPHIN_ATTACK
-    // DOLPHIN_PLAY
-    // DONKEY_AMBIENT
-    // DROWNED_AMBIENT
-    // ELDER_GUARDIAN_CURSE
-    // ENCHANTMENT_TABLE_USE
-    // DRAGON_FIREBALL_EXPLODE
-    // ENDER_DRAGON_FLAP
-    // ENDER_EYE_DEATH
-    // ENDERMAN_AMBIENT
-    // ENDERMAN_TELEPORT
-    // ENDERMITE_AMBIENT
-    // END_GATEWAY_SPAWN
-    // END_PORTAL_FRAME_FILL
-    // EVOKER_AMBIENT
-    // EVOKER_CAST_SPELL
-    // EVOKER_FANGS_ATTACK
-    // EXPERIENCE_ORB_PICKUP
-    // FIREWORK_ROCKET_BLAST
-    // FIREWORK_ROCKET_LARGE_BLAST
-    // FIREWORK_ROCKET_LAUNCH
-    // FIREWORK_ROCKET_TWINKLE
-    // FIRE_AMBIENT
-    // FIRE_EXTINGUISH
-    // FOX_AMBIENT
-    // FOX_SCREECH
-    // FROG_AMBIENT
-    // GENERIC_DRINK
-    // GENERIC_EAT
-    // GHAST_AMBIENT
-    // GHAST_SCREAM
-    // GHAST_WARN
-    // GLASS_BREAK
-    // GRINDSTONE_USE
-    // GROWING_PLANT_CROP
-    // GUARDIAN_HURT
-    // TRIAL_SPAWNER_SPAWN_MOB
-    // TRIAL_SPAWNER_DETECT_PLAYER
-    // HONEY_DRINK
-    // HORSE_GALLOP
-    // HORSE_AMBIENT
-    // HOSTILE_HURT
-    // ILLUSIONER_AMBIENT
-    // ILLUSIONER_CAST_SPELL
-    // ILLUSIONER_MIRROR_MOVE
-    // LAVA_EXTINGUISH
-    // LAVA_POP
-    // LIGHTNING_BOLT_IMPACT
-    // MACE_SMASH_AIR
-    // MACE_SMASH_GROUND
-    // MACE_SMASH_GROUND_HEAVY
-    // MOOSHROOM_CONVERT
-    // PHANTOM_BITE
-    // PIGLIN_CONVERTED_TO_ZOMBIFIED
-    // PISTON_CONTRACT
-    // PISTON_EXTEND
-    // PLAYER_ATTACK_CRIT
-    // PLAYER_LEVELUP
-    // PORTAL_TRIGGER
-    // PUFFER_FISH_BLOW_OUT
-    // PUFFER_FISH_BLOW_UP
-    // PUFFER_FISH_STING
-    // PUMPKIN_CARVE
-    // RAVAGER_STUNNED
-    // RAVAGER_ROAR
-    // SCULK_CLICKING
-    // SCULK_SHRIEKER_SHRIEK
-    // SHIELD_BLOCK
-    // SHIELD_BREAK
-    // SHULKER_BULLET_HIT
-    // SKELETON_CONVERTED_TO_STRAY
-    // SILVERFISH_AMBIENT
-    // SKELETON_SHOOT
-    // SNIFFER_SNIFFING
-    // SNIFFER_HAPPY
-    // SNIFFER_EGG_CRACK
-    // SPONGE_ABSORB
-    //TNT_PRIMED
-    // THORNS_HIT
-    // TRIDENT_RETURN
-    // TRIDENT_RIPTIDE_3
-    // VAULT_ACTIVATE
-    // VEX_CHARGE
-    // VILLAGER_AMBIENT
-    // WARDEN_ATTACK_IMPACT
-    // WARDEN_HEARTBEAT
-    // WARDEN_LISTENING
-    // WARDEN_SONIC_BOOM
-    // WARDEN_SONIC_CHARGE
-    // WARDEN_TENDRIL_CLICKS
-    // WEATHER_RAIN
-    // WIND_CHARGE_BURST
-    // WITCH_AMBIENT
-    // WITCH_CELEBRATE
-    // WITCH_DRINK
-    // WOLF_ARMOR_BREAK
-    // WOLF_ARMOR_CRACK
-    // WOLF_AMBIENT
-    // WOLF_HOWL
-    // WOLF_SHAKE
-    // ZOMBIE_INFECT
-    // ZOMBIE_VILLAGER_CONVERTED
-    // ZOMBIE_VILLAGER_CURE
-    // APPLY_EFFECT_BAD_OMEN
-    // APPLY_EFFECT_TRIAL_OMEN
-    // APPLY_EFFECT_RAID_OMEN
-
     public static SpellSound ALLAY_AMBIENT_WITH_ITEM = register(SoundEvents.ALLAY_AMBIENT_WITH_ITEM, "allay_ambient_with_item");
     public static SpellSound ALLAY_AMBIENT_WITHOUT_ITEM = register(SoundEvents.ALLAY_AMBIENT_WITHOUT_ITEM, "allay_ambient_without_item");
     public static SpellSound ALLAY_DEATH = register(SoundEvents.ALLAY_DEATH, "allay_death");
@@ -361,7 +203,29 @@ public class SoundRegistry {
     public static SpellSound APPLY_EFFECT_BAD_OMEN = register(SoundEvents.APPLY_EFFECT_BAD_OMEN, "apply_effect_bad_omen");
     public static SpellSound APPLY_EFFECT_TRIAL_OMEN = register(SoundEvents.APPLY_EFFECT_TRIAL_OMEN, "apply_effect_trial_omen");
     public static SpellSound APPLY_EFFECT_RAID_OMEN = register(SoundEvents.APPLY_EFFECT_RAID_OMEN, "apply_effect_raid_omen");
-
+    
+    public static final SpellSound HORSE_DEATH = register(SoundEvents.HORSE_DEATH, "horse_death");
+    public static final SpellSound ARMADILLO_HURT_REDUCED = register(SoundEvents.ARMADILLO_HURT_REDUCED, "armadillo_hurt_reduced");
+    public static final SpellSound WITHER_AMBIENT = register(SoundEvents.WITHER_AMBIENT, "wither_ambient");
+    public static final SpellSound WITHER_DEATH = register(SoundEvents.WITHER_DEATH, "wither_death");
+    public static final SpellSound WITHER_HURT = register(SoundEvents.WITHER_HURT, "wither_hurt");
+    public static final SpellSound WITHER_SHOOT = register(SoundEvents.WITHER_SHOOT, "wither_shoot");
+    public static final SpellSound WITHER_BREAK_BLOCK = register(SoundEvents.WITHER_BREAK_BLOCK, "wither_break_block");
+    public static final SpellSound ZOGLIN_AMBIENT = register(SoundEvents.ZOGLIN_AMBIENT, "zoglin_ambient");
+    public static final SpellSound ZOGLIN_ANGRY = register(SoundEvents.ZOGLIN_ANGRY, "zoglin_angry");
+    public static final SpellSound ZOGLIN_ATTACK = register(SoundEvents.ZOGLIN_ATTACK, "zoglin_attack");
+    public static final SpellSound WATER_AMBIENT = register(SoundEvents.WATER_AMBIENT, "water_ambient");
+    public static final SpellSound WARDEN_AGITATED = register(SoundEvents.WARDEN_AGITATED, "warden_agitated");
+    public static final SpellSound WARDEN_AMBIENT = register(SoundEvents.WARDEN_AMBIENT, "warden_ambient");
+    public static final SpellSound WARDEN_DEATH = register(SoundEvents.WARDEN_DEATH, "warden_death");
+    public static final SpellSound WARDEN_DIG = register(SoundEvents.WARDEN_DIG, "warden_dig");
+    public static final SpellSound WARDEN_EMERGE = register(SoundEvents.WARDEN_EMERGE, "warden_emerge");
+    public static final SpellSound WARDEN_HURT = register(SoundEvents.WARDEN_HURT, "warden_hurt");
+    public static final SpellSound WARDEN_SNIFF = register(SoundEvents.WARDEN_SNIFF, "warden_sniff");
+    public static final SpellSound TRIDENT_THUNDER = register(SoundEvents.TRIDENT_THUNDER, "trident_thunder");
+    public static final SpellSound TRIDENT_THROW = register(SoundEvents.TRIDENT_THROW, "trident_throw");
+    public static final SpellSound TOTEM_USE = register(SoundEvents.TOTEM_USE, "totem_use");
+    public static final SpellSound SQUID_SQUIRT = register(SoundEvents.SQUID_SQUIRT, "squid_squirt");
 
     public static SpellSound register(Holder<SoundEvent> soundEvent, String name) {
         return SpellSoundRegistry.registerSpellSound(new SpellSound(soundEvent, Component.translatable("ars_nouveau.sound." + name), ArsNouveau.prefix(name)));

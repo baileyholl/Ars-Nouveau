@@ -1758,6 +1758,28 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.expand_button", "Toggle Expanded View");
 
         add("ars_nouveau.model.spike", "Spike");
+        add("ars_nouveau.sound.horse_death", "Horse Death");
+        add("ars_nouveau.sound.armadillo_hurt_reduced", "Armadillo Hurt Reduced");
+        add("ars_nouveau.sound.wither_ambient", "Wither Ambient");
+        add("ars_nouveau.sound.wither_death", "Wither Death");
+        add("ars_nouveau.sound.wither_hurt", "Wither Hurt");
+        add("ars_nouveau.sound.wither_shoot", "Wither Shoot");
+        add("ars_nouveau.sound.wither_break_block", "Wither Break Block");
+        add("ars_nouveau.sound.zoglin_ambient", "Zoglin Ambient");
+        add("ars_nouveau.sound.zoglin_angry", "Zoglin Angry");
+        add("ars_nouveau.sound.zoglin_attack", "Zoglin Attack");
+        add("ars_nouveau.sound.water_ambient", "Water Ambient");
+        add("ars_nouveau.sound.warden_agitated", "Warden Agitated");
+        add("ars_nouveau.sound.warden_ambient", "Warden Ambient");
+        add("ars_nouveau.sound.warden_death", "Warden Death");
+        add("ars_nouveau.sound.warden_dig", "Warden Dig");
+        add("ars_nouveau.sound.warden_emerge", "Warden Emerge");
+        add("ars_nouveau.sound.warden_hurt", "Warden Hurt");
+        add("ars_nouveau.sound.warden_sniff", "Warden Sniff");
+        add("ars_nouveau.sound.trident_thunder", "Trident Thunder");
+        add("ars_nouveau.sound.trident_throw", "Trident Throw");
+        add("ars_nouveau.sound.totem_use", "Totem Use");
+        add("ars_nouveau.sound.squid_squirt", "Squid Squirt");
 
     }
 
