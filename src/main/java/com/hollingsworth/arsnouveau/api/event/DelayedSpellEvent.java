@@ -41,6 +41,11 @@ public class DelayedSpellEvent implements ITimedEvent {
             }
             if (showParticles) {
                 emitter.tick(world);
+                if (duration <= 0) {
+                    DelayTimeline delayTimeline = resolver.spell.particleTimeline().get(ParticleTimelineRegistry.DELAY_TIMELINE.get());
+                    ParticleEmitter resolveEmitter = new ParticleEmitter(result::getLocation, () -> new Vec2(0, 0), delayTimeline.onResolvingEffect);
+                    resolveEmitter.tick(world);
+                }
             }
         }
     }
@@ -51,6 +56,8 @@ public class DelayedSpellEvent implements ITimedEvent {
         if (result instanceof EntityHitResult ehr && ehr.getEntity().isRemoved()) {
             return;
         }
+        DelayTimeline delayTimeline = resolver.spell.particleTimeline().get(ParticleTimelineRegistry.DELAY_TIMELINE.get());
+        delayTimeline.resolvingSound().sound.playSound(world, result.getLocation());
         resolver.resume(world);
     }
 

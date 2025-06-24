@@ -135,7 +135,7 @@ public class SoundProperty extends BaseProperty<SoundProperty> {
         };
     }
 
-    public void playTestSound(ConfiguredSpellSound sound) {
+    private void playTestSound(ConfiguredSpellSound sound) {
         LocalPlayer localPlayer = Minecraft.getInstance().player;
         Vec3 pos = localPlayer.position().add(0, 2, 0);
         localPlayer.level.playLocalSound(pos.x(), pos.y(), pos.z(), sound.getSound().getSoundEvent().value(), SoundSource.PLAYERS, (float) sound.getVolume(), sound.getPitch(), false);
